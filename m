@@ -1,39 +1,111 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Wed, 9 Oct 2013 08:30:35 -0600
-Message-ID: <CAErSpo6ujYmoOz4RMo3ATEJ+REMPiz6oR2pEUn=jW5GMDEB+Yw@mail.gmail.com>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
- <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
- <525438F6.3090600@gmail.com> <1381264135.645.230.camel@pasglop>
- <20131009090923.GE25606@e102652-lin.cambridge.arm.com> <1381315068.4330.1.camel@pasglop>
- <20131009104553.GI25606@e102652-lin.cambridge.arm.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4.2 09/10] ARM/dts: am335x-evm: Add audio support for am335x-evm.dts
+Date: Wed, 9 Oct 2013 17:32:54 +0300
+Message-ID: <1381329174-9556-1-git-send-email-jsarha@ti.com>
+References: <1381322701-8851-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20131009104553.GI25606@e102652-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1381322701-8851-1-git-send-email-jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Darren Etheridge <detheridge@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 9, 2013 at 4:45 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+From: Darren Etheridge <detheridge@ti.com>
 
-> Semantic question: what is the perceived difference between a pci_controller
-> and a pci_host_bridge? Are they just historical naming artifacts of the
-> same concept? (person A deciding to do a cleanup of the code and picks a
-> new name in order not to upset the old APIs)
+Adds sound, tlv320aic3106, mcasp1, and am335x_evm_audio_pin nodes.
 
-pci_controller is a typical name for the arch-dependent PCI host
-bridge structure.  Some arches use different names, e.g.,
-pci_sys_data, pci_hba_data, pci_channel, etc.
+Signed-off-by: Darren Etheridge <detheridge@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ arch/arm/boot/dts/am335x-evm.dts |   51 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-When I added support in the PCI core for host bridge address
-translation, e.g., ACPI _TRA, I named the core structure
-pci_host_bridge.
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index e8ec875..814b3e9 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -149,6 +149,16 @@
+ 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 			>;
+ 		};
++
++		am335x_evm_audio_pins: am335x_evm_audio_pins {
++			pinctrl-single,pins = <
++				0x10c (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_rx_dv.mcasp1_aclkx */
++				0x110 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_txd3.mcasp1_fsx */
++				0x108 (PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* mii1_col.mcasp1_axr2 */
++				0x144 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* rmii1_ref_clk.mcasp1_axr3 */
++			>;
++		};
++
+ 	};
+ 
+ 	ocp {
+@@ -244,6 +254,18 @@
+ 				compatible = "ti,tmp275";
+ 				reg = <0x48>;
+ 			};
++
++			tlv320aic3106: tlv320aic3106@1b {
++				compatible = "ti,tlv320aic3106";
++				reg = <0x1b>;
++				status = "okay";
++
++				/* Regulators */
++				AVDD-supply = <&vaux2_reg>;
++				IOVDD-supply = <&vaux2_reg>;
++				DRVDD-supply = <&vaux2_reg>;
++				DVDD-supply = <&vbat>;
++			};
+ 		};
+ 
+ 		elm: elm@48080000 {
+@@ -340,6 +362,19 @@
+ 				};
+ 			};
+ 		};
++
++		sound {
++			compatible = "ti,da830-evm-audio";
++			ti,model = "AM335x-EVM";
++			ti,audio-codec = <&tlv320aic3106>;
++			ti,mcasp-controller = <&mcasp1>;
++			ti,codec-clock-rate = <12000000>;
++			ti,audio-routing =
++				"Headphone Jack",       "HPLOUT",
++				"Headphone Jack",       "HPROUT",
++				"LINE1L",               "Line In",
++				"LINE1R",               "Line In";
++		};
+ 	};
+ 
+ 	vbat: fixedregulator@0 {
+@@ -407,6 +442,22 @@
+ 
+ #include "tps65910.dtsi"
+ 
++&mcasp1 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&am335x_evm_audio_pins>;
++
++		status = "okay";
++
++		op-mode = <0>;          /* MCASP_IIS_MODE */
++		tdm-slots = <2>;
++		/* 4 serializers */
++		serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
++			0 0 1 2
++		>;
++		tx-num-evt = <1>;
++		rx-num-evt = <1>;
++};
++
+ &tps {
+ 	vcc1-supply = <&vbat>;
+ 	vcc2-supply = <&vbat>;
+-- 
+1.7.9.5
 
-Some of the stuff in pci_controller and similar arch-dependent
-structures could probably be moved into pci_host_bridge, given
-appropriate PCI core interfaces to supply the information (or maybe
-pcibios_*() functions the core could use to retrieve it).  But I doubt
-we could completely remove the arch-dependent structures.
-
-Bjorn
