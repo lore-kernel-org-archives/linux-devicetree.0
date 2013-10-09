@@ -1,148 +1,95 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 3/8] ARM: l2x0: add Marvell Tauros3 compatible
-Date: Wed, 09 Oct 2013 21:27:14 +0200
-Message-ID: <5255AE12.2000205@gmail.com>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com> <1381235073-17134-4-git-send-email-sebastian.hesselbarth@gmail.com> <20131008134100.GD1412@e106331-lin.cambridge.arm.com> <52542D64.5010800@gmail.com> <525433D3.2090906@free-electrons.com> <20131009085026.GD4981@e106331-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131009085026.GD4981@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Jisheng Zhang <jszhang@marvell.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
+Date: Wed, 9 Oct 2013 12:46:06 -0700
+Message-ID: <CAOesGMgZ7+w3NGaxjpV-f08Wt+Zh8FPRHEoR+pM1UG5vLkFMkg@mail.gmail.com>
+References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+	<3887347.Oxs1qQnt5k@flatron>
+	<20130923141504.GD16069@e106331-lin.cambridge.arm.com>
+	<CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
+	<20131009082551.GC4981@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20131009082551.GC4981@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Tony Lindgren <tony@atomide.com>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 10:50 AM, Mark Rutland wrote:
-> On Tue, Oct 08, 2013 at 05:33:23PM +0100, Gregory CLEMENT wrote:
->> On 08/10/2013 18:05, Sebastian Hesselbarth wrote:
->>> On 10/08/2013 03:41 PM, Mark Rutland wrote:
->>>> On Tue, Oct 08, 2013 at 01:24:28PM +0100, Sebastian Hesselbarth wrote:
->>>>> This add a compatible for the Marvell Tauros3 cache controller which
->>>>> is compatible with l2x0 cache controllers. While updating the binding
->>>>> documentation, clean up the list of possible compatibles.
->>>>>
->>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->>>>> ---
-
-Added Jisheng and Lennert to Cc.
-
-Lennert, while looking for differences between ARM PL310 and
-Marvell Tauros3 cache controller in a GPL'ed 2.6 kernel source
-from Asus, I found arch/arm/mm/cache-tauros3.c which states you
-as the original author. If that is wrong, please ignore this.
-
->>> [...]
->>>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
->>>>> index c0c7626..a1d0cbd 100644
->>>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
->>>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
->>>>> @@ -7,20 +7,20 @@ The ARM L2 cache representation in the device tree should be done as follows:
->>>>>    Required properties:
->>>>>
->>>>>    - compatible : should be one of:
->>>>> -	"arm,pl310-cache"
->>>>> -	"arm,l220-cache"
->>>>> -	"arm,l210-cache"
->>>>> -	"marvell,aurora-system-cache": Marvell Controller designed to be
->>>>> +  "arm,pl310-cache"
->>>>> +  "arm,l220-cache"
->>>>> +  "arm,l210-cache"
->>>>> +  "bcm,bcm11351-a2-pl310-cache": DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
->>>>> +  "brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
->>>>> +     offset needs to be added to the address before passing down to the L2
->>>>> +     cache controller
->>>>> +  "marvell,aurora-system-cache": Marvell Controller designed to be
->>>>>         compatible with the ARM one, with system cache mode (meaning
->>>>>         maintenance operations on L1 are broadcasted to the L2 and L2
->>>>>         performs the same operation).
->>>>> -	"marvell,"aurora-outer-cache: Marvell Controller designed to be
->>>>> -	 compatible with the ARM one with outer cache mode.
->>>>> -	"brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
->>>>> -	offset needs to be added to the address before passing down to the L2
->>>>> -	cache controller
->>>>> -	"bcm,bcm11351-a2-pl310-cache": DEPRECATED by
->>>>> -	                               "brcm,bcm11351-a2-pl310-cache"
->>>>> +  "marvell,aurora-outer-cache": Marvell Controller designed to be
->>>>> +     compatible with the ARM one with outer cache mode.
->>>>> +  "marvell,tauros3-cache": Marvell Tauros3 cache controller.
->>>>
->>>> How does the tauros3 cache differ from the other caches supported by the
->>>> l2x0 driver?
->>>
->>> [added Gregory to Cc]
->>>
->>> Good question. I cannot say at this time. I would have guessed that l2cc
->>> on Armada 1500 and Armada 370/XP are more or less the same, as both use
->>> Marvell's PJ4B CPU. Maybe, Gregory or Thomas can shed some light into
->>> this.
-
-As stated above, I did some research on the differences. I think I can
-prepare a patch providing tauros3 specific callbacks for .inv_all,
-.flush_all, .resume, and .save.
-
-For full .setup, I need to do more research on the CTRL/AUX_CTRL bits.
-
-Up to now, I think pl310 specific callbacks (.resume, .save, .setup)
-are _not_ suitable for tauros3. In the source from above, there are
-no TAG_LATENCY_CTRL, DATA_LATENCY_CTRL, ADDR_FILTER_*, nor POWER_CTRL
-registers.
-
->>>>>    - cache-unified : Specifies the cache is a unified cache.
->>>>>    - cache-level : Should be set to 2 for a level 2 cache.
->>>>>    - reg : Physical base address and size of cache controller's memory mapped
->>>>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
->>>>> index 447da6f..90c776e 100644
->>>>> --- a/arch/arm/mm/cache-l2x0.c
->>>>> +++ b/arch/arm/mm/cache-l2x0.c
->>>>> @@ -929,6 +929,7 @@ static const struct of_device_id l2x0_ids[] __initconst = {
->>>>>    	  .data = (void *)&aurora_no_outer_data},
->>>>>    	{ .compatible = "marvell,aurora-outer-cache",
->>>>>    	  .data = (void *)&aurora_with_outer_data},
->>>>> +	{ .compatible = "marvell,tauros3-cache", .data = (void *)&l2x0_data },
->>>>
->>>> Are we intending to handle this differently later?
->>>>
->>>> Or is it 100% compatible with the pl210 or pl220? We could just require
->>>> an entry later in the compatible string list instead...
->>>
->>> No public documentation, no clear answer.
->>>
->>> Tauros3 isn't 100% compatible with any of the ARM l2cc above, it has
->>> additional "features" or "bugs" - call it whatever you want.
->>>
->>> I am not an l2cc expert, but basically I see two options:
->>> a) use (possibly) wrong existing compatible in current mv88de3100.dtsi
->>>      now and fix later.
->>> b) add tauros3 compatible now and add (possible) quirks/marvell-specific
->>>      properties later.
->>>
->>> IMHO b) is very likely to happen as l2x0_of_init in patch 8/8 already
->>> sets bits, I wasn't able to verify in public ARM l2cc docu.
+On Wed, Oct 9, 2013 at 1:25 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Oct 08, 2013 at 11:15:47PM +0100, Olof Johansson wrote:
+>> [Adding Tony, who reported a mainline booting issue, and Sean who
+>> helped me track this down]
 >>
->> I agree with Sebastian. I don't have more information that Sebastian, but
->> as it is definitely a different controller of the ones from ARM, it should
->> have its own compatible string. Then latter when we will discover new feature
->> and/or bugs, we will be able to manage them without requiring people to update
->> their dtb. If I understood well it is the philosophy behind the device tree.
+>> On Mon, Sep 23, 2013 at 7:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > On Sat, Sep 21, 2013 at 04:24:59PM +0100, Tomasz Figa wrote:
+>> >> Hi Yuvaraj,
+>> >>
+>> >> On Wednesday 18 of September 2013 15:41:53 Yuvaraj Kumar C D wrote:
+>> >> > Without the "clock-frequency" property in arch timer node, could able
+>> >> > to see the below crash dump.
+>> >> [snip]
+>> >> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>> >> > b/arch/arm/boot/dts/exynos5250.dtsi index 7d7cc77..668ce5d 100644
+>> >> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> >> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> >> > @@ -96,6 +96,7 @@
+>> >> >                          <1 14 0xf08>,
+>> >> >                          <1 11 0xf08>,
+>> >> >                          <1 10 0xf08>;
+>> >> > +           clock-frequency = <24000000>;
+>> >>
+>> >> Shouldn't it rather come from some clock provided by some clock controller
+>> >> instead?
+>> >>
+>> >> The frequency would be then retrieved using clk_get_rate() on a clock
+>> >> received by clk_get(), specified in device tree using generic clock
+>> >> bindings.
+>> >
+>> > If the bootloader has initialised the generic timer correctly, the
+>> > CNTFRQ register should contain the clock frequency, independent of any
+>> > external clock.
+>>
+>> So, we just sat here to bisect a problem on the Samsung Chromebook
+>> where we hit exactly this problem. The read-only firmware on the
+>> device does not set CNTFRQ at boot, so this fails.
 >
-> Please note that I wasn't arguing for people to have to update their
-> dtb. I was only suggesting that we'd have something like:
+> Ouch. That's a shame.
 >
-> 	compatible = "marvell,tauros3-cache", "arm,l220-cache";
+> A chained bootloader (like the KVM guys are using) should be able to set
+> CNTFRQ, so as long as any chained loader actually does that this won't
+> cause that to blow up...
+
+Yes, but we have cases where we want to be able to boot without a
+chained u-boot as well.
+
+>> Apparantly the u-boot that comes with Arndale sets it, so I haven't
+>> seen this error on that platform.
+>>
+>> > Having the bootloader set CNTFRQ is by far the preferable solution, it
+>> > is architected for this purpose.
+>>
+>> Unfortunately there is now real hardware out there that needs this due
+>> to firmware bugs / missing features, so there's little other choice.
+>> :(
 >
-> Which would function now, and later the driver could choose to check for
-> "marvell,tauros3-cache" and do something different.
+> Indeed :(
+>
+>>
+>> I'll pick this patch up in the fixes branch for 3.12, unless someone
+>> complains loudly.
+>
+> Could you please add a note to the dts regarding why we actually need
+> this? It would be nice to maintain the impression that this is not the
+> preferred way of doing things...
 
-Agree, we really should use above compatible style more often.
+s/dts/dtsi/, yes I can do that. Hopefully with that we won't get too
+much automated copy and paste to other platforms.
 
-> However, given that we don't have sufficient documentation to tell how
-> close the tauros3 cache is to any ARM l2x0 variant, having just the
-> "marvell,tauros3-cache" string in dts and supporting this in the driver
-> makes sense to me.
+It looks like current upstream u-boot got the timer enablement patches
+merged together with HYP support, which explains why I didn't see this
+on Arndale since it has a forked version of u-boot from Linaro
+somewhere.
 
-I found some source, which is possibly enough documentation. Also, I am
-counting on Jisheng or Lennert to comment on the hidden magic in
-Tauros3.
 
-Sebastian
-
+-Olof
