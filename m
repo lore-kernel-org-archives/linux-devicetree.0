@@ -1,40 +1,36 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 25/29] arc: use common of_flat_dt_match_machine
-Date: Wed, 9 Oct 2013 12:04:52 -0500
-Message-ID: <CAL_JsqJS8Vwt2363BXP+3zVNAHM-H=JPKEMkaq22wuQJBCZUXw@mail.gmail.com>
-References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-	<1381163377-21044-26-git-send-email-robherring2@gmail.com>
-	<52539B4C.9040400@synopsys.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 4/9] ARM: OMAP5: hwmod data: Add spinlock data
+Date: Wed, 9 Oct 2013 12:49:03 -0500
+Message-ID: <5255970F.1060307@ti.com>
+References: <cover.1379445653.git.s-anna@ti.com> <9812d9a19f9a52021dcae4b4fef50f10f2c21202.1379445653.git.s-anna@ti.com> <alpine.DEB.2.02.1310090712440.30199@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52539B4C.9040400-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1310090712440.30199-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2013 at 12:42 AM, Vineet Gupta
-<Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 10/07/2013 09:59 PM, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
+On 10/09/2013 02:12 AM, Paul Walmsley wrote:
+> On Tue, 17 Sep 2013, Suman Anna wrote:
+> 
+>> Add the hwmod data for the spinlock IP in OMAP5 SoC.
+>> This is needed to be able to enable the OMAP spinlock
+>> support for OMAP5.
 >>
->> Convert arc to use the common of_flat_dt_match_machine function.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
->> Acked-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> 
+> Thanks, queued.  You can omit this one from future reposts of this series.
+> 
 
->
-> Can you please fold the following into this patch. This removes the const warning
-> and also gets rid of some dead code.
+Thanks. I will be reposting the series (soon), and will omit this patch
+and the AM335 sysc patch in the repost.
 
-Thanks. I've added this in and updated my branch. Please double check
-it when you have a chance. I also made __arch_info_begin[] and
-__arch_info_end[] const.
+regards
+Suman
 
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
