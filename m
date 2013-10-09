@@ -1,80 +1,49 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: Let DT say what devices should not to
- idled or reset
-Date: Wed, 09 Oct 2013 10:19:01 +0200
-Message-ID: <52551175.3070705@baylibre.com>
-References: <1376983966-16490-1-git-send-email-rnayak@ti.com> <1376983966-16490-4-git-send-email-rnayak@ti.com> <alpine.DEB.2.02.1310090720230.30199@utopia.booyaka.com> <525507A4.9010308@ti.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 2/2] hwrng: msm: Add PRNG support for MSM SoC's
+Date: Wed, 09 Oct 2013 11:23:43 +0300
+Message-ID: <5255128F.8090107@mm-sol.com>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <1380811955-18085-3-git-send-email-svarbanov@mm-sol.com> <524DC4B1.4050100@codeaurora.org> <524EED4E.8090505@mm-sol.com> <524EEEC5.7090803@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <525507A4.9010308@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <524EEEC5.7090803@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajendra,
+Hi Stephen,
 
-On 09/10/2013 09:37, Rajendra Nayak wrote:
-> On Wednesday 09 October 2013 12:54 PM, Paul Walmsley wrote:
->> Hi Beno=EEt, Rajendra,
+On 10/04/2013 07:37 PM, Stephen Boyd wrote:
+> On 10/04/13 09:31, Stanimir Varbanov wrote:
 >>
->> On Tue, 20 Aug 2013, Rajendra Nayak wrote:
->>
->>> Now that we have DT bindings to specify which devices on the SoC sh=
-ould not
->>> be reset or idled, get rid of the same information existing as part=
- of the
->>> hwmod data files and pass this info from DT instead.
->>>
->>> For GPMC, the HWMOD_INIT_NO_RESET flag seems to be added in hwmod n=
-ot due to
->>> any errata around the GPMC IP, but rather because any timings
->>> set by the bootloader are not being correctly programmed by the ker=
-nel.
->>> This seems like something that needs to be fixed as part of GPMC dr=
-iver
->>> in the kernel, and hence the flag is left as is in hwmod, which can=
- be
->>> removed once the driver does what its expected to.
->>>
->>> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
->>> ---
->>>   arch/arm/boot/dts/am33xx.dtsi              |    2 ++
->>>   arch/arm/boot/dts/omap4.dtsi               |    3 +++
->>>   arch/arm/boot/dts/omap5.dtsi               |    2 ++
->>>   arch/arm/mach-omap2/omap_hwmod_33xx_data.c |    4 ++--
->>>   arch/arm/mach-omap2/omap_hwmod_44xx_data.c |    4 +---
->>>   arch/arm/mach-omap2/omap_hwmod_54xx_data.c |    2 --
->>>   6 files changed, 10 insertions(+), 7 deletions(-)
->>
->> Looking at this one, maybe the best thing for this patch is for Raje=
-ndra
->> to split it into two patches.  Beno=EEt can merge the DTS patch firs=
-t, then
->> I can merge the hwmod side as a cleanup once the first one goes in. =
- That
->> will avoid conflicts from other DTS and hwmod changes going into the=
- tree.
->>
->> Rajendra, when you do the split, please add in the DT documentation =
-part
->> from patch 2.  Am going to strip that out from the second patch and =
-just
->> merge the hwmod changes.
->>
->> Sound good?
->
-> Sure Paul, I'll repost the complete series with proper splits such th=
-at its
-> easier for you and Benoit to pick them up independently.
+>>>> +static int msm_rng_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct msm_rng *rng;
+>>>> +	struct device_node *np;
+>>>> +	struct resource res;
+>>>> +	int ret;
+>>>> +
+>>>> +	np = of_node_get(pdev->dev.of_node);
+>>>> +	if (!np)
+>>>> +		return -ENODEV;
+>>> This is unnecessary.
+>> I used this call because CONFIG_OF_DYNAMIC could be enabled at some
+>> time. Isn't that possible? I saw that of_node_get|put is used in .probe
+>> on few places in drivers.
+> 
+> So far we aren't selecting that config on ARM.
+> 
+> If you look at of_device_alloc() you'll see
+> 
+>     dev->dev.of_node = of_node_get(np);
+> 
+> so any platform devices created from of_platform_populate won't have
+> their of_node go away.
 
-If you could do it soon, I'm about to send an early pull request to Ton=
-y=20
-to avoid the trouble we had last time.
+Thanks for the pointers, it makes sense. I'll remove the calls to
+of_node_get|put.
 
-Thanks,
-Benoit
-
+regards,
+Stan
