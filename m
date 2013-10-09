@@ -1,65 +1,109 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
-Date: Wed, 09 Oct 2013 09:58:03 -0600
-Message-ID: <52557D0B.5040901@wwwdotorg.org>
-References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org>
- <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
- <20131009124425.GG25034@n2100.arm.linux.org.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4.2 10/10] ARM/dts: am335x-evmsk: Audio support
+Date: Wed, 9 Oct 2013 18:58:38 +0300
+Message-ID: <1381334318-12559-1-git-send-email-jsarha@ti.com>
+References: <f389f285899dce8aa7651e79dc26d8f8748a4525.1381259962.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131009124425.GG25034@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Sherman Yin <syin@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <f389f285899dce8aa7651e79dc26d8f8748a4525.1381259962.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 06:44 AM, Russell King - ARM Linux wrote:
-> On Wed, Oct 09, 2013 at 02:40:49PM +0200, Linus Walleij wrote:
->> NAK this this a Linux kernel implementation detail. Sherman Yin
->> fixed this up so the drivers does not have to imply any sequence
->> semantic for this.
->>
->> Study commit 03b054e9696c3cbd3d5905ec96da15acd0a2fe8d
->> "pinctrl: Pass all configs to driver on pin_config_set()"
->>
->> It is perfectly legal for a driver to accumulate the settings into
->> e.g. a single register write if it can, e.g.:
->>
->> u32 val = 0;
->>
->> for (i = 0; i < num_configs; i++) {
->>   switch() {
->>   FOO:
->>      val |= 1;
->>      break;
->>    BAR:
->>      val |= 2:
->>      break;
->>    BAZ:
->>      val |=4;
->>      break;
->> };
->>
->> writel(val, base+pinreg);
->>
->> I.e. the driver may choose to apply configs sequentially, but that is
->> not at all necessary.
-> 
-> So, just to be clear, what you're saying is that specifying two settings
-> in a pinctrl declaration which provide different values results in
-> undefined behaviour?
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-That makes sense to me, yes. It should be simple to separate out the
-common/shared parts of a configuration, vs. other unique parts, and put
-them into separate "pin configuration nodes", and hence avoid the
-situation completely.
+AM335x EVM-SK have only support for audio playback (stereo jack on the
+board) via tlv320aic3106 codec connected to McASP1.
+Enable the support for audio playback on the board:
+- McASP1 configuration
+- tlv320aic3106 configuration
+- Machine driver.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ arch/arm/boot/dts/am335x-evmsk.dts |   48 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index 4f339fa..9e570fb 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -158,6 +158,15 @@
+ 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 			>;
+ 		};
++
++		mcasp1_pins: mcasp1_pins {
++			pinctrl-single,pins = <
++				0x10c (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_crs.mcasp1_aclkx */
++				0x110 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_rxerr.mcasp1_fsx */
++				0x108 (PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* mii1_col.mcasp1_axr2 */
++				0x144 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* rmii1_ref_clk.mcasp1_axr3 */
++			>;
++		};
+ 	};
+ 
+ 	ocp {
+@@ -206,6 +215,18 @@
+ 				st,max-limit-y = <550>;
+ 				st,max-limit-z = <750>;
+ 			};
++
++			tlv320aic3106: tlv320aic3106@1b {
++				compatible = "ti,tlv320aic3106";
++				reg = <0x1b>;
++				status = "okay";
++
++				/* Regulators */
++				AVDD-supply = <&vaux2_reg>;
++				IOVDD-supply = <&vaux2_reg>;
++				DRVDD-supply = <&vaux2_reg>;
++				DVDD-supply = <&vbat>;
++			};
+ 		};
+ 
+ 		musb: usb@47400000 {
+@@ -233,6 +254,17 @@
+ 				pinctrl-0 = <&ecap2_pins>;
+ 			};
+ 		};
++
++		sound {
++			compatible = "ti,da830-evm-audio";
++			ti,model = "AM335x-EVMSK";
++			ti,audio-codec = <&tlv320aic3106>;
++			ti,mcasp-controller = <&mcasp1>;
++			ti,codec-clock-rate = <24576000>;
++			ti,audio-routing =
++				"Headphone Jack",       "HPLOUT",
++				"Headphone Jack",       "HPROUT";
++		};
+ 	};
+ 
+ 	vbat: fixedregulator@0 {
+@@ -419,3 +451,19 @@
+ 	phy_id = <&davinci_mdio>, <1>;
+ 	phy-mode = "rgmii-txid";
+ };
++
++&mcasp1 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&mcasp1_pins>;
++
++		status = "okay";
++
++		op-mode = <0>;          /* MCASP_IIS_MODE */
++		tdm-slots = <2>;
++		/* 4 serializers */
++		serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
++			0 0 1 2
++		>;
++		tx-num-evt = <1>;
++		rx-num-evt = <1>;
++};
+-- 
+1.7.9.5
+
