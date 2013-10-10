@@ -1,63 +1,74 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] ARM: add basic support for Trusted Foundations
-Date: Thu, 10 Oct 2013 15:28:43 -0700
-Message-ID: <CAAVeFuKAm75TX6mz5n9Pu83+LCP74jPYD43UcA1eCh2SEwaChQ@mail.gmail.com>
-References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
- <1380904635-18113-2-git-send-email-acourbot@nvidia.com> <CAOesGMj74Pui1V5O7zxEipM5Hg6nboVTUCFuMY0c0aUh=wuu3Q@mail.gmail.com>
- <CAAVeFuLvHdUuDurqA_=tvxJonNP+RekotM_MuysQrJD0PUgcSQ@mail.gmail.com> <5257288E.6000704@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V5 3/3] drivers/rtc/rtc-as3722: add RTC driver
+Date: Thu, 10 Oct 2013 23:47:48 +0100
+Message-ID: <20131010224748.GW21581@sirena.org.uk>
+References: <1381321761-8898-1-git-send-email-ldewangan@nvidia.com>
+ <1381321761-8898-4-git-send-email-ldewangan@nvidia.com>
+ <20131010152446.1715e64b70ddd0281a3971e9@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5257288E.6000704-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Vs6r5beQVWevPlSD"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131010152446.1715e64b70ddd0281a3971e9@linux-foundation.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, sameo@linux.intel.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 3:22 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 10/10/2013 02:58 PM, Alexandre Courbot wrote:
->> On Wed, Oct 9, 2013 at 4:47 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> On Fri, Oct 4, 2013 at 9:37 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> ...
->>> But do we really need to panic here? It's a PITA to debug since it'll
->>> be a very early panic. I'd rather have the system log errors in dmesg
->>> but continue booting with one cpu.
->>
->> Actually the first version of this series continued on one CPU if TF
->> support was missing (as secondary CPUs would simply fail to boot), but
->> IIRC Stephen advocated for the current behavior (panic) instead. I
->> agree such an early panic is hard to debug, especially considering
->> that most devices using TF (Tegra retail devices) do not even feature
->> a serial port.
->>
->> On the other hand, if we continue booting in these conditions the
->> system freezes as soon as cpuidle kicks in, so we won't be going very
->> far anyway. However the console is up when it happens.
->>
->> Maybe if there is a way to disable the kernel features TF is supposed
->> to manage (SMP & cpuidle at the moment) when registration fails, the
->> system could continue more gracefully (even if on one leg) and warn
->> the user about this condition. Stephen, can I have your thoughts on
->> this?
->
-> If we can disable the features that rely on TF/secure-mode when support
-> is missing, then doing that rather than panic is fine. We do something
-> similar for PCIe on Tegra20, where LP2 cpuidle state must be disabled or
-> PCIe interrupts won't work.
->
-> I would be inclined to merge the patch as-is right now, since it's only
-> enabling a new feature that won't see any regressions due to this panic,
-> and then add the disable-other-features with a separate patch/series
-> later. Does that seem reasonable?
 
-According to Olof we should also be moving the DT node under
-/firmware, so I guess another revision is in order to at least get
-this part right.
+--Vs6r5beQVWevPlSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-3.12 also added a powered-down cpuidle state for Tegra which freezes
-the system if TF is enabled as the firmware driver does not support
-idle yet, but this can be fixed later.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Oct 10, 2013 at 03:24:46PM -0700, Andrew Morton wrote:
+> On Wed, 9 Oct 2013 17:59:21 +0530 Laxman Dewangan <ldewangan@nvidia.com> =
+wrote:
+
+> > +config RTC_DRV_AS3722
+> > +	tristate "ams AS3722 RTC driver"
+> > +	depends on MFD_AS3722
+
+> ... the rtc patch depends on an mfd patch, so everyone ends up sitting
+> around looking at everyone else, wondering who will merge it all.
+
+With the MFD ones providing you trust the interfaces with the core
+are going to be OK there's no problem to just merge them via individual
+trees - the dependency on the MFD will prevent bisection problems.
+
+> > +#ifdef CONFIG_PM
+>=20
+> Most (but not all!) rtc drivers use CONFIG_PM_SLEEP.  People have madly
+> mucked with CONFIG_PM* and I don't know the difference and I don't know
+> what's going on and I don't know of a convenient place to go to find
+> out.  If you work it out, please be sure to tell me!  But as soon as I
+> figure it out I'm sure they'll go and madly muck with it again.
+
+The two effective options for this stuff are PM_SLEEP (for system
+suspend) and PM_RUNTIME (for runtime suspend which RTCs are unlikely to
+use I guess).  PM mostly just enables selection of the other two.
+
+--Vs6r5beQVWevPlSD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVy6RAAoJELSic+t+oim9uQoQAI/jGxDlxhiuYUiEW0B1k1vQ
+fYBGYMv6XbuJAqC89fwCKA6uW45yHWTDBsn+AmW76My4d+O2lsYvp/oDrGAigYzf
+5neP8+jsNPbcX4JFDl55aMe7F4l3CfwXgIGSHDmL3ibe+ZXRv93cYTSORSBVGtgP
+ZdvJTJwjNft2hGs6Ibp2cLH8yDNXZXzEWsZcA5rYBmLvOOeBCst13O/EVPOeyMWN
+zwTTqvCkAuDnPh/DATFm/XVApxTR6TiMfLtw8G5Y8VzBVXpM9aTNM+1FA0BSOwly
+w7XUSzSTV1REPc2VY/y57lBx2pl6Xl70sUQE6qtsEhIVnhEKCbPxyWQome9a374O
+9rJ2cptzm3e3OxCMM8XCyd0hWFA1gqJGUKPFSZxo60L+gkLU7TrWNWaHiJpxyMPm
+RbttLH91SISGCBVf3QZ/f4skOt0yuNRzIeTryd/Y8xCWIYTR3aOOnKJog07Is+57
+GSQLlQSahRvsks/13VumbIQlHqo5zIs6Inrd5lVfMFlyNdyz8FDRZXtNS9SuM0MA
+/hafMJIcngykzin6nMgBQDsZ0Z/P/Gbr6SOcQWK+K+HhSQFCEHpmWPNrGo21OA/x
+5njidl90yJn7wRufXbDUCTjCEAXE2BBvAKkWKpU9vbG/7zshy8sUJG+G/Za0aO6h
+18LQtvvJP+FKDKdJEuiM
+=igyP
+-----END PGP SIGNATURE-----
+
+--Vs6r5beQVWevPlSD--
