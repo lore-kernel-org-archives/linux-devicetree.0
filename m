@@ -1,38 +1,91 @@
-From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] Add I2C support to ST SoCs
-Date: Thu, 10 Oct 2013 11:39:02 +0200
-Message-ID: <525675B6.4080404@st.com>
-References: <1381250576-7916-1-git-send-email-maxime.coquelin@st.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
+Date: Thu, 10 Oct 2013 15:24:51 +0530
+Message-ID: <5256796B.7070000@ti.com>
+References: <1381390377-11109-1-git-send-email-kishon@ti.com> <20131010093908.GD26954@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381250576-7916-1-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131010093908.GD26954@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Thursday 10 October 2013 03:09 PM, Mark Rutland wrote:
+> On Thu, Oct 10, 2013 at 08:32:57AM +0100, Kishon Vijay Abraham I wrote:
+>> The Palmas device contains only a USB VBUS-ID detector, so added a
+>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
+>> types for backward compatibility.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> Changes from v4:
+>> * added compatible property "ti,twl6035-usb-vid"
+>>
+>> Changes from v3:
+>> * Fixed commit log message (VID to VBUS-ID).
+>> * Fixed the Documentation to tell "ti,twl6035-usb" and "ti,palmas-usb" is
+>> deprecated
+>> Changes from [1]:
+>> * Since the old compatible values will be in 3.11 kernel, we shouldn't remove
+>> the old compatible values. So retain the old compatible values.
+>>
+>> [1] -> http://www.spinics.net/lists/linux-omap/msg95843.html
+>>
+>>  Documentation/devicetree/bindings/extcon/extcon-palmas.txt |    4 +++-
+>>  drivers/extcon/extcon-palmas.c                             |    2 ++
+>>  2 files changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+>> index 7dab6a8..ce2100f 100644
+>> --- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+>> +++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+>> @@ -2,7 +2,9 @@ EXTCON FOR PALMAS/TWL CHIPS
+>>  
+>>  PALMAS USB COMPARATOR
+>>  Required Properties:
+>> - - compatible : Should be "ti,palmas-usb" or "ti,twl6035-usb"
+>> + - compatible : Should be "ti,palmas-usb-vid" or "ti,twl6035-usb-vid".
+>> +   "ti,twl6035-usb" and "ti,palmas-usb" is deprecated and is kept
+>> +   for backward compatibility.
+> 
+> How about having these one per line, with a description:
+> 
+> - compatible: should contain one of:
+>   * "ti,palmas-usb-vid" for palmas systems. 
+>   * "ti,twl6035-usb-vid" for twl6035 systems.
+>   * "ti,palmas-usb" (DEPRECATED - use "ti,palmas-usb-vid").
+>   * "ti,twl6035-usb" (DEPRECATED - use "ti,twl6035-usb-vid").
+> 
+> That makes it easier to add to in future, and hopefully makes things a
+> bit clearer.
+> 
+> I don't think we need to state it's kept for backwards compatiblity.
+> The set of strings Linux understands is a Linux detail rather than a dt
+> detail.
+> 
+>>  
+>>  Optional Properties:
+>>   - ti,wakeup : To enable the wakeup comparator in probe
+>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+>> index 6c91976..6e83e9a 100644
+>> --- a/drivers/extcon/extcon-palmas.c
+>> +++ b/drivers/extcon/extcon-palmas.c
+>> @@ -269,7 +269,9 @@ static const struct dev_pm_ops palmas_pm_ops = {
+>>  
+>>  static struct of_device_id of_palmas_match_tbl[] = {
+>>  	{ .compatible = "ti,palmas-usb", },
+>> +	{ .compatible = "ti,palmas-usb-vid", },
+>>  	{ .compatible = "ti,twl6035-usb", },
+>> +	{ .compatible = "ti,twl6035-usb-vid", },
+> 
+> It might be worth a /* DEPRECATED */ note on the old strings.
+> 
+> Otherwise, the looks sensible to me.
 
-On 10/08/2013 06:42 PM, Maxime COQUELIN wrote:
-> The goal of this series is to add I2C support to ST SoCs.
-> The DT definition is added for STiH415 and STiH416 SoCs on
-> B2000 and B2020 boards.
->
-> The series has been tested working on STiH416-B2020 board.
-> It applies on top of v3.12-rc4.
->
-> Changes since v3:
->    - Switch back to vendor specific DT properties regarding the anti-glitch
->      filter configuration, as this IP is the only one having such a filter.
-Do you agree to keep these properties vendor-specifics?
+Ok. I'll change it in the next version.
 
-If so, could you take this series for v3.13?
-
-Thanks,
-Maxime--
-To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
