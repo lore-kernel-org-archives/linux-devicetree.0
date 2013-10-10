@@ -1,193 +1,51 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
- driver
-Date: Thu, 10 Oct 2013 09:58:34 -0700
-Message-ID: <5256DCBA.6020408@newsguy.com>
-References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
- <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
- <20131008131214.GA12839@ulmo.nvidia.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v3 03/11] ASoC: davinci-mcasp: Add
+ DMA register locations to DT
+Date: Thu, 10 Oct 2013 17:59:59 +0100
+Message-ID: <20131010165959.GB3910@e106331-lin.cambridge.arm.com>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <66bdda0c0b75d737d649260b9ec10f9f870c20cd.1379590036.git.jsarha@ti.com>
+ <20131007214718.GA2976@kartoffel>
+ <20131008004641.GV21581@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131008131214.GA12839@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Marek Vasut <marex@denx.de>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, devicetree@vger.kernel.org, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20131008004641.GV21581@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "joelf@ti.com" <joelf@ti.com>, "jsarha@ti.com" <jsarha@ti.com>, "Hebbar,
+ Gururaja" <gururaja.hebbar@ti.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, Darren Etheridge <detheridge@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2013 06:12 AM, Thierry Reding wrote:
-> On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
->> This patch adds device tree support to the PXA's PWM driver.  Nothing
->> needs to be extracted from the device tree node by the PWM device.
->> Client devices need only specify the period; the per-chip index is
->> implicitly zero because one device node must be present for each PWM
->> output in use.  This approach is more convenient due to the wide
->> variability in the number of PWM channels present across the various PXA
->> variants, and is made possible by the fact that the register sets for
->> each PWM channel are segregated from each other.  An of_xlate() method
->> is added to parse this single-cell node.  The existing ID table is
->> reused for the match table data.
->>
->> Tested on a Palm Treo 680 (both platform data and DT cases).
->>
->> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
->> ---
->>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
->>  drivers/pwm/pwm-pxa.c                             | 52 ++++++++++++++++++++++-
->>  2 files changed, 81 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+On Tue, Oct 08, 2013 at 01:46:41AM +0100, Mark Brown wrote:
+> On Mon, Oct 07, 2013 at 10:47:18PM +0100, Mark Rutland wrote:
+> > On Thu, Sep 26, 2013 at 08:18:28PM +0100, Jyri Sarha wrote:
 > 
-> This looks good to me, but I'd like to get an Acked-by: from one of the
-> device tree bindings maintainers.
+> > >  - interrupts : Interrupt number for McASP
 > 
-> Thierry
-
-
-Thanks much Thierry and Stephen for the reviews and advice.  Stephen, are there
-any remaining issues with the bindings below?
-
-Thanks again,
-Mike
-
-
+> > The device also seems to be able to generate multiple interrupts -- which
+> > interrupt does this actually cover?
 > 
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
->> new file mode 100644
->> index 0000000..5ae9f1e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
->> @@ -0,0 +1,30 @@
->> +Marvell PWM controller
->> +
->> +Required properties:
->> +- compatible: should be one or more of:
->> +  - "marvell,pxa250-pwm"
->> +  - "marvell,pxa270-pwm"
->> +  - "marvell,pxa168-pwm"
->> +  - "marvell,pxa910-pwm"
->> +- reg: Physical base address and length of the registers used by the PWM channel
->> +  Note that one device instance must be created for each PWM that is used, so the
->> +  length covers only the register window for one PWM output, not that of the
->> +  entire PWM controller.  Currently length is 0x10 for all supported devices.
->> +- #pwm-cells: Should be 1.  This cell is used to specify the period in
->> +  nanoseconds.
->> +
->> +Example PWM device node:
->> +
->> +pwm0: pwm@40b00000 {
->> +	compatible = "marvell,pxa250-pwm";
->> +	reg = <0x40b00000 0x10>;
->> +	#pwm-cells = <1>;
->> +};
->> +
->> +Example PWM client node:
->> +
->> +backlight {
->> +	compatible = "pwm-backlight";
->> +	pwms = <&pwm0 5000000>;
->> +	...
->> +}
->> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
->> index a4d2164..e928cc8 100644
->> --- a/drivers/pwm/pwm-pxa.c
->> +++ b/drivers/pwm/pwm-pxa.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/clk.h>
->>  #include <linux/io.h>
->>  #include <linux/pwm.h>
->> +#include <linux/of_device.h>
->>  
->>  #include <asm/div64.h>
->>  
->> @@ -124,6 +125,45 @@ static struct pwm_ops pxa_pwm_ops = {
->>  	.owner = THIS_MODULE,
->>  };
->>  
->> +#ifdef CONFIG_OF
->> +/*
->> + * Device tree users must create one device instance for each pwm channel.
->> + * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the original driver
->> + * code that this is a single channel pxa25x-pwm.  Currently all devices are
->> + * supported identically.
->> + */
->> +static struct of_device_id pwm_of_match[] = {
->> +	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
->> +	{ .compatible = "marvell,pxa270-pwm", .data = &pwm_id_table[0]},
->> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[0]},
->> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[0]},
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, pwm_of_match);
->> +#else
->> +static struct of_device_id *pwm_of_match;
->> +#endif
->> +
->> +static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
->> +{
->> +	const struct of_device_id *id = of_match_device(pwm_of_match, dev);
->> +	return id ? id->data : NULL;
->> +}
->> +
->> +static struct pwm_device *
->> +pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
->> +{
->> +	struct pwm_device *pwm;
->> +
->> +	pwm = pwm_request_from_chip(pc, 0, NULL);
->> +	if (IS_ERR(pwm))
->> +		return pwm;
->> +
->> +	pwm_set_period(pwm, args->args[0]);
->> +
->> +	return pwm;
->> +}
->> +
->>  static int pwm_probe(struct platform_device *pdev)
->>  {
->>  	const struct platform_device_id *id = platform_get_device_id(pdev);
->> @@ -131,6 +171,12 @@ static int pwm_probe(struct platform_device *pdev)
->>  	struct resource *r;
->>  	int ret = 0;
->>  
->> +	if (IS_ENABLED(CONFIG_OF) && id == NULL)
->> +		id = pxa_pwm_get_id_dt(&pdev->dev);
->> +
->> +	if (id == NULL)
->> +		return -EINVAL;
->> +
->>  	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
->>  	if (pwm == NULL) {
->>  		dev_err(&pdev->dev, "failed to allocate memory\n");
->> @@ -145,7 +191,10 @@ static int pwm_probe(struct platform_device *pdev)
->>  	pwm->chip.ops = &pxa_pwm_ops;
->>  	pwm->chip.base = -1;
->>  	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
->> -
->> +	if (IS_ENABLED(CONFIG_OF)) {
->> +		pwm->chip.of_xlate = pxa_pwm_of_xlate;
->> +		pwm->chip.of_pwm_n_cells = 1;
->> +	}
->>  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
->>  	if (IS_ERR(pwm->mmio_base))
->> @@ -176,6 +225,7 @@ static struct platform_driver pwm_driver = {
->>  	.driver		= {
->>  		.name	= "pxa25x-pwm",
->>  		.owner	= THIS_MODULE,
->> +		.of_match_table	= of_match_ptr(pwm_of_match),
->>  	},
->>  	.probe		= pwm_probe,
->>  	.remove		= pwm_remove,
->> -- 
->> 1.8.1.5
->>
+> > The driver doesn't seem to use it (by a grep of irq|interrupt). Have I missed
+> > something?
+> 
+> No, they're not actually of much practical use to us at the minute but
+> it was generally felt better to include the information and not use it
+> so that if someone does come up with a use for them then the trees for
+> deployed systems already have the information.
+
+Sure, but if this device can generate multiple interrupts, we should
+make it possible to describe all of them, unambiguously.
+
+Thanks,
+Mark.
