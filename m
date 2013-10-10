@@ -1,67 +1,81 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v5] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
-Date: Thu, 10 Oct 2013 13:02:57 +0530
-Message-ID: <1381390377-11109-1-git-send-email-kishon@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
+Date: Thu, 10 Oct 2013 10:03:40 +0200
+Message-ID: <CACRpkdZFx94kEXiWPHOZVmK1d21pM0jg4y6coqu3Pyd=9HES5w@mail.gmail.com>
+References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org>
+	<CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
+	<20131010072624.GA29191@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, cw00.choi@samsung.com
-Cc: ijc+devicetree@hellion.org.uk, rob@landley.net, myungjoo.ham@samsung.com, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131010072624.GA29191-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Palmas device contains only a USB VBUS-ID detector, so added a
-compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
-types for backward compatibility.
+On Thu, Oct 10, 2013 at 9:26 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
-Changes from v4:
-* added compatible property "ti,twl6035-usb-vid"
+> However, my patch is talking about a different thing.  For example, we
+> have a device whose pinctrl-0 consists of two phandle entries that point
+> to pin configuration nodes foo and bar.
+>
+>         pinctrl-0 = <&foo &bar>;
+>
+>         foo {
+>                 ...
+>         };
+>
+>         bar {
+>                 ...
+>         };
+>
+> My patch only wants to make it clear that the configuration specified by
+> node foo will be applied to pin controller first, and the configuration
+> defined in node bar will be applied after that.  When both nodes have
+> configuration for a pin, these two configs for the same pin go to two
+> different pinctrl_setting structures.  And these two pinctrl_settings
+> can not be applied accumulatedly but only sequentially.  That's what my
+> patch talks about.
 
-Changes from v3:
-* Fixed commit log message (VID to VBUS-ID).
-* Fixed the Documentation to tell "ti,twl6035-usb" and "ti,palmas-usb" is
-deprecated
-Changes from [1]:
-* Since the old compatible values will be in 3.11 kernel, we shouldn't remove
-the old compatible values. So retain the old compatible values.
+OK I get it (I think).
 
-[1] -> http://www.spinics.net/lists/linux-omap/msg95843.html
+However isn't this aspect rather a property of how the specific driver
+parses and uses the device tree?
 
- Documentation/devicetree/bindings/extcon/extcon-palmas.txt |    4 +++-
- drivers/extcon/extcon-palmas.c                             |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Remember that with drivers that do not use generic pin config,
+we have left the handling of the device tree node up to the driver
+by the callback dt_node_to_map().
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-index 7dab6a8..ce2100f 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-@@ -2,7 +2,9 @@ EXTCON FOR PALMAS/TWL CHIPS
- 
- PALMAS USB COMPARATOR
- Required Properties:
-- - compatible : Should be "ti,palmas-usb" or "ti,twl6035-usb"
-+ - compatible : Should be "ti,palmas-usb-vid" or "ti,twl6035-usb-vid".
-+   "ti,twl6035-usb" and "ti,palmas-usb" is deprecated and is kept
-+   for backward compatibility.
- 
- Optional Properties:
-  - ti,wakeup : To enable the wakeup comparator in probe
-diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-index 6c91976..6e83e9a 100644
---- a/drivers/extcon/extcon-palmas.c
-+++ b/drivers/extcon/extcon-palmas.c
-@@ -269,7 +269,9 @@ static const struct dev_pm_ops palmas_pm_ops = {
- 
- static struct of_device_id of_palmas_match_tbl[] = {
- 	{ .compatible = "ti,palmas-usb", },
-+	{ .compatible = "ti,palmas-usb-vid", },
- 	{ .compatible = "ti,twl6035-usb", },
-+	{ .compatible = "ti,twl6035-usb-vid", },
- 	{ /* end */ }
- };
- 
--- 
-1.7.10.4
+But I do understand the ambition to specify this behaviour for all
+pin control drivers using device tree.
 
+But we need to be careful since DT isn't very much in the
+buisiness of defining sequence semantics for stuff, and that
+is why I'm a bit hesitant.
+
+So, maybe we can add this as it only concerns the binding
+(but then I want that example to be part of the documentation patch
+so that it is crystal clear what we're talking about), but it would be
+proper if we also helped enforce this semantic across the drivers,
+i.e. centralize more of the DT parsing code...
+
+BTW on a related subject: have you examined if the i.MX driver
+can use the new utility functions from pinctrl-utils.h:
+
+pinctrl_utils_reserve_map()
+pinctrl_utils_add_map_mux()
+pinctrl_utils_add_map_configs()
+pinctrl_utils_add_config()
+pinctrl_utils_dt_free_map()
+
+It helps a lot the more boilerplate we can move out of the
+drivers and get a clear picture of the device tree parsing code,
+and see what really needs to be different across the drivers.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
