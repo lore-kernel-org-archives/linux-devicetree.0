@@ -1,65 +1,64 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
-Date: Thu, 10 Oct 2013 17:38:28 +0530
-Message-ID: <525698BC.3080902@ti.com>
-References: <1381390377-11109-1-git-send-email-kishon@ti.com> <20131010093908.GD26954@e106331-lin.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/5] drm/bridge: Add PTN3460 bridge driver
+Date: Thu, 10 Oct 2013 13:23:34 +0100
+Message-ID: <20131010122334.GJ21581@sirena.org.uk>
+References: <1380670860-17621-4-git-send-email-seanpaul@chromium.org>
+ <CAAQKjZN_r-=-sj=Vb-o-KUS4ab5=cjCq1ni3VZeMeVc3NL=MMg@mail.gmail.com>
+ <CAOw6vbLiJLLKn=gb1=j5TBeM0ijEK13+goG-=mw7MZTyNT1kpQ@mail.gmail.com>
+ <CAAQKjZPwyKCpju4Ndd+MB_aN24-zA5xTHFsFsun2617h7YT6dw@mail.gmail.com>
+ <CAOesGMgKastzdFHYQzyL8gxkBN=86wFZ4jbgP8BHxfkOuZvJxg@mail.gmail.com>
+ <CAAQKjZMhovKLxNfnXnbF-6diM2zF1cWyi+xHGyL3v83vBh4p6g@mail.gmail.com>
+ <20131009182905.GY21581@sirena.org.uk>
+ <05c701cec56f$b79eea50$26dcbef0$%dae@samsung.com>
+ <20131010093708.GC21581@sirena.org.uk>
+ <063a01cec5ad$8afd1920$a0f74b60$%dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131010093908.GD26954@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yJ4qnbZIW6vSQ1qE"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <063a01cec5ad$8afd1920$a0f74b60$%dae@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: 'Olof Johansson' <olof@lixom.net>, 'Sean Paul' <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 'DRI mailing list' <dri-devel@lists.freedesktop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 10 October 2013 03:09 PM, Mark Rutland wrote:
-> On Thu, Oct 10, 2013 at 08:32:57AM +0100, Kishon Vijay Abraham I wrote:
->> The Palmas device contains only a USB VBUS-ID detector, so added a
->> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
->> types for backward compatibility.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->> Changes from v4:
->> * added compatible property "ti,twl6035-usb-vid"
->>
->> Changes from v3:
->> * Fixed commit log message (VID to VBUS-ID).
->> * Fixed the Documentation to tell "ti,twl6035-usb" and "ti,palmas-usb" is
->> deprecated
->> Changes from [1]:
->> * Since the old compatible values will be in 3.11 kernel, we shouldn't remove
->> the old compatible values. So retain the old compatible values.
->>
->> [1] -> http://www.spinics.net/lists/linux-omap/msg95843.html
->>
->>  Documentation/devicetree/bindings/extcon/extcon-palmas.txt |    4 +++-
->>  drivers/extcon/extcon-palmas.c                             |    2 ++
->>  2 files changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
->> index 7dab6a8..ce2100f 100644
->> --- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
->> @@ -2,7 +2,9 @@ EXTCON FOR PALMAS/TWL CHIPS
->>  
->>  PALMAS USB COMPARATOR
->>  Required Properties:
->> - - compatible : Should be "ti,palmas-usb" or "ti,twl6035-usb"
->> + - compatible : Should be "ti,palmas-usb-vid" or "ti,twl6035-usb-vid".
->> +   "ti,twl6035-usb" and "ti,palmas-usb" is deprecated and is kept
->> +   for backward compatibility.
-> 
-> How about having these one per line, with a description:
-> 
-> - compatible: should contain one of:
->   * "ti,palmas-usb-vid" for palmas systems. 
->   * "ti,twl6035-usb-vid" for twl6035 systems.
+--yJ4qnbZIW6vSQ1qE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-twl6035 is just an another name for palmas.
+On Thu, Oct 10, 2013 at 08:40:38PM +0900, Inki Dae wrote:
 
-Thanks
-Kishon
+> That is what I mentioned. Some boards _could control_ the actual regulator
+> for lvds-bridge, and that would be depended on how HW engineer designs the
+> board.=20
+
+For the driver this should be totally transparent - it should just
+control the regulator all the time, the regulator API will just not do
+anything if the regulator state can't actually be changed.
+
+--yJ4qnbZIW6vSQ1qE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVpxDAAoJELSic+t+oim9lGoP/iCL66+/bISG/Y/dGNV4pH17
+Y++ASeLEyHO7YJYMpy+JADrTA18r4YpFub1q6pNFEW3V9MHY0LkFmPDuZdrfSJso
+6+Pr8H1DfOF4w1GYosfGxZMv9nmfPIefeKC8KNWHYL6Yi3+GvdScHWjVKGn+daAC
+Mrmrq2ajkhlLNsgbok8MoF9UpNsbgXLwXcjc5NBuAhZ8Plh5wChhXW03yYiCAa8F
+G/kVcBSfJpWYEyehOhMuFSbbSiE8a4LTFdhvRsCgwnRQBCcb46L1vM61t9xIfJA7
+OuNbOfGonWbJEj0FN6tXtyb3JPFf/OuCKFstp5vycgb6Qnb6+SLZN456maTH3Sy4
+AL7b3WcK9m+4A2EBVYyo+OBnPmSFb5KWEFUDdt9pkp57tGy2lDudhGh/3UvsrL+z
+NGTqZCtvkjtYoCfwc4ZgMoBB91W2j3ZsUWWOcZf+7ktMaj7f50CMrqrbtISOmQVQ
+LrzRFGC0K+klrmJ0JzOOTBulJFypuwIUI9Gdo7P5H4MfbRjABqAbilPj4+UsuRGX
+OqUhI+X2XfBBOhY5JcKZDSzKEsEQda+Z4USxhueJ+xS3iAsOYdWMj6p77RCOCa5w
+1akPTkOHHrnQRTEpB0i80a9ovDl2Ur/7LN2Yx/0vQ9B7fuWqZpoVIgFvn/ARtTs2
++fBQtUfo84DPOgwFKgdk
+=xvZv
+-----END PGP SIGNATURE-----
+
+--yJ4qnbZIW6vSQ1qE--
