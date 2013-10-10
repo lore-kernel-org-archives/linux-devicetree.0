@@ -1,229 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Thu, 10 Oct 2013 11:03:31 +0100
-Message-ID: <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 0/4] Add I2C support to ST SoCs
+Date: Thu, 10 Oct 2013 12:03:54 +0200
+Message-ID: <20131010100354.GE2638@katana>
+References: <1381250576-7916-1-git-send-email-maxime.coquelin@st.com>
+ <525675B6.4080404@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UnaWdueM1EBWVRzC"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381300704-4238-1-git-send-email-Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <525675B6.4080404@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, Lee Jones <lee.jones@linaro.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 07:38:24AM +0100, Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> The following SoCs will be affected: p2041, p3041, p4080,
-> p5020, p5040, b4420, b4860, t4240
->
-> Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v5:
->         - refine the binding document
->         - update the compatible string
-> v4:
->         - add binding document
->         - update compatible string
->         - update the reg property
-> v3:
->         - fix typo
-> v2:
->         - add t4240, b4420, b4860 support
->         - remove pll/4 clock from p2041, p3041 and p5020 board
->
->  .../devicetree/bindings/clock/corenet-clock.txt    | 111 ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi        |  35 +++++++
->  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi         |   2 +
->  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi        |  35 +++++++
->  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |  60 +++++++++++
->  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |  60 +++++++++++
->  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        | 112 +++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi         |   8 ++
->  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi        |  42 ++++++++
->  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi         |   2 +
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |  60 +++++++++++
->  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |  85 ++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi         |  12 +++
->  17 files changed, 640 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/corenet-clock.txt
->
-> diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> new file mode 100644
-> index 0000000..8efc62d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> @@ -0,0 +1,111 @@
-> +* Clock Block on Freescale CoreNet Platforms
-> +
-> +Freescale CoreNet chips take primary clocking input from the external
-> +SYSCLK signal. The SYSCLK input (frequency) is multiplied using
-> +multiple phase locked loops (PLL) to create a variety of frequencies
-> +which can then be passed to a variety of internal logic, including
-> +cores and peripheral IP blocks.
-> +Please refer to the Reference Manual for details.
-> +
-> +1. Clock Block Binding
-> +
-> +Required properties:
-> +- compatible: Should include one or more of the following:
-> +       - "fsl,<chip>-clockgen": for chip specific clock block
-> +       - "fsl,qoriq-clockgen-[1,2].x": for chassis 1.x and 2.x clock
 
-While I can see that "fsl,<chip>-clockgen" might have a large set of
-strings that we may never deal with in th kernel, I'd prefer that the
-basic strings (i.e. all the "fsl,qoriq-clockgen-[1,2].x" variants) were
-listed explicitly here.
+--UnaWdueM1EBWVRzC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Given they only seem to be "fsl,qoriq-clockgen-1.0" and
-"fsl,qoriq-clockgen-2.0" this shouldn't be too difficult to list and
-describe.
 
-> +- reg: Offset and length of the clock register set
-> +- clock-frequency: Indicates input clock frequency of clock block.
-> +       Will be set by u-boot
+> > Changes since v3:
+> >    - Switch back to vendor specific DT properties regarding the anti-glitch
+> >      filter configuration, as this IP is the only one having such a filter.
+> Do you agree to keep these properties vendor-specifics?
 
-Why does the fact this is set by u-boot matter to the binding?
+My preference is generic bindings. There are no other users right now,
+yet there might be in the future. At least with something similar enough
+that the bindings will apply. Was hoping for some additional input,
+though, but I am not depending on it.
 
-> +
-> +Recommended properties:
-> +- #ddress-cells: Specifies the number of cells used to represent
-> +       physical base addresses.  Must be present if the device has
-> +       sub-nodes and set to 1 if present
+> If so, could you take this series for v3.13?
 
-Typo: #address-cells
+Sure, if it passes the second review...
 
-In the example it looks like the address cells of child nodes are
-offsets within the unit, rather than absolute physical addresses. Could
-the code not treat them as absolute addresses? Then we'd only need to
-document that #address-cells, #size-cells and ranges must be present and
-have values suitable for mapping child nodes into the address space of
-the parent.
 
-> +- #size-cells: Specifies the number of cells used to represent
-> +       the size of an address. Must be present if the device has
-> +       sub-nodes and set to 1 if present
+--UnaWdueM1EBWVRzC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-It's not really the size of an address, it's the size of a region
-identified by a reg entry.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-I think this can be simplified by my suggestion above.
+iQIcBAEBAgAGBQJSVnuKAAoJEBQN5MwUoCm29YAP/j86Uvw2t0c5cudusZoI5pBT
+mWGREfUbrGlgNBb3AFMeTdJtZRFPOn1ZJx8K/FHOz7e//tgTH0ebQm9dTDZ7ZwWQ
+WD17mFEWsRq/yFyYxV9wr1bXu6OuKoUzLz9tDcLlN9BAYwJCXUHuQBt3Os6ELsb8
+2HqUdPdsWhN+iEan8qwi4DeU0HA58IPiU71QeLCk6+ex8yGh5SOI2Q3HMES+eMDL
+fgivJzU0u0SBUKNtfrhdK6RYmSYAm5qI/RezMhl/oU2r0q//bps8aF5aGNV1y9ZX
+6b8cnpV3KGsju4DuPccGGAMKb7k4Yi/Z3lENsm57+FnsZu0cPpp3GentG0WiiLVI
+BY57HKex3JwGblHKeYeM8+A+YCMg1Ju4+dY2gZ4wxWFPxaxORsXqdeufSRFXJErv
+lHCOi91GyH2aYgxMi9EwE/Miwp59oQSCSzYsaVp/rvg2q2+75No4NSstq1qd0eLB
+9B7zuEaXwVCzI1Ep9r+0nVSv6PRiNm74uzdgjUd7GbdxinaFRCrO21nNCvQFZVwv
+Qj2+bUGequCP/55a4x/LJdYa2lNEjJImbyRwSPzI60pD7VEhYBZwopAlc3P39bGQ
+0G0BsO46cFUGFagdiNMJkk1+kvmYmd6HS1Haua/nuKb2zfRhJ8LXyy9a/EYwwnOf
+stNvDh3H5XFreu94BEwD
+=Yzfa
+-----END PGP SIGNATURE-----
 
-> +
-> +2. Clock Provider/Consumer Binding
-> +
-> +Most of the binding are from the common clock binding[1].
-> + [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : Should include one or more of the following:
-> +       - "fsl,qoriq-core-pll-[1,2].x": Indicates a core PLL clock device
-> +       - "fsl,qoriq-core-mux-[1,2].x": Indicates a core multiplexer clock
-> +               device; divided from the core PLL clock
-
-As above, I'd prefer a complete list of the basic strings we expect.
-
-> +       - "fixed-clock": From common clock binding; indicates output clock
-> +               of oscillator
-> +       - "fsl,qoriq-sysclk-[1,2].x": Indicates input system clock
-
-Here too.
-
-> +- #clock-cells: From common clock binding; indicates the number of
-> +       output clock. 0 is for one output clock; 1 for more than one clock
-
-If a clock source has multiple outputs, what those outputs are and what
-values in clock-cells they correspond to should be described here.
-
-> +
-> +Recommended properties:
-> +- clocks: Should be the phandle of input parent clock
-> +- clock-names: From common clock binding, indicates the clock name
-
-That description's a bit opaque.
-
-What's the name of the clock input on these units? That's what
-clock-names should contain, and that should be documented.
-
-Do we not _always_ need the parent clock?
-
-If we have a clock do we need a clock-names entry for it?
-
-> +- clock-output-names: From common clock binding, indicates the names of
-> +       output clocks
-> +- reg: Should be the offset and length of clock block base address.
-> +       The length should be 4.
-> +
-> +Example for clock block and clock provider:
-> +/ {
-> +       clockgen: global-utilities@e1000 {
-> +               compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0";
-> +               reg = <0xe1000 0x1000>;
-> +               clock-frequency = <0>;
-
-That looks odd.
-
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               sysclk: sysclk {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fsl,qoriq-sysclk-1.0", "fixed-clock";
-
-We didn't mention in the binding that "fsl,qoriq-sysclk-1.0" was
-compatible with "fixed-clock" and should have "fixed-clock" in the
-compatible list...
-
-> +                       clock-output-names = "sysclk";
-> +               }
-> +
-> +               pll0: pll0@800 {
-> +                       #clock-cells = <1>;
-> +                       reg = <0x800 0x4>;
-> +                       compatible = "fsl,qoriq-core-pll-1.0";
-> +                       clocks = <&sysclk>;
-> +                       clock-output-names = "pll0", "pll0-div2";
-> +               };
-> +
-> +               pll1: pll1@820 {
-> +                       #clock-cells = <1>;
-> +                       reg = <0x820 0x4>;
-> +                       compatible = "fsl,qoriq-core-pll-1.0";
-> +                       clocks = <&sysclk>;
-> +                       clock-output-names = "pll1", "pll1-div2";
-> +               };
-> +
-> +               mux0: mux0@0 {
-> +                       #clock-cells = <0>;
-> +                       reg = <0x0 0x4>;
-> +                       compatible = "fsl,qoriq-core-mux-1.0";
-> +                       clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-> +                       clock-names = "pll0_0", "pll0_1", "pll1_0", "pll1_1";
-> +                       clock-output-names = "cmux0";
-> +               };
-> +
-> +               mux1: mux1@20 {
-> +                       #clock-cells = <0>;
-> +                       reg = <0x20 0x4>;
-> +                       compatible = "fsl,qoriq-core-mux-1.0";
-> +                       clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-> +                       clock-names = "pll0_0", "pll0_1", "pll1_0", "pll1_1";
-> +                       clock-output-names = "cmux1";
-
-How does the mux choose which input clock to use at a point in time?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--UnaWdueM1EBWVRzC--
