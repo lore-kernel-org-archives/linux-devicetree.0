@@ -1,101 +1,83 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: s5m8767: Modify parsing method of the
- voltage table of buck2/3/4
-Date: Thu, 10 Oct 2013 11:36:46 +0100
-Message-ID: <20131010103646.GH26954@e106331-lin.cambridge.arm.com>
-References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
- <1381369296-17101-2-git-send-email-cw00.choi@samsung.com>
+From: Archit Taneja <archit@ti.com>
+Subject: Re: [PATCH v3 1/2] arm: dts: omap4+: Add DMM bindings
+Date: Thu, 10 Oct 2013 16:06:03 +0530
+Message-ID: <52568313.5070600@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com> <1381386994-24747-1-git-send-email-archit@ti.com> <1381386994-24747-2-git-send-email-archit@ti.com> <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1381369296-17101-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 02:41:36AM +0100, Chanwoo Choi wrote:
-> The s5m8767 regulator driver parse always the voltage table of buck2/3/4.
-> If gpio_dvs feature isn't used and dts haven't included the voltage table
-> of buck2/3/4, s5m8767 regulator driver return error and file probe state.
-> 
-> This patch check only voltage table of buck on s5m8767_pmic_dt_parse_pdata()
-> if buck[2-4]_gpiodvs is true.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/regulator/s5m8767.c | 54 +++++++++++++++++++++++----------------------
->  1 file changed, 28 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-> index cb6cdb3..29999c0 100644
-> --- a/drivers/regulator/s5m8767.c
-> +++ b/drivers/regulator/s5m8767.c
-> @@ -522,7 +522,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
->  	struct device_node *pmic_np, *regulators_np, *reg_np;
->  	struct sec_regulator_data *rdata;
->  	struct sec_opmode_data *rmode;
-> -	unsigned int i, dvs_voltage_nr = 1, ret;
-> +	unsigned int i, dvs_voltage_nr = 8, ret;
->  
->  	pmic_np = iodev->dev->of_node;
->  	if (!pmic_np) {
-> @@ -586,15 +586,39 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
->  		rmode++;
->  	}
->  
-> -	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-uses-gpio-dvs", NULL))
-> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-uses-gpio-dvs", NULL)) {
->  		pdata->buck2_gpiodvs = true;
+Hi,
 
-As this line is being changed, please switch to of_property_read_bool.
+On Thursday 10 October 2013 03:38 PM, Mark Rutland wrote:
+> On Thu, Oct 10, 2013 at 07:36:33AM +0100, Archit Taneja wrote:
+>> Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. DMM
+>> only requires address and irq information.
+>>
+>> Add documentation for the DMM bindings.
+>>
+>> Originally worked on by Andy Gross <andygro@gmail.com>
+>>
+>> Cc: Andy Gross <andygro@gmail.com>
+>> Signed-off-by: Archit Taneja <archit@ti.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/omap/dmm.txt | 16 ++++++++++++++++
+>>   arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
+>>   arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
+>>   3 files changed, 30 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/omap/dmm.txt b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+>> new file mode 100644
+>> index 0000000..6fc3d79
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+>> @@ -0,0 +1,16 @@
+>> +OMAP Dynamic Memory Manager (DMM) bindings
+>
+> Is there any documentation? A brief description of what this is would be
+> nice.
 
->  
-> -	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-uses-gpio-dvs", NULL))
-> +		if (of_property_read_u32_array(pmic_np,
-> +				"s5m8767,pmic-buck2-dvs-voltage",
-> +				pdata->buck2_voltage, dvs_voltage_nr)) {
+I'll do that.
 
-Won't this break existing (not conforming to the binding) dts?
+>
+>> +
+>> +Required properties:
+>> +- compatible:	Must be "ti,omap4-dmm" for OMAP4 family
+>> +		Must be "ti,omap5-dmm" for OMAP5 and DRA7x family
+>
+> s/must be/should contain/
+>
+>> +- reg:		Contains timer register address range (base address and length)
+>
+> Huh? What's a timer got to do with the DMM?
 
-$(git grep s5m8767,pmic-buck2-dvs-voltage) shows me
-arch/arm/boot/dts/exynos5250-arndale.dts is only has one entry in its
-s5m8767,pmic-buck3-uses-gpio-dvs property's list.
+Err, my mistake!
 
-> +			dev_err(iodev->dev, "buck2 voltages not specified\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-uses-gpio-dvs", NULL)) {
->  		pdata->buck3_gpiodvs = true;
+>
+>> +- interrupts:	Contains interrupt information (source, etc) for the DMM IRQ
+>
+> Is there a single interrupt? If so:
+>
+> - interrupts: Should contain an interrupt-specifier for the DMM IRQ.
 
-Another of_proeprty_read_bool candidate.
+Okay.
 
->  
-> -	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-uses-gpio-dvs", NULL))
-> +		if (of_property_read_u32_array(pmic_np,
-> +				"s5m8767,pmic-buck3-dvs-voltage",
-> +				pdata->buck3_voltage, dvs_voltage_nr)) {
-> +			dev_err(iodev->dev, "buck3 voltages not specified\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-uses-gpio-dvs", NULL)) {
->  		pdata->buck4_gpiodvs = true;
+>
+> Assuming the "DMM IRQ" is well defined. If there's a name for it in
+> documentation, using that's preferable. If a future revision may have
+> multiple interrupts, please use interrupt-names now to save us endless
+> pain in future.
 
-Similarly.
+The IRQ is called DMM_IRQ in the documentation. I don't think there 
+would be more than one interrupt line from this IP. I'll still cross check.
 
-In general I'm confused by the need for the *-uses-gpio-dvs properties.
-Are they not implied by the presence of *-dvs-voltage properties?
+Thanks,
+Archit
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
