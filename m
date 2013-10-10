@@ -1,43 +1,78 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/5] clk: tegra124: Add new peripheral clocks
-Date: Thu, 10 Oct 2013 11:51:36 +0300
-Message-ID: <20131010085136.GP4233@tbergstrom-lnx.Nvidia.com>
-References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
- <1380878014-22088-5-git-send-email-pdeschrijver@nvidia.com>
- <525487C7.6080103@wwwdotorg.org>
- <20131009081123.GB3973@tbergstrom-lnx.Nvidia.com>
- <52557D92.9050200@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52557D92.9050200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH V2] ARM: dts: exynos5: add pwm DT nodes to Exynos5250 and
+ Exynos5420
+Date: Thu, 10 Oct 2013 14:43:29 +0530
+Message-ID: <1381396409-10313-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, devicetree@vger.kernel.org, t.figa@samsung.com, abrestic@chromium.org, olofj@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 06:00:18PM +0200, Stephen Warren wrote:
-> On 10/09/2013 02:11 AM, Peter De Schrijver wrote:
-> > On Wed, Oct 09, 2013 at 12:31:35AM +0200, Stephen Warren wrote:
-> >> On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
-> >>> Tegra124 introduces a number of new peripheral clocks. This patch adds those
-> >>> to the common peripheral clock code.
-> >>
-> >> Don't you need to add AFC[0..5] in this patch and/or patch 5?
-> > 
-> > AFC[0..5] are reset only nodes afaik. Up to now, we haven't done that.
-> > The goal is to include them once we move to the reset framework.
-> 
-> No, we've always added clock entries for all reset-only clocks into the
-> clock driver. Since the port to the reset framework is not available
-> yet, we need to continue to do this. Otherwise, we won't be able to
-> upstream audio support.
-> 
+Add the device-tree binding for the PWM controller to Exynos5250 and Exynos5420
 
-The only clock which required this up to now was 'cop' (avp). Which is not
-in upstream.
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Signed-off-by: Olof Johansson <olofj@chromium.org>
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+---
+changes since v1:
+	- Moved the common properties in the node to exynos5.dtsi file
+	  suggested by Sachin Kamat <sachin.kamat@linaro.org>	  
 
-Cheers,
+ arch/arm/boot/dts/exynos5.dtsi    |    7 +++++++
+ arch/arm/boot/dts/exynos5250.dtsi |    5 +++++
+ arch/arm/boot/dts/exynos5420.dtsi |    5 +++++
+ 3 files changed, 17 insertions(+)
 
-Peter.
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index 074739d..eb74ebc 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -109,6 +109,13 @@
+ 		status = "disabled";
+ 	};
+ 
++	pwm: pwm@12dd0000 {
++		compatible = "samsung,exynos4210-pwm";
++		reg = <0x12dd0000 0x100>;
++		samsung,pwm-outputs = <0>, <1>, <2>, <3>;
++		#pwm-cells = <3>;
++	};
++
+ 	fimd@14400000 {
+ 		compatible = "samsung,exynos5250-fimd";
+ 		interrupt-parent = <&combiner>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 7cb5c4b..52bf8d2 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -521,6 +521,11 @@
+ 		};
+ 	};
+ 
++	pwm: pwm@12dd0000 {
++		clocks = <&clock 311>;
++		clock-names = "timers";
++	};
++
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 09aa06c..9387b15 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -210,6 +210,11 @@
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
+ 
++	pwm: pwm@12dd0000 {
++		clocks = <&clock 279>;
++		clock-names = "timers";
++	};
++
+ 	dp_phy: video-phy@10040728 {
+ 		compatible = "samsung,exynos5250-dp-video-phy";
+ 		reg = <0x10040728 4>;
+-- 
+1.7.10.4
