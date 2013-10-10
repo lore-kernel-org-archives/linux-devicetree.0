@@ -1,45 +1,160 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
-Date: Thu, 10 Oct 2013 09:23:15 -0700
-Message-ID: <20131010162314.GD29913@atomide.com>
-References: <20131003054104.8941.88857.stgit@localhost>
- <20131003054221.8941.87801.stgit@localhost>
- <5256AA7F.8030005@ti.com>
- <20131010160018.GA29913@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131010160018.GA29913@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prakash Manjunathappa <prakash.pm@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: integrator: core module registers from compatible strings
+Date: Thu, 10 Oct 2013 18:27:40 +0200
+Message-ID: <1381422460-20218-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [131010 09:09]:
-> * Roger Quadros <rogerq@ti.com> [131010 06:32]:
-> > 
-> > I tried testing this with the USB EHCI driver, but I'm not getting wake up interrupts
-> > while the system is still running and only the EHCI controller is runtime suspended.
-> > 
-> > It seems we need to somehow call _reconfigure_io_chain() to update the daisy chain
-> > whenever the pad wakeup_enable bit is changed.
-> 
-> Sounds like this is on omap3? Have you tried calling pcs_soc->rearm() in the
-> pcs_irq_handle() like the comments there suggest? At least for me that keeps
-> the wake-up interrupts continuously running on omap3 instead of just idle modes.
-> 
-> Now on omap4, I've noticed the wake up interrupts are on all the time based on tests
-> with the serial driver.
+This augments the core machine code for the Integrator platforms
+to get their references to the core module device nodes by
+using compatible strings instead of predefined node names
+and rename the CP syscon node to be simply "syscon".
 
-Oh, and if you're runtime suspending EHCI only, and if the EHCI module has
-wake-up registers, it should be able to wake EHCI from retention on it's own
-without a need for the io chain at all.
+Reported-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/arm-boards | 30 ++++++++++++++----------
+ arch/arm/boot/dts/integratorap.dts               |  2 +-
+ arch/arm/boot/dts/integratorcp.dts               |  4 ++--
+ arch/arm/mach-integrator/integrator_ap.c         |  8 ++++++-
+ arch/arm/mach-integrator/integrator_cp.c         |  8 ++++++-
+ 5 files changed, 34 insertions(+), 18 deletions(-)
 
-At least the serial driver does that if it's internal wake-up registers are
-configured right. But for off-idle, the serial driver needs the io chain wake-up
-events.
+diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
+index 0ebf3d9..5fac246 100644
+--- a/Documentation/devicetree/bindings/arm/arm-boards
++++ b/Documentation/devicetree/bindings/arm/arm-boards
+@@ -19,18 +19,22 @@ Required nodes:
+   - regs: the location and size of the core module registers, one
+     range of 0x200 bytes.
+ 
+-- cpcon/syscon: the root node the Integrator/CP must have a /cpcon
+-  node pointing to the CP control registers, and the Integrator/AP
+-  must have a /syscon node pointing to the Integrator/AP system
+-  controller. The AP syscon node must include the logical module
+-  interrupts.
+-
+-In the root node the Integrator/CP must have a /cpcon node pointing
+-to the CP control registers, and the Integrator/AP must have a
+-/syscon node pointing to the Integrator/AP system controller.
+-The AP syscon node must include the logic module interrupts, stated
+-in order of module instance <module 0, module 1, module 2 ...>
+-example:
++- syscon: the root node of the Integrator platforms must have a
++  system controller node pointong to the control registers,
++  with the compatible string
++  "arm,integrator-ap-syscon"
++  "arm,integrator-cp-syscon"
++  respectively.
++
++  Required properties for the system controller:
++  - regs: the location and size of the system controller registers,
++    one range of 0x100 bytes.
++
++  Required properties for the AP system controller:
++  - interrupts: the AP syscon node must include the logical module
++    interrupts, stated in order of module instance <module 0>,
++    <module 1>, <module 2> ... for the CP system controller this
++    is not required not of any use.
+ 
+ /dts-v1/;
+ /include/ "integrator.dtsi"
+@@ -45,7 +49,7 @@ example:
+ 	};
+ 
+ 	syscon {
+-		/* AP system controller registers */
++		compatible = "arm,integrator-ap-syscon";
+ 		reg = <0x11000000 0x100>;
+ 		interrupt-parent = <&pic>;
+ 		/* These are the logic module IRQs */
+diff --git a/arch/arm/boot/dts/integratorap.dts b/arch/arm/boot/dts/integratorap.dts
+index 453ab0e..e6be931 100644
+--- a/arch/arm/boot/dts/integratorap.dts
++++ b/arch/arm/boot/dts/integratorap.dts
+@@ -19,7 +19,7 @@
+ 	};
+ 
+ 	syscon {
+-		/* AP system controller registers */
++		compatible = "arm,integrator-ap-syscon";
+ 		reg = <0x11000000 0x100>;
+ 		interrupt-parent = <&pic>;
+ 		/* These are the logical module IRQs */
+diff --git a/arch/arm/boot/dts/integratorcp.dts b/arch/arm/boot/dts/integratorcp.dts
+index ff1aea0..a3a06b8 100644
+--- a/arch/arm/boot/dts/integratorcp.dts
++++ b/arch/arm/boot/dts/integratorcp.dts
+@@ -18,8 +18,8 @@
+ 		bootargs = "root=/dev/ram0 console=ttyAMA0,38400n8 earlyprintk";
+ 	};
+ 
+-	cpcon {
+-		/* CP controller registers */
++	syscon {
++		compatible = "arm,integrator-cp-syscon";
+ 		reg = <0xcb000000 0x100>;
+ 	};
+ 
+diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-integrator/integrator_ap.c
+index ece4755..d50dc2d 100644
+--- a/arch/arm/mach-integrator/integrator_ap.c
++++ b/arch/arm/mach-integrator/integrator_ap.c
+@@ -470,6 +470,11 @@ static struct of_dev_auxdata ap_auxdata_lookup[] __initdata = {
+ 	{ /* sentinel */ },
+ };
+ 
++static const struct of_device_id ap_syscon_match[] = {
++	{ .compatible = "arm,integrator-ap-syscon"},
++	{ },
++};
++
+ static void __init ap_init_of(void)
+ {
+ 	unsigned long sc_dec;
+@@ -486,7 +491,8 @@ static void __init ap_init_of(void)
+ 	root = of_find_node_by_path("/");
+ 	if (!root)
+ 		return;
+-	syscon = of_find_node_by_path("/syscon");
++
++	syscon = of_find_matching_node(root, ap_syscon_match);
+ 	if (!syscon)
+ 		return;
+ 
+diff --git a/arch/arm/mach-integrator/integrator_cp.c b/arch/arm/mach-integrator/integrator_cp.c
+index 422c3f9..1df6e76 100644
+--- a/arch/arm/mach-integrator/integrator_cp.c
++++ b/arch/arm/mach-integrator/integrator_cp.c
+@@ -286,6 +286,11 @@ static struct of_dev_auxdata intcp_auxdata_lookup[] __initdata = {
+ 	{ /* sentinel */ },
+ };
+ 
++static const struct of_device_id intcp_syscon_match[] = {
++	{ .compatible = "arm,integrator-cp-syscon"},
++	{ },
++};
++
+ static void __init intcp_init_of(void)
+ {
+ 	struct device_node *root;
+@@ -300,7 +305,8 @@ static void __init intcp_init_of(void)
+ 	root = of_find_node_by_path("/");
+ 	if (!root)
+ 		return;
+-	cpcon = of_find_node_by_path("/cpcon");
++
++	cpcon = of_find_matching_node(root, intcp_syscon_match);
+ 	if (!cpcon)
+ 		return;
+ 
+-- 
+1.8.3.1
 
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
