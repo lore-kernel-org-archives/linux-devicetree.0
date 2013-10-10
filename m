@@ -1,56 +1,89 @@
-From: Lu Jingchang-B35083 <B35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-Date: Thu, 10 Oct 2013 09:39:04 +0000
-Message-ID: <B56CDBE15CE27145A4B77D2D24263E8522EFE6@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5] extcon: palmas: Added a new compatible type
+ *ti,palmas-usb-vid*
+Date: Thu, 10 Oct 2013 10:39:08 +0100
+Message-ID: <20131010093908.GD26954@e106331-lin.cambridge.arm.com>
+References: <1381390377-11109-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379498279-16096-1-git-send-email-b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381390377-11109-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZpbm9kLA0KDQogIENvdWxkIHlvdSBwbGVhc2UgaGVscCByZXZpZXcgdGhpcyBwYXRjaD8g
-Q291bGQgaXQgYmUgbWVyZ2VkIGludG8geW91ciBuZXh0IHRyZWU/DQogIFRoYW5rcyENCg0KDQpC
-ZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+IEZyb206IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1i
-ZXIgMTgsIDIwMTMgNTo1OCBQTQ0KPiBUbzogdmlub2Qua291bEBpbnRlbC5jb20NCj4gQ2M6IHNo
-YXduLmd1b0BsaW5hcm8ub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgTHUgSmluZ2NoYW5nLQ0KPiBCMzUwODM7IFdhbmcgSHVhbi1CMTg5NjUNCj4gU3ViamVj
-dDogW1BBVENIIHY2IDMvM10gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRyaXZlciBz
-dXBwb3J0DQo+IA0KPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2VkIGRpcmVjdCBtZW1vcnkoZURNQSkg
-Y29udHJvbGxlciBzdXBwb3J0Lg0KPiBUaGUgZURNQSBjb250cm9sbGVyIGRlcGxveXMgRE1BTVVY
-cyByb3V0aW5nIERNQSByZXF1ZXN0IHNvdXJjZXMoc2xvdCkNCj4gdG8gZURNQSBjaGFubmVscy4N
-Cj4gVGhpcyBtb2R1bGUgY2FuIGJlIGZvdW5kIG9uIFZ5YnJpZCBhbmQgTFMtMSBTb0NzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPg0KPiBT
-aWduZWQtb2ZmLWJ5OiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29tPg0KPiAtLS0N
-Cj4gY2hhbmdlcyBpbiB2NjoNCj4gICBob2xkaW5nIGxvY2sgaW4gZG1hX2NvbnRyb2wgdG8gcHJl
-dmVudCByYWNlLg0KPiANCj4gY2hhbmdlcyBpbiB2NToNCj4gICBjb25maWcgc2xhdmVfaWQgd2hl
-biBkbWFlbmdpbmVfc2xhdmVfY29uZmlnIGludGVhZCBvZiBjaGFubmVsIHJlcXVlc3QuDQo+ICAg
-YWRkaW5nIHJlc2lkdWUgY2FsY3VsYXRpb24gYW5kIGRtYSBwYXVzZS9yZXN1bWUgZGV2aWNlIGNv
-bnRyb2wuDQo+IA0KPiBjaGFuZ2VzIGluIHY0Og0KPiAgIHVzaW5nIGV4YWN0IGNvbXBhdGlibGUg
-c3RyaW5nIGluIGJpbmRpbmcgZG9jdW1lbnQuDQo+IA0KPiBjaGFuZ2VzIGluIHYzOg0KPiAgIGhh
-bmRsZSBhbGwgcGVuZGluZyBpbnRlcnJ1cHQgb25lIHRpbWUuDQo+ICAgYWRkIHByb3RlY3QgbG9j
-ayBvbiBkbWEgdHJhbnNmZXIgY29tcGxldGUgaGFuZGxpbmcuDQo+ICAgY2hhbmdlIGRlc2MgYW5k
-IHRjZCBhbGxvYyBmbGFnIHRvIEdGUF9OT1dBSVQuDQo+ICAgYWRkIHNhbml0eSBjaGVjayBhbmQg
-ZXJyb3IgbWVzc2FnZXMuDQo+IA0KPiBjaGFuZ2VzIGluIHYyOg0KPiAgIHVzaW5nIGdlbmVyaWMg
-ZG1hLWNoYW5uZWxzIHByb3BlcnR5IGluc3RlYWQgb2YgZnNsLGRtYS1jaGFubmVsLg0KPiAgIHJl
-bmFtZSB0aGUgYmluZGluZyBkb2N1bWVudCB0byBmc2wtZWRtYS50eHQuDQo+IA0KPiANCj4gIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0IHwgIDg0ICsr
-DQo+ICBkcml2ZXJzL2RtYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAxMCArDQo+ICBkcml2ZXJzL2RtYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2RtYS9mc2wtZWRtYS5jICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8IDk0NA0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gIDQgZmlsZXMgY2hh
-bmdlZCwgMTAzOSBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtZWRtYS50eHQNCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2RtYS9mc2wtZWRtYS5jDQoNCg==
+On Thu, Oct 10, 2013 at 08:32:57AM +0100, Kishon Vijay Abraham I wrote:
+> The Palmas device contains only a USB VBUS-ID detector, so added a
+> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
+> types for backward compatibility.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> Changes from v4:
+> * added compatible property "ti,twl6035-usb-vid"
+> 
+> Changes from v3:
+> * Fixed commit log message (VID to VBUS-ID).
+> * Fixed the Documentation to tell "ti,twl6035-usb" and "ti,palmas-usb" is
+> deprecated
+> Changes from [1]:
+> * Since the old compatible values will be in 3.11 kernel, we shouldn't remove
+> the old compatible values. So retain the old compatible values.
+> 
+> [1] -> http://www.spinics.net/lists/linux-omap/msg95843.html
+> 
+>  Documentation/devicetree/bindings/extcon/extcon-palmas.txt |    4 +++-
+>  drivers/extcon/extcon-palmas.c                             |    2 ++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> index 7dab6a8..ce2100f 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> @@ -2,7 +2,9 @@ EXTCON FOR PALMAS/TWL CHIPS
+>  
+>  PALMAS USB COMPARATOR
+>  Required Properties:
+> - - compatible : Should be "ti,palmas-usb" or "ti,twl6035-usb"
+> + - compatible : Should be "ti,palmas-usb-vid" or "ti,twl6035-usb-vid".
+> +   "ti,twl6035-usb" and "ti,palmas-usb" is deprecated and is kept
+> +   for backward compatibility.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about having these one per line, with a description:
+
+- compatible: should contain one of:
+  * "ti,palmas-usb-vid" for palmas systems. 
+  * "ti,twl6035-usb-vid" for twl6035 systems.
+  * "ti,palmas-usb" (DEPRECATED - use "ti,palmas-usb-vid").
+  * "ti,twl6035-usb" (DEPRECATED - use "ti,twl6035-usb-vid").
+
+That makes it easier to add to in future, and hopefully makes things a
+bit clearer.
+
+I don't think we need to state it's kept for backwards compatiblity.
+The set of strings Linux understands is a Linux detail rather than a dt
+detail.
+
+>  
+>  Optional Properties:
+>   - ti,wakeup : To enable the wakeup comparator in probe
+> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+> index 6c91976..6e83e9a 100644
+> --- a/drivers/extcon/extcon-palmas.c
+> +++ b/drivers/extcon/extcon-palmas.c
+> @@ -269,7 +269,9 @@ static const struct dev_pm_ops palmas_pm_ops = {
+>  
+>  static struct of_device_id of_palmas_match_tbl[] = {
+>  	{ .compatible = "ti,palmas-usb", },
+> +	{ .compatible = "ti,palmas-usb-vid", },
+>  	{ .compatible = "ti,twl6035-usb", },
+> +	{ .compatible = "ti,twl6035-usb-vid", },
+
+It might be worth a /* DEPRECATED */ note on the old strings.
+
+Otherwise, the looks sensible to me.
+
+Thanks,
+Mark.
