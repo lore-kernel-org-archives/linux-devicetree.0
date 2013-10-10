@@ -1,83 +1,168 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v3 1/2] arm: dts: omap4+: Add DMM bindings
-Date: Thu, 10 Oct 2013 16:06:03 +0530
-Message-ID: <52568313.5070600@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1381386994-24747-1-git-send-email-archit@ti.com> <1381386994-24747-2-git-send-email-archit@ti.com> <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] clk: tegra: Add support for PLLSS
+Date: Thu, 10 Oct 2013 12:39:16 +0200
+Message-ID: <20131010103915.GA6735@ulmo.nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-2-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1380878014-22088-2-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 10 October 2013 03:38 PM, Mark Rutland wrote:
-> On Thu, Oct 10, 2013 at 07:36:33AM +0100, Archit Taneja wrote:
->> Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. DMM
->> only requires address and irq information.
->>
->> Add documentation for the DMM bindings.
->>
->> Originally worked on by Andy Gross <andygro@gmail.com>
->>
->> Cc: Andy Gross <andygro@gmail.com>
->> Signed-off-by: Archit Taneja <archit@ti.com>
->> ---
->>   Documentation/devicetree/bindings/arm/omap/dmm.txt | 16 ++++++++++++++++
->>   arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
->>   arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
->>   3 files changed, 30 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/omap/dmm.txt b/Documentation/devicetree/bindings/arm/omap/dmm.txt
->> new file mode 100644
->> index 0000000..6fc3d79
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/omap/dmm.txt
->> @@ -0,0 +1,16 @@
->> +OMAP Dynamic Memory Manager (DMM) bindings
->
-> Is there any documentation? A brief description of what this is would be
-> nice.
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll do that.
+On Fri, Oct 04, 2013 at 12:12:40PM +0300, Peter De Schrijver wrote:
+> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
->
->> +
->> +Required properties:
->> +- compatible:	Must be "ti,omap4-dmm" for OMAP4 family
->> +		Must be "ti,omap5-dmm" for OMAP5 and DRA7x family
->
-> s/must be/should contain/
->
->> +- reg:		Contains timer register address range (base address and length)
->
-> Huh? What's a timer got to do with the DMM?
+This is missing a commit description.
 
-Err, my mistake!
+> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+[...]
+> +const struct clk_ops tegra_clk_pllss_ops = {
 
->
->> +- interrupts:	Contains interrupt information (source, etc) for the DMM IRQ
->
-> Is there a single interrupt? If so:
->
-> - interrupts: Should contain an interrupt-specifier for the DMM IRQ.
+static?
 
-Okay.
+> +struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
+> +				void __iomem *clk_base, unsigned long flags,
+> +				unsigned long fixed_rate,
+> +				struct tegra_clk_pll_params *pll_params,
+> +				struct tegra_clk_pll_freq_table *freq_table,
+> +				spinlock_t *lock)
+> +{
+[...]
+> +	pll = _tegra_init_pll(clk_base, NULL, fixed_rate, pll_params,
+> +				pll_flags, freq_table, lock);
+> +
+> +	if (IS_ERR(pll))
 
->
-> Assuming the "DMM IRQ" is well defined. If there's a name for it in
-> documentation, using that's preferable. If a future revision may have
-> multiple interrupts, please use interrupt-names now to save us endless
-> pain in future.
+I'd leave out the blank line separating the assignment of pll and the
+check for validity. Grouping them together like that makes it
+immediately clear that they belong together.
 
-The IRQ is called DMM_IRQ in the documentation. I don't think there 
-would be more than one interrupt line from this IP. I'll still cross check.
+> +		return ERR_CAST(pll);
+> +
+> +	val = pll_readl_base(pll);
+> +
+> +	if (val & (3 << 25)) {
 
-Thanks,
-Archit
+Same here. Also 3 << 25 could probably be a symbolic constant, something
+like PLLSS_REF_SRC_SEL_MASK perhaps?
 
+> +		WARN(1, "Unknown parent selected for %s: %d\n", name,
+> +			val >> 25);
+
+Similarly, this should be something like:
+
+		(val & PLLSS_REF_SRC_SEL_MASK) >> PLLSS_REF_SRC_SEL_SHIFT
+
+> +		kfree(pll);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +	_get_pll_mnp(pll, &cfg);
+
+Nit: I'd put a blank line before this, to separate the block and the
+function call. That is:
+
+	}
+
+	_get_pll_mnp(...);
+
+> +
+> +	if (cfg.n > 1) {
+> +		WARN(1, "%s should not be initialized\n", name);
+> +		kfree(pll);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+
+Is this really fatal? Can't we just configure the PLL from scratch?
+
+> +	parent_rate = __clk_get_rate(parent);
+> +
+> +	pll_params->vco_min = _clip_vco_min(pll_params->vco_min, parent_rate);
+> +
+> +	cfg.m = _pll_fixed_mdiv(pll_params, parent_rate);
+> +	cfg.n = cfg.m * pll_params->vco_min / parent_rate;
+> +
+> +	for (i = 0; pll_params->pdiv_tohw[i].pdiv; i++)
+> +		;
+> +	cfg.p = pll_params->pdiv_tohw[i-1].hw_val;
+
+Could use a blank line to separate them. Also what if .pdiv of the first
+entry is 0? The loop will terminate on the first run and i will be 0, so
+this would try to access pdiv_tohw[-1]. Can that ever happen?
+
+> +	_update_pll_mnp(pll, &cfg);
+> +
+> +	pll_writel_misc(PLLSS_MISC_DEFAULT, pll);
+> +	pll_writel(PLLSS_CFG_DEFAULT, pll_params->ext_misc_reg[0], pll);
+> +	pll_writel(PLLSS_CTRL1_DEFAULT, pll_params->ext_misc_reg[1], pll);
+> +	pll_writel(PLLSS_CTRL1_DEFAULT, pll_params->ext_misc_reg[2], pll);
+> +
+> +	val = pll_readl_base(pll);
+> +	if (val & PLL_BASE_ENABLE) {
+> +		if (val & BIT(pll_params->iddq_bit_idx)) {
+> +			WARN(1, "%s is on but IDDQ set\n", name);
+> +			kfree(pll);
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +	} else
+> +		val |= BIT(pll_params->iddq_bit_idx);
+> +
+> +	val &= ~BIT(24); /* disable lock override */
+
+Could use a symbolic name as well. PLLS_LOCK_OVERRIDE?
+
+> +	pll_writel_base(val, pll);
+> +
+> +	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
+> +					&tegra_clk_pllss_ops);
+> +
+> +	if (IS_ERR(clk))
+
+I'd remove the blank line between the above two here as well.
+
+> +struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
+> +			   void __iomem *clk_base, unsigned long flags,
+> +			   unsigned long fixed_rate,
+> +			   struct tegra_clk_pll_params *pll_params,
+> +			   struct tegra_clk_pll_freq_table *freq_table,
+> +			   spinlock_t *lock);
+
+Nit: Parameter alignment looks funky here. I think you should either
+align them with the first argument on the first line or use only tabs to
+indent. Given that you don't align them anywhere else, I'd suggest using
+the latter for consistency.
+
+Thierry
+
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVoPTAAoJEN0jrNd/PrOhbTEP/2do2P1JjwYvyH/eIwtE3HnX
+XOza2TMy1lS2fS14ueUgAPPM6VIbc5QdkBYayd09LQC9ccj3qEJ6Lb5JdvtmNLrz
+ifBwakQAakmsqXpG1Dm5jbOcaEvpm06H0Diof4mAWL10W9+5cpsCN9sAslLuw1BC
+kGf/IrLxq5rdOtBi04zCstnfKl7epsgvrQKC4WEodaz6VOoaRNKx7XUF+EOaU/pL
+mJHlcQMJ2MyXexhmQXuNOo8PmyNegmVOd8qF08HgHrowjhFfIvyl83ndf/AlM9zz
+0EPgtjfCR0bj388sWyYbixTYkSQfZAlXC6M4EMNE5a6CSmA6jpC/FN7uQaEz5QkW
+GKjTiI/5yJfxqyBv3Ve+VmD4pF7j6UBQi+yjzT8vY5Cp6ntOQ8rnQ0a9e8DhMm9h
+9fcEtLnuDHqvZzPhEec7m9Us+JotXfsxR9EbSXA+bH0IQQWdJSDYPTHZ7R3+e43f
+Oay2NWPreREfMpV6O2DVdYfVks8XVmNoIEtaYAU6FLid6SuUBZDvRj838KKx3hNl
+qCOkMBcZ3agAlT0vf/bBtjpWZzK11Jc8zLeEI4qWd5TnSXJ5ALSbtqURoh+WdYdj
+Ba0Add3xabiJFxoAdaiDINRWccvmNEiKDD8UAC0SKYoxHgZoEC+Suv/NzNUhd62G
+odLqR3qq6zrFrbA8HOr2
+=P9h8
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
