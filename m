@@ -1,57 +1,78 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
-Date: Thu, 10 Oct 2013 11:23:23 +0100
-Message-ID: <20131010102322.GQ25034@n2100.arm.linux.org.uk>
-References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org> <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com> <20131010072624.GA29191@S2101-09.ap.freescale.net> <20131010100840.GP25034@n2100.arm.linux.org.uk> <20131010102205.GD29191@S2101-09.ap.freescale.net>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to
+ parse data related to ramp
+Date: Thu, 10 Oct 2013 11:28:26 +0100
+Message-ID: <20131010102826.GG26954@e106331-lin.cambridge.arm.com>
+References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131010102205.GD29191-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 06:22:07PM +0800, Shawn Guo wrote:
-> What about the solution suggested by Stephen, moving
-> MX6QDL_PAD_SD1_DAT3__SD1_DATA3 out from pinctrl_usdhc1_1 and having
-> additional nodes/phandle for DAT3 with different settings?
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 59154dc..fd52f4e 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -1157,7 +1157,6 @@
->                                                         MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
->                                                         MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
->                                                         MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
-> -                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
->                                                         MX6QDL_PAD_NANDF_D0__SD1_DATA4 0x17059
->                                                         MX6QDL_PAD_NANDF_D1__SD1_DATA5 0x17059
->                                                         MX6QDL_PAD_NANDF_D2__SD1_DATA6 0x17059
-> @@ -1165,6 +1164,18 @@
->                                                 >;
->                                         };
-> 
-> +                                       pinctrl_usdhc1_1_dat3: usdhc1dat3-1 {
-> +                                               fsl,pins = <
-> +                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
-> +                                               >;
-> +                                       };
-> +
-> +                                       pinctrl_usdhc1_1_dat3cd: usdhc1dat3cd-1 {
-> +                                               fsl,pins = <
-> +                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x13059
-> +                                               >;
-> +                                       };
-> 
-> Then pinctrl-0 = <&pinctrl_usdhc1_1 &pinctrl_usdhc1_1_dat3> for existing
-> boards, and <&pinctrl_usdhc1_1 &pinctrl_usdhc1_1_dat3cd> for boards that
-> want to use DAT3 for card detection.
+On Thu, Oct 10, 2013 at 02:41:35AM +0100, Chanwoo Choi wrote:
+> This patch parse 'buck[2-4]_ramp_enable and buck_ramp_delay' platform data
+> from dts file.
 
-Yes, that avoids the issue entirely, and is a much better solution IMHO.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why?
+
+What do these describe? Why do we need them?
+
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/regulator/s5m8767.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+> index c24448b..cb6cdb3 100644
+> --- a/drivers/regulator/s5m8767.c
+> +++ b/drivers/regulator/s5m8767.c
+> @@ -640,6 +640,22 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-ramp-enable", NULL))
+> +		pdata->buck2_ramp_enable = true;
+
+Please describe what this is and why we need it.
+
+For reading boolean proeprties, use of_property_read_bool.
+
+> +
+> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-ramp-enable", NULL))
+> +		pdata->buck3_ramp_enable = true;
+> +
+> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-ramp-enable", NULL))
+> +		pdata->buck4_ramp_enable = true;
+> +
+> +	if (pdata->buck2_ramp_enable || pdata->buck3_ramp_enable
+> +			|| pdata->buck4_ramp_enable) {
+> +		if (of_property_read_u32(pmic_np, "s5m8767,pmic-buck-ramp-delay",
+> +				&pdata->buck_ramp_delay))
+> +			pdata->buck_ramp_delay = 0;
+
+Why not initialise pdata->buck_ramp_delay to 0 beforehand?
+
+That way you don't need to check the return value of
+of_property_read_u32 here.
+
+I note that pdata->buck_ramp_delay is an int, not a u32. Please use a
+u32 temporary variable.
+
+> +	}
+> +
+
+NAK. None of these seem to be documented in mainline's
+Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt, nor
+does documentation seem to be added here. Until there's some description
+of what these are and why they're needed, I don't think they're
+suitable.
+
+Thanks,
+Mark.
