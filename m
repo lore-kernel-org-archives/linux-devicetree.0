@@ -1,45 +1,58 @@
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Thu, 10 Oct 2013 08:08:25 -0700
-Message-ID: <5256C2E9.4010704@zytor.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org> <52556C4E.9000604@mm-sol.com> <52557137.5050200@zytor.com> <20131010104140.GE9906@iris.ozlabs.ibm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] cpufreq: probe the Integrator cpufreq driver from DT
+Date: Thu, 10 Oct 2013 17:11:26 +0200
+Message-ID: <CACRpkdY7kiuBzN=tYW-iGdW+LjvJ+oEg4WwOkxX_XnprOtZXVw@mail.gmail.com>
+References: <1380816238-3255-1-git-send-email-linus.walleij@linaro.org>
+	<20131008100044.GF28972@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131010104140.GE9906@iris.ozlabs.ibm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Paul Mackerras <paulus@samba.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131008100044.GF28972-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2013 03:41 AM, Paul Mackerras wrote:
-> On Wed, Oct 09, 2013 at 08:07:35AM -0700, H. Peter Anvin wrote:
-> 
->> consider the PowerPC random number generator[1]) and
-> 
-> [snip]
-> 
->> [1] which has a known first-order bias which they "correct" for by
->> XORing two datums together in a very simple data reduction step.
-> 
-> 65 actually, not two.
-> 
->> However, if their random source has bias it is extremely likely it also
->> has nonzero correlations, which require stronger reductions.  It would
-> 
-> The correlations are essentially zero, by design, and experiment
-> confirms it.  Did you see my mail on the kvm list where I explained
-> how it works?
-> 
+On Tue, Oct 8, 2013 at 12:00 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 
-No, sorry... I got a bit of detached discussion as part of benh talking
-about KVM and randomness (for the record, I'm all for better randomness
-on all platforms.)
+>> +static int __init integrator_cpufreq_probe(struct platform_device *pdev)
+>>  {
+>> +     struct device_node *np = pdev->dev.of_node;
+>> +
+>> +     cm_base = of_iomap(np, 0);
+>> +     if (!cm_base)
+>> +             return -ENODEV;
+>>       return cpufreq_register_driver(&integrator_driver);
+>
+> If we fail to register the driver we could unmap cm_base, no?
 
-Either way, XORing samples is a pretty inefficient (both in terms of
-anticorrelation and in terms of entropy efficiency) form of data
-reduction/conditioning.  It would still be better to feed the output
-into the pool with a 65x derating.
+Using devm_* is better so I'll revise it to do this.
 
-	-hpa
+>> -static void __exit integrator_cpu_exit(void)
+>> +static void __exit integrator_cpufreq_remove(struct platform_device *pdev)
+>>  {
+>>       cpufreq_unregister_driver(&integrator_driver);
+>
+> Unmap here?
+
+Dito. Check v2.
+
+>> +static const struct of_device_id integrator_cpufreq_match[] = {
+>> +     { .compatible = "arm,core-module-integrator"},
+>> +     { },
+>> +};
+>
+> It feels a little scary that this also got handled by some other code in
+> the previous patch. Is no arbitrarion required between the two when
+> accessing the core module registers?
+
+They are using totally different registers, so it should not be an
+issue. Inside the mach folder there is some arbitration for the
+register that is actually accessed by several consumers.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
