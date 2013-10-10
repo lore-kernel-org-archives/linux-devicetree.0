@@ -1,49 +1,48 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to parse data
- related to ramp
-Date: Thu, 10 Oct 2013 10:41:35 +0900
-Message-ID: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lgirdwood@gmail.com, sbkim73@samsung.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos4x12: Add maudio/gps_alive power
+ domain for exynos4x12
+Date: Thu, 10 Oct 2013 08:59:24 +0530
+Message-ID: <CAK9yfHxr27nsmaqkE+seDgZAkpUmOsPqdXdeogY89tAXYEEG2w@mail.gmail.com>
+References: <1381365007-1782-1-git-send-email-cw00.choi@samsung.com>
+	<1381365007-1782-4-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1381365007-1782-4-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ijc+devicetree@hellion.org.uk, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-This patch parse 'buck[2-4]_ramp_enable and buck_ramp_delay' platform data
-from dts file.
+On 10 October 2013 06:00, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> This patch maudio/gps_alive power domain to exynos4x12.dtsi.
+>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4x12.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> index ad531fe..c04418e 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -35,6 +35,16 @@
+>                 reg = <0x10023CA0 0x20>;
+>         };
+>
+> +       pd_maudio: maudio-power-domain@10023CC0 {
+> +               compatible = "samsung,exynos4210-pd";
+> +               reg = <0x10023CC0 0x20>;
+> +       };
+> +
+> +       pd_gps_alive: gps-alive-power-domain@10023D04 {
+> +               compatible = "samsung,exynos4210-pd";
+> +               reg = <0x10023D00 0x20>;
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/regulator/s5m8767.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+There is mismatch between node name and register value.
 
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index c24448b..cb6cdb3 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -640,6 +640,22 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
-+	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-ramp-enable", NULL))
-+		pdata->buck2_ramp_enable = true;
-+
-+	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-ramp-enable", NULL))
-+		pdata->buck3_ramp_enable = true;
-+
-+	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-ramp-enable", NULL))
-+		pdata->buck4_ramp_enable = true;
-+
-+	if (pdata->buck2_ramp_enable || pdata->buck3_ramp_enable
-+			|| pdata->buck4_ramp_enable) {
-+		if (of_property_read_u32(pmic_np, "s5m8767,pmic-buck-ramp-delay",
-+				&pdata->buck_ramp_delay))
-+			pdata->buck_ramp_delay = 0;
-+	}
-+
- 	return 0;
- }
- #else
+
 -- 
-1.8.0
+With warm regards,
+Sachin
