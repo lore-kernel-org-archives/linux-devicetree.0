@@ -1,39 +1,90 @@
-From: Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Thu, 10 Oct 2013 21:41:40 +1100
-Message-ID: <20131010104140.GE9906@iris.ozlabs.ibm.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com>
- <20131003165130.GA11974@thunk.org>
- <524EEB96.6040707@mm-sol.com>
- <20131004181005.GA7022@thunk.org>
- <52556C4E.9000604@mm-sol.com>
- <52557137.5050200@zytor.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] clk: tegra: Add periph regs bank X
+Date: Thu, 10 Oct 2013 12:43:07 +0200
+Message-ID: <20131010104306.GB6735@ulmo.nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-3-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52557137.5050200@zytor.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1380878014-22088-3-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 08:07:35AM -0700, H. Peter Anvin wrote:
 
-> consider the PowerPC random number generator[1]) and
+--JP+T4n/bALQSJXh8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[snip]
+On Fri, Oct 04, 2013 at 12:12:41PM +0300, Peter De Schrijver wrote:
+> Tegra124 has an extra bank of peripheral clock registers. Add it to the
+> generic peripheral clock code.
+>=20
+> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/clk/tegra/clk.c |   10 ++++++++++
+>  1 files changed, 10 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index c8c84ce..0240dc3 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -57,6 +57,8 @@
+>  #define RST_DEVICES_CLR_V		0x434
+>  #define RST_DEVICES_SET_W		0x438
+>  #define RST_DEVICES_CLR_W		0x43c
+> +#define RST_DEVICES_SET_X		0x290
+> +#define RST_DEVICES_CLR_X		0x294
 
-> [1] which has a known first-order bias which they "correct" for by
-> XORing two datums together in a very simple data reduction step.
+Perhaps sort these numerically rather than alphabetically? Also I don't
+see where the CLK_OUT_ENB_X, CLK_OUT_ENB_{SET,CLR}_X or RST_DEVICES_X
+registers are defined. Perhaps they were part of some other patch or a
+series that this depends on?
 
-65 actually, not two.
+> =20
+>  /* Global data of Tegra CPU CAR ops */
+>  static struct tegra_cpu_car_ops dummy_car_ops;
+> @@ -109,6 +111,14 @@ static struct tegra_clk_periph_regs periph_regs[] =
+=3D {
+>  		.rst_set_reg =3D RST_DEVICES_SET_W,
+>  		.rst_clr_reg =3D RST_DEVICES_CLR_W,
+>  	},
+> +	[5] =3D {
+> +		.enb_reg =3D CLK_OUT_ENB_X,
+> +		.enb_set_reg =3D CLK_OUT_ENB_SET_X,
+> +		.enb_clr_reg =3D CLK_OUT_ENB_CLR_X,
+> +		.rst_reg =3D RST_DEVICES_X,
+> +		.rst_set_reg =3D RST_DEVICES_SET_X,
+> +		.rst_clr_reg =3D RST_DEVICES_CLR_X,
+> +	},
+>  };
 
-> However, if their random source has bias it is extremely likely it also
-> has nonzero correlations, which require stronger reductions.  It would
+Thierry
 
-The correlations are essentially zero, by design, and experiment
-confirms it.  Did you see my mail on the kvm list where I explained
-how it works?
+--JP+T4n/bALQSJXh8
+Content-Type: application/pgp-signature
 
-Paul.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVoS6AAoJEN0jrNd/PrOh+JcP/R7i6KO0eQ3qB8atCTy882V0
+7BiM7uvauXCnqJcEL2t6S+FWiCR2yQ9I3fhYLxbuzk+mCNHDGYkCyOx8DJLMJIQ7
+wppZ+E4wxxoy8VvkShPoM/Uacf8JfMaRtqDtFpgM+UE1TS36OIrzY1efZ8F3xgVL
+/UeEhQWpYJysT7qTWYNr3IkmD2I2Rx/0x4BnuAdEOYiTXOux/pjFHu8vQjT19XnB
+Y+IGhm5U64WzaoUEXSt1IQYPXHrQVvKsF8YfHt7OrBgaQZg/qZ49Q2BJenz0dxQ+
+RCcpZuKRgxDGAWWRqGk1F2M0Ulm4bjDNZfX1NtIFAjb3UJifUCVCbTiyPd0RTdO8
+0dhOhdNUZ2iGGhO54WMLJ+XDUZZxWi7QF6n04y3e3U/Yr7oY7MFt2VPaulAW5/yI
+cbM4zMYZyy2arav6SghpYBkEXfmLXJcJbPgRhwacK0Zk/W0Cwf1Mnbt4fKODhipr
+m8kbJL4asS3hj9Bb4cL12ir8Wevl6xzT258+/6ffc65Y2Jxp3kPKDssv+gfKzdU7
+RJiwTtWRoKiG0aJWqP+Y5BgHUeAgT7iaTO3aQBZPFO70VwBw4mfujfCmXDxRCIvy
+uRkpofKb/9oquZVM5LaowgxxUHHSLMBqHoiTri2npwocvcqj2OomH5RjTsib/C+r
+jYWmbEM8klgbndDvheLX
+=Xdo5
+-----END PGP SIGNATURE-----
+
+--JP+T4n/bALQSJXh8--
