@@ -1,45 +1,125 @@
-From: Ryan Mallon <rmallon@gmail.com>
-Subject: Re: [PATCH 1/2] i2c designware make SCL and SDA falling time configurable
-Date: Thu, 10 Oct 2013 11:54:13 +1100
-Message-ID: <5255FAB5.7080803@gmail.com>
-References: <20130828153429.GB7066@ab42.lan> <1381244455-3836-1-git-send-email-romainba@abilis.com> <20131009075538.GQ3521@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131009075538.GQ3521@intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Romain Baeriswyl <romainba@abilis.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] regulator: s5m8767: Modify parsing method of the voltage
+ table of buck2/3/4
+Date: Thu, 10 Oct 2013 10:41:36 +0900
+Message-ID: <1381369296-17101-2-git-send-email-cw00.choi@samsung.com>
+References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1381369296-17101-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/13 18:55, Mika Westerberg wrote:
-> On Tue, Oct 08, 2013 at 05:00:54PM +0200, Romain Baeriswyl wrote:
->>  static void __i2c_dw_enable(struct dw_i2c_dev *dev, bool enable)
->> @@ -286,6 +287,7 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
->>  	u32 input_clock_khz;
->>  	u32 hcnt, lcnt;
->>  	u32 reg;
->> +	u32 sda_falling_time, scl_falling_time;
->>  
->>  	input_clock_khz = dev->get_clk_rate_khz(dev);
->>  
->> @@ -307,15 +309,25 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
->>  
->>  	/* set standard and fast speed deviders for high/low periods */
->>  
->> +	if (dev->sda_falling_time)
->> +		sda_falling_time = dev->sda_falling_time;
->> +	else
->> +		sda_falling_time = 300; /* ns */
-> 
-> I think this looks better:
-> 
-> 	sda_falling_time = dev->sda_falling_time ? dev->sda_falling_time : 300;
+The s5m8767 regulator driver parse always the voltage table of buck2/3/4.
+If gpio_dvs feature isn't used and dts haven't included the voltage table
+of buck2/3/4, s5m8767 regulator driver return error and file probe state.
 
-You can also use the gcc-ism, which is a bit more concise:
+This patch check only voltage table of buck on s5m8767_pmic_dt_parse_pdata()
+if buck[2-4]_gpiodvs is true.
 
-	sda_falling_time = dev->sda_falling_time ?: 300;
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/regulator/s5m8767.c | 54 +++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
-~Ryan
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index cb6cdb3..29999c0 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -522,7 +522,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 	struct device_node *pmic_np, *regulators_np, *reg_np;
+ 	struct sec_regulator_data *rdata;
+ 	struct sec_opmode_data *rmode;
+-	unsigned int i, dvs_voltage_nr = 1, ret;
++	unsigned int i, dvs_voltage_nr = 8, ret;
+ 
+ 	pmic_np = iodev->dev->of_node;
+ 	if (!pmic_np) {
+@@ -586,15 +586,39 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 		rmode++;
+ 	}
+ 
+-	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-uses-gpio-dvs", NULL))
++	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-uses-gpio-dvs", NULL)) {
+ 		pdata->buck2_gpiodvs = true;
+ 
+-	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-uses-gpio-dvs", NULL))
++		if (of_property_read_u32_array(pmic_np,
++				"s5m8767,pmic-buck2-dvs-voltage",
++				pdata->buck2_voltage, dvs_voltage_nr)) {
++			dev_err(iodev->dev, "buck2 voltages not specified\n");
++			return -EINVAL;
++		}
++	}
++
++	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-uses-gpio-dvs", NULL)) {
+ 		pdata->buck3_gpiodvs = true;
+ 
+-	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-uses-gpio-dvs", NULL))
++		if (of_property_read_u32_array(pmic_np,
++				"s5m8767,pmic-buck3-dvs-voltage",
++				pdata->buck3_voltage, dvs_voltage_nr)) {
++			dev_err(iodev->dev, "buck3 voltages not specified\n");
++			return -EINVAL;
++		}
++	}
++
++	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-uses-gpio-dvs", NULL)) {
+ 		pdata->buck4_gpiodvs = true;
+ 
++		if (of_property_read_u32_array(pmic_np,
++				"s5m8767,pmic-buck4-dvs-voltage",
++				pdata->buck4_voltage, dvs_voltage_nr)) {
++			dev_err(iodev->dev, "buck4 voltages not specified\n");
++			return -EINVAL;
++		}
++	}
++
+ 	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
+ 						pdata->buck4_gpiodvs) {
+ 		ret = s5m8767_pmic_dt_parse_dvs_gpio(iodev, pdata, pmic_np);
+@@ -612,34 +636,12 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 				"invalid value for default dvs index, use 0\n");
+ 			}
+ 		}
+-		dvs_voltage_nr = 8;
+ 	}
+ 
+ 	ret = s5m8767_pmic_dt_parse_ds_gpio(iodev, pdata, pmic_np);
+ 	if (ret)
+ 		return -EINVAL;
+ 
+-	if (of_property_read_u32_array(pmic_np,
+-				"s5m8767,pmic-buck2-dvs-voltage",
+-				pdata->buck2_voltage, dvs_voltage_nr)) {
+-		dev_err(iodev->dev, "buck2 voltages not specified\n");
+-		return -EINVAL;
+-	}
+-
+-	if (of_property_read_u32_array(pmic_np,
+-				"s5m8767,pmic-buck3-dvs-voltage",
+-				pdata->buck3_voltage, dvs_voltage_nr)) {
+-		dev_err(iodev->dev, "buck3 voltages not specified\n");
+-		return -EINVAL;
+-	}
+-
+-	if (of_property_read_u32_array(pmic_np,
+-				"s5m8767,pmic-buck4-dvs-voltage",
+-				pdata->buck4_voltage, dvs_voltage_nr)) {
+-		dev_err(iodev->dev, "buck4 voltages not specified\n");
+-		return -EINVAL;
+-	}
+-
+ 	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-ramp-enable", NULL))
+ 		pdata->buck2_ramp_enable = true;
+ 
+-- 
+1.8.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
