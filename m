@@ -1,72 +1,120 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [RESEND] [PATCH] ARM: dts: exynos5: add pwm DT nodes to
- Exynos5250 and Exynos5420
-Date: Thu, 10 Oct 2013 11:18:00 +0530
-Message-ID: <CAK9yfHyB=Uqjg1HhMx6BXSihDmwRpmpkeLrm2YgDj2Yyo4ySuA@mail.gmail.com>
-References: <1381383731-4359-1-git-send-email-l.krishna@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1381383731-4359-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, abrestic@chromium.org, olofj@chromium.org
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/3] video: xilinxfb: Use standard variable name convention
+Date: Thu, 10 Oct 2013 08:30:20 +0200
+Message-ID: <631df9a44b366af4129d00f1d4e1d3baad7d4903.1381386616.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-26965-1381386623-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-On 10 October 2013 11:12, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
-> Add the device-tree binding for the PWM controller to Exynos5250 and Exynos5420
->
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Olof Johansson <olofj@chromium.org>
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi |    9 +++++++++
->  arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
->  2 files changed, 18 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 864ae90..99abc72 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -521,6 +521,15 @@
->                 };
->         };
->
-> +       pwm: pwm@12dd0000 {
-> +               compatible = "samsung,exynos4210-pwm";
-> +               reg = <0x12dd0000 0x100>;
-> +               samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-> +               #pwm-cells = <3>;
-> +               clocks = <&clock 311>;
-> +               clock-names = "timers";
-> +       };
-> +
->         amba {
->                 #address-cells = <1>;
->                 #size-cells = <1>;
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index d537cd7..80afc8b 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -206,6 +206,15 @@
->                 clock-names = "uart", "clk_uart_baud0";
->         };
->
-> +       pwm: pwm@12dd0000 {
-> +               compatible = "samsung,exynos4210-pwm";
-> +               reg = <0x12dd0000 0x100>;
-> +               samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-> +               #pwm-cells = <3>;
-> +               clocks = <&clock 279>;
-> +               clock-names = "timers";
-> +       };
-> +
+--=_mimegpg-monstr-desktop-26965-1381386623-0001
 
-Looking at the properties in the above 2 nodes, can't we have the
-common ones defined in exynos5.dtsi?
+s/op/pdev/ in xilinxfb_of_probe().
+No functional chagnes.
 
--- 
-With warm regards,
-Sachin
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3: None
+Changes in v2: None
+
+ drivers/video/xilinxfb.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/video/xilinxfb.c b/drivers/video/xilinxfb.c
+index 0e1dd33..d12345f 100644
+--- a/drivers/video/xilinxfb.c
++++ b/drivers/video/xilinxfb.c
+@@ -411,7 +411,7 @@ static int xilinxfb_release(struct device *dev)
+  * OF bus binding
+  */
+
+-static int xilinxfb_of_probe(struct platform_device *op)
++static int xilinxfb_of_probe(struct platform_device *pdev)
+ {
+ 	const u32 *prop;
+ 	u32 tft_access = 0;
+@@ -425,7 +425,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
+ 	/* Allocate the driver data region */
+ 	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata) {
+-		dev_err(&op->dev, "Couldn't allocate device private record\n");
++		dev_err(&pdev->dev, "Couldn't allocate device private record\n");
+ 		return -ENOMEM;
+ 	}
+
+@@ -433,7 +433,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
+ 	 * To check whether the core is connected directly to DCR or BUS
+ 	 * interface and initialize the tft_access accordingly.
+ 	 */
+-	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
++	of_property_read_u32(pdev->dev.of_node, "xlnx,dcr-splb-slave-if",
+ 			     &tft_access);
+
+ 	/*
+@@ -457,29 +457,29 @@ static int xilinxfb_of_probe(struct platform_device *op)
+ 	}
+ #endif
+
+-	prop = of_get_property(op->dev.of_node, "phys-size", &size);
++	prop = of_get_property(pdev->dev.of_node, "phys-size", &size);
+ 	if ((prop) && (size >= sizeof(u32)*2)) {
+ 		pdata.screen_width_mm = prop[0];
+ 		pdata.screen_height_mm = prop[1];
+ 	}
+
+-	prop = of_get_property(op->dev.of_node, "resolution", &size);
++	prop = of_get_property(pdev->dev.of_node, "resolution", &size);
+ 	if ((prop) && (size >= sizeof(u32)*2)) {
+ 		pdata.xres = prop[0];
+ 		pdata.yres = prop[1];
+ 	}
+
+-	prop = of_get_property(op->dev.of_node, "virtual-resolution", &size);
++	prop = of_get_property(pdev->dev.of_node, "virtual-resolution", &size);
+ 	if ((prop) && (size >= sizeof(u32)*2)) {
+ 		pdata.xvirt = prop[0];
+ 		pdata.yvirt = prop[1];
+ 	}
+
+-	if (of_find_property(op->dev.of_node, "rotate-display", NULL))
++	if (of_find_property(pdev->dev.of_node, "rotate-display", NULL))
+ 		pdata.rotate_screen = 1;
+
+-	dev_set_drvdata(&op->dev, drvdata);
+-	return xilinxfb_assign(op, drvdata, &pdata);
++	dev_set_drvdata(&pdev->dev, drvdata);
++	return xilinxfb_assign(pdev, drvdata, &pdata);
+ }
+
+ static int xilinxfb_of_remove(struct platform_device *op)
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-26965-1381386623-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlJWSX8ACgkQykllyylKDCGAQACeP+F2rvGoLlm79dZn4RNTDImB
+acYAn3DmSN5PDZaTivlAZQ6rMuwOj1yr
+=p0Ab
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-26965-1381386623-0001--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
