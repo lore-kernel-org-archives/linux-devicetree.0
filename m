@@ -1,29 +1,48 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
-Date: Thu, 10 Oct 2013 18:41:15 +0530
-Message-ID: <5256A773.6060807@nvidia.com>
-References: <1381408647-24653-1-git-send-email-kishon@ti.com>
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] ARM: STi: Supply I2C configuration to STiH415 SoC
+Date: Thu, 10 Oct 2013 14:49:45 +0200
+Message-ID: <5256A269.9070809@st.com>
+References: <1381250576-7916-1-git-send-email-maxime.coquelin@st.com>
+ <1381250576-7916-4-git-send-email-maxime.coquelin@st.com>
+ <A3BF01DB4A606149A4C20C4C4C808F6C5BC8A70D4E@SAFEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381408647-24653-1-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <A3BF01DB4A606149A4C20C4C4C808F6C5BC8A70D4E-+EwDPpWUVoThJTuQ9jeba9BPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
-> The Palmas device contains only a USB VBUS-ID detector, so added a
-> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
-> types for backward compatibility.
+
+On 10/10/2013 02:33 PM, Stephen GALLIMORE wrote:
+>> -----Original Message-----
+>> From: Maxime COQUELIN [mailto:maxime.coquelin-qxv4g6HH51o@public.gmane.org]
+>> Sent: 08 October 2013 17:43
+>> .....
+>> +
+>> +		i2c@fed40000 {
+>> +			compatible	= "st,comms-ssc-i2c";
+>> +			reg		= <0xfed40000 0x110>;
+>> +			interrupts	=  <GIC_SPI 187 IRQ_TYPE_EDGE_RISING>;
+> This should specify level (high) triggered, not edge triggered, for our
+> SoC integrations.
 >
-I dont have much issue on this nomenclature but just second thought:
+> Note that level triggered is the default GIC setup and was therefore
+> what was being used when you specified "0" for the flags previously.
+Thanks Stephen.
+As discussed this morning, I agree this should be high level triggered.
 
-The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, 
-ID-RB, ID-RC and ID-FLOAT as per BC1.2.
-This sub-module only detect the cable, does nothing more than this.
-In this case, should we say "ti,palmas-usb-extcon"?
-Again extcon is linux specific terminology and this can be defer.
+This will be fixed in next revision.
 
-
+>
+>> +			clocks		= <&CLKS_ICN_REG_0>;
+>> +			clock-names	= "ssc";
+>> +			clock-frequency = <400000>;
+>> +			pinctrl-names	= "default";
+>> +			pinctrl-0	= <&pinctrl_i2c0_default>;
+>> +
+>> +			status		= "disabled";
+>> +		};
