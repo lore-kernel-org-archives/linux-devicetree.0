@@ -1,75 +1,59 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH V6 02/15] ARM: OMAP2+: AM33XX: add lateinit hook for calling
- pm late init
-Date: Thu, 10 Oct 2013 10:23:50 -0500
-Message-ID: <5256C686.6000301@ti.com>
-References: <1381354144-7134-1-git-send-email-nm@ti.com> <1381361098-8283-1-git-send-email-nm@ti.com> <52563BD8.1060703@ti.com> <20131010133209.GA13105@kahuna> <5256C5D2.9030302@ti.com>
+From: Jens Renner <renner-Xf229rFC5gsb1SvskN2V4Q@public.gmane.org>
+Subject: [PATCH] spi: xilinx: Add DT binding documentation for spi/spi-xilinx.c
+Date: Thu, 10 Oct 2013 17:24:38 +0200
+Message-ID: <5256C6B6.9090604@efe-gmbh.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5256C5D2.9030302@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Paul Walmsley <paul@pwsan.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2013 10:20 AM, Joel Fernandes wrote:
-> On 10/10/2013 08:32 AM, Nishanth Menon wrote:
->> On 00:32-20131010, Joel Fernandes wrote:
->>> On 10/09/2013 06:24 PM, Nishanth Menon wrote:
->>>> Call OMAP2+ generic lateinit hook from AM specific late init hook.
->>>> This allows the generic late initializations such as cpufreq hooks
->>>> to be active.
->>>>
->>>> Cc: Benoit Cousson <bcousson@baylibre.com>
->>>> Cc: Kevin Hilman <khilman@deeprootsystems.com>
->>>> Cc: Paul Walmsley <paul@pwsan.com>
->>>> Cc: Tony Lindgren <tony@atomide.com>
->>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>> ---
->>>>  arch/arm/mach-omap2/board-generic.c |    1 +
->>>>  arch/arm/mach-omap2/common.h        |    1 +
->>>>  arch/arm/mach-omap2/io.c            |    6 ++++++
->>>>  3 files changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
->>>> index 87162e1..b474498 100644
->>>> --- a/arch/arm/mach-omap2/board-generic.c
->>>> +++ b/arch/arm/mach-omap2/board-generic.c
->>>> @@ -180,6 +180,7 @@ DT_MACHINE_START(AM33XX_DT, "Generic AM33XX (Flattened Device Tree)")
->>>>  	.init_irq	= omap_intc_of_init,
->>>>  	.handle_irq	= omap3_intc_handle_irq,
->>>>  	.init_machine	= omap_generic_init,
->>>> +	.init_late	= am33xx_init_late,
->>>
->>> Instead of adding a new a *_init_late function for every platform, perhaps
->>> better to just do:
->>> .init_late	= omap2_common_pm_late_init;
->>>
->>> since that's the only function you're calling.
->>>
->>> Later if more functions are added, then it can be wrapped around.
->>
->> And what benefit would that give us? we break consistency of functions
->> available in io.c, considering the work we have already done in
->> out-of-tree patches on ti-forks, we *do know* that there is more
->> incoming and has to be done anyways, I prefer having symmetric
->> functions and a placeholder that folks can add on to.
->>
-> 
-> Ok, sure if you think such placeholders are right way and there's more code
-> later to be added to init_late callbacks.
-> 
-> Adding 6 lines of identical code for every platform seems redundant, I'd just
-> define an omap_common_late_init for all platforms for now, and then fork off for
-> the future differences. That way we save on LOC and readability in the header as
-> well. Your call.
+Add device tree binding documentation for the driver in spi/spi-xilinx.c.
 
-I see a function of that name already exists. I guess you can leave your patch
-as is then and not have to do this.
-
-regards,
-
--Joel
-
+Signed-off-by: Jens Renner <renner-Xf229rFC5gsb1SvskN2V4Q@public.gmane.org>
+---
+diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+new file mode 100644
+index 0000000..768a1ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+@@ -0,0 +1,32 @@
++Xilinx SPI controller:
++
++Required properties:
++- compatible : Must be "xlnx,axi-1.02.a" or "xlnx,xps-spi-2.00.a"
++- interrupt-parent : reference to parent interrupt controller
++- interrupts : SPI controller interrupt
++- reg : SPI register location and length
++
++Optional properties:
++- xlnx,num-ss-bits : # of slave select bits
++- xlnx,num-transfer_bits : # of data transfer bits (defaults to 8)
++- xlnx,... : not considered by kernel module
++- #address-cells = <1> : if child nodes are defined
++- #size-cells = <0> : if child nodes are defined
++- Child nodes conforming to SPI bus binding
++
++Example with 3 slave select bits and 32 bit transfer size:
++
++	axi_spi_0: spi@40a00000 {
++		compatible = "xlnx,axi-spi-1.02.a", "xlnx,xps-spi-2.00.a";
++		interrupt-parent = <&axi_intc_0>;
++		interrupts = < 2 2 >;
++		reg = < 0x40a00000 0x10000 >;
++		xlnx,family = "spartan6";
++		xlnx,fifo-exist = <0x1>;
++		xlnx,instance = "axi_spi_0";
++		xlnx,num-ss-bits = <0x3>;
++		xlnx,num-transfer-bits = <0x20>;
++		xlnx,sck-ratio = <0x4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
