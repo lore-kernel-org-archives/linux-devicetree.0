@@ -1,78 +1,57 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH V2] ARM: dts: exynos5: add pwm DT nodes to Exynos5250 and
- Exynos5420
-Date: Thu, 10 Oct 2013 14:43:29 +0530
-Message-ID: <1381396409-10313-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, devicetree@vger.kernel.org, t.figa@samsung.com, abrestic@chromium.org, olofj@chromium.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [rtc-linux] [PATCH V5 2/3] pincntrl: add support for ams AS3722
+ pin control driver
+Date: Thu, 10 Oct 2013 14:55:32 +0530
+Message-ID: <5256728C.6060802@nvidia.com>
+References: <1380729030-25896-1-git-send-email-ldewangan@nvidia.com> <1380729030-25896-3-git-send-email-ldewangan@nvidia.com> <CACRpkdbmAnRxDpP17tmAAeC7U6Yibd5N7vFA1o1h=4DdhW+H-g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbmAnRxDpP17tmAAeC7U6Yibd5N7vFA1o1h=4DdhW+H-g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device-tree binding for the PWM controller to Exynos5250 and Exynos5420
+On Tuesday 08 October 2013 05:46 PM, Linus Walleij wrote:
+> On Wed, Oct 2, 2013 at 5:50 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>
+>> The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
+>>
+>> Add a driver to support accessing the GPIO, pinmux and pin configuration
+>> of 8 GPIO pins found on the ams AS3722 through pin control driver and
+>> gpiolib.
+>>
+>> The driver will register itself as the pincontrol driver and gpio driver.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> ---
+>> Changes from V1:
+>> - Nit cleanups in driver and use module_platform_driver.
+>>
+>> Changes from V2:
+>> - Move the gpio driver from gpio folder to pinctnrl driver and register
+>>    driver as pincontrol driver.
+>> - Provide pin configuration through pincntrl framework.
+>>
+>> Changes from V3:
+>> - Added gpio ranges and pinctrl_gpio calls.
+>> - Used pinctrl_gpio_* calls on gpio chips callback.
+>> - Remove dummy function which just return not supported.
+>> - Nit cleanups.
+>>
+>> Changes from V4:
+>> - Drop separate DT binding document as it is moved to mfd/as3722.txt.
+> As mentioned I am happy with this driver,
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> When you agreed with the DT folks and want me to merge it,
+> tell me.
+>
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Signed-off-by: Olof Johansson <olofj@chromium.org>
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
----
-changes since v1:
-	- Moved the common properties in the node to exynos5.dtsi file
-	  suggested by Sachin Kamat <sachin.kamat@linaro.org>	  
+Stephen has given the ACK from DT side, so I think you can merge this patch.
 
- arch/arm/boot/dts/exynos5.dtsi    |    7 +++++++
- arch/arm/boot/dts/exynos5250.dtsi |    5 +++++
- arch/arm/boot/dts/exynos5420.dtsi |    5 +++++
- 3 files changed, 17 insertions(+)
+Thanks,
+Laxman
 
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 074739d..eb74ebc 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -109,6 +109,13 @@
- 		status = "disabled";
- 	};
- 
-+	pwm: pwm@12dd0000 {
-+		compatible = "samsung,exynos4210-pwm";
-+		reg = <0x12dd0000 0x100>;
-+		samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-+		#pwm-cells = <3>;
-+	};
-+
- 	fimd@14400000 {
- 		compatible = "samsung,exynos5250-fimd";
- 		interrupt-parent = <&combiner>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 7cb5c4b..52bf8d2 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -521,6 +521,11 @@
- 		};
- 	};
- 
-+	pwm: pwm@12dd0000 {
-+		clocks = <&clock 311>;
-+		clock-names = "timers";
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 09aa06c..9387b15 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -210,6 +210,11 @@
- 		clock-names = "uart", "clk_uart_baud0";
- 	};
- 
-+	pwm: pwm@12dd0000 {
-+		clocks = <&clock 279>;
-+		clock-names = "timers";
-+	};
-+
- 	dp_phy: video-phy@10040728 {
- 		compatible = "samsung,exynos5250-dp-video-phy";
- 		reg = <0x10040728 4>;
--- 
-1.7.10.4
