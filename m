@@ -1,82 +1,43 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [RESEND] [PATCH] ARM: dts: exynos5: add pwm DT nodes to
- Exynos5250 and Exynos5420
-Date: Thu, 10 Oct 2013 14:11:14 +0530
-Message-ID: <CAL1wa8e0e1NwrntEPTnm8=_bSXj3k=Gk+jenphYPEAh8tXKwiA@mail.gmail.com>
-References: <1381383731-4359-1-git-send-email-l.krishna@samsung.com> <CAK9yfHyB=Uqjg1HhMx6BXSihDmwRpmpkeLrm2YgDj2Yyo4ySuA@mail.gmail.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/5] clk: tegra124: Add new peripheral clocks
+Date: Thu, 10 Oct 2013 11:51:36 +0300
+Message-ID: <20131010085136.GP4233@tbergstrom-lnx.Nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-5-git-send-email-pdeschrijver@nvidia.com>
+ <525487C7.6080103@wwwdotorg.org>
+ <20131009081123.GB3973@tbergstrom-lnx.Nvidia.com>
+ <52557D92.9050200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHyB=Uqjg1HhMx6BXSihDmwRpmpkeLrm2YgDj2Yyo4ySuA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, abrestic@chromium.org, olofj@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52557D92.9050200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+On Wed, Oct 09, 2013 at 06:00:18PM +0200, Stephen Warren wrote:
+> On 10/09/2013 02:11 AM, Peter De Schrijver wrote:
+> > On Wed, Oct 09, 2013 at 12:31:35AM +0200, Stephen Warren wrote:
+> >> On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
+> >>> Tegra124 introduces a number of new peripheral clocks. This patch adds those
+> >>> to the common peripheral clock code.
+> >>
+> >> Don't you need to add AFC[0..5] in this patch and/or patch 5?
+> > 
+> > AFC[0..5] are reset only nodes afaik. Up to now, we haven't done that.
+> > The goal is to include them once we move to the reset framework.
+> 
+> No, we've always added clock entries for all reset-only clocks into the
+> clock driver. Since the port to the reset framework is not available
+> yet, we need to continue to do this. Otherwise, we won't be able to
+> upstream audio support.
+> 
 
-On Thu, Oct 10, 2013 at 11:18 AM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Leela,
->
-> On 10 October 2013 11:12, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
->> Add the device-tree binding for the PWM controller to Exynos5250 and Exynos5420
->>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> Signed-off-by: Olof Johansson <olofj@chromium.org>
->> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi |    9 +++++++++
->>  arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
->>  2 files changed, 18 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 864ae90..99abc72 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -521,6 +521,15 @@
->>                 };
->>         };
->>
->> +       pwm: pwm@12dd0000 {
->> +               compatible = "samsung,exynos4210-pwm";
->> +               reg = <0x12dd0000 0x100>;
->> +               samsung,pwm-outputs = <0>, <1>, <2>, <3>;
->> +               #pwm-cells = <3>;
->> +               clocks = <&clock 311>;
->> +               clock-names = "timers";
->> +       };
->> +
->>         amba {
->>                 #address-cells = <1>;
->>                 #size-cells = <1>;
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index d537cd7..80afc8b 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -206,6 +206,15 @@
->>                 clock-names = "uart", "clk_uart_baud0";
->>         };
->>
->> +       pwm: pwm@12dd0000 {
->> +               compatible = "samsung,exynos4210-pwm";
->> +               reg = <0x12dd0000 0x100>;
->> +               samsung,pwm-outputs = <0>, <1>, <2>, <3>;
->> +               #pwm-cells = <3>;
->> +               clocks = <&clock 279>;
->> +               clock-names = "timers";
->> +       };
->> +
->
-> Looking at the properties in the above 2 nodes, can't we have the
-> common ones defined in exynos5.dtsi?
->
+The only clock which required this up to now was 'cop' (avp). Which is not
+in upstream.
 
-Yes, we can do it, will change and post the next version
+Cheers,
 
-> --
-> With warm regards,
-> Sachin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter.
