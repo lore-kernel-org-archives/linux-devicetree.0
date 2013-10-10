@@ -1,64 +1,104 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap4-panda-es: Do not reset gpio1
-Date: Thu, 10 Oct 2013 09:47:02 -0700
-Message-ID: <20131010164702.GF29913@atomide.com>
-References: <1381313521-10422-1-git-send-email-rnayak@ti.com>
- <1381423481-5920-1-git-send-email-nm@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to
+ parse data related to ramp
+Date: Thu, 10 Oct 2013 17:51:00 +0100
+Message-ID: <20131010165100.GA3910@e106331-lin.cambridge.arm.com>
+References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
+ <20131010102826.GG26954@e106331-lin.cambridge.arm.com>
+ <52568B3D.7020209@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381423481-5920-1-git-send-email-nm@ti.com>
+In-Reply-To: <52568B3D.7020209@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [131010 09:53]:
-> Do not reset GPIO1 at boot-up because GPIO 7 in GPIO1 block is used on
-> OMAP4460 PandaBoard-ES to select voltage register in TPS62361 which
-> supplies VDD_MPU.
+On Thu, Oct 10, 2013 at 12:10:53PM +0100, Chanwoo Choi wrote:
+> On 10/10/2013 07:28 PM, Mark Rutland wrote:
+> > On Thu, Oct 10, 2013 at 02:41:35AM +0100, Chanwoo Choi wrote:
+> >> This patch parse 'buck[2-4]_ramp_enable and buck_ramp_delay' platform data
+> >> from dts file.
+> > 
+> > Why?
+> > 
+> > What do these describe? Why do we need them?
 > 
-> Without this, OMAP4460 PandaBoard-ES boards fail to boot-up because
-> MPU voltage switches over to VSET0 voltage value (boot voltage) which
-> is not sufficient to operate the device at OPP100.
+> Turn on ramp control of buck2/3/4.
 
-Is this needs as a fix for the -rc series?
+Ok, but why does this need to be in the dt?
 
-Tony
- 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
-> As explained here: http://marc.info/?l=u-boot&m=133066647800872&w=2
 > 
-> GPIO1 reset causes PandaBoard-ES to stop functioning.
-> This depends on Patch series from Rajendra:
-> http://marc.info/?l=linux-doc&m=138131355520116&w=2
-> Applies on Benoit's for_13/dts branch:
-> https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+> > 
+> >>
+> >> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >> ---
+> >>  drivers/regulator/s5m8767.c | 16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >>
+> >> diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+> >> index c24448b..cb6cdb3 100644
+> >> --- a/drivers/regulator/s5m8767.c
+> >> +++ b/drivers/regulator/s5m8767.c
+> >> @@ -640,6 +640,22 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+> >>  		return -EINVAL;
+> >>  	}
+> >>  
+> >> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck2-ramp-enable", NULL))
+> >> +		pdata->buck2_ramp_enable = true;
+> > 
+> > Please describe what this is and why we need it.
 > 
-> Tested on PandaBoard-ES without the u-boot uenv hack
+> buck2/3/4_ramp_enable is used to protect the chip from the in-rush current.
+
+Ok. Could we not always set these in the driver? Under what
+circumstances do we need this?
+
 > 
->  arch/arm/boot/dts/omap4-panda-es.dts |    4 ++++
->  1 file changed, 4 insertions(+)
+> > 
+> > For reading boolean proeprties, use of_property_read_bool.
 > 
-> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-> index 56c4354..816d1c9 100644
-> --- a/arch/arm/boot/dts/omap4-panda-es.dts
-> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
-> @@ -62,3 +62,7 @@
->  		gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
->  	};
->  };
-> +
-> +&gpio1 {
-> +	 ti,no-reset-on-init;
-> +};
-> -- 
-> 1.7.9.5
+> I'll fix it.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> > 
+> >> +
+> >> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck3-ramp-enable", NULL))
+> >> +		pdata->buck3_ramp_enable = true;
+> >> +
+> >> +	if (of_get_property(pmic_np, "s5m8767,pmic-buck4-ramp-enable", NULL))
+> >> +		pdata->buck4_ramp_enable = true;
+> >> +
+> >> +	if (pdata->buck2_ramp_enable || pdata->buck3_ramp_enable
+> >> +			|| pdata->buck4_ramp_enable) {
+> >> +		if (of_property_read_u32(pmic_np, "s5m8767,pmic-buck-ramp-delay",
+> >> +				&pdata->buck_ramp_delay))
+> >> +			pdata->buck_ramp_delay = 0;
+> > 
+> > Why not initialise pdata->buck_ramp_delay to 0 beforehand?
+> > 
+> > That way you don't need to check the return value of
+> > of_property_read_u32 here.
+> > 
+> > I note that pdata->buck_ramp_delay is an int, not a u32. Please use a
+> > u32 temporary variable.
+> 
+> I'll fix it
+> 
+> > 
+> >> +	}
+> >> +
+> > 
+> > NAK. None of these seem to be documented in mainline's
+> > Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt, nor
+> > does documentation seem to be added here. Until there's some description
+> > of what these are and why they're needed, I don't think they're
+> > suitable.
+> 
+> I'll add description about this patch.
+
+Cheers.
+
+Mark.
