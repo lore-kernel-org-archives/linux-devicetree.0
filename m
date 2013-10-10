@@ -1,57 +1,47 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [rtc-linux] [PATCH V5 2/3] pincntrl: add support for ams AS3722
- pin control driver
-Date: Thu, 10 Oct 2013 14:55:32 +0530
-Message-ID: <5256728C.6060802@nvidia.com>
-References: <1380729030-25896-1-git-send-email-ldewangan@nvidia.com> <1380729030-25896-3-git-send-email-ldewangan@nvidia.com> <CACRpkdbmAnRxDpP17tmAAeC7U6Yibd5N7vFA1o1h=4DdhW+H-g@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 5/6] Revert "ARM: OMAP2+: Provide alias to USB PHY
+ clock"
+Date: Thu, 10 Oct 2013 12:15:43 +0300
+Message-ID: <5256703F.1070806@ti.com>
+References: <1381226799-29158-1-git-send-email-rogerq@ti.com>
+ <1381226799-29158-6-git-send-email-rogerq@ti.com> <52550180.1000506@ti.com>
+ <20131009151522.GA8313@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbmAnRxDpP17tmAAeC7U6Yibd5N7vFA1o1h=4DdhW+H-g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131009151522.GA8313@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 October 2013 05:46 PM, Linus Walleij wrote:
-> On Wed, Oct 2, 2013 at 5:50 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->
->> The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
+On 10/09/2013 06:15 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [131009 00:19]:
+>> Hi Tony,
 >>
->> Add a driver to support accessing the GPIO, pinmux and pin configuration
->> of 8 GPIO pins found on the ams AS3722 through pin control driver and
->> gpiolib.
+>> On 10/08/2013 01:06 PM, Roger Quadros wrote:
+>>> This reverts commit 741532c4a995be11815cb72d4d7a48f442a22fea.
+>>>
+>>> The proper clock reference is provided in device tree so we
+>>> no longer need this.
 >>
->> The driver will register itself as the pincontrol driver and gpio driver.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> ---
->> Changes from V1:
->> - Nit cleanups in driver and use module_platform_driver.
->>
->> Changes from V2:
->> - Move the gpio driver from gpio folder to pinctnrl driver and register
->>    driver as pincontrol driver.
->> - Provide pin configuration through pincntrl framework.
->>
->> Changes from V3:
->> - Added gpio ranges and pinctrl_gpio calls.
->> - Used pinctrl_gpio_* calls on gpio chips callback.
->> - Remove dummy function which just return not supported.
->> - Nit cleanups.
->>
->> Changes from V4:
->> - Drop separate DT binding document as it is moved to mfd/as3722.txt.
-> As mentioned I am happy with this driver,
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> When you agreed with the DT folks and want me to merge it,
-> tell me.
->
+>> Could you please Ack this one? I think it is best if it goes through Benoit's tree.
+> 
+> I could queue this into my board removal series that will be
+> based on Benoit's branch if that works for you. And this
+> also seems to depend on the omap-for-v3.13/quirk branch
+> that moves all the legacy pdata handling into pdata-quirks.c.
 
-Stephen has given the ACK from DT side, so I think you can merge this patch.
+OK Tony. Thanks.
 
-Thanks,
-Laxman
-
+cheers,
+-roger
