@@ -1,88 +1,80 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] spi: xilinx: Add DT binding documentation for
- spi/spi-xilinx.c
-Date: Thu, 10 Oct 2013 17:03:26 +0100
-Message-ID: <20131010160326.GK26954@e106331-lin.cambridge.arm.com>
-References: <5256C6B6.9090604@efe-gmbh.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Thu, 10 Oct 2013 09:11:12 -0700
+Message-ID: <a828e0bf-381f-483c-b952-c9707b32be58@TX2EHSMHS008.ehs.local>
+References: <1381242972-14752-1-git-send-email-soren.brinkmann@xilinx.com>
+ <20131008153816.GB4981@e106331-lin.cambridge.arm.com>
+ <fe3858e7-e3e2-4806-aeca-a2a4676e09aa@CO1EHSMHS007.ehs.local>
+ <52563964.4030905@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5256C6B6.9090604-Xf229rFC5gsb1SvskN2V4Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Renner <renner-Xf229rFC5gsb1SvskN2V4Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <52563964.4030905@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 04:24:38PM +0100, Jens Renner wrote:
-> Add device tree binding documentation for the driver in spi/spi-xilinx.c.
-> 
-> Signed-off-by: Jens Renner <renner-Xf229rFC5gsb1SvskN2V4Q@public.gmane.org>
-> ---
-> diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-> new file mode 100644
-> index 0000000..768a1ea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-> @@ -0,0 +1,32 @@
-> +Xilinx SPI controller:
-> +
-> +Required properties:
-> +- compatible : Must be "xlnx,axi-1.02.a" or "xlnx,xps-spi-2.00.a"
+On Thu, Oct 10, 2013 at 07:21:40AM +0200, Michal Simek wrote:
+> On 10/09/2013 05:25 PM, S=C3=B6ren Brinkmann wrote:
+> > On Tue, Oct 08, 2013 at 04:38:17PM +0100, Mark Rutland wrote:
+> >> On Tue, Oct 08, 2013 at 03:36:11PM +0100, Soren Brinkmann wrote:
+> >>> In some use cases Zynq's FPGA clocks are used as static clock
+> >>> generators for IP in the FPGA part of the SOC for which no Linux =
+driver
+> >>> exists and would control those clocks. To avoid automatic
+> >>> gating of these clocks in such cases a new property - fclk-enable=
+ - is
+> >>> added to the clock controller's DT description to accomodate such=
+ use
+> >>> cases. It's value is a bitmask, where a set bit results in enabli=
+ng
+> >>> the corresponding FCLK through the clkc.
+> >>>
+> >>> FPGA clocks are handled following the rules below:
+> >>>
+> >>> If an FCLK is not enabled by bootloaders, that FCLK will be disab=
+led in
+> >>> Linux. Drivers can enable and control it through the CCF as usual=
+=2E
+> >>>
+> >>> If an FCLK is enabled by bootloaders AND the corresponding bit in=
+ the
+> >>> 'fclk-enable' DT property is set, that FCLK will be enabled by th=
+e clkc,
+> >>> resulting in an off by one reference count for that clock. Ensuri=
+ng it
+> >>> will always be running.
+> >>>
+> >>> The default value for 'fclk-enable' is '0xf' (all FCLK's enabled =
+by the
+> >>> bootloader are enabled through the clkc.
+> >>
+> >> Why? Juding by the diff that's not what the code currently does, s=
+o why
+> >> not leave it as 0, and only set it where required as a work-around=
+?
+> > The default is set as described here:
+> > [...]
+> >>> +	ret =3D of_property_read_u32(np, "fclk-enable", &fclk_enable);
+> >>> +	if (ret)
+> >>> +		fclk_enable =3D 0xf;
+> >>> +
+> >=20
+> > The default has been chosen this way, because it avoids trouble wit=
+h
+> > customers. Customers expect the FPGA clocks to be running, once the=
+y
+> > configured them in the FPGA tools. If Linux gates them off for some
+> > reason, it creates confusion and often ends up in customer support.
+> > But in general I agree. It is kind of a work around and having zero=
+ as
+> > default would be desirable. I'd leave this to Michal.
+>=20
+> No problem to have default value setup to 0. And use this workaround
+> when it is set in DTS.
+All right, I'll prepare v2 with that default changed to 0.
 
-s/Must be/Should contain/
-
-> +- interrupt-parent : reference to parent interrupt controller
-
-Is this required in all situations? I don't think it is...
-
-> +- interrupts : SPI controller interrupt
-
-Is there a single interrupt:
-
-- interrupts: interrupt-specifier for the SPI controller interrupt.
-
-> +- reg : SPI register location and length
-
-There's a single register? The example looks a bit bigger than that:
-
-- reg: offset and length of the SPI registers.
-
-> +
-> +Optional properties:
-> +- xlnx,num-ss-bits : # of slave select bits
-
-- xlnx,num-ss-bits: a single u32 cell describing the number of slave
-                    select bits.
-
-> +- xlnx,num-transfer_bits : # of data transfer bits (defaults to 8)
-
-Bindings should use '-' rather than '_' in property names, and I don't
-see this being used by the driver in mainline. Please fix this:
-
-xlnx,num-transfer-bits: a single u32 cell describing the number of data
-                        transfer bits, if not 8.
-
-Why is this needed? I am not familiar with SPI.
-
-> +- xlnx,... : not considered by kernel module
-
-Huh? kernel details shouldn't leak into the dt binding description, but
-I can't even tell what this is supposed to mean...
-
-> +		xlnx,family = "spartan6";
-> +		xlnx,fifo-exist = <0x1>;
-> +		xlnx,instance = "axi_spi_0";
-
-These were not defined. Why are they here?
-
-> +		xlnx,sck-ratio = <0x4>;
-
-This too. Huh?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
