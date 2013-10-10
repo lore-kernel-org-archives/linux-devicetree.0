@@ -1,43 +1,95 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
-Date: Thu, 10 Oct 2013 16:19:54 +0530
-Message-ID: <1381402195-29257-2-git-send-email-kishon@ti.com>
-References: <1381402195-29257-1-git-send-email-kishon@ti.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH 1/5] clk: tegra: Add support for PLLSS
+Date: Thu, 10 Oct 2013 13:59:16 +0300
+Message-ID: <20131010105916.GQ4233@tbergstrom-lnx.Nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-2-git-send-email-pdeschrijver@nvidia.com>
+ <20131010103915.GA6735@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381402195-29257-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131010103915.GA6735@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Paul Walmsley <pwalmsley@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+On Thu, Oct 10, 2013 at 12:39:16PM +0200, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Fri, Oct 04, 2013 at 12:12:40PM +0300, Peter De Schrijver wrote:
+> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> 
+> This is missing a commit description.
+> 
+> > diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> [...]
+> > +const struct clk_ops tegra_clk_pllss_ops = {
+> 
+> static?
+> 
 
-Added dr_mode property in dwc3 and set its default mode to device.
+While this could be static, I think conceptually it is exported. So I rather
+leave it not static. Unless you expect name space problems.
 
-Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap5.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+> > +struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
+> > +				void __iomem *clk_base, unsigned long flags,
+> > +				unsigned long fixed_rate,
+> > +				struct tegra_clk_pll_params *pll_params,
+> > +				struct tegra_clk_pll_freq_table *freq_table,
+> > +				spinlock_t *lock)
+> > +{
+> [...]
+> > +	pll = _tegra_init_pll(clk_base, NULL, fixed_rate, pll_params,
+> > +				pll_flags, freq_table, lock);
+> > +
+> > +	if (IS_ERR(pll))
+> 
+> I'd leave out the blank line separating the assignment of pll and the
+> check for validity. Grouping them together like that makes it
+> immediately clear that they belong together.
+> 
+> > +		return ERR_CAST(pll);
+> > +
+> > +	val = pll_readl_base(pll);
+> > +
+> > +	if (val & (3 << 25)) {
+> 
+> Same here. Also 3 << 25 could probably be a symbolic constant, something
+> like PLLSS_REF_SRC_SEL_MASK perhaps?
+> 
+> > +		WARN(1, "Unknown parent selected for %s: %d\n", name,
+> > +			val >> 25);
+> 
+> Similarly, this should be something like:
+> 
+> 		(val & PLLSS_REF_SRC_SEL_MASK) >> PLLSS_REF_SRC_SEL_SHIFT
+> 
+> > +		kfree(pll);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +	_get_pll_mnp(pll, &cfg);
+> 
+> Nit: I'd put a blank line before this, to separate the block and the
+> function call. That is:
+> 
+> 	}
+> 
+> 	_get_pll_mnp(...);
+> 
+> > +
+> > +	if (cfg.n > 1) {
+> > +		WARN(1, "%s should not be initialized\n", name);
+> > +		kfree(pll);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> 
+> Is this really fatal? Can't we just configure the PLL from scratch?
+> 
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 6d0a1d5..ef598af 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -652,6 +652,7 @@
- 				reg = <0x4a030000 0x10000>;
- 				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
- 				usb-phy = <&usb2_phy>, <&usb3_phy>;
-+				dr_mode = "peripheral";
- 				tx-fifo-resize;
- 			};
- 		};
--- 
-1.7.10.4
+At least in downstream it is. I'm assuming there is a good reason for this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+
+Peter.
