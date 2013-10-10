@@ -1,140 +1,78 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCHv3 1/8] hwspinlock/core: maintain a list of registered hwspinlock banks
-Date: Thu, 10 Oct 2013 16:15:28 -0500
-Message-ID: <1381439735-52888-2-git-send-email-s-anna@ti.com>
-References: <1381439735-52888-1-git-send-email-s-anna@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 0/8] Make few omap3 boards device tree only
+Date: Thu, 10 Oct 2013 15:20:39 -0700
+Message-ID: <20131010221833.9063.49904.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381439735-52888-1-git-send-email-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Paul Walmsley <paul@pwsan.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The hwspinlock_device structure is used for registering a bank of
-locks with the driver core. The structure already contains the
-necessary members to identify the bank of locks. The core does not
-maintain the hwspinlock_devices itself, but maintains only a radix
-tree for all the registered locks. A specific lock can be requested
-by users using a global lock id, and any device-specific fields
-can be retrieved through a reference to the hwspinlock_device in
-each lock.
+Hi all,
 
-The global lock id, however, is not friendly to be requested for
-users using the device-tree model. The device-tree representation
-will typically have each of the hwspinlock devices represented as
-a DT node, and a specific lock can be requested using the device's
-phandle and a lock specifier. Add support to the core therefore to
-maintain all the registered hwspinlock_devices, so that a device
-can be looked up and a specific lock belonging to the device
-requested through a phandle + args approach.
+Now that we have the remaining omap3 PM related wake-up
+events mostly resolved, it's time to start making omap3
+to be device tree only.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
+These are the boards that I'm using for testing in my
+rack setup, so I've verified that the basic features work
+well enough for me so we can make them device tree only.
+
+Patches are welcome to add more features :)
+
+Regards,
+
+Tony
+
 ---
- drivers/hwspinlock/hwspinlock_core.c     | 48 ++++++++++++++++++++++++++++++++
- drivers/hwspinlock/hwspinlock_internal.h |  2 ++
- 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-index 461a0d7..00c49d3 100644
---- a/drivers/hwspinlock/hwspinlock_core.c
-+++ b/drivers/hwspinlock/hwspinlock_core.c
-@@ -59,6 +59,11 @@ static RADIX_TREE(hwspinlock_tree, GFP_KERNEL);
-  */
- static DEFINE_MUTEX(hwspinlock_tree_lock);
- 
-+/*
-+ * A linked list for maintaining all the registered hwspinlock devices.
-+ * The list is maintained in an ordered-list of the supported locks group.
-+ */
-+static LIST_HEAD(hwspinlock_devices);
- 
- /**
-  * __hwspin_trylock() - attempt to lock a specific hwspinlock
-@@ -307,6 +312,40 @@ out:
- 	return hwlock;
- }
- 
-+/*
-+ * Add a new hwspinlock device to the global list, keeping the list of
-+ * devices sorted by base order.
-+ *
-+ * Returns 0 on success, or -EBUSY if the new device overlaps with some
-+ * other device's lock space.
-+ */
-+static int hwspinlock_device_add(struct hwspinlock_device *bank)
-+{
-+	struct list_head *entry = &hwspinlock_devices;
-+	struct hwspinlock_device *_bank;
-+	int ret = 0;
-+
-+	list_for_each(entry, &hwspinlock_devices) {
-+		_bank = list_entry(entry, struct hwspinlock_device, list);
-+		if (_bank->base_id >= bank->base_id + bank->num_locks)
-+			break;
-+	}
-+
-+	if (entry != &hwspinlock_devices &&
-+	    entry->prev != &hwspinlock_devices) {
-+		_bank = list_entry(entry->prev, struct hwspinlock_device, list);
-+		if (_bank->base_id + _bank->num_locks > bank->base_id) {
-+			dev_err(bank->dev, "hwlock space overlap, cannot add device\n");
-+			ret = -EBUSY;
-+		}
-+	}
-+
-+	if (!ret)
-+		list_add_tail(&bank->list, entry);
-+
-+	return ret;
-+}
-+
- /**
-  * hwspin_lock_register() - register a new hw spinlock device
-  * @bank: the hwspinlock device, which usually provides numerous hw locks
-@@ -339,6 +378,12 @@ int hwspin_lock_register(struct hwspinlock_device *bank, struct device *dev,
- 	bank->base_id = base_id;
- 	bank->num_locks = num_locks;
- 
-+	mutex_lock(&hwspinlock_tree_lock);
-+	ret = hwspinlock_device_add(bank);
-+	mutex_unlock(&hwspinlock_tree_lock);
-+	if (ret)
-+		return ret;
-+
- 	for (i = 0; i < num_locks; i++) {
- 		hwlock = &bank->lock[i];
- 
-@@ -355,6 +400,9 @@ int hwspin_lock_register(struct hwspinlock_device *bank, struct device *dev,
- reg_failed:
- 	while (--i >= 0)
- 		hwspin_lock_unregister_single(base_id + i);
-+	mutex_lock(&hwspinlock_tree_lock);
-+	list_del(&bank->list);
-+	mutex_unlock(&hwspinlock_tree_lock);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(hwspin_lock_register);
-diff --git a/drivers/hwspinlock/hwspinlock_internal.h b/drivers/hwspinlock/hwspinlock_internal.h
-index d26f78b..aff560c 100644
---- a/drivers/hwspinlock/hwspinlock_internal.h
-+++ b/drivers/hwspinlock/hwspinlock_internal.h
-@@ -53,6 +53,7 @@ struct hwspinlock {
- 
- /**
-  * struct hwspinlock_device - a device which usually spans numerous hwspinlocks
-+ * @list: list element to link hwspinlock devices together
-  * @dev: underlying device, will be used to invoke runtime PM api
-  * @ops: platform-specific hwspinlock handlers
-  * @base_id: id index of the first lock in this device
-@@ -60,6 +61,7 @@ struct hwspinlock {
-  * @lock: dynamically allocated array of 'struct hwspinlock'
-  */
- struct hwspinlock_device {
-+	struct list_head list;
- 	struct device *dev;
- 	const struct hwspinlock_ops *ops;
- 	int base_id;
+Tony Lindgren (8):
+      ARM: OMAP2+: Use pdata quirks for wl12xx for omap3 evm and zoom3
+      ARM: OMAP2+: Add minimal 8250 support for GPMC
+      ARM: dts: Shared file for omap GPMC connected smsc911x
+      ARM: dts: Add common support for omap3-evm
+      ARM: dts: Add basic support for TMDSEVM3730 (Mistral AM/DM37x EVM)
+      ARM: dts: Add basic support for zoom3
+      ARM: OMAP2+: Remove legacy booting support for omap3 EVM
+      ARM: OMAP2+: Remove legacy support for zoom platforms
+
+
+ arch/arm/boot/dts/Makefile                   |    2 
+ arch/arm/boot/dts/omap-gpmc-smsc911x.dtsi    |   52 ++
+ arch/arm/boot/dts/omap-zoom-common.dtsi      |   33 +
+ arch/arm/boot/dts/omap3-evm-37xx.dts         |  146 +++++
+ arch/arm/boot/dts/omap3-evm-common.dtsi      |   96 +++
+ arch/arm/boot/dts/omap3-evm.dts              |   58 --
+ arch/arm/boot/dts/omap3-igep0020.dts         |   45 --
+ arch/arm/boot/dts/omap3-zoom3.dts            |  217 +++++++
+ arch/arm/mach-omap2/Kconfig                  |   26 -
+ arch/arm/mach-omap2/Makefile                 |   10 
+ arch/arm/mach-omap2/board-3630sdp.c          |  225 --------
+ arch/arm/mach-omap2/board-ldp.c              |    3 
+ arch/arm/mach-omap2/board-omap3evm.c         |  756 --------------------------
+ arch/arm/mach-omap2/board-zoom-debugboard.c  |  139 -----
+ arch/arm/mach-omap2/board-zoom-display.c     |   71 --
+ arch/arm/mach-omap2/board-zoom-peripherals.c |  360 ------------
+ arch/arm/mach-omap2/board-zoom.c             |  159 -----
+ arch/arm/mach-omap2/board-zoom.h             |   10 
+ arch/arm/mach-omap2/gpmc.c                   |   38 +
+ arch/arm/mach-omap2/pdata-quirks.c           |   12 
+ 20 files changed, 601 insertions(+), 1857 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap-gpmc-smsc911x.dtsi
+ create mode 100644 arch/arm/boot/dts/omap-zoom-common.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-evm-37xx.dts
+ create mode 100644 arch/arm/boot/dts/omap3-evm-common.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-zoom3.dts
+ delete mode 100644 arch/arm/mach-omap2/board-3630sdp.c
+ delete mode 100644 arch/arm/mach-omap2/board-omap3evm.c
+ delete mode 100644 arch/arm/mach-omap2/board-zoom-debugboard.c
+ delete mode 100644 arch/arm/mach-omap2/board-zoom-display.c
+ delete mode 100644 arch/arm/mach-omap2/board-zoom-peripherals.c
+ delete mode 100644 arch/arm/mach-omap2/board-zoom.c
+ delete mode 100644 arch/arm/mach-omap2/board-zoom.h
+
 -- 
-1.8.4
+Signature
