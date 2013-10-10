@@ -1,120 +1,40 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/3] video: xilinxfb: Use standard variable name convention
-Date: Thu, 10 Oct 2013 08:30:20 +0200
-Message-ID: <631df9a44b366af4129d00f1d4e1d3baad7d4903.1381386616.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-26965-1381386623-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Archit Taneja <archit@ti.com>
+Subject: [PATCH v3 0/2] DMM DT adaptation
+Date: Thu, 10 Oct 2013 12:06:32 +0530
+Message-ID: <1381386994-24747-1-git-send-email-archit@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1379063679-4869-1-git-send-email-archit@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, tomi.valkeinen@ti.com, robdclark@gmail.com
+Cc: linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+The DMM/Tiler block can used by omapdrm to allocate frame buffers. With the
+removal of address and irq data from the omap4 hwmods, the probe of DMM driver
+fails and omapdrm isn't able to utilize the DMM hardware.
 
---=_mimegpg-monstr-desktop-26965-1381386623-0001
+Add DMM bindings for omap4 and omap5.
 
-s/op/pdev/ in xilinxfb_of_probe().
-No functional chagnes.
+Changes in v3:
+- Fix mistakes in documentation and remove aliases for dmm nodes.
 
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- No changes, split out into a separate series containing only DT related parts.
 
- drivers/video/xilinxfb.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Archit Taneja (2):
+  arm: dts: omap4+: Add DMM bindings
+  drm: omap: Enable DT support for DMM
 
-diff --git a/drivers/video/xilinxfb.c b/drivers/video/xilinxfb.c
-index 0e1dd33..d12345f 100644
---- a/drivers/video/xilinxfb.c
-+++ b/drivers/video/xilinxfb.c
-@@ -411,7 +411,7 @@ static int xilinxfb_release(struct device *dev)
-  * OF bus binding
-  */
+ Documentation/devicetree/bindings/arm/omap/dmm.txt | 16 ++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
+ arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
+ drivers/gpu/drm/omapdrm/omap_dmm_tiler.c           | 11 +++++++++++
+ 4 files changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
 
--static int xilinxfb_of_probe(struct platform_device *op)
-+static int xilinxfb_of_probe(struct platform_device *pdev)
- {
- 	const u32 *prop;
- 	u32 tft_access = 0;
-@@ -425,7 +425,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	/* Allocate the driver data region */
- 	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata) {
--		dev_err(&op->dev, "Couldn't allocate device private record\n");
-+		dev_err(&pdev->dev, "Couldn't allocate device private record\n");
- 		return -ENOMEM;
- 	}
+-- 
+1.8.1.2
 
-@@ -433,7 +433,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	 * To check whether the core is connected directly to DCR or BUS
- 	 * interface and initialize the tft_access accordingly.
- 	 */
--	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
-+	of_property_read_u32(pdev->dev.of_node, "xlnx,dcr-splb-slave-if",
- 			     &tft_access);
-
- 	/*
-@@ -457,29 +457,29 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	}
- #endif
-
--	prop = of_get_property(op->dev.of_node, "phys-size", &size);
-+	prop = of_get_property(pdev->dev.of_node, "phys-size", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.screen_width_mm = prop[0];
- 		pdata.screen_height_mm = prop[1];
- 	}
-
--	prop = of_get_property(op->dev.of_node, "resolution", &size);
-+	prop = of_get_property(pdev->dev.of_node, "resolution", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.xres = prop[0];
- 		pdata.yres = prop[1];
- 	}
-
--	prop = of_get_property(op->dev.of_node, "virtual-resolution", &size);
-+	prop = of_get_property(pdev->dev.of_node, "virtual-resolution", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.xvirt = prop[0];
- 		pdata.yvirt = prop[1];
- 	}
-
--	if (of_find_property(op->dev.of_node, "rotate-display", NULL))
-+	if (of_find_property(pdev->dev.of_node, "rotate-display", NULL))
- 		pdata.rotate_screen = 1;
-
--	dev_set_drvdata(&op->dev, drvdata);
--	return xilinxfb_assign(op, drvdata, &pdata);
-+	dev_set_drvdata(&pdev->dev, drvdata);
-+	return xilinxfb_assign(pdev, drvdata, &pdata);
- }
-
- static int xilinxfb_of_remove(struct platform_device *op)
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-26965-1381386623-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlJWSX8ACgkQykllyylKDCGAQACeP+F2rvGoLlm79dZn4RNTDImB
-acYAn3DmSN5PDZaTivlAZQ6rMuwOj1yr
-=p0Ab
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-26965-1381386623-0001--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
