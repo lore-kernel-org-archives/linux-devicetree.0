@@ -1,66 +1,131 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Thu, 10 Oct 2013 16:47:42 +0300
-Message-ID: <5256AFFE.5090605@mm-sol.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org> <52556C4E.9000604@mm-sol.com> <52557137.5050200@zytor.com>
+From: =?ISO-8859-1?Q?Ezequiel_Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v2 2/2] input: rotary-encoder: Add 'on-each-step' to
+ binding documentation
+Date: Thu, 10 Oct 2013 10:55:45 -0300
+Message-ID: <CAAEAJfA8iiuT-8k2psXLt5a9fAndwU=_YVR8OXU1Lz1xzZX5pA@mail.gmail.com>
+References: <1380891203-17617-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<1380891203-17617-3-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<20131004131956.GE6999@e106331-lin.cambridge.arm.com>
+	<20131004140925.GA27809@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <52557137.5050200@zytor.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131004140925.GA27809@localhost>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ted, Peter,
-
-On 10/09/2013 06:07 PM, H. Peter Anvin wrote:
-> On 10/09/2013 07:46 AM, Stanimir Varbanov wrote:
+On 4 October 2013 11:09, Ezequiel Garcia
+<ezequiel.garcia@free-electrons.com> wrote:
+> On Fri, Oct 04, 2013 at 02:19:56PM +0100, Mark Rutland wrote:
+>> On Fri, Oct 04, 2013 at 01:53:23PM +0100, Ezequiel Garcia wrote:
+>> > The driver now supports a new mode to handle the interruptions gen=
+erated
+>> > by the device: on this new mode an input event is generated on eac=
+h step
+>> > (i.e. on each IRQ). Therefore, add a new DT property, to select th=
+e
+>> > mode: 'rotary-encoder,on-each-step'.
+>> >
+>> > Cc: Daniel Mack <zonque@gmail.com>
+>> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> > Cc: Rob Herring <rob.herring@calxeda.com>
+>> > Cc: devicetree@vger.kernel.org
+>> > Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+>> > ---
+>> > I'm not at all happy with this DT binding as it's way to customize=
+d
+>> > for the current driver. For instance, if we want to support mappin=
+g
+>> > key events (or better arbitrary linux-input event types) it seems
+>> > there's no easy way to fix the binding.
+>> >
+>> > Maybe a better way of handling the different 'modes' is through
+>> > compatible strings?
 >>
->> No, there is no public documentation for the block. Here is the driver
->> documentation which I used as a base [1].
+>> I'd prefer not to have more pseudo-devices in DT, and would prefer n=
+ot
+>> to have compatible strings that boil down to driver options. We end =
+up
+>> just embedding a tonne of Linux-specific driver configuration in the=
+ DT
+>> rather than describing hardware.
 >>
->> My guess was that - if it is PRNG (got from hardware description link
->> above) than according to wiki [2] it is also known as a deterministic
->> random bit generator (DRBG). The recommendation for RNG using DRBG is
->> NIST 800-90.
+>> That said, I'm not sure what the best solution is here.
 >>
->> Of course I could be wrong, so I can add a comment that this is just a
->> guess and we shouldn't over-reliance on this.
+>> >
+>> > I'm not really sure, so I hope the DT guys have some comment on th=
+is.
+>> >
+>> >  Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
+>> >  1 file changed, 1 insertion(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/input/rotary-encode=
+r.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+>> > index 3315495..b89e38d 100644
+>> > --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+>> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+>> > @@ -15,6 +15,7 @@ Optional properties:
+>> >  - rotary-encoder,rollover: Automatic rollove when the rotary valu=
+e becomes
+>> >    greater than the specified steps or smaller than 0. For absolut=
+e axis only.
+>> >  - rotary-encoder,half-period: Makes the driver work on half-perio=
+d mode.
+>> > +- rotary-encoder,on-each-step: Makes the driver send an event on =
+each step.
 >>
-> 
-> There needs to be an architecturally guaranteed lower bound on the
-> entropic content for this to be at all useful.  However, the hwrandom
-> interface is currently expecting fully entropic output (which is almost
-> certainly bogus... consider the PowerPC random number generator[1]) and
-> so using it for a PRNG output is directly wrong.  This is part of why
-> RDRAND support is implemented directly in rngd so that we can do the
-> required cryptographic data reduction to produce fully entropic output.
+>> Could this not be something requested at runtime?
+>>
+>
+> Sure. The different modes:
+>
+> * default (no option)
+> * rotary-encoder,half-period
+> * rotary-encoder,on-each-step
+>
+> Just map to different interruption handlers. I don't have any other
+> rotary-encoder device, so I'm not at all sure what's the use of the
+> other two cases.
+> My particular device is detented, and produces a 'stable' event on ea=
+ch
+> step (i.e on each IRQ).
+>
+> Regarding the runtime specification: you mean as a module parameter?
+> That should be trivial to add, no?
+>
+>> Could you explain what you want to achieve with this? -- what events=
+ do
+>> you want to occur when, to be handled in what way?
+>>
+>
+> Hm.. maybe I should have added the binding to the 1/2 patch and CCed
+> everybody involved for better context.
+>
+> Anyway, I hope the above is clearer, I'm not really sure how to speci=
+fy
+> the details in the DT binding, since it's a specific interruption han=
+dler
+> for this class of encoder devices (stable on each step).
+>
+> That said, I really hope I'm crafting a generic solution and not some
+> tailor-made implementation that just happens to match my use case.
+>
+> The input maintainer's opinion on this would be valuable.
 
-I ran the rngtest with following command line:
+Any insights on this binding?
 
-# cat /dev/hw_random | rngtest -c 100000
+If nobody objects, then I'd like to get this change accepted,
+together with the driver change.
 
-Copyright (c) 2004 by Henrique de Moraes Holschuh
-This is free software; see the source for copying conditions.  There is
-NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE.
-
-rngtest: starting FIPS tests...
-rngtest: bits received from input: 2000000032
-rngtest: FIPS 140-2 successes: 99925
-rngtest: FIPS 140-2 failures: 75
-rngtest: FIPS 140-2(2001-10-10) Monobit: 10
-rngtest: FIPS 140-2(2001-10-10) Poker: 9
-rngtest: FIPS 140-2(2001-10-10) Runs: 20
-rngtest: FIPS 140-2(2001-10-10) Long run: 38
-rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
-rngtest: input channel speed: (min=1.267; avg=53.222; max=2384.186)Mibits/s
-rngtest: FIPS tests speed: (min=3.016; avg=48.847; max=49.931)Mibits/s
-rngtest: Program run time: 75191914 microseconds
-
-Could you guys comment those results?
-
-regards,
-Stan
+Thanks!
+--=20
+Ezequiel Garc=EDa, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
