@@ -1,74 +1,143 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V5 3/3] drivers/rtc/rtc-as3722: add RTC driver
-Date: Thu, 10 Oct 2013 23:47:48 +0100
-Message-ID: <20131010224748.GW21581@sirena.org.uk>
-References: <1381321761-8898-1-git-send-email-ldewangan@nvidia.com>
- <1381321761-8898-4-git-send-email-ldewangan@nvidia.com>
- <20131010152446.1715e64b70ddd0281a3971e9@linux-foundation.org>
+From: "Sherman Yin" <syin@broadcom.com>
+Subject: RE: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Thu, 10 Oct 2013 23:48:15 +0000
+Message-ID: <051069C10411E24D9749790C498526FA1BE027EA@SJEXCHMB12.corp.ad.broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <1380846199-12829-4-git-send-email-syin@broadcom.com>
+ <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Vs6r5beQVWevPlSD"
+Content-Type: text/plain;
+ charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131010152446.1715e64b70ddd0281a3971e9@linux-foundation.org>
+In-Reply-To: <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, lee.jones@linaro.org, sameo@linux.intel.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+>> +config PINCTRL_CAPRI
+>> +       bool "Broadcom Capri pinctrl driver"
+>> +       select PINMUX
+>> +       select PINCONF
+>> +       help
+>> +         Say Y here to support Broadcom Capri pinctrl driver, which is used for
+>> +         the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
+>> +         BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
+>> +         framework.  GPIO is provided by a separate GPIO driver.
+>
+>As mentioned this should be selecting and using GENERIC_PINCONF.
+>Basically I want that to happen before we look further at this code.
+>
+>(But I'll take a quick glance anyway...)
 
---Vs6r5beQVWevPlSD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, working on it.
 
-On Thu, Oct 10, 2013 at 03:24:46PM -0700, Andrew Morton wrote:
-> On Wed, 9 Oct 2013 17:59:21 +0530 Laxman Dewangan <ldewangan@nvidia.com> =
-wrote:
+>> +#define CAPRI_PINCONF_PACK(val, mask)     (((val) << 16) | ((mask) & 0xffff))
+>> +#define CAPRI_PINCONF_UNPACK_VAL(conf)    ((conf) >> 16)
+>> +#define CAPRI_PINCONF_UNPACK_MASK(conf)   ((conf) & 0xffff)
+>
+>This custom horror goes away by using the macros from genric pin config
+><linux/pinctrl/pinconf-generic.h> instead.
 
-> > +config RTC_DRV_AS3722
-> > +	tristate "ams AS3722 RTC driver"
-> > +	depends on MFD_AS3722
+Actually these are used differently than the pack/unpack functions in the pinconf-
+generic.h.  These pack the bit value and bit mask to be written to a register,
+whereas the pinconf-generic ones pack the parameter id and value.  But I get what
+you're saying and will try to reuse as much as possible from the pinconf generic
+functions and utils.
 
-> ... the rtc patch depends on an mfd patch, so everyone ends up sitting
-> around looking at everyone else, wondering who will merge it all.
+>> +static const struct capri_cfg_param capri_pinconf_params[] = {
+>> +       {"brcm,hysteresis",     CAPRI_PINCONF_PARAM_HYST},
+>> +       {"brcm,pull",           CAPRI_PINCONF_PARAM_PULL},
+>> +       {"brcm,slew",           CAPRI_PINCONF_PARAM_SLEW},
+>> +       {"brcm,input_dis",      CAPRI_PINCONF_PARAM_INPUT_DIS},
+>> +       {"brcm,drive_str",      CAPRI_PINCONF_PARAM_DRV_STR},
+>> +       {"brcm,pull_up_str",    CAPRI_PINCONF_PARAM_PULL_UP_STR},
+>> +       {"brcm,mode",           CAPRI_PINCONF_PARAM_MODE},
+>> +};
+>
+>As well as all this stuff...
 
-With the MFD ones providing you trust the interfaces with the core
-are going to be OK there's no problem to just merge them via individual
-trees - the dependency on the MFD will prevent bisection problems.
+OK.  Will see if I can find something suitable for "input disable" and "mode"
 
-> > +#ifdef CONFIG_PM
->=20
-> Most (but not all!) rtc drivers use CONFIG_PM_SLEEP.  People have madly
-> mucked with CONFIG_PM* and I don't know the difference and I don't know
-> what's going on and I don't know of a convenient place to go to find
-> out.  If you work it out, please be sure to tell me!  But as soon as I
-> figure it out I'm sure they'll go and madly muck with it again.
+>> +/* Standard pin register */
+>
+>Add some more elaborate explanation here. I am half-guessing that
+>most of the registers are laid out like this and then there are
+>two exceptions, then write that right here in the comment.
+>
+>(BTW: this is a HW/driver detail and should not be written in the
+>device tree doc as was done in patch 2)
 
-The two effective options for this stuff are PM_SLEEP (for system
-suspend) and PM_RUNTIME (for runtime suspend which RTCs are unlikely to
-use I guess).  PM mostly just enables selection of the other two.
+Yes you guessed correctly.  Most of the pin have bit-field definitions like
+the "standard" or "std" pin register.  There are 12 pins that have the i2c
+definitions, and 2 pins that have the hdmi definitions.  Will add
+explanation to the code.
 
---Vs6r5beQVWevPlSD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+However, I wanted to explain this in the DT doc as well because, for example,
+setting a slew rate for an hdmi pin would be invalid.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+>> +/* Macro to update reg with new pin config param */
+>> +#define CAPRI_PIN_REG_SET(reg, type, param, val)                       \
+>> +       (((reg) & ~CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK)       \
+>> +       | (((val) << CAPRI_ ## type ## _PIN_REG_ ## param ## _SHIFT)    \
+>> +       & CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK))
+>
+>No thanks.
+>
+>Rewrite this into a static inline which has the same effect when
+>compiling, but produces *WAY* more readable code than this
+>horrid thing. Plus you can type the arguments.
 
-iQIcBAEBAgAGBQJSVy6RAAoJELSic+t+oim9uQoQAI/jGxDlxhiuYUiEW0B1k1vQ
-fYBGYMv6XbuJAqC89fwCKA6uW45yHWTDBsn+AmW76My4d+O2lsYvp/oDrGAigYzf
-5neP8+jsNPbcX4JFDl55aMe7F4l3CfwXgIGSHDmL3ibe+ZXRv93cYTSORSBVGtgP
-ZdvJTJwjNft2hGs6Ibp2cLH8yDNXZXzEWsZcA5rYBmLvOOeBCst13O/EVPOeyMWN
-zwTTqvCkAuDnPh/DATFm/XVApxTR6TiMfLtw8G5Y8VzBVXpM9aTNM+1FA0BSOwly
-w7XUSzSTV1REPc2VY/y57lBx2pl6Xl70sUQE6qtsEhIVnhEKCbPxyWQome9a374O
-9rJ2cptzm3e3OxCMM8XCyd0hWFA1gqJGUKPFSZxo60L+gkLU7TrWNWaHiJpxyMPm
-RbttLH91SISGCBVf3QZ/f4skOt0yuNRzIeTryd/Y8xCWIYTR3aOOnKJog07Is+57
-GSQLlQSahRvsks/13VumbIQlHqo5zIs6Inrd5lVfMFlyNdyz8FDRZXtNS9SuM0MA
-/hafMJIcngykzin6nMgBQDsZ0Z/P/Gbr6SOcQWK+K+HhSQFCEHpmWPNrGo21OA/x
-5njidl90yJn7wRufXbDUCTjCEAXE2BBvAKkWKpU9vbG/7zshy8sUJG+G/Za0aO6h
-18LQtvvJP+FKDKdJEuiM
-=igyP
------END PGP SIGNATURE-----
+Ok.  The reason I used a macro is to take shortcuts given how the SHIFT
+and MASK #defines follow the format 
 
---Vs6r5beQVWevPlSD--
+CAPRI_<pin type>_PIN_REG_<parameter name>_<mask or shift>
+
+I'll try to simply this.
+
+>> +#define _PIN(offset)                   (offset)
+>
+>This macro isn't exactly useful.
+>
+>> +/*
+>> + * Pin number definition.  The order here must be the same as defined in the
+>> + * PADCTRLREG block in the RDB.
+>> + */
+>> +#define CAPRI_PIN_ADCSYNC              _PIN(0)
+>
+>If it's just going to be like that, then skip the _PIN() macro.
+
+Removed.  Was following pinctrl-tegra20.c where they have the _GPIO and _PIN
+macros.  I guess it would be useful if we need to change the order of the enums
+in the future, but that's not the case at the moment for capri. 
+
+>> +/* Process the pin configuration node */
+>> +static int capri_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+>> +                                       struct device_node *pnode,
+>> +                                       struct pinctrl_map **map,
+>> +                                       unsigned *nmaps)
+>> +{
+>
+>Make use of these from pinctrl-utils.c:
+>pinctrl_utils_reserve_map()
+>pinctrl_utils_add_map_mux()
+>pinctrl_utils_add_map_configs()
+>pinctrl_utils_dt_free_map()
+>
+>Then you get rid of another big chunk of boilerplate code.
+>
+>After these changes the driver will be much smaller and
+>cleaner and we can take a closer look.
+
+Yea actually the generic code is similar to what I have, there are some
+differences in terms of pre-allocating / re-allocating the pinctrl_maps.
+Seems like there are very few users of these functions at the moment.
+Anyway I'll try to make use of them.
+
+Thanks for the review.
+
+Regards,
+Sherman
+
