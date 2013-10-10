@@ -1,86 +1,61 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFCv3 0/7] OMAP SSI driver
-Date: Thu, 10 Oct 2013 10:32:11 -0700
-Message-ID: <20131010173211.GH29913@atomide.com>
-References: <1381091235-18293-1-git-send-email-sre@debian.org>
- <20131008172815.GA8313@atomide.com>
- <20131010172128.GF28657@earth.universe>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to
+ parse data related to ramp
+Date: Thu, 10 Oct 2013 18:36:27 +0100
+Message-ID: <20131010173627.GR21581@sirena.org.uk>
+References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
+ <20131010102826.GG26954@e106331-lin.cambridge.arm.com>
+ <52568B3D.7020209@samsung.com>
+ <20131010165100.GA3910@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="myWHXexGRVC5aLMg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131010172128.GF28657@earth.universe>
+In-Reply-To: <20131010165100.GA3910@e106331-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?utf-8?Q?'Beno=C3=AEt?= Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 'Pali =?utf-8?Q?Roh=C3=A1r'?= <pali.rohar@gmail.com>, =?utf-8?B?J9CY0LLQsNC50LvQviDQlNC40LzQuNGC0YDQvtCyJw==?= <free>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131010 10:30]:
-> Hi,
->=20
-> On Tue, Oct 08, 2013 at 10:28:15AM -0700, Tony Lindgren wrote:
-> > * Sebastian Reichel <sre@debian.org> [131006 13:36]:
-> > > Here is the third round of the OMAP SSI driver patches.
-> >=20
-> > Thanks for updating these, they look good to me now:
-> >=20
-> > Acked-by: Tony Lindgren <tony@atomide.com>
->=20
-> Ok. I guess it's time to check how this gets included in the kernel.
->=20
-> The first patch has already been queued and the last patch could
-> probably go through Beno=C3=AEt once the DT people have reviewed the
-> updated patches. The other ones would normally go through the
-> hsi tree, but that one was maintained by Carlos Chinea and is=20
-> now more or less orphaned.
 
-Yes, I suggest you post the .dts changes completely seprately
-so driver maintainers don't accidentally pick those up.
-=20
-> My suggestion is:
->=20
-> 1. I create another patch, which adds entries for hsi subsystem and
->    ssi driver to MAINTAINERS.
->=20
->    It would be nice to have some co-maintainers for the subsystem.
->    Linus Walleij maybe? I think you created the launchpad blueprint [=
-1]?
->    Especially because I have no documentation/specification for HSI, =
-which
->    brings me to my next slightly off topic request.
->=20
->    I would like to have access to SSI documentation and HSI specifica=
-tion.
->    Can the guys from Texas Instruments please give me some pointers h=
-ow I
->    can get access to the NDA'd documentation? I couldn't find any hin=
-ts
->    on ti.com.
->=20
-> 2. I create a patch adding Carlos Chinea to CREDITS
->=20
-> 3. I create a git repository and put all of the patches in there, so
->    that they can be pulled into linux-next.
->=20
-> 4. I add a gpg/pgp signed tag with the key used to signed this mail.
->=20
-> Any issues with this or any other suggestions how to proceed? And if =
-following this
-> - should I request an account on kernel.org to host the repository th=
-ere,
-> or should I just upload it at a random place?
+--myWHXexGRVC5aLMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That all sounds good to me. It is a *good thing* to have a maintainer
-for a driver subsystem, and if you're willing to pick it up, that's
-the way to go.
+On Thu, Oct 10, 2013 at 05:51:00PM +0100, Mark Rutland wrote:
+> On Thu, Oct 10, 2013 at 12:10:53PM +0100, Chanwoo Choi wrote:
 
-Regards,
+> > Turn on ramp control of buck2/3/4.
 
-Tony
-=20
-> [0] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/=
-tree/Next/Trees
-> [1] https://blueprints.launchpad.net/linux-linaro/+spec/hsi-subsystem=
--maint
->=20
-> -- Sebastian
+> Ok, but why does this need to be in the dt?
+
+Ramp control is a hardware system integration decision which people
+working with regulators should be familiar with - you're trading off
+speed of power on or voltage change for maximum current draw from the
+regulator supply.  The term should be sufficiently clear to an engineer
+who can make an informed decision about using it.
+
+--myWHXexGRVC5aLMg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVuWYAAoJELSic+t+oim9imcP/jJVzRf/7IH32ah8qXU+rhRR
+OQgSUjup+4bzVDTl6O9NwCfuCZmuVjKu1uniT9pOd1oxLOZL0TSwAq5Srif6AyBi
+/l3a4a4OyEVFVLyE7Sb8ik/F22TeeAj0FBS2+LFRchLZmRR5+dzBAVUrP4t0Tg1D
+I/5qQqglAhzzjlDcHrAzMwlyjhp/zmpnK1huosBbQigKc61Ux6JSBqKeJwrvcliM
+8olKPXjlcVz+PCazM/EKtW0MbR5InJbr6VTwWrMlrPZWfeyZv812DsDmZS+DlKID
+sNdiZqTRQ9Lox9sjzrpkN2YzHsfWNfmsUkG8lco+UN7hlFPaN77BiSkxZXqth3YS
+ojwFUOyxbChkblCnYKLQSh45EVwHDa+r71Mz65NseiVULMokJtQ5GC64R4qzTcys
+5S9aeBq7L7Cbjgf+Dv/inB5VwJnmxI5wnN9kZtWRT7rlH4iVazuxIH//Io/lDf+T
+RCBTgH2Sx58auMv7UwegcDXfK+Re8HEM4Ov0Z3q6UB70NTk5R8kAUtSPvnrNNjFM
+QmMxaJukOsEY/i+wfCjFzh0143rYFMwWWUOKCAbA796k4il6hgmxVW9O94JSdDDD
+/1jIEBLWeDGav8DQULfdckolAqcuS4Wka3NYCh/6TenIC/JE2jAs+YYuf45J6REg
+61uBvt77tIFods5lLV3o
+=9dzG
+-----END PGP SIGNATURE-----
+
+--myWHXexGRVC5aLMg--
