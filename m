@@ -1,51 +1,120 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND PATCH v3 03/11] ASoC: davinci-mcasp: Add
- DMA register locations to DT
-Date: Thu, 10 Oct 2013 17:59:59 +0100
-Message-ID: <20131010165959.GB3910@e106331-lin.cambridge.arm.com>
-References: <cover.1379590035.git.jsarha@ti.com>
- <66bdda0c0b75d737d649260b9ec10f9f870c20cd.1379590036.git.jsarha@ti.com>
- <20131007214718.GA2976@kartoffel>
- <20131008004641.GV21581@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20131008004641.GV21581@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "joelf@ti.com" <joelf@ti.com>, "jsarha@ti.com" <jsarha@ti.com>, "Hebbar,
- Gururaja" <gururaja.hebbar@ti.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, Darren Etheridge <detheridge@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Thu, 10 Oct 2013 10:10:17 -0700
+Message-ID: <1381425018-5653-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2013 at 01:46:41AM +0100, Mark Brown wrote:
-> On Mon, Oct 07, 2013 at 10:47:18PM +0100, Mark Rutland wrote:
-> > On Thu, Sep 26, 2013 at 08:18:28PM +0100, Jyri Sarha wrote:
-> 
-> > >  - interrupts : Interrupt number for McASP
-> 
-> > The device also seems to be able to generate multiple interrupts -- which
-> > interrupt does this actually cover?
-> 
-> > The driver doesn't seem to use it (by a grep of irq|interrupt). Have I missed
-> > something?
-> 
-> No, they're not actually of much practical use to us at the minute but
-> it was generally felt better to include the information and not use it
-> so that if someone does come up with a use for them then the trees for
-> deployed systems already have the information.
+In some use cases Zynq's FPGA clocks are used as static clock
+generators for IP in the FPGA part of the SOC for which no Linux driver
+exists and would control those clocks. To avoid automatic
+gating of these clocks in such cases a new property - fclk-enable - is
+added to the clock controller's DT description to accomodate such use
+cases. It's value is a bitmask, where a set bit results in enabling
+the corresponding FCLK through the clkc.
 
-Sure, but if this device can generate multiple interrupts, we should
-make it possible to describe all of them, unambiguously.
+FPGA clocks are handled following the rules below:
 
-Thanks,
-Mark.
+If an FCLK is not enabled by bootloaders, that FCLK will be disabled in
+Linux. Drivers can enable and control it through the CCF as usual.
+
+If an FCLK is enabled by bootloaders AND the corresponding bit in the
+'fclk-enable' DT property is set, that FCLK will be enabled by the clkc,
+resulting in an off by one reference count for that clock. Ensuring it
+will always be running.
+
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v2:
+ - change default value for fclk-enable to '0'
+---
+ Documentation/devicetree/bindings/clock/zynq-7000.txt |  4 ++++
+ drivers/clk/zynq/clkc.c                               | 18 +++++++++++++++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.txt b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+index d99af878f5d7..11fdd146ec83 100644
+--- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
++++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+@@ -22,6 +22,10 @@ Required properties:
+ Optional properties:
+  - clocks : as described in the clock bindings
+  - clock-names : as described in the clock bindings
++ - fclk-enable : Bit mask to enable FCLKs in cases no proper CCF compatible
++		 driver is available. Bit [0..3] correspond to FCLK0..FCLK3. The
++		 corresponding FCLK will only be enabled if it is actually
++		 running at boot time. (default = 0xf)
+ 
+ Clock inputs:
+ The following strings are optional parameters to the 'clock-names' property in
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 10772aa72e4e..af3bd0aec538 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -102,9 +102,10 @@ static const char *swdt_ext_clk_input_names[] __initdata = {"swdt_ext_clk"};
+ 
+ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 		const char *clk_name, void __iomem *fclk_ctrl_reg,
+-		const char **parents)
++		const char **parents, int enable)
+ {
+ 	struct clk *clk;
++	u32 enable_reg;
+ 	char *mux_name;
+ 	char *div0_name;
+ 	char *div1_name;
+@@ -147,6 +148,12 @@ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 	clks[fclk] = clk_register_gate(NULL, clk_name,
+ 			div1_name, CLK_SET_RATE_PARENT, fclk_gate_reg,
+ 			0, CLK_GATE_SET_TO_DISABLE, fclk_gate_lock);
++	enable_reg = readl(fclk_gate_reg) & 1;
++	if (enable & !enable_reg) {
++		if (clk_prepare_enable(clks[fclk]))
++			pr_warn("%s: FCLK%u enable failed\n", __func__,
++					fclk - fclk0);
++	}
+ 	kfree(mux_name);
+ 	kfree(div0_name);
+ 	kfree(div1_name);
+@@ -213,6 +220,7 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	int ret;
+ 	struct clk *clk;
+ 	char *clk_name;
++	unsigned int fclk_enable = 0;
+ 	const char *clk_output_name[clk_max];
+ 	const char *cpu_parents[4];
+ 	const char *periph_parents[4];
+@@ -238,6 +246,8 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	periph_parents[2] = clk_output_name[armpll];
+ 	periph_parents[3] = clk_output_name[ddrpll];
+ 
++	of_property_read_u32(np, "fclk-enable", &fclk_enable);
++
+ 	/* ps_clk */
+ 	ret = of_property_read_u32(np, "ps-clk-frequency", &tmp);
+ 	if (ret) {
+@@ -340,10 +350,12 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	clk_prepare_enable(clks[dci]);
+ 
+ 	/* Peripheral clocks */
+-	for (i = fclk0; i <= fclk3; i++)
++	for (i = fclk0; i <= fclk3; i++) {
++		int enable = !!(fclk_enable & BIT(i - fclk0));
+ 		zynq_clk_register_fclk(i, clk_output_name[i],
+ 				SLCR_FPGA0_CLK_CTRL + 0x10 * (i - fclk0),
+-				periph_parents);
++				periph_parents, enable);
++	}
+ 
+ 	zynq_clk_register_periph_clk(lqspi, 0, clk_output_name[lqspi], NULL,
+ 			SLCR_LQSPI_CLK_CTRL, periph_parents, 0);
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
