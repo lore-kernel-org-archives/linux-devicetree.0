@@ -1,61 +1,130 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to
- parse data related to ramp
-Date: Thu, 10 Oct 2013 18:36:27 +0100
-Message-ID: <20131010173627.GR21581@sirena.org.uk>
-References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
- <20131010102826.GG26954@e106331-lin.cambridge.arm.com>
- <52568B3D.7020209@samsung.com>
- <20131010165100.GA3910@e106331-lin.cambridge.arm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/5] usb: gadget: s3c-hsotg: support configurable UTMI
+ PHY width
+Date: Thu, 10 Oct 2013 12:46:20 -0500
+Message-ID: <20131010174620.GC19802@radagast>
+References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
+ <1381140752-312-3-git-send-email-matt.porter@linaro.org>
+ <20131010152922.GF28375@radagast> <5256DBD0.8030008@linaro.org>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="myWHXexGRVC5aLMg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131010165100.GA3910@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: multipart/mixed; boundary="===============2338557185448725473=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5256DBD0.8030008@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Porter <matt.porter@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, balbi@ti.com, Linaro Patches <patches@linaro.org>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---myWHXexGRVC5aLMg
-Content-Type: text/plain; charset=us-ascii
+--===============2338557185448725473==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
 Content-Disposition: inline
 
-On Thu, Oct 10, 2013 at 05:51:00PM +0100, Mark Rutland wrote:
-> On Thu, Oct 10, 2013 at 12:10:53PM +0100, Chanwoo Choi wrote:
+--c3bfwLpm8qysLVxt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Turn on ramp control of buck2/3/4.
+Hi,
 
-> Ok, but why does this need to be in the dt?
+On Thu, Oct 10, 2013 at 12:54:40PM -0400, Matt Porter wrote:
+> On 10/10/2013 11:29 AM, Felipe Balbi wrote:
+> >On Mon, Oct 07, 2013 at 06:12:29AM -0400, Matt Porter wrote:
+> >>Extend dwc2 binding with an optional utmi phy width property.
+> >>Enable the s3c-hsotg.c driver to use standard dwc2 binding
+> >>and enable configuration of the UTMI phy width based on the
+> >>property.
+> >>
+> >>Signed-off-by: Matt Porter <matt.porter@linaro.org>
+> >>Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> >>Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> >>---
+> >>  Documentation/devicetree/bindings/staging/dwc2.txt |  4 ++++
+> >>  drivers/usb/gadget/s3c-hsotg.c                     | 18 +++++++++++++=
+++++-
+> >>  drivers/usb/gadget/s3c-hsotg.h                     |  1 +
+> >>  3 files changed, 22 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Docum=
+entation/devicetree/bindings/staging/dwc2.txt
+> >>index 1a1b7cf..fb6b8ee 100644
+> >>--- a/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>@@ -6,10 +6,14 @@ Required properties:
+> >>  - reg : Should contain 1 register range (address and length)
+> >>  - interrupts : Should contain 1 interrupt
+> >>
+> >>+Optional properties:
+> >>+- snps,phy-utmi-width: Must contain the UTMI data width (either 8 or 1=
+6)
+> >
+> >isn't this available in any of the configuration registers ?
+>=20
+> Yes and no. HWCFG4 has a UTMI data width field. However, it has 3
+> valid states, "8", "16", or "8 or 16". The BCM281xx implementation is
+> set to the latter and the attached phy is 8-bit.
+>=20
+> Looking at dwc2 prior to Matthijs Kooijman's patch [1] which starts
+> validating the value of phy_utmi_width in that driver, the pci.c
+> dwc2_module_params .phy_utmi_width field there even had the comment,
+> "/* 16 bits - NOT DETECTABLE */". The autodetect code in
+> dwc2_set_param_phy_utmi_width() will fail if HWCFG4 has the "8 or 16"
+> option as it just decides to default to a phy width of 16 if nothing
+> is configured by the platform glue. This property would also allow
+> this issue to be addressed in that driver.
 
-Ramp control is a hardware system integration decision which people
-working with regulators should be familiar with - you're trading off
-speed of power on or voltage change for maximum current draw from the
-regulator supply.  The term should be sufficiently clear to an engineer
-who can make an informed decision about using it.
+fair enough, but I'd really like to hear from DT folks if your suggested
+binding is acceptable. It seems like we can equally argue that it's a SW
+configuration or HW description.
 
---myWHXexGRVC5aLMg
+cheers
+
+--=20
+balbi
+
+--c3bfwLpm8qysLVxt
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSVuWYAAoJELSic+t+oim9imcP/jJVzRf/7IH32ah8qXU+rhRR
-OQgSUjup+4bzVDTl6O9NwCfuCZmuVjKu1uniT9pOd1oxLOZL0TSwAq5Srif6AyBi
-/l3a4a4OyEVFVLyE7Sb8ik/F22TeeAj0FBS2+LFRchLZmRR5+dzBAVUrP4t0Tg1D
-I/5qQqglAhzzjlDcHrAzMwlyjhp/zmpnK1huosBbQigKc61Ux6JSBqKeJwrvcliM
-8olKPXjlcVz+PCazM/EKtW0MbR5InJbr6VTwWrMlrPZWfeyZv812DsDmZS+DlKID
-sNdiZqTRQ9Lox9sjzrpkN2YzHsfWNfmsUkG8lco+UN7hlFPaN77BiSkxZXqth3YS
-ojwFUOyxbChkblCnYKLQSh45EVwHDa+r71Mz65NseiVULMokJtQ5GC64R4qzTcys
-5S9aeBq7L7Cbjgf+Dv/inB5VwJnmxI5wnN9kZtWRT7rlH4iVazuxIH//Io/lDf+T
-RCBTgH2Sx58auMv7UwegcDXfK+Re8HEM4Ov0Z3q6UB70NTk5R8kAUtSPvnrNNjFM
-QmMxaJukOsEY/i+wfCjFzh0143rYFMwWWUOKCAbA796k4il6hgmxVW9O94JSdDDD
-/1jIEBLWeDGav8DQULfdckolAqcuS4Wka3NYCh/6TenIC/JE2jAs+YYuf45J6REg
-61uBvt77tIFods5lLV3o
-=9dzG
+iQIcBAEBAgAGBQJSVufsAAoJEIaOsuA1yqREz6UQAJRTHwkAXhNfJYndx+tyxPc9
+Pmy6wi6qMiwxNkzmIS9iRLGPnipag8eI/Kh0qURAG8OT9N/C/H73xwbOr81F27nE
+yLawRTLDd3yT0858wR87t1ktjCEI1XhfcWSyOm/1U4teAReMJlmvLzHPX09v1QTH
+1mRxuJU05sD0QL4cWj9lckj9fU3JZyQUK2RPVpaovnVL1qSA7D6KYG07lCnAC2GA
+B4ezVy6CXPOxX5fIs/LMhbYLRpjxOW+sh3lt/f9DGpKmowWOEvoxulytK2/+gKzV
+zKXM2H85PjJ/bYumAGMp85RA7alPOe6HM0aTiG5Tp7Rw+DE33fPbg4gn0EZcEH90
+ElNOqFzjtNBxXBFmJAQRA4dOTwJDUdSUuJr8mE+Om8nhBZW/MjdE1/u+eutSFuRW
+7RCpNr6KG4Nf0aJPcbSVl121OteZ59/w22D0YZIGRnyD/zlR0O5blbk/aBssOzAi
+MuVPkm9hsxwZZrRXf9zypeto3LfNfv4n4QqiXKxtFoQ2Ctl/0tdb+G+IpXxuGPmk
+ZhWYYYWXMNvrJHlPOuH+0+UDFkEhXdJF+y8jqTdQFBAow3zGgtJfIa0XA5EkoWPd
+yd9IrimUgMdp6OAI62R91VxxLQrYPvOvfTvqu1AE2ftkqvROzOkNloDShfG5kykZ
+EhCz/EtdD6s38ovRAGxf
+=idGW
 -----END PGP SIGNATURE-----
 
---myWHXexGRVC5aLMg--
+--c3bfwLpm8qysLVxt--
+
+
+--===============2338557185448725473==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2338557185448725473==--
