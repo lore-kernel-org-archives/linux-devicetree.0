@@ -1,63 +1,42 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: integrator: delete non-devicetree boot path
-Date: Thu, 10 Oct 2013 16:22:38 +0200
-Message-ID: <CACRpkdZvV9Ck-wG9w+=wh1DvvyddYj0k7WUB9aQMT9V4yH+Ykw@mail.gmail.com>
-References: <1380816202-3128-1-git-send-email-linus.walleij@linaro.org>
-	<20131008095148.GD28972@e106331-lin.cambridge.arm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
+Date: Thu, 10 Oct 2013 17:35:19 +0300
+Message-ID: <5256BB27.6010107@ti.com>
+References: <20131003054104.8941.88857.stgit@localhost> <20131003054221.8941.87801.stgit@localhost> <5256AA7F.8030005@ti.com> <CACRpkdZx5+OCcQytkpjd7_nz4hw6VXoXOS0LByKgJ8_cQjbA4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131008095148.GD28972-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <CACRpkdZx5+OCcQytkpjd7_nz4hw6VXoXOS0LByKgJ8_cQjbA4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Prakash Manjunathappa <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2013 at 11:51 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+On 10/10/2013 05:04 PM, Linus Walleij wrote:
+> On Thu, Oct 10, 2013 at 3:24 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> 
+>> I think pcs_irq_set_wake() is where need to control system wakeup behaviour for the irq.
+>> This is where we should be able to change WAKEUP_EN bit of the pad
+>> to enable/disable system wakeup for that pad and also call _reconfigure_io_chain().
+> 
+> As an innocent bystander who has no clue what the _reconfigure_io_chain()
+> is about can you tell me what this is all about?
 
->> +       /* Remap the Integrator system controller */
->> +       ap_syscon_base = ioremap(INTEGRATOR_SC_BASE, 0x100);
->
-> It seems a shame that this didn't get described in the DT. This hasn't
-> been fully moved over...
+The OMAP SoC has a mechanism to monitor and wakeup from a low power state by creating
+an IO ring of all the pads. But there is one bit in one of the control registers that
+needs to be toggled each time the pad configuration is changed to re-arm the IO ring.
+This is exactly what _reconfigure_io_chain() does.
+> 
+> Is this another one of the OMAP forked paths where you must call back into
+> the machine with a special callback from each and every driver?
 
-No. There is still stuff to move over, and not only the system controller,
-also the EBI (external bus interface) on the AP.
+_reconfigure_io_chain() is not available for public use and is not called by any driver yet.
+However, it somehow needs to be called from this pinctrl-single driver each time the
+wakeup configuration for any pad is changed.
 
-But we can still work from this point, or do you mean that we cannot
-proceed to delete the ATAG boot path before we fix this?
-
-My idea is that deleting this makes the code easier to handle after
-the shrink.
-
->> +       if (!ap_syscon_base) {
->> +               dev_err(&pdev->dev, "unable to remap the AP syscon for PCIv3\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       /* Device tree probe path */
->> +       if (!np) {
->> +               dev_err(&pdev->dev, "no device tree node for PCIv3\n");
->> +               return -ENODEV;
->> +       }
->
-> We didn't unmap the syscon registers, yet we mapped them here. Either
-> we've got a useless mapping, or we're mapping it from the wrong block of
-> code...
-
-Sorry I'm not following this. The only thing the patch does is remove the
-ATAG boot path, moving the relevant part of the DT boot path over
-to the DT probe function and renaming it pci_v3_probe() in the process
-which might make the patch messy but that is all it does.
-
-If you mean that we should unmap the syscon base you're right
-but that would be a separate patch, right?
-
-I'll write a separate patch for that instead using devm_* so we
-don't have to unmap it by calling any special function.
-
-Yours,
-Linus Walleij
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
