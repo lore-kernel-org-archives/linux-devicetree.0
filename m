@@ -1,69 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 1/2] arm: dts: omap4+: Add DMM bindings
-Date: Thu, 10 Oct 2013 11:08:33 +0100
-Message-ID: <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com>
- <1381386994-24747-1-git-send-email-archit@ti.com>
- <1381386994-24747-2-git-send-email-archit@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
+Date: Thu, 10 Oct 2013 11:08:40 +0100
+Message-ID: <20131010100840.GP25034@n2100.arm.linux.org.uk>
+References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org> <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com> <20131010072624.GA29191@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1381386994-24747-2-git-send-email-archit@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>
+In-Reply-To: <20131010072624.GA29191-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 07:36:33AM +0100, Archit Taneja wrote:
-> Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. DMM
-> only requires address and irq information.
+On Thu, Oct 10, 2013 at 03:26:26PM +0800, Shawn Guo wrote:
+> However, my patch is talking about a different thing.  For example, we
+> have a device whose pinctrl-0 consists of two phandle entries that point
+> to pin configuration nodes foo and bar.
 > 
-> Add documentation for the DMM bindings.
+> 	pinctrl-0 = <&foo &bar>;
 > 
-> Originally worked on by Andy Gross <andygro@gmail.com>
+> 	foo {
+> 		...
+> 	};
 > 
-> Cc: Andy Gross <andygro@gmail.com>
-> Signed-off-by: Archit Taneja <archit@ti.com>
-> ---
->  Documentation/devicetree/bindings/arm/omap/dmm.txt | 16 ++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
->  arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
->  3 files changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
+> 	bar {
+> 		...
+> 	};
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/dmm.txt b/Documentation/devicetree/bindings/arm/omap/dmm.txt
-> new file mode 100644
-> index 0000000..6fc3d79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/omap/dmm.txt
-> @@ -0,0 +1,16 @@
-> +OMAP Dynamic Memory Manager (DMM) bindings
+> My patch only wants to make it clear that the configuration specified by
+> node foo will be applied to pin controller first, and the configuration
+> defined in node bar will be applied after that.  When both nodes have
+> configuration for a pin, these two configs for the same pin go to two
+> different pinctrl_setting structures.  And these two pinctrl_settings
+> can not be applied accumulatedly but only sequentially.  That's what my
+> patch talks about.
 
-Is there any documentation? A brief description of what this is would be
-nice.
+I still say this is a potentially dangerous thing, and in my case of
+overriding the DAT3 pull-sense, it will cause the pin to glitch if
+nothing is connected to it.
 
-> +
-> +Required properties:
-> +- compatible:	Must be "ti,omap4-dmm" for OMAP4 family
-> +		Must be "ti,omap5-dmm" for OMAP5 and DRA7x family
-
-s/must be/should contain/
-
-> +- reg:		Contains timer register address range (base address and length)
-
-Huh? What's a timer got to do with the DMM?
-
-> +- interrupts:	Contains interrupt information (source, etc) for the DMM IRQ
-
-Is there a single interrupt? If so:
-
-- interrupts: Should contain an interrupt-specifier for the DMM IRQ.
-
-Assuming the "DMM IRQ" is well defined. If there's a name for it in
-documentation, using that's preferable. If a future revision may have
-multiple interrupts, please use interrupt-names now to save us endless
-pain in future.
-
-Cheers,
-Mark.
+So even if you do get this clarified, I am *not* happy to change my
+patch.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
