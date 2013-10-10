@@ -1,86 +1,60 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-Date: Thu, 10 Oct 2013 21:14:14 +0530
-Message-ID: <20131010154414.GY2954@intel.com>
-References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
- <B56CDBE15CE27145A4B77D2D24263E8522EFE6@039-SN1MPN1-004.039d.mgd.msft.net>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: omap4-panda-es: Do not reset gpio1
+Date: Thu, 10 Oct 2013 11:44:41 -0500
+Message-ID: <1381423481-5920-1-git-send-email-nm@ti.com>
+References: <1381313521-10422-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <B56CDBE15CE27145A4B77D2D24263E8522EFE6-TcFNo7jSaXM0vywKSws3iq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lu Jingchang-B35083 <B35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381313521-10422-1-git-send-email-rnayak@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 09:39:04AM +0000, Lu Jingchang-B35083 wrote:
-> Hi, Vinod,
-> 
->   Could you please help review this patch? Could it be merged into your next tree?
->   Thanks!
-Where is the patch 1 & 2 of the series, I dont sem to find it.
-Also I need ACK from one of the DT maintainers on the binding before I can carry
-this
+Do not reset GPIO1 at boot-up because GPIO 7 in GPIO1 block is used on
+OMAP4460 PandaBoard-ES to select voltage register in TPS62361 which
+supplies VDD_MPU.
 
---
-~Vinod
-> 
-> 
-> Best Regards,
-> Jingchang
-> 
-> 
-> > -----Original Message-----
-> > From: Lu Jingchang-B35083
-> > Sent: Wednesday, September 18, 2013 5:58 PM
-> > To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> > Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Lu Jingchang-
-> > B35083; Wang Huan-B18965
-> > Subject: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-> > 
-> > Add Freescale enhanced direct memory(eDMA) controller support.
-> > The eDMA controller deploys DMAMUXs routing DMA request sources(slot)
-> > to eDMA channels.
-> > This module can be found on Vybrid and LS-1 SoCs.
-> > 
-> > Signed-off-by: Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> > changes in v6:
-> >   holding lock in dma_control to prevent race.
-> > 
-> > changes in v5:
-> >   config slave_id when dmaengine_slave_config intead of channel request.
-> >   adding residue calculation and dma pause/resume device control.
-> > 
-> > changes in v4:
-> >   using exact compatible string in binding document.
-> > 
-> > changes in v3:
-> >   handle all pending interrupt one time.
-> >   add protect lock on dma transfer complete handling.
-> >   change desc and tcd alloc flag to GFP_NOWAIT.
-> >   add sanity check and error messages.
-> > 
-> > changes in v2:
-> >   using generic dma-channels property instead of fsl,dma-channel.
-> >   rename the binding document to fsl-edma.txt.
-> > 
-> > 
-> >  Documentation/devicetree/bindings/dma/fsl-edma.txt |  84 ++
-> >  drivers/dma/Kconfig                                |  10 +
-> >  drivers/dma/Makefile                               |   1 +
-> >  drivers/dma/fsl-edma.c                             | 944
-> > +++++++++++++++++++++
-> >  4 files changed, 1039 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/fsl-edma.txt
-> >  create mode 100644 drivers/dma/fsl-edma.c
-> 
+Without this, OMAP4460 PandaBoard-ES boards fail to boot-up because
+MPU voltage switches over to VSET0 voltage value (boot voltage) which
+is not sufficient to operate the device at OPP100.
 
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+As explained here: http://marc.info/?l=u-boot&m=133066647800872&w=2
+
+GPIO1 reset causes PandaBoard-ES to stop functioning.
+This depends on Patch series from Rajendra:
+http://marc.info/?l=linux-doc&m=138131355520116&w=2
+Applies on Benoit's for_13/dts branch:
+https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+
+Tested on PandaBoard-ES without the u-boot uenv hack
+
+ arch/arm/boot/dts/omap4-panda-es.dts |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index 56c4354..816d1c9 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -62,3 +62,7 @@
+ 		gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
++
++&gpio1 {
++	 ti,no-reset-on-init;
++};
 -- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
