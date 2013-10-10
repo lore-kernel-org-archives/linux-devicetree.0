@@ -1,71 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/5] drm/bridge: Add PTN3460 bridge driver
-Date: Thu, 10 Oct 2013 10:37:08 +0100
-Message-ID: <20131010093708.GC21581@sirena.org.uk>
-References: <1380670860-17621-1-git-send-email-seanpaul@chromium.org>
- <1380670860-17621-4-git-send-email-seanpaul@chromium.org>
- <CAAQKjZN_r-=-sj=Vb-o-KUS4ab5=cjCq1ni3VZeMeVc3NL=MMg@mail.gmail.com>
- <CAOw6vbLiJLLKn=gb1=j5TBeM0ijEK13+goG-=mw7MZTyNT1kpQ@mail.gmail.com>
- <CAAQKjZPwyKCpju4Ndd+MB_aN24-zA5xTHFsFsun2617h7YT6dw@mail.gmail.com>
- <CAOesGMgKastzdFHYQzyL8gxkBN=86wFZ4jbgP8BHxfkOuZvJxg@mail.gmail.com>
- <CAAQKjZMhovKLxNfnXnbF-6diM2zF1cWyi+xHGyL3v83vBh4p6g@mail.gmail.com>
- <20131009182905.GY21581@sirena.org.uk>
- <05c701cec56f$b79eea50$26dcbef0$%dae@samsung.com>
+From: Lu Jingchang-B35083 <B35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
+Date: Thu, 10 Oct 2013 09:39:04 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E8522EFE6@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d03Wvsl4acTHE0IU"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <05c701cec56f$b79eea50$26dcbef0$%dae@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: 'Olof Johansson' <olof@lixom.net>, 'Sean Paul' <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 'DRI mailing list' <dri-devel@lists.freedesktop.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379498279-16096-1-git-send-email-b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+SGksIFZpbm9kLA0KDQogIENvdWxkIHlvdSBwbGVhc2UgaGVscCByZXZpZXcgdGhpcyBwYXRjaD8g
+Q291bGQgaXQgYmUgbWVyZ2VkIGludG8geW91ciBuZXh0IHRyZWU/DQogIFRoYW5rcyENCg0KDQpC
+ZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+IEZyb206IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1i
+ZXIgMTgsIDIwMTMgNTo1OCBQTQ0KPiBUbzogdmlub2Qua291bEBpbnRlbC5jb20NCj4gQ2M6IHNo
+YXduLmd1b0BsaW5hcm8ub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgTHUgSmluZ2NoYW5nLQ0KPiBCMzUwODM7IFdhbmcgSHVhbi1CMTg5NjUNCj4gU3ViamVj
+dDogW1BBVENIIHY2IDMvM10gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRyaXZlciBz
+dXBwb3J0DQo+IA0KPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2VkIGRpcmVjdCBtZW1vcnkoZURNQSkg
+Y29udHJvbGxlciBzdXBwb3J0Lg0KPiBUaGUgZURNQSBjb250cm9sbGVyIGRlcGxveXMgRE1BTVVY
+cyByb3V0aW5nIERNQSByZXF1ZXN0IHNvdXJjZXMoc2xvdCkNCj4gdG8gZURNQSBjaGFubmVscy4N
+Cj4gVGhpcyBtb2R1bGUgY2FuIGJlIGZvdW5kIG9uIFZ5YnJpZCBhbmQgTFMtMSBTb0NzLg0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPg0KPiBT
+aWduZWQtb2ZmLWJ5OiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29tPg0KPiAtLS0N
+Cj4gY2hhbmdlcyBpbiB2NjoNCj4gICBob2xkaW5nIGxvY2sgaW4gZG1hX2NvbnRyb2wgdG8gcHJl
+dmVudCByYWNlLg0KPiANCj4gY2hhbmdlcyBpbiB2NToNCj4gICBjb25maWcgc2xhdmVfaWQgd2hl
+biBkbWFlbmdpbmVfc2xhdmVfY29uZmlnIGludGVhZCBvZiBjaGFubmVsIHJlcXVlc3QuDQo+ICAg
+YWRkaW5nIHJlc2lkdWUgY2FsY3VsYXRpb24gYW5kIGRtYSBwYXVzZS9yZXN1bWUgZGV2aWNlIGNv
+bnRyb2wuDQo+IA0KPiBjaGFuZ2VzIGluIHY0Og0KPiAgIHVzaW5nIGV4YWN0IGNvbXBhdGlibGUg
+c3RyaW5nIGluIGJpbmRpbmcgZG9jdW1lbnQuDQo+IA0KPiBjaGFuZ2VzIGluIHYzOg0KPiAgIGhh
+bmRsZSBhbGwgcGVuZGluZyBpbnRlcnJ1cHQgb25lIHRpbWUuDQo+ICAgYWRkIHByb3RlY3QgbG9j
+ayBvbiBkbWEgdHJhbnNmZXIgY29tcGxldGUgaGFuZGxpbmcuDQo+ICAgY2hhbmdlIGRlc2MgYW5k
+IHRjZCBhbGxvYyBmbGFnIHRvIEdGUF9OT1dBSVQuDQo+ICAgYWRkIHNhbml0eSBjaGVjayBhbmQg
+ZXJyb3IgbWVzc2FnZXMuDQo+IA0KPiBjaGFuZ2VzIGluIHYyOg0KPiAgIHVzaW5nIGdlbmVyaWMg
+ZG1hLWNoYW5uZWxzIHByb3BlcnR5IGluc3RlYWQgb2YgZnNsLGRtYS1jaGFubmVsLg0KPiAgIHJl
+bmFtZSB0aGUgYmluZGluZyBkb2N1bWVudCB0byBmc2wtZWRtYS50eHQuDQo+IA0KPiANCj4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0IHwgIDg0ICsr
+DQo+ICBkcml2ZXJzL2RtYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAxMCArDQo+ICBkcml2ZXJzL2RtYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2RtYS9mc2wtZWRtYS5jICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDk0NA0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gIDQgZmlsZXMgY2hh
+bmdlZCwgMTAzOSBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtZWRtYS50eHQNCj4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2RtYS9mc2wtZWRtYS5jDQoNCg==
 
---d03Wvsl4acTHE0IU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Oct 10, 2013 at 01:18:05PM +0900, Inki Dae wrote:
-
-> > > I still think the pin could be replaced with a regulator. But
-> > > lvds-bridge node has "powerdown-gpio" property - it say this board
-> > > will use gpio pin - specific to board.  So it seems no problem.
-
-> > No, don't model things that aren't regulators as regulators - it's just
-> > confusing from a usability standpoint and causes breakage when the pins
-> > don't behave like regulators.
-
-> It seems that there was your missing point. That _is not_ what I mentioned.
-> I mean that other boards can use a regulator instead of gpio pin.
-
-What I'm saying is no boards should use a regulator to control that
-GPIO pin, obviously if they're controlling the actual regulators that's
-fine but the reset signal should not be controlled via the regulator
-API (there are some unfortunate cases where people have done that
-already but let's not have any more).
-
---d03Wvsl4acTHE0IU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSVnVBAAoJELSic+t+oim9gEQP/1GHEMDVINGUFY2SpF1Vfzey
-hByjoMy60N6KNCTmnMryf9AE3gxMmRKKhI3yLjPObXEBIt6qhtyzBb6M8csmidNJ
-UNShBARw+LswoLGjxwWmN3XcO0+7bSJQ4KTcm6lONelZv8UG6tW5YKZRrR2viOwu
-OQ0UL17QGTiYkdSgUo1s6viD4d7AFWZL93Gcs/W0UmLVxms6K12Cu/wgsRF9g9Jl
-tnL8R2H1Ddn1uzEToALua+oM/jDNw7Lb3jeZrhYVwDbWCEPyePl9gE0Jh3fCiKYT
-jrYDceWVv4z7G1l1tU2aAA2tnwWaUKuIspUIxWCStka30HjpXc2JdSUUXC7kvdyu
-CHeVK8N7j6ETv9P+Eb+osdQ7K1bZJBMxrY6ABpUvhhWfrsrxiqOZcZXtsnzomrv4
-yhZeR99u3bG9GA+wkmdUuFeOk/u5NhyFNMxrHpeEZ6AoVFZ+ubisgLkQYtabXZLe
-4YdNuXz8ehu96YhdJ6keJJ+yu5Z4wASojpYeLxu9+XP8ZSTPsFHwd+diNwnY5YJH
-JIKfCh1R8diuw0kobiuntgw3EDQ7GgCePoxkK8ySgHlz0Ol2nPq+9oUSbl5HoBwF
-05Z6KWjj90Vbb4aOi+f75K/KzsAQhixnioJzXhnUDGcRb5WaOzy7Kdp97BjcF4Ao
-oj3JL2VHbUpEPkZzrcID
-=dV4p
------END PGP SIGNATURE-----
-
---d03Wvsl4acTHE0IU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
