@@ -1,137 +1,60 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH V5 3/3] drivers/rtc/rtc-as3722: add RTC driver
-Date: Thu, 10 Oct 2013 15:24:46 -0700
-Message-ID: <20131010152446.1715e64b70ddd0281a3971e9@linux-foundation.org>
-References: <1381321761-8898-1-git-send-email-ldewangan@nvidia.com>
-	<1381321761-8898-4-git-send-email-ldewangan@nvidia.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] ARM: add basic support for Trusted Foundations
+Date: Thu, 10 Oct 2013 15:25:46 -0700
+Message-ID: <CAOesGMjZGRU+dnz3u5BhDqvyyZMcCANzBDKFwX5S3h+CFHGhQg@mail.gmail.com>
+References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
+	<1380904635-18113-2-git-send-email-acourbot@nvidia.com>
+	<CAOesGMj74Pui1V5O7zxEipM5Hg6nboVTUCFuMY0c0aUh=wuu3Q@mail.gmail.com>
+	<CAAVeFuLvHdUuDurqA_=tvxJonNP+RekotM_MuysQrJD0PUgcSQ@mail.gmail.com>
+	<5257288E.6000704@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381321761-8898-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5257288E.6000704-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Oct 2013 17:59:21 +0530 Laxman Dewangan <ldewangan@nvidia.com> wrote:
-
-> The ams AS3722 is a compact system PMU suitable for mobile phones,
-> tablets etc.
-> 
-> Add a driver to support accessing the RTC found on the ams AS3722
-> PMIC using RTC framework.
-
-I hate these patchsets, because ...
-
-> index 9654aa3..d8785d7 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -153,6 +153,16 @@ config RTC_DRV_88PM80X
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-88pm80x.
->  
-> +config RTC_DRV_AS3722
-> +	tristate "ams AS3722 RTC driver"
-> +	depends on MFD_AS3722
-
-... the rtc patch depends on an mfd patch, so everyone ends up sitting
-around looking at everyone else, wondering who will merge it all.
-
-> +	help
-> +	  If you say yes here you get support for the RTC of ams AS3722 PMIC
-> +	  chips.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rtc-as3722.
-> +
->
+On Thu, Oct 10, 2013 at 3:22 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 10/10/2013 02:58 PM, Alexandre Courbot wrote:
+>> On Wed, Oct 9, 2013 at 4:47 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> On Fri, Oct 4, 2013 at 9:37 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 > ...
+>>> But do we really need to panic here? It's a PITA to debug since it'll
+>>> be a very early panic. I'd rather have the system log errors in dmesg
+>>> but continue booting with one cpu.
+>>
+>> Actually the first version of this series continued on one CPU if TF
+>> support was missing (as secondary CPUs would simply fail to boot), but
+>> IIRC Stephen advocated for the current behavior (panic) instead. I
+>> agree such an early panic is hard to debug, especially considering
+>> that most devices using TF (Tegra retail devices) do not even feature
+>> a serial port.
+>>
+>> On the other hand, if we continue booting in these conditions the
+>> system freezes as soon as cpuidle kicks in, so we won't be going very
+>> far anyway. However the console is up when it happens.
+>>
+>> Maybe if there is a way to disable the kernel features TF is supposed
+>> to manage (SMP & cpuidle at the moment) when registration fails, the
+>> system could continue more gracefully (even if on one leg) and warn
+>> the user about this condition. Stephen, can I have your thoughts on
+>> this?
 >
-> +static int as3722_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct as3722 *as3722 = dev_get_drvdata(pdev->dev.parent);
-> +	struct as3722_rtc *as3722_rtc;
-> +	int val;
-> +	int ret;
-> +
-> +	as3722_rtc = devm_kzalloc(&pdev->dev, sizeof(*as3722_rtc), GFP_KERNEL);
-> +	if (!as3722_rtc)
-> +		return -ENOMEM;
-> +
-> +	as3722_rtc->as3722 = as3722;
-> +	as3722_rtc->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, as3722_rtc);
-> +
-> +	/* Enable the RTC to make sure it is running. */
-> +	ret = as3722_update_bits(as3722, AS3722_RTC_CONTROL_REG,
-> +				AS3722_RTC_ON, AS3722_RTC_ON);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "RTC_CONTROL reg update failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	val = AS3722_RTC_ON | AS3722_RTC_ALARM_WAKEUP_EN;
-> +	ret = as3722_write(as3722, AS3722_RTC_CONTROL_REG, val);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "RTC_CONTROL reg write failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	device_init_wakeup(&pdev->dev, 1);
-> +
-> +	as3722_rtc->rtc = rtc_device_register("as3722", &pdev->dev,
-> +				&as3722_rtc_ops, THIS_MODULE);
+> If we can disable the features that rely on TF/secure-mode when support
+> is missing, then doing that rather than panic is fine. We do something
+> similar for PCIe on Tegra20, where LP2 cpuidle state must be disabled or
+> PCIe interrupts won't work.
+>
+> I would be inclined to merge the patch as-is right now, since it's only
+> enabling a new feature that won't see any regressions due to this panic,
+> and then add the disable-other-features with a separate patch/series
+> later. Does that seem reasonable?
 
-devm_rtc_device_register()?
+Yes, I tried to make that clear with my initial feedback: I think it
+would be good to get away from the panic, but we can merge with it now
+and fix it with later patches.
 
-> +	if (IS_ERR(as3722_rtc->rtc)) {
-> +		ret = PTR_ERR(as3722_rtc->rtc);
-> +		dev_err(&pdev->dev, "RTC register failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	as3722_rtc->alarm_irq = platform_get_irq(pdev, 0);
-> +	dev_info(&pdev->dev, "RTC interrupt %d\n", as3722_rtc->alarm_irq);
-> +
-> +	ret = request_threaded_irq(as3722_rtc->alarm_irq, NULL,
-> +			as3722_alarm_irq, IRQF_ONESHOT | IRQF_EARLY_RESUME,
-> +			"rtc-alarm", as3722_rtc);
 
-devm_request_threaded_irq()?
-
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
-> +				as3722_rtc->alarm_irq, ret);
-> +		goto scrub;
-> +	}
-> +	disable_irq(as3722_rtc->alarm_irq);
-
-It seems strange to disable your IRQ here.
-
-> +	return 0;
-> +scrub:
-> +	rtc_device_unregister(as3722_rtc->rtc);
-> +	return ret;
-> +}
-
-The function is a bit confused.  It uses a mix of the "returns
-sprinkled all over the place" approach and the "goto out" approach. 
-The latter is preferred.
-
-> +static int as3722_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct as3722_rtc *as3722_rtc = platform_get_drvdata(pdev);
-> +
-> +	free_irq(as3722_rtc->alarm_irq, as3722_rtc);
-> +	rtc_device_unregister(as3722_rtc->rtc);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-
-Most (but not all!) rtc drivers use CONFIG_PM_SLEEP.  People have madly
-mucked with CONFIG_PM* and I don't know the difference and I don't know
-what's going on and I don't know of a convenient place to go to find
-out.  If you work it out, please be sure to tell me!  But as soon as I
-figure it out I'm sure they'll go and madly muck with it again.
+-Olof
