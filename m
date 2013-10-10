@@ -1,36 +1,45 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 2/3] ARM: dts: exynos4212: Add missing clock for multi core
- timer
-Date: Thu, 10 Oct 2013 09:30:06 +0900
-Message-ID: <1381365007-1782-3-git-send-email-cw00.choi@samsung.com>
-References: <1381365007-1782-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1381365007-1782-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, kyungmin.park@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Ryan Mallon <rmallon@gmail.com>
+Subject: Re: [PATCH 1/2] i2c designware make SCL and SDA falling time configurable
+Date: Thu, 10 Oct 2013 11:54:13 +1100
+Message-ID: <5255FAB5.7080803@gmail.com>
+References: <20130828153429.GB7066@ab42.lan> <1381244455-3836-1-git-send-email-romainba@abilis.com> <20131009075538.GQ3521@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131009075538.GQ3521@intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Romain Baeriswyl <romainba@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+On 09/10/13 18:55, Mika Westerberg wrote:
+> On Tue, Oct 08, 2013 at 05:00:54PM +0200, Romain Baeriswyl wrote:
+>>  static void __i2c_dw_enable(struct dw_i2c_dev *dev, bool enable)
+>> @@ -286,6 +287,7 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+>>  	u32 input_clock_khz;
+>>  	u32 hcnt, lcnt;
+>>  	u32 reg;
+>> +	u32 sda_falling_time, scl_falling_time;
+>>  
+>>  	input_clock_khz = dev->get_clk_rate_khz(dev);
+>>  
+>> @@ -307,15 +309,25 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+>>  
+>>  	/* set standard and fast speed deviders for high/low periods */
+>>  
+>> +	if (dev->sda_falling_time)
+>> +		sda_falling_time = dev->sda_falling_time;
+>> +	else
+>> +		sda_falling_time = 300; /* ns */
+> 
+> I think this looks better:
+> 
+> 	sda_falling_time = dev->sda_falling_time ? dev->sda_falling_time : 300;
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos4212.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+You can also use the gcc-ism, which is a bit more concise:
 
-diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
-index 3081bae..d7a3fbc 100644
---- a/arch/arm/boot/dts/exynos4212.dtsi
-+++ b/arch/arm/boot/dts/exynos4212.dtsi
-@@ -43,6 +43,8 @@
- 		interrupt-parent = <&mct_map>;
- 		interrupts = <0 0>, <1 0>, <2 0>, <3 0>,
- 			     <4 0>, <5 0>;
-+		clocks = <&clock 3>, <&clock 344>;
-+		clock-names = "fin_pll", "mct";
- 
- 		mct_map: mct-map {
- 			#interrupt-cells = <2>;
--- 
-1.8.0
+	sda_falling_time = dev->sda_falling_time ?: 300;
+
+~Ryan
+
