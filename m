@@ -1,134 +1,61 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 2/9] hwspinlock/omap: add support for dt nodes
-Date: Thu, 10 Oct 2013 15:29:01 -0500
-Message-ID: <52570E0D.80507@ti.com>
-References: <cover.1379445653.git.s-anna@ti.com> <0fd6a11880894260d627a50b1e35f363625e9b1d.1379445653.git.s-anna@ti.com> <AE597DCC-83D7-4BCD-8990-3D63540F32EA@codeaurora.org> <20131001084015.GH22259@e106331-lin.cambridge.arm.com> <524CEE9F.8060407@ti.com> <20131009214638.GB2322@kartoffel>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 01/03] Make non-linear GPIO ranges accesible from gpiolib
+Date: Thu, 10 Oct 2013 14:47:24 -0600
+Message-ID: <5257125C.2030007@wwwdotorg.org>
+References: <20131008122145.GA21985@ab42.lan>	<1381235122-23730-1-git-send-email-christian.ruppert@abilis.com> <CACRpkdafaNE_fgiq8iW=_gT5gDVC_H8m-+0dfpunhAantLdJwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131009214638.GB2322@kartoffel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdafaNE_fgiq8iW=_gT5gDVC_H8m-+0dfpunhAantLdJwQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 10/09/2013 05:58 AM, Linus Walleij wrote:
+> On Tue, Oct 8, 2013 at 2:25 PM, Christian Ruppert
+> <christian.ruppert@abilis.com> wrote:
+>> This patch adds the infrastructure required to register non-linear gpio
+>> ranges through gpiolib and the standard GPIO device tree bindings.
+...
+>> +Example:
+>> +
+>> +       gpio_pio_i: gpio-controller@14B0 {
+>> +               #gpio-cells = <2>;
+>> +               compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+>> +               reg = <0x1480 0x18>;
+>> +               gpio-controller;
+>> +               gpio-ranges =                   <&pinctrl1 0 20 10>,
+>> +                                               <&pinctrl2 10 0 0>,
+>> +                                               <&pinctrl1 15 0 10>,
+>> +                                               <&pinctrl2 25 0 0>;
+>> +               gpio-ranges-group-names =       "",
+>> +                                               "foo",
+>> +                                               "",
+>> +                                               "bar";
+>> +       };
+> 
+> And here, I get a bit uneasy as I remember Stephen's stance that such
+> groups must be a physical property of the controller. I am generally a
+> bit soft on that, but that is from a driver point of view, and describing
+> hardware in the devicetree must be reflecting an objective view of the
+> hardware, not how the particular driver is written for Linux.
+> 
+> This is very questionable :-/
 
->>
->>> On Fri, Sep 27, 2013 at 05:06:38PM +0100, Kumar Gala wrote:
->>>>
->>>> On Sep 17, 2013, at 2:30 PM, Suman Anna wrote:
->>>>
->>>>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
->>>>> which are all device-tree boot only. This patch adds the
->>>>> base support for parsing the DT nodes, and removes the code
->>>>> dealing with the traditional platform device instantiation.
->>>>>
->>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 31 +++++++++++
->>>>> arch/arm/mach-omap2/Makefile                       |  3 --
->>>>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
->>>>> drivers/hwspinlock/omap_hwspinlock.c               | 23 +++++++--
->>>>> 4 files changed, 50 insertions(+), 67 deletions(-)
->>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>> new file mode 100644
->>>>> index 0000000..235b7c5
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>> @@ -0,0 +1,31 @@
->>>>> +OMAP4+ HwSpinlock Driver
->>>>> +========================
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
->>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>>
->>> "Currently supports" is not something I expect to see in a binding
->>> document. That sounds like a description of the driver rather than the
->>> binding.
->>>
->>> How similar are these hardware modules? What are the differences?
->>
->> The IP is almost the same, they all have the same revision id. The
->> number of locks (each represented by a register) though vary from one
->> SoC to another (OMAP4, OMAP5, DRA7 have same number of locks, and
->> AM33xx/AM43xx have a different number). The number of locks is directly
->> read by the driver from a module register. There is no separate .data
->> associated with the of_device_id table, so I used a single compatible
->> property for all the SoCs.
-> 
-> Ok. Probeability is good, it keeps these simpler :)
-> 
-> I think This can be reworded to say "should contain" rather than "currently
-> supports only":
-> 
-> - compatible:		Should contain "ti,omap4-hwspinlock" for
-> 			OMAP44xx, OMAP54xx, AM33xx, AM43xx, or DRA7xx SoCs
-> 
-> That way the binding allows for a future backwards-compatible variant, and
-> doesn't mention the current level of support in Linux.
+I think describing the GPIO ranges is an aspect of the HW; it's
+describing actual routing of signal lines between the GPIO and pinctrl
+HW blocks. It seems reasonable for DT to describe that concept (although
+perhaps the actual mapping could be part of some driver rather than DT,
+but that's a separate issue).
 
-Yes, that is the change I have made in my current working set as well.
-
-> 
->>
->>>
->>>>> +- reg:			Contains the hwspinlock register address range (base
->>>>> +			address and length)
->>>
->>> Is there only one register bank for the hwlock module?
->>
->> The lock registers start at a certain offset (0x800) within the module
->> register space, and the offsets for various registers are identical
->> between all SoCs.
-> 
-> What are the other registers within the module? Are they shared with other
-> devices, or are they simply unused by the hwspinlock driver?
-
-No, they are not shared with other devices. These are like revision
-register, and a SYSCONFIG register which is used by the OMAP hwmod
-layer. This register definition is in line with other modules on OMAP.
-
-> 
->>
->>>
->>>>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
->>>>> +
->>>>> +Common hwlock properties:
->>>>> +The following describes the usage of the common hwlock properties (defined in
->>>>> +Documentation/devicetree/bindings/hwlock/hwlock.txt) on OMAP.
->>>>> +
->>>>> +- hwlock-base-id:	There are currently no OMAP SoCs with multiple
->>>>> +			hwspinlock devices. The OMAP driver uses a default
->>>>> +			base id value of 0 for the locks present within the
->>>>> +			single hwspinlock device on all SoCs.
->>>
->>>
->>> Driver details should not leak into bindngs...
->>
->> OK, will remove the info on driver details.
->>
->>>
->>> As mentioned in the other patch, I don't think this is the way to handle
->>> this. I think we need a phandle + args representation.
->>
->> This is an optional parameter for now and I was going to revise the
->> description based on comments from Kumar Gala on this thread, but I will
->> wait and adjust this based on the outcome on the first patch.
-> 
-> Ok.
-
-I have removed this property altogether in my current working set. Will
-post the v3 of the series soon.
-
-regards
-Suman
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Using groups to describe aspects of this mapping doesn't seem totally
+unreasonable either. We have named groups for muxing, which is a real HW
+property. We can have named groups for GPIO/pinctrl routing, which again
+is a HW property. Certainly in the muxing case, and hopefully for this
+case too, the naming of those groups is driven purely by the HW design
+of the SoC top-level or GPIO/pinctrl HW blocks, and hence it's
+reasonable for a DT binding to define (or rather, use) those names.
+Hopefully different OSs don't use different names for the groups, since
+the naming is derived directly from HW.
