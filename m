@@ -1,61 +1,69 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 0/4] Add I2C support to ST SoCs
-Date: Thu, 10 Oct 2013 12:03:54 +0200
-Message-ID: <20131010100354.GE2638@katana>
-References: <1381250576-7916-1-git-send-email-maxime.coquelin@st.com>
- <525675B6.4080404@st.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 1/2] arm: dts: omap4+: Add DMM bindings
+Date: Thu, 10 Oct 2013 11:08:33 +0100
+Message-ID: <20131010100833.GF26954@e106331-lin.cambridge.arm.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
+ <1381386994-24747-1-git-send-email-archit@ti.com>
+ <1381386994-24747-2-git-send-email-archit@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UnaWdueM1EBWVRzC"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <525675B6.4080404@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, Lee Jones <lee.jones@linaro.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+In-Reply-To: <1381386994-24747-2-git-send-email-archit@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Archit Taneja <archit@ti.com>
+Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 10, 2013 at 07:36:33AM +0100, Archit Taneja wrote:
+> Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. DMM
+> only requires address and irq information.
+> 
+> Add documentation for the DMM bindings.
+> 
+> Originally worked on by Andy Gross <andygro@gmail.com>
+> 
+> Cc: Andy Gross <andygro@gmail.com>
+> Signed-off-by: Archit Taneja <archit@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/omap/dmm.txt | 16 ++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
+>  arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
+>  3 files changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/dmm.txt b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+> new file mode 100644
+> index 0000000..6fc3d79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+> @@ -0,0 +1,16 @@
+> +OMAP Dynamic Memory Manager (DMM) bindings
 
---UnaWdueM1EBWVRzC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Is there any documentation? A brief description of what this is would be
+nice.
 
+> +
+> +Required properties:
+> +- compatible:	Must be "ti,omap4-dmm" for OMAP4 family
+> +		Must be "ti,omap5-dmm" for OMAP5 and DRA7x family
 
-> > Changes since v3:
-> >    - Switch back to vendor specific DT properties regarding the anti-glitch
-> >      filter configuration, as this IP is the only one having such a filter.
-> Do you agree to keep these properties vendor-specifics?
+s/must be/should contain/
 
-My preference is generic bindings. There are no other users right now,
-yet there might be in the future. At least with something similar enough
-that the bindings will apply. Was hoping for some additional input,
-though, but I am not depending on it.
+> +- reg:		Contains timer register address range (base address and length)
 
-> If so, could you take this series for v3.13?
+Huh? What's a timer got to do with the DMM?
 
-Sure, if it passes the second review...
+> +- interrupts:	Contains interrupt information (source, etc) for the DMM IRQ
 
+Is there a single interrupt? If so:
 
---UnaWdueM1EBWVRzC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+- interrupts: Should contain an interrupt-specifier for the DMM IRQ.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Assuming the "DMM IRQ" is well defined. If there's a name for it in
+documentation, using that's preferable. If a future revision may have
+multiple interrupts, please use interrupt-names now to save us endless
+pain in future.
 
-iQIcBAEBAgAGBQJSVnuKAAoJEBQN5MwUoCm29YAP/j86Uvw2t0c5cudusZoI5pBT
-mWGREfUbrGlgNBb3AFMeTdJtZRFPOn1ZJx8K/FHOz7e//tgTH0ebQm9dTDZ7ZwWQ
-WD17mFEWsRq/yFyYxV9wr1bXu6OuKoUzLz9tDcLlN9BAYwJCXUHuQBt3Os6ELsb8
-2HqUdPdsWhN+iEan8qwi4DeU0HA58IPiU71QeLCk6+ex8yGh5SOI2Q3HMES+eMDL
-fgivJzU0u0SBUKNtfrhdK6RYmSYAm5qI/RezMhl/oU2r0q//bps8aF5aGNV1y9ZX
-6b8cnpV3KGsju4DuPccGGAMKb7k4Yi/Z3lENsm57+FnsZu0cPpp3GentG0WiiLVI
-BY57HKex3JwGblHKeYeM8+A+YCMg1Ju4+dY2gZ4wxWFPxaxORsXqdeufSRFXJErv
-lHCOi91GyH2aYgxMi9EwE/Miwp59oQSCSzYsaVp/rvg2q2+75No4NSstq1qd0eLB
-9B7zuEaXwVCzI1Ep9r+0nVSv6PRiNm74uzdgjUd7GbdxinaFRCrO21nNCvQFZVwv
-Qj2+bUGequCP/55a4x/LJdYa2lNEjJImbyRwSPzI60pD7VEhYBZwopAlc3P39bGQ
-0G0BsO46cFUGFagdiNMJkk1+kvmYmd6HS1Haua/nuKb2zfRhJ8LXyy9a/EYwwnOf
-stNvDh3H5XFreu94BEwD
-=Yzfa
------END PGP SIGNATURE-----
-
---UnaWdueM1EBWVRzC--
+Cheers,
+Mark.
