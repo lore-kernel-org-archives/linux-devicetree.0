@@ -1,33 +1,90 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Thu, 10 Oct 2013 10:18:06 +0300
-Message-ID: <525654AE.7060009@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com> <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
+Date: Thu, 10 Oct 2013 15:26:26 +0800
+Message-ID: <20131010072624.GA29191@S2101-09.ap.freescale.net>
+References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org>
+ <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, mturquette@linaro.org
-Cc: linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 09:59 PM, Paul Walmsley wrote:
-> Eh, one correction:
->
-> On Wed, 9 Oct 2013, Paul Walmsley wrote:
->
->> We could easily wind up with kernels that won't boot at all when used
->> with newer DT data.
->
-> This is a misstatement of the issue: the concern here is that newer
-> kernels may not boot at all with older DT data - which could easily be in
-> locked areas of the flash or firmware.
+On Wed, Oct 09, 2013 at 02:40:49PM +0200, Linus Walleij wrote:
+> On Wed, Oct 9, 2013 at 7:42 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > It's naturally expected that when there are multiple phandle entries
+> > specified in pinctrl-* property, these entries will be applied
+> > sequentially.  And this is how Linux kernel works.  So let's define
+> > this behavior in the binding doc.
+> 
+> NAK this this a Linux kernel implementation detail. Sherman Yin
+> fixed this up so the drivers does not have to imply any sequence
+> semantic for this.
+> 
+> Study commit 03b054e9696c3cbd3d5905ec96da15acd0a2fe8d
+> "pinctrl: Pass all configs to driver on pin_config_set()"
+> 
+> It is perfectly legal for a driver to accumulate the settings into
+> e.g. a single register write if it can, e.g.:
+> 
+> u32 val = 0;
+> 
+> for (i = 0; i < num_configs; i++) {
+>   switch() {
+>   FOO:
+>      val |= 1;
+>      break;
+>    BAR:
+>      val |= 2:
+>      break;
+>    BAZ:
+>      val |=4;
+>      break;
+> };
+> 
+> writel(val, base+pinreg);
+> 
+> I.e. the driver may choose to apply configs sequentially, but that is
+> not at all necessary.
 
-I wonder who would be crazy enough to put DT data into a locked area, 
-and to what purpose. If you can update the kernel, there is no point 
-locking down DT data, this will just cause you unnecessary misery.
+Yes, that's the case when pinconf_apply_setting() is called to apply a
+struct pinctrl_setting.  This pinctrl_setting may contain multiple
+configs (pull, drive, open drain etc.) for a pin, and driver may choose
+to apply these configs sequentially or accumulatedly.  In case of device
+tree, all these configs must be coming from a single pin configuration
+node, as per my understanding of how pinctrl core code maps pin
+configuration in device tree node to struct pinctrl_setting.
 
--Tero
+However, my patch is talking about a different thing.  For example, we
+have a device whose pinctrl-0 consists of two phandle entries that point
+to pin configuration nodes foo and bar.
 
+	pinctrl-0 = <&foo &bar>;
+
+	foo {
+		...
+	};
+
+	bar {
+		...
+	};
+
+My patch only wants to make it clear that the configuration specified by
+node foo will be applied to pin controller first, and the configuration
+defined in node bar will be applied after that.  When both nodes have
+configuration for a pin, these two configs for the same pin go to two
+different pinctrl_setting structures.  And these two pinctrl_settings
+can not be applied accumulatedly but only sequentially.  That's what my
+patch talks about.
+
+Shawn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
