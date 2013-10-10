@@ -1,38 +1,37 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
-Date: Thu, 10 Oct 2013 18:12:04 +0800
-Message-ID: <20131010101140.GC29191@S2101-09.ap.freescale.net>
+Date: Thu, 10 Oct 2013 18:22:07 +0800
+Message-ID: <20131010102205.GD29191@S2101-09.ap.freescale.net>
 References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org>
  <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
  <20131010072624.GA29191@S2101-09.ap.freescale.net>
- <CACRpkdZFx94kEXiWPHOZVmK1d21pM0jg4y6coqu3Pyd=9HES5w@mail.gmail.com>
+ <20131010100840.GP25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZFx94kEXiWPHOZVmK1d21pM0jg4y6coqu3Pyd=9HES5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20131010100840.GP25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2013 at 10:03:40AM +0200, Linus Walleij wrote:
-> On Thu, Oct 10, 2013 at 9:26 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
+On Thu, Oct 10, 2013 at 11:08:40AM +0100, Russell King - ARM Linux wrote:
+> On Thu, Oct 10, 2013 at 03:26:26PM +0800, Shawn Guo wrote:
 > > However, my patch is talking about a different thing.  For example, we
 > > have a device whose pinctrl-0 consists of two phandle entries that point
 > > to pin configuration nodes foo and bar.
-> >
-> >         pinctrl-0 = <&foo &bar>;
-> >
-> >         foo {
-> >                 ...
-> >         };
-> >
-> >         bar {
-> >                 ...
-> >         };
-> >
+> > 
+> > 	pinctrl-0 = <&foo &bar>;
+> > 
+> > 	foo {
+> > 		...
+> > 	};
+> > 
+> > 	bar {
+> > 		...
+> > 	};
+> > 
 > > My patch only wants to make it clear that the configuration specified by
 > > node foo will be applied to pin controller first, and the configuration
 > > defined in node bar will be applied after that.  When both nodes have
@@ -41,53 +40,48 @@ On Thu, Oct 10, 2013 at 10:03:40AM +0200, Linus Walleij wrote:
 > > can not be applied accumulatedly but only sequentially.  That's what my
 > > patch talks about.
 > 
-> OK I get it (I think).
+> I still say this is a potentially dangerous thing, and in my case of
+> overriding the DAT3 pull-sense, it will cause the pin to glitch if
+> nothing is connected to it.
 > 
-> However isn't this aspect rather a property of how the specific driver
-> parses and uses the device tree?
+> So even if you do get this clarified, I am *not* happy to change my
+> patch.
 
-The 'pinctrl-0' property is defined by common pinctrl device tree
-binding and is parsed by pinctrl core, while pin configuration node
-is platform specific and handled by controller driver.
+What about the solution suggested by Stephen, moving
+MX6QDL_PAD_SD1_DAT3__SD1_DATA3 out from pinctrl_usdhc1_1 and having
+additional nodes/phandle for DAT3 with different settings?
 
-> Remember that with drivers that do not use generic pin config,
-> we have left the handling of the device tree node up to the driver
-> by the callback dt_node_to_map().
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 59154dc..fd52f4e 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1157,7 +1157,6 @@
+                                                        MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
+                                                        MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
+                                                        MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
+-                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
+                                                        MX6QDL_PAD_NANDF_D0__SD1_DATA4 0x17059
+                                                        MX6QDL_PAD_NANDF_D1__SD1_DATA5 0x17059
+                                                        MX6QDL_PAD_NANDF_D2__SD1_DATA6 0x17059
+@@ -1165,6 +1164,18 @@
+                                                >;
+                                        };
 
-Yes.  dt_node_to_map() takes pin configuration node pointer as input and
-return a set of struct pinctrl_map.  But how pinctrl_map eventually gets
-turned into pinctrl_setting as the input to pinconf_apply_setting() call
-are all handled by pinctrl core and common across different controller
-drivers.
++                                       pinctrl_usdhc1_1_dat3: usdhc1dat3-1 {
++                                               fsl,pins = <
++                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
++                                               >;
++                                       };
++
++                                       pinctrl_usdhc1_1_dat3cd: usdhc1dat3cd-1 {
++                                               fsl,pins = <
++                                                       MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x13059
++                                               >;
++                                       };
 
-> But I do understand the ambition to specify this behaviour for all
-> pin control drivers using device tree.
-> 
-> But we need to be careful since DT isn't very much in the
-> buisiness of defining sequence semantics for stuff, and that
-> is why I'm a bit hesitant.
-> 
-> So, maybe we can add this as it only concerns the binding
-> (but then I want that example to be part of the documentation patch
-> so that it is crystal clear what we're talking about), but it would be
-> proper if we also helped enforce this semantic across the drivers,
-> i.e. centralize more of the DT parsing code...
-
-Ok.  I would hold it off for a while and consider Stephen's comment
-first for solving the problem we have on i.MX.
-
-> BTW on a related subject: have you examined if the i.MX driver
-> can use the new utility functions from pinctrl-utils.h:
-> 
-> pinctrl_utils_reserve_map()
-> pinctrl_utils_add_map_mux()
-> pinctrl_utils_add_map_configs()
-> pinctrl_utils_add_config()
-> pinctrl_utils_dt_free_map()
-
-Thanks for the info.  Just had a quick look at them, and it seems that
-they don't save too much code for imx.  Will take another deep look
-though.
+Then pinctrl-0 = <&pinctrl_usdhc1_1 &pinctrl_usdhc1_1_dat3> for existing
+boards, and <&pinctrl_usdhc1_1 &pinctrl_usdhc1_1_dat3cd> for boards that
+want to use DAT3 for card detection.
 
 Shawn
 
