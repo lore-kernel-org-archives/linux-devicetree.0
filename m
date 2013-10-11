@@ -1,93 +1,126 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: Re: [PATCH] gpio: add export with name from dts
-Date: Fri, 11 Oct 2013 15:10:42 +0200
-Message-ID: <5257F8D2.5080700@aksignal.cz>
-References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz> <CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com> <5257E15D.5080602@aksignal.cz> <CACRpkdYkG-0x9_oQijA6hYn+snDsjtVT+RhYhDe_9gjfDdWuoA@mail.gmail.com>
-Reply-To: jiri.prchal@aksignal.cz
+From: Pekon Gupta <pekon@ti.com>
+Subject: [PATCH v8 0/6] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Fri, 11 Oct 2013 19:06:37 +0530
+Message-ID: <1381498603-15715-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYkG-0x9_oQijA6hYn+snDsjtVT+RhYhDe_9gjfDdWuoA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com
+Cc: Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pekon Gupta <pekon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dne 11.10.2013 14:49, Linus Walleij napsal(a):
-> On Fri, Oct 11, 2013 at 1:30 PM, skrev Ji=C5=99=C3=AD Prchal <jiri.pr=
-chal@aksignal.cz>:
->> Dne 11.10.2013 12:48, Linus Walleij napsal(a):
->
->>> - What do you think of the approach of just not using this for DT
->>>     boots, instead we create a new userspace ABI, using e.g. a
->>>     char device for each GPIO chip like /dev/gpio0, /dev/gpio1 etc
->>>     and access these using ioctl:s?
->>
->> It would be nice, but yesterday was late.
->> Even nicer would be /dev/in13, /dev/out20 etc.
->
-> Hm like one device node per pin?
->
-> /dev/gpio0/in01
-> /dev/gpio0/out01
-> etc
-Yes, because one userspace app is controling out1 and the other out2.
-And maybe /dev/gpio/, not sorted by chip, because out2 and out3 could b=
-e another chip.
-Just picked up unused gpio over soc and some added by SPI expander.
-=46or example:
-SOC -> board name
-pioC18 -> in13
-pioB12 -> in14
-pioA31 -> out15
-etc
+*Changes v7 -> v8*
+[PATCH 1/6] <no updates>
+[PATCH 2/6]
+	- updated DT parsing of "ti,nand-ecc-opts" so that its "ham1" remains
+		compatible to "sw","hw","hw-romcode"
+	- updated DT parsing of "ti,elm-id" to retain compatibility to "elm_id"
+	- using of_parse_phandle() to get ELM device pointer from DT
+[PATCH 3..6/6] <commit log updates>
 
->
->>> - I guess you have a specific system in mind for this? What is the
->>>     use case? I have seen *way* too many people trying to reimpleme=
-nt
->>>     drivers/leds/leds-gpio.c
->>>     drivers/input/keyboard/gpio_keys.c
->>>     drivers/input/keyboard/gpio_keys_polled.c
->>>     drivers/power/gpio-charger.c
->>>     drivers/i2c/busses/i2c-gpio.c
->>>     drivers/extcon/extcon-gpio.c
->>>     drivers/spi/spi-gpio.c
->>>     IN USERSPACE! JUST BECAUSE THEY CAN!
->>
->> As I know, no one is good for me. May be I could use gpio-led for ou=
-tputs,
->> but they would be under sysfs/leds and it isn't clear.
->
-> If the GPIOs are actually connected to LEDs you should be
-> using drivers/leds/leds-gpio.c and not export the GPIOs.
-I know that, just don't like /sys/class/leds/out15/brightness.
 
->
->> And what for inputs?
->
-> Depends on what input. For simple buttons:
->
-> drivers/input/keyboard/gpio_keys.c
-> drivers/input/keyboard/gpio_keys_polled.c
->
-> Then you get the input events from /dev/input/eventN
-> just like any other key press.
->
-> extcon-gpio.c is for e.g. headphone insertion on mobile
-> phones etc.
-Hm, my inputs are simple digital inputs from real world, like "door ope=
-n",
-"somewhere is voltage", "some switch is on". And more than one app is r=
-eading them.
-So what to use for it?
+*Changes v6 -> v7*
+[PATCH 1/6] <NEW> split from [PATCH v6 2/4] as per feedbacks of Brain Norris
+[PATCH 2/6] incorporated feedbacks from DT maintainers
+[PATCH 3/6] patch cleaning and incorporated feedbacks from Brain Norris
+[PATCH 4/6] rebasing changes and cleanup
+[PATCH 5/6] updated omap3430-sdp.dts
+[PATCH 6/6] <NEW> updated for devm_xx
 
-Thanks
-Jiri
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+*Changes v5 -> v6*
+[PATCH 1/4]: 
+	- updated DT binding for gpmc-nand based on 'Olof Johansson's feedbacks
+	http://lists.infradead.org/pipermail/linux-mtd/2013-August/048394.html
+	- detection of ELM device via ti,elm-id DT node, moved to gpmc.c driver
+[PATCH 2/4]
+	- removed: support for following obselete ECC schemes
+	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming ECC)
+	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit Hamming ECC scheme)
+	- updated: using omap_oobinfo as chip->ecc.layout for all ecc-schemes
+	- clean: error messages
+[PATCH 3/4] cleaned to include changes for OMAP_ECC_BCH8_CODE_HW only
+[PATCH 4/4] updated to include DT property changes
+
+
+*Changes v4 -> v5*
+- Rebased to linux-next 
+IMPORTANT: Need to revert commit fb1585b, [PATCH 2/4] part of previous version
+	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
+
+- Swapped PATCH-1 & PATCH-2 to maintain bisectibility & compilation dependency
+	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047461.html
+
+- PATCH-2: re-ordered call to is_elm_present() for later updates ELM driver
+	- dropped changes in include/linux/platform_data/elm.h (not needed)
+- PATCH-3: re-ordered call to is_elm_present() for later updates ELM driver
+- Re-formated patch description (replaced tabs with white-spaces)
+
+
+*Changes v3 -> v4*
+(Resent with CC: devicetree-discuss@lists.ozlabs.org)
+- [Patch 1/3] removed MTD_NAND_OMAP_BCH8 & MTD_NAND_OMAP_BCH4 from nand/Kconfig
+	ECC scheme selectable via nand DT (nand-ecc-opt).
+- [*] rebased for l2-mtd.git
+
+
+*Changes v2 -> v3*
+(Resent with Author Name fixed)
+- PATCH-1: re-arranged code to remove redundancy, added NAND_BUSWIDTH_AUTO
+- PATCH-2: updated nand-ecc-opt DT mapping and Documentation
+- PATCH-3: code-cleaning + changes to match PATCH-1
+- PATCH-4 <DROPPED> update DT attribute for ti,nand-ecc-opt 
+	- received feedback to keep DT mapping independent of linuxism
+- PATCH-4:<NEW> : ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+	- independent patch for AM335x-evm.dts update based on PATCH-2
+
+
+*Changes v1 -> v2*
+	added 	[PATCH 3/4] and [PATCH 4/4]
+
+
+After this patch series, omap2-nand driver will supports following ECC schemes:
++---------------------------------------+---------------+---------------+
+| ECC scheme                            |ECC calculation|Error detection|
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_HAM1_CODE_HW                  |H/W (GPMC)     |S/W            |
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH4_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
+|OMAP_ECC_BCH4_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
+|OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
++---------------------------------------+---------------+---------------+
+
+To optimize footprint of omap2-nand driver, selection of some ECC schemes
+also require enabling following Kconfigs, in addition to setting appropriate
+DT bindings
+- Kconfig:CONFIG_MTD_NAND_ECC_BCH        error detection done in software
+- Kconfig:CONFIG_MTD_NAND_OMAP_BCH       error detection done by h/w engine
+
+
+Pekon Gupta (6):
+  mtd: nand: omap: combine different flavours of 1-bit hamming ecc
+    schemes
+  ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+  mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC configurations in
+    device_probe
+  mtd:nand:omap2: updated support for BCH4 ECC scheme
+  ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+  mtd: nand: omap: updated devm_xx for all resource allocation and free
+    calls
+
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |  16 +-
+ arch/arm/boot/dts/am335x-evm.dts                   |   3 +-
+ arch/arm/boot/dts/omap3430-sdp.dts                 |   2 +-
+ arch/arm/mach-omap2/board-flash.c                  |   2 +-
+ arch/arm/mach-omap2/gpmc.c                         |  47 +-
+ drivers/mtd/nand/Kconfig                           |  30 +-
+ drivers/mtd/nand/omap2.c                           | 569 ++++++++++-----------
+ include/linux/platform_data/mtd-nand-omap2.h       |  18 +-
+ 8 files changed, 333 insertions(+), 354 deletions(-)
+
+-- 
+1.8.1
+
