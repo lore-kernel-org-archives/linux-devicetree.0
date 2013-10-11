@@ -1,51 +1,48 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all resource
- allocation and free calls
-Date: Fri, 11 Oct 2013 15:14:43 -0700
-Message-ID: <CAN8TOE-0e+7211_c-Ao6RwP22ttKLSfVS54RQjHBiQxFtwS6PQ@mail.gmail.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
-	<1381498603-15715-7-git-send-email-pekon@ti.com>
-	<20131011181515.GJ23337@ld-irv-0074.broadcom.com>
-	<20131011182840.GW29913@atomide.com>
-	<CAN8TOE9S63a1YdtzS+urTGBoMqrhq83cXXEeGinvQi9=dyUX1Q@mail.gmail.com>
-	<20131011214653.GA29913@atomide.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 17/27] drm/tegra: Add Tegra114 HDMI support
+Date: Fri, 11 Oct 2013 16:19:19 -0600
+Message-ID: <52587967.6050806@wwwdotorg.org>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-18-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131011214653.GA29913@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Pekon Gupta <pekon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, Artem Bityutskiy <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Benoit Cousson <bcousson@baylibre.com>, Avinash Philip <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381134884-5816-18-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 2:46 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Brian Norris <computersforpeace@gmail.com> [131011 12:35]:
->> On Fri, Oct 11, 2013 at 11:28 AM, Tony Lindgren <tony@atomide.com> wrote:
->> >
->> > FYI, the .dts changes should be queued separately by Benoit to avoid
->> > pointless merge conflicts. The arch/arm/mach-omap2/gpmc.c changes I
->> > need to look, hopefully I can ack those for you today so you can take
->> > the code related changes into the MTD tree.
->>
->> Why are you replying to this patch, instead of the DTS?
->
-> Because you said you might merrge some parts of the series and I've
-> seen many merge cycles of pointless merge conflicts with driver
-> maintainers merging .dts files along with the driver changes? :)
+On 10/07/2013 02:34 AM, Thierry Reding wrote:
+> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Tegra114 TMDS configuration requires a new peak_current field and the
+> driver current override bit has changed position.
 
-Sure, thanks for pointing this out. I may have fallen into that myself.
+> diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
 
-> Pekon, can please post the .dts changes entirely separately from
-> the driver changes in the future?
->
->> Also, I don't think all of this code is ready. There are several
->> comments from weeks ago that Pekon hasn't addressed. It's possible the
->> DT binding changes can go in, but not some of the later patches, yet.
->
-> Yes that's up to you. I have not looked at the MTD parts and I
-> appreciate the fact that you are reviewing that stuff. I've acked
-> the arch/arm/*omap* parts so hopefully I'm out of the loop now.
+>  static const struct tmds_config tegra2_tmds_config[] = {
+> @@ -223,6 +224,85 @@ static const struct tmds_config tegra3_tmds_config[] = {
 
-Yes, I think so. The MTD stuff is the only remaining weak point I see.
+Not related to this patch, but those should have been named
+tegra20_tmds_config[] and tegra30_tmds_config[].
 
-Brian
+>  static void tegra_hdmi_setup_tmds(struct tegra_hdmi *hdmi,
+
+> -	value = tmds->drive_current | DRIVE_CURRENT_FUSE_OVERRIDE;
+> -	tegra_hdmi_writel(hdmi, value, HDMI_NV_PDISP_SOR_LANE_DRIVE_CURRENT);
+> +	if (of_device_is_compatible(np, "nvidia,tegra114-hdmi")) {
+
+Let's not check this at run-time. Instead, host1x_drm_subdevs[]'s .data
+field should be used to contain either flags or a pointer to a
+configuration structure, either of which can be directly consulted to
+determine the properties of the HW in a feature-oriented/semantic way.
+
+drivers/gpio/gpio-tegra.c's
+tegra20_gpio_config/tegra30_gpio_config/tegra_gpio_of_match provide a
+good example of this.
+
+This means that if Tegra124 is identical to Tegra114, yet a hypothetical
+Tegra999 is different, you don't have to keep adjusting these if
+conditions throughout the code; they can simply refer to the same
+feature bit forever.
