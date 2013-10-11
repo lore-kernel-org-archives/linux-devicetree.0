@@ -1,42 +1,60 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
-Date: Fri, 11 Oct 2013 13:22:35 +0530
-Message-ID: <5257AE43.4020902@ti.com>
-References: <1381408647-24653-1-git-send-email-kishon@ti.com> <5256A773.6060807@nvidia.com> <5257977C.1030108@ti.com> <5257A36D.80902@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 01/03] Make non-linear GPIO ranges accesible from gpiolib
+Date: Fri, 11 Oct 2013 09:53:53 +0200
+Message-ID: <CACRpkdZYTc2_zQww7NfmTjSZEoiksVwpV3sugXnanoUX135iRA@mail.gmail.com>
+References: <20131008122145.GA21985@ab42.lan>
+	<1381235122-23730-1-git-send-email-christian.ruppert@abilis.com>
+	<CACRpkdafaNE_fgiq8iW=_gT5gDVC_H8m-+0dfpunhAantLdJwQ@mail.gmail.com>
+	<20131009132837.GA23021@ab42.lan>
+	<CACRpkdbo9MOuCY_UWhzbWwEAom_Z3=Vi575ELix9j3hsZdBzZw@mail.gmail.com>
+	<525712C9.6040502@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5257A36D.80902@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <525712C9.6040502@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
-
-On Friday 11 October 2013 12:36 PM, Chanwoo Choi wrote:
-> On 10/11/2013 03:15 PM, Kishon Vijay Abraham I wrote:
->> On Thursday 10 October 2013 06:41 PM, Laxman Dewangan wrote:
->>> On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
->>>> The Palmas device contains only a USB VBUS-ID detector, so added a
->>>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
->>>> types for backward compatibility.
->>>>
->>> I dont have much issue on this nomenclature but just second thought:
->>>
->>> The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, ID-RB, ID-RC
->>> and ID-FLOAT as per BC1.2.
->>> This sub-module only detect the cable, does nothing more than this.
->>> In this case, should we say "ti,palmas-usb-extcon"?
->>> Again extcon is linux specific terminology and this can be defer.
+On Thu, Oct 10, 2013 at 10:49 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 10/09/2013 08:01 AM, Linus Walleij wrote:
+>> On Wed, Oct 9, 2013 at 3:28 PM, Christian Ruppert
+>> <christian.ruppert@abilis.com> wrote:
+>>> On Wed, Oct 09, 2013 at 01:58:35PM +0200, Linus Walleij wrote:
+>>>> On Tue, Oct 8, 2013 at 2:25 PM, Christian Ruppert
+>>>> <christian.ruppert@abilis.com> wrote:
+> ...
+>>> Obviously, a driver (no matter for which OS) must be aware of
+>>> this hardware property so it can decide which value to write to which
+>>> register in order to control the pin mux. If we don't want to split (or
+>>> worse: duplicate) that information in the driver and device tree, I see
+>>> two alternatives.
+>>> 1. Define register offsets, masks and register values and the list of
+>>>    pins controlled by those register/value pairs in the device tree.
 >>
->> I don't mind either way. Chanwoo?
-> 
-> The EXTCON is subsystem name. I don't prefer to use 'extcon' word on device name.
-> I agree Kishon opinion.
+>> This is not a viable alternative of course.
+>
+> Cough. pinctrl-single. Cough.
 
-Cool.. can you this patch as-is?
+Indeed I have had second thoughts about pinctrl-single both
+during its inception and later. Especially yesteray when it
+sort of popped up that "yeah one register per pin ... then we
+have this one extra register on the side to flush the pin settings
+out to the IO-ring". (Haven't caught up with that discussion
+though.)
 
-Thanks
-Kishon
+It really needs to be kept in its very constrained cage.
+
+For pinctrl-single there are quite a few strings attached,
+like the pin can only be controlled by a single register, not
+two of them. The indata to the device tree should be
+in some nonsensical machine-readable form, not a
+human-readable manual, such that the work of writing a
+"proper" driver would involve reverse-engineering that
+manual.
+
+But it is definately in a grey area.
+
+Yours,
+Linus Walleij
