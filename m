@@ -1,83 +1,284 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v7 1/6] mtd: nand: omap: combine different flavours of
- 1-bit hamming ecc schemes
-Date: Fri, 11 Oct 2013 10:17:48 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA2122E@DBDE04.ent.ti.com>
-References: <1380916188-24206-1-git-send-email-pekon@ti.com>
- <1380916188-24206-2-git-send-email-pekon@ti.com>
- <20131007112728.GA15365@e106331-lin.cambridge.arm.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA1F3DC@DBDE04.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA1F3DC@DBDE04.ent.ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "dedekind1@gmail.com" <dedekind1@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "olof@lixom.net" <olof@lixom.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 12/17] clk: at91: add PMC utmi clock
+Date: Fri, 11 Oct 2013 12:22:06 +0200
+Message-ID: <1381486926-14346-1-git-send-email-b.brezillon@overkiz.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear MTD Maintainers,
+This adds new at91 utmi clock implementation using common clk framework.
 
-> >
-> > If I have my NAND formatted with one of the existing ECC schemes (e.g.
-> > OMAP_ECC_HAMMING_CODE_DEFAULT) will it work with the new
-> > OMAP_ECC_HAM1_CODE_HW scheme?
-> >
-> > Are they all compatible?
-> >
-> Yes, they all are 1-bit hamming code, the only difference between
-> xx_Default and xx_HW was who was doing the ECC calculation.
-> For xx_DEFAULT: ECC calculation was done on CPU via s/w library
-> For xx_HW: ECC calculation was done by in-build h/w engine.
-> So, all HAMMING_xx can be replaced by HAM1_HW.
-> 
-> [snip]
-> 
-> > > @@ -1342,9 +1342,7 @@ static void __maybe_unused
-> > gpmc_read_timings_dt(struct device_node *np,
-> > >  #ifdef CONFIG_MTD_NAND
-> > >
-> > >  static const char * const nand_ecc_opts[] = {
-> > > -	[OMAP_ECC_HAMMING_CODE_DEFAULT]		= "sw",
-> > > -	[OMAP_ECC_HAMMING_CODE_HW]		= "hw",
-> > > -	[OMAP_ECC_HAMMING_CODE_HW_ROMCODE]	= "hw-
-> > romcode",
-> > > +	[OMAP_ECC_HAM1_CODE_HW]			= "ham1",
-> > >  	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
-> > >  	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
-> >
-> > Won't this break existing dts which have "sw", "hw", or "hw-romcode"?
-> >
-> > Someone may try to use a new kernel with an old dt, and we marked them
-> > as deprecated, not removed.
-> >
-> HAMMING_xx ECC scheme was used only on legacy platforms, when
-> BCH8 was not available, I have not seen anyone using this scheme
-> *from mainline kernel* from quite a long time. So, it's safe to remove them.
-> 
-> This is what was concluded as per below email.
-> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048876.html
-> 
+This clock is a pll with a fixed factor (x40).
+It is used as a source for usb clock.
 
-This patch-series and its follow-on series has already missed many merge
-windows, And the above discussion has reached a stalled state (infinite loop)
-where, I cannot revert some DT binding updates to and fro to keep all legacy
-DT bindings backward compatible forever.
-However, I can assure that these DT updates make binding stable for long-term.
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ arch/arm/mach-at91/Kconfig  |    7 ++
+ drivers/clk/at91/Makefile   |    1 +
+ drivers/clk/at91/clk-utmi.c |  162 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/at91/pmc.c      |    7 ++
+ drivers/clk/at91/pmc.h      |    5 ++
+ 5 files changed, 182 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-utmi.c
 
-So now it's your discretion to whether to accept or leave following 2 series:
+diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+index 85b53a4..6ad37da 100644
+--- a/arch/arm/mach-at91/Kconfig
++++ b/arch/arm/mach-at91/Kconfig
+@@ -1,5 +1,8 @@
+ if ARCH_AT91
+ 
++config HAVE_AT91_UTMI
++	bool
++
+ config HAVE_AT91_DBGU0
+ 	bool
+ 
+@@ -78,6 +81,7 @@ config SOC_SAMA5D3
+ 	select HAVE_FB_ATMEL
+ 	select HAVE_AT91_DBGU1
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_UTMI
+ 	help
+ 	  Select this if you are using one of Atmel's SAMA5D3 family SoC.
+ 	  This support covers SAMA5D31, SAMA5D33, SAMA5D34, SAMA5D35.
+@@ -124,6 +128,7 @@ config SOC_AT91SAM9RL
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_UTMI
+ 
+ config SOC_AT91SAM9G45
+ 	bool "AT91SAM9G45 or AT91SAM9M10 families"
+@@ -131,6 +136,7 @@ config SOC_AT91SAM9G45
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_UTMI
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9G45 family SoC.
+ 	  This support covers AT91SAM9G45, AT91SAM9G46, AT91SAM9M10 and AT91SAM9M11.
+@@ -141,6 +147,7 @@ config SOC_AT91SAM9X5
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_UTMI
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9x5 family SoC.
+ 	  This means that your SAM9 name finishes with a '5' (except if it is
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index 3873b62..a824883 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -7,3 +7,4 @@ obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
+ obj-y += clk-system.o clk-peripheral.o
+ 
+ obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
++obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
+diff --git a/drivers/clk/at91/clk-utmi.c b/drivers/clk/at91/clk-utmi.c
+new file mode 100644
+index 0000000..9a133df
+--- /dev/null
++++ b/drivers/clk/at91/clk-utmi.c
+@@ -0,0 +1,162 @@
++/*
++ * drivers/clk/at91/clk-utmi.c
++ *
++ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/clk/at91_pmc.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/io.h>
++#include <linux/sched.h>
++#include <linux/wait.h>
++
++#include "pmc.h"
++
++#define UTMI_FIXED_MUL		40
++
++struct clk_utmi {
++	struct clk_hw hw;
++	struct at91_pmc *pmc;
++	unsigned int irq;
++	wait_queue_head_t wait;
++};
++
++#define to_clk_utmi(hw) container_of(hw, struct clk_utmi, hw)
++
++static irqreturn_t clk_utmi_irq_handler(int irq, void *dev_id)
++{
++	struct clk_utmi *utmi = (struct clk_utmi *)dev_id;
++
++	wake_up(&utmi->wait);
++	disable_irq_nosync(utmi->irq);
++
++	return IRQ_HANDLED;
++}
++
++static int clk_utmi_prepare(struct clk_hw *hw)
++{
++	struct clk_utmi *utmi = to_clk_utmi(hw);
++	struct at91_pmc *pmc = utmi->pmc;
++	u32 tmp = at91_pmc_read(AT91_CKGR_UCKR) | AT91_PMC_UPLLEN |
++		  AT91_PMC_UPLLCOUNT | AT91_PMC_BIASEN;
++
++	pmc_write(pmc, AT91_CKGR_UCKR, tmp);
++
++	while (!(pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_LOCKU)) {
++		enable_irq(utmi->irq);
++		wait_event(utmi->wait,
++			   pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_LOCKU);
++	}
++
++	return 0;
++}
++
++static int clk_utmi_is_ready(struct clk_hw *hw)
++{
++	struct clk_utmi *utmi = to_clk_utmi(hw);
++	struct at91_pmc *pmc = utmi->pmc;
++
++	return !!(pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_LOCKU);
++}
++
++static void clk_utmi_disable(struct clk_hw *hw)
++{
++	struct clk_utmi *utmi = to_clk_utmi(hw);
++	struct at91_pmc *pmc = utmi->pmc;
++	u32 tmp = at91_pmc_read(AT91_CKGR_UCKR) & ~AT91_PMC_UPLLEN;
++
++	pmc_write(pmc, AT91_CKGR_UCKR, tmp);
++}
++
++static unsigned long clk_utmi_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	/* UTMI clk is a fixed clk multiplier */
++	return parent_rate * UTMI_FIXED_MUL;
++}
++
++static const struct clk_ops utmi_ops = {
++	.prepare = clk_utmi_prepare,
++	.is_prepared = clk_utmi_is_ready,
++	.disable = clk_utmi_disable,
++	.is_enabled = clk_utmi_is_ready,
++	.recalc_rate = clk_utmi_recalc_rate,
++};
++
++static struct clk * __init
++at91_clk_register_utmi(struct at91_pmc *pmc, unsigned int irq,
++		       const char *name, const char *parent_name)
++{
++	int ret;
++	struct clk_utmi *utmi;
++	struct clk *clk = NULL;
++	struct clk_init_data init;
++
++	utmi = kzalloc(sizeof(*utmi), GFP_KERNEL);
++	if (!utmi)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &utmi_ops;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	init.num_parents = parent_name ? 1 : 0;
++	init.flags = CLK_SET_RATE_GATE;
++
++	utmi->hw.init = &init;
++	utmi->pmc = pmc;
++	utmi->irq = irq;
++	init_waitqueue_head(&utmi->wait);
++	irq_set_status_flags(utmi->irq, IRQ_NOAUTOEN);
++	ret = request_irq(utmi->irq, clk_utmi_irq_handler,
++			  IRQF_TRIGGER_HIGH, "clk-utmi", utmi);
++	if (ret)
++		return ERR_PTR(ret);
++
++	clk = clk_register(NULL, &utmi->hw);
++	if (IS_ERR(clk))
++		kfree(utmi);
++
++	return clk;
++}
++
++static void __init
++of_at91_clk_utmi_setup(struct device_node *np, struct at91_pmc *pmc)
++{
++	unsigned int irq;
++	struct clk *clk;
++	const char *parent_name;
++	const char *name = np->name;
++
++	parent_name = of_clk_get_parent_name(np, 0);
++
++	of_property_read_string(np, "clock-output-names", &name);
++
++	irq = irq_of_parse_and_map(np, 0);
++	if (!irq)
++		return;
++
++	clk = at91_clk_register_utmi(pmc, irq, name, parent_name);
++	if (IS_ERR(clk))
++		return;
++
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
++	return;
++}
++
++void __init of_at91sam9x5_clk_utmi_setup(struct device_node *np,
++					 struct at91_pmc *pmc)
++{
++	of_at91_clk_utmi_setup(np, pmc);
++}
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index 5b8a959e..8802999 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -272,6 +272,13 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
+ 		.data = of_at91sam9x5_clk_prog_setup,
+ 	},
+ #endif
++	/* UTMI clock */
++#if defined(CONFIG_HAVE_AT91_UTMI)
++	{
++		.compatible = "atmel,at91sam9x5-clk-utmi",
++		.data = of_at91sam9x5_clk_utmi_setup,
++	},
++#endif
+ 	{ /*sentinel*/ }
+ };
+ 
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 5f20dc1..3ba9503 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -91,4 +91,9 @@ extern void __init of_at91sam9x5_clk_prog_setup(struct device_node *np,
+ 						struct at91_pmc *pmc);
+ #endif
+ 
++#if defined(CONFIG_HAVE_AT91_UTMI)
++extern void __init of_at91sam9x5_clk_utmi_setup(struct device_node *np,
++						struct at91_pmc *pmc);
++#endif
++
+ #endif /* __PMC_H_ */
+-- 
+1.7.9.5
 
-http://lists.infradead.org/pipermail/linux-mtd/2013-October/048983.html
-
-http://lists.infradead.org/pipermail/linux-mtd/2013-October/049008.html
-
-
-AFAIK no-one is using Hamming based ecc-scheme on OMAP platforms
-*from mainline kernel*. So this DT update actually does not affect users
-I know of. Rather these patch series was intended for long term scalability
-and clean-up so that more OMAP users migrate to mainline kernel easily.
-
-
-with regards, pekon 
