@@ -1,51 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
-Date: Fri, 11 Oct 2013 09:01:46 -0700
-Message-ID: <20131011160146.GR29913@atomide.com>
-References: <20131003054221.8941.87801.stgit@localhost>
- <5256AA7F.8030005@ti.com>
- <20131010160018.GA29913@atomide.com>
- <CACRpkdaG-PQA39XSjKUgM9TyeD7srgm_8s+NazrDKJ0gmNLcwg@mail.gmail.com>
- <20131010162015.GC29913@atomide.com>
- <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
- <5257BD3E.5000707@ti.com>
- <CACRpkdYJNaiAAHhYatd6g5_wVt0QEUxOvsk6nQn9o=_i5zfWrA@mail.gmail.com>
- <20131011154352.GO29913@atomide.com>
- <CACRpkdZhbadd5d4P+2B0_DktqK4CHzZPVJC8kPHZYUnp8TaxsA@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 01/17] ARM: at91: move at91_pmc.h to
+ include/linux/clk/at91_pmc.h
+Date: Fri, 11 Oct 2013 11:05:28 -0500
+Message-ID: <20131011160528.GV25706@radagast>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+ <1381477081-6041-2-git-send-email-b.brezillon@overkiz.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pEAjBjStGYT6H+Py"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZhbadd5d4P+2B0_DktqK4CHzZPVJC8kPHZYUnp8TaxsA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Roger Quadros <rogerq@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prakash Manjunathappa <prakash.pm@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>
+In-Reply-To: <1381477081-6041-2-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij@linaro.org> [131011 09:05]:
-> On Fri, Oct 11, 2013 at 5:43 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > * Linus Walleij <linus.walleij@linaro.org> [131011 03:40]:
-> >> On Fri, Oct 11, 2013 at 10:56 AM, Roger Quadros <rogerq@ti.com> wrote:
-> >>
-> >> > The register handling is fine. But how do we deal with resource handling?
-> >> > e.g. the block that has the deep-core registers might need to be clocked or powered
-> >> > before the registers can be accessed.
-> >>
-> >> Yeah I saw this in the code there.
-> >>
-> >> In this case it seems syscon-type regmap access can be used to
-> >> read/write the registers, so maybe the pin controller also need to
-> >>  get a handle on some clock etc?
-> >
-> > Uhh, let's not go there.. The resource availability needs to be
-> > handled transparently in regmap code and the reg provider hardware
-> > module driver using runtime PM.
-> 
-> OK we can surely discuss this with broonie, it makes sense to
-> have regmap be able to do its deed transparently.
+--pEAjBjStGYT6H+Py
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes I think so too. Sounds like we need callbacks for the runtime PM
-checks to the "register provider" driver. Hwo knows, maybe those
-features are there already :)
+On Fri, Oct 11, 2013 at 09:37:45AM +0200, Boris BREZILLON wrote:
+> This patch moves at91_pmc.h header from machine specific directory
+> (arch/arm/mach-at91/include/mach/at91_pmc.h) to clk include directory
+> (include/linux/clk/at91_pmc.h).
+> We need this to avoid reference to machine specific headers in clk
+> drivers.
+>=20
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 
-Tony
+for drivers/usb/gadget:
+
+Acked-by: Felipe Balbi <balbi@ti.com>
+
+
+--=20
+balbi
+
+--pEAjBjStGYT6H+Py
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSWCHIAAoJEIaOsuA1yqREYTUP/jo1tAeSsGLgW8wPWSHBtM2U
+3NoEP4BFgO5zen+YQpD39m5yR/LSfMNsUG0l45q4ewRmPAziTOvVTAHBGRmsdLZL
+33QAoy56TJj2a3tbweEKKhl6uVaL+phLA3r5MiRClxudGDakqxlTbTSKmNtbvgQV
+SlOZQY/n5uR70eYsUmACMn1ss+0lurxQXfaArqi0VXvxjxD7sxGzV2g5l4dC7ERC
+elPyT0bbCNCdZChFbd02E0cpe2rBa87xIDyq88qzJiOkLtrtTI0nVwIE6U9FHG9/
+IL7cvo8nUq9/j3P/lvw4V13V/FR9GKsLZpK+UM1UyCQuYbTsvyt6DdmQGAVwQjmR
+lgTKUuw/MBiZlCz4PDsgtxXjFbRQVguSUSFXC4NATVId9gUU/v75fKrEIOCzTqDD
+fYAV1H6qT4A6HouCJz4qaMyspyneIN+52hwKZytZa9EfA2WZSoWGT1RiCm030+XS
+IZiasUBKklcxUGz9KdD1a8POJdgjti/BWbG8So5lgSZA6/1D57bYfi0SBCEghLms
+kq8ghrkUcx2a0rZrpmPGc3wup6nIKuzniW7ONExQrhAoxqZXq1chb18fT5uTi3oe
+zjrsUwUyKuKdErPmhF2rYUcNYb+FFDC4YYMmbVoHvWNmPBaFio3VQ0/28A2MV6Bk
+TPeLe4J+AXnU/hvNe2bP
+=Q8gr
+-----END PGP SIGNATURE-----
+
+--pEAjBjStGYT6H+Py--
