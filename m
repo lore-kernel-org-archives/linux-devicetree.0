@@ -1,47 +1,445 @@
-From: Lennert Buytenhek <buytenh@wantstofly.org>
-Subject: Re: [PATCH 3/8] ARM: l2x0: add Marvell Tauros3 compatible
-Date: Fri, 11 Oct 2013 11:05:32 +0200
-Message-ID: <20131011090532.GU633@wantstofly.org>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1381235073-17134-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20131008134100.GD1412@e106331-lin.cambridge.arm.com>
- <52542D64.5010800@gmail.com> <525433D3.2090906@free-electrons.com>
- <20131009085026.GD4981@e106331-lin.cambridge.arm.com>
- <5255AE12.2000205@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Fri, 11 Oct 2013 10:25:26 +0100
+Message-ID: <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+ <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5255AE12.2000205@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150BD137-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 09:27:14PM +0200, Sebastian Hesselbarth wrote:
+On Fri, Oct 11, 2013 at 04:18:18AM +0100, Tang Yuantian-B29983 wrote:
+> Thanks for your review.
+> See my reply inline
+>
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> > Sent: 2013=E5=B9=B410=E6=9C=8810=E6=97=A5 =E6=98=9F=E6=9C=9F=E5=9B=9B=
+ 18:04
+> > To: Tang Yuantian-B29983
+> > Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Li Yang-Leo-R58472
+> > Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in =
+device
+> > tree
+> >
+> > On Wed, Oct 09, 2013 at 07:38:24AM +0100, Yuantian.Tang@freescale.c=
+om
+> > wrote:
+> > > From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > >
+> > > The following SoCs will be affected: p2041, p3041, p4080, p5020,
+> > > p5040, b4420, b4860, t4240
+> > >
+> > > Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > > v5:
+> > >         - refine the binding document
+> > >         - update the compatible string
+> > > v4:
+> > >         - add binding document
+> > >         - update compatible string
+> > >         - update the reg property
+> > > v3:
+> > >         - fix typo
+> > > v2:
+> > >         - add t4240, b4420, b4860 support
+> > >         - remove pll/4 clock from p2041, p3041 and p5020 board
+> > >
+> > >  .../devicetree/bindings/clock/corenet-clock.txt    | 111
+> > ++++++++++++++++++++
+> > >  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi        |  35 +++++++
+> > >  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi         |   2 +
+> > >  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi        |  35 +++++++
+> > >  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi         |   4 +
+> > >  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |  60 +++++++=
+++++
+> > >  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi         |   4 +
+> > >  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |  60 +++++++=
+++++
+> > >  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi         |   4 +
+> > >  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        | 112
+> > +++++++++++++++++++++
+> > >  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi         |   8 ++
+> > >  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi        |  42 +++++++=
++
+> > >  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi         |   2 +
+> > >  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |  60 +++++++=
+++++
+> > >  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi         |   4 +
+> > >  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |  85
+> > ++++++++++++++++
+> > >  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi         |  12 +++
+> > >  17 files changed, 640 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/clock/corenet-clock.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/clock/corenet-cloc=
+k.txt
+> > > b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+> > > new file mode 100644
+> > > index 0000000..8efc62d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+> > > @@ -0,0 +1,111 @@
+> > > +* Clock Block on Freescale CoreNet Platforms
+> > > +
+> > > +Freescale CoreNet chips take primary clocking input from the ext=
+ernal
+> > > +SYSCLK signal. The SYSCLK input (frequency) is multiplied using
+> > > +multiple phase locked loops (PLL) to create a variety of frequen=
+cies
+> > > +which can then be passed to a variety of internal logic, includi=
+ng
+> > > +cores and peripheral IP blocks.
+> > > +Please refer to the Reference Manual for details.
+> > > +
+> > > +1. Clock Block Binding
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should include one or more of the following:
+> > > +       - "fsl,<chip>-clockgen": for chip specific clock block
+> > > +       - "fsl,qoriq-clockgen-[1,2].x": for chassis 1.x and 2.x c=
+lock
+> >
+> > While I can see that "fsl,<chip>-clockgen" might have a large set o=
+f
+> > strings that we may never deal with in th kernel, I'd prefer that t=
+he
+> > basic strings (i.e. all the "fsl,qoriq-clockgen-[1,2].x" variants) =
+were
+> > listed explicitly here.
+> >
+> > Given they only seem to be "fsl,qoriq-clockgen-1.0" and "fsl,qoriq-
+> > clockgen-2.0" this shouldn't be too difficult to list and describe.
+> >
+> OK, I will list them all.
 
-> >>>>>This add a compatible for the Marvell Tauros3 cache controller which
-> >>>>>is compatible with l2x0 cache controllers. While updating the binding
-> >>>>>documentation, clean up the list of possible compatibles.
-> >>>>>
-> >>>>>Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> >>>>>---
-> 
-> Added Jisheng and Lennert to Cc.
-> 
-> Lennert, while looking for differences between ARM PL310 and
-> Marvell Tauros3 cache controller in a GPL'ed 2.6 kernel source
-> from Asus, I found arch/arm/mm/cache-tauros3.c which states you
-> as the original author. If that is wrong, please ignore this.
+Thanks.
 
-I'm the original author of cache-tauros2.c, but I've never heard of
-Tauros3, and my name probably ended up in there via cp(1).
+>
+> > > +- reg: Offset and length of the clock register set
+> > > +- clock-frequency: Indicates input clock frequency of clock bloc=
+k.
+> > > +       Will be set by u-boot
+> >
+> > Why does the fact this is set by u-boot matter to the binding?
+> >
+> OK, I will remove it.
+>
+> > > +
+> > > +Recommended properties:
+> > > +- #ddress-cells: Specifies the number of cells used to represent
+> > > +       physical base addresses.  Must be present if the device h=
+as
+> > > +       sub-nodes and set to 1 if present
+> >
+> > Typo: #address-cells
+> >
+> > In the example it looks like the address cells of child nodes are o=
+ffsets
+> > within the unit, rather than absolute physical addresses. Could the=
+ code
+> > not treat them as absolute addresses? Then we'd only need to docume=
+nt
+> > that #address-cells, #size-cells and ranges must be present and hav=
+e
+> > values suitable for mapping child nodes into the address space of t=
+he
+> > parent.
+> >
+> OK, thanks.
+>
+> > > +- #size-cells: Specifies the number of cells used to represent
+> > > +       the size of an address. Must be present if the device has
+> > > +       sub-nodes and set to 1 if present
+> >
+> > It's not really the size of an address, it's the size of a region
+> > identified by a reg entry.
+> >
+> > I think this can be simplified by my suggestion above.
+> >
+> Yes
+
+Aah, I see that this is already in use, so it's a bit late to change
+this...
+
+>
+> > > +
+> > > +2. Clock Provider/Consumer Binding
+> > > +
+> > > +Most of the binding are from the common clock binding[1].
+> > > + [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > > +
+> > > +Required properties:
+> > > +- compatible : Should include one or more of the following:
+
+I didn't spot this earlier, but why "one or more"? are the 2.0 variants
+backwards compatible with the 1.0 variants.
+
+> > > +       - "fsl,qoriq-core-pll-[1,2].x": Indicates a core PLL cloc=
+k
+> > device
+> > > +       - "fsl,qoriq-core-mux-[1,2].x": Indicates a core multiple=
+xer
+> > clock
+> > > +               device; divided from the core PLL clock
+> >
+> > As above, I'd prefer a complete list of the basic strings we expect=
+=2E
+> >
+> There is no list here, just *-mux-1.x and *-mux-2.x
+> What kind of list do you prefer?
+
+Something like:
+
+- compatible: Should include at least one of:
+    * "fsl,qoriq-core-pll-1.0" for core PLL clocks (v1.0)
+    * "fsl,qoriq-core-pll-2.0" for core PLL clocks (v2.0)
+    * "fsl,qoriq-core-mux-1.0" for core mux clocks (v1.0)
+    * "fsl,qoriq-core-mux-2.0" for core mux clocks (v2.0)
+  The *-2.0 variants are backwards compatible with the *-1.0 variants,
+  so for compatiblity a *-1.0 variant string should be in the list.
+
+>
+> > > +       - "fixed-clock": From common clock binding; indicates out=
+put
+> > clock
+> > > +               of oscillator
+> > > +       - "fsl,qoriq-sysclk-[1,2].x": Indicates input system cloc=
+k
+> >
+> > Here too.
+> >
+> > > +- #clock-cells: From common clock binding; indicates the number =
+of
+> > > +       output clock. 0 is for one output clock; 1 for more than =
+one
+> > > +clock
+> >
+> > If a clock source has multiple outputs, what those outputs are and =
+what
+> > values in clock-cells they correspond to should be described here.
+> >
+> There is no way to describe the values of multiple outputs here.
+> This property is the type of BOOL. See the clock-bindings.txt.
+
+Sorry? #clock-cells is most definitely _not_ a bool:
+
+17: #clock-cells:      Number of cells in a clock specifier; Typically =
+0 for nodes
+18:                    with a single clock output and 1 for nodes with =
+multiple
+19:                    clock outputs.
+
+And neither are the clock-specifiers encoded with those cells. Consider=
+:
+
+  pll0: pll0@800 {
+          #clock-cells =3D <1>;
+          reg =3D <0x800 0x4>;
+          compatible =3D "fsl,qoriq-core-pll-1.0";
+          clocks =3D <&sysclk>;
+          clock-output-names =3D "pll0", "pll0-div2";
+  };
+
+Here the value of the cells in a clock-specifier seem to be:
+0: pll0
+1: pll0-div2
+
+So in a consumer, the valid values of the cells in a clock-specifier
+are:
+
+  consumer: device {
+          compatible =3D "vendor,some-device";
+          clocks =3D <&pll0 0>, /* pll0 */
+                   <&pll0 1>; /* pll0-div2 */
+  };
+
+There must be some meaning assigned to the values of the cells in the
+clock-specifier (e.g. linear index of the clock output in the hardware)=
+=2E
+It would be good to describe this, other clock bindings do.
+
+>
+> > > +
+> > > +Recommended properties:
+> > > +- clocks: Should be the phandle of input parent clock
+> > > +- clock-names: From common clock binding, indicates the clock na=
+me
+> >
+> > That description's a bit opaque.
+> >
+> > What's the name of the clock input on these units? That's what cloc=
+k-
+> > names should contain, and that should be documented.
+> >
+> Is it necessary to document these names since they are totally used
+> by clock provider and clock consumer has no idea about them?
+
+I'm not sure I follow -- clocks and clock-names are used by consumers.
+They define which clocks are inputs to a consumer, and the names of the
+clock inputs on the consumer:
+
+  consumer@0xffff0000 {
+          reg =3D <0xffff0000 0x1000>;
+          compatible =3D "vendor,some-consumer";
+          clocks =3D <&pl011 0>,
+                   <&otherclock 43 22>,
+                   <&pl011 1>;
+          clock-names =3D "apb_pclk",
+                        "pixel_clk",
+                        "scanout_clk";
+  };
+
+Here the set of clock-names would be defined in the binding of the
+consumer, based on the clock input names in the IP documentation -- the=
+y
+tell the consumer which clock inputs on the consumer the clocks
+described in clocks are wired in to, and describe nothing about output
+of the provider. Using clock-names allows the set of clocks on an IP to
+change over revisions and for some clock inputs to be optional.
+
+>
+> > Do we not _always_ need the parent clock?
+> >
+> Not for fixed-clock that its parent clock is oscillator :)
+
+Certainly fixed-clock doesn't need any parent clock, but I guess PLLs
+and muxes always do.
+
+>
+> > If we have a clock do we need a clock-names entry for it?
+> >
+> Technically yes, but I don't bother to add it if the clock node has
+> only one clocks.
+
+Ok. Where we only have one input clock, this doesn't need to be
+described.
+
+Do the mux clocks always take 3 input clocks (judging by the examples
+they do)?
+
+>
+> > > +- clock-output-names: From common clock binding, indicates the n=
+ames
+> > of
+> > > +       output clocks
+> > > +- reg: Should be the offset and length of clock block base addre=
+ss.
+> > > +       The length should be 4.
+> > > +
+> > > +Example for clock block and clock provider:
+> > > +/ {
+> > > +       clockgen: global-utilities@e1000 {
+> > > +               compatible =3D "fsl,p5020-clockgen", "fsl,qoriq-c=
+lockgen-
+> > 1.0";
+> > > +               reg =3D <0xe1000 0x1000>;
+> > > +               clock-frequency =3D <0>;
+> >
+> > That looks odd.
+> >
+> Yes, but it has already existed here before this patch.
+> Can I move it to sysclk clock node since it is not used yet?
+
+I hadn't realised there were DTS with this already. Why is there a cloc=
+k
+with clock-frequency =3D <0> at all? Surely that isn't useful...
+
+>
+> > > +               #address-cells =3D <1>;
+> > > +               #size-cells =3D <1>;
+> > > +
+> > > +               sysclk: sysclk {
+> > > +                       #clock-cells =3D <0>;
+> > > +                       compatible =3D "fsl,qoriq-sysclk-1.0",
+> > > + "fixed-clock";
+> >
+> > We didn't mention in the binding that "fsl,qoriq-sysclk-1.0" was
+> > compatible with "fixed-clock" and should have "fixed-clock" in the
+> > compatible list...
+> >
+> OK, will fix it.
+
+Cheers. Also, doesn't a fixed-clock require a clock-frequency?
+
+>
+> > > +                       clock-output-names =3D "sysclk";
+> > > +               }
+> > > +
+> > > +               pll0: pll0@800 {
+> > > +                       #clock-cells =3D <1>;
+> > > +                       reg =3D <0x800 0x4>;
+> > > +                       compatible =3D "fsl,qoriq-core-pll-1.0";
+> > > +                       clocks =3D <&sysclk>;
+> > > +                       clock-output-names =3D "pll0", "pll0-div2=
+";
+> > > +               };
+> > > +
+> > > +               pll1: pll1@820 {
+> > > +                       #clock-cells =3D <1>;
+> > > +                       reg =3D <0x820 0x4>;
+> > > +                       compatible =3D "fsl,qoriq-core-pll-1.0";
+> > > +                       clocks =3D <&sysclk>;
+> > > +                       clock-output-names =3D "pll1", "pll1-div2=
+";
+> > > +               };
+> > > +
+> > > +               mux0: mux0@0 {
+> > > +                       #clock-cells =3D <0>;
+> > > +                       reg =3D <0x0 0x4>;
+> > > +                       compatible =3D "fsl,qoriq-core-mux-1.0";
+> > > +                       clocks =3D <&pll0 0>, <&pll0 1>, <&pll1 0=
+>,
+> > <&pll1 1>;
+> > > +                       clock-names =3D "pll0_0", "pll0_1", "pll1=
+_0",
+> > "pll1_1";
+> > > +                       clock-output-names =3D "cmux0";
+> > > +               };
+> > > +
+> > > +               mux1: mux1@20 {
+> > > +                       #clock-cells =3D <0>;
+> > > +                       reg =3D <0x20 0x4>;
+> > > +                       compatible =3D "fsl,qoriq-core-mux-1.0";
+> > > +                       clocks =3D <&pll0 0>, <&pll0 1>, <&pll1 0=
+>,
+> > <&pll1 1>;
+> > > +                       clock-names =3D "pll0_0", "pll0_1", "pll1=
+_0",
+> > "pll1_1";
+
+I didn't spot this last time, but the clock-names here seem to be the
+names of the outputs from the provider, rather than the input names of
+the consumer. This goes against the intended purpose of clock-names.
+
+> > > +                       clock-output-names =3D "cmux1";
+> >
+> > How does the mux choose which input clock to use at a point in time=
+?
+> >
+> That is decided at runtime. Different input clock will lead to the di=
+fferent
+> Clock frequency that the CPUs work on.
+
+Ok.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
