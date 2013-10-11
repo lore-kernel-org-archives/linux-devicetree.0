@@ -1,61 +1,74 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
-Date: Fri, 11 Oct 2013 16:59:20 +0300
-Message-ID: <52580438.4040002@ti.com>
-References: <20131003054104.8941.88857.stgit@localhost> <20131003054221.8941.87801.stgit@localhost> <5256AA7F.8030005@ti.com> <20131010160018.GA29913@atomide.com> <5257BB8C.5080001@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/3] gpio: davinci: add OF support
+Date: Fri, 11 Oct 2013 16:09:00 +0200
+Message-ID: <CACRpkdYxegBSYXR1-98smUNnDXpyRHo_vuYdnr3r7zhawENiUA@mail.gmail.com>
+References: <1380902596-4693-1-git-send-email-sujithkv@ti.com>
+	<1380902596-4693-2-git-send-email-sujithkv@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5257BB8C.5080001-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Prakash Manjunathappa <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380902596-4693-2-git-send-email-sujithkv@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 11:49 AM, Roger Quadros wrote:
-> On 10/10/2013 07:00 PM, Tony Lindgren wrote:
->> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [131010 06:32]:
->>>
->>> I tried testing this with the USB EHCI driver, but I'm not getting wake up interrupts
->>> while the system is still running and only the EHCI controller is runtime suspended.
->>>
->>> It seems we need to somehow call _reconfigure_io_chain() to update the daisy chain
->>> whenever the pad wakeup_enable bit is changed.
->>
->> Sounds like this is on omap3? Have you tried calling pcs_soc->rearm() in the
->> pcs_irq_handle() like the comments there suggest? At least for me that keeps
->> the wake-up interrupts continuously running on omap3 instead of just idle modes.
-> 
-> Yes it is on OMAP3. I haven't tried with pcs_soc->rearm(). I will give it a try and
-> let you know.
->>
->> Now on omap4, I've noticed the wake up interrupts are on all the time based on tests
->> with the serial driver.
->>  
->>> I think pcs_irq_set_wake() is where need to control system wakeup behaviour for the irq.
->>> This is where we should be able to change WAKEUP_EN bit of the pad
->>> to enable/disable system wakeup for that pad and also call _reconfigure_io_chain().
->>
->> Well the irq_set_wake() should only be needed for suspend and resume. For runtime PM
->> the wake-events should be always enabled by default as pointed out by Alan Stern
->> a while back.
-> 
-> Right, but we need to update the WAKEUP_EN bit in the pad control register for that
-> to work, no?. This is something we are not doing in the driver.
+On Fri, Oct 4, 2013 at 6:03 PM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
 
-OK sorry, just figured out that we are doing it indeed in pcs_irq_set().
-Wasn't able to test it yet with USB. But I don't see any issues except that
-pcs_soc->rearm() needs to be called from pcs_irq_set() instead of from pcs_irq_unmask().
+> This patch adds OF parser support for davinci gpio
+> driver and also appropriate documentation in gpio-davinci.txt
+> located at Documentation/devicetree/bindings/gpio/.
+>
+> Signed-off-by: KV Sujith <sujithkv@ti.com>
+> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-After that you can add my
+^Don't trust this guy.
 
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> [prabhakar.csengg@gmail.com: simplified the OF code and also
+>                  the commit message]
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |   34 +++++++++++
+>  drivers/gpio/gpio-davinci.c                        |   60 +++++++++++++++++++-
+>  2 files changed, 91 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> new file mode 100644
+> index 0000000..87abd3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -0,0 +1,34 @@
+> +Davinci GPIO controller bindings
+> +
+> +Required Properties:
+> +- compatible: should be "ti,dm6441-gpio"
+> +
+> +- reg: Physical base address of the controller and the size of memory mapped
+> +       registers.
+> +
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +
+> +- interrupts: Array of GPIO interrupt number.
+> +
+> +- ngpio: The number of GPIO pins supported.
+> +
+> +- ti,davinci-gpio-irq-base: Base from where GPIO interrupt numbering starts.
 
-cheers,
--roger
+What is this?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I have ever ACKed this I have been drunk. I take it back.
+
+This "base" is a Linux-specific thing and has no place in the
+device tree, and shall not be there. You have to find some way to
+avoid this, what do you think some other OS should do with
+this value...
+
+All IRQs in Linux are assumed to be dynamically assigned numbers
+nowadays, with a property like this you can never switch on
+SPARSE_IRQ for the DaVinci.
+
+Yours,
+Linus Walleij
