@@ -1,64 +1,44 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 01/17] ARM: at91: move at91_pmc.h to
- include/linux/clk/at91_pmc.h
-Date: Fri, 11 Oct 2013 11:05:28 -0500
-Message-ID: <20131011160528.GV25706@radagast>
-References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
- <1381477081-6041-2-git-send-email-b.brezillon@overkiz.com>
-Reply-To: <balbi@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V6 02/15] ARM: OMAP2+: AM33XX: add lateinit hook for
+ calling pm late init
+Date: Fri, 11 Oct 2013 09:11:17 -0700
+Message-ID: <20131011161116.GS29913@atomide.com>
+References: <1381354144-7134-1-git-send-email-nm@ti.com>
+ <1381361098-8283-1-git-send-email-nm@ti.com>
+ <52563BD8.1060703@ti.com>
+ <20131010133209.GA13105@kahuna>
+ <5256C5D2.9030302@ti.com>
+ <5256C686.6000301@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pEAjBjStGYT6H+Py"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381477081-6041-2-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+In-Reply-To: <5256C686.6000301@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joel Fernandes <joelf@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
---pEAjBjStGYT6H+Py
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+* Joel Fernandes <joelf@ti.com> [131010 08:31]:
+> On 10/10/2013 10:20 AM, Joel Fernandes wrote:
+> > 
+> > Adding 6 lines of identical code for every platform seems redundant, I'd just
+> > define an omap_common_late_init for all platforms for now, and then fork off for
+> > the future differences. That way we save on LOC and readability in the header as
+> > well. Your call.
+> 
+> I see a function of that name already exists. I guess you can leave your patch
+> as is then and not have to do this.
 
-On Fri, Oct 11, 2013 at 09:37:45AM +0200, Boris BREZILLON wrote:
-> This patch moves at91_pmc.h header from machine specific directory
-> (arch/arm/mach-at91/include/mach/at91_pmc.h) to clk include directory
-> (include/linux/clk/at91_pmc.h).
-> We need this to avoid reference to machine specific headers in clk
-> drivers.
->=20
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+Yeah but why not just call the common late_init function directly for the
+cases where we know it's never needed.
 
-for drivers/usb/gadget:
+If thoses will be populated in the later patches, then it's OK to add them.
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+In any case, Nishant, can you please squash the late_init patches into a
+single patch and make sure it also applies on top of the omap-for-v3.13/quirk
+branch as there's been some changes to board-generic.c there.
 
+Regards,
 
---=20
-balbi
-
---pEAjBjStGYT6H+Py
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSWCHIAAoJEIaOsuA1yqREYTUP/jo1tAeSsGLgW8wPWSHBtM2U
-3NoEP4BFgO5zen+YQpD39m5yR/LSfMNsUG0l45q4ewRmPAziTOvVTAHBGRmsdLZL
-33QAoy56TJj2a3tbweEKKhl6uVaL+phLA3r5MiRClxudGDakqxlTbTSKmNtbvgQV
-SlOZQY/n5uR70eYsUmACMn1ss+0lurxQXfaArqi0VXvxjxD7sxGzV2g5l4dC7ERC
-elPyT0bbCNCdZChFbd02E0cpe2rBa87xIDyq88qzJiOkLtrtTI0nVwIE6U9FHG9/
-IL7cvo8nUq9/j3P/lvw4V13V/FR9GKsLZpK+UM1UyCQuYbTsvyt6DdmQGAVwQjmR
-lgTKUuw/MBiZlCz4PDsgtxXjFbRQVguSUSFXC4NATVId9gUU/v75fKrEIOCzTqDD
-fYAV1H6qT4A6HouCJz4qaMyspyneIN+52hwKZytZa9EfA2WZSoWGT1RiCm030+XS
-IZiasUBKklcxUGz9KdD1a8POJdgjti/BWbG8So5lgSZA6/1D57bYfi0SBCEghLms
-kq8ghrkUcx2a0rZrpmPGc3wup6nIKuzniW7ONExQrhAoxqZXq1chb18fT5uTi3oe
-zjrsUwUyKuKdErPmhF2rYUcNYb+FFDC4YYMmbVoHvWNmPBaFio3VQ0/28A2MV6Bk
-TPeLe4J+AXnU/hvNe2bP
-=Q8gr
------END PGP SIGNATURE-----
-
---pEAjBjStGYT6H+Py--
+Tony
