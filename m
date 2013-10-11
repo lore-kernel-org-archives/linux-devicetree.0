@@ -1,402 +1,86 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v4 07/17] clk: at91: add PMC master clock
-Date: Fri, 11 Oct 2013 10:51:23 +0200
-Message-ID: <1381481483-12248-1-git-send-email-b.brezillon@overkiz.com>
-References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
+Date: Fri, 11 Oct 2013 11:56:30 +0300
+Message-ID: <5257BD3E.5000707@ti.com>
+References: <20131003054104.8941.88857.stgit@localhost>
+ <20131003054221.8941.87801.stgit@localhost> <5256AA7F.8030005@ti.com>
+ <20131010160018.GA29913@atomide.com>
+ <CACRpkdaG-PQA39XSjKUgM9TyeD7srgm_8s+NazrDKJ0gmNLcwg@mail.gmail.com>
+ <20131010162015.GC29913@atomide.com>
+ <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prakash Manjunathappa <prakash.pm@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new at91 master clock implementation using common clk
-framework.
+On 10/11/2013 11:00 AM, Linus Walleij wrote:
+> On Thu, Oct 10, 2013 at 6:20 PM, Tony Lindgren <tony@atomide.com> wrote:
+>> * Linus Walleij <linus.walleij@linaro.org> [131010 09:19]:
+>>> On Thu, Oct 10, 2013 at 6:00 PM, Tony Lindgren <tony@atomide.com> wrote:
+>>>> * Roger Quadros <rogerq@ti.com> [131010 06:32]:
+>>>>>
+>>>>> I tried testing this with the USB EHCI driver, but I'm not getting wake up interrupts
+>>>>> while the system is still running and only the EHCI controller is runtime suspended.
+>>>>>
+>>>>> It seems we need to somehow call _reconfigure_io_chain() to update the daisy chain
+>>>>> whenever the pad wakeup_enable bit is changed.
+>>>>
+>>>> Sounds like this is on omap3? Have you tried calling pcs_soc->rearm() in the
+>>>> pcs_irq_handle() like the comments there suggest? At least for me that keeps
+>>>> the wake-up interrupts continuously running on omap3 instead of just idle modes.
+>>>
+>>> If the rearm() function is calling this _reconfigure_io_chain my comments
+>>> on the fact that this is something that should be handled by the pin
+>>> control driver still apply I think ....
+>>
+>> Yes, except that the reconfigure_io_chain registers are in the PRM module, not in
+>> the SCM module where the pinctrl registers are.. And that shared PRM interrupt is
+>> used mostly for the internal domain wake-ups, so we should keep that in the PRM
+>> driver.
+> 
+> That depends.
+> 
+> One-iorange-equals-one-driver is a fallacy, especially given that MFD for
+> memory-mapped things exist for a reason.
 
-The master clock layout describe the MCKR register layout.
-There are 2 master clock layouts:
-- at91rm9200
-- at91sam9x5
++1
 
-Master clocks are given characteristics:
-- min/max clock output rate
+Another place I faced a similar problem was the OMAP control module, which contains
+registers for a number of different non related peripherals. (e.g. PHY for USB, SATA,
+Display clock, etc)
 
-These characteristics are checked during rate change to avoid
-over/underclocking.
+> 
+> What the pin control driver should do is control the pins. Whether the registers
+> are spread out in the entire IO-memory does not matter. We did have one system
+> which placed the IO-muxing together with each peripheral (!) and I did
+> still want
+> that to be handled by a single pinctrl driver picking out windows to all these
+> IO-ranges.
+> 
+> Things like the PRM which has (my guess) a gazillion registers related to its
+> deep-core SoC stuff should be handled by things like
+> drivers/mfd/syscon.c, which means it is dead simple for some other driver
+> using "just this one register" in that range to get a handle at it and poke it
+> using syscon_node_to_regmap() (just derference an ampersand ref)
+> syscon_regmap_lookup_by_compatible() (use a compatible string)
+> all returning a regmap * that you can use to poke these registers.
 
-These characteristics are described in atmel's SoC datasheet in
-"Electrical Characteristics" paragraph.
+The register handling is fine. But how do we deal with resource handling?
+e.g. the block that has the deep-core registers might need to be clocked or powered
+before the registers can be accessed.
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- drivers/clk/at91/Makefile     |    2 +-
- drivers/clk/at91/clk-master.c |  278 +++++++++++++++++++++++++++++++++++++++++
- drivers/clk/at91/clk-pll.c    |   10 +-
- drivers/clk/at91/pmc.c        |    9 ++
- drivers/clk/at91/pmc.h        |    5 +
- 5 files changed, 295 insertions(+), 9 deletions(-)
- create mode 100644 drivers/clk/at91/clk-master.c
-
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 902bbf1..e28fb2b 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -3,4 +3,4 @@
- #
- 
- obj-y += pmc.o
--obj-y += clk-main.o clk-pll.o clk-plldiv.o
-+obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
-diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
-new file mode 100644
-index 0000000..58af23d
---- /dev/null
-+++ b/drivers/clk/at91/clk-master.c
-@@ -0,0 +1,278 @@
-+/*
-+ * drivers/clk/at91/clk-master.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91_pmc.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/wait.h>
-+#include <linux/sched.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+
-+#include "pmc.h"
-+
-+#define MASTER_SOURCE_MAX	4
-+
-+#define MASTER_PRES_MASK	0x7
-+#define MASTER_PRES_MAX		MASTER_PRES_MASK
-+#define MASTER_DIV_SHIFT	8
-+#define MASTER_DIV_MASK		0x3
-+
-+struct clk_master_characteristics {
-+	struct clk_range output;
-+	u32 divisors[4];
-+	u8 have_div3_pres;
-+};
-+
-+struct clk_master_layout {
-+	u32 mask;
-+	u8 pres_shift;
-+};
-+
-+#define to_clk_master(hw) container_of(hw, struct clk_master, hw)
-+
-+struct clk_master {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+	unsigned int irq;
-+	wait_queue_head_t wait;
-+	const struct clk_master_layout *layout;
-+	const struct clk_master_characteristics *characteristics;
-+};
-+
-+static irqreturn_t clk_master_irq_handler(int irq, void *dev_id)
-+{
-+	struct clk_master *master = (struct clk_master *)dev_id;
-+
-+	wake_up(&master->wait);
-+	disable_irq_nosync(master->irq);
-+
-+	return IRQ_HANDLED;
-+}
-+static int clk_master_prepare(struct clk_hw *hw)
-+{
-+	struct clk_master *master = to_clk_master(hw);
-+	struct at91_pmc *pmc = master->pmc;
-+
-+	while (!(pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_MCKRDY)) {
-+		enable_irq(master->irq);
-+		wait_event(master->wait,
-+			   pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_MCKRDY);
-+	}
-+
-+	return 0;
-+}
-+
-+static int clk_master_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_master *master = to_clk_master(hw);
-+
-+	return !!(pmc_read(master->pmc, AT91_PMC_SR) & AT91_PMC_MCKRDY);
-+}
-+
-+static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	u8 pres;
-+	u8 div;
-+	unsigned long rate = parent_rate;
-+	struct clk_master *master = to_clk_master(hw);
-+	struct at91_pmc *pmc = master->pmc;
-+	const struct clk_master_layout *layout = master->layout;
-+	const struct clk_master_characteristics *characteristics =
-+						master->characteristics;
-+	u32 tmp;
-+
-+	pmc_lock(pmc);
-+	tmp = pmc_read(pmc, AT91_PMC_MCKR) & layout->mask;
-+	pmc_unlock(pmc);
-+
-+	pres = (tmp >> layout->pres_shift) & MASTER_PRES_MASK;
-+	div = (tmp >> MASTER_DIV_SHIFT) & MASTER_DIV_MASK;
-+
-+	if (characteristics->have_div3_pres && pres == MASTER_PRES_MAX)
-+		rate /= 3;
-+	else
-+		rate >>= pres;
-+
-+	rate /= characteristics->divisors[div];
-+
-+	if (rate < characteristics->output.min)
-+		pr_warn("master clk is underclocked");
-+	else if (rate > characteristics->output.max)
-+		pr_warn("master clk is overclocked");
-+
-+	return rate;
-+}
-+
-+static u8 clk_master_get_parent(struct clk_hw *hw)
-+{
-+	struct clk_master *master = to_clk_master(hw);
-+	struct at91_pmc *pmc = master->pmc;
-+
-+	return pmc_read(pmc, AT91_PMC_MCKR) & AT91_PMC_CSS;
-+}
-+
-+static const struct clk_ops master_ops = {
-+	.prepare = clk_master_prepare,
-+	.is_prepared = clk_master_is_prepared,
-+	.recalc_rate = clk_master_recalc_rate,
-+	.get_parent = clk_master_get_parent,
-+};
-+
-+static struct clk * __init
-+at91_clk_register_master(struct at91_pmc *pmc, unsigned int irq,
-+		const char *name, int num_parents,
-+		const char **parent_names,
-+		const struct clk_master_layout *layout,
-+		const struct clk_master_characteristics *characteristics)
-+{
-+	int ret;
-+	struct clk_master *master;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	if (!pmc || !irq || !name || !num_parents || !parent_names)
-+		return ERR_PTR(-EINVAL);
-+
-+	master = kzalloc(sizeof(*master), GFP_KERNEL);
-+	if (!master)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &master_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
-+	init.flags = 0;
-+
-+	master->hw.init = &init;
-+	master->layout = layout;
-+	master->characteristics = characteristics;
-+	master->pmc = pmc;
-+	master->irq = irq;
-+	init_waitqueue_head(&master->wait);
-+	irq_set_status_flags(master->irq, IRQ_NOAUTOEN);
-+	ret = request_irq(master->irq, clk_master_irq_handler,
-+			  IRQF_TRIGGER_HIGH, "clk-master", master);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	clk = clk_register(NULL, &master->hw);
-+	if (IS_ERR(clk))
-+		kfree(master);
-+
-+	return clk;
-+}
-+
-+
-+static const struct clk_master_layout at91rm9200_master_layout = {
-+	.mask = 0x31F,
-+	.pres_shift = 2,
-+};
-+
-+static const struct clk_master_layout at91sam9x5_master_layout = {
-+	.mask = 0x373,
-+	.pres_shift = 4,
-+};
-+
-+
-+static struct clk_master_characteristics * __init
-+of_at91_clk_master_get_characteristics(struct device_node *np)
-+{
-+	u32 tmp;
-+	struct clk_master_characteristics *characteristics;
-+
-+	characteristics = kzalloc(sizeof(*characteristics), GFP_KERNEL);
-+	if (!characteristics)
-+		return NULL;
-+
-+	if (of_property_read_u32_index(np, "atmel,clk-output-range", 0, &tmp))
-+		goto out_free_characteristics;
-+	characteristics->output.min = tmp;
-+
-+	if (of_property_read_u32_index(np, "atmel,clk-output-range", 1, &tmp))
-+		goto out_free_characteristics;
-+	characteristics->output.max = tmp;
-+
-+	of_property_read_u32_array(np, "atmel,clk-divisors",
-+				   characteristics->divisors, 4);
-+
-+	characteristics->have_div3_pres =
-+		of_property_read_bool(np, "atmel,master-clk-have-div3-pres");
-+
-+	return characteristics;
-+
-+out_free_characteristics:
-+	kfree(characteristics);
-+	return NULL;
-+}
-+
-+static void __init
-+of_at91_clk_master_setup(struct device_node *np, struct at91_pmc *pmc,
-+			 const struct clk_master_layout *layout)
-+{
-+	struct clk *clk;
-+	int num_parents;
-+	int i;
-+	unsigned int irq;
-+	const char *parent_names[MASTER_SOURCE_MAX];
-+	const char *name = np->name;
-+	struct clk_master_characteristics *characteristics;
-+
-+	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (num_parents <= 0 || num_parents > MASTER_SOURCE_MAX)
-+		return;
-+
-+	for (i = 0; i < num_parents; ++i) {
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+		if (!parent_names[i])
-+			return;
-+	}
-+
-+	of_property_read_string(np, "clock-output-names", &name);
-+
-+	characteristics = of_at91_clk_master_get_characteristics(np);
-+	if (!characteristics)
-+		return;
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (!irq)
-+		return;
-+
-+	clk = at91_clk_register_master(pmc, irq, name, num_parents,
-+				       parent_names, layout,
-+				       characteristics);
-+	if (IS_ERR(clk))
-+		goto out_free_characteristics;
-+
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+	return;
-+
-+out_free_characteristics:
-+	kfree(characteristics);
-+}
-+
-+void __init of_at91rm9200_clk_master_setup(struct device_node *np,
-+					   struct at91_pmc *pmc)
-+{
-+	of_at91_clk_master_setup(np, pmc, &at91rm9200_master_layout);
-+}
-+
-+void __init of_at91sam9x5_clk_master_setup(struct device_node *np,
-+					   struct at91_pmc *pmc)
-+{
-+	of_at91_clk_master_setup(np, pmc, &at91sam9x5_master_layout);
-+}
-diff --git a/drivers/clk/at91/clk-pll.c b/drivers/clk/at91/clk-pll.c
-index 44caddf..351adc5 100644
---- a/drivers/clk/at91/clk-pll.c
-+++ b/drivers/clk/at91/clk-pll.c
-@@ -82,6 +82,8 @@ static int clk_pll_prepare(struct clk_hw *hw)
- 	struct clk_pll *pll = to_clk_pll(hw);
- 	struct at91_pmc *pmc = pll->pmc;
- 	const struct clk_pll_layout *layout = pll->layout;
-+	const struct clk_pll_characteristics *characteristics =
-+							pll->characteristics;
- 	u8 id = pll->id;
- 	u32 mask = PLL_STATUS_MASK(id);
- 	int offset = PLL_REG(id);
-@@ -271,18 +273,10 @@ static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 			    unsigned long parent_rate)
- {
- 	struct clk_pll *pll = to_clk_pll(hw);
--	struct at91_pmc *pmc = pll->pmc;
--	const struct clk_pll_layout *layout = pll->layout;
--	const struct clk_pll_characteristics *characteristics =
--						pll->characteristics;
--	u8 id = pll->id;
--	int offset = PLL_REG(id);
- 	long ret;
- 	u32 div;
- 	u32 mul;
- 	u32 index;
--	u32 tmp;
--	u8 out = 0;
- 
- 	ret = clk_pll_get_best_div_mul(pll, rate, parent_rate,
- 				       &div, &mul, &index);
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index c882e97..6f08879 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -234,6 +234,15 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
- 		.compatible = "atmel,at91sam9x5-clk-plldiv",
- 		.data = of_at91sam9x5_clk_plldiv_setup,
- 	},
-+	/* Master clock */
-+	{
-+		.compatible = "atmel,at91rm9200-clk-master",
-+		.data = of_at91rm9200_clk_master_setup,
-+	},
-+	{
-+		.compatible = "atmel,at91sam9x5-clk-master",
-+		.data = of_at91sam9x5_clk_master_setup,
-+	},
- 	{ /*sentinel*/ }
- };
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 35ccbbc..2e1dcb8 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -69,4 +69,9 @@ extern void __init of_sama5d3_clk_pll_setup(struct device_node *np,
- extern void __init of_at91sam9x5_clk_plldiv_setup(struct device_node *np,
- 						  struct at91_pmc *pmc);
- 
-+extern void __init of_at91rm9200_clk_master_setup(struct device_node *np,
-+						  struct at91_pmc *pmc);
-+extern void __init of_at91sam9x5_clk_master_setup(struct device_node *np,
-+						  struct at91_pmc *pmc);
-+
- #endif /* __PMC_H_ */
--- 
-1.7.9.5
-
+cheers,
+-roger
