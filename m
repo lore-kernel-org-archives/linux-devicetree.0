@@ -1,34 +1,37 @@
-From: Clemens Ladisch <clemens@ladisch.de>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Fri, 11 Oct 2013 09:05:04 +0200
-Message-ID: <5257A320.1070207@ladisch.de>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org> <52556C4E.9000604@mm-sol.com> <52557137.5050200@zytor.com> <5256AFFE.5090605@mm-sol.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type
+ *ti,palmas-usb-vid*
+Date: Fri, 11 Oct 2013 16:06:21 +0900
+Message-ID: <5257A36D.80902@samsung.com>
+References: <1381408647-24653-1-git-send-email-kishon@ti.com>
+ <5256A773.6060807@nvidia.com> <5257977C.1030108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5256AFFE.5090605@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <5257977C.1030108@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Stanimir Varbanov wrote:
-> I ran the rngtest with following command line:
->
-> # cat /dev/hw_random | rngtest -c 100000
-> ...
-> rngtest: bits received from input: 2000000032
-> rngtest: FIPS 140-2 successes: 99925
-> rngtest: FIPS 140-2 failures: 75
-> ...
->
-> Could you guys comment those results?
+On 10/11/2013 03:15 PM, Kishon Vijay Abraham I wrote:
+> On Thursday 10 October 2013 06:41 PM, Laxman Dewangan wrote:
+>> On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
+>>> The Palmas device contains only a USB VBUS-ID detector, so added a
+>>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
+>>> types for backward compatibility.
+>>>
+>> I dont have much issue on this nomenclature but just second thought:
+>>
+>> The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, ID-RB, ID-RC
+>> and ID-FLOAT as per BC1.2.
+>> This sub-module only detect the cable, does nothing more than this.
+>> In this case, should we say "ti,palmas-usb-extcon"?
+>> Again extcon is linux specific terminology and this can be defer.
+> 
+> I don't mind either way. Chanwoo?
 
-These tests are expected to fail a few times even for perfectly random
-data (think monkeys/Shakespeare).  An entropy source will be permanently
-disabled by rngd only if the failure ratio is worse than 1 in 1000.
+The EXTCON is subsystem name. I don't prefer to use 'extcon' word on device name.
+I agree Kishon opinion.
 
-
-Regards,
-Clemens
