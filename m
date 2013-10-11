@@ -1,245 +1,180 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY Framework
-Date: Fri, 11 Oct 2013 18:09:29 +0300
-Message-ID: <525814A9.7060106@ti.com>
-References: <1378136591-7463-1-git-send-email-kishon@ti.com> <1378136591-7463-3-git-send-email-kishon@ti.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Fri, 11 Oct 2013 11:10:38 -0400
+Message-ID: <525814EE.8060700@ti.com>
+References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com> <1381320509-23967-1-git-send-email-ch.naveen@samsung.com> <2386580.3V2pzai3k2@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1378136591-7463-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2386580.3V2pzai3k2@amdc1032>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
-> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
-> power_on and power_off the following APIs are used phy_init(), phy_exit(),
-> phy_power_on() and phy_power_off().
-> 
-> However using the old USB phy library wont be removed till the PHYs of all
-> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
->  drivers/usb/dwc3/Kconfig                       |    1 +
->  drivers/usb/dwc3/core.c                        |   49 ++++++++++++++++++++++++
->  drivers/usb/dwc3/core.h                        |    7 ++++
->  4 files changed, 61 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index e807635..471366d 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -6,11 +6,13 @@ Required properties:
->   - compatible: must be "snps,dwc3"
->   - reg : Address and length of the register set for the device
->   - interrupts: Interrupts used by the dwc3 controller.
-> +
-> +Optional properties:
->   - usb-phy : array of phandle for the PHY device.  The first element
->     in the array is expected to be a handle to the USB2/HS PHY and
->     the second element is expected to be a handle to the USB3/SS PHY
-> -
-> -Optional properties:
-> + - phys: from the *Generic PHY* bindings
-> + - phy-names: from the *Generic PHY* bindings
->   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->  
->  This is usually a subnode to DWC3 glue to which it is connected.
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index cfc16dd..ad7ce83 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -3,6 +3,7 @@ config USB_DWC3
->  	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
->  	depends on EXTCON
->  	select USB_PHY
-> +	select GENERIC_PHY
->  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
->  	help
->  	  Say Y or M here if your system has a Dual Role SuperSpeed
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 428c29e..485d365 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -82,6 +82,12 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
->  
->  	usb_phy_init(dwc->usb2_phy);
->  	usb_phy_init(dwc->usb3_phy);
+Hi Naveen,
 
-How about adding
-+	if (dwc->usb2_phy)
-+		usb_phy_init(dwc->usb2_phy);
-+	if (dwc->usb3_phy)
-+		usb_phy_init(dwc->usb3_phy);
+On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
+>=20
+> Hi,
+>=20
+> All patches (#1-#3) look good to me, FWIW you can add:
+>=20
+> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>=20
+> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412=
 
-both usb phy and generic phy shouldn't be present together.
+> fixup patchset:
+>=20
+> 	https://lkml.org/lkml/2013/10/9/35
+>=20
+> It is up to Eduardo to resolve this but it probably would be better to
+> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This woul=
+d
+> require you to port patch #3 over Lukasz's patchset though.
 
-> +
-> +	if (dwc->usb2_generic_phy)
-> +		phy_init(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_init(dwc->usb3_generic_phy);
-> +
->  	mdelay(100);
->  
->  	/* Clear USB3 PHY reset */
-> @@ -343,6 +349,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
->  {
->  	usb_phy_shutdown(dwc->usb2_phy);
->  	usb_phy_shutdown(dwc->usb3_phy);
+My question is if this fix applies also to EXYNOS4412, as it  is not
+mentioned in the patch description and the change affects all supported
+chip version deliberately. Has this change been validated on all
+supported chip versions?
 
-here as well
+Amit, I saw you ack, but still, it is not clear how this change behaves
+across supported hardware.
 
-> +
-> +	if (dwc->usb2_generic_phy)
-> +		phy_power_off(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_power_off(dwc->usb3_generic_phy);
->  }
->  
->  #define DWC3_ALIGN_MASK		(16 - 1)
-> @@ -427,6 +438,23 @@ static int dwc3_probe(struct platform_device *pdev)
->  		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
->  	}
->  
-> +	if (of_property_read_bool(node, "phys") || pdata->has_phy) {
-> +		dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
-> +		if (IS_ERR(dwc->usb2_generic_phy)) {
-> +			dev_err(dev, "no usb2 phy configured yet");
-> +			return PTR_ERR(dwc->usb2_generic_phy);
-> +		}
-> +
-> +		dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
-> +		if (IS_ERR(dwc->usb3_generic_phy)) {
-> +			dev_err(dev, "no usb3 phy configured yet");
-> +			return PTR_ERR(dwc->usb3_generic_phy);
-> +		}
+>=20
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>=20
+> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wro=
+te:
+>> The FALL interrupt related en, status bits are available at an offset =
+of
+>> 16 on INTEN, INTSTAT registers and at an offset of
+>> 12 on INTCLEAR register.
+>>
+>> This patch corrects the same for exyns5250 and exynos5440
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> ---
+>> Changes since v1:
+>> Changes since v2:
+>> Changes since v3:
+>>   None
+>>
+>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
+>>  4 files changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sa=
+msung/exynos_tmu.c
+>> index b43afda..af69209 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>> @@ -265,7 +265,7 @@ skip_calib_data:
+>>  				data->base + reg->threshold_th1);
+>> =20
+>>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+>> -			(reg->inten_fall_mask << reg->inten_fall_shift),
+>> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
+>>  				data->base + reg->tmu_intclear);
+>> =20
+>>  		/* if last threshold limit is also present */
+>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/sa=
+msung/exynos_tmu.h
+>> index b364c9e..7c6c34a 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu.h
+>> +++ b/drivers/thermal/samsung/exynos_tmu.h
+>> @@ -134,6 +134,7 @@ enum soc_type {
+>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+>>   * @tmu_intstat: Register containing the interrupt status values.
+>>   * @tmu_intclear: Register for clearing the raised interrupt status.
+>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
+>>   * @emul_con: TMU emulation controller register.
+>>   * @emul_temp_shift: shift bits of emulation temperature.
+>>   * @emul_time_shift: shift bits of emulation time.
+>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
+>>  	u32	tmu_intstat;
+>> =20
+>>  	u32	tmu_intclear;
+>> +	u32	intclr_fall_shift;
+>> =20
+>>  	u32	emul_con;
+>>  	u32	emul_temp_shift;
+>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/therm=
+al/samsung/exynos_tmu_data.c
+>> index 9002499..23fea23 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos525=
+0_tmu_registers =3D {
+>>  	.inten_fall0_shift =3D EXYNOS_TMU_INTEN_FALL0_SHIFT,
+>>  	.tmu_intstat =3D EXYNOS_TMU_REG_INTSTAT,
+>>  	.tmu_intclear =3D EXYNOS_TMU_REG_INTCLEAR,
+>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+>>  	.emul_con =3D EXYNOS_EMUL_CON,
+>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
+>>  	.emul_time_shift =3D EXYNOS_EMUL_TIME_SHIFT,
+>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos544=
+0_tmu_registers =3D {
+>>  	.inten_fall0_shift =3D EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+>>  	.tmu_intstat =3D EXYNOS5440_TMU_S0_7_IRQ,
+>>  	.tmu_intclear =3D EXYNOS5440_TMU_S0_7_IRQ,
+>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+>>  	.tmu_irqstatus =3D EXYNOS5440_TMU_IRQ_STATUS,
+>>  	.emul_con =3D EXYNOS5440_TMU_S0_7_DEBUG,
+>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
+>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/therm=
+al/samsung/exynos_tmu_data.h
+>> index dc7feb5..8788a87 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+>> @@ -69,9 +69,10 @@
+>>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
+>>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
+>>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
+>> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
+>> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
+>>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+>>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
+>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
+>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+>>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+>=20
+>=20
+>=20
 
-better to add
-+		/* Don't use USB PHY if generic PHY was found */
-+		dwc->usb2_phy = dwc->usb3_phy = NULL;
 
-> +	} else {
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
 
-not required as we've used kzalloc for dwc.
+Eduardo Valentin
 
-> +		dwc->usb2_generic_phy = NULL;
-> +		dwc->usb3_generic_phy = NULL;
-> +	}
-> +
->  	/* default to superspeed if no maximum_speed passed */
->  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
->  		dwc->maximum_speed = USB_SPEED_SUPER;
-> @@ -450,6 +478,11 @@ static int dwc3_probe(struct platform_device *pdev)
 
-if (dwc->usb2_phy)
+--PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
->  	usb_phy_set_suspend(dwc->usb2_phy, 0);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-if (dwc->usb3_phy)
+iF4EAREIAAYFAlJYFPMACgkQCXcVR3XQvP3PzQEAjdUlM2AYCAZbis8xNEF0Qgxf
+T6QdlXNX2s1Yq1KYZ88A/R027+dbOKcYUq4a2MvMoMVGEEHO10uaf6YC+UcsQH2u
+=b9hp
+-----END PGP SIGNATURE-----
 
->  	usb_phy_set_suspend(dwc->usb3_phy, 0);
->  
-> +	if (dwc->usb2_generic_phy)
-> +		phy_power_on(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_power_on(dwc->usb3_generic_phy);
-> +
->  	spin_lock_init(&dwc->lock);
->  	platform_set_drvdata(pdev, dwc);
->  
-> @@ -576,6 +609,11 @@ static int dwc3_remove(struct platform_device *pdev)
-
-if (dwc->usb2_phy)
->  	usb_phy_set_suspend(dwc->usb2_phy, 1);
-
-if (dwc->usb3_phy)
->  	usb_phy_set_suspend(dwc->usb3_phy, 1);
->  
-> +	if (dwc->usb2_generic_phy)
-> +		phy_power_off(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_power_off(dwc->usb3_generic_phy);
-> +
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  
-> @@ -673,6 +711,11 @@ static int dwc3_suspend(struct device *dev)
-
-if (dwc->usb3_phy)
->  	usb_phy_shutdown(dwc->usb3_phy);
-
-if (dwc->usb2_phy)
->  	usb_phy_shutdown(dwc->usb2_phy);
->  
-> +	if (dwc->usb2_generic_phy)
-> +		phy_exit(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_exit(dwc->usb3_generic_phy);
-> +
->  	return 0;
->  }
->  
-> @@ -683,6 +726,12 @@ static int dwc3_resume(struct device *dev)
->  
-
-if (dwc->usb3_phy)
->  	usb_phy_init(dwc->usb3_phy);
-
-if (dwc->usb2_phy)
->  	usb_phy_init(dwc->usb2_phy);
-> +
-> +	if (dwc->usb2_generic_phy)
-> +		phy_init(dwc->usb2_generic_phy);
-> +	if (dwc->usb3_generic_phy)
-> +		phy_init(dwc->usb3_generic_phy);
-> +
->  	msleep(100);
->  
->  	spin_lock_irqsave(&dwc->lock, flags);
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index f8af8d4..01ec7d7 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -31,6 +31,8 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/otg.h>
->  
-> +#include <linux/phy/phy.h>
-> +
->  /* Global constants */
->  #define DWC3_EP0_BOUNCE_SIZE	512
->  #define DWC3_ENDPOINTS_NUM	32
-> @@ -613,6 +615,8 @@ struct dwc3_scratchpad_array {
->   * @dr_mode: requested mode of operation
->   * @usb2_phy: pointer to USB2 PHY
->   * @usb3_phy: pointer to USB3 PHY
-> + * @usb2_generic_phy: pointer to USB2 PHY
-> + * @usb3_generic_phy: pointer to USB3 PHY
->   * @dcfg: saved contents of DCFG register
->   * @gctl: saved contents of GCTL register
->   * @is_selfpowered: true when we are selfpowered
-> @@ -665,6 +669,9 @@ struct dwc3 {
->  	struct usb_phy		*usb2_phy;
->  	struct usb_phy		*usb3_phy;
->  
-> +	struct phy		*usb2_generic_phy;
-> +	struct phy		*usb3_generic_phy;
-> +
->  	void __iomem		*regs;
->  	size_t			regs_size;
->  
-> 
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk--
