@@ -1,142 +1,74 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/5] usb: gadget: s3c-hsotg: support configurable UTMI
- PHY width
-Date: Fri, 11 Oct 2013 08:37:31 -0500
-Message-ID: <20131011133731.GD25706@radagast>
-References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
- <1381140752-312-3-git-send-email-matt.porter@linaro.org>
- <20131010152922.GF28375@radagast>
- <5256DBD0.8030008@linaro.org>
- <20131010174620.GC19802@radagast>
- <A2CA0424C0A6F04399FB9E1CD98E030458E16893@US01WEMBX2.internal.synopsys.com>
- <5256FAFA.1020509@linaro.org>
- <52576EBA.9000502@linaro.org>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Pekon Gupta <pekon@ti.com>
+Subject: [PATCH v8 5/6] ARM: dts: AM33xx: updated default ECC scheme in
+ nand-ecc-opt
+Date: Fri, 11 Oct 2013 19:06:42 +0530
+Message-ID: <1381498603-15715-6-git-send-email-pekon@ti.com>
+References: <1381498603-15715-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52576EBA.9000502-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1381498603-15715-1-git-send-email-pekon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com
+Cc: devicetree@vger.kernel.org, Pawel.Moll@arm.com, arnd@arndb.de, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, Pekon Gupta <pekon@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
---u5E4XgoOPWr4PD9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Updated DTS to replace deprecated binding with newer values
+Refer: Documentation/devicetree/bindings/mtd/gpmc-nand.txt
 
-Hi,
+Signed-off-by: Pekon Gupta <pekon@ti.com>
+---
+ arch/arm/boot/dts/am335x-evm.dts   | 3 +--
+ arch/arm/boot/dts/omap3430-sdp.dts | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-On Thu, Oct 10, 2013 at 11:21:30PM -0400, Matt Porter wrote:
-> On 10/10/2013 03:07 PM, Matt Porter wrote:
-> >On 10/10/2013 01:57 PM, Paul Zimmerman wrote:
-> >>>From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
-> >>>Sent: Thursday, October 10, 2013 10:46 AM
-> >>>
-> >>>On Thu, Oct 10, 2013 at 12:54:40PM -0400, Matt Porter wrote:
-> >>>>On 10/10/2013 11:29 AM, Felipe Balbi wrote:
-> >>>>>On Mon, Oct 07, 2013 at 06:12:29AM -0400, Matt Porter wrote:
-> >>>>>>Extend dwc2 binding with an optional utmi phy width property.
-> >>>>>>Enable the s3c-hsotg.c driver to use standard dwc2 binding
-> >>>>>>and enable configuration of the UTMI phy width based on the
-> >>>>>>property.
-> >>>>>>
-> >>>>>>Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>>>>Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>>>>Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>>>>---
-> >>>>>>  Documentation/devicetree/bindings/staging/dwc2.txt |  4 ++++
-> >>>>>>  drivers/usb/gadget/s3c-hsotg.c                     | 18
-> >>>>>>+++++++++++++++++-
-> >>>>>>  drivers/usb/gadget/s3c-hsotg.h                     |  1 +
-> >>>>>>  3 files changed, 22 insertions(+), 1 deletion(-)
-> >>>>>>
-> >>>>>>diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt
-> >>>b/Documentation/devicetree/bindings/staging/dwc2.txt
-> >>>>>>index 1a1b7cf..fb6b8ee 100644
-> >>>>>>--- a/Documentation/devicetree/bindings/staging/dwc2.txt
-> >>>>>>+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-> >>>>>>@@ -6,10 +6,14 @@ Required properties:
-> >>>>>>  - reg : Should contain 1 register range (address and length)
-> >>>>>>  - interrupts : Should contain 1 interrupt
-> >>>>>>
-> >>>>>>+Optional properties:
-> >>>>>>+- snps,phy-utmi-width: Must contain the UTMI data width (either 8
-> >>>>>>or 16)
-> >>>>>
-> >>>>>isn't this available in any of the configuration registers ?
-> >>>>
-> >>>>Yes and no. HWCFG4 has a UTMI data width field. However, it has 3
-> >>>>valid states, "8", "16", or "8 or 16". The BCM281xx implementation is
-> >>>>set to the latter and the attached phy is 8-bit.
-> >>>>
-> >>>>Looking at dwc2 prior to Matthijs Kooijman's patch [1] which starts
-> >>>>validating the value of phy_utmi_width in that driver, the pci.c
-> >>>>dwc2_module_params .phy_utmi_width field there even had the comment,
-> >>>>"/* 16 bits - NOT DETECTABLE */". The autodetect code in
-> >>>>dwc2_set_param_phy_utmi_width() will fail if HWCFG4 has the "8 or 16"
-> >>>>option as it just decides to default to a phy width of 16 if nothing
-> >>>>is configured by the platform glue. This property would also allow
-> >>>>this issue to be addressed in that driver.
-> >>>
-> >>>fair enough, but I'd really like to hear from DT folks if your suggest=
-ed
-> >>>binding is acceptable. It seems like we can equally argue that it's a =
-SW
-> >>>configuration or HW description.
-> >>
-> >>It's definitely a HW description - the width of the UTMI data connectio=
-n.
-> >>
-> >>But, which PHY is this? Does it have a register that could tell what
-> >>the data width is? The dwc2 core has an (optional) PHY Vendor Control
-> >>Register that allows reading the PHY registers.
-> >
-> >This is the integrated PHY on the bcm28155 part (the entire
-> >bcm281xx/11351 family shares it). My register doc doesn't show the
-> >optional PHY vendor control register as being present in this dwc2
-> >implementation. I'll track down with the design team if this is
-> >accurate...but it appears we can't go that route.
->=20
-> The design team confirmed that we do not have any registers that can
-> be accessed via the PHY Vendor Control Register. All PHY control
-> registers are implemented in the MMIO control block which is
-> supported in the PHY control driver later in this series.They also
-> confirmed there's no other way to detect that it's an 8-bit data
-> path.
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index e8ec875..1aee6ac 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -269,7 +269,6 @@
+ 				reg = <0 0 0>; /* CS0, offset 0 */
+ 				nand-bus-width = <8>;
+ 				ti,nand-ecc-opt = "bch8";
+-				gpmc,device-nand = "true";
+ 				gpmc,device-width = <1>;
+ 				gpmc,sync-clk-ps = <0>;
+ 				gpmc,cs-on-ns = <0>;
+@@ -296,7 +295,7 @@
+ 
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				elm_id = <&elm>;
++				ti,elm-id = <&elm>;
+ 
+ 				/* MTD partition table */
+ 				partition@0 {
+diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+index e2249bc..501f863 100644
+--- a/arch/arm/boot/dts/omap3430-sdp.dts
++++ b/arch/arm/boot/dts/omap3430-sdp.dts
+@@ -105,7 +105,7 @@
+ 		reg = <1 0 0x08000000>;
+ 		nand-bus-width = <8>;
+ 
+-		ti,nand-ecc-opt = "sw";
++		ti,nand-ecc-opt = "ham1";
+ 		gpmc,cs-on-ns = <0>;
+ 		gpmc,cs-rd-off-ns = <36>;
+ 		gpmc,cs-wr-off-ns = <36>;
+-- 
+1.8.1
 
-then we need the DT binding, let's see what DT maintainers say.
 
---=20
-balbi
-
---u5E4XgoOPWr4PD9E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSV/8bAAoJEIaOsuA1yqREP3MP/0M7glVlml6aKzCtbu7czTgl
-p6laWFgrzQW9/GH2tkbJew1V0gJ0fNUg+Tas1gSfTKfc5m6NK0QpyTqwx8q4H4RM
-WUQ7gQV10edeLdjnDa9+VGU16/OPTqsgrAum+DFP7vMOi7rNVh5g98M+JqDghMcn
-cKHFuFcosAqXFkhw6Xknnf/ldKLDHZS/hIlnLaAlplanRNP5xkJ6TsEpRd9vHO0o
-sWpRUoEo1Ud+JPhnQHXblbdsclnlemEUiWRJJZ84HynZKNC4HqDc/HMx4hyiV9yw
-/iXD0AnOO+jZVyj/X6+rn5nC+t0wnrMGlJMcLlxhP1dJucVC0Mxjx+e0tyZ9iuOf
-lUT0iibS/ziQJ7EBwHzO+xZP6aLAJfo0X/CZ1XaeBAUcy6EaRQ9pdwpKc4l85c0V
-hyxGB9pfU3PLsA+3KjKw4OiLp2BtOHsnmf/mrjI3onNuQcgO/3mMtCJDnNtFiwGY
-902K2fGLFiaU4USz8aZwqNvrSyMWibS62NrXjz4+nRrEN89gWrSWnhsKPjYv6p2z
-Zh1NNlCHr7BpxvA1hmT8XrEiET7Z9rDVAIxNGYEJ3LxpJOehrY1S4gEJuAKhhkPW
-ahtqrX5FxPGNpDnTS3Jh6Y3d/oI/WmpD5J029F1IP+OsReZLKkAw6EpvHCpGFbwm
-wjIH0ByMbXmLAEmKncrY
-=nY4D
------END PGP SIGNATURE-----
-
---u5E4XgoOPWr4PD9E--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
