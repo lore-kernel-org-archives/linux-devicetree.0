@@ -1,40 +1,73 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v2 4/6] ARM: at91/dt: define sama5d3xek's main clk frequency
-Date: Fri, 11 Oct 2013 14:43:34 +0200
-Message-ID: <1381495416-15928-5-git-send-email-b.brezillon@overkiz.com>
-References: <1381495416-15928-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381495416-15928-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: add export with name from dts
+Date: Fri, 11 Oct 2013 14:49:51 +0200
+Message-ID: <CACRpkdYkG-0x9_oQijA6hYn+snDsjtVT+RhYhDe_9gjfDdWuoA@mail.gmail.com>
+References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
+	<CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com>
+	<5257E15D.5080602@aksignal.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5257E15D.5080602@aksignal.cz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jiri Prchal <jiri.prchal@aksignal.cz>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the main clock frequency for the new main clock node
-in sama5d3xcm.dtsi.
+On Fri, Oct 11, 2013 at 1:30 PM, skrev Ji=F8=ED Prchal <jiri.prchal@aks=
+ignal.cz>:
+> Dne 11.10.2013 12:48, Linus Walleij napsal(a):
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/sama5d3xcm.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
+>> - What do you think of the approach of just not using this for DT
+>>    boots, instead we create a new userspace ABI, using e.g. a
+>>    char device for each GPIO chip like /dev/gpio0, /dev/gpio1 etc
+>>    and access these using ioctl:s?
+>
+> It would be nice, but yesterday was late.
+> Even nicer would be /dev/in13, /dev/out20 etc.
 
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index 726a0f3..dce5419 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -38,6 +38,12 @@
- 			macb0: ethernet@f0028000 {
- 				phy-mode = "rgmii";
- 			};
-+
-+			pmc: pmc@fffffc00 {
-+				main: mainck {
-+					clock-frequency = <12000000>;
-+				};
-+			};
- 		};
- 
- 		nand0: nand@60000000 {
--- 
-1.7.9.5
+Hm like one device node per pin?
+
+/dev/gpio0/in01
+/dev/gpio0/out01
+etc
+
+>> - I guess you have a specific system in mind for this? What is the
+>>    use case? I have seen *way* too many people trying to reimplement
+>>    drivers/leds/leds-gpio.c
+>>    drivers/input/keyboard/gpio_keys.c
+>>    drivers/input/keyboard/gpio_keys_polled.c
+>>    drivers/power/gpio-charger.c
+>>    drivers/i2c/busses/i2c-gpio.c
+>>    drivers/extcon/extcon-gpio.c
+>>    drivers/spi/spi-gpio.c
+>>    IN USERSPACE! JUST BECAUSE THEY CAN!
+>
+> As I know, no one is good for me. May be I could use gpio-led for out=
+puts,
+> but they would be under sysfs/leds and it isn't clear.
+
+If the GPIOs are actually connected to LEDs you should be
+using drivers/leds/leds-gpio.c and not export the GPIOs.
+
+> And what for inputs?
+
+Depends on what input. For simple buttons:
+
+drivers/input/keyboard/gpio_keys.c
+drivers/input/keyboard/gpio_keys_polled.c
+
+Then you get the input events from /dev/input/eventN
+just like any other key press.
+
+extcon-gpio.c is for e.g. headphone insertion on mobile
+phones etc.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
