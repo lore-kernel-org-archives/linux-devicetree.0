@@ -1,37 +1,101 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type
- *ti,palmas-usb-vid*
-Date: Fri, 11 Oct 2013 16:06:21 +0900
-Message-ID: <5257A36D.80902@samsung.com>
-References: <1381408647-24653-1-git-send-email-kishon@ti.com>
- <5256A773.6060807@nvidia.com> <5257977C.1030108@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 1/3] ahci: exynos: add ahci sata support on Exynos platform
+Date: Fri, 11 Oct 2013 09:26:34 +0200
+Message-ID: <5254874.hnE6mtQbvX@amdn883>
+References: <1380609183-21430-1-git-send-email-yuvaraj.cd@samsung.com>
+ <CAKuRcOJi5C1C63Y41dSJ0-YsaTni1AL=d3qH2Cjz74C8ardEpQ@mail.gmail.com>
+ <000001cec64d$fa1cdca0$ee5695e0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <5257977C.1030108@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000001cec64d$fa1cdca0$ee5695e0$%han@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Yuvaraj Kumar' <yuvaraj.cd@gmail.com>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, tj@kernel.org, kgene.kim@samsung.com, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kishon@ti.com, s.nawrocki@samsung.com, ks.giri@samsung.com, aditya.ps@samsung.com, 'Yuvaraj Kumar C D' <yuvaraj.cd@samsung.com>, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 03:15 PM, Kishon Vijay Abraham I wrote:
-> On Thursday 10 October 2013 06:41 PM, Laxman Dewangan wrote:
->> On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
->>> The Palmas device contains only a USB VBUS-ID detector, so added a
->>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
->>> types for backward compatibility.
->>>
->> I dont have much issue on this nomenclature but just second thought:
->>
->> The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, ID-RB, ID-RC
->> and ID-FLOAT as per BC1.2.
->> This sub-module only detect the cable, does nothing more than this.
->> In this case, should we say "ti,palmas-usb-extcon"?
->> Again extcon is linux specific terminology and this can be defer.
+Hi,
+
+On Friday 11 of October 2013 15:49:04 Jingoo Han wrote:
+> On Tuesday, October 08, 2013 8:45 PM, Yuvaraj Kumar wrote:
+> > On Fri, Oct 4, 2013 at 6:03 AM, Jingoo Han <jg1.han@samsung.com> wrote:
+> > > On Thursday, October 03, 2013 8:32 PM, Bartlomiej Zolnierkiewicz wrote:
+> > >> On Tuesday, October 01, 2013 12:03:01 PM Yuvaraj Kumar C D wrote:
+> > >> > Exynos5250 contains one Synopsys AHCI SATA controller.The avalaible
+> > >> > ahci_platform driver is not sufficient to handle the AHCI PHY and PHY
+> > >> > clock related initialization.
+> > >> >
+> > >> > This patch adds exynos specific ahci sata driver,contained the exynos
+> > >> > specific initialized codes, re-use the generic ahci_platform driver, and
+> > >> > keep the generic ahci_platform driver clean as much as possible.
+> > >> >
+> > >> > This patch depends on the below patch
+> > >> >     [1].drivers: phy: add generic PHY framework
+> > >> >             by Kishon Vijay Abraham I<kishon@ti.com>
+> > >> >
+> > >> > Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> > >> > ---
+> > >> >  drivers/ata/Kconfig       |    9 ++
+> > >> >  drivers/ata/Makefile      |    1 +
+> > >> >  drivers/ata/ahci_exynos.c |  226 +++++++++++++++++++++++++++++++++++++++++++++
+> > >> >  3 files changed, 236 insertions(+)
+> > >> >  create mode 100644 drivers/ata/ahci_exynos.c
+> > >> >
+> > >
+> > >
+> > > [.....]
+> > >
+> > >> > +   priv->phy = devm_phy_get(dev , "sata-phy");
+> > >> > +   if (IS_ERR(priv->phy))
+> > >> > +           return PTR_ERR(priv->phy);
+> > >
+> > > [.....]
+> > >
+> > >> Also please take a look at the following patch:
+> > >>
+> > >> https://lkml.org/lkml/2013/9/19/173
+> > >>
+> > >> it adds PHY support to ahci_platform driver, maybe it can be used
+> > >> for your needs as well.
+> > >
+> > > I also agree with Bartlomiej Zolnierkiewicz's opinion.
+> > > 'ahci_exynos.c' just calls PHY API, without any additional control
+> > > for Exynos AHCI IP.
+> > In addition to PHY handling,it also deals with the special clock
+> > sclk_sata which is not dealt in ahci_platform.c(certainly exynos
+> > specific).
 > 
-> I don't mind either way. Chanwoo?
+> Handling the special clock 'sclk_sata' is another issue.
+> Please, look at that other 'sclk_*'s are handled.
+> Also, if possible, please add 'the code handling the special clock'
+> to 'ahci_platform.c'.
+> 
+> > 
+> > Morever there is a wrapper driver to handle the platform specific
+> > things for the sata.Please refer the  patch[1]
+> > [1]ata: ti_sata: Add Texas Instruments SATA Wrapper driver
+> > https://lkml.org/lkml/2013/9/19/166
+> 
+> As Roger Quadros mentioned, 'ti_sata' driver will be dropped.
+> 
+> > [2]ahci_imx: add ahci sata support on imx platforms
+> > 
+> 
+> 'ahci_imx' is necessary, because 'ahci_imx' controls some
+> specific registers.
+> 
+> However, 'ahci_exynos.c' does not control any registers.
+> 
+> > I think, if we have platform specific driver like ahci_xxx.c , it
+> > would be better to handle the sata PHY in ahci_xxx.c so that we can
+> > retain and re-use the ahci_platform.c as it is.
+> 
+> I think that the platform specific driver like ahci_xxx.c is not
+> necessary, because 'ahci_exynos.c' does not control any special
+> registers.
 
-The EXTCON is subsystem name. I don't prefer to use 'extcon' word on device name.
-I agree Kishon opinion.
+My big +1 to all the JIngoo's points above.
 
+Best regards,
+Tomasz
