@@ -1,437 +1,173 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
-Date: Fri, 11 Oct 2013 11:14:33 -0700
-Message-ID: <1381515273-25466-4-git-send-email-acourbot@nvidia.com>
-References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all
+ resource allocation and free calls
+Date: Fri, 11 Oct 2013 11:15:15 -0700
+Message-ID: <20131011181515.GJ23337@ld-irv-0074.broadcom.com>
+References: <1381498603-15715-1-git-send-email-pekon@ti.com>
+ <1381498603-15715-7-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, gnurou@gmail.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381498603-15715-7-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, dedekind1@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add gpiod_get(), gpiod_get_index() and gpiod_put() functions that
-private safer management of GPIOs.
+Hi Pekon,
 
-These functions put the GPIO framework in line with the conventions of
-other frameworks in the kernel, and help ensure every GPIO is declared
-properly and valid while it is used.
+On Fri, Oct 11, 2013 at 07:06:43PM +0530, Pekon Gupta wrote:
+> "Managed Device Resource" or devm_xx calls takes care of automatic freeing
+> of the resource in case of:
+> - failure during driver probe
+> - failure during resource allocation
+> - detaching or unloading of driver module (rmmod)
+> Reference: Documentation/driver-model/devres.txt
+> 
+> Though OMAP NAND driver handles freeing of resource allocation in most of
+> the cases, but using devm_xx provides more clean and effortless approach
+> to handle all such cases.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
- drivers/gpio/devres.c         |  83 +++++++++++++++++
- drivers/gpio/gpiolib.c        | 203 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/gpio/consumer.h |  15 ++++
- include/linux/gpio/driver.h   |  55 ++++++++++++
- 4 files changed, 356 insertions(+)
+Judging by your patch, I think you missed the point of the devm_*
+managed functions. They are useful because you don't need to do any of
+the cleanup (kfree(), iounmap(), etc.) yourself. I'll note the changes
+that are necessary below, but seeing as this is an add-on to your patch
+series, I may merge the rest of series without this, and if so, you can
+just resubmit this patch separately.
 
-diff --git a/drivers/gpio/devres.c b/drivers/gpio/devres.c
-index 3e7812f..2caa257 100644
---- a/drivers/gpio/devres.c
-+++ b/drivers/gpio/devres.c
-@@ -19,6 +19,89 @@
- #include <linux/device.h>
- #include <linux/gfp.h>
- 
-+static void devm_gpiod_release(struct device *dev, void *res)
-+{
-+	struct gpio_desc **desc = res;
-+
-+	gpiod_put(*desc);
-+}
-+
-+static int devm_gpiod_match(struct device *dev, void *res, void *data)
-+{
-+	struct gpio_desc **this = res, **gpio = data;
-+
-+	return *this == *gpio;
-+}
-+
-+/**
-+ * devm_gpiod_get - Resource-managed gpiod_get()
-+ * @dev:	GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ *
-+ * Managed gpiod_get(). GPIO descriptors returned from this function are
-+ * automatically disposed on driver detach. See gpiod_get() for detailed
-+ * information about behavior and return values.
-+ */
-+struct gpio_desc *__must_check devm_gpiod_get(struct device *dev,
-+					      const char *con_id)
-+{
-+	return devm_gpiod_get_index(dev, con_id, 0);
-+}
-+EXPORT_SYMBOL(devm_gpiod_get);
-+
-+/**
-+ * devm_gpiod_get_index - Resource-managed gpiod_get_index()
-+ * @dev:	GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ * @idx:	index of the GPIO to obtain in the consumer
-+ *
-+ * Managed gpiod_get_index(). GPIO descriptors returned from this function are
-+ * automatically disposed on driver detach. See gpiod_get_index() for detailed
-+ * information about behavior and return values.
-+ */
-+struct gpio_desc *__must_check devm_gpiod_get_index(struct device *dev,
-+						    const char *con_id,
-+						    unsigned int idx)
-+{
-+	struct gpio_desc **dr;
-+	struct gpio_desc *desc;
-+
-+	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpiod_desc *),
-+			  GFP_KERNEL);
-+	if (!dr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	desc = gpiod_get_index(dev, con_id, idx);
-+	if (IS_ERR(desc)) {
-+		devres_free(dr);
-+		return desc;
-+	}
-+
-+	*dr = desc;
-+	devres_add(dev, dr);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(devm_gpiod_get_index);
-+
-+/**
-+ * devm_gpiod_put - Resource-managed gpiod_put()
-+ * @desc:	GPIO descriptor to dispose of
-+ *
-+ * Dispose of a GPIO descriptor obtained with devm_gpiod_get() or
-+ * devm_gpiod_get_index(). Normally this function will not be called as the GPIO
-+ * will be disposed of by the resource management code.
-+ */
-+void devm_gpiod_put(struct device *dev, struct gpio_desc *desc)
-+{
-+	WARN_ON(devres_release(dev, devm_gpiod_release, devm_gpiod_match,
-+		&desc));
-+}
-+EXPORT_SYMBOL(devm_gpiod_put);
-+
-+
-+
-+
- static void devm_gpio_release(struct device *dev, void *res)
- {
- 	unsigned *gpio = res;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b2a7839..05b9981 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -69,6 +69,8 @@ static struct gpio_desc gpio_desc[ARCH_NR_GPIOS];
- 
- #define GPIO_OFFSET_VALID(chip, offset) (offset >= 0 && offset < chip->ngpio)
- 
-+static DEFINE_MUTEX(gpio_lookup_lock);
-+static LIST_HEAD(gpio_lookup_list);
- static LIST_HEAD(gpio_chips);
- 
- #ifdef CONFIG_GPIO_SYSFS
-@@ -2111,6 +2113,207 @@ void gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
- }
- EXPORT_SYMBOL_GPL(gpiod_set_value_cansleep);
- 
-+/**
-+ * gpiod_add_table() - register GPIO device consumers
-+ * @table: array of consumers to register
-+ * @num: number of consumers in table
-+ */
-+void gpiod_add_table(struct gpiod_lookup *table, size_t size)
-+{
-+	mutex_lock(&gpio_lookup_lock);
-+
-+	while (size--) {
-+		list_add_tail(&table->list, &gpio_lookup_list);
-+		table++;
-+	}
-+
-+	mutex_unlock(&gpio_lookup_lock);
-+}
-+
-+/*
-+ * Caller must have a acquired gpio_lookup_lock
-+ */
-+static struct gpio_chip *find_chip_by_name(const char *name)
-+{
-+	struct gpio_chip *chip = NULL;
-+
-+	list_for_each_entry(chip, &gpio_lookup_list, list) {
-+		if (chip->label == NULL)
-+			continue;
-+		if (!strcmp(chip->label, name))
-+			break;
-+	}
-+
-+	return chip;
-+}
-+
-+#ifdef CONFIG_OF
-+static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
-+				      unsigned int idx, unsigned long *flags)
-+{
-+	char prop_name[32]; /* 32 is max size of property name */
-+	enum of_gpio_flags of_flags;
-+	struct gpio_desc *desc;
-+
-+	if (con_id)
-+		snprintf(prop_name, 32, "%s-gpios", con_id);
-+	else
-+		snprintf(prop_name, 32, "gpios");
-+
-+	desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
-+					&of_flags);
-+
-+	if (IS_ERR(desc))
-+		return desc;
-+
-+	if (of_flags & OF_GPIO_ACTIVE_LOW)
-+		*flags |= GPIOF_ACTIVE_LOW;
-+
-+	return desc;
-+}
-+#else
-+static struct device_node *of_find_gpio(struct device *dev, const char *id
-+					unsigned int idx, unsigned long flags)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
-+static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
-+				    unsigned int idx, unsigned long *flags)
-+{
-+	const char *dev_id = dev ? dev_name(dev) : NULL;
-+	struct gpio_desc *desc = ERR_PTR(-ENODEV);
-+	unsigned int match, best = 0;
-+	struct gpiod_lookup *p;
-+
-+	mutex_lock(&gpio_lookup_lock);
-+
-+	list_for_each_entry(p, &gpio_lookup_list, list) {
-+		match = 0;
-+
-+		if (p->dev_id) {
-+			if (!dev_id || strcmp(p->dev_id, dev_id))
-+				continue;
-+
-+			match += 2;
-+		}
-+
-+		if (p->con_id) {
-+			if (!con_id || strcmp(p->con_id, con_id))
-+				continue;
-+
-+			match += 1;
-+		}
-+
-+		if (p->idx != idx)
-+			continue;
-+
-+		if (match > best) {
-+			struct gpio_chip *chip;
-+
-+			chip = find_chip_by_name(p->chip_label);
-+
-+			if (!chip) {
-+				dev_warn(dev, "cannot find GPIO chip %s\n",
-+					 p->chip_label);
-+				continue;
-+			}
-+
-+			if (chip->ngpio >= p->chip_hwnum) {
-+				dev_warn(dev, "GPIO chip %s has %d GPIOs\n",
-+					 chip->label, chip->ngpio);
-+				continue;
-+			}
-+
-+			desc = gpio_to_desc(chip->base + p->chip_hwnum);
-+			*flags = p->flags;
-+
-+			if (match != 3)
-+				best = match;
-+			else
-+				break;
-+		}
-+	}
-+
-+	mutex_unlock(&gpio_lookup_lock);
-+
-+	return desc;
-+}
-+
-+/**
-+ * gpio_get - obtain a GPIO for a given GPIO function
-+ * @dev:	GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ *
-+ * Return the GPIO descriptor corresponding to the function con_id of device
-+ * dev, or an IS_ERR() condition if an error occured.
-+ */
-+struct gpio_desc *__must_check gpiod_get(struct device *dev, const char *con_id)
-+{
-+	return gpiod_get_index(dev, con_id, 0);
-+}
-+EXPORT_SYMBOL_GPL(gpiod_get);
-+
-+/**
-+ * gpiod_get_index - obtain a GPIO from a multi-index GPIO function
-+ * @dev:	GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ * @idx:	index of the GPIO to obtain in the consumer
-+ *
-+ * This variant of gpiod_get() allows to access GPIOs other than the first
-+ * defined one for functions that define several GPIOs.
-+ *
-+ * Return a valid GPIO descriptor, or an IS_ERR() condition in case of error.
-+ */
-+struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
-+					       const char *con_id,
-+					       unsigned int idx)
-+{
-+	struct gpio_desc *desc;
-+	int status;
-+	unsigned long flags = 0;
-+
-+	dev_dbg(dev, "GPIO lookup for consumer %s\n", con_id);
-+
-+	/* Using device tree? */
-+	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node) {
-+		dev_dbg(dev, "using device tree for GPIO lookup\n");
-+		desc = of_find_gpio(dev, con_id, idx, &flags);
-+	} else {
-+		dev_dbg(dev, "using lookup tables for GPIO lookup");
-+		desc = gpiod_find(dev, con_id, idx, &flags);
-+	}
-+
-+	if (IS_ERR(desc)) {
-+		dev_warn(dev, "lookup for GPIO %s failed\n", con_id);
-+		return desc;
-+	}
-+
-+	status = gpiod_request(desc, con_id);
-+
-+	if (status < 0)
-+		return ERR_PTR(status);
-+
-+	if (flags & GPIOF_ACTIVE_LOW)
-+		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(gpiod_get_index);
-+
-+/**
-+ * gpiod_put - dispose of a GPIO descriptor
-+ * @desc:	GPIO descriptor to dispose of
-+ *
-+ * No descriptor can be used after gpiod_put() has been called on it.
-+ */
-+void gpiod_put(struct gpio_desc *desc)
-+{
-+	gpiod_free(desc);
-+}
-+EXPORT_SYMBOL_GPL(gpiod_put);
-+
- #ifdef CONFIG_DEBUG_FS
- 
- static void gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 2088eb5..4d34dbb 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -18,6 +18,21 @@ struct gpio_chip;
-  */
- struct gpio_desc;
- 
-+/* Acquire and dispose GPIOs */
-+struct gpio_desc *__must_check gpiod_get(struct device *dev,
-+					 const char *con_id);
-+struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
-+					       const char *con_id,
-+					       unsigned int idx);
-+void gpiod_put(struct gpio_desc *desc);
-+
-+struct gpio_desc *__must_check devm_gpiod_get(struct device *dev,
-+					      const char *con_id);
-+struct gpio_desc *__must_check devm_gpiod_get_index(struct device *dev,
-+						    const char *con_id,
-+						    unsigned int idx);
-+void devm_gpiod_put(struct device *dev, struct gpio_desc *desc);
-+
- int gpiod_get_direction(const struct gpio_desc *desc);
- int gpiod_direction_input(struct gpio_desc *desc);
- int gpiod_direction_output(struct gpio_desc *desc, int value);
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 77eef93..3b316b4 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -120,5 +120,60 @@ extern int __must_check gpiochip_remove(struct gpio_chip *chip);
- extern struct gpio_chip *gpiochip_find(void *data,
- 			      int (*match)(struct gpio_chip *chip, void *data));
- 
-+/**
-+ * Lookup table for associating GPIOs to specific devices and functions using
-+ * platform data.
-+ */
-+struct gpiod_lookup {
-+	struct list_head list;
-+	/*
-+	 * name of the chip the GPIO belongs to
-+	 */
-+	const char *chip_label;
-+	/*
-+	 * hardware number (i.e. relative to the chip) of the GPIO
-+	 */
-+	u16 chip_hwnum;
-+	/*
-+	 * name of device that can claim this GPIO
-+	 */
-+	const char *dev_id;
-+	/*
-+	 * name of the GPIO from the device's point of view
-+	 */
-+	const char *con_id;
-+	/*
-+	 * index of the GPIO in case several GPIOs share the same name
-+	 */
-+	unsigned int idx;
-+	/*
-+	 * mask of GPIOF_* values
-+	 */
-+	unsigned long flags;
-+};
-+
-+/*
-+ * Simple definition of a single GPIO under a con_id
-+ */
-+#define GPIO_LOOKUP(_chip_label, _chip_hwnum, _dev_id, _con_id, _flags) \
-+	GPIO_LOOKUP_IDX(_chip_label, _chip_hwnum, _dev_id, _con_id, 0, _flags)
-+
-+/*
-+ * Use this macro if you need to have several GPIOs under the same con_id.
-+ * Each GPIO needs to use a different index and can be accessed using
-+ * gpiod_get_index()
-+ */
-+#define GPIO_LOOKUP_IDX(_chip_label, _chip_hwnum, _dev_id, _con_id, _idx, \
-+			_flags)                                           \
-+{                                                                         \
-+	.chip_label = _chip_label,                                        \
-+	.chip_hwnum = _chip_hwnum,                                        \
-+	.dev_id = _dev_id,                                                \
-+	.con_id = _con_id,                                                \
-+	.idx = _idx,                                                      \
-+	.flags = _flags,                                                   \
-+}
-+
-+void gpiod_add_table(struct gpiod_lookup *table, size_t size);
- 
- #endif
--- 
-1.8.4
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  drivers/mtd/nand/omap2.c | 38 +++++++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index a783dae..0f2b0d1 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -1658,7 +1658,8 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	info = kzalloc(sizeof(struct omap_nand_info), GFP_KERNEL);
+> +	info = devm_kzalloc(&pdev->dev, sizeof(struct omap_nand_info),
+> +				GFP_KERNEL);
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> @@ -1690,13 +1691,14 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  	info->phys_base = res->start;
+>  	info->mem_size = resource_size(res);
+>  
+> -	if (!request_mem_region(info->phys_base, info->mem_size,
+> -				pdev->dev.driver->name)) {
+> +	if (!devm_request_mem_region(&pdev->dev, info->phys_base,
+> +				info->mem_size,	pdev->dev.driver->name)) {
+>  		err = -EBUSY;
+>  		goto out_free_info;
+>  	}
+>  
+> -	info->nand.IO_ADDR_R = ioremap(info->phys_base, info->mem_size);
+> +	info->nand.IO_ADDR_R = devm_ioremap(&pdev->dev, info->phys_base,
+> +						info->mem_size);
+>  	if (!info->nand.IO_ADDR_R) {
+>  		err = -ENOMEM;
+>  		goto out_release_mem_region;
+> @@ -1799,8 +1801,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  			err = -ENODEV;
+>  			goto out_release_mem_region;
+>  		}
+> -		err = request_irq(info->gpmc_irq_fifo,	omap_nand_irq,
+> -					IRQF_SHARED, "gpmc-nand-fifo", info);
+> +		err = devm_request_irq(&pdev->dev, info->gpmc_irq_fifo,
+> +					omap_nand_irq, IRQF_SHARED,
+> +					"gpmc-nand-fifo", info);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
+>  						info->gpmc_irq_fifo, err);
+> @@ -1814,8 +1817,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  			err = -ENODEV;
+>  			goto out_release_mem_region;
+>  		}
+> -		err = request_irq(info->gpmc_irq_count,	omap_nand_irq,
+> -					IRQF_SHARED, "gpmc-nand-count", info);
+> +		err = devm_request_irq(&pdev->dev, info->gpmc_irq_count,
+> +					omap_nand_irq, IRQF_SHARED,
+> +					"gpmc-nand-count", info);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
+>  						info->gpmc_irq_count, err);
+> @@ -2031,10 +2035,10 @@ out_release_mem_region:
+>  	if (info->dma)
+>  		dma_release_channel(info->dma);
+>  	if (info->gpmc_irq_count > 0)
+> -		free_irq(info->gpmc_irq_count, info);
+> +		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
+
+Just drop the 'free'.
+
+>  	if (info->gpmc_irq_fifo > 0)
+> -		free_irq(info->gpmc_irq_fifo, info);
+> -	release_mem_region(info->phys_base, info->mem_size);
+> +		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
+
+Drop the 'free'.
+
+> +	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
+
+Drop this line.
+
+>  out_free_info:
+>  #ifdef CONFIG_MTD_NAND_ECC_BCH
+>  	if (info->nand.ecc.priv) {
+> @@ -2042,7 +2046,7 @@ out_free_info:
+>  		info->nand.ecc.priv = NULL;
+>  	}
+>  #endif
+> -	kfree(info);
+> +	devm_kfree(&pdev->dev, info);
+
+This line is also not needed.
+
+So in the end, the 'gotos' and error path of your probe function will be
+much simpler. You will only need to manage the info->dma DMA channel
+(i.e., dma_release_channel()).
+
+>  
+>  	return err;
+>  }
+> @@ -2062,15 +2066,15 @@ static int omap_nand_remove(struct platform_device *pdev)
+>  		dma_release_channel(info->dma);
+>  
+>  	if (info->gpmc_irq_count > 0)
+> -		free_irq(info->gpmc_irq_count, info);
+> +		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
+
+This 'free' is also not needed.
+
+>  	if (info->gpmc_irq_fifo > 0)
+> -		free_irq(info->gpmc_irq_fifo, info);
+> +		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
+
+Ditto.
+
+>  
+>  	/* Release NAND device, its internal structures and partitions */
+>  	nand_release(&info->mtd);
+> -	iounmap(info->nand.IO_ADDR_R);
+> -	release_mem_region(info->phys_base, info->mem_size);
+> -	kfree(info);
+> +	devm_iounmap(&pdev->dev, info->nand.IO_ADDR_R);
+> +	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
+> +	devm_kfree(&pdev->dev, info);
+
+Ditto for all 3.
+
+Your 'remove' function will also be much shorter.
+
+>  	return 0;
+>  }
+>  
+
+Thanks,
+Brian
