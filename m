@@ -1,31 +1,33 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 17/27] drm/tegra: Add Tegra114 HDMI support
-Date: Fri, 11 Oct 2013 16:22:14 -0600
-Message-ID: <52587A16.7050200@wwwdotorg.org>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-18-git-send-email-treding@nvidia.com> <52587967.6050806@wwwdotorg.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Fri, 11 Oct 2013 22:26:08 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1310112223570.27397@utopia.booyaka.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
+ <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <5258421D.8030006@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52587967.6050806-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5258421D.8030006@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 04:19 PM, Stephen Warren wrote:
-> On 10/07/2013 02:34 AM, Thierry Reding wrote:
->> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> Tegra114 TMDS configuration requires a new peak_current field and the
->> driver current override bit has changed position.
-> 
->> diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
-> 
->>  static const struct tmds_config tegra2_tmds_config[] = {
->> @@ -223,6 +224,85 @@ static const struct tmds_config tegra3_tmds_config[] = {
-> 
-> Not related to this patch, but those should have been named
-> tegra20_tmds_config[] and tegra30_tmds_config[].
+On Fri, 11 Oct 2013, Tero Kristo wrote:
 
-I see that patch 20 fixes this:-)
+> Well, even if you sign something, you can still update it. Writing any
+> software to true OTP memory is one way to commit suicide IMO. How many nasty
+> bugs have you seen with ROM code? Also, if people want to make their custom
+> security solutions which are not supported by the kernel, why should the
+> kernel care about it? We don't know the details, and can't influence the
+> design, so we can't prepare for it anyway.
+
+The point is that newer kernels need to be compatible with older DT data: 
+that's the "stable ABI" criterion that's been discussed quite a bit.  The 
+worst-case scenario if the bindings are at a top-level node and not fully 
+cooked is that it can make it very difficult, if not impossible, to have 
+this forward compatibility for the DT data without having extremely nasty 
+hacks.
+
+
+- Paul
