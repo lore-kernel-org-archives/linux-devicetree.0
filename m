@@ -1,45 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL] ARM: OMAP: Device Tree for 3.13
-Date: Fri, 11 Oct 2013 11:03:24 -0700
-Message-ID: <20131011180324.GV29913@atomide.com>
-References: <52582A67.6050108@baylibre.com>
-Mime-Version: 1.0
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in device tree
+Date: Fri, 11 Oct 2013 13:12:54 -0500
+Message-ID: <83E50073-1BDF-4EB9-87D2-EFA427EFE756@codeaurora.org>
+References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com> <1381477716.5630.74.camel@pasglop>
+Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52582A67.6050108@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381477716.5630.74.camel@pasglop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
 
-* Benoit Cousson <bcousson@baylibre.com> [131011 09:50]:
-> Add the minimal DTS support for DRA7xx based SoC core.
-> Add the initial support for N900 and gta04 phones.
-> Enable USB3 on OMAP5 evm board.
-> Add support for cryto accelerators
-> Add new IGEP AQUILA board
-> Add AM33XX EDMA support
-> Update HSUSB node to use the reset-gpios fmwk
+On Oct 11, 2013, at 2:48 AM, Benjamin Herrenschmidt wrote:
 
-Looks good to me, but we're getting self-inflicted merge
-conflicts in two places now with Paul's hwmod changes,
-and my defconfig changes.
+> On Fri, 2013-10-11 at 09:27 +0200, Marek Szyprowski wrote:
+>> Hi all!
+>> 
+>> Benjamin Herrenschmidt pointed a few issues in the proposed design of
+>> device tree bindings for contiguous memory allocator and reserved memory
+>> regions:
+>> https://lkml.org/lkml/2013/9/15/151
+>> http://www.spinics.net/lists/arm-kernel/msg273548.html
+> 
+> Are you guys in Edinburgh ?
+> 
+> I'll be there from Tuesday PM (so really Wed) to Friday (fly out on
+> Sat). We should catch up, brainstorm and come up with something.
+> 
+> Cheers,
+> Ben.
 
-Can you please respin without the following two patches:
+We can try and do it during the DT-summit, or find another time.
 
-49bcd824c1c0db32fe4de0c1ba3ee36defdb11ca ARM: configs: omap2plus_defconfig: enable dwc3 and dependencies
-736c4bb159c793b00331261438deb982cbac3c03 ARM: OMAP5: hwmod: add missing ocp2scp hwmod data
+- k
 
-I can pick the two patches above and apply after pulling in
-Paul's branch first.
+> 
+>> Some time has passed, but there is still no consensus on the bindings
+>> for the reserved memory and various drawback of this solution has been
+>> shown, so in my opinion the best I can do now is to revert them
+>> completely and start from scratch again later.
+>> 
+>> This patch series reverts patches related to device tree bindings
+>> proposed in the following thread:
+>> http://thread.gmane.org/gmane.linux.ports.arm.kernel/263216
+>> and merged by commit 64c353864e3f7ccba0ade1bd6f562f9a3bc7e68d ("Merge
+>> branch 'for-v3.12' of git://git.linaro.org/people/mszyprowski/linux-dma-mapping").
+>> 
+>> Best regards
+>> Marek Szyprowski
+>> Samsung R&D Institute Poland
+>> 
+>> Marek Szyprowski (2):
+>>  Revert "ARM: init: add support for reserved memory defined by device tree"
+>>  Revert "drivers: of: add initialization code for dma reserved memory"
+>> 
+>> Documentation/devicetree/bindings/memory.txt |  168 -------------------------
+>> arch/arm/mm/init.c                           |    3 -
+>> drivers/of/Kconfig                           |    6 -
+>> drivers/of/Makefile                          |    1 -
+>> drivers/of/of_reserved_mem.c                 |  173 --------------------------
+>> drivers/of/platform.c                        |    4 -
+>> include/linux/of_reserved_mem.h              |   14 ---
+>> 7 files changed, 369 deletions(-)
+>> delete mode 100644 Documentation/devicetree/bindings/memory.txt
+>> delete mode 100644 drivers/of/of_reserved_mem.c
+>> delete mode 100644 include/linux/of_reserved_mem.h
+>> 
+> 
+> 
 
-However, if other branches are based on this, then we just
-need to deal with the merge conflicts, and there's no point
-in redoing your branch.
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
