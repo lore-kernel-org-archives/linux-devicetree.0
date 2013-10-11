@@ -1,33 +1,42 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Fri, 11 Oct 2013 22:26:08 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1310112223570.27397@utopia.booyaka.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
- <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <5258421D.8030006@ti.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Fri, 11 Oct 2013 15:31:19 -0700
+Message-ID: <52587C37.3070606@nvidia.com>
+References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com> <1381515273-25466-4-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5258421D.8030006@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1381515273-25466-4-git-send-email-acourbot@nvidia.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2013, Tero Kristo wrote:
+> +#else
+> +static struct device_node *of_find_gpio(struct device *dev, const char *id
+> +					unsigned int idx, unsigned long flags)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +#endif
 
-> Well, even if you sign something, you can still update it. Writing any
-> software to true OTP memory is one way to commit suicide IMO. How many nasty
-> bugs have you seen with ROM code? Also, if people want to make their custom
-> security solutions which are not supported by the kernel, why should the
-> kernel care about it? We don't know the details, and can't influence the
-> design, so we can't prepare for it anyway.
+... and of course I forgot to fix the main compilation error. Linus, 
+would you mind squashing what follows into this patch? Apologies for
+the inconvenience.
 
-The point is that newer kernels need to be compatible with older DT data: 
-that's the "stable ABI" criterion that's been discussed quite a bit.  The 
-worst-case scenario if the bindings are at a top-level node and not fully 
-cooked is that it can make it very difficult, if not impossible, to have 
-this forward compatibility for the DT data without having extremely nasty 
-hacks.
-
-
-- Paul
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 05b9981..e1d1a15 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2172,8 +2172,8 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 	return desc;
+ }
+ #else
+-static struct device_node *of_find_gpio(struct device *dev, const char *id
+-					unsigned int idx, unsigned long flags)
++static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
++				      unsigned int idx, unsigned long *flags)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
