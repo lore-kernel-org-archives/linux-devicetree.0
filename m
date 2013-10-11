@@ -1,74 +1,68 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/3] gpio: davinci: add OF support
-Date: Fri, 11 Oct 2013 16:09:00 +0200
-Message-ID: <CACRpkdYxegBSYXR1-98smUNnDXpyRHo_vuYdnr3r7zhawENiUA@mail.gmail.com>
-References: <1380902596-4693-1-git-send-email-sujithkv@ti.com>
-	<1380902596-4693-2-git-send-email-sujithkv@ti.com>
+Subject: Re: [PATCH] gpio: add export with name from dts
+Date: Fri, 11 Oct 2013 16:46:51 +0200
+Message-ID: <CACRpkdau1nGVuDji+gxBnkuC2Ri4SM+MUL+FnQKvMpKMLnG1dQ@mail.gmail.com>
+References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
+	<CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com>
+	<5257E15D.5080602@aksignal.cz>
+	<CACRpkdYkG-0x9_oQijA6hYn+snDsjtVT+RhYhDe_9gjfDdWuoA@mail.gmail.com>
+	<5257F8D2.5080700@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380902596-4693-2-git-send-email-sujithkv@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5257F8D2.5080700@aksignal.cz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jiri Prchal <jiri.prchal@aksignal.cz>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 4, 2013 at 6:03 PM, Prabhakar Lad
-<prabhakar.csengg@gmail.com> wrote:
+On Fri, Oct 11, 2013 at 3:10 PM, Ji=C5=99=C3=AD Prchal <jiri.prchal@aks=
+ignal.cz> wrote:
+> Dne 11.10.2013 14:49, Linus Walleij napsal(a):
 
-> This patch adds OF parser support for davinci gpio
-> driver and also appropriate documentation in gpio-davinci.txt
-> located at Documentation/devicetree/bindings/gpio/.
+>> If the GPIOs are actually connected to LEDs you should be
+>> using drivers/leds/leds-gpio.c and not export the GPIOs.
 >
-> Signed-off-by: KV Sujith <sujithkv@ti.com>
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> I know that, just don't like /sys/class/leds/out15/brightness.
 
-^Don't trust this guy.
+Hm, then you might want to modify the way names are set
+on leds rather ... this is the way we handle LEDs in the kernel
+so any problems need to be discussed with Bryan Wu,
+the LED maintainer.
 
-> [prabhakar.csengg@gmail.com: simplified the OF code and also
->                  the commit message]
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-davinci.txt      |   34 +++++++++++
->  drivers/gpio/gpio-davinci.c                        |   60 +++++++++++++++++++-
->  2 files changed, 91 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>> And what for inputs?
+>>
+>> Depends on what input. For simple buttons:
+>>
+>> drivers/input/keyboard/gpio_keys.c
+>> drivers/input/keyboard/gpio_keys_polled.c
+>>
+>> Then you get the input events from /dev/input/eventN
+>> just like any other key press.
+>>
+>> extcon-gpio.c is for e.g. headphone insertion on mobile
+>> phones etc.
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> new file mode 100644
-> index 0000000..87abd3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -0,0 +1,34 @@
-> +Davinci GPIO controller bindings
-> +
-> +Required Properties:
-> +- compatible: should be "ti,dm6441-gpio"
-> +
-> +- reg: Physical base address of the controller and the size of memory mapped
-> +       registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- interrupts: Array of GPIO interrupt number.
-> +
-> +- ngpio: The number of GPIO pins supported.
-> +
-> +- ti,davinci-gpio-irq-base: Base from where GPIO interrupt numbering starts.
+> Hm, my inputs are simple digital inputs from real world, like "door o=
+pen",
+> "somewhere is voltage", "some switch is on". And more than one app is
+> reading them.
+> So what to use for it?
 
-What is this?
+This is actually a valid case for using userspace GPIO, because
+of course the kernel cannot model the entire world :-D
 
-If I have ever ACKed this I have been drunk. I take it back.
+What makes me suspicious is mostly when some system
+(board with GPIO used in an electronic design) is modeled
+from userspace.
 
-This "base" is a Linux-specific thing and has no place in the
-device tree, and shall not be there. You have to find some way to
-avoid this, what do you think some other OS should do with
-this value...
-
-All IRQs in Linux are assumed to be dynamically assigned numbers
-nowadays, with a property like this you can never switch on
-SPARSE_IRQ for the DaVinci.
+So this seems to be OK.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
