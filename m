@@ -1,494 +1,203 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v4 09/17] clk: at91: add PMC peripheral clocks
-Date: Fri, 11 Oct 2013 11:44:36 +0200
-Message-ID: <1381484676-13469-1-git-send-email-b.brezillon@overkiz.com>
-References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
+Date: Fri, 11 Oct 2013 13:53:50 +0400
+Message-ID: <5257CAAE.4030302@cogentembedded.com>
+References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20131011010032.GA13809@verge.net.au>
+Sender: linux-ide-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new at91 peripheral clock implementation using common clk
-framework.
+On 10/11/2013 05:00 AM, Simon Horman wrote:
+> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
+>
+> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
+>> RCAR Gen2 SoC has a different phy which is not compatible with
+>> the older H1/M1 versions. This adds OF/platform device table
+>> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+>
+> I think it would aid subsequent reading of this patch
+> if you included information about which SoC is H1, M1, H2 and M2
+> in the change log.
+>
+> For the benefit of others they are as follows:
+>
+> Gen 1:
+> 	H1: r8a7779 SoC
+> 	M1: r8a7778 SoC
+>
+> Gen 2:
+> 	H2: r8a7790 SoC
+> 	M2: r8a7791 SoC
+>
 
-Almost all peripherals provided by at91 SoCs need a clock to work properly.
-This clock is enabled/disabled using PCER/PCDR resgisters.
+OK, thanks. I'll add this to the commit log.
 
-Each peripheral is given an id (see atmel's datasheets) which is used to
-define and reference peripheral clocks.
+>> PHY initialization method is chosen based on the device id.
+>> Default PHY settings are applied for Gen2 SoC, which should
+>> suit the available Gen2 boards.
+>>
+>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>> ---
+>>   drivers/ata/sata_rcar.c | 108 +++++++++++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 94 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+>> index c2d95e9..45af29f 100644
+>> --- a/drivers/ata/sata_rcar.c
+>> +++ b/drivers/ata/sata_rcar.c
+>> @@ -15,6 +15,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/ata.h>
+>>   #include <linux/libata.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/clk.h>
+>>   #include <linux/err.h>
+>> @@ -118,17 +119,42 @@
+>>   #define SATAPCTLR3_REG			0x5A
+>>   #define SATAPCTLR4_REG			0x60
+>>
+>> +/* Gen2 Physical Layer Control Registers */
+>> +#define RCAR_GEN2_PHY_CTL1_REG		0x1704
+>> +#define RCAR_GEN2_PHY_CTL1		0x34180002
+>> +#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
+>> +
+>> +#define RCAR_GEN2_PHY_CTL2_REG		0x170C
+>> +#define RCAR_GEN2_PHY_CTL2		0x00002303
+>> +
+>> +#define RCAR_GEN2_PHY_CTL3_REG		0x171C
+>> +#define RCAR_GEN2_PHY_CTL3		0x000B0194
+>> +
+>> +#define RCAR_GEN2_PHY_CTL4_REG		0x1724
+>> +#define RCAR_GEN2_PHY_CTL4		0x00030994
+>> +
+>> +#define RCAR_GEN2_PHY_CTL5_REG		0x1740
+>> +#define RCAR_GEN2_PHY_CTL5		0x03004001
+>> +#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
+>> +#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
+>> +
+>>   /* Descriptor table word 0 bit (when DTA32M = 1) */
+>>   #define SATA_RCAR_DTEND			BIT(0)
+>>
+>>   #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
+>>
+>> +enum sata_rcar_type {
+>> +	RCAR_SATA,
+>> +	RCAR_GEN2_SATA,
+>> +};
+>> +
+>>   struct sata_rcar_priv {
+>>   	void __iomem *base;
+>>   	struct clk *clk;
+>> +	enum sata_rcar_type type;
+>>   };
+>>
+>> -static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
+>> +static void sata_rcar_phy_preinit(struct sata_rcar_priv *priv)
+>>   {
+>>   	void __iomem *base = priv->base;
+>>
+>> @@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
+>>   	iowrite32(0, base + SATAPHYADDR_REG);
+>>   }
+>>
+>> +static void sata_rcar_phy_init(struct sata_rcar_priv *priv)
+>> +{
+>> +	sata_rcar_phy_preinit(priv);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+>> +	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+>> +}
+>> +
+>> +static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
+>> +{
+>> +	void __iomem *base = priv->base;
+>> +
+>> +	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
+>> +	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
+>> +	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
+>> +	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
+>> +	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
+>> +		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
+>> +}
+>> +
+>>   static void sata_rcar_freeze(struct ata_port *ap)
+>>   {
+>>   	struct sata_rcar_priv *priv = ap->host->private_data;
+>> @@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>>   	u32 val;
+>>
+>>   	/* reset and setup phy */
+>> -	sata_rcar_phy_initialize(priv);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+>> -	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+>> +	switch (priv->type) {
+>> +	case RCAR_GEN2_SATA:
+>> +		sata_rcar_gen2_phy_init(priv);
+>> +		break;
+>> +	case RCAR_SATA:
+>> +		sata_rcar_phy_init(priv);
+>> +		break;
+>> +	default:
+>> +		dev_warn(host->dev, "SATA PHY is not initialized\n");
+>> +		break;
+>> +	}
+>>
+>>   	/* SATA-IP reset state */
+>>   	val = ioread32(base + ATAPI_CONTROL1_REG);
+>> @@ -770,8 +823,34 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>>   	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
+>>   }
+>>
+>> +static struct of_device_id sata_rcar_match[] = {
+>> +	{
+>> +		.compatible = "renesas,rcar-sata",
+>> +		.data = (void *)RCAR_SATA
+>> +	},
+>> +	{
+>> +		.compatible = "renesas,sata-r8a7790",
+>> +		.data = (void *)RCAR_GEN2_SATA
+>> +	},
+>> +	{
+>> +		.compatible = "renesas,sata-r8a7791",
+>> +		.data = (void *)RCAR_GEN2_SATA
+>> +	},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
+>> +
+>> +static const struct platform_device_id sata_rcar_id_table[] = {
+>> +	{ "sata_rcar",		RCAR_SATA },
+>> +	{ "sata-r8a7790",	RCAR_GEN2_SATA },
+>> +	{ "sata-r8a7791",	RCAR_GEN2_SATA },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, sata_rcat_id_table);
+>> +
+>
+> I think it would be better to add sata-r8a7779 and
+> sata-r8a7778 to handle the GEN1 hardware and deprecate rcar-sata.
+>
+> Less importantly I think it would be better to name RCAR_SATA
+> as RCAR_GEN1_SATA.
 
-Some new SoCs (at91sam9x5 and sama5d3) provide a new register (PCR) where you
-can configure the peripheral clock as a division of the master clock.
-This will help reducing the peripherals power comsumption.
+I agree. I think this should be done with a separate patch because it is 
+not related to Gen2 phy.
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- drivers/clk/at91/Makefile         |    2 +-
- drivers/clk/at91/clk-peripheral.c |  407 +++++++++++++++++++++++++++++++++++++
- drivers/clk/at91/pmc.c            |    9 +
- drivers/clk/at91/pmc.h            |    5 +
- 4 files changed, 422 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/at91/clk-peripheral.c
+[snip]
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index c2b7068..04deba3 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -4,4 +4,4 @@
- 
- obj-y += pmc.o
- obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
--obj-y += clk-system.o
-+obj-y += clk-system.o clk-peripheral.o
-diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
-new file mode 100644
-index 0000000..2dce2e2
---- /dev/null
-+++ b/drivers/clk/at91/clk-peripheral.c
-@@ -0,0 +1,407 @@
-+/*
-+ * drivers/clk/at91/clk-peripheral.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91_pmc.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/io.h>
-+
-+#include "pmc.h"
-+
-+#define PERIPHERAL_MAX		64
-+
-+#define PERIPHERAL_AT91RM9200	0
-+#define PERIPHERAL_AT91SAM9X5	1
-+
-+#define PERIPHERAL_ID_MIN	2
-+#define PERIPHERAL_ID_MAX	31
-+#define PERIPHERAL_MASK(id)	(1 << ((id) & PERIPHERAL_ID_MAX))
-+
-+#define PERIPHERAL_RSHIFT_MASK	0x3
-+#define PERIPHERAL_RSHIFT(val)	(((val) >> 16) & PERIPHERAL_RSHIFT_MASK)
-+
-+struct clk_peripheral {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+	u32 id;
-+};
-+
-+#define to_clk_peripheral(hw) container_of(hw, struct clk_peripheral, hw)
-+
-+struct clk_sam9x5_peripheral {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+	u32 id;
-+	u8 div;
-+	u8 have_div_support;
-+};
-+
-+#define to_clk_sam9x5_peripheral(hw) \
-+	container_of(hw, struct clk_sam9x5_peripheral, hw)
-+
-+static int clk_peripheral_enable(struct clk_hw *hw)
-+{
-+	struct clk_peripheral *periph = to_clk_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+	int offset = AT91_PMC_PCER;
-+	u32 id = periph->id;
-+
-+	if (id < PERIPHERAL_ID_MIN)
-+		return 0;
-+	if (id > PERIPHERAL_ID_MAX)
-+		offset = AT91_PMC_PCER1;
-+	pmc_write(pmc, offset, PERIPHERAL_MASK(id));
-+	return 0;
-+}
-+
-+static void clk_peripheral_disable(struct clk_hw *hw)
-+{
-+	struct clk_peripheral *periph = to_clk_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+	int offset = AT91_PMC_PCDR;
-+	u32 id = periph->id;
-+
-+	if (id < PERIPHERAL_ID_MIN)
-+		return;
-+	if (id > PERIPHERAL_ID_MAX)
-+		offset = AT91_PMC_PCDR1;
-+	pmc_write(pmc, offset, PERIPHERAL_MASK(id));
-+}
-+
-+static int clk_peripheral_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_peripheral *periph = to_clk_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+	int offset = AT91_PMC_PCSR;
-+	u32 id = periph->id;
-+
-+	if (id < PERIPHERAL_ID_MIN)
-+		return 1;
-+	if (id > PERIPHERAL_ID_MAX)
-+		offset = AT91_PMC_PCSR1;
-+	return !!(pmc_read(pmc, offset) & PERIPHERAL_MASK(id));
-+}
-+
-+static const struct clk_ops peripheral_ops = {
-+	.enable = clk_peripheral_enable,
-+	.disable = clk_peripheral_disable,
-+	.is_enabled = clk_peripheral_is_enabled,
-+};
-+
-+static struct clk * __init
-+at91_clk_register_peripheral(struct at91_pmc *pmc, const char *name,
-+			     const char *parent_name, u32 id)
-+{
-+	struct clk_peripheral *periph;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	if (!pmc || !name || !parent_name || id > PERIPHERAL_ID_MAX)
-+		return ERR_PTR(-EINVAL);
-+
-+	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
-+	if (!periph)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &peripheral_ops;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+	init.flags = 0;
-+
-+	periph->id = id;
-+	periph->hw.init = &init;
-+	periph->pmc = pmc;
-+
-+	clk = clk_register(NULL, &periph->hw);
-+	if (IS_ERR(clk))
-+		kfree(periph);
-+
-+	return clk;
-+}
-+
-+static int clk_sam9x5_peripheral_enable(struct clk_hw *hw)
-+{
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+
-+	if (periph->id < PERIPHERAL_ID_MIN)
-+		return 0;
-+	pmc_write(pmc, AT91_PMC_PCR, (periph->id & AT91_PMC_PCR_PID) |
-+				     AT91_PMC_PCR_CMD |
-+				     AT91_PMC_PCR_DIV(periph->div) |
-+				     AT91_PMC_PCR_EN);
-+	return 0;
-+}
-+
-+static void clk_sam9x5_peripheral_disable(struct clk_hw *hw)
-+{
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+
-+	if (periph->id < PERIPHERAL_ID_MIN)
-+		return;
-+
-+	pmc_write(pmc, AT91_PMC_PCR, (periph->id & AT91_PMC_PCR_PID) |
-+				     AT91_PMC_PCR_CMD);
-+}
-+
-+static int clk_sam9x5_peripheral_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+	int ret;
-+
-+	if (periph->id < PERIPHERAL_ID_MIN)
-+		return 1;
-+	pmc_lock(pmc);
-+	pmc_write(pmc, AT91_PMC_PCR, (periph->id & AT91_PMC_PCR_PID));
-+	ret = !!(pmc_read(pmc, AT91_PMC_PCR) & AT91_PMC_PCR_EN);
-+	pmc_unlock(pmc);
-+
-+	return ret;
-+}
-+
-+static unsigned long
-+clk_sam9x5_peripheral_recalc_rate(struct clk_hw *hw,
-+				  unsigned long parent_rate)
-+{
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+	struct at91_pmc *pmc = periph->pmc;
-+	u32 shift;
-+
-+	if (periph->id < PERIPHERAL_ID_MIN || !periph->have_div_support)
-+		return parent_rate;
-+	pmc_lock(pmc);
-+	pmc_write(pmc, AT91_PMC_PCR, (periph->id & AT91_PMC_PCR_PID));
-+	shift = PERIPHERAL_RSHIFT(pmc_read(pmc, AT91_PMC_PCR));
-+	pmc_unlock(pmc);
-+	return parent_rate >> shift;
-+}
-+
-+static long clk_sam9x5_peripheral_round_rate(struct clk_hw *hw,
-+					     unsigned long rate,
-+					     unsigned long *parent_rate)
-+{
-+	int shift;
-+	unsigned long best_rate;
-+	unsigned long best_diff;
-+	unsigned long cur_rate;
-+	unsigned long cur_diff;
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+
-+	if (periph->id < 2 || !periph->have_div_support)
-+		return *parent_rate;
-+	if (rate >= *parent_rate)
-+		return rate;
-+	best_diff = *parent_rate - rate;
-+	best_rate = *parent_rate;
-+	for (shift = 1; shift < 4; shift++) {
-+		cur_rate = *parent_rate >> shift;
-+		if (cur_rate < rate)
-+			cur_diff = rate - cur_rate;
-+		else
-+			cur_diff = cur_rate - rate;
-+		if (cur_diff < best_diff) {
-+			best_diff = cur_diff;
-+			best_rate = cur_rate;
-+		}
-+		if (!best_diff || cur_rate < rate)
-+			break;
-+	}
-+	return best_rate;
-+}
-+
-+static int clk_sam9x5_peripheral_set_rate(struct clk_hw *hw,
-+					  unsigned long rate,
-+					  unsigned long parent_rate)
-+{
-+	int shift;
-+	struct clk_sam9x5_peripheral *periph = to_clk_sam9x5_peripheral(hw);
-+	if (periph->id < 2 || !periph->have_div_support) {
-+		if (parent_rate == rate)
-+			return 0;
-+		else
-+			return -EINVAL;
-+	}
-+
-+	for (shift = 0; shift < 4; shift++) {
-+		if (parent_rate >> shift == rate) {
-+			periph->div = shift;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct clk_ops sam9x5_peripheral_ops = {
-+	.enable = clk_sam9x5_peripheral_enable,
-+	.disable = clk_sam9x5_peripheral_disable,
-+	.is_enabled = clk_sam9x5_peripheral_is_enabled,
-+	.recalc_rate = clk_sam9x5_peripheral_recalc_rate,
-+	.round_rate = clk_sam9x5_peripheral_round_rate,
-+	.set_rate = clk_sam9x5_peripheral_set_rate,
-+};
-+
-+static struct clk * __init
-+at91_clk_register_sam9x5_peripheral(struct at91_pmc *pmc, const char *name,
-+				    const char *parent_name, u32 id,
-+				    u32 default_div)
-+{
-+	struct clk_sam9x5_peripheral *periph;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	if (!pmc || !name || !parent_name)
-+		return ERR_PTR(-EINVAL);
-+
-+	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
-+	if (!periph)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &sam9x5_peripheral_ops;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+	init.flags = CLK_SET_RATE_GATE;
-+
-+	periph->id = id;
-+	periph->hw.init = &init;
-+	periph->div = default_div;
-+	periph->pmc = pmc;
-+
-+	clk = clk_register(NULL, &periph->hw);
-+	if (IS_ERR(clk))
-+		kfree(periph);
-+
-+	return clk;
-+}
-+
-+struct clk_periph_data {
-+	struct clk **clks;
-+	u8 *ids;
-+	unsigned int clk_num;
-+};
-+
-+static struct clk * __init
-+of_clk_src_periph_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk_periph_data *clk_data = data;
-+	unsigned int id = clkspec->args[0];
-+	int i;
-+
-+	if (id >= PERIPHERAL_MAX)
-+		goto err;
-+
-+	for (i = 0; i < clk_data->clk_num; i++) {
-+		if (clk_data->ids[i] == id)
-+			return clk_data->clks[i];
-+	}
-+
-+err:
-+	pr_err("%s: invalid clock id %d\n", __func__, id);
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static void __init
-+of_at91_clk_periph_setup(struct device_node *np, struct at91_pmc *pmc, u8 type)
-+{
-+	int num;
-+	int i;
-+	u32 id;
-+	struct clk *clk;
-+	const char *parent_name;
-+	const char *name;
-+	u32 divisor;
-+	struct clk **clks;
-+	u8 *ids;
-+	struct clk_periph_data *clktab;
-+	struct device_node *periphclknp;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name)
-+		return;
-+
-+	num = of_get_child_count(np);
-+	if (!num || num > PERIPHERAL_MAX)
-+		return;
-+
-+	clktab = kzalloc(sizeof(*clktab), GFP_KERNEL);
-+	if (!clktab)
-+		return;
-+
-+	ids = kzalloc(num * sizeof(*ids), GFP_KERNEL);
-+	if (!ids)
-+		goto out_free_clktab;
-+
-+	clks = kzalloc(num * sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		goto out_free_ids;
-+
-+	i = 0;
-+	for_each_child_of_node(np, periphclknp) {
-+		name = periphclknp->name;
-+
-+		if (of_property_read_u32(periphclknp, "atmel,clk-id", &id))
-+			goto out_free_clks;
-+		if (id >= PERIPHERAL_MAX)
-+			goto out_free_clks;
-+
-+		if (type == PERIPHERAL_AT91RM9200) {
-+			clk = at91_clk_register_peripheral(pmc, name,
-+							   parent_name, id);
-+		} else {
-+			if (of_property_read_u32(periphclknp,
-+						 "atmel,clk-default-divisor",
-+						 &divisor))
-+				divisor = 0;
-+
-+			clk = at91_clk_register_sam9x5_peripheral(pmc, name,
-+								  parent_name,
-+								  id,
-+								  divisor);
-+		}
-+		if (IS_ERR(clk))
-+			goto out_free_clks;
-+
-+		clks[i] = clk;
-+		ids[i++] = id;
-+	}
-+
-+	clktab->clk_num = num;
-+	clktab->clks = clks;
-+	clktab->ids = ids;
-+	of_clk_add_provider(np, of_clk_src_periph_get, clktab);
-+	return;
-+
-+out_free_clks:
-+	kfree(clks);
-+out_free_ids:
-+	kfree(ids);
-+out_free_clktab:
-+	kfree(clktab);
-+}
-+
-+void __init of_at91rm9200_clk_periph_setup(struct device_node *np,
-+					   struct at91_pmc *pmc)
-+{
-+	of_at91_clk_periph_setup(np, pmc, PERIPHERAL_AT91RM9200);
-+}
-+
-+void __init of_at91sam9x5_clk_periph_setup(struct device_node *np,
-+					   struct at91_pmc *pmc)
-+{
-+	of_at91_clk_periph_setup(np, pmc, PERIPHERAL_AT91SAM9X5);
-+}
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index ce76ba6..8e27e92 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -248,6 +248,15 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
- 		.compatible = "atmel,at91rm9200-clk-system",
- 		.data = of_at91rm9200_clk_sys_setup,
- 	},
-+	/* Peripheral clocks */
-+	{
-+		.compatible = "atmel,at91rm9200-clk-peripheral",
-+		.data = of_at91rm9200_clk_periph_setup,
-+	},
-+	{
-+		.compatible = "atmel,at91sam9x5-clk-peripheral",
-+		.data = of_at91sam9x5_clk_periph_setup,
-+	},
- 	{ /*sentinel*/ }
- };
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index f88ef41..08c30fb 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -77,4 +77,9 @@ extern void __init of_at91sam9x5_clk_master_setup(struct device_node *np,
- extern void __init of_at91rm9200_clk_sys_setup(struct device_node *np,
- 					       struct at91_pmc *pmc);
- 
-+extern void __init of_at91rm9200_clk_periph_setup(struct device_node *np,
-+						  struct at91_pmc *pmc);
-+extern void __init of_at91sam9x5_clk_periph_setup(struct device_node *np,
-+						  struct at91_pmc *pmc);
-+
- #endif /* __PMC_H_ */
--- 
-1.7.9.5
-
+Thanks,
+Val.
