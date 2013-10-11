@@ -1,203 +1,42 @@
-From: Valentine <valentine.barshak@cogentembedded.com>
-Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
-Date: Fri, 11 Oct 2013 13:53:50 +0400
-Message-ID: <5257CAAE.4030302@cogentembedded.com>
-References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131011010032.GA13809@verge.net.au>
-Sender: linux-ide-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree@vger.kernel.org
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 10/17] clk: at91: add peripheral clk macros for peripheral clk dt bindings
+Date: Fri, 11 Oct 2013 11:53:00 +0200
+Message-ID: <1381485180-13796-1-git-send-email-b.brezillon@overkiz.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 05:00 AM, Simon Horman wrote:
-> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
->
-> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
->> RCAR Gen2 SoC has a different phy which is not compatible with
->> the older H1/M1 versions. This adds OF/platform device table
->> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
->
-> I think it would aid subsequent reading of this patch
-> if you included information about which SoC is H1, M1, H2 and M2
-> in the change log.
->
-> For the benefit of others they are as follows:
->
-> Gen 1:
-> 	H1: r8a7779 SoC
-> 	M1: r8a7778 SoC
->
-> Gen 2:
-> 	H2: r8a7790 SoC
-> 	M2: r8a7791 SoC
->
+This patch adds the peripheral divisors macros (for sam9x5 compatible IPs)
+which will be used by peripheral clk dt definitions.
 
-OK, thanks. I'll add this to the commit log.
+Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+---
+ include/dt-bindings/clk/at91.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
->> PHY initialization method is chosen based on the device id.
->> Default PHY settings are applied for Gen2 SoC, which should
->> suit the available Gen2 boards.
->>
->> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->> ---
->>   drivers/ata/sata_rcar.c | 108 +++++++++++++++++++++++++++++++++++++++++-------
->>   1 file changed, 94 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
->> index c2d95e9..45af29f 100644
->> --- a/drivers/ata/sata_rcar.c
->> +++ b/drivers/ata/sata_rcar.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/module.h>
->>   #include <linux/ata.h>
->>   #include <linux/libata.h>
->> +#include <linux/of_device.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/clk.h>
->>   #include <linux/err.h>
->> @@ -118,17 +119,42 @@
->>   #define SATAPCTLR3_REG			0x5A
->>   #define SATAPCTLR4_REG			0x60
->>
->> +/* Gen2 Physical Layer Control Registers */
->> +#define RCAR_GEN2_PHY_CTL1_REG		0x1704
->> +#define RCAR_GEN2_PHY_CTL1		0x34180002
->> +#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
->> +
->> +#define RCAR_GEN2_PHY_CTL2_REG		0x170C
->> +#define RCAR_GEN2_PHY_CTL2		0x00002303
->> +
->> +#define RCAR_GEN2_PHY_CTL3_REG		0x171C
->> +#define RCAR_GEN2_PHY_CTL3		0x000B0194
->> +
->> +#define RCAR_GEN2_PHY_CTL4_REG		0x1724
->> +#define RCAR_GEN2_PHY_CTL4		0x00030994
->> +
->> +#define RCAR_GEN2_PHY_CTL5_REG		0x1740
->> +#define RCAR_GEN2_PHY_CTL5		0x03004001
->> +#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
->> +#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
->> +
->>   /* Descriptor table word 0 bit (when DTA32M = 1) */
->>   #define SATA_RCAR_DTEND			BIT(0)
->>
->>   #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
->>
->> +enum sata_rcar_type {
->> +	RCAR_SATA,
->> +	RCAR_GEN2_SATA,
->> +};
->> +
->>   struct sata_rcar_priv {
->>   	void __iomem *base;
->>   	struct clk *clk;
->> +	enum sata_rcar_type type;
->>   };
->>
->> -static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
->> +static void sata_rcar_phy_preinit(struct sata_rcar_priv *priv)
->>   {
->>   	void __iomem *base = priv->base;
->>
->> @@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
->>   	iowrite32(0, base + SATAPHYADDR_REG);
->>   }
->>
->> +static void sata_rcar_phy_init(struct sata_rcar_priv *priv)
->> +{
->> +	sata_rcar_phy_preinit(priv);
->> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
->> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
->> +	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
->> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
->> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
->> +	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
->> +}
->> +
->> +static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
->> +{
->> +	void __iomem *base = priv->base;
->> +
->> +	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
->> +	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
->> +	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
->> +	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
->> +	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
->> +		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
->> +}
->> +
->>   static void sata_rcar_freeze(struct ata_port *ap)
->>   {
->>   	struct sata_rcar_priv *priv = ap->host->private_data;
->> @@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
->>   	u32 val;
->>
->>   	/* reset and setup phy */
->> -	sata_rcar_phy_initialize(priv);
->> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
->> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
->> -	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
->> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
->> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
->> -	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
->> +	switch (priv->type) {
->> +	case RCAR_GEN2_SATA:
->> +		sata_rcar_gen2_phy_init(priv);
->> +		break;
->> +	case RCAR_SATA:
->> +		sata_rcar_phy_init(priv);
->> +		break;
->> +	default:
->> +		dev_warn(host->dev, "SATA PHY is not initialized\n");
->> +		break;
->> +	}
->>
->>   	/* SATA-IP reset state */
->>   	val = ioread32(base + ATAPI_CONTROL1_REG);
->> @@ -770,8 +823,34 @@ static void sata_rcar_init_controller(struct ata_host *host)
->>   	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
->>   }
->>
->> +static struct of_device_id sata_rcar_match[] = {
->> +	{
->> +		.compatible = "renesas,rcar-sata",
->> +		.data = (void *)RCAR_SATA
->> +	},
->> +	{
->> +		.compatible = "renesas,sata-r8a7790",
->> +		.data = (void *)RCAR_GEN2_SATA
->> +	},
->> +	{
->> +		.compatible = "renesas,sata-r8a7791",
->> +		.data = (void *)RCAR_GEN2_SATA
->> +	},
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
->> +
->> +static const struct platform_device_id sata_rcar_id_table[] = {
->> +	{ "sata_rcar",		RCAR_SATA },
->> +	{ "sata-r8a7790",	RCAR_GEN2_SATA },
->> +	{ "sata-r8a7791",	RCAR_GEN2_SATA },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(platform, sata_rcat_id_table);
->> +
->
-> I think it would be better to add sata-r8a7779 and
-> sata-r8a7778 to handle the GEN1 hardware and deprecate rcar-sata.
->
-> Less importantly I think it would be better to name RCAR_SATA
-> as RCAR_GEN1_SATA.
+diff --git a/include/dt-bindings/clk/at91.h b/include/dt-bindings/clk/at91.h
+index 0b4cb99..a3b07ca 100644
+--- a/include/dt-bindings/clk/at91.h
++++ b/include/dt-bindings/clk/at91.h
+@@ -19,4 +19,10 @@
+ #define AT91_PMC_MOSCRCS	17		/* Main On-Chip RC */
+ #define AT91_PMC_CFDEV		18		/* Clock Failure Detector Event */
+ 
++/* sam9x5 peripheral divisors */
++#define AT91SAM9X5_PERIPH_CLK_DIV1	0
++#define AT91SAM9X5_PERIPH_CLK_DIV2	1
++#define AT91SAM9X5_PERIPH_CLK_DIV4	2
++#define AT91SAM9X5_PERIPH_CLK_DIV8	3
++
+ #endif
+-- 
+1.7.9.5
 
-I agree. I think this should be done with a separate patch because it is 
-not related to Gen2 phy.
-
-[snip]
-
-Thanks,
-Val.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
