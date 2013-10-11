@@ -1,186 +1,153 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
-Date: Fri, 11 Oct 2013 09:45 +0200
-Message-ID: <3237757.RTKJthVZ2l@avalon>
-References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com> <20130521105436.GB2041@valkosipuli.retiisi.org.uk> <CAK5ve-LLkGtG9hVcsJgbgT+O-rdhOLNEw-eONSbJWs7aNJ0NOQ@mail.gmail.com>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 00/17] ARM: at91: move to common clk framework
+Date: Fri, 11 Oct 2013 09:37:44 +0200
+Message-ID: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-LLkGtG9hVcsJgbgT+O-rdhOLNEw-eONSbJWs7aNJ0NOQ@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Andrzej Hajda <a.hajda@samsung.com>, "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
+Hello,
 
-On Thursday 10 October 2013 17:07:22 Bryan Wu wrote:
-> On Tue, May 21, 2013 at 3:54 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > On Tue, May 21, 2013 at 10:34:53AM +0200, Andrzej Hajda wrote:
-> >> On 12.05.2013 23:12, Sakari Ailus wrote:
-> >> > On Wed, May 08, 2013 at 09:32:17AM +0200, Andrzej Hajda wrote:
-> >> >> On 07.05.2013 17:07, Laurent Pinchart wrote:
-> >> >>> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
-> >> >>>> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
-> >> >>>>> This RFC proposes generic API for exposing flash subdevices via LED
-> >> >>>>> framework.
-> >> >>>>> 
-> >> >>>>> Rationale
-> >> >>>>> 
-> >> >>>>> Currently there are two frameworks which are used for exposing LED
-> >> >>>>> flash to user space:
-> >> >>>>> - V4L2 flash controls,
-> >> >>>>> - LED framework(with custom sysfs attributes).
-> >> >>>>> 
-> >> >>>>> The list below shows flash drivers in mainline kernel with initial
-> >> >>>>> commit date and typical chip application (according to producer):
-> >> >>>>> 
-> >> >>>>> LED API:
-> >> >>>>>     lm3642: 2012-09-12, Cameras
-> >> >>>>>     lm355x: 2012-09-05, Cameras
-> >> >>>>>     max8997: 2011-12-14, Cameras (?)
-> >> >>>>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
-> >> >>>>>     pca955x: 2008-07-16, Cameras, Indicators (?)
-> >> >>>>> 
-> >> >>>>> V4L2 API:
-> >> >>>>>     as3645a:  2011-05-05, Cameras
-> >> >>>>>     adp1653: 2011-05-05, Cameras
-> >> >>>>> 
-> >> >>>>> V4L2 provides richest functionality, but there is often demand from
-> >> >>>>> application developers to provide already established LED API. We
-> >> >>>>> would like to have an unified user interface for flash devices.
-> >> >>>>> Some of devices already have the LED API driver exposing limited
-> >> >>>>> set of a Flash IC functionality. In order to support all required
-> >> >>>>> features the LED API would have to be extended or the V4L2 API
-> >> >>>>> would need to be used. However when switching from a LED to a V4L2
-> >> >>>>> Flash driver existing LED API interface would need to be retained.
-> >> >>>>> 
-> >> >>>>> Proposed solution
-> >> >>>>> 
-> >> >>>>> This patch adds V4L2 helper functions to register existing V4L2
-> >> >>>>> flash subdev as LED class device. After registration via
-> >> >>>>> v4l2_leddev_register appropriate entry in /sys/class/leds/ is
-> >> >>>>> created. During registration all V4L2 flash controls are enumerated
-> >> >>>>> and corresponding attributes are added.
-> >> >>>>> 
-> >> >>>>> I have attached also patch with new max77693-led driver using
-> >> >>>>> v4l2_leddev. This patch requires presence of the patch "max77693:
-> >> >>>>> added device tree support":
-> >> >>>>> https://patchwork.kernel.org/patch/2414351/ .
-> >> >>>>> 
-> >> >>>>> Additional features
-> >> >>>>> 
-> >> >>>>> - simple API to access all V4L2 flash controls via sysfs,
-> >> >>>>> - V4L2 subdevice should not be registered by V4L2 device to use it,
-> >> >>>>> - LED triggers API can be used to control the device,
-> >> >>>>> - LED device is optional - it will be created only if V4L2_LEDDEV
-> >> >>>>>   configuration option is enabled and the subdev driver calls
-> >> >>>>>   v4l2_leddev_register.
-> >> >>>>> 
-> >> >>>>> Doubts
-> >> >>>>> 
-> >> >>>>> This RFC is a result of a uncertainty which API developers should
-> >> >>>>> expose by their flash drivers. It is a try to gluing together both
-> >> >>>>> APIs. I am not sure if it is the best solution, but I hope there
-> >> >>>>> will be some discussion and hopefully some decisions will be taken
-> >> >>>>> which way we should follow.
-> >> >>>> 
-> >> >>>> The LED subsystem provides similar APIs for the Camera driver.
-> >> >>>> With LED trigger event, flash and torch are enabled/disabled.
-> >> >>>> I'm not sure this is applicable for you.
-> >> >>>> Could you take a look at LED camera trigger feature?
-> >> >>>> 
-> >> >>>> For the camera LED trigger,
-> >> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git
-> >> >>>> /commit/ ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
-> >> >>>> 
-> >> >>>> Example of camera flash driver,
-> >> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git
-> >> >>>> /commit/ ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
-> >> >>> 
-> >> >>> I think we should decide on one API. Implementing two APIs for a
-> >> >>> single device is usually messy, and will result in different feature
-> >> >>> sets (and different bugs) being implemented through each API,
-> >> >>> depending on the driver. Interactions between the APIs are also a
-> >> >>> pain point on the kernel side to properly synchronize calls.
-> >> > 
-> >> > I don't like having two APIs either. Especially we shouldn't have
-> >> > multiple drivers implementing different APIs for the same device.
-> >> > 
-> >> > That said, I wonder if it's possible to support camera-related use
-> >> > cases using the LED API: it's originally designed for quite different
-> >> > devices. Even if you could handle flash strobing using the LED API, the
-> >> > functionality provided by the Media controller and subdev APIs will
-> >> > always be missing: device enumeration and association with the right
-> >> > camera.
-> >> 
-> >> Is there a generic way to associate flash and camera subdevs in
-> >> current V4L2 API? The only ways I see now are:
-> >> - both belongs to the same media controller, but this is not enough if
-> >> there is more than one camera subdev in that controller,
-> > 
-> > Yes, there is. That's the group_id field in struct media_entity_desc. The
-> > lens subdev is associated to the rest of the devices the same way.
-> > 
-> >> - using media links/pads - at first sight it seems to be
-> >> overkill/abuse...
-> > 
-> > No. Links describe the flow of data, not relations between entities.
-> > 
-> > ...
-> > 
-> >> >>> The LED API is too limited for torch and flash usage, but I'm
-> >> >>> definitely open to moving flash devices to the LED API is we can
-> >> >>> extend it in a way that it covers all the use cases.
-> >> >> 
-> >> >> Extending LED API IMHO seems to be quite straightforward - by adding
-> >> >> attributes for supported functionalities. We just need a specification
-> >> >> for standard flash/torch attributes.
-> >> >> I could prepare an RFC about it if there is a will to explore this
-> >> >> direction.
-> >> > 
-> >> > I'm leaning towards providing a wrapper that provides torch
-> >> > functionality using V4L2 flash API unless it's really proven to be
-> >> > insane. ;-) The code supporting that in an individual flash driver
-> >> > should be minimal --- which is what the patchset essentially already
-> >> > does.
-> >> 
-> >> Providing only torch functionality do not require adding new attributes
-> >> (besides the ones already present in the led_classdev), so the patch will
-> >> be much simpler.
-> > 
-> > Yes. Attributes could be added later on to the LED API to support flash
-> > and the wrapper could be extended accordingly. My thinking is however that
-> > the main use case is torch, not strobing flash, so it would be fulfilled
-> > already without extensions to the LED API.
-> 
-> Sorry for replying so late.
-> 
-> I think Milo Kim did some work in our LED subsystem by add LED Flash
-> trigger for camera device. I agree it doesn't satisfy the usage of
-> V4L2 Flash API and what I'm thinking about is expanding the LED Flash
-> trigger driver to export a well defined sysfs interface, so user space
-> libv4l2 can wrap it for applications.
+This patch series is the 4th version of the new at91 clock implementation
+(using common clk framework).
 
-I've replied to your comment in the media-summit agenda mail thread, but the 
-discussion belongs here, so here's a repost. Let's try to keep replies in this 
-mail thread.
+Most of the clock provided by the PMC (Power Management Controller) are
+implemented :
+- main clock (main oscillator)
+- pll clocks
+- master clock
+- programmable clocks
+- utmi clock
+- peripheral clocks
+- system clocks
 
-The biggest reason why we're not fond of sysfs-based APIs for media devices is 
-that they can't provide atomicity. There's no way to set multiple parameters 
-in a single operation.
+This implementation is only compatible with device tree definition.
+The goal is to define the whole clock tree in the device tree.
 
-We can't get rid of the sysfs LEDs API, but maybe we could have a unified 
-kernel LED/flash subsystem that would provide both a sysfs-based API to ensure 
-compatibility with current userspace software and an ioctl-based API (possibly 
-through V4L2 controls). That way LED/flash devices would be registered with a 
-single subsystem, and the corresponding drivers won't have to care about the 
-API exposed to userspace. That would require a major refactoring of the in-
-kernel APIs though.
+Could a dt maintainer take a look at these dt bindinds.
+
+This patch series is based on linus tree (but should apply correctly on
+linux-next) and has been tested on sama5d31ek.
+
+Best Regards,
+Boris
+
+Changes since v3:
+ - simplify master clk implementation (drop set_rate/parent support)
+ - fix bug in set_rate function of pll driver
+ - fix coding style issues
+ - define macros and constants where needed
+ - remove peripheral id macro references
+ - remove sam9g35 specific handling (sam9g35 = sam9x5)
+ - rework main clk prepare function to handle automatic rate calculation
+
+Changes since v2:
+ - fix several bugs in clk implementations
+ - drop non-dt boards support
+ - split the series to ease review and tests:
+   * 1 patch series for new clk implementations (this series)
+   * 1 patch series to move each at91 SoC to common clk framework (coming soon)
+ - modify dt-bindings (add atmel,clk- prefix to atmel specific properties)
+ - add clk macros for dt-bindings
+ - add pmc framework (helper function to access pmc registers)
+ - add interrupt support to enable passive wait in clk_prepare functions
+
+Changes since v1:
+ - fix bugs in pll, programmable and system clock implementations
+   (wrong bit position).
+ - add usb clock configuration support (ohci and udc drivers +
+   clk_lookup for non dt boards)
+ - rework of the system clock interfaces (no need to define a parent clock,
+   system clock is a gate with no rate info)
+ - change system, peripheral and programmable clk dt bindings (1 master node
+   and multiple child nodes each defining a system/peripheral or prog clock)
+ - fix bugs in sama5 dt definition
+
+Boris BREZILLON (17):
+  ARM: at91: move at91_pmc.h to include/linux/clk/at91_pmc.h
+  ARM: at91: add Kconfig options for common clk support
+  clk: at91: add PMC base support
+  clk: at91: add PMC macro file for dt definitions
+  clk: at91: add PMC main clock
+  clk: at91: add PMC pll clocks
+  clk: at91: add PMC master clock
+  clk: at91: add PMC system clocks
+  clk: at91: add PMC peripheral clocks
+  clk: at91: add peripheral clk macros for peripheral clk dt bindings
+  clk: at91: add PMC programmable clocks
+  clk: at91: add PMC utmi clock
+  clk: at91: add PMC usb clock
+  clk: at91: add PMC smd clock
+  clk: at91: add PMC clk device tree binding doc.
+  ARM: at91: move pit timer to common clk framework
+  ARM: at91: add new compatible strings for pmc driver
+
+ .../devicetree/bindings/clock/at91-clock.txt       |  328 ++++++++++++
+ arch/arm/mach-at91/Kconfig                         |   44 ++
+ arch/arm/mach-at91/Kconfig.non_dt                  |    6 +
+ arch/arm/mach-at91/Makefile                        |    2 +-
+ arch/arm/mach-at91/at91rm9200.c                    |    2 +-
+ arch/arm/mach-at91/at91sam9260.c                   |    2 +-
+ arch/arm/mach-at91/at91sam9261.c                   |    2 +-
+ arch/arm/mach-at91/at91sam9263.c                   |    2 +-
+ arch/arm/mach-at91/at91sam926x_time.c              |   14 +-
+ arch/arm/mach-at91/at91sam9g45.c                   |    2 +-
+ arch/arm/mach-at91/at91sam9n12.c                   |    2 +-
+ arch/arm/mach-at91/at91sam9rl.c                    |    2 +-
+ arch/arm/mach-at91/at91sam9x5.c                    |    2 +-
+ arch/arm/mach-at91/clock.c                         |    7 +-
+ arch/arm/mach-at91/generic.h                       |    3 +-
+ arch/arm/mach-at91/pm.c                            |    2 +-
+ arch/arm/mach-at91/pm_slowclock.S                  |    2 +-
+ arch/arm/mach-at91/sama5d3.c                       |    2 +-
+ arch/arm/mach-at91/setup.c                         |    8 +-
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/at91/Makefile                          |   12 +
+ drivers/clk/at91/clk-main.c                        |  189 +++++++
+ drivers/clk/at91/clk-master.c                      |  278 ++++++++++
+ drivers/clk/at91/clk-peripheral.c                  |  407 +++++++++++++++
+ drivers/clk/at91/clk-pll.c                         |  539 ++++++++++++++++++++
+ drivers/clk/at91/clk-plldiv.c                      |  137 +++++
+ drivers/clk/at91/clk-programmable.c                |  423 +++++++++++++++
+ drivers/clk/at91/clk-smd.c                         |  173 +++++++
+ drivers/clk/at91/clk-system.c                      |  193 +++++++
+ drivers/clk/at91/clk-usb.c                         |  400 +++++++++++++++
+ drivers/clk/at91/clk-utmi.c                        |  162 ++++++
+ drivers/clk/at91/pmc.c                             |  372 ++++++++++++++
+ drivers/clk/at91/pmc.h                             |  113 ++++
+ drivers/usb/gadget/atmel_usba_udc.c                |    2 +-
+ include/dt-bindings/clk/at91.h                     |   28 +
+ .../include/mach => include/linux/clk}/at91_pmc.h  |    4 +-
+ 36 files changed, 3847 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
+ create mode 100644 drivers/clk/at91/Makefile
+ create mode 100644 drivers/clk/at91/clk-main.c
+ create mode 100644 drivers/clk/at91/clk-master.c
+ create mode 100644 drivers/clk/at91/clk-peripheral.c
+ create mode 100644 drivers/clk/at91/clk-pll.c
+ create mode 100644 drivers/clk/at91/clk-plldiv.c
+ create mode 100644 drivers/clk/at91/clk-programmable.c
+ create mode 100644 drivers/clk/at91/clk-smd.c
+ create mode 100644 drivers/clk/at91/clk-system.c
+ create mode 100644 drivers/clk/at91/clk-usb.c
+ create mode 100644 drivers/clk/at91/clk-utmi.c
+ create mode 100644 drivers/clk/at91/pmc.c
+ create mode 100644 drivers/clk/at91/pmc.h
+ create mode 100644 include/dt-bindings/clk/at91.h
+ rename {arch/arm/mach-at91/include/mach => include/linux/clk}/at91_pmc.h (98%)
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+1.7.9.5
