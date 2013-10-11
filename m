@@ -1,445 +1,270 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Fri, 11 Oct 2013 10:25:26 +0100
-Message-ID: <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
- <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
- <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 1/8] irqchip: add DesignWare APB ICTL interrupt
+ controller
+Date: Fri, 11 Oct 2013 17:30:18 +0800
+Message-ID: <20131011173018.04caee22@xhacker>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1381235073-17134-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150BD137-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381235073-17134-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 04:18:18AM +0100, Tang Yuantian-B29983 wrote:
-> Thanks for your review.
-> See my reply inline
->
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> > Sent: 2013=E5=B9=B410=E6=9C=8810=E6=97=A5 =E6=98=9F=E6=9C=9F=E5=9B=9B=
- 18:04
-> > To: Tang Yuantian-B29983
-> > Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Li Yang-Leo-R58472
-> > Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in =
-device
-> > tree
-> >
-> > On Wed, Oct 09, 2013 at 07:38:24AM +0100, Yuantian.Tang@freescale.c=
-om
-> > wrote:
-> > > From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >
-> > > The following SoCs will be affected: p2041, p3041, p4080, p5020,
-> > > p5040, b4420, b4860, t4240
-> > >
-> > > Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > > v5:
-> > >         - refine the binding document
-> > >         - update the compatible string
-> > > v4:
-> > >         - add binding document
-> > >         - update compatible string
-> > >         - update the reg property
-> > > v3:
-> > >         - fix typo
-> > > v2:
-> > >         - add t4240, b4420, b4860 support
-> > >         - remove pll/4 clock from p2041, p3041 and p5020 board
-> > >
-> > >  .../devicetree/bindings/clock/corenet-clock.txt    | 111
-> > ++++++++++++++++++++
-> > >  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi        |  35 +++++++
-> > >  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi         |   2 +
-> > >  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi        |  35 +++++++
-> > >  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi         |   4 +
-> > >  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |  60 +++++++=
-++++
-> > >  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi         |   4 +
-> > >  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |  60 +++++++=
-++++
-> > >  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi         |   4 +
-> > >  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        | 112
-> > +++++++++++++++++++++
-> > >  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi         |   8 ++
-> > >  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi        |  42 +++++++=
-+
-> > >  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi         |   2 +
-> > >  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |  60 +++++++=
-++++
-> > >  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi         |   4 +
-> > >  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |  85
-> > ++++++++++++++++
-> > >  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi         |  12 +++
-> > >  17 files changed, 640 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/corenet-cloc=
-k.txt
-> > > b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > > new file mode 100644
-> > > index 0000000..8efc62d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > > @@ -0,0 +1,111 @@
-> > > +* Clock Block on Freescale CoreNet Platforms
-> > > +
-> > > +Freescale CoreNet chips take primary clocking input from the ext=
-ernal
-> > > +SYSCLK signal. The SYSCLK input (frequency) is multiplied using
-> > > +multiple phase locked loops (PLL) to create a variety of frequen=
-cies
-> > > +which can then be passed to a variety of internal logic, includi=
-ng
-> > > +cores and peripheral IP blocks.
-> > > +Please refer to the Reference Manual for details.
-> > > +
-> > > +1. Clock Block Binding
-> > > +
-> > > +Required properties:
-> > > +- compatible: Should include one or more of the following:
-> > > +       - "fsl,<chip>-clockgen": for chip specific clock block
-> > > +       - "fsl,qoriq-clockgen-[1,2].x": for chassis 1.x and 2.x c=
-lock
-> >
-> > While I can see that "fsl,<chip>-clockgen" might have a large set o=
-f
-> > strings that we may never deal with in th kernel, I'd prefer that t=
-he
-> > basic strings (i.e. all the "fsl,qoriq-clockgen-[1,2].x" variants) =
-were
-> > listed explicitly here.
-> >
-> > Given they only seem to be "fsl,qoriq-clockgen-1.0" and "fsl,qoriq-
-> > clockgen-2.0" this shouldn't be too difficult to list and describe.
-> >
-> OK, I will list them all.
+On Tue, 8 Oct 2013 05:24:26 -0700
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
-Thanks.
+> This adds an irqchip driver and corresponding devicetree binding for the
+> secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Changelog:
+> RFCv1->RFCv2:
+> - added copyright reference
+> 
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  .../interrupt-controller/snps,dw-apb-ictl.txt      |   29 ++++
+>  drivers/irqchip/Kconfig                            |    4 +
+>  drivers/irqchip/Makefile                           |    1 +
+>  drivers/irqchip/irq-dw-apb-ictl.c                  |  142
+> ++++++++++++++++++++ 4 files changed, 176 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+> create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+> b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+> new file mode 100644 index 0000000..7ccd1ba --- /dev/null
+> +++
+> b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+> @@ -0,0 +1,29 @@ +Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
+> +
+> +Synopsys DesignWare provides interrupt controller IP for APB known as
+> +dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs
+> with +APB bus, e.g. Marvell Armada 1500.
+> +
+> +Required properties:
+> +- compatible: shall be "snps,dw-apb-ictl"
+> +- reg: base address of interrupt registers starting with ENABLE_LOW
+> register +- interrupt-controller: identifies the node as an interrupt
+> controller +- #interrupt-cells: number of cells to encode an interrupt
+> source, shall be 1 +- interrupts: interrupt reference to primary interrupt
+> controller +- interrupt-parent: (optional) reference specific primary
+> interrupt controller +
+> +The interrupt sources map to the corresponding bits in the interrupt
+> +registers, i.e.
+> +- 0 maps to bit 0 of low interrupts,
+> +- 1 maps to bit 1 of low interrupts,
+> +- 32 maps to bit 0 of high interrupts, and so on.
+> +
+> +Example:
+> +       aic: interrupt-controller@3000 {
+> +               compatible = "snps,dw-apb-ictl";
+> +               reg = <0x3000 0xc00>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +               interrupt-parent = <&gic>;
+> +               interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +       };
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 3792a1a..940638d 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -30,6 +30,10 @@ config ARM_VIC_NR
+>           The maximum number of VICs available in the system, for
+>           power management.
+> 
+> +config DW_APB_ICTL
+> +       bool
+> +       select IRQ_DOMAIN
+> +
+>  config IMGPDC_IRQ
+>         bool
+>         select GENERIC_IRQ_CHIP
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index c60b901..6427323 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_MMP)                  += irq-mmp.o
+>  obj-$(CONFIG_ARCH_MVEBU)               += irq-armada-370-xp.o
+>  obj-$(CONFIG_ARCH_MXS)                 += irq-mxs.o
+>  obj-$(CONFIG_ARCH_S3C24XX)             += irq-s3c24xx.o
+> +obj-$(CONFIG_DW_APB_ICTL)              += irq-dw-apb-ictl.o
+>  obj-$(CONFIG_METAG)                    += irq-metag-ext.o
+>  obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)   += irq-metag.o
+>  obj-$(CONFIG_ARCH_MOXART)              += irq-moxart.o
+> diff --git a/drivers/irqchip/irq-dw-apb-ictl.c
+> b/drivers/irqchip/irq-dw-apb-ictl.c new file mode 100644
+> index 0000000..bbcacee
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-dw-apb-ictl.c
+> @@ -0,0 +1,142 @@
+> +/*
+> + * Synopsys DW APB ICTL irqchip driver.
+> + *
+> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> + *
+> + * based on GPL'ed 2.6 kernel sources
+> + *  (c) Marvell International Ltd.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#include "irqchip.h"
+> +
+> +#define APB_INT_ENABLE_L       0x00
+> +#define APB_INT_ENABLE_H       0x04
+> +#define APB_INT_MASK_L         0x08
+> +#define APB_INT_MASK_H         0x0c
+> +#define APB_INT_FINALSTATUS_L  0x30
+> +#define APB_INT_FINALSTATUS_H  0x34
+> +
+> +static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +       struct irq_chip *chip = irq_get_chip(irq);
+> +       struct irq_chip_generic *gc = irq_get_handler_data(irq);
+> +       struct irq_domain *d = gc->private;
+> +       u32 stat;
+> +       int n;
+> +
+> +       chained_irq_enter(chip, desc);
+> +
+> +       for (n = 0; n < gc->num_ct; n++) {
+> +               stat = readl_relaxed(gc->reg_base +
+> +                                    APB_INT_FINALSTATUS_L + 4 * n);
+> +               while (stat) {
+> +                       u32 hwirq = ffs(stat) - 1;
+> +                       generic_handle_irq(irq_find_mapping(d,
+> +                                           gc->irq_base + hwirq + 32 * n));
+> +                       stat &= ~(1 << hwirq);
+> +               }
+> +       }
+> +
+> +       chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int __init dw_apb_ictl_init(struct device_node *np,
+> +                                  struct device_node *parent)
+> +{
+> +       unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +       struct resource r;
+> +       struct irq_domain *domain;
+> +       struct irq_chip_generic *gc;
+> +       void __iomem *iobase;
+> +       int ret, nrirqs, irq;
+> +       u32 reg;
+> +
+> +       /* Map the parent interrupt for the chained handler */
+> +       irq = irq_of_parse_and_map(np, 0);
+> +       if (irq <= 0) {
+> +               pr_err("%s: unable to parse irq\n", np->name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret = of_address_to_resource(np, 0, &r);
+> +       if (ret) {
+> +               pr_err("%s: unable to get resource\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       if (!request_mem_region(r.start, resource_size(&r), np->name)) {
+> +               pr_err("%s: unable to request mem region\n", np->name);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       iobase = ioremap(r.start, resource_size(&r));
+> +       if (!iobase) {
+> +               pr_err("%s: unable to map resource\n", np->name);
+release_mem_region() is missing
+> +               return -ENOMEM;
+> +       }
+> +
+> +       /*
+> +        * DW IP can be configured to allow 2-64 irqs. We can determine
+> +        * the number of irqs supported by writing into enable register
+> +        * and look for bits not set, as corresponding flip-flops will
+> +        * have been removed by sythesis tool.
+> +        */
+> +
+> +       /* mask and enable all interrupts */
+> +       writel(~0, iobase + APB_INT_MASK_L);
+> +       writel(~0, iobase + APB_INT_MASK_H);
+> +       writel(~0, iobase + APB_INT_ENABLE_L);
+> +       writel(~0, iobase + APB_INT_ENABLE_H);
+> +
+> +       reg = readl(iobase + APB_INT_ENABLE_H);
+> +       if (reg)
+> +               nrirqs = 32 + fls(reg);
+> +       else
+> +               nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
+> +
+> +       domain = irq_domain_add_linear(np, nrirqs,
+> +                                      &irq_generic_chip_ops, NULL);
+> +       if (!domain) {
+> +               pr_err("%s: unable to add irq domain\n", np->name);
+iounmap() and release_mem_region() is missing
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ?
+> 2 : 1,
+> +                                            np->name, handle_level_irq,
+> clr, 0,
+> +                                            IRQ_GC_INIT_MASK_CACHE);
+> +       if (ret) {
+> +               pr_err("%s: unable to alloc irq domain gc\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       gc = irq_get_domain_generic_chip(domain, 0);
+> +       gc->private = domain;
+> +       gc->reg_base = iobase;
+> +
+> +       gc->chip_types[0].regs.mask = APB_INT_MASK_L;
+> +       gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
+> +       gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
+> +
+> +       if (nrirqs > 32) {
+> +               gc->chip_types[1].regs.mask = APB_INT_MASK_H;
+> +               gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
+> +               gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
+> +       }
+> +
+> +       irq_set_handler_data(irq, gc);
+> +       irq_set_chained_handler(irq, dw_apb_ictl_handler);
+> +
+> +       return 0;
+> +}
+> +IRQCHIP_DECLARE(dw_apb_ictl,
+> +               "snps,dw-apb-ictl", dw_apb_ictl_init);
+> --
+> 1.7.10.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
->
-> > > +- reg: Offset and length of the clock register set
-> > > +- clock-frequency: Indicates input clock frequency of clock bloc=
-k.
-> > > +       Will be set by u-boot
-> >
-> > Why does the fact this is set by u-boot matter to the binding?
-> >
-> OK, I will remove it.
->
-> > > +
-> > > +Recommended properties:
-> > > +- #ddress-cells: Specifies the number of cells used to represent
-> > > +       physical base addresses.  Must be present if the device h=
-as
-> > > +       sub-nodes and set to 1 if present
-> >
-> > Typo: #address-cells
-> >
-> > In the example it looks like the address cells of child nodes are o=
-ffsets
-> > within the unit, rather than absolute physical addresses. Could the=
- code
-> > not treat them as absolute addresses? Then we'd only need to docume=
-nt
-> > that #address-cells, #size-cells and ranges must be present and hav=
-e
-> > values suitable for mapping child nodes into the address space of t=
-he
-> > parent.
-> >
-> OK, thanks.
->
-> > > +- #size-cells: Specifies the number of cells used to represent
-> > > +       the size of an address. Must be present if the device has
-> > > +       sub-nodes and set to 1 if present
-> >
-> > It's not really the size of an address, it's the size of a region
-> > identified by a reg entry.
-> >
-> > I think this can be simplified by my suggestion above.
-> >
-> Yes
-
-Aah, I see that this is already in use, so it's a bit late to change
-this...
-
->
-> > > +
-> > > +2. Clock Provider/Consumer Binding
-> > > +
-> > > +Most of the binding are from the common clock binding[1].
-> > > + [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > > +
-> > > +Required properties:
-> > > +- compatible : Should include one or more of the following:
-
-I didn't spot this earlier, but why "one or more"? are the 2.0 variants
-backwards compatible with the 1.0 variants.
-
-> > > +       - "fsl,qoriq-core-pll-[1,2].x": Indicates a core PLL cloc=
-k
-> > device
-> > > +       - "fsl,qoriq-core-mux-[1,2].x": Indicates a core multiple=
-xer
-> > clock
-> > > +               device; divided from the core PLL clock
-> >
-> > As above, I'd prefer a complete list of the basic strings we expect=
-=2E
-> >
-> There is no list here, just *-mux-1.x and *-mux-2.x
-> What kind of list do you prefer?
-
-Something like:
-
-- compatible: Should include at least one of:
-    * "fsl,qoriq-core-pll-1.0" for core PLL clocks (v1.0)
-    * "fsl,qoriq-core-pll-2.0" for core PLL clocks (v2.0)
-    * "fsl,qoriq-core-mux-1.0" for core mux clocks (v1.0)
-    * "fsl,qoriq-core-mux-2.0" for core mux clocks (v2.0)
-  The *-2.0 variants are backwards compatible with the *-1.0 variants,
-  so for compatiblity a *-1.0 variant string should be in the list.
-
->
-> > > +       - "fixed-clock": From common clock binding; indicates out=
-put
-> > clock
-> > > +               of oscillator
-> > > +       - "fsl,qoriq-sysclk-[1,2].x": Indicates input system cloc=
-k
-> >
-> > Here too.
-> >
-> > > +- #clock-cells: From common clock binding; indicates the number =
-of
-> > > +       output clock. 0 is for one output clock; 1 for more than =
-one
-> > > +clock
-> >
-> > If a clock source has multiple outputs, what those outputs are and =
-what
-> > values in clock-cells they correspond to should be described here.
-> >
-> There is no way to describe the values of multiple outputs here.
-> This property is the type of BOOL. See the clock-bindings.txt.
-
-Sorry? #clock-cells is most definitely _not_ a bool:
-
-17: #clock-cells:      Number of cells in a clock specifier; Typically =
-0 for nodes
-18:                    with a single clock output and 1 for nodes with =
-multiple
-19:                    clock outputs.
-
-And neither are the clock-specifiers encoded with those cells. Consider=
-:
-
-  pll0: pll0@800 {
-          #clock-cells =3D <1>;
-          reg =3D <0x800 0x4>;
-          compatible =3D "fsl,qoriq-core-pll-1.0";
-          clocks =3D <&sysclk>;
-          clock-output-names =3D "pll0", "pll0-div2";
-  };
-
-Here the value of the cells in a clock-specifier seem to be:
-0: pll0
-1: pll0-div2
-
-So in a consumer, the valid values of the cells in a clock-specifier
-are:
-
-  consumer: device {
-          compatible =3D "vendor,some-device";
-          clocks =3D <&pll0 0>, /* pll0 */
-                   <&pll0 1>; /* pll0-div2 */
-  };
-
-There must be some meaning assigned to the values of the cells in the
-clock-specifier (e.g. linear index of the clock output in the hardware)=
-=2E
-It would be good to describe this, other clock bindings do.
-
->
-> > > +
-> > > +Recommended properties:
-> > > +- clocks: Should be the phandle of input parent clock
-> > > +- clock-names: From common clock binding, indicates the clock na=
-me
-> >
-> > That description's a bit opaque.
-> >
-> > What's the name of the clock input on these units? That's what cloc=
-k-
-> > names should contain, and that should be documented.
-> >
-> Is it necessary to document these names since they are totally used
-> by clock provider and clock consumer has no idea about them?
-
-I'm not sure I follow -- clocks and clock-names are used by consumers.
-They define which clocks are inputs to a consumer, and the names of the
-clock inputs on the consumer:
-
-  consumer@0xffff0000 {
-          reg =3D <0xffff0000 0x1000>;
-          compatible =3D "vendor,some-consumer";
-          clocks =3D <&pl011 0>,
-                   <&otherclock 43 22>,
-                   <&pl011 1>;
-          clock-names =3D "apb_pclk",
-                        "pixel_clk",
-                        "scanout_clk";
-  };
-
-Here the set of clock-names would be defined in the binding of the
-consumer, based on the clock input names in the IP documentation -- the=
-y
-tell the consumer which clock inputs on the consumer the clocks
-described in clocks are wired in to, and describe nothing about output
-of the provider. Using clock-names allows the set of clocks on an IP to
-change over revisions and for some clock inputs to be optional.
-
->
-> > Do we not _always_ need the parent clock?
-> >
-> Not for fixed-clock that its parent clock is oscillator :)
-
-Certainly fixed-clock doesn't need any parent clock, but I guess PLLs
-and muxes always do.
-
->
-> > If we have a clock do we need a clock-names entry for it?
-> >
-> Technically yes, but I don't bother to add it if the clock node has
-> only one clocks.
-
-Ok. Where we only have one input clock, this doesn't need to be
-described.
-
-Do the mux clocks always take 3 input clocks (judging by the examples
-they do)?
-
->
-> > > +- clock-output-names: From common clock binding, indicates the n=
-ames
-> > of
-> > > +       output clocks
-> > > +- reg: Should be the offset and length of clock block base addre=
-ss.
-> > > +       The length should be 4.
-> > > +
-> > > +Example for clock block and clock provider:
-> > > +/ {
-> > > +       clockgen: global-utilities@e1000 {
-> > > +               compatible =3D "fsl,p5020-clockgen", "fsl,qoriq-c=
-lockgen-
-> > 1.0";
-> > > +               reg =3D <0xe1000 0x1000>;
-> > > +               clock-frequency =3D <0>;
-> >
-> > That looks odd.
-> >
-> Yes, but it has already existed here before this patch.
-> Can I move it to sysclk clock node since it is not used yet?
-
-I hadn't realised there were DTS with this already. Why is there a cloc=
-k
-with clock-frequency =3D <0> at all? Surely that isn't useful...
-
->
-> > > +               #address-cells =3D <1>;
-> > > +               #size-cells =3D <1>;
-> > > +
-> > > +               sysclk: sysclk {
-> > > +                       #clock-cells =3D <0>;
-> > > +                       compatible =3D "fsl,qoriq-sysclk-1.0",
-> > > + "fixed-clock";
-> >
-> > We didn't mention in the binding that "fsl,qoriq-sysclk-1.0" was
-> > compatible with "fixed-clock" and should have "fixed-clock" in the
-> > compatible list...
-> >
-> OK, will fix it.
-
-Cheers. Also, doesn't a fixed-clock require a clock-frequency?
-
->
-> > > +                       clock-output-names =3D "sysclk";
-> > > +               }
-> > > +
-> > > +               pll0: pll0@800 {
-> > > +                       #clock-cells =3D <1>;
-> > > +                       reg =3D <0x800 0x4>;
-> > > +                       compatible =3D "fsl,qoriq-core-pll-1.0";
-> > > +                       clocks =3D <&sysclk>;
-> > > +                       clock-output-names =3D "pll0", "pll0-div2=
-";
-> > > +               };
-> > > +
-> > > +               pll1: pll1@820 {
-> > > +                       #clock-cells =3D <1>;
-> > > +                       reg =3D <0x820 0x4>;
-> > > +                       compatible =3D "fsl,qoriq-core-pll-1.0";
-> > > +                       clocks =3D <&sysclk>;
-> > > +                       clock-output-names =3D "pll1", "pll1-div2=
-";
-> > > +               };
-> > > +
-> > > +               mux0: mux0@0 {
-> > > +                       #clock-cells =3D <0>;
-> > > +                       reg =3D <0x0 0x4>;
-> > > +                       compatible =3D "fsl,qoriq-core-mux-1.0";
-> > > +                       clocks =3D <&pll0 0>, <&pll0 1>, <&pll1 0=
->,
-> > <&pll1 1>;
-> > > +                       clock-names =3D "pll0_0", "pll0_1", "pll1=
-_0",
-> > "pll1_1";
-> > > +                       clock-output-names =3D "cmux0";
-> > > +               };
-> > > +
-> > > +               mux1: mux1@20 {
-> > > +                       #clock-cells =3D <0>;
-> > > +                       reg =3D <0x20 0x4>;
-> > > +                       compatible =3D "fsl,qoriq-core-mux-1.0";
-> > > +                       clocks =3D <&pll0 0>, <&pll0 1>, <&pll1 0=
->,
-> > <&pll1 1>;
-> > > +                       clock-names =3D "pll0_0", "pll0_1", "pll1=
-_0",
-> > "pll1_1";
-
-I didn't spot this last time, but the clock-names here seem to be the
-names of the outputs from the provider, rather than the input names of
-the consumer. This goes against the intended purpose of clock-names.
-
-> > > +                       clock-output-names =3D "cmux1";
-> >
-> > How does the mux choose which input clock to use at a point in time=
-?
-> >
-> That is decided at runtime. Different input clock will lead to the di=
-fferent
-> Clock frequency that the CPUs work on.
-
-Ok.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
