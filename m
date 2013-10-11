@@ -1,133 +1,146 @@
-From: Pekon Gupta <pekon@ti.com>
-Subject: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all resource allocation and free calls
-Date: Fri, 11 Oct 2013 19:06:43 +0530
-Message-ID: <1381498603-15715-7-git-send-email-pekon@ti.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] gpio: add export with name from dts
+Date: Fri, 11 Oct 2013 14:45:57 +0100
+Message-ID: <20131011134557.GG3910@e106331-lin.cambridge.arm.com>
+References: <1381489420-12578-1-git-send-email-jiri.prchal@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381498603-15715-1-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com
-Cc: Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pekon Gupta <pekon@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1381489420-12578-1-git-send-email-jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-"Managed Device Resource" or devm_xx calls takes care of automatic freeing
-of the resource in case of:
-- failure during driver probe
-- failure during resource allocation
-- detaching or unloading of driver module (rmmod)
-Reference: Documentation/driver-model/devres.txt
+Hi,
 
-Though OMAP NAND driver handles freeing of resource allocation in most of
-the cases, but using devm_xx provides more clean and effortless approach
-to handle all such cases.
+On Fri, Oct 11, 2013 at 12:03:40PM +0100, Jiri Prchal wrote:
+> Add export possibility to sysfs with given name in device tree.
+> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
+> 
+> Signed-off-by: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt |   61 +++++++++++++++++++++++
+>  drivers/gpio/gpiolib-of.c                       |   61 +++++++++++++++++++++++
+>  drivers/gpio/gpiolib.c                          |   27 ++++++----
+>  include/asm-generic/gpio.h                      |    6 ++-
+>  include/linux/gpio.h                            |   23 ++++++++-
+>  5 files changed, 166 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 6cec6ff..03c4ef5 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -117,3 +117,64 @@ Example:
+>  Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
+>  pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
+>  pins 50..59.
+> +
+> +
+> +3) gpio-export
+> +--------------
+> +
+> +gpio-export will allow you to automatically export gpio
 
-Signed-off-by: Pekon Gupta <pekon@ti.com>
----
- drivers/mtd/nand/omap2.c | 38 +++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+What does this mean? In what sense is the gpio exported?
 
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index a783dae..0f2b0d1 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -1658,7 +1658,8 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	info = kzalloc(sizeof(struct omap_nand_info), GFP_KERNEL);
-+	info = devm_kzalloc(&pdev->dev, sizeof(struct omap_nand_info),
-+				GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
- 
-@@ -1690,13 +1691,14 @@ static int omap_nand_probe(struct platform_device *pdev)
- 	info->phys_base = res->start;
- 	info->mem_size = resource_size(res);
- 
--	if (!request_mem_region(info->phys_base, info->mem_size,
--				pdev->dev.driver->name)) {
-+	if (!devm_request_mem_region(&pdev->dev, info->phys_base,
-+				info->mem_size,	pdev->dev.driver->name)) {
- 		err = -EBUSY;
- 		goto out_free_info;
- 	}
- 
--	info->nand.IO_ADDR_R = ioremap(info->phys_base, info->mem_size);
-+	info->nand.IO_ADDR_R = devm_ioremap(&pdev->dev, info->phys_base,
-+						info->mem_size);
- 	if (!info->nand.IO_ADDR_R) {
- 		err = -ENOMEM;
- 		goto out_release_mem_region;
-@@ -1799,8 +1801,9 @@ static int omap_nand_probe(struct platform_device *pdev)
- 			err = -ENODEV;
- 			goto out_release_mem_region;
- 		}
--		err = request_irq(info->gpmc_irq_fifo,	omap_nand_irq,
--					IRQF_SHARED, "gpmc-nand-fifo", info);
-+		err = devm_request_irq(&pdev->dev, info->gpmc_irq_fifo,
-+					omap_nand_irq, IRQF_SHARED,
-+					"gpmc-nand-fifo", info);
- 		if (err) {
- 			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
- 						info->gpmc_irq_fifo, err);
-@@ -1814,8 +1817,9 @@ static int omap_nand_probe(struct platform_device *pdev)
- 			err = -ENODEV;
- 			goto out_release_mem_region;
- 		}
--		err = request_irq(info->gpmc_irq_count,	omap_nand_irq,
--					IRQF_SHARED, "gpmc-nand-count", info);
-+		err = devm_request_irq(&pdev->dev, info->gpmc_irq_count,
-+					omap_nand_irq, IRQF_SHARED,
-+					"gpmc-nand-count", info);
- 		if (err) {
- 			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
- 						info->gpmc_irq_count, err);
-@@ -2031,10 +2035,10 @@ out_release_mem_region:
- 	if (info->dma)
- 		dma_release_channel(info->dma);
- 	if (info->gpmc_irq_count > 0)
--		free_irq(info->gpmc_irq_count, info);
-+		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
- 	if (info->gpmc_irq_fifo > 0)
--		free_irq(info->gpmc_irq_fifo, info);
--	release_mem_region(info->phys_base, info->mem_size);
-+		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
-+	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
- out_free_info:
- #ifdef CONFIG_MTD_NAND_ECC_BCH
- 	if (info->nand.ecc.priv) {
-@@ -2042,7 +2046,7 @@ out_free_info:
- 		info->nand.ecc.priv = NULL;
- 	}
- #endif
--	kfree(info);
-+	devm_kfree(&pdev->dev, info);
- 
- 	return err;
- }
-@@ -2062,15 +2066,15 @@ static int omap_nand_remove(struct platform_device *pdev)
- 		dma_release_channel(info->dma);
- 
- 	if (info->gpmc_irq_count > 0)
--		free_irq(info->gpmc_irq_count, info);
-+		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
- 	if (info->gpmc_irq_fifo > 0)
--		free_irq(info->gpmc_irq_fifo, info);
-+		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
- 
- 	/* Release NAND device, its internal structures and partitions */
- 	nand_release(&info->mtd);
--	iounmap(info->nand.IO_ADDR_R);
--	release_mem_region(info->phys_base, info->mem_size);
--	kfree(info);
-+	devm_iounmap(&pdev->dev, info->nand.IO_ADDR_R);
-+	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
-+	devm_kfree(&pdev->dev, info);
- 	return 0;
- }
- 
--- 
-1.8.1
+Why is this needed? What's the intended purpose?
 
+This patch is embedding a completely Linux-specific policy (when and how
+to export devices via sysfs) into the DT. That does not belong in the
+DT, as it is not a description of hardware. As such, NAK.
+
+If we want gpios exported to userspace, that is better handled
+elsewhere, and does not warrant a device tree binding for controlling
+software.
+
+> +
+> +required properties:
+> +- compatible: Should be "gpio-export"
+> +
+> +in each child node will reprensent a gpio or if no name is specified
+> +a list of gpio to export
+
+What does this mean?
+
+What is each child node meant to look like?
+
+Why are names and lists mutually exclusive?
+
+s/reprensent/represent/
+
+> +
+> +required properties:
+> +- gpios: gpio to export
+
+Isn't this contradictory to the above?
+
+> +
+> +optional properties:
+> + - gpio-export,name: export name
+
+What does this mean?
+
+Type?
+
+> + - gpio-export,output: to set the as output with default value
+> + 		       if no present gpio as input
+
+Type?
+
+What values are valid?
+
+> + - pio-export,direction_may_change: boolean to allow the direction to be controllable
+
+s/pio/gpio/.
+
+'_' should be '-'.
+
+> +
+> +Example:
+> +
+> +
+> +gpio_export {
+> +	compatible = "gpio-export";
+> +	#size-cells = <0>;
+
+Why is there a #size-cells? No children have reg properties.
+
+> +
+> +	in {
+> +		gpio-export,name = "in";
+> +		gpios = <&pioC 20 0>;
+> +	};
+> +
+> +	out {
+> +		gpio-export,name = "out";
+> +		gpio-export,output = <1>;
+> +		gpio-export,direction_may_change;
+> +		gpios = <&pioC 21 0>;
+> +	};
+> +
+> +	in_out {
+> +		gpio-export,name = "in_out";
+> +		gpio-export,direction_may_change;
+> +		gpios = <&pioC 21 0>;
+> +	};
+> +
+> +	gpios_in {
+> +		gpios = <&pioB 0 0
+> +			 &pioB 3 0
+> +			 &pioC 4 0>;
+
+Tom maintain consistency across various arbitrary-size composite value
+lists, I'd prefer we bracket each entry in lists individually, e.g.
+
+gpios = <&pioB 0 0>,
+        <&pioB 3 0>,
+        <&pioC 4 0>;
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
