@@ -1,173 +1,190 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all
- resource allocation and free calls
-Date: Fri, 11 Oct 2013 11:15:15 -0700
-Message-ID: <20131011181515.GJ23337@ld-irv-0074.broadcom.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
- <1381498603-15715-7-git-send-email-pekon@ti.com>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v2 2/3] gpiolib: port of_ functions to use gpiod
+Date: Fri, 11 Oct 2013 11:14:32 -0700
+Message-ID: <1381515273-25466-3-git-send-email-acourbot@nvidia.com>
+References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381498603-15715-7-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, dedekind1@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, gnurou@gmail.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
+Refactor the of_ functions of gpiolib to use the now public gpiod
+interface, and export of_get_named_gpiod_flags() and
+of_get_gpiod_flags() functions.
 
-On Fri, Oct 11, 2013 at 07:06:43PM +0530, Pekon Gupta wrote:
-> "Managed Device Resource" or devm_xx calls takes care of automatic freeing
-> of the resource in case of:
-> - failure during driver probe
-> - failure during resource allocation
-> - detaching or unloading of driver module (rmmod)
-> Reference: Documentation/driver-model/devres.txt
-> 
-> Though OMAP NAND driver handles freeing of resource allocation in most of
-> the cases, but using devm_xx provides more clean and effortless approach
-> to handle all such cases.
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+---
+ drivers/gpio/gpiolib-of.c | 28 +++++++++++++++++-----------
+ include/linux/of_gpio.h   | 29 ++++++++++++++++++++++++-----
+ 2 files changed, 41 insertions(+), 16 deletions(-)
 
-Judging by your patch, I think you missed the point of the devm_*
-managed functions. They are useful because you don't need to do any of
-the cleanup (kfree(), iounmap(), etc.) yourself. I'll note the changes
-that are necessary below, but seeing as this is an add-on to your patch
-series, I may merge the rest of series without this, and if so, you can
-just resubmit this patch separately.
-
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  drivers/mtd/nand/omap2.c | 38 +++++++++++++++++++++-----------------
->  1 file changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index a783dae..0f2b0d1 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
-> @@ -1658,7 +1658,8 @@ static int omap_nand_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	info = kzalloc(sizeof(struct omap_nand_info), GFP_KERNEL);
-> +	info = devm_kzalloc(&pdev->dev, sizeof(struct omap_nand_info),
-> +				GFP_KERNEL);
->  	if (!info)
->  		return -ENOMEM;
->  
-> @@ -1690,13 +1691,14 @@ static int omap_nand_probe(struct platform_device *pdev)
->  	info->phys_base = res->start;
->  	info->mem_size = resource_size(res);
->  
-> -	if (!request_mem_region(info->phys_base, info->mem_size,
-> -				pdev->dev.driver->name)) {
-> +	if (!devm_request_mem_region(&pdev->dev, info->phys_base,
-> +				info->mem_size,	pdev->dev.driver->name)) {
->  		err = -EBUSY;
->  		goto out_free_info;
->  	}
->  
-> -	info->nand.IO_ADDR_R = ioremap(info->phys_base, info->mem_size);
-> +	info->nand.IO_ADDR_R = devm_ioremap(&pdev->dev, info->phys_base,
-> +						info->mem_size);
->  	if (!info->nand.IO_ADDR_R) {
->  		err = -ENOMEM;
->  		goto out_release_mem_region;
-> @@ -1799,8 +1801,9 @@ static int omap_nand_probe(struct platform_device *pdev)
->  			err = -ENODEV;
->  			goto out_release_mem_region;
->  		}
-> -		err = request_irq(info->gpmc_irq_fifo,	omap_nand_irq,
-> -					IRQF_SHARED, "gpmc-nand-fifo", info);
-> +		err = devm_request_irq(&pdev->dev, info->gpmc_irq_fifo,
-> +					omap_nand_irq, IRQF_SHARED,
-> +					"gpmc-nand-fifo", info);
->  		if (err) {
->  			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
->  						info->gpmc_irq_fifo, err);
-> @@ -1814,8 +1817,9 @@ static int omap_nand_probe(struct platform_device *pdev)
->  			err = -ENODEV;
->  			goto out_release_mem_region;
->  		}
-> -		err = request_irq(info->gpmc_irq_count,	omap_nand_irq,
-> -					IRQF_SHARED, "gpmc-nand-count", info);
-> +		err = devm_request_irq(&pdev->dev, info->gpmc_irq_count,
-> +					omap_nand_irq, IRQF_SHARED,
-> +					"gpmc-nand-count", info);
->  		if (err) {
->  			dev_err(&pdev->dev, "requesting irq(%d) error:%d",
->  						info->gpmc_irq_count, err);
-> @@ -2031,10 +2035,10 @@ out_release_mem_region:
->  	if (info->dma)
->  		dma_release_channel(info->dma);
->  	if (info->gpmc_irq_count > 0)
-> -		free_irq(info->gpmc_irq_count, info);
-> +		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
-
-Just drop the 'free'.
-
->  	if (info->gpmc_irq_fifo > 0)
-> -		free_irq(info->gpmc_irq_fifo, info);
-> -	release_mem_region(info->phys_base, info->mem_size);
-> +		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
-
-Drop the 'free'.
-
-> +	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
-
-Drop this line.
-
->  out_free_info:
->  #ifdef CONFIG_MTD_NAND_ECC_BCH
->  	if (info->nand.ecc.priv) {
-> @@ -2042,7 +2046,7 @@ out_free_info:
->  		info->nand.ecc.priv = NULL;
->  	}
->  #endif
-> -	kfree(info);
-> +	devm_kfree(&pdev->dev, info);
-
-This line is also not needed.
-
-So in the end, the 'gotos' and error path of your probe function will be
-much simpler. You will only need to manage the info->dma DMA channel
-(i.e., dma_release_channel()).
-
->  
->  	return err;
->  }
-> @@ -2062,15 +2066,15 @@ static int omap_nand_remove(struct platform_device *pdev)
->  		dma_release_channel(info->dma);
->  
->  	if (info->gpmc_irq_count > 0)
-> -		free_irq(info->gpmc_irq_count, info);
-> +		devm_free_irq(&pdev->dev, info->gpmc_irq_count, info);
-
-This 'free' is also not needed.
-
->  	if (info->gpmc_irq_fifo > 0)
-> -		free_irq(info->gpmc_irq_fifo, info);
-> +		devm_free_irq(&pdev->dev, info->gpmc_irq_fifo, info);
-
-Ditto.
-
->  
->  	/* Release NAND device, its internal structures and partitions */
->  	nand_release(&info->mtd);
-> -	iounmap(info->nand.IO_ADDR_R);
-> -	release_mem_region(info->phys_base, info->mem_size);
-> -	kfree(info);
-> +	devm_iounmap(&pdev->dev, info->nand.IO_ADDR_R);
-> +	devm_release_mem_region(&pdev->dev, info->phys_base, info->mem_size);
-> +	devm_kfree(&pdev->dev, info);
-
-Ditto for all 3.
-
-Your 'remove' function will also be much shorter.
-
->  	return 0;
->  }
->  
-
-Thanks,
-Brian
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 0dfaf20..32a396d 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -15,19 +15,21 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <linux/io.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/slab.h>
+ 
++struct gpio_desc;
++
+ /* Private data structure for of_gpiochip_find_and_xlate */
+ struct gg_data {
+ 	enum of_gpio_flags *flags;
+ 	struct of_phandle_args gpiospec;
+ 
+-	int out_gpio;
++	struct gpio_desc *out_gpio;
+ };
+ 
+ /* Private function for resolving node pointer to gpio_chip */
+@@ -45,28 +47,31 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
+ 	if (ret < 0)
+ 		return false;
+ 
+-	gg_data->out_gpio = ret + gc->base;
++	gg_data->out_gpio = gpio_to_desc(ret + gc->base);
+ 	return true;
+ }
+ 
+ /**
+- * of_get_named_gpio_flags() - Get a GPIO number and flags to use with GPIO API
++ * of_get_named_gpiod_flags() - Get a GPIO descriptor and flags for GPIO API
+  * @np:		device node to get GPIO from
+  * @propname:	property name containing gpio specifier(s)
+  * @index:	index of the GPIO
+  * @flags:	a flags pointer to fill in
+  *
+- * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
++ * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
+  * value on the error condition. If @flags is not NULL the function also fills
+  * in flags for the GPIO.
+  */
+-int of_get_named_gpio_flags(struct device_node *np, const char *propname,
+-			   int index, enum of_gpio_flags *flags)
++struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
++		     const char *propname, int index, enum of_gpio_flags *flags)
+ {
+ 	/* Return -EPROBE_DEFER to support probe() functions to be called
+ 	 * later when the GPIO actually becomes available
+ 	 */
+-	struct gg_data gg_data = { .flags = flags, .out_gpio = -EPROBE_DEFER };
++	struct gg_data gg_data = {
++		.flags = flags,
++		.out_gpio = ERR_PTR(-EPROBE_DEFER)
++	};
+ 	int ret;
+ 
+ 	/* .of_xlate might decide to not fill in the flags, so clear it. */
+@@ -78,16 +83,17 @@ int of_get_named_gpio_flags(struct device_node *np, const char *propname,
+ 	if (ret) {
+ 		pr_debug("%s: can't parse gpios property of node '%s[%d]'\n",
+ 			__func__, np->full_name, index);
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+ 
+ 	of_node_put(gg_data.gpiospec.np);
+-	pr_debug("%s exited with status %d\n", __func__, gg_data.out_gpio);
++	pr_debug("%s exited with status %d\n", __func__,
++		 PTR_RET(gg_data.out_gpio));
+ 	return gg_data.out_gpio;
+ }
+-EXPORT_SYMBOL(of_get_named_gpio_flags);
++EXPORT_SYMBOL(of_get_named_gpiod_flags);
+ 
+ /**
+  * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index a83dc6f..d71f2cc 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -21,6 +21,7 @@
+ #include <linux/of.h>
+ 
+ struct device_node;
++struct gpio_desc;
+ 
+ /*
+  * This is Linux-specific flags. By default controllers' and Linux' mapping
+@@ -47,7 +48,7 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
+ 	return container_of(gc, struct of_mm_gpio_chip, gc);
+ }
+ 
+-extern int of_get_named_gpio_flags(struct device_node *np,
++extern struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 		const char *list_name, int index, enum of_gpio_flags *flags);
+ 
+ extern int of_mm_gpiochip_add(struct device_node *np,
+@@ -62,10 +63,10 @@ extern int of_gpio_simple_xlate(struct gpio_chip *gc,
+ #else /* CONFIG_OF_GPIO */
+ 
+ /* Drivers may not strictly depend on the GPIO support, so let them link. */
+-static inline int of_get_named_gpio_flags(struct device_node *np,
++static inline struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 		const char *list_name, int index, enum of_gpio_flags *flags)
+ {
+-	return -ENOSYS;
++	return ERR_PTR(-ENOSYS);
+ }
+ 
+ static inline int of_gpio_simple_xlate(struct gpio_chip *gc,
+@@ -80,6 +81,18 @@ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+ 
+ #endif /* CONFIG_OF_GPIO */
+ 
++static inline int of_get_named_gpio_flags(struct device_node *np,
++		const char *list_name, int index, enum of_gpio_flags *flags)
++{
++	struct gpio_desc *desc;
++	desc = of_get_named_gpiod_flags(np, list_name, index, flags);
++
++	if (IS_ERR(desc))
++		return PTR_ERR(desc);
++	else
++		return desc_to_gpio(desc);
++}
++
+ /**
+  * of_gpio_named_count() - Count GPIOs for a device
+  * @np:		device node to count GPIOs for
+@@ -117,15 +130,21 @@ static inline int of_gpio_count(struct device_node *np)
+ }
+ 
+ /**
+- * of_get_gpio_flags() - Get a GPIO number and flags to use with GPIO API
++ * of_get_gpiod_flags() - Get a GPIO descriptor and flags to use with GPIO API
+  * @np:		device node to get GPIO from
+  * @index:	index of the GPIO
+  * @flags:	a flags pointer to fill in
+  *
+- * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
++ * Returns GPIO descriptor to use with Linux generic GPIO API, or a errno
+  * value on the error condition. If @flags is not NULL the function also fills
+  * in flags for the GPIO.
+  */
++static inline struct gpio_desc *of_get_gpiod_flags(struct device_node *np,
++					int index, enum of_gpio_flags *flags)
++{
++	return of_get_named_gpiod_flags(np, "gpios", index, flags);
++}
++
+ static inline int of_get_gpio_flags(struct device_node *np, int index,
+ 		      enum of_gpio_flags *flags)
+ {
+-- 
+1.8.4
