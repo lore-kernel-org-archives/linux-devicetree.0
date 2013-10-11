@@ -1,190 +1,48 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v2 2/3] gpiolib: port of_ functions to use gpiod
-Date: Fri, 11 Oct 2013 11:14:32 -0700
-Message-ID: <1381515273-25466-3-git-send-email-acourbot@nvidia.com>
-References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Fri, 11 Oct 2013 21:23:25 +0300
+Message-ID: <5258421D.8030006@ti.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com> <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, gnurou@gmail.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Refactor the of_ functions of gpiolib to use the now public gpiod
-interface, and export of_get_named_gpiod_flags() and
-of_get_gpiod_flags() functions.
+On 10/11/2013 08:54 PM, Paul Walmsley wrote:
+> On Thu, 10 Oct 2013, Tero Kristo wrote:
+>
+>> On 10/09/2013 09:59 PM, Paul Walmsley wrote:
+>>> Eh, one correction:
+>>>
+>>> On Wed, 9 Oct 2013, Paul Walmsley wrote:
+>>>
+>>>> We could easily wind up with kernels that won't boot at all when used
+>>>> with newer DT data.
+>>>
+>>> This is a misstatement of the issue: the concern here is that newer
+>>> kernels may not boot at all with older DT data - which could easily be in
+>>> locked areas of the flash or firmware.
+>>
+>> I wonder who would be crazy enough to put DT data into a locked area, and to
+>> what purpose. If you can update the kernel, there is no point locking down DT
+>> data, this will just cause you unnecessary misery.
+>
+> The DT data will be used by bootloaders also :-(
+>
+> In situations where the bootloaders are signed and locked, the security
+> people are also insisting that the DT data be signed and locked.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
- drivers/gpio/gpiolib-of.c | 28 +++++++++++++++++-----------
- include/linux/of_gpio.h   | 29 ++++++++++++++++++++++++-----
- 2 files changed, 41 insertions(+), 16 deletions(-)
+Well, even if you sign something, you can still update it. Writing any 
+software to true OTP memory is one way to commit suicide IMO. How many 
+nasty bugs have you seen with ROM code? Also, if people want to make 
+their custom security solutions which are not supported by the kernel, 
+why should the kernel care about it? We don't know the details, and 
+can't influence the design, so we can't prepare for it anyway.
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 0dfaf20..32a396d 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -15,19 +15,21 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/io.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_gpio.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/slab.h>
- 
-+struct gpio_desc;
-+
- /* Private data structure for of_gpiochip_find_and_xlate */
- struct gg_data {
- 	enum of_gpio_flags *flags;
- 	struct of_phandle_args gpiospec;
- 
--	int out_gpio;
-+	struct gpio_desc *out_gpio;
- };
- 
- /* Private function for resolving node pointer to gpio_chip */
-@@ -45,28 +47,31 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
- 	if (ret < 0)
- 		return false;
- 
--	gg_data->out_gpio = ret + gc->base;
-+	gg_data->out_gpio = gpio_to_desc(ret + gc->base);
- 	return true;
- }
- 
- /**
-- * of_get_named_gpio_flags() - Get a GPIO number and flags to use with GPIO API
-+ * of_get_named_gpiod_flags() - Get a GPIO descriptor and flags for GPIO API
-  * @np:		device node to get GPIO from
-  * @propname:	property name containing gpio specifier(s)
-  * @index:	index of the GPIO
-  * @flags:	a flags pointer to fill in
-  *
-- * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
-+ * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
-  * value on the error condition. If @flags is not NULL the function also fills
-  * in flags for the GPIO.
-  */
--int of_get_named_gpio_flags(struct device_node *np, const char *propname,
--			   int index, enum of_gpio_flags *flags)
-+struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
-+		     const char *propname, int index, enum of_gpio_flags *flags)
- {
- 	/* Return -EPROBE_DEFER to support probe() functions to be called
- 	 * later when the GPIO actually becomes available
- 	 */
--	struct gg_data gg_data = { .flags = flags, .out_gpio = -EPROBE_DEFER };
-+	struct gg_data gg_data = {
-+		.flags = flags,
-+		.out_gpio = ERR_PTR(-EPROBE_DEFER)
-+	};
- 	int ret;
- 
- 	/* .of_xlate might decide to not fill in the flags, so clear it. */
-@@ -78,16 +83,17 @@ int of_get_named_gpio_flags(struct device_node *np, const char *propname,
- 	if (ret) {
- 		pr_debug("%s: can't parse gpios property of node '%s[%d]'\n",
- 			__func__, np->full_name, index);
--		return ret;
-+		return ERR_PTR(ret);
- 	}
- 
- 	gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
- 
- 	of_node_put(gg_data.gpiospec.np);
--	pr_debug("%s exited with status %d\n", __func__, gg_data.out_gpio);
-+	pr_debug("%s exited with status %d\n", __func__,
-+		 PTR_RET(gg_data.out_gpio));
- 	return gg_data.out_gpio;
- }
--EXPORT_SYMBOL(of_get_named_gpio_flags);
-+EXPORT_SYMBOL(of_get_named_gpiod_flags);
- 
- /**
-  * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index a83dc6f..d71f2cc 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -21,6 +21,7 @@
- #include <linux/of.h>
- 
- struct device_node;
-+struct gpio_desc;
- 
- /*
-  * This is Linux-specific flags. By default controllers' and Linux' mapping
-@@ -47,7 +48,7 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
- 	return container_of(gc, struct of_mm_gpio_chip, gc);
- }
- 
--extern int of_get_named_gpio_flags(struct device_node *np,
-+extern struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags);
- 
- extern int of_mm_gpiochip_add(struct device_node *np,
-@@ -62,10 +63,10 @@ extern int of_gpio_simple_xlate(struct gpio_chip *gc,
- #else /* CONFIG_OF_GPIO */
- 
- /* Drivers may not strictly depend on the GPIO support, so let them link. */
--static inline int of_get_named_gpio_flags(struct device_node *np,
-+static inline struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags)
- {
--	return -ENOSYS;
-+	return ERR_PTR(-ENOSYS);
- }
- 
- static inline int of_gpio_simple_xlate(struct gpio_chip *gc,
-@@ -80,6 +81,18 @@ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
- 
- #endif /* CONFIG_OF_GPIO */
- 
-+static inline int of_get_named_gpio_flags(struct device_node *np,
-+		const char *list_name, int index, enum of_gpio_flags *flags)
-+{
-+	struct gpio_desc *desc;
-+	desc = of_get_named_gpiod_flags(np, list_name, index, flags);
-+
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+	else
-+		return desc_to_gpio(desc);
-+}
-+
- /**
-  * of_gpio_named_count() - Count GPIOs for a device
-  * @np:		device node to count GPIOs for
-@@ -117,15 +130,21 @@ static inline int of_gpio_count(struct device_node *np)
- }
- 
- /**
-- * of_get_gpio_flags() - Get a GPIO number and flags to use with GPIO API
-+ * of_get_gpiod_flags() - Get a GPIO descriptor and flags to use with GPIO API
-  * @np:		device node to get GPIO from
-  * @index:	index of the GPIO
-  * @flags:	a flags pointer to fill in
-  *
-- * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
-+ * Returns GPIO descriptor to use with Linux generic GPIO API, or a errno
-  * value on the error condition. If @flags is not NULL the function also fills
-  * in flags for the GPIO.
-  */
-+static inline struct gpio_desc *of_get_gpiod_flags(struct device_node *np,
-+					int index, enum of_gpio_flags *flags)
-+{
-+	return of_get_named_gpiod_flags(np, "gpios", index, flags);
-+}
-+
- static inline int of_get_gpio_flags(struct device_node *np, int index,
- 		      enum of_gpio_flags *flags)
- {
--- 
-1.8.4
+-Tero
+
