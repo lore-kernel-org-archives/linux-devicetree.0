@@ -1,48 +1,54 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type *ti,palmas-usb-vid*
-Date: Fri, 11 Oct 2013 13:55:41 +0530
-Message-ID: <5257B605.2000608@ti.com>
-References: <1381408647-24653-1-git-send-email-kishon@ti.com> <5256A773.6060807@nvidia.com> <5257977C.1030108@ti.com> <5257A36D.80902@samsung.com> <5257AE43.4020902@ti.com> <5257B576.3060800@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5257B576.3060800@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 04/17] clk: at91: add PMC macro file for dt definitions
+Date: Fri, 11 Oct 2013 10:41:25 +0200
+Message-ID: <1381480885-11994-1-git-send-email-b.brezillon@overkiz.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 October 2013 01:53 PM, Chanwoo Choi wrote:
-> On 10/11/2013 04:52 PM, Kishon Vijay Abraham I wrote:
->> Hi Chanwoo,
->>
->> On Friday 11 October 2013 12:36 PM, Chanwoo Choi wrote:
->>> On 10/11/2013 03:15 PM, Kishon Vijay Abraham I wrote:
->>>> On Thursday 10 October 2013 06:41 PM, Laxman Dewangan wrote:
->>>>> On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
->>>>>> The Palmas device contains only a USB VBUS-ID detector, so added a
->>>>>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
->>>>>> types for backward compatibility.
->>>>>>
->>>>> I dont have much issue on this nomenclature but just second thought:
->>>>>
->>>>> The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, ID-RB, ID-RC
->>>>> and ID-FLOAT as per BC1.2.
->>>>> This sub-module only detect the cable, does nothing more than this.
->>>>> In this case, should we say "ti,palmas-usb-extcon"?
->>>>> Again extcon is linux specific terminology and this can be defer.
->>>>
->>>> I don't mind either way. Chanwoo?
->>>
->>> The EXTCON is subsystem name. I don't prefer to use 'extcon' word on device name.
->>> I agree Kishon opinion.
->>
->> Cool.. can you this patch as-is?
->>
-> 
-> OK, applied it.
+This patch adds a new macro file for PMC macros.
 
-Thanks :-)
+This macro file includes the definitions of SR (status register) bit
+offsets and will be use to reference PMC irqs.
 
--Kishon
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ include/dt-bindings/clk/at91.h |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 include/dt-bindings/clk/at91.h
+
+diff --git a/include/dt-bindings/clk/at91.h b/include/dt-bindings/clk/at91.h
+new file mode 100644
+index 0000000..0b4cb99
+--- /dev/null
++++ b/include/dt-bindings/clk/at91.h
+@@ -0,0 +1,22 @@
++/*
++ * This header provides constants for AT91 pmc status.
++ *
++ * The constants defined in this header are being used in dts.
++ *
++ * Licensed under GPLv2 or later.
++ */
++
++#ifndef _DT_BINDINGS_CLK_AT91_H
++#define _DT_BINDINGS_CLK_AT91_H
++
++#define AT91_PMC_MOSCS		0		/* MOSCS Flag */
++#define AT91_PMC_LOCKA		1		/* PLLA Lock */
++#define AT91_PMC_LOCKB		2		/* PLLB Lock */
++#define AT91_PMC_MCKRDY		3		/* Master Clock */
++#define AT91_PMC_LOCKU		6		/* UPLL Lock */
++#define AT91_PMC_PCKRDY(id)	(8 + (id))	/* Programmable Clock */
++#define AT91_PMC_MOSCSELS	16		/* Main Oscillator Selection */
++#define AT91_PMC_MOSCRCS	17		/* Main On-Chip RC */
++#define AT91_PMC_CFDEV		18		/* Clock Failure Detector Event */
++
++#endif
+-- 
+1.7.9.5
+
