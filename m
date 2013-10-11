@@ -1,78 +1,74 @@
-From: Valentine <valentine.barshak@cogentembedded.com>
-Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
-Date: Fri, 11 Oct 2013 14:54:52 +0400
-Message-ID: <5257D8FC.3040405@cogentembedded.com>
-References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au> <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drivers: misc: add gpio wakeup driver
+Date: Fri, 11 Oct 2013 13:11:34 +0200
+Message-ID: <CACRpkdYhQ+-d1COcvmg_hEJ==cTFpKLNDnvF8kdK4QgXzHenEA@mail.gmail.com>
+References: <1380635719-31171-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380635719-31171-1-git-send-email-zonque@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 01:41 PM, Mark Rutland wrote:
-> On Fri, Oct 11, 2013 at 02:00:35AM +0100, Simon Horman wrote:
->> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
->
-> Cheers!
->
+On Tue, Oct 1, 2013 at 3:55 PM, Daniel Mack <zonque@gmail.com> wrote:
 
-Hi Mark,
-
->>
->> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
->>> RCAR Gen2 SoC has a different phy which is not compatible with
->>> the older H1/M1 versions. This adds OF/platform device table
->>> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+> This patch adds a very simple driver that enables GPIO lines as wakeup
+> sources. It only operates on information passed in via DT, and depends
+> on CONFIG_OF && CONFIG_PM_SLEEP. It can for example be used to connect
+> wake-on-LAN (WOL) signals or other electric wakeup networks.
 >
-> Is the PHY combined with the rest of the controller, or are they
-> logically separate components in the SoC? I note that the Calxeda
-> Highbank SATA controller driver treats the phy and the controller as
-> separate entities, and describes the way the two are attached (though
-> the driver handles both). Would a similar approach work here?
+> The driver accepts a list of GPIO nodes and claims them along with their
+> interrupt line. During suspend, the interrupts will be enabled and
+> selected as wakeup source. The driver doesn't do anything else with the
+> GPIO lines, and will ignore occured interrupts silently.
 >
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
 
-It seems to be described in the docs as a single entity with the rest of 
-the controller. The phy registers are in the same address space block. 
-We don't need to describe how the phy is attached to the SATA 
-controller. In the future we may need some phy-specific configuration in 
-the device tree. For example, to describe how clock generator is 
-connected to the controller. I think this could be done with optional 
-properties added to the SATA node if needed.
+This makes a weird kind of sense.
+Hm hm hm.
 
-> [...]
->
->>> +static struct of_device_id sata_rcar_match[] = {
->>> +	{
->>> +		.compatible = "renesas,rcar-sata",
->>> +		.data = (void *)RCAR_SATA
->>> +	},
->>> +	{
->>> +		.compatible = "renesas,sata-r8a7790",
->>> +		.data = (void *)RCAR_GEN2_SATA
->>> +	},
->>> +	{
->>> +		.compatible = "renesas,sata-r8a7791",
->>> +		.data = (void *)RCAR_GEN2_SATA
->>> +	},
->>> +	{},
->
-> These bindings will need documentation. A grep of any of these in
-> mainline's Documentation/devicetree shows up nothing (not even the
-> existing "renesas,rcar-sata" string used by the driver.
+But I really need the misc mainatiners' help here...
+possibly also irqchip maintainers.
 
-Indeed.
-Since we need to adjust rcar-sata bindings and add documentation for it, 
-which is not really related to Gen2 phy support, looks like it will be a 
-separate patch.
+> +++ b/Documentation/devicetree/bindings/misc/gpio-wakeup.txt
+> @@ -0,0 +1,16 @@
+> +GPIO WAKEUP DRIVER BINDINGS
+> +
+> +Required:
+> +
+> +       compatible:     Must be "gpio-wakeup"
+> +       gpios:          At list of GPIO nodes that are enabled as wakeup
+> +                       sources.
 
->
-> Thanks,
-> Mark.
->
+Reword so this is OS independent. Describe what a wakeup source is
+for example.
 
-Thanks,
-Val.
+> +Example:
+> +
+> +       wake_up {
+> +               compatible = "gpio-wakeup";
+> +               gpios = <&gpio0 19 0>;
+> +       };
+
+This will not work if that GPIO chip is not capable of supporting
+interrupts on that GPIO line right?
+
+We have recently had a very long discussion about this: such
+GPIO chips will also be marked "interrupt-controller" and you
+should be able to just state interrupt-parent and
+interrupts = <>; for this. (And it should accept an array.)
+
+It *may* be that we have many GPIO drivers that do not accept
+that you request an interrupt on them before you have done
+request_gpio() followed by gpio_to_irq() on the pin. Then this
+shall be treated like a bug and the GPIO driver fixed to handle
+this. (That was the outcome of this discussion.)
+
+Since what the driver will then eventually provide is to
+flag an IRQ line as wakeup, I wonder if this should not just
+simply go into the interrupt core, or atleast of/irq.c.
+
+Yours,
+Linus Walleij
