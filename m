@@ -1,48 +1,85 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all
- resource allocation and free calls
-Date: Fri, 11 Oct 2013 14:46:54 -0700
-Message-ID: <20131011214653.GA29913@atomide.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
- <1381498603-15715-7-git-send-email-pekon@ti.com>
- <20131011181515.GJ23337@ld-irv-0074.broadcom.com>
- <20131011182840.GW29913@atomide.com>
- <CAN8TOE9S63a1YdtzS+urTGBoMqrhq83cXXEeGinvQi9=dyUX1Q@mail.gmail.com>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v8 3/5] ARM: tegra: split setting of CPU reset handler
+Date: Fri, 11 Oct 2013 14:45:36 -0700
+Message-ID: <1381527938-22840-4-git-send-email-acourbot@nvidia.com>
+References: <1381527938-22840-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAN8TOE9S63a1YdtzS+urTGBoMqrhq83cXXEeGinvQi9=dyUX1Q@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Pekon Gupta <pekon@ti.com>, Mark Rutland <mark.rutland@arm.com>, robherring2@gmail.com, "olof@lixom.net" <olof@lixom.net>, Artem Bityutskiy <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, bcousson@baylibre.com, Avinash Philip <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381527938-22840-1-git-send-email-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-* Brian Norris <computersforpeace@gmail.com> [131011 12:35]:
-> On Fri, Oct 11, 2013 at 11:28 AM, Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > FYI, the .dts changes should be queued separately by Benoit to avoid
-> > pointless merge conflicts. The arch/arm/mach-omap2/gpmc.c changes I
-> > need to look, hopefully I can ack those for you today so you can take
-> > the code related changes into the MTD tree.
-> 
-> Why are you replying to this patch, instead of the DTS?
+Not all Tegra devices can set the CPU reset handler in the same way.
+In particular, devices using a TrustZone secure monitor cannot set the
+reset handler directly and need to do it through a firmware operation.
 
-Because you said you might merrge some parts of the series and I've
-seen many merge cycles of pointless merge conflicts with driver
-maintainers merging .dts files along with the driver changes? :)
+This patch separates the act of setting the reset handler from its
+preparation, so the former can be implemented in a different way.
 
-Pekon, can please post the .dts changes entirely separately from
-the driver changes in the future?
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+---
+ arch/arm/mach-tegra/reset.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+index fd0bbf8..e282395 100644
+--- a/arch/arm/mach-tegra/reset.c
++++ b/arch/arm/mach-tegra/reset.c
+@@ -33,26 +33,18 @@
  
-> Also, I don't think all of this code is ready. There are several
-> comments from weeks ago that Pekon hasn't addressed. It's possible the
-> DT binding changes can go in, but not some of the later patches, yet.
-
-Yes that's up to you. I have not looked at the MTD parts and I
-appreciate the fact that you are reviewing that stuff. I've acked
-the arch/arm/*omap* parts so hopefully I'm out of the loop now.
-
-Regards,
-
-Tony
+ static bool is_enabled;
+ 
+-static void __init tegra_cpu_reset_handler_enable(void)
++static void __init tegra_cpu_reset_handler_set(const u32 reset_address)
+ {
+-	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
+ 	void __iomem *evp_cpu_reset =
+ 		IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE + 0x100);
+ 	void __iomem *sb_ctrl = IO_ADDRESS(TEGRA_SB_BASE);
+ 	u32 reg;
+ 
+-	BUG_ON(is_enabled);
+-	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
+-
+-	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+-			tegra_cpu_reset_handler_size);
+-
+ 	/*
+ 	 * NOTE: This must be the one and only write to the EVP CPU reset
+ 	 *       vector in the entire system.
+ 	 */
+-	writel(TEGRA_IRAM_RESET_BASE + tegra_cpu_reset_handler_offset,
+-			evp_cpu_reset);
++	writel(reset_address, evp_cpu_reset);
+ 	wmb();
+ 	reg = readl(evp_cpu_reset);
+ 
+@@ -66,6 +58,21 @@ static void __init tegra_cpu_reset_handler_enable(void)
+ 		writel(reg, sb_ctrl);
+ 		wmb();
+ 	}
++}
++
++static void __init tegra_cpu_reset_handler_enable(void)
++{
++	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
++	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
++						tegra_cpu_reset_handler_offset;
++
++	BUG_ON(is_enabled);
++	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
++
++	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
++			tegra_cpu_reset_handler_size);
++
++	tegra_cpu_reset_handler_set(reset_address);
+ 
+ 	is_enabled = true;
+ }
+-- 
+1.8.4
