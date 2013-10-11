@@ -1,18 +1,19 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
-Date: Fri, 11 Oct 2013 11:56:30 +0300
-Message-ID: <5257BD3E.5000707@ti.com>
-References: <20131003054104.8941.88857.stgit@localhost>
- <20131003054221.8941.87801.stgit@localhost> <5256AA7F.8030005@ti.com>
- <20131010160018.GA29913@atomide.com>
- <CACRpkdaG-PQA39XSjKUgM9TyeD7srgm_8s+NazrDKJ0gmNLcwg@mail.gmail.com>
- <20131010162015.GC29913@atomide.com>
- <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
+From: Lennert Buytenhek <buytenh@wantstofly.org>
+Subject: Re: [PATCH 3/8] ARM: l2x0: add Marvell Tauros3 compatible
+Date: Fri, 11 Oct 2013 11:05:32 +0200
+Message-ID: <20131011090532.GU633@wantstofly.org>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1381235073-17134-4-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20131008134100.GD1412@e106331-lin.cambridge.arm.com>
+ <52542D64.5010800@gmail.com> <525433D3.2090906@free-electrons.com>
+ <20131009085026.GD4981@e106331-lin.cambridge.arm.com>
+ <5255AE12.2000205@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5255AE12.2000205@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,65 +23,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prakash Manjunathappa <prakash.pm@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 11:00 AM, Linus Walleij wrote:
-> On Thu, Oct 10, 2013 at 6:20 PM, Tony Lindgren <tony@atomide.com> wrote:
->> * Linus Walleij <linus.walleij@linaro.org> [131010 09:19]:
->>> On Thu, Oct 10, 2013 at 6:00 PM, Tony Lindgren <tony@atomide.com> wrote:
->>>> * Roger Quadros <rogerq@ti.com> [131010 06:32]:
->>>>>
->>>>> I tried testing this with the USB EHCI driver, but I'm not getting wake up interrupts
->>>>> while the system is still running and only the EHCI controller is runtime suspended.
->>>>>
->>>>> It seems we need to somehow call _reconfigure_io_chain() to update the daisy chain
->>>>> whenever the pad wakeup_enable bit is changed.
->>>>
->>>> Sounds like this is on omap3? Have you tried calling pcs_soc->rearm() in the
->>>> pcs_irq_handle() like the comments there suggest? At least for me that keeps
->>>> the wake-up interrupts continuously running on omap3 instead of just idle modes.
->>>
->>> If the rearm() function is calling this _reconfigure_io_chain my comments
->>> on the fact that this is something that should be handled by the pin
->>> control driver still apply I think ....
->>
->> Yes, except that the reconfigure_io_chain registers are in the PRM module, not in
->> the SCM module where the pinctrl registers are.. And that shared PRM interrupt is
->> used mostly for the internal domain wake-ups, so we should keep that in the PRM
->> driver.
+On Wed, Oct 09, 2013 at 09:27:14PM +0200, Sebastian Hesselbarth wrote:
+
+> >>>>>This add a compatible for the Marvell Tauros3 cache controller which
+> >>>>>is compatible with l2x0 cache controllers. While updating the binding
+> >>>>>documentation, clean up the list of possible compatibles.
+> >>>>>
+> >>>>>Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> >>>>>---
 > 
-> That depends.
+> Added Jisheng and Lennert to Cc.
 > 
-> One-iorange-equals-one-driver is a fallacy, especially given that MFD for
-> memory-mapped things exist for a reason.
+> Lennert, while looking for differences between ARM PL310 and
+> Marvell Tauros3 cache controller in a GPL'ed 2.6 kernel source
+> from Asus, I found arch/arm/mm/cache-tauros3.c which states you
+> as the original author. If that is wrong, please ignore this.
 
-+1
-
-Another place I faced a similar problem was the OMAP control module, which contains
-registers for a number of different non related peripherals. (e.g. PHY for USB, SATA,
-Display clock, etc)
-
-> 
-> What the pin control driver should do is control the pins. Whether the registers
-> are spread out in the entire IO-memory does not matter. We did have one system
-> which placed the IO-muxing together with each peripheral (!) and I did
-> still want
-> that to be handled by a single pinctrl driver picking out windows to all these
-> IO-ranges.
-> 
-> Things like the PRM which has (my guess) a gazillion registers related to its
-> deep-core SoC stuff should be handled by things like
-> drivers/mfd/syscon.c, which means it is dead simple for some other driver
-> using "just this one register" in that range to get a handle at it and poke it
-> using syscon_node_to_regmap() (just derference an ampersand ref)
-> syscon_regmap_lookup_by_compatible() (use a compatible string)
-> all returning a regmap * that you can use to poke these registers.
-
-The register handling is fine. But how do we deal with resource handling?
-e.g. the block that has the deep-core registers might need to be clocked or powered
-before the registers can be accessed.
-
-cheers,
--roger
+I'm the original author of cache-tauros2.c, but I've never heard of
+Tauros3, and my name probably ended up in there via cp(1).
