@@ -1,71 +1,78 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: add export with name from dts
-Date: Fri, 11 Oct 2013 12:48:54 +0200
-Message-ID: <CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com>
-References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
+Date: Fri, 11 Oct 2013 14:54:52 +0400
+Message-ID: <5257D8FC.3040405@cogentembedded.com>
+References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au> <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jiri Prchal <jiri.prchal@aksignal.cz>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch must be CC to devicetree@vger.kernel.org as it concerns
-device tree bindings. Please also keep Alexandre Courbot in the loop as
-he's working on GPIO refactorings.
-
-On Fri, Oct 11, 2013 at 12:05 PM, Jiri Prchal <jiri.prchal@aksignal.cz> wrote:
-
-> Add export possibility to sysfs with given name in device tree.
-> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
+On 10/11/2013 01:41 PM, Mark Rutland wrote:
+> On Fri, Oct 11, 2013 at 02:00:35AM +0100, Simon Horman wrote:
+>> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
 >
-> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
+> Cheers!
+>
 
-This is a very terse commit message for something which will have
-a very drastic impact on the Linux kernel and device tree.
+Hi Mark,
 
-> +3) gpio-export
-> +--------------
-> +
-> +gpio-export will allow you to automatically export gpio
+>>
+>> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
+>>> RCAR Gen2 SoC has a different phy which is not compatible with
+>>> the older H1/M1 versions. This adds OF/platform device table
+>>> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+>
+> Is the PHY combined with the rest of the controller, or are they
+> logically separate components in the SoC? I note that the Calxeda
+> Highbank SATA controller driver treats the phy and the controller as
+> separate entities, and describes the way the two are attached (though
+> the driver handles both). Would a similar approach work here?
+>
 
+It seems to be described in the docs as a single entity with the rest of 
+the controller. The phy registers are in the same address space block. 
+We don't need to describe how the phy is attached to the SATA 
+controller. In the future we may need some phy-specific configuration in 
+the device tree. For example, to describe how clock generator is 
+connected to the controller. I think this could be done with optional 
+properties added to the SATA node if needed.
 
-What does this mean? You have to define all terms. And also consider the
-audience. If someone is using device tree on Symbian or Windows,
-what does "export" mean to them? Not all readers of this document
-are Linux implementers.
+> [...]
+>
+>>> +static struct of_device_id sata_rcar_match[] = {
+>>> +	{
+>>> +		.compatible = "renesas,rcar-sata",
+>>> +		.data = (void *)RCAR_SATA
+>>> +	},
+>>> +	{
+>>> +		.compatible = "renesas,sata-r8a7790",
+>>> +		.data = (void *)RCAR_GEN2_SATA
+>>> +	},
+>>> +	{
+>>> +		.compatible = "renesas,sata-r8a7791",
+>>> +		.data = (void *)RCAR_GEN2_SATA
+>>> +	},
+>>> +	{},
+>
+> These bindings will need documentation. A grep of any of these in
+> mainline's Documentation/devicetree shows up nothing (not even the
+> existing "renesas,rcar-sata" string used by the driver.
 
-> +required properties:
-> +- compatible: Should be "gpio-export"
+Indeed.
+Since we need to adjust rcar-sata bindings and add documentation for it, 
+which is not really related to Gen2 phy support, looks like it will be a 
+separate patch.
 
-If this is a Linux-specific concept it should be named "linux-gpio-export"
+>
+> Thanks,
+> Mark.
+>
 
-But overall I'm not happy with this *at all* as the sysfs ABI is already
-enough of a trouble for us. WIth platforms switching to DT-only
-probing it would be perfect to get rid of this sysfs interface altogether.
-
-Two questions:
-
-- What do you think of the approach of just not using this for DT
-  boots, instead we create a new userspace ABI, using e.g. a
-  char device for each GPIO chip like /dev/gpio0, /dev/gpio1 etc
-  and access these using ioctl:s?
-
-- I guess you have a specific system in mind for this? What is the
-  use case? I have seen *way* too many people trying to reimplement
-  drivers/leds/leds-gpio.c
-  drivers/input/keyboard/gpio_keys.c
-  drivers/input/keyboard/gpio_keys_polled.c
-  drivers/power/gpio-charger.c
-  drivers/i2c/busses/i2c-gpio.c
-  drivers/extcon/extcon-gpio.c
-  drivers/spi/spi-gpio.c
-  IN USERSPACE! JUST BECAUSE THEY CAN!
-
->From a kernel developers point of view the kernel shall handle
-hardware, so that is why I'm quite picky about this.
-
-Yours,
-Linus Walleij
+Thanks,
+Val.
