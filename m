@@ -1,82 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
-Date: Fri, 11 Oct 2013 22:24:15 +0200
-Message-ID: <52585E6F.40903@cogentembedded.com>
-References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v8 6/6] mtd: nand: omap: updated devm_xx for all resource
+ allocation and free calls
+Date: Fri, 11 Oct 2013 12:27:29 -0700
+Message-ID: <CAN8TOE9S63a1YdtzS+urTGBoMqrhq83cXXEeGinvQi9=dyUX1Q@mail.gmail.com>
+References: <1381498603-15715-1-git-send-email-pekon@ti.com>
+	<1381498603-15715-7-git-send-email-pekon@ti.com>
+	<20131011181515.GJ23337@ld-irv-0074.broadcom.com>
+	<20131011182840.GW29913@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131011010032.GA13809@verge.net.au>
-Sender: linux-ide-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131011182840.GW29913@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Pekon Gupta <pekon@ti.com>, Mark Rutland <mark.rutland@arm.com>, robherring2@gmail.com, "olof@lixom.net" <olof@lixom.net>, Artem Bityutskiy <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, bcousson@baylibre.com, Avinash Philip <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 11-10-2013 3:00, Simon Horman wrote:
-
-> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
-
-    Note that I did CC then-existing devicetree-discuss list when posting the 
-original driver but we got no feedback from there. That's why the binding 
-documentation is missing.
-
->> RCAR Gen2 SoC has a different phy which is not compatible with
-
-    Hm, the SoCs family is called R-Car, is it so hard to remember? :-)
-
->> the older H1/M1 versions. This adds OF/platform device table
->> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
-
-[...]
-
->> PHY initialization method is chosen based on the device id.
->> Default PHY settings are applied for Gen2 SoC, which should
->> suit the available Gen2 boards.
-
->> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-[skip overquoating, grr :-]
->> @@ -770,8 +823,34 @@ static void sata_rcar_init_controller(struct ata_host *host)
->>   	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
->>   }
+On Fri, Oct 11, 2013 at 11:28 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Brian Norris <computersforpeace@gmail.com> [131011 11:23]:
+>> Hi Pekon,
 >>
->> +static struct of_device_id sata_rcar_match[] = {
->> +	{
->> +		.compatible = "renesas,rcar-sata",
->> +		.data = (void *)RCAR_SATA
->> +	},
->> +	{
->> +		.compatible = "renesas,sata-r8a7790",
->> +		.data = (void *)RCAR_GEN2_SATA
->> +	},
->> +	{
->> +		.compatible = "renesas,sata-r8a7791",
->> +		.data = (void *)RCAR_GEN2_SATA
->> +	},
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
->> +
->> +static const struct platform_device_id sata_rcar_id_table[] = {
->> +	{ "sata_rcar",		RCAR_SATA },
->> +	{ "sata-r8a7790",	RCAR_GEN2_SATA },
->> +	{ "sata-r8a7791",	RCAR_GEN2_SATA },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(platform, sata_rcat_id_table);
->> +
+>> On Fri, Oct 11, 2013 at 07:06:43PM +0530, Pekon Gupta wrote:
+>> > "Managed Device Resource" or devm_xx calls takes care of automatic freeing
+>> > of the resource in case of:
+>> > - failure during driver probe
+>> > - failure during resource allocation
+>> > - detaching or unloading of driver module (rmmod)
+>> > Reference: Documentation/driver-model/devres.txt
+>> >
+>> > Though OMAP NAND driver handles freeing of resource allocation in most of
+>> > the cases, but using devm_xx provides more clean and effortless approach
+>> > to handle all such cases.
+>>
+>> Judging by your patch, I think you missed the point of the devm_*
+>> managed functions. They are useful because you don't need to do any of
+>> the cleanup (kfree(), iounmap(), etc.) yourself. I'll note the changes
+>> that are necessary below, but seeing as this is an add-on to your patch
+>> series, I may merge the rest of series without this, and if so, you can
+>> just resubmit this patch separately.
+>
+> FYI, the .dts changes should be queued separately by Benoit to avoid
+> pointless merge conflicts. The arch/arm/mach-omap2/gpmc.c changes I
+> need to look, hopefully I can ack those for you today so you can take
+> the code related changes into the MTD tree.
 
-> I think it would be better to add sata-r8a7779 and
-> sata-r8a7778 to handle the GEN1 hardware and deprecate rcar-sata.
+Why are you replying to this patch, instead of the DTS?
 
-    R8A7778 doesn't have the SATA controller AFAIR.
+Also, I don't think all of this code is ready. There are several
+comments from weeks ago that Pekon hasn't addressed. It's possible the
+DT binding changes can go in, but not some of the later patches, yet.
 
-> Less importantly I think it would be better to name RCAR_SATA
-> as RCAR_GEN1_SATA.
-
-    Now that we have Gen2, yes.
-
-WBR, Sergei
-
+Brian
