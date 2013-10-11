@@ -1,48 +1,48 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Fri, 11 Oct 2013 21:23:25 +0300
-Message-ID: <5258421D.8030006@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com> <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com>
+From: "Sherman Yin" <syin@broadcom.com>
+Subject: RE: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Fri, 11 Oct 2013 18:25:16 +0000
+Message-ID: <051069C10411E24D9749790C498526FA1BE03D43@SJEXCHMB12.corp.ad.broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <1380846199-12829-4-git-send-email-syin@broadcom.com>
+ <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
+ <051069C10411E24D9749790C498526FA1BE027EA@SJEXCHMB12.corp.ad.broadcom.com>
+ <CACRpkdarPC+LxAAezT2LRiz=Y2RduUsb75YYHUgq7HqePzkD3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: text/plain;
+ charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdarPC+LxAAezT2LRiz=Y2RduUsb75YYHUgq7HqePzkD3Q@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 08:54 PM, Paul Walmsley wrote:
-> On Thu, 10 Oct 2013, Tero Kristo wrote:
->
->> On 10/09/2013 09:59 PM, Paul Walmsley wrote:
->>> Eh, one correction:
+>>>> +static const struct capri_cfg_param capri_pinconf_params[] = {
+>>>> +       {"brcm,hysteresis",     CAPRI_PINCONF_PARAM_HYST},
+>>>> +       {"brcm,pull",           CAPRI_PINCONF_PARAM_PULL},
+>>>> +       {"brcm,slew",           CAPRI_PINCONF_PARAM_SLEW},
+>>>> +       {"brcm,input_dis",      CAPRI_PINCONF_PARAM_INPUT_DIS},
+>>>> +       {"brcm,drive_str",      CAPRI_PINCONF_PARAM_DRV_STR},
+>>>> +       {"brcm,pull_up_str",    CAPRI_PINCONF_PARAM_PULL_UP_STR},
+>>>> +       {"brcm,mode",           CAPRI_PINCONF_PARAM_MODE},
+>>>> +};
 >>>
->>> On Wed, 9 Oct 2013, Paul Walmsley wrote:
->>>
->>>> We could easily wind up with kernels that won't boot at all when used
->>>> with newer DT data.
->>>
->>> This is a misstatement of the issue: the concern here is that newer
->>> kernels may not boot at all with older DT data - which could easily be in
->>> locked areas of the flash or firmware.
+>>>As well as all this stuff...
 >>
->> I wonder who would be crazy enough to put DT data into a locked area, and to
->> what purpose. If you can update the kernel, there is no point locking down DT
->> data, this will just cause you unnecessary misery.
+>> OK.  Will see if I can find something suitable for "input disable" and "mode"
 >
-> The DT data will be used by bootloaders also :-(
+>Let's discuss this. What exactly does "input disable" and "mode"
+>mean, in electrical terms?
 >
-> In situations where the bootloaders are signed and locked, the security
-> people are also insisting that the DT data be signed and locked.
+>When you come down to what actually happens it may turn out that
+>"input disable" is PIN_CONFIG_OUTPUT, which implicitly turns
+>off input does it not?
 
-Well, even if you sign something, you can still update it. Writing any 
-software to true OTP memory is one way to commit suicide IMO. How many 
-nasty bugs have you seen with ROM code? Also, if people want to make 
-their custom security solutions which are not supported by the kernel, 
-why should the kernel care about it? We don't know the details, and 
-can't influence the design, so we can't prepare for it anyway.
+I'm going to verify the details with our hardware team first, and will let you
+know if we think we can use one of the existing generic parameters or if we
+need a new one.
 
--Tero
-
+Regards,
+Sherman
