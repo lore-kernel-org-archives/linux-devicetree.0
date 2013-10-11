@@ -1,322 +1,560 @@
-From: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Subject: [PATCH] gpio: add export with name from dts
-Date: Fri, 11 Oct 2013 13:03:40 +0200
-Message-ID: <1381489420-12578-1-git-send-email-jiri.prchal@aksignal.cz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 13/17] clk: at91: add PMC usb clock
+Date: Fri, 11 Oct 2013 13:15:23 +0200
+Message-ID: <1381490123-14560-1-git-send-email-b.brezillon@overkiz.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add export possibility to sysfs with given name in device tree.
-Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
+This patch adds new at91 usb clock implementation using common clk framework.
+This clock is used to clock usb ports (ohci, ehci and udc).
 
-Signed-off-by: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio.txt |   61 +++++++++++++++++++++++
- drivers/gpio/gpiolib-of.c                       |   61 +++++++++++++++++++++++
- drivers/gpio/gpiolib.c                          |   27 ++++++----
- include/asm-generic/gpio.h                      |    6 ++-
- include/linux/gpio.h                            |   23 ++++++++-
- 5 files changed, 166 insertions(+), 12 deletions(-)
+ arch/arm/mach-at91/Kconfig |   11 ++
+ drivers/clk/at91/Makefile  |    1 +
+ drivers/clk/at91/clk-usb.c |  400 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/at91/pmc.c     |   11 ++
+ drivers/clk/at91/pmc.h     |    9 +
+ 5 files changed, 432 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-usb.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 6cec6ff..03c4ef5 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -117,3 +117,64 @@ Example:
- Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
- pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
- pins 50..59.
-+
-+
-+3) gpio-export
-+--------------
-+
-+gpio-export will allow you to automatically export gpio
-+
-+required properties:
-+- compatible: Should be "gpio-export"
-+
-+in each child node will reprensent a gpio or if no name is specified
-+a list of gpio to export
-+
-+required properties:
-+- gpios: gpio to export
-+
-+optional properties:
-+ - gpio-export,name: export name
-+ - gpio-export,output: to set the as output with default value
-+ 		       if no present gpio as input
-+ - pio-export,direction_may_change: boolean to allow the direction to be controllable
-+
-+Example:
-+
-+
-+gpio_export {
-+	compatible = "gpio-export";
-+	#size-cells = <0>;
-+
-+	in {
-+		gpio-export,name = "in";
-+		gpios = <&pioC 20 0>;
-+	};
-+
-+	out {
-+		gpio-export,name = "out";
-+		gpio-export,output = <1>;
-+		gpio-export,direction_may_change;
-+		gpios = <&pioC 21 0>;
-+	};
-+
-+	in_out {
-+		gpio-export,name = "in_out";
-+		gpio-export,direction_may_change;
-+		gpios = <&pioC 21 0>;
-+	};
-+
-+	gpios_in {
-+		gpios = <&pioB 0 0
-+			 &pioB 3 0
-+			 &pioC 4 0>;
-+		gpio-export,direction_may_change;
-+	};
-+
-+	gpios_out {
-+		gpios = <&pioB 1 0
-+			 &pioB 2 0
-+			 &pioC 3 0>;
-+		gpio-export,output = <1>;
-+	};
-+};
-\ No newline at end of file
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 0dfaf20..1a43d8b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -21,6 +21,8 @@
- #include <linux/of_gpio.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/slab.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
+diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+index 6ad37da..b76dc4c 100644
+--- a/arch/arm/mach-at91/Kconfig
++++ b/arch/arm/mach-at91/Kconfig
+@@ -3,6 +3,9 @@ if ARCH_AT91
+ config HAVE_AT91_UTMI
+ 	bool
  
- /* Private data structure for of_gpiochip_find_and_xlate */
- struct gg_data {
-@@ -243,3 +245,62 @@ void of_gpiochip_remove(struct gpio_chip *chip)
- 	if (chip->of_node)
- 		of_node_put(chip->of_node);
- }
++config HAVE_AT91_USB_CLK
++	bool
 +
-+static struct of_device_id gpio_export_ids[] = {
-+	{ .compatible = "gpio-export" },
-+	{ /* sentinel */ }
+ config HAVE_AT91_DBGU0
+ 	bool
+ 
+@@ -82,6 +85,7 @@ config SOC_SAMA5D3
+ 	select HAVE_AT91_DBGU1
+ 	select AT91_USE_OLD_CLK
+ 	select HAVE_AT91_UTMI
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using one of Atmel's SAMA5D3 family SoC.
+ 	  This support covers SAMA5D31, SAMA5D33, SAMA5D34, SAMA5D35.
+@@ -96,12 +100,14 @@ config SOC_AT91RM9200
+ 	select MULTI_IRQ_HANDLER
+ 	select SPARSE_IRQ
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_USB_CLK
+ 
+ config SOC_AT91SAM9260
+ 	bool "AT91SAM9260, AT91SAM9XE or AT91SAM9G20"
+ 	select HAVE_AT91_DBGU0
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9260, AT91SAM9XE
+ 	  or AT91SAM9G20 SoC.
+@@ -112,6 +118,7 @@ config SOC_AT91SAM9261
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9261 or AT91SAM9G10 SoC.
+ 
+@@ -121,6 +128,7 @@ config SOC_AT91SAM9263
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_USB_CLK
+ 
+ config SOC_AT91SAM9RL
+ 	bool "AT91SAM9RL"
+@@ -137,6 +145,7 @@ config SOC_AT91SAM9G45
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
+ 	select HAVE_AT91_UTMI
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9G45 family SoC.
+ 	  This support covers AT91SAM9G45, AT91SAM9G46, AT91SAM9M10 and AT91SAM9M11.
+@@ -148,6 +157,7 @@ config SOC_AT91SAM9X5
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
+ 	select HAVE_AT91_UTMI
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using one of Atmel's AT91SAM9x5 family SoC.
+ 	  This means that your SAM9 name finishes with a '5' (except if it is
+@@ -161,6 +171,7 @@ config SOC_AT91SAM9N12
+ 	select HAVE_FB_ATMEL
+ 	select SOC_AT91SAM9
+ 	select AT91_USE_OLD_CLK
++	select HAVE_AT91_USB_CLK
+ 	help
+ 	  Select this if you are using Atmel's AT91SAM9N12 SoC.
+ 
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index a824883..61db058 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -8,3 +8,4 @@ obj-y += clk-system.o clk-peripheral.o
+ 
+ obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
+ obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
++obj-$(CONFIG_HAVE_AT91_USB_CLK)		+= clk-usb.o
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+new file mode 100644
+index 0000000..0454555
+--- /dev/null
++++ b/drivers/clk/at91/clk-usb.c
+@@ -0,0 +1,400 @@
++/*
++ * drivers/clk/at91/clk-usb.c
++ *
++ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/clk/at91_pmc.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/io.h>
++
++#include "pmc.h"
++
++#define USB_SOURCE_MAX		2
++
++#define SAM9X5_USB_DIV_SHIFT	8
++#define SAM9X5_USB_MAX_DIV	0xf
++
++#define RM9200_USB_DIV_SHIFT	28
++#define RM9200_USB_DIV_TAB_SIZE	4
++
++struct at91sam9x5_clk_usb {
++	struct clk_hw hw;
++	struct at91_pmc *pmc;
 +};
 +
-+static int __init of_gpio_export_probe(struct platform_device *pdev)
++#define to_at91sam9x5_clk_usb(hw) \
++	container_of(hw, struct at91sam9x5_clk_usb, hw)
++
++struct at91rm9200_clk_usb {
++	struct clk_hw hw;
++	struct at91_pmc *pmc;
++	u32 divisors[4];
++};
++
++#define to_at91rm9200_clk_usb(hw) \
++	container_of(hw, struct at91rm9200_clk_usb, hw)
++
++static unsigned long at91sam9x5_clk_usb_recalc_rate(struct clk_hw *hw,
++						    unsigned long parent_rate)
 +{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *cnp;
-+	u32 val;
-+	int nb = 0;
++	u32 tmp;
++	u8 usbdiv;
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
 +
-+	for_each_child_of_node(np, cnp) {
-+		const char *name = NULL;
-+		int gpio;
-+		bool dmc;
-+		int max_gpio = 1;
-+		int i;
++	tmp = pmc_read(pmc, AT91_PMC_USB);
++	usbdiv = (tmp & AT91_PMC_OHCIUSBDIV) >> SAM9X5_USB_DIV_SHIFT;
++	return parent_rate / (usbdiv + 1);
++}
 +
-+		of_property_read_string(cnp, "gpio-export,name", &name);
++static long at91sam9x5_clk_usb_round_rate(struct clk_hw *hw, unsigned long rate,
++					  unsigned long *parent_rate)
++{
++	unsigned long div;
++	unsigned long bestrate;
++	unsigned long tmp;
 +
-+		if (!name)
-+			max_gpio = of_gpio_count(cnp);
++	if (rate >= *parent_rate)
++		return *parent_rate;
 +
-+		for (i = 0; i < max_gpio; i++) {
-+			gpio = of_get_gpio(cnp, i);
-+			if (devm_gpio_request(&pdev->dev, gpio, name ? name : of_node_full_name(np)))
-+				continue;
++	div = *parent_rate / rate;
++	if (div >= SAM9X5_USB_MAX_DIV)
++		return *parent_rate / (SAM9X5_USB_MAX_DIV + 1);
 +
-+			if (!of_property_read_u32(cnp, "gpio-export,output", &val))
-+				gpio_direction_output(gpio, val);
-+			else
-+				gpio_direction_input(gpio);
++	bestrate = *parent_rate / div;
++	tmp = *parent_rate / (div + 1);
++	if (bestrate - rate > rate - tmp)
++		bestrate = tmp;
 +
-+			dmc = of_property_read_bool(np, "gpio-export,direction_may_change");
-+			gpio_export_with_name(gpio, dmc, name);
-+			nb++;
-+		}
-+	}
++	return bestrate;
++}
 +
-+	dev_info(&pdev->dev, "%d gpio(s) exported\n", nb);
++static int at91sam9x5_clk_usb_set_parent(struct clk_hw *hw, u8 index)
++{
++	u32 tmp;
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++
++	if (index > 1)
++		return -EINVAL;
++	tmp = pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_USBS;
++	if (index)
++		tmp |= AT91_PMC_USBS;
++	pmc_write(pmc, AT91_PMC_USB, tmp);
++	return 0;
++}
++
++static u8 at91sam9x5_clk_usb_get_parent(struct clk_hw *hw)
++{
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++
++	return pmc_read(pmc, AT91_PMC_USB) & AT91_PMC_USBS;
++}
++
++static int at91sam9x5_clk_usb_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	u32 tmp;
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++	unsigned long div = parent_rate / rate;
++
++	if (parent_rate % rate || div < 1 || div >= SAM9X5_USB_MAX_DIV)
++		return -EINVAL;
++
++	tmp = pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_OHCIUSBDIV;
++	tmp |= (div - 1) << SAM9X5_USB_DIV_SHIFT;
++	pmc_write(pmc, AT91_PMC_USB, tmp);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver gpio_export_driver = {
-+	.driver		= {
-+		.name		= "gpio-export",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(gpio_export_ids),
-+	},
++static const struct clk_ops at91sam9x5_usb_ops = {
++	.recalc_rate = at91sam9x5_clk_usb_recalc_rate,
++	.round_rate = at91sam9x5_clk_usb_round_rate,
++	.get_parent = at91sam9x5_clk_usb_get_parent,
++	.set_parent = at91sam9x5_clk_usb_set_parent,
++	.set_rate = at91sam9x5_clk_usb_set_rate,
 +};
 +
-+static int __init of_gpio_export_init(void)
++static int at91sam9n12_clk_usb_enable(struct clk_hw *hw)
 +{
-+	return platform_driver_probe(&gpio_export_driver, of_gpio_export_probe);
-+}
-+device_initcall(of_gpio_export_init);
-\ No newline at end of file
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 86ef346..c7494d1 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -96,7 +96,8 @@ static int gpiod_get_value(const struct gpio_desc *desc);
- static void gpiod_set_value(struct gpio_desc *desc, int value);
- static int gpiod_cansleep(const struct gpio_desc *desc);
- static int gpiod_to_irq(const struct gpio_desc *desc);
--static int gpiod_export(struct gpio_desc *desc, bool direction_may_change);
-+static int gpiod_export_with_name(struct gpio_desc *desc,
-+				  bool direction_may_change, const char *name);
- static int gpiod_export_link(struct device *dev, const char *name,
- 			     struct gpio_desc *desc);
- static int gpiod_sysfs_set_active_low(struct gpio_desc *desc, int value);
-@@ -674,7 +675,7 @@ static ssize_t export_store(struct class *class,
- 			status = -ENODEV;
- 		goto done;
- 	}
--	status = gpiod_export(desc, true);
-+	status = gpiod_export_with_name(desc, true, NULL);
- 	if (status < 0)
- 		gpiod_free(desc);
- 	else
-@@ -736,9 +737,10 @@ static struct class gpio_class = {
- 
- 
- /**
-- * gpio_export - export a GPIO through sysfs
-+ * gpiod_export_with_name - export a GPIO through sysfs
-  * @gpio: gpio to make available, already requested
-  * @direction_may_change: true if userspace may change gpio direction
-+ * @name: gpio name
-  * Context: arch_initcall or later
-  *
-  * When drivers want to make a GPIO accessible to userspace after they
-@@ -750,7 +752,8 @@ static struct class gpio_class = {
-  *
-  * Returns zero on success, else an error.
-  */
--static int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
-+int gpiod_export_with_name(struct gpio_desc *desc, bool direction_may_change,
-+			  const char *name)
- {
- 	unsigned long		flags;
- 	int			status;
-@@ -788,7 +791,9 @@ static int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	spin_unlock_irqrestore(&gpio_lock, flags);
- 
- 	offset = gpio_chip_hwgpio(desc);
--	if (desc->chip->names && desc->chip->names[offset])
-+	if (name)
-+		ioname = name;
-+	else if (desc->chip->names && desc->chip->names[offset])
- 		ioname = desc->chip->names[offset];
- 
- 	dev = device_create(&gpio_class, desc->chip->dev, MKDEV(0, 0),
-@@ -829,11 +834,13 @@ fail_unlock:
- 	return status;
- }
- 
--int gpio_export(unsigned gpio, bool direction_may_change)
-+int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-+			  const char *name)
- {
--	return gpiod_export(gpio_to_desc(gpio), direction_may_change);
-+	return gpiod_export_with_name(gpio_to_desc(gpio), direction_may_change,
-+				      name);
- }
--EXPORT_SYMBOL_GPL(gpio_export);
-+EXPORT_SYMBOL_GPL(gpio_export_with_name);
- 
- static int match_export(struct device *dev, const void *data)
- {
-@@ -1531,7 +1538,9 @@ int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
- 		goto free_gpio;
- 
- 	if (flags & GPIOF_EXPORT) {
--		err = gpiod_export(desc, flags & GPIOF_EXPORT_CHANGEABLE);
-+		err = gpiod_export_with_name(desc,
-+					     flags & GPIOF_EXPORT_CHANGEABLE,
-+					     NULL);
- 		if (err)
- 			goto free_gpio;
- 	}
-diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-index bde6469..d0970e3 100644
---- a/include/asm-generic/gpio.h
-+++ b/include/asm-generic/gpio.h
-@@ -202,7 +202,8 @@ extern void gpio_free_array(const struct gpio *array, size_t num);
-  * A sysfs interface can be exported by individual drivers if they want,
-  * but more typically is configured entirely from userspace.
-  */
--extern int gpio_export(unsigned gpio, bool direction_may_change);
-+extern int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-+				 const char *name);
- extern int gpio_export_link(struct device *dev, const char *name,
- 			unsigned gpio);
- extern int gpio_sysfs_set_active_low(unsigned gpio, int value);
-@@ -284,7 +285,8 @@ struct device;
- 
- /* sysfs support is only available with gpiolib, where it's optional */
- 
--static inline int gpio_export(unsigned gpio, bool direction_may_change)
-+static inline int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-+					const char *name)
- {
- 	return -ENOSYS;
- }
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 552e3f4..12a6cd2 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -169,7 +169,8 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
- 	WARN_ON(1);
- }
- 
--static inline int gpio_export(unsigned gpio, bool direction_may_change)
-+static inline int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-+					const char *name)
- {
- 	/* GPIO can never have been requested or set as {in,out}put */
- 	WARN_ON(1);
-@@ -236,4 +237,24 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 			  unsigned long flags, const char *label);
- void devm_gpio_free(struct device *dev, unsigned int gpio);
- 
-+/**
-+ * gpio_export - export a GPIO through sysfs
-+ * @gpio: gpio to make available, already requested
-+ * @direction_may_change: true if userspace may change gpio direction
-+ * Context: arch_initcall or later
-+ *
-+ * When drivers want to make a GPIO accessible to userspace after they
-+ * have requested it -- perhaps while debugging, or as part of their
-+ * public interface -- they may use this routine.  If the GPIO can
-+ * change direction (some can't) and the caller allows it, userspace
-+ * will see "direction" sysfs attribute which may be used to change
-+ * the gpio's direction.  A "value" attribute will always be provided.
-+ *
-+ * Returns zero on success, else an error.
-+ */
-+static inline int gpio_export(unsigned gpio,bool direction_may_change)
-+{
-+	return gpio_export_with_name(gpio, direction_may_change, NULL);
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++
++	pmc_write(pmc, AT91_PMC_USB,
++		  pmc_read(pmc, AT91_PMC_USB) | AT91_PMC_USBS);
++	return 0;
 +}
 +
- #endif /* __LINUX_GPIO_H */
++static void at91sam9n12_clk_usb_disable(struct clk_hw *hw)
++{
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++
++	pmc_write(pmc, AT91_PMC_USB,
++		  pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_USBS);
++}
++
++static int at91sam9n12_clk_usb_is_enabled(struct clk_hw *hw)
++{
++	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++
++	return !!(pmc_read(pmc, AT91_PMC_USB) & AT91_PMC_USBS);
++}
++
++static const struct clk_ops at91sam9n12_usb_ops = {
++	.enable = at91sam9n12_clk_usb_enable,
++	.disable = at91sam9n12_clk_usb_disable,
++	.is_enabled = at91sam9n12_clk_usb_is_enabled,
++	.recalc_rate = at91sam9x5_clk_usb_recalc_rate,
++	.round_rate = at91sam9x5_clk_usb_round_rate,
++	.set_rate = at91sam9x5_clk_usb_set_rate,
++};
++
++static struct clk * __init
++at91sam9x5_clk_register_usb(struct at91_pmc *pmc, const char *name,
++			    const char **parent_names, u8 num_parents)
++{
++	struct at91sam9x5_clk_usb *usb;
++	struct clk *clk = NULL;
++	struct clk_init_data init;
++
++	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
++	if (!usb)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &at91sam9x5_usb_ops;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
++	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
++
++	usb->hw.init = &init;
++	usb->pmc = pmc;
++
++	clk = clk_register(NULL, &usb->hw);
++	if (IS_ERR(clk))
++		kfree(usb);
++
++	return clk;
++}
++
++static struct clk * __init
++at91sam9n12_clk_register_usb(struct at91_pmc *pmc, const char *name,
++			     const char *parent_name)
++{
++	struct at91sam9x5_clk_usb *usb;
++	struct clk *clk = NULL;
++	struct clk_init_data init;
++
++	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
++	if (!usb)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &at91sam9n12_usb_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	init.flags = CLK_SET_RATE_GATE;
++
++	usb->hw.init = &init;
++	usb->pmc = pmc;
++
++	clk = clk_register(NULL, &usb->hw);
++	if (IS_ERR(clk))
++		kfree(usb);
++
++	return clk;
++}
++
++static unsigned long at91rm9200_clk_usb_recalc_rate(struct clk_hw *hw,
++						    unsigned long parent_rate)
++{
++	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++	u32 tmp;
++	u8 usbdiv;
++
++	tmp = pmc_read(pmc, AT91_CKGR_PLLBR);
++	usbdiv = (tmp & AT91_PMC_USBDIV) >> RM9200_USB_DIV_SHIFT;
++	if (usb->divisors[usbdiv])
++		return parent_rate / usb->divisors[usbdiv];
++
++	return 0;
++}
++
++static long at91rm9200_clk_usb_round_rate(struct clk_hw *hw, unsigned long rate,
++					  unsigned long *parent_rate)
++{
++	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
++	unsigned long bestrate = 0;
++	int bestdiff = -1;
++	unsigned long tmprate;
++	int tmpdiff;
++	int i = 0;
++
++	for (i = 0; i < 4; i++) {
++		if (!usb->divisors[i])
++			continue;
++		tmprate = *parent_rate / usb->divisors[i];
++		if (tmprate < rate)
++			tmpdiff = rate - tmprate;
++		else
++			tmpdiff = tmprate - rate;
++
++		if (bestdiff < 0 || bestdiff > tmpdiff) {
++			bestrate = tmprate;
++			bestdiff = tmpdiff;
++		}
++
++		if (!bestdiff)
++			break;
++	}
++
++	return bestrate;
++}
++
++static int at91rm9200_clk_usb_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	u32 tmp;
++	int i;
++	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
++	struct at91_pmc *pmc = usb->pmc;
++	unsigned long div = parent_rate / rate;
++
++	if (parent_rate % rate)
++		return -EINVAL;
++	for (i = 0; i < RM9200_USB_DIV_TAB_SIZE; i++) {
++		if (usb->divisors[i] == div) {
++			tmp = pmc_read(pmc, AT91_CKGR_PLLBR) &
++			      ~AT91_PMC_USBDIV;
++			tmp |= i << RM9200_USB_DIV_SHIFT;
++			pmc_write(pmc, AT91_CKGR_PLLBR, tmp);
++			return 0;
++		}
++	}
++
++	return -EINVAL;
++}
++
++static const struct clk_ops at91rm9200_usb_ops = {
++	.recalc_rate = at91rm9200_clk_usb_recalc_rate,
++	.round_rate = at91rm9200_clk_usb_round_rate,
++	.set_rate = at91rm9200_clk_usb_set_rate,
++};
++
++static struct clk * __init
++at91rm9200_clk_register_usb(struct at91_pmc *pmc, const char *name,
++			    const char *parent_name, const u32 *divisors)
++{
++	struct at91rm9200_clk_usb *usb;
++	struct clk *clk = NULL;
++	struct clk_init_data init;
++
++	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
++	if (!usb)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &at91rm9200_usb_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	init.flags = 0;
++
++	usb->hw.init = &init;
++	usb->pmc = pmc;
++	memcpy(usb->divisors, divisors, sizeof(usb->divisors));
++
++	clk = clk_register(NULL, &usb->hw);
++	if (IS_ERR(clk))
++		kfree(usb);
++
++	return clk;
++}
++
++void __init of_at91sam9x5_clk_usb_setup(struct device_node *np,
++					struct at91_pmc *pmc)
++{
++	struct clk *clk;
++	int i;
++	int num_parents;
++	const char *parent_names[USB_SOURCE_MAX];
++	const char *name = np->name;
++
++	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
++	if (num_parents <= 0 || num_parents > USB_SOURCE_MAX)
++		return;
++
++	for (i = 0; i < num_parents; i++) {
++		parent_names[i] = of_clk_get_parent_name(np, i);
++		if (!parent_names[i])
++			return;
++	}
++
++	of_property_read_string(np, "clock-output-names", &name);
++
++	clk = at91sam9x5_clk_register_usb(pmc, name, parent_names, num_parents);
++	if (IS_ERR(clk))
++		return;
++
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
++void __init of_at91sam9n12_clk_usb_setup(struct device_node *np,
++					 struct at91_pmc *pmc)
++{
++	struct clk *clk;
++	const char *parent_name;
++	const char *name = np->name;
++
++	parent_name = of_clk_get_parent_name(np, 0);
++	if (!parent_name)
++		return;
++
++	of_property_read_string(np, "clock-output-names", &name);
++
++	clk = at91sam9n12_clk_register_usb(pmc, name, parent_name);
++	if (IS_ERR(clk))
++		return;
++
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
++void __init of_at91rm9200_clk_usb_setup(struct device_node *np,
++					struct at91_pmc *pmc)
++{
++	struct clk *clk;
++	const char *parent_name;
++	const char *name = np->name;
++	u32 divisors[4] = {0, 0, 0, 0};
++
++	parent_name = of_clk_get_parent_name(np, 0);
++	if (!parent_name)
++		return;
++
++	of_property_read_u32_array(np, "atmel,clk-divisors", divisors, 4);
++	if (!divisors[0])
++		return;
++
++	of_property_read_string(np, "clock-output-names", &name);
++
++	clk = at91rm9200_clk_register_usb(pmc, name, parent_name, divisors);
++	if (IS_ERR(clk))
++		return;
++
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index 8802999..dc0b1b6 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -279,6 +279,17 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
+ 		.data = of_at91sam9x5_clk_utmi_setup,
+ 	},
+ #endif
++	/* USB clock */
++#if defined(CONFIG_HAVE_AT91_USB_CLK)
++	{
++		.compatible = "atmel,at91rm9200-clk-usb",
++		.data = of_at91rm9200_clk_usb_setup,
++	},
++	{
++		.compatible = "atmel,at91sam9x5-clk-usb",
++		.data = of_at91sam9x5_clk_usb_setup,
++	},
++#endif
+ 	{ /*sentinel*/ }
+ };
+ 
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 3ba9503..eba7334 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -96,4 +96,13 @@ extern void __init of_at91sam9x5_clk_utmi_setup(struct device_node *np,
+ 						struct at91_pmc *pmc);
+ #endif
+ 
++#if defined(CONFIG_HAVE_AT91_USB_CLK)
++extern void __init of_at91rm9200_clk_usb_setup(struct device_node *np,
++					       struct at91_pmc *pmc);
++extern void __init of_at91sam9x5_clk_usb_setup(struct device_node *np,
++					       struct at91_pmc *pmc);
++extern void __init of_at91sam9n12_clk_usb_setup(struct device_node *np,
++						struct at91_pmc *pmc);
++#endif
++
+ #endif /* __PMC_H_ */
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
