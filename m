@@ -1,47 +1,50 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Fri, 11 Oct 2013 10:16:49 +0200
-Message-ID: <CACRpkdb5UTtUsbVOnN_K-qfj8uBwn5tr94XfV5J__zTfxca4Mw@mail.gmail.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<522FBED9.9000305@collabora.co.uk>
-	<5230C7F6.3080803@wwwdotorg.org>
-	<3653629.tapNZSuWhS@lem-wkst-02>
-	<52373B34.4060709@wwwdotorg.org>
-	<CACRpkdY=cgtf6_eypfAAv-fvmiNgAYyz4StTgDie5THsbrcumg@mail.gmail.com>
-	<5240A2D3.20105@wwwdotorg.org>
-	<CACRpkdZ7E7MGppbkTiObvTDHdmphnbysMKVc1OZjsPXKVuKttQ@mail.gmail.com>
-	<5241C4DB.9090200@wwwdotorg.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v6] extcon: palmas: Added a new compatible type
+ *ti,palmas-usb-vid*
+Date: Fri, 11 Oct 2013 17:23:18 +0900
+Message-ID: <5257B576.3060800@samsung.com>
+References: <1381408647-24653-1-git-send-email-kishon@ti.com>
+ <5256A773.6060807@nvidia.com> <5257977C.1030108@ti.com>
+ <5257A36D.80902@samsung.com> <5257AE43.4020902@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5241C4DB.9090200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org, Laur
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <5257AE43.4020902@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 6:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 09/24/2013 02:31 AM, Linus Walleij wrote:
->> On Mon, Sep 23, 2013 at 10:21 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> ...
->>> Perhaps rather than having the gpio_chip/irq_chip drivers physically
->>> implement a function which calls this common code, they could set some
->>> flags/data/... in the struct gpio_chip/irq_chip indicating that they
->>> desire the core code that implements the error-checking to be enabled.
+On 10/11/2013 04:52 PM, Kishon Vijay Abraham I wrote:
+> Hi Chanwoo,
+> 
+> On Friday 11 October 2013 12:36 PM, Chanwoo Choi wrote:
+>> On 10/11/2013 03:15 PM, Kishon Vijay Abraham I wrote:
+>>> On Thursday 10 October 2013 06:41 PM, Laxman Dewangan wrote:
+>>>> On Thursday 10 October 2013 06:07 PM, Kishon Vijay Abraham I wrote:
+>>>>> The Palmas device contains only a USB VBUS-ID detector, so added a
+>>>>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
+>>>>> types for backward compatibility.
+>>>>>
+>>>> I dont have much issue on this nomenclature but just second thought:
+>>>>
+>>>> The Palmas USB module is capable of detection VBUS, ID-GND, ID-RA, ID-RB, ID-RC
+>>>> and ID-FLOAT as per BC1.2.
+>>>> This sub-module only detect the cable, does nothing more than this.
+>>>> In this case, should we say "ti,palmas-usb-extcon"?
+>>>> Again extcon is linux specific terminology and this can be defer.
+>>>
+>>> I don't mind either way. Chanwoo?
 >>
->> I think it should more be like a function they can call to flag
->> a GPIO as used for IRQ.
->
-> For the record, that's pretty much exactly what I meant by implementing
-> it in the drivers. The irq_chip driver knows when the IRQ has been
-> requested, and calls some gpiolib function to mark the GPIO as
-> in-use-as-an-IRQ.
+>> The EXTCON is subsystem name. I don't prefer to use 'extcon' word on device name.
+>> I agree Kishon opinion.
+> 
+> Cool.. can you this patch as-is?
+> 
 
-Ah OK we're on the same page, this is progressing :-)
+OK, applied it.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Chanwoo Choi
+
