@@ -1,50 +1,86 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
-Date: Fri, 11 Oct 2013 17:46:12 +0300
-Message-ID: <52580F34.8030809@ti.com>
-References: <1381402195-29257-1-git-send-email-kishon@ti.com> <1381402195-29257-2-git-send-email-kishon@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
+Date: Fri, 11 Oct 2013 15:47:41 +0100
+Message-ID: <20131011144741.GA16477@e106331-lin.cambridge.arm.com>
+References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131011010032.GA13809@verge.net.au>
+ <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
+ <5257D8FC.3040405@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381402195-29257-2-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5257D8FC.3040405@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine <valentine.barshak@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
-> From: George Cherian <george.cherian@ti.com>
+On Fri, Oct 11, 2013 at 11:54:52AM +0100, Valentine wrote:
+> On 10/11/2013 01:41 PM, Mark Rutland wrote:
+> > On Fri, Oct 11, 2013 at 02:00:35AM +0100, Simon Horman wrote:
+> >> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
+> >
+> > Cheers!
+> >
 > 
-> Added dr_mode property in dwc3 and set its default mode to device.
+> Hi Mark,
+> 
+> >>
+> >> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
+> >>> RCAR Gen2 SoC has a different phy which is not compatible with
+> >>> the older H1/M1 versions. This adds OF/platform device table
+> >>> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+> >
+> > Is the PHY combined with the rest of the controller, or are they
+> > logically separate components in the SoC? I note that the Calxeda
+> > Highbank SATA controller driver treats the phy and the controller as
+> > separate entities, and describes the way the two are attached (though
+> > the driver handles both). Would a similar approach work here?
+> >
+> 
+> It seems to be described in the docs as a single entity with the rest of 
+> the controller. The phy registers are in the same address space block. 
+> We don't need to describe how the phy is attached to the SATA 
+> controller. In the future we may need some phy-specific configuration in 
+> the device tree. For example, to describe how clock generator is 
+> connected to the controller. I think this could be done with optional 
+> properties added to the SATA node if needed.
 
-If there is a specific reason why this is not set to "otg", we need
-to explain it here.
-
-AFAIK the port is meant to be used as OTG port.
+As they're tightly coupled and share the same register block, I guess
+describing them together is ok. Is that clock example hypothetical, or
+something we _will_ need in future?
 
 > 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  arch/arm/boot/dts/omap5.dtsi |    1 +
->  1 file changed, 1 insertion(+)
+> > [...]
+> >
+> >>> +static struct of_device_id sata_rcar_match[] = {
+> >>> +	{
+> >>> +		.compatible = "renesas,rcar-sata",
+> >>> +		.data = (void *)RCAR_SATA
+> >>> +	},
+> >>> +	{
+> >>> +		.compatible = "renesas,sata-r8a7790",
+> >>> +		.data = (void *)RCAR_GEN2_SATA
+> >>> +	},
+> >>> +	{
+> >>> +		.compatible = "renesas,sata-r8a7791",
+> >>> +		.data = (void *)RCAR_GEN2_SATA
+> >>> +	},
+> >>> +	{},
+> >
+> > These bindings will need documentation. A grep of any of these in
+> > mainline's Documentation/devicetree shows up nothing (not even the
+> > existing "renesas,rcar-sata" string used by the driver.
 > 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 6d0a1d5..ef598af 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -652,6 +652,7 @@
->  				reg = <0x4a030000 0x10000>;
->  				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->  				usb-phy = <&usb2_phy>, <&usb3_phy>;
-> +				dr_mode = "peripheral";
->  				tx-fifo-resize;
->  			};
->  		};
-> 
+> Indeed.
+> Since we need to adjust rcar-sata bindings and add documentation for it, 
+> which is not really related to Gen2 phy support, looks like it will be a 
+> separate patch.
 
-cheers,
--roger
+If you're adding strings, there should be documentation. While it may be
+a separate patch, we should _not_ add compatible strings to the kernel
+without documentation. I'd like to see the documentation patch first.
+
+Thanks,
+Mark.
