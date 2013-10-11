@@ -1,121 +1,82 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 4/6] mtd:nand:omap2: updated support for BCH4 ECC
- scheme
-Date: Fri, 11 Oct 2013 13:28:50 -0700
-Message-ID: <20131011202850.GM23337@ld-irv-0074.broadcom.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
- <1381498603-15715-5-git-send-email-pekon@ti.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] hwrng: msm: Add PRNG support for MSM SoC's
+Date: Fri, 11 Oct 2013 13:37:01 -0700
+Message-ID: <20131011203701.GC13139@codeaurora.org>
+References: <1381504601-23773-1-git-send-email-svarbanov@mm-sol.com>
+ <1381504601-23773-3-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381498603-15715-5-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, dedekind1@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1381504601-23773-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 07:06:41PM +0530, Pekon Gupta wrote:
-> This patch adds following two flavours of BCH4 ECC scheme in omap2-nand driver
-> - OMAP_ECC_BCH4_CODE_HW_DETECTION_SW
-> 	- uses GPMC H/W engine for calculating ECC.
-> 	- uses software library (lib/bch.h & nand_bch.h) for error correction.
+On 10/11, Stanimir Varbanov wrote:
+> This adds a driver for hardware random number generator present
+> on Qualcomm MSM SoC's.
 > 
-> - OMAP_ECC_BCH4_CODE_HW
-> 	- uses GPMC H/W engine for calculating ECC.
-> 	- uses ELM H/W engine for error correction.
-> 
-> With this patch omap2-nand driver supports following ECC schemes:
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAM1_CODE_HW                  |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH4_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
-> |OMAP_ECC_BCH4_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> +---------------------------------------+---------------+---------------+
-> Important:
-> - Selection of OMAP_ECC_BCHx_CODE_HW_DETECTION_SW requires,
-> 	Kconfig: CONFIG_MTD_NAND_ECC_BCH: enables S/W based BCH ECC algorithm.
-> 
-> - Selection of OMAP_ECC_BCHx_CODE_HW requires,
-> 	Kconfig: CONFIG_MTD_NAND_OMAP_BCH: enables ELM H/W module.
-> 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 > ---
->  drivers/mtd/nand/Kconfig |  30 ++---------
->  drivers/mtd/nand/omap2.c | 134 +++++++++++++++++++++--------------------------
->  2 files changed, 63 insertions(+), 101 deletions(-)
-> 
 
-...
+Just nitpicks.
 
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index fb96251..a783dae 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
-> @@ -1927,7 +1868,7 @@ static int omap_nand_probe(struct platform_device *pdev)
->  		nand_chip->ecc.bytes		= 7;
->  		nand_chip->ecc.strength		= 4;
->  		nand_chip->ecc.hwctl		= omap3_enable_hwecc_bch;
-> -		nand_chip->ecc.correct		= omap3_correct_data_bch;
-> +		info->nand.ecc.correct		= nand_bch_correct_data;
-
-Your patch description doesn't talk about this (and the deletion of
-omap3_correct_data_bch() above). Is the NAND BCH library a drop-in
-replacement for omap3_correct_data_bch()? If so, TELL me about it in the
-commit description. If not, this is an incompatible change and should at
-least be documented so that people can understand the change. These
-questions are being asked by the DT guys, so include it in your
-descriptions.
-
-Also, you're very inconsistent on using 'nand_chip' vs. 'info->nand'.
-You added 'nand_chip' amid the noise of patch 3, so if you have it, use
-it consistently throughout probe(). Or remove it and don't use it at
-all. (This would be an independent patch from patch 3 and 4, in case
-you're wondering, since it causes a lot of diff noise.)
-
->  		nand_chip->ecc.calculate	= omap3_calculate_ecc_bch4;
->  		/* define custom ECC layout */
->  		ecclayout->eccbytes		= nand_chip->ecc.bytes *
-
-> @@ -2061,7 +2036,12 @@ out_release_mem_region:
->  		free_irq(info->gpmc_irq_fifo, info);
->  	release_mem_region(info->phys_base, info->mem_size);
->  out_free_info:
-> -	omap3_free_bch(&info->mtd);
-> +#ifdef CONFIG_MTD_NAND_ECC_BCH
-> +	if (info->nand.ecc.priv) {
-> +		nand_bch_free(info->nand.ecc.priv);
-> +		info->nand.ecc.priv = NULL;
-> +	}
-> +#endif
-
-As noted previously, the #ifdef should not be necessary.
-
->  	kfree(info);
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 0aa9d91daef5..d902330cef43 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -314,3 +314,15 @@ config HW_RANDOM_TPM
+>  	  module will be called tpm-rng.
 >  
->  	return err;
-> @@ -2072,8 +2052,12 @@ static int omap_nand_remove(struct platform_device *pdev)
->  	struct mtd_info *mtd = platform_get_drvdata(pdev);
->  	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
->  							mtd);
-> -	omap3_free_bch(&info->mtd);
-> -
-> +#ifdef CONFIG_MTD_NAND_ECC_BCH
-> +	if (info->nand.ecc.priv) {
-> +		nand_bch_free(info->nand.ecc.priv);
-> +		info->nand.ecc.priv = NULL;
-> +	}
-> +#endif
+>  	  If unsure, say Y.
+> +
+> +config HW_RANDOM_MSM
+> +        tristate "Qualcomm MSM Random Number Generator support"
+> +        depends on HW_RANDOM && ARCH_MSM && HAVE_CLK
 
-Ditto.
+It should be fine to drop HAVE_CLK here because ARCH_MSM always
+selects COMMON_CLK which indirectly selects HAVE_CLK.
 
->  	if (info->dma)
->  		dma_release_channel(info->dma);
->  
+> +        ---help---
+> +          This driver provides kernel-side support for the Random Number
+> +          Generator hardware found on Qualcomm MSM SoCs.
+> +
+> +          To compile this driver as a module, choose M here. the
+> +          module will be called msm-rng.
+> +
+> +          If unsure, say Y.
+> diff --git a/drivers/char/hw_random/msm-rng.c b/drivers/char/hw_random/msm-rng.c
+> new file mode 100644
+> index 000000000000..e219e94d02c1
+> --- /dev/null
+> +++ b/drivers/char/hw_random/msm-rng.c
+> @@ -0,0 +1,195 @@
+> +#include <linux/clk.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
 
-Brian
++#include <linux/err.h> for -ENOMEM usage.
+
+> +
+> +/* Device specific register offsets */
+> +#define PRNG_DATA_OUT		0x0000
+> +#define PRNG_STATUS		0x0004
+> +#define PRNG_LFSR_CFG		0x0100
+> +#define PRNG_CONFIG		0x0104
+> +
+[snip]
+> +
+> +MODULE_AUTHOR("The Linux Foundation");
+> +MODULE_DESCRIPTION("Qualcomm MSM random number generator driver");
+> +MODULE_LICENSE("GPL v2");
+
+MODULE_ALIAS perhaps?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
