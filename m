@@ -1,63 +1,71 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 1/3] video: xilinxfb: Use standard variable name convention
-Date: Fri, 11 Oct 2013 08:58:09 +0300
-Message-ID: <52579371.8070408@ti.com>
-References: <631df9a44b366af4129d00f1d4e1d3baad7d4903.1381386616.git.michal.simek@xilinx.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap5-uevm: remove always_on, boot_on from
+ smps10_out1
+Date: Fri, 11 Oct 2013 11:43:55 +0530
+Message-ID: <52579723.6080209@ti.com>
+References: <1381402195-29257-1-git-send-email-kishon@ti.com>
+ <20131010141949.GA13277@kahuna>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="catTPNVVv4gFOm9LsvdwmNclLLtE5x089"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <631df9a44b366af4129d00f1d4e1d3baad7d4903.1381386616.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, joe@perches.com, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131010141949.GA13277@kahuna>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---catTPNVVv4gFOm9LsvdwmNclLLtE5x089
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thursday 10 October 2013 07:49 PM, Nishanth Menon wrote:
+> On 16:19-20131010, Kishon Vijay Abraham I wrote:
+>> smps10 should be enabled only in the case of host mode. So stop
+>> doing always_on, boot_on from smps10_out1. The driver will enable it in =
+host
+>> mode.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  arch/arm/boot/dts/omap5-uevm.dts |    2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-=
+uevm.dts
+>> index d784b3a..e06a04a 100644
+>> --- a/arch/arm/boot/dts/omap5-uevm.dts
+>> +++ b/arch/arm/boot/dts/omap5-uevm.dts
+>> @@ -334,8 +334,6 @@
+>>  					regulator-name =3D "smps10_out1";
+>>  					regulator-min-microvolt =3D <5000000>;
+>>  					regulator-max-microvolt =3D <5000000>;
+>> -					regulator-always-on;
+>> -					regulator-boot-on;
+>>  				};
+>>  =
 
-On 10/10/13 09:30, Michal Simek wrote:
-> s/op/pdev/ in xilinxfb_of_probe().
-> No functional chagnes.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes in v3: None
-> Changes in v2: None
->=20
->  drivers/video/xilinxfb.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>>  				ldo1_reg: ldo1 {
+>> -- =
 
-Thanks, queued this series for 3.13.
+> Always good to get rid of regulator-always-on. Thanks for it.
+> =
 
- Tomi
+> regulator-boot-on indicates that PMIC enables it by default as part of
+> OTP or some internal behavior -> Looking at the measurements done on
+> uEVM and OTP information -> regulator-boot-on should be kept here.
 
+No. Actually I don=92t want PMIC to enable it by default. I want the palmas=
+-usb
+driver to handle it.
+Enabling it by default makes palmas-usb to detect VBUS interrupt. This shou=
+ld
+ideally be detected only when you connect a host cable.
+Btw I didn't exactly get why you want regulator-boot-on should be kept here.
 
-
---catTPNVVv4gFOm9LsvdwmNclLLtE5x089
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSV5NxAAoJEPo9qoy8lh71cn0P/0aoh15bnSNQAdKZ8HufYbZb
-jmd8AANUVCgRmiiSKNvXgU6vjj0sA/gT1FxcOww3F17NSrNxaJxaZYkG+o7JNcp4
-1JjDBfK/HJt7+TM+AfDEwdGCy3grkfgalm6EF55paFYiEgd8xPSc7U+mlD3EAU6o
-tRtrRtgdl6nN5FLHD8xJTC5XDzuKiXIZV6I9qy0gzjF2WCJIuF63PrwrOTMstW9f
-adXg4O/X0ZAUk3pqOHcbZRan7LqhHhihQgAL3mQyIpGy8aTiSuTL1mPV05gUEl3v
-7RVzzpqYSNnWhH9eQIgNbDYon8Xn/ueqeZAAguo75WXwO4JCGcihDhDr/p5t+PeH
-V+HdOCqbpKEu3hljCvRt46gkbbeqvNOxKLQiwFly36tf/+NwAmREKSt3CEvQZdoo
-YDfjsQCPbs8hD9e0XElJGtkhsSs91dzzwlCr2QbT+p+b9n683r6Fj427RdKFKpP4
-Weokl1YPza8GGGFbuaRg8KdTogygJNWrCybGHyuru6k074e1YAkKxgPsvMsmHEN2
-VjgOekCNG4zX2R02f4vw7rpMQs9dxOqDtCn+F4Fd7SPrpOUN6U/FBDo22FhKeCs+
-t2/LyFA6rhUyjkIAJI8lOuxt0hX3u98AY+LFJq819GW097GKNWW1pzRZ6Xd215Yb
-jsAK1HzcX+tWjtEmrii2
-=LVr9
------END PGP SIGNATURE-----
-
---catTPNVVv4gFOm9LsvdwmNclLLtE5x089--
+Thanks
+Kishon
