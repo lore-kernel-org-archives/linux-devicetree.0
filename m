@@ -1,464 +1,186 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] Revert
- "drivers: of: add initialization code for dma reserved memory"
-Date: Fri, 11 Oct 2013 09:27:28 +0200
-Message-ID: <1381476448-14548-3-git-send-email-m.szyprowski@samsung.com>
-References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1381476448-14548-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Fri, 11 Oct 2013 09:45 +0200
+Message-ID: <3237757.RTKJthVZ2l@avalon>
+References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com> <20130521105436.GB2041@valkosipuli.retiisi.org.uk> <CAK5ve-LLkGtG9hVcsJgbgT+O-rdhOLNEw-eONSbJWs7aNJ0NOQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAK5ve-LLkGtG9hVcsJgbgT+O-rdhOLNEw-eONSbJWs7aNJ0NOQ@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Andrzej Hajda <a.hajda@samsung.com>, "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 9d8eab7af79cb4ce2de5de39f82c455b1f796963. There is
-still no consensus on the bindings for the reserved memory and various
-drawbacks of the proposed solution has been shown, so the best now is to
-revert it completely and start again from scratch later.
+Hi Bryan,
 
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/memory.txt |  168 -------------------------
- drivers/of/Kconfig                           |    6 -
- drivers/of/Makefile                          |    1 -
- drivers/of/of_reserved_mem.c                 |  173 --------------------------
- drivers/of/platform.c                        |    4 -
- include/linux/of_reserved_mem.h              |   14 ---
- 6 files changed, 366 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/memory.txt
- delete mode 100644 drivers/of/of_reserved_mem.c
- delete mode 100644 include/linux/of_reserved_mem.h
+On Thursday 10 October 2013 17:07:22 Bryan Wu wrote:
+> On Tue, May 21, 2013 at 3:54 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > On Tue, May 21, 2013 at 10:34:53AM +0200, Andrzej Hajda wrote:
+> >> On 12.05.2013 23:12, Sakari Ailus wrote:
+> >> > On Wed, May 08, 2013 at 09:32:17AM +0200, Andrzej Hajda wrote:
+> >> >> On 07.05.2013 17:07, Laurent Pinchart wrote:
+> >> >>> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
+> >> >>>> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
+> >> >>>>> This RFC proposes generic API for exposing flash subdevices via LED
+> >> >>>>> framework.
+> >> >>>>> 
+> >> >>>>> Rationale
+> >> >>>>> 
+> >> >>>>> Currently there are two frameworks which are used for exposing LED
+> >> >>>>> flash to user space:
+> >> >>>>> - V4L2 flash controls,
+> >> >>>>> - LED framework(with custom sysfs attributes).
+> >> >>>>> 
+> >> >>>>> The list below shows flash drivers in mainline kernel with initial
+> >> >>>>> commit date and typical chip application (according to producer):
+> >> >>>>> 
+> >> >>>>> LED API:
+> >> >>>>>     lm3642: 2012-09-12, Cameras
+> >> >>>>>     lm355x: 2012-09-05, Cameras
+> >> >>>>>     max8997: 2011-12-14, Cameras (?)
+> >> >>>>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+> >> >>>>>     pca955x: 2008-07-16, Cameras, Indicators (?)
+> >> >>>>> 
+> >> >>>>> V4L2 API:
+> >> >>>>>     as3645a:  2011-05-05, Cameras
+> >> >>>>>     adp1653: 2011-05-05, Cameras
+> >> >>>>> 
+> >> >>>>> V4L2 provides richest functionality, but there is often demand from
+> >> >>>>> application developers to provide already established LED API. We
+> >> >>>>> would like to have an unified user interface for flash devices.
+> >> >>>>> Some of devices already have the LED API driver exposing limited
+> >> >>>>> set of a Flash IC functionality. In order to support all required
+> >> >>>>> features the LED API would have to be extended or the V4L2 API
+> >> >>>>> would need to be used. However when switching from a LED to a V4L2
+> >> >>>>> Flash driver existing LED API interface would need to be retained.
+> >> >>>>> 
+> >> >>>>> Proposed solution
+> >> >>>>> 
+> >> >>>>> This patch adds V4L2 helper functions to register existing V4L2
+> >> >>>>> flash subdev as LED class device. After registration via
+> >> >>>>> v4l2_leddev_register appropriate entry in /sys/class/leds/ is
+> >> >>>>> created. During registration all V4L2 flash controls are enumerated
+> >> >>>>> and corresponding attributes are added.
+> >> >>>>> 
+> >> >>>>> I have attached also patch with new max77693-led driver using
+> >> >>>>> v4l2_leddev. This patch requires presence of the patch "max77693:
+> >> >>>>> added device tree support":
+> >> >>>>> https://patchwork.kernel.org/patch/2414351/ .
+> >> >>>>> 
+> >> >>>>> Additional features
+> >> >>>>> 
+> >> >>>>> - simple API to access all V4L2 flash controls via sysfs,
+> >> >>>>> - V4L2 subdevice should not be registered by V4L2 device to use it,
+> >> >>>>> - LED triggers API can be used to control the device,
+> >> >>>>> - LED device is optional - it will be created only if V4L2_LEDDEV
+> >> >>>>>   configuration option is enabled and the subdev driver calls
+> >> >>>>>   v4l2_leddev_register.
+> >> >>>>> 
+> >> >>>>> Doubts
+> >> >>>>> 
+> >> >>>>> This RFC is a result of a uncertainty which API developers should
+> >> >>>>> expose by their flash drivers. It is a try to gluing together both
+> >> >>>>> APIs. I am not sure if it is the best solution, but I hope there
+> >> >>>>> will be some discussion and hopefully some decisions will be taken
+> >> >>>>> which way we should follow.
+> >> >>>> 
+> >> >>>> The LED subsystem provides similar APIs for the Camera driver.
+> >> >>>> With LED trigger event, flash and torch are enabled/disabled.
+> >> >>>> I'm not sure this is applicable for you.
+> >> >>>> Could you take a look at LED camera trigger feature?
+> >> >>>> 
+> >> >>>> For the camera LED trigger,
+> >> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git
+> >> >>>> /commit/ ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
+> >> >>>> 
+> >> >>>> Example of camera flash driver,
+> >> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git
+> >> >>>> /commit/ ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
+> >> >>> 
+> >> >>> I think we should decide on one API. Implementing two APIs for a
+> >> >>> single device is usually messy, and will result in different feature
+> >> >>> sets (and different bugs) being implemented through each API,
+> >> >>> depending on the driver. Interactions between the APIs are also a
+> >> >>> pain point on the kernel side to properly synchronize calls.
+> >> > 
+> >> > I don't like having two APIs either. Especially we shouldn't have
+> >> > multiple drivers implementing different APIs for the same device.
+> >> > 
+> >> > That said, I wonder if it's possible to support camera-related use
+> >> > cases using the LED API: it's originally designed for quite different
+> >> > devices. Even if you could handle flash strobing using the LED API, the
+> >> > functionality provided by the Media controller and subdev APIs will
+> >> > always be missing: device enumeration and association with the right
+> >> > camera.
+> >> 
+> >> Is there a generic way to associate flash and camera subdevs in
+> >> current V4L2 API? The only ways I see now are:
+> >> - both belongs to the same media controller, but this is not enough if
+> >> there is more than one camera subdev in that controller,
+> > 
+> > Yes, there is. That's the group_id field in struct media_entity_desc. The
+> > lens subdev is associated to the rest of the devices the same way.
+> > 
+> >> - using media links/pads - at first sight it seems to be
+> >> overkill/abuse...
+> > 
+> > No. Links describe the flow of data, not relations between entities.
+> > 
+> > ...
+> > 
+> >> >>> The LED API is too limited for torch and flash usage, but I'm
+> >> >>> definitely open to moving flash devices to the LED API is we can
+> >> >>> extend it in a way that it covers all the use cases.
+> >> >> 
+> >> >> Extending LED API IMHO seems to be quite straightforward - by adding
+> >> >> attributes for supported functionalities. We just need a specification
+> >> >> for standard flash/torch attributes.
+> >> >> I could prepare an RFC about it if there is a will to explore this
+> >> >> direction.
+> >> > 
+> >> > I'm leaning towards providing a wrapper that provides torch
+> >> > functionality using V4L2 flash API unless it's really proven to be
+> >> > insane. ;-) The code supporting that in an individual flash driver
+> >> > should be minimal --- which is what the patchset essentially already
+> >> > does.
+> >> 
+> >> Providing only torch functionality do not require adding new attributes
+> >> (besides the ones already present in the led_classdev), so the patch will
+> >> be much simpler.
+> > 
+> > Yes. Attributes could be added later on to the LED API to support flash
+> > and the wrapper could be extended accordingly. My thinking is however that
+> > the main use case is torch, not strobing flash, so it would be fulfilled
+> > already without extensions to the LED API.
+> 
+> Sorry for replying so late.
+> 
+> I think Milo Kim did some work in our LED subsystem by add LED Flash
+> trigger for camera device. I agree it doesn't satisfy the usage of
+> V4L2 Flash API and what I'm thinking about is expanding the LED Flash
+> trigger driver to export a well defined sysfs interface, so user space
+> libv4l2 can wrap it for applications.
 
-diff --git a/Documentation/devicetree/bindings/memory.txt b/Documentation/devicetree/bindings/memory.txt
-deleted file mode 100644
-index eb24693..0000000
---- a/Documentation/devicetree/bindings/memory.txt
-+++ /dev/null
-@@ -1,168 +0,0 @@
--*** Memory binding ***
--
--The /memory node provides basic information about the address and size
--of the physical memory. This node is usually filled or updated by the
--bootloader, depending on the actual memory configuration of the given
--hardware.
--
--The memory layout is described by the following node:
--
--/ {
--	#address-cells = <(n)>;
--	#size-cells = <(m)>;
--	memory {
--		device_type = "memory";
--		reg =  <(baseaddr1) (size1)
--			(baseaddr2) (size2)
--			...
--			(baseaddrN) (sizeN)>;
--	};
--	...
--};
--
--A memory node follows the typical device tree rules for "reg" property:
--n:		number of cells used to store base address value
--m:		number of cells used to store size value
--baseaddrX:	defines a base address of the defined memory bank
--sizeX:		the size of the defined memory bank
--
--
--More than one memory bank can be defined.
--
--
--*** Reserved memory regions ***
--
--In /memory/reserved-memory node one can create child nodes describing
--particular reserved (excluded from normal use) memory regions. Such
--memory regions are usually designed for the special usage by various
--device drivers. A good example are contiguous memory allocations or
--memory sharing with other operating system on the same hardware board.
--Those special memory regions might depend on the board configuration and
--devices used on the target system.
--
--Parameters for each memory region can be encoded into the device tree
--with the following convention:
--
--[(label):] (name) {
--	compatible = "linux,contiguous-memory-region", "reserved-memory-region";
--	reg = <(address) (size)>;
--	(linux,default-contiguous-region);
--};
--
--compatible:	one or more of:
--	- "linux,contiguous-memory-region" - enables binding of this
--	  region to Contiguous Memory Allocator (special region for
--	  contiguous memory allocations, shared with movable system
--	  memory, Linux kernel-specific).
--	- "reserved-memory-region" - compatibility is defined, given
--	  region is assigned for exclusive usage for by the respective
--	  devices.
--
--reg:	standard property defining the base address and size of
--	the memory region
--
--linux,default-contiguous-region: property indicating that the region
--	is the default region for all contiguous memory
--	allocations, Linux specific (optional)
--
--It is optional to specify the base address, so if one wants to use
--autoconfiguration of the base address, '0' can be specified as a base
--address in the 'reg' property.
--
--The /memory/reserved-memory node must contain the same #address-cells
--and #size-cells value as the root node.
--
--
--*** Device node's properties ***
--
--Once regions in the /memory/reserved-memory node have been defined, they
--may be referenced by other device nodes. Bindings that wish to reference
--memory regions should explicitly document their use of the following
--property:
--
--memory-region = <&phandle_to_defined_region>;
--
--This property indicates that the device driver should use the memory
--region pointed by the given phandle.
--
--
--*** Example ***
--
--This example defines a memory consisting of 4 memory banks. 3 contiguous
--regions are defined for Linux kernel, one default of all device drivers
--(named contig_mem, placed at 0x72000000, 64MiB), one dedicated to the
--framebuffer device (labelled display_mem, placed at 0x78000000, 8MiB)
--and one for multimedia processing (labelled multimedia_mem, placed at
--0x77000000, 64MiB). 'display_mem' region is then assigned to fb@12300000
--device for DMA memory allocations (Linux kernel drivers will use CMA is
--available or dma-exclusive usage otherwise). 'multimedia_mem' is
--assigned to scaler@12500000 and codec@12600000 devices for contiguous
--memory allocations when CMA driver is enabled.
--
--The reason for creating a separate region for framebuffer device is to
--match the framebuffer base address to the one configured by bootloader,
--so once Linux kernel drivers starts no glitches on the displayed boot
--logo appears. Scaller and codec drivers should share the memory
--allocations.
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	/* ... */
--
--	memory {
--		reg =  <0x40000000 0x10000000
--			0x50000000 0x10000000
--			0x60000000 0x10000000
--			0x70000000 0x10000000>;
--
--		reserved-memory {
--			#address-cells = <1>;
--			#size-cells = <1>;
--
--			/*
--			 * global autoconfigured region for contiguous allocations
--			 * (used only with Contiguous Memory Allocator)
--			 */
--			contig_region@0 {
--				compatible = "linux,contiguous-memory-region";
--				reg = <0x0 0x4000000>;
--				linux,default-contiguous-region;
--			};
--
--			/*
--			 * special region for framebuffer
--			 */
--			display_region: region@78000000 {
--				compatible = "linux,contiguous-memory-region", "reserved-memory-region";
--				reg = <0x78000000 0x800000>;
--			};
--
--			/*
--			 * special region for multimedia processing devices
--			 */
--			multimedia_region: region@77000000 {
--				compatible = "linux,contiguous-memory-region";
--				reg = <0x77000000 0x4000000>;
--			};
--		};
--	};
--
--	/* ... */
--
--	fb0: fb@12300000 {
--		status = "okay";
--		memory-region = <&display_region>;
--	};
--
--	scaler: scaler@12500000 {
--		status = "okay";
--		memory-region = <&multimedia_region>;
--	};
--
--	codec: codec@12600000 {
--		status = "okay";
--		memory-region = <&multimedia_region>;
--	};
--};
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 9d2009a..78cc760 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -74,10 +74,4 @@ config OF_MTD
- 	depends on MTD
- 	def_bool y
- 
--config OF_RESERVED_MEM
--	depends on OF_FLATTREE && (DMA_CMA || (HAVE_GENERIC_DMA_COHERENT && HAVE_MEMBLOCK))
--	def_bool y
--	help
--	  Initialization code for DMA reserved memory
--
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index ed9660a..efd0510 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -9,4 +9,3 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
- obj-$(CONFIG_OF_MTD)	+= of_mtd.o
--obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-deleted file mode 100644
-index 0fe40c7..0000000
---- a/drivers/of/of_reserved_mem.c
-+++ /dev/null
-@@ -1,173 +0,0 @@
--/*
-- * Device tree based initialization code for reserved memory.
-- *
-- * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- * Author: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of the
-- * License or (at your optional) any later version of the license.
-- */
--
--#include <linux/memblock.h>
--#include <linux/err.h>
--#include <linux/of.h>
--#include <linux/of_fdt.h>
--#include <linux/of_platform.h>
--#include <linux/mm.h>
--#include <linux/sizes.h>
--#include <linux/mm_types.h>
--#include <linux/dma-contiguous.h>
--#include <linux/dma-mapping.h>
--#include <linux/of_reserved_mem.h>
--
--#define MAX_RESERVED_REGIONS	16
--struct reserved_mem {
--	phys_addr_t		base;
--	unsigned long		size;
--	struct cma		*cma;
--	char			name[32];
--};
--static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
--static int reserved_mem_count;
--
--static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
--					int depth, void *data)
--{
--	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
--	phys_addr_t base, size;
--	int is_cma, is_reserved;
--	unsigned long len;
--	const char *status;
--	__be32 *prop;
--
--	is_cma = IS_ENABLED(CONFIG_DMA_CMA) &&
--	       of_flat_dt_is_compatible(node, "linux,contiguous-memory-region");
--	is_reserved = of_flat_dt_is_compatible(node, "reserved-memory-region");
--
--	if (!is_reserved && !is_cma) {
--		/* ignore node and scan next one */
--		return 0;
--	}
--
--	status = of_get_flat_dt_prop(node, "status", &len);
--	if (status && strcmp(status, "okay") != 0) {
--		/* ignore disabled node nad scan next one */
--		return 0;
--	}
--
--	prop = of_get_flat_dt_prop(node, "reg", &len);
--	if (!prop || (len < (dt_root_size_cells + dt_root_addr_cells) *
--			     sizeof(__be32))) {
--		pr_err("Reserved mem: node %s, incorrect \"reg\" property\n",
--		       uname);
--		/* ignore node and scan next one */
--		return 0;
--	}
--	base = dt_mem_next_cell(dt_root_addr_cells, &prop);
--	size = dt_mem_next_cell(dt_root_size_cells, &prop);
--
--	if (!size) {
--		/* ignore node and scan next one */
--		return 0;
--	}
--
--	pr_info("Reserved mem: found %s, memory base %lx, size %ld MiB\n",
--		uname, (unsigned long)base, (unsigned long)size / SZ_1M);
--
--	if (reserved_mem_count == ARRAY_SIZE(reserved_mem))
--		return -ENOSPC;
--
--	rmem->base = base;
--	rmem->size = size;
--	strlcpy(rmem->name, uname, sizeof(rmem->name));
--
--	if (is_cma) {
--		struct cma *cma;
--		if (dma_contiguous_reserve_area(size, base, 0, &cma) == 0) {
--			rmem->cma = cma;
--			reserved_mem_count++;
--			if (of_get_flat_dt_prop(node,
--						"linux,default-contiguous-region",
--						NULL))
--				dma_contiguous_set_default(cma);
--		}
--	} else if (is_reserved) {
--		if (memblock_remove(base, size) == 0)
--			reserved_mem_count++;
--		else
--			pr_err("Failed to reserve memory for %s\n", uname);
--	}
--
--	return 0;
--}
--
--static struct reserved_mem *get_dma_memory_region(struct device *dev)
--{
--	struct device_node *node;
--	const char *name;
--	int i;
--
--	node = of_parse_phandle(dev->of_node, "memory-region", 0);
--	if (!node)
--		return NULL;
--
--	name = kbasename(node->full_name);
--	for (i = 0; i < reserved_mem_count; i++)
--		if (strcmp(name, reserved_mem[i].name) == 0)
--			return &reserved_mem[i];
--	return NULL;
--}
--
--/**
-- * of_reserved_mem_device_init() - assign reserved memory region to given device
-- *
-- * This function assign memory region pointed by "memory-region" device tree
-- * property to the given device.
-- */
--void of_reserved_mem_device_init(struct device *dev)
--{
--	struct reserved_mem *region = get_dma_memory_region(dev);
--	if (!region)
--		return;
--
--	if (region->cma) {
--		dev_set_cma_area(dev, region->cma);
--		pr_info("Assigned CMA %s to %s device\n", region->name,
--			dev_name(dev));
--	} else {
--		if (dma_declare_coherent_memory(dev, region->base, region->base,
--		    region->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) != 0)
--			pr_info("Declared reserved memory %s to %s device\n",
--				region->name, dev_name(dev));
--	}
--}
--
--/**
-- * of_reserved_mem_device_release() - release reserved memory device structures
-- *
-- * This function releases structures allocated for memory region handling for
-- * the given device.
-- */
--void of_reserved_mem_device_release(struct device *dev)
--{
--	struct reserved_mem *region = get_dma_memory_region(dev);
--	if (!region && !region->cma)
--		dma_release_declared_memory(dev);
--}
--
--/**
-- * early_init_dt_scan_reserved_mem() - create reserved memory regions
-- *
-- * This function grabs memory from early allocator for device exclusive use
-- * defined in device tree structures. It should be called by arch specific code
-- * once the early allocator (memblock) has been activated and all other
-- * subsystems have already allocated/reserved memory.
-- */
--void __init early_init_dt_scan_reserved_mem(void)
--{
--	of_scan_flat_dt_by_path("/memory/reserved-memory",
--				fdt_scan_reserved_mem, NULL);
--}
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9b439ac..f6dcde2 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -21,7 +21,6 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
--#include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- 
- const struct of_device_id of_default_bus_match_table[] = {
-@@ -219,8 +218,6 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 
--	of_reserved_mem_device_init(&dev->dev);
--
- 	/* We do not fill the DMA ops for platform devices by default.
- 	 * This is currently the responsibility of the platform code
- 	 * to do such, possibly using a device notifier
-@@ -228,7 +225,6 @@ static struct platform_device *of_platform_device_create_pdata(
- 
- 	if (of_device_add(dev) != 0) {
- 		platform_device_put(dev);
--		of_reserved_mem_device_release(&dev->dev);
- 		return NULL;
- 	}
- 
-diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-deleted file mode 100644
-index c841282..0000000
---- a/include/linux/of_reserved_mem.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--#ifndef __OF_RESERVED_MEM_H
--#define __OF_RESERVED_MEM_H
--
--#ifdef CONFIG_OF_RESERVED_MEM
--void of_reserved_mem_device_init(struct device *dev);
--void of_reserved_mem_device_release(struct device *dev);
--void early_init_dt_scan_reserved_mem(void);
--#else
--static inline void of_reserved_mem_device_init(struct device *dev) { }
--static inline void of_reserved_mem_device_release(struct device *dev) { }
--static inline void early_init_dt_scan_reserved_mem(void) { }
--#endif
--
--#endif /* __OF_RESERVED_MEM_H */
+I've replied to your comment in the media-summit agenda mail thread, but the 
+discussion belongs here, so here's a repost. Let's try to keep replies in this 
+mail thread.
+
+The biggest reason why we're not fond of sysfs-based APIs for media devices is 
+that they can't provide atomicity. There's no way to set multiple parameters 
+in a single operation.
+
+We can't get rid of the sysfs LEDs API, but maybe we could have a unified 
+kernel LED/flash subsystem that would provide both a sysfs-based API to ensure 
+compatibility with current userspace software and an ioctl-based API (possibly 
+through V4L2 controls). That way LED/flash devices would be registered with a 
+single subsystem, and the corresponding drivers won't have to care about the 
+API exposed to userspace. That would require a major refactoring of the in-
+kernel APIs though.
+
 -- 
-1.7.9.5
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
