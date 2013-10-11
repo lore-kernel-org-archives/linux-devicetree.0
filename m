@@ -1,56 +1,271 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
-Date: Fri, 11 Oct 2013 10:41:57 +0100
-Message-ID: <20131011094156.GF3910@e106331-lin.cambridge.arm.com>
-References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com>
- <20131011010032.GA13809@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131011010032.GA13809@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 08/17] clk: at91: add PMC system clocks
+Date: Fri, 11 Oct 2013 11:41:41 +0200
+Message-ID: <1381484501-13420-1-git-send-email-b.brezillon@overkiz.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 02:00:35AM +0100, Simon Horman wrote:
-> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
+This patch adds new at91 system clock implementation using common clk
+framework.
 
-Cheers!
+Some peripherals need to enable a "system" clock in order to work properly.
+Each system clock is given an id based on the bit position in SCER/SCDR
+registers.
 
-> 
-> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
-> > RCAR Gen2 SoC has a different phy which is not compatible with
-> > the older H1/M1 versions. This adds OF/platform device table
-> > and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/clk/at91/Makefile     |    1 +
+ drivers/clk/at91/clk-system.c |  193 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/at91/pmc.c        |    5 ++
+ drivers/clk/at91/pmc.h        |    3 +
+ 4 files changed, 202 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-system.c
 
-Is the PHY combined with the rest of the controller, or are they
-logically separate components in the SoC? I note that the Calxeda
-Highbank SATA controller driver treats the phy and the controller as
-separate entities, and describes the way the two are attached (though
-the driver handles both). Would a similar approach work here?
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index e28fb2b..c2b7068 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -4,3 +4,4 @@
+ 
+ obj-y += pmc.o
+ obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
++obj-y += clk-system.o
+diff --git a/drivers/clk/at91/clk-system.c b/drivers/clk/at91/clk-system.c
+new file mode 100644
+index 0000000..603b4b1
+--- /dev/null
++++ b/drivers/clk/at91/clk-system.c
+@@ -0,0 +1,193 @@
++/*
++ * drivers/clk/at91/clk-system.c
++ *
++ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/clk/at91_pmc.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/io.h>
++
++#include "pmc.h"
++
++#define SYSTEM_MAX_ID		31
++
++#define to_clk_system(hw) container_of(hw, struct clk_system, hw)
++struct clk_system {
++	struct clk_hw hw;
++	struct at91_pmc *pmc;
++	u8 id;
++};
++
++static int clk_system_enable(struct clk_hw *hw)
++{
++	struct clk_system *sys = to_clk_system(hw);
++	struct at91_pmc *pmc = sys->pmc;
++
++	pmc_write(pmc, AT91_PMC_SCER, 1 << sys->id);
++	return 0;
++}
++
++static void clk_system_disable(struct clk_hw *hw)
++{
++	struct clk_system *sys = to_clk_system(hw);
++	struct at91_pmc *pmc = sys->pmc;
++
++	pmc_write(pmc, AT91_PMC_SCDR, 1 << sys->id);
++}
++
++static int clk_system_is_enabled(struct clk_hw *hw)
++{
++	struct clk_system *sys = to_clk_system(hw);
++	struct at91_pmc *pmc = sys->pmc;
++
++	return !!(pmc_read(pmc, AT91_PMC_SCSR) & (1 << sys->id));
++}
++
++static const struct clk_ops system_ops = {
++	.enable = clk_system_enable,
++	.disable = clk_system_disable,
++	.is_enabled = clk_system_is_enabled,
++};
++
++static struct clk * __init
++at91_clk_register_system(struct at91_pmc *pmc, const char *name,
++			 const char *parent_name, u8 id)
++{
++	struct clk_system *sys;
++	struct clk *clk = NULL;
++	struct clk_init_data init;
++
++	if (!parent_name || id > SYSTEM_MAX_ID)
++		return ERR_PTR(-EINVAL);
++
++	sys = kzalloc(sizeof(*sys), GFP_KERNEL);
++	if (!sys)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &system_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	/*
++	 * CLK_IGNORE_UNUSED is used to avoid ddrck switch off.
++	 * TODO : we should implement a driver supporting at91 ddr controller
++	 * (see drivers/memory) which would request and enable the ddrck clock.
++	 * When this is done we will be able to remove CLK_IGNORE_UNUSED flag.
++	 */
++	init.flags = CLK_IGNORE_UNUSED;
++
++	sys->id = id;
++	sys->hw.init = &init;
++	sys->pmc = pmc;
++
++	clk = clk_register(NULL, &sys->hw);
++	if (IS_ERR(clk))
++		kfree(sys);
++
++	return clk;
++}
++
++struct clk_system_data {
++	struct clk **clks;
++	u8 *ids;
++	unsigned int clk_num;
++};
++
++static struct clk * __init
++of_clk_src_system_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct clk_system_data *clk_data = data;
++	unsigned int id = clkspec->args[0];
++	int i;
++
++	if (id > SYSTEM_MAX_ID)
++		goto err;
++
++	for (i = 0; i < clk_data->clk_num; i++) {
++		if (clk_data->ids[i] == id)
++			return clk_data->clks[i];
++	}
++
++err:
++	pr_err("%s: invalid clock id %d\n", __func__, id);
++	return ERR_PTR(-EINVAL);
++}
++
++static void __init
++of_at91_clk_sys_setup(struct device_node *np, struct at91_pmc *pmc)
++{
++	int i;
++	int num;
++	u32 id;
++	struct clk *clk;
++	u8 *ids;
++	struct clk **clks;
++	struct clk_system_data *clktab;
++	const char *name;
++	struct device_node *sysclknp;
++	const char *parent_name;
++
++	num = of_get_child_count(np);
++	if (num > (SYSTEM_MAX_ID + 1))
++		return;
++
++	clktab = kzalloc(sizeof(*clktab), GFP_KERNEL);
++	if (!clktab)
++		return;
++
++	ids = kzalloc(num * sizeof(*ids), GFP_KERNEL);
++	if (!ids)
++		goto out_free_clktab;
++
++	clks = kzalloc(num * sizeof(*clks), GFP_KERNEL);
++	if (!clks)
++		goto out_free_ids;
++
++	i = 0;
++	for_each_child_of_node(np, sysclknp) {
++		name = sysclknp->name;
++
++		if (of_property_read_u32(sysclknp, "atmel,clk-id", &id))
++			goto out_free_clks;
++
++		parent_name = of_clk_get_parent_name(sysclknp, 0);
++
++		clk = at91_clk_register_system(pmc, name, parent_name, id);
++		if (IS_ERR(clk))
++			goto out_free_clks;
++
++		clks[i] = clk;
++		ids[i] = id;
++
++		i++;
++	}
++
++	clktab->clk_num = num;
++	clktab->clks = clks;
++	clktab->ids = ids;
++	of_clk_add_provider(np, of_clk_src_system_get, clktab);
++	return;
++
++out_free_clks:
++	kfree(clks);
++out_free_ids:
++	kfree(ids);
++out_free_clktab:
++	kfree(clktab);
++}
++
++void __init of_at91rm9200_clk_sys_setup(struct device_node *np,
++					struct at91_pmc *pmc)
++{
++	of_at91_clk_sys_setup(np, pmc);
++}
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index 6f08879..ce76ba6 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -243,6 +243,11 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
+ 		.compatible = "atmel,at91sam9x5-clk-master",
+ 		.data = of_at91sam9x5_clk_master_setup,
+ 	},
++	/* System clocks */
++	{
++		.compatible = "atmel,at91rm9200-clk-system",
++		.data = of_at91rm9200_clk_sys_setup,
++	},
+ 	{ /*sentinel*/ }
+ };
+ 
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 2e1dcb8..f88ef41 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -74,4 +74,7 @@ extern void __init of_at91rm9200_clk_master_setup(struct device_node *np,
+ extern void __init of_at91sam9x5_clk_master_setup(struct device_node *np,
+ 						  struct at91_pmc *pmc);
+ 
++extern void __init of_at91rm9200_clk_sys_setup(struct device_node *np,
++					       struct at91_pmc *pmc);
++
+ #endif /* __PMC_H_ */
+-- 
+1.7.9.5
 
-[...]
-
-> > +static struct of_device_id sata_rcar_match[] = {
-> > +	{
-> > +		.compatible = "renesas,rcar-sata",
-> > +		.data = (void *)RCAR_SATA
-> > +	},
-> > +	{
-> > +		.compatible = "renesas,sata-r8a7790",
-> > +		.data = (void *)RCAR_GEN2_SATA
-> > +	},
-> > +	{
-> > +		.compatible = "renesas,sata-r8a7791",
-> > +		.data = (void *)RCAR_GEN2_SATA
-> > +	},
-> > +	{},
-
-These bindings will need documentation. A grep of any of these in
-mainline's Documentation/devicetree shows up nothing (not even the
-existing "renesas,rcar-sata" string used by the driver.
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
