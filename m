@@ -1,68 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: add export with name from dts
-Date: Fri, 11 Oct 2013 16:46:51 +0200
-Message-ID: <CACRpkdau1nGVuDji+gxBnkuC2Ri4SM+MUL+FnQKvMpKMLnG1dQ@mail.gmail.com>
-References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
-	<CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com>
-	<5257E15D.5080602@aksignal.cz>
-	<CACRpkdYkG-0x9_oQijA6hYn+snDsjtVT+RhYhDe_9gjfDdWuoA@mail.gmail.com>
-	<5257F8D2.5080700@aksignal.cz>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
+Date: Fri, 11 Oct 2013 17:46:12 +0300
+Message-ID: <52580F34.8030809@ti.com>
+References: <1381402195-29257-1-git-send-email-kishon@ti.com> <1381402195-29257-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5257F8D2.5080700@aksignal.cz>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jiri Prchal <jiri.prchal@aksignal.cz>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Bryan Wu <cooloney@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381402195-29257-2-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 3:10 PM, Ji=C5=99=C3=AD Prchal <jiri.prchal@aks=
-ignal.cz> wrote:
-> Dne 11.10.2013 14:49, Linus Walleij napsal(a):
+Hi,
 
->> If the GPIOs are actually connected to LEDs you should be
->> using drivers/leds/leds-gpio.c and not export the GPIOs.
->
-> I know that, just don't like /sys/class/leds/out15/brightness.
+On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
+> From: George Cherian <george.cherian@ti.com>
+> 
+> Added dr_mode property in dwc3 and set its default mode to device.
 
-Hm, then you might want to modify the way names are set
-on leds rather ... this is the way we handle LEDs in the kernel
-so any problems need to be discussed with Bryan Wu,
-the LED maintainer.
+If there is a specific reason why this is not set to "otg", we need
+to explain it here.
 
->>> And what for inputs?
->>
->> Depends on what input. For simple buttons:
->>
->> drivers/input/keyboard/gpio_keys.c
->> drivers/input/keyboard/gpio_keys_polled.c
->>
->> Then you get the input events from /dev/input/eventN
->> just like any other key press.
->>
->> extcon-gpio.c is for e.g. headphone insertion on mobile
->> phones etc.
->
-> Hm, my inputs are simple digital inputs from real world, like "door o=
-pen",
-> "somewhere is voltage", "some switch is on". And more than one app is
-> reading them.
-> So what to use for it?
+AFAIK the port is meant to be used as OTG port.
 
-This is actually a valid case for using userspace GPIO, because
-of course the kernel cannot model the entire world :-D
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  arch/arm/boot/dts/omap5.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 6d0a1d5..ef598af 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -652,6 +652,7 @@
+>  				reg = <0x4a030000 0x10000>;
+>  				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+>  				usb-phy = <&usb2_phy>, <&usb3_phy>;
+> +				dr_mode = "peripheral";
+>  				tx-fifo-resize;
+>  			};
+>  		};
+> 
 
-What makes me suspicious is mostly when some system
-(board with GPIO used in an electronic design) is modeled
-from userspace.
-
-So this seems to be OK.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
