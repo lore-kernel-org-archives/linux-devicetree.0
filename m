@@ -1,180 +1,112 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
- status bit fields
-Date: Fri, 11 Oct 2013 11:10:38 -0400
-Message-ID: <525814EE.8060700@ti.com>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com> <1381320509-23967-1-git-send-email-ch.naveen@samsung.com> <2386580.3V2pzai3k2@amdc1032>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
+Date: Fri, 11 Oct 2013 19:14:39 +0400
+Message-ID: <525815DF.4040707@cogentembedded.com>
+References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com> <20131011010032.GA13809@verge.net.au> <20131011094156.GF3910@e106331-lin.cambridge.arm.com> <5257D8FC.3040405@cogentembedded.com> <20131011144741.GA16477@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2386580.3V2pzai3k2@amdc1032>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131011144741.GA16477@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi Naveen,
-
-On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
->=20
-> Hi,
->=20
-> All patches (#1-#3) look good to me, FWIW you can add:
->=20
-> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->=20
-> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412=
-
-> fixup patchset:
->=20
-> 	https://lkml.org/lkml/2013/10/9/35
->=20
-> It is up to Eduardo to resolve this but it probably would be better to
-> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This woul=
-d
-> require you to port patch #3 over Lukasz's patchset though.
-
-My question is if this fix applies also to EXYNOS4412, as it  is not
-mentioned in the patch description and the change affects all supported
-chip version deliberately. Has this change been validated on all
-supported chip versions?
-
-Amit, I saw you ack, but still, it is not clear how this change behaves
-across supported hardware.
-
->=20
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
->=20
-> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wro=
-te:
->> The FALL interrupt related en, status bits are available at an offset =
-of
->> 16 on INTEN, INTSTAT registers and at an offset of
->> 12 on INTCLEAR register.
+On 10/11/2013 06:47 PM, Mark Rutland wrote:
+> On Fri, Oct 11, 2013 at 11:54:52AM +0100, Valentine wrote:
+>> On 10/11/2013 01:41 PM, Mark Rutland wrote:
+>>> On Fri, Oct 11, 2013 at 02:00:35AM +0100, Simon Horman wrote:
+>>>> [ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
+>>>
+>>> Cheers!
+>>>
 >>
->> This patch corrects the same for exyns5250 and exynos5440
+>> Hi Mark,
 >>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> ---
->> Changes since v1:
->> Changes since v2:
->> Changes since v3:
->>   None
+>>>>
+>>>> On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
+>>>>> RCAR Gen2 SoC has a different phy which is not compatible with
+>>>>> the older H1/M1 versions. This adds OF/platform device table
+>>>>> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
+>>>
+>>> Is the PHY combined with the rest of the controller, or are they
+>>> logically separate components in the SoC? I note that the Calxeda
+>>> Highbank SATA controller driver treats the phy and the controller as
+>>> separate entities, and describes the way the two are attached (though
+>>> the driver handles both). Would a similar approach work here?
+>>>
 >>
->>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
->>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
->>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
->>  4 files changed, 7 insertions(+), 2 deletions(-)
+>> It seems to be described in the docs as a single entity with the rest of
+>> the controller. The phy registers are in the same address space block.
+>> We don't need to describe how the phy is attached to the SATA
+>> controller. In the future we may need some phy-specific configuration in
+>> the device tree. For example, to describe how clock generator is
+>> connected to the controller. I think this could be done with optional
+>> properties added to the SATA node if needed.
+>
+> As they're tightly coupled and share the same register block, I guess
+> describing them together is ok. Is that clock example hypothetical, or
+> something we _will_ need in future?
+
+According to the manual there's some configuration possible,
+though it's not verbosely described:
+* SSCG (on/off)
+* Clock connection (AC/DC)
+* Termination Resistor (on/off)
+
+AFAIU, this describes how the external clock generator is connected.
+All available Gen2 boards use the same generator type and
+the same "default" phy settings (SSCG off/DC/TR on).
+
+It is possible set spread spectrum with a switch on the board (it is 
+disabled by default)
+
+I don't know if we will need to change those settings in the future.
+Probably this could be done as a separate patch if needed.
+
+>
 >>
->> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sa=
-msung/exynos_tmu.c
->> index b43afda..af69209 100644
->> --- a/drivers/thermal/samsung/exynos_tmu.c
->> +++ b/drivers/thermal/samsung/exynos_tmu.c
->> @@ -265,7 +265,7 @@ skip_calib_data:
->>  				data->base + reg->threshold_th1);
->> =20
->>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
->> -			(reg->inten_fall_mask << reg->inten_fall_shift),
->> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
->>  				data->base + reg->tmu_intclear);
->> =20
->>  		/* if last threshold limit is also present */
->> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/sa=
-msung/exynos_tmu.h
->> index b364c9e..7c6c34a 100644
->> --- a/drivers/thermal/samsung/exynos_tmu.h
->> +++ b/drivers/thermal/samsung/exynos_tmu.h
->> @@ -134,6 +134,7 @@ enum soc_type {
->>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
->>   * @tmu_intstat: Register containing the interrupt status values.
->>   * @tmu_intclear: Register for clearing the raised interrupt status.
->> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
->>   * @emul_con: TMU emulation controller register.
->>   * @emul_temp_shift: shift bits of emulation temperature.
->>   * @emul_time_shift: shift bits of emulation time.
->> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
->>  	u32	tmu_intstat;
->> =20
->>  	u32	tmu_intclear;
->> +	u32	intclr_fall_shift;
->> =20
->>  	u32	emul_con;
->>  	u32	emul_temp_shift;
->> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/therm=
-al/samsung/exynos_tmu_data.c
->> index 9002499..23fea23 100644
->> --- a/drivers/thermal/samsung/exynos_tmu_data.c
->> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
->> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos525=
-0_tmu_registers =3D {
->>  	.inten_fall0_shift =3D EXYNOS_TMU_INTEN_FALL0_SHIFT,
->>  	.tmu_intstat =3D EXYNOS_TMU_REG_INTSTAT,
->>  	.tmu_intclear =3D EXYNOS_TMU_REG_INTCLEAR,
->> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->>  	.emul_con =3D EXYNOS_EMUL_CON,
->>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
->>  	.emul_time_shift =3D EXYNOS_EMUL_TIME_SHIFT,
->> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos544=
-0_tmu_registers =3D {
->>  	.inten_fall0_shift =3D EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
->>  	.tmu_intstat =3D EXYNOS5440_TMU_S0_7_IRQ,
->>  	.tmu_intclear =3D EXYNOS5440_TMU_S0_7_IRQ,
->> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->>  	.tmu_irqstatus =3D EXYNOS5440_TMU_IRQ_STATUS,
->>  	.emul_con =3D EXYNOS5440_TMU_S0_7_DEBUG,
->>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
->> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/therm=
-al/samsung/exynos_tmu_data.h
->> index dc7feb5..8788a87 100644
->> --- a/drivers/thermal/samsung/exynos_tmu_data.h
->> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
->> @@ -69,9 +69,10 @@
->>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
->>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
->>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
->> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
->> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
->>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
->>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
->> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
->>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
->>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
->>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
->=20
->=20
->=20
+>>> [...]
+>>>
+>>>>> +static struct of_device_id sata_rcar_match[] = {
+>>>>> +	{
+>>>>> +		.compatible = "renesas,rcar-sata",
+>>>>> +		.data = (void *)RCAR_SATA
+>>>>> +	},
+>>>>> +	{
+>>>>> +		.compatible = "renesas,sata-r8a7790",
+>>>>> +		.data = (void *)RCAR_GEN2_SATA
+>>>>> +	},
+>>>>> +	{
+>>>>> +		.compatible = "renesas,sata-r8a7791",
+>>>>> +		.data = (void *)RCAR_GEN2_SATA
+>>>>> +	},
+>>>>> +	{},
+>>>
+>>> These bindings will need documentation. A grep of any of these in
+>>> mainline's Documentation/devicetree shows up nothing (not even the
+>>> existing "renesas,rcar-sata" string used by the driver.
+>>
+>> Indeed.
+>> Since we need to adjust rcar-sata bindings and add documentation for it,
+>> which is not really related to Gen2 phy support, looks like it will be a
+>> separate patch.
+>
+> If you're adding strings, there should be documentation. While it may be
+> a separate patch, we should _not_ add compatible strings to the kernel
+> without documentation. I'd like to see the documentation patch first.
 
+Right. I meant that there should be a separate patch that adds 
+documentation for the already existing binding.
+I think I'll make a couple of patches then:
+* Adjust and document the existing bindings as Simon has suggested
+* Add Gen2 support and document Ge2 bindings.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+>
+> Thanks,
+> Mark.
+>
 
-Eduardo Valentin
-
-
---PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJYFPMACgkQCXcVR3XQvP3PzQEAjdUlM2AYCAZbis8xNEF0Qgxf
-T6QdlXNX2s1Yq1KYZ88A/R027+dbOKcYUq4a2MvMoMVGEEHO10uaf6YC+UcsQH2u
-=b9hp
------END PGP SIGNATURE-----
-
---PCUN8VI9REiIrqQwD6CFK86Kte3MOgKgk--
+Thanks,
+Val.
