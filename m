@@ -1,63 +1,67 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL] ARM: OMAP: Device Tree for 3.13
-Date: Fri, 11 Oct 2013 14:42:01 -0700
-Message-ID: <20131011214201.GZ29913@atomide.com>
-References: <52582A67.6050108@baylibre.com>
- <20131011180324.GV29913@atomide.com>
- <52584BF7.8060100@baylibre.com>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 0/5] ARM: support for Trusted Foundations secure monitor
+Date: Fri, 11 Oct 2013 14:45:33 -0700
+Message-ID: <1381527938-22840-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52584BF7.8060100@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <bcousson@baylibre.com> [131011 12:13]:
-> Hi Tony,
-> 
-> On 11/10/2013 20:03, Tony Lindgren wrote:
-> >Hi Benoit,
-> >
-> >* Benoit Cousson <bcousson@baylibre.com> [131011 09:50]:
-> >>Add the minimal DTS support for DRA7xx based SoC core.
-> >>Add the initial support for N900 and gta04 phones.
-> >>Enable USB3 on OMAP5 evm board.
-> >>Add support for cryto accelerators
-> >>Add new IGEP AQUILA board
-> >>Add AM33XX EDMA support
-> >>Update HSUSB node to use the reset-gpios fmwk
-> >
-> >Looks good to me, but we're getting self-inflicted merge
-> >conflicts in two places now with Paul's hwmod changes,
-> >and my defconfig changes.
-> 
-> Damn!
+Hopefully this has received enough review to be merged (although a few more
+acks/review especially from DT people on patch 1 would be nice). Thanks
+everyone for all the input and comments!
 
-:)
- 
-> >Can you please respin without the following two patches:
-> >
-> >49bcd824c1c0db32fe4de0c1ba3ee36defdb11ca ARM: configs: omap2plus_defconfig: enable dwc3 and dependencies
-> >736c4bb159c793b00331261438deb982cbac3c03 ARM: OMAP5: hwmod: add missing ocp2scp hwmod data
-> >
-> >I can pick the two patches above and apply after pulling in
-> >Paul's branch first.
-> 
-> OK, no problem.
-> 
-> >
-> >However, if other branches are based on this, then we just
-> >need to deal with the merge conflicts, and there's no point
-> >in redoing your branch.
-> 
-> Considering the patches, I don't see any dependency with the other
-> ones, as soon as they are pulled before the DTS changes.
-> 
-> I'll do that ASAP and repost.
+Trusted Foundations is an ARM secure monitor that is used by many Tegra-based
+retail devices (like SHIELD and TegraNote). Adding support to it allows these
+devices to boot on a purely upstream kernel.
 
-OK thanks! I'll cherry pick the above two commits then.
+Public documentation about Trusted Foundations is scarce, but over the various
+versions of this patch it has been established that it does not follow the ARM
+SMC convention and also has no connection whatsoever with PSCI. As such, it
+requires an implementation of its own and the firmware interface introduced by
+Tomasz provides an adequate framework for it.
 
-Tony
+Changes since v7:
+- explicitly request the TF DT node to be under /firmware/ in the bindings
+  documentation
+- renamed arguments of tf_generic_smc() (suggestion made by Linus W. some time
+  ago that I overlooked).
+- fixed multi-line comment style
+
+TODO in a future patchset:
+- disable TF-dependant features (SMP, cpuidle) if TF cannot be supported instead
+  or doing an early panic
+- complete TF support with idle and L2 cache handling (ongoing)
+
+Alexandre Courbot (5):
+  ARM: add basic support for Trusted Foundations
+  ARM: tegra: add support for Trusted Foundations
+  ARM: tegra: split setting of CPU reset handler
+  ARM: tegra: set CPU reset handler with firmware op
+  ARM: tegra: support Trusted Foundations by default
+
+ .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
+ Documentation/devicetree/bindings/arm/tegra.txt    |  5 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/Kconfig                                   |  2 +
+ arch/arm/Makefile                                  |  1 +
+ arch/arm/configs/tegra_defconfig                   |  1 +
+ arch/arm/firmware/Kconfig                          | 28 ++++++++
+ arch/arm/firmware/Makefile                         |  1 +
+ arch/arm/firmware/trusted_foundations.c            | 79 ++++++++++++++++++++++
+ arch/arm/include/asm/trusted_foundations.h         | 68 +++++++++++++++++++
+ arch/arm/mach-tegra/Kconfig                        |  1 +
+ arch/arm/mach-tegra/common.c                       |  2 +
+ arch/arm/mach-tegra/reset.c                        | 40 ++++++++---
+ 13 files changed, 238 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+ create mode 100644 arch/arm/firmware/Kconfig
+ create mode 100644 arch/arm/firmware/Makefile
+ create mode 100644 arch/arm/firmware/trusted_foundations.c
+ create mode 100644 arch/arm/include/asm/trusted_foundations.h
+
+-- 
+1.8.4
