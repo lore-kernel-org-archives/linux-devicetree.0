@@ -1,256 +1,96 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v2 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Fri, 11 Oct 2013 18:16:41 +0300
-Message-ID: <1381504601-23773-3-git-send-email-svarbanov@mm-sol.com>
-References: <1381504601-23773-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381504601-23773-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
+Date: Fri, 11 Oct 2013 08:36:55 -0700
+Message-ID: <20131011153654.GN29913@atomide.com>
+References: <20131003054104.8941.88857.stgit@localhost>
+ <20131003054221.8941.87801.stgit@localhost>
+ <5256AA7F.8030005@ti.com>
+ <20131010160018.GA29913@atomide.com>
+ <CACRpkdaG-PQA39XSjKUgM9TyeD7srgm_8s+NazrDKJ0gmNLcwg@mail.gmail.com>
+ <20131010162015.GC29913@atomide.com>
+ <CACRpkdYF83ghUf60Wmrti53UJ1bWV30GW_P9GjWnsOcZHbsv+Q@mail.gmail.com>
+ <5257BD3E.5000707@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5257BD3E.5000707@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prakash Manjunathappa <prakash.pm@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a driver for hardware random number generator present
-on Qualcomm MSM SoC's.
+* Roger Quadros <rogerq@ti.com> [131011 02:04]:
+> On 10/11/2013 11:00 AM, Linus Walleij wrote:
+> > On Thu, Oct 10, 2013 at 6:20 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >> * Linus Walleij <linus.walleij@linaro.org> [131010 09:19]:
+> >>> On Thu, Oct 10, 2013 at 6:00 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >>>> * Roger Quadros <rogerq@ti.com> [131010 06:32]:
+> >>>>>
+> >>>>> I tried testing this with the USB EHCI driver, but I'm not getting wake up interrupts
+> >>>>> while the system is still running and only the EHCI controller is runtime suspended.
+> >>>>>
+> >>>>> It seems we need to somehow call _reconfigure_io_chain() to update the daisy chain
+> >>>>> whenever the pad wakeup_enable bit is changed.
+> >>>>
+> >>>> Sounds like this is on omap3? Have you tried calling pcs_soc->rearm() in the
+> >>>> pcs_irq_handle() like the comments there suggest? At least for me that keeps
+> >>>> the wake-up interrupts continuously running on omap3 instead of just idle modes.
+> >>>
+> >>> If the rearm() function is calling this _reconfigure_io_chain my comments
+> >>> on the fact that this is something that should be handled by the pin
+> >>> control driver still apply I think ....
+> >>
+> >> Yes, except that the reconfigure_io_chain registers are in the PRM module, not in
+> >> the SCM module where the pinctrl registers are.. And that shared PRM interrupt is
+> >> used mostly for the internal domain wake-ups, so we should keep that in the PRM
+> >> driver.
+> > 
+> > That depends.
+> > 
+> > One-iorange-equals-one-driver is a fallacy, especially given that MFD for
+> > memory-mapped things exist for a reason.
+> 
+> +1
+> 
+> Another place I faced a similar problem was the OMAP control module, which contains
+> registers for a number of different non related peripherals. (e.g. PHY for USB, SATA,
+> Display clock, etc)
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
----
- drivers/char/hw_random/Kconfig   |  12 +++
- drivers/char/hw_random/Makefile  |   1 +
- drivers/char/hw_random/msm-rng.c | 195 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 208 insertions(+)
- create mode 100644 drivers/char/hw_random/msm-rng.c
+Guys, we really need to keep the register access between hardware modules
+under control because the hardware blocks can live separate life from clocking
+and power state point of view.
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 0aa9d91daef5..d902330cef43 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -314,3 +314,15 @@ config HW_RANDOM_TPM
- 	  module will be called tpm-rng.
- 
- 	  If unsure, say Y.
-+
-+config HW_RANDOM_MSM
-+        tristate "Qualcomm MSM Random Number Generator support"
-+        depends on HW_RANDOM && ARCH_MSM && HAVE_CLK
-+        ---help---
-+          This driver provides kernel-side support for the Random Number
-+          Generator hardware found on Qualcomm MSM SoCs.
-+
-+          To compile this driver as a module, choose M here. the
-+          module will be called msm-rng.
-+
-+          If unsure, say Y.
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index bed467c9300e..441a0a7705a2 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -27,3 +27,4 @@ obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
- obj-$(CONFIG_HW_RANDOM_EXYNOS)	+= exynos-rng.o
- obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
- obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
-+obj-$(CONFIG_HW_RANDOM_MSM) += msm-rng.o
-diff --git a/drivers/char/hw_random/msm-rng.c b/drivers/char/hw_random/msm-rng.c
-new file mode 100644
-index 000000000000..e219e94d02c1
---- /dev/null
-+++ b/drivers/char/hw_random/msm-rng.c
-@@ -0,0 +1,195 @@
-+/*
-+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/clk.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+/* Device specific register offsets */
-+#define PRNG_DATA_OUT		0x0000
-+#define PRNG_STATUS		0x0004
-+#define PRNG_LFSR_CFG		0x0100
-+#define PRNG_CONFIG		0x0104
-+
-+/* Device specific register masks and config values */
-+#define PRNG_LFSR_CFG_MASK	0x0000ffff
-+#define PRNG_LFSR_CFG_CLOCKS	0x0000dddd
-+#define PRNG_CONFIG_HW_ENABLE	BIT(1)
-+#define PRNG_STATUS_DATA_AVAIL	BIT(0)
-+
-+#define MAX_HW_FIFO_DEPTH	16
-+#define MAX_HW_FIFO_SIZE	(MAX_HW_FIFO_DEPTH * 4)
-+#define WORD_SZ			4
-+
-+struct msm_rng {
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct hwrng hwrng;
-+};
-+
-+#define to_msm_rng(p)	container_of(p, struct msm_rng, hwrng)
-+
-+static int msm_rng_enable(struct hwrng *hwrng, int enable)
-+{
-+	struct msm_rng *rng = to_msm_rng(hwrng);
-+	u32 val;
-+	int ret;
-+
-+	ret = clk_prepare_enable(rng->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (enable) {
-+		/* Enable PRNG only if it is not already enabled */
-+		val = readl_relaxed(rng->base + PRNG_CONFIG);
-+		if (val & PRNG_CONFIG_HW_ENABLE)
-+			goto already_enabled;
-+
-+		val = readl_relaxed(rng->base + PRNG_LFSR_CFG);
-+		val &= ~PRNG_LFSR_CFG_MASK;
-+		val |= PRNG_LFSR_CFG_CLOCKS;
-+		writel(val, rng->base + PRNG_LFSR_CFG);
-+
-+		val = readl_relaxed(rng->base + PRNG_CONFIG);
-+		val |= PRNG_CONFIG_HW_ENABLE;
-+		writel(val, rng->base + PRNG_CONFIG);
-+	} else {
-+		val = readl_relaxed(rng->base + PRNG_CONFIG);
-+		val &= ~PRNG_CONFIG_HW_ENABLE;
-+		writel(val, rng->base + PRNG_CONFIG);
-+	}
-+
-+already_enabled:
-+	clk_disable_unprepare(rng->clk);
-+	return 0;
-+}
-+
-+static int msm_rng_read(struct hwrng *hwrng, void *data, size_t max, bool wait)
-+{
-+	struct msm_rng *rng = to_msm_rng(hwrng);
-+	size_t currsize = 0;
-+	u32 *retdata = data;
-+	size_t maxsize;
-+	int ret;
-+	u32 val;
-+
-+	/* calculate max size bytes to transfer back to caller */
-+	maxsize = min_t(size_t, MAX_HW_FIFO_SIZE, max);
-+
-+	/* no room for word data */
-+	if (maxsize < WORD_SZ)
-+		return 0;
-+
-+	ret = clk_prepare_enable(rng->clk);
-+	if (ret)
-+		return ret;
-+
-+	/* read random data from hardware */
-+	do {
-+		val = readl_relaxed(rng->base + PRNG_STATUS);
-+		if (!(val & PRNG_STATUS_DATA_AVAIL))
-+			break;
-+
-+		val = readl_relaxed(rng->base + PRNG_DATA_OUT);
-+		if (!val)
-+			break;
-+
-+		*retdata++ = val;
-+		currsize += WORD_SZ;
-+
-+		/* make sure we stay on 32bit boundary */
-+		if ((maxsize - currsize) < WORD_SZ)
-+			break;
-+	} while (currsize < maxsize);
-+
-+	clk_disable_unprepare(rng->clk);
-+
-+	return currsize;
-+}
-+
-+static int msm_rng_init(struct hwrng *hwrng)
-+{
-+	return msm_rng_enable(hwrng, 1);
-+}
-+
-+static void msm_rng_cleanup(struct hwrng *hwrng)
-+{
-+	msm_rng_enable(hwrng, 0);
-+}
-+
-+static int msm_rng_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct msm_rng *rng;
-+	int ret;
-+
-+	rng = devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
-+	if (!rng)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, rng);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rng->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rng->base))
-+		return PTR_ERR(rng->base);
-+
-+	rng->clk = devm_clk_get(&pdev->dev, "prng");
-+	if (IS_ERR(rng->clk))
-+		return PTR_ERR(rng->clk);
-+
-+	rng->hwrng.name = KBUILD_MODNAME,
-+	rng->hwrng.init = msm_rng_init,
-+	rng->hwrng.cleanup = msm_rng_cleanup,
-+	rng->hwrng.read = msm_rng_read,
-+
-+	ret = hwrng_register(&rng->hwrng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register hwrng\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int msm_rng_remove(struct platform_device *pdev)
-+{
-+	struct msm_rng *rng = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&rng->hwrng);
-+	return 0;
-+}
-+
-+static const struct of_device_id msm_rng_of_match[] = {
-+	{ .compatible = "qcom,prng", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, msm_rng_of_match);
-+
-+static struct platform_driver msm_rng_driver = {
-+	.probe = msm_rng_probe,
-+	.remove = msm_rng_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(msm_rng_of_match),
-+	}
-+};
-+module_platform_driver(msm_rng_driver);
-+
-+MODULE_AUTHOR("The Linux Foundation");
-+MODULE_DESCRIPTION("Qualcomm MSM random number generator driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.3.1
+Regmap could be probably used for the register access across various hardware
+modules in a controlled way that is also aware of the clocking and PM state of
+the hardware modules in question. As long as it's done sanely, I'm OK with that.
 
+But for any other kind of random direct register tinkering between hardware
+modules, that's a no no.
+
+> > What the pin control driver should do is control the pins. Whether the registers
+> > are spread out in the entire IO-memory does not matter. We did have one system
+> > which placed the IO-muxing together with each peripheral (!) and I did
+> > still want
+> > that to be handled by a single pinctrl driver picking out windows to all these
+> > IO-ranges.
+> > 
+> > Things like the PRM which has (my guess) a gazillion registers related to its
+> > deep-core SoC stuff should be handled by things like
+> > drivers/mfd/syscon.c, which means it is dead simple for some other driver
+> > using "just this one register" in that range to get a handle at it and poke it
+> > using syscon_node_to_regmap() (just derference an ampersand ref)
+> > syscon_regmap_lookup_by_compatible() (use a compatible string)
+> > all returning a regmap * that you can use to poke these registers.
+> 
+> The register handling is fine. But how do we deal with resource handling?
+> e.g. the block that has the deep-core registers might need to be clocked or powered
+> before the registers can be accessed.
+
+Right, that's the key issue here. The register access would have to be conditional
+based on the hardware modules PM state. Otherwise we'll have hard to trace hangs
+and oopses.
+
+Regards,
+
+Tony
