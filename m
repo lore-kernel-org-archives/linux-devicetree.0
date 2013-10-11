@@ -1,21 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
-Date: Fri, 11 Oct 2013 16:43:57 -0600
-Message-ID: <52587F2D.9070007@wwwdotorg.org>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Fri, 11 Oct 2013 15:53:34 -0700
+Message-ID: <20131011225333.GD29913@atomide.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+ <524EE00F.7010208@ti.com>
+ <20131007021556.GV8949@atomide.com>
+ <52525642.8010307@ti.com>
+ <20131007154103.GW8949@atomide.com>
+ <20131007190322.GY8949@atomide.com>
+ <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
+ <525662A6.4080504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381134884-5816-28-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <525662A6.4080504@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Paul Walmsley <paul@pwsan.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2013 02:34 AM, Thierry Reding wrote:
-> The gr2d hardware in Tegra114 is compatible with that of Tegra20 and
-> Tegra30. No functionaly changes are required.
+* Tero Kristo <t-kristo@ti.com> [131010 01:25]:
+> On 10/09/2013 09:55 PM, Paul Walmsley wrote:
+> >So in my view, the right things to do here are to:
+> >
+> >1. associate SoC DT clock data with the device node that contains the
+> >    clock control registers
+> 
+> So, either "cm", "prcm", and maybe "control_module" instead of
+> current "clocks". How much do we benefit from this? This would get
+> rid of need to call of_iomap() for each register basically.
 
-Similarly here, if the HW is 100% backwards-compatible, there's no need
-to add compatible values to the driver.
+It seems that all you need to do for that is to set up two or three
+clock driver instances and have the clocks registered under them.
+
+Then later on those can be children of cm, prcm and scm core drivers
+as needed without much of an issue.
+
+Regards,
+
+Tony
