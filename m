@@ -1,143 +1,231 @@
-From: "Sherman Yin" <syin@broadcom.com>
-Subject: RE: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Thu, 10 Oct 2013 23:48:15 +0000
-Message-ID: <051069C10411E24D9749790C498526FA1BE027EA@SJEXCHMB12.corp.ad.broadcom.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
- <1380846199-12829-4-git-send-email-syin@broadcom.com>
- <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ata: sata_rcar: Add RCAR Gen2 SATA PHY support
+Date: Fri, 11 Oct 2013 10:00:35 +0900
+Message-ID: <20131011010032.GA13809@verge.net.au>
+References: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381432083-3684-1-git-send-email-valentine.barshak@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->> +config PINCTRL_CAPRI
->> +       bool "Broadcom Capri pinctrl driver"
->> +       select PINMUX
->> +       select PINCONF
->> +       help
->> +         Say Y here to support Broadcom Capri pinctrl driver, which is used for
->> +         the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
->> +         BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
->> +         framework.  GPIO is provided by a separate GPIO driver.
->
->As mentioned this should be selecting and using GENERIC_PINCONF.
->Basically I want that to happen before we look further at this code.
->
->(But I'll take a quick glance anyway...)
+[ CCed devicetree@vger.kernel.org as this involves DT compatibility strings ]
 
-Sure, working on it.
+On Thu, Oct 10, 2013 at 11:08:03PM +0400, Valentine Barshak wrote:
+> RCAR Gen2 SoC has a different phy which is not compatible with
+> the older H1/M1 versions. This adds OF/platform device table
+> and PHY initialization callbacks for H2/M2 (Gen2) SoC.
 
->> +#define CAPRI_PINCONF_PACK(val, mask)     (((val) << 16) | ((mask) & 0xffff))
->> +#define CAPRI_PINCONF_UNPACK_VAL(conf)    ((conf) >> 16)
->> +#define CAPRI_PINCONF_UNPACK_MASK(conf)   ((conf) & 0xffff)
->
->This custom horror goes away by using the macros from genric pin config
-><linux/pinctrl/pinconf-generic.h> instead.
+I think it would aid subsequent reading of this patch
+if you included information about which SoC is H1, M1, H2 and M2
+in the change log.
 
-Actually these are used differently than the pack/unpack functions in the pinconf-
-generic.h.  These pack the bit value and bit mask to be written to a register,
-whereas the pinconf-generic ones pack the parameter id and value.  But I get what
-you're saying and will try to reuse as much as possible from the pinconf generic
-functions and utils.
+For the benefit of others they are as follows:
 
->> +static const struct capri_cfg_param capri_pinconf_params[] = {
->> +       {"brcm,hysteresis",     CAPRI_PINCONF_PARAM_HYST},
->> +       {"brcm,pull",           CAPRI_PINCONF_PARAM_PULL},
->> +       {"brcm,slew",           CAPRI_PINCONF_PARAM_SLEW},
->> +       {"brcm,input_dis",      CAPRI_PINCONF_PARAM_INPUT_DIS},
->> +       {"brcm,drive_str",      CAPRI_PINCONF_PARAM_DRV_STR},
->> +       {"brcm,pull_up_str",    CAPRI_PINCONF_PARAM_PULL_UP_STR},
->> +       {"brcm,mode",           CAPRI_PINCONF_PARAM_MODE},
->> +};
->
->As well as all this stuff...
+Gen 1:
+	H1: r8a7779 SoC
+	M1: r8a7778 SoC
 
-OK.  Will see if I can find something suitable for "input disable" and "mode"
+Gen 2:
+	H2: r8a7790 SoC
+	M2: r8a7791 SoC
 
->> +/* Standard pin register */
->
->Add some more elaborate explanation here. I am half-guessing that
->most of the registers are laid out like this and then there are
->two exceptions, then write that right here in the comment.
->
->(BTW: this is a HW/driver detail and should not be written in the
->device tree doc as was done in patch 2)
+> PHY initialization method is chosen based on the device id.
+> Default PHY settings are applied for Gen2 SoC, which should
+> suit the available Gen2 boards.
+> 
+> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> ---
+>  drivers/ata/sata_rcar.c | 108 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 94 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+> index c2d95e9..45af29f 100644
+> --- a/drivers/ata/sata_rcar.c
+> +++ b/drivers/ata/sata_rcar.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/ata.h>
+>  #include <linux/libata.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+> @@ -118,17 +119,42 @@
+>  #define SATAPCTLR3_REG			0x5A
+>  #define SATAPCTLR4_REG			0x60
+>  
+> +/* Gen2 Physical Layer Control Registers */
+> +#define RCAR_GEN2_PHY_CTL1_REG		0x1704
+> +#define RCAR_GEN2_PHY_CTL1		0x34180002
+> +#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
+> +
+> +#define RCAR_GEN2_PHY_CTL2_REG		0x170C
+> +#define RCAR_GEN2_PHY_CTL2		0x00002303
+> +
+> +#define RCAR_GEN2_PHY_CTL3_REG		0x171C
+> +#define RCAR_GEN2_PHY_CTL3		0x000B0194
+> +
+> +#define RCAR_GEN2_PHY_CTL4_REG		0x1724
+> +#define RCAR_GEN2_PHY_CTL4		0x00030994
+> +
+> +#define RCAR_GEN2_PHY_CTL5_REG		0x1740
+> +#define RCAR_GEN2_PHY_CTL5		0x03004001
+> +#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
+> +#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
+> +
+>  /* Descriptor table word 0 bit (when DTA32M = 1) */
+>  #define SATA_RCAR_DTEND			BIT(0)
+>  
+>  #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
+>  
+> +enum sata_rcar_type {
+> +	RCAR_SATA,
+> +	RCAR_GEN2_SATA,
+> +};
+> +
+>  struct sata_rcar_priv {
+>  	void __iomem *base;
+>  	struct clk *clk;
+> +	enum sata_rcar_type type;
+>  };
+>  
+> -static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
+> +static void sata_rcar_phy_preinit(struct sata_rcar_priv *priv)
+>  {
+>  	void __iomem *base = priv->base;
+>  
+> @@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
+>  	iowrite32(0, base + SATAPHYADDR_REG);
+>  }
+>  
+> +static void sata_rcar_phy_init(struct sata_rcar_priv *priv)
+> +{
+> +	sata_rcar_phy_preinit(priv);
+> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+> +	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+> +	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+> +	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+> +	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+> +}
+> +
+> +static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
+> +{
+> +	void __iomem *base = priv->base;
+> +
+> +	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
+> +		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
+> +}
+> +
+>  static void sata_rcar_freeze(struct ata_port *ap)
+>  {
+>  	struct sata_rcar_priv *priv = ap->host->private_data;
+> @@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>  	u32 val;
+>  
+>  	/* reset and setup phy */
+> -	sata_rcar_phy_initialize(priv);
+> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+> -	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+> -	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+> +	switch (priv->type) {
+> +	case RCAR_GEN2_SATA:
+> +		sata_rcar_gen2_phy_init(priv);
+> +		break;
+> +	case RCAR_SATA:
+> +		sata_rcar_phy_init(priv);
+> +		break;
+> +	default:
+> +		dev_warn(host->dev, "SATA PHY is not initialized\n");
+> +		break;
+> +	}
+>  
+>  	/* SATA-IP reset state */
+>  	val = ioread32(base + ATAPI_CONTROL1_REG);
+> @@ -770,8 +823,34 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>  	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
+>  }
+>  
+> +static struct of_device_id sata_rcar_match[] = {
+> +	{
+> +		.compatible = "renesas,rcar-sata",
+> +		.data = (void *)RCAR_SATA
+> +	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7790",
+> +		.data = (void *)RCAR_GEN2_SATA
+> +	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7791",
+> +		.data = (void *)RCAR_GEN2_SATA
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> +
+> +static const struct platform_device_id sata_rcar_id_table[] = {
+> +	{ "sata_rcar",		RCAR_SATA },
+> +	{ "sata-r8a7790",	RCAR_GEN2_SATA },
+> +	{ "sata-r8a7791",	RCAR_GEN2_SATA },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(platform, sata_rcat_id_table);
+> +
 
-Yes you guessed correctly.  Most of the pin have bit-field definitions like
-the "standard" or "std" pin register.  There are 12 pins that have the i2c
-definitions, and 2 pins that have the hdmi definitions.  Will add
-explanation to the code.
+I think it would be better to add sata-r8a7779 and
+sata-r8a7778 to handle the GEN1 hardware and deprecate rcar-sata.
 
-However, I wanted to explain this in the DT doc as well because, for example,
-setting a slew rate for an hdmi pin would be invalid.
+Less importantly I think it would be better to name RCAR_SATA
+as RCAR_GEN1_SATA.
 
->> +/* Macro to update reg with new pin config param */
->> +#define CAPRI_PIN_REG_SET(reg, type, param, val)                       \
->> +       (((reg) & ~CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK)       \
->> +       | (((val) << CAPRI_ ## type ## _PIN_REG_ ## param ## _SHIFT)    \
->> +       & CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK))
->
->No thanks.
->
->Rewrite this into a static inline which has the same effect when
->compiling, but produces *WAY* more readable code than this
->horrid thing. Plus you can type the arguments.
-
-Ok.  The reason I used a macro is to take shortcuts given how the SHIFT
-and MASK #defines follow the format 
-
-CAPRI_<pin type>_PIN_REG_<parameter name>_<mask or shift>
-
-I'll try to simply this.
-
->> +#define _PIN(offset)                   (offset)
->
->This macro isn't exactly useful.
->
->> +/*
->> + * Pin number definition.  The order here must be the same as defined in the
->> + * PADCTRLREG block in the RDB.
->> + */
->> +#define CAPRI_PIN_ADCSYNC              _PIN(0)
->
->If it's just going to be like that, then skip the _PIN() macro.
-
-Removed.  Was following pinctrl-tegra20.c where they have the _GPIO and _PIN
-macros.  I guess it would be useful if we need to change the order of the enums
-in the future, but that's not the case at the moment for capri. 
-
->> +/* Process the pin configuration node */
->> +static int capri_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->> +                                       struct device_node *pnode,
->> +                                       struct pinctrl_map **map,
->> +                                       unsigned *nmaps)
->> +{
->
->Make use of these from pinctrl-utils.c:
->pinctrl_utils_reserve_map()
->pinctrl_utils_add_map_mux()
->pinctrl_utils_add_map_configs()
->pinctrl_utils_dt_free_map()
->
->Then you get rid of another big chunk of boilerplate code.
->
->After these changes the driver will be much smaller and
->cleaner and we can take a closer look.
-
-Yea actually the generic code is similar to what I have, there are some
-differences in terms of pre-allocating / re-allocating the pinctrl_maps.
-Seems like there are very few users of these functions at the moment.
-Anyway I'll try to make use of them.
-
-Thanks for the review.
-
-Regards,
-Sherman
-
+>  static int sata_rcar_probe(struct platform_device *pdev)
+>  {
+> +	const struct of_device_id *of_id;
+>  	struct ata_host *host;
+>  	struct sata_rcar_priv *priv;
+>  	struct resource *mem;
+> @@ -787,6 +866,12 @@ static int sata_rcar_probe(struct platform_device *pdev)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> +	of_id = of_match_device(sata_rcar_match, &pdev->dev);
+> +	if (of_id)
+> +		priv->type = (enum sata_rcar_type)of_id->data;
+> +	else
+> +		priv->type = platform_get_device_id(pdev)->driver_data;
+> +
+>  	priv->clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(priv->clk)) {
+>  		dev_err(&pdev->dev, "failed to get access to sata clock\n");
+> @@ -892,15 +977,10 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+>  };
+>  #endif
+>  
+> -static struct of_device_id sata_rcar_match[] = {
+> -	{ .compatible = "renesas,rcar-sata", },
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> -
+>  static struct platform_driver sata_rcar_driver = {
+>  	.probe		= sata_rcar_probe,
+>  	.remove		= sata_rcar_remove,
+> +	.id_table	= sata_rcar_id_table,
+>  	.driver = {
+>  		.name		= DRV_NAME,
+>  		.owner		= THIS_MODULE,
+> -- 
+> 1.8.3.1
+> 
