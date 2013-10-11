@@ -1,72 +1,71 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] regulator: dts: Fix bindings description of regulator-boot-on
-Date: Fri, 11 Oct 2013 05:46:44 -0500
-Message-ID: <5257D714.9060005@ti.com>
-References: <1381487207-18298-1-git-send-email-nm@ti.com> <5257D40C.3060501@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: add export with name from dts
+Date: Fri, 11 Oct 2013 12:48:54 +0200
+Message-ID: <CACRpkda0=wWPP1JD-pzafEsbrOh2KQmOsvei2gc6m9yBa1tDZg@mail.gmail.com>
+References: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5257D40C.3060501@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: Rob Landley <rob@landley.net>, Mark Brown <broonie@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1381485939-12435-1-git-send-email-jiri.prchal@aksignal.cz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jiri Prchal <jiri.prchal@aksignal.cz>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2013 05:33 AM, Rajendra Nayak wrote:
-> On Friday 11 October 2013 03:56 PM, Nishanth Menon wrote:
->> Since regulator-boot-on property maps back to constraints->boot_on,
->> current description of 'regulator-boot-on' property conflicts with
->> description of 'boot-on' in include/linux/regulator/machine.h and the
->> corresponding implementation in drivers/regulator/core.c.
->>
->> Ensure the description is more inline with the original intent.
->>
->> Cc: Rajendra Nayak <rnayak@ti.com>
->>
->> Reported-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>
->> Ref: my confusion in http://marc.info/?t=138140228800004&r=1&w=2
->> Based on v3.12-rc4 tag
->>
->>  .../devicetree/bindings/regulator/regulator.txt    |    4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
->> index 2bd8f09..d999f096 100644
->> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
->> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
->> @@ -8,7 +8,9 @@ Optional properties:
->>  - regulator-min-microamp: smallest current consumers may set
->>  - regulator-max-microamp: largest current consumers may set
->>  - regulator-always-on: boolean, regulator should never be disabled
->> -- regulator-boot-on: bootloader/firmware enabled regulator
->> +- regulator-boot-on: regulator is enabled when the system is initially started.
->> +  If the regulator is not enabled by the hardware or bootloader then it will be
->> +  enabled when the constraints are applied.
-> 
-> Isn't this specific to how the linux regulator framework implements it?
-> why should it be documented in the generic bindings documentation which has
-> nothing Linux specific but more hardware details?
+This patch must be CC to devicetree@vger.kernel.org as it concerns
+device tree bindings. Please also keep Alexandre Courbot in the loop as
+he's working on GPIO refactorings.
 
-Lets say for the moment that SMPS10 was enabled by hardware
-/bootloader/firmware at boot.
+On Fri, Oct 11, 2013 at 12:05 PM, Jiri Prchal <jiri.prchal@aksignal.cz> wrote:
 
-By the description of "bootloader/firmware enabled regulator" , I have
-described the dts correctly by adding regulator-boot-on. However,
-translating that to implementation of "Keep the regulator enabled at
-boot even if we dont use it in USB" makes no logical leap for me.
+> Add export possibility to sysfs with given name in device tree.
+> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
+>
+> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
 
-In fact, what does "bootloader/firmware enabled regulator" even mean
-to OS? why should it even care if "bootloader/firmware enabled
-regulator"? It cares about regulators that are mandatory to be kept on
-at boot.
+This is a very terse commit message for something which will have
+a very drastic impact on the Linux kernel and device tree.
 
-So, IMHO, either our implementation in regulator core is wrong, or we
-are describing the wrong hardware property. This patch assumes the later.
+> +3) gpio-export
+> +--------------
+> +
+> +gpio-export will allow you to automatically export gpio
 
--- 
-Regards,
-Nishanth Menon
+
+What does this mean? You have to define all terms. And also consider the
+audience. If someone is using device tree on Symbian or Windows,
+what does "export" mean to them? Not all readers of this document
+are Linux implementers.
+
+> +required properties:
+> +- compatible: Should be "gpio-export"
+
+If this is a Linux-specific concept it should be named "linux-gpio-export"
+
+But overall I'm not happy with this *at all* as the sysfs ABI is already
+enough of a trouble for us. WIth platforms switching to DT-only
+probing it would be perfect to get rid of this sysfs interface altogether.
+
+Two questions:
+
+- What do you think of the approach of just not using this for DT
+  boots, instead we create a new userspace ABI, using e.g. a
+  char device for each GPIO chip like /dev/gpio0, /dev/gpio1 etc
+  and access these using ioctl:s?
+
+- I guess you have a specific system in mind for this? What is the
+  use case? I have seen *way* too many people trying to reimplement
+  drivers/leds/leds-gpio.c
+  drivers/input/keyboard/gpio_keys.c
+  drivers/input/keyboard/gpio_keys_polled.c
+  drivers/power/gpio-charger.c
+  drivers/i2c/busses/i2c-gpio.c
+  drivers/extcon/extcon-gpio.c
+  drivers/spi/spi-gpio.c
+  IN USERSPACE! JUST BECAUSE THEY CAN!
+
+>From a kernel developers point of view the kernel shall handle
+hardware, so that is why I'm quite picky about this.
+
+Yours,
+Linus Walleij
