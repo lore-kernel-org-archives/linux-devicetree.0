@@ -1,523 +1,83 @@
-From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 11/17] clk: at91: add PMC programmable clocks
-Date: Fri, 11 Oct 2013 11:57:04 +0200
-Message-ID: <1381485424-13895-1-git-send-email-b.brezillon@overkiz.com>
-References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v7 1/6] mtd: nand: omap: combine different flavours of
+ 1-bit hamming ecc schemes
+Date: Fri, 11 Oct 2013 10:17:48 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA2122E@DBDE04.ent.ti.com>
+References: <1380916188-24206-1-git-send-email-pekon@ti.com>
+ <1380916188-24206-2-git-send-email-pekon@ti.com>
+ <20131007112728.GA15365@e106331-lin.cambridge.arm.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA1F3DC@DBDE04.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA1F3DC@DBDE04.ent.ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "dedekind1@gmail.com" <dedekind1@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "olof@lixom.net" <olof@lixom.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new at91 programmable clocks implementation using common clk
-framework.
-A programmable clock is a clock which can be exported on a given pin to clock
-external devices.
-Each programmable clock is given an id (from 0 to 8).
-The number of available programmable clocks depends on the SoC you're using.
-Programmable clock driver only implements the clock setting (clock rate and
-parent setting). It must be chained to a system clock in order to
-enable/disable the generated clock.
-The PCKX pins used to output the clock signals must be assigned to the
-appropriate peripheral (see atmel's datasheets).
+Dear MTD Maintainers,
 
-Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
----
- drivers/clk/at91/Makefile           |    2 +
- drivers/clk/at91/clk-programmable.c |  423 +++++++++++++++++++++++++++++++++++
- drivers/clk/at91/pmc.c              |   15 ++
- drivers/clk/at91/pmc.h              |    9 +
- 4 files changed, 449 insertions(+)
- create mode 100644 drivers/clk/at91/clk-programmable.c
+> >
+> > If I have my NAND formatted with one of the existing ECC schemes (e.g.
+> > OMAP_ECC_HAMMING_CODE_DEFAULT) will it work with the new
+> > OMAP_ECC_HAM1_CODE_HW scheme?
+> >
+> > Are they all compatible?
+> >
+> Yes, they all are 1-bit hamming code, the only difference between
+> xx_Default and xx_HW was who was doing the ECC calculation.
+> For xx_DEFAULT: ECC calculation was done on CPU via s/w library
+> For xx_HW: ECC calculation was done by in-build h/w engine.
+> So, all HAMMING_xx can be replaced by HAM1_HW.
+> 
+> [snip]
+> 
+> > > @@ -1342,9 +1342,7 @@ static void __maybe_unused
+> > gpmc_read_timings_dt(struct device_node *np,
+> > >  #ifdef CONFIG_MTD_NAND
+> > >
+> > >  static const char * const nand_ecc_opts[] = {
+> > > -	[OMAP_ECC_HAMMING_CODE_DEFAULT]		= "sw",
+> > > -	[OMAP_ECC_HAMMING_CODE_HW]		= "hw",
+> > > -	[OMAP_ECC_HAMMING_CODE_HW_ROMCODE]	= "hw-
+> > romcode",
+> > > +	[OMAP_ECC_HAM1_CODE_HW]			= "ham1",
+> > >  	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
+> > >  	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
+> >
+> > Won't this break existing dts which have "sw", "hw", or "hw-romcode"?
+> >
+> > Someone may try to use a new kernel with an old dt, and we marked them
+> > as deprecated, not removed.
+> >
+> HAMMING_xx ECC scheme was used only on legacy platforms, when
+> BCH8 was not available, I have not seen anyone using this scheme
+> *from mainline kernel* from quite a long time. So, it's safe to remove them.
+> 
+> This is what was concluded as per below email.
+> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048876.html
+> 
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 04deba3..3873b62 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -5,3 +5,5 @@
- obj-y += pmc.o
- obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
- obj-y += clk-system.o clk-peripheral.o
-+
-+obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
-diff --git a/drivers/clk/at91/clk-programmable.c b/drivers/clk/at91/clk-programmable.c
-new file mode 100644
-index 0000000..b34f80b
---- /dev/null
-+++ b/drivers/clk/at91/clk-programmable.c
-@@ -0,0 +1,423 @@
-+/*
-+ * drivers/clk/at91/clk-programmable.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91_pmc.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/wait.h>
-+#include <linux/sched.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+
-+#include "pmc.h"
-+
-+#define PROG_SOURCE_MAX		5
-+#define PROG_ID_MAX		7
-+
-+#define PROG_STATUS_MASK(id)	(1 << ((id) + 8))
-+#define PROG_PRES_MASK		0x7
-+#define PROG_MAX_RM9200_CSS	3
-+
-+struct clk_programmable_layout {
-+	u8 pres_shift;
-+	u8 css_mask;
-+	u8 have_slck_mck;
-+};
-+
-+struct clk_programmable {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+	unsigned int irq;
-+	wait_queue_head_t wait;
-+	u8 id;
-+	u8 css;
-+	u8 pres;
-+	u8 slckmck;
-+	const struct clk_programmable_layout *layout;
-+};
-+
-+#define to_clk_programmable(hw) container_of(hw, struct clk_programmable, hw)
-+
-+
-+static irqreturn_t clk_programmable_irq_handler(int irq, void *dev_id)
-+{
-+	struct clk_programmable *prog = (struct clk_programmable *)dev_id;
-+
-+	wake_up(&prog->wait);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int clk_programmable_prepare(struct clk_hw *hw)
-+{
-+	u32 tmp;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct at91_pmc *pmc = prog->pmc;
-+	const struct clk_programmable_layout *layout = prog->layout;
-+	u8 id = prog->id;
-+	u32 mask = PROG_STATUS_MASK(id);
-+
-+	tmp = prog->css | (prog->pres << layout->pres_shift);
-+	if (layout->have_slck_mck && prog->slckmck)
-+		tmp |= AT91_PMC_CSSMCK_MCK;
-+
-+	pmc_write(pmc, AT91_PMC_PCKR(id), tmp);
-+
-+	while (!(pmc_read(pmc, AT91_PMC_SR) & mask))
-+		wait_event(prog->wait, pmc_read(pmc, AT91_PMC_SR) & mask);
-+
-+	return 0;
-+}
-+
-+static int clk_programmable_is_ready(struct clk_hw *hw)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct at91_pmc *pmc = prog->pmc;
-+
-+	return !!(pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_PCKR(prog->id));
-+}
-+
-+static unsigned long clk_programmable_recalc_rate(struct clk_hw *hw,
-+						  unsigned long parent_rate)
-+{
-+	u32 tmp;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct at91_pmc *pmc = prog->pmc;
-+	const struct clk_programmable_layout *layout = prog->layout;
-+
-+	tmp = pmc_read(pmc, AT91_PMC_PCKR(prog->id));
-+	prog->pres = (tmp >> layout->pres_shift) & PROG_PRES_MASK;
-+
-+	return parent_rate >> prog->pres;
-+}
-+
-+static long clk_programmable_round_rate(struct clk_hw *hw, unsigned long rate,
-+					unsigned long *parent_rate)
-+{
-+	unsigned long best_rate = *parent_rate;
-+	unsigned long best_diff;
-+	unsigned long new_diff;
-+	unsigned long cur_rate;
-+	int shift = shift;
-+
-+	if (rate > *parent_rate)
-+		return *parent_rate;
-+	else
-+		best_diff = *parent_rate - rate;
-+
-+	if (!best_diff)
-+		return best_rate;
-+
-+	for (shift = 1; shift < PROG_PRES_MASK; shift++) {
-+		cur_rate = *parent_rate >> shift;
-+
-+		if (cur_rate > rate)
-+			new_diff = cur_rate - rate;
-+		else
-+			new_diff = rate - cur_rate;
-+
-+		if (!new_diff)
-+			return cur_rate;
-+
-+		if (new_diff < best_diff) {
-+			best_diff = new_diff;
-+			best_rate = cur_rate;
-+		}
-+
-+		if (rate > cur_rate)
-+			break;
-+	}
-+
-+	return best_rate;
-+}
-+
-+static int clk_programmable_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	const struct clk_programmable_layout *layout = prog->layout;
-+	if (index > layout->css_mask) {
-+		if (index > PROG_MAX_RM9200_CSS && layout->have_slck_mck) {
-+			prog->css = 0;
-+			prog->slckmck = 1;
-+			return 0;
-+		} else {
-+			return -EINVAL;
-+		}
-+	}
-+
-+	prog->css = index;
-+	return 0;
-+}
-+
-+static u8 clk_programmable_get_parent(struct clk_hw *hw)
-+{
-+	u32 tmp;
-+	u8 ret;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct at91_pmc *pmc = prog->pmc;
-+	const struct clk_programmable_layout *layout = prog->layout;
-+
-+	tmp = pmc_read(pmc, AT91_PMC_PCKR(prog->id));
-+	prog->css = tmp & layout->css_mask;
-+	ret = prog->css;
-+	if (layout->have_slck_mck) {
-+		prog->slckmck = !!(tmp & AT91_PMC_CSSMCK_MCK);
-+		if (prog->slckmck && !ret)
-+			ret = PROG_MAX_RM9200_CSS + 1;
-+	}
-+
-+	return ret;
-+}
-+
-+static int clk_programmable_set_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long parent_rate)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	unsigned long best_rate = parent_rate;
-+	unsigned long best_diff;
-+	unsigned long new_diff;
-+	unsigned long cur_rate;
-+	int shift = 0;
-+
-+	if (rate > parent_rate)
-+		return parent_rate;
-+	else
-+		best_diff = parent_rate - rate;
-+
-+	if (!best_diff) {
-+		prog->pres = shift;
-+		return 0;
-+	}
-+
-+	for (shift = 1; shift < PROG_PRES_MASK; shift++) {
-+		cur_rate = parent_rate >> shift;
-+
-+		if (cur_rate > rate)
-+			new_diff = cur_rate - rate;
-+		else
-+			new_diff = rate - cur_rate;
-+
-+		if (!new_diff)
-+			break;
-+
-+		if (new_diff < best_diff) {
-+			best_diff = new_diff;
-+			best_rate = cur_rate;
-+		}
-+
-+		if (rate > cur_rate)
-+			break;
-+	}
-+
-+	prog->pres = shift;
-+	return 0;
-+}
-+
-+static const struct clk_ops programmable_ops = {
-+	.prepare = clk_programmable_prepare,
-+	.is_prepared = clk_programmable_is_ready,
-+	.recalc_rate = clk_programmable_recalc_rate,
-+	.round_rate = clk_programmable_round_rate,
-+	.get_parent = clk_programmable_get_parent,
-+	.set_parent = clk_programmable_set_parent,
-+	.set_rate = clk_programmable_set_rate,
-+};
-+
-+static struct clk * __init
-+at91_clk_register_programmable(struct at91_pmc *pmc, unsigned int irq,
-+			       const char *name, const char **parent_names,
-+			       u8 num_parents, u8 id,
-+			       const struct clk_programmable_layout *layout)
-+{
-+	int ret;
-+	struct clk_programmable *prog;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+	char irq_name[11];
-+
-+	if (id > PROG_ID_MAX)
-+		return ERR_PTR(-EINVAL);
-+
-+	prog = kzalloc(sizeof(*prog), GFP_KERNEL);
-+	if (!prog)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &programmable_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
-+	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-+
-+	prog->id = id;
-+	prog->layout = layout;
-+	prog->hw.init = &init;
-+	prog->pmc = pmc;
-+	prog->irq = irq;
-+	init_waitqueue_head(&prog->wait);
-+	irq_set_status_flags(prog->irq, IRQ_NOAUTOEN);
-+	snprintf(irq_name, sizeof(irq_name), "clk-prog%d", id);
-+	ret = request_irq(prog->irq, clk_programmable_irq_handler,
-+			  IRQF_TRIGGER_HIGH, irq_name, prog);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	clk = clk_register(NULL, &prog->hw);
-+	if (IS_ERR(clk))
-+		kfree(prog);
-+
-+	return clk;
-+}
-+
-+static const struct clk_programmable_layout at91rm9200_programmable_layout = {
-+	.pres_shift = 2,
-+	.css_mask = 0x3,
-+	.have_slck_mck = 0,
-+};
-+
-+static const struct clk_programmable_layout at91sam9g45_programmable_layout = {
-+	.pres_shift = 2,
-+	.css_mask = 0x3,
-+	.have_slck_mck = 1,
-+};
-+
-+static const struct clk_programmable_layout at91sam9x5_programmable_layout = {
-+	.pres_shift = 4,
-+	.css_mask = 0x7,
-+	.have_slck_mck = 0,
-+};
-+
-+struct clk_prog_data {
-+	struct clk **clks;
-+	u8 *ids;
-+	unsigned int clk_num;
-+};
-+
-+static struct clk * __init
-+of_clk_src_periph_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk_prog_data *clk_data = data;
-+	unsigned int id = clkspec->args[0];
-+	int i;
-+
-+	if (id > PROG_ID_MAX)
-+		goto err;
-+
-+	for (i = 0; i < clk_data->clk_num; i++) {
-+		if (clk_data->ids[i] == id)
-+			return clk_data->clks[i];
-+	}
-+
-+err:
-+	pr_err("%s: invalid clock id %d\n", __func__, id);
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static void __init
-+of_at91_clk_prog_setup(struct device_node *np, struct at91_pmc *pmc,
-+		       const struct clk_programmable_layout *layout)
-+{
-+	int num;
-+	u32 id;
-+	int i;
-+	unsigned int irq;
-+	struct clk *clk;
-+	int num_parents;
-+	u8 *ids;
-+	struct clk **clks;
-+	struct clk_prog_data *clktab;
-+	const char *parent_names[PROG_SOURCE_MAX];
-+	const char *name;
-+	struct device_node *progclknp;
-+
-+	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (num_parents <= 0 || num_parents > PROG_SOURCE_MAX)
-+		return;
-+
-+	for (i = 0; i < num_parents; ++i) {
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+		if (!parent_names[i])
-+			return;
-+	}
-+
-+	num = of_get_child_count(np);
-+	if (!num || num > (PROG_ID_MAX + 1))
-+		return;
-+
-+	clktab = kzalloc(sizeof(*clktab), GFP_KERNEL);
-+	if (!clktab)
-+		return;
-+
-+	ids = kzalloc(num * sizeof(*ids), GFP_KERNEL);
-+	if (!ids)
-+		goto out_free_clktab;
-+
-+	clks = kzalloc(num * sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		goto out_free_ids;
-+
-+	i = 0;
-+	for_each_child_of_node(np, progclknp) {
-+		name = progclknp->name;
-+
-+		if (of_property_read_u32(progclknp, "atmel,clk-id", &id))
-+			goto out_free_clks;
-+
-+		irq = irq_of_parse_and_map(np, 0);
-+		if (!irq)
-+			goto out_free_clks;
-+
-+		clk = at91_clk_register_programmable(pmc, irq, name,
-+						     parent_names, num_parents,
-+						     id, layout);
-+		if (IS_ERR(clk))
-+			goto out_free_clks;
-+
-+		clks[i] = clk;
-+		ids[i++] = id;
-+	}
-+
-+	clktab->clk_num = num;
-+	clktab->clks = clks;
-+	clktab->ids = ids;
-+	of_clk_add_provider(np, of_clk_src_periph_get, clktab);
-+	return;
-+
-+out_free_clks:
-+	kfree(clks);
-+out_free_ids:
-+	kfree(ids);
-+out_free_clktab:
-+	kfree(clktab);
-+}
-+
-+
-+void __init of_at91rm9200_clk_prog_setup(struct device_node *np,
-+					 struct at91_pmc *pmc)
-+{
-+	of_at91_clk_prog_setup(np, pmc, &at91rm9200_programmable_layout);
-+}
-+
-+void __init of_at91sam9g45_clk_prog_setup(struct device_node *np,
-+					  struct at91_pmc *pmc)
-+{
-+	of_at91_clk_prog_setup(np, pmc, &at91sam9g45_programmable_layout);
-+}
-+
-+void __init of_at91sam9x5_clk_prog_setup(struct device_node *np,
-+					 struct at91_pmc *pmc)
-+{
-+	of_at91_clk_prog_setup(np, pmc, &at91sam9x5_programmable_layout);
-+}
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index 8e27e92..5b8a959e 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -257,6 +257,21 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
- 		.compatible = "atmel,at91sam9x5-clk-peripheral",
- 		.data = of_at91sam9x5_clk_periph_setup,
- 	},
-+	/* Programmable clocks */
-+#if defined(CONFIG_AT91_PROGRAMMABLE_CLOCKS)
-+	{
-+		.compatible = "atmel,at91rm9200-clk-programmable",
-+		.data = of_at91rm9200_clk_prog_setup,
-+	},
-+	{
-+		.compatible = "atmel,at91sam9g45-clk-programmable",
-+		.data = of_at91sam9g45_clk_prog_setup,
-+	},
-+	{
-+		.compatible = "atmel,at91sam9x5-clk-programmable",
-+		.data = of_at91sam9x5_clk_prog_setup,
-+	},
-+#endif
- 	{ /*sentinel*/ }
- };
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 08c30fb..5f20dc1 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -82,4 +82,13 @@ extern void __init of_at91rm9200_clk_periph_setup(struct device_node *np,
- extern void __init of_at91sam9x5_clk_periph_setup(struct device_node *np,
- 						  struct at91_pmc *pmc);
- 
-+#if defined(CONFIG_AT91_PROGRAMMABLE_CLOCKS)
-+extern void __init of_at91rm9200_clk_prog_setup(struct device_node *np,
-+						struct at91_pmc *pmc);
-+extern void __init of_at91sam9g45_clk_prog_setup(struct device_node *np,
-+						 struct at91_pmc *pmc);
-+extern void __init of_at91sam9x5_clk_prog_setup(struct device_node *np,
-+						struct at91_pmc *pmc);
-+#endif
-+
- #endif /* __PMC_H_ */
--- 
-1.7.9.5
+This patch-series and its follow-on series has already missed many merge
+windows, And the above discussion has reached a stalled state (infinite loop)
+where, I cannot revert some DT binding updates to and fro to keep all legacy
+DT bindings backward compatible forever.
+However, I can assure that these DT updates make binding stable for long-term.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So now it's your discretion to whether to accept or leave following 2 series:
+
+http://lists.infradead.org/pipermail/linux-mtd/2013-October/048983.html
+
+http://lists.infradead.org/pipermail/linux-mtd/2013-October/049008.html
+
+
+AFAIK no-one is using Hamming based ecc-scheme on OMAP platforms
+*from mainline kernel*. So this DT update actually does not affect users
+I know of. Rather these patch series was intended for long term scalability
+and clean-up so that more OMAP users migrate to mainline kernel easily.
+
+
+with regards, pekon 
