@@ -1,335 +1,142 @@
-From: Pekon Gupta <pekon@ti.com>
-Subject: [PATCH v8 4/6] mtd:nand:omap2: updated support for BCH4 ECC scheme
-Date: Fri, 11 Oct 2013 19:06:41 +0530
-Message-ID: <1381498603-15715-5-git-send-email-pekon@ti.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/5] usb: gadget: s3c-hsotg: support configurable UTMI
+ PHY width
+Date: Fri, 11 Oct 2013 08:37:31 -0500
+Message-ID: <20131011133731.GD25706@radagast>
+References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
+ <1381140752-312-3-git-send-email-matt.porter@linaro.org>
+ <20131010152922.GF28375@radagast>
+ <5256DBD0.8030008@linaro.org>
+ <20131010174620.GC19802@radagast>
+ <A2CA0424C0A6F04399FB9E1CD98E030458E16893@US01WEMBX2.internal.synopsys.com>
+ <5256FAFA.1020509@linaro.org>
+ <52576EBA.9000502@linaro.org>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381498603-15715-1-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: mark.rutland@arm.com, robherring2@gmail.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com
-Cc: Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pekon Gupta <pekon@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52576EBA.9000502-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds following two flavours of BCH4 ECC scheme in omap2-nand driver
-- OMAP_ECC_BCH4_CODE_HW_DETECTION_SW
-	- uses GPMC H/W engine for calculating ECC.
-	- uses software library (lib/bch.h & nand_bch.h) for error correction.
+--u5E4XgoOPWr4PD9E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- OMAP_ECC_BCH4_CODE_HW
-	- uses GPMC H/W engine for calculating ECC.
-	- uses ELM H/W engine for error correction.
+Hi,
 
-With this patch omap2-nand driver supports following ECC schemes:
-+---------------------------------------+---------------+---------------+
-| ECC scheme                            |ECC calculation|Error detection|
-+---------------------------------------+---------------+---------------+
-|OMAP_ECC_HAM1_CODE_HW                  |H/W (GPMC)     |S/W            |
-+---------------------------------------+---------------+---------------+
-|OMAP_ECC_BCH4_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
-|OMAP_ECC_BCH4_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-+---------------------------------------+---------------+---------------+
-|OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W (lib/bch.h)|
-|OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-+---------------------------------------+---------------+---------------+
-Important:
-- Selection of OMAP_ECC_BCHx_CODE_HW_DETECTION_SW requires,
-	Kconfig: CONFIG_MTD_NAND_ECC_BCH: enables S/W based BCH ECC algorithm.
+On Thu, Oct 10, 2013 at 11:21:30PM -0400, Matt Porter wrote:
+> On 10/10/2013 03:07 PM, Matt Porter wrote:
+> >On 10/10/2013 01:57 PM, Paul Zimmerman wrote:
+> >>>From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
+> >>>Sent: Thursday, October 10, 2013 10:46 AM
+> >>>
+> >>>On Thu, Oct 10, 2013 at 12:54:40PM -0400, Matt Porter wrote:
+> >>>>On 10/10/2013 11:29 AM, Felipe Balbi wrote:
+> >>>>>On Mon, Oct 07, 2013 at 06:12:29AM -0400, Matt Porter wrote:
+> >>>>>>Extend dwc2 binding with an optional utmi phy width property.
+> >>>>>>Enable the s3c-hsotg.c driver to use standard dwc2 binding
+> >>>>>>and enable configuration of the UTMI phy width based on the
+> >>>>>>property.
+> >>>>>>
+> >>>>>>Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>>>Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>>>Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>>>---
+> >>>>>>  Documentation/devicetree/bindings/staging/dwc2.txt |  4 ++++
+> >>>>>>  drivers/usb/gadget/s3c-hsotg.c                     | 18
+> >>>>>>+++++++++++++++++-
+> >>>>>>  drivers/usb/gadget/s3c-hsotg.h                     |  1 +
+> >>>>>>  3 files changed, 22 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>>diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>>b/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>>>>>index 1a1b7cf..fb6b8ee 100644
+> >>>>>>--- a/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>>>>>+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+> >>>>>>@@ -6,10 +6,14 @@ Required properties:
+> >>>>>>  - reg : Should contain 1 register range (address and length)
+> >>>>>>  - interrupts : Should contain 1 interrupt
+> >>>>>>
+> >>>>>>+Optional properties:
+> >>>>>>+- snps,phy-utmi-width: Must contain the UTMI data width (either 8
+> >>>>>>or 16)
+> >>>>>
+> >>>>>isn't this available in any of the configuration registers ?
+> >>>>
+> >>>>Yes and no. HWCFG4 has a UTMI data width field. However, it has 3
+> >>>>valid states, "8", "16", or "8 or 16". The BCM281xx implementation is
+> >>>>set to the latter and the attached phy is 8-bit.
+> >>>>
+> >>>>Looking at dwc2 prior to Matthijs Kooijman's patch [1] which starts
+> >>>>validating the value of phy_utmi_width in that driver, the pci.c
+> >>>>dwc2_module_params .phy_utmi_width field there even had the comment,
+> >>>>"/* 16 bits - NOT DETECTABLE */". The autodetect code in
+> >>>>dwc2_set_param_phy_utmi_width() will fail if HWCFG4 has the "8 or 16"
+> >>>>option as it just decides to default to a phy width of 16 if nothing
+> >>>>is configured by the platform glue. This property would also allow
+> >>>>this issue to be addressed in that driver.
+> >>>
+> >>>fair enough, but I'd really like to hear from DT folks if your suggest=
+ed
+> >>>binding is acceptable. It seems like we can equally argue that it's a =
+SW
+> >>>configuration or HW description.
+> >>
+> >>It's definitely a HW description - the width of the UTMI data connectio=
+n.
+> >>
+> >>But, which PHY is this? Does it have a register that could tell what
+> >>the data width is? The dwc2 core has an (optional) PHY Vendor Control
+> >>Register that allows reading the PHY registers.
+> >
+> >This is the integrated PHY on the bcm28155 part (the entire
+> >bcm281xx/11351 family shares it). My register doc doesn't show the
+> >optional PHY vendor control register as being present in this dwc2
+> >implementation. I'll track down with the design team if this is
+> >accurate...but it appears we can't go that route.
+>=20
+> The design team confirmed that we do not have any registers that can
+> be accessed via the PHY Vendor Control Register. All PHY control
+> registers are implemented in the MMIO control block which is
+> supported in the PHY control driver later in this series.They also
+> confirmed there's no other way to detect that it's an 8-bit data
+> path.
 
-- Selection of OMAP_ECC_BCHx_CODE_HW requires,
-	Kconfig: CONFIG_MTD_NAND_OMAP_BCH: enables ELM H/W module.
+then we need the DT binding, let's see what DT maintainers say.
 
-Signed-off-by: Pekon Gupta <pekon@ti.com>
----
- drivers/mtd/nand/Kconfig |  30 ++---------
- drivers/mtd/nand/omap2.c | 134 +++++++++++++++++++++--------------------------
- 2 files changed, 63 insertions(+), 101 deletions(-)
+--=20
+balbi
 
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index d885298..5836039 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -96,35 +96,13 @@ config MTD_NAND_OMAP2
- 
- config MTD_NAND_OMAP_BCH
- 	depends on MTD_NAND && MTD_NAND_OMAP2 && ARCH_OMAP3
--	tristate "Enable support for hardware BCH error correction"
-+	tristate "Support hardware based BCH error correction"
- 	default n
- 	select BCH
--	select BCH_CONST_PARAMS
- 	help
--	 Support for hardware BCH error correction.
--
--choice
--	prompt "BCH error correction capability"
--	depends on MTD_NAND_OMAP_BCH
--
--config MTD_NAND_OMAP_BCH8
--	bool "8 bits / 512 bytes (recommended)"
--	help
--	 Support correcting up to 8 bitflips per 512-byte block.
--	 This will use 13 bytes of spare area per 512 bytes of page data.
--	 This is the recommended mode, as 4-bit mode does not work
--	 on some OMAP3 revisions, due to a hardware bug.
--
--config MTD_NAND_OMAP_BCH4
--	bool "4 bits / 512 bytes"
--	help
--	 Support correcting up to 4 bitflips per 512-byte block.
--	 This will use 7 bytes of spare area per 512 bytes of page data.
--	 Note that this mode does not work on some OMAP3 revisions, due to a
--	 hardware bug. Please check your OMAP datasheet before selecting this
--	 mode.
--
--endchoice
-+	  Some devices have built-in ELM hardware engine, which can be used to
-+	  locate and correct errors when using BCH ECC scheme. This enables the
-+	  driver support for same.
- 
- if MTD_NAND_OMAP_BCH
- config BCH_CONST_M
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index fb96251..a783dae 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -27,6 +27,7 @@
- 
- #ifdef CONFIG_MTD_NAND_ECC_BCH
- #include <linux/bch.h>
-+#include <linux/mtd/nand_bch.h>
- #endif
- #ifdef CONFIG_MTD_NAND_OMAP_BCH
- #include <linux/platform_data/elm.h>
-@@ -144,7 +145,6 @@
- #define BCH_ECC_SIZE1		0x20	/* ecc_size1 = 32 */
- 
- #define BADBLOCK_MARKER_LENGTH		2
--#define OMAP_ECC_BCH8_POLYNOMIAL	0x201b
- 
- #ifdef CONFIG_MTD_NAND_OMAP_BCH
- static u_char bch8_vector[] = {0xf3, 0xdb, 0x14, 0x16, 0x8b, 0xd2, 0xbe, 0xcc,
-@@ -188,7 +188,6 @@ struct omap_nand_info {
- 	int					buf_len;
- 	struct gpmc_nand_regs		reg;
- 	/* fields specific for BCHx_HW ECC scheme */
--	struct bch_control              *bch;
- 	bool				is_elm_used;
- 	struct device			*elm_dev;
- 	struct device_node		*of_node;
-@@ -1522,43 +1521,7 @@ static int omap_elm_correct_data(struct mtd_info *mtd, u_char *data,
- 
- 	return stat;
- }
--#endif /* CONFIG_MTD_NAND_OMAP_BCH */
- 
--#ifdef CONFIG_MTD_NAND_ECC_BCH
--/**
-- * omap3_correct_data_bch - Decode received data and correct errors
-- * @mtd: MTD device structure
-- * @data: page data
-- * @read_ecc: ecc read from nand flash
-- * @calc_ecc: ecc read from HW ECC registers
-- */
--static int omap3_correct_data_bch(struct mtd_info *mtd, u_char *data,
--				  u_char *read_ecc, u_char *calc_ecc)
--{
--	int i, count;
--	/* cannot correct more than 8 errors */
--	unsigned int errloc[8];
--	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
--						   mtd);
--
--	count = decode_bch(info->bch, NULL, 512, read_ecc, calc_ecc, NULL,
--			   errloc);
--	if (count > 0) {
--		/* correct errors */
--		for (i = 0; i < count; i++) {
--			/* correct data only, not ecc bytes */
--			if (errloc[i] < 8*512)
--				data[errloc[i]/8] ^= 1 << (errloc[i] & 7);
--			pr_debug("corrected bitflip %u\n", errloc[i]);
--		}
--	} else if (count < 0) {
--		pr_err("ecc unrecoverable error\n");
--	}
--	return count;
--}
--#endif /* CONFIG_MTD_NAND_ECC_BCH */
--
--#ifdef CONFIG_MTD_NAND_OMAP_BCH
- /**
-  * omap_write_page_bch - BCH ecc based write page function for entire page
-  * @mtd:		mtd info structure
-@@ -1675,28 +1638,6 @@ static int is_elm_present(struct omap_nand_info *info,
- }
- #endif /* CONFIG_MTD_NAND_ECC_BCH */
- 
--#ifdef CONFIG_MTD_NAND_ECC_BCH
--/**
-- * omap3_free_bch - Release BCH ecc resources
-- * @mtd: MTD device structure
-- */
--static void omap3_free_bch(struct mtd_info *mtd)
--{
--	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
--						   mtd);
--	if (info->bch) {
--		free_bch(info->bch);
--		info->bch = NULL;
--	}
--}
--
--#else
--
--static void omap3_free_bch(struct mtd_info *mtd)
--{
--}
--#endif /* CONFIG_MTD_NAND_ECC_BCH */
--
- static int omap_nand_probe(struct platform_device *pdev)
- {
- 	struct omap_nand_info		*info;
-@@ -1731,10 +1672,10 @@ static int omap_nand_probe(struct platform_device *pdev)
- 	mtd->owner		= THIS_MODULE;
- 	mtd->priv		= &info->nand;
- 	nand_chip		= &info->nand;
-+	nand_chip->ecc.priv	= NULL;
- 	info->pdev		= pdev;
- 	info->gpmc_cs		= pdata->cs;
- 	info->reg		= pdata->reg;
--	info->bch		= NULL;
- 
- 	nand_chip->options	|= NAND_SKIP_BBTSCAN | NAND_BUSWIDTH_AUTO;
- 	info->of_node		= pdata->of_node;
-@@ -1927,7 +1868,7 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		nand_chip->ecc.bytes		= 7;
- 		nand_chip->ecc.strength		= 4;
- 		nand_chip->ecc.hwctl		= omap3_enable_hwecc_bch;
--		nand_chip->ecc.correct		= omap3_correct_data_bch;
-+		info->nand.ecc.correct		= nand_bch_correct_data;
- 		nand_chip->ecc.calculate	= omap3_calculate_ecc_bch4;
- 		/* define custom ECC layout */
- 		ecclayout->eccbytes		= nand_chip->ecc.bytes *
-@@ -1937,10 +1878,11 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		ecclayout->oobfree->offset	= ecclayout->eccpos[0] +
- 							ecclayout->eccbytes;
- 		/* software bch library is used for locating errors */
--		info->bch = init_bch(nand_chip->ecc.bytes,
--					nand_chip->ecc.strength,
--					OMAP_ECC_BCH8_POLYNOMIAL);
--		if (!info->bch) {
-+		info->nand.ecc.priv		= nand_bch_init(mtd,
-+							info->nand.ecc.size,
-+							info->nand.ecc.bytes,
-+							&info->nand.ecc.layout);
-+		if (!info->nand.ecc.priv) {
- 			pr_err("nand: error: unable to use s/w BCH library\n");
- 			err = -EINVAL;
- 		}
-@@ -1951,6 +1893,39 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		goto out_release_mem_region;
- #endif
- 
-+	case OMAP_ECC_BCH4_CODE_HW:
-+#ifdef CONFIG_MTD_NAND_OMAP_BCH
-+		pr_info("nand: using OMAP_ECC_BCH4_CODE_HW ECC scheme\n");
-+		info->nand.ecc.mode		= NAND_ECC_HW;
-+		info->nand.ecc.size		= 512;
-+		/* 14th bit is kept reserved for ROM-code compatibility */
-+		info->nand.ecc.bytes		= 7 + 1;
-+		info->nand.ecc.strength		= 4;
-+		info->nand.ecc.hwctl		= omap3_enable_hwecc_bch;
-+		info->nand.ecc.correct		= omap_elm_correct_data;
-+		info->nand.ecc.calculate	= omap3_calculate_ecc_bch;
-+		info->nand.ecc.read_page	= omap_read_page_bch;
-+		info->nand.ecc.write_page	= omap_write_page_bch;
-+		/* This ECC scheme requires ELM H/W block */
-+		if (is_elm_present(info, pdata->elm_of_node, BCH4_ECC) < 0) {
-+			pr_err("nand: error: could not initialize ELM\n");
-+			err = -ENODEV;
-+			goto out_release_mem_region;
-+		}
-+		/* define ECC layout */
-+		ecclayout->eccbytes		= info->nand.ecc.bytes *
-+							(mtd->writesize /
-+							info->nand.ecc.size);
-+		ecclayout->eccpos[0]		= BADBLOCK_MARKER_LENGTH;
-+		ecclayout->oobfree->offset	= ecclayout->eccpos[0] +
-+							ecclayout->eccbytes;
-+		break;
-+#else
-+		pr_err("nand: error: CONFIG_MTD_NAND_OMAP_BCH not enabled\n");
-+		err = -EINVAL;
-+		goto out_release_mem_region;
-+#endif
-+
- 	case OMAP_ECC_BCH8_CODE_HW_DETECTION_SW:
- #ifdef CONFIG_MTD_NAND_ECC_BCH
- 		pr_info("nand: using OMAP_ECC_BCH8_CODE_HW_DETECTION_SW\n");
-@@ -1959,7 +1934,7 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		nand_chip->ecc.bytes		= 13;
- 		nand_chip->ecc.strength		= 8;
- 		nand_chip->ecc.hwctl		= omap3_enable_hwecc_bch;
--		nand_chip->ecc.correct		= omap3_correct_data_bch;
-+		info->nand.ecc.correct		= nand_bch_correct_data;
- 		nand_chip->ecc.calculate	= omap3_calculate_ecc_bch8;
- 		/* define custom ECC layout */
- 		ecclayout->eccbytes		= nand_chip->ecc.bytes *
-@@ -1969,10 +1944,11 @@ static int omap_nand_probe(struct platform_device *pdev)
- 		ecclayout->oobfree->offset	= ecclayout->eccpos[0] +
- 							ecclayout->eccbytes;
- 		/* software bch library is used for locating errors */
--		info->bch = init_bch(nand_chip->ecc.bytes,
--					nand_chip->ecc.strength,
--					OMAP_ECC_BCH8_POLYNOMIAL);
--		if (!info->bch) {
-+		info->nand.ecc.priv		= nand_bch_init(mtd,
-+							info->nand.ecc.size,
-+							info->nand.ecc.bytes,
-+							&info->nand.ecc.layout);
-+		if (!info->nand.ecc.priv) {
- 			pr_err("nand: error: unable to use s/w BCH library\n");
- 			err = -EINVAL;
- 			goto out_release_mem_region;
-@@ -2023,7 +1999,6 @@ static int omap_nand_probe(struct platform_device *pdev)
- 	}
- 
- 	/* populate remaining info for custom ecc layout */
--	pr_info("%s: using custom ecc layout\n", DRIVER_NAME);
- 	ecclayout->oobfree->length = mtd->oobsize - BADBLOCK_MARKER_LENGTH
- 						- ecclayout->eccbytes;
- 	if (!(nand_chip->options & NAND_BUSWIDTH_16))
-@@ -2061,7 +2036,12 @@ out_release_mem_region:
- 		free_irq(info->gpmc_irq_fifo, info);
- 	release_mem_region(info->phys_base, info->mem_size);
- out_free_info:
--	omap3_free_bch(&info->mtd);
-+#ifdef CONFIG_MTD_NAND_ECC_BCH
-+	if (info->nand.ecc.priv) {
-+		nand_bch_free(info->nand.ecc.priv);
-+		info->nand.ecc.priv = NULL;
-+	}
-+#endif
- 	kfree(info);
- 
- 	return err;
-@@ -2072,8 +2052,12 @@ static int omap_nand_remove(struct platform_device *pdev)
- 	struct mtd_info *mtd = platform_get_drvdata(pdev);
- 	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
- 							mtd);
--	omap3_free_bch(&info->mtd);
--
-+#ifdef CONFIG_MTD_NAND_ECC_BCH
-+	if (info->nand.ecc.priv) {
-+		nand_bch_free(info->nand.ecc.priv);
-+		info->nand.ecc.priv = NULL;
-+	}
-+#endif
- 	if (info->dma)
- 		dma_release_channel(info->dma);
- 
--- 
-1.8.1
+--u5E4XgoOPWr4PD9E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSV/8bAAoJEIaOsuA1yqREP3MP/0M7glVlml6aKzCtbu7czTgl
+p6laWFgrzQW9/GH2tkbJew1V0gJ0fNUg+Tas1gSfTKfc5m6NK0QpyTqwx8q4H4RM
+WUQ7gQV10edeLdjnDa9+VGU16/OPTqsgrAum+DFP7vMOi7rNVh5g98M+JqDghMcn
+cKHFuFcosAqXFkhw6Xknnf/ldKLDHZS/hIlnLaAlplanRNP5xkJ6TsEpRd9vHO0o
+sWpRUoEo1Ud+JPhnQHXblbdsclnlemEUiWRJJZ84HynZKNC4HqDc/HMx4hyiV9yw
+/iXD0AnOO+jZVyj/X6+rn5nC+t0wnrMGlJMcLlxhP1dJucVC0Mxjx+e0tyZ9iuOf
+lUT0iibS/ziQJ7EBwHzO+xZP6aLAJfo0X/CZ1XaeBAUcy6EaRQ9pdwpKc4l85c0V
+hyxGB9pfU3PLsA+3KjKw4OiLp2BtOHsnmf/mrjI3onNuQcgO/3mMtCJDnNtFiwGY
+902K2fGLFiaU4USz8aZwqNvrSyMWibS62NrXjz4+nRrEN89gWrSWnhsKPjYv6p2z
+Zh1NNlCHr7BpxvA1hmT8XrEiET7Z9rDVAIxNGYEJ3LxpJOehrY1S4gEJuAKhhkPW
+ahtqrX5FxPGNpDnTS3Jh6Y3d/oI/WmpD5J029F1IP+OsReZLKkAw6EpvHCpGFbwm
+wjIH0ByMbXmLAEmKncrY
+=nY4D
+-----END PGP SIGNATURE-----
+
+--u5E4XgoOPWr4PD9E--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
