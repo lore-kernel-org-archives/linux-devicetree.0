@@ -1,42 +1,31 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Fri, 11 Oct 2013 22:37:28 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
- <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <52584785.2020504@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 25/27] gpu: host1x: Add MIPI pad calibration support
+Date: Fri, 11 Oct 2013 16:37:35 -0600
+Message-ID: <52587DAF.9080003@wwwdotorg.org>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-26-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52584785.2020504@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381134884-5816-26-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2013, Tero Kristo wrote:
+On 10/07/2013 02:34 AM, Thierry Reding wrote:
+> This driver adds support to perform calibration of the MIPI pads for CSI
+> and DSI.
 
-> Oh yea, one additional note you probably have missed. Mike asked us to fall
-> back to vendor specific bindings at around v6 or so of this set. Take a look
-> at v8, we have dropped the use of generic bindings, we are not trying to
-> declare those with this set.
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
 
-No, I didn't miss it.
+> +int tegra_mipi_calibrate(struct device *device)
+...
+> +	err = of_parse_phandle_with_args(device->of_node, "calibrate",
+> +					 "#calibrate-cells", 0, &args);
+...
+> +static struct of_device_id tegra_mipi_of_match[] = {
+> +	{ .compatible = "nvidia,tegra114-mipi", },
 
-> This set introduces vendor specific bindings only, and even these are 
-> claimed 'unstable', which should be enough to discourage people from 
-> burning those to OTP type memory.
-
-Better to just avoid merging unstable bindings in the first place.
-
-Please keep this in mind: any change that anyone makes to the DT data 
-needs to be supportable by the kernel into the indefinite future, once it 
-makes it into arch/arm/boot/dts or the DT binding documentation.  Also, 
-any changes need to work for other OSes, i.e., the changes should not be 
-Linux-specific.
-
-Those have been stated goals for the Linux DT project since day one.  
-Some folks haven't been monitoring those goals very closely and that's 
-unfortunate.  We could have avoided some pretty big messes.
-
-
-- Paul
+Is the DT binding for that compatible value documented anywhere? I'm not
+sure what #calibrate-cells means; it doesn't seem to be used...
