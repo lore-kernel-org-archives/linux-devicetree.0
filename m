@@ -1,145 +1,26 @@
-From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCHv5 2/4] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Sat, 12 Oct 2013 14:14:44 -0700
-Message-ID: <1381612484-760-1-git-send-email-rvaswani@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [RESEND PATCH V2 1/2] ARM: dts: AM33xx: Add RNG node
+Date: Sat, 12 Oct 2013 21:51:19 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1310122148520.27397@utopia.booyaka.com>
+References: <1377780731-3648-1-git-send-email-lokeshvutla@ti.com> <1377780731-3648-2-git-send-email-lokeshvutla@ti.com> <52594DF0.1050002@ti.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52594DF0.1050002@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic board support for APQ8074 Dragonboard
-which belongs to the Snapdragon 800 family.
-For now, just support a basic machine with device tree.
+On Sat, 12 Oct 2013, Lokesh Vutla wrote:
 
-Signed-off-by: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                     |  3 ++-
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
- arch/arm/boot/dts/qcom-msm8974.dtsi            | 35 ++++++++++++++++++++++++++
- arch/arm/mach-msm/Kconfig                      | 13 ++++++++++
- arch/arm/mach-msm/board-dt.c                   |  9 +++++++
- 5 files changed, 65 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
- create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
+> Seems you missed this patch. Please consider this for this merge window.
+> Patch 2/2 is already taken by Paul.
+> Without this patch AM335x boot will crash as I mentioned in my cover letter.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 000cf76..e71a3ec 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
- 	kirkwood-openblocks_a6.dtb
- dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
- dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
--	msm8960-cdp.dtb
-+	msm8960-cdp.dtb \
-+	qcom-apq8074-dragonboard.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
- 	armada-370-mirabox.dtb \
- 	armada-370-netgear-rn102.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-new file mode 100644
-index 0000000..13ac3e2
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -0,0 +1,6 @@
-+#include "qcom-msm8974.dtsi"
-+
-+/ {
-+	model = "Qualcomm APQ8074 Dragonboard";
-+	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
-+};
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-new file mode 100644
-index 0000000..e0fd55a
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -0,0 +1,35 @@
-+/dts-v1/;
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "Qualcomm MSM8974";
-+	compatible = "qcom,msm8974";
-+	interrupt-parent = <&intc>;
-+
-+	soc: soc { };
-+};
-+
-+&soc {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+	compatible = "simple-bus";
-+
-+	intc: interrupt-controller@f9000000 {
-+		compatible = "qcom,msm-qgic2";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0xf9000000 0x1000>,
-+		      <0xf9002000 0x1000>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <1 2 0xf08>,
-+			     <1 3 0xf08>,
-+			     <1 4 0xf08>,
-+			     <1 1 0xf08>;
-+		clock-frequency = <19200000>;
-+	};
-+};
-diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
-index 2586c28..086bcb9 100644
---- a/arch/arm/mach-msm/Kconfig
-+++ b/arch/arm/mach-msm/Kconfig
-@@ -64,6 +64,19 @@ config ARCH_MSM_DT
- 	select SPARSE_IRQ
- 	select USE_OF
- 
-+config ARCH_MSM8974
-+	bool "MSM8974"
-+	select ARM_GIC
-+	select CPU_V7
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_SMP
-+	select MSM_SCM if SMP
-+	select USE_OF
-+
-+config ARCH_MSM_DT
-+	def_bool y
-+	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
-+
- config MSM_HAS_DEBUG_UART_HS
- 	bool
- 
-diff --git a/arch/arm/mach-msm/board-dt.c b/arch/arm/mach-msm/board-dt.c
-index 266a280..5211e80 100644
---- a/arch/arm/mach-msm/board-dt.c
-+++ b/arch/arm/mach-msm/board-dt.c
-@@ -26,7 +26,16 @@ static const char * const msm_dt_match[] __initconst = {
- 	NULL
- };
- 
-+static const char * const apq8074_dt_match[] __initconst = {
-+	"qcom,apq8074-dragonboard",
-+	NULL
-+};
-+
- DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
- 	.smp = smp_ops(msm_smp_ops),
- 	.dt_compat = msm_dt_match,
- MACHINE_END
-+
-+DT_MACHINE_START(APQ_DT, "Qualcomm MSM (Flattened Device Tree)")
-+	.dt_compat = apq8074_dt_match,
-+MACHINE_END
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+That won't happen since this patch from Suman got merged:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96447.html
+
+
+- Paul
