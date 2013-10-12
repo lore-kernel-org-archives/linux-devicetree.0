@@ -1,65 +1,55 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Sat, 12 Oct 2013 13:25:47 +0300
-Message-ID: <525923AB.4030807@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com> <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <52584785.2020504@ti.com> <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 14/27] drm/tegra: Move driver to DRM tree
+Date: Sat, 12 Oct 2013 13:16:25 +0200
+Message-ID: <20131012111625.GB22284@mithrandir>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-15-git-send-email-treding@nvidia.com>
+ <52587797.7000402@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52587797.7000402-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/2013 01:37 AM, Paul Walmsley wrote:
-> On Fri, 11 Oct 2013, Tero Kristo wrote:
->
->> Oh yea, one additional note you probably have missed. Mike asked us to fall
->> back to vendor specific bindings at around v6 or so of this set. Take a look
->> at v8, we have dropped the use of generic bindings, we are not trying to
->> declare those with this set.
->
-> No, I didn't miss it.
->
->> This set introduces vendor specific bindings only, and even these are
->> claimed 'unstable', which should be enough to discourage people from
->> burning those to OTP type memory.
->
-> Better to just avoid merging unstable bindings in the first place.
->
-> Please keep this in mind: any change that anyone makes to the DT data
-> needs to be supportable by the kernel into the indefinite future, once it
-> makes it into arch/arm/boot/dts or the DT binding documentation.  Also,
-> any changes need to work for other OSes, i.e., the changes should not be
-> Linux-specific.
 
-As pointed out earlier, the unstable claim just points to the fact that 
-we might have some generic clock bindings in distant future at which 
-point we _might_ evolve that way. Personally I have no problems carrying 
-these binding to the far future, as they are vendor specific, and pretty 
-much also device specific (am3-dpll-* omap4-dpll-* etc.)
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Later on, we can add also support for clock firmware or whatever if we 
-want to optimize stuff.
+On Fri, Oct 11, 2013 at 04:11:35PM -0600, Stephen Warren wrote:
+> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+> > In order to subsystem-wide changes easier, move the Tegra DRM driver
+>              ^^ make ?
 
-If we do not merge the bindings now, what is your proposal then? We have 
-a couple of new SoC:s in queue and getting them boot mainline currently 
-we only have this option to get them to work. Hardware is not going to 
-wait for two years so we can have generic clock bindings in place. I 
-would rather have this resolved as soon as possible, and it would have 
-been much better if you came forward with your claims at version 1 or 2 
-of this set, rather than at v8 and saying all should be forfeit.
+I had noticed myself already and fixed it up.
 
--Tero
+Thanks,
+Thierry
 
->
-> Those have been stated goals for the Linux DT project since day one.
-> Some folks haven't been monitoring those goals very closely and that's
-> unfortunate.  We could have avoided some pretty big messes.
->
->
-> - Paul
->
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSWS+JAAoJEN0jrNd/PrOhbTAP+gLJqkPoD6z4dOGnT5u/IMk0
+RTLLxzAyyPZ9fYMR2SYTx9jTczaBOkwQ9i7D35NKqCgG8QzVDMexi5nWwO+D9nib
+rEfu5d6owUcooDrRPZykLYX6V20QCIFH7aeyC+ozaFNBRyNgsIrcdyWpno5zyLwg
+4QccKNGdFZwoQFZfhM6akzFNlXi4OruZC8p07Gz5p2R9CsJfUfKDtDnI1SlZeJbS
+4TrErFaKytv8wy91LXyLcSmvs9hWpcwJEdvkDlvvnZR9sL3UIQeXMegxvgVcf8KS
+l+gCV8q+m5uUMBrB9tzUCDwacYCIb/OPjI2B2En3miUKxmjhmOlccb610bJxgF7x
+DiZ6moIJjNQU5g8OOzhrug8LoQphrVZUWuTLAVfnhYJYumrXesdjSL6GEnuILMF6
+VTP19v8q8UNwXznhBxt8XggKLRXcvSD/3l1OorQVMSWyaswdGiAyCDG8hK9Jy9BR
+5MDFlsftn5aDbUz+qPAnzunmTO7h/Rzui3Zn71q08Mrjp9DBVcR0LtC2IdwMaShr
+HtQJAeXd2aamuWbttXVvm9IWFl4D9vV2qGM4E4mOuvBiUB3ESurARuXyY+pM4V1N
+u8bN5a4BgLjmQgKcyeJP2n+3SHYWXyMq9aGvZP0lo7ECaDruCBdbQUCWjWjfn0av
+mfarrWPXAk4/4+12QMH1
+=8CUQ
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
