@@ -1,36 +1,45 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Usage of for_each_child_of_node()
-Date: Sat, 12 Oct 2013 13:54:16 -0700
-Message-ID: <5259B6F8.3070701@roeck-us.net>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: "powerpc/83xx: gianfar_ptp: select 1588 clock source through
+ dts file" was added twice
+Date: Sat, 12 Oct 2013 17:11:10 -0400 (EDT)
+Message-ID: <20131012.171110.246440214474931440.davem@davemloft.net>
+References: <525962B2.8010100@skitlab.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525962B2.8010100-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+Date: Sat, 12 Oct 2013 18:54:42 +0400
 
-for_each_child_of_node() and similar functions increase the refcount
-on each returned node and expect the caller to release the node by
-calling of_node_put() when done.
+> Hi,
+> 
+> recently I looked through commits in kernel/git/torvalds/linux.git and
+> I noticed that my patch (old and new version) was added twice (by
+> David S. Miller):
+> 
+> e58f6f4fb4eada7867014bfaec898f03afbce5c2
+> 894116bd0e9b7749a0c4b6c62dec13c2a0ccef68
+> 
+> I think this is not good, and only
+> e58f6f4fb4eada7867014bfaec898f03afbce5c2 should be added.
 
-Looking through the kernel code, it appears this is hardly ever done,
-if at all. Some code even calls of_node_get() on returned nodes again.
+Read the code history properly.
 
-I guess this doesn't matter in cases where devicetree is a static entity.
-However, this is not (or no longer) the case with devicetree overlays,
-or more generically in cases where devicetree nodes are added and
-removed dynamically.
+First 894116bd0e9b7749a0c4b6c62dec13c2a0ccef68 got applied, as you say
+accidently.  Then I reverted it, see commit
+3f3f0960aff951c5df6e42ce292d1593a2520646.
 
-Fundamental question: Would patches to fix this problem be accepted upstream ?
+Then I applied the correct version which is commit
+e58f6f4fb4eada7867014bfaec898f03afbce5c2.
 
-Or, of course, stepping a bit back: Am I missing something essential ?
-
-Thanks,
-Guenter
+I didn't respond at all the first time you pointed this out hoping
+you would figure it out on your own.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
