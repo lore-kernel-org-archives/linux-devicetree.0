@@ -1,36 +1,67 @@
-From: Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c designware add support of I2C standard mode
-Date: Sun, 13 Oct 2013 20:46:52 +0900
-Message-ID: <525A882C.3030905@pobox.com>
-References: <20130828153429.GB7066@ab42.lan> <1381244455-3836-2-git-send-email-romainba@abilis.com> <20131009075632.GR3521@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131009075632.GR3521-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [RFC PATCH RESEND 0/2] clk: add clk accuracy support
+Date: Sun, 13 Oct 2013 19:17:09 +0200
+Message-ID: <1381684631-10835-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/9/13 4:56 PM, Mika Westerberg wrote:> On Tue, Oct 08, 2013 at 05:00:55PM +0200, Romain Baeriswyl wrote:
->> Some legacy devices support ony I2C standard mode at 100kHz.
->> This patch allows to select the standard mode through the DTS
->> with the use of the existing clock-frequency parameter.
->>
->> When clock-frequency parameter is not set, the fast mode is selected.
->> Only when the parameter is set at 100000, the standard mode is selected.
->>
->> Signed-off-by: Romain Baeriswyl <romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
->
-> Reviewed-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Hello,
 
-I don't have build environment for these patches right now, but both
-changes 1/2 and 2/2 look good.
+Sorry for the noise, but I didn't get any feedback on this patch series.
 
-It's quite reasonable and makes the code readable to convert
-{3 => 300} into nsec based one.  I should have done so from the
-beginning, thanks for doing this.
+This patch series is a proposal to add clock accuracy retrieval support to the
+common clk framework.
 
-   Shinya
+The support of accuracy retrieval may benefit to the at91 platform (I explain
+why in the following paragraphs).
+
+I don't know if other platforms may benefit from this accuracy support. This
+series is here to get feedbacks from other developpers/maintainers, and see if
+this can be integrated in the clk framework.
+
+Here is why at91 platform may need the clk accuracy informations:
+
+AT91 SoCs provide a slow clock (32 KHz clock) which can be used as a clock
+source for some peripherals (USART, TC blocks, ...).
+
+This slow clock can be generated from 2 sources:
+- a 32KHz internal RC with a poor accuracy (50000 ppm)
+- a 32KHz external crystal oscillator
+
+Most of the supported at91 boards (if not all) use the external 32KHz crystal
+source except for the kizbox (the board I'm working with :)).
+It probably comes from a bad hardware design (hardware team should have
+connected a crystal oscillator to the SoC instead of relying on the unaccurate
+internal RC).
+Anyway, I can't change the hardware as it is already widely deployed.
+
+What I'm proposing is to give clock users the ability to retrieve clocks
+accuracies in order to choose the most accurate source (or at least discard
+clocks with poor accuracy).
+
+Could you tell me if this approach is right, and if other platforms/boards have
+similar issues and would be interrested by this series ?
+
+Best Regards,
+
+Boris
+
+Boris BREZILLON (2):
+  clk: add clk accuracy retrieval support
+  clk: add accuracy support for fixed clock
+
+ Documentation/clk.txt                              |    4 +
+ .../devicetree/bindings/clock/fixed-clock.txt      |    3 +
+ drivers/clk/Kconfig                                |    4 +
+ drivers/clk/clk-fixed-rate.c                       |   43 +++++++--
+ drivers/clk/clk.c                                  |   92 +++++++++++++++++++-
+ include/linux/clk-private.h                        |    1 +
+ include/linux/clk-provider.h                       |   14 +++
+ include/linux/clk.h                                |   17 ++++
+ 8 files changed, 168 insertions(+), 10 deletions(-)
+
+-- 
+1.7.9.5
