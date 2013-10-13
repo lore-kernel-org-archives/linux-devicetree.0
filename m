@@ -1,70 +1,44 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 3/6] mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC
- configurations in device_probe
-Date: Sat, 12 Oct 2013 18:40:54 -0700
-Message-ID: <5259FA26.8090805@gmail.com>
-References: <1381498603-15715-1-git-send-email-pekon@ti.com> <1381498603-15715-4-git-send-email-pekon@ti.com> <20131011192833.GL23337@ld-irv-0074.broadcom.com> <20980858CB6D3A4BAE95CA194937D5E73EA218B5@DBDE04.ent.ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Usage of for_each_child_of_node()
+Date: Sat, 12 Oct 2013 22:15:03 -0500
+Message-ID: <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
+References: <5259B6F8.3070701@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA218B5@DBDE04.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5259B6F8.3070701-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
+On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> Hi all,
+>
+> for_each_child_of_node() and similar functions increase the refcount
+> on each returned node and expect the caller to release the node by
+> calling of_node_put() when done.
+>
+> Looking through the kernel code, it appears this is hardly ever done,
+> if at all. Some code even calls of_node_get() on returned nodes again.
+>
+> I guess this doesn't matter in cases where devicetree is a static entity.
+> However, this is not (or no longer) the case with devicetree overlays,
+> or more generically in cases where devicetree nodes are added and
+> removed dynamically.
+>
+> Fundamental question: Would patches to fix this problem be accepted upstream
+> ?
 
-On 10/12/2013 04:58 PM, Gupta, Pekon wrote:
->> From: Brian Norris [mailto:computersforpeace@gmail.com]
->>> On Fri, Oct 11, 2013 at 07:06:40PM +0530, Pekon Gupta wrote:
-> [...]
->> Why do you even need the #ifdef's for the #include's? It is not harmful
->> to include headers for stuff that is only conditionally used. In fact,
->> this creates a problem later when you try to use nand_bch_free(), and
->> you have to surround it with extra #ifdef's.
->>
->> In short: these #ifdef's just breed more #ifdef's and cause the code to
->> become harder to read and less maintainable.
+Certainly.
 
-First off, I should clarify this: the above comment was speaking *only* 
-about surrounding the #include's with #ifdef's. Such #ifdef's only make 
-everything else harder.
+> Or, of course, stepping a bit back: Am I missing something essential ?
 
-Now, I recognize that there are still many cases where you may need 
-#ifdef's in the body of the code. I was only trying to hit the easiest ones.
+No. I think this is frequently wrong since it typically doesn't matter
+for static entries as you mention.
 
-> There are 2 problems here:
-> (1)
-> I have removed #ifdef across headers in next version. But I cannot remove
-> #ifdef across some callbacks for  cc.hwctl(), ecc.calculate(), ecc.correct(),
-> because then compilation would throw warnings for un-used functions.
-
-The __maybe_unused attribute can be given to functions that will compile 
-but are unused, and the compiler will just remove unused ones from the 
-binary without warning. That is probably (weakly) preferable to 
-#ifdef's, if you can manage it. But I understand some #ifdef's are 
-necessary.
-
-> (2)
-> OMAP driver uses generic lib/bch.c which is compiled only when
-> CONFIG_MTD_NAND_ECC_BCH is enabled. So to avoid compilation
-> issues, I had to put #ifdefs on all wrapper functions which use lib/bch.c
-> or nand_bch.c
-
-nand_bch.c (and its corresponding nand_bch.h) has stub implementations 
-so that extra #ifdef's often aren't needed. But include/linux/bch.h does 
-not, so you are correct.
-
-> I myself have tried in previous versions to avoid #ifdefs, but I ended
-> up in one or the other problem like (1) |  (2) above.
-> And this is where randconfig test failed earlier when Arnd Bergmann
-> commented, so some #ifdef would hv to be carried till be deprecate
-> some legacy ecc-schemes.
-> However, with patch split many redundant #ifdefs are now removed.
-
-Great, thanks for the effort.
-
-Regards,
-Brian
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
