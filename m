@@ -1,136 +1,108 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
-Date: Mon, 14 Oct 2013 15:22:47 -0400
-Message-ID: <525C4487.2030502@ti.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-1-git-send-email-l.majewski@samsung.com> <20131014074635.77fd9f6e@amdc308.digital.local> <744357E9AAD1214791ACBA4B0B90926301190077@SHSMSX101.ccr.corp.intel.com> <525C4242.2050306@ti.com>
+From: <dinguyen@altera.com>
+Subject: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase in system manager
+Date: Mon, 14 Oct 2013 14:47:29 -0500
+Message-ID: <1381780051-1826-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="Hx5JMLHSnMBrj35brmWa2QDMcRJX6lVoQ"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <525C4242.2050306@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: "Zhang, Rui" <rui.zhang@intel.com>, Lukasz Majewski <l.majewski@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, Linux PM list <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinh.linux@gmail.com
+Cc: Dinh Nguyen <dinguyen@altera.com>, Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Hx5JMLHSnMBrj35brmWa2QDMcRJX6lVoQ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+From: Dinh Nguyen <dinguyen@altera.com>
 
-On 14-10-2013 15:13, Eduardo Valentin wrote:
-> On 14-10-2013 01:52, Zhang, Rui wrote:
->> Eduardo,
->>
->> What's your opinion on this patch set?
->> BTW, please send me all the urgent fixes for thermal soc drivers that
-> you think should go to 3.12.
->>
->=20
-> I will be sending these + one fix on ti soc thermal for 3.12 soon.
->=20
-> The new chip support on exynos needs to be reworked and there are coupl=
-e
-> of new drivers that needs to be reworked too. But those I don't think
-> are ready to go now.
->=20
+Add functionality in the System Manager to set the SDR settings for the
+SD/MMC IP.
 
-Just to be clear, on this patch set obviously I wont be sending the DT
-changes. Those should go via the correct tree.
+Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+Cc: Pavel Machek <pavel@denx.de>
+CC: Arnd Bergmann <arnd@arndb.de>
+CC: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ian.campbell@citrix.com>
+Cc: Chris Ball <cjb@laptop.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
 
->> Thanks,
->> rui
->>> -----Original Message-----
->>> From: Lukasz Majewski [mailto:l.majewski@samsung.com]
->>> Sent: Monday, October 14, 2013 1:47 PM
->>> To: Zhang, Rui; Eduardo Valentin; kgene.kim@samsung.com
->>> Cc: Lukasz Majewski; Linux PM list; Lukasz Majewski; linux-kernel;
->>> Bartlomiej Zolnierkiewicz; devicetree@vger.kernel.org; Amit Daniel
->>> Kachhap; linux-samsung-soc@vger.kernel.org
->>> Subject: Re: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
->>> Importance: High
->>>
->>> Hi Zhang, Eduardo,
->>>
->>>> This patch series is divided into two parts:
->>>> 1. Device tree node definition and enabelement for TMU at Exynos4412=
+---
+v2:
+- Have socfpga_sysmgr_set_dwmmc_drvsel_smpsel() take in the SDR settings
+directly so that it does not have to walk the DTB.
+---
+ arch/arm/mach-socfpga/Makefile     |    2 +-
+ arch/arm/mach-socfpga/core.h       |    6 ++++++
+ arch/arm/mach-socfpga/system_mgr.c |   28 ++++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/mach-socfpga/system_mgr.c
 
->>>> (Trats2) 2. Exynos thermal subsystem regressions for v3.12-rc4.
->>>> Several commits were necessary to properly fix regression for TMU
->>> test
->>>> MUX address setting after reset.
->>>>
->>>> Test HW:
->>>> - Exynos4412 - TRATS2 board (Linux v3.12-rc4)
->>>> SHA1: 8b5ede69d24db939f52b47effff2f6fe1e83e08b
->>>>
->>>>
->>>> Lukasz Majewski (5):
->>>>   thermal: exynos: Remove check for thermal device pointer at
->>>>     exynos_report_trigger()
->>>>   thermal: exynos: Provide separate TMU data for Exynos4412
->>>>   thermal: exynos: Provide initial setting for TMU's test MUX addres=
-s
->>>>     at Exynos4412
->>>>   ARM: dts: exynos4x12: Device tree node definition for TMU on
->>>>     Exynos4x12
->>>>   ARM: dts: exynos4412-trats2: Enable TMU support at Trats2
->>>>
->>>
->>> Zhang, Eduardo - any comments?
->>>
->>> Would it be possible to add them to v3.12 since they do fix critical
->>> error and regression on Exynos4412.
->>>
->>>
->>>>  arch/arm/boot/dts/exynos4412-trats2.dts         |    5 ++++
->>>>  arch/arm/boot/dts/exynos4x12.dtsi               |   10 ++++++++
->>>>  drivers/thermal/samsung/exynos_thermal_common.c |    2 --
->>>>  drivers/thermal/samsung/exynos_tmu.c            |   12 ++++++---
->>>>  drivers/thermal/samsung/exynos_tmu.h            |    7 +++++-
->>>>  drivers/thermal/samsung/exynos_tmu_data.c       |   30
->>>> ++++++++++++++++++-----
->>>> drivers/thermal/samsung/exynos_tmu_data.h       |   13 +++++++++- 7
->>>> files changed, 65 insertions(+), 14 deletions(-)
->>>>
->>>
->>>
->>>
->>> --
->>> Best regards,
->>>
->>> Lukasz Majewski
->>>
->>> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pm" in=
-
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->=20
->=20
+diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+index 6dd7a93..e4ff8b9 100644
+--- a/arch/arm/mach-socfpga/Makefile
++++ b/arch/arm/mach-socfpga/Makefile
+@@ -2,5 +2,5 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-obj-y					:= socfpga.o
++obj-y					:= socfpga.o system_mgr.o
+ obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
+diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+index 572b8f7..b05fa6a 100644
+--- a/arch/arm/mach-socfpga/core.h
++++ b/arch/arm/mach-socfpga/core.h
+@@ -44,4 +44,10 @@ extern unsigned long cpu1start_addr;
+ 
+ #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
+ 
++/* SDMMC Group for System Manager defines */
++#define SYSMGR_SDMMCGRP_CTRL_OFFSET             0x108
++#define DRV_CLK_PHASE_SHIFT_SEL_MASK    0x7
++#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
++	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
++
+ #endif
+diff --git a/arch/arm/mach-socfpga/system_mgr.c b/arch/arm/mach-socfpga/system_mgr.c
+new file mode 100644
+index 0000000..9fdce1d
+--- /dev/null
++++ b/arch/arm/mach-socfpga/system_mgr.c
+@@ -0,0 +1,28 @@
++/*
++ * Copyright Altera Corporation (C) 2013. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/of_platform.h>
++#include <asm/mach/map.h>
++
++#include "core.h"
++
++void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(u32 drvsel, u32 smplsel)
++{
++	u32 hs_timing;
++
++	hs_timing = SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel);
++	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
++}
++EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
+-- 
+1.7.9.5
 
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---Hx5JMLHSnMBrj35brmWa2QDMcRJX6lVoQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJcRIcACgkQCXcVR3XQvP3fIQD9GQhnysF0but2Ykmw3iJ68uSO
-8NWW55hd3+sUgke7ZroBALx8fDNM0J2PM9UAK3UEpchsb8/7dun/vn+maQtvFdiC
-=DC9P
------END PGP SIGNATURE-----
-
---Hx5JMLHSnMBrj35brmWa2QDMcRJX6lVoQ--
