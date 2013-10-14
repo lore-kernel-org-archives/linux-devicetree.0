@@ -1,277 +1,67 @@
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v3 02/13] usb: phy: msm: Move global regulators variables to
- driver state
-Date: Mon, 14 Oct 2013 18:24:29 +0300
-Message-ID: <1381764280-28420-3-git-send-email-iivanov@mm-sol.com>
+Subject: [PATCH v3 08/13] usb: phy: msm: Drop default usb_dr_mode from platform data.
+Date: Mon, 14 Oct 2013 18:24:35 +0300
+Message-ID: <1381764280-28420-9-git-send-email-iivanov@mm-sol.com>
 References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: balbi@ti.com
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, dwalker@fifo99.com, linux@arm.linux.org.uk, swarren@wwwdotorg.org, grant.likely@linaro.org, davidb@codeaurora.org, devicetree@vger.kernel.org, jackp@codeaurora.org, rob@landley.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-arm-msm@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, dsegal@codeaurora.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, mgautam@codeaurora.org, bryanh@codeaurora.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, jackp@codeaurora.org, mgautam@codeaurora.org, dsegal@codeaurora.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
+USB DT bindings states: "...In case this attribute isn't
+passed via DT, USB DRD controllers should default to OTG...",
+so remove redundand field.
+
 Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 ---
- drivers/usb/phy/phy-msm-usb.c |   82 ++++++++++++++++++++---------------------
- include/linux/usb/msm_hsusb.h |    3 ++
- 2 files changed, 42 insertions(+), 43 deletions(-)
+ drivers/usb/phy/phy-msm-usb.c |    7 -------
+ include/linux/usb/msm_hsusb.h |    3 ---
+ 2 files changed, 10 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 118798d..ab39ecb 100644
+index 2aca042..4a23cfa 100644
 --- a/drivers/usb/phy/phy-msm-usb.c
 +++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -58,47 +58,43 @@
- #define USB_PHY_VDD_DIG_VOL_MIN	1000000 /* uV */
- #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
- 
--static struct regulator *hsusb_3p3;
--static struct regulator *hsusb_1p8;
--static struct regulator *hsusb_vddcx;
--
- static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
- {
- 	int ret = 0;
- 
- 	if (init) {
--		hsusb_vddcx = regulator_get(motg->phy.dev, "HSUSB_VDDCX");
--		if (IS_ERR(hsusb_vddcx)) {
-+		motg->vddcx = regulator_get(motg->phy.dev, "HSUSB_VDDCX");
-+		if (IS_ERR(motg->vddcx)) {
- 			dev_err(motg->phy.dev, "unable to get hsusb vddcx\n");
--			return PTR_ERR(hsusb_vddcx);
-+			return PTR_ERR(motg->vddcx);
+@@ -1067,15 +1067,8 @@ static void msm_otg_init_sm(struct msm_otg *motg)
+ 			else
+ 				clear_bit(B_SESS_VLD, &motg->inputs);
+ 		} else if (pdata->otg_control == OTG_USER_CONTROL) {
+-			if (pdata->default_mode == USB_DR_MODE_PERIPHERAL) {
+-				set_bit(ID, &motg->inputs);
+-				set_bit(B_SESS_VLD, &motg->inputs);
+-			} else if (pdata->default_mode == USB_DR_MODE_HOST) {
+-				clear_bit(ID, &motg->inputs);
+-			} else {
+ 				set_bit(ID, &motg->inputs);
+ 				clear_bit(B_SESS_VLD, &motg->inputs);
+-			}
  		}
- 
--		ret = regulator_set_voltage(hsusb_vddcx,
-+		ret = regulator_set_voltage(motg->vddcx,
- 				USB_PHY_VDD_DIG_VOL_MIN,
- 				USB_PHY_VDD_DIG_VOL_MAX);
- 		if (ret) {
- 			dev_err(motg->phy.dev, "unable to set the voltage "
- 					"for hsusb vddcx\n");
--			regulator_put(hsusb_vddcx);
-+			regulator_put(motg->vddcx);
- 			return ret;
- 		}
- 
--		ret = regulator_enable(hsusb_vddcx);
-+		ret = regulator_enable(motg->vddcx);
- 		if (ret) {
- 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
--			regulator_put(hsusb_vddcx);
-+			regulator_put(motg->vddcx);
- 		}
- 	} else {
--		ret = regulator_set_voltage(hsusb_vddcx, 0,
-+		ret = regulator_set_voltage(motg->vddcx, 0,
- 			USB_PHY_VDD_DIG_VOL_MAX);
- 		if (ret)
- 			dev_err(motg->phy.dev, "unable to set the voltage "
- 					"for hsusb vddcx\n");
--		ret = regulator_disable(hsusb_vddcx);
-+		ret = regulator_disable(motg->vddcx);
- 		if (ret)
- 			dev_err(motg->phy.dev, "unable to disable hsusb vddcx\n");
- 
--		regulator_put(hsusb_vddcx);
-+		regulator_put(motg->vddcx);
- 	}
- 
- 	return ret;
-@@ -109,38 +105,38 @@ static int msm_hsusb_ldo_init(struct msm_otg *motg, int init)
- 	int rc = 0;
- 
- 	if (init) {
--		hsusb_3p3 = regulator_get(motg->phy.dev, "HSUSB_3p3");
--		if (IS_ERR(hsusb_3p3)) {
-+		motg->v3p3 = regulator_get(motg->phy.dev, "HSUSB_3p3");
-+		if (IS_ERR(motg->v3p3)) {
- 			dev_err(motg->phy.dev, "unable to get hsusb 3p3\n");
--			return PTR_ERR(hsusb_3p3);
-+			return PTR_ERR(motg->v3p3);
- 		}
- 
--		rc = regulator_set_voltage(hsusb_3p3, USB_PHY_3P3_VOL_MIN,
-+		rc = regulator_set_voltage(motg->v3p3, USB_PHY_3P3_VOL_MIN,
- 				USB_PHY_3P3_VOL_MAX);
- 		if (rc) {
- 			dev_err(motg->phy.dev, "unable to set voltage level "
- 					"for hsusb 3p3\n");
- 			goto put_3p3;
- 		}
--		rc = regulator_enable(hsusb_3p3);
-+		rc = regulator_enable(motg->v3p3);
- 		if (rc) {
- 			dev_err(motg->phy.dev, "unable to enable the hsusb 3p3\n");
- 			goto put_3p3;
- 		}
--		hsusb_1p8 = regulator_get(motg->phy.dev, "HSUSB_1p8");
--		if (IS_ERR(hsusb_1p8)) {
-+		motg->v1p8 = regulator_get(motg->phy.dev, "HSUSB_1p8");
-+		if (IS_ERR(motg->v1p8)) {
- 			dev_err(motg->phy.dev, "unable to get hsusb 1p8\n");
--			rc = PTR_ERR(hsusb_1p8);
-+			rc = PTR_ERR(motg->v1p8);
- 			goto disable_3p3;
- 		}
--		rc = regulator_set_voltage(hsusb_1p8, USB_PHY_1P8_VOL_MIN,
-+		rc = regulator_set_voltage(motg->v1p8, USB_PHY_1P8_VOL_MIN,
- 				USB_PHY_1P8_VOL_MAX);
- 		if (rc) {
- 			dev_err(motg->phy.dev, "unable to set voltage level "
- 					"for hsusb 1p8\n");
- 			goto put_1p8;
- 		}
--		rc = regulator_enable(hsusb_1p8);
-+		rc = regulator_enable(motg->v1p8);
- 		if (rc) {
- 			dev_err(motg->phy.dev, "unable to enable the hsusb 1p8\n");
- 			goto put_1p8;
-@@ -149,19 +145,19 @@ static int msm_hsusb_ldo_init(struct msm_otg *motg, int init)
- 		return 0;
- 	}
- 
--	regulator_disable(hsusb_1p8);
-+	regulator_disable(motg->v1p8);
- put_1p8:
--	regulator_put(hsusb_1p8);
-+	regulator_put(motg->v1p8);
- disable_3p3:
--	regulator_disable(hsusb_3p3);
-+	regulator_disable(motg->v3p3);
- put_3p3:
--	regulator_put(hsusb_3p3);
-+	regulator_put(motg->v3p3);
- 	return rc;
- }
- 
- #ifdef CONFIG_PM_SLEEP
- #define USB_PHY_SUSP_DIG_VOL  500000
--static int msm_hsusb_config_vddcx(int high)
-+static int msm_hsusb_config_vddcx(struct msm_otg *motg, int high)
- {
- 	int max_vol = USB_PHY_VDD_DIG_VOL_MAX;
- 	int min_vol;
-@@ -172,7 +168,7 @@ static int msm_hsusb_config_vddcx(int high)
- 	else
- 		min_vol = USB_PHY_SUSP_DIG_VOL;
- 
--	ret = regulator_set_voltage(hsusb_vddcx, min_vol, max_vol);
-+	ret = regulator_set_voltage(motg->vddcx, min_vol, max_vol);
- 	if (ret) {
- 		pr_err("%s: unable to set the voltage for regulator "
- 			"HSUSB_VDDCX\n", __func__);
-@@ -185,44 +181,44 @@ static int msm_hsusb_config_vddcx(int high)
- }
- #endif
- 
--static int msm_hsusb_ldo_set_mode(int on)
-+static int msm_hsusb_ldo_set_mode(struct msm_otg *motg, int on)
- {
- 	int ret = 0;
- 
--	if (!hsusb_1p8 || IS_ERR(hsusb_1p8)) {
-+	if (!motg->v1p8 || IS_ERR(motg->v1p8)) {
- 		pr_err("%s: HSUSB_1p8 is not initialized\n", __func__);
- 		return -ENODEV;
- 	}
- 
--	if (!hsusb_3p3 || IS_ERR(hsusb_3p3)) {
-+	if (!motg->v3p3 || IS_ERR(motg->v3p3)) {
- 		pr_err("%s: HSUSB_3p3 is not initialized\n", __func__);
- 		return -ENODEV;
- 	}
- 
- 	if (on) {
--		ret = regulator_set_optimum_mode(hsusb_1p8,
-+		ret = regulator_set_optimum_mode(motg->v1p8,
- 				USB_PHY_1P8_HPM_LOAD);
- 		if (ret < 0) {
- 			pr_err("%s: Unable to set HPM of the regulator "
- 				"HSUSB_1p8\n", __func__);
- 			return ret;
- 		}
--		ret = regulator_set_optimum_mode(hsusb_3p3,
-+		ret = regulator_set_optimum_mode(motg->v3p3,
- 				USB_PHY_3P3_HPM_LOAD);
- 		if (ret < 0) {
- 			pr_err("%s: Unable to set HPM of the regulator "
- 				"HSUSB_3p3\n", __func__);
--			regulator_set_optimum_mode(hsusb_1p8,
-+			regulator_set_optimum_mode(motg->v1p8,
- 				USB_PHY_1P8_LPM_LOAD);
- 			return ret;
- 		}
- 	} else {
--		ret = regulator_set_optimum_mode(hsusb_1p8,
-+		ret = regulator_set_optimum_mode(motg->v1p8,
- 				USB_PHY_1P8_LPM_LOAD);
- 		if (ret < 0)
- 			pr_err("%s: Unable to set LPM of the regulator "
- 				"HSUSB_1p8\n", __func__);
--		ret = regulator_set_optimum_mode(hsusb_3p3,
-+		ret = regulator_set_optimum_mode(motg->v3p3,
- 				USB_PHY_3P3_LPM_LOAD);
- 		if (ret < 0)
- 			pr_err("%s: Unable to set LPM of the regulator "
-@@ -518,8 +514,8 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
--		msm_hsusb_ldo_set_mode(0);
--		msm_hsusb_config_vddcx(0);
-+		msm_hsusb_ldo_set_mode(motg, 0);
-+		msm_hsusb_config_vddcx(motg, 0);
- 	}
- 
- 	if (device_may_wakeup(phy->dev))
-@@ -555,8 +551,8 @@ static int msm_otg_resume(struct msm_otg *motg)
- 
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
--		msm_hsusb_ldo_set_mode(1);
--		msm_hsusb_config_vddcx(1);
-+		msm_hsusb_ldo_set_mode(motg, 1);
-+		msm_hsusb_config_vddcx(motg, 1);
- 		writel(readl(USB_PHY_CTRL) & ~PHY_RETEN, USB_PHY_CTRL);
- 	}
- 
-@@ -1519,7 +1515,7 @@ static int __init msm_otg_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "hsusb vreg configuration failed\n");
- 		goto vddcx_exit;
- 	}
--	ret = msm_hsusb_ldo_set_mode(1);
-+	ret = msm_hsusb_ldo_set_mode(motg, 1);
- 	if (ret) {
- 		dev_err(&pdev->dev, "hsusb vreg enable failed\n");
- 		goto ldo_exit;
+ 		break;
+ 	case USB_DR_MODE_HOST:
 diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 3275483..8705b01 100644
+index f9d512e..72c5830 100644
 --- a/include/linux/usb/msm_hsusb.h
 +++ b/include/linux/usb/msm_hsusb.h
-@@ -183,6 +183,9 @@ struct msm_otg {
- 	enum usb_chg_state chg_state;
- 	enum usb_chg_type chg_type;
- 	u8 dcd_retries;
-+	struct regulator *v3p3;
-+	struct regulator *v1p8;
-+	struct regulator *vddcx;
- };
- 
- #endif
+@@ -106,8 +106,6 @@ enum usb_chg_type {
+  * @power_budget: VBUS power budget in mA (0 will be treated as 500mA).
+  * @mode: Supported mode (OTG/peripheral/host).
+  * @otg_control: OTG switch controlled by user/Id pin
+- * @default_mode: Default operational mode. Applicable only if
+- *              OTG switch is controller by user.
+  * @pclk_src_name: pclk is derived from ebi1_usb_clk in case of 7x27 and 8k
+  *              dfab_usb_hs_clk in case of 8660 and 8960.
+  */
+@@ -117,7 +115,6 @@ struct msm_otg_platform_data {
+ 	unsigned power_budget;
+ 	enum usb_dr_mode mode;
+ 	enum otg_control_type otg_control;
+-	enum usb_dr_mode default_mode;
+ 	enum msm_usb_phy_type phy_type;
+ 	void (*setup_gpio)(enum usb_otg_state state);
+ 	char *pclk_src_name;
 -- 
 1.7.9.5
