@@ -1,261 +1,207 @@
-From: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Subject: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
-Date: Mon, 14 Oct 2013 19:42:34 +0400
-Message-ID: <1381765354-28440-3-git-send-email-valentine.barshak@cogentembedded.com>
-References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Mon, 14 Oct 2013 18:01:20 +0200
+Message-ID: <3444817.fM2Daj9BhR@amdc1032>
+References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
+ <1615083.zyGXhBfPcS@amdc1032> <525BFD1B.5080709@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <525BFD1B.5080709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 SoCs have a different PHY which is not compatible
-with the older R-Car H1 (R8A7779) version.
-This adds OF/platform device id tables and PHY initialization
-callbacks for the following Gen2 SoCs:
-  * R-Car H2: R8A7790;
-  * R-Car M2: R8A7791.
+On Monday, October 14, 2013 10:18:03 AM Eduardo Valentin wrote:
+> On 11-10-2013 11:57, Bartlomiej Zolnierkiewicz wrote:
+> > 
+> > Hi,
+> > 
+> > On Friday, October 11, 2013 11:10:38 AM Eduardo Valentin wrote:
+> >> Hi Naveen,
+> >>
+> >> On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
+> >>>
+> >>> Hi,
+> >>>
+> >>> All patches (#1-#3) look good to me, FWIW you can add:
+> >>>
+> >>> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >>>
+> >>> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412
+> >>> fixup patchset:
+> >>>
+> >>> 	https://lkml.org/lkml/2013/10/9/35
+> >>>
+> >>> It is up to Eduardo to resolve this but it probably would be better to
+> >>> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This would
+> >>> require you to port patch #3 over Lukasz's patchset though.
+> >>
+> >> My question is if this fix applies also to EXYNOS4412, as it  is not
+> >> mentioned in the patch description and the change affects all supported
+> > 
+> > This patch doesn't affect EXYNOS4210 as exynos4210_tmu_registers struct
+> 
+> I was, at least for now, worried about 4412, as I mentioned above.
+> 
+> > uses the default zero value for inten_fall_mask, inten_fall_shift and
+> > intclr_fall_shift.
+> > 
+> >> chip version deliberately. Has this change been validated on all
+> >> supported chip versions?
+> >>
+> >> Amit, I saw you ack, but still, it is not clear how this change behaves
+> >> across supported hardware.
+> > 
+> > For EXYNOS4412 and EXYNOS5250 this patch doesn't cause any functionality
+> > changes because while the patch changes inten_fall_shift usage to
+> > intclr_fall_shift one in exynos_tmu_initialize() it defines
+> > EXYNOS_TMU_CLEAR_FALL_INT_SHIFT to 12 (old EXYNOS_TMU_FALL_INT_SHIFT
+> > value).
+> > 
+> 
+> OK. Then the patch is about a symbol rename, right?
 
-PHY initialization method is chosen, based on the device id.
-Default PHY settings are applied for Gen2 SoCs, which should
-suit the Gen2 boards available.
+Yes and while doing so it also changes the define and the value used on
+EXYNOS5440. I checked this change against the documentation today (please
+see below).
 
-The R8A7779 platform code is modified to use "sata-r8a7779"
-device id.
+> > This patch only changes driver behavior for EXYNOS5440 on which the
+> > used shift value changes from 4 to 12.
+> 
+> I see.
 
-Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
----
- .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
- arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
- arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
- drivers/ata/sata_rcar.c                            | 112 ++++++++++++++++++---
- 4 files changed, 102 insertions(+), 19 deletions(-)
+tmu_intstat and tmu_intclear refer to the same register on EXYNOS5440
+(EXYNOS5440_TMU_S0_7_IRQ defined to 0x230) and the documentation that
+I have says that the value 4 (which matches EXYNOS5440_TMU_FALL_INT_SHIFT
+before the patch) should be used for the shift value. However the patch
+doesn't define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT and instead makes
+the code use generic EXYNOS_TMU_CLEAR_FALL_INT_SHIFT (defined to value
+12) also on EXYNOS5440. This doesn't seem correct.
 
-diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-index 2465183..b5a41bf 100644
---- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-+++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-@@ -1,7 +1,10 @@
- * Renesas R-Car SATA
- 
- Required properties:
--- compatible		: must be "renesas,sata-r8a7779"
-+- compatible		: must be one of the following:
-+			  - "renesas,sata-r8a7779" for R-Car H1
-+			  - "renesas,sata-r8a7790" for R-Car H2
-+			  - "renesas,sata-r8a7791" for R-Car M2
- - reg			: address range of the SATA registers.
- - interrupt-parent	: interrupt parent controller phandle
- - interrupts		: must consist of one interrupt specifier.
-diff --git a/arch/arm/mach-shmobile/clock-r8a7779.c b/arch/arm/mach-shmobile/clock-r8a7779.c
-index badb8b7..6593237 100644
---- a/arch/arm/mach-shmobile/clock-r8a7779.c
-+++ b/arch/arm/mach-shmobile/clock-r8a7779.c
-@@ -170,7 +170,7 @@ static struct clk_lookup lookups[] = {
- 	/* MSTP32 clocks */
- 	CLKDEV_DEV_ID("r8a7779-vin.3", &mstp_clks[MSTP120]), /* VIN3 */
- 	CLKDEV_DEV_ID("rcar-pcie", &mstp_clks[MSTP116]), /* PCIe */
--	CLKDEV_DEV_ID("sata_rcar", &mstp_clks[MSTP115]), /* SATA */
-+	CLKDEV_DEV_ID("sata-r8a7779", &mstp_clks[MSTP115]), /* SATA */
- 	CLKDEV_DEV_ID("fc600000.sata", &mstp_clks[MSTP115]), /* SATA w/DT */
- 	CLKDEV_DEV_ID("r8a777x-ether", &mstp_clks[MSTP114]), /* Ether */
- 	CLKDEV_DEV_ID("r8a7779-vin.0", &mstp_clks[MSTP110]), /* VIN0 */
-diff --git a/arch/arm/mach-shmobile/setup-r8a7779.c b/arch/arm/mach-shmobile/setup-r8a7779.c
-index 13049e9..6aac99e 100644
---- a/arch/arm/mach-shmobile/setup-r8a7779.c
-+++ b/arch/arm/mach-shmobile/setup-r8a7779.c
-@@ -438,7 +438,7 @@ static struct resource sata_resources[] = {
- };
- 
- static struct platform_device sata_device = {
--	.name		= "sata_rcar",
-+	.name		= "sata-r8a7779",
- 	.id		= -1,
- 	.resource	= sata_resources,
- 	.num_resources	= ARRAY_SIZE(sata_resources),
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index c4cd738..80fc2e1 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/ata.h>
- #include <linux/libata.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-@@ -123,12 +124,37 @@
- 
- #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
- 
-+/* Gen2 Physical Layer Control Registers */
-+#define RCAR_GEN2_PHY_CTL1_REG		0x1704
-+#define RCAR_GEN2_PHY_CTL1		0x34180002
-+#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
-+
-+#define RCAR_GEN2_PHY_CTL2_REG		0x170C
-+#define RCAR_GEN2_PHY_CTL2		0x00002303
-+
-+#define RCAR_GEN2_PHY_CTL3_REG		0x171C
-+#define RCAR_GEN2_PHY_CTL3		0x000B0194
-+
-+#define RCAR_GEN2_PHY_CTL4_REG		0x1724
-+#define RCAR_GEN2_PHY_CTL4		0x00030994
-+
-+#define RCAR_GEN2_PHY_CTL5_REG		0x1740
-+#define RCAR_GEN2_PHY_CTL5		0x03004001
-+#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
-+#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
-+
-+enum sata_rcar_type {
-+	RCAR_GEN1_SATA,
-+	RCAR_GEN2_SATA,
-+};
-+
- struct sata_rcar_priv {
- 	void __iomem *base;
- 	struct clk *clk;
-+	enum sata_rcar_type type;
- };
- 
--static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
-+static void sata_rcar_gen1_phy_preinit(struct sata_rcar_priv *priv)
- {
- 	void __iomem *base = priv->base;
- 
-@@ -141,8 +167,8 @@ static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
- 	iowrite32(0, base + SATAPHYRESET_REG);
- }
- 
--static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
--				int group)
-+static void sata_rcar_gen1_phy_write(struct sata_rcar_priv *priv, u16 reg,
-+				     u32 val, int group)
- {
- 	void __iomem *base = priv->base;
- 	int timeout;
-@@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
- 	iowrite32(0, base + SATAPHYADDR_REG);
- }
- 
-+static void sata_rcar_gen1_phy_init(struct sata_rcar_priv *priv)
-+{
-+	sata_rcar_gen1_phy_preinit(priv);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-+}
-+
-+static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
-+{
-+	void __iomem *base = priv->base;
-+
-+	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
-+		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
-+}
-+
- static void sata_rcar_freeze(struct ata_port *ap)
- {
- 	struct sata_rcar_priv *priv = ap->host->private_data;
-@@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
- 	u32 val;
- 
- 	/* reset and setup phy */
--	sata_rcar_phy_initialize(priv);
--	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
--	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
--	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-+	switch (priv->type) {
-+	case RCAR_GEN1_SATA:
-+		sata_rcar_gen1_phy_init(priv);
-+		break;
-+	case RCAR_GEN2_SATA:
-+		sata_rcar_gen2_phy_init(priv);
-+		break;
-+	default:
-+		dev_warn(host->dev, "SATA phy is not initialized\n");
-+		break;
-+	}
- 
- 	/* SATA-IP reset state */
- 	val = ioread32(base + ATAPI_CONTROL1_REG);
-@@ -770,8 +823,34 @@ static void sata_rcar_init_controller(struct ata_host *host)
- 	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
- }
- 
-+static struct of_device_id sata_rcar_match[] = {
-+	{
-+		.compatible = "renesas,sata-r8a7779",
-+		.data = (void *)RCAR_GEN1_SATA,
-+	},
-+	{
-+		.compatible = "renesas,sata-r8a7790",
-+		.data = (void *)RCAR_GEN2_SATA
-+	},
-+	{
-+		.compatible = "renesas,sata-r8a7791",
-+		.data = (void *)RCAR_GEN2_SATA
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sata_rcar_match);
-+
-+static const struct platform_device_id sata_rcar_id_table[] = {
-+	{ "sata-r8a7779", RCAR_GEN1_SATA },
-+	{ "sata-r8a7790", RCAR_GEN2_SATA },
-+	{ "sata-r8a7791", RCAR_GEN2_SATA },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, sata_rcar_id_table);
-+
- static int sata_rcar_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id;
- 	struct ata_host *host;
- 	struct sata_rcar_priv *priv;
- 	struct resource *mem;
-@@ -787,6 +866,12 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	of_id = of_match_device(sata_rcar_match, &pdev->dev);
-+	if (of_id)
-+		priv->type = (enum sata_rcar_type)of_id->data;
-+	else
-+		priv->type = platform_get_device_id(pdev)->driver_data;
-+
- 	priv->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(priv->clk)) {
- 		dev_err(&pdev->dev, "failed to get access to sata clock\n");
-@@ -892,15 +977,10 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
- };
- #endif
- 
--static struct of_device_id sata_rcar_match[] = {
--	{ .compatible = "renesas,sata-r8a7779", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, sata_rcar_match);
--
- static struct platform_driver sata_rcar_driver = {
- 	.probe		= sata_rcar_probe,
- 	.remove		= sata_rcar_remove,
-+	.id_table	= sata_rcar_id_table,
- 	.driver = {
- 		.name		= DRV_NAME,
- 		.owner		= THIS_MODULE,
--- 
-1.8.3.1
+Naveen, this issue needs to be either fixed or explained properly (if
+the documentation is wrong) in the patch description. Please also put some
+information about hardware that you've tested your patch on in the patch
+description.
 
+> > 
+> > PS I've only noticed it now but after this patch inten_fall_shift becomes
+> > unused and can be removed.
+> > 
+> 
+> 
+> Then we should remove it.
+
+I completely agree.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> > Best regards,
+> > --
+> > Bartlomiej Zolnierkiewicz
+> > Samsung R&D Institute Poland
+> > Samsung Electronics
+> > 
+> >>>
+> >>> Best regards,
+> >>> --
+> >>> Bartlomiej Zolnierkiewicz
+> >>> Samsung R&D Institute Poland
+> >>> Samsung Electronics
+> >>>
+> >>> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wrote:
+> >>>> The FALL interrupt related en, status bits are available at an offset of
+> >>>> 16 on INTEN, INTSTAT registers and at an offset of
+> >>>> 12 on INTCLEAR register.
+> >>>>
+> >>>> This patch corrects the same for exyns5250 and exynos5440
+> >>>>
+> >>>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> >>>> ---
+> >>>> Changes since v1:
+> >>>> Changes since v2:
+> >>>> Changes since v3:
+> >>>>   None
+> >>>>
+> >>>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+> >>>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+> >>>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+> >>>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
+> >>>>  4 files changed, 7 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> >>>> index b43afda..af69209 100644
+> >>>> --- a/drivers/thermal/samsung/exynos_tmu.c
+> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> >>>> @@ -265,7 +265,7 @@ skip_calib_data:
+> >>>>  				data->base + reg->threshold_th1);
+> >>>>  
+> >>>>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+> >>>> -			(reg->inten_fall_mask << reg->inten_fall_shift),
+> >>>> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
+> >>>>  				data->base + reg->tmu_intclear);
+> >>>>  
+> >>>>  		/* if last threshold limit is also present */
+> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> >>>> index b364c9e..7c6c34a 100644
+> >>>> --- a/drivers/thermal/samsung/exynos_tmu.h
+> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> >>>> @@ -134,6 +134,7 @@ enum soc_type {
+> >>>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+> >>>>   * @tmu_intstat: Register containing the interrupt status values.
+> >>>>   * @tmu_intclear: Register for clearing the raised interrupt status.
+> >>>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
+> >>>>   * @emul_con: TMU emulation controller register.
+> >>>>   * @emul_temp_shift: shift bits of emulation temperature.
+> >>>>   * @emul_time_shift: shift bits of emulation time.
+> >>>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
+> >>>>  	u32	tmu_intstat;
+> >>>>  
+> >>>>  	u32	tmu_intclear;
+> >>>> +	u32	intclr_fall_shift;
+> >>>>  
+> >>>>  	u32	emul_con;
+> >>>>  	u32	emul_temp_shift;
+> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+> >>>> index 9002499..23fea23 100644
+> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> >>>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
+> >>>>  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+> >>>>  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+> >>>>  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
+> >>>> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+> >>>>  	.emul_con = EXYNOS_EMUL_CON,
+> >>>>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> >>>>  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+> >>>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+> >>>>  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+> >>>>  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+> >>>>  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
+> >>>> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+> >>>>  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+> >>>>  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+> >>>>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+> >>>> index dc7feb5..8788a87 100644
+> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> >>>> @@ -69,9 +69,10 @@
+> >>>>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
+> >>>>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
+> >>>>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
+> >>>> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
+> >>>> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
+> >>>>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+> >>>>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
+> >>>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
+> >>>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+> >>>>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+> >>>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
