@@ -1,42 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] unset twsi option3 for gconfig as well
-Date: Mon, 14 Oct 2013 09:12:30 +0200
-Message-ID: <20131014091230.65047d00@skate>
-References: <1381706847-32762-1-git-send-email-roel.kluin@gmail.com>
-	<CACRpkdb8ibOm61D_iGkOkbas1475n4k5jptnRH7VFk=9+pipHQ@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM:at91:enable sound on at91sam9n12ek board
+Date: Mon, 14 Oct 2013 09:38:59 +0200
+Message-ID: <525B9F93.9040001@atmel.com>
+References: <1381729113-29714-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb8ibOm61D_iGkOkbas1475n4k5jptnRH7VFk=9+pipHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1381729113-29714-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Roel Kluin <roel.kluin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Linus Walleij,
+On 14/10/2013 07:38, Bo Shen :
+> This patch series enable sound on at91sam9n12ek board with wm8904 codec
+>
+>
+> Bo Shen (5):
+>    ARM: at91: add at91sam9n12 ssc clock in look up table
+>    ARM: at91: add ssc dma parameter for at91sam9n12
+>    ARM: at91: enable wm8904 on at91sam9n12ek board
+>    ARM: at91: enable ssc on at91sam9n12ek board
+>    ARM: at91: add sound support on at91sam9n12ek board
 
-On Mon, 14 Oct 2013 09:08:11 +0200, Linus Walleij wrote:
+Great!
 
-> Please include Thomas & Sebastian on the To: line when posting
-> patches to this driver.
+And on the whole patch series:
 
-... and you should quote the entire e-mail so it's easier for us to see
-what it is all about :-))
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Sebastian, the original e-mail is at
-http://www.spinics.net/lists/kernel/msg1618853.html.
+I stack it on at91-3.13-dt branch.
 
-Since this is a Dove-specific pinctrl issue, and Sebastian is the one
-knowing about Dove, I'll let him answer.
+Thanks.
 
-Best regards,
+>
+>   arch/arm/boot/dts/at91sam9n12.dtsi  |    3 +++
+>   arch/arm/boot/dts/at91sam9n12ek.dts |   34 ++++++++++++++++++++++++++++++++++
+>   arch/arm/mach-at91/at91sam9n12.c    |    1 +
+>   3 files changed, 38 insertions(+)
+>
 
-Thomas
+
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
