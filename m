@@ -1,85 +1,36 @@
-From: "Zhang, Rui" <rui.zhang@intel.com>
-Subject: RE: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
-Date: Mon, 14 Oct 2013 05:52:19 +0000
-Message-ID: <744357E9AAD1214791ACBA4B0B90926301190077@SHSMSX101.ccr.corp.intel.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
- <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
- <20131014074635.77fd9f6e@amdc308.digital.local>
+From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
+Date: Mon, 14 Oct 2013 08:58:34 +0300
+Message-ID: <525B880A.7090802@nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com> <52587F2D.9070007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131014074635.77fd9f6e@amdc308.digital.local>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <eduardo.valentin@ti.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52587F2D.9070007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Eduardo,
+On 12.10.2013 01:43, Stephen Warren wrote:
+> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+>> The gr2d hardware in Tegra114 is compatible with that of Tegra20 and
+>> Tegra30. No functionaly changes are required.
+> Similarly here, if the HW is 100% backwards-compatible, there's no need
+> to add compatible values to the driver.
 
-What's your opinion on this patch set?
-BTW, please send me all the urgent fixes for thermal soc drivers that you think should go to 3.12.
+We've used this mechanism for attaching a per-hw-version data structure
+in match table to accomodate differences in how the hardware is power
+gated, reset, booted, some per-soc performance related changes etc. It's
+also used in staging features for new chips, such as disabling power
+features when they're not working/verified yet.
 
-Thanks,
-rui
-> -----Original Message-----
-> From: Lukasz Majewski [mailto:l.majewski@samsung.com]
-> Sent: Monday, October 14, 2013 1:47 PM
-> To: Zhang, Rui; Eduardo Valentin; kgene.kim@samsung.com
-> Cc: Lukasz Majewski; Linux PM list; Lukasz Majewski; linux-kernel;
-> Bartlomiej Zolnierkiewicz; devicetree@vger.kernel.org; Amit Daniel
-> Kachhap; linux-samsung-soc@vger.kernel.org
-> Subject: Re: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
-> Importance: High
-> 
-> Hi Zhang, Eduardo,
-> 
-> > This patch series is divided into two parts:
-> > 1. Device tree node definition and enabelement for TMU at Exynos4412
-> > (Trats2) 2. Exynos thermal subsystem regressions for v3.12-rc4.
-> > Several commits were necessary to properly fix regression for TMU
-> test
-> > MUX address setting after reset.
-> >
-> > Test HW:
-> > - Exynos4412 - TRATS2 board (Linux v3.12-rc4)
-> > SHA1: 8b5ede69d24db939f52b47effff2f6fe1e83e08b
-> >
-> >
-> > Lukasz Majewski (5):
-> >   thermal: exynos: Remove check for thermal device pointer at
-> >     exynos_report_trigger()
-> >   thermal: exynos: Provide separate TMU data for Exynos4412
-> >   thermal: exynos: Provide initial setting for TMU's test MUX address
-> >     at Exynos4412
-> >   ARM: dts: exynos4x12: Device tree node definition for TMU on
-> >     Exynos4x12
-> >   ARM: dts: exynos4412-trats2: Enable TMU support at Trats2
-> >
-> 
-> Zhang, Eduardo - any comments?
-> 
-> Would it be possible to add them to v3.12 since they do fix critical
-> error and regression on Exynos4412.
-> 
-> 
-> >  arch/arm/boot/dts/exynos4412-trats2.dts         |    5 ++++
-> >  arch/arm/boot/dts/exynos4x12.dtsi               |   10 ++++++++
-> >  drivers/thermal/samsung/exynos_thermal_common.c |    2 --
-> >  drivers/thermal/samsung/exynos_tmu.c            |   12 ++++++---
-> >  drivers/thermal/samsung/exynos_tmu.h            |    7 +++++-
-> >  drivers/thermal/samsung/exynos_tmu_data.c       |   30
-> > ++++++++++++++++++-----
-> > drivers/thermal/samsung/exynos_tmu_data.h       |   13 +++++++++- 7
-> > files changed, 65 insertions(+), 14 deletions(-)
-> >
-> 
-> 
-> 
-> --
-> Best regards,
-> 
-> Lukasz Majewski
-> 
-> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+Upstream driver is not yet in a state where that is relevant.
+
+With this, would we still be able to do that with match table? It sounds
+like we could, because we can still (even with multiple compatible
+properties) add separate entries in match table and I guess the
+compatible properties matched in order.
+
+Terje
