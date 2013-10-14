@@ -1,130 +1,32 @@
-From: Valentine <valentine.barshak@cogentembedded.com>
-Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
-Date: Tue, 15 Oct 2013 01:22:23 +0400
-Message-ID: <525C608F.5010303@cogentembedded.com>
-References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com> <20131014162603.GB19196@e106331-lin.cambridge.arm.com> <525C30DA.5060406@cogentembedded.com> <21950975.Xyu9tdlx3R@avalon>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v8 1/5] ARM: add basic support for Trusted Foundations
+Date: Mon, 14 Oct 2013 16:12:49 -0600
+Message-ID: <525C6C61.5090306@wwwdotorg.org>
+References: <1381527938-22840-1-git-send-email-acourbot@nvidia.com> <1381527938-22840-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <21950975.Xyu9tdlx3R@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381527938-22840-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2013 10:15 PM, Laurent Pinchart wrote:
-> Hi Valentine,
->
+On 10/11/2013 03:45 PM, Alexandre Courbot wrote:
+> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+> can be invoked using the same SMC-based API on all supported
+> platforms. This patch adds initial basic support for Trusted
+> Foundations using the ARM firmware API. Current features are limited
+> to the ability to boot secondary processors.
+> 
+> Note: The API followed by Trusted Foundations does *not* follow the SMC
+> calling conventions. It has nothing to do with PSCI neither and is only
+> relevant to devices that use Trusted Foundations (like most Tegra-based
+> retail devices).
 
-Hi Laurent,
+Russell, are you OK with this patch? Is it OK if I take it through the
+Tegra tree, or would you like to take it through your tree and give me a
+stable branch I can apply the rest on top of?
 
-> On Monday 14 October 2013 21:58:50 Valentine wrote:
->> On 10/14/2013 08:26 PM, Mark Rutland wrote:
->>> On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
->>>> R-Car Gen2 SoCs have a different PHY which is not compatible
->>>> with the older R-Car H1 (R8A7779) version.
->>>> This adds OF/platform device id tables and PHY initialization
->>>>
->>>> callbacks for the following Gen2 SoCs:
->>>>     * R-Car H2: R8A7790;
->>>>     * R-Car M2: R8A7791.
->>>>
->>>> PHY initialization method is chosen, based on the device id.
->>>> Default PHY settings are applied for Gen2 SoCs, which should
->>>> suit the Gen2 boards available.
->>>>
->>>> The R8A7779 platform code is modified to use "sata-r8a7779"
->>>> device id.
->>>>
->>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->>>> ---
->>>>
->>>>    .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
->>>>    arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
->>>>    arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
->>>>    drivers/ata/sata_rcar.c                            | 112 +++++++++++---
->>>>    4 files changed, 102 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
->>>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
->>>> 2465183..b5a41bf 100644
->>>> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
->>>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
->>>> @@ -1,7 +1,10 @@
->>>>
->>>>    * Renesas R-Car SATA
->>>>
->>>>    Required properties:
->>>> -- compatible		: must be "renesas,sata-r8a7779"
->>>
->>>> +- compatible		: must be one of the following:
->>> s/must be/should contain/
->>>
->>>> +			  - "renesas,sata-r8a7779" for R-Car H1
->>>> +			  - "renesas,sata-r8a7790" for R-Car H2
->>>> +			  - "renesas,sata-r8a7791" for R-Car M2
->>>
->>> How do renesas,sata-r8a7790 and renesas,sata-r8a7791 differ?
->>>
->>>>    - reg			: address range of the SATA registers.
->>>
->>> It's a size too...
->>>
->>>>    - interrupt-parent	: interrupt parent controller phandle
->>>
->>> Not required.
->>>
->>> [...]
->>>
->>>> +static struct of_device_id sata_rcar_match[] = {
->>>> +	{
->>>> +		.compatible = "renesas,sata-r8a7779",
->>>> +		.data = (void *)RCAR_GEN1_SATA,
->>>> +	},
->>>> +	{
->>>> +		.compatible = "renesas,sata-r8a7790",
->>>> +		.data = (void *)RCAR_GEN2_SATA
->>>> +	},
->>>> +	{
->>>> +		.compatible = "renesas,sata-r8a7791",
->>>> +		.data = (void *)RCAR_GEN2_SATA
->>>> +	},
->>>> +	{},
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
->>>
->>> Are the renesas,sata-r8a779x variants identical?
->>
->> Yes.
->>
->>> If so, why the two strings?
->>
->> Just thought the driver should support "renesas,sata-r8a7791"
->> compatibility as well since it should support both SoCs.
->> Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
->
-> One reason for two compatibility strings is not to be stuck if we later find
-> out the the 7791 SATA controller differs from the 7790.
->
-
-Thanks!
-Yeah, anyways, I'd prefer to keep both strings in the device id table.
-
->>> Could we not require sata-r8a7791 devices to have "sata-r8a7790" in the
->>>
->>> compatible list:
->>> 	compatible = "sata-r8a7791", "sata-r8a7790";
->>>
->>> That way we can match on "sata-r8a7791" if we want to later, but don't
->>> need code for it now.
->>
->> We could. In this case having compatible = "renesas,sata-r8a7791" would not
->> be enough, though it looks like a valid compatible list to me.
->
-> I'm fine with both solution, as long as the "sata-r8a7791" compatibility
-> string is present and has precedence over "sata-r8a7790".
->
-
-Thanks,
-Val.
+Thanks.
