@@ -1,95 +1,199 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] phy: omap: Adapt phy-omap-usb2 for AM437x
-Date: Mon, 14 Oct 2013 15:33:00 +0100
-Message-ID: <20131014143259.GD31708@e106331-lin.cambridge.arm.com>
-References: <1381754603-11581-1-git-send-email-george.cherian@ti.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 2/5] thermal: exynos: Provide separate TMU data for
+ Exynos4412
+Date: Mon, 14 Oct 2013 16:52:49 +0200
+Message-ID: <20131014165249.7b8b2f9e@amdc308.digital.local>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-3-git-send-email-l.majewski@samsung.com>
+ <525BFDC5.4000109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381754603-11581-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, "rob@landley.net" <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <525BFDC5.4000109@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, kgene.kim@samsung.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 14, 2013 at 01:43:23PM +0100, George Cherian wrote:
-> This patch adds a compatible for AM437x "ti,am43xx-usb2" to
-> reuse the same phy-omap-usb2 driver.
+Hi Eduardo,
+
+> On 09-10-2013 02:29, Lukasz Majewski wrote:
+> > Up till now Exynos5250 and Exynos4412 had the same definitions for
+> > TMU data. Following commit changes that, by introducing separate
+> > exynos4412_default_tmu_data structure.
+> > 
+> > Since Exynos4412 was chronologically first, the corresponding name
+> > for TMU registers and default data was renamed.
+> > 
+> > Additionally, new SOC_ARCH_EXYNOS4412 type has been defined.
+> > 
+> > Moreover, the SOC_ARCH_EXYNOS name has been changed to
+> > SOC_ARCH_EXYNOS5250.
+> > 
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> > 
+> > ---
+> > Changes for v2:
+> > - Replace SOC_ARCH_EXYNOS with SOC_ARCH_EXYNOS5250
+> > - Fix coding style for tmu_data elements definition
+> > 
+> >  drivers/thermal/samsung/exynos_tmu.c      |    9 +++++----
+> >  drivers/thermal/samsung/exynos_tmu.h      |    3 ++-
+> >  drivers/thermal/samsung/exynos_tmu_data.c |   28
+> > ++++++++++++++++++++++------
+> > drivers/thermal/samsung/exynos_tmu_data.h |    9 ++++++++- 4 files
+> > changed, 37 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.c
+> > b/drivers/thermal/samsung/exynos_tmu.c index b43afda..1312b34 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu.c
+> > @@ -488,7 +488,7 @@ static const struct of_device_id
+> > exynos_tmu_match[] = { },
+> >  	{
+> >  		.compatible = "samsung,exynos4412-tmu",
+> > -		.data = (void *)EXYNOS5250_TMU_DRV_DATA,
+> > +		.data = (void *)EXYNOS4412_TMU_DRV_DATA,
+> >  	},
+> >  	{
+> >  		.compatible = "samsung,exynos5250-tmu",
+> > @@ -629,9 +629,10 @@ static int exynos_tmu_probe(struct
+> > platform_device *pdev) if (ret)
+> >  		return ret;
+> >  
+> > -	if (pdata->type == SOC_ARCH_EXYNOS ||
+> > -		pdata->type == SOC_ARCH_EXYNOS4210 ||
+> > -				pdata->type == SOC_ARCH_EXYNOS5440)
+> > +	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+> > +	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+> > +	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+> > +	    pdata->type == SOC_ARCH_EXYNOS5440)
+> >  		data->soc = pdata->type;
+> >  	else {
+> >  		ret = -EINVAL;
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.h
+> > b/drivers/thermal/samsung/exynos_tmu.h index b364c9e..b42ece4 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.h
+> > +++ b/drivers/thermal/samsung/exynos_tmu.h
+> > @@ -41,7 +41,8 @@ enum calibration_mode {
+> >  
+> >  enum soc_type {
+> >  	SOC_ARCH_EXYNOS4210 = 1,
+> > -	SOC_ARCH_EXYNOS,
+> > +	SOC_ARCH_EXYNOS4412,
+> > +	SOC_ARCH_EXYNOS5250,
+> >  	SOC_ARCH_EXYNOS5440,
+> >  };
+> >  
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.c
+> > b/drivers/thermal/samsung/exynos_tmu_data.c index 9002499..d8de5c1
+> > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> > @@ -90,8 +90,8 @@ struct exynos_tmu_init_data const
+> > exynos4210_default_tmu_data = { };
+> >  #endif
+> >  
+> > -#if defined(CONFIG_SOC_EXYNOS5250) ||
+> > defined(CONFIG_SOC_EXYNOS4412) -static const struct
+> > exynos_tmu_registers exynos5250_tmu_registers = { +#if
+> > defined(CONFIG_SOC_EXYNOS4412) || defined(CONFIG_SOC_EXYNOS5250)
 > 
-> Also updated the documentation to add the new compatible.
+> Below will be only 4412 definitions,right? Why should we test for
+> 5250? 
+   ^^^^^^^^ [1]
+
+Below are registers definitions for Exynos4412, which appeared first.
+
+However, the Exynos5250 is reusing those registers. 
+
+The exact separation between Exynos4412 and Exynos5250 is done when we
+assign value to .tmu_data at exynos4412_default_tmu_data and
+exynos5250_default_tmu_data.
+
+The test [1] is correct here.
+
 > 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-phy.txt |  2 +-
->  drivers/phy/phy-omap-usb2.c                       | 13 ++++++++++---
->  2 files changed, 11 insertions(+), 4 deletions(-)
+> > +static const struct exynos_tmu_registers exynos4412_tmu_registers
+> > = { .triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
+> >  	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
+> >  	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
+> > @@ -128,7 +128,7 @@ static const struct exynos_tmu_registers
+> > exynos5250_tmu_registers = { .emul_time_mask =
+> > EXYNOS_EMUL_TIME_MASK, };
+> >  
+> > -#define EXYNOS5250_TMU_DATA \
+> > +#define EXYNOS4412_TMU_DATA \
+> >  	.threshold_falling = 10, \
+> >  	.trigger_levels[0] = 85, \
+> >  	.trigger_levels[1] = 103, \
+> > @@ -162,15 +162,31 @@ static const struct exynos_tmu_registers
+> > exynos5250_tmu_registers = { .temp_level = 103, \
+> >  	}, \
+> >  	.freq_tab_count = 2, \
+> > -	.type = SOC_ARCH_EXYNOS, \
+> > -	.registers = &exynos5250_tmu_registers, \
+> > +	.registers = &exynos4412_tmu_registers, \
+> >  	.features = (TMU_SUPPORT_EMULATION |
+> > TMU_SUPPORT_TRIM_RELOAD | \ TMU_SUPPORT_FALLING_TRIP |
+> > TMU_SUPPORT_READY_STATUS | \ TMU_SUPPORT_EMUL_TIME)
+> > +#endif
+> >  
+> > +#if defined(CONFIG_SOC_EXYNOS4412)
+> > +struct exynos_tmu_init_data const exynos4412_default_tmu_data = {
+> > +	.tmu_data = {
+> > +		{
+> > +			EXYNOS4412_TMU_DATA,
+> > +			.type = SOC_ARCH_EXYNOS4412,
+> > +		},
+> > +	},
+> > +	.tmu_count = 1,
+> > +};
+> > +#endif
+> > +
+> > +#if defined(CONFIG_SOC_EXYNOS5250)
+> >  struct exynos_tmu_init_data const exynos5250_default_tmu_data = {
+> >  	.tmu_data = {
+> > -		{ EXYNOS5250_TMU_DATA },
+> > +		{
+> > +			EXYNOS4412_TMU_DATA,
+> > +			.type = SOC_ARCH_EXYNOS5250,
+> > +		},
+> >  	},
+> >  	.tmu_count = 1,
+> >  };
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.h
+> > b/drivers/thermal/samsung/exynos_tmu_data.h index dc7feb5..b130b1e
+> > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> > @@ -138,7 +138,14 @@ extern struct exynos_tmu_init_data const
+> > exynos4210_default_tmu_data; #define EXYNOS4210_TMU_DRV_DATA (NULL)
+> >  #endif
+> >  
+> > -#if (defined(CONFIG_SOC_EXYNOS5250) ||
+> > defined(CONFIG_SOC_EXYNOS4412)) +#if defined(CONFIG_SOC_EXYNOS4412)
+> > +extern struct exynos_tmu_init_data const
+> > exynos4412_default_tmu_data; +#define EXYNOS4412_TMU_DRV_DATA
+> > (&exynos4412_default_tmu_data) +#else
+> > +#define EXYNOS4412_TMU_DRV_DATA (NULL)
+> > +#endif
+> > +
+> > +#if defined(CONFIG_SOC_EXYNOS5250)
+> >  extern struct exynos_tmu_init_data const
+> > exynos5250_default_tmu_data; #define EXYNOS5250_TMU_DRV_DATA
+> > (&exynos5250_default_tmu_data) #else
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> index c0245c8..d5a7f21 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> @@ -3,7 +3,7 @@ USB PHY
->  OMAP USB2 PHY
->  
->  Required properties:
-> - - compatible: Should be "ti,omap-usb2"
-> + - compatible: Should be "ti,omap-usb2" or "ti,am437x-usb2"
+> 
 
-In case this needs to be modified in future, it might be best to split
-this up one per line, with a brief description of when it applies:
 
-- compatible: Should contain one of:
-  * "ti,omap-usb2" for ____ systems
-  * "ti,am437x-usb2" for ____ systems
 
->   - reg : Address and length of the register set for the device.
->   - #phy-cells: determine the number of cells that should be given in the
->     phandle while referencing this phy.
-> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-> index bfc5c33..0529c83 100644
-> --- a/drivers/phy/phy-omap-usb2.c
-> +++ b/drivers/phy/phy-omap-usb2.c
-> @@ -29,6 +29,7 @@
->  #include <linux/delay.h>
->  #include <linux/usb/omap_control_usb.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/of.h>
->  #include <linux/of_platform.h>
->  
->  /**
-> @@ -172,7 +173,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
->  	phy->dev		= &pdev->dev;
->  
->  	phy->phy.dev		= phy->dev;
-> -	phy->phy.label		= "omap-usb2";
-> +	if (of_device_is_compatible(node, "ti,am437x-usb2"))
-> +		phy->phy.label		= "am437x-usb2";
-> +	else
-> +		phy->phy.label		= "omap-usb2";
+-- 
+Best regards,
 
-Instead of having this check here, you could put together a struct
-containing the data applying to a particular compatible string, and
-associate it with the compatible string using of_device_id::data.
+Lukasz Majewski
 
-That means we don't need to duplicate the compatible strings, and it's
-easier to extend in future.
-
->  	phy->phy.set_suspend	= omap_usb2_suspend;
->  	phy->phy.otg		= otg;
->  	phy->phy.type		= USB_PHY_TYPE_USB2;
-> @@ -201,8 +205,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
->  
->  	otg->set_host		= omap_usb_set_host;
->  	otg->set_peripheral	= omap_usb_set_peripheral;
-> -	otg->set_vbus		= omap_usb_set_vbus;
-> -	otg->start_srp		= omap_usb_start_srp;
-> +	if (of_device_is_compatible(node, "ti,omap-usb2")) {
-> +		otg->set_vbus		= omap_usb_set_vbus;
-> +		otg->start_srp		= omap_usb_start_srp;
-> +	}
-
-Similarly here.
-
-Cheers,
-Mark.
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
