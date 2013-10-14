@@ -1,115 +1,72 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] usb: phy: omap: Add omap-control Support for AM437x
-Date: Mon, 14 Oct 2013 16:19:09 +0300
-Message-ID: <525BEF4D.3000103@ti.com>
-References: <1381755071-11931-1-git-send-email-george.cherian@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 25/27] gpu: host1x: Add MIPI pad calibration support
+Date: Mon, 14 Oct 2013 15:44:25 +0200
+Message-ID: <20131014134424.GA16302@ulmo.nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-26-git-send-email-treding@nvidia.com>
+ <52587DAF.9080003@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381755071-11931-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, kishon@ti.com, gregkh@linuxfoundation.org, balbi@ti.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52587DAF.9080003-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi George,
 
-On 10/14/2013 03:51 PM, George Cherian wrote:
-> This adds omap control module support for USBSS in AM437x SoC.
-> Update DT binding information to reflect these changes.
-> 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> ---
->  Documentation/devicetree/bindings/usb/omap-usb.txt |  2 ++
->  drivers/usb/phy/phy-omap-control.c                 | 17 +++++++++++++++++
->  include/linux/usb/omap_control_usb.h               |  6 ++++++
->  3 files changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index 090e5e2..c495135 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -87,6 +87,8 @@ Required properties:
->  			e.g. USB3 PHY and SATA PHY on OMAP5.
->   "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
->  			DRA7 platform.
-> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
-> +			AM437 platform.
->   - reg : Address and length of the register set for the device. It contains
->     the address of "otghs_control" for control-phy-otghs or "power" register
->     for other types.
-> diff --git a/drivers/usb/phy/phy-omap-control.c b/drivers/usb/phy/phy-omap-control.c
-> index 09c5ace..c453b81 100644
-> --- a/drivers/usb/phy/phy-omap-control.c
-> +++ b/drivers/usb/phy/phy-omap-control.c
-> @@ -84,6 +84,18 @@ void omap_control_usb_phy_power(struct device *dev, int on)
->  		else
->  			val |= OMAP_CTRL_USB2_PHY_PD;
->  		break;
-> +
-> +	case OMAP_CTRL_TYPE_AM437USB2:
-> +		if (on) {
-> +			val &= ~(AM437X_CTRL_USB2_PHY_PD |
-> +					AM437X_CTRL_USB2_OTG_PD);
-> +			val |= (AM437X_CTRL_USB2_OTGVDET_EN |
-> +					AM437X_CTRL_USB2_OTGSESSEND_EN);
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The ON and OFF operations are not symmetric because of this. Shouldn't the
-OTG specific stuff go in otg specific ops?
+On Fri, Oct 11, 2013 at 04:37:35PM -0600, Stephen Warren wrote:
+> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+> > This driver adds support to perform calibration of the MIPI pads for CSI
+> > and DSI.
+>=20
+> > diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>=20
+> > +int tegra_mipi_calibrate(struct device *device)
+> ...
+> > +	err =3D of_parse_phandle_with_args(device->of_node, "calibrate",
+> > +					 "#calibrate-cells", 0, &args);
+> ...
+> > +static struct of_device_id tegra_mipi_of_match[] =3D {
+> > +	{ .compatible =3D "nvidia,tegra114-mipi", },
+>=20
+> Is the DT binding for that compatible value documented anywhere? I'm not
+> sure what #calibrate-cells means; it doesn't seem to be used...
 
-> +		} else {
-> +			val |= (AM437X_CTRL_USB2_PHY_PD |
-> +					 AM437X_CTRL_USB2_OTG_PD);
-> +		}
-> +		break;
->  	default:
->  		dev_err(dev, "%s: type %d not recognized\n",
->  					__func__, control_usb->type);
-> @@ -197,6 +209,7 @@ static const enum omap_control_usb_type otghs_data = OMAP_CTRL_TYPE_OTGHS;
->  static const enum omap_control_usb_type usb2_data = OMAP_CTRL_TYPE_USB2;
->  static const enum omap_control_usb_type pipe3_data = OMAP_CTRL_TYPE_PIPE3;
->  static const enum omap_control_usb_type dra7usb2_data = OMAP_CTRL_TYPE_DRA7USB2;
-> +static const enum omap_control_usb_type am437usb2_data = OMAP_CTRL_TYPE_AM437USB2;
->  
->  static const struct of_device_id omap_control_usb_id_table[] = {
->  	{
-> @@ -215,6 +228,10 @@ static const struct of_device_id omap_control_usb_id_table[] = {
->  		.compatible = "ti,control-phy-dra7usb2",
->  		.data = &dra7usb2_data,
->  	},
-> +	{
-> +		.compatible = "ti,control-phy-am437usb2",
-> +		.data = &am437usb2_data,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, omap_control_usb_id_table);
-> diff --git a/include/linux/usb/omap_control_usb.h b/include/linux/usb/omap_control_usb.h
-> index 596b019..69ae383 100644
-> --- a/include/linux/usb/omap_control_usb.h
-> +++ b/include/linux/usb/omap_control_usb.h
-> @@ -24,6 +24,7 @@ enum omap_control_usb_type {
->  	OMAP_CTRL_TYPE_USB2,	/* USB2_PHY, power down in CONTROL_DEV_CONF */
->  	OMAP_CTRL_TYPE_PIPE3,	/* PIPE3 PHY, DPLL & seperate Rx/Tx power */
->  	OMAP_CTRL_TYPE_DRA7USB2, /* USB2 PHY, power and power_aux e.g. DRA7 */
-> +	OMAP_CTRL_TYPE_AM437USB2, /* USB2 PHY, power e.g. AM437x */
->  };
->  
->  struct omap_control_usb {
-> @@ -64,6 +65,11 @@ enum omap_control_usb_mode {
->  
->  #define OMAP_CTRL_USB2_PHY_PD		BIT(28)
->  
-> +#define AM437X_CTRL_USB2_PHY_PD		BIT(0)
-> +#define AM437X_CTRL_USB2_OTG_PD		BIT(1)
-> +#define AM437X_CTRL_USB2_OTGVDET_EN	BIT(19)
-> +#define AM437X_CTRL_USB2_OTGSESSEND_EN	BIT(20)
-> +
->  #if IS_ENABLED(CONFIG_OMAP_CONTROL_USB)
->  extern void omap_control_usb_phy_power(struct device *dev, int on);
->  extern void omap_control_usb_set_mode(struct device *dev,
-> 
+I forgot to add a binding document, but I've complemented my local patch
+series with one. The #calibrate-cells defines the number of cells used
+for the specifier and should be 1. I suspect that we'll never get to
+have more than 32 pads that can be calibrated, but perhaps at some point
+data other than a bitmask of the pads will be needed.
 
-cheers,
--roger
+Thierry
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSW/U4AAoJEN0jrNd/PrOh9mIP/01TsmyKTXcp94Pfsfh4r9BR
+bX1ZjhuWBls+C46H7HaWt7LyPHUr8ie3WhDrxNq8azjjOhf7t49v2UEtkOpT77WM
+bW2DMiIpGN6d0g1p6RL1ozbo+BUAZvLxvwjIU1M5H8qKb0tP/ORgr8KI52kumf58
+EEecETWf8ELuLCvtkYhi29NgUgwqngG3KDMm+TFoFRrIltOwSG6FXej4y3AXZVlI
+AfcFSJzab18ekDRdsbok/QBna9xyQkX1KxohDZyINgS9LHUgEV2DYFDYbJf21/Y7
++2Hhn+gz8hincXF+drh1yUd15mNdFeWt8jDRtDlSRHQkc/z3PK+DPJLRLQDFLfIM
+wIW98j33O0afYNcDTStpMguVc8KpW8+LbJtLWxYNRpjNR9abTrKZ6EkNJEaPD+4Q
+V5xWQBXtnXi7yLa+Wl7YNGaXMyKD2rp+4x7NKE4nHjhKlU3txJwU0qFzv0+MVGKx
+Y1VdBjs5upibdPGm7cWHDLl22mZAlJ1thQEBjhftGi4pV+UdPgJi/mu1XLgpn5hm
+WsbhwtsKoUq59ZiPkgmCOavRrG0ZvgB6j8gscXSMWMMmUighq5WIkiczc+8qZm9R
+cW1aVrwYTGH0NFGOGQTmw3vVyK0BvGOnxVQU0K8+oppxNAwEHovE3M3QWbL0zTAk
+3yZrbfy05RjWF00k1nL/
+=MTn5
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
