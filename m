@@ -1,51 +1,85 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: Re: "powerpc/83xx: gianfar_ptp: select 1588 clock source through
- dts file" was added twice
-Date: Mon, 14 Oct 2013 09:52:13 +0400
-Message-ID: <525B868D.9080806@skitlab.ru>
-References: <525962B2.8010100@skitlab.ru> <20131012.171110.246440214474931440.davem@davemloft.net>
+From: "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
+Date: Mon, 14 Oct 2013 05:52:19 +0000
+Message-ID: <744357E9AAD1214791ACBA4B0B90926301190077@SHSMSX101.ccr.corp.intel.com>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+ <20131014074635.77fd9f6e@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131012.171110.246440214474931440.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131014074635.77fd9f6e@amdc308.digital.local>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <eduardo.valentin@ti.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13.10.2013 01:11, David Miller wrote:
-> From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-> Date: Sat, 12 Oct 2013 18:54:42 +0400
->
->> Hi,
->>
->> recently I looked through commits in kernel/git/torvalds/linux.git and
->> I noticed that my patch (old and new version) was added twice (by
->> David S. Miller):
->>
->> e58f6f4fb4eada7867014bfaec898f03afbce5c2
->> 894116bd0e9b7749a0c4b6c62dec13c2a0ccef68
->>
->> I think this is not good, and only
->> e58f6f4fb4eada7867014bfaec898f03afbce5c2 should be added.
->
-> Read the code history properly.
->
-> First 894116bd0e9b7749a0c4b6c62dec13c2a0ccef68 got applied, as you say
-> accidently.  Then I reverted it, see commit
-> 3f3f0960aff951c5df6e42ce292d1593a2520646.
->
-> Then I applied the correct version which is commit
-> e58f6f4fb4eada7867014bfaec898f03afbce5c2.
->
-> I didn't respond at all the first time you pointed this out hoping
-> you would figure it out on your own.
->
+Eduardo,
 
-Oh...right...
-Please accept my apology.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What's your opinion on this patch set?
+BTW, please send me all the urgent fixes for thermal soc drivers that you think should go to 3.12.
+
+Thanks,
+rui
+> -----Original Message-----
+> From: Lukasz Majewski [mailto:l.majewski@samsung.com]
+> Sent: Monday, October 14, 2013 1:47 PM
+> To: Zhang, Rui; Eduardo Valentin; kgene.kim@samsung.com
+> Cc: Lukasz Majewski; Linux PM list; Lukasz Majewski; linux-kernel;
+> Bartlomiej Zolnierkiewicz; devicetree@vger.kernel.org; Amit Daniel
+> Kachhap; linux-samsung-soc@vger.kernel.org
+> Subject: Re: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
+> Importance: High
+> 
+> Hi Zhang, Eduardo,
+> 
+> > This patch series is divided into two parts:
+> > 1. Device tree node definition and enabelement for TMU at Exynos4412
+> > (Trats2) 2. Exynos thermal subsystem regressions for v3.12-rc4.
+> > Several commits were necessary to properly fix regression for TMU
+> test
+> > MUX address setting after reset.
+> >
+> > Test HW:
+> > - Exynos4412 - TRATS2 board (Linux v3.12-rc4)
+> > SHA1: 8b5ede69d24db939f52b47effff2f6fe1e83e08b
+> >
+> >
+> > Lukasz Majewski (5):
+> >   thermal: exynos: Remove check for thermal device pointer at
+> >     exynos_report_trigger()
+> >   thermal: exynos: Provide separate TMU data for Exynos4412
+> >   thermal: exynos: Provide initial setting for TMU's test MUX address
+> >     at Exynos4412
+> >   ARM: dts: exynos4x12: Device tree node definition for TMU on
+> >     Exynos4x12
+> >   ARM: dts: exynos4412-trats2: Enable TMU support at Trats2
+> >
+> 
+> Zhang, Eduardo - any comments?
+> 
+> Would it be possible to add them to v3.12 since they do fix critical
+> error and regression on Exynos4412.
+> 
+> 
+> >  arch/arm/boot/dts/exynos4412-trats2.dts         |    5 ++++
+> >  arch/arm/boot/dts/exynos4x12.dtsi               |   10 ++++++++
+> >  drivers/thermal/samsung/exynos_thermal_common.c |    2 --
+> >  drivers/thermal/samsung/exynos_tmu.c            |   12 ++++++---
+> >  drivers/thermal/samsung/exynos_tmu.h            |    7 +++++-
+> >  drivers/thermal/samsung/exynos_tmu_data.c       |   30
+> > ++++++++++++++++++-----
+> > drivers/thermal/samsung/exynos_tmu_data.h       |   13 +++++++++- 7
+> > files changed, 65 insertions(+), 14 deletions(-)
+> >
+> 
+> 
+> 
+> --
+> Best regards,
+> 
+> Lukasz Majewski
+> 
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
