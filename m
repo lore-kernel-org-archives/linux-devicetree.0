@@ -1,209 +1,189 @@
 From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
- status bit fields
-Date: Mon, 14 Oct 2013 10:18:03 -0400
-Message-ID: <525BFD1B.5080709@ti.com>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com> <2386580.3V2pzai3k2@amdc1032> <525814EE.8060700@ti.com> <1615083.zyGXhBfPcS@amdc1032>
+Subject: Re: [PATCH v2 2/5] thermal: exynos: Provide separate TMU data for
+ Exynos4412
+Date: Mon, 14 Oct 2013 10:20:53 -0400
+Message-ID: <525BFDC5.4000109@ti.com>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-3-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
 	protocol="application/pgp-signature";
-	boundary="GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE"
+	boundary="8QTIFGTxN50L5nUipJ46sVoC4PwddkdTs"
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1615083.zyGXhBfPcS@amdc1032>
+In-Reply-To: <1381300194-13134-3-git-send-email-l.majewski@samsung.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, kgene.kim@samsung.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE
+--8QTIFGTxN50L5nUipJ46sVoC4PwddkdTs
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 11-10-2013 11:57, Bartlomiej Zolnierkiewicz wrote:
+On 09-10-2013 02:29, Lukasz Majewski wrote:
+> Up till now Exynos5250 and Exynos4412 had the same definitions for TMU
+> data. Following commit changes that, by introducing separate
+> exynos4412_default_tmu_data structure.
 >=20
-> Hi,
+> Since Exynos4412 was chronologically first, the corresponding name for
+> TMU registers and default data was renamed.
 >=20
-> On Friday, October 11, 2013 11:10:38 AM Eduardo Valentin wrote:
->> Hi Naveen,
->>
->> On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
->>>
->>> Hi,
->>>
->>> All patches (#1-#3) look good to me, FWIW you can add:
->>>
->>> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->>>
->>> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS44=
-12
->>> fixup patchset:
->>>
->>> 	https://lkml.org/lkml/2013/10/9/35
->>>
->>> It is up to Eduardo to resolve this but it probably would be better t=
-o
->>> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This wo=
-uld
->>> require you to port patch #3 over Lukasz's patchset though.
->>
->> My question is if this fix applies also to EXYNOS4412, as it  is not
->> mentioned in the patch description and the change affects all supporte=
-d
+> Additionally, new SOC_ARCH_EXYNOS4412 type has been defined.
 >=20
-> This patch doesn't affect EXYNOS4210 as exynos4210_tmu_registers struct=
-
-
-I was, at least for now, worried about 4412, as I mentioned above.
-
-> uses the default zero value for inten_fall_mask, inten_fall_shift and
-> intclr_fall_shift.
+> Moreover, the SOC_ARCH_EXYNOS name has been changed to SOC_ARCH_EXYNOS5=
+250.
 >=20
->> chip version deliberately. Has this change been validated on all
->> supported chip versions?
->>
->> Amit, I saw you ack, but still, it is not clear how this change behave=
-s
->> across supported hardware.
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 >=20
-> For EXYNOS4412 and EXYNOS5250 this patch doesn't cause any functionalit=
-y
-> changes because while the patch changes inten_fall_shift usage to
-> intclr_fall_shift one in exynos_tmu_initialize() it defines
-> EXYNOS_TMU_CLEAR_FALL_INT_SHIFT to 12 (old EXYNOS_TMU_FALL_INT_SHIFT
-> value).
+> ---
+> Changes for v2:
+> - Replace SOC_ARCH_EXYNOS with SOC_ARCH_EXYNOS5250
+> - Fix coding style for tmu_data elements definition
 >=20
-
-OK. Then the patch is about a symbol rename, right?
-
-> This patch only changes driver behavior for EXYNOS5440 on which the
-> used shift value changes from 4 to 12.
-
-I see.
-
+>  drivers/thermal/samsung/exynos_tmu.c      |    9 +++++----
+>  drivers/thermal/samsung/exynos_tmu.h      |    3 ++-
+>  drivers/thermal/samsung/exynos_tmu_data.c |   28 +++++++++++++++++++++=
++------
+>  drivers/thermal/samsung/exynos_tmu_data.h |    9 ++++++++-
+>  4 files changed, 37 insertions(+), 12 deletions(-)
 >=20
-> PS I've only noticed it now but after this patch inten_fall_shift becom=
-es
-> unused and can be removed.
->=20
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sam=
+sung/exynos_tmu.c
+> index b43afda..1312b34 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -488,7 +488,7 @@ static const struct of_device_id exynos_tmu_match[]=
+ =3D {
+>  	},
+>  	{
+>  		.compatible =3D "samsung,exynos4412-tmu",
+> -		.data =3D (void *)EXYNOS5250_TMU_DRV_DATA,
+> +		.data =3D (void *)EXYNOS4412_TMU_DRV_DATA,
+>  	},
+>  	{
+>  		.compatible =3D "samsung,exynos5250-tmu",
+> @@ -629,9 +629,10 @@ static int exynos_tmu_probe(struct platform_device=
+ *pdev)
+>  	if (ret)
+>  		return ret;
+> =20
+> -	if (pdata->type =3D=3D SOC_ARCH_EXYNOS ||
+> -		pdata->type =3D=3D SOC_ARCH_EXYNOS4210 ||
+> -				pdata->type =3D=3D SOC_ARCH_EXYNOS5440)
+> +	if (pdata->type =3D=3D SOC_ARCH_EXYNOS4210 ||
+> +	    pdata->type =3D=3D SOC_ARCH_EXYNOS4412 ||
+> +	    pdata->type =3D=3D SOC_ARCH_EXYNOS5250 ||
+> +	    pdata->type =3D=3D SOC_ARCH_EXYNOS5440)
+>  		data->soc =3D pdata->type;
+>  	else {
+>  		ret =3D -EINVAL;
+> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/sam=
+sung/exynos_tmu.h
+> index b364c9e..b42ece4 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.h
+> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> @@ -41,7 +41,8 @@ enum calibration_mode {
+> =20
+>  enum soc_type {
+>  	SOC_ARCH_EXYNOS4210 =3D 1,
+> -	SOC_ARCH_EXYNOS,
+> +	SOC_ARCH_EXYNOS4412,
+> +	SOC_ARCH_EXYNOS5250,
+>  	SOC_ARCH_EXYNOS5440,
+>  };
+> =20
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/therma=
+l/samsung/exynos_tmu_data.c
+> index 9002499..d8de5c1 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> @@ -90,8 +90,8 @@ struct exynos_tmu_init_data const exynos4210_default_=
+tmu_data =3D {
+>  };
+>  #endif
+> =20
+> -#if defined(CONFIG_SOC_EXYNOS5250) || defined(CONFIG_SOC_EXYNOS4412)
+> -static const struct exynos_tmu_registers exynos5250_tmu_registers =3D =
+{
+> +#if defined(CONFIG_SOC_EXYNOS4412) || defined(CONFIG_SOC_EXYNOS5250)
 
+Below will be only 4412 definitions,right? Why should we test for 5250?
 
-Then we should remove it.
+> +static const struct exynos_tmu_registers exynos4412_tmu_registers =3D =
+{
+>  	.triminfo_data =3D EXYNOS_TMU_REG_TRIMINFO,
+>  	.triminfo_25_shift =3D EXYNOS_TRIMINFO_25_SHIFT,
+>  	.triminfo_85_shift =3D EXYNOS_TRIMINFO_85_SHIFT,
+> @@ -128,7 +128,7 @@ static const struct exynos_tmu_registers exynos5250=
+_tmu_registers =3D {
+>  	.emul_time_mask =3D EXYNOS_EMUL_TIME_MASK,
+>  };
+> =20
+> -#define EXYNOS5250_TMU_DATA \
+> +#define EXYNOS4412_TMU_DATA \
+>  	.threshold_falling =3D 10, \
+>  	.trigger_levels[0] =3D 85, \
+>  	.trigger_levels[1] =3D 103, \
+> @@ -162,15 +162,31 @@ static const struct exynos_tmu_registers exynos52=
+50_tmu_registers =3D {
+>  		.temp_level =3D 103, \
+>  	}, \
+>  	.freq_tab_count =3D 2, \
+> -	.type =3D SOC_ARCH_EXYNOS, \
+> -	.registers =3D &exynos5250_tmu_registers, \
+> +	.registers =3D &exynos4412_tmu_registers, \
+>  	.features =3D (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
+>  			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+>  			TMU_SUPPORT_EMUL_TIME)
+> +#endif
+> =20
+> +#if defined(CONFIG_SOC_EXYNOS4412)
+> +struct exynos_tmu_init_data const exynos4412_default_tmu_data =3D {
+> +	.tmu_data =3D {
+> +		{
+> +			EXYNOS4412_TMU_DATA,
+> +			.type =3D SOC_ARCH_EXYNOS4412,
+> +		},
+> +	},
+> +	.tmu_count =3D 1,
+> +};
+> +#endif
+> +
+> +#if defined(CONFIG_SOC_EXYNOS5250)
+>  struct exynos_tmu_init_data const exynos5250_default_tmu_data =3D {
+>  	.tmu_data =3D {
+> -		{ EXYNOS5250_TMU_DATA },
+> +		{
+> +			EXYNOS4412_TMU_DATA,
+> +			.type =3D SOC_ARCH_EXYNOS5250,
+> +		},
+>  	},
+>  	.tmu_count =3D 1,
+>  };
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/therma=
+l/samsung/exynos_tmu_data.h
+> index dc7feb5..b130b1e 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> @@ -138,7 +138,14 @@ extern struct exynos_tmu_init_data const exynos421=
+0_default_tmu_data;
+>  #define EXYNOS4210_TMU_DRV_DATA (NULL)
+>  #endif
+> =20
+> -#if (defined(CONFIG_SOC_EXYNOS5250) || defined(CONFIG_SOC_EXYNOS4412))=
 
-
-
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
->=20
->>>
->>> Best regards,
->>> --
->>> Bartlomiej Zolnierkiewicz
->>> Samsung R&D Institute Poland
->>> Samsung Electronics
->>>
->>> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi w=
-rote:
->>>> The FALL interrupt related en, status bits are available at an offse=
-t of
->>>> 16 on INTEN, INTSTAT registers and at an offset of
->>>> 12 on INTCLEAR register.
->>>>
->>>> This patch corrects the same for exyns5250 and exynos5440
->>>>
->>>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->>>> ---
->>>> Changes since v1:
->>>> Changes since v2:
->>>> Changes since v3:
->>>>   None
->>>>
->>>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
->>>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
->>>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->>>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
->>>>  4 files changed, 7 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/=
-samsung/exynos_tmu.c
->>>> index b43afda..af69209 100644
->>>> --- a/drivers/thermal/samsung/exynos_tmu.c
->>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
->>>> @@ -265,7 +265,7 @@ skip_calib_data:
->>>>  				data->base + reg->threshold_th1);
->>>> =20
->>>>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
->>>> -			(reg->inten_fall_mask << reg->inten_fall_shift),
->>>> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
->>>>  				data->base + reg->tmu_intclear);
->>>> =20
->>>>  		/* if last threshold limit is also present */
->>>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/=
-samsung/exynos_tmu.h
->>>> index b364c9e..7c6c34a 100644
->>>> --- a/drivers/thermal/samsung/exynos_tmu.h
->>>> +++ b/drivers/thermal/samsung/exynos_tmu.h
->>>> @@ -134,6 +134,7 @@ enum soc_type {
->>>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
->>>>   * @tmu_intstat: Register containing the interrupt status values.
->>>>   * @tmu_intclear: Register for clearing the raised interrupt status=
-=2E
->>>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
->>>>   * @emul_con: TMU emulation controller register.
->>>>   * @emul_temp_shift: shift bits of emulation temperature.
->>>>   * @emul_time_shift: shift bits of emulation time.
->>>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
->>>>  	u32	tmu_intstat;
->>>> =20
->>>>  	u32	tmu_intclear;
->>>> +	u32	intclr_fall_shift;
->>>> =20
->>>>  	u32	emul_con;
->>>>  	u32	emul_temp_shift;
->>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/the=
-rmal/samsung/exynos_tmu_data.c
->>>> index 9002499..23fea23 100644
->>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
->>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
->>>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5=
-250_tmu_registers =3D {
->>>>  	.inten_fall0_shift =3D EXYNOS_TMU_INTEN_FALL0_SHIFT,
->>>>  	.tmu_intstat =3D EXYNOS_TMU_REG_INTSTAT,
->>>>  	.tmu_intclear =3D EXYNOS_TMU_REG_INTCLEAR,
->>>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->>>>  	.emul_con =3D EXYNOS_EMUL_CON,
->>>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
->>>>  	.emul_time_shift =3D EXYNOS_EMUL_TIME_SHIFT,
->>>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5=
-440_tmu_registers =3D {
->>>>  	.inten_fall0_shift =3D EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
->>>>  	.tmu_intstat =3D EXYNOS5440_TMU_S0_7_IRQ,
->>>>  	.tmu_intclear =3D EXYNOS5440_TMU_S0_7_IRQ,
->>>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->>>>  	.tmu_irqstatus =3D EXYNOS5440_TMU_IRQ_STATUS,
->>>>  	.emul_con =3D EXYNOS5440_TMU_S0_7_DEBUG,
->>>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
->>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/the=
-rmal/samsung/exynos_tmu_data.h
->>>> index dc7feb5..8788a87 100644
->>>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
->>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
->>>> @@ -69,9 +69,10 @@
->>>>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
->>>>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
->>>>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
->>>> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
->>>> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
->>>>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
->>>>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
->>>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
->>>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
->>>>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
->>>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
->=20
->=20
+> +#if defined(CONFIG_SOC_EXYNOS4412)
+> +extern struct exynos_tmu_init_data const exynos4412_default_tmu_data;
+> +#define EXYNOS4412_TMU_DRV_DATA (&exynos4412_default_tmu_data)
+> +#else
+> +#define EXYNOS4412_TMU_DRV_DATA (NULL)
+> +#endif
+> +
+> +#if defined(CONFIG_SOC_EXYNOS5250)
+>  extern struct exynos_tmu_init_data const exynos5250_default_tmu_data;
+>  #define EXYNOS5250_TMU_DRV_DATA (&exynos5250_default_tmu_data)
+>  #else
 >=20
 
 
@@ -213,7 +193,7 @@ You have got to be excited about what you are doing. (L. Lamport)
 Eduardo Valentin
 
 
---GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE
+--8QTIFGTxN50L5nUipJ46sVoC4PwddkdTs
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -222,9 +202,9 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.12 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iF4EAREIAAYFAlJb/RsACgkQCXcVR3XQvP1GEwD/Xmj3BdF4Tpj/A1E8EM/3Qj9O
-sEbFT0MMBdYMhRtY9iwBAJTnZhb+q9n5ozn/0kGznl9JnXeuslcJ6Ghxl+ObaMMO
-=gGLT
+iF4EAREIAAYFAlJb/c0ACgkQCXcVR3XQvP1AugEAh+JL1Uf3PyuM1lpmTYD4uIAE
+GTjhHQFUWTLC9mhYvtcA/250f0nxseUo8V34NabOXuxy+7rDkCTvbDvcXKeoTrlQ
+=sLzO
 -----END PGP SIGNATURE-----
 
---GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE--
+--8QTIFGTxN50L5nUipJ46sVoC4PwddkdTs--
