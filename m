@@ -1,65 +1,71 @@
-From: Majunath Goudar <csmanjuvijay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: CCI : Fix implicit declaration of function error
-Date: Mon, 14 Oct 2013 15:52:27 +0530
-Message-ID: <1381746147-13830-1-git-send-email-manju.goudar@lge.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: nataraja.km-Hm3cg6mZ9cc@public.gmane.org, Majunath Goudar <manju.goudar-Hm3cg6mZ9cc@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] of: Add helper for printing an of_phandle_args structure
+Date: Mon, 14 Oct 2013 11:50:51 +0100
+Message-ID: <1381747851-20594-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a inline dummy implementations of_find_matching_node()
-in "#ifdef CONFIG_OF" else part. Without this patch,build system can
-lead to issues. This was discovered during randconfig testing,in which
-ARM_CCI was enabled w/o CONFIG_OF being enabled,leading to the followin=
-g error:
+It is sometimes useful for debug to get the contents of an
+of_phandle_args structure out into the kernel log.
 
-CC      drivers/bus/arm-cci.o
-drivers/bus/arm-cci.c: In function =E2=80=98cci_probe=E2=80=99:
-drivers/bus/arm-cci.c:971:2: error: implicit declaration of function
-=E2=80=98of_find_matching_node=E2=80=99 [-Werror=3Dimplicit-function-de=
-claration]
-cc1: some warnings being treated as errors
-make[2]: *** [drivers/bus/arm-cci.o] Error 1
-make[1]: *** [drivers/bus] Error 2
-make: *** [drivers] Error 2
-
-Signed-off-by: Manjunath Goudar <manju.goudar-Hm3cg6mZ9cc@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
 ---
- include/linux/of.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/of/base.c  | 9 +++++++++
+ drivers/of/irq.c   | 6 +++---
+ include/linux/of.h | 1 +
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index f95aee3..2c57aa2 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -340,6 +340,13 @@ int of_device_is_stdout_path(struct device_node *d=
-n);
-=20
- #else /* CONFIG_OF */
-=20
-+static inline struct device_node *of_find_matching_node(
-+	struct device_node *from,
-+	const struct of_device_id *matches)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 924ba04..4caa9f4 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1192,6 +1192,15 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+ }
+ EXPORT_SYMBOL_GPL(of_property_count_strings);
+ 
++void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
 +{
-+	return NULL;
++	int i;
++	printk("%s %s", msg, of_node_full_name(args->np));
++	for (i = 0; i < args->args_count; i++)
++		printk(i ? ",%08x" : ":%08x", args->args[i]);
++	printk("\n");
 +}
 +
- static inline const char* of_node_full_name(struct device_node *np)
- {
- 	return "<no-node>";
---=20
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
+ 					const char *cells_name,
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index b6c32bc..4bda131 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -101,9 +101,9 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
+ 	int imaplen, match, i;
+ 
+-	pr_debug("of_irq_parse_raw: par=%s,intspec=[0x%08x 0x%08x...],ointsize=%d\n",
+-		 of_node_full_name(out_irq->np), out_irq->args[0], out_irq->args[1],
+-		 out_irq->args_count);
++#ifdef DEBUG
++	of_print_phandle_args("of_irq_parse_raw: ", out_irq);
++#endif
+ 
+ 	ipar = of_node_get(out_irq->np);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 54017b8..5ea16e5 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -277,6 +277,7 @@ extern int of_n_size_cells(struct device_node *np);
+ extern const struct of_device_id *of_match_node(
+ 	const struct of_device_id *matches, const struct device_node *node);
+ extern int of_modalias_node(struct device_node *node, char *modalias, int len);
++extern void of_print_phandle_args(const char *msg, const struct of_phandle_args *args);
+ extern struct device_node *of_parse_phandle(const struct device_node *np,
+ 					    const char *phandle_name,
+ 					    int index);
+-- 
+1.8.1.2
