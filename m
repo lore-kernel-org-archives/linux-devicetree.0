@@ -1,79 +1,115 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH] In absence of braces, port and NULL are missed
-Date: Tue, 15 Oct 2013 06:37:06 +1300
-Message-ID: <525C2BC2.1030207@prisktech.co.nz>
-References: <1381703376-31380-1-git-send-email-roel.kluin@gmail.com> <20131014125449.GB31708@e106331-lin.cambridge.arm.com>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
+Date: Mon, 14 Oct 2013 21:58:50 +0400
+Message-ID: <525C30DA.5060406@cogentembedded.com>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com> <1381765354-28440-3-git-send-email-valentine.barshak@cogentembedded.com> <20131014162603.GB19196@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20131014125449.GB31708@e106331-lin.cambridge.arm.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Roel Kluin <roel.kluin@gmail.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20131014162603.GB19196@e106331-lin.cambridge.arm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/10/13 01:54, Mark Rutland wrote:
-> [Adding Tony Prisk and linux-serial]
+On 10/14/2013 08:26 PM, Mark Rutland wrote:
+> On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
+>> R-Car Gen2 SoCs have a different PHY which is not compatible
+>> with the older R-Car H1 (R8A7779) version.
+>> This adds OF/platform device id tables and PHY initialization
+>> callbacks for the following Gen2 SoCs:
+>>    * R-Car H2: R8A7790;
+>>    * R-Car M2: R8A7791.
+>>
+>> PHY initialization method is chosen, based on the device id.
+>> Default PHY settings are applied for Gen2 SoCs, which should
+>> suit the Gen2 boards available.
+>>
+>> The R8A7779 platform code is modified to use "sata-r8a7779"
+>> device id.
+>>
+>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>> ---
+>>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+>>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+>>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+>>   drivers/ata/sata_rcar.c                            | 112 ++++++++++++++++++---
+>>   4 files changed, 102 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> index 2465183..b5a41bf 100644
+>> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> @@ -1,7 +1,10 @@
+>>   * Renesas R-Car SATA
+>>
+>>   Required properties:
+>> -- compatible		: must be "renesas,sata-r8a7779"
+>> +- compatible		: must be one of the following:
 >
-> Hi Roel,
+> s/must be/should contain/
 >
-> While this looks like a good fix, the commit message is a bit confusing.
-> How about something like the message between the scissor lines below:
+>> +			  - "renesas,sata-r8a7779" for R-Car H1
+>> +			  - "renesas,sata-r8a7790" for R-Car H2
+>> +			  - "renesas,sata-r8a7791" for R-Car M2
 >
-> ---->8----
-> [PATCH] serial: vt8500: add missing braces
+> How do renesas,sata-r8a7790 and renesas,sata-r8a7791 differ?
 >
-> Due to missing braces on an if statement, port will always be assigned
-> -1 regardless of any alias entries in the dt, which was clearly not the
-> intended behaviour.
+>>   - reg			: address range of the SATA registers.
 >
-> This patch adds the missing braces, fixing the issue.
-> ---->8----
+> It's a size too...
 >
-> Also, while this is device tree related, you should Cc the driver
-> maintainer when submitting driver changes.
+>>   - interrupt-parent	: interrupt parent controller phandle
 >
-> Cheers,
+> Not required.
+>
+> [...]
+>
+>> +static struct of_device_id sata_rcar_match[] = {
+>> +	{
+>> +		.compatible = "renesas,sata-r8a7779",
+>> +		.data = (void *)RCAR_GEN1_SATA,
+>> +	},
+>> +	{
+>> +		.compatible = "renesas,sata-r8a7790",
+>> +		.data = (void *)RCAR_GEN2_SATA
+>> +	},
+>> +	{
+>> +		.compatible = "renesas,sata-r8a7791",
+>> +		.data = (void *)RCAR_GEN2_SATA
+>> +	},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
+>
+> Are the renesas,sata-r8a779x variants identical?
+>
+
+Yes.
+
+> If so, why the two strings?
+
+Just thought the driver should support "renesas,sata-r8a7791" 
+compatibility as well since it should support both SoCs.
+Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
+
+>
+> Could we not require sata-r8a7791 devices to have "sata-r8a7790" in the
+> compatible list:
+>
+> 	compatible = "sata-r8a7791", "sata-r8a7790";
+>
+> That way we can match on "sata-r8a7791" if we want to later, but don't
+> need code for it now.
+
+We could. In this case having compatible = "renesas,sata-r8a7791" would 
+not be enough, though it looks like a valid compatible list to me.
+
+>
+> Thanks,
 > Mark.
 >
-> On Sun, Oct 13, 2013 at 11:29:36PM +0100, Roel Kluin wrote:
->> Signed-off-by: Roel Kluin <roel.kluin@gmail.com>
->> ---
->>   drivers/tty/serial/vt8500_serial.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
->> index 93b697a..4cf71c0 100644
->> --- a/drivers/tty/serial/vt8500_serial.c
->> +++ b/drivers/tty/serial/vt8500_serial.c
->> @@ -561,12 +561,13 @@ static int vt8500_serial_probe(struct platform_device *pdev)
->>   	if (!mmres || !irqres)
->>   		return -ENODEV;
->>   
->> -	if (np)
->> +	if (np) {
->>   		port = of_alias_get_id(np, "serial");
->>   		if (port >= VT8500_MAX_PORTS)
->>   			port = -1;
->> -	else
->> +        } else {
->>   		port = -1;
->> +        }
->>   
->>   	if (port < 0) {
->>   		/* calculate the port id */
->> -- 
->> 1.8.1.2
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-Nice find and thanks for the fix.
 
-Acked-by: Tony Prisk <linux@prisktech.co.nz>
-
-Regards
-Tony P
+Thanks,
+Val.
