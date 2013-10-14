@@ -1,82 +1,282 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v3 00/13] usb: phy: msm: Fixes, cleanups and DT support
-Date: Mon, 14 Oct 2013 18:24:27 +0300
-Message-ID: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, dwalker@fifo99.com, linux@arm.linux.org.uk, swarren@wwwdotorg.org, grant.likely@linaro.org, davidb@codeaurora.org, devicetree@vger.kernel.org, jackp@codeaurora.org, rob@landley.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-arm-msm@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, dsegal@codeaurora.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, mgautam@codeaurora.org, bryanh@codeaurora.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 10/13] usb: phy: msm: Switch clock consumer strings
+Date: Mon, 14 Oct 2013 18:24:37 +0300
+Message-ID: <1381764280-28420-11-git-send-email-iivanov@mm-sol.com>
+References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381764280-28420-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dsegal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
-Hi, 
+Replace the USB specific clock names in driver
+with the more standard 'core' and 'iface' ... names.
 
-This is third version of MSM OTG clean up patches.
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/mach-msm/devices-msm7x00.c |    4 +-
+ arch/arm/mach-msm/devices-msm7x30.c |    8 ++--
+ arch/arm/mach-msm/devices-qsd8x50.c |    6 +--
+ drivers/usb/phy/phy-msm-usb.c       |   79 +++++++++++++++++++----------------
+ include/linux/usb/msm_hsusb.h       |   14 +++----
+ 5 files changed, 58 insertions(+), 53 deletions(-)
+
+diff --git a/arch/arm/mach-msm/devices-msm7x00.c b/arch/arm/mach-msm/devices-msm7x00.c
+index d83404d..e7274e1 100644
+--- a/arch/arm/mach-msm/devices-msm7x00.c
++++ b/arch/arm/mach-msm/devices-msm7x00.c
+@@ -461,8 +461,8 @@ static struct clk_pcom_desc msm_clocks_7x01a[] = {
+ 	CLK_PCOM("core",	UART3_CLK,	"msm_serial.2", OFF),
+ 	CLK_PCOM("uart1dm_clk",	UART1DM_CLK,	NULL, OFF),
+ 	CLK_PCOM("uart2dm_clk",	UART2DM_CLK,	NULL, 0),
+-	CLK_PCOM("usb_hs_clk",	USB_HS_CLK,	"msm_hsusb", OFF),
+-	CLK_PCOM("usb_hs_pclk",	USB_HS_P_CLK,	"msm_hsusb", OFF),
++	CLK_PCOM("core",	USB_HS_CLK,	"msm_hsusb", OFF),
++	CLK_PCOM("iface",	USB_HS_P_CLK,	"msm_hsusb", OFF),
+ 	CLK_PCOM("usb_otg_clk",	USB_OTG_CLK,	NULL, 0),
+ 	CLK_PCOM("vdc_clk",	VDC_CLK,	NULL, OFF ),
+ 	CLK_PCOM("vfe_clk",	VFE_CLK,	NULL, OFF),
+diff --git a/arch/arm/mach-msm/devices-msm7x30.c b/arch/arm/mach-msm/devices-msm7x30.c
+index c15ea8a..b7d00fa 100644
+--- a/arch/arm/mach-msm/devices-msm7x30.c
++++ b/arch/arm/mach-msm/devices-msm7x30.c
+@@ -212,10 +212,10 @@ static struct clk_pcom_desc msm_clocks_7x30[] = {
+ 	CLK_PCOM("tv_dac_clk",	TV_DAC_CLK,	NULL, 0),
+ 	CLK_PCOM("tv_enc_clk",	TV_ENC_CLK,	NULL, 0),
+ 	CLK_PCOM("core",	UART2_CLK,	"msm_serial.1", 0),
+-	CLK_PCOM("usb_phy_clk",	USB_PHY_CLK,	NULL, 0),
+-	CLK_PCOM("usb_hs_clk",		USB_HS_CLK,		NULL, OFF),
+-	CLK_PCOM("usb_hs_pclk",		USB_HS_P_CLK,		NULL, OFF),
+-	CLK_PCOM("usb_hs_core_clk",	USB_HS_CORE_CLK,	NULL, OFF),
++	CLK_PCOM("phy",	USB_PHY_CLK,	NULL, 0),
++	CLK_PCOM("core",		USB_HS_CLK,		NULL, OFF),
++	CLK_PCOM("iface",		USB_HS_P_CLK,		NULL, OFF),
++	CLK_PCOM("alt_core",	USB_HS_CORE_CLK,	NULL, OFF),
+ 	CLK_PCOM("usb_hs2_clk",		USB_HS2_CLK,		NULL, OFF),
+ 	CLK_PCOM("usb_hs2_pclk",	USB_HS2_P_CLK,		NULL, OFF),
+ 	CLK_PCOM("usb_hs2_core_clk",	USB_HS2_CORE_CLK,	NULL, OFF),
+diff --git a/arch/arm/mach-msm/devices-qsd8x50.c b/arch/arm/mach-msm/devices-qsd8x50.c
+index 9e1e9ce..c9614b8 100644
+--- a/arch/arm/mach-msm/devices-qsd8x50.c
++++ b/arch/arm/mach-msm/devices-qsd8x50.c
+@@ -363,8 +363,8 @@ static struct clk_pcom_desc msm_clocks_8x50[] = {
+ 	CLK_PCOM("core",	UART3_CLK,	"msm_serial.2", OFF),
+ 	CLK_PCOM("uartdm_clk",	UART1DM_CLK,	NULL, OFF),
+ 	CLK_PCOM("uartdm_clk",	UART2DM_CLK,	NULL, 0),
+-	CLK_PCOM("usb_hs_clk",	USB_HS_CLK,	NULL, OFF),
+-	CLK_PCOM("usb_hs_pclk",	USB_HS_P_CLK,	NULL, OFF),
++	CLK_PCOM("core",	USB_HS_CLK,	NULL, OFF),
++	CLK_PCOM("iface",	USB_HS_P_CLK,	NULL, OFF),
+ 	CLK_PCOM("usb_otg_clk",	USB_OTG_CLK,	NULL, 0),
+ 	CLK_PCOM("vdc_clk",	VDC_CLK,	NULL, OFF | CLK_MIN),
+ 	CLK_PCOM("vfe_clk",	VFE_CLK,	NULL, OFF),
+@@ -374,7 +374,7 @@ static struct clk_pcom_desc msm_clocks_8x50[] = {
+ 	CLK_PCOM("usb_hs2_pclk",	USB_HS2_P_CLK,	NULL, OFF),
+ 	CLK_PCOM("usb_hs3_clk",	USB_HS3_CLK,	NULL, OFF),
+ 	CLK_PCOM("usb_hs3_pclk",	USB_HS3_P_CLK,	NULL, OFF),
+-	CLK_PCOM("usb_phy_clk",	USB_PHY_CLK,	NULL, 0),
++	CLK_PCOM("phy",	USB_PHY_CLK,	NULL, 0),
+ };
  
-v3
---
-* In patch 1 - functions for reseting PHY and LINK controller just
-  call platform code if available.
-* New stuff is: cleaning up unneeded/unused driver state variables
-* Simplified regulator names. There is no references to these names
-  in tree, so there should not be a problem with this.
-* Replace the USB specific clock names with the more standard 'core' 
-  and 'iface' ... names.   
-* Added devicetree support 
-
-v2
---
-* Fix compilation issue in patch 1
-* Separate regulator changes
-* Merge devm_ related changes to one commit
-* Drop Lindent patch
-
-v1
---
-Following patches make initial cleanup of usb phy found in the Qualcomm
-chipsets. Changes include:
-* Build time error fix.
-* Move driver to Managed Device Resource allocation.
-* Checkpatch warnings and error fixes
-* Removed usage of global regulators variables.
-
-Ivan T. Ivanov (13):
-  usb: phy: msm: Move mach depndend code to platform data
-  usb: phy: msm: Move global regulators variables to driver state
-  usb: phy: msm: Migrate to Managed Device Resource allocation
-  usb: phy: msm: Remove unnecessarily check for valid regulators.
-  usb: phy: msm: Fix WARNING: quoted string split across lines
-  usb: phy: msm: Fix WARNING: Prefer seq_puts to seq_printf
-  usb: phy: msm: Replace custom enum usb_mode_type with enum
-    usb_dr_mode
-  usb: phy: msm: Drop default usb_dr_mode from platform data.
-  usb: phy: msm: Remove unused pclk_src_name
-  usb: phy: msm: Switch clock consumer strings
-  usb: phy: msm: Remove HSUSB prefix from requlator names
-  usb: phy: msm: Properly check core interrupt number
-  usb: phy: msm: Add device tree support and binding information
-
- .../devicetree/bindings/usb/msm-hsusb.txt          |   58 +++
- arch/arm/mach-msm/board-msm7x30.c                  |   37 +-
- arch/arm/mach-msm/board-qsd8x50.c                  |   37 +-
- arch/arm/mach-msm/devices-msm7x00.c                |    4 +-
- arch/arm/mach-msm/devices-msm7x30.c                |    8 +-
- arch/arm/mach-msm/devices-qsd8x50.c                |    6 +-
- drivers/usb/phy/phy-msm-usb.c                      |  470 +++++++++-----------
- include/linux/usb/msm_hsusb.h                      |   45 +-
- 8 files changed, 362 insertions(+), 303 deletions(-)
-
+ static struct pcom_clk_pdata msm_clock_8x50_pdata = {
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index c1020d9..0bd3ba5 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -262,7 +262,7 @@ static int msm_otg_link_clk_reset(struct msm_otg *motg, bool assert)
+ 	if (!motg->pdata->link_clk_reset)
+ 		return ret;
+ 
+-	ret = motg->pdata->link_clk_reset(motg->clk, assert);
++	ret = motg->pdata->link_clk_reset(motg->core_clk, assert);
+ 	if (ret)
+ 		dev_err(motg->phy.dev, "usb link clk reset failed\n");
+ 
+@@ -276,7 +276,7 @@ static int msm_otg_phy_clk_reset(struct msm_otg *motg)
+ 	if (!motg->pdata->phy_clk_reset)
+ 		return ret;
+ 
+-	ret = motg->pdata->phy_clk_reset(motg->phy_reset_clk);
++	ret = motg->pdata->phy_clk_reset(motg->phy_clk);
+ 	if (ret)
+ 		dev_err(motg->phy.dev, "usb phy clk assert failed\n");
+ 
+@@ -459,10 +459,10 @@ static int msm_otg_suspend(struct msm_otg *motg)
+ 			motg->pdata->otg_control == OTG_PMIC_CONTROL)
+ 		writel(readl(USB_PHY_CTRL) | PHY_RETEN, USB_PHY_CTRL);
+ 
+-	clk_disable_unprepare(motg->pclk);
+-	clk_disable_unprepare(motg->clk);
+-	if (!IS_ERR(motg->core_clk))
+-		clk_disable_unprepare(motg->core_clk);
++	clk_disable_unprepare(motg->iface_clk);
++	clk_disable_unprepare(motg->core_clk);
++	if (!IS_ERR(motg->alt_core_clk))
++		clk_disable_unprepare(motg->alt_core_clk);
+ 
+ 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
+ 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
+@@ -493,10 +493,10 @@ static int msm_otg_resume(struct msm_otg *motg)
+ 	if (!atomic_read(&motg->in_lpm))
+ 		return 0;
+ 
+-	clk_prepare_enable(motg->pclk);
+-	clk_prepare_enable(motg->clk);
+-	if (!IS_ERR(motg->core_clk))
+-		clk_prepare_enable(motg->core_clk);
++	clk_prepare_enable(motg->iface_clk);
++	clk_prepare_enable(motg->core_clk);
++	if (!IS_ERR(motg->alt_core_clk))
++		clk_prepare_enable(motg->alt_core_clk);
+ 
+ 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
+ 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
+@@ -1372,16 +1372,16 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	phy = &motg->phy;
+ 	phy->dev = &pdev->dev;
+ 
+-	motg->phy_reset_clk = devm_clk_get(&pdev->dev, "usb_phy_clk");
+-	if (IS_ERR(motg->phy_reset_clk)) {
+-		dev_err(&pdev->dev, "failed to get usb_phy_clk\n");
+-		return PTR_ERR(motg->phy_reset_clk);
++	motg->phy_clk = devm_clk_get(&pdev->dev, "phy");
++	if (IS_ERR(motg->phy_clk)) {
++		dev_err(&pdev->dev, "failed to get phy clock\n");
++		return PTR_ERR(motg->phy_clk);
+ 	}
+ 
+-	motg->clk = devm_clk_get(&pdev->dev, "usb_hs_clk");
+-	if (IS_ERR(motg->clk)) {
+-		dev_err(&pdev->dev, "failed to get usb_hs_clk\n");
+-		return PTR_ERR(motg->clk);
++	motg->core_clk = devm_clk_get(&pdev->dev, "core");
++	if (IS_ERR(motg->core_clk)) {
++		dev_err(&pdev->dev, "failed to get core clock\n");
++		return PTR_ERR(motg->core_clk);
+ 	}
+ 
+ 	/*
+@@ -1390,18 +1390,22 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	 * operation and USB core cannot tolerate frequency changes on
+ 	 * CORE CLK.
+ 	 */
+-	motg->pclk = devm_clk_get(&pdev->dev, "usb_hs_pclk");
+-	if (IS_ERR(motg->pclk)) {
+-		dev_err(&pdev->dev, "failed to get usb_hs_pclk\n");
+-		return PTR_ERR(motg->pclk);
++
++	motg->iface_clk = devm_clk_get(&pdev->dev, "iface");
++	if (IS_ERR(motg->iface_clk)) {
++		dev_err(&pdev->dev, "failed to get iface clock\n");
++		return PTR_ERR(motg->iface_clk);
+ 	}
+ 
+ 	/*
+-	 * USB core clock is not present on all MSM chips. This
++	 * USB alt_core clock is not present on all MSM chips. This
+ 	 * clock is introduced to remove the dependency on AXI
+ 	 * bus frequency.
++	 *
++	 * Targets on which link uses asynchronous reset methodology,
++	 * free running clock is not required during the reset.
+ 	 */
+-	motg->core_clk = devm_clk_get(&pdev->dev, "usb_hs_core_clk");
++	motg->alt_core_clk = devm_clk_get(&pdev->dev, "alt_core");
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	motg->regs = devm_ioremap_resource(&pdev->dev, res);
+@@ -1434,13 +1438,13 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 		return PTR_ERR(motg->v1p8);
+ 	}
+ 
+-	clk_set_rate(motg->clk, 60000000);
++	clk_set_rate(motg->core_clk, 60000000);
+ 
+-	clk_prepare_enable(motg->clk);
+-	clk_prepare_enable(motg->pclk);
++	clk_prepare_enable(motg->core_clk);
++	clk_prepare_enable(motg->iface_clk);
+ 
+-	if (!IS_ERR(motg->core_clk))
+-		clk_prepare_enable(motg->core_clk);
++	if (!IS_ERR(motg->alt_core_clk))
++		clk_prepare_enable(motg->alt_core_clk);
+ 
+ 	ret = msm_hsusb_init_vddcx(motg, 1);
+ 	if (ret) {
+@@ -1506,10 +1510,10 @@ disable_ldo:
+ disable_vddcx:
+ 	msm_hsusb_init_vddcx(motg, 0);
+ disable_clks:
+-	clk_disable_unprepare(motg->pclk);
+-	clk_disable_unprepare(motg->clk);
+-	if (!IS_ERR(motg->core_clk))
+-		clk_disable_unprepare(motg->core_clk);
++	clk_disable_unprepare(motg->iface_clk);
++	clk_disable_unprepare(motg->core_clk);
++	if (!IS_ERR(motg->alt_core_clk))
++		clk_disable_unprepare(motg->alt_core_clk);
+ 	return ret;
+ }
+ 
+@@ -1550,10 +1554,11 @@ static int msm_otg_remove(struct platform_device *pdev)
+ 	if (cnt >= PHY_SUSPEND_TIMEOUT_USEC)
+ 		dev_err(phy->dev, "Unable to suspend PHY\n");
+ 
+-	clk_disable_unprepare(motg->pclk);
+-	clk_disable_unprepare(motg->clk);
+-	if (!IS_ERR(motg->core_clk))
+-		clk_disable_unprepare(motg->core_clk);
++	clk_disable_unprepare(motg->iface_clk);
++	clk_disable_unprepare(motg->core_clk);
++	if (!IS_ERR(motg->alt_core_clk))
++		clk_disable_unprepare(motg->alt_core_clk);
++
+ 	msm_hsusb_ldo_init(motg, 0);
+ 
+ 	pm_runtime_set_suspended(&pdev->dev);
+diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
+index 262ed80..f1b98f2 100644
+--- a/include/linux/usb/msm_hsusb.h
++++ b/include/linux/usb/msm_hsusb.h
+@@ -124,10 +124,10 @@ struct msm_otg_platform_data {
+  * @otg: USB OTG Transceiver structure.
+  * @pdata: otg device platform data.
+  * @irq: IRQ number assigned for HSUSB controller.
+- * @clk: clock struct of usb_hs_clk.
+- * @pclk: clock struct of usb_hs_pclk.
+- * @phy_reset_clk: clock struct of usb_phy_clk.
+- * @core_clk: clock struct of usb_hs_core_clk.
++ * @core_clk: reference to core clock struct.
++ * @iface_clk: reference to interface clock struct.
++ * @phy_clk: reference to PHY clock struct.
++ * @alt_core_clk: reference to alternative clock struct
+  * @regs: ioremapped register base address.
+  * @inputs: OTG state machine inputs(Id, SessValid etc).
+  * @sm_work: OTG state machine work.
+@@ -144,10 +144,10 @@ struct msm_otg {
+ 	struct usb_phy phy;
+ 	struct msm_otg_platform_data *pdata;
+ 	int irq;
+-	struct clk *clk;
+-	struct clk *pclk;
+-	struct clk *phy_reset_clk;
+ 	struct clk *core_clk;
++	struct clk *iface_clk;
++	struct clk *phy_clk;
++	struct clk *alt_core_clk;
+ 	void __iomem *regs;
+ #define ID		0
+ #define B_SESS_VLD	1
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
