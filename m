@@ -1,124 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
-Date: Mon, 14 Oct 2013 20:15:08 +0200
-Message-ID: <21950975.Xyu9tdlx3R@avalon>
-References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com> <20131014162603.GB19196@e106331-lin.cambridge.arm.com> <525C30DA.5060406@cogentembedded.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 26/27] drm/tegra: Add DSI support
+Date: Mon, 14 Oct 2013 12:16:48 -0600
+Message-ID: <525C3510.60802@wwwdotorg.org>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-27-git-send-email-treding@nvidia.com> <52587F17.7060104@wwwdotorg.org> <20131014135548.GB16302@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <525C30DA.5060406@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Valentine <valentine.barshak@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131014135548.GB16302-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Valentine,
-
-On Monday 14 October 2013 21:58:50 Valentine wrote:
-> On 10/14/2013 08:26 PM, Mark Rutland wrote:
-> > On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
-> >> R-Car Gen2 SoCs have a different PHY which is not compatible
-> >> with the older R-Car H1 (R8A7779) version.
-> >> This adds OF/platform device id tables and PHY initialization
-> >> 
-> >> callbacks for the following Gen2 SoCs:
-> >>    * R-Car H2: R8A7790;
-> >>    * R-Car M2: R8A7791.
-> >> 
-> >> PHY initialization method is chosen, based on the device id.
-> >> Default PHY settings are applied for Gen2 SoCs, which should
-> >> suit the Gen2 boards available.
-> >> 
-> >> The R8A7779 platform code is modified to use "sata-r8a7779"
-> >> device id.
-> >> 
-> >> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-> >> ---
-> >> 
-> >>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
-> >>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
-> >>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
-> >>   drivers/ata/sata_rcar.c                            | 112 +++++++++++---
-> >>   4 files changed, 102 insertions(+), 19 deletions(-)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >> b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
-> >> 2465183..b5a41bf 100644
-> >> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >> @@ -1,7 +1,10 @@
-> >> 
-> >>   * Renesas R-Car SATA
-> >> 
-> >>   Required properties:
-> >> -- compatible		: must be "renesas,sata-r8a7779"
-> > 
-> >> +- compatible		: must be one of the following:
-> > s/must be/should contain/
-> > 
-> >> +			  - "renesas,sata-r8a7779" for R-Car H1
-> >> +			  - "renesas,sata-r8a7790" for R-Car H2
-> >> +			  - "renesas,sata-r8a7791" for R-Car M2
-> > 
-> > How do renesas,sata-r8a7790 and renesas,sata-r8a7791 differ?
-> > 
-> >>   - reg			: address range of the SATA registers.
-> > 
-> > It's a size too...
-> > 
-> >>   - interrupt-parent	: interrupt parent controller phandle
-> > 
-> > Not required.
-> > 
-> > [...]
-> > 
-> >> +static struct of_device_id sata_rcar_match[] = {
-> >> +	{
-> >> +		.compatible = "renesas,sata-r8a7779",
-> >> +		.data = (void *)RCAR_GEN1_SATA,
-> >> +	},
-> >> +	{
-> >> +		.compatible = "renesas,sata-r8a7790",
-> >> +		.data = (void *)RCAR_GEN2_SATA
-> >> +	},
-> >> +	{
-> >> +		.compatible = "renesas,sata-r8a7791",
-> >> +		.data = (void *)RCAR_GEN2_SATA
-> >> +	},
-> >> +	{},
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
-> > 
-> > Are the renesas,sata-r8a779x variants identical?
+On 10/14/2013 07:55 AM, Thierry Reding wrote:
+> On Fri, Oct 11, 2013 at 04:43:35PM -0600, Stephen Warren wrote:
+>> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+>>> This commit adds support for both DSI outputs found on Tegra. Only very
+>>> minimal functionality is implemented, so advanced features like ganged
+>>> mode won't work.
+>>>
+>>> Due to the lack of other test hardware, some sections of the driver are
+>>> hardcoded to work with Dalmore.
+>>
+>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+>>
+>>> +static int tegra_dsi_show_regs(struct seq_file *s, void *data)
+>>> +{
+>>> +	struct drm_info_node *node = s->private;
+>>> +	struct tegra_dsi *dsi = node->info_ent->data;
+>>> +
+>>> +#define DUMP_REG(name)						\
+>>> +	seq_printf(s, "%-32s %#05x %08lx\n", #name, name,	\
+>>> +		   tegra_dsi_readl(dsi, name))
+>>> +
+>>> +	DUMP_REG(DSI_INCR_SYNCPT);
+>>
+>> Does it make sense to use an MMIO regmap instead? That way, you get all
+>> the debugfs files for free...
 > 
-> Yes.
-> 
-> > If so, why the two strings?
-> 
-> Just thought the driver should support "renesas,sata-r8a7791"
-> compatibility as well since it should support both SoCs.
-> Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
+> As far as I know, regmap doesn't give you the symbolic names for the
+> registers. I find that a rather useful feature because it allows to
+> easily compare the registers to the ones in our downstream kernels.
 
-One reason for two compatibility strings is not to be stuck if we later find 
-out the the 7791 SATA controller differs from the 7790.
-
-> > Could we not require sata-r8a7791 devices to have "sata-r8a7790" in the
-> > 
-> > compatible list:
-> > 	compatible = "sata-r8a7791", "sata-r8a7790";
-> > 
-> > That way we can match on "sata-r8a7791" if we want to later, but don't
-> > need code for it now.
-> 
-> We could. In this case having compatible = "renesas,sata-r8a7791" would not
-> be enough, though it looks like a valid compatible list to me.
-
-I'm fine with both solution, as long as the "sata-r8a7791" compatibility 
-string is present and has precedence over "sata-r8a7790".
-
--- 
-Regards,
-
-Laurent Pinchart
-
+True. However, we should really be writing user-space scripts to encode
+that information. Such a script could be useful e.g. if reading the
+information directly from /dev/mem or JTAG too, and bloating the kernel
+with debug strings doesn't seem like a great idea.
