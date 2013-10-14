@@ -1,85 +1,39 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Mon, 14 Oct 2013 18:27:59 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1310141824380.22465@utopia.booyaka.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
- <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <52584785.2020504@ti.com> <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com> <525923AB.4030807@ti.com>
- <alpine.DEB.2.02.1310132023240.27397@utopia.booyaka.com> <525C063C.9080908@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: dts: remove unneeded linux,default-state
+ from led nodes
+Date: Mon, 14 Oct 2013 20:28:21 +0200
+Message-ID: <20131014182821.GD25095@lunn.ch>
+References: <1381774047-23354-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <525C063C.9080908@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, mark.rutland@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1381774047-23354-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Oct 2013, Tero Kristo wrote:
-
-> On 10/14/2013 02:45 AM, Paul Walmsley wrote:
->
-> > 8. A few random comments about the individual clock binding data formats
-> > themselves, based on a quick look:
-> > 
-> > A. It seems pretty odd and unnecessarily obscure to do something like
-> > this:
-> > 
-> > dpll_usb_ck: dpll_usb_ck@... {
-> >         ...
-> >         reg = <0x4a008180 0x4>, <0x4a008184 0x4>, <0x4a008188 0x4>,
-> > <0x4a00818c 0x4>;
-> >         ...
-> > };
-> >
-> > It's at least self-documenting to do something like this:
-> > 
-> > dpll_usb_ck: dpll_usb_ck@... {
-> >         ...
-> >         control-reg = < ... >;
-> >         idlest-reg = < ... >;
-> >         .. etc. ..
-> > };
+On Mon, Oct 14, 2013 at 06:07:27PM +0000, Jason Cooper wrote:
+> Generally, power LEDs should indicate when power is applied, and go out
+> once power is removed.  _Not_ annoy the developer with migraine-inducing
+> blinking reminicent of some badly animated television series designed to
+> sell sugar to children.
 > 
-> Some earlier version had something along these lines, but it was turned down.
-> I had also reg-names as documentation purposes along, but this was unnecessary
-> and was dropped also.
-> 
-> > Which itself might not even be needed, depending on how the DPLL control
-> > code is implemented.  For example, if the relative offsets are always the
-> > same for all OMAP4-family devices, maybe there's not even a need to
-> > explicitly encode that into the DT data.
-> 
-> If I want to get rid of these, I need to add extra compatible strings for the
-> dpll types. There are several weird register offsets for omap3/am3 devices.
-> omap4/5/dra7/am4 behave more sanely.
-> 
-> > B. Seems like you can remove the "ti," prefix on the properties, since
-> > they have no pretentions at genericity: they are specific to the
-> > PRCM/CM/PRM IP block data, and registered by those drivers.
-> 
-> Can or should? It seems existing bindings use "ti," prefix even on non-generic
-> bindings, meaning if I look at any other data in DT.
+> On a more serious note, most of these OS-specific properties aren't
+> necessary and should be removed.  I left two that are legitimately tying
+> disk LEDs to disk activity.  Other than that, we keep the state the
+> bootloader left them in until userspace changes the state via sysfs.
 
-My comments in #8 are just regarding minor issues that don't seem
-right.  I don't have a significant objection to staying with the
-existing property names here if you think that they are important.
+Hi Jason
 
-> > C. Looks like the patches use the property "autoidle-low" to indicate that
-> > the autoidle bit should be inverted.  "Low" seems like the wrong
-> > expression here - it invokes the actual voltage logic level of a hardware
-> > signal, and we have no idea whether the hardware signal is using a low
-> > voltage or a high voltage to express this condition.  Would suggest
-> > something like 'invert-autoidle-bit' instead.
-> >
-> > D. Regarding "ti,index-starts-at-one", it seems best to explicitly state
-> > which index starts at one.  The code mentions a "mux index" so please
-> > consider renaming this something like "mux-index-starts-at-one" or
-> > "one-based-mux-index"
-> 
-> The index is explicitly defined by the clock node where this is present. If it
-> is a mux-clock, then it is for mux-index. If for divider clock, it is index
-> for the divider.
+Do you know what happens with "keep" and the bootloader setting the
+LED to hardware blink? I'm just wondering if some of these default-on,
+are actually disabling hardware blinking and making it constant on?
 
-
-
-- Paul
+Thanks
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
