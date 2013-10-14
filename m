@@ -1,63 +1,65 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 5/5] ARM: at91: add sound support on at91sam9n12ek board
-Date: Mon, 14 Oct 2013 13:38:33 +0800
-Message-ID: <1381729113-29714-6-git-send-email-voice.shen@atmel.com>
-References: <1381729113-29714-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381729113-29714-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 0/5] thermal: exynos: Fixes for v3.12
+Date: Mon, 14 Oct 2013 07:46:35 +0200
+Message-ID: <20131014074635.77fd9f6e@amdc308.digital.local>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, kgene.kim@samsung.com
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Linux PM list <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add sound support on at91sam9n12ek board with wm8904 as codec.
+Hi Zhang, Eduardo,
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> This patch series is divided into two parts:
+> 1. Device tree node definition and enabelement for TMU at Exynos4412
+> (Trats2) 2. Exynos thermal subsystem regressions for v3.12-rc4.
+> Several commits were necessary to properly fix regression for TMU
+> test MUX address setting after reset.
+> 
+> Test HW:
+> - Exynos4412 - TRATS2 board (Linux v3.12-rc4)
+> SHA1: 8b5ede69d24db939f52b47effff2f6fe1e83e08b
+> 
+> 
+> Lukasz Majewski (5):
+>   thermal: exynos: Remove check for thermal device pointer at
+>     exynos_report_trigger()
+>   thermal: exynos: Provide separate TMU data for Exynos4412
+>   thermal: exynos: Provide initial setting for TMU's test MUX address
+>     at Exynos4412
+>   ARM: dts: exynos4x12: Device tree node definition for TMU on
+>     Exynos4x12
+>   ARM: dts: exynos4412-trats2: Enable TMU support at Trats2
+> 
 
----
- arch/arm/boot/dts/at91sam9n12ek.dts |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Zhang, Eduardo - any comments?
 
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 391c532..e9487f6 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -91,6 +91,13 @@
- 							<AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
- 					};
- 				};
-+
-+				sound {
-+					pinctrl_pck0_as_audio_mck: pck0_as_audio_mck {
-+						atmel,pins =
-+							<AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-+					};
-+				};
- 			};
- 
- 			spi0: spi@f0000000 {
-@@ -151,4 +158,22 @@
- 			gpio-key,wakeup;
- 		};
- 	};
-+
-+	sound {
-+		compatible = "atmel,asoc-wm8904";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
-+
-+		atmel,model = "wm8904 @ AT91SAM9N12";
-+		atmel,audio-routing =
-+			"Headphone Jack", "HPOUTL",
-+			"Headphone Jack", "HPOUTR",
-+			"IN2L", "Line In Jack",
-+			"IN2R", "Line In Jack",
-+			"Mic", "MICBIAS",
-+			"IN1L", "Mic";
-+
-+		atmel,ssc-controller = <&ssc0>;
-+		atmel,audio-codec = <&wm8904>;
-+	};
- };
+Would it be possible to add them to v3.12 since they do fix critical
+error and regression on Exynos4412.
+
+
+>  arch/arm/boot/dts/exynos4412-trats2.dts         |    5 ++++
+>  arch/arm/boot/dts/exynos4x12.dtsi               |   10 ++++++++
+>  drivers/thermal/samsung/exynos_thermal_common.c |    2 --
+>  drivers/thermal/samsung/exynos_tmu.c            |   12 ++++++---
+>  drivers/thermal/samsung/exynos_tmu.h            |    7 +++++-
+>  drivers/thermal/samsung/exynos_tmu_data.c       |   30
+> ++++++++++++++++++-----
+> drivers/thermal/samsung/exynos_tmu_data.h       |   13 +++++++++- 7
+> files changed, 65 insertions(+), 14 deletions(-)
+> 
+
+
+
 -- 
-1.7.9.5
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
