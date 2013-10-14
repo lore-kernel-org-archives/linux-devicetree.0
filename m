@@ -1,97 +1,119 @@
-From: Cho KyongHo <pullip.cho@samsung.com>
-Subject: Re: [PATCH v10 20/20] iommu/exynos: add devices attached to the System
- MMU to an IOMMU group
-Date: Mon, 14 Oct 2013 20:02:27 +0900
-Message-ID: <20131014200227.10964a2e57d711c23c345c10@samsung.com>
-References: <20131007105844.a260f37a9a941bed894adca3@samsung.com>
- <1381438469.2796.58.camel@ul30vt.home>
+From: Jonas Jensen <jonas.jensen@gmail.com>
+Subject: Re: [PATCH v5] gpio: Add MOXA ART GPIO driver
+Date: Mon, 14 Oct 2013 13:15:28 +0200
+Message-ID: <CACmBeS1NoyHWhS5ydONf3x_z8SQu5-vh_XzMazuY9-uYXdg_wQ@mail.gmail.com>
+References: <1375103161-12460-1-git-send-email-jonas.jensen@gmail.com>
+	<1381503190-5733-1-git-send-email-jonas.jensen@gmail.com>
+	<CACRpkda23nUF8i03RWePj+dGa9Wj6E1L8vfPMfxvnGkazfKS5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1381438469.2796.58.camel@ul30vt.home>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Subash Patel <supash.ramaswamy@linaro.org>, Varun Sethi <Varun.Sethi@freescale.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda23nUF8i03RWePj+dGa9Wj6E1L8vfPMfxvnGkazfKS5w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Oct 2013 14:54:29 -0600, Alex Williamson wrote:
-> On Mon, 2013-10-07 at 10:58 +0900, Cho KyongHo wrote:
-> > Patch written by Antonios Motakis <a.motakis@virtualopensystems.com>:
-> > 
-> > IOMMU groups are expected by certain users of the IOMMU API,
-> > e.g. VFIO. Since each device is behind its own System MMU, we
-> > can allocate a new IOMMU group for each device.
-> > 
-> > Reviewd-by: Cho KyongHo <pullip.cho@samsung.com>
-> > Signed-off-by: Antonios Motakis <a.motakis@virtualopensystems.com>
-> > ---
-> >  drivers/iommu/exynos-iommu.c |   28 ++++++++++++++++++++++++++++
-> >  1 files changed, 28 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> > index 5025338..24505a0 100644
-> > --- a/drivers/iommu/exynos-iommu.c
-> > +++ b/drivers/iommu/exynos-iommu.c
-> > @@ -1028,6 +1028,32 @@ static phys_addr_t exynos_iommu_iova_to_phys(struct iommu_domain *domain,
-> >  	return phys;
-> >  }
-> >  
-> > +static int exynos_iommu_add_device(struct device *dev)
-> > +{
-> > +	struct iommu_group *group;
-> > +	int ret;
-> > +
-> > +	group = iommu_group_get(dev);
-> 
-> Seems reasonable, my only nit would be whether it's really an error to
-> get a group back from the above call.  If devices are always isolated
-> and IOMMU groups are always singleton, it would be an error to find one
-> already associated with the device.  Right?  Thanks,
-> 
-Do you mean that calling iommu_group_add_device() with the group that is
-returned by the above iommu_group_get() will return -EEXIST?
+Thank you for the replies.
 
-I didn't think about that.
+On 11 October 2013 17:44, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>     The register responsible for doing enable/disable is located
+>>     at <0x98100100 0x4>, the clock register is very close at
+>>     <0x98100000 0x34>.
+>
+> If we don't know we have to guess.
+>
+> This layout makes me think that the IO-window at 0x98100000 is
+> a power-clock-and-reset controller. It contains some register
+> to latch the pins enable/disable them, or if this is even a clock
+> gate? Are you sure about this? Is it now a gated clock, simply,
+> so that this bit should be handled in the clock driver, i.e.
+> this bit gets set by clk_enable() from the GPIO driver?
 
-> Alex
+The IO-window at 0x98100000 contains registers that are read to
+determine PLL and APB clock frequencies. Sorry I don't know more than
+that.
 
-Thank you.
+This is part of a pending patch adding the clock driver:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-October/203494.html
 
-KyongHo.
-> 
-> > +
-> > +	if (!group) {
-> > +		group = iommu_group_alloc();
-> > +		if (IS_ERR(group)) {
-> > +			dev_err(dev, "Failed to allocate IOMMU group\n");
-> > +			return PTR_ERR(group);
-> > +		}
-> > +	}
-> > +
-> > +	ret = iommu_group_add_device(group, dev);
-> > +	iommu_group_put(group);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void exynos_iommu_remove_device(struct device *dev)
-> > +{
-> > +	iommu_group_remove_device(dev);
-> > +}
-> > +
-> >  static struct iommu_ops exynos_iommu_ops = {
-> >  	.domain_init = &exynos_iommu_domain_init,
-> >  	.domain_destroy = &exynos_iommu_domain_destroy,
-> > @@ -1036,6 +1062,8 @@ static struct iommu_ops exynos_iommu_ops = {
-> >  	.map = &exynos_iommu_map,
-> >  	.unmap = &exynos_iommu_unmap,
-> >  	.iova_to_phys = &exynos_iommu_iova_to_phys,
-> > +	.add_device = &exynos_iommu_add_device,
-> > +	.remove_device = &exynos_iommu_remove_device,
-> >  	.pgsize_bitmap = SECT_SIZE | LPAGE_SIZE | SPAGE_SIZE,
-> >  };
-> >  
-> 
-> 
-> 
+Arnd made a similar comment suggesting syscon back when MMC mapped the
+same register:
+https://groups.google.com/d/msg/linux.kernel/eeS7vhMWMAc/zNYhzyKilh8J
+
+I think I prefer to have this in the clock driver opposed to using syscon.
+
+The one downside I can see, individual control of the pins would be
+lost? Does it make sense to enable all pins once? this is acceptable
+for at least UC-7112-LX, it doesn't need to disable/enable pins beyond
+the initial clk_enable().
+
+I say the above because I currently have nothing that requires
+individual pin control. However, I removed one line from MMC that
+turned out to be unnecessary. That line directly access the "PMU"
+register disabling pins 10-17 with the following comment:
+
+"
+/* change I/O multiplexing to SD, so the GPIO 17-10 will be fail */
+moxart_gpio_mp_clear(0xff << 10);
+"
+http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/mmc/host/moxasd.c#619
+
+
+>>     I don't think gpio_poweroff driver is right for this hardware
+>>     because the pin is not connected to anything that can do reset.
+>>     The old 2.6.9 kernel driver uses timer poll with eventual call
+>>     to userspace.
+>>
+>>     To test that it works, I added gpio_poweroff anyway, modified
+>>     with gpio_export() the pin can then be seen switching between
+>>     0 and 1 (on "cat /sys/class/gpio/gpio25/value").
+>
+> Hmmmm not quite following this...
+
+I'll try to elaborate. What happens in gpio_poweroff driver does not
+look like something that can reset the hardware. Reset on UC-7112-LX
+is implemented using the same register as the watchdog, in platform
+code hooked up to arm_pm_restart.
+
+The old sources "solved" this by polling the reset pin with eventual
+call_usermodehelper (/sbin/reboot):
+http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/char/moxa_watchdog.c#174
+
+What was previously in a kernel driver, would now be solved in userspace?
+
+gpio_export() allowed me to verify the pin number, pressing reset
+toggles the value.
+
+Adding the gpio-leds driver, that pin was automatically exported to
+sysfs, that got me thinking:
+
+How do I export the reset button to sysfs? Should gpio_export() be
+added to platform code?
+
+
+from drivers/power/reset/gpio-poweroff.c:
+
+static void gpio_poweroff_do_poweroff(void)
+{
+        BUG_ON(!gpio_is_valid(gpio_num));
+
+        /* drive it active, also inactive->active edge */
+        gpio_direction_output(gpio_num, !gpio_active_low);
+        mdelay(100);
+        /* drive inactive, also active->inactive edge */
+        gpio_set_value(gpio_num, gpio_active_low);
+        mdelay(100);
+
+        /* drive it active, also inactive->active edge */
+        gpio_set_value(gpio_num, !gpio_active_low);
+
+        /* give it some time */
+        mdelay(3000);
+
+        WARN_ON(1);
+}
+
+
+Regards,
+Jonas
