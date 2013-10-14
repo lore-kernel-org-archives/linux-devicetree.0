@@ -1,207 +1,101 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
- status bit fields
-Date: Mon, 14 Oct 2013 18:01:20 +0200
-Message-ID: <3444817.fM2Daj9BhR@amdc1032>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
- <1615083.zyGXhBfPcS@amdc1032> <525BFD1B.5080709@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] sata_rcar: Adjust and document device tree bindings
+Date: Mon, 14 Oct 2013 17:13:54 +0100
+Message-ID: <20131014161353.GA19196@e106331-lin.cambridge.arm.com>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <1381765354-28440-2-git-send-email-valentine.barshak@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <525BFD1B.5080709@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381765354-28440-2-git-send-email-valentine.barshak@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, October 14, 2013 10:18:03 AM Eduardo Valentin wrote:
-> On 11-10-2013 11:57, Bartlomiej Zolnierkiewicz wrote:
-> > 
-> > Hi,
-> > 
-> > On Friday, October 11, 2013 11:10:38 AM Eduardo Valentin wrote:
-> >> Hi Naveen,
-> >>
-> >> On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> All patches (#1-#3) look good to me, FWIW you can add:
-> >>>
-> >>> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >>>
-> >>> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412
-> >>> fixup patchset:
-> >>>
-> >>> 	https://lkml.org/lkml/2013/10/9/35
-> >>>
-> >>> It is up to Eduardo to resolve this but it probably would be better to
-> >>> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This would
-> >>> require you to port patch #3 over Lukasz's patchset though.
-> >>
-> >> My question is if this fix applies also to EXYNOS4412, as it  is not
-> >> mentioned in the patch description and the change affects all supported
-> > 
-> > This patch doesn't affect EXYNOS4210 as exynos4210_tmu_registers struct
+On Mon, Oct 14, 2013 at 04:42:33PM +0100, Valentine Barshak wrote:
+> This converts the R-Car SATA DT compatibility string to
+> the <unit>-<soc> format which is the preferred one for
+> all SH-Mobile devices. The DT bindings are documented.
 > 
-> I was, at least for now, worried about 4412, as I mentioned above.
+> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> ---
+>  Documentation/devicetree/bindings/ata/sata_rcar.txt | 16 ++++++++++++++++
+>  arch/arm/boot/dts/r8a7779.dtsi                      |  2 +-
+>  drivers/ata/sata_rcar.c                             |  2 +-
+>  3 files changed, 18 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 > 
-> > uses the default zero value for inten_fall_mask, inten_fall_shift and
-> > intclr_fall_shift.
-> > 
-> >> chip version deliberately. Has this change been validated on all
-> >> supported chip versions?
-> >>
-> >> Amit, I saw you ack, but still, it is not clear how this change behaves
-> >> across supported hardware.
-> > 
-> > For EXYNOS4412 and EXYNOS5250 this patch doesn't cause any functionality
-> > changes because while the patch changes inten_fall_shift usage to
-> > intclr_fall_shift one in exynos_tmu_initialize() it defines
-> > EXYNOS_TMU_CLEAR_FALL_INT_SHIFT to 12 (old EXYNOS_TMU_FALL_INT_SHIFT
-> > value).
-> > 
-> 
-> OK. Then the patch is about a symbol rename, right?
+> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> new file mode 100644
+> index 0000000..2465183
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> @@ -0,0 +1,16 @@
+> +* Renesas R-Car SATA
+> +
+> +Required properties:
+> +- compatible		: must be "renesas,sata-r8a7779"
 
-Yes and while doing so it also changes the define and the value used on
-EXYNOS5440. I checked this change against the documentation today (please
-see below).
+s/must be/should include/
 
-> > This patch only changes driver behavior for EXYNOS5440 on which the
-> > used shift value changes from 4 to 12.
-> 
-> I see.
+> +- reg			: address range of the SATA registers.
 
-tmu_intstat and tmu_intclear refer to the same register on EXYNOS5440
-(EXYNOS5440_TMU_S0_7_IRQ defined to 0x230) and the documentation that
-I have says that the value 4 (which matches EXYNOS5440_TMU_FALL_INT_SHIFT
-before the patch) should be used for the shift value. However the patch
-doesn't define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT and instead makes
-the code use generic EXYNOS_TMU_CLEAR_FALL_INT_SHIFT (defined to value
-12) also on EXYNOS5440. This doesn't seem correct.
+Also their size...
 
-Naveen, this issue needs to be either fixed or explained properly (if
-the documentation is wrong) in the patch description. Please also put some
-information about hardware that you've tested your patch on in the patch
-description.
+> +- interrupt-parent	: interrupt parent controller phandle
 
-> > 
-> > PS I've only noticed it now but after this patch inten_fall_shift becomes
-> > unused and can be removed.
-> > 
-> 
-> 
-> Then we should remove it.
+This isn't required as such, as the interrupt-controller can be
+inherited from the parent. As it's a standard auxiliary property I don't
+think it needs to be documented here.
 
-I completely agree.
+> +- interrupts		: must consist of one interrupt specifier.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Is there only one interrupt generated by the device?
 
-> > Best regards,
-> > --
-> > Bartlomiej Zolnierkiewicz
-> > Samsung R&D Institute Poland
-> > Samsung Electronics
-> > 
-> >>>
-> >>> Best regards,
-> >>> --
-> >>> Bartlomiej Zolnierkiewicz
-> >>> Samsung R&D Institute Poland
-> >>> Samsung Electronics
-> >>>
-> >>> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wrote:
-> >>>> The FALL interrupt related en, status bits are available at an offset of
-> >>>> 16 on INTEN, INTSTAT registers and at an offset of
-> >>>> 12 on INTCLEAR register.
-> >>>>
-> >>>> This patch corrects the same for exyns5250 and exynos5440
-> >>>>
-> >>>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> >>>> ---
-> >>>> Changes since v1:
-> >>>> Changes since v2:
-> >>>> Changes since v3:
-> >>>>   None
-> >>>>
-> >>>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
-> >>>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
-> >>>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
-> >>>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
-> >>>>  4 files changed, 7 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> >>>> index b43afda..af69209 100644
-> >>>> --- a/drivers/thermal/samsung/exynos_tmu.c
-> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> >>>> @@ -265,7 +265,7 @@ skip_calib_data:
-> >>>>  				data->base + reg->threshold_th1);
-> >>>>  
-> >>>>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
-> >>>> -			(reg->inten_fall_mask << reg->inten_fall_shift),
-> >>>> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
-> >>>>  				data->base + reg->tmu_intclear);
-> >>>>  
-> >>>>  		/* if last threshold limit is also present */
-> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-> >>>> index b364c9e..7c6c34a 100644
-> >>>> --- a/drivers/thermal/samsung/exynos_tmu.h
-> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> >>>> @@ -134,6 +134,7 @@ enum soc_type {
-> >>>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
-> >>>>   * @tmu_intstat: Register containing the interrupt status values.
-> >>>>   * @tmu_intclear: Register for clearing the raised interrupt status.
-> >>>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
-> >>>>   * @emul_con: TMU emulation controller register.
-> >>>>   * @emul_temp_shift: shift bits of emulation temperature.
-> >>>>   * @emul_time_shift: shift bits of emulation time.
-> >>>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
-> >>>>  	u32	tmu_intstat;
-> >>>>  
-> >>>>  	u32	tmu_intclear;
-> >>>> +	u32	intclr_fall_shift;
-> >>>>  
-> >>>>  	u32	emul_con;
-> >>>>  	u32	emul_temp_shift;
-> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-> >>>> index 9002499..23fea23 100644
-> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> >>>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
-> >>>>  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
-> >>>>  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
-> >>>>  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
-> >>>> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
-> >>>>  	.emul_con = EXYNOS_EMUL_CON,
-> >>>>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-> >>>>  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
-> >>>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
-> >>>>  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
-> >>>>  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
-> >>>>  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
-> >>>> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
-> >>>>  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
-> >>>>  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
-> >>>>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-> >>>> index dc7feb5..8788a87 100644
-> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
-> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
-> >>>> @@ -69,9 +69,10 @@
-> >>>>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
-> >>>>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
-> >>>>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
-> >>>> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
-> >>>> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
-> >>>>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
-> >>>>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
-> >>>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
-> >>>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
-> >>>>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
-> >>>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+> +
+> +Example:
+> +
+> +sata: sata@fc600000 {
+> +	compatible = "renesas,sata-r8a7779";
+> +	reg = <0xfc600000 0x2000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <0 100 0x4>;
+> +};
+> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> index da61d27..b1747f5 100644
+> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> @@ -201,7 +201,7 @@
+>  	};
+>  
+>  	sata: sata@fc600000 {
+> -		compatible = "renesas,rcar-sata";
+> +		compatible = "renesas,sata-r8a7779";
+>  		reg = <0xfc600000 0x2000>;
+>  		interrupt-parent = <&gic>;
+>  		interrupts = <0 100 0x4>;
+> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+> index c2d95e9..c4cd738 100644
+> --- a/drivers/ata/sata_rcar.c
+> +++ b/drivers/ata/sata_rcar.c
+> @@ -893,7 +893,7 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+>  #endif
+>  
+>  static struct of_device_id sata_rcar_match[] = {
+> -	{ .compatible = "renesas,rcar-sata", },
+> +	{ .compatible = "renesas,sata-r8a7779", },
+>  	{},
+>  };
+
+Why is an existing compatible string being removed?
+
+Please do not change existing strings, it will break any dts files that
+are already in use.
+
+While the new compatible string may be preferred, the old string should
+be kept for compatibility.
+
+Thanks,
+Mark.
