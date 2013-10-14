@@ -1,49 +1,74 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/5] ARM:at91:enable sound on at91sam9n12ek board
-Date: Mon, 14 Oct 2013 09:38:59 +0200
-Message-ID: <525B9F93.9040001@atmel.com>
-References: <1381729113-29714-1-git-send-email-voice.shen@atmel.com>
+From: Lu Jingchang-B35083 <B35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
+Date: Mon, 14 Oct 2013 09:00:57 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E852336EE@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
+ <B56CDBE15CE27145A4B77D2D24263E8522EFE6@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20131010154414.GY2954@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381729113-29714-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20131010154414.GY2954-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/2013 07:38, Bo Shen :
-> This patch series enable sound on at91sam9n12ek board with wm8904 codec
->
->
-> Bo Shen (5):
->    ARM: at91: add at91sam9n12 ssc clock in look up table
->    ARM: at91: add ssc dma parameter for at91sam9n12
->    ARM: at91: enable wm8904 on at91sam9n12ek board
->    ARM: at91: enable ssc on at91sam9n12ek board
->    ARM: at91: add sound support on at91sam9n12ek board
+SGksIFJvYiwNCiAgQ291bGQgeW91IHBsZWFzZSBoZWxwIHJldmlldyB0aGUgZGV2aWNldHJlZSBi
+aW5kaW5nPw0KICBUaGFua3MhDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpbm9kIEtvdWwgW21haWx0bzp2aW5vZC5r
+b3VsQGludGVsLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMTAsIDIwMTMgMTE6NDQg
+UE0NCj4gVG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gQ2M6IHNoYXduLmd1b0BsaW5hcm8ub3Jn
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIHY2IDMvM10gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRyaXZlciBz
+dXBwb3J0DQo+IA0KPiBPbiBUaHUsIE9jdCAxMCwgMjAxMyBhdCAwOTozOTowNEFNICswMDAwLCBM
+dSBKaW5nY2hhbmctQjM1MDgzIHdyb3RlOg0KPiA+IEhpLCBWaW5vZCwNCj4gPg0KPiA+ICAgQ291
+bGQgeW91IHBsZWFzZSBoZWxwIHJldmlldyB0aGlzIHBhdGNoPyBDb3VsZCBpdCBiZSBtZXJnZWQg
+aW50byB5b3VyDQo+IG5leHQgdHJlZT8NCj4gPiAgIFRoYW5rcyENCj4gV2hlcmUgaXMgdGhlIHBh
+dGNoIDEgJiAyIG9mIHRoZSBzZXJpZXMsIEkgZG9udCBzZW0gdG8gZmluZCBpdC4NCj4gQWxzbyBJ
+IG5lZWQgQUNLIGZyb20gb25lIG9mIHRoZSBEVCBtYWludGFpbmVycyBvbiB0aGUgYmluZGluZyBi
+ZWZvcmUgSQ0KPiBjYW4gY2FycnkNCj4gdGhpcw0KPiANCj4gLS0NCj4gflZpbm9kDQo+ID4NCj4g
+Pg0KPiA+IEJlc3QgUmVnYXJkcywNCj4gPiBKaW5nY2hhbmcNCj4gPg0KPiA+DQo+ID4gPiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTHUgSmluZ2NoYW5nLUIzNTA4Mw0K
+PiA+ID4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTgsIDIwMTMgNTo1OCBQTQ0KPiA+ID4g
+VG86IHZpbm9kLmtvdWxAaW50ZWwuY29tDQo+ID4gPiBDYzogc2hhd24uZ3VvQGxpbmFyby5vcmc7
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgSmluZ2No
+YW5nLQ0KPiA+ID4gQjM1MDgzOyBXYW5nIEh1YW4tQjE4OTY1DQo+ID4gPiBTdWJqZWN0OiBbUEFU
+Q0ggdjYgMy8zXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdpbmUgZHJpdmVyIHN1cHBvcnQN
+Cj4gPiA+DQo+ID4gPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2VkIGRpcmVjdCBtZW1vcnkoZURNQSkg
+Y29udHJvbGxlciBzdXBwb3J0Lg0KPiA+ID4gVGhlIGVETUEgY29udHJvbGxlciBkZXBsb3lzIERN
+QU1VWHMgcm91dGluZyBETUEgcmVxdWVzdCBzb3VyY2VzKHNsb3QpDQo+ID4gPiB0byBlRE1BIGNo
+YW5uZWxzLg0KPiA+ID4gVGhpcyBtb2R1bGUgY2FuIGJlIGZvdW5kIG9uIFZ5YnJpZCBhbmQgTFMt
+MSBTb0NzLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVA
+ZnJlZXNjYWxlLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8YjM1MDgz
+QGZyZWVzY2FsZS5jb20+DQo+ID4gPiAtLS0NCj4gPiA+IGNoYW5nZXMgaW4gdjY6DQo+ID4gPiAg
+IGhvbGRpbmcgbG9jayBpbiBkbWFfY29udHJvbCB0byBwcmV2ZW50IHJhY2UuDQo+ID4gPg0KPiA+
+ID4gY2hhbmdlcyBpbiB2NToNCj4gPiA+ICAgY29uZmlnIHNsYXZlX2lkIHdoZW4gZG1hZW5naW5l
+X3NsYXZlX2NvbmZpZyBpbnRlYWQgb2YgY2hhbm5lbA0KPiByZXF1ZXN0Lg0KPiA+ID4gICBhZGRp
+bmcgcmVzaWR1ZSBjYWxjdWxhdGlvbiBhbmQgZG1hIHBhdXNlL3Jlc3VtZSBkZXZpY2UgY29udHJv
+bC4NCj4gPiA+DQo+ID4gPiBjaGFuZ2VzIGluIHY0Og0KPiA+ID4gICB1c2luZyBleGFjdCBjb21w
+YXRpYmxlIHN0cmluZyBpbiBiaW5kaW5nIGRvY3VtZW50Lg0KPiA+ID4NCj4gPiA+IGNoYW5nZXMg
+aW4gdjM6DQo+ID4gPiAgIGhhbmRsZSBhbGwgcGVuZGluZyBpbnRlcnJ1cHQgb25lIHRpbWUuDQo+
+ID4gPiAgIGFkZCBwcm90ZWN0IGxvY2sgb24gZG1hIHRyYW5zZmVyIGNvbXBsZXRlIGhhbmRsaW5n
+Lg0KPiA+ID4gICBjaGFuZ2UgZGVzYyBhbmQgdGNkIGFsbG9jIGZsYWcgdG8gR0ZQX05PV0FJVC4N
+Cj4gPiA+ICAgYWRkIHNhbml0eSBjaGVjayBhbmQgZXJyb3IgbWVzc2FnZXMuDQo+ID4gPg0KPiA+
+ID4gY2hhbmdlcyBpbiB2MjoNCj4gPiA+ICAgdXNpbmcgZ2VuZXJpYyBkbWEtY2hhbm5lbHMgcHJv
+cGVydHkgaW5zdGVhZCBvZiBmc2wsZG1hLWNoYW5uZWwuDQo+ID4gPiAgIHJlbmFtZSB0aGUgYmlu
+ZGluZyBkb2N1bWVudCB0byBmc2wtZWRtYS50eHQuDQo+ID4gPg0KPiA+ID4NCj4gPiA+ICBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2ZzbC1lZG1hLnR4dCB8ICA4NCArKw0K
+PiA+ID4gIGRyaXZlcnMvZG1hL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgIDEwICsNCj4gPiA+ICBkcml2ZXJzL2RtYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMSArDQo+ID4gPiAgZHJpdmVycy9kbWEvZnNsLWVkbWEuYyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCA5NDQNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysrKw0K
+PiA+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMTAzOSBpbnNlcnRpb25zKCspDQo+ID4gPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLQ0K
+PiBlZG1hLnR4dA0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2RtYS9mc2wtZWRt
+YS5jDQo+ID4NCj4gDQo+IC0tDQoNCg==
 
-Great!
-
-And on the whole patch series:
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-I stack it on at91-3.13-dt branch.
-
-Thanks.
-
->
->   arch/arm/boot/dts/at91sam9n12.dtsi  |    3 +++
->   arch/arm/boot/dts/at91sam9n12ek.dts |   34 ++++++++++++++++++++++++++++++++++
->   arch/arm/mach-at91/at91sam9n12.c    |    1 +
->   3 files changed, 38 insertions(+)
->
-
-
--- 
-Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
