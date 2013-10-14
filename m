@@ -1,75 +1,89 @@
-From: Lu Jingchang-B35083 <B35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-Date: Mon, 14 Oct 2013 09:00:57 +0000
-Message-ID: <B56CDBE15CE27145A4B77D2D24263E852336EE@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
- <B56CDBE15CE27145A4B77D2D24263E8522EFE6@039-SN1MPN1-004.039d.mgd.msft.net>
- <20131010154414.GY2954@intel.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Mon, 14 Oct 2013 11:04:55 +0200
+Message-ID: <525BB3B7.7000802@monstr.eu>
+References: <1381425018-5653-1-git-send-email-soren.brinkmann@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131010154414.GY2954-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="dEccllHRKSxu9DdNso9tRnDA2bEFqAE0o"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381425018-5653-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYiwNCiAgQ291bGQgeW91IHBsZWFzZSBoZWxwIHJldmlldyB0aGUgZGV2aWNldHJlZSBi
-aW5kaW5nPw0KICBUaGFua3MhDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpbm9kIEtvdWwgW21haWx0bzp2aW5vZC5r
-b3VsQGludGVsLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMTAsIDIwMTMgMTE6NDQg
-UE0NCj4gVG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gQ2M6IHNoYXduLmd1b0BsaW5hcm8ub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIHY2IDMvM10gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRyaXZlciBz
-dXBwb3J0DQo+IA0KPiBPbiBUaHUsIE9jdCAxMCwgMjAxMyBhdCAwOTozOTowNEFNICswMDAwLCBM
-dSBKaW5nY2hhbmctQjM1MDgzIHdyb3RlOg0KPiA+IEhpLCBWaW5vZCwNCj4gPg0KPiA+ICAgQ291
-bGQgeW91IHBsZWFzZSBoZWxwIHJldmlldyB0aGlzIHBhdGNoPyBDb3VsZCBpdCBiZSBtZXJnZWQg
-aW50byB5b3VyDQo+IG5leHQgdHJlZT8NCj4gPiAgIFRoYW5rcyENCj4gV2hlcmUgaXMgdGhlIHBh
-dGNoIDEgJiAyIG9mIHRoZSBzZXJpZXMsIEkgZG9udCBzZW0gdG8gZmluZCBpdC4NCj4gQWxzbyBJ
-IG5lZWQgQUNLIGZyb20gb25lIG9mIHRoZSBEVCBtYWludGFpbmVycyBvbiB0aGUgYmluZGluZyBi
-ZWZvcmUgSQ0KPiBjYW4gY2FycnkNCj4gdGhpcw0KPiANCj4gLS0NCj4gflZpbm9kDQo+ID4NCj4g
-Pg0KPiA+IEJlc3QgUmVnYXJkcywNCj4gPiBKaW5nY2hhbmcNCj4gPg0KPiA+DQo+ID4gPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTHUgSmluZ2NoYW5nLUIzNTA4Mw0K
-PiA+ID4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTgsIDIwMTMgNTo1OCBQTQ0KPiA+ID4g
-VG86IHZpbm9kLmtvdWxAaW50ZWwuY29tDQo+ID4gPiBDYzogc2hhd24uZ3VvQGxpbmFyby5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgSmluZ2No
-YW5nLQ0KPiA+ID4gQjM1MDgzOyBXYW5nIEh1YW4tQjE4OTY1DQo+ID4gPiBTdWJqZWN0OiBbUEFU
-Q0ggdjYgMy8zXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdpbmUgZHJpdmVyIHN1cHBvcnQN
-Cj4gPiA+DQo+ID4gPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2VkIGRpcmVjdCBtZW1vcnkoZURNQSkg
-Y29udHJvbGxlciBzdXBwb3J0Lg0KPiA+ID4gVGhlIGVETUEgY29udHJvbGxlciBkZXBsb3lzIERN
-QU1VWHMgcm91dGluZyBETUEgcmVxdWVzdCBzb3VyY2VzKHNsb3QpDQo+ID4gPiB0byBlRE1BIGNo
-YW5uZWxzLg0KPiA+ID4gVGhpcyBtb2R1bGUgY2FuIGJlIGZvdW5kIG9uIFZ5YnJpZCBhbmQgTFMt
-MSBTb0NzLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVA
-ZnJlZXNjYWxlLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8YjM1MDgz
-QGZyZWVzY2FsZS5jb20+DQo+ID4gPiAtLS0NCj4gPiA+IGNoYW5nZXMgaW4gdjY6DQo+ID4gPiAg
-IGhvbGRpbmcgbG9jayBpbiBkbWFfY29udHJvbCB0byBwcmV2ZW50IHJhY2UuDQo+ID4gPg0KPiA+
-ID4gY2hhbmdlcyBpbiB2NToNCj4gPiA+ICAgY29uZmlnIHNsYXZlX2lkIHdoZW4gZG1hZW5naW5l
-X3NsYXZlX2NvbmZpZyBpbnRlYWQgb2YgY2hhbm5lbA0KPiByZXF1ZXN0Lg0KPiA+ID4gICBhZGRp
-bmcgcmVzaWR1ZSBjYWxjdWxhdGlvbiBhbmQgZG1hIHBhdXNlL3Jlc3VtZSBkZXZpY2UgY29udHJv
-bC4NCj4gPiA+DQo+ID4gPiBjaGFuZ2VzIGluIHY0Og0KPiA+ID4gICB1c2luZyBleGFjdCBjb21w
-YXRpYmxlIHN0cmluZyBpbiBiaW5kaW5nIGRvY3VtZW50Lg0KPiA+ID4NCj4gPiA+IGNoYW5nZXMg
-aW4gdjM6DQo+ID4gPiAgIGhhbmRsZSBhbGwgcGVuZGluZyBpbnRlcnJ1cHQgb25lIHRpbWUuDQo+
-ID4gPiAgIGFkZCBwcm90ZWN0IGxvY2sgb24gZG1hIHRyYW5zZmVyIGNvbXBsZXRlIGhhbmRsaW5n
-Lg0KPiA+ID4gICBjaGFuZ2UgZGVzYyBhbmQgdGNkIGFsbG9jIGZsYWcgdG8gR0ZQX05PV0FJVC4N
-Cj4gPiA+ICAgYWRkIHNhbml0eSBjaGVjayBhbmQgZXJyb3IgbWVzc2FnZXMuDQo+ID4gPg0KPiA+
-ID4gY2hhbmdlcyBpbiB2MjoNCj4gPiA+ICAgdXNpbmcgZ2VuZXJpYyBkbWEtY2hhbm5lbHMgcHJv
-cGVydHkgaW5zdGVhZCBvZiBmc2wsZG1hLWNoYW5uZWwuDQo+ID4gPiAgIHJlbmFtZSB0aGUgYmlu
-ZGluZyBkb2N1bWVudCB0byBmc2wtZWRtYS50eHQuDQo+ID4gPg0KPiA+ID4NCj4gPiA+ICBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2ZzbC1lZG1hLnR4dCB8ICA4NCArKw0K
-PiA+ID4gIGRyaXZlcnMvZG1hL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDEwICsNCj4gPiA+ICBkcml2ZXJzL2RtYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgMSArDQo+ID4gPiAgZHJpdmVycy9kbWEvZnNsLWVkbWEuYyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCA5NDQNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysrKw0K
-PiA+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMTAzOSBpbnNlcnRpb25zKCspDQo+ID4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLQ0K
-PiBlZG1hLnR4dA0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2RtYS9mc2wtZWRt
-YS5jDQo+ID4NCj4gDQo+IC0tDQoNCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--dEccllHRKSxu9DdNso9tRnDA2bEFqAE0o
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/10/2013 07:10 PM, Soren Brinkmann wrote:
+> In some use cases Zynq's FPGA clocks are used as static clock
+> generators for IP in the FPGA part of the SOC for which no Linux driver=
+
+> exists and would control those clocks. To avoid automatic
+> gating of these clocks in such cases a new property - fclk-enable - is
+> added to the clock controller's DT description to accomodate such use
+> cases. It's value is a bitmask, where a set bit results in enabling
+> the corresponding FCLK through the clkc.
+>=20
+> FPGA clocks are handled following the rules below:
+>=20
+> If an FCLK is not enabled by bootloaders, that FCLK will be disabled in=
+
+> Linux. Drivers can enable and control it through the CCF as usual.
+>=20
+> If an FCLK is enabled by bootloaders AND the corresponding bit in the
+> 'fclk-enable' DT property is set, that FCLK will be enabled by the clkc=
+,
+> resulting in an off by one reference count for that clock. Ensuring it
+> will always be running.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+> v2:
+>  - change default value for fclk-enable to '0'
+> ---
+>  Documentation/devicetree/bindings/clock/zynq-7000.txt |  4 ++++
+>  drivers/clk/zynq/clkc.c                               | 18 +++++++++++=
+++++---
+>  2 files changed, 19 insertions(+), 3 deletions(-)
+
+For both patches:
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+Mike: Can you please add both these patches to your tree?
+There shouldn't be any conflict with DT patch itself.
+But if you don't want to add 2/2 through your tree, I am also fine
+with taking this through my zynq tree.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--dEccllHRKSxu9DdNso9tRnDA2bEFqAE0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlJbs7wACgkQykllyylKDCHTiwCeJf5wDat0vQWyAjf5hzSOugtX
+EzMAoIOjtlrHrMFEVzGRYyAxd4mkSFYB
+=n4gz
+-----END PGP SIGNATURE-----
+
+--dEccllHRKSxu9DdNso9tRnDA2bEFqAE0o--
