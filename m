@@ -1,53 +1,124 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
-Date: Mon, 14 Oct 2013 12:14:47 -0600
-Message-ID: <525C3497.6010700@wwwdotorg.org>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com> <52587F2D.9070007@wwwdotorg.org> <525B880A.7090802@nvidia.com> <20131014140010.GC16302@ulmo.nvidia.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
+Date: Mon, 14 Oct 2013 20:15:08 +0200
+Message-ID: <21950975.Xyu9tdlx3R@avalon>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com> <20131014162603.GB19196@e106331-lin.cambridge.arm.com> <525C30DA.5060406@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131014140010.GC16302-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?VGVyamUgQmVyZ3N0?= =?UTF-8?B?csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <525C30DA.5060406@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine <valentine.barshak@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2013 08:00 AM, Thierry Reding wrote:
-> On Mon, Oct 14, 2013 at 08:58:34AM +0300, Terje Bergstr=C3=B6m wrote:
->> On 12.10.2013 01:43, Stephen Warren wrote:
->>> On 10/07/2013 02:34 AM, Thierry Reding wrote:
->>>> The gr2d hardware in Tegra114 is compatible with that of
->>>> Tegra20 and Tegra30. No functionaly changes are required.
->>> Similarly here, if the HW is 100% backwards-compatible, there's
->>> no need to add compatible values to the driver.
->>=20
->> We've used this mechanism for attaching a per-hw-version data
->> structure in match table to accomodate differences in how the
->> hardware is power gated, reset, booted, some per-soc performance
->> related changes etc. It's also used in staging features for new
->> chips, such as disabling power features when they're not
->> working/verified yet.
->>=20
->> Upstream driver is not yet in a state where that is relevant.
->>=20
->> With this, would we still be able to do that with match table? It
->> sounds like we could, because we can still (even with multiple
->> compatible properties) add separate entries in match table and I
->> guess the compatible properties matched in order.
->=20
-> Yes, as long as the device tree files includes the most specific
-> value in the compatible this should still be possible. So we'd have
-> this:
->=20
-> gr2d@54140000 { compatible =3D "nvida,tegra114-gr2d",
-> "nvidia,tegra20-gr2d"; ... };
->=20
-> and the driver will match on "nvidia,tegra20-gr2d" if the more
-> specific "nvidia,tegra114-gr2d" is not there. When the driver is
-> updated to support Tegra114 specific functionality, then a more
-> specific entry can be added to the compatible table to handle it.
+Hi Valentine,
 
-True, but the DT fragment above is also only accurate /if/ a driver
-that only knows about "nvidia,tegra20-gr2d" can operate 100% of the
-features in Tegra20 HW on Tegra114 HW forever.
+On Monday 14 October 2013 21:58:50 Valentine wrote:
+> On 10/14/2013 08:26 PM, Mark Rutland wrote:
+> > On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
+> >> R-Car Gen2 SoCs have a different PHY which is not compatible
+> >> with the older R-Car H1 (R8A7779) version.
+> >> This adds OF/platform device id tables and PHY initialization
+> >> 
+> >> callbacks for the following Gen2 SoCs:
+> >>    * R-Car H2: R8A7790;
+> >>    * R-Car M2: R8A7791.
+> >> 
+> >> PHY initialization method is chosen, based on the device id.
+> >> Default PHY settings are applied for Gen2 SoCs, which should
+> >> suit the Gen2 boards available.
+> >> 
+> >> The R8A7779 platform code is modified to use "sata-r8a7779"
+> >> device id.
+> >> 
+> >> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> >> ---
+> >> 
+> >>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+> >>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+> >>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+> >>   drivers/ata/sata_rcar.c                            | 112 +++++++++++---
+> >>   4 files changed, 102 insertions(+), 19 deletions(-)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
+> >> 2465183..b5a41bf 100644
+> >> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> @@ -1,7 +1,10 @@
+> >> 
+> >>   * Renesas R-Car SATA
+> >> 
+> >>   Required properties:
+> >> -- compatible		: must be "renesas,sata-r8a7779"
+> > 
+> >> +- compatible		: must be one of the following:
+> > s/must be/should contain/
+> > 
+> >> +			  - "renesas,sata-r8a7779" for R-Car H1
+> >> +			  - "renesas,sata-r8a7790" for R-Car H2
+> >> +			  - "renesas,sata-r8a7791" for R-Car M2
+> > 
+> > How do renesas,sata-r8a7790 and renesas,sata-r8a7791 differ?
+> > 
+> >>   - reg			: address range of the SATA registers.
+> > 
+> > It's a size too...
+> > 
+> >>   - interrupt-parent	: interrupt parent controller phandle
+> > 
+> > Not required.
+> > 
+> > [...]
+> > 
+> >> +static struct of_device_id sata_rcar_match[] = {
+> >> +	{
+> >> +		.compatible = "renesas,sata-r8a7779",
+> >> +		.data = (void *)RCAR_GEN1_SATA,
+> >> +	},
+> >> +	{
+> >> +		.compatible = "renesas,sata-r8a7790",
+> >> +		.data = (void *)RCAR_GEN2_SATA
+> >> +	},
+> >> +	{
+> >> +		.compatible = "renesas,sata-r8a7791",
+> >> +		.data = (void *)RCAR_GEN2_SATA
+> >> +	},
+> >> +	{},
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> > 
+> > Are the renesas,sata-r8a779x variants identical?
+> 
+> Yes.
+> 
+> > If so, why the two strings?
+> 
+> Just thought the driver should support "renesas,sata-r8a7791"
+> compatibility as well since it should support both SoCs.
+> Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
+
+One reason for two compatibility strings is not to be stuck if we later find 
+out the the 7791 SATA controller differs from the 7790.
+
+> > Could we not require sata-r8a7791 devices to have "sata-r8a7790" in the
+> > 
+> > compatible list:
+> > 	compatible = "sata-r8a7791", "sata-r8a7790";
+> > 
+> > That way we can match on "sata-r8a7791" if we want to later, but don't
+> > need code for it now.
+> 
+> We could. In this case having compatible = "renesas,sata-r8a7791" would not
+> be enough, though it looks like a valid compatible list to me.
+
+I'm fine with both solution, as long as the "sata-r8a7791" compatibility 
+string is present and has precedence over "sata-r8a7790".
+
+-- 
+Regards,
+
+Laurent Pinchart
+
