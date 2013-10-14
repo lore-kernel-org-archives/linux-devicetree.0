@@ -1,80 +1,107 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 1/2] ARM: DT: msm: Add Qualcomm's PRNG driver binding
- document
-Date: Mon, 14 Oct 2013 18:01:26 +0300
-Message-ID: <525C0746.40506@mm-sol.com>
-References: <1381504601-23773-1-git-send-email-svarbanov@mm-sol.com> <1381504601-23773-2-git-send-email-svarbanov@mm-sol.com> <20131011204640.GD13139@codeaurora.org>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/5] clk: tegra: Add support for PLLSS
+Date: Mon, 14 Oct 2013 18:03:17 +0300
+Message-ID: <20131014150317.GA19540@tbergstrom-lnx.Nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-2-git-send-email-pdeschrijver@nvidia.com>
+ <20131010103915.GA6735@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131011204640.GD13139@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131010103915.GA6735-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-Thanks for the review.
-
-On 10/11/2013 11:46 PM, Stephen Boyd wrote:
-> On 10/11, Stanimir Varbanov wrote:
->> This adds Qualcomm PRNG driver device tree binding documentation
->> to use as an example in dts trees.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> ---
->>  Documentation/devicetree/bindings/rng/qcom,prng.txt | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rng/qcom,prng.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rng/qcom,prng.txt b/Documentation/devicetree/bindings/rng/qcom,prng.txt
->> new file mode 100644
->> index 000000000000..92be00085ab1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rng/qcom,prng.txt
->> @@ -0,0 +1,17 @@
->> +Qualcomm MSM pseudo random number generator.
->> +
->> +Required properties:
->> +
->> +- compatible  : should be "qcom,prng"
->> +- reg         : specifies base physical address and size of the registers map
->> +- clocks      : phandle to clock-controller plus clock-specifier pair
->> +- clock-names : "prng" clocks all registers, FIFO and circuits in PRNG IP block
+On Thu, Oct 10, 2013 at 12:39:16PM +0200, Thierry Reding wrote:
+> * PGP Signed by an unknown key
 > 
-> We're trying to keep to more generic names such as "core" for
-> clocks like this. We've had problems in the past where hardware
-> designers named the clock input after the name of the hardware
-> and then the name of the hardware changed in the next version of
-> the chip (although the hardware was mostly compatible with the
-> previous version) and so they renamed the clock input. This
-> leaked into the software drivers and we had horrible things like
-> platform data for clock names. Sticking to "core" indicates what
-> the clock does (i.e. it clocks the core PRNG hardware) while
-> staying generic enough to prevent problems in the future if the
-> block is renamed to something else. It might also help us in the
-> future should our bus layer become smart enough to manage clocks
-> for drivers without their knowing.
-
-Thanks for the detailed explanation, I will rename the clock.
-
+> On Fri, Oct 04, 2013 at 12:12:40PM +0300, Peter De Schrijver wrote:
+> > Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
->> +
->> +Example:
->> +
->> +	rng {
+> This is missing a commit description.
 > 
-> It's good practice to add the unit address here, so rng@f9bff000.
-
-I will follow the good practice, thanks.
-
+> > diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> [...]
+> > +const struct clk_ops tegra_clk_pllss_ops = {
 > 
->> +		compatible = "qcom,prng";
->> +		reg = <0xf9bff000 0x200>;
->> +		clocks = <&clock GCC_PRNG_AHB_CLK>;
->> +		clock-names = "prng";
->> +	};
+> static?
+> 
+> > +struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
+> > +				void __iomem *clk_base, unsigned long flags,
+> > +				unsigned long fixed_rate,
+> > +				struct tegra_clk_pll_params *pll_params,
+> > +				struct tegra_clk_pll_freq_table *freq_table,
+> > +				spinlock_t *lock)
+> > +{
+> [...]
+> > +	pll = _tegra_init_pll(clk_base, NULL, fixed_rate, pll_params,
+> > +				pll_flags, freq_table, lock);
+> > +
+> > +	if (IS_ERR(pll))
+> 
+> I'd leave out the blank line separating the assignment of pll and the
+> check for validity. Grouping them together like that makes it
+> immediately clear that they belong together.
+> 
+> > +		return ERR_CAST(pll);
+> > +
+> > +	val = pll_readl_base(pll);
+> > +
+> > +	if (val & (3 << 25)) {
+> 
+> Same here. Also 3 << 25 could probably be a symbolic constant, something
+> like PLLSS_REF_SRC_SEL_MASK perhaps?
+> 
+> > +		WARN(1, "Unknown parent selected for %s: %d\n", name,
+> > +			val >> 25);
+> 
+> Similarly, this should be something like:
+> 
+> 		(val & PLLSS_REF_SRC_SEL_MASK) >> PLLSS_REF_SRC_SEL_SHIFT
+> 
+> > +		kfree(pll);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +	_get_pll_mnp(pll, &cfg);
+> 
+> Nit: I'd put a blank line before this, to separate the block and the
+> function call. That is:
+> 
+> 	}
+> 
+> 	_get_pll_mnp(...);
+> 
+> > +
+> > +	if (cfg.n > 1) {
+> > +		WARN(1, "%s should not be initialized\n", name);
+> > +		kfree(pll);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> 
+> Is this really fatal? Can't we just configure the PLL from scratch?
+> 
+> > +	parent_rate = __clk_get_rate(parent);
+> > +
+> > +	pll_params->vco_min = _clip_vco_min(pll_params->vco_min, parent_rate);
+> > +
+> > +	cfg.m = _pll_fixed_mdiv(pll_params, parent_rate);
+> > +	cfg.n = cfg.m * pll_params->vco_min / parent_rate;
+> > +
+> > +	for (i = 0; pll_params->pdiv_tohw[i].pdiv; i++)
+> > +		;
+> > +	cfg.p = pll_params->pdiv_tohw[i-1].hw_val;
+> 
+> Could use a blank line to separate them. Also what if .pdiv of the first
+> entry is 0? The loop will terminate on the first run and i will be 0, so
+> this would try to access pdiv_tohw[-1]. Can that ever happen?
 > 
 
+That would be an error. This PLL type always has a post divider table.
+I will add a check.
+
+Cheers,
+
+Peter.
