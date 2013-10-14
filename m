@@ -1,236 +1,437 @@
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v3 07/13] usb: phy: msm: Replace custom enum usb_mode_type with enum usb_dr_mode
-Date: Mon, 14 Oct 2013 18:24:34 +0300
-Message-ID: <1381764280-28420-8-git-send-email-iivanov@mm-sol.com>
+Subject: [PATCH v3 03/13] usb: phy: msm: Migrate to Managed Device Resource
+ allocation
+Date: Mon, 14 Oct 2013 18:24:30 +0300
+Message-ID: <1381764280-28420-4-git-send-email-iivanov@mm-sol.com>
 References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, jackp@codeaurora.org, mgautam@codeaurora.org, dsegal@codeaurora.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, dwalker@fifo99.com, linux@arm.linux.org.uk, swarren@wwwdotorg.org, grant.likely@linaro.org, davidb@codeaurora.org, devicetree@vger.kernel.org, jackp@codeaurora.org, rob@landley.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-arm-msm@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, dsegal@codeaurora.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, mgautam@codeaurora.org, bryanh@codeaurora.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
+Move memory, regulators, clocks and irq allocation to
+devm_* variants. Properly check for valid clk handles.
+
 Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 ---
- arch/arm/mach-msm/board-msm7x30.c |    2 +-
- arch/arm/mach-msm/board-qsd8x50.c |    2 +-
- drivers/usb/phy/phy-msm-usb.c     |   40 ++++++++++++++++++-------------------
- include/linux/usb/msm_hsusb.h     |   19 ++----------------
- 4 files changed, 24 insertions(+), 39 deletions(-)
+ drivers/usb/phy/phy-msm-usb.c |  192 ++++++++++++++++-------------------------
+ 1 file changed, 74 insertions(+), 118 deletions(-)
 
-diff --git a/arch/arm/mach-msm/board-msm7x30.c b/arch/arm/mach-msm/board-msm7x30.c
-index 46de789..0c4c200 100644
---- a/arch/arm/mach-msm/board-msm7x30.c
-+++ b/arch/arm/mach-msm/board-msm7x30.c
-@@ -95,7 +95,7 @@ static int hsusb_phy_clk_reset(struct clk *phy_clk)
- 
- static struct msm_otg_platform_data msm_otg_pdata = {
- 	.phy_init_seq		= hsusb_phy_init_seq,
--	.mode                   = USB_PERIPHERAL,
-+	.mode                   = USB_DR_MODE_PERIPHERAL,
- 	.otg_control		= OTG_PHY_CONTROL,
- 	.link_clk_reset		= hsusb_link_clk_reset,
- 	.phy_clk_reset		= hsusb_phy_clk_reset,
-diff --git a/arch/arm/mach-msm/board-qsd8x50.c b/arch/arm/mach-msm/board-qsd8x50.c
-index 9169ec3..4c74861 100644
---- a/arch/arm/mach-msm/board-qsd8x50.c
-+++ b/arch/arm/mach-msm/board-qsd8x50.c
-@@ -116,7 +116,7 @@ static int hsusb_phy_clk_reset(struct clk *phy_clk)
- 
- static struct msm_otg_platform_data msm_otg_pdata = {
- 	.phy_init_seq		= hsusb_phy_init_seq,
--	.mode                   = USB_PERIPHERAL,
-+	.mode                   = USB_DR_MODE_PERIPHERAL,
- 	.otg_control		= OTG_PHY_CONTROL,
- 	.link_clk_reset		= hsusb_link_clk_reset,
- 	.phy_clk_reset		= hsusb_phy_clk_reset,
 diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 46800c0..2aca042 100644
+index ab39ecb..136f063 100644
 --- a/drivers/usb/phy/phy-msm-usb.c
 +++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -372,10 +372,10 @@ static int msm_otg_reset(struct usb_phy *phy)
+@@ -63,27 +63,18 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ 	int ret = 0;
  
- 	if (pdata->otg_control == OTG_PHY_CONTROL) {
- 		val = readl(USB_OTGSC);
--		if (pdata->mode == USB_OTG) {
-+		if (pdata->mode == USB_DR_MODE_OTG) {
- 			ulpi_val = ULPI_INT_IDGRD | ULPI_INT_SESS_VALID;
- 			val |= OTGSC_IDIE | OTGSC_BSVIE;
--		} else if (pdata->mode == USB_PERIPHERAL) {
-+		} else if (pdata->mode == USB_DR_MODE_PERIPHERAL) {
- 			ulpi_val = ULPI_INT_SESS_VALID;
- 			val |= OTGSC_BSVIE;
- 		}
-@@ -636,7 +636,7 @@ static int msm_otg_set_host(struct usb_otg *otg, struct usb_bus *host)
- 	 * Fail host registration if this board can support
- 	 * only peripheral configuration.
- 	 */
--	if (motg->pdata->mode == USB_PERIPHERAL) {
-+	if (motg->pdata->mode == USB_DR_MODE_PERIPHERAL) {
- 		dev_info(otg->phy->dev, "Host mode is not supported\n");
- 		return -ENODEV;
- 	}
-@@ -665,7 +665,7 @@ static int msm_otg_set_host(struct usb_otg *otg, struct usb_bus *host)
- 	 * Kick the state machine work, if peripheral is not supported
- 	 * or peripheral is already registered with us.
- 	 */
--	if (motg->pdata->mode == USB_HOST || otg->gadget) {
-+	if (motg->pdata->mode == USB_DR_MODE_HOST || otg->gadget) {
- 		pm_runtime_get_sync(otg->phy->dev);
- 		schedule_work(&motg->sm_work);
- 	}
-@@ -709,7 +709,7 @@ static int msm_otg_set_peripheral(struct usb_otg *otg,
- 	 * Fail peripheral registration if this board can support
- 	 * only host configuration.
- 	 */
--	if (motg->pdata->mode == USB_HOST) {
-+	if (motg->pdata->mode == USB_DR_MODE_HOST) {
- 		dev_info(otg->phy->dev, "Peripheral mode is not supported\n");
- 		return -ENODEV;
- 	}
-@@ -734,7 +734,7 @@ static int msm_otg_set_peripheral(struct usb_otg *otg,
- 	 * Kick the state machine work, if host is not supported
- 	 * or host is already registered with us.
- 	 */
--	if (motg->pdata->mode == USB_PERIPHERAL || otg->host) {
-+	if (motg->pdata->mode == USB_DR_MODE_PERIPHERAL || otg->host) {
- 		pm_runtime_get_sync(otg->phy->dev);
- 		schedule_work(&motg->sm_work);
- 	}
-@@ -1055,7 +1055,7 @@ static void msm_otg_init_sm(struct msm_otg *motg)
- 	u32 otgsc = readl(USB_OTGSC);
- 
- 	switch (pdata->mode) {
--	case USB_OTG:
-+	case USB_DR_MODE_OTG:
- 		if (pdata->otg_control == OTG_PHY_CONTROL) {
- 			if (otgsc & OTGSC_ID)
- 				set_bit(ID, &motg->inputs);
-@@ -1067,21 +1067,21 @@ static void msm_otg_init_sm(struct msm_otg *motg)
- 			else
- 				clear_bit(B_SESS_VLD, &motg->inputs);
- 		} else if (pdata->otg_control == OTG_USER_CONTROL) {
--			if (pdata->default_mode == USB_HOST) {
--				clear_bit(ID, &motg->inputs);
--			} else if (pdata->default_mode == USB_PERIPHERAL) {
-+			if (pdata->default_mode == USB_DR_MODE_PERIPHERAL) {
- 				set_bit(ID, &motg->inputs);
- 				set_bit(B_SESS_VLD, &motg->inputs);
-+			} else if (pdata->default_mode == USB_DR_MODE_HOST) {
-+				clear_bit(ID, &motg->inputs);
- 			} else {
- 				set_bit(ID, &motg->inputs);
- 				clear_bit(B_SESS_VLD, &motg->inputs);
- 			}
- 		}
- 		break;
--	case USB_HOST:
-+	case USB_DR_MODE_HOST:
- 		clear_bit(ID, &motg->inputs);
- 		break;
--	case USB_PERIPHERAL:
-+	case USB_DR_MODE_PERIPHERAL:
- 		set_bit(ID, &motg->inputs);
- 		if (otgsc & OTGSC_BSV)
- 			set_bit(B_SESS_VLD, &motg->inputs);
-@@ -1257,7 +1257,7 @@ static ssize_t msm_otg_mode_write(struct file *file, const char __user *ubuf,
- 	char buf[16];
- 	struct usb_otg *otg = motg->phy.otg;
- 	int status = count;
--	enum usb_mode_type req_mode;
-+	enum usb_dr_mode req_mode;
- 
- 	memset(buf, 0x00, sizeof(buf));
- 
-@@ -1267,18 +1267,18 @@ static ssize_t msm_otg_mode_write(struct file *file, const char __user *ubuf,
- 	}
- 
- 	if (!strncmp(buf, "host", 4)) {
--		req_mode = USB_HOST;
-+		req_mode = USB_DR_MODE_HOST;
- 	} else if (!strncmp(buf, "peripheral", 10)) {
--		req_mode = USB_PERIPHERAL;
-+		req_mode = USB_DR_MODE_PERIPHERAL;
- 	} else if (!strncmp(buf, "none", 4)) {
--		req_mode = USB_NONE;
-+		req_mode = USB_DR_MODE_UNKNOWN;
- 	} else {
- 		status = -EINVAL;
- 		goto out;
- 	}
- 
- 	switch (req_mode) {
--	case USB_NONE:
-+	case USB_DR_MODE_UNKNOWN:
- 		switch (otg->phy->state) {
- 		case OTG_STATE_A_HOST:
- 		case OTG_STATE_B_PERIPHERAL:
-@@ -1289,7 +1289,7 @@ static ssize_t msm_otg_mode_write(struct file *file, const char __user *ubuf,
- 			goto out;
- 		}
- 		break;
--	case USB_PERIPHERAL:
-+	case USB_DR_MODE_PERIPHERAL:
- 		switch (otg->phy->state) {
- 		case OTG_STATE_B_IDLE:
- 		case OTG_STATE_A_HOST:
-@@ -1300,7 +1300,7 @@ static ssize_t msm_otg_mode_write(struct file *file, const char __user *ubuf,
- 			goto out;
- 		}
- 		break;
--	case USB_HOST:
-+	case USB_DR_MODE_HOST:
- 		switch (otg->phy->state) {
- 		case OTG_STATE_B_IDLE:
- 		case OTG_STATE_B_PERIPHERAL:
-@@ -1515,7 +1515,7 @@ static int __init msm_otg_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, motg);
- 	device_init_wakeup(&pdev->dev, 1);
- 
--	if (motg->pdata->mode == USB_OTG &&
-+	if (motg->pdata->mode == USB_DR_MODE_OTG &&
- 			motg->pdata->otg_control == OTG_USER_CONTROL) {
- 		ret = msm_otg_debugfs_init(motg);
- 		if (ret)
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 8705b01..f9d512e 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -23,21 +23,6 @@
- #include <linux/clk.h>
- 
- /**
-- * Supported USB modes
-- *
-- * USB_PERIPHERAL       Only peripheral mode is supported.
-- * USB_HOST             Only host mode is supported.
-- * USB_OTG              OTG mode is supported.
-- *
-- */
--enum usb_mode_type {
--	USB_NONE = 0,
--	USB_PERIPHERAL,
--	USB_HOST,
--	USB_OTG,
--};
+ 	if (init) {
+-		motg->vddcx = regulator_get(motg->phy.dev, "HSUSB_VDDCX");
+-		if (IS_ERR(motg->vddcx)) {
+-			dev_err(motg->phy.dev, "unable to get hsusb vddcx\n");
+-			return PTR_ERR(motg->vddcx);
+-		}
 -
--/**
-  * OTG control
-  *
-  * OTG_NO_CONTROL	Id/VBUS notifications not required. Useful in host
-@@ -130,9 +115,9 @@ struct msm_otg_platform_data {
- 	int *phy_init_seq;
- 	void (*vbus_power)(bool on);
- 	unsigned power_budget;
--	enum usb_mode_type mode;
-+	enum usb_dr_mode mode;
- 	enum otg_control_type otg_control;
--	enum usb_mode_type default_mode;
-+	enum usb_dr_mode default_mode;
- 	enum msm_usb_phy_type phy_type;
- 	void (*setup_gpio)(enum usb_otg_state state);
- 	char *pclk_src_name;
+ 		ret = regulator_set_voltage(motg->vddcx,
+ 				USB_PHY_VDD_DIG_VOL_MIN,
+ 				USB_PHY_VDD_DIG_VOL_MAX);
+ 		if (ret) {
+ 			dev_err(motg->phy.dev, "unable to set the voltage "
+ 					"for hsusb vddcx\n");
+-			regulator_put(motg->vddcx);
+ 			return ret;
+ 		}
+ 
+ 		ret = regulator_enable(motg->vddcx);
+-		if (ret) {
++		if (ret)
+ 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
+-			regulator_put(motg->vddcx);
+-		}
+ 	} else {
+ 		ret = regulator_set_voltage(motg->vddcx, 0,
+ 			USB_PHY_VDD_DIG_VOL_MAX);
+@@ -93,8 +84,6 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ 		ret = regulator_disable(motg->vddcx);
+ 		if (ret)
+ 			dev_err(motg->phy.dev, "unable to disable hsusb vddcx\n");
+-
+-		regulator_put(motg->vddcx);
+ 	}
+ 
+ 	return ret;
+@@ -105,53 +94,38 @@ static int msm_hsusb_ldo_init(struct msm_otg *motg, int init)
+ 	int rc = 0;
+ 
+ 	if (init) {
+-		motg->v3p3 = regulator_get(motg->phy.dev, "HSUSB_3p3");
+-		if (IS_ERR(motg->v3p3)) {
+-			dev_err(motg->phy.dev, "unable to get hsusb 3p3\n");
+-			return PTR_ERR(motg->v3p3);
+-		}
+-
+ 		rc = regulator_set_voltage(motg->v3p3, USB_PHY_3P3_VOL_MIN,
+ 				USB_PHY_3P3_VOL_MAX);
+ 		if (rc) {
+ 			dev_err(motg->phy.dev, "unable to set voltage level "
+ 					"for hsusb 3p3\n");
+-			goto put_3p3;
++			goto exit;
+ 		}
+ 		rc = regulator_enable(motg->v3p3);
+ 		if (rc) {
+ 			dev_err(motg->phy.dev, "unable to enable the hsusb 3p3\n");
+-			goto put_3p3;
+-		}
+-		motg->v1p8 = regulator_get(motg->phy.dev, "HSUSB_1p8");
+-		if (IS_ERR(motg->v1p8)) {
+-			dev_err(motg->phy.dev, "unable to get hsusb 1p8\n");
+-			rc = PTR_ERR(motg->v1p8);
+-			goto disable_3p3;
++			goto exit;
+ 		}
+ 		rc = regulator_set_voltage(motg->v1p8, USB_PHY_1P8_VOL_MIN,
+ 				USB_PHY_1P8_VOL_MAX);
+ 		if (rc) {
+ 			dev_err(motg->phy.dev, "unable to set voltage level "
+ 					"for hsusb 1p8\n");
+-			goto put_1p8;
++			goto disable_3p3;
+ 		}
+ 		rc = regulator_enable(motg->v1p8);
+ 		if (rc) {
+ 			dev_err(motg->phy.dev, "unable to enable the hsusb 1p8\n");
+-			goto put_1p8;
++			goto disable_3p3;
+ 		}
+ 
+ 		return 0;
+ 	}
+ 
+ 	regulator_disable(motg->v1p8);
+-put_1p8:
+-	regulator_put(motg->v1p8);
+ disable_3p3:
+ 	regulator_disable(motg->v3p3);
+-put_3p3:
+-	regulator_put(motg->v3p3);
++exit:
+ 	return rc;
+ }
+ 
+@@ -506,7 +480,7 @@ static int msm_otg_suspend(struct msm_otg *motg)
+ 
+ 	clk_disable_unprepare(motg->pclk);
+ 	clk_disable_unprepare(motg->clk);
+-	if (motg->core_clk)
++	if (!IS_ERR(motg->core_clk))
+ 		clk_disable_unprepare(motg->core_clk);
+ 
+ 	if (!IS_ERR(motg->pclk_src))
+@@ -546,7 +520,7 @@ static int msm_otg_resume(struct msm_otg *motg)
+ 
+ 	clk_prepare_enable(motg->pclk);
+ 	clk_prepare_enable(motg->clk);
+-	if (motg->core_clk)
++	if (!IS_ERR(motg->core_clk))
+ 		clk_prepare_enable(motg->core_clk);
+ 
+ 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
+@@ -1414,13 +1388,14 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	motg = kzalloc(sizeof(struct msm_otg), GFP_KERNEL);
++	motg = devm_kzalloc(&pdev->dev, sizeof(struct msm_otg), GFP_KERNEL);
+ 	if (!motg) {
+ 		dev_err(&pdev->dev, "unable to allocate msm_otg\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	motg->phy.otg = kzalloc(sizeof(struct usb_otg), GFP_KERNEL);
++	motg->phy.otg = devm_kzalloc(&pdev->dev, sizeof(struct usb_otg),
++				     GFP_KERNEL);
+ 	if (!motg->phy.otg) {
+ 		dev_err(&pdev->dev, "unable to allocate msm_otg\n");
+ 		return -ENOMEM;
+@@ -1430,20 +1405,17 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	phy = &motg->phy;
+ 	phy->dev = &pdev->dev;
+ 
+-	motg->phy_reset_clk = clk_get(&pdev->dev, "usb_phy_clk");
++	motg->phy_reset_clk = devm_clk_get(&pdev->dev, "usb_phy_clk");
+ 	if (IS_ERR(motg->phy_reset_clk)) {
+ 		dev_err(&pdev->dev, "failed to get usb_phy_clk\n");
+-		ret = PTR_ERR(motg->phy_reset_clk);
+-		goto free_motg;
++		return PTR_ERR(motg->phy_reset_clk);
+ 	}
+ 
+-	motg->clk = clk_get(&pdev->dev, "usb_hs_clk");
++	motg->clk = devm_clk_get(&pdev->dev, "usb_hs_clk");
+ 	if (IS_ERR(motg->clk)) {
+ 		dev_err(&pdev->dev, "failed to get usb_hs_clk\n");
+-		ret = PTR_ERR(motg->clk);
+-		goto put_phy_reset_clk;
++		return PTR_ERR(motg->clk);
+ 	}
+-	clk_set_rate(motg->clk, 60000000);
+ 
+ 	/*
+ 	 * If USB Core is running its protocol engine based on CORE CLK,
+@@ -1452,22 +1424,18 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	 * CORE CLK. For such USB cores, vote for maximum clk frequency
+ 	 * on pclk source
+ 	 */
++	 motg->pclk_src = ERR_PTR(-ENOENT);
+ 	 if (motg->pdata->pclk_src_name) {
+-		motg->pclk_src = clk_get(&pdev->dev,
+-			motg->pdata->pclk_src_name);
++		motg->pclk_src = devm_clk_get(&pdev->dev,
++					motg->pdata->pclk_src_name);
+ 		if (IS_ERR(motg->pclk_src))
+-			goto put_clk;
+-		clk_set_rate(motg->pclk_src, INT_MAX);
+-		clk_prepare_enable(motg->pclk_src);
+-	} else
+-		motg->pclk_src = ERR_PTR(-ENOENT);
+-
++			return PTR_ERR(motg->pclk_src);
++	}
+ 
+-	motg->pclk = clk_get(&pdev->dev, "usb_hs_pclk");
++	motg->pclk = devm_clk_get(&pdev->dev, "usb_hs_pclk");
+ 	if (IS_ERR(motg->pclk)) {
+ 		dev_err(&pdev->dev, "failed to get usb_hs_pclk\n");
+-		ret = PTR_ERR(motg->pclk);
+-		goto put_pclk_src;
++		return PTR_ERR(motg->pclk);
+ 	}
+ 
+ 	/*
+@@ -1475,65 +1443,78 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	 * clock is introduced to remove the dependency on AXI
+ 	 * bus frequency.
+ 	 */
+-	motg->core_clk = clk_get(&pdev->dev, "usb_hs_core_clk");
+-	if (IS_ERR(motg->core_clk))
+-		motg->core_clk = NULL;
++	motg->core_clk = devm_clk_get(&pdev->dev, "usb_hs_core_clk");
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&pdev->dev, "failed to get platform resource mem\n");
+-		ret = -ENODEV;
+-		goto put_core_clk;
+-	}
++	motg->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(motg->regs))
++		return PTR_ERR(motg->regs);
+ 
+-	motg->regs = ioremap(res->start, resource_size(res));
+-	if (!motg->regs) {
+-		dev_err(&pdev->dev, "ioremap failed\n");
+-		ret = -ENOMEM;
+-		goto put_core_clk;
+-	}
+ 	dev_info(&pdev->dev, "OTG regs = %p\n", motg->regs);
+ 
+ 	motg->irq = platform_get_irq(pdev, 0);
+ 	if (!motg->irq) {
+ 		dev_err(&pdev->dev, "platform_get_irq failed\n");
+-		ret = -ENODEV;
+-		goto free_regs;
++		return motg->irq;
++	}
++
++	motg->vddcx = devm_regulator_get(motg->phy.dev, "HSUSB_VDDCX");
++	if (IS_ERR(motg->vddcx)) {
++		dev_err(motg->phy.dev, "unable to get hsusb vddcx\n");
++		return PTR_ERR(motg->vddcx);
++	}
++
++	motg->v3p3 = devm_regulator_get(motg->phy.dev, "HSUSB_3p3");
++	if (IS_ERR(motg->v3p3)) {
++		dev_err(motg->phy.dev, "unable to get hsusb 3p3\n");
++		return PTR_ERR(motg->v3p3);
++	}
++
++	motg->v1p8 = devm_regulator_get(motg->phy.dev, "HSUSB_1p8");
++	if (IS_ERR(motg->v1p8)) {
++		dev_err(motg->phy.dev, "unable to get hsusb 1p8\n");
++		return PTR_ERR(motg->v1p8);
++	}
++
++	clk_set_rate(motg->clk, 60000000);
++	if (!IS_ERR(motg->pclk_src)) {
++		clk_set_rate(motg->pclk_src, INT_MAX);
++		clk_prepare_enable(motg->pclk_src);
+ 	}
+ 
+ 	clk_prepare_enable(motg->clk);
+ 	clk_prepare_enable(motg->pclk);
+ 
++	if (!IS_ERR(motg->core_clk))
++		clk_prepare_enable(motg->core_clk);
++
+ 	ret = msm_hsusb_init_vddcx(motg, 1);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "hsusb vddcx configuration failed\n");
+-		goto free_regs;
++		goto disable_clks;
+ 	}
+ 
+ 	ret = msm_hsusb_ldo_init(motg, 1);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "hsusb vreg configuration failed\n");
+-		goto vddcx_exit;
++		goto disable_vddcx;
+ 	}
+ 	ret = msm_hsusb_ldo_set_mode(motg, 1);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "hsusb vreg enable failed\n");
+-		goto ldo_exit;
++		goto disable_ldo;
+ 	}
+ 
+-	if (motg->core_clk)
+-		clk_prepare_enable(motg->core_clk);
+-
+ 	writel(0, USB_USBINTR);
+ 	writel(0, USB_OTGSC);
+ 
+ 	INIT_WORK(&motg->sm_work, msm_otg_sm_work);
+ 	INIT_DELAYED_WORK(&motg->chg_work, msm_chg_detect_work);
+-	ret = request_irq(motg->irq, msm_otg_irq, IRQF_SHARED,
++	ret = devm_request_irq(&pdev->dev, motg->irq, msm_otg_irq, IRQF_SHARED,
+ 					"msm_otg", motg);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "request irq failed\n");
+-		goto disable_clks;
++		goto disable_ldo;
+ 	}
+ 
+ 	phy->init = msm_otg_reset;
+@@ -1548,7 +1529,7 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	ret = usb_add_phy(&motg->phy, USB_PHY_TYPE_USB2);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "usb_add_phy failed\n");
+-		goto free_irq;
++		goto disable_ldo;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, motg);
+@@ -1566,33 +1547,18 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	return 0;
+-free_irq:
+-	free_irq(motg->irq, motg);
++
++disable_ldo:
++	msm_hsusb_ldo_init(motg, 0);
++disable_vddcx:
++	msm_hsusb_init_vddcx(motg, 0);
+ disable_clks:
+ 	clk_disable_unprepare(motg->pclk);
+ 	clk_disable_unprepare(motg->clk);
+-ldo_exit:
+-	msm_hsusb_ldo_init(motg, 0);
+-vddcx_exit:
+-	msm_hsusb_init_vddcx(motg, 0);
+-free_regs:
+-	iounmap(motg->regs);
+-put_core_clk:
+-	if (motg->core_clk)
+-		clk_put(motg->core_clk);
+-	clk_put(motg->pclk);
+-put_pclk_src:
+-	if (!IS_ERR(motg->pclk_src)) {
++	if (!IS_ERR(motg->core_clk))
++		clk_disable_unprepare(motg->core_clk);
++	if (!IS_ERR(motg->pclk_src))
+ 		clk_disable_unprepare(motg->pclk_src);
+-		clk_put(motg->pclk_src);
+-	}
+-put_clk:
+-	clk_put(motg->clk);
+-put_phy_reset_clk:
+-	clk_put(motg->phy_reset_clk);
+-free_motg:
+-	kfree(motg->phy.otg);
+-	kfree(motg);
+ 	return ret;
+ }
+ 
+@@ -1615,7 +1581,7 @@ static int msm_otg_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	usb_remove_phy(phy);
+-	free_irq(motg->irq, motg);
++	disable_irq(motg->irq);
+ 
+ 	/*
+ 	 * Put PHY in low power mode.
+@@ -1635,26 +1601,15 @@ static int msm_otg_remove(struct platform_device *pdev)
+ 
+ 	clk_disable_unprepare(motg->pclk);
+ 	clk_disable_unprepare(motg->clk);
+-	if (motg->core_clk)
++	if (!IS_ERR(motg->core_clk))
+ 		clk_disable_unprepare(motg->core_clk);
+-	if (!IS_ERR(motg->pclk_src)) {
++	if (!IS_ERR(motg->pclk_src))
+ 		clk_disable_unprepare(motg->pclk_src);
+-		clk_put(motg->pclk_src);
+-	}
++
+ 	msm_hsusb_ldo_init(motg, 0);
+ 
+-	iounmap(motg->regs);
+ 	pm_runtime_set_suspended(&pdev->dev);
+ 
+-	clk_put(motg->phy_reset_clk);
+-	clk_put(motg->pclk);
+-	clk_put(motg->clk);
+-	if (motg->core_clk)
+-		clk_put(motg->core_clk);
+-
+-	kfree(motg->phy.otg);
+-	kfree(motg);
+-
+ 	return 0;
+ }
+ 
+@@ -1736,6 +1691,7 @@ static const struct dev_pm_ops msm_otg_dev_pm_ops = {
+ #endif
+ 
+ static struct platform_driver msm_otg_driver = {
++	.probe = msm_otg_probe,
+ 	.remove = msm_otg_remove,
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+@@ -1746,7 +1702,7 @@ static struct platform_driver msm_otg_driver = {
+ 	},
+ };
+ 
+-module_platform_driver_probe(msm_otg_driver, msm_otg_probe);
++module_platform_driver(msm_otg_driver);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("MSM USB transceiver driver");
 -- 
 1.7.9.5
