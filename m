@@ -1,269 +1,78 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH] ARM: mvebu: dts: remove unneeded linux,default-state from led nodes
-Date: Mon, 14 Oct 2013 18:07:27 +0000
-Message-ID: <1381774047-23354-1-git-send-email-jason@lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 17/27] drm/tegra: Add Tegra114 HDMI support
+Date: Mon, 14 Oct 2013 12:10:21 -0600
+Message-ID: <525C338D.50801@wwwdotorg.org>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-18-git-send-email-treding@nvidia.com> <52587967.6050806@wwwdotorg.org> <20131012114122.GF22284@mithrandir>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131012114122.GF22284@mithrandir>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Generally, power LEDs should indicate when power is applied, and go out
-once power is removed.  _Not_ annoy the developer with migraine-inducing
-blinking reminicent of some badly animated television series designed to
-sell sugar to children.
+On 10/12/2013 05:41 AM, Thierry Reding wrote:
+> On Fri, Oct 11, 2013 at 04:19:19PM -0600, Stephen Warren wrote:
+>> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+>>> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> 
+>>> Tegra114 TMDS configuration requires a new peak_current field
+>>> and the driver current override bit has changed position.
+>> 
+>>> diff --git a/drivers/gpu/drm/tegra/hdmi.c
+>>> b/drivers/gpu/drm/tegra/hdmi.c
+>> 
+>>> static const struct tmds_config tegra2_tmds_config[] = { @@
+>>> -223,6 +224,85 @@ static const struct tmds_config
+>>> tegra3_tmds_config[] = {
+>> 
+>> Not related to this patch, but those should have been named 
+>> tegra20_tmds_config[] and tegra30_tmds_config[].
+>> 
+>>> static void tegra_hdmi_setup_tmds(struct tegra_hdmi *hdmi,
+>> 
+>>> -	value = tmds->drive_current | DRIVE_CURRENT_FUSE_OVERRIDE; -
+>>> tegra_hdmi_writel(hdmi, value,
+>>> HDMI_NV_PDISP_SOR_LANE_DRIVE_CURRENT); +	if
+>>> (of_device_is_compatible(np, "nvidia,tegra114-hdmi")) {
+>> 
+>> Let's not check this at run-time. Instead, host1x_drm_subdevs[]'s
+>> .data field should be used to contain either flags or a pointer
+>> to a configuration structure, either of which can be directly
+>> consulted to determine the properties of the HW in a
+>> feature-oriented/semantic way.
+>> 
+>> drivers/gpio/gpio-tegra.c's 
+>> tegra20_gpio_config/tegra30_gpio_config/tegra_gpio_of_match
+>> provide a good example of this.
+>> 
+>> This means that if Tegra124 is identical to Tegra114, yet a
+>> hypothetical Tegra999 is different, you don't have to keep
+>> adjusting these if conditions throughout the code; they can
+>> simply refer to the same feature bit forever.
+> 
+> Okay, I'll see what I can come up with. It's unfortunately not as
+> simple as the GPIO driver's parameterization, and who knows what
+> other differences will be introduced in some later versions of this
+> block.
+> 
+> What I mean is that at some point it becomes questionable whether
+> it makes sense to parameterize at all if you have to encode the
+> register offset and bit position within that register for a large
+> number of bits.
 
-On a more serious note, most of these OS-specific properties aren't
-necessary and should be removed.  I left two that are legitimately tying
-disk LEDs to disk activity.  Other than that, we keep the state the
-bootloader left them in until userspace changes the state via sysfs.
+Well, I wasn't advocating that we shouldn't have an if statement at
+all. Simply that the if statement shouldn't be doing string compares
+of specific HW. Either of the following would be fine:
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
- arch/arm/boot/dts/armada-370-mirabox.dts               | 4 ++--
- arch/arm/boot/dts/armada-370-netgear-rn102.dts         | 2 +-
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts       | 3 +--
- arch/arm/boot/dts/dove-cubox.dts                       | 2 +-
- arch/arm/boot/dts/kirkwood-dns320.dts                  | 2 +-
- arch/arm/boot/dts/kirkwood-dns325.dts                  | 2 +-
- arch/arm/boot/dts/kirkwood-dockstar.dts                | 2 +-
- arch/arm/boot/dts/kirkwood-goflexnet.dts               | 2 +-
- arch/arm/boot/dts/kirkwood-ib62x0.dts                  | 2 +-
- arch/arm/boot/dts/kirkwood-iconnect.dts                | 4 ++--
- arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts          | 2 +-
- arch/arm/boot/dts/kirkwood-lsxl.dtsi                   | 2 +-
- arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts | 2 +-
- arch/arm/boot/dts/kirkwood-ns2lite.dts                 | 2 +-
- arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts        | 2 +-
- arch/arm/boot/dts/kirkwood-sheevaplug.dts              | 2 +-
- 16 files changed, 18 insertions(+), 19 deletions(-)
+if (hdmi->soc_data->some_feature_flag)
+   // just represents some code; doesn't have to be a function call
+   do_something();
+else;
+  do_something_else();
 
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index 2471d9d..41457e5 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -74,13 +74,13 @@
- 				green_pwr_led {
- 					label = "mirabox:green:pwr";
- 					gpios = <&gpio1 31 1>;
--					linux,default-trigger = "heartbeat";
-+					default-state = "keep";
- 				};
- 
- 				blue_stat_led {
- 					label = "mirabox:blue:stat";
- 					gpios = <&gpio2 0 1>;
--					linux,default-trigger = "cpu0";
-+					default-state = "off";
- 				};
- 
- 				green_stat_led {
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index 05e4485..4b2dfd7 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -130,7 +130,7 @@
- 		blue_power_led {
- 			label = "rn102:blue:pwr";
- 			gpios = <&gpio1 25 1>;  /* GPIO 57 Active Low */
--			linux,default-trigger = "heartbeat";
-+			default-state = "keep";
- 		};
- 
- 		green_sata1_led {
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 5695afc..99bcf76 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -103,8 +103,7 @@
- 				green_led {
- 					label = "green_led";
- 					gpios = <&gpio1 21 1>;
--					default-state = "off";
--					linux,default-trigger = "heartbeat";
-+					default-state = "keep";
- 				};
- 			};
- 
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-index 8349a24..7a70f4c 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dts
-@@ -23,7 +23,7 @@
- 		power {
- 			label = "Power";
- 			gpios = <&gpio0 18 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
-index e112ca6..ff13b93 100644
---- a/arch/arm/boot/dts/kirkwood-dns320.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns320.dts
-@@ -25,7 +25,7 @@
- 		blue-power {
- 			label = "dns320:blue:power";
- 			gpios = <&gpio0 26 1>; /* GPIO 26 Active Low */
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		blue-usb {
- 			label = "dns320:blue:usb";
-diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
-index 5119fb8..f433043 100644
---- a/arch/arm/boot/dts/kirkwood-dns325.dts
-+++ b/arch/arm/boot/dts/kirkwood-dns325.dts
-@@ -25,7 +25,7 @@
- 		white-power {
- 			label = "dns325:white:power";
- 			gpios = <&gpio0 26 1>; /* GPIO 26 Active Low */
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		white-usb {
- 			label = "dns325:white:usb";
-diff --git a/arch/arm/boot/dts/kirkwood-dockstar.dts b/arch/arm/boot/dts/kirkwood-dockstar.dts
-index 33ff368..a5f1e39 100644
---- a/arch/arm/boot/dts/kirkwood-dockstar.dts
-+++ b/arch/arm/boot/dts/kirkwood-dockstar.dts
-@@ -43,7 +43,7 @@
- 		health {
- 			label = "status:green:health";
- 			gpios = <&gpio1 14 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		fault {
- 			label = "status:orange:fault";
-diff --git a/arch/arm/boot/dts/kirkwood-goflexnet.dts b/arch/arm/boot/dts/kirkwood-goflexnet.dts
-index a43bebb..a9e98c9 100644
---- a/arch/arm/boot/dts/kirkwood-goflexnet.dts
-+++ b/arch/arm/boot/dts/kirkwood-goflexnet.dts
-@@ -86,7 +86,7 @@
- 		health {
- 			label = "status:green:health";
- 			gpios = <&gpio1 14 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		fault {
- 			label = "status:orange:fault";
-diff --git a/arch/arm/boot/dts/kirkwood-ib62x0.dts b/arch/arm/boot/dts/kirkwood-ib62x0.dts
-index c5fb02f..dbc9033 100644
---- a/arch/arm/boot/dts/kirkwood-ib62x0.dts
-+++ b/arch/arm/boot/dts/kirkwood-ib62x0.dts
-@@ -82,7 +82,7 @@
- 		green-os {
- 			label = "ib62x0:green:os";
- 			gpios = <&gpio0 25 0>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		red-os {
- 			label = "ib62x0:red:os";
-diff --git a/arch/arm/boot/dts/kirkwood-iconnect.dts b/arch/arm/boot/dts/kirkwood-iconnect.dts
-index 4a62b20..399fb0c 100644
---- a/arch/arm/boot/dts/kirkwood-iconnect.dts
-+++ b/arch/arm/boot/dts/kirkwood-iconnect.dts
-@@ -95,12 +95,12 @@
- 		led-level {
- 			label = "led_level";
- 			gpios = <&gpio1 9 0>;
--			linux,default-trigger = "default-on";
-+			default-state = "on";
- 		};
- 		power-blue {
- 			label = "power:blue";
- 			gpios = <&gpio1 10 0>;
--			linux,default-trigger = "timer";
-+			default-state = "keep";
- 		};
- 		power-red {
- 			label = "power:red";
-diff --git a/arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts b/arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts
-index d15395d..b9de441 100644
---- a/arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts
-+++ b/arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts
-@@ -128,7 +128,7 @@
- 		power_led {
- 			label = "status:white:power_led";
- 			gpios = <&gpio0 16 0>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		rebuild_led {
- 			label = "status:white:rebuild_led";
-diff --git a/arch/arm/boot/dts/kirkwood-lsxl.dtsi b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-index 4e8f9e4..bc34a60 100644
---- a/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-lsxl.dtsi
-@@ -150,7 +150,7 @@
- 		led@4 {
- 			label = "lsxl:blue:power";
- 			gpios = <&gpio1 7 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 
- 		led@5 {
-diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-index e6a102c..6b96e85 100644
---- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-+++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-@@ -113,7 +113,7 @@
- 		power_led {
- 			label = "status:blue:power_led";
- 			gpios = <&gpio0 31 1>;   /* GPIO 31 Active Low */
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 		activity_led {
- 			label = "status:blue:activity_led";
-diff --git a/arch/arm/boot/dts/kirkwood-ns2lite.dts b/arch/arm/boot/dts/kirkwood-ns2lite.dts
-index 2796070..7cea2a4 100644
---- a/arch/arm/boot/dts/kirkwood-ns2lite.dts
-+++ b/arch/arm/boot/dts/kirkwood-ns2lite.dts
-@@ -26,7 +26,7 @@
- 		blue-sata {
- 			label = "ns2:blue:sata";
- 			gpios = <&gpio0 30 1>;
--			linux,default-trigger = "default-on";
-+			linux,default-trigger = "ide-disk";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts b/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
-index eac6a21..ce9b3be 100644
---- a/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
-+++ b/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
-@@ -37,7 +37,7 @@
- 		health {
- 			label = "sheevaplug:blue:health";
- 			gpios = <&gpio1 17 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/kirkwood-sheevaplug.dts b/arch/arm/boot/dts/kirkwood-sheevaplug.dts
-index bb61918..1eff4f6 100644
---- a/arch/arm/boot/dts/kirkwood-sheevaplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-sheevaplug.dts
-@@ -32,7 +32,7 @@
- 		health {
- 			label = "sheevaplug:blue:health";
- 			gpios = <&gpio1 17 1>;
--			linux,default-trigger = "default-on";
-+			default-state = "keep";
- 		};
- 
- 		misc {
--- 
-1.8.3.2
+or:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+do_something(hdmi->soc_data->some_feature_value);
