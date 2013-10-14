@@ -1,93 +1,98 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Mon, 14 Oct 2013 18:05:04 +0300
-Message-ID: <525C0820.7000601@mm-sol.com>
-References: <1381504601-23773-1-git-send-email-svarbanov@mm-sol.com> <1381504601-23773-3-git-send-email-svarbanov@mm-sol.com> <20131011203701.GC13139@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131011203701.GC13139@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+From: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Subject: [PATCH v2 0/4] Exynos 5410 Dual cluster support
+Date: Mon, 14 Oct 2013 19:08:21 +0400
+Message-ID: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Tyrtov Vyacheslav <v.tyrtov@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+The series of patches represent support of Exynos 5410 SoC
+    
+The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture.
+Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same time
+    
+Patches add new platform description, support of clock controller,
+dual cluster support and device tree for Exynos 5410 
+   
+Has been build on v3.12-rc5.
+Has been tested on Exynos 5410 reference board (exynos_defconfig).
+    
+Thanks,
+	Vyacheslav.
 
-Thanks for the review.
 
-On 10/11/2013 11:37 PM, Stephen Boyd wrote:
-> On 10/11, Stanimir Varbanov wrote:
->> This adds a driver for hardware random number generator present
->> on Qualcomm MSM SoC's.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> ---
-> 
-> Just nitpicks.
-> 
->> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
->> index 0aa9d91daef5..d902330cef43 100644
->> --- a/drivers/char/hw_random/Kconfig
->> +++ b/drivers/char/hw_random/Kconfig
->> @@ -314,3 +314,15 @@ config HW_RANDOM_TPM
->>  	  module will be called tpm-rng.
->>  
->>  	  If unsure, say Y.
->> +
->> +config HW_RANDOM_MSM
->> +        tristate "Qualcomm MSM Random Number Generator support"
->> +        depends on HW_RANDOM && ARCH_MSM && HAVE_CLK
-> 
-> It should be fine to drop HAVE_CLK here because ARCH_MSM always
-> selects COMMON_CLK which indirectly selects HAVE_CLK.
+Changelog:
 
-It is leftover, I'll remove HAVE_CLK dependency.
+v2:
+	In drivers/clk/samsung/clk-exynos5410.c
+1. Clock driver converted to use preprocessor macros instead of enums.
+   Clock IDs now defined in include/dt-bindings/clock/exynos5410.h.
+2. Unused spinlock removed.
+3. Function exynos5410_clk_init defined as static.
+   Struct exynos5410_fixed_rate_ext_clks defined as static.
+   Struct exynos5410_mux_clks defined as static.
+   Struct exynos5410_div_clks defined as static.
+   Struct exynos5410_gate_clks defined as static.
+4. Removed aliases.
+5. Pll's magic register offsets defined as preprocessor macros.
+6. Redundant check of device_node pointer removed.
+	
+	In arch/arm/boot/dts/exynos5410.dtsi
+1. dwmmcX nodes renamed to mmc.
+   dwmmc_X renamed to mmc_X.
+   dwmmc status="disabled" field added.
+   fifo-depth field moved from arch/arm/boot/dts/exynos5410-smdk5410.dts
+2. Blank lines added where necessary.
+3. cpu@ suffixes corrected.
+4. edcs node removed.
+5. Hexadecimal characters case corrected.
+6. Clock IDs replaced with preprocessor macros.
+	
+	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+1. status = "okay" field added to mmc nodes.
+	
+	In arch/arm/mach-exynos/edcs.c
+1. "kfs_" prefix replaced with "edcs_"
+2. EDCS_CPUS_PER_CLUSTER and EDCS_CLUSTERS defined instead of MCPM's values.
+3. Cache handling sequence borrowed from arch/arm/mach-vexpress/tc2_pm.c
+4. mcpm_sync_init() call added.
+5. power management functions reworked.
+	
+	Other
+1. Documentation/devicetree/bindings/clock/exynos5410-clock.txt corrected.
+2. Removed smdk5410_defconfig. Instead SOC_EXYNOS5410 now selects MCPM and
+   ARM_CCI in arch/arm/mach-exynos/Kconfig.
+3. edcs_status driver removed.
 
-> 
->> +        ---help---
->> +          This driver provides kernel-side support for the Random Number
->> +          Generator hardware found on Qualcomm MSM SoCs.
->> +
->> +          To compile this driver as a module, choose M here. the
->> +          module will be called msm-rng.
->> +
->> +          If unsure, say Y.
->> diff --git a/drivers/char/hw_random/msm-rng.c b/drivers/char/hw_random/msm-rng.c
->> new file mode 100644
->> index 000000000000..e219e94d02c1
->> --- /dev/null
->> +++ b/drivers/char/hw_random/msm-rng.c
->> @@ -0,0 +1,195 @@
->> +#include <linux/clk.h>
->> +#include <linux/hw_random.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
-> 
-> +#include <linux/err.h> for -ENOMEM usage.
+Tarek Dakhran (4):
+  ARM: EXYNOS: Add support for EXYNOS5410 SoC
+  clk: exynos5410: register clocks using common clock framework
+  ARM: EXYNOS: add Exynos Dual Cluster Support
+  ARM: dts: Add initial device tree support for EXYNOS5410
 
-OK
+ .../devicetree/bindings/clock/exynos5410-clock.txt |  37 +++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |  65 +++++
+ arch/arm/boot/dts/exynos5410.dtsi                  | 209 ++++++++++++++++
+ arch/arm/mach-exynos/Kconfig                       |  12 +
+ arch/arm/mach-exynos/Makefile                      |   2 +
+ arch/arm/mach-exynos/common.c                      |  18 ++
+ arch/arm/mach-exynos/edcs.c                        | 270 +++++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h            |   1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   1 +
+ arch/arm/plat-samsung/include/plat/cpu.h           |   8 +
+ drivers/clk/samsung/Makefile                       |   1 +
+ drivers/clk/samsung/clk-exynos5410.c               | 251 +++++++++++++++++++
+ include/dt-bindings/clock/exynos5410.h             | 175 +++++++++++++
+ 14 files changed, 1051 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+ create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+ create mode 100644 arch/arm/mach-exynos/edcs.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+ create mode 100644 include/dt-bindings/clock/exynos5410.h
 
-> 
->> +
->> +/* Device specific register offsets */
->> +#define PRNG_DATA_OUT		0x0000
->> +#define PRNG_STATUS		0x0004
->> +#define PRNG_LFSR_CFG		0x0100
->> +#define PRNG_CONFIG		0x0104
->> +
-> [snip]
->> +
->> +MODULE_AUTHOR("The Linux Foundation");
->> +MODULE_DESCRIPTION("Qualcomm MSM random number generator driver");
->> +MODULE_LICENSE("GPL v2");
-> 
-> MODULE_ALIAS perhaps?
-
-OK, I will add it.
-
-regards,
-Stan
+-- 
+1.8.1.5
