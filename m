@@ -1,241 +1,182 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Mon, 14 Oct 2013 17:57:00 +0300
-Message-ID: <525C063C.9080908@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com> <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <52584785.2020504@ti.com> <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com> <525923AB.4030807@ti.com> <alpine.DEB.2.02.1310132023240.27397@utopia.booyaka.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 3/5] thermal: exynos: Provide initial setting for TMU's
+ test MUX address at Exynos4412
+Date: Mon, 14 Oct 2013 17:00:32 +0200
+Message-ID: <20131014170032.7ed18cad@amdc308.digital.local>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-4-git-send-email-l.majewski@samsung.com>
+ <525BFEB0.9080609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310132023240.27397@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, mark.rutland@arm.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <525BFEB0.9080609@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, kgene.kim@samsung.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Eduardo,
 
-I've been looking at this stuff today, and this will cause pretty huge 
-changes to the set. This probably means a few weeks delay in 
-implementation at least.
+> On 09-10-2013 02:29, Lukasz Majewski wrote:
+> > The commit d0a0ce3e77c795258d47f9163e92d5031d0c5221 ("thermal:
+> > exynos: Add missing definations and code cleanup") has removed
+> > setting of test MUX address value at TMU configuration setting.
+> > 
+> > This field is not present on Exynos4210 and Exynos5 SoCs. However
+> > on Exynos4412 SoC it is required to set this field after reset
+> > because without it TMU shows maximal available temperature, which
+> > causes immediate platform shutdown.
+> > 
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> > 
+> > ---
+> > Changes for v2:
+> > - Define test_mux and test_mux_addr_shift to not use direct
+> > register access
+> > - Remove pdata->type == SOC_ARCH_EXYNOS4412 check at
+> > exynos_tmu_control() and use only generic code
+> > 
+> >  drivers/thermal/samsung/exynos_tmu.c      |    3 +++
+> >  drivers/thermal/samsung/exynos_tmu.h      |    4 ++++
+> >  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+> >  drivers/thermal/samsung/exynos_tmu_data.h |    4 ++++
+> >  4 files changed, 13 insertions(+)
+> > 
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.c
+> > b/drivers/thermal/samsung/exynos_tmu.c index 1312b34..32f38b9 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu.c
+> > @@ -317,6 +317,9 @@ static void exynos_tmu_control(struct
+> > platform_device *pdev, bool on) 
+> >  	con = readl(data->base + reg->tmu_ctrl);
+> >  
+> > +	if (pdata->test_mux)
+> 
+> 
+> test_mux field is in fact an address, correct? Can 0 be a valid
+> address?
 
-Some comments on the technical perspectives below.
+No it isn't an address. It is the value which shall be written to
+test_mux field of TMU_CONTROL register.
 
-On 10/14/2013 02:45 AM, Paul Walmsley wrote:
->
-> Here you go:
->
-> 1. Create DT nodes for the IP blocks that contain the clock control
-> registers, underneath the appropriate bus node.  So for example OMAP4
-> would have:
->
-> /ocp {
->
->      prm@4a306000 {
-> 	compatible = xxx;
-> 	regs = <0x4a306000 xxxx>;
->      };
->
->      cm1@4a004000 {
-> 	compatible = xxx;
-> 	regs = <0x4a004000 xxxx>;
->      };
->
->      cm2@4a008000 {
-> 	compatible = xxx;
-> 	regs = <0x4a008000 xxxx>;
->      };
->
-> };
->
-> This is pure OS-independent hardware description (with the unfortunate
-> exception of the "ocp" part).
->
->
-> 2. Create the clock data underneath the corresponding PRCM/CM/PRM device
-> nodes that their control registers exist in.  So for example, dpll_per_ck
-> would belong to the "cm1" device, since that's where its control registers
-> are located.  Something like this:
->
->      cm1@4a004000 {
->          ...
->          clocks {
->              dpll_per_ck@.... {
-> 		<clock data goes here>
->              };
->          };
->      };
->
->
-> The DT data is intended to portray addressable devices from the
-> perspective of the CPUs that are booted with that data, organized by bus
-> structure.  From this point of view, clocks that are controlled via a
-> particular IP block should have their data associated with that block.
->
->
-> 3. Place clock register accesses in the low-level PRCM/CM/PRM device
-> driver.  If other kernel code needs some resource that's provided by the
-> IP block, it should either come from common Linux framework routines (like
-> the clock code), or use functions exported from the low-level driver that
-> don't expose register addresses.
->
-> Otherwise, if MMIO accesses to that device are allowed from all over the
-> codebase, it creates an undebuggable mess:
->
-> A. It could result in IP blocks being partially programmed before they are
-> probed by their drivers.  If their drivers (or the integration code) reset
-> the IP blocks, the non-driver code has no way of knowing that it needs to
-> reprogram the underlying IP block.
->
-> B. If any preparation is needed before the clock registers can be
-> accessed, like runtime PM calls or device_enable()-type calls, this should
-> be coordinated by the low-level IP block itself.  We don't expect this to
-> be the case for PRCM/CM/PRM, but we do expect it to be the case for UART,
-> DSS, some audio clocks, etc.
->
-> C. The low-level IP block drivers may want to implement some caching layer
-> like regmap.  If some register writes bypass the low-level driver, then
-> someone is likely to get a big unpleasant surprise.
->
-> D. It impairs the common debugging technique of adding code to the IP
-> block MMIO read/write functions to log register accesses.
->
->
->
-> 4. Use relative register offsets from the top of the containing IP block's
-> base address, rather than absolute addresses.
->
->     cm1@4a004000 {
->          ...
->          clocks {
->              dpll_per_ck@4140 {
->                  <clock data goes here>
->              };
->          };
->      };
->
-> This makes it possible to reuse the same DT clock data in cases where the
-> same IP block is used, but at a different base address.  This is probably
-> not a big issue with the system integration IP blocks, but quite possible
-> with the non-SoC-integration IP blocks.  It also makes it obvious if
-> someone tries to sneak clocks into the IP block data that aren't
-> controlled by that IP block.
+> 
+> Why not using the feature flags to test for capabilities,
 
-Relative addressing basically means I need to copy paste the code for 
-clk_divider + clk_mux from drivers/clk to drivers/clk/ti. Or 
-alternatively add a way to provide register read/write ops to the basic 
-clock.
+It is easier to assign value to test_mux tmu_data struct, than write
+separate set of features for Exynos4412 and Exynos5250, which share the
+code.
 
-> 5. Register the clocks from the low-level IP block drivers, rather than
-> from external code.  That way there's no need to export low-level register
-> manipulation functions off to other kernel code.  This registration can be
-> done when the PRCM/CM/PRM driver probes.
->
->
-> 6. Move the OMAP clockdomain data underneath the DT node for the low-level
-> IP block that contains them:
->
->
->     cm1@4a004000 {
->          ...
->          clocks {
-> 	       ...
->          };
->
->          clockdomains {
->                 l3_init_clkdm: l3_init_clkdm@... {
->                     ...
->                 };
->          };
->      };
+Also .features seems to define SoC independent features of TMU IP (like
+TMU_SUPPORT_EMULATION).
 
-I think clocks + clockdomains grouping nodes are unnecessary in this 
-case. Same can be accomplished with simply using the compatible string 
-for mapping to corresponding types. (This is probably valid for current 
-code also.)
+The TEST_MUX setting is platform dependent (only Exynos4412 uses it),
+so this is the rationale to define it at tmu platform data.
 
-> For non-OMAP folks reading this thread, OMAP clockdomains have control
-> registers associated with them, located in the PRCM/CM/PRM IP block
-> address space, so that's where they belong.
->
->
-> 7. drivers/clk/ti is probably the wrong place for most of the low-level
-> drivers for IP blocks like the PRM/PRCM/CM.  Most of these IP blocks do
-> more than just control clocks: they also control other system entities
-> like reset lines, OMAP powerdomains, AVS, or OMAP "clockdomains" (which in
-> some cases may have nothing to do with clocks).
->
-> drivers/clk/ti is almost defensible for CM, if it weren't for the OMAP
-> "clockdomain" registers that are there.  However, for the other OMAP
-> integration IP blocks, drivers/clk/ti definitely seems out of place.  And
-> since some OMAP chips like OMAP2420 or AM43XX don't have separate CM and
-> PRM blocks -- they combine them both into a single PRCM module -- it seems
-> best to place CM, PRM, and other related code into a single common
-> directory, so they can easily share code across chips.
->
-> I'd suggest putting them in drivers/sysctrl/omap/.  This would be intended
-> for low-level SoC IP block drivers that control system integration.
-> Otherwise drivers/clk/XXX is going to turn into another drivers/mfd.
+> features and
+> required configurations instead of assuming obscure domain and address
+> ranges?
 
-I think initially I would place this stuff under mach-omap2. Much better 
-than to try to introduce multiple new drivers with a single set.
+TMU_MUX only uses 
 
-> 8. A few random comments about the individual clock binding data formats
-> themselves, based on a quick look:
->
-> A. It seems pretty odd and unnecessarily obscure to do something like
-> this:
->
-> dpll_usb_ck: dpll_usb_ck@... {
->         ...
->         reg = <0x4a008180 0x4>, <0x4a008184 0x4>, <0x4a008188 0x4>, <0x4a00818c 0x4>;
->         ...
-> };
- >
-> It's at least self-documenting to do something like this:
->
-> dpll_usb_ck: dpll_usb_ck@... {
->         ...
->         control-reg = < ... >;
->         idlest-reg = < ... >;
->         .. etc. ..
-> };
+(test_mux << test_mux_addr_shift) at tmu_ctrl register.
 
-Some earlier version had something along these lines, but it was turned 
-down. I had also reg-names as documentation purposes along, but this was 
-unnecessary and was dropped also.
 
-> Which itself might not even be needed, depending on how the DPLL control
-> code is implemented.  For example, if the relative offsets are always the
-> same for all OMAP4-family devices, maybe there's not even a need to
-> explicitly encode that into the DT data.
+> 
+> 
+> > +		con |= (pdata->test_mux <<
+> > reg->test_mux_addr_shift); +
+> >  	if (pdata->reference_voltage) {
+> >  		con &= ~(reg->buf_vref_sel_mask <<
+> > reg->buf_vref_sel_shift); con |= pdata->reference_voltage <<
+> > reg->buf_vref_sel_shift; diff --git
+> > a/drivers/thermal/samsung/exynos_tmu.h
+> > b/drivers/thermal/samsung/exynos_tmu.h index b42ece4..3fb6554
+> > 100644 --- a/drivers/thermal/samsung/exynos_tmu.h +++
+> > b/drivers/thermal/samsung/exynos_tmu.h @@ -85,6 +85,7 @@ enum
+> > soc_type {
+> >   * @triminfo_reload_shift: shift of triminfo reload enable bit in
+> > triminfo_ctrl reg.
+> >   * @tmu_ctrl: TMU main controller register.
+> > + * @test_mux_addr_shift: shift bits of test mux address.
+> >   * @buf_vref_sel_shift: shift bits of reference voltage in
+> > tmu_ctrl register.
+> >   * @buf_vref_sel_mask: mask bits of reference voltage in tmu_ctrl
+> > register.
+> >   * @therm_trip_mode_shift: shift bits of tripping mode in tmu_ctrl
+> > register. @@ -151,6 +152,7 @@ struct exynos_tmu_registers {
+> >  	u32	triminfo_reload_shift;
+> >  
+> >  	u32	tmu_ctrl;
+> > +	u32     test_mux_addr_shift;
+> >  	u32	buf_vref_sel_shift;
+> >  	u32	buf_vref_sel_mask;
+> >  	u32	therm_trip_mode_shift;
+> > @@ -258,6 +260,7 @@ struct exynos_tmu_registers {
+> >   * @first_point_trim: temp value of the first point trimming
+> >   * @second_point_trim: temp value of the second point trimming
+> >   * @default_temp_offset: default temperature offset in case of no
+> > trimming
+> > + * @test_mux; information if SoC supports test MUX
+> >   * @cal_type: calibration type for temperature
+> >   * @cal_mode: calibration mode for temperature
+> >   * @freq_clip_table: Table representing frequency reduction
+> > percentage. @@ -287,6 +290,7 @@ struct exynos_tmu_platform_data {
+> >  	u8 first_point_trim;
+> >  	u8 second_point_trim;
+> >  	u8 default_temp_offset;
+> > +	u8 test_mux;
+> >  
+> >  	enum calibration_type cal_type;
+> >  	enum calibration_mode cal_mode;
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.c
+> > b/drivers/thermal/samsung/exynos_tmu_data.c index d8de5c1..073c292
+> > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> > @@ -98,6 +98,7 @@ static const struct exynos_tmu_registers
+> > exynos4412_tmu_registers = { .triminfo_ctrl =
+> > EXYNOS_TMU_TRIMINFO_CON, .triminfo_reload_shift =
+> > EXYNOS_TRIMINFO_RELOAD_SHIFT, .tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
+> > +	.test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
+> >  	.buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
+> >  	.buf_vref_sel_mask = EXYNOS_TMU_REF_VOLTAGE_MASK,
+> >  	.therm_trip_mode_shift = EXYNOS_TMU_TRIP_MODE_SHIFT,
+> > @@ -174,6 +175,7 @@ struct exynos_tmu_init_data const
+> > exynos4412_default_tmu_data = { {
+> >  			EXYNOS4412_TMU_DATA,
+> >  			.type = SOC_ARCH_EXYNOS4412,
+> > +			.test_mux = EXYNOS4412_MUX_ADDR_VALUE,
+> >  		},
+> >  	},
+> >  	.tmu_count = 1,
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.h
+> > b/drivers/thermal/samsung/exynos_tmu_data.h index b130b1e..a1ea19d
+> > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> > @@ -95,6 +95,10 @@
+> >  
+> >  #define EXYNOS_MAX_TRIGGER_PER_REG	4
+> >  
+> > +/* Exynos4412 specific */
+> > +#define EXYNOS4412_MUX_ADDR_VALUE          6
+> 
+> > +#define EXYNOS4412_MUX_ADDR_SHIFT          20
+> > +
+> >  /*exynos5440 specific registers*/
+> >  #define EXYNOS5440_TMU_S0_7_TRIM		0x000
+> >  #define EXYNOS5440_TMU_S0_7_CTRL		0x020
+> > 
+> 
+> 
 
-If I want to get rid of these, I need to add extra compatible strings 
-for the dpll types. There are several weird register offsets for 
-omap3/am3 devices. omap4/5/dra7/am4 behave more sanely.
 
-> B. Seems like you can remove the "ti," prefix on the properties, since
-> they have no pretentions at genericity: they are specific to the
-> PRCM/CM/PRM IP block data, and registered by those drivers.
 
-Can or should? It seems existing bindings use "ti," prefix even on 
-non-generic bindings, meaning if I look at any other data in DT.
+-- 
+Best regards,
 
-> C. Looks like the patches use the property "autoidle-low" to indicate that
-> the autoidle bit should be inverted.  "Low" seems like the wrong
-> expression here - it invokes the actual voltage logic level of a hardware
-> signal, and we have no idea whether the hardware signal is using a low
-> voltage or a high voltage to express this condition.  Would suggest
-> something like 'invert-autoidle-bit' instead.
- >
-> D. Regarding "ti,index-starts-at-one", it seems best to explicitly state
-> which index starts at one.  The code mentions a "mux index" so please
-> consider renaming this something like "mux-index-starts-at-one" or
-> "one-based-mux-index"
+Lukasz Majewski
 
-The index is explicitly defined by the clock node where this is present. 
-If it is a mux-clock, then it is for mux-index. If for divider clock, it 
-is index for the divider.
-
--Tero
-
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
