@@ -1,109 +1,230 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 22/27] drm/panel: Add simple panel support
-Date: Mon, 14 Oct 2013 16:10:57 +0200
-Message-ID: <20131014141056.GD16302@ulmo.nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
- <1381134884-5816-23-git-send-email-treding@nvidia.com>
- <52587CBD.8010304@wwwdotorg.org>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Mon, 14 Oct 2013 10:18:03 -0400
+Message-ID: <525BFD1B.5080709@ti.com>
+References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com> <2386580.3V2pzai3k2@amdc1032> <525814EE.8060700@ti.com> <1615083.zyGXhBfPcS@amdc1032>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52587CBD.8010304-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1615083.zyGXhBfPcS@amdc1032>
+Sender: linux-pm-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
---q9KOos5vDmpwPx9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2013 at 04:33:33PM -0600, Stephen Warren wrote:
-> On 10/07/2013 02:34 AM, Thierry Reding wrote:
-> > Add a driver for simple panels. Such panels can have a regulator that
-> > provides the supply voltage and a separate GPIO to enable the panel.
-> > Optionally the panels can have a backlight associated with them so it
-> > can be enabled or disabled according to the panel's power management
-> > mode.
-> >=20
-> > Support is added for three panels: An AU Optronics 10.1" WSVGA, a
-> > Chunghwa Picture Tubes 10.1" WXGA and a Panasonic 10.1 WUXGA TFT LCD
-> > panel.
+On 11-10-2013 11:57, Bartlomiej Zolnierkiewicz wrote:
 >=20
-> >  .../devicetree/bindings/panel/auo,b101aw03.txt     |   7 +
-> >  .../bindings/panel/chunghwa,claa101wb03.txt        |   7 +
-> >  .../bindings/panel/panasonic,vvx10f004b00.txt      |   7 +
-> >  .../devicetree/bindings/panel/simple-panel.txt     |  21 ++
+> Hi,
 >=20
-> Since this patch defines new DT bindings, it should also be sent to the
-> DT binding maintainers and DT mailing list.
-
-I Cc'ed at least the DT mailing list. The get_maintainer.pl generated
-list was pretty large, and I keep getting different feedback about
-whether it's a good idea to Cc individual people or just the relevant
-mailing lists. In this case I assumed that all DT binding maintainers
-would be reading the DT mailing list and therefore see the patches. I
-can change my habit though if you prefer to get an extra copy.
-
-One slight inconvenience with large series like this is that a lot of
-work is required to handcraft an appropriate list of people and lists
-to send the patches to. Furthermore I personally like receiving whole
-patch series because it gives me full context, but other people seem
-to want only the patches that they need to worry about. So what I
-usually do is handcraft a list of people I want to send patches to
-and use it for the whole series. If that list grows too large, I'll
-usually trim it down to include only lists. Having to handcraft lists
-for each individual patch doesn't sound that useful to me.
-
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/pan=
-el/panel-simple.c
+> On Friday, October 11, 2013 11:10:38 AM Eduardo Valentin wrote:
+>> Hi Naveen,
+>>
+>> On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
+>>>
+>>> Hi,
+>>>
+>>> All patches (#1-#3) look good to me, FWIW you can add:
+>>>
+>>> 	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>>>
+>>> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS44=
+12
+>>> fixup patchset:
+>>>
+>>> 	https://lkml.org/lkml/2013/10/9/35
+>>>
+>>> It is up to Eduardo to resolve this but it probably would be better t=
+o
+>>> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This wo=
+uld
+>>> require you to port patch #3 over Lukasz's patchset though.
+>>
+>> My question is if this fix applies also to EXYNOS4412, as it  is not
+>> mentioned in the patch description and the change affects all supporte=
+d
 >=20
-> > +static int panel_simple_remove(struct platform_device *pdev)
-> > +{
-> > +	struct panel_simple *panel =3D platform_get_drvdata(pdev);
-> > +
-> > +	if (gpio_is_valid(panel->enable_gpio)) {
-> > +		if (panel->enable_gpio_flags & GPIO_ACTIVE_LOW)
-> > +			gpio_set_value(panel->enable_gpio, 1);
-> > +		else
-> > +			gpio_set_value(panel->enable_gpio, 0);
-> > +
-> > +		gpio_free(panel->enable_gpio);
-> > +	}
-> > +
-> > +	regulator_disable(panel->supply);
+> This patch doesn't affect EXYNOS4210 as exynos4210_tmu_registers struct=
+
+
+I was, at least for now, worried about 4412, as I mentioned above.
+
+> uses the default zero value for inten_fall_mask, inten_fall_shift and
+> intclr_fall_shift.
 >=20
-> Can you just call panel_simple_disable() to do the HW cleanup, and just
-> do resource cleanup here?
+>> chip version deliberately. Has this change been validated on all
+>> supported chip versions?
+>>
+>> Amit, I saw you ack, but still, it is not clear how this change behave=
+s
+>> across supported hardware.
+>=20
+> For EXYNOS4412 and EXYNOS5250 this patch doesn't cause any functionalit=
+y
+> changes because while the patch changes inten_fall_shift usage to
+> intclr_fall_shift one in exynos_tmu_initialize() it defines
+> EXYNOS_TMU_CLEAR_FALL_INT_SHIFT to 12 (old EXYNOS_TMU_FALL_INT_SHIFT
+> value).
+>=20
 
-Yes, I can.
+OK. Then the patch is about a symbol rename, right?
 
-Thanks,
-Thierry
+> This patch only changes driver behavior for EXYNOS5440 on which the
+> used shift value changes from 4 to 12.
 
---q9KOos5vDmpwPx9o
-Content-Type: application/pgp-signature
+I see.
+
+>=20
+> PS I've only noticed it now but after this patch inten_fall_shift becom=
+es
+> unused and can be removed.
+>=20
+
+
+Then we should remove it.
+
+
+
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>=20
+>>>
+>>> Best regards,
+>>> --
+>>> Bartlomiej Zolnierkiewicz
+>>> Samsung R&D Institute Poland
+>>> Samsung Electronics
+>>>
+>>> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi w=
+rote:
+>>>> The FALL interrupt related en, status bits are available at an offse=
+t of
+>>>> 16 on INTEN, INTSTAT registers and at an offset of
+>>>> 12 on INTCLEAR register.
+>>>>
+>>>> This patch corrects the same for exyns5250 and exynos5440
+>>>>
+>>>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>>>> ---
+>>>> Changes since v1:
+>>>> Changes since v2:
+>>>> Changes since v3:
+>>>>   None
+>>>>
+>>>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+>>>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+>>>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+>>>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
+>>>>  4 files changed, 7 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/=
+samsung/exynos_tmu.c
+>>>> index b43afda..af69209 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>>>> @@ -265,7 +265,7 @@ skip_calib_data:
+>>>>  				data->base + reg->threshold_th1);
+>>>> =20
+>>>>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+>>>> -			(reg->inten_fall_mask << reg->inten_fall_shift),
+>>>> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
+>>>>  				data->base + reg->tmu_intclear);
+>>>> =20
+>>>>  		/* if last threshold limit is also present */
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/=
+samsung/exynos_tmu.h
+>>>> index b364c9e..7c6c34a 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu.h
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu.h
+>>>> @@ -134,6 +134,7 @@ enum soc_type {
+>>>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+>>>>   * @tmu_intstat: Register containing the interrupt status values.
+>>>>   * @tmu_intclear: Register for clearing the raised interrupt status=
+=2E
+>>>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
+>>>>   * @emul_con: TMU emulation controller register.
+>>>>   * @emul_temp_shift: shift bits of emulation temperature.
+>>>>   * @emul_time_shift: shift bits of emulation time.
+>>>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
+>>>>  	u32	tmu_intstat;
+>>>> =20
+>>>>  	u32	tmu_intclear;
+>>>> +	u32	intclr_fall_shift;
+>>>> =20
+>>>>  	u32	emul_con;
+>>>>  	u32	emul_temp_shift;
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/the=
+rmal/samsung/exynos_tmu_data.c
+>>>> index 9002499..23fea23 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+>>>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5=
+250_tmu_registers =3D {
+>>>>  	.inten_fall0_shift =3D EXYNOS_TMU_INTEN_FALL0_SHIFT,
+>>>>  	.tmu_intstat =3D EXYNOS_TMU_REG_INTSTAT,
+>>>>  	.tmu_intclear =3D EXYNOS_TMU_REG_INTCLEAR,
+>>>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+>>>>  	.emul_con =3D EXYNOS_EMUL_CON,
+>>>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
+>>>>  	.emul_time_shift =3D EXYNOS_EMUL_TIME_SHIFT,
+>>>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5=
+440_tmu_registers =3D {
+>>>>  	.inten_fall0_shift =3D EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+>>>>  	.tmu_intstat =3D EXYNOS5440_TMU_S0_7_IRQ,
+>>>>  	.tmu_intclear =3D EXYNOS5440_TMU_S0_7_IRQ,
+>>>> +	.intclr_fall_shift =3D EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+>>>>  	.tmu_irqstatus =3D EXYNOS5440_TMU_IRQ_STATUS,
+>>>>  	.emul_con =3D EXYNOS5440_TMU_S0_7_DEBUG,
+>>>>  	.emul_temp_shift =3D EXYNOS_EMUL_DATA_SHIFT,
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/the=
+rmal/samsung/exynos_tmu_data.h
+>>>> index dc7feb5..8788a87 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+>>>> @@ -69,9 +69,10 @@
+>>>>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
+>>>>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
+>>>>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
+>>>> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
+>>>> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
+>>>>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+>>>>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
+>>>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
+>>>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+>>>>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+>>>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+>=20
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJSW/twAAoJEN0jrNd/PrOhnF0P/1oaYmdo7rc/1s8un3ohkJnC
-TPeQNEjXPnq8sSGodtqsmX3FMboEw1novcRI0gCmoCKkssA8MoX706jKwXxie87o
-NPkfyQyb6mWAXrSPYzjXm3ZgoRcp+nkYtn2713P37v+NNVOrRC7Wpm5VI1cKNwIh
-1wBx2tWptPVCvZPUMUukajV9wRwaneYi+UGe4Oc0FY5IL508xX9akZn/HcolZNFQ
-dVocakzrdats4VElEcmTB/chUacV7guR3KYFYKZJ5WyeXhBfdMSHCsKUp1R8rrcQ
-1n2usA3mKzwjCldFtcb4SqIxRmm4aoLIOHsMNYrOL4/vg/jKJEKR2zvhoNxKiIC2
-9QtB//UGSrUVXhCXtxqqJfmyPyxw7R6P1K0buC7PK4LywQdxtdK7lpDvDUMYo10g
-OZOow3x30Gx9EZied7BVKzzamw3r+lh7rOO2sRtG7bzV2hd5Q4BYZHv2Ej+olPrS
-FSFxZ51xV5mSBGe5Viq5LENVjzlXRQyBrMXzYyhzrcwVyLQh0aF63Lky9cMEpYCp
-CWDD7cKECc290MC2yM0t+fG+DzXgnmu6fuSZ81kOgOUbh7NwWnBX0WHi2ZHCqcP7
-wfa6QMzEatAxoemedAI7lRQac6LbAdU/OxkebtCNxJL0/yhgYNce2WbwsRBTmjgN
-at5cNVdbt2aKJmeMBUzb
-=WO7N
+iF4EAREIAAYFAlJb/RsACgkQCXcVR3XQvP1GEwD/Xmj3BdF4Tpj/A1E8EM/3Qj9O
+sEbFT0MMBdYMhRtY9iwBAJTnZhb+q9n5ozn/0kGznl9JnXeuslcJ6Ghxl+ObaMMO
+=gGLT
 -----END PGP SIGNATURE-----
 
---q9KOos5vDmpwPx9o--
+--GSXQ8SNS86O1d1FtJcx2I0wPRb8uFmrOE--
