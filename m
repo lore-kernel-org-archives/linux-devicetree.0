@@ -1,185 +1,95 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH v2 3/5] thermal: exynos: Provide initial setting for TMU's
- test MUX address at Exynos4412
-Date: Mon, 14 Oct 2013 10:24:48 -0400
-Message-ID: <525BFEB0.9080609@ti.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-4-git-send-email-l.majewski@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] phy: omap: Adapt phy-omap-usb2 for AM437x
+Date: Mon, 14 Oct 2013 15:33:00 +0100
+Message-ID: <20131014143259.GD31708@e106331-lin.cambridge.arm.com>
+References: <1381754603-11581-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="kaJwQAgMKePoiALPutGqcHJIBSBNNFdbC"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1381300194-13134-4-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, kgene.kim@samsung.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381754603-11581-1-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, "rob@landley.net" <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
---kaJwQAgMKePoiALPutGqcHJIBSBNNFdbC
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 09-10-2013 02:29, Lukasz Majewski wrote:
-> The commit d0a0ce3e77c795258d47f9163e92d5031d0c5221 ("thermal: exynos: =
-Add
-> missing definations and code cleanup") has removed setting of test MUX =
-address
-> value at TMU configuration setting.
->=20
-> This field is not present on Exynos4210 and Exynos5 SoCs. However on Ex=
-ynos4412
-> SoC it is required to set this field after reset because without it TMU=
- shows
-> maximal available temperature, which causes immediate platform shutdown=
-=2E
->=20
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->=20
+On Mon, Oct 14, 2013 at 01:43:23PM +0100, George Cherian wrote:
+> This patch adds a compatible for AM437x "ti,am43xx-usb2" to
+> reuse the same phy-omap-usb2 driver.
+> 
+> Also updated the documentation to add the new compatible.
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
 > ---
-> Changes for v2:
-> - Define test_mux and test_mux_addr_shift to not use direct register ac=
-cess
-> - Remove pdata->type =3D=3D SOC_ARCH_EXYNOS4412 check at exynos_tmu_con=
-trol() and
->   use only generic code
->=20
->  drivers/thermal/samsung/exynos_tmu.c      |    3 +++
->  drivers/thermal/samsung/exynos_tmu.h      |    4 ++++
->  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->  drivers/thermal/samsung/exynos_tmu_data.h |    4 ++++
->  4 files changed, 13 insertions(+)
->=20
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sam=
-sung/exynos_tmu.c
-> index 1312b34..32f38b9 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -317,6 +317,9 @@ static void exynos_tmu_control(struct platform_devi=
-ce *pdev, bool on)
-> =20
->  	con =3D readl(data->base + reg->tmu_ctrl);
-> =20
-> +	if (pdata->test_mux)
+>  Documentation/devicetree/bindings/usb/usb-phy.txt |  2 +-
+>  drivers/phy/phy-omap-usb2.c                       | 13 ++++++++++---
+>  2 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> index c0245c8..d5a7f21 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> @@ -3,7 +3,7 @@ USB PHY
+>  OMAP USB2 PHY
+>  
+>  Required properties:
+> - - compatible: Should be "ti,omap-usb2"
+> + - compatible: Should be "ti,omap-usb2" or "ti,am437x-usb2"
 
+In case this needs to be modified in future, it might be best to split
+this up one per line, with a brief description of when it applies:
 
-test_mux field is in fact an address, correct? Can 0 be a valid address?
+- compatible: Should contain one of:
+  * "ti,omap-usb2" for ____ systems
+  * "ti,am437x-usb2" for ____ systems
 
-Why not using the feature flags to test for capabilities, features and
-required configurations instead of assuming obscure domain and address
-ranges?
+>   - reg : Address and length of the register set for the device.
+>   - #phy-cells: determine the number of cells that should be given in the
+>     phandle while referencing this phy.
+> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+> index bfc5c33..0529c83 100644
+> --- a/drivers/phy/phy-omap-usb2.c
+> +++ b/drivers/phy/phy-omap-usb2.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/usb/omap_control_usb.h>
+>  #include <linux/phy/phy.h>
+> +#include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  
+>  /**
+> @@ -172,7 +173,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>  	phy->dev		= &pdev->dev;
+>  
+>  	phy->phy.dev		= phy->dev;
+> -	phy->phy.label		= "omap-usb2";
+> +	if (of_device_is_compatible(node, "ti,am437x-usb2"))
+> +		phy->phy.label		= "am437x-usb2";
+> +	else
+> +		phy->phy.label		= "omap-usb2";
 
+Instead of having this check here, you could put together a struct
+containing the data applying to a particular compatible string, and
+associate it with the compatible string using of_device_id::data.
 
-> +		con |=3D (pdata->test_mux << reg->test_mux_addr_shift);
-> +
->  	if (pdata->reference_voltage) {
->  		con &=3D ~(reg->buf_vref_sel_mask << reg->buf_vref_sel_shift);
->  		con |=3D pdata->reference_voltage << reg->buf_vref_sel_shift;
-> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/sam=
-sung/exynos_tmu.h
-> index b42ece4..3fb6554 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.h
-> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> @@ -85,6 +85,7 @@ enum soc_type {
->   * @triminfo_reload_shift: shift of triminfo reload enable bit in trim=
-info_ctrl
->  	reg.
->   * @tmu_ctrl: TMU main controller register.
-> + * @test_mux_addr_shift: shift bits of test mux address.
->   * @buf_vref_sel_shift: shift bits of reference voltage in tmu_ctrl re=
-gister.
->   * @buf_vref_sel_mask: mask bits of reference voltage in tmu_ctrl regi=
-ster.
->   * @therm_trip_mode_shift: shift bits of tripping mode in tmu_ctrl reg=
-ister.
-> @@ -151,6 +152,7 @@ struct exynos_tmu_registers {
->  	u32	triminfo_reload_shift;
-> =20
->  	u32	tmu_ctrl;
-> +	u32     test_mux_addr_shift;
->  	u32	buf_vref_sel_shift;
->  	u32	buf_vref_sel_mask;
->  	u32	therm_trip_mode_shift;
-> @@ -258,6 +260,7 @@ struct exynos_tmu_registers {
->   * @first_point_trim: temp value of the first point trimming
->   * @second_point_trim: temp value of the second point trimming
->   * @default_temp_offset: default temperature offset in case of no trim=
-ming
-> + * @test_mux; information if SoC supports test MUX
->   * @cal_type: calibration type for temperature
->   * @cal_mode: calibration mode for temperature
->   * @freq_clip_table: Table representing frequency reduction percentage=
-=2E
-> @@ -287,6 +290,7 @@ struct exynos_tmu_platform_data {
->  	u8 first_point_trim;
->  	u8 second_point_trim;
->  	u8 default_temp_offset;
-> +	u8 test_mux;
-> =20
->  	enum calibration_type cal_type;
->  	enum calibration_mode cal_mode;
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/therma=
-l/samsung/exynos_tmu_data.c
-> index d8de5c1..073c292 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> @@ -98,6 +98,7 @@ static const struct exynos_tmu_registers exynos4412_t=
-mu_registers =3D {
->  	.triminfo_ctrl =3D EXYNOS_TMU_TRIMINFO_CON,
->  	.triminfo_reload_shift =3D EXYNOS_TRIMINFO_RELOAD_SHIFT,
->  	.tmu_ctrl =3D EXYNOS_TMU_REG_CONTROL,
-> +	.test_mux_addr_shift =3D EXYNOS4412_MUX_ADDR_SHIFT,
->  	.buf_vref_sel_shift =3D EXYNOS_TMU_REF_VOLTAGE_SHIFT,
->  	.buf_vref_sel_mask =3D EXYNOS_TMU_REF_VOLTAGE_MASK,
->  	.therm_trip_mode_shift =3D EXYNOS_TMU_TRIP_MODE_SHIFT,
-> @@ -174,6 +175,7 @@ struct exynos_tmu_init_data const exynos4412_defaul=
-t_tmu_data =3D {
->  		{
->  			EXYNOS4412_TMU_DATA,
->  			.type =3D SOC_ARCH_EXYNOS4412,
-> +			.test_mux =3D EXYNOS4412_MUX_ADDR_VALUE,
->  		},
->  	},
->  	.tmu_count =3D 1,
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/therma=
-l/samsung/exynos_tmu_data.h
-> index b130b1e..a1ea19d 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.h
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
-> @@ -95,6 +95,10 @@
-> =20
->  #define EXYNOS_MAX_TRIGGER_PER_REG	4
-> =20
-> +/* Exynos4412 specific */
-> +#define EXYNOS4412_MUX_ADDR_VALUE          6
+That means we don't need to duplicate the compatible strings, and it's
+easier to extend in future.
 
-> +#define EXYNOS4412_MUX_ADDR_SHIFT          20
-> +
->  /*exynos5440 specific registers*/
->  #define EXYNOS5440_TMU_S0_7_TRIM		0x000
->  #define EXYNOS5440_TMU_S0_7_CTRL		0x020
->=20
+>  	phy->phy.set_suspend	= omap_usb2_suspend;
+>  	phy->phy.otg		= otg;
+>  	phy->phy.type		= USB_PHY_TYPE_USB2;
+> @@ -201,8 +205,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>  
+>  	otg->set_host		= omap_usb_set_host;
+>  	otg->set_peripheral	= omap_usb_set_peripheral;
+> -	otg->set_vbus		= omap_usb_set_vbus;
+> -	otg->start_srp		= omap_usb_start_srp;
+> +	if (of_device_is_compatible(node, "ti,omap-usb2")) {
+> +		otg->set_vbus		= omap_usb_set_vbus;
+> +		otg->start_srp		= omap_usb_start_srp;
+> +	}
 
+Similarly here.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---kaJwQAgMKePoiALPutGqcHJIBSBNNFdbC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJb/rEACgkQCXcVR3XQvP1NPwEAy/+oc1CMkcEd0d1+0hDFH/kj
-wjWGVBkkePaM0gqyLPsA+wVBdxYl0dRD/8G/gCfq4i4jRqb2NMi252EXPC4utCHC
-=vJOJ
------END PGP SIGNATURE-----
-
---kaJwQAgMKePoiALPutGqcHJIBSBNNFdbC--
+Cheers,
+Mark.
