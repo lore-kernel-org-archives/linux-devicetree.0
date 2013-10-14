@@ -1,48 +1,50 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: dts: remove unneeded linux,default-state
- from led nodes
-Date: Mon, 14 Oct 2013 14:36:33 -0400
-Message-ID: <20131014183633.GK5402@titan.lakedaemon.net>
-References: <1381774047-23354-1-git-send-email-jason@lakedaemon.net>
- <20131014182821.GD25095@lunn.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [Patch V5] drivers: power: Add support for bq24735 charger
+Date: Mon, 14 Oct 2013 12:40:26 -0600
+Message-ID: <525C3A9A.5000207@wwwdotorg.org>
+References: <1381526143-20800-1-git-send-email-rklein@nvidia.com> <525C361C.1020703@wwwdotorg.org> <525C376A.3000009@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131014182821.GD25095-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <525C376A.3000009-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Manish Badarkha <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 14, 2013 at 08:28:21PM +0200, Andrew Lunn wrote:
-> On Mon, Oct 14, 2013 at 06:07:27PM +0000, Jason Cooper wrote:
-> > Generally, power LEDs should indicate when power is applied, and go out
-> > once power is removed.  _Not_ annoy the developer with migraine-inducing
-> > blinking reminicent of some badly animated television series designed to
-> > sell sugar to children.
-> > 
-> > On a more serious note, most of these OS-specific properties aren't
-> > necessary and should be removed.  I left two that are legitimately tying
-> > disk LEDs to disk activity.  Other than that, we keep the state the
-> > bootloader left them in until userspace changes the state via sysfs.
+On 10/14/2013 12:26 PM, Rhyland Klein wrote:
+> On 10/14/2013 2:21 PM, Stephen Warren wrote:
+>> On 10/11/2013 03:15 PM, Rhyland Klein wrote:
+>>> From: Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Adds support for the bq24735 charger chipset. The bq24735 is a
+>>> high-efficiency, synchronous battery charger.
+>>>
+>>> It allows control of the charging current, input current, and the charger
+>>> voltage DAC's through SMBus.
+>>
+>> Please CC the DT bindings maintainers on patches that add DT bindings.
 > 
-> Hi Jason
+> Oops, sorry, will do in the future.
 > 
-> Do you know what happens with "keep" and the bootloader setting the
-> LED to hardware blink? I'm just wondering if some of these default-on,
-> are actually disabling hardware blinking and making it constant on?
+>>
+>>> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+>>
+>>> +Optional properties :
+>>
+>>> + - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
+>>> +   presence.
+>>
+>> Is that actually a property of the BQ24735 chip itself (i.e. is it an
+>> output signal from the chip), or part of the board/system?
+> 
+> The gpio itself is actually what the IRQ line is tied to from the
+> bq24735 -> tegra (in this case). In other words this is a Host GPIO that
+> is configured as an input and connected to the bq24735.
 
-hmmm, good question.  I'll let this patch sit for some time since it is
-trivial and doesn't conflict with anything in mvebu/dt.  We'll see if
-anyone says anything.
-
-Regardless of the outcome, 'default-state = "on";' can be used instead
-for that scenario.
-
-thx,
-
-Jason.
+Ok, so this is the ACOK output pin? In that case, it's fine. It might be
+worth mentioning that explicitly though.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
