@@ -1,54 +1,85 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [Patch V5] drivers: power: Add support for bq24735 charger
-Date: Mon, 14 Oct 2013 14:26:50 -0400
-Message-ID: <525C376A.3000009@nvidia.com>
-References: <1381526143-20800-1-git-send-email-rklein@nvidia.com> <525C361C.1020703@wwwdotorg.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Mon, 14 Oct 2013 18:27:59 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1310141824380.22465@utopia.booyaka.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com> <52525642.8010307@ti.com> <20131007154103.GW8949@atomide.com> <20131007190322.GY8949@atomide.com> <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
+ <alpine.DEB.2.02.1310091858411.30199@utopia.booyaka.com> <525654AE.7060009@ti.com> <alpine.DEB.2.02.1310111749180.27397@utopia.booyaka.com> <52584785.2020504@ti.com> <alpine.DEB.2.02.1310112226130.27397@utopia.booyaka.com> <525923AB.4030807@ti.com>
+ <alpine.DEB.2.02.1310132023240.27397@utopia.booyaka.com> <525C063C.9080908@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <525C361C.1020703@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Darbha Sriharsha <dsriharsha@nvidia.com>, Manish Badarkha <badarkhe.manish@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <525C063C.9080908@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2013 2:21 PM, Stephen Warren wrote:
-> On 10/11/2013 03:15 PM, Rhyland Klein wrote:
->> From: Darbha Sriharsha <dsriharsha@nvidia.com>
->>
->> Adds support for the bq24735 charger chipset. The bq24735 is a
->> high-efficiency, synchronous battery charger.
->>
->> It allows control of the charging current, input current, and the charger
->> voltage DAC's through SMBus.
-> 
-> Please CC the DT bindings maintainers on patches that add DT bindings.
+On Mon, 14 Oct 2013, Tero Kristo wrote:
 
-Oops, sorry, will do in the future.
-
+> On 10/14/2013 02:45 AM, Paul Walmsley wrote:
+>
+> > 8. A few random comments about the individual clock binding data formats
+> > themselves, based on a quick look:
+> > 
+> > A. It seems pretty odd and unnecessarily obscure to do something like
+> > this:
+> > 
+> > dpll_usb_ck: dpll_usb_ck@... {
+> >         ...
+> >         reg = <0x4a008180 0x4>, <0x4a008184 0x4>, <0x4a008188 0x4>,
+> > <0x4a00818c 0x4>;
+> >         ...
+> > };
+> >
+> > It's at least self-documenting to do something like this:
+> > 
+> > dpll_usb_ck: dpll_usb_ck@... {
+> >         ...
+> >         control-reg = < ... >;
+> >         idlest-reg = < ... >;
+> >         .. etc. ..
+> > };
 > 
->> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+> Some earlier version had something along these lines, but it was turned down.
+> I had also reg-names as documentation purposes along, but this was unnecessary
+> and was dropped also.
 > 
->> +Optional properties :
+> > Which itself might not even be needed, depending on how the DPLL control
+> > code is implemented.  For example, if the relative offsets are always the
+> > same for all OMAP4-family devices, maybe there's not even a need to
+> > explicitly encode that into the DT data.
 > 
->> + - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
->> +   presence.
+> If I want to get rid of these, I need to add extra compatible strings for the
+> dpll types. There are several weird register offsets for omap3/am3 devices.
+> omap4/5/dra7/am4 behave more sanely.
 > 
-> Is that actually a property of the BQ24735 chip itself (i.e. is it an
-> output signal from the chip), or part of the board/system?
-
-The gpio itself is actually what the IRQ line is tied to from the
-bq24735 -> tegra (in this case). In other words this is a Host GPIO that
-is configured as an input and connected to the bq24735.
-
--rhyland
-
+> > B. Seems like you can remove the "ti," prefix on the properties, since
+> > they have no pretentions at genericity: they are specific to the
+> > PRCM/CM/PRM IP block data, and registered by those drivers.
 > 
-> Aside from that, the binding looks reasonable to me (although I'm no
-> longer a DT bindings maintainer).
+> Can or should? It seems existing bindings use "ti," prefix even on non-generic
+> bindings, meaning if I look at any other data in DT.
+
+My comments in #8 are just regarding minor issues that don't seem
+right.  I don't have a significant objection to staying with the
+existing property names here if you think that they are important.
+
+> > C. Looks like the patches use the property "autoidle-low" to indicate that
+> > the autoidle bit should be inverted.  "Low" seems like the wrong
+> > expression here - it invokes the actual voltage logic level of a hardware
+> > signal, and we have no idea whether the hardware signal is using a low
+> > voltage or a high voltage to express this condition.  Would suggest
+> > something like 'invert-autoidle-bit' instead.
+> >
+> > D. Regarding "ti,index-starts-at-one", it seems best to explicitly state
+> > which index starts at one.  The code mentions a "mux index" so please
+> > consider renaming this something like "mux-index-starts-at-one" or
+> > "one-based-mux-index"
 > 
+> The index is explicitly defined by the clock node where this is present. If it
+> is a mux-clock, then it is for mux-index. If for divider clock, it is index
+> for the divider.
 
 
--- 
-nvpublic
+
+- Paul
