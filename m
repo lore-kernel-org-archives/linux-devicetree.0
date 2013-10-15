@@ -1,98 +1,44 @@
-From: "Wendy Ng" <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: bcm281xx: Add thermal driver to device
- tree.
-Date: Tue, 15 Oct 2013 14:10:07 -0700
-Message-ID: <525DAF2F.7080009@broadcom.com>
-References: <1380321454-16216-1-git-send-email-wendy.ng@broadcom.com>
- <1380321454-16216-4-git-send-email-wendy.ng@broadcom.com>
- <525B1C77.1070809@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=iso-8859-1;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] MFD: fixup tc3589x for device tree
+Date: Tue, 15 Oct 2013 23:10:48 +0200
+Message-ID: <1381871448-21492-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <525B1C77.1070809-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2013 3:19 PM, Eduardo Valentin wrote:
-> On 27-09-2013 18:37, Wendy Ng wrote:
->> This patch adds the device tree node for Broadcom bcm281xx SoCs thermal
->> driver.
->>
->> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/bcm11351-brt.dts |    4 +++-
->>   arch/arm/boot/dts/bcm11351.dtsi    |    6 ++++++
->>   arch/arm/boot/dts/bcm28155-ap.dts  |    4 ++++
->>   3 files changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
->> index 9d36eb4..0771b6b 100644
->> --- a/arch/arm/boot/dts/bcm11351-brt.dts
->> +++ b/arch/arm/boot/dts/bcm11351-brt.dts
->> @@ -43,5 +43,7 @@
->>   		status = "okay";
->>   	};
->>
->> -
->> +	thermal@34008000 {
->> +		status = "okay";
->> +	};
->>   };
->> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
->> index 05a5aab..aa13353 100644
->> --- a/arch/arm/boot/dts/bcm11351.dtsi
->> +++ b/arch/arm/boot/dts/bcm11351.dtsi
->> @@ -96,4 +96,10 @@
->>   		status = "disabled";
->>   	};
->>
->> +	thermal@34008000 {
->> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
->> +		reg = <0x34008000 0x0024>;
->> +		thermal-name = "bcm_kona_therm";
->
-> As I mentioned previously, my only concern is this thermal binding,
-> which is specific to your driver (BTW, you would need to do
-> bcm,thermal-name)
->
+This series of patches defines the device tree bindings for the
+Toshiba TC3589x multi-purpose expander. This has been half-useable
+with devicetree using the "device tree node named like the I2C
+device ID" approach, but this adds proper bindings and put them
+to use.
 
-Hi Eduardo,
+It is partly documenting how it is already working, but since
+there never was a proper binding document I do not regard the
+old bindings "deployed".
 
-I have a local working copy of the thermal driver that does not use the 
-'thermal-name' from this DTS file.  It has been re-based to your working 
-version of the new thermal DT binding.
+The patches are orthogonal so once these are cleared, patches
+1-3 can be applied to the MFD tree, patch 4 to the input tree,
+and I will pick patch 5 to the ux500 device tree branch.
 
->> +		status = "disabled";
->> +	};
->>   };
->> diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
->> index 96ae67a..a39aa47 100644
->> --- a/arch/arm/boot/dts/bcm28155-ap.dts
->> +++ b/arch/arm/boot/dts/bcm28155-ap.dts
->> @@ -42,4 +42,8 @@
->>   		max-frequency = <48000000>;
->>   		status = "okay";
->>   	};
->> +
->> +	thermal@34008000 {
->> +		status = "okay";
->> +	};
->>   };
->>
->
->
+Linus Walleij (5):
+  mfd: tc3589x: add device tree bindings
+  mfd: tc3589x: detect the precise version
+  mfd: tc3589x: reform device tree probing
+  input: tc3589x-keypad: support probing from device tree
+  ARM: ux500: adjust the TC3589x devices to the binding
 
+ Documentation/devicetree/bindings/mfd/tc3589x.txt |  61 ++++++++++
+ arch/arm/boot/dts/ste-href-tvk1281618.dtsi        |  39 ++++++-
+ arch/arm/boot/dts/ste-hrefprev60.dtsi             |   8 +-
+ drivers/input/keyboard/tc3589x-keypad.c           |  63 ++++++++++-
+ drivers/mfd/tc3589x.c                             | 129 ++++++++++++++++++----
+ 5 files changed, 264 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tc3589x.txt
 
 -- 
-Best regards,
--Wendy
+1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
