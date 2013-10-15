@@ -1,466 +1,100 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [RFC 1/9] of/irq: Rename of_irq_map_* functions to of_irq_parse_*
-Date: Tue, 15 Oct 2013 21:39:15 +0100
-Message-ID: <1381869563-16083-2-git-send-email-grant.likely@linaro.org>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: "Wendy Ng" <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: bcm281xx: Add thermal driver to device
+ tree.
+Date: Tue, 15 Oct 2013 14:10:07 -0700
+Message-ID: <525DAF2F.7080009@broadcom.com>
+References: <1380321454-16216-1-git-send-email-wendy.ng@broadcom.com>
+ <1380321454-16216-4-git-send-email-wendy.ng@broadcom.com>
+ <525B1C77.1070809@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525B1C77.1070809-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The OF irq handling code has been overloading the term 'map' to refer to
-both parsing the data in the device tree and mapping it to the internal
-linux irq system. This is probably because the device tree does have the
-concept of an 'interrupt-map' function for translating interrupt
-references from one node to another, but 'map' is still confusing when
-the primary purpose of some of the functions are to parse the DT data.
+On 10/13/2013 3:19 PM, Eduardo Valentin wrote:
+> On 27-09-2013 18:37, Wendy Ng wrote:
+>> This patch adds the device tree node for Broadcom bcm281xx SoCs thermal
+>> driver.
+>>
+>> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/bcm11351-brt.dts |    4 +++-
+>>   arch/arm/boot/dts/bcm11351.dtsi    |    6 ++++++
+>>   arch/arm/boot/dts/bcm28155-ap.dts  |    4 ++++
+>>   3 files changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
+>> index 9d36eb4..0771b6b 100644
+>> --- a/arch/arm/boot/dts/bcm11351-brt.dts
+>> +++ b/arch/arm/boot/dts/bcm11351-brt.dts
+>> @@ -43,5 +43,7 @@
+>>   		status = "okay";
+>>   	};
+>>
+>> -
+>> +	thermal@34008000 {
+>> +		status = "okay";
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+>> index 05a5aab..aa13353 100644
+>> --- a/arch/arm/boot/dts/bcm11351.dtsi
+>> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+>> @@ -96,4 +96,10 @@
+>>   		status = "disabled";
+>>   	};
+>>
+>> +	thermal@34008000 {
+>> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
+>> +		reg = <0x34008000 0x0024>;
+>> +		thermal-name = "bcm_kona_therm";
+>
+> As I mentioned previously, my only concern is this thermal binding,
+> which is specific to your driver (BTW, you would need to do
+> bcm,thermal-name)
+>
 
-This patch renames all the of_irq_map_* functions to of_irq_parse_*
-which makes it clear that there is a difference between the parsing
-phase and the mapping phase. Kernel code can make use of just the
-parsing or just the mapping support as needed by the subsystem.
+Hi Eduardo,
 
-The patch was generated mechanically with a handful of sed commands.
+I have a local working copy of the thermal driver that does not use the 
+'thermal-name' from this DTS file.  It has been re-based to your working 
+version of the new thermal DT binding.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- arch/arm/mach-integrator/pci_v3.c              |  4 ++--
- arch/microblaze/pci/pci-common.c               |  2 +-
- arch/mips/pci/fixup-lantiq.c                   |  2 +-
- arch/mips/pci/pci-rt3883.c                     |  2 +-
- arch/powerpc/kernel/pci-common.c               |  2 +-
- arch/powerpc/platforms/cell/celleb_scc_pciex.c |  2 +-
- arch/powerpc/platforms/cell/celleb_scc_sio.c   |  2 +-
- arch/powerpc/platforms/cell/spider-pic.c       |  2 +-
- arch/powerpc/platforms/cell/spu_manage.c       |  2 +-
- arch/powerpc/platforms/fsl_uli1575.c           |  2 +-
- arch/powerpc/platforms/powermac/pic.c          |  2 +-
- arch/powerpc/platforms/pseries/event_sources.c |  2 +-
- arch/powerpc/sysdev/mpic_msi.c                 |  2 +-
- arch/x86/kernel/devicetree.c                   |  2 +-
- drivers/of/address.c                           |  4 ++--
- drivers/of/irq.c                               | 28 +++++++++++++-------------
- drivers/of/of_pci_irq.c                        | 10 ++++-----
- drivers/pci/host/pci-mvebu.c                   |  2 +-
- include/linux/of_irq.h                         |  8 ++++----
- include/linux/of_pci.h                         |  2 +-
- 20 files changed, 42 insertions(+), 42 deletions(-)
+>> +		status = "disabled";
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+>> index 96ae67a..a39aa47 100644
+>> --- a/arch/arm/boot/dts/bcm28155-ap.dts
+>> +++ b/arch/arm/boot/dts/bcm28155-ap.dts
+>> @@ -42,4 +42,8 @@
+>>   		max-frequency = <48000000>;
+>>   		status = "okay";
+>>   	};
+>> +
+>> +	thermal@34008000 {
+>> +		status = "okay";
+>> +	};
+>>   };
+>>
+>
+>
 
-diff --git a/arch/arm/mach-integrator/pci_v3.c b/arch/arm/mach-integrator/pci_v3.c
-index bef1005..0f496cc 100644
---- a/arch/arm/mach-integrator/pci_v3.c
-+++ b/arch/arm/mach-integrator/pci_v3.c
-@@ -840,9 +840,9 @@ static int __init pci_v3_map_irq_dt(const struct pci_dev *dev, u8 slot, u8 pin)
- 	struct of_irq oirq;
- 	int ret;
- 
--	ret = of_irq_map_pci(dev, &oirq);
-+	ret = of_irq_parse_pci(dev, &oirq);
- 	if (ret) {
--		dev_err(&dev->dev, "of_irq_map_pci() %d\n", ret);
-+		dev_err(&dev->dev, "of_irq_parse_pci() %d\n", ret);
- 		/* Proper return code 0 == NO_IRQ */
- 		return 0;
- 	}
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 1b93bf0..4d5b1a9 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -217,7 +217,7 @@ int pci_read_irq_line(struct pci_dev *pci_dev)
- 	memset(&oirq, 0xff, sizeof(oirq));
- #endif
- 	/* Try to get a mapping from the device-tree */
--	if (of_irq_map_pci(pci_dev, &oirq)) {
-+	if (of_irq_parse_pci(pci_dev, &oirq)) {
- 		u8 line, pin;
- 
- 		/* If that fails, lets fallback to what is in the config
-diff --git a/arch/mips/pci/fixup-lantiq.c b/arch/mips/pci/fixup-lantiq.c
-index 6c829df..2e8dbfe 100644
---- a/arch/mips/pci/fixup-lantiq.c
-+++ b/arch/mips/pci/fixup-lantiq.c
-@@ -28,7 +28,7 @@ int __init pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 	struct of_irq dev_irq;
- 	int irq;
- 
--	if (of_irq_map_pci(dev, &dev_irq)) {
-+	if (of_irq_parse_pci(dev, &dev_irq)) {
- 		dev_err(&dev->dev, "trying to map irq for unknown slot:%d pin:%d\n",
- 			slot, pin);
- 		return 0;
-diff --git a/arch/mips/pci/pci-rt3883.c b/arch/mips/pci/pci-rt3883.c
-index 95c9d41..cae92a0 100644
---- a/arch/mips/pci/pci-rt3883.c
-+++ b/arch/mips/pci/pci-rt3883.c
-@@ -587,7 +587,7 @@ int __init pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 	int err;
- 	int irq;
- 
--	err = of_irq_map_pci(dev, &dev_irq);
-+	err = of_irq_parse_pci(dev, &dev_irq);
- 	if (err) {
- 		pr_err("pci %s: unable to get irq map, err=%d\n",
- 		       pci_name((struct pci_dev *) dev), err);
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 905a24b..2f41854 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -237,7 +237,7 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
- 	memset(&oirq, 0xff, sizeof(oirq));
- #endif
- 	/* Try to get a mapping from the device-tree */
--	if (of_irq_map_pci(pci_dev, &oirq)) {
-+	if (of_irq_parse_pci(pci_dev, &oirq)) {
- 		u8 line, pin;
- 
- 		/* If that fails, lets fallback to what is in the config
-diff --git a/arch/powerpc/platforms/cell/celleb_scc_pciex.c b/arch/powerpc/platforms/cell/celleb_scc_pciex.c
-index 14be2bd..40bc371 100644
---- a/arch/powerpc/platforms/cell/celleb_scc_pciex.c
-+++ b/arch/powerpc/platforms/cell/celleb_scc_pciex.c
-@@ -507,7 +507,7 @@ static __init int celleb_setup_pciex(struct device_node *node,
- 	phb->ops = &scc_pciex_pci_ops;
- 
- 	/* internal interrupt handler */
--	if (of_irq_map_one(node, 1, &oirq)) {
-+	if (of_irq_parse_one(node, 1, &oirq)) {
- 		pr_err("PCIEXC:Failed to map irq\n");
- 		goto error;
- 	}
-diff --git a/arch/powerpc/platforms/cell/celleb_scc_sio.c b/arch/powerpc/platforms/cell/celleb_scc_sio.c
-index 9c339ec..96388b2 100644
---- a/arch/powerpc/platforms/cell/celleb_scc_sio.c
-+++ b/arch/powerpc/platforms/cell/celleb_scc_sio.c
-@@ -53,7 +53,7 @@ static int __init txx9_serial_init(void)
- 			if (!(txx9_serial_bitmap & (1<<i)))
- 				continue;
- 
--			if (of_irq_map_one(node, i, &irq))
-+			if (of_irq_parse_one(node, i, &irq))
- 				continue;
- 			if (of_address_to_resource(node,
- 				txx9_scc_tab[i].index, &res))
-diff --git a/arch/powerpc/platforms/cell/spider-pic.c b/arch/powerpc/platforms/cell/spider-pic.c
-index 8e29944..b491f40 100644
---- a/arch/powerpc/platforms/cell/spider-pic.c
-+++ b/arch/powerpc/platforms/cell/spider-pic.c
-@@ -236,7 +236,7 @@ static unsigned int __init spider_find_cascade_and_node(struct spider_pic *pic)
- 	 * tree in case the device-tree is ever fixed
- 	 */
- 	struct of_irq oirq;
--	if (of_irq_map_one(pic->host->of_node, 0, &oirq) == 0) {
-+	if (of_irq_parse_one(pic->host->of_node, 0, &oirq) == 0) {
- 		virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
- 					     oirq.size);
- 		return virq;
-diff --git a/arch/powerpc/platforms/cell/spu_manage.c b/arch/powerpc/platforms/cell/spu_manage.c
-index 2bb6977..e6cdb81 100644
---- a/arch/powerpc/platforms/cell/spu_manage.c
-+++ b/arch/powerpc/platforms/cell/spu_manage.c
-@@ -182,7 +182,7 @@ static int __init spu_map_interrupts(struct spu *spu, struct device_node *np)
- 	int i;
- 
- 	for (i=0; i < 3; i++) {
--		ret = of_irq_map_one(np, i, &oirq);
-+		ret = of_irq_parse_one(np, i, &oirq);
- 		if (ret) {
- 			pr_debug("spu_new: failed to get irq %d\n", i);
- 			goto err;
-diff --git a/arch/powerpc/platforms/fsl_uli1575.c b/arch/powerpc/platforms/fsl_uli1575.c
-index 92ac9b5..ac539c1 100644
---- a/arch/powerpc/platforms/fsl_uli1575.c
-+++ b/arch/powerpc/platforms/fsl_uli1575.c
-@@ -333,7 +333,7 @@ static void hpcd_final_uli5288(struct pci_dev *dev)
- 
- 	laddr[0] = (hose->first_busno << 16) | (PCI_DEVFN(31, 0) << 8);
- 	laddr[1] = laddr[2] = 0;
--	of_irq_map_raw(hosenode, &pin, 1, laddr, &oirq);
-+	of_irq_parse_raw(hosenode, &pin, 1, laddr, &oirq);
- 	virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
- 				     oirq.size);
- 	dev->irq = virq;
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 31036b5..720663e 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -393,7 +393,7 @@ static void __init pmac_pic_probe_oldstyle(void)
- #endif
- }
- 
--int of_irq_map_oldworld(struct device_node *device, int index,
-+int of_irq_parse_oldworld(struct device_node *device, int index,
- 			struct of_irq *out_irq)
- {
- 	const u32 *ints = NULL;
-diff --git a/arch/powerpc/platforms/pseries/event_sources.c b/arch/powerpc/platforms/pseries/event_sources.c
-index 2605c31..850c18c 100644
---- a/arch/powerpc/platforms/pseries/event_sources.c
-+++ b/arch/powerpc/platforms/pseries/event_sources.c
-@@ -55,7 +55,7 @@ void request_event_sources_irqs(struct device_node *np,
- 	/* Else use normal interrupt tree parsing */
- 	else {
- 		/* First try to do a proper OF tree parsing */
--		for (index = 0; of_irq_map_one(np, index, &oirq) == 0;
-+		for (index = 0; of_irq_parse_one(np, index, &oirq) == 0;
- 		     index++) {
- 			if (count > 15)
- 				break;
-diff --git a/arch/powerpc/sysdev/mpic_msi.c b/arch/powerpc/sysdev/mpic_msi.c
-index bbf342c..463e3a7 100644
---- a/arch/powerpc/sysdev/mpic_msi.c
-+++ b/arch/powerpc/sysdev/mpic_msi.c
-@@ -63,7 +63,7 @@ static int mpic_msi_reserve_u3_hwirqs(struct mpic *mpic)
- 		pr_debug("mpic: mapping hwirqs for %s\n", np->full_name);
- 
- 		index = 0;
--		while (of_irq_map_one(np, index++, &oirq) == 0) {
-+		while (of_irq_parse_one(np, index++, &oirq) == 0) {
- 			ops->xlate(mpic->irqhost, NULL, oirq.specifier,
- 						oirq.size, &hwirq, &flags);
- 			msi_bitmap_reserve_hwirq(&mpic->msi_bitmap, hwirq);
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index 376dc78..3ac6398 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -116,7 +116,7 @@ static int x86_of_pci_irq_enable(struct pci_dev *dev)
- 	if (!pin)
- 		return 0;
- 
--	ret = of_irq_map_pci(dev, &oirq);
-+	ret = of_irq_parse_pci(dev, &oirq);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 71180b9..994f293 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -532,12 +532,12 @@ static u64 __of_translate_address(struct device_node *dev,
- 		pbus->count_cells(dev, &pna, &pns);
- 		if (!OF_CHECK_COUNTS(pna, pns)) {
- 			printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
--			       dev->full_name);
-+			       of_node_full_name(dev));
- 			break;
- 		}
- 
- 		pr_debug("OF: parent bus is %s (na=%d, ns=%d) on %s\n",
--		    pbus->name, pna, pns, parent->full_name);
-+		    pbus->name, pna, pns, of_node_full_name(parent));
- 
- 		/* Apply bus translation */
- 		if (of_translate_one(dev, bus, pbus, addr, na, ns, pna, rprop))
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 90068f9..410aa24 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -31,14 +31,14 @@
-  * @dev: Device node of the device whose interrupt is to be mapped
-  * @index: Index of the interrupt to map
-  *
-- * This function is a wrapper that chains of_irq_map_one() and
-+ * This function is a wrapper that chains of_irq_parse_one() and
-  * irq_create_of_mapping() to make things easier to callers
-  */
- unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
- {
- 	struct of_irq oirq;
- 
--	if (of_irq_map_one(dev, index, &oirq))
-+	if (of_irq_parse_one(dev, index, &oirq))
- 		return 0;
- 
- 	return irq_create_of_mapping(oirq.controller, oirq.specifier,
-@@ -79,7 +79,7 @@ struct device_node *of_irq_find_parent(struct device_node *child)
- }
- 
- /**
-- * of_irq_map_raw - Low level interrupt tree parsing
-+ * of_irq_parse_raw - Low level interrupt tree parsing
-  * @parent:	the device interrupt parent
-  * @intspec:	interrupt specifier ("interrupts" property of the device)
-  * @ointsize:   size of the passed in interrupt specifier
-@@ -93,7 +93,7 @@ struct device_node *of_irq_find_parent(struct device_node *child)
-  * properties, for example when resolving PCI interrupts when no device
-  * node exist for the parent.
-  */
--int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
-+int of_irq_parse_raw(struct device_node *parent, const __be32 *intspec,
- 		   u32 ointsize, const __be32 *addr, struct of_irq *out_irq)
- {
- 	struct device_node *ipar, *tnode, *old = NULL, *newpar = NULL;
-@@ -101,7 +101,7 @@ int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
- 	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
- 	int imaplen, match, i;
- 
--	pr_debug("of_irq_map_raw: par=%s,intspec=[0x%08x 0x%08x...],ointsize=%d\n",
-+	pr_debug("of_irq_parse_raw: par=%s,intspec=[0x%08x 0x%08x...],ointsize=%d\n",
- 		 of_node_full_name(parent), be32_to_cpup(intspec),
- 		 be32_to_cpup(intspec + 1), ointsize);
- 
-@@ -126,7 +126,7 @@ int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
- 		goto fail;
- 	}
- 
--	pr_debug("of_irq_map_raw: ipar=%s, size=%d\n", of_node_full_name(ipar), intsize);
-+	pr_debug("of_irq_parse_raw: ipar=%s, size=%d\n", of_node_full_name(ipar), intsize);
- 
- 	if (ointsize != intsize)
- 		return -EINVAL;
-@@ -269,29 +269,29 @@ int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
- 
- 	return -EINVAL;
- }
--EXPORT_SYMBOL_GPL(of_irq_map_raw);
-+EXPORT_SYMBOL_GPL(of_irq_parse_raw);
- 
- /**
-- * of_irq_map_one - Resolve an interrupt for a device
-+ * of_irq_parse_one - Resolve an interrupt for a device
-  * @device: the device whose interrupt is to be resolved
-  * @index: index of the interrupt to resolve
-  * @out_irq: structure of_irq filled by this function
-  *
-  * This function resolves an interrupt, walking the tree, for a given
-- * device-tree node. It's the high level pendant to of_irq_map_raw().
-+ * device-tree node. It's the high level pendant to of_irq_parse_raw().
-  */
--int of_irq_map_one(struct device_node *device, int index, struct of_irq *out_irq)
-+int of_irq_parse_one(struct device_node *device, int index, struct of_irq *out_irq)
- {
- 	struct device_node *p;
- 	const __be32 *intspec, *tmp, *addr;
- 	u32 intsize, intlen;
- 	int res = -EINVAL;
- 
--	pr_debug("of_irq_map_one: dev=%s, index=%d\n", of_node_full_name(device), index);
-+	pr_debug("of_irq_parse_one: dev=%s, index=%d\n", of_node_full_name(device), index);
- 
- 	/* OldWorld mac stuff is "special", handle out of line */
- 	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
--		return of_irq_map_oldworld(device, index, out_irq);
-+		return of_irq_parse_oldworld(device, index, out_irq);
- 
- 	/* Get the interrupts property */
- 	intspec = of_get_property(device, "interrupts", &intlen);
-@@ -322,13 +322,13 @@ int of_irq_map_one(struct device_node *device, int index, struct of_irq *out_irq
- 		goto out;
- 
- 	/* Get new specifier and map it */
--	res = of_irq_map_raw(p, intspec + index * intsize, intsize,
-+	res = of_irq_parse_raw(p, intspec + index * intsize, intsize,
- 			     addr, out_irq);
-  out:
- 	of_node_put(p);
- 	return res;
- }
--EXPORT_SYMBOL_GPL(of_irq_map_one);
-+EXPORT_SYMBOL_GPL(of_irq_parse_one);
- 
- /**
-  * of_irq_to_resource - Decode a node's IRQ and return it as a resource
-diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-index 6770538..dceec10 100644
---- a/drivers/of/of_pci_irq.c
-+++ b/drivers/of/of_pci_irq.c
-@@ -5,7 +5,7 @@
- #include <asm/prom.h>
- 
- /**
-- * of_irq_map_pci - Resolve the interrupt for a PCI device
-+ * of_irq_parse_pci - Resolve the interrupt for a PCI device
-  * @pdev:       the device whose interrupt is to be resolved
-  * @out_irq:    structure of_irq filled by this function
-  *
-@@ -15,7 +15,7 @@
-  * PCI tree until an device-node is found, at which point it will finish
-  * resolving using the OF tree walking.
-  */
--int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
-+int of_irq_parse_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
- {
- 	struct device_node *dn, *ppnode;
- 	struct pci_dev *ppdev;
-@@ -30,7 +30,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
- 	 */
- 	dn = pci_device_to_OF_node(pdev);
- 	if (dn) {
--		rc = of_irq_map_one(dn, 0, out_irq);
-+		rc = of_irq_parse_one(dn, 0, out_irq);
- 		if (!rc)
- 			return rc;
- 	}
-@@ -88,6 +88,6 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq)
- 	lspec_be = cpu_to_be32(lspec);
- 	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
- 	laddr[1]  = laddr[2] = cpu_to_be32(0);
--	return of_irq_map_raw(ppnode, &lspec_be, 1, laddr, out_irq);
-+	return of_irq_parse_raw(ppnode, &lspec_be, 1, laddr, out_irq);
- }
--EXPORT_SYMBOL_GPL(of_irq_map_pci);
-+EXPORT_SYMBOL_GPL(of_irq_parse_pci);
-diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-index 729d5a1..05f8180 100644
---- a/drivers/pci/host/pci-mvebu.c
-+++ b/drivers/pci/host/pci-mvebu.c
-@@ -650,7 +650,7 @@ static int __init mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 	struct of_irq oirq;
- 	int ret;
- 
--	ret = of_irq_map_pci(dev, &oirq);
-+	ret = of_irq_parse_pci(dev, &oirq);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index fcd63ba..a00bc71 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -35,12 +35,12 @@ typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
- #if defined(CONFIG_PPC32) && defined(CONFIG_PPC_PMAC)
- extern unsigned int of_irq_workarounds;
- extern struct device_node *of_irq_dflt_pic;
--extern int of_irq_map_oldworld(struct device_node *device, int index,
-+extern int of_irq_parse_oldworld(struct device_node *device, int index,
- 			       struct of_irq *out_irq);
- #else /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
- #define of_irq_workarounds (0)
- #define of_irq_dflt_pic (NULL)
--static inline int of_irq_map_oldworld(struct device_node *device, int index,
-+static inline int of_irq_parse_oldworld(struct device_node *device, int index,
- 				      struct of_irq *out_irq)
- {
- 	return -EINVAL;
-@@ -48,10 +48,10 @@ static inline int of_irq_map_oldworld(struct device_node *device, int index,
- #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
- 
- 
--extern int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
-+extern int of_irq_parse_raw(struct device_node *parent, const __be32 *intspec,
- 			  u32 ointsize, const __be32 *addr,
- 			  struct of_irq *out_irq);
--extern int of_irq_map_one(struct device_node *device, int index,
-+extern int of_irq_parse_one(struct device_node *device, int index,
- 			  struct of_irq *out_irq);
- extern unsigned int irq_create_of_mapping(struct device_node *controller,
- 					  const u32 *intspec,
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index fd9c408..839ba20 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -6,7 +6,7 @@
- 
- struct pci_dev;
- struct of_irq;
--int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
-+int of_irq_parse_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
- 
- struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
+
 -- 
-1.8.1.2
+Best regards,
+-Wendy
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
