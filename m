@@ -1,163 +1,42 @@
 From: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668 module
-Date: Wed, 16 Oct 2013 00:03:29 +0200
-Message-ID: <1381874609-14464-5-git-send-email-lisovy@gmail.com>
-References: <1381874609-14464-1-git-send-email-lisovy@gmail.com>
+Subject: [PATCH 0/4] Devicetree support for Voipac i.MX53 module
+Date: Wed, 16 Oct 2013 00:03:25 +0200
+Message-ID: <1381874609-14464-1-git-send-email-lisovy@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381874609-14464-1-git-send-email-lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Supported peripherals: Audio -- headphone output, LEDs, Buttons
-(using keyboard controller), SD-card.
+This patchset adds devicetree definition for Voipac X53-DMM-668 module
+which uses i.MX53 CPU. More information about the module may be found at:
+http://www.voipac.com/#X53-DMM-668
+The support for the baseboard used with this module is also provided.
+More information about the baseboard: http://www.voipac.com/#X25-BSB-000
 
-Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Working peripherals are:
+* UART0
+* Ethernet
+* Buttons (with keyboard controller)
+* Sound (headphone output)
+* SD-card
+* LEDs (through GPIOs)
 
+
+Rostislav Lisovy (4):
+  ARM: dts: i.MX53: Add alternate pinmux option for i2c_3
+  ARM: dts: i.MX53: Internal keyboard controller
+  ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+  ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668
+    module
+
+ arch/arm/boot/dts/imx53-voipac-bsb.dts      |  135 +++++++++++++++++++
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |  195 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx53.dtsi                |   15 +++
+ 3 files changed, 345 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
 
-diff --git a/arch/arm/boot/dts/imx53-voipac-bsb.dts b/arch/arm/boot/dts/imx53-voipac-bsb.dts
-new file mode 100644
-index 0000000..7b48462
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-voipac-bsb.dts
-@@ -0,0 +1,135 @@
-+/*
-+ * Copyright 2013 Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, PiKRON s.r.o.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "imx53-voipac-dmm-668.dtsi"
-+
-+/ {
-+	sound {
-+		compatible = "fsl,imx53-voipac-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx53-voipac-sgtl5000";
-+		ssi-controller = <&ssi2>;
-+		audio-codec = <&sgtl5000>;
-+		audio-routing =
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <2>;
-+		mux-ext-port = <5>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pin_gpio>;
-+
-+		led1 {
-+			label = "led-red";
-+			gpios = <&gpio3 29 0>;
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "led-orange";
-+			gpios = <&gpio2 31 0>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	hog {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				/* SD2_CD */
-+				MX53_PAD_EIM_D25__GPIO3_25	0x80000000
-+				/* SD2_WP */
-+				MX53_PAD_EIM_A19__GPIO2_19 	0x80000000
-+			>;
-+		};
-+
-+		led_pin_gpio: led_gpio@0 {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D29__GPIO3_29	0x80000000
-+				MX53_PAD_EIM_EB3__GPIO2_31	0x80000000
-+			>;
-+		};
-+	};
-+
-+	/* Keyboard controller */
-+	kpp {
-+		pinctrl_kpp_1: kppgrp-1 {
-+			fsl,pins = <
-+				MX53_PAD_GPIO_9__KPP_COL_6	0xe8
-+				MX53_PAD_GPIO_4__KPP_COL_7	0xe8
-+				MX53_PAD_KEY_COL2__KPP_COL_2	0xe8
-+				MX53_PAD_KEY_COL3__KPP_COL_3	0xe8
-+				MX53_PAD_KEY_COL4__KPP_COL_4	0xe8
-+
-+				MX53_PAD_GPIO_2__KPP_ROW_6	0xe0
-+				MX53_PAD_GPIO_5__KPP_ROW_7	0xe0
-+				MX53_PAD_KEY_ROW2__KPP_ROW_2	0xe0
-+				MX53_PAD_KEY_ROW3__KPP_ROW_3	0xe0
-+				MX53_PAD_KEY_ROW4__KPP_ROW_4	0xe0
-+			>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3_2>;
-+	status = "okay";
-+
-+	sgtl5000: codec@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		clocks = <&clks 150>;
-+	};
-+};
-+
-+&kpp {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_kpp_1>;
-+	linux,keymap = <
-+			0x0203003b	/* KEY_F1 */
-+			0x0603003c	/* KEY_F2 */
-+			0x0207003d	/* KEY_F3 */
-+			0x0607003e	/* KEY_F4 */
-+			>;
-+	keypad,num-rows = <8>;
-+	keypad,num-columns = <1>;
-+	status = "okay";
-+};
-+
-+&ssi2 {
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux_1>; /* SSI1 */
-+	status = "okay";
-+};
-+
-+&esdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc2_1>;
-+	cd-gpios = <&gpio3 25 0>;
-+	wp-gpios = <&gpio2 19 0>;
-+	vmmc-supply = <&reg_3p3v>;
-+	status = "okay";
-+};
 -- 
 1.7.10.4
 
