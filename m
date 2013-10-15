@@ -1,61 +1,82 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 11/19] clk: tegra: move periph clocks to common file
-Date: Tue, 15 Oct 2013 13:19:44 -0600
-Message-ID: <525D9550.2030701@wwwdotorg.org>
-References: <1381848794-11761-1-git-send-email-pdeschrijver@nvidia.com> <1381848794-11761-12-git-send-email-pdeschrijver@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] drivers: misc: add gpio wakeup driver
+Date: Tue, 15 Oct 2013 21:32:00 +0200
+Message-ID: <201310152132.00409.arnd@arndb.de>
+References: <1380635719-31171-1-git-send-email-zonque@gmail.com> <CACRpkdYhQ+-d1COcvmg_hEJ==cTFpKLNDnvF8kdK4QgXzHenEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381848794-11761-12-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYhQ+-d1COcvmg_hEJ==cTFpKLNDnvF8kdK4QgXzHenEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Daniel Mack <zonque@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 08:52 AM, Peter De Schrijver wrote:
-> Introduce a new file for peripheral clocks common between several Tegra
-> SoCs and move Tegra114 to this new infrastructure. Also PLLP and the PLLP_OUT
-> clocks will be initialized here.
+On Friday 11 October 2013, Linus Walleij wrote:
+> On Tue, Oct 1, 2013 at 3:55 PM, Daniel Mack <zonque@gmail.com> wrote:
+> 
+> > This patch adds a very simple driver that enables GPIO lines as wakeup
+> > sources. It only operates on information passed in via DT, and depends
+> > on CONFIG_OF && CONFIG_PM_SLEEP. It can for example be used to connect
+> > wake-on-LAN (WOL) signals or other electric wakeup networks.
+> >
+> > The driver accepts a list of GPIO nodes and claims them along with their
+> > interrupt line. During suspend, the interrupts will be enabled and
+> > selected as wakeup source. The driver doesn't do anything else with the
+> > GPIO lines, and will ignore occured interrupts silently.
+> >
+> > Signed-off-by: Daniel Mack <zonque@gmail.com>
+> 
+> This makes a weird kind of sense.
+> Hm hm hm.
+> 
+> But I really need the misc mainatiners' help here...
+> possibly also irqchip maintainers.
 
-> diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+This seems like a completely generic driver, rather than some oddball
+hack, so I'd prefer to not see it in drivers/misc at all. Maybe you
+can find some other maintainer who is willing to put it into his
+subsystem, candidates would be
 
-> @@ -966,22 +699,22 @@ static struct tegra_clk tegra114_clks[tegra_clk_max] __initdata = {
->  	[tegra_clk_pwm] = { .dt_id = TEGRA114_CLK_PWM, .present = true },
->  	[tegra_clk_i2s0] = { .dt_id = TEGRA114_CLK_I2S0, .present = true },
->  	[tegra_clk_i2s2] = { .dt_id = TEGRA114_CLK_I2S2, .present = true },
-> -	[tegra_clk_epp] = { .dt_id = TEGRA114_CLK_EPP, .present = true },
-> -	[tegra_clk_gr2d] = { .dt_id = TEGRA114_CLK_GR2D, .present = true },
-> +	[tegra_clk_epp_8] = { .dt_id = TEGRA114_CLK_EPP, .present = true },
-> +	[tegra_clk_gr2d_8] = { .dt_id = TEGRA114_CLK_GR2D, .present = true },
->  	[tegra_clk_usbd] = { .dt_id = TEGRA114_CLK_USBD, .present = true },
->  	[tegra_clk_isp] = { .dt_id = TEGRA114_CLK_ISP, .present = true },
-> -	[tegra_clk_gr3d] = { .dt_id = TEGRA114_CLK_GR3D, .present = true },
-> +	[tegra_clk_gr3d_8] = { .dt_id = TEGRA114_CLK_GR3D, .present = true },
-...
+ * gpio
+ * irqchip
+ * power
+ * of/dt
 
-Why the need to edit this table in this patch? Why not just get it right
-in the previous patch, where it's first added?
+I don't see anything wrong with the basic approach though.
 
-> @@ -2166,9 +1606,10 @@ static void __init tegra114_clock_init(struct device_node *np)
->  
->  	tegra114_fixed_clk_init(clk_base);
->  	tegra114_pll_init(clk_base, pmc_base);
-> -	tegra114_periph_clk_init(clk_base);
-> +	tegra114_periph_clk_init(clk_base, pmc_base);
->  	tegra_audio_clk_init(clk_base, pmc_base, tegra114_clks, &pll_a_params);
->  	tegra114_pmc_clk_init(pmc_base);
-> +
->  	tegra114_super_clk_init(clk_base);
+> > +Example:
+> > +
+> > +       wake_up {
+> > +               compatible = "gpio-wakeup";
+> > +               gpios = <&gpio0 19 0>;
+> > +       };
+> 
+> This will not work if that GPIO chip is not capable of supporting
+> interrupts on that GPIO line right?
+> 
+> We have recently had a very long discussion about this: such
+> GPIO chips will also be marked "interrupt-controller" and you
+> should be able to just state interrupt-parent and
+> interrupts = <>; for this. (And it should accept an array.)
+> 
+> It *may* be that we have many GPIO drivers that do not accept
+> that you request an interrupt on them before you have done
+> request_gpio() followed by gpio_to_irq() on the pin. Then this
+> shall be treated like a bug and the GPIO driver fixed to handle
+> this. (That was the outcome of this discussion.)
 
-That seems like an unrelated whitespace change. There's one in the
-previous patch too:
+I haven't followed that discussion, but it's good to hear that
+you made some progress there. I find it a bit worrying that you
+say the behavior may be dependent on the gpio driver, but maybe
+I didn't fully understand what the resolution is.
 
-> @@ -502,7 +492,6 @@ static struct tegra_clk_pll_freq_table pll_a_freq_table[] = {
->  	{0, 0, 0, 0, 0, 0},
->  };
->  
-> -
->  static struct tegra_clk_pll_params pll_a_params = {
->  	.input_min = 2000000,
->  	.input_max = 31000000,
+> Since what the driver will then eventually provide is to
+> flag an IRQ line as wakeup, I wonder if this should not just
+> simply go into the interrupt core, or atleast of/irq.c.
+
+Right.
+
+	Arnd
