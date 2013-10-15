@@ -1,85 +1,157 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 16/27] drm/tegra: Add Tegra114 display controller
- support
-Date: Tue, 15 Oct 2013 10:06:34 +0200
-Message-ID: <20131015080633.GF7856@ulmo.nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
- <1381134884-5816-17-git-send-email-treding@nvidia.com>
- <52587843.9070806@wwwdotorg.org>
- <20131012113231.GD22284@mithrandir>
- <525C325E.2090700@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] sata_rcar: Adjust and document device tree bindings
+Date: Tue, 15 Oct 2013 09:15:32 +0100
+Message-ID: <20131015081532.GC19196@e106331-lin.cambridge.arm.com>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <1381765354-28440-2-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131014161353.GA19196@e106331-lin.cambridge.arm.com>
+ <525C27A9.5010402@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lIrNkN/7tmsD/ALM"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <525C325E.2090700-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <525C27A9.5010402@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine <valentine.barshak@cogentembedded.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 14, 2013 at 06:19:37PM +0100, Valentine wrote:
+> Hi Mark,
+> thanks for looking at this.
+> 
+> On 10/14/2013 08:13 PM, Mark Rutland wrote:
+> > On Mon, Oct 14, 2013 at 04:42:33PM +0100, Valentine Barshak wrote:
+> >> This converts the R-Car SATA DT compatibility string to
+> >> the <unit>-<soc> format which is the preferred one for
+> >> all SH-Mobile devices. The DT bindings are documented.
+> >>
+> >> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 16 ++++++++++++++++
+> >>   arch/arm/boot/dts/r8a7779.dtsi                      |  2 +-
+> >>   drivers/ata/sata_rcar.c                             |  2 +-
+> >>   3 files changed, 18 insertions(+), 2 deletions(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> new file mode 100644
+> >> index 0000000..2465183
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> @@ -0,0 +1,16 @@
+> >> +* Renesas R-Car SATA
+> >> +
+> >> +Required properties:
+> >> +- compatible		: must be "renesas,sata-r8a7779"
+> >
+> > s/must be/should include/
+> >
+> 
+> OK, thanks.
 
---lIrNkN/7tmsD/ALM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cheers.
 
-On Mon, Oct 14, 2013 at 12:05:18PM -0600, Stephen Warren wrote:
-> On 10/12/2013 05:32 AM, Thierry Reding wrote:
-> > On Fri, Oct 11, 2013 at 04:14:27PM -0600, Stephen Warren wrote:
-> >> On 10/07/2013 02:34 AM, Thierry Reding wrote:
-> >>> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>=20
-> >>> The Tegra114 display controller is backwards-compatible with
-> >>> previous generations of the Tegra SoC. No code changes are
-> >>> required.
-> >>=20
-> >> If the HW is backwards-compatible, then there's no need to add
-> >> extra compatible values to the driver; just write the following
-> >> in the DT, and it'll just work:
-> >>=20
-> >> compatible =3D "nvidia,tegra114-dc", "nvidia,tegra30-dc";
-> >=20
-> > One reason why I thought it might be useful to still include this,
-> > even though unnecessary, was to match it to the host1x_drm_subdevs
-> > table. We can probably remove the entry from there as well,
-> > though.
-> >=20
-> > As far as I can tell, the same holds for Tegra30, which is also=20
-> > backwards compatible with Tegra20 but the DTS doesn't contain the=20
-> > Tegra20 compatible. So to keep ABI compatibility we'll need to keep
-> > the nvidia,tegra30-dc in the driver's match tables, but I could
-> > still update the DTS to include the nvidia,tegra20-dc for
-> > correctness.
-> >=20
-> > Does that make sense?
->=20
-> Yes, fixing the Tegra30 .dtsi file sounds like a good idea.
+> 
+> >> +- reg			: address range of the SATA registers.
+> >
+> > Also their size...
+> 
+> Do you want me to rephrase it to "base address and size of the SATA 
+> registers"?
+> 
+> Looks like a lot of other bindings examples available in 
+> Documentation/devicetree/bindings describe regs property
+> as the "address range" which implies the address and size
+> of the registers.
 
-Done.
+This is unfortunately one area where there isn't any general consensus
+on the terminology. I think "base address and size ..." is sufficient --
+it maps well to the set of address-cells and size-cells. For reg values
+describing MMIO register blocks, ePAPR says "the offsets and lengths of
+the memory-mapped IO register blocks", and there's similar wording in
+other bindings.
 
-Thierry
+> 
+> >
+> >> +- interrupt-parent	: interrupt parent controller phandle
+> >
+> > This isn't required as such, as the interrupt-controller can be
+> > inherited from the parent. As it's a standard auxiliary property I don't
+> > think it needs to be documented here.
+> 
+> OK, will drop it, thanks.
 
---lIrNkN/7tmsD/ALM
-Content-Type: application/pgp-signature
+Ok.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> 
+> >
+> >> +- interrupts		: must consist of one interrupt specifier.
+> >
+> > Is there only one interrupt generated by the device?
+> 
+> Yes, there's just one IRQ.
 
-iQIcBAEBAgAGBQJSXPeJAAoJEN0jrNd/PrOhuusP+wTH/WaCS4FWgmMzSmbsbLQt
-/X/UCSQwMLGRSTfFxsPIFmVYRLa4UNZD+H37sAupuk0nCVBzYbRfm5fHYes4BA8i
-xC1YIXrz2SnTerR1iSousvFjmE5jBKD2y4zAwBh1HBIGusGeddQWG63tifmvfAcu
-ANyP5Sbel9NBkudJn6tpryOYW9wcJvtyu81+PU9DESA64voJ43FQW28NKeOktCRT
-53Q6hQlfSFtDJtUJoWnxoAVYm0jQMKMysUir/676VIfnAgMYMg28YC2pauvF/OoW
-z2rf9yRU5FD27Ya9gecWrD9zEvwXtds4++KQ4cNlOhO9Ys2OYGIvgDKjBvuwU73K
-AlhGIzVtcdjTK1nl94yoN/Kd0/gN+fLVYZN9X4WdiPfQ7Ci1XzONvVjSUe0jdvAn
-TPDuC13/YMrkng+XCz2NpsLcmANZwvte1ALrcbvyumVY7Ey/0/AYmOfV+X/Syrhn
-ooZcTmX4Jk/g7vlRDLsu4BuWFN715ctOV74KQn2yBOL0wXwbXsIgh5laC9FBuYbu
-WBwvLV6JEKbBmasxGLjZAbTEcaq5JS29XZOC8m7wxS5+8xKv210TokeWNt+a1A67
-oewbXG4pzIZ/oLY4tJFS53RbZoIX+NtT0AdNDritTL1CNJ8A0YXmlHEWcn1ocTI/
-IDIvPXR9qCBrzfLh4BQr
-=vKuW
------END PGP SIGNATURE-----
+Ok.
 
---lIrNkN/7tmsD/ALM--
+> 
+> >
+> >> +
+> >> +Example:
+> >> +
+> >> +sata: sata@fc600000 {
+> >> +	compatible = "renesas,sata-r8a7779";
+> >> +	reg = <0xfc600000 0x2000>;
+> >> +	interrupt-parent = <&gic>;
+> >> +	interrupts = <0 100 0x4>;
+> >> +};
+> >> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> >> index da61d27..b1747f5 100644
+> >> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> >> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> >> @@ -201,7 +201,7 @@
+> >>   	};
+> >>
+> >>   	sata: sata@fc600000 {
+> >> -		compatible = "renesas,rcar-sata";
+> >> +		compatible = "renesas,sata-r8a7779";
+> >>   		reg = <0xfc600000 0x2000>;
+> >>   		interrupt-parent = <&gic>;
+> >>   		interrupts = <0 100 0x4>;
+> >> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+> >> index c2d95e9..c4cd738 100644
+> >> --- a/drivers/ata/sata_rcar.c
+> >> +++ b/drivers/ata/sata_rcar.c
+> >> @@ -893,7 +893,7 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+> >>   #endif
+> >>
+> >>   static struct of_device_id sata_rcar_match[] = {
+> >> -	{ .compatible = "renesas,rcar-sata", },
+> >> +	{ .compatible = "renesas,sata-r8a7779", },
+> >>   	{},
+> >>   };
+> >
+> > Why is an existing compatible string being removed?
+> >
+> > Please do not change existing strings, it will break any dts files that
+> > are already in use.
+> 
+> It won't break the dts files, since I'm changing the only dtsi file that 
+> uses the SATA node as well. It will only break binary compatibility with 
+> the older dtb files.
+
+Why should an existing dtb suddenly stop working?
+
+What if someone has an out-of-tree dts?
+
+> 
+> >
+> > While the new compatible string may be preferred, the old string should
+> > be kept for compatibility.
+> 
+> OK, I can keep the old string if it's needed.
+
+Please do.
+
+Thanks,
+Mark.
