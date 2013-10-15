@@ -1,54 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase in
- system manager
-Date: Tue, 15 Oct 2013 21:47:27 +0200
-Message-ID: <201310152147.27569.arnd@arndb.de>
-References: <1381780051-1826-1-git-send-email-dinguyen@altera.com>
- <201310152101.44669.arnd@arndb.de> <525D9532.6080503@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/7] Make dwc3 use Generic PHY Framework
+Date: Wed, 16 Oct 2013 01:24:10 +0530
+Message-ID: <1381866857-3861-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <525D9532.6080503@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Seungwon Jeon <tgih.jun@samsung.com>, Pavel Machek <pavel@denx.de>, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Chris Ball <cjb@laptop.org>, dinguyen@altera.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon@ti.com, balbi@ti.com, gregkh@linuxfoundation.org
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 October 2013, Dinh Nguyen wrote:
-> >
-> > 1 Create a "syscon" backend driver to control your "system manager", which
-> >    lets other drivers hook into it without calling a private API.
-> Yes, if you look at drivers/mmc/host/dw_mmc-socfpga.c that is in the 
-> mainline,
-> it is hooking into the "system manager" through "syscon". Is this what you
-> mean here?
+Felipe,
 
-No, because you directly hook into the syscon driver, rather than using
-a clock driver as the middle-man, see steps 2 and 3 below.
- 
-> The problem is because of the SYSMGR_SDMMCGRP_CTRL_OFFSET define
-> in this file. This means the SD/MMC driver needs information that is 
-> outside of its IP.
+Looks like most of the patches are dependent on Generic PHY Framework except
+the first one. Let me know if I have to take these patches with your ACK or
+you'll take it yourself.
+******************************************************************
+Modified dwc3 core to find PHYs only if the platform indicates that it has 
+to use a PHY. Adapted DWC3 and USB3 PHY to use Generic PHY framework. Also 
+changed the name of USB3 PHY driver to PIPE3 PHY driver since the same driver 
+has to be used for SATA and PCIE too.
 
-Yes, this is not ideal because you don't really want that information
-in the sd/mmc driver. That driver should only know about the fact
-that it talks to a clock controller, not how it's implemented.
+Changes from v1:
+* The logic in which the driver detects the presence of PHYs has changed.
+* patch ordering has changed
+* udelay is replaced with usleep_range
+* A patch to remove set_suspend callback which was deferred from Generic
+PHY Framework series has been included.
 
-	Arnd
+Kishon Vijay Abraham I (7):
+  usb: dwc3: get "usb_phy" only if the platform indicates the presence
+    of PHY's
+  usb: dwc3: adapt dwc3 core to use Generic PHY Framework
+  Documentation: dt bindings: move ..usb/usb-phy.txt to
+    ..phy/ti-phy.txt
+  drivers: phy: usb3/pipe3: Adapt pipe3 driver to Generic PHY Framework
+  usb: phy: omap-usb2: remove *set_suspend* callback from omap-usb2
+  phy: omap-usb2: move omap_usb.h from linux/usb/ to linux/phy/
+  arm/dts: added dt properties to adapt to the new phy framwork
 
-> > 2 Create a trivial clock driver that is independent of your existing
-> >    clock driver and independent of the other drivers using the system
-> >    manager, by using syscon as the low-level interface.
-> > 3 Make the sdmmc driver use the normal clock API and link its clock to the
-> >    driver from step 2 in the device tree.
-> >
-> > Is this what you have tried before?
+ .../bindings/{usb/usb-phy.txt => phy/ti-phy.txt}   |    9 +-
+ Documentation/devicetree/bindings/usb/dwc3.txt     |    6 +-
+ arch/arm/boot/dts/omap5.dtsi                       |    5 +-
+ drivers/phy/Kconfig                                |   10 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-omap-usb2.c                        |   27 +--
+ .../phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c}     |  206 +++++++++++---------
+ drivers/usb/dwc3/Kconfig                           |    2 +
+ drivers/usb/dwc3/core.c                            |  124 ++++++++----
+ drivers/usb/dwc3/core.h                            |    7 +
+ drivers/usb/dwc3/platform_data.h                   |    4 +
+ drivers/usb/phy/Kconfig                            |   11 --
+ drivers/usb/phy/Makefile                           |    1 -
+ include/linux/{usb => phy}/omap_usb.h              |    3 -
+ include/linux/{usb/omap_usb.h => phy/ti_pipe3.h}   |   33 +---
+ 15 files changed, 248 insertions(+), 201 deletions(-)
+ rename Documentation/devicetree/bindings/{usb/usb-phy.txt => phy/ti-phy.txt} (86%)
+ rename drivers/{usb/phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c} (57%)
+ copy include/linux/{usb => phy}/omap_usb.h (95%)
+ rename include/linux/{usb/omap_usb.h => phy/ti_pipe3.h} (53%)
+
+-- 
+1.7.10.4
+
