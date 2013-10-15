@@ -1,59 +1,91 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 01/03] Make non-linear GPIO ranges accesible from gpiolib
-Date: Tue, 15 Oct 2013 15:36:22 +0200
-Message-ID: <20131015133621.GA7461@ab42.lan>
-References: <20131008122145.GA21985@ab42.lan>
- <1381235122-23730-1-git-send-email-christian.ruppert@abilis.com>
- <CACRpkdafaNE_fgiq8iW=_gT5gDVC_H8m-+0dfpunhAantLdJwQ@mail.gmail.com>
- <20131009132837.GA23021@ab42.lan>
- <CACRpkdbo9MOuCY_UWhzbWwEAom_Z3=Vi575ELix9j3hsZdBzZw@mail.gmail.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: exynos4x12: Device tree node definition
+ for TMU on Exynos4x12
+Date: Tue, 15 Oct 2013 09:37:48 -0400
+Message-ID: <525D452C.4020802@ti.com>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-5-git-send-email-l.majewski@samsung.com> <20131015082750.4b2f3325@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbo9MOuCY_UWhzbWwEAom_Z3=Vi575ELix9j3hsZdBzZw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20131015082750.4b2f3325@amdc308.digital.local>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: kgene.kim@samsung.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Lukasz Majewski <l.majewski@majess.pl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 04:01:05PM +0200, Linus Walleij wrote:
-> On Wed, Oct 9, 2013 at 3:28 PM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
-> > On Wed, Oct 09, 2013 at 01:58:35PM +0200, Linus Walleij wrote:
-> >> On Tue, Oct 8, 2013 at 2:25 PM, Christian Ruppert
-> >> <christian.ruppert@abilis.com> wrote:
-> >> > +In addition, named groups of pins can be mapped to pin groups of a given
-> >> > +pin controller using the gpio-ranges property as described below:
-> >> > +
-> >> > +       gpio-range-list ::= <single-gpio-range> [gpio-range-list]
-> >> > +       single-gpio-range ::= <numeric-gpio-range> | <named-gpio-range>
-> >> > +       numeric-gpio-range ::=
-> >> > +                       <pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
-> >> > +       named-gpio-range ::= <pinctrl-phandle> <gpio-base> '<0 0>'
-> >> > +       pinctrl-phanle : phandle to pin controller node.
-> >>
-> >> phanle really?
-> >
-> > Yes, this is actually identical to the numeric ranges. It specifies the
-> > pin controller which is "responsible" for the pins/pin group in
-> > question.
-> 
-> I was more thinking about the speling, should it not be "phandle"?
-> 
-> > The named pin groups actually are a physical property of the pin
-> > controller hardware (well, at least the pin groups are, the names are
-> > not ;).
-> 
-> OK.
-> 
-> It would be good if the names of the group could match, as close
-> as possible, the names given to the same identity in the data
-> sheet or similar documentation.
+--RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-This is the idea. In many cases, the names are more coherent over
-several product/package variants than the numbers and it is much easier
-to make names coherent with (at least our) hardware documentation than
-numbers.
+On 15-10-2013 02:27, Lukasz Majewski wrote:
+> Hi Kukjin,
+>=20
+>> The TMU device tree node definition for Exynos4x12 family of SoCs.
+>>
+>> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-[An updated patch with all the other comments integrated will follow]
+BTW, you can add my
+
+Reviewed-by: Eduardo Valentin <eduardo.valentin@ti.com>
+
+on patch 4 and 5 of this series.
+
+>>
+>> ---
+>> Changes for v2:
+>> - None
+>>
+>>  arch/arm/boot/dts/exynos4x12.dtsi |   10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+>> b/arch/arm/boot/dts/exynos4x12.dtsi index ad531fe..64c0ece 100644
+>> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+>> @@ -176,4 +176,14 @@
+>>  			};
+>>  		};
+>>  	};
+>> +
+>> +	tmu@100C0000 {
+>> +		compatible =3D "samsung,exynos4412-tmu";
+>> +		interrupt-parent =3D <&combiner>;
+>> +		interrupts =3D <2 4>;
+>> +		reg =3D <0x100C0000 0x100>;
+>> +		clocks =3D <&clock 383>;
+>> +		clock-names =3D "tmu_apbif";
+>> +		status =3D "disabled";
+>> +	};
+>>  };
+>=20
+> Can you pull this DT node definition for TMU (as a fix to v3.12)?
+>=20
+> It is crucial for Exynos4412.
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlJdRS8ACgkQCXcVR3XQvP1kvwEA4rfbYgOgcZi1caxoieyaw0vi
+oUUyE5+dK1hKwf6UlQQBALKVmudGU1+f0oesnQoXVi+xkFTPAQ4CPTrFNmQ/nF6N
+=Kvu7
+-----END PGP SIGNATURE-----
+
+--RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT--
