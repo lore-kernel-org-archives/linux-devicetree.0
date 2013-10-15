@@ -1,108 +1,78 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v8 1/5] ARM: add basic support for Trusted Foundations
-Date: Tue, 15 Oct 2013 12:07:25 +0100
-Message-ID: <20131015110725.GZ25034@n2100.arm.linux.org.uk>
-References: <1381527938-22840-1-git-send-email-acourbot@nvidia.com> <1381527938-22840-2-git-send-email-acourbot@nvidia.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/6] of: add function to check against a list of
+ compatible strings
+Date: Tue, 15 Oct 2013 12:11:46 +0100
+Message-ID: <20131015111145.GE19196@e106331-lin.cambridge.arm.com>
+References: <201310151246.49402.heiko@sntech.de>
+ <201310151247.50408.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1381527938-22840-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <201310151247.50408.heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 02:45:34PM -0700, Alexandre Courbot wrote:
-> Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> can be invoked using the same SMC-based API on all supported
-> platforms. This patch adds initial basic support for Trusted
-> Foundations using the ARM firmware API. Current features are limited
-> to the ability to boot secondary processors.
-> 
-> Note: The API followed by Trusted Foundations does *not* follow the SMC
-> calling conventions. It has nothing to do with PSCI neither and is only
-> relevant to devices that use Trusted Foundations (like most Tegra-based
-> retail devices).
-> 
-> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm/Kconfig                                   |  2 +
->  arch/arm/Makefile                                  |  1 +
->  arch/arm/firmware/Kconfig                          | 28 ++++++++
->  arch/arm/firmware/Makefile                         |  1 +
->  arch/arm/firmware/trusted_foundations.c            | 79 ++++++++++++++++++++++
->  arch/arm/include/asm/trusted_foundations.h         | 68 +++++++++++++++++++
->  8 files changed, 200 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
->  create mode 100644 arch/arm/firmware/Kconfig
->  create mode 100644 arch/arm/firmware/Makefile
->  create mode 100644 arch/arm/firmware/trusted_foundations.c
->  create mode 100644 arch/arm/include/asm/trusted_foundations.h
-
-Is having this under arch/arm appropriate?  What happens if the API
-gets re-used on ARM64 for example?  Would drivers/firmware be a better
-cross-arch location for this?
-
-> diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
-> new file mode 100644
-> index 0000000..c6f20bd
-> --- /dev/null
-> +++ b/arch/arm/include/asm/trusted_foundations.h
-> @@ -0,0 +1,68 @@
-> +/*
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +/*
-> + * Support for the Trusted Foundations secure monitor.
-> + *
-> + * Trusted Foundation comes active on some ARM consumer devices (most
-> + * Tegra-based devices sold on the market are concerned). Such devices can only
-> + * perform some basic operations, like setting the CPU reset vector, through
-> + * SMC calls to the secure monitor. The calls are completely specific to
-> + * Trusted Foundations, and do *not* follow the SMC calling convention or the
-> + * PSCI standard.
-> + */
-> +
-> +#ifndef __ASM_ARM_TRUSTED_FOUNDATIONS_H
-> +#define __ASM_ARM_TRUSTED_FOUNDATIONS_H
-> +
-> +#include <linux/kconfig.h>
-> +
-> +struct trusted_foundations_platform_data {
-> +	unsigned int version_major;
-> +	unsigned int version_minor;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_TRUSTED_FOUNDATIONS)
-> +
-> +void register_trusted_foundations(struct trusted_foundations_platform_data *pd);
-> +void of_register_trusted_foundations(void);
-> +
-> +#else /* CONFIG_TRUSTED_FOUNDATIONS */
-> +
-> +#include <linux/printk.h>
-> +#include <linux/of.h>
-> +#include <asm/bug.h>
-
-Please move these up along side the other #include - having includes depend
-on config symbols is an additional unnecessary source of fragility.
-
-Secondly, please use linux/*.h includes in preference to asm/*.h where the
-linux/*.h include picks up the corresponding asm/*.h include.  In this case,
-that should be linux/bug.h, not asm/bug.h.
+SGkgSGVpa28sCgpPbiBUdWUsIE9jdCAxNSwgMjAxMyBhdCAxMTo0Nzo1MEFNICswMTAwLCBIZWlr
+byBTdMO8Ym5lciB3cm90ZToKPiBUaGUgYmFzaWMgb2YgZnVuY3Rpb25zIGFscmVhZHkgcHJvdmlk
+ZSBhIG9mX2RldmljZV9pc19jb21wYXRpYmxlIHRvIGNoZWNrCj4gaWYgYSBkZXZpY2UncyBjb21w
+YXRpYmxlIHByb3BlcnR5IGNvbnRhaW5zIGEgc3BlY2lmaWMgb25lLiBCdXQgc29tZXRpbWVzCj4g
+aXQncyBhbHNvIG5lY2Vzc2FyeSB0byBjaGVjayBpZiB0aGUgZGV2aWNlIGlzIGNvbXBhdGlibGUg
+dG8gb25lIG91dCBvZiBhCj4gbGlzdCBvZiBjb21wYXRpYmxlIGRldmljZXMuCj4gCj4gVGhlcmVm
+b3JlIGFkZCBvZl9kZXZpY2VfaXNfYW55X29mIHRoYXQgcmV1c2VzIHRoZSBjb21wYXRpYmxlIGNo
+ZWNrIG9mCj4gb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUgYnV0IGNoZWNrcyBhZ2FpbnN0IGEgbGlz
+dCBvZiBjb21wYXRpYmxlIHN0cmluZ3MKPiB3aXRob3V0IHRoZSBsb2NraW5nIG92ZXJoZWFkIG9m
+IGNhbGxpbmcgb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUgbXVsdGlwbGUKPiB0aW1lcy4KCkkgZG9u
+J3QgdGhpbmsgd2UgbmVlZCB0aGlzIC0tIHdlIGFscmVhZHkgaGF2ZSBvZl9tYXRjaF9ub2RlLCBh
+bmQgeW91IGNhbgp1c2UgaXQgdG8gYWNoaWV2ZSB0aGUgc2FtZSByZXN1bHQuCgpUaGFua3MsCk1h
+cmsuCgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+
+Cj4gLS0tCj4gIGRyaXZlcnMvb2YvYmFzZS5jICB8ICAgMjEgKysrKysrKysrKysrKysrKysrKysr
+Cj4gIGluY2x1ZGUvbGludXgvb2YuaCB8ICAgIDIgKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMyBp
+bnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvYmFzZS5jIGIvZHJpdmVy
+cy9vZi9iYXNlLmMKPiBpbmRleCA4NjVkM2Y2Li41ODlmNDNlIDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvb2YvYmFzZS5jCj4gKysrIGIvZHJpdmVycy9vZi9iYXNlLmMKPiBAQCAtMzY2LDYgKzM2Niwy
+NyBAQCBpbnQgb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUoY29uc3Qgc3RydWN0IGRldmljZV9ub2Rl
+ICpkZXZpY2UsCj4gIEVYUE9SVF9TWU1CT0wob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUpOwo+ICAK
+PiAgLyoqCj4gKyAqIENoZWNrcyBpZiBhbnkgb2YgdGhlIGdpdmVuICJjb21wYXQiIHN0cmluZ3Mg
+bWF0Y2hlcyBvbmUgb2YgdGhlIHN0cmluZ3MKPiArICogaW4gdGhlIGRldmljZSdzICJjb21wYXRp
+YmxlIiBwcm9wZXJ0eS4KPiArICovCj4gK2ludCBvZl9kZXZpY2VfaXNfYW55X29mKGNvbnN0IHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqZGV2aWNlLAo+ICsJCQljb25zdCBjaGFyICogY29uc3QgKmNvbXBh
+dCwgaW50IG51bSkgewo+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsKPiArCWludCByZXMgPSAwLCBp
+Owo+ICsKPiArCXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmZGV2dHJlZV9sb2NrLCBmbGFncyk7Cj4g
+Kwlmb3IgKGkgPSAwOyBpIDwgbnVtOyBpKyspIHsKPiArCQlpZiAoX19vZl9kZXZpY2VfaXNfY29t
+cGF0aWJsZShkZXZpY2UsIGNvbXBhdFtpXSkpIHsKPiArCQkJcmVzID0gMTsKPiArCQkJYnJlYWs7
+Cj4gKwkJfQo+ICsJfQo+ICsJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRldnRyZWVfbG9j
+aywgZmxhZ3MpOwo+ICsJcmV0dXJuIHJlczsKPiArfQo+ICtFWFBPUlRfU1lNQk9MKG9mX2Rldmlj
+ZV9pc19hbnlfb2YpOwo+ICsKPiArLyoqCj4gICAqIG9mX21hY2hpbmVfaXNfY29tcGF0aWJsZSAt
+IFRlc3Qgcm9vdCBvZiBkZXZpY2UgdHJlZSBmb3IgYSBnaXZlbiBjb21wYXRpYmxlIHZhbHVlCj4g
+ICAqIEBjb21wYXQ6IGNvbXBhdGlibGUgc3RyaW5nIHRvIGxvb2sgZm9yIGluIHJvb3Qgbm9kZSdz
+IGNvbXBhdGlibGUgcHJvcGVydHkuCj4gICAqCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+b2YuaCBiL2luY2x1ZGUvbGludXgvb2YuaAo+IGluZGV4IGY5NWFlZTMuLjViZjdjOWEgMTAwNjQ0
+Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9vZi5oCj4gKysrIGIvaW5jbHVkZS9saW51eC9vZi5oCj4g
+QEAgLTI2Miw2ICsyNjIsOCBAQCBleHRlcm4gaW50IG9mX3Byb3BlcnR5X2NvdW50X3N0cmluZ3Mo
+c3RydWN0IGRldmljZV9ub2RlICpucCwKPiAgCQkJCSAgICAgY29uc3QgY2hhciAqcHJvcG5hbWUp
+Owo+ICBleHRlcm4gaW50IG9mX2RldmljZV9pc19jb21wYXRpYmxlKGNvbnN0IHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqZGV2aWNlLAo+ICAJCQkJICAgY29uc3QgY2hhciAqKTsKPiArZXh0ZXJuIGludCBv
+Zl9kZXZpY2VfaXNfYW55X29mKGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2aWNlLAo+ICsJ
+CQkgICAgICAgY29uc3QgY2hhciAqIGNvbnN0ICpjb21wYXQsIGludCBudW0pOwo+ICBleHRlcm4g
+aW50IG9mX2RldmljZV9pc19hdmFpbGFibGUoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpkZXZp
+Y2UpOwo+ICBleHRlcm4gY29uc3Qgdm9pZCAqb2ZfZ2V0X3Byb3BlcnR5KGNvbnN0IHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbm9kZSwKPiAgCQkJCWNvbnN0IGNoYXIgKm5hbWUsCj4gLS0gCj4gMS43LjEw
+LjQKPiAKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5l
+ICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBt
+YWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDov
+L3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
