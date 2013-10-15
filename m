@@ -1,61 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 26/27] drm/tegra: Add DSI support
-Date: Tue, 15 Oct 2013 11:21:07 -0600
-Message-ID: <525D7983.6010001@wwwdotorg.org>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-27-git-send-email-treding@nvidia.com> <52587F17.7060104@wwwdotorg.org> <20131014135548.GB16302@ulmo.nvidia.com> <525C3510.60802@wwwdotorg.org> <20131015083342.GH7856@ulmo.nvidia.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Tue, 15 Oct 2013 12:40:55 -0500
+Message-ID: <1381858855.7979.693.camel@snotra.buserror.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+	 <1381518433.7979.536.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381788786.7979.643.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131015083342.GH7856-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150C2B08-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 02:33 AM, Thierry Reding wrote:
-> On Mon, Oct 14, 2013 at 12:16:48PM -0600, Stephen Warren wrote:
->> On 10/14/2013 07:55 AM, Thierry Reding wrote:
->>> On Fri, Oct 11, 2013 at 04:43:35PM -0600, Stephen Warren
->>> wrote:
->>>> On 10/07/2013 02:34 AM, Thierry Reding wrote:
->>>>> This commit adds support for both DSI outputs found on
->>>>> Tegra. Only very minimal functionality is implemented, so
->>>>> advanced features like ganged mode won't work.
->>>>> 
->>>>> Due to the lack of other test hardware, some sections of
->>>>> the driver are hardcoded to work with Dalmore.
->>>> 
->>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c
->>>>> b/drivers/gpu/drm/tegra/dsi.c
->>>> 
->>>>> +static int tegra_dsi_show_regs(struct seq_file *s, void
->>>>> *data) +{ +	struct drm_info_node *node = s->private; +
->>>>> struct tegra_dsi *dsi = node->info_ent->data; + +#define
->>>>> DUMP_REG(name)						\ +	seq_printf(s, "%-32s %#05x
->>>>> %08lx\n", #name, name,	\ +		   tegra_dsi_readl(dsi, name)) 
->>>>> + +	DUMP_REG(DSI_INCR_SYNCPT);
->>>> 
->>>> Does it make sense to use an MMIO regmap instead? That way,
->>>> you get all the debugfs files for free...
->>> 
->>> As far as I know, regmap doesn't give you the symbolic names
->>> for the registers. I find that a rather useful feature because
->>> it allows to easily compare the registers to the ones in our
->>> downstream kernels.
->> 
->> True. However, we should really be writing user-space scripts to
->> encode that information. Such a script could be useful e.g. if
->> reading the information directly from /dev/mem or JTAG too, and
->> bloating the kernel with debug strings doesn't seem like a great
->> idea.
-> 
-> I don't agree. While I see some value in having such userspace
-> scripts, having the symbolic names in debugfs allows anyone to look
-> at a readable form of the data without having to have access to
-> those scripts. Besides it's called *debug*fs for a purpose, isn't
-> it? There's plenty of edited data that's not just a plain dump of
-> data.
+On Mon, 2013-10-14 at 20:59 -0500, Tang Yuantian-B29983 wrote:
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: 2013=E5=B9=B410=E6=9C=8815=E6=97=A5 =E6=98=9F=E6=9C=9F=E4=BA=8C=
+ 6:13
+> > To: Tang Yuantian-B29983
+> > Cc: Wood Scott-B07421; Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Li Yang-Leo-R58472
+> > Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in =
+device
+> > tree
+> >=20
+> > On Fri, 2013-10-11 at 21:52 -0500, Tang Yuantian-B29983 wrote:
+> > > Thanks for your review.
+> > >
+> > > > -----Original Message-----
+> > > > From: Wood Scott-B07421
+> > > > Sent: 2013=E5=B9=B410=E6=9C=8812=E6=97=A5 =E6=98=9F=E6=9C=9F=E5=
+=85=AD 3:07
+> > > > To: Mark Rutland
+> > > > Cc: Tang Yuantian-B29983; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
+> > > > dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Li Yang-Leo-R58472
+> > > > Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes=
+ in
+> > > > device tree
+> > > >
+> > > > I'm not sure I understand the "_0"/"_1" part, though.  Doesn't =
+each
+> > > > PLL just have one output, which the consumer may choose to divi=
+de by
+> > > > 2 (or in some cases 4)?  Why does that division need to be expo=
+sed
+> > > > in the device tree as separate connections to the parent clock?
+> > > >
+> > > The device tree makes that quite clear.
+> >=20
+> > You chose to model it that way in the device tree; that doesn't mak=
+e it
+> > clear that the hardware works that way or that it's a good way to m=
+odel
+> > it.
+> >=20
+> > > Each PLL has several output which MUX node can take from.
+> >=20
+> > Point out where in the hardware documentation it says this.  What I=
+ see
+> > is a PLL that has one output, and a MUX register that can choose fr=
+om
+> > multiple PLL and divider options.
+> >=20
+> Take T4240 for example: see section 4.6.5.1 , (Page 141) in T4240RM R=
+ev. D, 09/2012.
 
-Perhaps you should work to enhance regmap's debugfs files to support
-optionally naming registers?
+That shows the dividers as being somewhere in between the PLL and the
+MUX.  The MUX is where the divider is selected.  There's nothing in the
+PLL's programming interface that relates to the dividers.  As such it's
+simpler to model it as being part of the MUX.
+
+-Scott
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
