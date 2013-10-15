@@ -1,56 +1,130 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v8 1/5] ARM: add basic support for Trusted Foundations
-Date: Tue, 15 Oct 2013 10:11:59 -0600
-Message-ID: <525D694F.3070803@wwwdotorg.org>
-References: <1381527938-22840-1-git-send-email-acourbot@nvidia.com> <1381527938-22840-2-git-send-email-acourbot@nvidia.com> <20131015110725.GZ25034@n2100.arm.linux.org.uk>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v3 3/4] mmc: omap_hsmmc: Remux pins to support SDIO
+ interrupt on AM335x
+Date: Tue, 15 Oct 2013 22:04:14 +0530
+Message-ID: <525D6E86.1040208@ti.com>
+References: <1380971830-21492-1-git-send-email-afenkart@gmail.com>
+ <1380971830-21492-4-git-send-email-afenkart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131015110725.GZ25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1380971830-21492-4-git-send-email-afenkart@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas Fenkart <afenkart@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, zonque@gmail.com, Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 05:07 AM, Russell King - ARM Linux wrote:
-> On Fri, Oct 11, 2013 at 02:45:34PM -0700, Alexandre Courbot wrote:
->> Trusted Foundations is a TrustZone-based secure monitor for ARM that
->> can be invoked using the same SMC-based API on all supported
->> platforms. This patch adds initial basic support for Trusted
->> Foundations using the ARM firmware API. Current features are limited
->> to the ability to boot secondary processors.
->>
->> Note: The API followed by Trusted Foundations does *not* follow the SMC
->> calling conventions. It has nothing to do with PSCI neither and is only
->> relevant to devices that use Trusted Foundations (like most Tegra-based
->> retail devices).
->>
->> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
->>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>  arch/arm/Kconfig                                   |  2 +
->>  arch/arm/Makefile                                  |  1 +
->>  arch/arm/firmware/Kconfig                          | 28 ++++++++
->>  arch/arm/firmware/Makefile                         |  1 +
->>  arch/arm/firmware/trusted_foundations.c            | 79 ++++++++++++++++++++++
->>  arch/arm/include/asm/trusted_foundations.h         | 68 +++++++++++++++++++
->>  8 files changed, 200 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
->>  create mode 100644 arch/arm/firmware/Kconfig
->>  create mode 100644 arch/arm/firmware/Makefile
->>  create mode 100644 arch/arm/firmware/trusted_foundations.c
->>  create mode 100644 arch/arm/include/asm/trusted_foundations.h
-> 
-> Is having this under arch/arm appropriate?  What happens if the API
-> gets re-used on ARM64 for example?  Would drivers/firmware be a better
-> cross-arch location for this?
+Thanks Andreas for the patch,
 
-That's probably a better location, yes.
+On Saturday 05 October 2013 04:47 PM, Andreas Fenkart wrote:
+> The am335x can't detect pending cirq in PM runtime suspend.
+> This patch reconfigures dat1 as a GPIO before going to suspend.
+> SDIO interrupts are detected with the GPIO, while in runtime
+> suspend, standard detection of the module block otherwise.
+>
+> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
+>
+> @@ -2293,23 +2440,66 @@ static int omap_hsmmc_resume(struct device *dev)
+>   static int omap_hsmmc_runtime_suspend(struct device *dev)
+>   {
+>   	struct omap_hsmmc_host *host;
+> +	unsigned long flags;
+> +	int ret = 0;
+>
+>   	host = platform_get_drvdata(to_platform_device(dev));
+>   	omap_hsmmc_context_save(host);
+>   	dev_dbg(dev, "disabled\n");
+>
+> -	return 0;
+> +	if (host->flags & HSMMC_SWAKEUP_QUIRK) {
+> +		spin_lock_irqsave(&host->irq_lock, flags);
+> +		OMAP_HSMMC_WRITE(host->base, ISE, 0);
+> +		OMAP_HSMMC_WRITE(host->base, IE, 0);
+> +		OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
+> +		spin_unlock_irqrestore(&host->irq_lock, flags);
+> +
+> +		ret = pinctrl_select_state(host->pinctrl, host->idle);
+> +		if (ret < 0)
+> +			dev_warn(mmc_dev(host->mmc), "Unable to select idle pinmux\n");
+> +
+> +		enable_irq(mmc_slot(host).sdio_irq);
+> +	}
+> +
+> +	spin_lock_irqsave(&host->irq_lock, flags);
+> +	/* infinite loop, if irq not cleared in omap_hsmmc_enable_sdio_irq */
+> +	host->flags |= HSMMC_RUNTIME_SUSPENDED;
 
-BTW, drivers/firmware/ doesn't seem to have an overall maintainer. Who
-should Alex send the patch to, or should I just take this patch throught
-the Tegra tree once the files are moved?
+Can you provide more details about the infinite loop and how it will get recovered.
+
+> +	spin_unlock_irqrestore(&host->irq_lock, flags);
+> +
+> +	return ret;
+>   }
+>
+>   static int omap_hsmmc_runtime_resume(struct device *dev)
+>   {
+>   	struct omap_hsmmc_host *host;
+> +	unsigned long flags;
+> +	int ret = 0;
+>
+>   	host = platform_get_drvdata(to_platform_device(dev));
+>   	omap_hsmmc_context_restore(host);
+>   	dev_dbg(dev, "enabled\n");
+>
+> -	return 0;
+> +	spin_lock_irqsave(&host->irq_lock, flags);
+> +	/* infinite loop, if irq not cleared in omap_hsmmc_enable_sdio_irq */
+> +	host->flags &= ~HSMMC_RUNTIME_SUSPENDED;
+> +	spin_unlock_irqrestore(&host->irq_lock, flags);
+> +
+> +	if (host->flags & HSMMC_SWAKEUP_QUIRK) {
+> +		disable_irq(mmc_slot(host).sdio_irq);
+> +
+> +		ret = pinctrl_select_state(host->pinctrl, host->active);
+> +		if (ret < 0)
+> +			dev_warn(mmc_dev(host->mmc), "Unable to select active pinmux\n");
+> +
+> +		spin_lock_irqsave(&host->irq_lock, flags);
+> +		if (host->flags & HSMMC_SDIO_IRQ_ENABLED) {
+> +			OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
+> +			OMAP_HSMMC_WRITE(host->base, ISE, CIRQ_EN);
+> +			OMAP_HSMMC_WRITE(host->base, IE, CIRQ_EN);
+> +		}
+> +		spin_unlock_irqrestore(&host->irq_lock, flags);
+> +	}
+> +	return ret;
+>   }
+>
+>   static struct dev_pm_ops omap_hsmmc_dev_pm_ops = {
+> diff --git a/include/linux/platform_data/mmc-omap.h b/include/linux/platform_data/mmc-omap.h
+> index 2bf1b30..fd5fff5 100644
+> --- a/include/linux/platform_data/mmc-omap.h
+> +++ b/include/linux/platform_data/mmc-omap.h
+> @@ -115,6 +115,7 @@ struct omap_mmc_platform_data {
+>
+>   		int switch_pin;			/* gpio (card detect) */
+>   		int gpio_wp;			/* gpio (write protect) */
+> +		int gpio_cirq;			/* gpio (card irq) */
+>
+>   		int (*set_bus_mode)(struct device *dev, int slot, int bus_mode);
+>   		int (*set_power)(struct device *dev, int slot,
+> @@ -145,6 +146,9 @@ struct omap_mmc_platform_data {
+>   		int card_detect_irq;
+>   		int (*card_detect)(struct device *dev, int slot);
+>
+> +		/* SDIO IRQs */
+> +		int sdio_irq;
+> +
+>   		unsigned int ban_openended:1;
+>
+>   	} slots[OMAP_MMC_MAX_SLOTS];
+>
