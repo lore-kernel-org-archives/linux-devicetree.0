@@ -1,57 +1,60 @@
-From: Archit Taneja <archit@ti.com>
-Subject: [PATCH v4 2/2] drm: omap: Enable DT support for DMM
-Date: Tue, 15 Oct 2013 12:34:20 +0530
-Message-ID: <1381820660-5501-3-git-send-email-archit@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com>
- <1381820660-5501-1-git-send-email-archit@ti.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 12/13] usb: phy: msm: Properly check core interrupt
+ number
+Date: Tue, 15 Oct 2013 10:12:16 +0300
+Message-ID: <1381821136.29983.15.camel@iivanov-dev.int.mm-sol.com>
+References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
+	 <1381764280-28420-13-git-send-email-iivanov@mm-sol.com>
+	 <20131014225933.GF7446@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381820660-5501-1-git-send-email-archit@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com
-Cc: tomi.valkeinen@ti.com, robdclark@gmail.com, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Andy Gross <andygro@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131014225933.GF7446@radagast>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dsegal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable use of DT for DMM/Tiler.
+On Mon, 2013-10-14 at 17:59 -0500, Felipe Balbi wrote: 
+> On Mon, Oct 14, 2013 at 06:24:39PM +0300, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > 
+> > IRQ with number 0 is valid case, so check for negative
+> 
+> not entirelly correct... IRQ 0 isn't supposed to be used as a linux IRQ
+> number IIRC.
 
-Originally worked on by Andy Gross <andygro@gmail.com>
+I am not really sure. NO_IRQ is -1 at least on ARM. Also when
+taking into account irqdomain's zero as interrupt number is valid??
 
-Cc: Andy Gross <andygro@gmail.com>
-Cc: DRI Development <dri-devel@lists.freedesktop.org>
-Signed-off-by: Archit Taneja <archit@ti.com>
----
- drivers/gpu/drm/omapdrm/omap_dmm_tiler.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> 
+> > numbers instead.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/usb/phy/phy-msm-usb.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+> > index ca2abe6..f34c8a9 100644
+> > --- a/drivers/usb/phy/phy-msm-usb.c
+> > +++ b/drivers/usb/phy/phy-msm-usb.c
+> > @@ -1415,7 +1415,7 @@ static int __init msm_otg_probe(struct platform_device *pdev)
+> >  	dev_info(&pdev->dev, "OTG regs = %p\n", motg->regs);
+> >  
+> >  	motg->irq = platform_get_irq(pdev, 0);
+> > -	if (!motg->irq) {
+> > +	if (motg->irq < 0) {
+> 
+> this check is correct though, since platform_get_irq() will return
+> -ENXIO if it doesn't find IRQ resource.
+> 
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-index acf6678..59f17de 100644
---- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-+++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-@@ -968,12 +968,23 @@ static const struct dev_pm_ops omap_dmm_pm_ops = {
- };
- #endif
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id dmm_of_match[] = {
-+	{ .compatible = "ti,omap4-dmm", },
-+	{ .compatible = "ti,omap5-dmm", },
-+	{},
-+};
-+#else
-+#define dmm_of_match NULL
-+#endif
-+
- struct platform_driver omap_dmm_driver = {
- 	.probe = omap_dmm_probe,
- 	.remove = omap_dmm_remove,
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name = DMM_DRIVER_NAME,
-+		.of_match_table = dmm_of_match,
- #ifdef CONFIG_PM
- 		.pm = &omap_dmm_pm_ops,
- #endif
--- 
-1.8.1.2
+Thanks,
+Ivan
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
