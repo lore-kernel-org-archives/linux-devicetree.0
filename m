@@ -1,88 +1,77 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10 3/7] ARM: dts: enable hi4511 with device tree
-Date: Tue, 15 Oct 2013 20:18:10 +0200
-Message-ID: <201310152018.10908.arnd@arndb.de>
-References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org> <1381828577-27998-4-git-send-email-haojian.zhuang@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 5/8] ARM: dts: Add basic support for TMDSEVM3730
+ (Mistral AM/DM37x EVM)
+Date: Tue, 15 Oct 2013 11:43:32 -0700
+Message-ID: <20131015184306.GC11234@atomide.com>
+References: <20131010221833.9063.49904.stgit@localhost>
+ <20131010222053.9063.81702.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381828577-27998-4-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131010222053.9063.81702.stgit@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 October 2013, Haojian Zhuang wrote:
-> Enable Hisilicon Hi4511 development platform with device tree support.
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+* Tony Lindgren <tony@atomide.com> [131010 15:29]:
+> I've tested the serial, MMC, smsc911x, wl12xx, and off-idle support
+> with the pinctrl patches, so it probably works better than the
+> board-*.c files ever did. Also the board-omap3evm.c file is broken
+> for the DSS, and has been for a while. Patches are welcome to fix
+> it in this .dts file, let's just drop the board-*.c file for this.
 
-Based on my other mail, some more comments here:
+Oops, the NAND I did not test and the copied partition map is
+different from the board file. Here's the updated partition map.
+I've tested the NAND using ubifs on the last partition.
 
-> +/ {
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
+I'm folding in the following fix as I did not push it out yet.
 
-Since all clocks are in the fc802000 page, I would prefer using a non-empty
-ranges to map the clocks into their own address space, like
+Regards,
 
-		ranges = <0 0xfc802000 0x1000>;
+Tony
 
 
-> +		timer4_mux: timer4_mux@fc802018 {
-> +			compatible = "hisilicon,clk-mux";
-> +			#clock-cells = <0>;
-> +			clocks = <&osc32k &timerclk45>;
-> +			clock-output-names = "timer4_mux";
-> +			reg = <0xfc802018 0x4>;
-> +			clkmux-mask = <0x3>;
-> +			clkmux-table = <0 0x1>;
-> +		};
-
-which would turn this into 
-
-		timer4_mux: timer4_mux@18 {
-			...
-			reg = <0x18 0x4>;
-			...
-		};
-
-The code would not be impacted by this.
-
-On a related note, I find it strange that you have multiple devices with the
-same register. Normally, we try to have device node names be generic,
-e.g. 'clock@18' rather than 'timer4_mux@18', but that won't work if the
-register is the same for all of them. Maybe some DT expert can comment
-on this.
-
-> +
-> +	amba {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "arm,amba-bus";
-> +		interrupt-parent = <&gic>;
-> +		ranges;
-> +
-> +		L2: l2-cache {
-> +			compatible = "arm,pl310-cache";
-> +			reg = <0xfc10000 0x100000>;
-> +			interrupts = <0 15 4>;
-> +			cache-unified;
-> +			cache-level = <2>;
-> +		};
-
-For this node, we could use the same trick with the non-empty ranges, since
-all amba devices seem to be in the 0xfc000000 range.
-
-If you do that, it probably makes sense to move the clock controller under here
-as well.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--- a/arch/arm/boot/dts/omap3-evm-37xx.dts
++++ b/arch/arm/boot/dts/omap3-evm-37xx.dts
+@@ -94,7 +94,7 @@
+ 		 <5 0 0x2c000000 0x01000000>;
+ 
+ 	nand@0,0 {
+-		linux,mtd-name= "micron,mt29c4g96maz";
++		linux,mtd-name= "hynix,h8kds0un0mer-4em";
+ 		reg = <0 0 0>;
+ 		nand-bus-width = <16>;
+ 		ti,nand-ecc-opt = "bch8";
+@@ -118,24 +118,24 @@
+ 		#size-cells = <1>;
+ 
+ 		partition@0 {
+-			label = "SPL";
+-			reg = <0 0x100000>;
++			label = "X-Loader";
++			reg = <0 0x80000>;
+ 		};
+ 		partition@0x80000 {
+ 			label = "U-Boot";
+-			reg = <0x100000 0x180000>;
++			reg = <0x80000 0x1c0000>;
+ 		};
+ 		partition@0x1c0000 {
+ 			label = "Environment";
+-			reg = <0x280000 0x100000>;
++			reg = <0x240000 0x40000>;
+ 		};
+ 		partition@0x280000 {
+ 			label = "Kernel";
+-			reg = <0x380000 0x300000>;
++			reg = <0x280000 0x500000>;
+ 		};
+ 		partition@0x780000 {
+ 			label = "Filesystem";
+-			reg = <0x680000 0x1f980000>;
++			reg = <0x780000 0x1f880000>;
+ 		};
+ 	};
+ 
