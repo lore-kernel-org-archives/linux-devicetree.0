@@ -1,55 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 2/7] ARM: hi3xxx: add board support with device tree
-Date: Tue, 15 Oct 2013 20:06:38 +0200
-Message-ID: <201310152006.38824.arnd@arndb.de>
-References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org>
- <201310151500.36959.arnd@arndb.de>
- <CAD6h2NR6umVpgYM2t2pwrwP8-Jk-e3Kfng-7oymPJ44cNmuk-w@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Tegra124 clock support
+Date: Tue, 15 Oct 2013 11:14:42 -0700
+Message-ID: <CAOesGMiXDqO9tKaj1s_hN32q_bPdLVojWPe2LweURDq-b2784w__48629.0875509896$1381860899$gmane$org@mail.gmail.com>
+References: <1381850098-12357-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD6h2NR6umVpgYM2t2pwrwP8-Jk-e3Kfng-7oymPJ44cNmuk-w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Shaojie Sun <shaojie.sun@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Patch Tracking <patches@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381850098-12357-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 October 2013, Haojian Zhuang wrote:
-> On 15 October 2013 21:00, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 15 October 2013, Haojian Zhuang wrote:
-> >>
-> >> Add board support with device tree for Hisilicon Hi3620 SoC platform.
-> >>
-> >> Changelog:
-> >> v10:
-> >> 1. Add .map_io() & debug_ll_io_init() back. Since debug_ll_io_init() is
-> >> only called if .map_io() isn't assigned. Use .map_io() to setup static
-> >> IO mapping that is used in clock driver.
-> >>
-> >
-> > This seems like a step in the wrong direction. Why would you want to use
-> > a static I/O mapping in the clock driver?
-> >
-> 
-> Because Stephen & Kevin asked me to use unit address in DTS file. They
-> also require me to use reg property to present real hardware address
-> in DTS file.
+[devicetree to bcc]
 
-Ah, so it's just an optimization, not required to make the clock driver
-work, I misread that. Can you add a comment near the hi3620_io_desc
-definition and verify that it still works without it?
+Peter,
 
-I would also recommend to extend that static mapping to the entire
-0xfc800000-0xfcbfffff range, or whatever you can use to get the most
-I/O devices with a small number of TLB entries.
+Please don't post driver/platform patches to the devicetree list. Only
+bindings updates should be posted here.
 
-	Arnd
+Otherwise the volume of patches make the people who need to see the
+and review the bindings run for the hills. :-)
+
+
+-Olof
+
+On Tue, Oct 15, 2013 at 8:14 AM, Peter De Schrijver
+<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> This series introduces support for the Tegra124 CAR clocks.
+> Based on '[PATCH v3 00/12] Introduce common infra for tegra clocks'
+>
+> changes since v1:
+>
+> + suspend/resume for LP1 (Joseph Lo)
+> + fixed some comments
+> + account for changes to the common infra code
+>
+> Joseph Lo (2):
+>   clk: tegra124: add wait_for_reset and disable_clock for
+>     tegra_cpu_car_ops
+>   clk: tegra124: add suspend/resume function for tegra_cpu_car_ops
+>
+> Peter De Schrijver (5):
+>   clk: tegra: Add support for PLLSS
+>   clk: tegra: Add periph regs bank X
+>   clk: tegra124: Add common clk IDs to clk-id.h
+>   clk: tegra124: Add new peripheral clocks
+>   clk: tegra124: Add support for Tegra124 clocks
+>
+>  drivers/clk/tegra/Makefile               |    1 +
+>  drivers/clk/tegra/clk-id.h               |   20 +
+>  drivers/clk/tegra/clk-pll.c              |  172 ++++
+>  drivers/clk/tegra/clk-tegra-periph.c     |   55 ++
+>  drivers/clk/tegra/clk-tegra124.c         | 1430 ++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.c                  |   10 +
+>  drivers/clk/tegra/clk.h                  |    5 +
+>  include/dt-bindings/clock/tegra124-car.h |  341 +++++++
+>  8 files changed, 2034 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/clk/tegra/clk-tegra124.c
+>  create mode 100644 include/dt-bindings/clock/tegra124-car.h
+>
+> --
+> 1.7.7.rc0.72.g4b5ea.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
