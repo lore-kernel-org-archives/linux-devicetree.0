@@ -1,225 +1,156 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
- status bit fields
-Date: Tue, 15 Oct 2013 17:09:54 +0530
-Message-ID: <CAHfPSqDbvgtMpivfhwd4kW3NE7x2=-zyE1ugpox+e0+mxm7bmg@mail.gmail.com>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
- <1615083.zyGXhBfPcS@amdc1032> <525BFD1B.5080709@ti.com> <3444817.fM2Daj9BhR@amdc1032>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 2/2] phy: omap-usb2: Adapt phy-omap-usb2 for AM437x
+Date: Tue, 15 Oct 2013 06:51:36 -0500
+Message-ID: <20131015115136.GB11380@radagast>
+References: <1381820025-31376-1-git-send-email-george.cherian@ti.com>
+ <1381820025-31376-3-git-send-email-george.cherian@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <3444817.fM2Daj9BhR@amdc1032>
-Sender: linux-pm-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, rui.zhang@intel.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SkvwRMAIpAhPCcCJ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381820025-31376-3-git-send-email-george.cherian@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, tony@atomide.com, balbi@ti.com, kishon@ti.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 October 2013 21:31, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> On Monday, October 14, 2013 10:18:03 AM Eduardo Valentin wrote:
->> On 11-10-2013 11:57, Bartlomiej Zolnierkiewicz wrote:
->> >
->> > Hi,
->> >
->> > On Friday, October 11, 2013 11:10:38 AM Eduardo Valentin wrote:
->> >> Hi Naveen,
->> >>
->> >> On 09-10-2013 10:03, Bartlomiej Zolnierkiewicz wrote:
->> >>>
->> >>> Hi,
->> >>>
->> >>> All patches (#1-#3) look good to me, FWIW you can add:
->> >>>
->> >>>   Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> >>>
->> >>> Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412
->> >>> fixup patchset:
->> >>>
->> >>>   https://lkml.org/lkml/2013/10/9/35
->> >>>
->> >>> It is up to Eduardo to resolve this but it probably would be better to
->> >>> merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This would
->> >>> require you to port patch #3 over Lukasz's patchset though.
->> >>
->> >> My question is if this fix applies also to EXYNOS4412, as it  is not
->> >> mentioned in the patch description and the change affects all supported
->> >
->> > This patch doesn't affect EXYNOS4210 as exynos4210_tmu_registers struct
->>
->> I was, at least for now, worried about 4412, as I mentioned above.
->>
->> > uses the default zero value for inten_fall_mask, inten_fall_shift and
->> > intclr_fall_shift.
->> >
->> >> chip version deliberately. Has this change been validated on all
->> >> supported chip versions?
->> >>
->> >> Amit, I saw you ack, but still, it is not clear how this change behaves
->> >> across supported hardware.
->> >
->> > For EXYNOS4412 and EXYNOS5250 this patch doesn't cause any functionality
->> > changes because while the patch changes inten_fall_shift usage to
->> > intclr_fall_shift one in exynos_tmu_initialize() it defines
->> > EXYNOS_TMU_CLEAR_FALL_INT_SHIFT to 12 (old EXYNOS_TMU_FALL_INT_SHIFT
->> > value).
->> >
->>
->> OK. Then the patch is about a symbol rename, right?
->
-> Yes and while doing so it also changes the define and the value used on
-> EXYNOS5440. I checked this change against the documentation today (please
-> see below).
->
->> > This patch only changes driver behavior for EXYNOS5440 on which the
->> > used shift value changes from 4 to 12.
->>
->> I see.
->
-> tmu_intstat and tmu_intclear refer to the same register on EXYNOS5440
-> (EXYNOS5440_TMU_S0_7_IRQ defined to 0x230) and the documentation that
-> I have says that the value 4 (which matches EXYNOS5440_TMU_FALL_INT_SHIFT
-> before the patch) should be used for the shift value. However the patch
-> doesn't define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT and instead makes
-> the code use generic EXYNOS_TMU_CLEAR_FALL_INT_SHIFT (defined to value
-> 12) also on EXYNOS5440. This doesn't seem correct.
+--SkvwRMAIpAhPCcCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right EXYNOS5440  User manual says TMU_S0-7_IRQEN register fields
-RISE_IRQEN 3:0
-FALL_IRQEN 7:4
-Will make changes accordingly.
+Hi,
 
-I've only tested on Exynos5250 and Exynos5420.
-Depending on Amit for Exynos5440 as i don't hardware available.
->
-> Naveen, this issue needs to be either fixed or explained properly (if
-> the documentation is wrong) in the patch description. Please also put some
-> information about hardware that you've tested your patch on in the patch
-> description.
-I've seen that the patches won't apply straight.
-and there is a compilation warning introduced. Will fix both of them.
->
->> >
->> > PS I've only noticed it now but after this patch inten_fall_shift becomes
->> > unused and can be removed.
->> >
->>
->>
->> Then we should remove it.
->
-> I completely agree.
->
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
->
->> > Best regards,
->> > --
->> > Bartlomiej Zolnierkiewicz
->> > Samsung R&D Institute Poland
->> > Samsung Electronics
->> >
->> >>>
->> >>> Best regards,
->> >>> --
->> >>> Bartlomiej Zolnierkiewicz
->> >>> Samsung R&D Institute Poland
->> >>> Samsung Electronics
->> >>>
->> >>> On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wrote:
->> >>>> The FALL interrupt related en, status bits are available at an offset of
->> >>>> 16 on INTEN, INTSTAT registers and at an offset of
->> >>>> 12 on INTCLEAR register.
->> >>>>
->> >>>> This patch corrects the same for exyns5250 and exynos5440
->> >>>>
->> >>>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> >>>> ---
->> >>>> Changes since v1:
->> >>>> Changes since v2:
->> >>>> Changes since v3:
->> >>>>   None
->> >>>>
->> >>>>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
->> >>>>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
->> >>>>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->> >>>>  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
->> >>>>  4 files changed, 7 insertions(+), 2 deletions(-)
->> >>>>
->> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
->> >>>> index b43afda..af69209 100644
->> >>>> --- a/drivers/thermal/samsung/exynos_tmu.c
->> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
->> >>>> @@ -265,7 +265,7 @@ skip_calib_data:
->> >>>>                                  data->base + reg->threshold_th1);
->> >>>>
->> >>>>                  writel((reg->inten_rise_mask << reg->inten_rise_shift) |
->> >>>> -                        (reg->inten_fall_mask << reg->inten_fall_shift),
->> >>>> +                        (reg->inten_fall_mask << reg->intclr_fall_shift),
->> >>>>                                  data->base + reg->tmu_intclear);
->> >>>>
->> >>>>                  /* if last threshold limit is also present */
->> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
->> >>>> index b364c9e..7c6c34a 100644
->> >>>> --- a/drivers/thermal/samsung/exynos_tmu.h
->> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.h
->> >>>> @@ -134,6 +134,7 @@ enum soc_type {
->> >>>>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
->> >>>>   * @tmu_intstat: Register containing the interrupt status values.
->> >>>>   * @tmu_intclear: Register for clearing the raised interrupt status.
->> >>>> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
->> >>>>   * @emul_con: TMU emulation controller register.
->> >>>>   * @emul_temp_shift: shift bits of emulation temperature.
->> >>>>   * @emul_time_shift: shift bits of emulation time.
->> >>>> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
->> >>>>          u32     tmu_intstat;
->> >>>>
->> >>>>          u32     tmu_intclear;
->> >>>> +        u32     intclr_fall_shift;
->> >>>>
->> >>>>          u32     emul_con;
->> >>>>          u32     emul_temp_shift;
->> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
->> >>>> index 9002499..23fea23 100644
->> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
->> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
->> >>>> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
->> >>>>          .inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
->> >>>>          .tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
->> >>>>          .tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
->> >>>> +        .intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->> >>>>          .emul_con = EXYNOS_EMUL_CON,
->> >>>>          .emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
->> >>>>          .emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
->> >>>> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
->> >>>>          .inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
->> >>>>          .tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
->> >>>>          .tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
->> >>>> +        .intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->> >>>>          .tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
->> >>>>          .emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
->> >>>>          .emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
->> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
->> >>>> index dc7feb5..8788a87 100644
->> >>>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
->> >>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
->> >>>> @@ -69,9 +69,10 @@
->> >>>>  #define EXYNOS_TMU_RISE_INT_MASK        0x111
->> >>>>  #define EXYNOS_TMU_RISE_INT_SHIFT       0
->> >>>>  #define EXYNOS_TMU_FALL_INT_MASK        0x111
->> >>>> -#define EXYNOS_TMU_FALL_INT_SHIFT       12
->> >>>> +#define EXYNOS_TMU_FALL_INT_SHIFT       16
->> >>>>  #define EXYNOS_TMU_CLEAR_RISE_INT       0x111
->> >>>>  #define EXYNOS_TMU_CLEAR_FALL_INT       (0x111 << 12)
->> >>>> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT 12
->> >>>>  #define EXYNOS_TMU_TRIP_MODE_SHIFT      13
->> >>>>  #define EXYNOS_TMU_TRIP_MODE_MASK       0x7
->> >>>>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT  12
->
+On Tue, Oct 15, 2013 at 12:23:45PM +0530, George Cherian wrote:
+> This patch adds a compatible for AM437x "ti,am43xx-usb2" to
+> reuse the same phy-omap-usb2 driver.
 
+it does more than just adding a new compatible flag.
 
+> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+> index 3e5f08c..7c0bc6c 100644
+> --- a/drivers/phy/phy-omap-usb2.c
+> +++ b/drivers/phy/phy-omap-usb2.c
+> @@ -144,6 +144,35 @@ static struct phy_ops ops =3D {
+>  	.owner		=3D THIS_MODULE,
+>  };
+> =20
+> +#ifdef CONFIG_OF
+> +static const struct usb_phy_data omap_usb2_data =3D {
+> +	.label =3D "omap_usb2",
+> +	.set_host =3D omap_usb_set_host,
+> +	.set_peripheral =3D omap_usb_set_peripheral,
+> +	.set_vbus =3D omap_usb_set_vbus,
+> +	.start_srp =3D omap_usb_start_srp,
+> +};
+> +
+> +static const struct usb_phy_data am437x_usb2_data =3D {
+> +	.label =3D "am437x_usb2",
+> +	.set_host =3D omap_usb_set_host,
+> +	.set_peripheral =3D omap_usb_set_peripheral,
+> +};
+> +
+> +static const struct of_device_id omap_usb2_id_table[] =3D {
+> +	{
+> +		.compatible =3D "ti,omap-usb2",
+> +		.data =3D &omap_usb2_data,
+> +	},
+> +	{
+> +		.compatible =3D "ti,am437x-usb2",
+> +		.data =3D &am437x_usb2_data,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
+> +#endif
+> +
+>  static int omap_usb2_probe(struct platform_device *pdev)
+>  {
+>  	struct omap_usb	*phy;
+> @@ -153,9 +182,14 @@ static int omap_usb2_probe(struct platform_device *p=
+dev)
+>  	struct device_node *node =3D pdev->dev.of_node;
+>  	struct device_node *control_node;
+>  	struct platform_device *control_pdev;
+> +	const struct of_device_id *of_id;
+> +	struct usb_phy_data *phy_data;
+> +
+> +	of_id =3D of_match_device(of_match_ptr(omap_usb2_id_table), &pdev->dev);
+> =20
+> -	if (!node)
+> +	if (!of_id)
+>  		return -EINVAL;
+> +	phy_data =3D (struct usb_phy_data *)of_id->data;
+> =20
+>  	phy =3D devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
+>  	if (!phy) {
+> @@ -172,7 +206,7 @@ static int omap_usb2_probe(struct platform_device *pd=
+ev)
+>  	phy->dev		=3D &pdev->dev;
+> =20
+>  	phy->phy.dev		=3D phy->dev;
+> -	phy->phy.label		=3D "omap-usb2";
+> +	phy->phy.label		=3D phy_data->label;
 
--- 
-Shine bright,
-(: Nav :)
+label can be set based on compatible flag:
+
+if (of_device_is_compatible(node, "ti,omap-usb2"))
+	phy->phy.label		=3D "omap-usb2";
+else /* if (of_device_is_compatible(node, "ti,am437x-usb2")) */ /* default =
+to newest */
+	phy->phy.label		=3D "am437x-usb2";	/* keep name consistency */
+
+>  	phy->phy.set_suspend	=3D omap_usb2_suspend;
+>  	phy->phy.otg		=3D otg;
+>  	phy->phy.type		=3D USB_PHY_TYPE_USB2;
+> @@ -199,10 +233,10 @@ static int omap_usb2_probe(struct platform_device *=
+pdev)
+>  	phy->is_suspended	=3D 1;
+>  	omap_control_usb_phy_power(phy->control_dev, 0);
+> =20
+> -	otg->set_host		=3D omap_usb_set_host;
+> -	otg->set_peripheral	=3D omap_usb_set_peripheral;
+> -	otg->set_vbus		=3D omap_usb_set_vbus;
+> -	otg->start_srp		=3D omap_usb_start_srp;
+> +	otg->set_host		=3D phy_data->set_host;
+> +	otg->set_peripheral	=3D phy_data->set_peripheral;
+> +	otg->set_vbus		=3D phy_data->set_vbus;
+> +	otg->start_srp		=3D phy_data->start_srp;
+
+this doesn't look right. I would rather have feature flags so that you
+could:
+
+if (test_bit(&phy_data->flags, OMAP_USB2_HAS_SRP))
+	otg->start_srp =3D omap_usb_start_srp;
+
+and so on. Note that you might need to add __maybe_unused annotations to
+those functions otherwise you'll get unused warnings.
+
+--=20
+balbi
+
+--SkvwRMAIpAhPCcCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSXSxIAAoJEIaOsuA1yqRESpgQAKFiqCTF5cdYmAk752fKEBzv
+xYdR/P79dVYeM1a2oGTJHqf6HK2hdWIOz7KI5n1wCI0KZ11V9a1AawAqJL1I13+L
+VCtiEYZhZQSoYAdkVYQPPMrRaCPP9pAiaXdP+Td/nL1tmUkRaZcBvG8v8hi+hwQq
+jmjXctuwCAbpLG4NbvdGWbuacyC/tZpRfY9mqgmlHyAhK5wEtvWllifMicQ4r6SF
+qBol5PbTdy9HOt7o7Dh9ERNth3Jo5VJJJRTrrMtird01CT+H3uM/H3QIQ8KU1BvU
+34U+xqo659ud4wTfATQl94Vvh0An5na/PMQTMf/u5bEeZDjCL2FfN0ErWLmpwXwr
+xThwpEgOaF6giWJ2gJpeMquAx9ono2GCD3o/Tf3GAt0HVx+II6ro7aNyTvoGblqn
+FlktTelROh/BTFRpoQC9qeT2nhweNjXd+Blm+jIWoI0nzhD3udBHY2mahXYZ+Yag
+S+orm9Ma0NgVokfvmiig/hCUkG0q/iCE5vaNw8KXbFIIdhoIWSU7rAEZBBgV0/cb
+a6gpnqum1PvW1CcEOmZltLRkiJbwVVGpI4bcNGzmuAujxrcaR+WykVzGa3tmeSbZ
+yjosoRWuLH26Zrs9Y7vDRopD7jgJzANmAZCYBL+lPXA/ceY/dfv2MS8jXgoRL6Nf
+7AHqzXkWdovXAxxuVM5z
+=YVKe
+-----END PGP SIGNATURE-----
+
+--SkvwRMAIpAhPCcCJ--
