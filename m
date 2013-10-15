@@ -1,290 +1,125 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY Framework
-Date: Tue, 15 Oct 2013 15:10:42 +0300
-Message-ID: <525D30C2.8060208@ti.com>
-References: <1378136591-7463-1-git-send-email-kishon@ti.com> <1378136591-7463-3-git-send-email-kishon@ti.com> <525814A9.7060106@ti.com> <525BB8C0.1070802@ti.com> <525BC5A9.3060904@ti.com> <20131015115741.GD11380@radagast>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase
+ in system manager
+Date: Tue, 15 Oct 2013 07:37:48 -0500
+Message-ID: <525D371C.3070201@gmail.com>
+References: <1381780051-1826-1-git-send-email-dinguyen@altera.com> <525CE5FD.8070107@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131015115741.GD11380@radagast>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <525CE5FD.8070107@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, dinguyen@altera.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Seungwon Jeon <tgih.jun@samsung.com>, Pavel Machek <pavel@denx.de>, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Chris Ball <cjb@laptop.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 02:57 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Mon, Oct 14, 2013 at 01:21:29PM +0300, Roger Quadros wrote:
->> +Vivek
->>
->> On 10/14/2013 12:26 PM, Kishon Vijay Abraham I wrote:
->>> Hi Roger,
->>>
->>> On Friday 11 October 2013 08:39 PM, Roger Quadros wrote:
->>>> Hi,
->>>>
->>>> On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
->>>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
->>>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
->>>>> phy_power_on() and phy_power_off().
->>>>>
->>>>> However using the old USB phy library wont be removed till the PHYs of all
->>>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
->>>>>  drivers/usb/dwc3/Kconfig                       |    1 +
->>>>>  drivers/usb/dwc3/core.c                        |   49 ++++++++++++++++++++++++
->>>>>  drivers/usb/dwc3/core.h                        |    7 ++++
->>>>>  4 files changed, 61 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->>>>> index e807635..471366d 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>>>> @@ -6,11 +6,13 @@ Required properties:
->>>>>   - compatible: must be "snps,dwc3"
->>>>>   - reg : Address and length of the register set for the device
->>>>>   - interrupts: Interrupts used by the dwc3 controller.
->>>>> +
->>>>> +Optional properties:
->>>>>   - usb-phy : array of phandle for the PHY device.  The first element
->>>>>     in the array is expected to be a handle to the USB2/HS PHY and
->>>>>     the second element is expected to be a handle to the USB3/SS PHY
->>>>> -
->>>>> -Optional properties:
->>>>> + - phys: from the *Generic PHY* bindings
->>>>> + - phy-names: from the *Generic PHY* bindings
->>>>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->>>>>  
->>>>>  This is usually a subnode to DWC3 glue to which it is connected.
->>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
->>>>> index cfc16dd..ad7ce83 100644
->>>>> --- a/drivers/usb/dwc3/Kconfig
->>>>> +++ b/drivers/usb/dwc3/Kconfig
->>>>> @@ -3,6 +3,7 @@ config USB_DWC3
->>>>>  	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
->>>>>  	depends on EXTCON
->>>>>  	select USB_PHY
->>>>> +	select GENERIC_PHY
->>>>>  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
->>>>>  	help
->>>>>  	  Say Y or M here if your system has a Dual Role SuperSpeed
->>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->>>>> index 428c29e..485d365 100644
->>>>> --- a/drivers/usb/dwc3/core.c
->>>>> +++ b/drivers/usb/dwc3/core.c
->>>>> @@ -82,6 +82,12 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
->>>>>  
->>>>>  	usb_phy_init(dwc->usb2_phy);
->>>>>  	usb_phy_init(dwc->usb3_phy);
->>>>
->>>> How about adding
->>>> +	if (dwc->usb2_phy)
->>>> +		usb_phy_init(dwc->usb2_phy);
->>>> +	if (dwc->usb3_phy)
->>>> +		usb_phy_init(dwc->usb3_phy);
->>>
->>> Thankfully that usb_phy_init will check if phy is NULL.
->>>>
->>>> both usb phy and generic phy shouldn't be present together.
->>>
->>> ok.
->>>>
->>>>> +
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_init(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_init(dwc->usb3_generic_phy);
->>>>> +
->>>>>  	mdelay(100);
->>>>>  
->>>>>  	/* Clear USB3 PHY reset */
->>>>> @@ -343,6 +349,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
->>>>>  {
->>>>>  	usb_phy_shutdown(dwc->usb2_phy);
->>>>>  	usb_phy_shutdown(dwc->usb3_phy);
->>>>
->>>> here as well
->>>>
->>>>> +
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_power_off(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_power_off(dwc->usb3_generic_phy);
->>>>>  }
->>>>>  
->>>>>  #define DWC3_ALIGN_MASK		(16 - 1)
->>>>> @@ -427,6 +438,23 @@ static int dwc3_probe(struct platform_device *pdev)
->>>>>  		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
->>>>>  	}
->>>>>  
->>>>> +	if (of_property_read_bool(node, "phys") || pdata->has_phy) {
->>>>> +		dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
->>>>> +		if (IS_ERR(dwc->usb2_generic_phy)) {
->>>>> +			dev_err(dev, "no usb2 phy configured yet");
->>>>> +			return PTR_ERR(dwc->usb2_generic_phy);
->>>>> +		}
->>>>> +
->>>>> +		dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
->>>>> +		if (IS_ERR(dwc->usb3_generic_phy)) {
->>>>> +			dev_err(dev, "no usb3 phy configured yet");
->>>>> +			return PTR_ERR(dwc->usb3_generic_phy);
->>>>> +		}
->>>>
->>>> better to add
->>>> +		/* Don't use USB PHY if generic PHY was found */
->>>> +		dwc->usb2_phy = dwc->usb3_phy = NULL;
->>>
->>> ok.
->>>>
->>>>> +	} else {
->>>>
->>>> not required as we've used kzalloc for dwc.
->>>>
->>>>> +		dwc->usb2_generic_phy = NULL;
->>>>> +		dwc->usb3_generic_phy = NULL;
->>>>> +	}
->>>>> +
->>>>>  	/* default to superspeed if no maximum_speed passed */
->>>>>  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
->>>>>  		dwc->maximum_speed = USB_SPEED_SUPER;
->>>>> @@ -450,6 +478,11 @@ static int dwc3_probe(struct platform_device *pdev)
->>>>
->>>> if (dwc->usb2_phy)
->>>>
->>>>>  	usb_phy_set_suspend(dwc->usb2_phy, 0);
->>>>
->>>> if (dwc->usb3_phy)
->>>>
->>>>>  	usb_phy_set_suspend(dwc->usb3_phy, 0);
->>>>>  
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_power_on(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_power_on(dwc->usb3_generic_phy);
->>>>> +
->>>>>  	spin_lock_init(&dwc->lock);
->>>>>  	platform_set_drvdata(pdev, dwc);
->>>>>  
->>>>> @@ -576,6 +609,11 @@ static int dwc3_remove(struct platform_device *pdev)
->>>>
->>>> if (dwc->usb2_phy)
->>>>>  	usb_phy_set_suspend(dwc->usb2_phy, 1);
->>>>
->>>> if (dwc->usb3_phy)
->>>>>  	usb_phy_set_suspend(dwc->usb3_phy, 1);
->>>>>  
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_power_off(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_power_off(dwc->usb3_generic_phy);
->>>>> +
->>>>>  	pm_runtime_put(&pdev->dev);
->>>>>  	pm_runtime_disable(&pdev->dev);
->>>>>  
->>>>> @@ -673,6 +711,11 @@ static int dwc3_suspend(struct device *dev)
->>>>
->>>> if (dwc->usb3_phy)
->>>>>  	usb_phy_shutdown(dwc->usb3_phy);
->>>>
->>>> if (dwc->usb2_phy)
->>>>>  	usb_phy_shutdown(dwc->usb2_phy);
->>>>>  
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_exit(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_exit(dwc->usb3_generic_phy);
->>>>> +
->>>>>  	return 0;
->>>>>  }
->>>>>  
->>>>> @@ -683,6 +726,12 @@ static int dwc3_resume(struct device *dev)
->>>>>  
->>>>
->>>> if (dwc->usb3_phy)
->>>>>  	usb_phy_init(dwc->usb3_phy);
->>>>
->>>> if (dwc->usb2_phy)
->>>>>  	usb_phy_init(dwc->usb2_phy);
->>>>> +
->>>>> +	if (dwc->usb2_generic_phy)
->>>>> +		phy_init(dwc->usb2_generic_phy);
->>>>> +	if (dwc->usb3_generic_phy)
->>>>> +		phy_init(dwc->usb3_generic_phy);
->>>>> +
->>>>>  	msleep(100);
->>>>>  
->>>>>  	spin_lock_irqsave(&dwc->lock, flags);
->>>>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
->>>>> index f8af8d4..01ec7d7 100644
->>>>> --- a/drivers/usb/dwc3/core.h
->>>>> +++ b/drivers/usb/dwc3/core.h
->>>>> @@ -31,6 +31,8 @@
->>>>>  #include <linux/usb/gadget.h>
->>>>>  #include <linux/usb/otg.h>
->>>>>  
->>>>> +#include <linux/phy/phy.h>
->>>>> +
->>>>>  /* Global constants */
->>>>>  #define DWC3_EP0_BOUNCE_SIZE	512
->>>>>  #define DWC3_ENDPOINTS_NUM	32
->>>>> @@ -613,6 +615,8 @@ struct dwc3_scratchpad_array {
->>>>>   * @dr_mode: requested mode of operation
->>>>>   * @usb2_phy: pointer to USB2 PHY
->>>>>   * @usb3_phy: pointer to USB3 PHY
->>>>> + * @usb2_generic_phy: pointer to USB2 PHY
->>>>> + * @usb3_generic_phy: pointer to USB3 PHY
->>>>>   * @dcfg: saved contents of DCFG register
->>>>>   * @gctl: saved contents of GCTL register
->>>>>   * @is_selfpowered: true when we are selfpowered
->>>>> @@ -665,6 +669,9 @@ struct dwc3 {
->>>>>  	struct usb_phy		*usb2_phy;
->>>>>  	struct usb_phy		*usb3_phy;
->>>>>  
->>>>> +	struct phy		*usb2_generic_phy;
->>>>> +	struct phy		*usb3_generic_phy;
->>>>> +
->>>>>  	void __iomem		*regs;
->>>>>  	size_t			regs_size;
->>>>>  
->>>>>
->>>
->>> Do you have any suggestions on how to get only individual PHYs? like only
->>> usb2phy or usb3phy?
->>
->> My earlier understanding was that both PHYs are needed only if .speed is "super-speed"
->> and only usb2phy is needed for "high-speed". But as per Vivek's email it seems
->> Samsung's exynos5 SoC doesn't need usb2phy for "super-speed".
->>
->> So to keeps things flexible, I can propose the following approach
->> - if speed == 'high-speed' usb2phy must be present. usb3phy will be ignored if supplied.
->> - if speed == 'super-speed' usb3phy must be present and usb2phy is optional but must be
->> initialized if supplied.
->> - if speed is not specified, we default to 'super-speed'.
->>
->> Felipe, does this address the issue you were facing with OMAP5?
-> 
-> on OMAP5 we cannot skip USB3 PHY initialization. But then it becomes a
-> question of supporting a test feature (in OMAP5 case it would be cool to
-> force controller to lower speeds for testing) or coping with a broken
-> DTS.
-> 
+Hi Jaehoo,
 
-I don't think we can protect ourselves from all possible broken configurations of DTS.
-I would vote for simplicity and maximum flexibility.
+On 10/15/13 1:51 AM, Jaehoon Chung wrote:
+> Hi Dinh,
+>
+> On 10/15/2013 04:47 AM, dinguyen@altera.com wrote:
+>> From: Dinh Nguyen <dinguyen@altera.com>
+>>
+>> Add functionality in the System Manager to set the SDR settings for the
+>> SD/MMC IP.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+>> Cc: Pavel Machek <pavel@denx.de>
+>> CC: Arnd Bergmann <arnd@arndb.de>
+>> CC: Olof Johansson <olof@lixom.net>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>> Cc: Ian Campbell <ian.campbell@citrix.com>
+>> Cc: Chris Ball <cjb@laptop.org>
+>> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+>> Cc: Seungwon Jeon <tgih.jun@samsung.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-mmc@vger.kernel.org
+>> CC: linux-arm-kernel@lists.infradead.org
+>>
+>> ---
+>> v2:
+>> - Have socfpga_sysmgr_set_dwmmc_drvsel_smpsel() take in the SDR settings
+>> directly so that it does not have to walk the DTB.
+>> ---
+>>   arch/arm/mach-socfpga/Makefile     |    2 +-
+>>   arch/arm/mach-socfpga/core.h       |    6 ++++++
+>>   arch/arm/mach-socfpga/system_mgr.c |   28 ++++++++++++++++++++++++++++
+>>   3 files changed, 35 insertions(+), 1 deletion(-)
+>>   create mode 100644 arch/arm/mach-socfpga/system_mgr.c
+>>
+>> diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
+>> index 6dd7a93..e4ff8b9 100644
+>> --- a/arch/arm/mach-socfpga/Makefile
+>> +++ b/arch/arm/mach-socfpga/Makefile
+>> @@ -2,5 +2,5 @@
+>>   # Makefile for the linux kernel.
+>>   #
+>>   
+>> -obj-y					:= socfpga.o
+>> +obj-y					:= socfpga.o system_mgr.o
+>>   obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
+>> diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+>> index 572b8f7..b05fa6a 100644
+>> --- a/arch/arm/mach-socfpga/core.h
+>> +++ b/arch/arm/mach-socfpga/core.h
+>> @@ -44,4 +44,10 @@ extern unsigned long cpu1start_addr;
+>>   
+>>   #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
+>>   
+>> +/* SDMMC Group for System Manager defines */
+>> +#define SYSMGR_SDMMCGRP_CTRL_OFFSET             0x108
+>> +#define DRV_CLK_PHASE_SHIFT_SEL_MASK    0x7
+> I didn't see where this define is used. When do this use?
+It's not used at all. I will remove.
 
-So IMO we should just depend on DTS to provide the phys that are needed by the platform.
-In the driver we initialize whatever PHY is provided and don't complain if any or even all PHYs are missing.
+Thanks for the review.
+Dinh
+>
+> Best Regards,
+> Jaehoon Chung
+>
+>> +#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
+>> +	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+>> +
+>>   #endif
+>> diff --git a/arch/arm/mach-socfpga/system_mgr.c b/arch/arm/mach-socfpga/system_mgr.c
+>> new file mode 100644
+>> index 0000000..9fdce1d
+>> --- /dev/null
+>> +++ b/arch/arm/mach-socfpga/system_mgr.c
+>> @@ -0,0 +1,28 @@
+>> +/*
+>> + * Copyright Altera Corporation (C) 2013. All Rights Reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +#include <linux/of_platform.h>
+>> +#include <asm/mach/map.h>
+>> +
+>> +#include "core.h"
+>> +
+>> +void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(u32 drvsel, u32 smplsel)
+>> +{
+>> +	u32 hs_timing;
+>> +
+>> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel);
+>> +	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+>> +}
+>> +EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
+>>
 
-If this is not good enough then could you please suggest an alternative? Thanks.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
