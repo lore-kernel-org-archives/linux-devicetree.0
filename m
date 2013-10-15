@@ -1,103 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
-Date: Tue, 15 Oct 2013 02:32:28 +0200
-Message-ID: <1902318.RuT4p9kbZ7@avalon>
-References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com> <525C608F.5010303@cogentembedded.com> <20131015002319.GG22321@verge.net.au>
+From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Tue, 15 Oct 2013 01:59:33 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+	 <1381518433.7979.536.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381788786.7979.643.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131015002319.GG22321@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Valentine <valentine.barshak@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381788786.7979.643.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
+DQo+IFNlbnQ6IDIwMTPlubQxMOaciDE15pelIOaYn+acn+S6jCA2OjEzDQo+IFRvOiBUYW5nIFl1
+YW50aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IE1hcmsgUnV0bGFuZDsgZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
+OyBMaSBZYW5nLUxlby1SNTg0NzINCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gcG93ZXJwYy9t
+cGM4NXh4OiBVcGRhdGUgdGhlIGNsb2NrIG5vZGVzIGluIGRldmljZQ0KPiB0cmVlDQo+IA0KPiBP
+biBGcmksIDIwMTMtMTAtMTEgYXQgMjE6NTIgLTA1MDAsIFRhbmcgWXVhbnRpYW4tQjI5OTgzIHdy
+b3RlOg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gU2Vu
+dDogMjAxM+W5tDEw5pyIMTLml6Ug5pif5pyf5YWtIDM6MDcNCj4gPiA+IFRvOiBNYXJrIFJ1dGxh
+bmQNCj4gPiA+IENjOiBUYW5nIFl1YW50aWFuLUIyOTk4MzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4cHBjLQ0KPiA+ID4gZGV2QGxpc3RzLm96bGFicy5vcmc7IExpIFlhbmctTGVv
+LVI1ODQ3Mg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gcG93ZXJwYy9tcGM4NXh4OiBV
+cGRhdGUgdGhlIGNsb2NrIG5vZGVzIGluDQo+ID4gPiBkZXZpY2UgdHJlZQ0KPiA+ID4NCj4gPiA+
+IEknbSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhlICJfMCIvIl8xIiBwYXJ0LCB0aG91Z2guICBE
+b2Vzbid0IGVhY2gNCj4gPiA+IFBMTCBqdXN0IGhhdmUgb25lIG91dHB1dCwgd2hpY2ggdGhlIGNv
+bnN1bWVyIG1heSBjaG9vc2UgdG8gZGl2aWRlIGJ5DQo+ID4gPiAyIChvciBpbiBzb21lIGNhc2Vz
+IDQpPyAgV2h5IGRvZXMgdGhhdCBkaXZpc2lvbiBuZWVkIHRvIGJlIGV4cG9zZWQNCj4gPiA+IGlu
+IHRoZSBkZXZpY2UgdHJlZSBhcyBzZXBhcmF0ZSBjb25uZWN0aW9ucyB0byB0aGUgcGFyZW50IGNs
+b2NrPw0KPiA+ID4NCj4gPiBUaGUgZGV2aWNlIHRyZWUgbWFrZXMgdGhhdCBxdWl0ZSBjbGVhci4N
+Cj4gDQo+IFlvdSBjaG9zZSB0byBtb2RlbCBpdCB0aGF0IHdheSBpbiB0aGUgZGV2aWNlIHRyZWU7
+IHRoYXQgZG9lc24ndCBtYWtlIGl0DQo+IGNsZWFyIHRoYXQgdGhlIGhhcmR3YXJlIHdvcmtzIHRo
+YXQgd2F5IG9yIHRoYXQgaXQncyBhIGdvb2Qgd2F5IHRvIG1vZGVsDQo+IGl0Lg0KPiANCj4gPiBF
+YWNoIFBMTCBoYXMgc2V2ZXJhbCBvdXRwdXQgd2hpY2ggTVVYIG5vZGUgY2FuIHRha2UgZnJvbS4N
+Cj4gDQo+IFBvaW50IG91dCB3aGVyZSBpbiB0aGUgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbiBpdCBz
+YXlzIHRoaXMuICBXaGF0IEkgc2VlDQo+IGlzIGEgUExMIHRoYXQgaGFzIG9uZSBvdXRwdXQsIGFu
+ZCBhIE1VWCByZWdpc3RlciB0aGF0IGNhbiBjaG9vc2UgZnJvbQ0KPiBtdWx0aXBsZSBQTEwgYW5k
+IGRpdmlkZXIgb3B0aW9ucy4NCj4gDQpUYWtlIFQ0MjQwIGZvciBleGFtcGxlOiBzZWUgc2VjdGlv
+biA0LjYuNS4xICwgKFBhZ2UgMTQxKSBpbiBUNDI0MFJNIFJldi4gRCwgMDkvMjAxMi4NCg0KPiA+
+ICBJdCBpcyBub3QgYSBydW50aW1lIGRlY2lzaW9uLg0KPiANCj4gSG1tPyAgSXQncyBhIHJlZ2lz
+dGVyIHlvdSB3cml0ZSB0by4NCj4gDQpJIG1lYW4gdGhlIG51bWJlciBvZiBQTEwgb3V0cHV0IG9y
+IHRoZSBkaXZpc2lvbiBvZiBQTEwgaXMgbm90IGEgcnVudGltZSBkZWNpc2lvbi4NCldoaWNoIG91
+dHB1dCBvZiBQTEwgdGhlIE1VWCBjYW4gdGFrZSBpcyBhIHJ1bnRpbWUgZGVjaXNpb24uDQoNClJl
+Z2FyZHMsDQpZdWFudGlhbg0KDQo+IC1TY290dA0KPiANCg0K
 
-On Tuesday 15 October 2013 09:23:19 Simon Horman wrote:
-> On Tue, Oct 15, 2013 at 01:22:23AM +0400, Valentine wrote:
-> > On 10/14/2013 10:15 PM, Laurent Pinchart wrote:
-> > >On Monday 14 October 2013 21:58:50 Valentine wrote:
-> > >>On 10/14/2013 08:26 PM, Mark Rutland wrote:
-> > >>>On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
-> > >>>>R-Car Gen2 SoCs have a different PHY which is not compatible
-> > >>>>with the older R-Car H1 (R8A7779) version.
-> > >>>>This adds OF/platform device id tables and PHY initialization
-> > >>>>
-> > >>>>callbacks for the following Gen2 SoCs:
-> > >>>>    * R-Car H2: R8A7790;
-> > >>>>    * R-Car M2: R8A7791.
-> > >>>>
-> > >>>>PHY initialization method is chosen, based on the device id.
-> > >>>>Default PHY settings are applied for Gen2 SoCs, which should
-> > >>>>suit the Gen2 boards available.
-> > >>>>
-> > >>>>The R8A7779 platform code is modified to use "sata-r8a7779"
-> > >>>>device id.
-> > >>>>
-> > >>>>Signed-off-by: Valentine Barshak
-> > >>>><valentine.barshak@cogentembedded.com>
-> > >>>>---
-> > >>>>
-> > >>>>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
-> > >>>>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
-> > >>>>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
-> > >>>>   drivers/ata/sata_rcar.c                            | 112
-> > >>>>   +++++++++++---
-> > >>>>   4 files changed, 102 insertions(+), 19 deletions(-)
-> > >>>>
-> > >>>>diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > >>>>b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
-> > >>>>2465183..b5a41bf 100644
-> > >>>>--- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > >>>>+++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-
-[snip]
-
-> > >>>>+static struct of_device_id sata_rcar_match[] = {
-> > >>>>+	{
-> > >>>>+		.compatible = "renesas,sata-r8a7779",
-> > >>>>+		.data = (void *)RCAR_GEN1_SATA,
-> > >>>>+	},
-> > >>>>+	{
-> > >>>>+		.compatible = "renesas,sata-r8a7790",
-> > >>>>+		.data = (void *)RCAR_GEN2_SATA
-> > >>>>+	},
-> > >>>>+	{
-> > >>>>+		.compatible = "renesas,sata-r8a7791",
-> > >>>>+		.data = (void *)RCAR_GEN2_SATA
-> > >>>>+	},
-> > >>>>+	{},
-> > >>>>+};
-> > >>>>+MODULE_DEVICE_TABLE(of, sata_rcar_match);
-> > >>>
-> > >>>Are the renesas,sata-r8a779x variants identical?
-> > >>
-> > >>Yes.
-> > >>
-> > >>>If so, why the two strings?
-> > >>
-> > >>Just thought the driver should support "renesas,sata-r8a7791"
-> > >>compatibility as well since it should support both SoCs.
-> > >>Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
-> > >
-> > >One reason for two compatibility strings is not to be stuck if we later
-> > >find out the the 7791 SATA controller differs from the 7790.
-> > 
-> > Thanks!
-> > Yeah, anyways, I'd prefer to keep both strings in the device id table.
-> 
-> Yes, I do too, mostly for the reason that Laurent gave.
-> But also because this is consistent with compatibility strings
-> for other Renesas IP.
-
-We need to use the 7791 compatibility string in DT, but if we specify both, 
-the driver could have a single entry for both SoCs in its device ID table. As 
-stated before, I have no strong preference, both would work.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
