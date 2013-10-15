@@ -1,160 +1,226 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 2/2] phy: omap-usb2: Adapt phy-omap-usb2 for AM437x
-Date: Tue, 15 Oct 2013 12:23:45 +0530
-Message-ID: <1381820025-31376-3-git-send-email-george.cherian@ti.com>
-References: <1381820025-31376-1-git-send-email-george.cherian@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v3 01/13] usb: phy: msm: Move mach depndend code to
+ platform data
+Date: Tue, 15 Oct 2013 10:01:03 +0300
+Message-ID: <1381820463.29983.10.camel@iivanov-dev.int.mm-sol.com>
+References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
+	 <1381764280-28420-2-git-send-email-iivanov@mm-sol.com>
+	 <20131014225207.GD7446@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381820025-31376-1-git-send-email-george.cherian@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: tony@atomide.com, balbi@ti.com, kishon@ti.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, gregkh@linuxfoundation.org, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131014225207.GD7446@radagast>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, jackp@codeaurora.org, mgautam@codeaurora.org, dsegal@codeaurora.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a compatible for AM437x "ti,am43xx-usb2" to
-reuse the same phy-omap-usb2 driver.
+On Mon, 2013-10-14 at 17:52 -0500, Felipe Balbi wrote: 
+> Hi,
+> 
+> On Mon, Oct 14, 2013 at 06:24:28PM +0300, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > This patch fix compilation error and is an intermediate step
+> > before the addition of DeviceTree support for newer targets.
+> > 
+> > Cc: David Brown <davidb@codeaurora.org>
+> > Cc: Daniel Walker <dwalker@fifo99.com>
+> > Cc: Felipe Balbi <balbi@ti.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > ---
+> >  arch/arm/mach-msm/board-msm7x30.c |   35 +++++++++++++++++++++++++++++++++++
+> >  arch/arm/mach-msm/board-qsd8x50.c |   35 +++++++++++++++++++++++++++++++++++
+> >  drivers/usb/phy/phy-msm-usb.c     |   34 ++++++++++++++--------------------
+> >  include/linux/usb/msm_hsusb.h     |    3 +++
+> >  4 files changed, 87 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-msm/board-msm7x30.c b/arch/arm/mach-msm/board-msm7x30.c
+> > index f9af5a4..46de789 100644
+> > --- a/arch/arm/mach-msm/board-msm7x30.c
+> > +++ b/arch/arm/mach-msm/board-msm7x30.c
+> > @@ -30,6 +30,7 @@
+> >  #include <asm/memory.h>
+> >  #include <asm/setup.h>
+> >  
+> > +#include <mach/clk.h>
+> >  #include <mach/msm_iomap.h>
+> >  #include <mach/dma.h>
+> >  
+> > @@ -60,10 +61,44 @@ static int hsusb_phy_init_seq[] = {
+> >  	-1
+> >  };
+> >  
+> > +static int hsusb_link_clk_reset(struct clk *link_clk, bool assert)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (assert) {
+> > +		ret = clk_reset(link_clk, CLK_RESET_ASSERT);
+> > +		if (ret)
+> > +			pr_err("usb hs_clk assert failed\n");
+> > +	} else {
+> > +		ret = clk_reset(link_clk, CLK_RESET_DEASSERT);
+> > +		if (ret)
+> > +			pr_err("usb hs_clk deassert failed\n");
+> > +	}
+> > +	return ret;
+> > +}
+> > +
+> > +static int hsusb_phy_clk_reset(struct clk *phy_clk)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = clk_reset(phy_clk, CLK_RESET_ASSERT);
+> > +	if (ret) {
+> > +		pr_err("usb phy clk assert failed\n");
+> > +		return ret;
+> > +	}
+> > +	usleep_range(10000, 12000);
+> > +	ret = clk_reset(phy_clk, CLK_RESET_DEASSERT);
+> > +	if (ret)
+> > +		pr_err("usb phy clk deassert failed\n");
+> > +	return ret;
+> > +}
+> > +
+> >  static struct msm_otg_platform_data msm_otg_pdata = {
+> >  	.phy_init_seq		= hsusb_phy_init_seq,
+> >  	.mode                   = USB_PERIPHERAL,
+> >  	.otg_control		= OTG_PHY_CONTROL,
+> > +	.link_clk_reset		= hsusb_link_clk_reset,
+> > +	.phy_clk_reset		= hsusb_phy_clk_reset,
+> >  };
+> >  
+> >  struct msm_gpiomux_config msm_gpiomux_configs[GPIOMUX_NGPIOS] = {
+> > diff --git a/arch/arm/mach-msm/board-qsd8x50.c b/arch/arm/mach-msm/board-qsd8x50.c
+> > index 5f933bc..9169ec3 100644
+> > --- a/arch/arm/mach-msm/board-qsd8x50.c
+> > +++ b/arch/arm/mach-msm/board-qsd8x50.c
+> > @@ -31,6 +31,7 @@
+> >  #include <mach/irqs.h>
+> >  #include <mach/sirc.h>
+> >  #include <mach/vreg.h>
+> > +#include <mach/clk.h>
+> >  #include <linux/platform_data/mmc-msm_sdcc.h>
+> >  
+> >  #include "devices.h"
+> > @@ -81,10 +82,44 @@ static int hsusb_phy_init_seq[] = {
+> >  	-1
+> >  };
+> >  
+> > +static int hsusb_link_clk_reset(struct clk *link_clk, bool assert)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (assert) {
+> > +		ret = clk_reset(link_clk, CLK_RESET_ASSERT);
+> > +		if (ret)
+> > +			pr_err("usb hs_clk assert failed\n");
+> > +	} else {
+> > +		ret = clk_reset(link_clk, CLK_RESET_DEASSERT);
+> > +		if (ret)
+> > +			pr_err("usb hs_clk deassert failed\n");
+> > +	}
+> > +	return ret;
+> > +}
+> > +
+> > +static int hsusb_phy_clk_reset(struct clk *phy_clk)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = clk_reset(phy_clk, CLK_RESET_ASSERT);
+> > +	if (ret) {
+> > +		pr_err("usb phy clk assert failed\n");
+> > +		return ret;
+> > +	}
+> > +	usleep_range(10000, 12000);
+> > +	ret = clk_reset(phy_clk, CLK_RESET_DEASSERT);
+> > +	if (ret)
+> > +		pr_err("usb phy clk deassert failed\n");
+> > +	return ret;
+> > +}
+> > +
+> >  static struct msm_otg_platform_data msm_otg_pdata = {
+> >  	.phy_init_seq		= hsusb_phy_init_seq,
+> >  	.mode                   = USB_PERIPHERAL,
+> >  	.otg_control		= OTG_PHY_CONTROL,
+> > +	.link_clk_reset		= hsusb_link_clk_reset,
+> > +	.phy_clk_reset		= hsusb_phy_clk_reset,
+> >  };
+> >  
+> >  static struct platform_device *devices[] __initdata = {
+> > diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+> > index e9d4cd9..118798d 100644
+> > --- a/drivers/usb/phy/phy-msm-usb.c
+> > +++ b/drivers/usb/phy/phy-msm-usb.c
+> > @@ -40,8 +40,6 @@
+> >  #include <linux/usb/msm_hsusb_hw.h>
+> >  #include <linux/regulator/consumer.h>
+> >  
+> > -#include <mach/clk.h>
+> > -
+> >  #define MSM_USB_BASE	(motg->regs)
+> >  #define DRIVER_NAME	"msm_otg"
+> >  
+> > @@ -308,33 +306,29 @@ static void ulpi_init(struct msm_otg *motg)
+> >  
+> >  static int msm_otg_link_clk_reset(struct msm_otg *motg, bool assert)
+> >  {
+> > -	int ret;
+> > +	int ret = 0;
+> > +
+> > +	if (!motg->pdata->link_clk_reset)
+> > +		return ret;
+> > +
+> > +	ret = motg->pdata->link_clk_reset(motg->clk, assert);
+> > +	if (ret)
+> > +		dev_err(motg->phy.dev, "usb link clk reset failed\n");
+> >  
+> > -	if (assert) {
+> > -		ret = clk_reset(motg->clk, CLK_RESET_ASSERT);
+> > -		if (ret)
+> > -			dev_err(motg->phy.dev, "usb hs_clk assert failed\n");
+> > -	} else {
+> > -		ret = clk_reset(motg->clk, CLK_RESET_DEASSERT);
+> > -		if (ret)
+> > -			dev_err(motg->phy.dev, "usb hs_clk deassert failed\n");
+> > -	}
+> >  	return ret;
+> >  }
+> >  
+> >  static int msm_otg_phy_clk_reset(struct msm_otg *motg)
+> >  {
+> > -	int ret;
+> > +	int ret = 0;
+> >  
+> > -	ret = clk_reset(motg->phy_reset_clk, CLK_RESET_ASSERT);
+> > -	if (ret) {
+> > -		dev_err(motg->phy.dev, "usb phy clk assert failed\n");
+> > +	if (!motg->pdata->phy_clk_reset)
+> >  		return ret;
+> > -	}
+> > -	usleep_range(10000, 12000);
+> > -	ret = clk_reset(motg->phy_reset_clk, CLK_RESET_DEASSERT);
+> > +
+> > +	ret = motg->pdata->phy_clk_reset(motg->phy_reset_clk);
+> >  	if (ret)
+> > -		dev_err(motg->phy.dev, "usb phy clk deassert failed\n");
+> > +		dev_err(motg->phy.dev, "usb phy clk assert failed\n");
+> 
+> seems like you're doing more than *just* fixing the build error. Which
+> build error do you get ?
 
-Also updated the documentation to add the new compatible.
+clk_reset() is defined only in mach code which is not available in 
+multi platform builds. But you are right, probably I have to mention
+that some error messages are also changed. 
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- Documentation/devicetree/bindings/usb/usb-phy.txt |  4 +-
- drivers/phy/phy-omap-usb2.c                       | 54 +++++++++++++++++------
- include/linux/usb/omap_usb.h                      | 10 +++++
- 3 files changed, 53 insertions(+), 15 deletions(-)
+With this change driver will loss ability to reset PHY and LINk
+controllers on newer targets, but I don't think it is functional 
+on them right now (driver resources are not defined on these
+boards). I am planing to add reset framework support to driver in
+order to support them.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
-index c0245c8..309ab27 100644
---- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-@@ -3,7 +3,9 @@ USB PHY
- OMAP USB2 PHY
- 
- Required properties:
-- - compatible: Should be "ti,omap-usb2"
-+ - compatible: Should be either of
-+	* "ti,omap-usb2" for OMAP4,OMAP5,DRA7
-+	* "ti,am437x-usb2" for AM437x
-  - reg : Address and length of the register set for the device.
-  - #phy-cells: determine the number of cells that should be given in the
-    phandle while referencing this phy.
-diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-index 3e5f08c..7c0bc6c 100644
---- a/drivers/phy/phy-omap-usb2.c
-+++ b/drivers/phy/phy-omap-usb2.c
-@@ -144,6 +144,35 @@ static struct phy_ops ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+#ifdef CONFIG_OF
-+static const struct usb_phy_data omap_usb2_data = {
-+	.label = "omap_usb2",
-+	.set_host = omap_usb_set_host,
-+	.set_peripheral = omap_usb_set_peripheral,
-+	.set_vbus = omap_usb_set_vbus,
-+	.start_srp = omap_usb_start_srp,
-+};
-+
-+static const struct usb_phy_data am437x_usb2_data = {
-+	.label = "am437x_usb2",
-+	.set_host = omap_usb_set_host,
-+	.set_peripheral = omap_usb_set_peripheral,
-+};
-+
-+static const struct of_device_id omap_usb2_id_table[] = {
-+	{
-+		.compatible = "ti,omap-usb2",
-+		.data = &omap_usb2_data,
-+	},
-+	{
-+		.compatible = "ti,am437x-usb2",
-+		.data = &am437x_usb2_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
-+#endif
-+
- static int omap_usb2_probe(struct platform_device *pdev)
- {
- 	struct omap_usb	*phy;
-@@ -153,9 +182,14 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct device_node *control_node;
- 	struct platform_device *control_pdev;
-+	const struct of_device_id *of_id;
-+	struct usb_phy_data *phy_data;
-+
-+	of_id = of_match_device(of_match_ptr(omap_usb2_id_table), &pdev->dev);
- 
--	if (!node)
-+	if (!of_id)
- 		return -EINVAL;
-+	phy_data = (struct usb_phy_data *)of_id->data;
- 
- 	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy) {
-@@ -172,7 +206,7 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	phy->dev		= &pdev->dev;
- 
- 	phy->phy.dev		= phy->dev;
--	phy->phy.label		= "omap-usb2";
-+	phy->phy.label		= phy_data->label;
- 	phy->phy.set_suspend	= omap_usb2_suspend;
- 	phy->phy.otg		= otg;
- 	phy->phy.type		= USB_PHY_TYPE_USB2;
-@@ -199,10 +233,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	phy->is_suspended	= 1;
- 	omap_control_usb_phy_power(phy->control_dev, 0);
- 
--	otg->set_host		= omap_usb_set_host;
--	otg->set_peripheral	= omap_usb_set_peripheral;
--	otg->set_vbus		= omap_usb_set_vbus;
--	otg->start_srp		= omap_usb_start_srp;
-+	otg->set_host		= phy_data->set_host;
-+	otg->set_peripheral	= phy_data->set_peripheral;
-+	otg->set_vbus		= phy_data->set_vbus;
-+	otg->start_srp		= phy_data->start_srp;
- 	otg->phy		= &phy->phy;
- 
- 	platform_set_drvdata(pdev, phy);
-@@ -297,14 +331,6 @@ static const struct dev_pm_ops omap_usb2_pm_ops = {
- #define DEV_PM_OPS     NULL
- #endif
- 
--#ifdef CONFIG_OF
--static const struct of_device_id omap_usb2_id_table[] = {
--	{ .compatible = "ti,omap-usb2" },
--	{}
--};
--MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
--#endif
--
- static struct platform_driver omap_usb2_driver = {
- 	.probe		= omap_usb2_probe,
- 	.remove		= omap_usb2_remove,
-diff --git a/include/linux/usb/omap_usb.h b/include/linux/usb/omap_usb.h
-index 6ae2936..0c6b71c 100644
---- a/include/linux/usb/omap_usb.h
-+++ b/include/linux/usb/omap_usb.h
-@@ -42,6 +42,16 @@ struct omap_usb {
- 	u8			is_suspended:1;
- };
- 
-+struct usb_phy_data {
-+	const char *label;
-+	int (*set_host)(struct usb_otg *otg, struct usb_bus *host);
-+	int (*set_peripheral)(struct usb_otg *otg,
-+					struct usb_gadget *gadget);
-+	int (*set_vbus)(struct usb_otg *otg, bool enabled);
-+	int (*start_srp)(struct usb_otg *otg);
-+	int (*start_hnp)(struct usb_otg *otg);
-+};
-+
- #define	phy_to_omapusb(x)	container_of((x), struct omap_usb, phy)
- 
- #if defined(CONFIG_OMAP_USB2) || defined(CONFIG_OMAP_USB2_MODULE)
--- 
-1.8.1
-
+Regards,
+Ivan
