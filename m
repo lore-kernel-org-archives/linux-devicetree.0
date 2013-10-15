@@ -1,43 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in device tree
-Date: Tue, 15 Oct 2013 12:41:16 +0100
-Message-ID: <20131015114116.74FF0C4009A@trevor.secretlab.ca>
-References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com> <1381477716.5630.74.camel@pasglop> <83E50073-1BDF-4EB9-87D2-EFA427EFE756@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <83E50073-1BDF-4EB9-87D2-EFA427EFE756-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase
+ in system manager
+Date: Tue, 15 Oct 2013 08:22:50 -0500
+Message-ID: <525D41AA.7060503@gmail.com>
+References: <1381780051-1826-1-git-send-email-dinguyen@altera.com> <201310151450.48650.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201310151450.48650.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, dinguyen@altera.com
+Cc: Pavel Machek <pavel@denx.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2013 13:12:54 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> 
-> On Oct 11, 2013, at 2:48 AM, Benjamin Herrenschmidt wrote:
-> 
-> > On Fri, 2013-10-11 at 09:27 +0200, Marek Szyprowski wrote:
-> >> Hi all!
-> >> 
-> >> Benjamin Herrenschmidt pointed a few issues in the proposed design of
-> >> device tree bindings for contiguous memory allocator and reserved memory
-> >> regions:
-> >> https://lkml.org/lkml/2013/9/15/151
-> >> http://www.spinics.net/lists/arm-kernel/msg273548.html
-> > 
-> > Are you guys in Edinburgh ?
-> > 
-> > I'll be there from Tuesday PM (so really Wed) to Friday (fly out on
-> > Sat). We should catch up, brainstorm and come up with something.
-> > 
-> > Cheers,
-> > Ben.
-> 
-> We can try and do it during the DT-summit, or find another time.
+Hi Arnd,
 
-Let's plan on Wednesday afternoon.
+On 10/15/13 7:50 AM, Arnd Bergmann wrote:
+> On Monday 14 October 2013, dinguyen@altera.com wrote:
+>> +void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(u32 drvsel, u32 smplsel)
+>> +{
+>> +       u32 hs_timing;
+>> +
+>> +       hs_timing = SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel);
+>> +       writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+>> +}
+>> +EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
+> This looks like the wrong approach. What are you trying to do? If you want to
+> set a clock, please use the clk API.
+I can't use the clk API because this function is setting up a clock 
+phase bit for the SD/MMC
+clock that is used to clock the card, not the IP. This register is 
+located outside the SD/MMC
+and the clock manager.
 
-g.
+Just to refresh your memory on this topic:
+I tried to use the syscon approach that you suggested:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/168470.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/170423.html
+
+But this approach was rejected by Stephen Warren because we wanted to 
+the SD driver to be automonous
+of registers outside its IP:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/194014.html
+
+So I went with the approach of exposing a platform API so that the 
+SD/MMC platform specific
+code can call it.
+
+The system manager has a plethora of registers that controls other IPs 
+on the SOC, so I kinda thought
+syscon was the way to go with this. A driver for this IP did not make 
+sense to me.
+
+Please advise if you know of another approach?
+
+Thanks,
+Dinh
+
+
+
+
+
+
+>
+> 	Arnd
+
