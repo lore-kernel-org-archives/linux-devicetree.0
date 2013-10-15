@@ -1,23 +1,54 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 00/19] Introduce common infra for tegra clocks
-Date: Tue, 15 Oct 2013 13:43:38 -0600
-Message-ID: <525D9AEA.3080009@wwwdotorg.org>
-References: <1381848794-11761-1-git-send-email-pdeschrijver@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase in
+ system manager
+Date: Tue, 15 Oct 2013 21:47:27 +0200
+Message-ID: <201310152147.27569.arnd@arndb.de>
+References: <1381780051-1826-1-git-send-email-dinguyen@altera.com>
+ <201310152101.44669.arnd@arndb.de> <525D9532.6080503@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381848794-11761-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <525D9532.6080503@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Seungwon Jeon <tgih.jun@samsung.com>, Pavel Machek <pavel@denx.de>, linux-mmc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Chris Ball <cjb@laptop.org>, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 08:52 AM, Peter De Schrijver wrote:
-> This patchset introduces common infrastructure for clocks which exist in                                                                                       
-> several Tegra SoCs. We also also move Tegra20, Tegra30 and Tegra114 to
-> this new infrastructure.
+On Tuesday 15 October 2013, Dinh Nguyen wrote:
+> >
+> > 1 Create a "syscon" backend driver to control your "system manager", which
+> >    lets other drivers hook into it without calling a private API.
+> Yes, if you look at drivers/mmc/host/dw_mmc-socfpga.c that is in the 
+> mainline,
+> it is hooking into the "system manager" through "syscon". Is this what you
+> mean here?
 
-Overall, this series looks reasonable aside from the few nits I pointed
-out. I'll hold my ack until the issues I found during testing are
-resolved though.
+No, because you directly hook into the syscon driver, rather than using
+a clock driver as the middle-man, see steps 2 and 3 below.
+ 
+> The problem is because of the SYSMGR_SDMMCGRP_CTRL_OFFSET define
+> in this file. This means the SD/MMC driver needs information that is 
+> outside of its IP.
+
+Yes, this is not ideal because you don't really want that information
+in the sd/mmc driver. That driver should only know about the fact
+that it talks to a clock controller, not how it's implemented.
+
+	Arnd
+
+> > 2 Create a trivial clock driver that is independent of your existing
+> >    clock driver and independent of the other drivers using the system
+> >    manager, by using syscon as the low-level interface.
+> > 3 Make the sdmmc driver use the normal clock API and link its clock to the
+> >    driver from step 2 in the device tree.
+> >
+> > Is this what you have tried before?
