@@ -1,56 +1,43 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Tue, 15 Oct 2013 12:48:27 +0100
-Message-ID: <20131015114827.850BCC4009B@trevor.secretlab.ca>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com> <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com> <525438F6.3090600@gmail.com> <1381264135.645.230.camel@pasglop> <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in device tree
+Date: Tue, 15 Oct 2013 12:41:16 +0100
+Message-ID: <20131015114116.74FF0C4009A@trevor.secretlab.ca>
+References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com> <1381477716.5630.74.camel@pasglop> <83E50073-1BDF-4EB9-87D2-EFA427EFE756@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <83E50073-1BDF-4EB9-87D2-EFA427EFE756-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Oct 2013 10:09:23 +0100, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Tue, Oct 08, 2013 at 09:28:55PM +0100, Benjamin Herrenschmidt wrote:
-> > On Tue, 2013-10-08 at 11:55 -0500, Rob Herring wrote:
-> > 
-> > > > I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
-> > > > drivers/of?  The implementations I looked at are mostly concerned with
-> > > > parsing OF resources, and they don't have much to do with PCI
-> > > > directly.
-> > > 
-> > > This was being done until Ben weighed in:
-> > > 
-> > > https://lkml.org/lkml/2013/5/4/103
-> > 
-> > Well, I proposed an alternative (better) approach which I of course had
-> > no time to actually implement yet :-)
+On Fri, 11 Oct 2013 13:12:54 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 > 
-> In order to avoid any confusion, could you please point me again to the
-> relevant message(s) where you proposed your approach?
+> On Oct 11, 2013, at 2:48 AM, Benjamin Herrenschmidt wrote:
 > 
+> > On Fri, 2013-10-11 at 09:27 +0200, Marek Szyprowski wrote:
+> >> Hi all!
+> >> 
+> >> Benjamin Herrenschmidt pointed a few issues in the proposed design of
+> >> device tree bindings for contiguous memory allocator and reserved memory
+> >> regions:
+> >> https://lkml.org/lkml/2013/9/15/151
+> >> http://www.spinics.net/lists/arm-kernel/msg273548.html
 > > 
-> > I have done the changes I needed to do to powerpc
-> > pci_process_bridge_OF_ranges so it would be possible to move that now to
-> > a generic place, but I still think it's not a great idea. It means the
-> > pci_controller structure with its resources will have to become generic
-> > which somewhat overlaps with the pci_host_bridge that Bjorn introduced,
-> > so that's really not great.
+> > Are you guys in Edinburgh ?
 > > 
-> > I still think an arch with DT and simpler PCI code that powerpc could
-> > start looking at the transition to a better model that I hinted at...
+> > I'll be there from Tuesday PM (so really Wed) to Friday (fly out on
+> > Sat). We should catch up, brainstorm and come up with something.
+> > 
+> > Cheers,
+> > Ben.
 > 
-> As tempting as it is to start anew and with a cleaner code, I am wary
-> that porting the existing platforms to the new code will take longer
-> that way. My intentions are to make the (probably infrequent) task of
-> adding a new architecture to the PCI infrastructure a simple and
-> straighforward task. But adding code for my platform is no guarantee
-> that new ones will have an easier job.
+> We can try and do it during the DT-summit, or find another time.
 
-In the previous thread I Nacked an approach that creates new code
-without making at least two existing platforms (microblaze & powerpc are
-the easy targets because they are so similar) use said new code. I know
-that makes things harder for you, but not migrating is a bigger
-maintenance burden in the long run.
+Let's plan on Wednesday afternoon.
 
 g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
