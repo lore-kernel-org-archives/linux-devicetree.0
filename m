@@ -1,90 +1,100 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/5] mfd: tc3589x: add device tree bindings
-Date: Tue, 15 Oct 2013 23:11:15 +0200
-Message-ID: <1381871475-21543-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/5] mfd: tc3589x: detect the precise version
+Date: Tue, 15 Oct 2013 23:14:00 +0200
+Message-ID: <1381871640-22262-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This defines the device tree bindings for the Toshiba TC3589x
-series of multi-purpose expanders. Only the stuff I can test
-is defined: GPIO and keypad. Others may implement more
-subdevices further down the road.
+Instead of detecting the "tc3589x" and hard-coding the number of
+GPIO pins to 24, encode all the possible subtypes and set the
+number of GPIO pins from the type.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/tc3589x.txt | 61 +++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/tc3589x.txt
+ drivers/mfd/tc3589x.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tc3589x.txt b/Documentation/devicetree/bindings/mfd/tc3589x.txt
-new file mode 100644
-index 0000000..121301d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tc3589x.txt
-@@ -0,0 +1,61 @@
-+* Toshiba TC3589x multi-purpose expander
+diff --git a/drivers/mfd/tc3589x.c b/drivers/mfd/tc3589x.c
+index 70f4909f..0eabbb0 100644
+--- a/drivers/mfd/tc3589x.c
++++ b/drivers/mfd/tc3589x.c
+@@ -16,6 +16,19 @@
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/tc3589x.h>
+ 
++/**
++ * enum tc3589x_version - indicates the TC3589x version
++ */
++enum tc3589x_version {
++	TC3589X_TC35890,
++	TC3589X_TC35892,
++	TC3589X_TC35893,
++	TC3589X_TC35894,
++	TC3589X_TC35895,
++	TC3589X_TC35896,
++	TC3589X_UNKNOWN,
++};
 +
-+The Toshiba TC3589x series are I2C-based MFD devices which may expose the
-+following built-in devices: gpio, keypad, rotator (vibrator), PWM (for
-+e.g. LEDs or vibrators) The included models are:
+ #define TC3589x_CLKMODE_MODCTL_SLEEP		0x0
+ #define TC3589x_CLKMODE_MODCTL_OPERATION	(1 << 0)
+ 
+@@ -361,7 +374,33 @@ static int tc3589x_probe(struct i2c_client *i2c,
+ 	tc3589x->i2c = i2c;
+ 	tc3589x->pdata = pdata;
+ 	tc3589x->irq_base = pdata->irq_base;
+-	tc3589x->num_gpio = id->driver_data;
 +
-+- TC35890
-+- TC35892
-+- TC35893
-+- TC35894
-+- TC35895
-+- TC35896
-+
-+Required properties:
-+ - compatible : must be "toshiba,tc35890", "toshiba,tc35892", "toshiba,tc35893",
-+   "toshiba,tc35894", "toshiba,tc35895" or "toshiba,tc35896"
-+ - reg : I2C address of the device
-+ - interrupt-parent : specifies which IRQ controller we're connected to
-+ - interrupts : the interrupt on the parent the controller is connected to
-+ - interrupt-controller : marks the device node as an interrupt controller
-+ - #interrupt-cells : should be <1>, the first cell is the IRQ offset on this
-+   TC3589x interrupt controller.
-+
-+Optional nodes:
-+
-+- GPIO
-+  This GPIO module inside the TC3589x has 24 (TC35890, TC35892) or 20
-+  (other models) GPIO lines.
-+ - compatible : must be "toshiba,tc3589x-gpio"
-+ - interrupts : interrupt on the parent, which must be the tc3589x MFD device
-+ - interrupt-controller : marks the device node as an interrupt controller
-+ - #interrupt-cells : should be <2>, the first cell is the IRQ offset on this
-+   TC3589x GPIO interrupt controller, the second cell is the interrupt flags
-+   in accordance with <dt-bindings/interrupt-controller/irq.h>. The following
-+   flags are valid:
-+   - IRQ_TYPE_LEVEL_LOW
-+   - IRQ_TYPE_LEVEL_HIGH
-+   - IRQ_TYPE_EDGE_RISING
-+   - IRQ_TYPE_EDGE_FALLING
-+   - IRQ_TYPE_EDGE_BOTH
-+ - gpio-controller : marks the device node as a GPIO controller
-+ - #gpio-cells : should be <2>, the first cell is the GPIO offset on this
-+   GPIO controller, the second cell is the flags.
-+
-+- Keypad
-+  This keypad is the same on all variants, supporting up to 96 different
-+  keys. The linux-specific properties are modeled on those already existing
-+  in other input drivers.
-+ - compatible : must be "toshiba,tc3589x-keypad"
-+ - debounce-delay-ms : debounce interval in milliseconds
-+ - keypad,num-rows : number of rows in the matrix, see
-+   bindings/input/matrix-keymap.txt
-+ - keypad,num-columns : number of columns in the matrix, see
-+   bindings/input/matrix-keymap.txt
-+ - linux,keymap: the definition can be found in
-+   bindings/input/matrix-keymap.txt
-+ - linux,no-autorepeat: do no enable autorepeat feature.
-+ - linux,wakeup: use any event on keypad as wakeup event.
-+
-+Example:
-+
++	switch (id->driver_data) {
++	case TC3589X_TC35890:
++		tc3589x->num_gpio = 24;
++		break;
++	case TC3589X_TC35892:
++		tc3589x->num_gpio = 24;
++		break;
++	case TC3589X_TC35893:
++		tc3589x->num_gpio = 20;
++		break;
++	case TC3589X_TC35894:
++		tc3589x->num_gpio = 24;
++		break;
++	case TC3589X_TC35895:
++		tc3589x->num_gpio = 20;
++		break;
++	case TC3589X_TC35896:
++		tc3589x->num_gpio = 20;
++		break;
++	case TC3589X_UNKNOWN:
++		tc3589x->num_gpio = 24;
++		break;
++	default:
++		tc3589x->num_gpio = 24;
++		break;
++	}
+ 
+ 	i2c_set_clientdata(i2c, tc3589x);
+ 
+@@ -432,7 +471,13 @@ static int tc3589x_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(tc3589x_dev_pm_ops, tc3589x_suspend, tc3589x_resume);
+ 
+ static const struct i2c_device_id tc3589x_id[] = {
+-	{ "tc3589x", 24 },
++	{ "tc35890", TC3589X_TC35890 },
++	{ "tc35892", TC3589X_TC35892 },
++	{ "tc35893", TC3589X_TC35893 },
++	{ "tc35894", TC3589X_TC35894 },
++	{ "tc35895", TC3589X_TC35895 },
++	{ "tc35896", TC3589X_TC35896 },
++	{ "tc3589x", TC3589X_UNKNOWN },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, tc3589x_id);
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
