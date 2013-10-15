@@ -1,43 +1,250 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 2/7] ARM: hi3xxx: add board support with device tree
-Date: Tue, 15 Oct 2013 21:12:54 +0800
-Message-ID: <CAD6h2NR6umVpgYM2t2pwrwP8-Jk-e3Kfng-7oymPJ44cNmuk-w@mail.gmail.com>
-References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org>
-	<1381828577-27998-3-git-send-email-haojian.zhuang@linaro.org>
-	<201310151500.36959.arnd@arndb.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY
+ Framework
+Date: Tue, 15 Oct 2013 08:19:34 -0500
+Message-ID: <20131015131934.GG11380@radagast>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com>
+ <1378136591-7463-3-git-send-email-kishon@ti.com>
+ <525814A9.7060106@ti.com> <525BB8C0.1070802@ti.com>
+ <525BC5A9.3060904@ti.com> <20131015115741.GD11380@radagast>
+ <525D30C2.8060208@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201310151500.36959.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Shaojie Sun <shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3732825490449165980=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <525D30C2.8060208@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, Vivek Gautam <gautamvivek1987@gmail.com>, s.nawrocki@samsung.com, ian.campbell@citrix.com, linux@arm.linux.org.uk, Kishon Vijay Abraham I <kishon@ti.com>, grant.likely@linaro.org, devicetree@vger.kernel.org, george.cherian@ti.com, rob@landley.net, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, bcousson@baylibre.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 October 2013 21:00, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 15 October 2013, Haojian Zhuang wrote:
->>
->> Add board support with device tree for Hisilicon Hi3620 SoC platform.
->>
->> Changelog:
->> v10:
->> 1. Add .map_io() & debug_ll_io_init() back. Since debug_ll_io_init() is
->> only called if .map_io() isn't assigned. Use .map_io() to setup static
->> IO mapping that is used in clock driver.
->>
->
-> This seems like a step in the wrong direction. Why would you want to use
-> a static I/O mapping in the clock driver?
->
->         Arnd
+--===============3732825490449165980==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cyV/sMl4KAhiehtf"
+Content-Disposition: inline
 
-Because Stephen & Kevin asked me to use unit address in DTS file. They
-also require me to use reg property to present real hardware address
-in DTS file.
+--cyV/sMl4KAhiehtf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards
-Haojian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Tue, Oct 15, 2013 at 03:10:42PM +0300, Roger Quadros wrote:
+> >>>>> @@ -665,6 +669,9 @@ struct dwc3 {
+> >>>>>  	struct usb_phy		*usb2_phy;
+> >>>>>  	struct usb_phy		*usb3_phy;
+> >>>>> =20
+> >>>>> +	struct phy		*usb2_generic_phy;
+> >>>>> +	struct phy		*usb3_generic_phy;
+> >>>>> +
+> >>>>>  	void __iomem		*regs;
+> >>>>>  	size_t			regs_size;
+> >>>>> =20
+> >>>>>
+> >>>
+> >>> Do you have any suggestions on how to get only individual PHYs? like =
+only
+> >>> usb2phy or usb3phy?
+> >>
+> >> My earlier understanding was that both PHYs are needed only if .speed =
+is "super-speed"
+> >> and only usb2phy is needed for "high-speed". But as per Vivek's email =
+it seems
+> >> Samsung's exynos5 SoC doesn't need usb2phy for "super-speed".
+> >>
+> >> So to keeps things flexible, I can propose the following approach
+> >> - if speed =3D=3D 'high-speed' usb2phy must be present. usb3phy will b=
+e ignored if supplied.
+> >> - if speed =3D=3D 'super-speed' usb3phy must be present and usb2phy is=
+ optional but must be
+> >> initialized if supplied.
+> >> - if speed is not specified, we default to 'super-speed'.
+> >>
+> >> Felipe, does this address the issue you were facing with OMAP5?
+> >=20
+> > on OMAP5 we cannot skip USB3 PHY initialization. But then it becomes a
+> > question of supporting a test feature (in OMAP5 case it would be cool to
+> > force controller to lower speeds for testing) or coping with a broken
+> > DTS.
+> >=20
+>=20
+> I don't think we can protect ourselves from all possible broken
+> configurations of DTS.
+> I would vote for simplicity and maximum flexibility.
+>=20
+> So IMO we should just depend on DTS to provide the phys that are
+> needed by the platform.
+> In the driver we initialize whatever PHY is provided and don't
+> complain if any or even all PHYs are missing.
+
+considering that DTS is an ABI, I really think eventually we *will* have
+broken DTBs burned into ROM and we will have to find ways to work with
+those too. Same thing already happens today with ACPI tables.
+
+> If this is not good enough then could you please suggest an
+> alternative? Thanks.
+
+The alternative would be to mandate nop xceiv for the "missing" PHY, but
+that doesn't solve anything, really, as DTS authors might still forget
+about the NOP xceiv and you can argue that forcing NOP xceiv would be a
+SW configuration.
+
+So, perhaps we go with the approach that all PHYs are optional, and
+here's my original patch which makes USB3 PHY optional:
+
+commit 979b84f96e4b7559b596b2933ae198aba267f260
+Author: Felipe Balbi <balbi@ti.com>
+Date:   Sun Jun 30 18:39:23 2013 +0300
+
+    usb: dwc3: core: make USB3 PHY optional
+   =20
+    If we want a port to work at any speed lower
+    than Superspeed, it makes no sense to even
+    initialize/power up the USB3 transceiver,
+    provided it won't be used.
+   =20
+    We can use the oportunity to save some power
+    and leave the superspeed transceiver powered
+    off.
+   =20
+    There is at least one such case which is
+    Texas Instruments' AM437x which has one
+    of its USB3 ports without a matching USB3
+    PHY (that port is hardwired to work on USB2
+    only).
+   =20
+    Signed-off-by: Felipe Balbi <balbi@ti.com>
+
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 74f9cf0..7a5ab93 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -387,16 +387,34 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	if (node) {
+ 		dwc->maximum_speed =3D of_usb_get_maximum_speed(node);
+=20
+-		dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+-		dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
++		switch (dwc->maximum_speed) {
++		case USB_SPEED_SUPER:
++			dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
++			dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
++			break;
++		case USB_SPEED_HIGH:
++		case USB_SPEED_FULL:
++		case USB_SPEED_LOW:
++			dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
++			break;
++		}
+=20
+ 		dwc->needs_fifo_resize =3D of_property_read_bool(node, "tx-fifo-resize");
+ 		dwc->dr_mode =3D of_usb_get_dr_mode(node);
+ 	} else if (pdata) {
+ 		dwc->maximum_speed =3D pdata->maximum_speed;
+=20
+-		dwc->usb2_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+-		dwc->usb3_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
++		switch (dwc->maximum_speed) {
++		case USB_SPEED_SUPER:
++			dwc->usb2_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++			dwc->usb3_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
++			break;
++		case USB_SPEED_HIGH:
++		case USB_SPEED_FULL:
++		case USB_SPEED_LOW:
++			dwc->usb2_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++			break;
++		}
+=20
+ 		dwc->needs_fifo_resize =3D pdata->tx_fifo_resize;
+ 		dwc->dr_mode =3D pdata->dr_mode;
+@@ -424,19 +442,21 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		return -EPROBE_DEFER;
+ 	}
+=20
+-	if (IS_ERR(dwc->usb3_phy)) {
+-		ret =3D PTR_ERR(dwc->usb3_phy);
++	if (dwc->maximum_speed =3D=3D USB_SPEED_SUPER) {
++		if (IS_ERR(dwc->usb3_phy)) {
++			ret =3D PTR_ERR(dwc->usb3_phy);
+=20
+-		/*
+-		 * if -ENXIO is returned, it means PHY layer wasn't
+-		 * enabled, so it makes no sense to return -EPROBE_DEFER
+-		 * in that case, since no PHY driver will ever probe.
+-		 */
+-		if (ret =3D=3D -ENXIO)
+-			return ret;
++			/*
++			 * if -ENXIO is returned, it means PHY layer wasn't
++			 * enabled, so it makes no sense to return -EPROBE_DEFER
++			 * in that case, since no PHY driver will ever probe.
++			 */
++			if (ret =3D=3D -ENXIO)
++				return ret;
+=20
+-		dev_err(dev, "no usb3 phy configured\n");
+-		return -EPROBE_DEFER;
++			dev_err(dev, "no usb3 phy configured\n");
++			return -EPROBE_DEFER;
++		}
+ 	}
+=20
+ 	dwc->xhci_resources[0].start =3D res->start;
+
+
+what you guys are saying though, is that every PHY should be optional.
+
+Do we have any device which doesn't provide USB2 PHY, only USB3 ? Dude,
+that's so non-standard! USB *must* be backwards compatible so I'd expect
+USB2 PHY to always be available.
+
+--=20
+balbi
+
+--cyV/sMl4KAhiehtf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSXUDmAAoJEIaOsuA1yqREJ0AQAKC3ONkDwVbbl3kjvgwifnSx
+eHhmEt2PQyoMgUIskjaLFSJ41PxKFMt9pb7o5miQmk98MldFCAHhSatyvAXFnGr3
+wNxQrUfCQUo1F9KagcBTOGe0RU+7oFDBlUu/LBu6lmVQg4My6481IQellJz52Aen
+sUCC+h8N2u1zfqTHPJBSjySeFke6a7ZKS2QLKknmKcMJAOMbvinDYcpEHDJzsThm
+zKJE+Z4sbll0PssDirJ0s1YeYOtT8LwIgLOAw4RTO60oJK/423GSkjvA0nWLGhpY
+PJsu82pm8nTx8Rg2K/QeLVC/VTtfChnc+oSqSfVZ/T6SFIP5T9dIve2yD980wJT8
+enVvYldF7nc8vwzStacYjQLt4wadpb28o1kfsfixoC0L0wVkr3d/V/Y5jZ/yqY/z
+mh5PQOSBjcw7H35FKmIgjx3LrTX8ykzjOws0LadQ5gVCsaTGgpqYZX8pP6giORj0
+dYkR/wyGgXM1ADAV/aa0mM5GNxhFSC1BsUEHio7EArRFV+KaXdkJppdMFl9AVGca
+ia5vfcjv6nK1F0aMSZ+nVZnjOwRRM6LaUrlOAhOKVKT1wVEuD4QpwcrFa2UaNXYN
+JoLGE5NP5NNQjTw1KSXpnhXJ2UJEHDR+HVW9yF8a4ZnbUWO+ZEYGTVJ35/w+dYuG
+HozZBaMwPnSfPaNRRHLX
+=znSu
+-----END PGP SIGNATURE-----
+
+--cyV/sMl4KAhiehtf--
+
+
+--===============3732825490449165980==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3732825490449165980==--
