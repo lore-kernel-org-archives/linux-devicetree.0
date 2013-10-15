@@ -1,100 +1,144 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 7/8] ARM: add Armada 1500 and Sony NSZ-GS7 device tree
- files
-Date: Tue, 15 Oct 2013 01:18:15 +0200
-Message-ID: <525C7BB7.8000209@gmail.com>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com> <1381235073-17134-8-git-send-email-sebastian.hesselbarth@gmail.com> <525C7A91.9060101@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <525C7A91.9060101@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
+Date: Tue, 15 Oct 2013 09:23:19 +0900
+Message-ID: <20131015002319.GG22321@verge.net.au>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131014162603.GB19196@e106331-lin.cambridge.arm.com>
+ <525C30DA.5060406@cogentembedded.com>
+ <21950975.Xyu9tdlx3R@avalon>
+ <525C608F.5010303@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <525C608F.5010303@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine <valentine.barshak@cogentembedded.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 01:13 AM, Sebastian Hesselbarth wrote:
-> On 10/08/2013 02:24 PM, Sebastian Hesselbarth wrote:
->> This adds very basic device tree files for the Marvell Armada 1500 SoC
->> (88DE3100) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
->> nodes for cpus, some clocks, l2 cache controller, local timer, apb
->> timers,
->> uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
->> device comprising the Armada 1500 SoC above.
->>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->> Reviewed-by: Jason Cooper <jason@lakedaemon.net>
->> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->> Changelog:
->> RCFv2->v1:
->> - switch to (soon to be) correct "marvell,pj4b" cpu compatible
->> - reference fixed-clock for uarts instead of hard-coded clock-frequency
->> - disable timers except two for clksrc and clkevt
->> RFCv1->RFCv2:
->> - add binding documentation (Reported by Jason Cooper)
->> - change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
->> - add copyright reference
->> - adapt compatibles to mach-berlin instead of mach-mvebu
->>
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   .../devicetree/bindings/arm/marvell,berlin.txt     |   23 ++
->>   arch/arm/boot/dts/Makefile                         |    2 +
->>   arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts      |   29 +++
->>   arch/arm/boot/dts/mv88de3100.dtsi                  |  227
->> ++++++++++++++++++++
->>   4 files changed, 281 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/arm/marvell,berlin.txt
->>   create mode 100644 arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
->>   create mode 100644 arch/arm/boot/dts/mv88de3100.dtsi
->>
->> diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt
->> b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
->> new file mode 100644
->> index 0000000..e389cba
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
->> @@ -0,0 +1,23 @@
->> +Marvell Berlin (88DE3xxx) family SoCs Device Tree Bindings
->> +---------------------------------------------------------------
->> +
->> +Boards with a SoC of the Marvell Berlin (88DE3xxx) family, e.g.
->> Armada 1500
->> +shall have the following properties:
->> +
->> +* Required root node properties:
->> +compatible: must contain "marvell,berlin"
->> +
->> +In addition, the above compatible shall be extended with the specific
->> +SoC and board used. Currently known SoC compatibles are:
->> +    "marvell,88de3100"    for Marvell 88DE3100 (Armada 1500),
->> +    "marvell,88de3010"    for Marvell 88DE3010 (Armada 1000),
->> +    "marvell,88de3005"    for Marvell 88DE3005 (Armada 1500-mini)
->
-> Jisheng,
+On Tue, Oct 15, 2013 at 01:22:23AM +0400, Valentine wrote:
+> On 10/14/2013 10:15 PM, Laurent Pinchart wrote:
+> >Hi Valentine,
+> >
+> 
+> Hi Laurent,
+> 
+> >On Monday 14 October 2013 21:58:50 Valentine wrote:
+> >>On 10/14/2013 08:26 PM, Mark Rutland wrote:
+> >>>On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
+> >>>>R-Car Gen2 SoCs have a different PHY which is not compatible
+> >>>>with the older R-Car H1 (R8A7779) version.
+> >>>>This adds OF/platform device id tables and PHY initialization
+> >>>>
+> >>>>callbacks for the following Gen2 SoCs:
+> >>>>    * R-Car H2: R8A7790;
+> >>>>    * R-Car M2: R8A7791.
+> >>>>
+> >>>>PHY initialization method is chosen, based on the device id.
+> >>>>Default PHY settings are applied for Gen2 SoCs, which should
+> >>>>suit the Gen2 boards available.
+> >>>>
+> >>>>The R8A7779 platform code is modified to use "sata-r8a7779"
+> >>>>device id.
+> >>>>
+> >>>>Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> >>>>---
+> >>>>
+> >>>>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+> >>>>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+> >>>>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+> >>>>   drivers/ata/sata_rcar.c                            | 112 +++++++++++---
+> >>>>   4 files changed, 102 insertions(+), 19 deletions(-)
+> >>>>
+> >>>>diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >>>>b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
+> >>>>2465183..b5a41bf 100644
+> >>>>--- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >>>>+++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >>>>@@ -1,7 +1,10 @@
+> >>>>
+> >>>>   * Renesas R-Car SATA
+> >>>>
+> >>>>   Required properties:
+> >>>>-- compatible		: must be "renesas,sata-r8a7779"
+> >>>
+> >>>>+- compatible		: must be one of the following:
+> >>>s/must be/should contain/
+> >>>
+> >>>>+			  - "renesas,sata-r8a7779" for R-Car H1
+> >>>>+			  - "renesas,sata-r8a7790" for R-Car H2
+> >>>>+			  - "renesas,sata-r8a7791" for R-Car M2
+> >>>
+> >>>How do renesas,sata-r8a7790 and renesas,sata-r8a7791 differ?
+> >>>
+> >>>>   - reg			: address range of the SATA registers.
+> >>>
+> >>>It's a size too...
+> >>>
+> >>>>   - interrupt-parent	: interrupt parent controller phandle
+> >>>
+> >>>Not required.
+> >>>
+> >>>[...]
+> >>>
+> >>>>+static struct of_device_id sata_rcar_match[] = {
+> >>>>+	{
+> >>>>+		.compatible = "renesas,sata-r8a7779",
+> >>>>+		.data = (void *)RCAR_GEN1_SATA,
+> >>>>+	},
+> >>>>+	{
+> >>>>+		.compatible = "renesas,sata-r8a7790",
+> >>>>+		.data = (void *)RCAR_GEN2_SATA
+> >>>>+	},
+> >>>>+	{
+> >>>>+		.compatible = "renesas,sata-r8a7791",
+> >>>>+		.data = (void *)RCAR_GEN2_SATA
+> >>>>+	},
+> >>>>+	{},
+> >>>>+};
+> >>>>+MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> >>>
+> >>>Are the renesas,sata-r8a779x variants identical?
+> >>
+> >>Yes.
+> >>
+> >>>If so, why the two strings?
+> >>
+> >>Just thought the driver should support "renesas,sata-r8a7791"
+> >>compatibility as well since it should support both SoCs.
+> >>Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
+> >
+> >One reason for two compatibility strings is not to be stuck if we later find
+> >out the the 7791 SATA controller differs from the 7790.
+> >
+> 
+> Thanks!
+> Yeah, anyways, I'd prefer to keep both strings in the device id table.
 
-(adding Jisheng to Cc, missed that)
+Yes, I do too, mostly for the reason that Laurent gave.
+But also because this is consistent with compatibility strings
+for other Renesas IP.
 
-> I am trying to follow your request to get rid of 88DExxxx numbering and
-> replace it where possible with berlin type-of names.
->
-> For the above, I have:
-> "marvell,berlin-bg2" for Marvell Armada 1500 (BG2, 88DE3100)
-> "marvell,berlin-bg2cd" for Marvell Armada 1500-mini (BG2CD, 88DE3005)
->
-> I cannot pin down Armada 1000 in the BG naming scheme. It would be great
-> if you provide info here on how Marvell would like to see the
-> compatibles.
->
-> Sebastian
->
-
+> >>>Could we not require sata-r8a7791 devices to have "sata-r8a7790" in the
+> >>>
+> >>>compatible list:
+> >>>	compatible = "sata-r8a7791", "sata-r8a7790";
+> >>>
+> >>>That way we can match on "sata-r8a7791" if we want to later, but don't
+> >>>need code for it now.
+> >>
+> >>We could. In this case having compatible = "renesas,sata-r8a7791" would not
+> >>be enough, though it looks like a valid compatible list to me.
+> >
+> >I'm fine with both solution, as long as the "sata-r8a7791" compatibility
+> >string is present and has precedence over "sata-r8a7790".
+> >
+> 
+> Thanks,
+> Val.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
