@@ -1,91 +1,329 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: exynos4x12: Device tree node definition
- for TMU on Exynos4x12
-Date: Tue, 15 Oct 2013 09:37:48 -0400
-Message-ID: <525D452C.4020802@ti.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-1-git-send-email-l.majewski@samsung.com> <1381300194-13134-5-git-send-email-l.majewski@samsung.com> <20131015082750.4b2f3325@amdc308.digital.local>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20131015082750.4b2f3325@amdc308.digital.local>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: kgene.kim@samsung.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Lukasz Majewski <l.majewski@majess.pl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: [PATCH V2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Tue, 15 Oct 2013 15:37:54 +0200
+Message-ID: <1381844274-12486-1-git-send-email-christian.ruppert@abilis.com>
+References: <20131015133621.GA7461@ab42.lan>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131015133621.GA7461@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Ruppert <christian.ruppert@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
---RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch adds the infrastructure required to register non-linear gpio
+ranges through gpiolib and the standard GPIO device tree bindings.
 
-On 15-10-2013 02:27, Lukasz Majewski wrote:
-> Hi Kukjin,
->=20
->> The TMU device tree node definition for Exynos4x12 family of SoCs.
->>
->> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
->> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt |   40 ++++++++++++++-
+ drivers/gpio/gpiolib-of.c                       |   63 ++++++++++++++++++++---
+ drivers/gpio/gpiolib.c                          |   47 +++++++++++++++++
+ drivers/pinctrl/core.c                          |   14 +++++
+ include/asm-generic/gpio.h                      |   10 ++++
+ include/linux/gpio.h                            |    9 +++
+ include/linux/pinctrl/pinctrl.h                 |    3 +
+ 7 files changed, 176 insertions(+), 10 deletions(-)
 
-BTW, you can add my
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 6cec6ff..0c85bb6 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -87,8 +87,10 @@ controllers. The gpio-ranges property described below represents this, and
+ contains information structures as follows:
+ 
+ 	gpio-range-list ::= <single-gpio-range> [gpio-range-list]
+-	single-gpio-range ::=
++	single-gpio-range ::= <numeric-gpio-range> | <named-gpio-range>
++	numeric-gpio-range ::=
+ 			<pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
++	named-gpio-range ::= <pinctrl-phandle> <gpio-base> '<0 0>'
+ 	gpio-phandle : phandle to pin controller node.
+ 	gpio-base : Base GPIO ID in the GPIO controller
+ 	pinctrl-base : Base pinctrl pin ID in the pin controller
+@@ -97,6 +99,19 @@ contains information structures as follows:
+ The "pin controller node" mentioned above must conform to the bindings
+ described in ../pinctrl/pinctrl-bindings.txt.
+ 
++In case named gpio ranges are used (ranges with both <pinctrl-base> and
++<count> set to 0), the property gpio-ranges-group-names contains one string
++for every single-gpio-range in gpio-ranges:
++	gpiorange-names-list ::= <gpiorange-name> [gpiorange-names-list]
++	gpiorange-name : Name of the pingroup associated to the GPIO range in
++			the respective pin controller.
++
++Elements of gpiorange-names-list corresponding to numeric ranges contain
++the empty string. Elements of gpiorange-names-list corresponding to named
++ranges contain the name of a pin group defined in the respective pin
++controller. The number of pins/GPIOs in the range is the number of pins in
++that pin group.
++
+ Previous versions of this binding required all pin controller nodes that
+ were referenced by any gpio-ranges property to contain a property named
+ #gpio-range-cells with value <3>. This requirement is now deprecated.
+@@ -104,7 +119,7 @@ However, that property may still exist in older device trees for
+ compatibility reasons, and would still be required even in new device
+ trees that need to be compatible with older software.
+ 
+-Example:
++Example 1:
+ 
+ 	qe_pio_e: gpio-controller@1460 {
+ 		#gpio-cells = <2>;
+@@ -117,3 +132,24 @@ Example:
+ Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
+ pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
+ pins 50..59.
++
++Example 2:
++
++	gpio_pio_i: gpio-controller@14B0 {
++		#gpio-cells = <2>;
++		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
++		reg = <0x1480 0x18>;
++		gpio-controller;
++		gpio-ranges =			<&pinctrl1 0 20 10>,
++						<&pinctrl2 10 0 0>,
++						<&pinctrl1 15 0 10>,
++						<&pinctrl2 25 0 0>;
++		gpio-ranges-group-names =	"",
++						"foo",
++						"",
++						"bar";
++	};
++
++Here, three GPIO ranges are defined wrt. two pin controllers. pinctrl1 GPIO
++ranges are defined using pin numbers whereas the GPIO ranges wrt. pinctrl2
++are named "foo" and "bar".
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 0dfaf20..e787609 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -190,10 +190,15 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
+ 	struct of_phandle_args pinspec;
+ 	struct pinctrl_dev *pctldev;
+ 	int index = 0, ret;
++	const char *name;
++	static const char group_names_propname[] = "gpio-ranges-group-names";
++	struct property *group_names;
+ 
+ 	if (!np)
+ 		return;
+ 
++	group_names = of_find_property(np, group_names_propname, NULL);
++
+ 	for (;; index++) {
+ 		ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3,
+ 				index, &pinspec);
+@@ -204,14 +209,56 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
+ 		if (!pctldev)
+ 			break;
+ 
+-		ret = gpiochip_add_pin_range(chip,
+-					     pinctrl_dev_get_devname(pctldev),
+-					     pinspec.args[0],
+-					     pinspec.args[1],
+-					     pinspec.args[2]);
+-
+-		if (ret)
+-			break;
++		if (pinspec.args[2]) {
++			if (group_names) {
++				ret = of_property_read_string_index(np,
++						group_names_propname,
++						index, &name);
++				if (strlen(name)) {
++					pr_err("%s: Group name of numeric GPIO ranges must be the empty string.\n",
++						np->full_name);
++					break;
++				}
++			}
++			/* npins != 0: linear range */
++			ret = gpiochip_add_pin_range(chip,
++					pinctrl_dev_get_devname(pctldev),
++					pinspec.args[0],
++					pinspec.args[1],
++					pinspec.args[2]);
++			if (ret)
++				break;
++		} else {
++			/* npins == 0: special range */
++			if (pinspec.args[1]) {
++				pr_err("%s: Illegal gpio-range format.\n",
++					np->full_name);
++				break;
++			}
++
++			if (!group_names) {
++				pr_err("%s: GPIO group range requested but no %s property.\n",
++					np->full_name, group_names_propname);
++				break;
++			}
++
++			ret = of_property_read_string_index(np,
++						group_names_propname,
++						index, &name);
++			if (ret)
++				break;
++
++			if (!strlen(name)) {
++				pr_err("%s: Group name of GPIO group range cannot be the empty string.\n",
++				np->full_name);
++				break;
++			}
++
++			ret = gpiochip_add_pingroup_range(chip, pctldev,
++						pinspec.args[0], name);
++			if (ret)
++				break;
++		}
+ 	}
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 86ef346..b83b7e4 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1320,6 +1320,53 @@ EXPORT_SYMBOL_GPL(gpiochip_find);
+ #ifdef CONFIG_PINCTRL
+ 
+ /**
++ * gpiochip_add_pingroup_range() - add a range for GPIO <-> pin mapping
++ * @chip: the gpiochip to add the range for
++ * @pinctrl: the dev_name() of the pin controller to map to
++ * @gpio_offset: the start offset in the current gpio_chip number space
++ * @pin_group: name of the pin group inside the pin controller
++ */
++int gpiochip_add_pingroup_range(struct gpio_chip *chip,
++			struct pinctrl_dev *pctldev,
++			unsigned int gpio_offset, const char *pin_group)
++{
++	struct gpio_pin_range *pin_range;
++	int ret;
++
++	pin_range = kzalloc(sizeof(*pin_range), GFP_KERNEL);
++	if (!pin_range) {
++		pr_err("%s: GPIO chip: failed to allocate pin ranges\n",
++				chip->label);
++		return -ENOMEM;
++	}
++
++	/* Use local offset as range ID */
++	pin_range->range.id = gpio_offset;
++	pin_range->range.gc = chip;
++	pin_range->range.name = chip->label;
++	pin_range->range.base = chip->base + gpio_offset;
++	pin_range->pctldev = pctldev;
++
++	ret = pinctrl_get_group_pins(pctldev, pin_group,
++					&pin_range->range.pins,
++					&pin_range->range.npins);
++	if (ret < 0)
++		return ret;
++
++	pinctrl_add_gpio_range(pctldev, &pin_range->range);
++
++	pr_debug("GPIO chip %s: created GPIO range %d->%d ==> %s PINGRP %s\n",
++		 chip->label, gpio_offset,
++		 gpio_offset + pin_range->range.npins - 1,
++		 pinctrl_dev_get_devname(pctldev), pin_group);
++
++	list_add_tail(&pin_range->node, &chip->pin_ranges);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
++
++/**
+  * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
+  * @chip: the gpiochip to add the range for
+  * @pinctrl_name: the dev_name() of the pin controller to map to
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 92f86ab..5ee61a4 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -462,6 +462,20 @@ struct pinctrl_dev *pinctrl_find_and_add_gpio_range(const char *devname,
+ }
+ EXPORT_SYMBOL_GPL(pinctrl_find_and_add_gpio_range);
+ 
++int pinctrl_get_group_pins(struct pinctrl_dev *pctldev, const char *pin_group,
++				const unsigned **pins, unsigned *num_pins)
++{
++	const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
++	int gs;
++
++	gs = pinctrl_get_group_selector(pctldev, pin_group);
++	if (gs < 0)
++		return gs;
++
++	return pctlops->get_group_pins(pctldev, gs, pins, num_pins);
++}
++EXPORT_SYMBOL_GPL(pinctrl_get_group_pins);
++
+ /**
+  * pinctrl_find_gpio_range_from_pin() - locate the GPIO range for a pin
+  * @pctldev: the pin controller device to look in
+diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+index bde6469..523f405 100644
+--- a/include/asm-generic/gpio.h
++++ b/include/asm-generic/gpio.h
+@@ -228,6 +228,9 @@ struct gpio_pin_range {
+ int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ 			   unsigned int gpio_offset, unsigned int pin_offset,
+ 			   unsigned int npins);
++int gpiochip_add_pingroup_range(struct gpio_chip *chip,
++			struct pinctrl_dev *pctldev,
++			unsigned int gpio_offset, const char *pin_group);
+ void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
+ 
+ #else
+@@ -239,6 +242,13 @@ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ {
+ 	return 0;
+ }
++static inline int
++gpiochip_add_pingroup_range(struct gpio_chip *chip,
++			struct pinctrl_dev *pctldev,
++			unsigned int gpio_offset, const char *pin_group)
++{
++	return 0;
++}
+ 
+ static inline void
+ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 552e3f4..234b32f 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -220,6 +220,15 @@ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ 	return -EINVAL;
+ }
+ 
++static inline int
++gpiochip_add_pingroup_range(struct gpio_chip *chip,
++			struct pinctrl_dev *pctldev,
++			unsigned int gpio_offset, const char *pin_group)
++{
++	WARN_ON(1);
++	return -EINVAL;
++}
++
+ static inline void
+ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+ {
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 5979147..fefb886 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -144,6 +144,9 @@ extern struct pinctrl_dev *pinctrl_find_and_add_gpio_range(const char *devname,
+ extern struct pinctrl_gpio_range *
+ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+ 				 unsigned int pin);
++extern int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++				const char *pin_group, const unsigned **pins,
++				unsigned *num_pins);
+ 
+ #ifdef CONFIG_OF
+ extern struct pinctrl_dev *of_pinctrl_get(struct device_node *np);
+-- 
+1.7.1
 
-Reviewed-by: Eduardo Valentin <eduardo.valentin@ti.com>
-
-on patch 4 and 5 of this series.
-
->>
->> ---
->> Changes for v2:
->> - None
->>
->>  arch/arm/boot/dts/exynos4x12.dtsi |   10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
->> b/arch/arm/boot/dts/exynos4x12.dtsi index ad531fe..64c0ece 100644
->> --- a/arch/arm/boot/dts/exynos4x12.dtsi
->> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
->> @@ -176,4 +176,14 @@
->>  			};
->>  		};
->>  	};
->> +
->> +	tmu@100C0000 {
->> +		compatible =3D "samsung,exynos4412-tmu";
->> +		interrupt-parent =3D <&combiner>;
->> +		interrupts =3D <2 4>;
->> +		reg =3D <0x100C0000 0x100>;
->> +		clocks =3D <&clock 383>;
->> +		clock-names =3D "tmu_apbif";
->> +		status =3D "disabled";
->> +	};
->>  };
->=20
-> Can you pull this DT node definition for TMU (as a fix to v3.12)?
->=20
-> It is crucial for Exynos4412.
->=20
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJdRS8ACgkQCXcVR3XQvP1kvwEA4rfbYgOgcZi1caxoieyaw0vi
-oUUyE5+dK1hKwf6UlQQBALKVmudGU1+f0oesnQoXVi+xkFTPAQ4CPTrFNmQ/nF6N
-=Kvu7
------END PGP SIGNATURE-----
-
---RwODSSp5i7fJDR9ckJemrPhl2DugWJaVT--
