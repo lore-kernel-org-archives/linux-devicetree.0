@@ -1,157 +1,130 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] sata_rcar: Adjust and document device tree bindings
-Date: Tue, 15 Oct 2013 09:15:32 +0100
-Message-ID: <20131015081532.GC19196@e106331-lin.cambridge.arm.com>
-References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
- <1381765354-28440-2-git-send-email-valentine.barshak@cogentembedded.com>
- <20131014161353.GA19196@e106331-lin.cambridge.arm.com>
- <525C27A9.5010402@cogentembedded.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 17/27] drm/tegra: Add Tegra114 HDMI support
+Date: Tue, 15 Oct 2013 10:13:39 +0200
+Message-ID: <20131015081318.GG7856@ulmo.nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-18-git-send-email-treding@nvidia.com>
+ <52587967.6050806@wwwdotorg.org>
+ <20131012114122.GF22284@mithrandir>
+ <525C338D.50801@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FwyhczKCDPOVeYh6"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <525C27A9.5010402@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Valentine <valentine.barshak@cogentembedded.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
+In-Reply-To: <525C338D.50801-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 14, 2013 at 06:19:37PM +0100, Valentine wrote:
-> Hi Mark,
-> thanks for looking at this.
-> 
-> On 10/14/2013 08:13 PM, Mark Rutland wrote:
-> > On Mon, Oct 14, 2013 at 04:42:33PM +0100, Valentine Barshak wrote:
-> >> This converts the R-Car SATA DT compatibility string to
-> >> the <unit>-<soc> format which is the preferred one for
-> >> all SH-Mobile devices. The DT bindings are documented.
-> >>
-> >> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 16 ++++++++++++++++
-> >>   arch/arm/boot/dts/r8a7779.dtsi                      |  2 +-
-> >>   drivers/ata/sata_rcar.c                             |  2 +-
-> >>   3 files changed, 18 insertions(+), 2 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >> new file mode 100644
-> >> index 0000000..2465183
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> >> @@ -0,0 +1,16 @@
-> >> +* Renesas R-Car SATA
-> >> +
-> >> +Required properties:
-> >> +- compatible		: must be "renesas,sata-r8a7779"
-> >
-> > s/must be/should include/
-> >
-> 
-> OK, thanks.
 
-Cheers.
+--FwyhczKCDPOVeYh6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> >> +- reg			: address range of the SATA registers.
-> >
-> > Also their size...
-> 
-> Do you want me to rephrase it to "base address and size of the SATA 
-> registers"?
-> 
-> Looks like a lot of other bindings examples available in 
-> Documentation/devicetree/bindings describe regs property
-> as the "address range" which implies the address and size
-> of the registers.
+On Mon, Oct 14, 2013 at 12:10:21PM -0600, Stephen Warren wrote:
+> On 10/12/2013 05:41 AM, Thierry Reding wrote:
+> > On Fri, Oct 11, 2013 at 04:19:19PM -0600, Stephen Warren wrote:
+> >> On 10/07/2013 02:34 AM, Thierry Reding wrote:
+> >>> From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>>=20
+> >>> Tegra114 TMDS configuration requires a new peak_current field
+> >>> and the driver current override bit has changed position.
+> >>=20
+> >>> diff --git a/drivers/gpu/drm/tegra/hdmi.c
+> >>> b/drivers/gpu/drm/tegra/hdmi.c
+> >>=20
+> >>> static const struct tmds_config tegra2_tmds_config[] =3D { @@
+> >>> -223,6 +224,85 @@ static const struct tmds_config
+> >>> tegra3_tmds_config[] =3D {
+> >>=20
+> >> Not related to this patch, but those should have been named=20
+> >> tegra20_tmds_config[] and tegra30_tmds_config[].
+> >>=20
+> >>> static void tegra_hdmi_setup_tmds(struct tegra_hdmi *hdmi,
+> >>=20
+> >>> -	value =3D tmds->drive_current | DRIVE_CURRENT_FUSE_OVERRIDE; -
+> >>> tegra_hdmi_writel(hdmi, value,
+> >>> HDMI_NV_PDISP_SOR_LANE_DRIVE_CURRENT); +	if
+> >>> (of_device_is_compatible(np, "nvidia,tegra114-hdmi")) {
+> >>=20
+> >> Let's not check this at run-time. Instead, host1x_drm_subdevs[]'s
+> >> .data field should be used to contain either flags or a pointer
+> >> to a configuration structure, either of which can be directly
+> >> consulted to determine the properties of the HW in a
+> >> feature-oriented/semantic way.
+> >>=20
+> >> drivers/gpio/gpio-tegra.c's=20
+> >> tegra20_gpio_config/tegra30_gpio_config/tegra_gpio_of_match
+> >> provide a good example of this.
+> >>=20
+> >> This means that if Tegra124 is identical to Tegra114, yet a
+> >> hypothetical Tegra999 is different, you don't have to keep
+> >> adjusting these if conditions throughout the code; they can
+> >> simply refer to the same feature bit forever.
+> >=20
+> > Okay, I'll see what I can come up with. It's unfortunately not as
+> > simple as the GPIO driver's parameterization, and who knows what
+> > other differences will be introduced in some later versions of this
+> > block.
+> >=20
+> > What I mean is that at some point it becomes questionable whether
+> > it makes sense to parameterize at all if you have to encode the
+> > register offset and bit position within that register for a large
+> > number of bits.
+>=20
+> Well, I wasn't advocating that we shouldn't have an if statement at
+> all. Simply that the if statement shouldn't be doing string compares
+> of specific HW. Either of the following would be fine:
+>=20
+> if (hdmi->soc_data->some_feature_flag)
+>    // just represents some code; doesn't have to be a function call
+>    do_something();
+> else;
+>   do_something_else();
+>=20
+> or:
+>=20
+> do_something(hdmi->soc_data->some_feature_value);
 
-This is unfortunately one area where there isn't any general consensus
-on the terminology. I think "base address and size ..." is sufficient --
-it maps well to the set of address-cells and size-cells. For reg values
-describing MMIO register blocks, ePAPR says "the offsets and lengths of
-the memory-mapped IO register blocks", and there's similar wording in
-other bindings.
+But the fact that a bit has moved from one register to another can
+hardly be defined as feature. At least I couldn't come up with any
+sensible name for one.
 
-> 
-> >
-> >> +- interrupt-parent	: interrupt parent controller phandle
-> >
-> > This isn't required as such, as the interrupt-controller can be
-> > inherited from the parent. As it's a standard auxiliary property I don't
-> > think it needs to be documented here.
-> 
-> OK, will drop it, thanks.
+We could of course just add a version number into a per-SoC descriptor
+and use that, but that's not any better than checking for the compatible
+value, really.
 
-Ok.
+Ideally of course the hardware wouldn't change in these ways from one
+generation to the next...
 
-> 
-> >
-> >> +- interrupts		: must consist of one interrupt specifier.
-> >
-> > Is there only one interrupt generated by the device?
-> 
-> Yes, there's just one IRQ.
+That said, I've opted to go with putting the register and bit position
+into a per-SoC descriptor and parameterize on that, along with a boolean
+flag for the existence of the IO peak current register.
 
-Ok.
+Thierry
 
-> 
-> >
-> >> +
-> >> +Example:
-> >> +
-> >> +sata: sata@fc600000 {
-> >> +	compatible = "renesas,sata-r8a7779";
-> >> +	reg = <0xfc600000 0x2000>;
-> >> +	interrupt-parent = <&gic>;
-> >> +	interrupts = <0 100 0x4>;
-> >> +};
-> >> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-> >> index da61d27..b1747f5 100644
-> >> --- a/arch/arm/boot/dts/r8a7779.dtsi
-> >> +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> >> @@ -201,7 +201,7 @@
-> >>   	};
-> >>
-> >>   	sata: sata@fc600000 {
-> >> -		compatible = "renesas,rcar-sata";
-> >> +		compatible = "renesas,sata-r8a7779";
-> >>   		reg = <0xfc600000 0x2000>;
-> >>   		interrupt-parent = <&gic>;
-> >>   		interrupts = <0 100 0x4>;
-> >> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-> >> index c2d95e9..c4cd738 100644
-> >> --- a/drivers/ata/sata_rcar.c
-> >> +++ b/drivers/ata/sata_rcar.c
-> >> @@ -893,7 +893,7 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
-> >>   #endif
-> >>
-> >>   static struct of_device_id sata_rcar_match[] = {
-> >> -	{ .compatible = "renesas,rcar-sata", },
-> >> +	{ .compatible = "renesas,sata-r8a7779", },
-> >>   	{},
-> >>   };
-> >
-> > Why is an existing compatible string being removed?
-> >
-> > Please do not change existing strings, it will break any dts files that
-> > are already in use.
-> 
-> It won't break the dts files, since I'm changing the only dtsi file that 
-> uses the SATA node as well. It will only break binary compatibility with 
-> the older dtb files.
+--FwyhczKCDPOVeYh6
+Content-Type: application/pgp-signature
 
-Why should an existing dtb suddenly stop working?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-What if someone has an out-of-tree dts?
+iQIcBAEBAgAGBQJSXPkeAAoJEN0jrNd/PrOhY4YP/2+H/ILyiiGTeq9yG03manHz
+Oagjxr0AzC3U+WV5uVCf/wdqF6a5/AB9IIDKiHXXd+6vtvyvMGkhA2RyhlXjuyz1
+SnIho0B7T0tMs8xiBGuFlllgwJF4Nmi5VA2SVaGUl03NG53UHyHYn6rwUSsb+iaJ
+bB+peXUbuXCXkTj5zceu9XwTd1EGNpYeCHwEd9GhJzQHYEE5N+dgTs4VT7CNrGLw
+84we37LC6SPYoP+UigQGYH/fva0JwOjqTP6ACkgOzRUBtqQXXIwcAkP9kFeDWyIL
+u+1AYhluLgOvZU9oq0Xnm3PK3CZIwuU+0Ne30bMMm82aIF+IIdJ2jAw+ruKX8t8h
+GNqvau20TwyID/PnPa8dLYZZznWfl3E8f4BKlEZ0B2F4lNGctCCR/a12dNnZw2MG
+9oe4uc66qXzoYbvcOSeS7J6EAi1SSzMgYor7wDlnFJqU5J15JosmeAoOmNQDoO9C
+dLTYg9fLrirxcos5hrAJMCqKTBJuevtTL/BQK4yNk+D5MSe25QvHy/Litn/bSvix
+pa51k1t3nHMfmuheFX3E2+bDJd57umfV8RKfXjxMKnEPsCwzgE6pnYvt+ATRSIUc
+FVlooARAAOcAIoV1J9gmNNf6S65clz264Zy5mwl+JHB97UnO27LS6dw6jFtMLrty
+XfeKywrRVSKZqk4+a4ni
+=MSvy
+-----END PGP SIGNATURE-----
 
-> 
-> >
-> > While the new compatible string may be preferred, the old string should
-> > be kept for compatibility.
-> 
-> OK, I can keep the old string if it's needed.
-
-Please do.
-
-Thanks,
-Mark.
+--FwyhczKCDPOVeYh6--
