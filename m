@@ -1,103 +1,98 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [PATCH] phy: omap: Adapt phy-omap-usb2 for AM437x
-Date: Tue, 15 Oct 2013 12:35:12 +0530
-Message-ID: <525CE928.4060405@ti.com>
-References: <1381754603-11581-1-git-send-email-george.cherian@ti.com> <20131014143259.GD31708@e106331-lin.cambridge.arm.com>
+From: Archit Taneja <archit@ti.com>
+Subject: [PATCH v4 1/2] arm: dts: omap4+: Add DMM bindings
+Date: Tue, 15 Oct 2013 12:34:19 +0530
+Message-ID: <1381820660-5501-2-git-send-email-archit@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
+ <1381820660-5501-1-git-send-email-archit@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131014143259.GD31708@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, "rob@landley.net" <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1381820660-5501-1-git-send-email-archit@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com
+Cc: tomi.valkeinen@ti.com, robdclark@gmail.com, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Andy Gross <andygro@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. DMM
+only requires address and irq information.
 
-Fixed all your comments and already sent a V2.
+Add documentation for the DMM bindings.
 
+Originally worked on by Andy Gross <andygro@gmail.com>
 
-On 10/14/2013 8:03 PM, Mark Rutland wrote:
-> On Mon, Oct 14, 2013 at 01:43:23PM +0100, George Cherian wrote:
->> This patch adds a compatible for AM437x "ti,am43xx-usb2" to
->> reuse the same phy-omap-usb2 driver.
->>
->> Also updated the documentation to add the new compatible.
->>
->> Signed-off-by: George Cherian <george.cherian@ti.com>
->> ---
->>   Documentation/devicetree/bindings/usb/usb-phy.txt |  2 +-
->>   drivers/phy/phy-omap-usb2.c                       | 13 ++++++++++---
->>   2 files changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
->> index c0245c8..d5a7f21 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->> @@ -3,7 +3,7 @@ USB PHY
->>   OMAP USB2 PHY
->>   
->>   Required properties:
->> - - compatible: Should be "ti,omap-usb2"
->> + - compatible: Should be "ti,omap-usb2" or "ti,am437x-usb2"
-> In case this needs to be modified in future, it might be best to split
-> this up one per line, with a brief description of when it applies:
->
-> - compatible: Should contain one of:
->    * "ti,omap-usb2" for ____ systems
->    * "ti,am437x-usb2" for ____ systems
->
->>    - reg : Address and length of the register set for the device.
->>    - #phy-cells: determine the number of cells that should be given in the
->>      phandle while referencing this phy.
->> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
->> index bfc5c33..0529c83 100644
->> --- a/drivers/phy/phy-omap-usb2.c
->> +++ b/drivers/phy/phy-omap-usb2.c
->> @@ -29,6 +29,7 @@
->>   #include <linux/delay.h>
->>   #include <linux/usb/omap_control_usb.h>
->>   #include <linux/phy/phy.h>
->> +#include <linux/of.h>
->>   #include <linux/of_platform.h>
->>   
->>   /**
->> @@ -172,7 +173,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
->>   	phy->dev		= &pdev->dev;
->>   
->>   	phy->phy.dev		= phy->dev;
->> -	phy->phy.label		= "omap-usb2";
->> +	if (of_device_is_compatible(node, "ti,am437x-usb2"))
->> +		phy->phy.label		= "am437x-usb2";
->> +	else
->> +		phy->phy.label		= "omap-usb2";
-> Instead of having this check here, you could put together a struct
-> containing the data applying to a particular compatible string, and
-> associate it with the compatible string using of_device_id::data.
->
-> That means we don't need to duplicate the compatible strings, and it's
-> easier to extend in future.
->
->>   	phy->phy.set_suspend	= omap_usb2_suspend;
->>   	phy->phy.otg		= otg;
->>   	phy->phy.type		= USB_PHY_TYPE_USB2;
->> @@ -201,8 +205,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
->>   
->>   	otg->set_host		= omap_usb_set_host;
->>   	otg->set_peripheral	= omap_usb_set_peripheral;
->> -	otg->set_vbus		= omap_usb_set_vbus;
->> -	otg->start_srp		= omap_usb_start_srp;
->> +	if (of_device_is_compatible(node, "ti,omap-usb2")) {
->> +		otg->set_vbus		= omap_usb_set_vbus;
->> +		otg->start_srp		= omap_usb_start_srp;
->> +	}
-> Similarly here.
->
-> Cheers,
-> Mark.
+Cc: Andy Gross <andygro@gmail.com>
+Signed-off-by: Archit Taneja <archit@ti.com>
+---
+ Documentation/devicetree/bindings/arm/omap/dmm.txt | 22 ++++++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
+ arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
 
-
+diff --git a/Documentation/devicetree/bindings/arm/omap/dmm.txt b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+new file mode 100644
+index 0000000..8bd6d0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/omap/dmm.txt
+@@ -0,0 +1,22 @@
++OMAP Dynamic Memory Manager (DMM) bindings
++
++The dynamic memory manager (DMM) is a module located immediately in front of the
++SDRAM controllers (called EMIFs on OMAP). DMM manages various aspects of memory
++accesses such as priority generation amongst initiators, configuration of SDRAM
++interleaving, optimizing transfer of 2D block objects, and provide MMU-like page
++translation for initiators which need contiguous dma bus addresses.
++
++Required properties:
++- compatible:	Should contain "ti,omap4-dmm" for OMAP4 family
++		Should contain "ti,omap5-dmm" for OMAP5 and DRA7x family
++- reg:		Contains DMM register address range (base address and length)
++- interrupts:	Should contain an interrupt-specifier for DMM_IRQ.
++- ti,hwmods:	Name of the hwmod associated to DMM, which is typically "dmm"
++
++Example:
++
++dmm@4e000000 {
++	compatible = "ti,omap4-dmm";
++	reg = <0x4e000000 0x800>;
++	ti,hwmods = "dmm";
++};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 22d9f2b..b6bf288 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -487,6 +487,13 @@
+ 			ti,hwmods = "kbd";
+ 		};
+ 
++		dmm@4e000000 {
++			compatible = "ti,omap4-dmm";
++			reg = <0x4e000000 0x800>;
++			interrupts = <0 113 0x4>;
++			ti,hwmods = "dmm";
++		};
++
+ 		emif1: emif@4c000000 {
+ 			compatible = "ti,emif-4d";
+ 			reg = <0x4c000000 0x100>;
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 7cdea1b..e405458 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -604,6 +604,13 @@
+ 			ti,hwmods = "wd_timer2";
+ 		};
+ 
++		dmm@4e000000 {
++			compatible = "ti,omap5-dmm";
++			reg = <0x4e000000 0x800>;
++			interrupts = <0 113 0x4>;
++			ti,hwmods = "dmm";
++		};
++
+ 		emif1: emif@0x4c000000 {
+ 			compatible	= "ti,emif-4d5";
+ 			ti,hwmods	= "emif1";
 -- 
--George
+1.8.1.2
 
