@@ -1,53 +1,45 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in
- device tree
-Date: Tue, 15 Oct 2013 15:27:42 +0200
-Message-ID: <525D42CE.5010008@samsung.com>
-References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
- <20131015114035.6CA5FC40098@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20131015114035.6CA5FC40098-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH v2] of: fix iteration bug over CPU reg properties
+Date: Tue, 15 Oct 2013 14:30:53 +0100
+Message-ID: <1381843853-13871-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The size of each hwid in a cpu nodes 'reg' property is defined by the
+parents #address-cells property in the normal way. The cpu parsing code
+has a bug where it will overrun the end of the property if
+address-cells is greater than one. This commit fixes the problem by
+adjusting the array size by the number of address cells. It also makes
+sure address-cells isn't zero for that would cause an infinite loop.
 
-On 2013-10-15 13:40, Grant Likely wrote:
-> On Fri, 11 Oct 2013 09:27:26 +0200, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Hi all!
-> >
-> > Benjamin Herrenschmidt pointed a few issues in the proposed design of
-> > device tree bindings for contiguous memory allocator and reserved memory
-> > regions:
-> > https://lkml.org/lkml/2013/9/15/151
-> > http://www.spinics.net/lists/arm-kernel/msg273548.html
-> >
-> > Some time has passed, but there is still no consensus on the bindings
-> > for the reserved memory and various drawback of this solution has been
-> > shown, so in my opinion the best I can do now is to revert them
-> > completely and start from scratch again later.
->
-> I had some fixup patches that I was getting ready to post, but your
-> right. We're really late to be doing anything like that. I've applied
-> the reverts and we'll plan on hammering something out in Edinburgh next
-> week so that it can be merged for v3.13
+v2: bail if #address-cells is zero instead of forcing to
+    OF_ROOT_NODE_ADDR_CELLS_DEFAULT. Forcing it will cause the reg
+    property to be parsed incorrectly.
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+ drivers/of/base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sadly I won't be able to go to Edinburgh because of other business trip 
-the same time. However Tomasz Figa will be there for the whole week, he 
-will also attend DT-summit, so I hope that you will manage to find a 
-consensus. I will implement whatever you will agree then.
-
-Best regards
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 15c4b59..a96f850 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -272,9 +272,9 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
+ 
+ 	ac = of_n_addr_cells(cpun);
+ 	cell = of_get_property(cpun, prop_name, &prop_len);
+-	if (!cell)
++	if (!cell || !ac)
+ 		return false;
+-	prop_len /= sizeof(*cell);
++	prop_len /= sizeof(*cell) * ac;
+ 	for (tid = 0; tid < prop_len; tid++) {
+ 		hwid = of_read_number(cell, ac);
+ 		if (arch_match_cpu_phys_id(cpu, hwid)) {
 -- 
-Marek Szyprowski
-Samsung R&D Institute Poland
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.2
