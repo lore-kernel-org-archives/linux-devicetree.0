@@ -1,166 +1,248 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 5/5] pinctrl: rockchip: emulate both edge triggered interrupts
-Date: Wed, 16 Oct 2013 01:09:08 +0200
-Message-ID: <201310160109.08771.heiko@sntech.de>
-References: <201310160106.42329.heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201310160106.42329.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 08/10] of/platform: Resolve interrupt references at probe time
+Date: Wed, 16 Oct 2013 00:24:36 +0100
+Message-ID: <20131015232436.19F61C40099@trevor.secretlab.ca>
+References: <1379510692-32435-1-git-send-email-treding@nvidia.com> <1379510692-32435-9-git-send-email-treding@nvidia.com>
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <1379510692-32435-9-git-send-email-treding@nvidia.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The gpio interrupt controller on Rockchip socs can do edge triggers only
-for single edges but not both. Nevertheless a lot of gpio users rely on
-the availability of both-edge triggered interrupts - i.e. gpio-keys.
+On Wed, 18 Sep 2013 15:24:50 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
+> Interrupt references are currently resolved very early (when a device is
+> created). This has the disadvantage that it will fail in cases where the
+> interrupt parent hasn't been probed and no IRQ domain for it has been
+> registered yet. To work around that various drivers use explicit
+> initcall ordering to force interrupt parents to be probed before devices
+> that need them are created. That's error prone and doesn't always work.
+> If a platform device uses an interrupt line connected to a different
+> platform device (such as a GPIO controller), both will be created in the
+> same batch, and the GPIO controller won't have been probed by its driver
+> when the depending platform device is created. Interrupt resolution will
+> fail in that case.
 
-Therefore implement a solution similar to pinctrl-coh901 re-setting the
-triggering edge depending on the gpio value in the interrupt demuxer.
+What is the reason for all the rework on the irq parsing return values?
+A return value of '0' is always an error on irq parsing, regardless of
+architecture even if NO_IRQ is defined as -1. I may have missed it, but
+I don't see any checking for specific error values in the return paths
+of the functions.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/pinctrl/pinctrl-rockchip.c |   61 +++++++++++++++++++++++++++++++-----
- 1 file changed, 54 insertions(+), 7 deletions(-)
+If the specific return value isn't required (and I don't think it is),
+then you can simplify the whole series by getting rid of the rework
+patches.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index f5e53a7..e939c28 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -101,7 +101,7 @@ struct rockchip_pin_bank {
- 	struct gpio_chip		gpio_chip;
- 	struct pinctrl_gpio_range	grange;
- 	spinlock_t			slock;
--
-+	u32				toggle_edge_mode;
- };
- 
- #define PIN_BANK(id, pins, label)			\
-@@ -1078,7 +1078,9 @@ static void rockchip_irq_demux(unsigned int irq, struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_get_chip(irq);
- 	struct rockchip_pin_bank *bank = irq_get_handler_data(irq);
-+	u32 polarity = 0, data = 0;
- 	u32 pend;
-+	bool edge_changed = false;
- 
- 	dev_dbg(bank->drvdata->dev, "got irq for bank %s\n", bank->name);
- 
-@@ -1086,6 +1088,12 @@ static void rockchip_irq_demux(unsigned int irq, struct irq_desc *desc)
- 
- 	pend = readl_relaxed(bank->reg_base + GPIO_INT_STATUS);
- 
-+	if (bank->toggle_edge_mode) {
-+		polarity = readl_relaxed(bank->reg_base +
-+					 GPIO_INT_POLARITY);
-+		data = readl_relaxed(bank->reg_base + GPIO_EXT_PORT);
-+	}
-+
- 	while (pend) {
- 		unsigned int virq;
- 
-@@ -1100,9 +1108,30 @@ static void rockchip_irq_demux(unsigned int irq, struct irq_desc *desc)
- 
- 		dev_dbg(bank->drvdata->dev, "handling irq %d\n", irq);
- 
-+		/*
-+		 * Triggering IRQ on both rising and falling edge
-+		 * needs manual intervention.
-+		 */
-+		if (bank->toggle_edge_mode & BIT(irq)) {
-+			if (data & BIT(irq))
-+				polarity &= ~BIT(irq);
-+			else
-+				polarity |= BIT(irq);
-+
-+			edge_changed = true;
-+		}
-+
- 		generic_handle_irq(virq);
- 	}
- 
-+	if (bank->toggle_edge_mode && edge_changed) {
-+		/* Interrupt params should only be set with ints disabled */
-+		data = readl_relaxed(bank->reg_base + GPIO_INTEN);
-+		writel_relaxed(0, bank->reg_base + GPIO_INTEN);
-+		writel(polarity, bank->reg_base + GPIO_INT_POLARITY);
-+		writel(data, bank->reg_base + GPIO_INTEN);
-+	}
-+
- 	chained_irq_exit(chip, desc);
- }
- 
-@@ -1115,6 +1144,12 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 	u32 level;
- 	u32 data;
- 
-+	/* make sure the pin is configured as gpio input */
-+	rockchip_set_mux(bank, d->hwirq, RK_FUNC_GPIO);
-+	data = readl_relaxed(bank->reg_base + GPIO_SWPORT_DDR);
-+	data &= ~mask;
-+	writel_relaxed(data, bank->reg_base + GPIO_SWPORT_DDR);
-+
- 	if (type & IRQ_TYPE_EDGE_BOTH)
- 		__irq_set_handler_locked(d->irq, handle_edge_irq);
- 	else
-@@ -1126,19 +1161,37 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 	polarity = readl_relaxed(gc->reg_base + GPIO_INT_POLARITY);
- 
- 	switch (type) {
-+	case IRQ_TYPE_EDGE_BOTH:
-+		bank->toggle_edge_mode |= mask;
-+		level |= mask;
-+
-+		/*
-+		 * Determine gpio state. If 1 next interrupt should be falling
-+		 * otherwise rising.
-+		 */
-+		data = readl(bank->reg_base + GPIO_EXT_PORT);
-+		if (data & mask)
-+			polarity &= ~mask;
-+		else
-+			polarity |= mask;
-+		break;
- 	case IRQ_TYPE_EDGE_RISING:
-+		bank->toggle_edge_mode &= ~mask;
- 		level |= mask;
- 		polarity |= mask;
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
-+		bank->toggle_edge_mode &= ~mask;
- 		level |= mask;
- 		polarity &= ~mask;
- 		break;
- 	case IRQ_TYPE_LEVEL_HIGH:
-+		bank->toggle_edge_mode &= ~mask;
- 		level &= ~mask;
- 		polarity |= mask;
- 		break;
- 	case IRQ_TYPE_LEVEL_LOW:
-+		bank->toggle_edge_mode &= ~mask;
- 		level &= ~mask;
- 		polarity &= ~mask;
- 		break;
-@@ -1152,12 +1205,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 
- 	irq_gc_unlock(gc);
- 
--	/* make sure the pin is configured as gpio input */
--	rockchip_set_mux(bank, d->hwirq, RK_FUNC_GPIO);
--	data = readl_relaxed(bank->reg_base + GPIO_SWPORT_DDR);
--	data &= ~mask;
--	writel_relaxed(data, bank->reg_base + GPIO_SWPORT_DDR);
--
- 	return 0;
- }
- 
--- 
-1.7.10.4
+g.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Another common workaround is for drivers to explicitly resolve interrupt
+> references at probe time. This is suboptimal, however, because it will
+> require every driver to duplicate the code.
+> 
+> This patch adds support for late interrupt resolution to the platform
+> driver core, by resolving the references right before a device driver's
+> .probe() function will be called. This not only delays the resolution
+> until a much later time (giving interrupt parents a better chance of
+> being probed in the meantime), but it also allows the platform driver
+> core to queue the device for deferred probing if the interrupt parent
+> hasn't registered its IRQ domain yet.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v2:
+> - split off IRQ parsing into separate function to make code flow simpler
+> - add comments to point out some aspects of the implementation
+> - make code idempotent (as pointed out by Grygorii Strashko
+> 
+>  drivers/base/platform.c     |   4 ++
+>  drivers/of/platform.c       | 107 +++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/of_platform.h |   7 +++
+>  3 files changed, 112 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 4f8bef3..8dcf835 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
+>  	struct platform_device *dev = to_platform_device(_dev);
+>  	int ret;
+>  
+> +	ret = of_platform_probe(dev);
+> +	if (ret)
+> +		return ret;
+> +
+>  	if (ACPI_HANDLE(_dev))
+>  		acpi_dev_pm_attach(_dev, true);
+>  
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 9b439ac..df6d56e 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -142,7 +142,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  				  struct device *parent)
+>  {
+>  	struct platform_device *dev;
+> -	int rc, i, num_reg = 0, num_irq;
+> +	int rc, i, num_reg = 0;
+>  	struct resource *res, temp_res;
+>  
+>  	dev = platform_device_alloc("", -1);
+> @@ -153,23 +153,21 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  	if (of_can_translate_address(np))
+>  		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+>  			num_reg++;
+> -	num_irq = of_irq_count(np);
+>  
+>  	/* Populate the resource table */
+> -	if (num_irq || num_reg) {
+> -		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
+> +	if (num_reg) {
+> +		res = kzalloc(sizeof(*res) * num_reg, GFP_KERNEL);
+>  		if (!res) {
+>  			platform_device_put(dev);
+>  			return NULL;
+>  		}
+>  
+> -		dev->num_resources = num_reg + num_irq;
+> +		dev->num_resources = num_reg;
+>  		dev->resource = res;
+>  		for (i = 0; i < num_reg; i++, res++) {
+>  			rc = of_address_to_resource(np, i, res);
+>  			WARN_ON(rc);
+>  		}
+> -		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+>  	}
+>  
+>  	dev->dev.of_node = of_node_get(np);
+> @@ -490,4 +488,101 @@ int of_platform_populate(struct device_node *root,
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(of_platform_populate);
+> +
+> +/**
+> + * of_platform_parse_irq() - parse interrupt resource from device node
+> + * @pdev: pointer to platform device
+> + *
+> + * Returns 0 on success or a negative error code on failure.
+> + */
+> +static int of_platform_parse_irq(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	unsigned int num_res = pdev->num_resources;
+> +	struct resource *res = pdev->resource;
+> +	unsigned int num_irq, num, c;
+> +	int ret = 0;
+> +
+> +	num_irq = of_irq_count(pdev->dev.of_node);
+> +	if (!num_irq)
+> +		return 0;
+> +
+> +	/*
+> +	 * Deferred probing may cause this function to be called multiple
+> +	 * times, so check if all interrupts have been parsed already and
+> +	 * return early.
+> +	 */
+> +	for (c = 0; c < num_irq; c++)
+> +		if (platform_get_irq(pdev, c) < 0)
+> +			break;
+> +
+> +	if (c == num_irq)
+> +		return 0;
+> +
+> +	num = num_res + num_irq;
+> +
+> +	/*
+> +	 * Note that in case we're called twice on the same device (due to
+> +	 * deferred probing for example) this will simply be a nop because
+> +	 * krealloc() returns the input pointer if the size of the memory
+> +	 * block that it points to is larger than or equal to the new size
+> +	 * being requested.
+> +	 */
+> +	res = krealloc(res, num * sizeof(*res), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	pdev->resource = res;
+> +	res += num_res;
+> +
+> +	/*
+> +	 * It is possible for this to fail. If so, not that the number of
+> +	 * resources is not updated, so that the next call to this function
+> +	 * will parse all interrupts again. Otherwise we can't keep track of
+> +	 * how many we've parsed so far.
+> +	 */
+> +	ret = of_irq_to_resource_table(np, res, num_irq);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * All interrupts are guaranteed to have been parsed and stored in
+> +	 * the resource table, so the number of resources can now safely be
+> +	 * updated.
+> +	 */
+> +	pdev->num_resources += num_irq;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * of_platform_probe() - OF specific initialization at probe time
+> + * @pdev: pointer to a platform device
+> + *
+> + * This function is called by the driver core to perform devicetree-specific
+> + * setup for a given platform device at probe time. If a device's resources
+> + * as specified in the device tree are not available yet, this function can
+> + * return -EPROBE_DEFER and cause the device to be probed again later, when
+> + * other drivers that potentially provide the missing resources have been
+> + * probed in turn.
+> + *
+> + * Note that because of the above, all code executed by this function must
+> + * be prepared to be run multiple times on the same device (i.e. it must be
+> + * idempotent).
+> + *
+> + * Returns 0 on success or a negative error code on failure.
+> + */
+> +int of_platform_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return 0;
+> +
+> +	ret = of_platform_parse_irq(pdev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+>  #endif /* CONFIG_OF_ADDRESS */
+> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+> index 05cb4a9..92fc4f6 100644
+> --- a/include/linux/of_platform.h
+> +++ b/include/linux/of_platform.h
+> @@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
+>  				const struct of_device_id *matches,
+>  				const struct of_dev_auxdata *lookup,
+>  				struct device *parent);
+> +
+> +extern int of_platform_probe(struct platform_device *pdev);
+>  #else
+>  static inline int of_platform_populate(struct device_node *root,
+>  					const struct of_device_id *matches,
+> @@ -80,6 +82,11 @@ static inline int of_platform_populate(struct device_node *root,
+>  {
+>  	return -ENODEV;
+>  }
+> +
+> +static inline int of_platform_probe(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  #endif	/* _LINUX_OF_PLATFORM_H */
+> -- 
+> 1.8.4
+> 
+
