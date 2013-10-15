@@ -1,119 +1,39 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/5] ARM: ux500: adjust the TC3589x devices to the binding
-Date: Tue, 15 Oct 2013 23:22:20 +0200
-Message-ID: <1381872140-23509-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drivers: misc: add gpio wakeup driver
+Date: Tue, 15 Oct 2013 23:35:03 +0200
+Message-ID: <CACRpkdbeHco4iykPeH=NF3hWzWm3UxfAaaTvM4y74NfSbJi2Jw@mail.gmail.com>
+References: <1380635719-31171-1-git-send-email-zonque@gmail.com>
+	<CACRpkdYhQ+-d1COcvmg_hEJ==cTFpKLNDnvF8kdK4QgXzHenEA@mail.gmail.com>
+	<201310152132.00409.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201310152132.00409.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Mack <zonque@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-The TC3589x devices appearing in the ST Ericsson device trees
-are adjusted to use the new binding so this is in a good shape,
-and we add the keypad on the TVK1281618 UIB so this is working
-again.
+On Tue, Oct 15, 2013 at 9:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 11 October 2013, Linus Walleij wrote:
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/ste-href-tvk1281618.dtsi | 39 +++++++++++++++++++++++++-----
- arch/arm/boot/dts/ste-hrefprev60.dtsi      |  8 +++---
- 2 files changed, 37 insertions(+), 10 deletions(-)
+>> It *may* be that we have many GPIO drivers that do not accept
+>> that you request an interrupt on them before you have done
+>> request_gpio() followed by gpio_to_irq() on the pin. Then this
+>> shall be treated like a bug and the GPIO driver fixed to handle
+>> this. (That was the outcome of this discussion.)
+>
+> I haven't followed that discussion, but it's good to hear that
+> you made some progress there. I find it a bit worrying that you
+> say the behavior may be dependent on the gpio driver, but maybe
+> I didn't fully understand what the resolution is.
 
-diff --git a/arch/arm/boot/dts/ste-href-tvk1281618.dtsi b/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
-index 76d3ef1..4c539bb 100644
---- a/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
-+++ b/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
-@@ -15,26 +15,53 @@
- 
- / {
- 	soc {
--		/* Add Synaptics touch screen, TC35892 keypad etc here */
-+		/* Add Synaptics touch screen, TC35893 keypad etc here */
- 		i2c@80004000 {
--			tc3589x@44 {
--				compatible = "tc3589x";
-+			tc35893@44 {
-+				compatible = "toshiba,tc35893";
- 				reg = <0x44>;
- 				interrupt-parent = <&gpio6>;
- 				interrupts = <26 IRQ_TYPE_EDGE_RISING>;
- 
- 				interrupt-controller;
--				#interrupt-cells = <2>;
-+				#interrupt-cells = <1>;
- 
- 				tc3589x_gpio {
--					compatible = "tc3589x-gpio";
--					interrupts = <0 IRQ_TYPE_EDGE_RISING>;
-+					compatible = "toshiba,tc3589x-gpio";
-+					interrupts = <0>;
- 
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
- 				};
-+				tc3589x_keypad {
-+					compatible = "toshiba,tc3589x-keypad";
-+					interrupts = <6>;
-+					debounce-delay-ms = <4>;
-+					keypad,num-columns = /bits/ 8 <8>;
-+					keypad,num-rows = /bits/ 8 <8>;
-+					linux,no-autorepeat;
-+					linux,wakeup;
-+					linux,keymap = <0x0301006b
-+						        0x04010066
-+							0x06040072
-+							0x040200d7
-+							0x0303006a
-+							0x0205000e
-+							0x0607008b
-+							0x0500001c
-+							0x0403000b
-+							0x03040034
-+							0x05020067
-+							0x0305006c
-+							0x040500e7
-+							0x0005009e
-+							0x06020073
-+							0x01030039
-+							0x07060069
-+							0x050500d9>;
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index b2cd7bc..6b271a4 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -28,18 +28,18 @@
- 				reg = <0x33>;
- 			};
- 
--			tc3589x@42 {
--				compatible = "tc3589x";
-+			tc35892@42 {
-+				compatible = "toshiba,tc35892";
- 				reg = <0x42>;
- 				interrupt-parent = <&gpio6>;
- 				interrupts = <25 IRQ_TYPE_EDGE_RISING>;
- 
- 				interrupt-controller;
--				#interrupt-cells = <2>;
-+				#interrupt-cells = <1>;
- 
- 				tc3589x_gpio: tc3589x_gpio {
- 					compatible = "tc3589x-gpio";
--					interrupts = <0 IRQ_TYPE_EDGE_RISING>;
-+					interrupts = <0>;
- 
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
--- 
-1.8.3.1
+It's some consensus on how to do this, but the existing drivers
+need to be augmented to implement it according to that
+consensus, especially those using device tree.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If noone else helps I guess it goes on top of the pile of stuff
+for the GPIO maintainer to fix...
+
+Yours,
+Linus Walleij
