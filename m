@@ -1,53 +1,38 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: Exynos5420: Add dt support for gscaler
-Date: Tue, 15 Oct 2013 20:51:54 +0200
-Message-ID: <1455132.3iFLDg6lah@flatron>
-References: <1381836054-6590-1-git-send-email-l.krishna@samsung.com> <1381836054-6590-3-git-send-email-l.krishna@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 03/19] clk: tegra: common periph_clk_enb_refcnt and
+ clks
+Date: Tue, 15 Oct 2013 12:52:49 -0600
+Message-ID: <525D8F01.8010603@wwwdotorg.org>
+References: <1381848794-11761-1-git-send-email-pdeschrijver@nvidia.com> <1381848794-11761-4-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1381836054-6590-3-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org, khw0178.kim@samsung.com, prathyush.k@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381848794-11761-4-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+On 10/15/2013 08:52 AM, Peter De Schrijver wrote:
+> This patch makes periph_clk_enb_refcnt a global array, dynamically allocated
+> at boottime. It simplifies the macros somewhat and allows clocks common to
+> several Tegra SoCs to be defined in a separate files. Also the clks array
+> becomes global and dynamically allocated which allows the DT registration to
+> be moved to a generic funcion.
 
-On Tuesday 15 of October 2013 16:50:54 Leela Krishna Amudala wrote:
-> Adds G-Scaler devices to the DT device list
-> 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
-> b/arch/arm/boot/dts/exynos5420.dtsi index 7f0296c..f86aeea 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -31,6 +31,8 @@
->  		i2c1 = &i2c_1;
->  		i2c2 = &i2c_2;
->  		i2c3 = &i2c_3;
-> +		gsc0 = &gsc_0;
-> +		gsc1 = &gsc_1;
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
 
-Do you really need these aliases?
+> +struct clk ** __init tegra_clk_init(int num, int banks)
+>  {
+> +	if (banks > ARRAY_SIZE(periph_regs)) {
+> +		WARN_ON(1);
 
->  	};
-> 
->  	cpus {
-> @@ -313,4 +315,22 @@
->  		clocks = <&clock 431>, <&clock 143>;
->  		clock-names = "mixer", "sclk_hdmi";
->  	};
-> +
-> +	gsc_0:  gsc@0x13e00000 {
+I think that can just be:
 
-coding style: There should be no 0x in node name and the name should
-be more meaningful, e.g. video-scaler.
+	if (WARN_ON(banks > ARRAY_SIZE(periph_regs))) {
 
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
