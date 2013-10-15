@@ -1,60 +1,180 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 12/13] usb: phy: msm: Properly check core interrupt
- number
-Date: Tue, 15 Oct 2013 10:12:16 +0300
-Message-ID: <1381821136.29983.15.camel@iivanov-dev.int.mm-sol.com>
-References: <1381764280-28420-1-git-send-email-iivanov@mm-sol.com>
-	 <1381764280-28420-13-git-send-email-iivanov@mm-sol.com>
-	 <20131014225933.GF7446@radagast>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH v2 2/5] ARM: dts: omap: Add new bindings for OMAP
+Date: Tue, 15 Oct 2013 09:27:10 +0200
+Message-ID: <525CEE4E.6010601@baylibre.com>
+References: <1381313521-10422-1-git-send-email-rnayak@ti.com> <1381313521-10422-3-git-send-email-rnayak@ti.com> <525572A8.9060401@baylibre.com> <5255872A.30702@ti.com> <52558842.6040409@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131014225933.GF7446@radagast>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dsegal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52558842.6040409@baylibre.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: paul@pwsan.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-10-14 at 17:59 -0500, Felipe Balbi wrote: 
-> On Mon, Oct 14, 2013 at 06:24:39PM +0300, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> > 
-> > IRQ with number 0 is valid case, so check for negative
-> 
-> not entirelly correct... IRQ 0 isn't supposed to be used as a linux IRQ
-> number IIRC.
+Hi Rajendra,
 
-I am not really sure. NO_IRQ is -1 at least on ARM. Also when
-taking into account irqdomain's zero as interrupt number is valid??
+On 09/10/2013 18:45, Benoit Cousson wrote:
+> + A couple of DT maintainers
+>
+> On 09/10/2013 18:41, Rajendra Nayak wrote:
+>> On Wednesday 09 October 2013 08:43 PM, Benoit Cousson wrote:
+>>> Hi Rajendra,
+>>>
+>>> On 09/10/2013 12:11, Rajendra Nayak wrote:
+>>>> On OMAP we have co-processor IPs, memory controllers,
+>>>> GPIOs which control regulators and power switches to
+>>>> PMIC, and SoC internal Bus IPs, some or most of which
+>>>> should either not be reset or idled or both at init.
+>>>> (In some cases there are erratas which prevent an IP
+>>>> from being reset)
+>>>> Have a way to pass this information from DT.
+>>>
+>>> Did you get some acked-by from the DT maintainers?
+>>> Every new bindings must be carefully reviewed now.
+>>
+>> Nope, I haven't. The patches are on the list for a couple
+>> of months now.
+>
+> Let's see if Mark and Rob are OK with that.
 
-> 
-> > numbers instead.
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/usb/phy/phy-msm-usb.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-> > index ca2abe6..f34c8a9 100644
-> > --- a/drivers/usb/phy/phy-msm-usb.c
-> > +++ b/drivers/usb/phy/phy-msm-usb.c
-> > @@ -1415,7 +1415,7 @@ static int __init msm_otg_probe(struct platform_device *pdev)
-> >  	dev_info(&pdev->dev, "OTG regs = %p\n", motg->regs);
-> >  
-> >  	motg->irq = platform_get_irq(pdev, 0);
-> > -	if (!motg->irq) {
-> > +	if (motg->irq < 0) {
-> 
-> this check is correct though, since platform_get_irq() will return
-> -ENXIO if it doesn't find IRQ resource.
-> 
+OK, I've just applied it after a small change in the subject:
+
+  ARM: dts: omap: Add reset/idle on init bindings for OMAP
+
+Is that OK for you?
 
 Thanks,
-Ivan
+Benoit
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Benoit
+>
+>>
+>>>
+>>> Regards,
+>>> Benoit
+>>>
+>>>>
+>>>> Update the am33xx/omap4 and omap5 dtsi files with the
+>>>> new bindings for modules which either should not be
+>>>> idled. reset or both. A later patch would cleanup the
+>>>> same information that exists today as part of the hwmod
+>>>> data files.
+>>>>
+>>>> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+>>>> ---
+>>>>    .../devicetree/bindings/arm/omap/omap.txt          |    3 ++-
+>>>>    arch/arm/boot/dts/am33xx.dtsi                      |    2 ++
+>>>>    arch/arm/boot/dts/omap4.dtsi                       |    3 +++
+>>>>    arch/arm/boot/dts/omap5.dtsi                       |    2 ++
+>>>>    4 files changed, 9 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt
+>>>> b/Documentation/devicetree/bindings/arm/omap/omap.txt
+>>>> index 91b7049..808c154 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+>>>> @@ -21,7 +21,8 @@ Required properties:
+>>>>    Optional properties:
+>>>>    - ti,no_idle_on_suspend: When present, it prevents the PM to id=
+le
+>>>> the module
+>>>>      during suspend.
+>>>> -
+>>>> +- ti,no-reset-on-init: When present, the module should not be res=
+et
+>>>> at init
+>>>> +- ti,no-idle-on-init: When present, the module should not be idle=
+d
+>>>> at init
+>>>>
+>>>>    Example:
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/am33xx.dtsi
+>>>> b/arch/arm/boot/dts/am33xx.dtsi
+>>>> index f9c5da9..ec33ea0 100644
+>>>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>>>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>>>> @@ -607,6 +607,7 @@
+>>>>                reg =3D <0x44d00000 0x4000    /* M3 UMEM */
+>>>>                       0x44d80000 0x2000>;    /* M3 DMEM */
+>>>>                ti,hwmods =3D "wkup_m3";
+>>>> +            ti,no-reset-on-init;
+>>>>            };
+>>>>
+>>>>            elm: elm@48080000 {
+>>>> @@ -637,6 +638,7 @@
+>>>>            gpmc: gpmc@50000000 {
+>>>>                compatible =3D "ti,am3352-gpmc";
+>>>>                ti,hwmods =3D "gpmc";
+>>>> +            ti,no-idle-on-init;
+>>>>                reg =3D <0x50000000 0x2000>;
+>>>>                interrupts =3D <100>;
+>>>>                gpmc,num-cs =3D <7>;
+>>>> diff --git a/arch/arm/boot/dts/omap4.dtsi
+>>>> b/arch/arm/boot/dts/omap4.dtsi
+>>>> index 22d9f2b..e8fe797 100644
+>>>> --- a/arch/arm/boot/dts/omap4.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>>>> @@ -214,6 +214,7 @@
+>>>>                gpmc,num-cs =3D <8>;
+>>>>                gpmc,num-waitpins =3D <4>;
+>>>>                ti,hwmods =3D "gpmc";
+>>>> +            ti,no-idle-on-init;
+>>>>            };
+>>>>
+>>>>            uart1: serial@4806a000 {
+>>>> @@ -492,6 +493,7 @@
+>>>>                reg =3D <0x4c000000 0x100>;
+>>>>                interrupts =3D <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+>>>>                ti,hwmods =3D "emif1";
+>>>> +            ti,no-idle-on-init;
+>>>>                phy-type =3D <1>;
+>>>>                hw-caps-read-idle-ctrl;
+>>>>                hw-caps-ll-interface;
+>>>> @@ -503,6 +505,7 @@
+>>>>                reg =3D <0x4d000000 0x100>;
+>>>>                interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+>>>>                ti,hwmods =3D "emif2";
+>>>> +            ti,no-idle-on-init;
+>>>>                phy-type =3D <1>;
+>>>>                hw-caps-read-idle-ctrl;
+>>>>                hw-caps-ll-interface;
+>>>> diff --git a/arch/arm/boot/dts/omap5.dtsi
+>>>> b/arch/arm/boot/dts/omap5.dtsi
+>>>> index 7cdea1b..a9d49df 100644
+>>>> --- a/arch/arm/boot/dts/omap5.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>>>> @@ -607,6 +607,7 @@
+>>>>            emif1: emif@0x4c000000 {
+>>>>                compatible    =3D "ti,emif-4d5";
+>>>>                ti,hwmods    =3D "emif1";
+>>>> +            ti,no-idle-on-init;
+>>>>                phy-type    =3D <2>; /* DDR PHY type: Intelli PHY *=
+/
+>>>>                reg =3D <0x4c000000 0x400>;
+>>>>                interrupts =3D <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+>>>> @@ -618,6 +619,7 @@
+>>>>            emif2: emif@0x4d000000 {
+>>>>                compatible    =3D "ti,emif-4d5";
+>>>>                ti,hwmods    =3D "emif2";
+>>>> +            ti,no-idle-on-init;
+>>>>                phy-type    =3D <2>; /* DDR PHY type: Intelli PHY *=
+/
+>>>>                reg =3D <0x4d000000 0x400>;
+>>>>                interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+>>>>
+>>>
+>>
+>
+
+
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
