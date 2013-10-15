@@ -1,62 +1,101 @@
-From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Tue, 15 Oct 2013 01:59:33 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-	 <1381518433.7979.536.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
- <1381788786.7979.643.camel@snotra.buserror.net>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 7/8] ARM: add Armada 1500 and Sony NSZ-GS7 device tree
+ files
+Date: Tue, 15 Oct 2013 11:06:50 +0800
+Message-ID: <20131015110650.250ca5f8@xhacker>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1381235073-17134-8-git-send-email-sebastian.hesselbarth@gmail.com>
+	<525C7A91.9060101@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381788786.7979.643.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <525C7A91.9060101@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
-DQo+IFNlbnQ6IDIwMTPlubQxMOaciDE15pelIOaYn+acn+S6jCA2OjEzDQo+IFRvOiBUYW5nIFl1
-YW50aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IE1hcmsgUnV0bGFuZDsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
-OyBMaSBZYW5nLUxlby1SNTg0NzINCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gcG93ZXJwYy9t
-cGM4NXh4OiBVcGRhdGUgdGhlIGNsb2NrIG5vZGVzIGluIGRldmljZQ0KPiB0cmVlDQo+IA0KPiBP
-biBGcmksIDIwMTMtMTAtMTEgYXQgMjE6NTIgLTA1MDAsIFRhbmcgWXVhbnRpYW4tQjI5OTgzIHdy
-b3RlOg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gU2Vu
-dDogMjAxM+W5tDEw5pyIMTLml6Ug5pif5pyf5YWtIDM6MDcNCj4gPiA+IFRvOiBNYXJrIFJ1dGxh
-bmQNCj4gPiA+IENjOiBUYW5nIFl1YW50aWFuLUIyOTk4MzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4cHBjLQ0KPiA+ID4gZGV2QGxpc3RzLm96bGFicy5vcmc7IExpIFlhbmctTGVv
-LVI1ODQ3Mg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gcG93ZXJwYy9tcGM4NXh4OiBV
-cGRhdGUgdGhlIGNsb2NrIG5vZGVzIGluDQo+ID4gPiBkZXZpY2UgdHJlZQ0KPiA+ID4NCj4gPiA+
-IEknbSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhlICJfMCIvIl8xIiBwYXJ0LCB0aG91Z2guICBE
-b2Vzbid0IGVhY2gNCj4gPiA+IFBMTCBqdXN0IGhhdmUgb25lIG91dHB1dCwgd2hpY2ggdGhlIGNv
-bnN1bWVyIG1heSBjaG9vc2UgdG8gZGl2aWRlIGJ5DQo+ID4gPiAyIChvciBpbiBzb21lIGNhc2Vz
-IDQpPyAgV2h5IGRvZXMgdGhhdCBkaXZpc2lvbiBuZWVkIHRvIGJlIGV4cG9zZWQNCj4gPiA+IGlu
-IHRoZSBkZXZpY2UgdHJlZSBhcyBzZXBhcmF0ZSBjb25uZWN0aW9ucyB0byB0aGUgcGFyZW50IGNs
-b2NrPw0KPiA+ID4NCj4gPiBUaGUgZGV2aWNlIHRyZWUgbWFrZXMgdGhhdCBxdWl0ZSBjbGVhci4N
-Cj4gDQo+IFlvdSBjaG9zZSB0byBtb2RlbCBpdCB0aGF0IHdheSBpbiB0aGUgZGV2aWNlIHRyZWU7
-IHRoYXQgZG9lc24ndCBtYWtlIGl0DQo+IGNsZWFyIHRoYXQgdGhlIGhhcmR3YXJlIHdvcmtzIHRo
-YXQgd2F5IG9yIHRoYXQgaXQncyBhIGdvb2Qgd2F5IHRvIG1vZGVsDQo+IGl0Lg0KPiANCj4gPiBF
-YWNoIFBMTCBoYXMgc2V2ZXJhbCBvdXRwdXQgd2hpY2ggTVVYIG5vZGUgY2FuIHRha2UgZnJvbS4N
-Cj4gDQo+IFBvaW50IG91dCB3aGVyZSBpbiB0aGUgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbiBpdCBz
-YXlzIHRoaXMuICBXaGF0IEkgc2VlDQo+IGlzIGEgUExMIHRoYXQgaGFzIG9uZSBvdXRwdXQsIGFu
-ZCBhIE1VWCByZWdpc3RlciB0aGF0IGNhbiBjaG9vc2UgZnJvbQ0KPiBtdWx0aXBsZSBQTEwgYW5k
-IGRpdmlkZXIgb3B0aW9ucy4NCj4gDQpUYWtlIFQ0MjQwIGZvciBleGFtcGxlOiBzZWUgc2VjdGlv
-biA0LjYuNS4xICwgKFBhZ2UgMTQxKSBpbiBUNDI0MFJNIFJldi4gRCwgMDkvMjAxMi4NCg0KPiA+
-ICBJdCBpcyBub3QgYSBydW50aW1lIGRlY2lzaW9uLg0KPiANCj4gSG1tPyAgSXQncyBhIHJlZ2lz
-dGVyIHlvdSB3cml0ZSB0by4NCj4gDQpJIG1lYW4gdGhlIG51bWJlciBvZiBQTEwgb3V0cHV0IG9y
-IHRoZSBkaXZpc2lvbiBvZiBQTEwgaXMgbm90IGEgcnVudGltZSBkZWNpc2lvbi4NCldoaWNoIG91
-dHB1dCBvZiBQTEwgdGhlIE1VWCBjYW4gdGFrZSBpcyBhIHJ1bnRpbWUgZGVjaXNpb24uDQoNClJl
-Z2FyZHMsDQpZdWFudGlhbg0KDQo+IC1TY290dA0KPiANCg0K
+Hi Sebastian,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, 14 Oct 2013 16:13:21 -0700
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+
+> On 10/08/2013 02:24 PM, Sebastian Hesselbarth wrote:
+> > This adds very basic device tree files for the Marvell Armada 1500 SoC
+> > (88DE3100) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
+> > nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
+> > uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
+> > device comprising the Armada 1500 SoC above.
+> >
+> > Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> > Reviewed-by: Jason Cooper <jason@lakedaemon.net>
+> > Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > Changelog:
+> > RCFv2->v1:
+> > - switch to (soon to be) correct "marvell,pj4b" cpu compatible
+> > - reference fixed-clock for uarts instead of hard-coded clock-frequency
+> > - disable timers except two for clksrc and clkevt
+> > RFCv1->RFCv2:
+> > - add binding documentation (Reported by Jason Cooper)
+> > - change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
+> > - add copyright reference
+> > - adapt compatibles to mach-berlin instead of mach-mvebu
+> >
+> > Cc: Jason Cooper <jason@lakedaemon.net>
+> > Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-doc@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >   .../devicetree/bindings/arm/marvell,berlin.txt     |   23 ++
+> >   arch/arm/boot/dts/Makefile                         |    2 +
+> >   arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts      |   29 +++
+> >   arch/arm/boot/dts/mv88de3100.dtsi                  |  227
+> > ++++++++++++++++++++ 4 files changed, 281 insertions(+)
+> >   create mode 100644
+> > Documentation/devicetree/bindings/arm/marvell,berlin.txt create mode
+> > 100644 arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts create mode 100644
+> > arch/arm/boot/dts/mv88de3100.dtsi
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+> > b/Documentation/devicetree/bindings/arm/marvell,berlin.txt new file mode
+> > 100644 index 0000000..e389cba
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+> > @@ -0,0 +1,23 @@
+> > +Marvell Berlin (88DE3xxx) family SoCs Device Tree Bindings
+> > +---------------------------------------------------------------
+> > +
+> > +Boards with a SoC of the Marvell Berlin (88DE3xxx) family, e.g. Armada
+> > 1500 +shall have the following properties:
+> > +
+> > +* Required root node properties:
+> > +compatible: must contain "marvell,berlin"
+> > +
+> > +In addition, the above compatible shall be extended with the specific
+> > +SoC and board used. Currently known SoC compatibles are:
+> > +    "marvell,88de3100"	for Marvell 88DE3100 (Armada 1500),
+> > +    "marvell,88de3010"	for Marvell 88DE3010 (Armada 1000),
+> > +    "marvell,88de3005"	for Marvell 88DE3005 (Armada 1500-mini)
+> 
+> Jisheng,
+> 
+> I am trying to follow your request to get rid of 88DExxxx numbering and
+> replace it where possible with berlin type-of names.
+Thanks for your help.
+> 
+> For the above, I have:
+> "marvell,berlin-bg2" for Marvell Armada 1500 (BG2, 88DE3100)
+We prefer "marvell,berlin2" for BG2
+> "marvell,berlin-bg2cd" for Marvell Armada 1500-mini (BG2CD, 88DE3005)
+we prefer "marvell,berlin2cd" for BG2CD, "marvell,berlin2ct" for BG2CT,
+and "marvell,berlin3" for BG3, etc.
+
+
+Thanks,
+Jisheng
