@@ -1,61 +1,122 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: exynos4412-trats2: Enable TMU support at
- Trats2
-Date: Tue, 15 Oct 2013 08:29:35 +0200
-Message-ID: <20131015082935.3d33eee7@amdc308.digital.local>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
- <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
- <1381300194-13134-6-git-send-email-l.majewski@samsung.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [RESEND PATCH V2 1/2] ARM: dts: AM33xx: Add RNG node
+Date: Tue, 15 Oct 2013 08:49:08 +0200
+Message-ID: <525CE564.6010605@baylibre.com>
+References: <1377780731-3648-1-git-send-email-lokeshvutla@ti.com> <1377780731-3648-2-git-send-email-lokeshvutla@ti.com> <52594DF0.1050002@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1381300194-13134-6-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>, kgene.kim@samsung.com
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Linux PM list <linux-pm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Amit Daniel Kachhap <amit.daniel@samsung.com>, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52594DF0.1050002@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: paul@pwsan.com, tony@atomide.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Hi Lokesh,
 
-> This patch enables support for TMU at Exynos4412 based Trats2 board.
-> 
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> 
-> ---
-> Changes for v2:
-> - None
-> 
->  arch/arm/boot/dts/exynos4412-trats2.dts |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
-> b/arch/arm/boot/dts/exynos4412-trats2.dts index fb7b9ae..57136f8
-> 100644 --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -467,6 +467,11 @@
->  		status = "okay";
->  	};
->  
-> +	tmu@100C0000 {
-> +		vtmu-supply = <&ldo10_reg>;
-> +		status = "okay";
-> +	};
-> +
->  	i2c_ak8975: i2c-gpio-0 {
->  		compatible = "i2c-gpio";
->  		gpios = <&gpy2 4 0>, <&gpy2 5 0>;
+On 12/10/2013 15:26, Lokesh Vutla wrote:
+> Hi Benoit,
+> On Thursday 29 August 2013 06:22 PM, Lokesh Vutla wrote:
+>> Add the AM33xx RNG module's device tree data.
+>> Also add Documentation file describing the data
+>> for the RNG module.
+> Seems you missed this patch. Please consider this for this merge wind=
+ow.
 
-Can you pull this DT node definition for TMU (as a fix to v3.12)?
+Indeed I missed it. Sorry :-(
 
-It is crucial for Exynos4412. Other patches from this patch set were
-already pulled as v3.12 fixes.
+> Patch 2/2 is already taken by Paul.
+> Without this patch AM335x boot will crash as I mentioned in my cover =
+letter.
+>
+> Thanks and regards,
+> Lokesh
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>> Changes since V1:
+>> - Drop "status=3Ddisabled" entry in dt node, Since
+>>    RNG is present on all AM33xx platforms.
+>>
+>>   .../devicetree/bindings/hwrng/omap_rng.txt         |   22 ++++++++=
+++++++++++++
+>>   arch/arm/boot/dts/am33xx.dtsi                      |    7 +++++++
+>>   2 files changed, 29 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/hwrng/omap_rn=
+g.txt
 
--- 
-Best regards,
+I do not see the acked-by for the binding part. You do need that for an=
+y=20
+new bindings nowadays.
 
-Lukasz Majewski
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwrng/omap_rng.txt b/=
+Documentation/devicetree/bindings/hwrng/omap_rng.txt
+>> new file mode 100644
+>> index 0000000..6a62acd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwrng/omap_rng.txt
+>> @@ -0,0 +1,22 @@
+>> +OMAP SoC HWRNG Module
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : Should contain entries for this and backward compati=
+ble
+>> +  RNG versions:
+>> +  - "ti,omap2-rng" for OMAP2.
+>> +  - "ti,omap4-rng" for OMAP4, OMAP5 and AM33XX.
+>> +  Note that these two versions are incompatible.
+>> +- ti,hwmods: Name of the hwmod associated with the RNG module
+>> +- reg : Offset and length of the register set for the module
+>> +- interrupts : the interrupt number for the RNG module.
+>> +		Only used for "ti,omap4-rng".
+>> +
+>> +Example:
+>> +/* AM335x */
+>> +rng: rng@48310000 {
+>> +	compatible =3D "ti,omap4-rng";
+>> +	ti,hwmods =3D "rng";
+>> +	reg =3D <0x48310000 0x2000>;
+>> +	interrupts =3D <111>;
+>> +};
+>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33x=
+x.dtsi
+>> index 38b446b..26ebe30 100644
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> @@ -530,5 +530,12 @@
+>>   			#size-cells =3D <1>;
+>>   			status =3D "disabled";
+>>   		};
+>> +
+>> +		rng: rng@48310000 {
+>> +			compatible =3D "ti,omap4-rng";
+>> +			ti,hwmods =3D "rng";
+>> +			reg =3D <0x48310000 0x2000>;
+>> +			interrupts =3D <111>;
+>> +		};
+>>   	};
+>>   };
+>>
+>
 
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+It looks good to me, but it does not apply on my branch.
+Please rebase it and repost with the proper acked-by.
+
+Thanks,
+Benoit
+
+
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
