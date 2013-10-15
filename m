@@ -1,46 +1,63 @@
-From: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/4] Devicetree support for Voipac i.MX53 module
-Date: Wed, 16 Oct 2013 00:03:25 +0200
-Message-ID: <1381874609-14464-1-git-send-email-lisovy@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 01/10] of/irq: Rework of_irq_count()
+Date: Tue, 15 Oct 2013 23:42:44 +0100
+Message-ID: <20131015224245.0B071C40099@trevor.secretlab.ca>
+References: <1379510692-32435-1-git-send-email-treding@nvidia.com> <1379510692-32435-2-git-send-email-treding@nvidia.com> <CAL_JsqLE8aj511oF-gK7Gu5QfmHsQO3+oJ0KFkv0wmuo7i6eiw@mail.gmail.com>
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLE8aj511oF-gK7Gu5QfmHsQO3+oJ0KFkv0wmuo7i6eiw@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, linux-mips@linux-mips.org, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, sparclinux@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds devicetree definition for Voipac X53-DMM-668 module
-which uses i.MX53 CPU. More information about the module may be found at:
-http://www.voipac.com/#X53-DMM-668
-The support for the baseboard used with this module is also provided.
-More information about the baseboard: http://www.voipac.com/#X25-BSB-000
+On Sun, 22 Sep 2013 16:19:27 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > The of_irq_to_resource() helper that is used to implement of_irq_count()
+> > tries to resolve interrupts and in fact creates a mapping for resolved
+> > interrupts. That's pretty heavy lifting for something that claims to
+> > just return the number of interrupts requested by a given device node.
+> >
+> > Instead, use the more lightweight of_irq_map_one(), which, despite the
+> > name, doesn't create an actual mapping. Perhaps a better name would be
+> > of_irq_translate_one().
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> 
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-Working peripherals are:
-* UART0
-* Ethernet
-* Buttons (with keyboard controller)
-* Sound (headphone output)
-* SD-card
-* LEDs (through GPIOs)
+Applied (and fixed to match the of_irq_map_one --> of_irq_parse_one
+rename that I'm going to merge in v3.13).
 
+g.
 
-Rostislav Lisovy (4):
-  ARM: dts: i.MX53: Add alternate pinmux option for i2c_3
-  ARM: dts: i.MX53: Internal keyboard controller
-  ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
-  ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668
-    module
+> 
+> > ---
+> >  drivers/of/irq.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > index 1752988..5f44388 100644
+> > --- a/drivers/of/irq.c
+> > +++ b/drivers/of/irq.c
+> > @@ -368,9 +368,10 @@ EXPORT_SYMBOL_GPL(of_irq_to_resource);
+> >   */
+> >  int of_irq_count(struct device_node *dev)
+> >  {
+> > +       struct of_irq irq;
+> >         int nr = 0;
+> >
+> > -       while (of_irq_to_resource(dev, nr, NULL))
+> > +       while (of_irq_map_one(dev, nr, &irq) == 0)
+> >                 nr++;
+> >
+> >         return nr;
+> > --
+> > 1.8.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
- arch/arm/boot/dts/imx53-voipac-bsb.dts      |  135 +++++++++++++++++++
- arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |  195 +++++++++++++++++++++++++++
- arch/arm/boot/dts/imx53.dtsi                |   15 +++
- 3 files changed, 345 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
- create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
