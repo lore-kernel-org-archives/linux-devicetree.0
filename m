@@ -1,43 +1,52 @@
-From: =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
-Date: Tue, 15 Oct 2013 08:51:47 +0300
-Message-ID: <525CD7F3.10907@nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com> <52587F2D.9070007@wwwdotorg.org> <525B880A.7090802@nvidia.com> <20131014140010.GC16302@ulmo.nvidia.com> <525C3497.6010700@wwwdotorg.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 2/2] ARM: dts: omap5: Add dr_mode for dwc3
+Date: Tue, 15 Oct 2013 11:19:59 +0530
+Message-ID: <1381816199-7966-1-git-send-email-kishon@ti.com>
+References: <52580F34.8030809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <525C3497.6010700-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52580F34.8030809@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcousson@baylibre.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, George Cherian <george.cherian@ti.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 14.10.2013 21:14, Stephen Warren wrote:
-> On 10/14/2013 08:00 AM, Thierry Reding wrote:
->> Yes, as long as the device tree files includes the most specific
->> value in the compatible this should still be possible. So we'd have
->> this:
->>
->> gr2d@54140000 { compatible = "nvida,tegra114-gr2d",
->> "nvidia,tegra20-gr2d"; ... };
->>
->> and the driver will match on "nvidia,tegra20-gr2d" if the more
->> specific "nvidia,tegra114-gr2d" is not there. When the driver is
->> updated to support Tegra114 specific functionality, then a more
->> specific entry can be added to the compatible table to handle it.
-> 
-> True, but the DT fragment above is also only accurate /if/ a driver
-> that only knows about "nvidia,tegra20-gr2d" can operate 100% of the
-> features in Tegra20 HW on Tegra114 HW forever.
+From: George Cherian <george.cherian@ti.com>
 
-I don't know of any hardware incompatibility. The only difference is
-related to something not directly to 2D. We moved host1x away from the
-power domain, so in Tegra114 we're able to power gate 2D and EPP. The
-DVFS tables are also different.
+Added dr_mode property in dwc3 and set its default mode to device.
+Currently dwc3 driver doesn't have support for OTG mode. So explicitly
+setting to peripheral even dwc3 is a OTG controller since OMAP5 has
+already got an EHCI host.
 
-I'd say say adding the compatible property "nvidia,tegra20-gr2d" for
-Tegra114's 2D is accurate and we're able to use the match table to drive
-any SW policy differences.
+Signed-off-by: George Cherian <george.cherian@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Changes from v1:
+Changed the commit log to explain why dr_mode was not set to OTG.
+ arch/arm/boot/dts/omap5.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-Terje
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 6d0a1d5..ef598af 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -652,6 +652,7 @@
+ 				reg = <0x4a030000 0x10000>;
+ 				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+ 				usb-phy = <&usb2_phy>, <&usb3_phy>;
++				dr_mode = "peripheral";
+ 				tx-fifo-resize;
+ 			};
+ 		};
+-- 
+1.7.10.4
