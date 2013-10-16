@@ -1,75 +1,73 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] gpu: host1x: Add MIPI pad calibration support
-Date: Wed, 16 Oct 2013 12:22:18 -0600
-Message-ID: <525ED95A.4060407@wwwdotorg.org>
-References: <1381944997-30671-1-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381944997-30671-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFR 0/2] DRM display panel support
+Date: Wed, 16 Oct 2013 20:25:10 +0200
+Message-ID: <1381947912-11741-1-git-send-email-treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2013 11:36 AM, Thierry Reding wrote:
-> This driver adds support to perform calibration of the MIPI pads for CSI
-> and DSI.
+Hi everyone,
 
-This binding looks conceptually OK to me. I have one non-semantic
-comment about the property names below though.
+This mini series adds panel support for the DRM subsystem and a sample
+implementation for three panels found on hardware that I have access to.
 
-I would like one of the DT bindings maintainers to ack/review it though.
+Stephen wanted be to get an OK from both device tree binding maintainers
+and people involved with CDF before merging the related DTS patches into
+the Tegra tree. This comes awfully late, for which I take all the blame,
+because Stephen needs to include the patches in his arm-soc pull request
+that he will send out on Thursday (US time).
 
-> diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
-> new file mode 100644
-> index 0000000..642c5d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
-> @@ -0,0 +1,37 @@
-> +NVIDIA Tegra MIPI pad calibration controller
-> +
-> +Required properties:
-> +- compatible: "nvidia,tegra<chip>-mipi"
-> +- reg: Physical base address and length of the controller's registers.
-> +- clocks: The clock consumed by the controller.
-> +- #calibrate-cells: Should be 1. The cell is a bitmask of the pads that need
-> +  to be calibrated by a given device.
-> +
-> +User nodes need to contain a calibrate property that has a phandle to refer
-> +to the calibration controller node and a bitmask of the pads that need to be
-> +calibrated.
+In a nutshell the important bits that Stephen needs acknowledged are the
+device tree bindings, because that needs to remain stable once merged. I
+should mention that these patches have been acked by Dave Airlie for
+inclusion in DRM, so besides the device tree bindings there's nothing
+holding this up from getting merged.
 
-#gpio-cells is a generic property that applies to any GPIO user, and
-hence has a generic name. #calibrate-cells here doesn't fall into the
-same class; it's something very specific to this individual binding. Do
-we need a more unique property name, such as
-#nvidia,mipi-calibrate-cells, and equally for the consumer to use
-nvidia,mipi-calibrate as the property that references the MIPI device,
-rather than the generic-sounding "calibrate"?
+>From the CDF folks it'd be good to know if they consider these bindings
+compatible with what they're working on. Note that these are simple
+panels with no need for an explicit control channel or anything like
+that. I'm fully aware that this doesn't cover all the use-cases that CDF
+is designed to cover, but I don't think it needs to. It gives us an easy
+and simple solution for all the trivial setups out there.
 
-> +Example:
-> +
-> +	mipi: mipi@700e3000 {
-> +		compatible = "nvidia,tegra114-mipi";
-> +		reg = <0x700e3000 0x100>;
-> +		clocks = <&tegra_car TEGRA114_CLK_MIPI_CAL>;
-> +		#calibrate-cells = <1>;
-> +	};
-> +
-> +	...
-> +
-> +	host1x@50000000 {
-> +		...
-> +
-> +		dsi@54300000 {
-> +			...
-> +
-> +			calibrate = <&mipi 0x060>;
-> +
-> +			...
-> +		};
-> +
-> +		...
-> +	};
+Stephen, have I summarized your concerns correctly in the above? If not
+please correct me.
+
+Thanks,
+Thierry
+
+Thierry Reding (2):
+  drm: Add panel support
+  drm/panel: Add simple panel support
+
+ .../devicetree/bindings/panel/auo,b101aw03.txt     |   7 +
+ .../bindings/panel/chunghwa,claa101wb03.txt        |   7 +
+ .../bindings/panel/panasonic,vvx10f004b00.txt      |   7 +
+ .../devicetree/bindings/panel/simple-panel.txt     |  21 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   2 +
+ drivers/gpu/drm/drm_panel.c                        |  96 ++++++
+ drivers/gpu/drm/panel/Kconfig                      |  17 ++
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-simple.c               | 335 +++++++++++++++++++++
+ include/drm/drm_panel.h                            |  78 +++++
+ 11 files changed, 573 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
+ create mode 100644 drivers/gpu/drm/drm_panel.c
+ create mode 100644 drivers/gpu/drm/panel/Kconfig
+ create mode 100644 drivers/gpu/drm/panel/Makefile
+ create mode 100644 drivers/gpu/drm/panel/panel-simple.c
+ create mode 100644 include/drm/drm_panel.h
+
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
