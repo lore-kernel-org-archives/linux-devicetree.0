@@ -1,55 +1,105 @@
-From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Wed, 16 Oct 2013 02:57:07 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-	 <1381518433.7979.536.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381788786.7979.643.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
- <1381858855.7979.693.camel@snotra.buserror.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA support
+Date: Wed, 16 Oct 2013 15:10:14 +0900
+Message-ID: <20131016061013.GE15425@verge.net.au>
+References: <1381765354-28440-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <525C608F.5010303@cogentembedded.com>
+ <20131015002319.GG22321@verge.net.au>
+ <1902318.RuT4p9kbZ7@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381858855.7979.693.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1902318.RuT4p9kbZ7@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Valentine <valentine.barshak@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+ID4gPiA+DQo+ID4gPiA+IFRoZSBkZXZpY2UgdHJlZSBtYWtlcyB0aGF0IHF1aXRlIGNsZWFy
-Lg0KPiA+ID4NCj4gPiA+IFlvdSBjaG9zZSB0byBtb2RlbCBpdCB0aGF0IHdheSBpbiB0aGUgZGV2
-aWNlIHRyZWU7IHRoYXQgZG9lc24ndCBtYWtlDQo+ID4gPiBpdCBjbGVhciB0aGF0IHRoZSBoYXJk
-d2FyZSB3b3JrcyB0aGF0IHdheSBvciB0aGF0IGl0J3MgYSBnb29kIHdheSB0bw0KPiA+ID4gbW9k
-ZWwgaXQuDQo+ID4gPg0KPiA+ID4gPiBFYWNoIFBMTCBoYXMgc2V2ZXJhbCBvdXRwdXQgd2hpY2gg
-TVVYIG5vZGUgY2FuIHRha2UgZnJvbS4NCj4gPiA+DQo+ID4gPiBQb2ludCBvdXQgd2hlcmUgaW4g
-dGhlIGhhcmR3YXJlIGRvY3VtZW50YXRpb24gaXQgc2F5cyB0aGlzLiAgV2hhdCBJDQo+ID4gPiBz
-ZWUgaXMgYSBQTEwgdGhhdCBoYXMgb25lIG91dHB1dCwgYW5kIGEgTVVYIHJlZ2lzdGVyIHRoYXQg
-Y2FuIGNob29zZQ0KPiA+ID4gZnJvbSBtdWx0aXBsZSBQTEwgYW5kIGRpdmlkZXIgb3B0aW9ucy4N
-Cj4gPiA+DQo+ID4gVGFrZSBUNDI0MCBmb3IgZXhhbXBsZTogc2VlIHNlY3Rpb24gNC42LjUuMSAs
-IChQYWdlIDE0MSkgaW4gVDQyNDBSTSBSZXYuDQo+IEQsIDA5LzIwMTIuDQo+IA0KPiBUaGF0IHNo
-b3dzIHRoZSBkaXZpZGVycyBhcyBiZWluZyBzb21ld2hlcmUgaW4gYmV0d2VlbiB0aGUgUExMIGFu
-ZCB0aGUgTVVYLg0KPiBUaGUgTVVYIGlzIHdoZXJlIHRoZSBkaXZpZGVyIGlzIHNlbGVjdGVkLiAg
-VGhlcmUncyBub3RoaW5nIGluIHRoZSBQTEwncw0KPiBwcm9ncmFtbWluZyBpbnRlcmZhY2UgdGhh
-dCByZWxhdGVzIHRvIHRoZSBkaXZpZGVycy4gIEFzIHN1Y2ggaXQncyBzaW1wbGVyDQo+IHRvIG1v
-ZGVsIGl0IGFzIGJlaW5nIHBhcnQgb2YgdGhlIE1VWC4NCj4gDQo+IC1TY290dA0KPiANCkkgZG9u
-J3Qga25vdyB3aGV0aGVyIGl0IGlzIHNpbXBsZXIsIGJ1dCAibW9kZWxpbmcgZGl2aWRlciBhcyBi
-ZWluZyBwYXJ0IG9mIHRoZSBNVVgiDQppcyB5b3VyIGd1ZXNzLCByaWdodD8NCklmIHRoZSAiZGl2
-aWRlciIgaXMgaW5jbHVkZWQgaW4gTVVYLCB0aGUgTVVYIHdvdWxkIG5vdCBiZSBjYWxsZWQgIk1V
-WCIuDQpJIGRvbid0IGtub3cgd2hldGhlciAiZGl2aWRlciIgbW9kdWxlIGV4aXN0cyBvciBub3Qu
-IElmIGl0IGV4aXN0cywgaXQgc2hvdWxkIGJlIHBhcnQNCm9mIFBMTCBvciBiZXR3ZWVuIFBMTCBh
-bmQgTVVYLiB3aGVyZXZlciBpdCB3YXMsIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGlzIGFwcHJv
-cHJpYXRlLg0KVGhlIFAzMDQxUk0gc2hvd3MgZXhhY3RseSBlYWNoIFBMTCBoYXMgMiBvdXRwdXRz
-IHdoaWNoIGRlZmluaXRlbHkgaGF2ZSBubyAiZGl2aWRlciIgYXQgYWxsLg0KDQpSZWdhcmRzLA0K
-WXVhbnRpYW4NCg==
+On Tue, Oct 15, 2013 at 02:32:28AM +0200, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Tuesday 15 October 2013 09:23:19 Simon Horman wrote:
+> > On Tue, Oct 15, 2013 at 01:22:23AM +0400, Valentine wrote:
+> > > On 10/14/2013 10:15 PM, Laurent Pinchart wrote:
+> > > >On Monday 14 October 2013 21:58:50 Valentine wrote:
+> > > >>On 10/14/2013 08:26 PM, Mark Rutland wrote:
+> > > >>>On Mon, Oct 14, 2013 at 04:42:34PM +0100, Valentine Barshak wrote:
+> > > >>>>R-Car Gen2 SoCs have a different PHY which is not compatible
+> > > >>>>with the older R-Car H1 (R8A7779) version.
+> > > >>>>This adds OF/platform device id tables and PHY initialization
+> > > >>>>
+> > > >>>>callbacks for the following Gen2 SoCs:
+> > > >>>>    * R-Car H2: R8A7790;
+> > > >>>>    * R-Car M2: R8A7791.
+> > > >>>>
+> > > >>>>PHY initialization method is chosen, based on the device id.
+> > > >>>>Default PHY settings are applied for Gen2 SoCs, which should
+> > > >>>>suit the Gen2 boards available.
+> > > >>>>
+> > > >>>>The R8A7779 platform code is modified to use "sata-r8a7779"
+> > > >>>>device id.
+> > > >>>>
+> > > >>>>Signed-off-by: Valentine Barshak
+> > > >>>><valentine.barshak@cogentembedded.com>
+> > > >>>>---
+> > > >>>>
+> > > >>>>   .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+> > > >>>>   arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+> > > >>>>   arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+> > > >>>>   drivers/ata/sata_rcar.c                            | 112
+> > > >>>>   +++++++++++---
+> > > >>>>   4 files changed, 102 insertions(+), 19 deletions(-)
+> > > >>>>
+> > > >>>>diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > >>>>b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
+> > > >>>>2465183..b5a41bf 100644
+> > > >>>>--- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > >>>>+++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> 
+> [snip]
+> 
+> > > >>>>+static struct of_device_id sata_rcar_match[] = {
+> > > >>>>+	{
+> > > >>>>+		.compatible = "renesas,sata-r8a7779",
+> > > >>>>+		.data = (void *)RCAR_GEN1_SATA,
+> > > >>>>+	},
+> > > >>>>+	{
+> > > >>>>+		.compatible = "renesas,sata-r8a7790",
+> > > >>>>+		.data = (void *)RCAR_GEN2_SATA
+> > > >>>>+	},
+> > > >>>>+	{
+> > > >>>>+		.compatible = "renesas,sata-r8a7791",
+> > > >>>>+		.data = (void *)RCAR_GEN2_SATA
+> > > >>>>+	},
+> > > >>>>+	{},
+> > > >>>>+};
+> > > >>>>+MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> > > >>>
+> > > >>>Are the renesas,sata-r8a779x variants identical?
+> > > >>
+> > > >>Yes.
+> > > >>
+> > > >>>If so, why the two strings?
+> > > >>
+> > > >>Just thought the driver should support "renesas,sata-r8a7791"
+> > > >>compatibility as well since it should support both SoCs.
+> > > >>Didn't want to force sata-r8a7790 compatibility for the r8a7791 SoC DTS.
+> > > >
+> > > >One reason for two compatibility strings is not to be stuck if we later
+> > > >find out the the 7791 SATA controller differs from the 7790.
+> > > 
+> > > Thanks!
+> > > Yeah, anyways, I'd prefer to keep both strings in the device id table.
+> > 
+> > Yes, I do too, mostly for the reason that Laurent gave.
+> > But also because this is consistent with compatibility strings
+> > for other Renesas IP.
+> 
+> We need to use the 7791 compatibility string in DT, but if we specify both, 
+> the driver could have a single entry for both SoCs in its device ID table. As 
+> stated before, I have no strong preference, both would work.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I understand.
+
+At this stage I don't have a strong preference either.
