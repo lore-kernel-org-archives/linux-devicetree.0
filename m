@@ -1,248 +1,133 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 08/10] of/platform: Resolve interrupt references at probe time
-Date: Wed, 16 Oct 2013 00:24:36 +0100
-Message-ID: <20131015232436.19F61C40099@trevor.secretlab.ca>
-References: <1379510692-32435-1-git-send-email-treding@nvidia.com> <1379510692-32435-9-git-send-email-treding@nvidia.com>
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <1379510692-32435-9-git-send-email-treding@nvidia.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: Fix modalias for ACPI enumerated I2C devices
+Date: Wed, 16 Oct 2013 01:04:02 +0100
+Message-ID: <CACxGe6v3JHLKHqBXux=1mgm227S2dLafaqohKvzqsw1uo6tHyA@mail.gmail.com>
+References: <1381414669-26115-1-git-send-email-jarkko.nikula@linux.intel.com>
+ <3125784.Lc8ATpWH6J@vostro.rjw.lan> <20131015233143.GA28114@kroah.com> <2766730.3Wpbhyx1zD@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2766730.3Wpbhyx1zD@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Zhang Rui <rui.zhang@intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Linux I2C <linux-i2c@vger.kernel.org>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Sep 2013 15:24:50 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
-> Interrupt references are currently resolved very early (when a device is
-> created). This has the disadvantage that it will fail in cases where the
-> interrupt parent hasn't been probed and no IRQ domain for it has been
-> registered yet. To work around that various drivers use explicit
-> initcall ordering to force interrupt parents to be probed before devices
-> that need them are created. That's error prone and doesn't always work.
-> If a platform device uses an interrupt line connected to a different
-> platform device (such as a GPIO controller), both will be created in the
-> same batch, and the GPIO controller won't have been probed by its driver
-> when the depending platform device is created. Interrupt resolution will
-> fail in that case.
+On Wed, Oct 16, 2013 at 12:47 AM, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> On Tuesday, October 15, 2013 04:31:43 PM Greg Kroah-Hartman wrote:
+>> On Tue, Oct 15, 2013 at 11:24:01PM +0200, Rafael J. Wysocki wrote:
+>> > On Tuesday, October 15, 2013 01:48:29 PM Greg Kroah-Hartman wrote:
+>> > > On Tue, Oct 15, 2013 at 10:37:02PM +0200, Rafael J. Wysocki wrote:
+>> > > > On Tuesday, October 15, 2013 07:44:44 PM Zhang Rui wrote:
+>> > > > > On Mon, 2013-10-14 at 20:47 +0800, Zhang Rui wrote:
+>> > > > > > On Mon, 2013-10-14 at 14:18 +0300, Jarkko Nikula wrote:
+>> > > > > > > On 10/14/2013 12:23 PM, Zhang Rui wrote:
+>> > > > > > > > Hi,
+>> > > > > > > >
+>> > > > > > > > On Thu, 2013-10-10 at 17:17 +0300, Jarkko Nikula wrote:
+>> > > > > > > >> There is a minor fault about ACPI enumerated I2C devices with their modalias
+>> > > > > > > >> attribute. Now modalias is set by device instance not by hardware ID.
+>> > > > > > > >> For example "i2c:INTABCD:00", "i2c:INTABCD:01" etc.
+>> > > > > > > >>
+>> > > > > > > >> This means each device instance gets different modalias which does match
+>> > > > > > > >> with generated modules.alias. Currently this is not problem as matching can
+>> > > > > > > >> happen also with "acpi:INTABCD" modalias.
+>> > > > > > > >>
+>> > > > > > > > IMO, this is not the proper fix for the modalias problem because ACPI
+>> > > > > > > > enumerated I2C device may have compatible ids.
+>> > > > > > > > Instead, we should export all the compatible ids as the modules alias of
+>> > > > > > > > the ACPI enumerated I2C device.
+>> > > > > > > >
+>> > > > > > > > can you please take a look at the patch I sent out earlier?
+>> > > > > > > > https://patchwork.kernel.org/patch/3034991/
+>> > > > > > > > https://patchwork.kernel.org/patch/3035041/
+>> > > > > > > > https://patchwork.kernel.org/patch/3035021/
+>> > > > > > > I see. This makes sense as it avoids that same device has two different
+>> > > > > > > modaliases from both acpi and other subsystem.
+>> > > > > > >
+>> > > > > > > How about modalias nodes in sysfs, should they also reflect what is
+>> > > > > > > matching uvent?
+>> > > > > > >
+>> > > > > > good catch, will fix "modalias" as well in next version.
+>> > > > >
+>> > > > > Hi,
+>> > > > >
+>> > > > > I have a question about the device "uevent" and "modalias" sysfs
+>> > > > > attributes.
+>> > > > > what is the relationship between these two?
+>> > > > > Am I right to say that, if there is the "MODALIAS" field in uevent file,
+>> > > > > this field must be consistent with the content in "modalias" attribute?
+>> > >
+>> > > Well, if it isn't, it's pretty pointless, right?
+>> > >
+>> > > > > I checked the code in drivers/base/platform.c,
+>> > > > > static ssize_t modalias_show(struct device *dev, struct device_attribute
+>> > > > > *a,
+>> > > > >                              char *buf)
+>> > > > > {
+>> > > > >         struct platform_device  *pdev = to_platform_device(dev);
+>> > > > >         int len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
+>> > > > >
+>> > > > >         return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+>> > > > > }
+>> > > > >
+>> > > > > static int platform_uevent(struct device *dev, struct kobj_uevent_env
+>> > > > > *env)
+>> > > > > {
+>> > > > >         struct platform_device  *pdev = to_platform_device(dev);
+>> > > > >         int rc;
+>> > > > >
+>> > > > >         /* Some devices have extra OF data and an OF-style MODALIAS */
+>> > > > >         rc = of_device_uevent_modalias(dev, env);
+>> > > > >         if (rc != -ENODEV)
+>> > > > >                 return rc;
+>> > > > >
+>> > > > >         add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+>> > > > >                         pdev->name);
+>> > > > >         return 0;
+>> > > > > }
+>> > > > >
+>> > > > > This means that the OF-style MODALIAS is not shown in "modalias" sysfs
+>> > > > > attribute.
+>> > > > > is this a bug?
+>> > > >
+>> > > > I would consider that as a bug, but I'm not sure what the recommended practice
+>> > > > is.  Greg?
+>> > >
+>> > > I have no idea how the OF stuff is working, and honestly, I really have
+>> > > no wish to ever know anything about it.  Especially when it comes to
+>> > > platform devices/drivers, something that I personally hate and wish
+>> > > would be deleted.
 
-What is the reason for all the rework on the irq parsing return values?
-A return value of '0' is always an error on irq parsing, regardless of
-architecture even if NO_IRQ is defined as -1. I may have missed it, but
-I don't see any checking for specific error values in the return paths
-of the functions.
+<digress>Greg, I've heard you say that a lot, but regardless of what
+platform devices/drivers were originally designed for, it is pretty
+much exactly what we need for non-discoverable memory mapped busses.
+I've yet to heard a viable alternative proposed. I've heard the
+proposal of creating new bus types and new driver binding to that bus
+type for each variant of a non-discoverable memory mapped bus, but I
+think it is a non-starter. There are too many combinations. What
+/might/ work to replace the platform_bus_type would be to have a
+mechanism for drivers to transparently bind to multiple bus types, but
+then I suspect that it will end up looking an awful lot like the
+existing platform_bus_type.
 
-If the specific return value isn't required (and I don't think it is),
-then you can simplify the whole series by getting rid of the rework
-patches.
+Probably worth discussing over beer next week</digress>
+
+>> > >
+>> > > So go ask the OF maintainers/developers, this is their domain :)
+>> >
+>> > Well, OK.  Whom in particular?
+>>
+>> The "OPEN FIRMWARE AND FLATTENED DEVICE TREE" entries in MAINTAINERS?
+>
+> Hmm, that looks like Grant and Rob Herring.
+>
+> Grant, Rob, do we want the OF-style MODALIAS to be shown in "modalias" sysfs
+> attributes of platform devices?
+
+I've not actually had to deal with modutils and modalias on any of the
+platforms I've worked with so I've only looked at it superficially.
+Yes, that does look like a bug, but Ben would probably have a much
+better idea [cc'd].
 
 g.
-
-> 
-> Another common workaround is for drivers to explicitly resolve interrupt
-> references at probe time. This is suboptimal, however, because it will
-> require every driver to duplicate the code.
-> 
-> This patch adds support for late interrupt resolution to the platform
-> driver core, by resolving the references right before a device driver's
-> .probe() function will be called. This not only delays the resolution
-> until a much later time (giving interrupt parents a better chance of
-> being probed in the meantime), but it also allows the platform driver
-> core to queue the device for deferred probing if the interrupt parent
-> hasn't registered its IRQ domain yet.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v2:
-> - split off IRQ parsing into separate function to make code flow simpler
-> - add comments to point out some aspects of the implementation
-> - make code idempotent (as pointed out by Grygorii Strashko
-> 
->  drivers/base/platform.c     |   4 ++
->  drivers/of/platform.c       | 107 +++++++++++++++++++++++++++++++++++++++++---
->  include/linux/of_platform.h |   7 +++
->  3 files changed, 112 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 4f8bef3..8dcf835 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
->  	struct platform_device *dev = to_platform_device(_dev);
->  	int ret;
->  
-> +	ret = of_platform_probe(dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	if (ACPI_HANDLE(_dev))
->  		acpi_dev_pm_attach(_dev, true);
->  
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 9b439ac..df6d56e 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -142,7 +142,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  				  struct device *parent)
->  {
->  	struct platform_device *dev;
-> -	int rc, i, num_reg = 0, num_irq;
-> +	int rc, i, num_reg = 0;
->  	struct resource *res, temp_res;
->  
->  	dev = platform_device_alloc("", -1);
-> @@ -153,23 +153,21 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	if (of_can_translate_address(np))
->  		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
->  			num_reg++;
-> -	num_irq = of_irq_count(np);
->  
->  	/* Populate the resource table */
-> -	if (num_irq || num_reg) {
-> -		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
-> +	if (num_reg) {
-> +		res = kzalloc(sizeof(*res) * num_reg, GFP_KERNEL);
->  		if (!res) {
->  			platform_device_put(dev);
->  			return NULL;
->  		}
->  
-> -		dev->num_resources = num_reg + num_irq;
-> +		dev->num_resources = num_reg;
->  		dev->resource = res;
->  		for (i = 0; i < num_reg; i++, res++) {
->  			rc = of_address_to_resource(np, i, res);
->  			WARN_ON(rc);
->  		}
-> -		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
->  	}
->  
->  	dev->dev.of_node = of_node_get(np);
-> @@ -490,4 +488,101 @@ int of_platform_populate(struct device_node *root,
->  	return rc;
->  }
->  EXPORT_SYMBOL_GPL(of_platform_populate);
-> +
-> +/**
-> + * of_platform_parse_irq() - parse interrupt resource from device node
-> + * @pdev: pointer to platform device
-> + *
-> + * Returns 0 on success or a negative error code on failure.
-> + */
-> +static int of_platform_parse_irq(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	unsigned int num_res = pdev->num_resources;
-> +	struct resource *res = pdev->resource;
-> +	unsigned int num_irq, num, c;
-> +	int ret = 0;
-> +
-> +	num_irq = of_irq_count(pdev->dev.of_node);
-> +	if (!num_irq)
-> +		return 0;
-> +
-> +	/*
-> +	 * Deferred probing may cause this function to be called multiple
-> +	 * times, so check if all interrupts have been parsed already and
-> +	 * return early.
-> +	 */
-> +	for (c = 0; c < num_irq; c++)
-> +		if (platform_get_irq(pdev, c) < 0)
-> +			break;
-> +
-> +	if (c == num_irq)
-> +		return 0;
-> +
-> +	num = num_res + num_irq;
-> +
-> +	/*
-> +	 * Note that in case we're called twice on the same device (due to
-> +	 * deferred probing for example) this will simply be a nop because
-> +	 * krealloc() returns the input pointer if the size of the memory
-> +	 * block that it points to is larger than or equal to the new size
-> +	 * being requested.
-> +	 */
-> +	res = krealloc(res, num * sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	pdev->resource = res;
-> +	res += num_res;
-> +
-> +	/*
-> +	 * It is possible for this to fail. If so, not that the number of
-> +	 * resources is not updated, so that the next call to this function
-> +	 * will parse all interrupts again. Otherwise we can't keep track of
-> +	 * how many we've parsed so far.
-> +	 */
-> +	ret = of_irq_to_resource_table(np, res, num_irq);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * All interrupts are guaranteed to have been parsed and stored in
-> +	 * the resource table, so the number of resources can now safely be
-> +	 * updated.
-> +	 */
-> +	pdev->num_resources += num_irq;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_platform_probe() - OF specific initialization at probe time
-> + * @pdev: pointer to a platform device
-> + *
-> + * This function is called by the driver core to perform devicetree-specific
-> + * setup for a given platform device at probe time. If a device's resources
-> + * as specified in the device tree are not available yet, this function can
-> + * return -EPROBE_DEFER and cause the device to be probed again later, when
-> + * other drivers that potentially provide the missing resources have been
-> + * probed in turn.
-> + *
-> + * Note that because of the above, all code executed by this function must
-> + * be prepared to be run multiple times on the same device (i.e. it must be
-> + * idempotent).
-> + *
-> + * Returns 0 on success or a negative error code on failure.
-> + */
-> +int of_platform_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return 0;
-> +
-> +	ret = of_platform_parse_irq(pdev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
->  #endif /* CONFIG_OF_ADDRESS */
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 05cb4a9..92fc4f6 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
->  				const struct of_device_id *matches,
->  				const struct of_dev_auxdata *lookup,
->  				struct device *parent);
-> +
-> +extern int of_platform_probe(struct platform_device *pdev);
->  #else
->  static inline int of_platform_populate(struct device_node *root,
->  					const struct of_device_id *matches,
-> @@ -80,6 +82,11 @@ static inline int of_platform_populate(struct device_node *root,
->  {
->  	return -ENODEV;
->  }
-> +
-> +static inline int of_platform_probe(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  #endif	/* _LINUX_OF_PLATFORM_H */
-> -- 
-> 1.8.4
-> 
-
