@@ -1,49 +1,36 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
-Date: Wed, 16 Oct 2013 13:29:44 +0200
-Message-ID: <CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
-References: <20131008122145.GA21985@ab42.lan>
-	<1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
-	<CACRpkdaMq1bzcTP6KZCGuWSm2MB0vSmJ4aRskuQNB8at4YnWRQ@mail.gmail.com>
-	<20131015134526.GB7461@ab42.lan>
+Subject: Re: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Wed, 16 Oct 2013 13:37:45 +0200
+Message-ID: <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
+References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
+	<1381515273-25466-4-git-send-email-acourbot@nvidia.com>
+	<52587C37.3070606@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131015134526.GB7461@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <52587C37.3070606@nvidia.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2013 at 3:45 PM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
-> On Wed, Oct 09, 2013 at 02:19:17PM +0200, Linus Walleij wrote:
-
->> It's not like I'm 100% certain on where to use one or the other
->> construct (a mechanism like the above is needed for threaded
->> IRQs I've noticed) but the chained handler seems more to the
->> point does it not?
->>
->> The only downside I've seen is that the parent IRQ does not get
->> a name and the accumulated IRQ stats in /proc/interrupts but
->> surely we can live without that (or fix it).
->>
->> Since I'm a bit rusty on chained IRQs correct me if I'm wrong...
+On Sat, Oct 12, 2013 at 12:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+>> +#else
+>> +static struct device_node *of_find_gpio(struct device *dev, const char *id
+>> +                                     unsigned int idx, unsigned long flags)
+>> +{
+>> +     return ERR_PTR(-ENODEV);
+>> +}
+>> +#endif
 >
-> OK, it took me a while to figure this back out again because as far as
-> I'm familiar with the IRQ framework you're right. The reason I'm not
-> using irq_set_chained_handler is that we have one driver instance per
-> GPIO bank and all GPIO banks share the same interrupt line. This means
-> every driver instance needs its own (different) user data and a simple
-> call to irq_set_handler_data(tb10x_gpio) won't suffice. I'm not aware of
-> any mechanism that allows interrupt sharing with the
-> irq_set_chained_handler() mechanism.
+> ... and of course I forgot to fix the main compilation error. Linus,
+> would you mind squashing what follows into this patch? Apologies for
+> the inconvenience.
 
-OK yes makes perfect sense. We'll live with this then.
+I guess you'll fix this if you respin it?
 
-I didn't see a new version of this patch with the other two, shall
-I just apply this last version in the pin control tree with the
-two other patches?
+If it's too much trouble now we can just defer this for early in the v3.14
+cycle.
 
 Yours,
 Linus Walleij
