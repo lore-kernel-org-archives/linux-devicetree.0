@@ -1,110 +1,117 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [RESEND PATCH V2 1/2] ARM: dts: AM33xx: Add RNG node
-Date: Wed, 16 Oct 2013 11:42:08 +0530
-Message-ID: <525E2E38.4000304@ti.com>
-References: <1377780731-3648-1-git-send-email-lokeshvutla@ti.com> <1377780731-3648-2-git-send-email-lokeshvutla@ti.com> <52594DF0.1050002@ti.com> <525CE564.6010605@baylibre.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/5] input: tc3589x-keypad: support probing from device
+ tree
+Date: Tue, 15 Oct 2013 23:39:47 -0700
+Message-ID: <20131016063947.GD4282@core.coreip.homeip.net>
+References: <1381872071-23455-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <525CE564.6010605@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: paul@pwsan.com, tony@atomide.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381872071-23455-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-On Tuesday 15 October 2013 12:19 PM, Benoit Cousson wrote:
-> Hi Lokesh,
+On Tue, Oct 15, 2013 at 11:21:11PM +0200, Linus Walleij wrote:
+> Implement device tree probing for the tc3589x keypad driver.
+> This is modeled on the STMPE keypad driver and tested on the
+> Ux500 TVK1281618 UIB.
 > 
-> On 12/10/2013 15:26, Lokesh Vutla wrote:
->> Hi Benoit,
->> On Thursday 29 August 2013 06:22 PM, Lokesh Vutla wrote:
->>> Add the AM33xx RNG module's device tree data.
->>> Also add Documentation file describing the data
->>> for the RNG module.
->> Seems you missed this patch. Please consider this for this merge window.
-> 
-> Indeed I missed it. Sorry :-(
-> 
->> Patch 2/2 is already taken by Paul.
->> Without this patch AM335x boot will crash as I mentioned in my cover letter.
->>
->> Thanks and regards,
->> Lokesh
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>> Changes since V1:
->>> - Drop "status=disabled" entry in dt node, Since
->>>    RNG is present on all AM33xx platforms.
->>>
->>>   .../devicetree/bindings/hwrng/omap_rng.txt         |   22 ++++++++++++++++++++
->>>   arch/arm/boot/dts/am33xx.dtsi                      |    7 +++++++
->>>   2 files changed, 29 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/hwrng/omap_rng.txt
-> 
-> I do not see the acked-by for the binding part. You do need that for any new bindings nowadays.
-> 
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwrng/omap_rng.txt b/Documentation/devicetree/bindings/hwrng/omap_rng.txt
->>> new file mode 100644
->>> index 0000000..6a62acd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwrng/omap_rng.txt
->>> @@ -0,0 +1,22 @@
->>> +OMAP SoC HWRNG Module
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : Should contain entries for this and backward compatible
->>> +  RNG versions:
->>> +  - "ti,omap2-rng" for OMAP2.
->>> +  - "ti,omap4-rng" for OMAP4, OMAP5 and AM33XX.
->>> +  Note that these two versions are incompatible.
->>> +- ti,hwmods: Name of the hwmod associated with the RNG module
->>> +- reg : Offset and length of the register set for the module
->>> +- interrupts : the interrupt number for the RNG module.
->>> +        Only used for "ti,omap4-rng".
->>> +
->>> +Example:
->>> +/* AM335x */
->>> +rng: rng@48310000 {
->>> +    compatible = "ti,omap4-rng";
->>> +    ti,hwmods = "rng";
->>> +    reg = <0x48310000 0x2000>;
->>> +    interrupts = <111>;
->>> +};
->>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->>> index 38b446b..26ebe30 100644
->>> --- a/arch/arm/boot/dts/am33xx.dtsi
->>> +++ b/arch/arm/boot/dts/am33xx.dtsi
->>> @@ -530,5 +530,12 @@
->>>               #size-cells = <1>;
->>>               status = "disabled";
->>>           };
->>> +
->>> +        rng: rng@48310000 {
->>> +            compatible = "ti,omap4-rng";
->>> +            ti,hwmods = "rng";
->>> +            reg = <0x48310000 0x2000>;
->>> +            interrupts = <111>;
->>> +        };
->>>       };
->>>   };
->>>
->>
-> 
-> It looks good to me, but it does not apply on my branch.
-Can I take this as your Acked-by: ?
-Ok, Ill rebase on top of your tree and post it.
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks and Regards,
-Lokesh
-> Please rebase it and repost with the proper acked-by.
+Looks good, should I merge it or you want to take it through another
+tree??
+
+> ---
+>  drivers/input/keyboard/tc3589x-keypad.c | 63 +++++++++++++++++++++++++++++++--
+>  1 file changed, 61 insertions(+), 2 deletions(-)
 > 
-> Thanks,
-> Benoit
-> 
+> diff --git a/drivers/input/keyboard/tc3589x-keypad.c b/drivers/input/keyboard/tc3589x-keypad.c
+> index 208de7c..f6ec0d7 100644
+> --- a/drivers/input/keyboard/tc3589x-keypad.c
+> +++ b/drivers/input/keyboard/tc3589x-keypad.c
+> @@ -297,6 +297,62 @@ static void tc3589x_keypad_close(struct input_dev *input)
+>  	tc3589x_keypad_disable(keypad);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct tc3589x_keypad_platform_data *
+> +tc3589x_keypad_of_probe(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct tc3589x_keypad_platform_data *plat;
+> +	u32 debounce_ms;
+> +	int proplen;
+> +
+> +	if (!np)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	plat = devm_kzalloc(dev, sizeof(*plat), GFP_KERNEL);
+> +	if (!plat)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	of_property_read_u8(np, "keypad,num-columns", &plat->kcol);
+> +	of_property_read_u8(np, "keypad,num-rows", &plat->krow);
+> +	if (!plat->krow || !plat->kcol ||
+> +	     plat->krow > TC_KPD_ROWS || plat->kcol > TC_KPD_COLUMNS) {
+> +		dev_err(dev,
+> +			"keypad columns/rows not properly specified (%ux%u)\n",
+> +			plat->kcol, plat->krow);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	if (!of_get_property(np, "linux,keymap", &proplen)) {
+> +		dev_err(dev, "property linux,keymap not found\n");
+> +		return ERR_PTR(-ENOENT);
+> +	}
+> +
+> +	plat->no_autorepeat = of_property_read_bool(np, "linux,no-autorepeat");
+> +	plat->enable_wakeup = of_property_read_bool(np, "linux,wakeup");
+> +
+> +	/* The custom delay format is ms/16 */
+> +	of_property_read_u32(np, "debounce-delay-ms", &debounce_ms);
+> +	if (debounce_ms)
+> +		plat->debounce_period = debounce_ms * 16;
+> +	else
+> +		plat->debounce_period = TC_KPD_DEBOUNCE_PERIOD;
+> +
+> +	plat->settle_time = TC_KPD_SETTLE_TIME;
+> +	/* FIXME: should be property of the IRQ resource? */
+> +	plat->irqtype = IRQF_TRIGGER_FALLING;
+> +
+> +	return plat;
+> +}
+> +#else
+> +static inline const struct tc3589x_keypad_platform_data *
+> +tc3589x_keypad_of_probe(struct device *dev)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +#endif
+> +
+> +
+>  static int tc3589x_keypad_probe(struct platform_device *pdev)
+>  {
+>  	struct tc3589x *tc3589x = dev_get_drvdata(pdev->dev.parent);
+> @@ -307,8 +363,11 @@ static int tc3589x_keypad_probe(struct platform_device *pdev)
+>  
+>  	plat = tc3589x->pdata->keypad;
+>  	if (!plat) {
+> -		dev_err(&pdev->dev, "invalid keypad platform data\n");
+> -		return -EINVAL;
+> +		plat = tc3589x_keypad_of_probe(&pdev->dev);
+> +		if (IS_ERR(plat)) {
+> +			dev_err(&pdev->dev, "invalid keypad platform data\n");
+> +			return PTR_ERR(plat);
+> +		}
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -- 
+> 1.8.3.1
 > 
 
+-- 
+Dmitry
