@@ -1,65 +1,41 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Exynos5420: Add dt support for gscaler
-Date: Wed, 16 Oct 2013 13:52:44 +0200
-Message-ID: <2359697.iZb6YQqtY2@amdc1227>
-References: <1381920987-11095-1-git-send-email-l.krishna@samsung.com>
+From: =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
+Date: Wed, 16 Oct 2013 15:05:41 +0300
+Message-ID: <525E8115.7080903@nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com> <52587F2D.9070007@wwwdotorg.org> <525B880A.7090802@nvidia.com> <20131014140010.GC16302@ulmo.nvidia.com> <525C3497.6010700@wwwdotorg.org> <20131015083731.GI7856@ulmo.nvidia.com> <525D5CF6.3020600@wwwdotorg.org> <20131016084804.GC21963@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1381920987-11095-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org, khw0178.kim@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131016084804.GC21963-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
-
-On Wednesday 16 of October 2013 16:26:26 Leela Krishna Amudala wrote:
-> Adds G-Scaler devices to the DT device list
+On 16.10.2013 11:48, Thierry Reding wrote:
+> On Tue, Oct 15, 2013 at 09:19:18AM -0600, Stephen Warren wrote:
+>> Taking advantage of new functionality isn't the issue. The issue is
+>> whether a driver that was written purely to the spec of Tegra20 can
+>> successfully operate on the HW. If it can't, then the HW is not
+>> compatible with Tegra20. Terje's previous comments sounded like the HW
+>> is not backwards-compatible, although his more recent comments make it
+>> sound like only SW policy differences, which shouldn't be part of DT
+>> anyway.
 > 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> Well, as good as I can tell it is backwards-compatible. I've been
+> testing the code included in this series with the same simple test
+> program that clears a rectangle on Tegra20, Tegra30 and Tegra114.
+> 
+> Furthermore our internal register specification files are identical,
+> with the exception of some whitespace changes for all three generations.
+> I think that qualifies as backwards-compatible?
 
-Now as I think of it, patch subject should be rather something like:
+A driver written for Tegra20 2D works with Tegra114 2D. Not necessarily
+vice versa, because Tegra114's driver can ask for higher clocks, or it
+might want to power gate 2D.
 
-ARM: dts: Exynos5420: Add device nodes for GScaler blocks
+I mentioned earlier bringup activities. Perhaps Stephen took that in a
+way I didn't intend.
 
-because the patch alone does not have anything to do with adding device
-tree support to GScaler driver.
-
-Also please see remaining comments inline.
-
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 09aa06c..c4210dc 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -31,6 +31,8 @@
->  		i2c1 = &i2c_1;
->  		i2c2 = &i2c_2;
->  		i2c3 = &i2c_3;
-> +		gsc0 = &gsc_0;
-> +		gsc1 = &gsc_1;
->  	};
->  
->  	cpus {
-> @@ -310,4 +312,22 @@
->  		clocks = <&clock 431>, <&clock 143>;
->  		clock-names = "mixer", "sclk_hdmi";
->  	};
-> +
-> +	gsc_0:  g-scaler@13e00000 {
-
-coding style: There should be just one space after the label.
-
-coding style 2: Please name the node simply video-scaler. Node name is not
-supposed to tell what exactly the device is. The name should be mostly
-used for readability, so a person reading the sources can find that this
-node represents some video scaler and then by looking at compatible value
-he would be able to state that it is an GScaler block compatible with this
-on Exynos 5 SoCs.
-
-Best regards,
-Tomasz
+Terje
