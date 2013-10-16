@@ -1,48 +1,39 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: [PATCH] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
-Date: Wed, 16 Oct 2013 20:04:03 +0400
-Message-ID: <1381939443-7318-1-git-send-email-aida.mynzhasova@skitlab.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Wed, 16 Oct 2013 09:10:07 -0700
+Message-ID: <525EBA5F.5080608@nvidia.com>
+References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>	<1381515273-25466-4-git-send-email-acourbot@nvidia.com>	<52587C37.3070606@nvidia.com> <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add auart2 pins configuration on its main pads
+On 10/16/2013 04:37 AM, Linus Walleij wrote:
+> On Sat, Oct 12, 2013 at 12:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+>>> +#else
+>>> +static struct device_node *of_find_gpio(struct device *dev, const char *id
+>>> +                                     unsigned int idx, unsigned long flags)
+>>> +{
+>>> +     return ERR_PTR(-ENODEV);
+>>> +}
+>>> +#endif
+>>
+>> ... and of course I forgot to fix the main compilation error. Linus,
+>> would you mind squashing what follows into this patch? Apologies for
+>> the inconvenience.
+>
+> I guess you'll fix this if you respin it?
+>
+> If it's too much trouble now we can just defer this for early in the v3.14
+> cycle.
 
-Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+No problem, I will try to rebase on top of your for-next, and squash 
+this today.
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 7363fde..81102b2 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -320,6 +320,19 @@
- 					fsl,pull-up = <0>;
- 				};
- 
-+				auart2_pins_a: auart2@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						0x3080 /* MX28_PAD_AUART2_RX__AUART2_RX	*/
-+						0x3090 /* MX28_PAD_AUART2_TX__AUART2_TX */
-+						0x30a0 /* MX28_PAD_AUART2_CTS__AUART2_CTS */
-+						0x30b0 /* MX28_PAD_AUART2_RTS__AUART2_RTS */
-+					>;
-+					fsl,drive-strength = <0>;
-+					fsl,voltage = <1>;
-+					fsl,pull-up = <0>;
-+				};
-+
- 				auart2_2pins_a: auart2-2pins@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
--- 
-1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Alex.
