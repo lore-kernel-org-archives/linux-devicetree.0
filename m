@@ -1,64 +1,59 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] mfd: tc3589x: reform device tree probing
-Date: Wed, 16 Oct 2013 10:43:56 +0100
-Message-ID: <20131016094356.GE19112@lee--X1>
-References: <1381871803-22796-1-git-send-email-linus.walleij@linaro.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Exynos5420: add clock entries to gsc power domain
+Date: Wed, 16 Oct 2013 15:36:04 +0530
+Message-ID: <CAL1wa8cFA-ww3CGAYA=AVmpbvAu48zZagSz1K_sqK28sFNoRaA@mail.gmail.com>
+References: <1381836054-6590-1-git-send-email-l.krishna@samsung.com>
+ <1381836054-6590-2-git-send-email-l.krishna@samsung.com> <3629005.VyZGZ4FEyV@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1381871803-22796-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3629005.VyZGZ4FEyV@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, khw0178.kim@samsung.com, prathyush.k@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 15 Oct 2013, Linus Walleij wrote:
+Hi Tomasz,
 
-> This changes the following mechanisms in the TC3589x device tree
-> probing path:
->=20
-> - Use the .of_match_table in struct device_driver to match the
->   device in the device tree.
-> - Add matches for the proper compatible strings "toshiba,..."
->   and all sub-variants, just as is done for the .id matches.
-> - Move over all the allocation of platform data etc to the
->   tc3589x_of_probe() function and follow the pattern of passing
->   a platform data pointer back, or an error pointer on error,
->   as found in the STMPE driver.
-> - Match the new (proper) compatible strings for the GPIO and
->   keypad MFD cells.
-> - Use of_device_is_compatible() rather than just !strcmp()
->   to discover which cells to instantiate.
->=20
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/tc3589x.c | 84 ++++++++++++++++++++++++++++++++++++-----=
-----------
->  1 file changed, 59 insertions(+), 25 deletions(-)
+On Wed, Oct 16, 2013 at 12:19 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Leela,
+>
+> On Tuesday 15 of October 2013 16:50:53 Leela Krishna Amudala wrote:
+>> Add clock nodes for oscillator clock, input clocks and parents of input
+>> clocks to gsc power domain so that we can set/restore the input
+>> clocks while powering on and powering off a domain.
+>>
+>> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5420.dtsi |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+>> b/arch/arm/boot/dts/exynos5420.dtsi index 09aa06c..7f0296c 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -116,6 +116,9 @@
+>>       gsc_pd: power-domain@10044000 {
+>>               compatible = "samsung,exynos4210-pd";
+>>               reg = <0x10044000 0x20>;
+>> +             clocks = <&clock 1>, <&clock 1032>, <&clock 1033>,
+>> +                      <&clock 1034>, <&clock 1035>;
+>> +             clock-names = "oscclk", "pclk0", "clk0", "pclk1", "clk1";
+>
+> This does not seem right. Do you have any actual code that uses this?
+>
 
-Nice patch overall.
+I'm not sure whether the code that uses this is present or not.
+For time being I'll discard this patch from the series and will post it later.
 
-> +	of_id =3D of_match_device(tc3589x_match, dev);
-> +	if (!of_id)
-> +		return ERR_PTR(-ENODEV);
+Best Wishes,
+Leela Krishna.
 
-I still think -EINVAL is better in this case, but I see that some
-people are using -ENODEV as well and I'm not religious enough about it
-to care, so:
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-:)
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Best regards,
+> Tomasz
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
