@@ -1,39 +1,80 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v2 0/4] Exynos 5410 Dual cluster support
-Date: Wed, 16 Oct 2013 15:15:03 -0700
-Message-ID: <87k3hc3lso.fsf@linaro.org>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v9 4/9] mtd: nand: omap: enable auto-detection of
+ bus-width for omap-nand drivers
+Date: Wed, 16 Oct 2013 15:22:48 -0700
+Message-ID: <20131016222248.GZ23337@ld-irv-0074.broadcom.com>
+References: <1381816197-20477-1-git-send-email-pekon@ti.com>
+ <1381816197-20477-5-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
-	(Vyacheslav Tyrtov's message of "Mon, 14 Oct 2013 19:08:21 +0400")
-Sender: linux-doc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381816197-20477-5-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: mark.rutland@arm.com, olof@lixom.net, dedekind1@gmail.com, tony@atomide.com, bcousson@baylibre.com, robherring2@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
+On Tue, Oct 15, 2013 at 11:19:52AM +0530, Pekon Gupta wrote:
+> Autodetection of NAND device bus-width was added in generic NAND driver as
+> part of following commit
+> 	commit 64b37b2a63eb2f80b65c7185f0013f8ffc637ae3
+> 	Author:     Matthieu CASTET <matthieu.castet@parrot.com>
+> 	AuthorDate: 2012-11-06
+> 	mtd: nand: add NAND_BUSWIDTH_AUTO to autodetect bus width
+> This patch enables this feature for OMAP2 NAND driver
+> 
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  drivers/mtd/nand/omap2.c | 29 ++++++++++++++++-------------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 5596368..57a3f51 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
 
-> The series of patches represent support of Exynos 5410 SoC
->     
-> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture.
-> Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same time
->     
-> Patches add new platform description, support of clock controller,
-> dual cluster support and device tree for Exynos 5410 
->    
-> Has been build on v3.12-rc5.
-> Has been tested on Exynos 5410 reference board (exynos_defconfig).
+[...]
 
-Has anyone tried this on the exynos5410 based odroid-xu yet?  
+> @@ -1904,6 +1903,21 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  		nand_chip->chip_delay = 50;
+>  	}
+>  
+> +	/* scan for NAND device connected to chip controller */
+> +	if (nand_scan_ident(mtd, 1, NULL)) {
+> +		err = -ENXIO;
+> +		goto out_release_mem_region;
+> +	}
+> +	if ((nand_chip->options & NAND_BUSWIDTH_16) !=
+> +			(pdata->devsize & NAND_BUSWIDTH_16)) {
+> +		pr_err("%s: detected %s device but driver configured for %s\n",
+> +			DRIVER_NAME,
+> +			(nand_chip->options & NAND_BUSWIDTH_16) ? "x16" : "x8",
+> +			(pdata->devsize & NAND_BUSWIDTH_16) ? "x16" : "x8");
 
-I tried booting this on my recently arrived odroid-xu, but am not
-getting it to boot.
+I'm not sure on the policy choice here; if you're using BUSWIDTH_AUTO,
+do you even want to try to configure the buswidth by platform data?
+You're not really getting the full use out of NAND_BUSWIDTH_AUTO because
+the platform data has to guess the same buswidth that nand_base.c
+determines. This is worse than the previous behavior, in which you would
+try both buswidths if the specified type failed.
 
-I'm not yet terribly familiar with this SoC, what are the settings 
-needed for DEBUG_LL on this board?
+IOW, what are you trying to achieve with auto-buswidth? Automatic
+determination of the buswidth or just automatic validation? What do you
+achieve with platform data's selection of buswidth? Specification of the
+buswidth or just a hint? Do the goals conflict? Perhaps you can just
+warn, and not error out if the two selections don't match? Or maybe you
+really wanted to replace the platform data selection mechanism entirely
+with auto-buswidth?
 
-Thanks,
+> +		err = -EINVAL;
+> +		goto out_release_mem_region;
+> +	}
+> +
+>  	switch (pdata->xfer_type) {
+>  	case NAND_OMAP_PREFETCH_POLLED:
+>  		nand_chip->read_buf   = omap_read_buf_pref;
 
-Kevin
+[...]
+
+Brian
