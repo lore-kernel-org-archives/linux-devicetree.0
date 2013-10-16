@@ -1,95 +1,63 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 1/2] ARM: dts: OMAP3+: Add i2c aliases
-Date: Wed, 16 Oct 2013 15:21:03 -0500
-Message-ID: <1381954864-24410-2-git-send-email-nm@ti.com>
-References: <525E8D91.5090400@ti.com>
- <1381954864-24410-1-git-send-email-nm@ti.com>
+From: "Wendy Ng" <wendy.ng@broadcom.com>
+Subject: Re: [PATCH v2 2/3] ARM: bcm281xx: Turn on Thermal and HWMON
+ drivers.
+Date: Wed, 16 Oct 2013 14:18:06 -0700
+Message-ID: <525F028E.6020006@broadcom.com>
+References: <1380321454-16216-1-git-send-email-wendy.ng@broadcom.com>
+ <1380321454-16216-3-git-send-email-wendy.ng@broadcom.com>
+ <525B1BC5.20800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381954864-24410-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <525B1BC5.20800@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently, on OMAP5, i2c1 and i2c5 defer probe due to pinctrl
-dependencies. This changes the i2c ID each bus is registered with in
-i2c-dev interface. As a result of this, many userspace tools break and
-there is no consistent manner to fix the same if the i2c dev interface
-have no consistent numbering.
+On 10/13/2013 3:16 PM, Eduardo Valentin wrote:
+> Wendy,
+>
+> On 27-09-2013 18:37, Wendy Ng wrote:
+>> This enables the thermal and HWMON drivers for Broadcom bcm281xx SoCs.
+>>
+>> Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
+>> Reviewed-by: Markus Mayer <mmayer@broadcom.com>
+>> Reviewed-by: Christian Daudt <csd@broadcom.com>
+>> ---
+>>   arch/arm/configs/bcm_defconfig |    3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+>> index 6e49310..1474661 100644
+>> --- a/arch/arm/configs/bcm_defconfig
+>> +++ b/arch/arm/configs/bcm_defconfig
+>> @@ -83,7 +83,8 @@ CONFIG_SERIAL_8250_DW=y
+>>   CONFIG_HW_RANDOM=y
+>>   CONFIG_I2C=y
+>>   CONFIG_I2C_CHARDEV=y
+>> -# CONFIG_HWMON is not set
+>> +CONFIG_THERMAL=y
+>
+> Maybe you also wanted to
+> CONFIG_BCM_THERMAL=y
+> ?
+>
+This is not required as I have default BCM_THERMAL to 'y' in Kconfig file.
 
-Since this could happen for other OMAP derivatives, provide i2c alias
-for all OMAP3+ SoCs to allow ordering the i2c devices correctly.
+>> +CONFIG_HWMON=y
+>>   CONFIG_VIDEO_OUTPUT_CONTROL=y
+>>   CONFIG_FB=y
+>>   CONFIG_BACKLIGHT_LCD_SUPPORT=y
+>>
+>
+>
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi  |    5 +++++
- arch/arm/boot/dts/omap3.dtsi |    3 +++
- arch/arm/boot/dts/omap4.dtsi |    4 ++++
- arch/arm/boot/dts/omap5.dtsi |    5 +++++
- 4 files changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index e723b52..f62f24a 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -20,6 +20,11 @@
- 	interrupt-parent = <&gic>;
- 
- 	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		i2c2 = &i2c3;
-+		i2c3 = &i2c4;
-+		i2c4 = &i2c5;
- 		serial0 = &uart1;
- 		serial1 = &uart2;
- 		serial2 = &uart3;
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 4f3778a..d9160e7 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -19,6 +19,9 @@
- 	interrupt-parent = <&intc>;
- 
- 	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		i2c2 = &i2c3;
- 		serial0 = &uart1;
- 		serial1 = &uart2;
- 		serial2 = &uart3;
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index decff2a..269bf83 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -17,6 +17,10 @@
- 	interrupt-parent = <&gic>;
- 
- 	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		i2c2 = &i2c3;
-+		i2c3 = &i2c4;
- 		serial0 = &uart1;
- 		serial1 = &uart2;
- 		serial2 = &uart3;
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index e18ee7e..8970deb 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -21,6 +21,11 @@
- 	interrupt-parent = <&gic>;
- 
- 	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c2;
-+		i2c2 = &i2c3;
-+		i2c3 = &i2c4;
-+		i2c4 = &i2c5;
- 		serial0 = &uart1;
- 		serial1 = &uart2;
- 		serial2 = &uart3;
 -- 
-1.7.9.5
+Best regards,
+-Wendy
+
