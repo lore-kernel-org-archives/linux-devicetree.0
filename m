@@ -1,60 +1,113 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND PATCHv2 1/3] arm: socfpga: Set the SDMMC clock phase in system manager
-Date: Wed, 16 Oct 2013 20:56:49 +0200
-Message-ID: <201310162056.49706.arnd@arndb.de>
-References: <1381780051-1826-1-git-send-email-dinguyen@altera.com> <201310152147.27569.arnd@arndb.de> <525DA3BE.2030304@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <525DA3BE.2030304@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: dinguyen@altera.com, Pavel Machek <pavel@denx.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCHv5 2/4] ARM: msm: Add support for APQ8074 Dragonboard
+Date: Wed, 16 Oct 2013 14:25:15 -0500
+Message-ID: <9460811C-9EA6-4536-9C8C-3E31FDD36F37@codeaurora.org>
+References: <1381612484-760-1-git-send-email-rvaswani@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381612484-760-1-git-send-email-rvaswani@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rohit Vaswani <rvaswani@codeaurora.org>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 October 2013, Dinh Nguyen wrote:
-> This makes sense for the SD/MMC driver, but do you think I can use the 
-> same approach for
-> other drivers that this system manager touches?
 
-It might not be as straightforward for every driver, but something like
-this should work at least for some of the more interesting ones. For the
-rest, you can have a system manager driver that exports functions.
+On Oct 12, 2013, at 4:14 PM, Rohit Vaswani wrote:
 
-> i.e. The ethernet IP's 
-> PHY setting is controlled
-> by a register that is in the system manager as well.
->
-> I have submitted this patch for enabling ethernet. It is making use of 
-> the driver platform specific
-> driver calls to touch the system manager.
+> This patch adds basic board support for APQ8074 Dragonboard
+> which belongs to the Snapdragon 800 family.
+> For now, just support a basic machine with device tree.
 > 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-September/200173.html
+> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+> ---
+> arch/arm/boot/dts/Makefile                     |  3 ++-
+> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
+> arch/arm/boot/dts/qcom-msm8974.dtsi            | 35 ++++++++++++++++++++++++++
+> arch/arm/mach-msm/Kconfig                      | 13 ++++++++++
+> arch/arm/mach-msm/board-dt.c                   |  9 +++++++
+> 5 files changed, 65 insertions(+), 1 deletion(-)
+> create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+> create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 000cf76..e71a3ec 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+> 	kirkwood-openblocks_a6.dtb
+> dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
+> dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+> -	msm8960-cdp.dtb
+> +	msm8960-cdp.dtb \
+> +	qcom-apq8074-dragonboard.dtb
+> dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+> 	armada-370-mirabox.dtb \
+> 	armada-370-netgear-rn102.dtb \
+> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+> new file mode 100644
+> index 0000000..13ac3e2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+> @@ -0,0 +1,6 @@
+> +#include "qcom-msm8974.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm APQ8074 Dragonboard";
+> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
+> +};
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> new file mode 100644
+> index 0000000..e0fd55a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -0,0 +1,35 @@
+> +/dts-v1/;
+> +
+> +#include "skeleton.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm MSM8974";
+> +	compatible = "qcom,msm8974";
+> +	interrupt-parent = <&intc>;
+> +
+> +	soc: soc { };
 
-I definitely don't want to see auxdata getting used for stuff like this.
+Was there an answer to Olof's question about:
 
-In case of the ethernet driver, I suspect an SoC specific PHY driver would
-be the right approach.
- 
-> Just wondering if that is right approach for the ethernet driver? If 
-> not, then I think I may have
-> to come up with a generic system manager driver so that it can be used 
-> for other IPs.
+For files that include this it's ok to use the &phandle syntax, but in this
+base dtsi, please use proper structure. In other words, move the contents of
+the soc node up above instead.
 
-The general way of handling this should be to see if there is a subsystem
-available for handling a particular feature. In case of clk and phy, we
-have those subsystems, so it's a matter of writing an appropriate driver
-that communicates with the high-level drivers using that.
+> +};
+> +
+> +&soc {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +	compatible = "simple-bus";
+> +
+> +	intc: interrupt-controller@f9000000 {
+> +		compatible = "qcom,msm-qgic2";
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +		reg = <0xf9000000 0x1000>,
+> +		      <0xf9002000 0x1000>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <1 2 0xf08>,
+> +			     <1 3 0xf08>,
+> +			     <1 4 0xf08>,
+> +			     <1 1 0xf08>;
+> +		clock-frequency = <19200000>;
+> +	};
+> +};
 
-I don't know what other features are provided by the system manager that
-might need a different solution, but if you can't come up with a nice
-solution, you can either have an soc specific portion in the device driver
-(as you suggested for sdmmc first), or you can have that platform specific
-mfd driver exporting some functions.
-If the functionality is actually something common but doesn't have a
-subsystem in Linux yet, the "right" approach might also be to introduce
-a new subsystem, which I realize can be a lot of work.
+- k
 
-	Arnd
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
