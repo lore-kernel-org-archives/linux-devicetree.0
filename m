@@ -1,113 +1,48 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv5 2/4] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Wed, 16 Oct 2013 14:25:15 -0500
-Message-ID: <9460811C-9EA6-4536-9C8C-3E31FDD36F37@codeaurora.org>
-References: <1381612484-760-1-git-send-email-rvaswani@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381612484-760-1-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 0/2] ARM: dts: OMAP2+: add i2c aliases
+Date: Wed, 16 Oct 2013 15:21:02 -0500
+Message-ID: <1381954864-24410-1-git-send-email-nm@ti.com>
+References: <525E8D91.5090400@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <525E8D91.5090400@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add i2c aliases for OMAP and AM processor dts nodes to ensure proper
+i2c ordering. Based on Benoit's for_13/dts branch[1]
 
-On Oct 12, 2013, at 4:14 PM, Rohit Vaswani wrote:
+Changes in V2:
+	- Following Rajendra's suggestion, done for all OMAP and AM
+	  series SoCs, where i2c is defined.
 
-> This patch adds basic board support for APQ8074 Dragonboard
-> which belongs to the Snapdragon 800 family.
-> For now, just support a basic machine with device tree.
-> 
-> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> ---
-> arch/arm/boot/dts/Makefile                     |  3 ++-
-> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
-> arch/arm/boot/dts/qcom-msm8974.dtsi            | 35 ++++++++++++++++++++++++++
-> arch/arm/mach-msm/Kconfig                      | 13 ++++++++++
-> arch/arm/mach-msm/board-dt.c                   |  9 +++++++
-> 5 files changed, 65 insertions(+), 1 deletion(-)
-> create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 000cf76..e71a3ec 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
-> 	kirkwood-openblocks_a6.dtb
-> dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
-> dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
-> -	msm8960-cdp.dtb
-> +	msm8960-cdp.dtb \
-> +	qcom-apq8074-dragonboard.dtb
-> dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
-> 	armada-370-mirabox.dtb \
-> 	armada-370-netgear-rn102.dtb \
-> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> new file mode 100644
-> index 0000000..13ac3e2
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> @@ -0,0 +1,6 @@
-> +#include "qcom-msm8974.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm APQ8074 Dragonboard";
-> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
-> +};
-> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> new file mode 100644
-> index 0000000..e0fd55a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> @@ -0,0 +1,35 @@
-> +/dts-v1/;
-> +
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm MSM8974";
-> +	compatible = "qcom,msm8974";
-> +	interrupt-parent = <&intc>;
-> +
-> +	soc: soc { };
+V1: https://patchwork.kernel.org/patch/3046671/
 
-Was there an answer to Olof's question about:
+Nishanth Menon (2):
+  ARM: dts: OMAP3+: Add i2c aliases
+  ARM: dts: AM33xx+: Add i2c aliases
 
-For files that include this it's ok to use the &phandle syntax, but in this
-base dtsi, please use proper structure. In other words, move the contents of
-the soc node up above instead.
+ arch/arm/boot/dts/am33xx.dtsi |    3 +++
+ arch/arm/boot/dts/am4372.dtsi |    3 +++
+ arch/arm/boot/dts/dra7.dtsi   |    5 +++++
+ arch/arm/boot/dts/omap3.dtsi  |    3 +++
+ arch/arm/boot/dts/omap4.dtsi  |    4 ++++
+ arch/arm/boot/dts/omap5.dtsi  |    5 +++++
+ 6 files changed, 23 insertions(+)
 
-> +};
-> +
-> +&soc {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +	compatible = "simple-bus";
-> +
-> +	intc: interrupt-controller@f9000000 {
-> +		compatible = "qcom,msm-qgic2";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		reg = <0xf9000000 0x1000>,
-> +		      <0xf9002000 0x1000>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <1 2 0xf08>,
-> +			     <1 3 0xf08>,
-> +			     <1 4 0xf08>,
-> +			     <1 1 0xf08>;
-> +		clock-frequency = <19200000>;
-> +	};
-> +};
-
-- k
+[1] https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.7.9.5
