@@ -1,54 +1,43 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH] ARM: dts: OMAP5: Add i2c aliases
-Date: Wed, 16 Oct 2013 17:07:42 +0530
-Message-ID: <525E7A86.4090507@ti.com>
-References: <1381856405-30970-1-git-send-email-nm@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: rockchip: separate different sub-types more
+Date: Wed, 16 Oct 2013 13:40:58 +0200
+Message-ID: <CACRpkdYQTy4mtBXfQqX=UnDxx-avAdjRYLnnEuKKEOBhMUxs3A@mail.gmail.com>
+References: <201310160106.42329.heiko@sntech.de>
+	<201310160107.21147.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381856405-30970-1-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201310160107.21147.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 October 2013 10:30 PM, Nishanth Menon wrote:
-> Currently, i2c1 and i2c5 defer probe due to pinctrl dependencies.
-> This changes the i2c ID each bus is registered with in i2c-dev
-> interface.
-> 
-> As a result of this, many userspace tools break and there is no
-> consistent manner to fix the same if the i2c dev interface have no
-> consistent numbering. Provide alias to allow ordering the i2c devices
-> correctly.
+On Wed, Oct 16, 2013 at 1:07 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrot=
+e:
 
-This looks good Nishanth. Shouldn't we just go ahead and fix these for
-all OMAPs/AMxx devices which would have the same problem as OMAP5 ;)
+> Further investigation of the different Rockchip SoCs showed that
+> the differences especially in the pull settings are quite deep.
+> As further patches will show, the register layout for the pulls of
+> the rk3188 is quite strange. Also it is to assume, that later
+> Rockchip SoCs may introduce even more quirks in this regard, making
+> it hard to support all of those using the current generic pull_*
+> variables.
+>
+> Therefore move the driver to hold the type of controller in an enum
+> and do the handling according to it in the necessary places. Also
+> instead of calculating the register in the get and set pull functions
+> move it to a type-specific callback.
+>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-Acked-by: Rajendra Nayak <rnayak@ti.com> 
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
-> 
->  arch/arm/boot/dts/omap5.dtsi |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index e18ee7e..8970deb 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -21,6 +21,11 @@
->  	interrupt-parent = <&gic>;
->  
->  	aliases {
-> +		i2c0 = &i2c1;
-> +		i2c1 = &i2c2;
-> +		i2c2 = &i2c3;
-> +		i2c3 = &i2c4;
-> +		i2c4 = &i2c5;
->  		serial0 = &uart1;
->  		serial1 = &uart2;
->  		serial2 = &uart3;
-> 
+Patch applied.
 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
