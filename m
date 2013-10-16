@@ -1,36 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
-Date: Wed, 16 Oct 2013 13:37:45 +0200
-Message-ID: <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
-References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>
-	<1381515273-25466-4-git-send-email-acourbot@nvidia.com>
-	<52587C37.3070606@nvidia.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH] ARM: dts: OMAP5: Add i2c aliases
+Date: Wed, 16 Oct 2013 17:07:42 +0530
+Message-ID: <525E7A86.4090507@ti.com>
+References: <1381856405-30970-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <52587C37.3070606@nvidia.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1381856405-30970-1-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 12, 2013 at 12:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
->> +#else
->> +static struct device_node *of_find_gpio(struct device *dev, const char *id
->> +                                     unsigned int idx, unsigned long flags)
->> +{
->> +     return ERR_PTR(-ENODEV);
->> +}
->> +#endif
->
-> ... and of course I forgot to fix the main compilation error. Linus,
-> would you mind squashing what follows into this patch? Apologies for
-> the inconvenience.
+On Tuesday 15 October 2013 10:30 PM, Nishanth Menon wrote:
+> Currently, i2c1 and i2c5 defer probe due to pinctrl dependencies.
+> This changes the i2c ID each bus is registered with in i2c-dev
+> interface.
+> 
+> As a result of this, many userspace tools break and there is no
+> consistent manner to fix the same if the i2c dev interface have no
+> consistent numbering. Provide alias to allow ordering the i2c devices
+> correctly.
 
-I guess you'll fix this if you respin it?
+This looks good Nishanth. Shouldn't we just go ahead and fix these for
+all OMAPs/AMxx devices which would have the same problem as OMAP5 ;)
 
-If it's too much trouble now we can just defer this for early in the v3.14
-cycle.
+Acked-by: Rajendra Nayak <rnayak@ti.com> 
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+> 
+>  arch/arm/boot/dts/omap5.dtsi |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index e18ee7e..8970deb 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -21,6 +21,11 @@
+>  	interrupt-parent = <&gic>;
+>  
+>  	aliases {
+> +		i2c0 = &i2c1;
+> +		i2c1 = &i2c2;
+> +		i2c2 = &i2c3;
+> +		i2c3 = &i2c4;
+> +		i2c4 = &i2c5;
+>  		serial0 = &uart1;
+>  		serial1 = &uart2;
+>  		serial2 = &uart3;
+> 
 
-Yours,
-Linus Walleij
