@@ -1,54 +1,183 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
-Date: Wed, 16 Oct 2013 14:58:56 +0200
-Message-ID: <20131016125855.GA20308@ab42.lan>
-References: <20131008122145.GA21985@ab42.lan>
- <1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
- <CACRpkdaMq1bzcTP6KZCGuWSm2MB0vSmJ4aRskuQNB8at4YnWRQ@mail.gmail.com>
- <20131015134526.GB7461@ab42.lan>
- <CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
+ indicates the presence of PHY's
+Date: Wed, 16 Oct 2013 16:03:15 +0300
+Message-ID: <525E8E93.9010503@ti.com>
+References: <1381866857-3861-1-git-send-email-kishon@ti.com>
+ <1381866857-3861-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381866857-3861-2-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, gregkh@linuxfoundation.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux@arm.linux.org.uk, bcousson@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2013 at 01:29:44PM +0200, Linus Walleij wrote:
-> On Tue, Oct 15, 2013 at 3:45 PM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
-> > On Wed, Oct 09, 2013 at 02:19:17PM +0200, Linus Walleij wrote:
-> 
-> >> It's not like I'm 100% certain on where to use one or the other
-> >> construct (a mechanism like the above is needed for threaded
-> >> IRQs I've noticed) but the chained handler seems more to the
-> >> point does it not?
-> >>
-> >> The only downside I've seen is that the parent IRQ does not get
-> >> a name and the accumulated IRQ stats in /proc/interrupts but
-> >> surely we can live without that (or fix it).
-> >>
-> >> Since I'm a bit rusty on chained IRQs correct me if I'm wrong...
-> >
-> > OK, it took me a while to figure this back out again because as far as
-> > I'm familiar with the IRQ framework you're right. The reason I'm not
-> > using irq_set_chained_handler is that we have one driver instance per
-> > GPIO bank and all GPIO banks share the same interrupt line. This means
-> > every driver instance needs its own (different) user data and a simple
-> > call to irq_set_handler_data(tb10x_gpio) won't suffice. I'm not aware of
-> > any mechanism that allows interrupt sharing with the
-> > irq_set_chained_handler() mechanism.
-> 
-> OK yes makes perfect sense. We'll live with this then.
-> 
-> I didn't see a new version of this patch with the other two, shall
-> I just apply this last version in the pin control tree with the
-> two other patches?
+Hi Kishon,
 
-If you don't see anything else which needs changing please do so, yes.
+On 10/15/2013 10:54 PM, Kishon Vijay Abraham I wrote:
+> There can be systems which does not have a external usb_phy, so get
+> usb_phy only if dt data indicates the presence of PHY in the case of dt boot or
+> if platform_data indicates the presence of PHY. Also remove checking if
+> return value is -ENXIO since it's now changed to always enable usb_phy layer.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> In usb_get_phy_by_phandle, index 0 always refers to usb2 phy and index 1 always
+> refers to usb3 phy. Since we've lived so long with this, this patch will make
+> an assumption that if only one entry is populated in *usb-phy* property, it will
+> be usb2 phy and the next entry will be usb3 phy.
+> 
+>  drivers/usb/dwc3/Kconfig         |    1 +
+>  drivers/usb/dwc3/core.c          |   72 ++++++++++++++++++++------------------
+>  drivers/usb/dwc3/platform_data.h |    2 ++
+>  3 files changed, 41 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 70fc430..8e385b4 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -1,6 +1,7 @@
+>  config USB_DWC3
+>  	tristate "DesignWare USB3 DRD Core Support"
+>  	depends on (USB || USB_GADGET) && HAS_DMA
+> +	select USB_PHY
+>  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>  	help
+>  	  Say Y or M here if your system has a Dual Role SuperSpeed
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 474162e..cb91d70 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -354,6 +354,7 @@ static int dwc3_probe(struct platform_device *pdev)
+>  	struct device_node	*node = dev->of_node;
+>  	struct resource		*res;
+>  	struct dwc3		*dwc;
+> +	int			count;
+>  
+>  	int			ret = -ENOMEM;
+>  
+> @@ -387,16 +388,49 @@ static int dwc3_probe(struct platform_device *pdev)
+>  	if (node) {
+>  		dwc->maximum_speed = of_usb_get_maximum_speed(node);
+>  
+> -		dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+> -		dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
+> +		count = of_count_phandle_with_args(node, "usb-phy", NULL);
+> +		switch (count) {
+> +		case 2:
+> +			dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
+> +				"usb-phy", 1);
+> +			if (IS_ERR(dwc->usb3_phy)) {
+> +				dev_err(dev, "usb3 phy not found\n");
+> +				return PTR_ERR(dwc->usb3_phy);
+> +			}
+> +		case 1:
+> +			dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
+> +				"usb-phy", 0);
+> +			if (IS_ERR(dwc->usb2_phy)) {
+> +				dev_err(dev, "usb2 phy not found\n");
+> +				return PTR_ERR(dwc->usb2_phy);
+> +			}
+> +			break;
 
-Best regards,
-  Christian
+In the Exynos case, there is only 1 phy and it is the USB3 phy. This code
+will wrongly treat it as usb2_phy.
+
+
+> +		default:
+> +			dev_err(dev, "usb phy nodes not configured\n");
+> +		}
+>  
+>  		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
+>  		dwc->dr_mode = of_usb_get_dr_mode(node);
+>  	} else if (pdata) {
+>  		dwc->maximum_speed = pdata->maximum_speed;
+>  
+> -		dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+> -		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+> +		if (pdata->usb2_phy) {
+> +			dwc->usb2_phy = devm_usb_get_phy(dev,
+> +				USB_PHY_TYPE_USB2);
+> +			if (IS_ERR(dwc->usb2_phy)) {
+> +				dev_err(dev, "usb2 phy not found\n");
+> +				return PTR_ERR(dwc->usb2_phy);
+> +			}
+> +		}
+> +
+> +		if (pdata->usb3_phy) {
+> +			dwc->usb3_phy = devm_usb_get_phy(dev,
+> +				USB_PHY_TYPE_USB3);
+> +			if (IS_ERR(dwc->usb3_phy)) {
+> +				dev_err(dev, "usb3 phy not found\n");
+> +				return PTR_ERR(dwc->usb3_phy);
+> +			}
+> +		}
+
+This part looks fine to me.
+>  
+>  		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
+>  		dwc->dr_mode = pdata->dr_mode;
+> @@ -409,36 +443,6 @@ static int dwc3_probe(struct platform_device *pdev)
+>  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
+>  		dwc->maximum_speed = USB_SPEED_SUPER;
+>  
+> -	if (IS_ERR(dwc->usb2_phy)) {
+> -		ret = PTR_ERR(dwc->usb2_phy);
+> -
+> -		/*
+> -		 * if -ENXIO is returned, it means PHY layer wasn't
+> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
+> -		 * in that case, since no PHY driver will ever probe.
+> -		 */
+> -		if (ret == -ENXIO)
+> -			return ret;
+> -
+> -		dev_err(dev, "no usb2 phy configured\n");
+> -		return -EPROBE_DEFER;
+> -	}
+> -
+> -	if (IS_ERR(dwc->usb3_phy)) {
+> -		ret = PTR_ERR(dwc->usb3_phy);
+> -
+> -		/*
+> -		 * if -ENXIO is returned, it means PHY layer wasn't
+> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
+> -		 * in that case, since no PHY driver will ever probe.
+> -		 */
+> -		if (ret == -ENXIO)
+> -			return ret;
+> -
+> -		dev_err(dev, "no usb3 phy configured\n");
+> -		return -EPROBE_DEFER;
+> -	}
+> -
+>  	dwc->xhci_resources[0].start = res->start;
+>  	dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>  					DWC3_XHCI_REGS_END;
+> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+> index 7db34f0..49ffa6d 100644
+> --- a/drivers/usb/dwc3/platform_data.h
+> +++ b/drivers/usb/dwc3/platform_data.h
+> @@ -24,4 +24,6 @@ struct dwc3_platform_data {
+>  	enum usb_device_speed maximum_speed;
+>  	enum usb_dr_mode dr_mode;
+>  	bool tx_fifo_resize;
+> +	bool usb2_phy;
+> +	bool usb3_phy;
+>  };
+> 
+
+
+cheers,
+-roger
