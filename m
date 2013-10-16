@@ -1,40 +1,65 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] pinctrl: rockchip: emulate both edge triggered interrupts
-Date: Wed, 16 Oct 2013 13:47:12 +0200
-Message-ID: <CACRpkdY88+21J3GaUSaZ5LYA5q2Xw+ak58UKe_8qaMucsT5cdw@mail.gmail.com>
-References: <201310160106.42329.heiko@sntech.de>
-	<201310160109.08771.heiko@sntech.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Exynos5420: Add dt support for gscaler
+Date: Wed, 16 Oct 2013 13:52:44 +0200
+Message-ID: <2359697.iZb6YQqtY2@amdc1227>
+References: <1381920987-11095-1-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201310160109.08771.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1381920987-11095-1-git-send-email-l.krishna@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org, khw0178.kim@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2013 at 1:09 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrot=
-e:
+Hi Leela,
 
-> The gpio interrupt controller on Rockchip socs can do edge triggers o=
-nly
-> for single edges but not both. Nevertheless a lot of gpio users rely =
-on
-> the availability of both-edge triggered interrupts - i.e. gpio-keys.
->
-> Therefore implement a solution similar to pinctrl-coh901 re-setting t=
-he
-> triggering edge depending on the gpio value in the interrupt demuxer.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On Wednesday 16 of October 2013 16:26:26 Leela Krishna Amudala wrote:
+> Adds G-Scaler devices to the DT device list
+> 
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi |   20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 
-Patch applied.
+Now as I think of it, patch subject should be rather something like:
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ARM: dts: Exynos5420: Add device nodes for GScaler blocks
+
+because the patch alone does not have anything to do with adding device
+tree support to GScaler driver.
+
+Also please see remaining comments inline.
+
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 09aa06c..c4210dc 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -31,6 +31,8 @@
+>  		i2c1 = &i2c_1;
+>  		i2c2 = &i2c_2;
+>  		i2c3 = &i2c_3;
+> +		gsc0 = &gsc_0;
+> +		gsc1 = &gsc_1;
+>  	};
+>  
+>  	cpus {
+> @@ -310,4 +312,22 @@
+>  		clocks = <&clock 431>, <&clock 143>;
+>  		clock-names = "mixer", "sclk_hdmi";
+>  	};
+> +
+> +	gsc_0:  g-scaler@13e00000 {
+
+coding style: There should be just one space after the label.
+
+coding style 2: Please name the node simply video-scaler. Node name is not
+supposed to tell what exactly the device is. The name should be mostly
+used for readability, so a person reading the sources can find that this
+node represents some video scaler and then by looking at compatible value
+he would be able to state that it is an GScaler block compatible with this
+on Exynos 5 SoCs.
+
+Best regards,
+Tomasz
