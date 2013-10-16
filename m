@@ -1,102 +1,162 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [RFC 1/9] of/irq: Rename of_irq_map_* functions to of_irq_parse_*
-Date: Wed, 16 Oct 2013 12:47:34 +0200
-Message-ID: <525E6EC6.70908@monstr.eu>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-2-git-send-email-grant.likely@linaro.org>
-Reply-To: monstr@monstr.eu
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/3 v5] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Wed, 16 Oct 2013 13:05:32 +0200
+Message-ID: <5633684.QO1TZpUeME@amdc1032>
+References: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+ <1381891890-30171-1-git-send-email-ch.naveen@samsung.com>
+ <2390546.yDm51ZJbTN@amdc1032>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="TeA2akp6vUVGlkdGjG8dnBiGuaMDK0qCw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381869563-16083-2-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <2390546.yDm51ZJbTN@amdc1032>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, l.majewski@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TeA2akp6vUVGlkdGjG8dnBiGuaMDK0qCw
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On 10/15/2013 10:39 PM, Grant Likely wrote:
-> The OF irq handling code has been overloading the term 'map' to refer t=
-o
-> both parsing the data in the device tree and mapping it to the internal=
+[ I was a bit too quick with hitting the Send button.. ]
 
-> linux irq system. This is probably because the device tree does have th=
-e
-> concept of an 'interrupt-map' function for translating interrupt
-> references from one node to another, but 'map' is still confusing when
-> the primary purpose of some of the functions are to parse the DT data.
->=20
-> This patch renames all the of_irq_map_* functions to of_irq_parse_*
-> which makes it clear that there is a difference between the parsing
-> phase and the mapping phase. Kernel code can make use of just the
-> parsing or just the mapping support as needed by the subsystem.
->=20
-> The patch was generated mechanically with a handful of sed commands.
->=20
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> ---
->  arch/arm/mach-integrator/pci_v3.c              |  4 ++--
->  arch/microblaze/pci/pci-common.c               |  2 +-
->  arch/mips/pci/fixup-lantiq.c                   |  2 +-
->  arch/mips/pci/pci-rt3883.c                     |  2 +-
->  arch/powerpc/kernel/pci-common.c               |  2 +-
->  arch/powerpc/platforms/cell/celleb_scc_pciex.c |  2 +-
->  arch/powerpc/platforms/cell/celleb_scc_sio.c   |  2 +-
->  arch/powerpc/platforms/cell/spider-pic.c       |  2 +-
->  arch/powerpc/platforms/cell/spu_manage.c       |  2 +-
->  arch/powerpc/platforms/fsl_uli1575.c           |  2 +-
->  arch/powerpc/platforms/powermac/pic.c          |  2 +-
->  arch/powerpc/platforms/pseries/event_sources.c |  2 +-
->  arch/powerpc/sysdev/mpic_msi.c                 |  2 +-
->  arch/x86/kernel/devicetree.c                   |  2 +-
->  drivers/of/address.c                           |  4 ++--
->  drivers/of/irq.c                               | 28 +++++++++++++-----=
---------
->  drivers/of/of_pci_irq.c                        | 10 ++++-----
->  drivers/pci/host/pci-mvebu.c                   |  2 +-
->  include/linux/of_irq.h                         |  8 ++++----
->  include/linux/of_pci.h                         |  2 +-
->  20 files changed, 42 insertions(+), 42 deletions(-)
+On Wednesday, October 16, 2013 12:06:21 PM Bartlomiej Zolnierkiewicz wrote:
+> 
+> Hi,
+> 
+> On Wednesday, October 16, 2013 08:21:30 AM Naveen Krishna Chatradhi wrote:
+> > On Exynos5250, the FALL interrupt related en, status and clear bits are
+> > available at an offset of
+> > 16 on INTEN, INTSTAT registers and at an offset of
+> > 12 on INTCLEAR register.
+> > 
+> > On Exynos5420, the FALL interrupt related en, status and clear bits are
+> > available at an offset of
+> > 16 on INTEN, INTSTAT and INTCLEAR registers.
+> > 
+> > On Exynos5440,
+> > the FALL_IRQEN bits are at an offset of 4
+> > and the RISE_IRQEN bits are at an offset of 0
+> > 
+> > This patch corrects the same for exyns5250 and exynos5440
+> 
+> No, it doesn't correct anything on EXYNOS5250 or EXYNOS5440. It just
+> does rename of used exynos_tmu_registers register and related defines.
 
-I have go through microblaze changes in this series and all are fine.
+s/register/field/
 
-For Microblaze changes. I expect you have already compiled that
-without any warning.
+> IOW This patch is just a preparation patch for EXYNOS5420 support, on
 
-Acked-by: Michal Simek <monstr@monstr.eu>
+Sorry, it isn't even that. This patch is just a cleanup patch and should
+be presented as such.
 
-Thanks,
-Michal
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---TeA2akp6vUVGlkdGjG8dnBiGuaMDK0qCw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlJebsYACgkQykllyylKDCFyzQCfYMjBr1uy21nbUu/5TL1G17xC
-h2sAniofl4LffSDZer054pDmDP/NuN2+
-=wVoe
------END PGP SIGNATURE-----
-
---TeA2akp6vUVGlkdGjG8dnBiGuaMDK0qCw--
+> its own it shouldn't cause any functionality changes.
+> 
+> Please update the patch description to mention this.
+> 
+> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> > ---
+> > Changes since v1:
+> > Changes since v2:
+> > Changes since v3:
+> >   None
+> > Changes since v4:
+> > Correct the CLEAR_FALL_INT_SHIFT for Exynos5250/Exynos5440
+> > 
+> >  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+> >  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+> >  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+> >  drivers/thermal/samsung/exynos_tmu_data.h |    4 +++-
+> >  4 files changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> > index 32f38b9..b2202fa 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu.c
+> > @@ -265,7 +265,7 @@ skip_calib_data:
+> >  				data->base + reg->threshold_th1);
+> >  
+> >  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+> > -			(reg->inten_fall_mask << reg->inten_fall_shift),
+> > +			(reg->inten_fall_mask << reg->intclr_fall_shift),
+> >  				data->base + reg->tmu_intclear);
+> >  
+> >  		/* if last threshold limit is also present */
+> > diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> > index 3fb6554..5f4fe6c 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu.h
+> > +++ b/drivers/thermal/samsung/exynos_tmu.h
+> > @@ -136,6 +136,7 @@ enum soc_type {
+> >   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+> >   * @tmu_intstat: Register containing the interrupt status values.
+> >   * @tmu_intclear: Register for clearing the raised interrupt status.
+> > + * @intclr_fall_shift: shift bits for interrupt clear fall 0
+> >   * @emul_con: TMU emulation controller register.
+> >   * @emul_temp_shift: shift bits of emulation temperature.
+> >   * @emul_time_shift: shift bits of emulation time.
+> > @@ -207,6 +208,7 @@ struct exynos_tmu_registers {
+> >  	u32	tmu_intstat;
+> >  
+> >  	u32	tmu_intclear;
+> > +	u32	intclr_fall_shift;
+> >  
+> >  	u32	emul_con;
+> >  	u32	emul_temp_shift;
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+> > index 073c292..09a8a27 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> > @@ -123,6 +123,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+> >  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+> >  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+> >  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
+> > +	.intclr_fall_shift = EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT,
+> >  	.emul_con = EXYNOS_EMUL_CON,
+> >  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> >  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+> > @@ -228,6 +229,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+> >  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+> >  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+> >  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
+> > +	.intclr_fall_shift = EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT,
+> >  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+> >  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+> >  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+> > index a1ea19d..9c1e2c8 100644
+> > --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> > +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> > @@ -69,9 +69,11 @@
+> >  #define EXYNOS_TMU_RISE_INT_MASK	0x111
+> >  #define EXYNOS_TMU_RISE_INT_SHIFT	0
+> >  #define EXYNOS_TMU_FALL_INT_MASK	0x111
+> > -#define EXYNOS_TMU_FALL_INT_SHIFT	12
+> > +#define EXYNOS_TMU_FALL_INT_SHIFT	16
+> >  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+> >  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
+> > +#define EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT	12
+> 
+> The better name would be EXYNOS_TMU_CLEAR_FALL_INT_SHIFT because
+> it is also used on EXYNOS4412.
+> 
+> Also in patch #3 you should define EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT
+> instead of re-using EXYNOS_TMU_FALL_INT_SHIFT.
+> 
+> In this patch (#1) EXYNOS*_TMU_FALL_INT_SHIFT should be removed together
+> with no longer needed inten_fall_shift.
+> 
+> > +#define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT	4
+> >  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+> >  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+> >  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
