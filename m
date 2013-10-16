@@ -1,40 +1,41 @@
-From: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Subject: [PATCH 0/2] sata_rcar: Adjust DT bindings and add R-Car Gen2 PHY support (take 3)
-Date: Wed, 16 Oct 2013 16:05:59 +0400
-Message-ID: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: [PATCH] Add a short note on pinctrl_get_group_pins to pinctrl.txt
+Date: Wed, 16 Oct 2013 14:56:54 +0200
+Message-ID: <1381928214-20916-1-git-send-email-christian.ruppert@abilis.com>
+References: <CACRpkdbD9gJnF4C4ZeO2o0Q2RcL3w8=Hnu93EWJHyxUPwn29og@mail.gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbD9gJnF4C4ZeO2o0Q2RcL3w8=Hnu93EWJHyxUPwn29og@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, devicetree@vger.kernel.org, Christian Ruppert <christian.ruppert@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-This modifies and documents R-Car SATA device tree (DT) bindings.
-The "sata-<SoC>" format is now used for the "compatible" property.
-Also, a platform device id table is introduced for non-DT support.
-The device id naming is consistent with the "compatible" DT
-property format.
+This patch adds a short description of how to use the newly added
+pinctrl_get_group_pins function to the pinctrl documentation.
 
-R-Car Gen2 SATA PHY support is added. PHY initialization method
-is chosen, based on the device id.
+Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+---
+ Documentation/pinctrl.txt |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-Changes from version 1:
-* Kept old DT bindings for compatibility
-* Amended DT bindings documentation
-Changes from version 2:
-* Dropped r8a7779.dtsi changes
-
-Valentine Barshak (2):
-  sata_rcar: Adjust and document device tree bindings
-  sata_rcar: Add R-Car Gen2 SATA support
-
- .../devicetree/bindings/ata/sata_rcar.txt          |  19 ++++
- arch/arm/boot/dts/r8a7779.dtsi                     |   2 +-
- arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
- arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
- drivers/ata/sata_rcar.c                            | 112 ++++++++++++++++++---
- 5 files changed, 118 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
-
+diff --git a/Documentation/pinctrl.txt b/Documentation/pinctrl.txt
+index c0ffd30..a7929cb 100644
+--- a/Documentation/pinctrl.txt
++++ b/Documentation/pinctrl.txt
+@@ -358,7 +358,12 @@ static struct pinctrl_gpio_range gpio_range = {
+ 	.gc = &chip;
+ };
+ 
+-In this case the pin_base property will be ignored.
++In this case the pin_base property will be ignored. If the name of a pin
++group is known, the pins and npins elements of the above structure can be
++initialised using the function pinctrl_get_group_pins(), e.g. for pin
++group "foo":
++
++pinctrl_get_group_pins(pctl, "foo", &gpio_range.pins, &gpio_range.npins);
+ 
+ When GPIO-specific functions in the pin control subsystem are called, these
+ ranges will be used to look up the appropriate pin controller by inspecting
 -- 
-1.8.3.1
+1.7.1
 
