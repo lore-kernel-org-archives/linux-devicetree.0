@@ -1,50 +1,42 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] MAINTAINERS: remove swarren from DT bindings
-Date: Wed, 16 Oct 2013 17:57:22 -0500
-Message-ID: <525F19D2.5020205@gmail.com>
-References: <1381263943-13878-1-git-send-email-swarren@wwwdotorg.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v2 0/5] PM / OPP: updates to enable sharing OPPs info
+Date: Thu, 17 Oct 2013 01:12:50 +0200
+Message-ID: <3220965.oF35vmiThF@vostro.rjw.lan>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381263943-13878-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2013 03:25 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tuesday, October 01, 2013 02:32:57 PM Sudeep KarkadaNagesha wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 > 
-> I'm afraid I'm rather burned out w.r.t. DT bindings. As has probably
-> been evident, I don't have and haven't made the time to review many
-> recently. As such, remove myself from that MAINTAINERS entry.
+> Hi,
 > 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-
-Reluctantly applied.
-
-Rob
-
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+> These are few updates to existing device tree binding and the PM/OPP
+> library to support sharing of OPPs between different device nodes.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8a0cbf3..120c335 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6155,7 +6155,6 @@ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
->  M:	Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->  M:	Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->  M:	Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> -M:	Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->  M:	Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->  L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Maintained
+> Currently all the cpu nodes are parsed until the OPPs are found. This
+> is essential to support cpuhotplug without having to replicate OPP
+> information in all the cpu nodes.
 > 
+> However in systems with multiple cpu power domain, its better to have
+> OPP entry for each cpu. To avoid replication, phandle can be specified
+> to the node which contains the full OPP information.
+> 
+> The table node containing all the OPPs and device nodes pointing to an
+> entry into it through phandle might also solve the problem of describing
+> multiple OPP profiles.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It looks like this still is under discussion, isn't it?
+
+If not, care to obtain ACKs from the people involved and resubmit?
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
