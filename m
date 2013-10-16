@@ -1,41 +1,62 @@
-From: =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 27/27] drm/tegra: Add Tegra114 gr2d support
-Date: Wed, 16 Oct 2013 15:05:41 +0300
-Message-ID: <525E8115.7080903@nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-28-git-send-email-treding@nvidia.com> <52587F2D.9070007@wwwdotorg.org> <525B880A.7090802@nvidia.com> <20131014140010.GC16302@ulmo.nvidia.com> <525C3497.6010700@wwwdotorg.org> <20131015083731.GI7856@ulmo.nvidia.com> <525D5CF6.3020600@wwwdotorg.org> <20131016084804.GC21963@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131016084804.GC21963-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Subject: [PATCH 1/2] sata_rcar: Adjust and document device tree bindings
+Date: Wed, 16 Oct 2013 16:06:00 +0400
+Message-ID: <1381925161-16729-2-git-send-email-valentine.barshak@cogentembedded.com>
+References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16.10.2013 11:48, Thierry Reding wrote:
-> On Tue, Oct 15, 2013 at 09:19:18AM -0600, Stephen Warren wrote:
->> Taking advantage of new functionality isn't the issue. The issue is
->> whether a driver that was written purely to the spec of Tegra20 can
->> successfully operate on the HW. If it can't, then the HW is not
->> compatible with Tegra20. Terje's previous comments sounded like the HW
->> is not backwards-compatible, although his more recent comments make it
->> sound like only SW policy differences, which shouldn't be part of DT
->> anyway.
-> 
-> Well, as good as I can tell it is backwards-compatible. I've been
-> testing the code included in this series with the same simple test
-> program that clears a rectangle on Tegra20, Tegra30 and Tegra114.
-> 
-> Furthermore our internal register specification files are identical,
-> with the exception of some whitespace changes for all three generations.
-> I think that qualifies as backwards-compatible?
+This deprecates the "rcar-sata" compatibility string
+and adds the "sata-r8a7779" which complies to the
+preferred <unit>-<soc> format for SH-Mobile devices.
+The DT bindings are documented.
 
-A driver written for Tegra20 2D works with Tegra114 2D. Not necessarily
-vice versa, because Tegra114's driver can ask for higher clocks, or it
-might want to power gate 2D.
+Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+---
+ Documentation/devicetree/bindings/ata/sata_rcar.txt | 15 +++++++++++++++
+ drivers/ata/sata_rcar.c                             |  3 ++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 
-I mentioned earlier bringup activities. Perhaps Stephen took that in a
-way I didn't intend.
+diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+new file mode 100644
+index 0000000..0719115
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+@@ -0,0 +1,15 @@
++* Renesas R-Car SATA
++
++Required properties:
++- compatible		: should contain "renesas,sata-r8a7779";
++- reg			: offset and length of the SATA registers;
++- interrupts		: must consist of one interrupt specifier.
++
++Example:
++
++sata: sata@fc600000 {
++	compatible = "renesas,sata-r8a7779";
++	reg = <0xfc600000 0x2000>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 100 0x4>;
++};
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index c2d95e9..a625cc5 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -893,7 +893,8 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+ #endif
+ 
+ static struct of_device_id sata_rcar_match[] = {
+-	{ .compatible = "renesas,rcar-sata", },
++	{ .compatible = "renesas,rcar-sata", },	/* Deprecated */
++	{ .compatible = "renesas,sata-r8a7779", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sata_rcar_match);
+-- 
+1.8.3.1
 
-Terje
