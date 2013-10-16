@@ -1,91 +1,75 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] WAN: Adding support for Infineon PEF2256 E1 chipset
-Date: Wed, 16 Oct 2013 11:24:57 -0500
-Message-ID: <CAL_JsqLSOy0OqEm4C1sCMSJnZ3O6Zsizpk_NJFxLij6LfyYK4A@mail.gmail.com>
-References: <201310161525.r9GFPZI5006238@localhost.localdomain>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Wed, 16 Oct 2013 11:46:49 -0500
+Message-ID: <1381942009.7979.727.camel@snotra.buserror.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+	 <1381518433.7979.536.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381788786.7979.643.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381858855.7979.693.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201310161525.r9GFPZI5006238@localhost.localdomain>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Krzysztof Halasa <khc@pm.waw.pl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, jerome.chantelauze@c-s.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150C312F-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2013 at 10:25 AM, Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
-> The patch adds WAN support for Infineon PEF2256 E1 Chipset.
->
-> Signed-off-by: Jerome Chantelauze <jerome.chantelauze@c-s.fr>
-> Acked-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Tue, 2013-10-15 at 21:57 -0500, Tang Yuantian-B29983 wrote:
+> > > > > >
+> > > > > The device tree makes that quite clear.
+> > > >
+> > > > You chose to model it that way in the device tree; that doesn't make
+> > > > it clear that the hardware works that way or that it's a good way to
+> > > > model it.
+> > > >
+> > > > > Each PLL has several output which MUX node can take from.
+> > > >
+> > > > Point out where in the hardware documentation it says this.  What I
+> > > > see is a PLL that has one output, and a MUX register that can choose
+> > > > from multiple PLL and divider options.
+> > > >
+> > > Take T4240 for example: see section 4.6.5.1 , (Page 141) in T4240RM Rev.
+> > D, 09/2012.
+> > 
+> > That shows the dividers as being somewhere in between the PLL and the MUX.
+> > The MUX is where the divider is selected.  There's nothing in the PLL's
+> > programming interface that relates to the dividers.  As such it's simpler
+> > to model it as being part of the MUX.
+> > 
+> > -Scott
+> > 
+> I don't know whether it is simpler, but "modeling divider as being part of the MUX"
+> is your guess, right?
+> If the "divider" is included in MUX, the MUX would not be called "MUX".
 
-[snip]
+It's still selecting from multiple PLLs.
 
-> diff -urN a/Documentation/devicetree/bindings/net/pef2256.txt b/Documentation/devicetree/bindings/net/pef2256.txt
-> --- a/Documentation/devicetree/bindings/net/pef2256.txt 1970-01-01 01:00:00.000000000 +0100
-> +++ b/Documentation/devicetree/bindings/net/pef2256.txt 2013-10-13 15:05:42.000000000 +0200
-> @@ -0,0 +1,29 @@
-> +* Wan on Infineon pef2256 E1 controller
-> +
-> +Required properties:
-> +- compatible: Should be "infineon,pef2256"
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain interrupts
-> +
-> +Optional properties:
-> +- data-rate: Data rate on the system highway.
-> +  Supported values are: 2, 4, 8, 16.
-> +  8 if not defined.
+> I don't know whether "divider" module exists or not. If it exists, it should be part
+> of PLL or between PLL and MUX. wherever it was, the device tree binding is appropriate.
 
-What are the units? Specify them in the property name.
+The device tree binding is unnecessarily complicated.
 
-> +- channel-phase: First time slot transmission channel phase.
-> +  Supported values are: 0, 1, 2, 3, 4, 5, 6, 7.
-> +  0 if not defined.
+> The P3041RM shows exactly each PLL has 2 outputs which definitely have no "divider" at all.
 
-This description basically tells me nothing.
+That diagram is a bit weird -- one of the outputs is used as is, and the
+other is split into 1/2 and 1/4.  It doesn't really matter though; the
+end result is the same.  We're describing the programming interface, not
+artwork choices in the manual.
 
-> +- rising-edge-sync-pulse: rising edge synchronous pulse.
-> +  Supported values are: "receive", "transmit".
-> +  "transmit" if not defined.
+-Scott
 
-Are receive and transmit mutually exclusive? If so, then wouldn't a
-single property like "rx-rising-edge-sync-pulse" be sufficient.
 
-> +
-> +Examples:
-> +
-> +       e1-wan@4,2000000 {
-> +               compatible = "infineon,pef2256";
-> +               reg = <4 0x2000000 0xFF>;
-> +               interrupts = <8 1>;
-> +               interrupt-parent = <&PIC>;
-> +               data-rate = <4>;
-> +               channel-phase = <1>;
-> +               rising-edge-sync-pulse = "transmit";
-> +       };
-> diff -urN a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
-> --- a/drivers/net/wan/Makefile  1970-01-01 01:00:00.000000000 +0100
-> +++ b/drivers/net/wan/Makefile  2013-10-13 13:05:01.000000000 +0200
-> @@ -22,6 +22,7 @@
->  obj-$(CONFIG_COSA)             += cosa.o
->  obj-$(CONFIG_FARSYNC)          += farsync.o
->  obj-$(CONFIG_DSCC4)             += dscc4.o
-> +obj-$(CONFIG_PEF2256)           += pef2256.o
->  obj-$(CONFIG_X25_ASY)          += x25_asy.o
->
->  obj-$(CONFIG_LANMEDIA)         += lmc/
-> diff -urN a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
-> --- a/drivers/net/wan/Kconfig   1970-01-01 01:00:00.000000000 +0100
-> +++ b/drivers/net/wan/Kconfig   2013-10-13 13:05:01.000000000 +0200
-> @@ -266,6 +266,16 @@
->           To compile this driver as a module, choose M here: the
->           module will be called farsync.
->
-> +config PEF2256
-> +       tristate "PEF2256 support"
-> +       depends on HDLC && OF && SYSFS
 
-It would be better if this can build without OF selected.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
