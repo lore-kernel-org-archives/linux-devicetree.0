@@ -1,39 +1,91 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH v2 3/3] gpiolib: add gpiod_get() and gpiod_put() functions
-Date: Wed, 16 Oct 2013 09:10:07 -0700
-Message-ID: <525EBA5F.5080608@nvidia.com>
-References: <1381515273-25466-1-git-send-email-acourbot@nvidia.com>	<1381515273-25466-4-git-send-email-acourbot@nvidia.com>	<52587C37.3070606@nvidia.com> <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] WAN: Adding support for Infineon PEF2256 E1 chipset
+Date: Wed, 16 Oct 2013 11:24:57 -0500
+Message-ID: <CAL_JsqLSOy0OqEm4C1sCMSJnZ3O6Zsizpk_NJFxLij6LfyYK4A@mail.gmail.com>
+References: <201310161525.r9GFPZI5006238@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZTqZKyG3Lbs_GmdnqB0yEjRApsaUhJA9-s_uPb_Wrq8A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201310161525.r9GFPZI5006238@localhost.localdomain>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Krzysztof Halasa <khc@pm.waw.pl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, jerome.chantelauze@c-s.fr
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2013 04:37 AM, Linus Walleij wrote:
-> On Sat, Oct 12, 2013 at 12:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
->>> +#else
->>> +static struct device_node *of_find_gpio(struct device *dev, const char *id
->>> +                                     unsigned int idx, unsigned long flags)
->>> +{
->>> +     return ERR_PTR(-ENODEV);
->>> +}
->>> +#endif
->>
->> ... and of course I forgot to fix the main compilation error. Linus,
->> would you mind squashing what follows into this patch? Apologies for
->> the inconvenience.
+On Wed, Oct 16, 2013 at 10:25 AM, Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+> The patch adds WAN support for Infineon PEF2256 E1 Chipset.
 >
-> I guess you'll fix this if you respin it?
+> Signed-off-by: Jerome Chantelauze <jerome.chantelauze@c-s.fr>
+> Acked-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+[snip]
+
+> diff -urN a/Documentation/devicetree/bindings/net/pef2256.txt b/Documentation/devicetree/bindings/net/pef2256.txt
+> --- a/Documentation/devicetree/bindings/net/pef2256.txt 1970-01-01 01:00:00.000000000 +0100
+> +++ b/Documentation/devicetree/bindings/net/pef2256.txt 2013-10-13 15:05:42.000000000 +0200
+> @@ -0,0 +1,29 @@
+> +* Wan on Infineon pef2256 E1 controller
+> +
+> +Required properties:
+> +- compatible: Should be "infineon,pef2256"
+> +- reg: Address and length of the register set for the device
+> +- interrupts: Should contain interrupts
+> +
+> +Optional properties:
+> +- data-rate: Data rate on the system highway.
+> +  Supported values are: 2, 4, 8, 16.
+> +  8 if not defined.
+
+What are the units? Specify them in the property name.
+
+> +- channel-phase: First time slot transmission channel phase.
+> +  Supported values are: 0, 1, 2, 3, 4, 5, 6, 7.
+> +  0 if not defined.
+
+This description basically tells me nothing.
+
+> +- rising-edge-sync-pulse: rising edge synchronous pulse.
+> +  Supported values are: "receive", "transmit".
+> +  "transmit" if not defined.
+
+Are receive and transmit mutually exclusive? If so, then wouldn't a
+single property like "rx-rising-edge-sync-pulse" be sufficient.
+
+> +
+> +Examples:
+> +
+> +       e1-wan@4,2000000 {
+> +               compatible = "infineon,pef2256";
+> +               reg = <4 0x2000000 0xFF>;
+> +               interrupts = <8 1>;
+> +               interrupt-parent = <&PIC>;
+> +               data-rate = <4>;
+> +               channel-phase = <1>;
+> +               rising-edge-sync-pulse = "transmit";
+> +       };
+> diff -urN a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+> --- a/drivers/net/wan/Makefile  1970-01-01 01:00:00.000000000 +0100
+> +++ b/drivers/net/wan/Makefile  2013-10-13 13:05:01.000000000 +0200
+> @@ -22,6 +22,7 @@
+>  obj-$(CONFIG_COSA)             += cosa.o
+>  obj-$(CONFIG_FARSYNC)          += farsync.o
+>  obj-$(CONFIG_DSCC4)             += dscc4.o
+> +obj-$(CONFIG_PEF2256)           += pef2256.o
+>  obj-$(CONFIG_X25_ASY)          += x25_asy.o
 >
-> If it's too much trouble now we can just defer this for early in the v3.14
-> cycle.
+>  obj-$(CONFIG_LANMEDIA)         += lmc/
+> diff -urN a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+> --- a/drivers/net/wan/Kconfig   1970-01-01 01:00:00.000000000 +0100
+> +++ b/drivers/net/wan/Kconfig   2013-10-13 13:05:01.000000000 +0200
+> @@ -266,6 +266,16 @@
+>           To compile this driver as a module, choose M here: the
+>           module will be called farsync.
+>
+> +config PEF2256
+> +       tristate "PEF2256 support"
+> +       depends on HDLC && OF && SYSFS
 
-No problem, I will try to rebase on top of your for-next, and squash 
-this today.
+It would be better if this can build without OF selected.
 
-Thanks,
-Alex.
+Rob
