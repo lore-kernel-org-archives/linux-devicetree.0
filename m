@@ -1,109 +1,115 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 3/7] ARM: dts: enable hi4511 with device tree
-Date: Wed, 16 Oct 2013 10:09:31 +0800
-Message-ID: <CAD6h2NTb8-8nSuaa6eQNYBFk3gv94TptZbX7xmz8WKFfCXZ5fg@mail.gmail.com>
-References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org>
-	<1381828577-27998-4-git-send-email-haojian.zhuang@linaro.org>
-	<201310152018.10908.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201310152018.10908.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Shaojie Sun <shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 1/3 v5] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Wed, 16 Oct 2013 08:21:30 +0530
+Message-ID: <1381891890-30171-1-git-send-email-ch.naveen@samsung.com>
+References: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, l.majewski@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 16 October 2013 02:18, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 15 October 2013, Haojian Zhuang wrote:
->> Enable Hisilicon Hi4511 development platform with device tree support.
->>
->> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Based on my other mail, some more comments here:
->
->> +/ {
->> +     clocks {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->
-> Since all clocks are in the fc802000 page, I would prefer using a non-empty
-> ranges to map the clocks into their own address space, like
->
->                 ranges = <0 0xfc802000 0x1000>;
->
->
-OK.
+On Exynos5250, the FALL interrupt related en, status and clear bits are
+available at an offset of
+16 on INTEN, INTSTAT registers and at an offset of
+12 on INTCLEAR register.
 
->> +             timer4_mux: timer4_mux@fc802018 {
->> +                     compatible = "hisilicon,clk-mux";
->> +                     #clock-cells = <0>;
->> +                     clocks = <&osc32k &timerclk45>;
->> +                     clock-output-names = "timer4_mux";
->> +                     reg = <0xfc802018 0x4>;
->> +                     clkmux-mask = <0x3>;
->> +                     clkmux-table = <0 0x1>;
->> +             };
->
-> which would turn this into
->
->                 timer4_mux: timer4_mux@18 {
->                         ...
->                         reg = <0x18 0x4>;
->                         ...
->                 };
->
-> The code would not be impacted by this.
->
-> On a related note, I find it strange that you have multiple devices with the
-> same register. Normally, we try to have device node names be generic,
-> e.g. 'clock@18' rather than 'timer4_mux@18', but that won't work if the
-> register is the same for all of them. Maybe some DT expert can comment
-> on this.
->
-Because multiple clock nodes (clock mux/clock gate/clock divider) are
-sharing the same register. I think that it's common on ARM SoC. At
-least, I can find this in both Hisilicon & Marvell PXA/MMP SoC.
+On Exynos5420, the FALL interrupt related en, status and clear bits are
+available at an offset of
+16 on INTEN, INTSTAT and INTCLEAR registers.
 
-If I force to merge multiple clock nodes into the same device node,
-it'll become mess. Different clock nodes have different properties.
-The property won't work any more if they are merged into the same
-device node.
+On Exynos5440,
+the FALL_IRQEN bits are at an offset of 4
+and the RISE_IRQEN bits are at an offset of 0
 
->> +
->> +     amba {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             compatible = "arm,amba-bus";
->> +             interrupt-parent = <&gic>;
->> +             ranges;
->> +
->> +             L2: l2-cache {
->> +                     compatible = "arm,pl310-cache";
->> +                     reg = <0xfc10000 0x100000>;
->> +                     interrupts = <0 15 4>;
->> +                     cache-unified;
->> +                     cache-level = <2>;
->> +             };
->
-> For this node, we could use the same trick with the non-empty ranges, since
-> all amba devices seem to be in the 0xfc000000 range.
->
-OK.
+This patch corrects the same for exyns5250 and exynos5440
 
-> If you do that, it probably makes sense to move the clock controller under here
-> as well.
-Could I keep them into hi3620-clk.dtsi? Since both hi3620.dtsi &
-hi3620-clk.dtsi are not small, merge them together only make people
-reading hard.
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
+Changes since v1:
+Changes since v2:
+Changes since v3:
+  None
+Changes since v4:
+Correct the CLEAR_FALL_INT_SHIFT for Exynos5250/Exynos5440
 
->
->         Arnd
+ drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+ drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.h |    4 +++-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
 
-Best Regards
-Haojian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index 32f38b9..b2202fa 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -265,7 +265,7 @@ skip_calib_data:
+ 				data->base + reg->threshold_th1);
+ 
+ 		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+-			(reg->inten_fall_mask << reg->inten_fall_shift),
++			(reg->inten_fall_mask << reg->intclr_fall_shift),
+ 				data->base + reg->tmu_intclear);
+ 
+ 		/* if last threshold limit is also present */
+diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+index 3fb6554..5f4fe6c 100644
+--- a/drivers/thermal/samsung/exynos_tmu.h
++++ b/drivers/thermal/samsung/exynos_tmu.h
+@@ -136,6 +136,7 @@ enum soc_type {
+  * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+  * @tmu_intstat: Register containing the interrupt status values.
+  * @tmu_intclear: Register for clearing the raised interrupt status.
++ * @intclr_fall_shift: shift bits for interrupt clear fall 0
+  * @emul_con: TMU emulation controller register.
+  * @emul_temp_shift: shift bits of emulation temperature.
+  * @emul_time_shift: shift bits of emulation time.
+@@ -207,6 +208,7 @@ struct exynos_tmu_registers {
+ 	u32	tmu_intstat;
+ 
+ 	u32	tmu_intclear;
++	u32	intclr_fall_shift;
+ 
+ 	u32	emul_con;
+ 	u32	emul_temp_shift;
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+index 073c292..09a8a27 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.c
++++ b/drivers/thermal/samsung/exynos_tmu_data.c
+@@ -123,6 +123,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+ 	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
++	.intclr_fall_shift = EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.emul_con = EXYNOS_EMUL_CON,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+ 	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+@@ -228,6 +229,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+ 	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
++	.intclr_fall_shift = EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+ 	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+index a1ea19d..9c1e2c8 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.h
++++ b/drivers/thermal/samsung/exynos_tmu_data.h
+@@ -69,9 +69,11 @@
+ #define EXYNOS_TMU_RISE_INT_MASK	0x111
+ #define EXYNOS_TMU_RISE_INT_SHIFT	0
+ #define EXYNOS_TMU_FALL_INT_MASK	0x111
+-#define EXYNOS_TMU_FALL_INT_SHIFT	12
++#define EXYNOS_TMU_FALL_INT_SHIFT	16
+ #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+ #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
++#define EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT	12
++#define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT	4
+ #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+ #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+ #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+-- 
+1.7.10.4
