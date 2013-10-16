@@ -1,109 +1,32 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [RESEND PATCH V2 1/2] ARM: dts: AM33xx: Add RNG node
-Date: Wed, 16 Oct 2013 16:46:41 +0530
-Message-ID: <525E7599.8010504@ti.com>
-References: <1377780731-3648-1-git-send-email-lokeshvutla@ti.com> <1377780731-3648-2-git-send-email-lokeshvutla@ti.com> <52594DF0.1050002@ti.com> <525CE564.6010605@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Wed, 16 Oct 2013 13:19:35 +0200
+Message-ID: <CACRpkdbD9gJnF4C4ZeO2o0Q2RcL3w8=Hnu93EWJHyxUPwn29og@mail.gmail.com>
+References: <20131015133621.GA7461@ab42.lan>
+	<1381844274-12486-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <525CE564.6010605@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: paul@pwsan.com, tony@atomide.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rob.herring@calxeda.com, mark.rutland@arm.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381844274-12486-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Rob and Mark
-On Tuesday 15 October 2013 12:19 PM, Benoit Cousson wrote:
-> Hi Lokesh,
-> 
-> On 12/10/2013 15:26, Lokesh Vutla wrote:
->> Hi Benoit,
->> On Thursday 29 August 2013 06:22 PM, Lokesh Vutla wrote:
->>> Add the AM33xx RNG module's device tree data.
->>> Also add Documentation file describing the data
->>> for the RNG module.
-Can you please review this patch..
+On Tue, Oct 15, 2013 at 3:37 PM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
 
-Thanks and regards,
-Lokesh
->> Seems you missed this patch. Please consider this for this merge window.
-> 
-> Indeed I missed it. Sorry :-(
-> 
->> Patch 2/2 is already taken by Paul.
->> Without this patch AM335x boot will crash as I mentioned in my cover letter.
->>
->> Thanks and regards,
->> Lokesh
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>> Changes since V1:
->>> - Drop "status=disabled" entry in dt node, Since
->>>    RNG is present on all AM33xx platforms.
->>>
->>>   .../devicetree/bindings/hwrng/omap_rng.txt         |   22 ++++++++++++++++++++
->>>   arch/arm/boot/dts/am33xx.dtsi                      |    7 +++++++
->>>   2 files changed, 29 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/hwrng/omap_rng.txt
-> 
-> I do not see the acked-by for the binding part. You do need that for any new bindings nowadays.
-> 
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwrng/omap_rng.txt b/Documentation/devicetree/bindings/hwrng/omap_rng.txt
->>> new file mode 100644
->>> index 0000000..6a62acd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwrng/omap_rng.txt
->>> @@ -0,0 +1,22 @@
->>> +OMAP SoC HWRNG Module
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : Should contain entries for this and backward compatible
->>> +  RNG versions:
->>> +  - "ti,omap2-rng" for OMAP2.
->>> +  - "ti,omap4-rng" for OMAP4, OMAP5 and AM33XX.
->>> +  Note that these two versions are incompatible.
->>> +- ti,hwmods: Name of the hwmod associated with the RNG module
->>> +- reg : Offset and length of the register set for the module
->>> +- interrupts : the interrupt number for the RNG module.
->>> +        Only used for "ti,omap4-rng".
->>> +
->>> +Example:
->>> +/* AM335x */
->>> +rng: rng@48310000 {
->>> +    compatible = "ti,omap4-rng";
->>> +    ti,hwmods = "rng";
->>> +    reg = <0x48310000 0x2000>;
->>> +    interrupts = <111>;
->>> +};
->>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->>> index 38b446b..26ebe30 100644
->>> --- a/arch/arm/boot/dts/am33xx.dtsi
->>> +++ b/arch/arm/boot/dts/am33xx.dtsi
->>> @@ -530,5 +530,12 @@
->>>               #size-cells = <1>;
->>>               status = "disabled";
->>>           };
->>> +
->>> +        rng: rng@48310000 {
->>> +            compatible = "ti,omap4-rng";
->>> +            ti,hwmods = "rng";
->>> +            reg = <0x48310000 0x2000>;
->>> +            interrupts = <111>;
->>> +        };
->>>       };
->>>   };
->>>
->>
-> 
-> It looks good to me, but it does not apply on my branch.
-> Please rebase it and repost with the proper acked-by.
-> 
-> Thanks,
-> Benoit
-> 
-> 
+> This patch adds the infrastructure required to register non-linear gpio
+> ranges through gpiolib and the standard GPIO device tree bindings.
+>
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
 
+OK this is looking fully acceptable, so applied it.
+
+(If some DT reviewer dislikes it, this is a good time to protest.)
+
+Christain, can you check if Documentation/pinctrl.txt needs to
+be updated for this?
+
+Yours,
+Linus Walleij
