@@ -1,128 +1,146 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Thu, 17 Oct 2013 12:52:40 +0300
-Message-ID: <525FB368.6020003@ti.com>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <1381947912-11741-3-git-send-email-treding@nvidia.com> <1695169.rzbDl9PeRX@avalon> <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com> <525FA4B0.8060504@ti.com> <20131017091614.GC2502@ulmo.nvidia.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3 v6] thermal: samsung: add intclr_fall_shift bit in
+ exynos_tmu_register
+Date: Thu, 17 Oct 2013 12:03:50 +0200
+Message-ID: <2064487.sPVcMNRS4J@amdc1032>
+References: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+ <1381979473-7079-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131017091614.GC2502-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-reply-to: <1381979473-7079-1-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, eduardo.valentin-l0cyMroinI0@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On 17/10/13 12:16, Thierry Reding wrote:
-> On Thu, Oct 17, 2013 at 11:49:52AM +0300, Tomi Valkeinen wrote:
+Hi Naveen,
 
->> Just my opinion, but yes, DT is that inflexible. DT bindings are like =
-a
->> syscall. Once they are there, you need to support them forever. That
->> support can, of course, include some kind of DT data converters or suc=
-h,
->> that try to convert old bindings to new bindings at kernel boot.
->=20
-> That's not entirely true. DT bindings are allowed to change, the only
-> restriction being that they don't break backwards compatibility. So if
+On Thursday, October 17, 2013 08:41:13 AM Naveen Krishna Chatradhi wrote:
+> On Exynos5250, the FALL interrupt related en, status and clear bits are
+> available at an offset of
+> 16 in INTEN, INTSTAT registers and at an offset of
+> 12 in INTCLEAR register.
+> 
+> On Exynos5420, the FALL interrupt related en, status and clear bits are
+> available at an offset of
+> 16 in INTEN, INTSTAT and INTCLEAR registers.
+> 
+> On Exynos5440,
+> the FALL_IRQEN bits are at an offset of 4
+> and the RISE_IRQEN bits are at an offset of 0
+> 
+> This patch introduces a new bit field intclr_fall_shift to handle the
+> offset for exyns5250 and exynos5440
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v1:
+> Changes since v2:
+> Changes since v3:
+>   None
+> Changes since v4:
+>  Correct the CLEAR_FALL_INT_SHIFT for Exynos5250/Exynos5440
+> Changes since v5:
+>  Modify the commit message
 
-True, but afaik the same goes for syscalls. But yes, it's probably
-easier to add, say, new properties to DT bindings than adding new flags
-to a syscall.
+Thank you but v5 had more issues which are not fixed yet. Please see below.
 
-> Am I the only one refusing to accept that we can't provide even the mos=
-t
-> basic functionality simply because we haven't been able to come up with=
+>  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+>  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+>  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+>  drivers/thermal/samsung/exynos_tmu_data.h |    4 +++-
+>  4 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index 32f38b9..b2202fa 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -265,7 +265,7 @@ skip_calib_data:
+>  				data->base + reg->threshold_th1);
+>  
+>  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+> -			(reg->inten_fall_mask << reg->inten_fall_shift),
+> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
+>  				data->base + reg->tmu_intclear);
+>  
+>  		/* if last threshold limit is also present */
+> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> index 3fb6554..5f4fe6c 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.h
+> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> @@ -136,6 +136,7 @@ enum soc_type {
+>   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+>   * @tmu_intstat: Register containing the interrupt status values.
+>   * @tmu_intclear: Register for clearing the raised interrupt status.
+> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
+>   * @emul_con: TMU emulation controller register.
+>   * @emul_temp_shift: shift bits of emulation temperature.
+>   * @emul_time_shift: shift bits of emulation time.
+> @@ -207,6 +208,7 @@ struct exynos_tmu_registers {
+>  	u32	tmu_intstat;
+>  
+>  	u32	tmu_intclear;
+> +	u32	intclr_fall_shift;
+>  
+>  	u32	emul_con;
+>  	u32	emul_temp_shift;
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+> index 073c292..09a8a27 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> @@ -123,6 +123,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+>  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+>  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+>  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
+> +	.intclr_fall_shift = EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT,
+>  	.emul_con = EXYNOS_EMUL_CON,
+>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+>  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+> @@ -228,6 +229,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+>  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+>  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+>  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
+> +	.intclr_fall_shift = EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT,
+>  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+>  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+>  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+> index a1ea19d..9c1e2c8 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> @@ -69,9 +69,11 @@
+>  #define EXYNOS_TMU_RISE_INT_MASK	0x111
+>  #define EXYNOS_TMU_RISE_INT_SHIFT	0
+>  #define EXYNOS_TMU_FALL_INT_MASK	0x111
+> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
+> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
+>  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+>  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
+> +#define EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT	12
 
-> the ultimately "perfect" DT binding yet? By definition it's not very
-> likely that any binding will ever be perfect.
+The better name would be EXYNOS_TMU_CLEAR_FALL_INT_SHIFT because it is
+also used on EXYNOS4412.
 
-With "perfect" I meant without any obvious features missing. I agree
-that DT bindings will never be perfect, but I at least would like them
-to be good enough to cover all the cases we know of.
+Also in patch #3 you should define EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT
+instead of re-using EXYNOS_TMU_FALL_INT_SHIFT.
 
-> I don't think we're doing ourselves any good by letting DT actively
-> hinder us in merging any of these features. I would personally prefer
-> having to support several bindings rather than not be able to provide
-> the functionality at all.
+Finally please remove no longer used inten_fall_shift field and related
+defines (EXYNOS_TMU_FALL_INT_MASK and EXYNOS5440_TMU_FALL_INT_MASK).
 
-I'd say the driver writer is of course free to create basic bindings for
-the device in question as long as the bindings are sane, and he agrees
-to later create any needed converters. I don't see any problem with
-having a driver supporting several versions of the bindings.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-But I don't think it's fair to push a driver with basic bindings,
-knowing that the bindings won't be enough in the future, and leave all
-the converter-mess to other people (not saying that's the case here).
+> +#define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT	4
+>  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+>  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+>  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
 
-As a fbdev maintainer, I'm ok with adding DT bindings to device specific
-fb drivers, as those can be just left as they are. Even when CDF is
-merged, the specific fb drivers just work with the old bindings. If the
-driver maintainer wants to use CDF, it's up to him to create any needed
-binding-converters.
-
-But a generic driver for panels is more problematic, as that one should
-be maintained and refreshed to new features like CDF. If such was
-proposed to be merged to fbdev, I'd be very reluctant to merge it if
-there were any concerns about it.
-
-I guess one option there would be to implement a new driver for the same
-panel devices, one that supports CDF, and leave the old one as is. Not
-so nice option, though.
-
-> For crying out loud, we can use the 3D engine to render to a framebuffe=
-r
-> but we can't look at the result because we can't make the bloody panel
-> light up! Seriously!?
-
-Ah, but do you have DT bindings for the 3D engine yet, which represent
-how different internal blocks in the 3D engine are connected? If not,
-better start designing it! Then the problem is solved, you won't even
-have working 3D engine. ;)
-
-But seriously speaking, I'm with you. I don't get this DT stuff.
-
-And the funny thing is, DT should just represent the hardware, it
-doesn't matter what kind of SW drivers there are, so in a sense talking
-about DT problems with a SW framework like CDF is a bit silly. How hard
-can it be to describe the hardware properly?
-
-Very, obviously =3D).
-
- Tomi
-
-
-
---vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSX7NoAAoJEPo9qoy8lh71BT0QAKI8o/SQr2gXmN2KdqeJXi4F
-ZLloNE36K9aScScFbNmbxgCiDe6oU1CEAK7obLb8+lGf9OER74Gz4FhpD60RxsIX
-m4+4iynTvkqanUXUops/CTuXeGMXI+KqC1jmxOuCHWZmw75bHVWQWfMO76XUOgyl
-ZWfIjLMiSJ78p7pW/sVkf6/oTjeYkwZD0XcPtV7PVwOuVETS+hBweo8TooWO6jwP
-7Gj6oQjBhmFQxM94ug596lCXKifO7oPSPHOa2XfObRryywYnrZ/PgsqPKE7A56Sx
-ZftpS+xu7MgyzAj2B5w3QYKHPM0/Yoy95KUW1kxTNECmxf0EGNDrTsc015B7XL+v
-yW+ZZ6VF86TUVAJieHu2mctFrQodNNHxm6CxZ8XCtK8+BDqHRMP5T9w7hyYBoape
-52o2P2cDsdNx5S/nbi7mE6WDETl/x5KdhBHtNGVeRfLRjK3WHOTrTCCTo76Ivh5E
-Y52nHyrHaWdzzpWLhojP1ldP4SLOfpi1O/fqeM+FiD483RJ5RYw+MtG1wssfyy1c
-sxpQWzWpZsQg5CjkkdKsK7uLoZEms3r4LmMIFMHeYCWiOGkPZscBzxebu7tRL4p5
-5XOulcL26khcvcHoizuAEn6KOmC46/z10nTXLgHcBR8DJIUwqygnkr6kS1tS7k5H
-f/A8boJj5EzCCUxDIUyM
-=cm1t
------END PGP SIGNATURE-----
-
---vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
