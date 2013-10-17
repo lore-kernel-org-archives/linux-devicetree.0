@@ -1,66 +1,270 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 2/6] ARM: dts: Specify clocks for UARTs on bcm11351
-Date: Thu, 17 Oct 2013 08:14:56 +0200
-Message-ID: <525F8060.4040900@gmail.com>
-References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org> <1381960030-1640-3-git-send-email-tim.kryger@linaro.org> <CAEPRUYrzAow1yr58jOp5ead7BkQx-K7yaLLzSHPwqYVu=aZFEQ@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEPRUYrzAow1yr58jOp5ead7BkQx-K7yaLLzSHPwqYVu=aZFEQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 1/8] irqchip: add DesignWare APB ICTL interrupt controller
+Date: Thu, 17 Oct 2013 08:37:33 +0200
+Message-ID: <1381991853-8131-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1381235073-17134-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381235073-17134-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 07:41 AM, Christian Daudt wrote:
-> On Wed, Oct 16, 2013 at 2:47 PM, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Rather than declaring the frequency of the external clock, specify the
->> label of the clock such that the driver may determine the frequency on
->> its own.
->>
->> Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/bcm11351.dtsi | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
->> index c6464fb..ce65367 100644
->> --- a/arch/arm/boot/dts/bcm11351.dtsi
->> +++ b/arch/arm/boot/dts/bcm11351.dtsi
->> @@ -43,7 +43,7 @@
->>                  compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
->>                  status = "disabled";
->>                  reg = <0x3e000000 0x1000>;
->> -               clock-frequency = <13000000>;
->> +               clocks = <&uartb_clk>;
->>                  interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
->>                  reg-shift = <2>;
->>                  reg-io-width = <4>;
->
-> Hi Sebastian,
->   this patch series (and a subsequent one from Tim) both rely on your
-> "ARM: provide common arch init for DT clocks" patchset in order to
-> work. Will that patchset be in 3.13 ? I don't want to pull the dt mods
-> unless they are as they break the boot without them.
+This adds an irqchip driver and corresponding devicetree binding for the
+secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
 
-Christian,
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Jisheng Zhang <jszhang@marvell.com>
+---
+Changelog:
+v1->v2:
+- reword binding docu for reg property and add FIQ decoding note
+  (Suggested by Mark Rutland)
+- add cleanup on error path (Reported by Jisheng Zhang)
+RFCv1->RFCv2:
+- added copyright reference
 
-here is the pull request [1], pull [2], and stable commitment for the
-branch [3]. You can merge that branch too and name the dependency when
-you send your PR, arm-soc maintainers will sort it out.
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../interrupt-controller/snps,dw-apb-ictl.txt      |   32 +++++
+ drivers/irqchip/Kconfig                            |    4 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-dw-apb-ictl.c                  |  150 ++++++++++++++++++++
+ 4 files changed, 187 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+ create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
 
-Besides a small section mismatch fixup for nomadik that Olof requested,
-I guess it is in.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+new file mode 100644
+index 0000000..4929117
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+@@ -0,0 +1,32 @@
++Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
++
++Synopsys DesignWare provides interrupt controller IP for APB known as
++dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs with
++APB bus, e.g. Marvell Armada 1500.
++
++Required properties:
++- compatible: shall be "snps,dw-apb-ictl"
++- reg: physical base address of the controller and length of memory mapped
++  region starting with ENABLE_LOW register
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: number of cells to encode an interrupt-specifier, shall be 1
++- interrupts: interrupt reference to primary interrupt controller
++- interrupt-parent: (optional) reference specific primary interrupt controller
++
++The interrupt sources map to the corresponding bits in the interrupt
++registers, i.e.
++- 0 maps to bit 0 of low interrupts,
++- 1 maps to bit 1 of low interrupts,
++- 32 maps to bit 0 of high interrupts,
++- 33 maps to bit 1 of high interrupts,
++- (optional) fast interrupts start at 64.
++
++Example:
++	aic: interrupt-controller@3000 {
++		compatible = "snps,dw-apb-ictl";
++		reg = <0x3000 0xc00>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++	};
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3792a1a..940638d 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -30,6 +30,10 @@ config ARM_VIC_NR
+ 	  The maximum number of VICs available in the system, for
+ 	  power management.
+ 
++config DW_APB_ICTL
++	bool
++	select IRQ_DOMAIN
++
+ config IMGPDC_IRQ
+ 	bool
+ 	select GENERIC_IRQ_CHIP
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index c60b901..6427323 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
+ obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
+ obj-$(CONFIG_ARCH_MXS)			+= irq-mxs.o
+ obj-$(CONFIG_ARCH_S3C24XX)		+= irq-s3c24xx.o
++obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
+ obj-$(CONFIG_METAG)			+= irq-metag-ext.o
+ obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
+ obj-$(CONFIG_ARCH_MOXART)		+= irq-moxart.o
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+new file mode 100644
+index 0000000..31e231e
+--- /dev/null
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -0,0 +1,150 @@
++/*
++ * Synopsys DW APB ICTL irqchip driver.
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * based on GPL'ed 2.6 kernel sources
++ *  (c) Marvell International Ltd.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#include "irqchip.h"
++
++#define APB_INT_ENABLE_L	0x00
++#define APB_INT_ENABLE_H	0x04
++#define APB_INT_MASK_L		0x08
++#define APB_INT_MASK_H		0x0c
++#define APB_INT_FINALSTATUS_L	0x30
++#define APB_INT_FINALSTATUS_H	0x34
++
++static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_get_chip(irq);
++	struct irq_chip_generic *gc = irq_get_handler_data(irq);
++	struct irq_domain *d = gc->private;
++	u32 stat;
++	int n;
++
++	chained_irq_enter(chip, desc);
++
++	for (n = 0; n < gc->num_ct; n++) {
++		stat = readl_relaxed(gc->reg_base +
++				     APB_INT_FINALSTATUS_L + 4 * n);
++		while (stat) {
++			u32 hwirq = ffs(stat) - 1;
++			generic_handle_irq(irq_find_mapping(d,
++					    gc->irq_base + hwirq + 32 * n));
++			stat &= ~(1 << hwirq);
++		}
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static int __init dw_apb_ictl_init(struct device_node *np,
++				   struct device_node *parent)
++{
++	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
++	struct resource r;
++	struct irq_domain *domain;
++	struct irq_chip_generic *gc;
++	void __iomem *iobase;
++	int ret, nrirqs, irq;
++	u32 reg;
++
++	/* Map the parent interrupt for the chained handler */
++	irq = irq_of_parse_and_map(np, 0);
++	if (irq <= 0) {
++		pr_err("%s: unable to parse irq\n", np->full_name);
++		return -EINVAL;
++	}
++
++	ret = of_address_to_resource(np, 0, &r);
++	if (ret) {
++		pr_err("%s: unable to get resource\n", np->full_name);
++		return ret;
++	}
++
++	if (!request_mem_region(r.start, resource_size(&r), np->full_name)) {
++		pr_err("%s: unable to request mem region\n", np->full_name);
++		return -ENOMEM;
++	}
++
++	iobase = ioremap(r.start, resource_size(&r));
++	if (!iobase) {
++		pr_err("%s: unable to map resource\n", np->full_name);
++		ret = -ENOMEM;
++		goto err_release;
++	}
++
++	/*
++	 * DW IP can be configured to allow 2-64 irqs. We can determine
++	 * the number of irqs supported by writing into enable register
++	 * and look for bits not set, as corresponding flip-flops will
++	 * have been removed by sythesis tool.
++	 */
++
++	/* mask and enable all interrupts */
++	writel(~0, iobase + APB_INT_MASK_L);
++	writel(~0, iobase + APB_INT_MASK_H);
++	writel(~0, iobase + APB_INT_ENABLE_L);
++	writel(~0, iobase + APB_INT_ENABLE_H);
++
++	reg = readl(iobase + APB_INT_ENABLE_H);
++	if (reg)
++		nrirqs = 32 + fls(reg);
++	else
++		nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
++
++	domain = irq_domain_add_linear(np, nrirqs,
++				       &irq_generic_chip_ops, NULL);
++	if (!domain) {
++		pr_err("%s: unable to add irq domain\n", np->full_name);
++		ret = -ENOMEM;
++		goto err_unmap;
++	}
++
++	ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ? 2 : 1,
++					     np->name, handle_level_irq, clr, 0,
++					     IRQ_GC_INIT_MASK_CACHE);
++	if (ret) {
++		pr_err("%s: unable to alloc irq domain gc\n", np->full_name);
++		goto err_unmap;
++	}
++
++	gc = irq_get_domain_generic_chip(domain, 0);
++	gc->private = domain;
++	gc->reg_base = iobase;
++
++	gc->chip_types[0].regs.mask = APB_INT_MASK_L;
++	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
++	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
++
++	if (nrirqs > 32) {
++		gc->chip_types[1].regs.mask = APB_INT_MASK_H;
++		gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
++		gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
++	}
++
++	irq_set_handler_data(irq, gc);
++	irq_set_chained_handler(irq, dw_apb_ictl_handler);
++
++	return 0;
++
++err_unmap:
++	iounmap(iobase);
++err_release:
++	release_mem_region(r.start, resource_size(&r));
++	return ret;
++}
++IRQCHIP_DECLARE(dw_apb_ictl,
++		"snps,dw-apb-ictl", dw_apb_ictl_init);
+-- 
+1.7.10.4
 
-Sebastian
-
-[1] http://www.spinics.net/lists/arm-kernel/msg276175.html
-[2] http://www.spinics.net/lists/arm-kernel/msg277816.html
-[3] http://www.spinics.net/lists/arm-kernel/msg279736.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
