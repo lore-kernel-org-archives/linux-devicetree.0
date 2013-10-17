@@ -1,104 +1,96 @@
-From: Tarek Dakhran <t.dakhran@samsung.com>
-Subject: Re: [PATCH v2 0/4] Exynos 5410 Dual cluster support
-Date: Thu, 17 Oct 2013 17:51:54 +0400
-Message-ID: <525FEB7A.6030609@samsung.com>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
- <87k3hc3lso.fsf@linaro.org> <20131017130435.GG3061@cat.local>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v2 2/6] ARM: dts: Specify clocks for UARTs on
+ bcm11351
+Date: Thu, 17 Oct 2013 14:56:02 +0100
+Message-ID: <20131017135602.GD24056@e106331-lin.cambridge.arm.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+ <1381960030-1640-3-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20131017130435.GG3061@cat.local>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Aliaksei Katovich <aliaksei.katovich@gmail.com>, Kevin Hilman <khilman@linaro.org>
-Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-samsung-soc@vger.kernel.org, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381960030-1640-3-git-send-email-tim.kryger@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.10.2013 17:04, Aliaksei Katovich wrote:
-> hi Kevin;
->
->> Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
->>
->>> The series of patches represent support of Exynos 5410 SoC
->>>      
->>> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture.
->>> Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same time
->>>      
->>> Patches add new platform description, support of clock controller,
->>> dual cluster support and device tree for Exynos 5410
->>>     
->>> Has been build on v3.12-rc5.
->>> Has been tested on Exynos 5410 reference board (exynos_defconfig).
->> Has anyone tried this on the exynos5410 based odroid-xu yet?
->>
->> I tried booting this on my recently arrived odroid-xu, but am not
->> getting it to boot.
-> 	I am able to boot my odroid-xu+e to busybox with these patches applied
-> 	against 3.12-rc5: exynos_defconfig and exynos5410-smdk5410.dtb were
-> 	used.
->
-> 	However there seem to be some issues with virq allocations, like this:
->
-> <snippet>
-> Starting kernel ...
->                     
-> [    0.000000] [<c0014d48>] (unwind_backtrace+0x0/0xf8) from [<c00117d0>] (show_stack+0x10/0x14)
-> [    0.000000] [<c00117d0>] (show_stack+0x10/0x14) from [<c0363488>] (dump_stack+0x6c/0xac)
-> [    0.000000] [<c0363488>] (dump_stack+0x6c/0xac) from [<c001e330>] (warn_slowpath_common+0x64/0x88)
-> [    0.000000] [<c001e330>] (warn_slowpath_common+0x64/0x88) from [<c001e3e8>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.000000] [<c001e3e8>] (warn_slowpath_fmt+0x30/0x40) from [<c005a1b4>] (irq_domain_associate+0x128/0x1a8)
-> [    0.000000] [<c005a1b4>] (irq_domain_associate+0x128/0x1a8) from [<c005a508>] (irq_domain_associate_many+0x30/0x3c
-> )
-> [    0.000000] [<c005a508>] (irq_domain_associate_many+0x30/0x3c) from [<c005a768>] (irq_domain_add_simple+0x78/0x90)
-> [    0.000000] [<c005a768>] (irq_domain_add_simple+0x78/0x90) from [<c04b044c>] (combiner_of_init+0xb4/0x198)
-> [    0.000000] [<c04b044c>] (combiner_of_init+0xb4/0x198) from [<c04b6938>] (of_irq_init+0x278/0x2a0)
-> [    0.000000] [<c04b6938>] (of_irq_init+0x278/0x2a0) from [<c049b8fc>] (start_kernel+0x18c/0x384)
-> [    0.000000] [<c049b8fc>] (start_kernel+0x18c/0x384) from [<40008074>] (0x40008074)
-> [    0.000000] ---[ end trace 1b75b31a2719edcd ]---
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/irq/irqdomain.c:278 irq_domain_associate+0x128/0x1a8()
-> [    0.000000] error: virq337 is not allocated
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W    3.12.0-rc5-00004-g1cb405f #1
-> [    0.000000] [<c0014d48>] (unwind_backtrace+0x0/0xf8) from [<c00117d0>] (show_stack+0x10/0x14)
-> [    0.000000] [<c00117d0>] (show_stack+0x10/0x14) from [<c0363488>] (dump_stack+0x6c/0xac)
-> [    0.000000] [<c0363488>] (dump_stack+0x6c/0xac) from [<c001e330>] (warn_slowpath_common+0x64/0x88)
-> [    0.000000] [<c001e330>] (warn_slowpath_common+0x64/0x88) from [<c001e3e8>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.000000] [<c001e3e8>] (warn_slowpath_fmt+0x30/0x40) from [<c005a1b4>] (irq_domain_associate+0x128/0x1a8)
-> [    0.000000] [<c005a1b4>] (irq_domain_associate+0x128/0x1a8) from [<c005a508>] (irq_domain_associate_many+0x30/0x3c
-> )
-> [    0.000000] [<c005a508>] (irq_domain_associate_many+0x30/0x3c) from [<c005a768>] (irq_domain_add_simple+0x78/0x90)
-> [    0.000000] [<c005a768>] (irq_domain_add_simple+0x78/0x90) from [<c04b044c>] (combiner_of_init+0xb4/0x198)
-> [    0.000000] [<c04b044c>] (combiner_of_init+0xb4/0x198) from [<c04b6938>] (of_irq_init+0x278/0x2a0)
-> [    0.000000] [<c04b6938>] (of_irq_init+0x278/0x2a0) from [<c049b8fc>] (start_kernel+0x18c/0x384)
-> [    0.000000] [<c049b8fc>] (start_kernel+0x18c/0x384) from [<40008074>] (0x40008074)
-> [    0.000000] ---[ end trace 1b75b31a2719edce ]---
-> [    0.000000] ------------[ cut here ]------------
-> </snippet>
->
-> 	You can check full boot log here http://sprunge.us/NKcU
->
-> --
-> Aliaksei
->
->> I'm not yet terribly familiar with this SoC, what are the settings
->> needed for DEBUG_LL on this board?
->>
->> Thanks,
->>
->> Kevin
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
-This will be fixed in 3.13.
+On Wed, Oct 16, 2013 at 10:47:06PM +0100, Tim Kryger wrote:
+> Rather than declaring the frequency of the external clock, specify the
+> label of the clock such that the driver may determine the frequency on
+> its own.
 
-Now you can just change  "irq_base = 160" to  "irq_base = 256"
-in "static int __init combiner_of_init(struct device_node *np, struct 
-device_node *parent)" function
-in "drivers/irqchip/exynos-combiner.c"
+Nit: we're not specifying the label of the clock. Clocks are represented
+py a phand+args pair, and the important part is that we're specifying
+the clock itself.
 
-Best regards,
-     Tarek Dakhran
+How about something like:
+
+---->8----
+Currently the rate of the external clock input to "snps,dw-apb-uart"
+devices is described by a clock-frequency property rather than by
+reference to the clock itself.
+
+This patch changes the "snps,dw-apb-uart" entries in bcm11351.dtsi to
+refer to the parent clock directly, following the common clock bindings.
+---->8----
+
+Also, this should probably be moved after the driver change, so as to
+not be unbootable temporarily.
+
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> ---
+>  arch/arm/boot/dts/bcm11351.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+> index c6464fb..ce65367 100644
+> --- a/arch/arm/boot/dts/bcm11351.dtsi
+> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+> @@ -43,7 +43,7 @@
+>  		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+>  		status = "disabled";
+>  		reg = <0x3e000000 0x1000>;
+> -		clock-frequency = <13000000>;
+> +		clocks = <&uartb_clk>;
+>  		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+>  		reg-shift = <2>;
+>  		reg-io-width = <4>;
+> @@ -53,7 +53,7 @@
+>  		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+>  		status = "disabled";
+>  		reg = <0x3e001000 0x1000>;
+> -		clock-frequency = <13000000>;
+> +		clocks = <&uartb2_clk>;
+>  		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+>  		reg-shift = <2>;
+>  		reg-io-width = <4>;
+> @@ -63,7 +63,7 @@
+>  		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+>  		status = "disabled";
+>  		reg = <0x3e002000 0x1000>;
+> -		clock-frequency = <13000000>;
+> +		clocks = <&uartb3_clk>;
+>  		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+>  		reg-shift = <2>;
+>  		reg-io-width = <4>;
+> @@ -73,7 +73,7 @@
+>  		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+>  		status = "disabled";
+>  		reg = <0x3e003000 0x1000>;
+> -		clock-frequency = <13000000>;
+> +		clocks = <&uartb4_clk>;
+>  		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+>  		reg-shift = <2>;
+>  		reg-io-width = <4>;
+> -- 
+> 1.8.0.1
+> 
+> 
+> 
