@@ -1,316 +1,449 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 16/37] ASoC: eukrea-tlv320: Add DT support.
-Date: Thu, 17 Oct 2013 17:02:14 +0200
-Message-ID: <1382022155-21954-17-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [Patch v2][ 15/37] Input: tsc2007: Add device tree support.
+Date: Thu, 17 Oct 2013 17:02:13 +0200
+Message-ID: <1382022155-21954-16-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis@eukrea.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sascha Hauer <kernel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Denis Carikli <denis@eukrea.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Eric B=C3=A9nard <eric@eukrea.com>
+Signed-off-by: Denis Carikli <denis@eukrea.com>
 ---
- .../devicetree/bindings/sound/eukrea-tlv320.txt    |   23 ++++
- sound/soc/fsl/Kconfig                              |    5 +-
- sound/soc/fsl/eukrea-tlv320.c                      |  125 ++++++++++++=
-+++++---
- 3 files changed, 133 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/eukrea-tlv3=
-20.txt
+ .../bindings/input/touchscreen/tsc2007.txt         |   44 +++++
+ drivers/input/touchscreen/tsc2007.c                |  200 ++++++++++++=
++++-----
+ 2 files changed, 201 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
+/tsc2007.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt =
-b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc200=
+7.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
 new file mode 100644
-index 0000000..8791037
+index 0000000..d67b33f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
-@@ -0,0 +1,23 @@
-+Audio complex for Eukrea boards with tlv320aic23 codec.
++++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+@@ -0,0 +1,44 @@
++* Texas Instruments tsc2007 touchscreen controller
 +
 +Required properties:
-+- compatible : "eukrea,eukrea-tlv320"
-+- model : The user-visible name of this sound complex.
-+- ssi-controller : The phandle of the SSI controller.
-+- audio-codec : The phandle of the tlv320aic23 audio codec.
-+- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
-+- mux-ext-port : The external port of the i.MX audio muxer.
++- compatible: must be "ti,tsc2007".
++- reg: I2C address of the chip.
++- pinctrl-0: Should specify pin control groups used for this controlle=
+r
++  (see pinctrl bindings[0]).
++- pinctrl-names: Should contain only one value - "default"
++  (see pinctrl bindings[0]).
++- interrupt-parent: the phandle for the interrupt controller
++  (see interrupt binding[1]).
++- interrupts: interrupt to which the chip is connected
++  (see interrupt binding[1]).
++- x-plate-ohms: X-plate resistance in ohms.
 +
-+Note: The AUDMUX port numbering should start at 1, which is consistent=
- with
-+hardware manual.
++Optional properties:
++- gpios: the interrupt gpio the chip is connected to (trough the penir=
+q pin)
++  (see GPIO binding[2] for more details).
++- max-rt: maximum pressure.
++- fuzzy: specifies the fuzz value that is used to filter noise from th=
+e event
++  stream.
++- poll-period: how much time to wait(in millisecond) before reading ag=
+ain the
++  values from the tsc2007.
++
++[0]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++[1]: Documentation/devicetree/bindings/interrupt-controller/interrupts=
+=2Etxt
++[2]: Documentation/devicetree/bindings/gpio/gpio.txt
 +
 +Example:
++	&i2c1 {
++		/* ... */
++		tsc2007@49 {
++			compatible =3D "ti,tsc2007";
++			reg =3D <0x49>;
++			pinctrl-names =3D "default";
++			pinctrl-0 =3D <&pinctrl_tsc2007_1>;
++			interrupt-parent =3D <&gpio4>;
++			interrupts =3D <0x0 0x8>;
++			gpios =3D <&gpio4 0 0>;
++			x-plate-ohms =3D <180>;
++		};
 +
-+	sound {
-+		compatible =3D "eukrea,eukrea-tlv320";
-+		model =3D "imx51-eukrea-tlv320aic23";
-+		ssi-controller =3D <&ssi2>;
-+		fsl,audio-codec =3D <&tlv320aic23>;
-+		mux-int-port =3D <2>;
-+		mux-ext-port =3D <3>;
++		/* ... */
 +	};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index b7ab71f..9c3cd64 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -161,12 +161,15 @@ config SND_SOC_EUKREA_TLV320
- 	depends on MACH_EUKREA_MBIMX27_BASEBOARD \
- 		|| MACH_EUKREA_MBIMXSD25_BASEBOARD \
- 		|| MACH_EUKREA_MBIMXSD35_BASEBOARD \
--		|| MACH_EUKREA_MBIMXSD51_BASEBOARD
-+		|| MACH_EUKREA_MBIMXSD51_BASEBOARD \
-+		|| OF
- 	depends on I2C
- 	select SND_SOC_TLV320AIC23
- 	select SND_SOC_IMX_PCM_FIQ
- 	select SND_SOC_IMX_AUDMUX
- 	select SND_SOC_IMX_SSI
-+	select SND_SOC_FSL_SSI
-+	select SND_SOC_IMX_PCM_DMA
- 	help
- 	  Enable I2S based access to the TLV320AIC23B codec attached
- 	  to the SSI interface
-diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv32=
-0.c
-index 9a4a0ca..975af57 100644
---- a/sound/soc/fsl/eukrea-tlv320.c
-+++ b/sound/soc/fsl/eukrea-tlv320.c
-@@ -17,6 +17,8 @@
-=20
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/device.h>
+diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchs=
+creen/tsc2007.c
+index 0b67ba4..b1ab6c0 100644
+--- a/drivers/input/touchscreen/tsc2007.c
++++ b/drivers/input/touchscreen/tsc2007.c
+@@ -26,6 +26,9 @@
+ #include <linux/interrupt.h>
  #include <linux/i2c.h>
- #include <sound/core.h>
-@@ -26,24 +28,33 @@
+ #include <linux/i2c/tsc2007.h>
++#include <linux/of_device.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
 =20
- #include "../codecs/tlv320aic23.h"
- #include "imx-ssi.h"
-+#include "fsl_ssi.h"
- #include "imx-audmux.h"
+ #define TSC2007_MEASURE_TEMP0		(0x0 << 4)
+ #define TSC2007_MEASURE_AUX		(0x2 << 4)
+@@ -74,7 +77,10 @@ struct tsc2007 {
+ 	u16			max_rt;
+ 	unsigned long		poll_delay;
+ 	unsigned long		poll_period;
++	int			fuzzy;
++	char			of;
 =20
- #define CODEC_CLOCK 12000000
++	unsigned		gpio;
+ 	int			irq;
 =20
-+struct eukrea_tlv320 {
-+	char of;
-+};
+ 	wait_queue_head_t	wait;
+@@ -84,6 +90,14 @@ struct tsc2007 {
+ 	void			(*clear_penirq)(void);
+ };
+=20
++static int tsc2007_get_pendown_state_dt(struct tsc2007  *ts)
++{
++	if (gpio_is_valid(ts->gpio))
++		return !gpio_get_value(ts->gpio);
++	else
++		return true;
++}
 +
- static int eukrea_tlv320_hw_params(struct snd_pcm_substream *substream=
-,
- 			    struct snd_pcm_hw_params *params)
+ static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
  {
- 	struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
-+	struct eukrea_tlv320 *priv =3D snd_soc_card_get_drvdata(rtd->card);
- 	struct snd_soc_dai *codec_dai =3D rtd->codec_dai;
- 	struct snd_soc_dai *cpu_dai =3D rtd->cpu_dai;
- 	int ret;
+ 	s32 data;
+@@ -158,6 +172,9 @@ static bool tsc2007_is_pen_down(struct tsc2007 *ts)
+ 	 * to fall back on the pressure reading.
+ 	 */
 =20
--	ret =3D snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
--				  SND_SOC_DAIFMT_NB_NF |
--				  SND_SOC_DAIFMT_CBM_CFM);
--	if (ret) {
--		pr_err("%s: failed set cpu dai format\n", __func__);
--		return ret;
-+	/* fsl_ssi lacks the set_fmt ops. */
-+	if (!priv->of) {
-+		ret =3D snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
-+					  SND_SOC_DAIFMT_NB_NF |
-+					  SND_SOC_DAIFMT_CBM_CFM);
-+		if (ret) {
-+			pr_err("%s: failed set cpu dai format\n", __func__);
-+			return ret;
-+		}
- 	}
++	if (ts->of)
++		return tsc2007_get_pendown_state_dt(ts);
++
+ 	if (!ts->get_pendown_state)
+ 		return true;
 =20
- 	ret =3D snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
-@@ -60,15 +71,18 @@ static int eukrea_tlv320_hw_params(struct snd_pcm_s=
-ubstream *substream,
- 		pr_err("%s: failed setting codec sysclk\n", __func__);
- 		return ret;
- 	}
--	snd_soc_dai_set_tdm_slot(cpu_dai, 0xffffffc, 0xffffffc, 2, 0);
+@@ -175,10 +192,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, void=
+ *handle)
 =20
--	ret =3D snd_soc_dai_set_sysclk(cpu_dai, IMX_SSP_SYS_CLK, 0,
--				SND_SOC_CLOCK_IN);
--	if (ret) {
--		pr_err("can't set CPU system clock IMX_SSP_SYS_CLK\n");
--		return ret;
--	}
-+	/* fsl_ssi lacks the set_sysclk ops */
-+	if (!priv->of) {
-+		snd_soc_dai_set_tdm_slot(cpu_dai, 0xffffffc, 0xffffffc, 2, 0);
+ 		/* pen is down, continue with the measurement */
+ 		tsc2007_read_values(ts, &tc);
+-
+ 		rt =3D tsc2007_calculate_pressure(ts, &tc);
 =20
-+		ret =3D snd_soc_dai_set_sysclk(cpu_dai, IMX_SSP_SYS_CLK, 0,
-+					SND_SOC_CLOCK_IN);
-+		if (ret) {
-+			pr_err("can't set CPU system clock IMX_SSP_SYS_CLK\n");
-+			return ret;
-+		}
+-		if (rt =3D=3D 0 && !ts->get_pendown_state) {
++		if ((ts->of && rt =3D=3D 0 && ts->gpio < 0) ||
++			(!ts->of && rt =3D=3D 0 && !ts->get_pendown_state)) {
+ 			/*
+ 			 * If pressure reported is 0 and we don't have
+ 			 * callback to check pendown state, we have to
+@@ -198,7 +215,6 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *=
+handle)
+ 			input_report_abs(input, ABS_PRESSURE, rt);
+=20
+ 			input_sync(input);
+-
+ 		} else {
+ 			/*
+ 			 * Sample found inconsistent by debouncing or pressure is
+@@ -217,7 +233,6 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *=
+handle)
+ 	input_report_key(input, BTN_TOUCH, 0);
+ 	input_report_abs(input, ABS_PRESSURE, 0);
+ 	input_sync(input);
+-
+ 	if (ts->clear_penirq)
+ 		ts->clear_penirq();
+=20
+@@ -228,11 +243,17 @@ static irqreturn_t tsc2007_hard_irq(int irq, void=
+ *handle)
+ {
+ 	struct tsc2007 *ts =3D handle;
+=20
+-	if (!ts->get_pendown_state || likely(ts->get_pendown_state()))
+-		return IRQ_WAKE_THREAD;
++	if (!ts->of) {
++		if (!ts->get_pendown_state || likely(ts->get_pendown_state()))
++			return IRQ_WAKE_THREAD;
+=20
+-	if (ts->clear_penirq)
+-		ts->clear_penirq();
++		if (ts->clear_penirq)
++			ts->clear_penirq();
++	} else {
++		if ((!gpio_is_valid(ts->gpio)) ||
++		    likely(tsc2007_get_pendown_state_dt(ts)))
++			return IRQ_WAKE_THREAD;
 +	}
- 	return 0;
+=20
+ 	return IRQ_HANDLED;
+ }
+@@ -273,34 +294,64 @@ static void tsc2007_close(struct input_dev *input=
+_dev)
+ 	tsc2007_stop(ts);
  }
 =20
-@@ -80,7 +94,6 @@ static struct snd_soc_dai_link eukrea_tlv320_dai =3D =
-{
- 	.name		=3D "tlv320aic23",
- 	.stream_name	=3D "TLV320AIC23",
- 	.codec_dai_name	=3D "tlv320aic23-hifi",
--	.platform_name	=3D "imx-ssi.0",
- 	.codec_name	=3D "tlv320aic23-codec.0-001a",
- 	.cpu_dai_name	=3D "imx-ssi.0",
- 	.ops		=3D &eukrea_tlv320_snd_ops,
-@@ -97,8 +110,56 @@ static int eukrea_tlv320_probe(struct platform_devi=
-ce *pdev)
+-static int tsc2007_probe(struct i2c_client *client,
+-				   const struct i2c_device_id *id)
++#ifdef CONFIG_OF
++static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 =
+*ts,
++			    struct device_node *np)
  {
- 	int ret;
- 	int int_port =3D 0, ext_port;
-+	struct platform_device *ssi_pdev;
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct device_node *ssi_np;
-+	struct eukrea_tlv320 *priv;
+-	struct tsc2007 *ts;
+-	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
+-	struct input_dev *input_dev;
+-	int err;
+-
+-	if (!pdata) {
+-		dev_err(&client->dev, "platform data is required!\n");
++	int err =3D 0;
++	u32 val32;
++	u64 val64;
 +
-+	priv =3D devm_kzalloc(&pdev->dev,
-+				sizeof(struct eukrea_tlv320), GFP_KERNEL);
-+	if (priv =3D=3D NULL)
++	if (!of_property_read_u32(np, "max-rt", &val32))
++		ts->max_rt =3D val32;
++	else
++		ts->max_rt =3D MAX_12BIT;
++
++	if (!of_property_read_u32(np, "fuzzy", &val32))
++		ts->fuzzy =3D val32;
++
++	if (!of_property_read_u64(np, "poll-period", &val64))
++		ts->poll_period =3D val64;
++	else
++		ts->poll_period =3D 1;
++
++	if (!of_property_read_u32(np, "x-plate-ohms", &val32)) {
++		ts->x_plate_ohms =3D val32;
++	} else {
++		dev_err(&client->dev,
++			"x-plate-ohms is not set up in the devicetree."
++			" (err %d).", err);
+ 		return -EINVAL;
+ 	}
+=20
+-	if (!i2c_check_functionality(client->adapter,
+-				     I2C_FUNC_SMBUS_READ_WORD_DATA))
+-		return -EIO;
++	ts->gpio =3D of_get_gpio(np, 0);
++	if (!gpio_is_valid(ts->gpio))
++		dev_err(&client->dev, "GPIO not found "
++			"(of_get_gpio returned %d)\n", ts->gpio);
+=20
+-	ts =3D kzalloc(sizeof(struct tsc2007), GFP_KERNEL);
+-	input_dev =3D input_allocate_device();
+-	if (!ts || !input_dev) {
+-		err =3D -ENOMEM;
+-		goto err_free_mem;
+-	}
++	/* Used to detect if it is probed trough the device tree,
++	 * in order to be able to use that information in the IRQ handler.
++	 */
++	ts->of =3D 1;
+=20
+-	ts->client =3D client;
+-	ts->irq =3D client->irq;
+-	ts->input =3D input_dev;
+-	init_waitqueue_head(&ts->wait);
++	return 0;
++}
++#else
++static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 =
+*ts,
++			    struct device_node *np)
++{
++	return -ENODEV;
++}
++#endif
++
++static int tsc2007_probe_pdev(struct i2c_client *client, struct tsc200=
+7 *ts,
++			      struct tsc2007_platform_data *pdata,
++			      const struct i2c_device_id *id)
++{
++	if (!pdata) {
++		dev_err(&client->dev, "platform data is required!\n");
++		return -EINVAL;
++	}
+=20
+ 	ts->model             =3D pdata->model;
+ 	ts->x_plate_ohms      =3D pdata->x_plate_ohms;
+@@ -309,13 +360,59 @@ static int tsc2007_probe(struct i2c_client *clien=
+t,
+ 	ts->poll_period       =3D pdata->poll_period ? : 1;
+ 	ts->get_pendown_state =3D pdata->get_pendown_state;
+ 	ts->clear_penirq      =3D pdata->clear_penirq;
++	ts->fuzzy             =3D pdata->fuzzy;
+=20
+ 	if (pdata->x_plate_ohms =3D=3D 0) {
+ 		dev_err(&client->dev, "x_plate_ohms is not set up in platform data")=
+;
+-		err =3D -EINVAL;
++		return -EINVAL;
++	}
++
++	/* Used to detect if it is probed trough the device tree,
++	 * in order to be able to use that information in the IRQ handler.
++	 */
++	ts->of =3D 0;
++
++	return 0;
++}
++
++static int tsc2007_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct device_node *np =3D client->dev.of_node;
++	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
++	struct tsc2007 *ts;
++	struct input_dev *input_dev;
++	int err =3D 0;
++
++	ts =3D kzalloc(sizeof(struct tsc2007), GFP_KERNEL);
++	if (!ts)
 +		return -ENOMEM;
 +
-+	if (np) {
-+		ssi_np =3D of_parse_phandle(pdev->dev.of_node,
-+					  "ssi-controller", 0);
-+		ssi_pdev =3D of_find_device_by_node(ssi_np);
-+		if (!ssi_pdev) {
-+			dev_err(&pdev->dev, "ssi-controller missing or "
-+				"invalid.\n");
-+			ret =3D -ENODEV;
-+			goto err;
-+		}
++	if (np)
++		err =3D tsc2007_probe_dt(client, ts, np);
++	else
++		err =3D tsc2007_probe_pdev(client, ts, pdata, id);
 +
-+		ret =3D of_property_read_u32(np, "mux-int-port", &int_port);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"mux-int-port missing or invalid\n");
-+			return ret;
-+		}
-+		ret =3D of_property_read_u32(np, "mux-ext-port", &ext_port);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"mux-ext-port missing or invalid\n");
-+			return ret;
-+		}
++	if (err)
++		goto err_free_mem;
 +
-+		/*
-+		 * The port numbering in the hardware manual starts at 1, while
-+		 * the audmux API expects it starts at 0.
-+		 */
-+		int_port--;
-+		ext_port--;
-+
-+		eukrea_tlv320_dai.cpu_dai_name =3D dev_name(&ssi_pdev->dev);
-+		eukrea_tlv320_dai.platform_of_node =3D ssi_np;
-+		priv->of =3D 1;
-+	} else {
-+		eukrea_tlv320_dai.platform_name =3D "imx-ssi.0";
-+	}
-=20
--	if (machine_is_eukrea_cpuimx27()) {
-+	if (machine_is_eukrea_cpuimx27() ||
-+	    of_find_compatible_node(NULL, NULL, "fsl,imx21-audmux")) {
- 		imx_audmux_v1_configure_port(MX27_AUDMUX_HPCR1_SSI0,
- 			IMX_AUDMUX_V1_PCR_SYN |
- 			IMX_AUDMUX_V1_PCR_TFSDIR |
-@@ -115,8 +176,12 @@ static int eukrea_tlv320_probe(struct platform_dev=
-ice *pdev)
- 		);
- 	} else if (machine_is_eukrea_cpuimx25sd() ||
- 		   machine_is_eukrea_cpuimx35sd() ||
--		   machine_is_eukrea_cpuimx51sd()) {
--		ext_port =3D machine_is_eukrea_cpuimx25sd() ? 4 : 3;
-+		   machine_is_eukrea_cpuimx51sd() ||
-+		   of_find_compatible_node(NULL, NULL, "fsl,imx31-audmux")) {
-+		if (!np)
-+			ext_port =3D machine_is_eukrea_cpuimx25sd() ?
-+				4 : 3;
-+
- 		imx_audmux_v2_configure_port(int_port,
- 			IMX_AUDMUX_V2_PTCR_SYN |
- 			IMX_AUDMUX_V2_PTCR_TFSDIR |
-@@ -130,14 +195,29 @@ static int eukrea_tlv320_probe(struct platform_de=
-vice *pdev)
- 			IMX_AUDMUX_V2_PDCR_RXDSEL(int_port)
- 		);
- 	} else {
--		/* return happy. We might run on a totally different machine */
--		return 0;
-+		if (np) {
-+			/* The eukrea,eukrea-tlv320 driver was explicitely
-+			 * requested (through the device tree).
-+			 */
-+			dev_err(&pdev->dev,
-+				"Missing audmux DT node.\n");
-+			return -ENODEV;
-+		} else {
-+			/* Return happy.
-+			 * We might run on a totally different machine.
-+			 */
-+			return 0;
-+		}
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_READ_WORD_DATA)) {
++		err =3D -EIO;
+ 		goto err_free_mem;
  	}
 =20
- 	eukrea_tlv320.dev =3D &pdev->dev;
-+	snd_soc_card_set_drvdata(&eukrea_tlv320, priv);
- 	ret =3D snd_soc_register_card(&eukrea_tlv320);
-+err:
- 	if (ret)
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-+	if (np)
-+		of_node_put(ssi_np);
-=20
- 	return ret;
- }
-@@ -149,10 +229,17 @@ static int eukrea_tlv320_remove(struct platform_d=
-evice *pdev)
- 	return 0;
- }
-=20
-+static const struct of_device_id imx_tlv320_dt_ids[] =3D {
-+	{ .compatible =3D "eukrea,eukrea-tlv320"},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_tlv320_dt_ids);
++	input_dev =3D input_allocate_device();
++	if (!input_dev) {
++		err =3D -ENOMEM;
++		goto err_free_input;
++	};
 +
- static struct platform_driver eukrea_tlv320_driver =3D {
++	ts->client =3D client;
++	ts->irq =3D client->irq;
++	ts->input =3D input_dev;
++	init_waitqueue_head(&ts->wait);
++
+ 	snprintf(ts->phys, sizeof(ts->phys),
+ 		 "%s/input0", dev_name(&client->dev));
+=20
+@@ -331,19 +428,21 @@ static int tsc2007_probe(struct i2c_client *clien=
+t,
+ 	input_dev->evbit[0] =3D BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+ 	input_dev->keybit[BIT_WORD(BTN_TOUCH)] =3D BIT_MASK(BTN_TOUCH);
+=20
+-	input_set_abs_params(input_dev, ABS_X, 0, MAX_12BIT, pdata->fuzzx, 0)=
+;
+-	input_set_abs_params(input_dev, ABS_Y, 0, MAX_12BIT, pdata->fuzzy, 0)=
+;
++	input_set_abs_params(input_dev, ABS_X, 0, MAX_12BIT, ts->fuzzy, 0);
++	input_set_abs_params(input_dev, ABS_Y, 0, MAX_12BIT, ts->fuzzy, 0);
+ 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, MAX_12BIT,
+-			pdata->fuzzz, 0);
++			     ts->fuzzy, 0);
+=20
+-	if (pdata->init_platform_hw)
+-		pdata->init_platform_hw();
++	if (!np) {
++		if (pdata->init_platform_hw)
++			pdata->init_platform_hw();
++	}
+=20
+ 	err =3D request_threaded_irq(ts->irq, tsc2007_hard_irq, tsc2007_soft_=
+irq,
+ 				   IRQF_ONESHOT, client->dev.driver->name, ts);
+ 	if (err < 0) {
+ 		dev_err(&client->dev, "irq %d busy?\n", ts->irq);
+-		goto err_free_mem;
++		goto err_free_input;
+ 	}
+=20
+ 	tsc2007_stop(ts);
+@@ -358,23 +457,29 @@ static int tsc2007_probe(struct i2c_client *clien=
+t,
+=20
+  err_free_irq:
+ 	free_irq(ts->irq, ts);
+-	if (pdata->exit_platform_hw)
+-		pdata->exit_platform_hw();
+- err_free_mem:
++	if (!np) {
++		if (pdata->exit_platform_hw)
++			pdata->exit_platform_hw();
++	}
++ err_free_input:
+ 	input_free_device(input_dev);
++ err_free_mem:
+ 	kfree(ts);
+ 	return err;
+ }
+=20
+ static int tsc2007_remove(struct i2c_client *client)
+ {
++	struct device_node *np =3D client->dev.of_node;
+ 	struct tsc2007	*ts =3D i2c_get_clientdata(client);
+ 	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
+=20
+ 	free_irq(ts->irq, ts);
+=20
+-	if (pdata->exit_platform_hw)
+-		pdata->exit_platform_hw();
++	if (!np) {
++		if (pdata->exit_platform_hw)
++			pdata->exit_platform_hw();
++	}
+=20
+ 	input_unregister_device(ts->input);
+ 	kfree(ts);
+@@ -389,10 +494,19 @@ static const struct i2c_device_id tsc2007_idtable=
+[] =3D {
+=20
+ MODULE_DEVICE_TABLE(i2c, tsc2007_idtable);
+=20
++#ifdef CONFIG_OF
++static const struct of_device_id tsc2007_of_match[] =3D {
++	{ .compatible =3D "ti,tsc2007" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tsc2007_of_match);
++#endif
++
+ static struct i2c_driver tsc2007_driver =3D {
  	.driver =3D {
- 		.name =3D "eukrea_tlv320",
- 		.owner =3D THIS_MODULE,
-+		.of_match_table =3D imx_tlv320_dt_ids,
+ 		.owner	=3D THIS_MODULE,
+-		.name	=3D "tsc2007"
++		.name	=3D "tsc2007",
++		.of_match_table =3D of_match_ptr(tsc2007_of_match),
  	},
- 	.probe =3D eukrea_tlv320_probe,
- 	.remove =3D eukrea_tlv320_remove,};
+ 	.id_table	=3D tsc2007_idtable,
+ 	.probe		=3D tsc2007_probe,
 --=20
 1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
