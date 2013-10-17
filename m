@@ -1,353 +1,157 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Thu, 17 Oct 2013 12:45:29 +0200
-Message-ID: <525FBFC9.70004@linaro.org>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com> <1381763305-7085-4-git-send-email-v.tyrtov@samsung.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 17 Oct 2013 12:48:57 +0200
+Message-ID: <20131017104856.GA10993@ulmo.nvidia.com>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com>
+ <1381947912-11741-3-git-send-email-treding@nvidia.com>
+ <1695169.rzbDl9PeRX@avalon>
+ <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com>
+ <525FA4B0.8060504@ti.com>
+ <20131017091614.GC2502@ulmo.nvidia.com>
+ <525FB368.6020003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381763305-7085-4-git-send-email-v.tyrtov@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <525FB368.6020003-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2013 05:08 PM, Vyacheslav Tyrtov wrote:
-> From: Tarek Dakhran <t.dakhran@samsung.com>
->
-> Add EDCS(Exynos Dual Cluster Support) for Samsung Exynos5410 SoC.
-> This enables all 8 cores, 4 x A7 and 4 x A15 run at the same time.
 
-IIUC, the 5410 has a CCI-400 bug preventing to use the two clusters at=20
-the same time. Right ? Could you explain how you fixed it ?
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> ---
->   arch/arm/mach-exynos/Makefile |   2 +
->   arch/arm/mach-exynos/edcs.c   | 270 +++++++++++++++++++++++++++++++=
-+++++++++++
->   2 files changed, 272 insertions(+)
->   create mode 100644 arch/arm/mach-exynos/edcs.c
->
-> diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Mak=
-efile
-> index 5369615..ba6efdb 100644
-> --- a/arch/arm/mach-exynos/Makefile
-> +++ b/arch/arm/mach-exynos/Makefile
-> @@ -34,3 +34,5 @@ AFLAGS_exynos-smc.o		:=3D-Wa,-march=3Darmv7-a$(plus=
-_sec)
->
->   obj-$(CONFIG_MACH_EXYNOS4_DT)		+=3D mach-exynos4-dt.o
->   obj-$(CONFIG_MACH_EXYNOS5_DT)		+=3D mach-exynos5-dt.o
-> +
-> +obj-$(CONFIG_SOC_EXYNOS5410)		+=3D edcs.o
-> diff --git a/arch/arm/mach-exynos/edcs.c b/arch/arm/mach-exynos/edcs.=
-c
-> new file mode 100644
-> index 0000000..e304bd9
-> --- /dev/null
-> +++ b/arch/arm/mach-exynos/edcs.c
-> @@ -0,0 +1,270 @@
-> +/*
-> + * arch/arm/mach-exynos/edcs.c - exynos dual cluster power managemen=
-t support
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Tarek Dakhran <t.dakhran@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * EDCS(exynos dual cluster support) for Exynos5410 SoC.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/errno.h>
-> +
-> +#include <asm/mcpm.h>
-> +#include <asm/proc-fns.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/cputype.h>
-> +#include <asm/cp15.h>
-> +
-> +#include <linux/arm-cci.h>
-> +#include <mach/regs-pmu.h>
-> +
-> +#define EDCS_CPUS_PER_CLUSTER	4
-> +#define EDCS_CLUSTERS		2
-> +
-> +/* Exynos5410 power management registers */
-> +#define EDCS_CORE_CONFIGURATION(_nr)	(S5P_ARM_CORE0_CONFIGURATION	\
-> +						+ ((_nr) * 0x80))
-> +#define EDCS_CORE_STATUS(_nr)		(EDCS_CORE_CONFIGURATION(_nr) + 0x4)
-> +#define EDCS_CORE_OPTION(_nr)		(EDCS_CORE_CONFIGURATION(_nr) + 0x8)
-> +
-> +#define REG_CPU_STATE_ADDR0		(S5P_VA_SYSRAM_NS + 0x28)
-> +#define REG_CPU_STATE_ADDR(_nr)		(REG_CPU_STATE_ADDR0 +	\
-> +						 _nr * EDCS_CPUS_PER_CLUSTER)
-> +
-> +static arch_spinlock_t edcs_lock =3D __ARCH_SPIN_LOCK_UNLOCKED;
-> +
-> +static int edcs_use_count[EDCS_CPUS_PER_CLUSTER][EDCS_CLUSTERS];
-> +static int core_count[EDCS_CLUSTERS];
-> +
-> +static void exynos_core_power_control(unsigned int cpu, unsigned int=
- cluster,
-> +				bool enable)
-> +{
-> +	unsigned int offset =3D cluster * EDCS_CPUS_PER_CLUSTER + cpu;
-> +	int value =3D enable ? S5P_CORE_LOCAL_PWR_EN : 0;
-> +
-> +	if ((__raw_readl(EDCS_CORE_STATUS(offset)) & 0x3) !=3D value)
-> +		__raw_writel(value, EDCS_CORE_CONFIGURATION(offset));
-> +}
-> +
-> +static void exynos_core_power_up(unsigned int cpu, unsigned int clus=
-ter)
-> +{
-> +	exynos_core_power_control(cpu, cluster, true);
-> +}
-> +
-> +static void exynos_core_power_down(unsigned int cpu, unsigned int cl=
-uster)
-> +{
-> +	exynos_core_power_control(cpu, cluster, false);
-> +}
-> +
-> +void set_boot_flag(unsigned int cpu, unsigned int mode)
-> +{
-> +	__raw_writel(mode, REG_CPU_STATE_ADDR(cpu));
-> +}
-> +
-> +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
-> +{
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >=3D EDCS_CPUS_PER_CLUSTER || cluster >=3D EDCS_CLUSTERS=
-);
-> +
-> +	local_irq_disable();
-> +	arch_spin_lock(&edcs_lock);
-> +
-> +	edcs_use_count[cpu][cluster]++;
-> +	if (edcs_use_count[cpu][cluster] =3D=3D 1) {
-> +		++core_count[cluster];
-> +		set_boot_flag(cpu, 0x2);
-> +		exynos_core_power_up(cpu, cluster);
-> +	} else if (edcs_use_count[cpu][cluster] !=3D 2) {
-> +		/*
-> +		 * The only possible values are:
-> +		 * 0 =3D CPU down
-> +		 * 1 =3D CPU (still) up
-> +		 * 2 =3D CPU requested to be up before it had a chance
-> +		 *     to actually make itself down.
-> +		 * Any other value is a bug.
-> +		 */
-> +		BUG();
-> +	}
-> +
-> +	arch_spin_unlock(&edcs_lock);
-> +	local_irq_enable();
-> +
-> +	return 0;
-> +}
-> +static void exynos_power_down(void)
-> +{
-> +	unsigned int mpidr, cpu, cluster;
-> +	bool last_man =3D false, skip_wfi =3D false;
-> +
-> +	mpidr =3D read_cpuid_mpidr();
-> +	cpu =3D MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +	cluster =3D MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >=3D EDCS_CPUS_PER_CLUSTER  || cluster >=3D EDCS_CLUSTER=
-S);
-> +
-> +	__mcpm_cpu_going_down(cpu, cluster);
-> +
-> +	arch_spin_lock(&edcs_lock);
-> +	BUG_ON(__mcpm_cluster_state(cluster) !=3D CLUSTER_UP);
-> +	edcs_use_count[cpu][cluster]--;
-> +	if (edcs_use_count[cpu][cluster] =3D=3D 0) {
-> +		--core_count[cluster];
-> +		if (core_count[cluster] =3D=3D 0)
-> +			last_man =3D true;
-> +	} else if (edcs_use_count[cpu][cluster] =3D=3D 1) {
-> +		/*
-> +		 * A power_up request went ahead of us.
-> +		 * Even if we do not want to shut this CPU down,
-> +		 * the caller expects a certain state as if the WFI
-> +		 * was aborted.  So let's continue with cache cleaning.
-> +		 */
-> +		skip_wfi =3D true;
-> +	} else
-> +		BUG();
-> +
-> +	if (last_man && __mcpm_outbound_enter_critical(cpu, cluster)) {
-> +		arch_spin_unlock(&edcs_lock);
-> +
-> +		if (read_cpuid_part_number() =3D=3D ARM_CPU_PART_CORTEX_A15) {
-> +			/*
-> +			 * On the Cortex-A15 we need to disable
-> +			 * L2 prefetching before flushing the cache.
-> +			 */
-> +			asm volatile(
-> +			"mcr	p15, 1, %0, c15, c0, 3\n\t"
-> +			"isb\n\t"
-> +			"dsb"
-> +			: : "r" (0x400));
-> +		}
-> +
-> +		/*
-> +		 * We need to disable and flush the whole (L1 and L2) cache.
-> +		 * Let's do it in the safest possible way i.e. with
-> +		 * no memory access within the following sequence
-> +		 * including the stack.
-> +		 *
-> +		 * Note: fp is preserved to the stack explicitly prior doing
-> +		 * this since adding it to the clobber list is incompatible
-> +		 * with having CONFIG_FRAME_POINTER=3Dy.
-> +		 */
-> +		asm volatile(
-> +		"str	fp, [sp, #-4]!\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 0	@ get CR\n\t"
-> +		"bic	r0, r0, #"__stringify(CR_C)"\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 0	@ set CR\n\t"
-> +		"isb\n\t"
-> +		"bl	v7_flush_dcache_all\n\t"
-> +		"clrex\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 1	@ get AUXCR\n\t"
-> +		"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 1	@ set AUXCR\n\t"
-> +		"isb\n\t"
-> +		"dsb\n\t"
-> +		"ldr	fp, [sp], #4"
-> +		: : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-> +			"r9", "r10", "lr", "memory");
-> +
-> +		cci_disable_port_by_cpu(mpidr);
-> +
-> +		__mcpm_outbound_leave_critical(cluster, CLUSTER_DOWN);
-> +
-> +	} else {
-> +		arch_spin_unlock(&edcs_lock);
-> +		/*
-> +			* We need to disable and flush only the L1 cache.
-> +			* Let's do it in the safest possible way as above.
-> +		*/
-> +		asm volatile(
-> +		"str	fp, [sp, #-4]!\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 0	@ get CR\n\t"
-> +		"bic	r0, r0, #"__stringify(CR_C)"\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 0	@ set CR\n\t"
-> +		"isb\n\t"
-> +		"bl	v7_flush_dcache_louis\n\t"
-> +		"clrex\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 1	@ get AUXCR\n\t"
-> +		"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 1	@ set AUXCR\n\t"
-> +		"isb\n\t"
-> +		"dsb\n\t"
-> +		"ldr	fp, [sp], #4"
-> +		: : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-> +		      "r9", "r10", "lr", "memory");
-> +
-> +	}
-> +	__mcpm_cpu_down(cpu, cluster);
-> +
-> +	if (!skip_wfi) {
-> +		exynos_core_power_down(cpu, cluster);
-> +		wfi();
-> +	}
-> +}
+On Thu, Oct 17, 2013 at 12:52:40PM +0300, Tomi Valkeinen wrote:
+> On 17/10/13 12:16, Thierry Reding wrote:
+> > On Thu, Oct 17, 2013 at 11:49:52AM +0300, Tomi Valkeinen wrote:
+>=20
+> >> Just my opinion, but yes, DT is that inflexible. DT bindings are like a
+> >> syscall. Once they are there, you need to support them forever. That
+> >> support can, of course, include some kind of DT data converters or suc=
+h,
+> >> that try to convert old bindings to new bindings at kernel boot.
+> >=20
+> > That's not entirely true. DT bindings are allowed to change, the only
+> > restriction being that they don't break backwards compatibility. So if
+>=20
+> True, but afaik the same goes for syscalls. But yes, it's probably
+> easier to add, say, new properties to DT bindings than adding new flags
+> to a syscall.
+>=20
+> > Am I the only one refusing to accept that we can't provide even the most
+> > basic functionality simply because we haven't been able to come up with
+> > the ultimately "perfect" DT binding yet? By definition it's not very
+> > likely that any binding will ever be perfect.
+>=20
+> With "perfect" I meant without any obvious features missing. I agree
+> that DT bindings will never be perfect, but I at least would like them
+> to be good enough to cover all the cases we know of.
 
-I did not looked line by line but these functions looks very similar=20
-than the tc2_pm.c's function. no ?
+As far as the simple panel device tree binding is concerned, it covers
+all the cases I know of. I can't seriously be expected to do any better
+than that. These panels are dumb. They only come with a power supply
+that needs to be switched on and an additional GPIO to enable it once
+powered up. All three panels just work with that set of properties. So
+anything that doesn't can arguably be covered by some other, not-so-
+simple binding.
 
-May be some code consolidation could be considered here.
+> > I don't think we're doing ourselves any good by letting DT actively
+> > hinder us in merging any of these features. I would personally prefer
+> > having to support several bindings rather than not be able to provide
+> > the functionality at all.
+>=20
+> I'd say the driver writer is of course free to create basic bindings for
+> the device in question as long as the bindings are sane, and he agrees
+> to later create any needed converters. I don't see any problem with
+> having a driver supporting several versions of the bindings.
+>=20
+> But I don't think it's fair to push a driver with basic bindings,
+> knowing that the bindings won't be enough in the future, and leave all
+> the converter-mess to other people (not saying that's the case here).
+>=20
+> As a fbdev maintainer, I'm ok with adding DT bindings to device specific
+> fb drivers, as those can be just left as they are. Even when CDF is
+> merged, the specific fb drivers just work with the old bindings. If the
+> driver maintainer wants to use CDF, it's up to him to create any needed
+> binding-converters.
+>=20
+> But a generic driver for panels is more problematic, as that one should
+> be maintained and refreshed to new features like CDF. If such was
+> proposed to be merged to fbdev, I'd be very reluctant to merge it if
+> there were any concerns about it.
 
-Added Nico and Lorenzo in Cc.
+I'm still missing the point here. For one, I don't see any reason that
+this driver would ever need to gain CDF support. At the same time, CDF
+could easily be supported by just adding a few required properties and
+it should be easy to support any non-CDF cases just as well to remain
+backwards-compatible.
 
-Thanks
-   -- Daniel
+> I guess one option there would be to implement a new driver for the same
+> panel devices, one that supports CDF, and leave the old one as is. Not
+> so nice option, though.
 
-> +static const struct mcpm_platform_ops exynos_power_ops =3D {
-> +	.power_up	=3D exynos_power_up,
-> +	.power_down	=3D exynos_power_down,
-> +};
-> +
-> +static void __init edcs_data_init(void)
-> +{
-> +	unsigned int mpidr, cpu, cluster;
-> +
-> +	mpidr =3D read_cpuid_mpidr();
-> +	cpu =3D MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +	cluster =3D MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >=3D EDCS_CPUS_PER_CLUSTER  || cluster >=3D EDCS_CLUSTER=
-S);
-> +	edcs_use_count[cpu][cluster] =3D 1;
-> +	++core_count[cluster];
-> +}
-> +
-> +/*
-> + * Enable cluster-level coherency, in preparation for turning on the=
- MMU.
-> + */
-> +static void __naked edcs_power_up_setup(unsigned int affinity_level)
-> +{
-> +	asm volatile ("\n"
-> +	"b	cci_enable_port_for_self");
-> +}
-> +
-> +static int __init edcs_init(void)
-> +{
-> +	int ret;
-> +	struct device_node *node;
-> +
-> +	node =3D of_find_compatible_node(NULL, NULL, "samsung,exynos5410");
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	if (!cci_probed())
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Future entries into the kernel can now go
-> +	 * through the cluster entry vectors.
-> +	 */
-> +	__raw_writel(virt_to_phys(mcpm_entry_point),
-> +				S5P_VA_SYSRAM_NS + 0x1c);
-> +
-> +	edcs_data_init();
-> +	mcpm_smp_set_ops();
-> +
-> +	ret =3D mcpm_platform_register(&exynos_power_ops);
-> +	if (!ret) {
-> +		mcpm_sync_init(edcs_power_up_setup);
-> +		pr_info("EDCS power management initialized\n");
-> +	}
-> +	return ret;
-> +}
-> +
-> +early_initcall(edcs_init);
->
+As I said, anything that really needs a CDF binding to work likely isn't
+"simple" anymore, therefore a separate driver can easily be justified.
 
+> > For crying out loud, we can use the 3D engine to render to a framebuffer
+> > but we can't look at the result because we can't make the bloody panel
+> > light up! Seriously!?
+>=20
+> Ah, but do you have DT bindings for the 3D engine yet, which represent
+> how different internal blocks in the 3D engine are connected? If not,
+> better start designing it! Then the problem is solved, you won't even
+> have working 3D engine. ;)
+>=20
+> But seriously speaking, I'm with you. I don't get this DT stuff.
+>=20
+> And the funny thing is, DT should just represent the hardware, it
+> doesn't matter what kind of SW drivers there are, so in a sense talking
+> about DT problems with a SW framework like CDF is a bit silly. How hard
+> can it be to describe the hardware properly?
+>=20
+> Very, obviously =3D).
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+Indeed. The fundamental point here seems to be that we don't represent
+things in DT which we don't need. In the same way that we don't add
+device nodes for enumerable devices, why would we need to explicitly add
+information about connections between devices that cannot be controlled
+anyway. If the board connects an RGB/LVDS output to a panel directly, it
+is only required that the output knows what it is connected to because
+there is no other way besides DT to obtain any information about the
+panel. Therefore a unidirectional connection is more than enough. Using
+that the output can access the panel and query it for information such
+as the mode timings as well as switch it on or off as required.
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thierry
 
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSX8CYAAoJEN0jrNd/PrOhvEEP/3a8D2hEBTpPn5Ekgvf7oDCc
+fgHcKZbrRAYZ4Hrbnucw4/XTPhE6m4zvvRF479FLFIJn/iu/7BnT/DB/kZz5SbEu
+7AtUhBevZU67lj2mE+x9URHBuvbvXjDg1Ah0M6Y3SkGrVnADsrMppQzS75Nxb9nU
+U8f1tezAXUGnqNWNfTxuDclgXZqSuQ9b9Ivx7AwbZI3QRW7Mi/nlfnyHHd5pR+j5
+5gUtOWYUacNVVXCDzxcGU9JaiMA22fnbBS/fuswl9M9levVr6mXGQ/E+kpFGJX4q
+guXMc87dcAeinFEet8YiSdISFO0agPXRohgKZqEJx+u0PvxTO613TSCTvFRCqTu2
+NmDzL4mGI06jJf+NBGPwf+xPIoiFC4QgeB/eETx+CnN4iFhhwmYOZIvnWjA0/H/3
+kRpOTKJDmxkAjTa3oEY0HZuUvjh7C0QzqrzDeGXlRyPhaQ5C9rm1S2TgTm8miT0E
+g2JStlhWsbxDjBzTlKz8LK27+q71TopgnnUoLpbl7jjuZC1lOxXfYRgdd0jNzYbK
+jppmJ/S8fYxMxSh63fmXIFGiKqUUkswURnE6S0499zBFh8o7Jju3DN6L7Md1YHWT
+StvzcA5/HlWgej/7Rp1YgSemhI8mMUW9QH3HAK5c7Iww6W6IG43VGTy32Otr4/j1
+qtu5IvDvZYs9Skf2+rCV
+=yNef
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
