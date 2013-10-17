@@ -1,58 +1,46 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
-Date: Thu, 17 Oct 2013 09:52:42 +0200
-Message-ID: <20131017095242.155725b6@ipc1.ka-ro>
-References: <1381939443-7318-1-git-send-email-aida.mynzhasova@skitlab.ru>
+From: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 17 Oct 2013 09:28:23 +0100
+Message-ID: <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com>
+	<1381947912-11741-3-git-send-email-treding@nvidia.com>
+	<1695169.rzbDl9PeRX@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1381939443-7318-1-git-send-email-aida.mynzhasova@skitlab.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1695169.rzbDl9PeRX@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpBaWRhIE15bnpoYXNvdmEgPGFpZGEubXluemhhc292YUBza2l0bGFiLnJ1PiB3cm90ZToK
-PiBBZGQgYXVhcnQyIHBpbnMgY29uZmlndXJhdGlvbiBvbiBpdHMgbWFpbiBwYWRzCj4gCj4gU2ln
-bmVkLW9mZi1ieTogQWlkYSBNeW56aGFzb3ZhIDxhaWRhLm15bnpoYXNvdmFAc2tpdGxhYi5ydT4K
-PiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14MjguZHRzaSB8IDEzICsrKysrKysrKysrKysK
-PiAgMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14MjguZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LmR0c2kK
-PiBpbmRleCA3MzYzZmRlLi44MTEwMmIyIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDI4LmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyOC5kdHNpCj4gQEAgLTMy
-MCw2ICszMjAsMTkgQEAKPiAgCQkJCQlmc2wscHVsbC11cCA9IDwwPjsKPiAgCQkJCX07Cj4gIAo+
-ICsJCQkJYXVhcnQyX3BpbnNfYTogYXVhcnQyQDAgewo+ICsJCQkJCXJlZyA9IDwwPjsKPiArCQkJ
-CQlmc2wscGlubXV4LWlkcyA9IDwKPiArCQkJCQkJMHgzMDgwIC8qIE1YMjhfUEFEX0FVQVJUMl9S
-WF9fQVVBUlQyX1JYCSovCj4gKwkJCQkJCTB4MzA5MCAvKiBNWDI4X1BBRF9BVUFSVDJfVFhfX0FV
-QVJUMl9UWCAqLwo+ICsJCQkJCQkweDMwYTAgLyogTVgyOF9QQURfQVVBUlQyX0NUU19fQVVBUlQy
-X0NUUyAqLwo+ICsJCQkJCQkweDMwYjAgLyogTVgyOF9QQURfQVVBUlQyX1JUU19fQVVBUlQyX1JU
-UyAqLwo+ClNpbmNlIGNvbW1pdCAyNzU3MmEyZiBBUk06IGR0czogbXhzOiBhZGQgcGluY3RybCBo
-ZWFkZXIgZmlsZXMKaXQgaXMgbm8gbG9uZ2VyIG5lY2Vzc2FyeSB0byBzcGVjaWZ5IHRoZSBwYWRj
-b25maWcgdmFsdWVzIGFzIG51bWJlcnMuCllvdSBzaG91bGQgdXNlIHRoZSBzeW1ib2xpYyBuYW1l
-cyBpbnN0ZWFkLgoKPiArCQkJCQk+Owo+ICsJCQkJCWZzbCxkcml2ZS1zdHJlbmd0aCA9IDwwPjsK
-PiArCQkJCQlmc2wsdm9sdGFnZSA9IDwxPjsKPiArCQkJCQlmc2wscHVsbC11cCA9IDwwPjsKQWxz
-byB0aGVzZSBzaG91bGQgYmU6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBmc2wsZHJpdmUtc3RyZW5ndGggPSA8TVhTX0RSSVZFXzRtQT47CiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBmc2wsdm9sdGFnZSA9IDxNWFNfVk9MVEFHRV9ISUdIPjsK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZzbCxwdWxsLXVwID0gPE1Y
-U19QVUxMX0RJU0FCTEU+OwoKWW91IHByb2JhYmx5IHNob3VsZCByZWJhc2UgeW91ciBwYXRjaCB0
-byBhIG1vcmUgcmVjZW50IHZlcnNpb24gb2YKbGludXgtbmV4dC4KCgpMb3RoYXIgV2HDn21hbm4K
-LS0gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCgpLYS1SbyBlbGVjdHJvbmljcyBHbWJIIHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1
-MjA3NiBBYWNoZW4KUGhvbmU6ICs0OSAyNDA4IDE0MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0x
-MApHZXNjaMOkZnRzZsO8aHJlcjogTWF0dGhpYXMgS2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50
-cmFnOiBBbXRzZ2VyaWNodCBBYWNoZW4sIEhSQiA0OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5k
-ZSB8IGluZm9Aa2Fyby1lbGVjdHJvbmljcy5kZQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+>
+> My biggest concern here is that this will not be compatible with the CDF DT
+> bindings. They're not complete yet, but they will require connections between
+> entities to be described in DT, in a way very similar (or actually identical)
+> to the V4L2 DT bindings, documented in
+> Documentation/devicetree/bindings/media/video-interfaces.txt. Could you have a
+> look at that ? Please ignore all optional properties beside remote-endpoint,
+> as they're V4L2 specific.
+>
+> I also plan to specify video bus parameters in DT for CDF, but this hasn't
+> been finalized yet.
+>
+
+While I understand this, I don't see why CDF can't enhance these
+bindings if it has
+requirements > than they have without disturbing the panel ones,
+
+is DT really that inflexible?
+
+It seems that have a simple description for basic panels like Thierry wants
+to support, that can be enhanced for the other cases in the future should
+suffice, I really don't like blocking stuff that makes things work on the chance
+of something that isn't upstream yet, its sets a bad precedent, its also breaks
+the perfect is the enemy of good rule
+
+Dave.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
