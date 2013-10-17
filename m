@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 21/37] arm/dts: i.MX25: Add ssi clocks and DMA events.
-Date: Thu, 17 Oct 2013 17:02:19 +0200
-Message-ID: <1382022155-21954-22-git-send-email-denis@eukrea.com>
+Subject: [Patch v2][ 25/37] arm/dts: imx51.dtsi: Add some pinmux pins.
+Date: Thu, 17 Oct 2013 17:02:23 +0200
+Message-ID: <1382022155-21954-26-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -24,47 +24,44 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx25.dtsi |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx51.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dts=
 i
-index dcceca6..09ce4b8 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -339,6 +339,11 @@
- 				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
- 				reg =3D <0x50014000 0x4000>;
- 				interrupts =3D <11>;
-+				clocks =3D <&clks 118>;
-+				clock-names =3D "ipg";
-+				dmas =3D <&sdma 24 1 0>,
-+				       <&sdma 25 1 0>;
-+				dma-names =3D "rx", "tx";
- 				status =3D "disabled";
- 			};
+index f4dcff3..48fa41b 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -621,6 +621,15 @@
+ 		};
+ 	};
 =20
-@@ -369,6 +374,11 @@
- 				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
- 				reg =3D <0x50034000 0x4000>;
- 				interrupts =3D <12>;
-+				clocks =3D <&clks 117>;
-+				clock-names =3D "ipg";
-+				dmas =3D <&sdma 28 1 0>,
-+				       <&sdma 29 1 0>;
-+				dma-names =3D "rx", "tx";
- 				status =3D "disabled";
- 			};
++	i2c1 {
++		pinctrl_i2c1_1: i2c1grp-1 {
++			fsl,pins =3D <
++				MX51_PAD_SD2_CMD__I2C1_SCL 0x400001ed
++				MX51_PAD_SD2_CLK__I2C1_SDA 0x400001ed
++			>;
++		};
++	};
++
+ 	i2c2 {
+ 		pinctrl_i2c2_1: i2c2grp-1 {
+ 			fsl,pins =3D <
+@@ -801,6 +810,13 @@
+ 				MX51_PAD_UART3_TXD__UART3_TXD 0x1c5
+ 			>;
+ 		};
++
++		pinctrl_uart3_rtscts_2: uart3rtscts-2 {
++			fsl,pins =3D <
++				MX51_PAD_KEY_COL4__UART3_RTS 0x1c5
++				MX51_PAD_KEY_COL5__UART3_CTS 0x1c5
++			>;
++		};
+ 	};
 =20
-@@ -539,7 +549,7 @@
- 				#interrupt-cells =3D <2>;
- 			};
-=20
--			sdma@53fd4000 {
-+			sdma: sdma@53fd4000 {
- 				compatible =3D "fsl,imx25-sdma", "fsl,imx35-sdma";
- 				reg =3D <0x53fd4000 0x4000>;
- 				clocks =3D <&clks 112>, <&clks 68>;
+ 	usbh1 {
 --=20
 1.7.9.5
 
