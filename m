@@ -1,26 +1,50 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [alsa-devel] [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface
- driver.
-Date: Thu, 17 Oct 2013 08:37:25 -0500
-Message-ID: <525FE815.1040300@tabi.org>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com> <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com> <525FD4C7.3050806@tabi.org> <525FD65B.3040004@metafoo.de> <525FE48B.7020709@tabi.org> <525FE728.90403@metafoo.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 0/6] Update Kona drivers to use clocks
+Date: Thu, 17 Oct 2013 14:47:01 +0100
+Message-ID: <20131017134701.GC24056@e106331-lin.cambridge.arm.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <525FE728.90403@metafoo.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1381960030-1640-1-git-send-email-tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lars-Peter Clausen wrote:
->> >Maybe I've been out of the loop for too long, but why is that a particular
->> >problem with this driver?
+On Wed, Oct 16, 2013 at 10:47:04PM +0100, Tim Kryger wrote:
+> This series declares the clocks present on bcm11351 (aka bcm281xx) SoCs
+> to be fixed at the rates configured by development bootloaders and then
+> updates the Kona drivers to make use of clock calls where appropriate.
+> 
+> This patch series depends on the following three commits being present:
+> 
+> https://lkml.org/lkml/2013/9/18/409
+> https://lkml.org/lkml/2013/9/20/305
+> http://www.spinics.net/lists/arm-kernel/msg274973.html
+> 
+> Changes in v2:
+>   - Renamed bsc4_clk to pmu_bsc_clk
+> 
+> Tim Kryger (6):
+>   ARM: dts: Declare clocks as fixed on bcm11351
+>   ARM: dts: Specify clocks for UARTs on bcm11351
+>   ARM: dts: Specify clocks for SDHCIs on bcm11351
+>   clocksource: kona: Add basic use of external clock
+>   ARM: dts: Specify clocks for timer on bcm11351
+>   mmc: sdhci-bcm-kona: Add basic use of clocks
+> 
+>  arch/arm/boot/dts/bcm11351.dtsi      | 111 +++++++++++++++++++++++++++++++++--
+>  drivers/clocksource/bcm_kona_timer.c |  14 ++++-
+>  drivers/mmc/host/sdhci-bcm-kona.c    |  30 +++++++++-
 
-> It is usually something you'd want to check in general to make sure that you
-> don't have multiple device that access the same iomem region at the same time.
+This requires a description in the binding documents, so we can figure
+out which clocks we need to describe, and how to describe them.
 
-I understand that, but I'm trying to figure out why of_iomap() is okay 
-for hundreds of other drivers, but not this one.  I've used it dozens of 
-times myself, without ever worrying about overlapping regions.
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
