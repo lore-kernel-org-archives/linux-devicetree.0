@@ -1,80 +1,119 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Thu, 17 Oct 2013 18:48:35 +0200
-Message-ID: <526014E3.70505@st.com>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
- <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
- <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
- <20131017141627.GD14104@ns203013.ovh.net>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v2 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Thu, 17 Oct 2013 17:49:33 +0100
+Message-ID: <20131017164933.GG2442@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131017141627.GD14104@ns203013.ovh.net>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stuart MENEFY <stuart.menefy@st.com>, Lee Jones <lee.jones@linaro.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 17, 2013 at 06:04:13PM +0200, Daniel Lezcano wrote:
+> On 10/17/2013 04:32 PM, Dave Martin wrote:
+> > On Thu, Oct 17, 2013 at 12:45:29PM +0200, Daniel Lezcano wrote:
+> >> On 10/14/2013 05:08 PM, Vyacheslav Tyrtov wrote:
+> >>> From: Tarek Dakhran <t.dakhran@samsung.com>
+> >>>=20
+> >>> Add EDCS(Exynos Dual Cluster Support) for Samsung Exynos5410 SoC.
+> >>> This enables all 8 cores, 4 x A7 and 4 x A15 run at the same time=
+=2E
+> >=20
+> > [...]
+> >=20
+> >>> +	__mcpm_cpu_down(cpu, cluster);
+> >>> +
+> >>> +	if (!skip_wfi) {
+> >>> +		exynos_core_power_down(cpu, cluster);
+> >>> +		wfi();
+> >>> +	}
+> >>> +}
+> >>=20
+> >> I did not looked line by line but these functions looks very simil=
+ar
+> >> than the tc2_pm.c's function. no ?
+> >=20
+> > This is true.
+> >=20
+> >> May be some code consolidation could be considered here.
+> >>=20
+> >> Added Nico and Lorenzo in Cc.
+> >>=20
+> >> Thanks
+> >>    -- Daniel
+> >=20
+> > Nico can commnent further, but I think the main concern here was th=
+at
+> > this code shouldn't be factored prematurely.
+>=20
+> I do not share this opinion.
+>=20
+> > There are many low-level platform specifics involved here, so it's
+> > hard to be certain that all platforms could fit into a more abstrac=
+ted
+> > framework until we have some evidence to look at.
+> >=20
+> > This could be revisited when we have a few diverse MCPM ports to
+> > compare.
+>=20
+> I am worried about seeing more and more duplicated code around the AR=
+M
+> arch (eg. arm[64]/kernel/smp.c arm64/kernel/smp.c).
+>=20
+> The cpuidle drivers have been duplicated and it took a while before
+> refactoring them, and it is not finished. The hotplug code have been
+> duplicated and now it is very difficult to factor it out.
+>=20
+> A lot of work have been done to consolidate the code across the
+> different SoC since the last 2 years.
+>=20
+> If we let duplicate code populate the different files, they will
+> belong to different maintainers, thus different trees. Each SoC
+> contributors will tend to add their small changes making the code to
+> diverge more and more and making difficult to re-factor it later.
 
-On 10/17/2013 04:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 09:27 Thu 17 Oct     , Maxime COQUELIN wrote:
->> Hi Jean-Christophe,
->>
->> On 10/16/2013 05:14 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>
->>
->> ...
->>>> +
->>>> +static inline void st_i2c_set_bits(void __iomem *reg, u32 mask)
->>>> +{
->>>> +     writel(readl(reg) | mask, reg);
->>>> +}
->>>> +
->>>> +static inline void st_i2c_clr_bits(void __iomem *reg, u32 mask)
->>>> +{
->>>> +     writel(readl(reg) & ~mask, reg);
->>> use set_bit api and use relaxed version
->> Using the set_bit api here does not match with the purpose of these
->> functions.
->> We want to be able to set/clear multiple bits, and AFAICS the set_bit
->> api does not
->> provide this possibility.
->>
->> I took example on i2c-nomadik for these functions.
->>
-> so factorize the code not copy and paste
-I won't create a new API for this.
-If this is blocking for you, then I will just remove this functions.
+I think this is Nico's call, since he has more experience than I do
+of how these things tend to play out in practice.
 
->>>> +}
->>>> +
->>>> +/* From I2C Specifications v0.5 */
->>>> +static struct st_i2c_timings i2c_timings[] = {
->>>> use readsl
->> Since the read content is flushed, I prefer keeping it as it is instead
->> of allocating
->> a buffer of the FIFO's size.
-> keep point is to speedup the bus
-I meant I will use readl_relaxed, not readl.
+Cheers
+---Dave
 
->>> use relaxed version as much as possible
->> I was not comfortable with the different possibilities (_raw_readl,
->> readl_relaxed, readl...).
->> I found this interresting discussion:
->> _http://comments.gmane.org/gmane.linux.ports.arm.kernel/117626
->>   From what I understood, you are right, I should be able to use
->> readl_relaxed everywhere.
->>
->> Maybe I should perform a readl on the interrupt mask register before
->> returning from the interrupt handler,
->> in order to ensure that the write to the IEN register is effective
->> before the IRQ for the device is re-enabled at GIC level.
->> Maybe this could avoid the few spurious interrupts I face sometimes, I
->> will have a try.
-> ok
-I failed to reproduce the spurious interrupt without the patch, so I 
-can't say
-whether performing a readl at this stage helps.
->>>> +}
+> I am in favor of preventing duplicate code entering in the kernel and
+> force the contributors to improve the kernel in general, not just the
+> small part they are supposed to work on. Otherwise, we are letting th=
+e
+> kernel to fork itself, internally...
+>=20
+> > The low-level A15/A7 cacheflush sequence is already being factored
+> > by Nico [1].
+>=20
+> Hopefully he did it :)
+>=20
+> Thanks
+>   -- Daniel
+>=20
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-Octo=
+ber/205085.html
+> > [PATCH] ARM: cacheflush: consolidate single-CPU ARMv7 cache disabli=
+ng code
+> >=20
+> > [...]
+> >=20
+>=20
+>=20
+> --=20
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>=20
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
