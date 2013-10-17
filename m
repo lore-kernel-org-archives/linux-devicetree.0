@@ -1,85 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
- Interface driver.
-Date: Thu, 17 Oct 2013 15:10:03 +0100
-Message-ID: <20131017141003.GO2443@sirena.org.uk>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
- <525FD4C7.3050806@tabi.org> <525FD65B.3040004@metafoo.de>
- <525FE48B.7020709@tabi.org> <525FE728.90403@metafoo.de>
- <525FE815.1040300@tabi.org> <525FEB7A.5040406@metafoo.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v2 6/6] mmc: sdhci-bcm-kona: Add basic use of
+ clocks
+Date: Thu, 17 Oct 2013 15:13:09 +0100
+Message-ID: <20131017141309.GG24056@e106331-lin.cambridge.arm.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+ <1381960030-1640-7-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5498208072526565621=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <525FEB7A.5040406@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, Timur Tabi <timur@tabi.org>, lgirdwood@gmail.com, r65073@freescale.com, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, Xiubo Li <Li.Xiubo@freescale.com>, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381960030-1640-7-git-send-email-tim.kryger@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 16, 2013 at 10:47:10PM +0100, Tim Kryger wrote:
+> Enable the external clock needed by the host controller during the
+> probe and disable it during the remove.
 
---===============5498208072526565621==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5+z6kX2Nyw2GkWv9"
-Content-Disposition: inline
+This requires a biding document update.
 
+I note that the binding is already incomplete (it does not describe the
+interrupts or reg).
 
---5+z6kX2Nyw2GkWv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> ---
+>  drivers/mmc/host/sdhci-bcm-kona.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
+> index 85472d3..91db099 100644
+> --- a/drivers/mmc/host/sdhci-bcm-kona.c
+> +++ b/drivers/mmc/host/sdhci-bcm-kona.c
+> @@ -54,6 +54,7 @@
+>  
+>  struct sdhci_bcm_kona_dev {
+>  	struct mutex	write_lock; /* protect back to back writes */
+> +	struct clk	*external_clk;
 
-On Thu, Oct 17, 2013 at 03:51:54PM +0200, Lars-Peter Clausen wrote:
-> On 10/17/2013 03:37 PM, Timur Tabi wrote:
+Is this the only clock input the unit has?
 
-> > I understand that, but I'm trying to figure out why of_iomap() is okay for
-> > hundreds of other drivers, but not this one.  I've used it dozens of times
-> > myself, without ever worrying about overlapping regions.
+Are there any other external resources the device needs (e.g. gpios,
+regulators)?
 
-> The driver would work fine with just of_iomap(). But the resource range
-> check comes basically for free and it does help to catch errors, so I'd
-> recommend on using it rather than not using it.
+>  };
+>  
+>  
+> @@ -252,11 +253,29 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
+>  	mmc_of_parse(host->mmc);
+>  
+>  	if (!host->mmc->f_max) {
+> -		dev_err(&pdev->dev, "Missing max-freq for SDHCI cfg\n");
+> +		dev_err(dev, "Missing max-freq for SDHCI cfg\n");
 
-There's also the fact that it's a devm_ function which means less error
-handling code that we can break which is nice.  There's probably a case
-for an improved OF helper here...
+This seems like an unrelated change.
 
---5+z6kX2Nyw2GkWv9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>  		ret = -ENXIO;
+>  		goto err_pltfm_free;
+>  	}
+>  
+> +	/* Get and enable the external clock */
+> +	kona_dev->external_clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(kona_dev->external_clk)) {
+> +		dev_err(dev, "Failed to get external clock\n");
+> +		ret = PTR_ERR(kona_dev->external_clk);
+> +		goto err_pltfm_free;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+This seems like a pretty clear breakage of existing DTBs.
 
-iQIcBAEBAgAGBQJSX++4AAoJELSic+t+oim9UWQP/0NLFy/f672CK3D2TKw6jpXp
-t+kX7AU+gXDdmR82JsW1LpMa+ZZtgA/RYezIi+yKL0BOadXLEdIZB86wsRT+Sqsp
-luBmPkpdVMCJDjcUpcatCsTkPBlqNy6UstzY+RnJlLUJ9QqC2JmUrueouZEcQXDj
-MKj13kFv+hp/6WTxBiaaVJdVhQ4S4ky2rYR4xtIQe0Fd/QGFYgEuRaOvwZx1+txY
-oennu3y9ADupCEcB3qzsnYj0EWu+wEbBltAMNa+lzHyc6pz1CqBrpKZguM9/Hj7t
-NManCo9b/3GA9ZQAasg2/lMwchqeMHswtg6N1aL9DDgpr58TWh75mBdiFqPtISjI
-k+ynBTwKfbEJtEF1xFEOfD9bHLZpmmqAQ9VSqg3gYzALCUqusqpdGbgPMM/edH5q
-Et14WDYSH/BZSuXUoJeQ53QjlqNFdWXAF51Vf3f1RoSkWoT53QCn2TEsc2oH5wUF
-GogKb67uxz+J4Rqe75aWpq5KRj5szkY0XmvOuwU4Po8RceJp0RuhSpqcGldlm2jn
-1wv/RVwiZeiPi74vTAaTUqqOMW6BXWmTktHVYVdzDZeVd5tgoqJ16tiQQB3XBQrl
-1qrJLxM6h/6/BDyR7NqpkPB3UvIwYDwbyISmgsEDVgw4W3FznpsLbbBiJdbsBXBz
-u30E/rYr0FH2eMVLlGk7
-=Bz6j
------END PGP SIGNATURE-----
+Why?
 
---5+z6kX2Nyw2GkWv9--
-
---===============5498208072526565621==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5498208072526565621==--
+Thanks,
+Mark.
