@@ -1,58 +1,53 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [Patch v2][ 04/37] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel
- format.
-Date: Thu, 17 Oct 2013 17:02:02 +0200
-Message-ID: <1382022155-21954-5-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [Patch v2][ 01/37] =?UTF-8?q?of:=20add=20vendor=20prefix=20for=20Eu?= =?UTF-8?q?kr=C3=A9a=20Electromatique.?=
+Date: Thu, 17 Oct 2013 17:01:59 +0200
+Message-ID: <1382022155-21954-2-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1382022155-21954-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, dri-devel@lists.freedesktop.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
-Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
-YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
-IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
-QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
-SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
-dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
-Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
-Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
-ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
-a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCkNjOiBFcmljIELDqW5hcmQgPGVyaWNAZXVrcmVhLmNvbT4KU2lnbmVkLW9mZi1ieTog
-RGVuaXMgQ2FyaWtsaSA8ZGVuaXNAZXVrcmVhLmNvbT4KLS0tCiBpbmNsdWRlL3VhcGkvbGludXgv
-dmlkZW9kZXYyLmggfCAgICAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlm
-ZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaCBiL2luY2x1ZGUvdWFwaS9s
-aW51eC92aWRlb2RldjIuaAppbmRleCA0MzdmMWIwLi5lOGZmNDEwIDEwMDY0NAotLS0gYS9pbmNs
-dWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKKysrIGIvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVv
-ZGV2Mi5oCkBAIC0yOTQsNiArMjk0LDcgQEAgc3RydWN0IHY0bDJfcGl4X2Zvcm1hdCB7CiAjZGVm
-aW5lIFY0TDJfUElYX0ZNVF9SR0I1NTVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdRJykg
-LyogMTYgIFJHQi01LTUtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX1JHQjU2NVggdjRs
-Ml9mb3VyY2MoJ1InLCAnRycsICdCJywgJ1InKSAvKiAxNiAgUkdCLTUtNi01IEJFICAqLwogI2Rl
-ZmluZSBWNEwyX1BJWF9GTVRfQkdSNjY2ICB2NGwyX2ZvdXJjYygnQicsICdHJywgJ1InLCAnSCcp
-IC8qIDE4ICBCR1ItNi02LTYJICAqLworI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNjY2ICB2NGwy
-X2ZvdXJjYygnUicsICdHJywgJ0InLCAnSCcpIC8qIDE4ICBSR0ItNi02LTYJICAqLwogI2RlZmlu
-ZSBWNEwyX1BJWF9GTVRfQkdSMjQgICB2NGwyX2ZvdXJjYygnQicsICdHJywgJ1InLCAnMycpIC8q
-IDI0ICBCR1ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9SR0IyNCAgIHY0bDJf
-Zm91cmNjKCdSJywgJ0cnLCAnQicsICczJykgLyogMjQgIFJHQi04LTgtOCAgICAgKi8KICNkZWZp
-bmUgVjRMMl9QSVhfRk1UX0JHUjMyICAgdjRsMl9mb3VyY2MoJ0InLCAnRycsICdSJywgJzQnKSAv
-KiAzMiAgQkdSLTgtOC04LTggICAqLwotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4
-ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Trivial patch to add Eukr=C3=A9a Electromatique to the list
+of devicetree vendor prefixes.
+
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index 2956800..a0329cf 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -25,6 +25,7 @@ denx	Denx Software Engineering
+ emmicro	EM Microelectronic
+ epson	Seiko Epson Corp.
+ est	ESTeem Wireless Modems
++eukrea  Eukr=C3=A9a Electromatique
+ fsl	Freescale Semiconductor
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
