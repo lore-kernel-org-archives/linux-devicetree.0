@@ -1,74 +1,213 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [Patch v2][ 14/37] staging: imx-drm: parallel display: add regulator
- support.
-Date: Thu, 17 Oct 2013 17:02:12 +0200
-Message-ID: <1382022155-21954-15-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [Patch v2][ 06/37] video: backlight: gpio-backlight: Add DT support.
+Date: Thu, 17 Oct 2013 17:02:04 +0200
+Message-ID: <1382022155-21954-7-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1382022155-21954-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, dri-devel@lists.freedesktop.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Q2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2VsIE1vbGwg
-PHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
-b20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzogSWFuIENh
-bXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKQ2M6IERh
-dmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCkNjOiBFcmljIELDqW5hcmQgPGVyaWNA
-ZXVrcmVhLmNvbT4KU2lnbmVkLW9mZi1ieTogRGVuaXMgQ2FyaWtsaSA8ZGVuaXNAZXVrcmVhLmNv
-bT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMgfCAgIDE5
-ICsrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jIGIv
-ZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jCmluZGV4IDFjOGY2M2Yu
-LmRmYWI3YjUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL3BhcmFsbGVsLWRp
-c3BsYXkuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMK
-QEAgLTIyLDYgKzIyLDcgQEAKICNpbmNsdWRlIDxkcm0vZHJtUC5oPgogI2luY2x1ZGUgPGRybS9k
-cm1fZmJfaGVscGVyLmg+CiAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgorI2luY2x1
-ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgogI2luY2x1ZGUgPGxpbnV4L3ZpZGVvZGV2
-Mi5oPgogI2luY2x1ZGUgPHZpZGVvL3ZpZGVvbW9kZS5oPgogI2luY2x1ZGUgPHZpZGVvL29mX2Rp
-c3BsYXlfdGltaW5nLmg+CkBAIC0zNyw2ICszOCw3IEBAIHN0cnVjdCBpbXhfcGFyYWxsZWxfZGlz
-cGxheSB7CiAJc3RydWN0IGRybV9lbmNvZGVyIGVuY29kZXI7CiAJc3RydWN0IGlteF9kcm1fZW5j
-b2RlciAqaW14X2RybV9lbmNvZGVyOwogCXN0cnVjdCBkZXZpY2UgKmRldjsKKwlzdHJ1Y3QgcmVn
-dWxhdG9yICpsY2RfcmVnOwogCXZvaWQgKmVkaWQ7CiAJaW50IGVkaWRfbGVuOwogCXUzMiBpbnRl
-cmZhY2VfcGl4X2ZtdDsKQEAgLTEyOSw2ICsxMzEsMTAgQEAgc3RhdGljIHZvaWQgaW14X3BkX2Vu
-Y29kZXJfcHJlcGFyZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCiB7CiAJc3RydWN0IGlt
-eF9wYXJhbGxlbF9kaXNwbGF5ICppbXhwZCA9IGVuY190b19pbXhwZChlbmNvZGVyKTsKIAorCWlm
-IChpbXhwZC0+bGNkX3JlZykKKwkJaWYgKHJlZ3VsYXRvcl9lbmFibGUoaW14cGQtPmxjZF9yZWcp
-KQorCQkJZGV2X2VycihpbXhwZC0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBsY2QgcmVndWxhdG9y
-LlxuIik7CisKIAlpbXhfZHJtX2NydGNfcGFuZWxfZm9ybWF0KGVuY29kZXItPmNydGMsIERSTV9N
-T0RFX0VOQ09ERVJfTk9ORSwKIAkJCWlteHBkLT5pbnRlcmZhY2VfcGl4X2ZtdCk7CiB9CkBAIC0x
-NDUsNiArMTUxLDExIEBAIHN0YXRpYyB2b2lkIGlteF9wZF9lbmNvZGVyX21vZGVfc2V0KHN0cnVj
-dCBkcm1fZW5jb2RlciAqZW5jb2RlciwKIAogc3RhdGljIHZvaWQgaW14X3BkX2VuY29kZXJfZGlz
-YWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCiB7CisJc3RydWN0IGlteF9wYXJhbGxl
-bF9kaXNwbGF5ICppbXhwZCA9IGVuY190b19pbXhwZChlbmNvZGVyKTsKKworCWlmIChpbXhwZC0+
-bGNkX3JlZykKKwkJaWYgKHJlZ3VsYXRvcl9kaXNhYmxlKGlteHBkLT5sY2RfcmVnKSkKKwkJCWRl
-dl9lcnIoaW14cGQtPmRldiwgIkZhaWxlZCB0byBkaXNhYmxlIGxjZCByZWd1bGF0b3IuXG4iKTsK
-IH0KIAogc3RhdGljIHZvaWQgaW14X3BkX2VuY29kZXJfZGVzdHJveShzdHJ1Y3QgZHJtX2VuY29k
-ZXIgKmVuY29kZXIpCkBAIC0yNDgsNiArMjU5LDE0IEBAIHN0YXRpYyBpbnQgaW14X3BkX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJldDsK
-IAorCWlteHBkLT5sY2RfcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0KCZwZGV2LT5kZXYsICJsY2Qi
-KTsKKwlpZiAoSVNfRVJSKGlteHBkLT5sY2RfcmVnKSkgeworCQlkZXZfZGJnKCZwZGV2LT5kZXYs
-ICJubyBsY2Qtc3VwcGx5IGdpdmVuLlxuIik7CisJCWlteHBkLT5sY2RfcmVnID0gTlVMTDsKKwl9
-IGVsc2UgeworCQlkZXZfaW5mbygmcGRldi0+ZGV2LCAibGNkLXN1cHBseSBmb3VuZC5cbiIpOwor
-CX0KKwogCXJldCA9IGlteF9kcm1fZW5jb2Rlcl9hZGRfcG9zc2libGVfY3J0Y3MoaW14cGQtPmlt
-eF9kcm1fZW5jb2RlciwgbnApOwogCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaW14cGQp
-OwotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0
-cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-dmVyZGV2LWRldmVsCg==
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/video/backlight/gpio-backlight.txt    |   18 +++++
+ drivers/video/backlight/gpio_backlight.c           |   73 ++++++++++++=
+++++++--
+ 2 files changed, 84 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
+pio-backlight.txt
+
+diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt
+new file mode 100644
+index 0000000..362dd40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
+txt
+@@ -0,0 +1,18 @@
++gpio-backlight bindings
++
++Required properties:
++  - compatible: "gpio-backlight"
++  - gpios: describes the gpio that is used for enabling/disabling the =
+backlight
++     (see GPIO binding[0] for more details).
++  - default-brightness-level: the default brightness level (can be 0(o=
+ff) or
++      1(on) since GPIOs only support theses levels).
++
++[0]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++	backlight {
++		compatible =3D "gpio-backlight";
++		gpios =3D <&gpio3 4 0>;
++		default-brightness-level =3D <1>;
++	};
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
+acklight/gpio_backlight.c
+index 81fb127..f5d31e7 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -13,6 +13,8 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_data/gpio_backlight.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -23,6 +25,7 @@ struct gpio_backlight {
+=20
+ 	int gpio;
+ 	int active;
++	int def_value;
+ };
+=20
+ static int gpio_backlight_update_status(struct backlight_device *bl)
+@@ -60,6 +63,43 @@ static const struct backlight_ops gpio_backlight_ops=
+ =3D {
+ 	.check_fb	=3D gpio_backlight_check_fb,
+ };
+=20
++static int gpio_backlight_probe_dt(struct platform_device *pdev,
++				   struct gpio_backlight *gbl)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	enum of_gpio_flags gpio_flags;
++	int ret;
++
++	gbl->fbdev =3D NULL;
++	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
++
++	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
++
++	if (gbl->gpio =3D=3D -EPROBE_DEFER) {
++		return ERR_PTR(-EPROBE_DEFER);
++	} else if (gbl->gpio < 0) {
++		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
++		return gbl->gpio;
++	}
++
++	ret =3D of_property_read_u32(np, "default-brightness-level",
++				   &gbl->def_value);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Error: default-brightness-level "
++			"is a required parameter.\n");
++		return ret;
++	}
++
++	if (gbl->def_value < 0 || gbl->def_value > 1) {
++		dev_err(&pdev->dev, "Error: Invalid "
++			"default-brightness-level value. Its value can be "
++			"either 0(off) or 1(on).\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_backlight_platform_data *pdata =3D
+@@ -67,10 +107,12 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
++	struct device_node *np =3D pdev->dev.of_node;
+ 	int ret;
+=20
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "failed to find platform data\n");
++	if (!pdata && !np) {
++		dev_err(&pdev->dev, "failed to find platform data or device "
++			"tree node.\n");
+ 		return -ENODEV;
+ 	}
+=20
+@@ -79,14 +121,21 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 		return -ENOMEM;
+=20
+ 	gbl->dev =3D &pdev->dev;
+-	gbl->fbdev =3D pdata->fbdev;
+-	gbl->gpio =3D pdata->gpio;
+-	gbl->active =3D pdata->active_low ? 0 : 1;
++
++	if (np) {
++		ret =3D gpio_backlight_probe_dt(pdev, gbl);
++		if (ret)
++			return ret;
++	} else {
++		gbl->fbdev =3D pdata->fbdev;
++		gbl->gpio =3D pdata->gpio;
++		gbl->active =3D pdata->active_low ? 0 : 1;
++	}
+=20
+ 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
+ 				    (gbl->active ? GPIOF_INIT_LOW
+ 						 : GPIOF_INIT_HIGH),
+-				    pdata->name);
++				    pdata ? pdata->name : "backlight");
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "unable to request GPIO\n");
+ 		return ret;
+@@ -103,17 +152,27 @@ static int gpio_backlight_probe(struct platform_d=
+evice *pdev)
+ 		return PTR_ERR(bl);
+ 	}
+=20
+-	bl->props.brightness =3D pdata->def_value;
++	if (np)
++		bl->props.brightness =3D gbl->def_value;
++	else
++		bl->props.brightness =3D pdata->def_value;
++
+ 	backlight_update_status(bl);
+=20
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
+ }
+=20
++static struct of_device_id gpio_backlight_of_match[] =3D {
++	{ .compatible =3D "gpio-backlight" },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver gpio_backlight_driver =3D {
+ 	.driver		=3D {
+ 		.name		=3D "gpio-backlight",
+ 		.owner		=3D THIS_MODULE,
++		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
+ 	},
+ 	.probe		=3D gpio_backlight_probe,
+ };
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
