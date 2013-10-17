@@ -1,96 +1,129 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCHv1 8/8] Documentation: Add device tree bindings for
- Freescale VF610 sound.
-Date: Thu, 17 Oct 2013 11:46:30 +0200
-Message-ID: <1382003190.4093.38.camel@weser.hi.pengutronix.de>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
-	 <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 17 Oct 2013 12:52:40 +0300
+Message-ID: <525FB368.6020003@ti.com>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <1381947912-11741-3-git-send-email-treding@nvidia.com> <1695169.rzbDl9PeRX@avalon> <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com> <525FA4B0.8060504@ti.com> <20131017091614.GC2502@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, perex@perex.cz, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131017091614.GC2502-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 17.10.2013, 17:01 +0800 schrieb Xiubo Li:
-> This adds the Document for Freescale VF610 sound driver under
-> Documentation/devicetree/bindings/sound/.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> ---
->  .../devicetree/bindings/sound/fsl-sgtl5000.txt     | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt b/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
-> new file mode 100644
-> index 0000000..43e350f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
+--vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-This document name is overly generic, there are more than one FSL
-platforms with SGTL5000 codecs. Please include the vf610 here.
+On 17/10/13 12:16, Thierry Reding wrote:
+> On Thu, Oct 17, 2013 at 11:49:52AM +0300, Tomi Valkeinen wrote:
 
-> @@ -0,0 +1,52 @@
-> +Freescale VF610 audio complex with SGTL5000 codec
-> +
-> +Required properties:
-> +- compatible: "fsl,vf610-sgtl5000"
-> +- model: The user-visible name of this sound complex.
-> +- saif-controllers: The phandle list of the SAI controller.
-> +- audio-codec: The phandle of the SGTL5000 audio codec.
-> +- audio-routing : A list of the connections between audio components.
-> +  Each entry is a pair of strings, the first being the connection's sink,
-> +  the second being the connection's source. Valid names could be power
-> +  supplies, SGTL5000 pins, and the jacks on the board:
-> +
-> +  -- Power supplies:
-> +     * Mic Bias
-> +
-> +  -- SGTL5000 pins:
-> +     * MIC_IN
-> +     * LINE_IN
-> +     * HP_OUT
-> +     * LINE_OUT
-> +
-> +  -- Board connectors:
-> +     * Mic Jack
-> +     * Line In Jack
-> +     * Headphone Jack
-> +     * Line Out Jack
-> +     * Ext Spk
-> +
-> +Example:
-> +
-> +sound {
-> +	compatible = "fsl,vf610-sgtl5000";
-> +	model = "vf610-sgtl5000";
-> +	saif-controller = <&sai2>;
-> +	audio-codec = <&codec>;
-> +	audio-routing =
-> +		"MIC_IN", "Mic Jack",
-> +		"Mic Jack", "Mic Bias",
-> +		"LINE_IN", "Line In Jack",
-> +		"Headphone Jack", "HP_OUT",
-> +		"Ext Spk", "LINE_OUT";
-> +};
-> +
-> +&i2c0 {
-> +	...
-> +
-> +	codec: sgtl5000@0a {
-> +	       compatible = "fsl,sgtl5000";
-> +	       reg = <0x0a>;
-> +	       clocks = <&clks VF610_CLK_SAI2>;
-> +       };
-> +};
+>> Just my opinion, but yes, DT is that inflexible. DT bindings are like =
+a
+>> syscall. Once they are there, you need to support them forever. That
+>> support can, of course, include some kind of DT data converters or suc=
+h,
+>> that try to convert old bindings to new bindings at kernel boot.
+>=20
+> That's not entirely true. DT bindings are allowed to change, the only
+> restriction being that they don't break backwards compatibility. So if
 
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+True, but afaik the same goes for syscalls. But yes, it's probably
+easier to add, say, new properties to DT bindings than adding new flags
+to a syscall.
 
+> Am I the only one refusing to accept that we can't provide even the mos=
+t
+> basic functionality simply because we haven't been able to come up with=
+
+> the ultimately "perfect" DT binding yet? By definition it's not very
+> likely that any binding will ever be perfect.
+
+With "perfect" I meant without any obvious features missing. I agree
+that DT bindings will never be perfect, but I at least would like them
+to be good enough to cover all the cases we know of.
+
+> I don't think we're doing ourselves any good by letting DT actively
+> hinder us in merging any of these features. I would personally prefer
+> having to support several bindings rather than not be able to provide
+> the functionality at all.
+
+I'd say the driver writer is of course free to create basic bindings for
+the device in question as long as the bindings are sane, and he agrees
+to later create any needed converters. I don't see any problem with
+having a driver supporting several versions of the bindings.
+
+But I don't think it's fair to push a driver with basic bindings,
+knowing that the bindings won't be enough in the future, and leave all
+the converter-mess to other people (not saying that's the case here).
+
+As a fbdev maintainer, I'm ok with adding DT bindings to device specific
+fb drivers, as those can be just left as they are. Even when CDF is
+merged, the specific fb drivers just work with the old bindings. If the
+driver maintainer wants to use CDF, it's up to him to create any needed
+binding-converters.
+
+But a generic driver for panels is more problematic, as that one should
+be maintained and refreshed to new features like CDF. If such was
+proposed to be merged to fbdev, I'd be very reluctant to merge it if
+there were any concerns about it.
+
+I guess one option there would be to implement a new driver for the same
+panel devices, one that supports CDF, and leave the old one as is. Not
+so nice option, though.
+
+> For crying out loud, we can use the 3D engine to render to a framebuffe=
+r
+> but we can't look at the result because we can't make the bloody panel
+> light up! Seriously!?
+
+Ah, but do you have DT bindings for the 3D engine yet, which represent
+how different internal blocks in the 3D engine are connected? If not,
+better start designing it! Then the problem is solved, you won't even
+have working 3D engine. ;)
+
+But seriously speaking, I'm with you. I don't get this DT stuff.
+
+And the funny thing is, DT should just represent the hardware, it
+doesn't matter what kind of SW drivers there are, so in a sense talking
+about DT problems with a SW framework like CDF is a bit silly. How hard
+can it be to describe the hardware properly?
+
+Very, obviously =3D).
+
+ Tomi
+
+
+
+--vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSX7NoAAoJEPo9qoy8lh71BT0QAKI8o/SQr2gXmN2KdqeJXi4F
+ZLloNE36K9aScScFbNmbxgCiDe6oU1CEAK7obLb8+lGf9OER74Gz4FhpD60RxsIX
+m4+4iynTvkqanUXUops/CTuXeGMXI+KqC1jmxOuCHWZmw75bHVWQWfMO76XUOgyl
+ZWfIjLMiSJ78p7pW/sVkf6/oTjeYkwZD0XcPtV7PVwOuVETS+hBweo8TooWO6jwP
+7Gj6oQjBhmFQxM94ug596lCXKifO7oPSPHOa2XfObRryywYnrZ/PgsqPKE7A56Sx
+ZftpS+xu7MgyzAj2B5w3QYKHPM0/Yoy95KUW1kxTNECmxf0EGNDrTsc015B7XL+v
+yW+ZZ6VF86TUVAJieHu2mctFrQodNNHxm6CxZ8XCtK8+BDqHRMP5T9w7hyYBoape
+52o2P2cDsdNx5S/nbi7mE6WDETl/x5KdhBHtNGVeRfLRjK3WHOTrTCCTo76Ivh5E
+Y52nHyrHaWdzzpWLhojP1ldP4SLOfpi1O/fqeM+FiD483RJ5RYw+MtG1wssfyy1c
+sxpQWzWpZsQg5CjkkdKsK7uLoZEms3r4LmMIFMHeYCWiOGkPZscBzxebu7tRL4p5
+5XOulcL26khcvcHoizuAEn6KOmC46/z10nTXLgHcBR8DJIUwqygnkr6kS1tS7k5H
+f/A8boJj5EzCCUxDIUyM
+=cm1t
+-----END PGP SIGNATURE-----
+
+--vSpEU07192KRa2oSUXF2rDnVJMbJ00EWW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
