@@ -1,76 +1,96 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: add export with name from dts
-Date: Thu, 17 Oct 2013 11:47:11 +0200
-Message-ID: <CACRpkdZ30LYdVRWT7QtSq35D8NX3dg3EKadKEVSA2OYahynoZA@mail.gmail.com>
-References: <1382001269-6334-1-git-send-email-jiri.prchal@aksignal.cz>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCHv1 8/8] Documentation: Add device tree bindings for
+ Freescale VF610 sound.
+Date: Thu, 17 Oct 2013 11:46:30 +0200
+Message-ID: <1382003190.4093.38.camel@weser.hi.pengutronix.de>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+	 <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1382001269-6334-1-git-send-email-jiri.prchal@aksignal.cz>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jiri Prchal <jiri.prchal@aksignal.cz>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Bryan Wu <cooloney@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, perex@perex.cz, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 11:14 AM, Jiri Prchal <jiri.prchal@aksignal.cz> wrote:
+Am Donnerstag, den 17.10.2013, 17:01 +0800 schrieb Xiubo Li:
+> This adds the Document for Freescale VF610 sound driver under
+> Documentation/devicetree/bindings/sound/.
+> 
+> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> ---
+>  .../devicetree/bindings/sound/fsl-sgtl5000.txt     | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt b/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
+> new file mode 100644
+> index 0000000..43e350f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl-sgtl5000.txt
 
-> Add export possibility to sysfs with given name in device tree. It is nice for users to have board specific gpios exportet at boottime and with their names.
+This document name is overly generic, there are more than one FSL
+platforms with SGTL5000 codecs. Please include the vf610 here.
 
-s/exportet/exported
-s/bottime/boot-time
-
-> It renames some functions in gpiolib and adds name as parameter. If is passed NULL as name everythink works like before, export by chip name.
-
-if IT is passed ...
-s/everythink/everything
-
-> It can be done by extra function export_with_name without changing original export function but I think there would not to be twice almost the same.
-> Even if gpio sysfs interface is almost to be deprecated, I would like to add this, cause new chardev interface is in farness future.
-> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
->
-> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
-
-Try to linebreak the commit message at column 70 or so.
-
-(I'll fix up the spellings etc, so don't worry too much about this.)
-
-> +3) gpio-export
-> +--------------
+> @@ -0,0 +1,52 @@
+> +Freescale VF610 audio complex with SGTL5000 codec
 > +
-> +gpio-export will allow you to automatically export gpio to linux sysfs.
-
-s/gpio/a GPIO line (I prefer upper-case and clear specification of what
-GPIO is. Why do you say it is automatic? How else would it be done
-if not by automation?
-
-> +Can be used to describe hw gpio by "name" and to have them exported at
-> +boot time to make it convenient for users.
+> +Required properties:
+> +- compatible: "fsl,vf610-sgtl5000"
+> +- model: The user-visible name of this sound complex.
+> +- saif-controllers: The phandle list of the SAI controller.
+> +- audio-codec: The phandle of the SGTL5000 audio codec.
+> +- audio-routing : A list of the connections between audio components.
+> +  Each entry is a pair of strings, the first being the connection's sink,
+> +  the second being the connection's source. Valid names could be power
+> +  supplies, SGTL5000 pins, and the jacks on the board:
 > +
-> +required properties:
-> +- compatible: Should be "linux-gpio-export"
+> +  -- Power supplies:
+> +     * Mic Bias
+> +
+> +  -- SGTL5000 pins:
+> +     * MIC_IN
+> +     * LINE_IN
+> +     * HP_OUT
+> +     * LINE_OUT
+> +
+> +  -- Board connectors:
+> +     * Mic Jack
+> +     * Line In Jack
+> +     * Headphone Jack
+> +     * Line Out Jack
+> +     * Ext Spk
+> +
+> +Example:
+> +
+> +sound {
+> +	compatible = "fsl,vf610-sgtl5000";
+> +	model = "vf610-sgtl5000";
+> +	saif-controller = <&sai2>;
+> +	audio-codec = <&codec>;
+> +	audio-routing =
+> +		"MIC_IN", "Mic Jack",
+> +		"Mic Jack", "Mic Bias",
+> +		"LINE_IN", "Line In Jack",
+> +		"Headphone Jack", "HP_OUT",
+> +		"Ext Spk", "LINE_OUT";
+> +};
+> +
+> +&i2c0 {
+> +	...
+> +
+> +	codec: sgtl5000@0a {
+> +	       compatible = "fsl,sgtl5000";
+> +	       reg = <0x0a>;
+> +	       clocks = <&clks VF610_CLK_SAI2>;
+> +       };
+> +};
 
-It seems other subsystems are using "linux," as prefix so change
-this to "linux,gpio-export"
+-- 
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-> +in each child node will represent a gpio or if no name is specified
-> +a list of gpio to export
-
-I don't quite understand this sentence. Do you mean:
-
-"each child node of the compatible node represents  a GPIO line
- or, if it does not have a name specified, a list if GPIOs to export"
-
-I don't think this works, the nodes get messy if some of
-them specify a single GPIO line and set it as output or input,
-and some specify an array.
-
-You have to make your mind up here: either we export
-exactly *one* GPIO line per node, or all nodes can export
-an array and also pass in arrays of output values and so
-on.
-
-One node per GPIO is arguably easiest and most readable,
-so please rewrite the patch in accordance.
-
-Yours,
-Linus Walleij
