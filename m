@@ -1,80 +1,100 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
- of another node for OPP
-Date: Thu, 17 Oct 2013 13:36:42 -0500
-Message-ID: <52602E3A.6080000@ti.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>	<1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>	<5252DAD3.6040903@gmail.com>	<525400B4.8060203@arm.com> <CAL_JsqKPprCKorvfgCH3usvX6hw5moypQYvKTdAznFVoTV-pyg@mail.gmail.com> <52601CCD.9020705@arm.com>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in
+ device tree
+Date: Thu, 17 Oct 2013 13:37:26 -0500
+Message-ID: <CAHCPf3s63Jh6YSo2vqJ-4OwfTBGRBcQPAVzw_FK1uU3jpTK+Ow@mail.gmail.com>
+References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
+	<1381477716.5630.74.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52601CCD.9020705@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Rob Herring <robherring2@gmail.com>
-Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381477716.5630.74.camel@pasglop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 12:22 PM, Sudeep KarkadaNagesha wrote:
-> On 17/10/13 14:22, Rob Herring wrote:
->> On Tue, Oct 8, 2013 at 7:55 AM, Sudeep KarkadaNagesha
->> <Sudeep.KarkadaNagesha@arm.com> wrote:
->>> On 07/10/13 17:01, Rob Herring wrote:
->>>> On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
-[...]
->>> 3. As part of RFC[1][2], it was also discussed that on some SoCs we need
->>>    multiple OPP profiles/options which it provides but only one of them can
->>>    be used based on the board design. phandle to OPP will also help resolve
->>>    that issue.
+On Fri, Oct 11, 2013 at 2:48 AM, Benjamin Herrenschmidt
+<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> On Fri, 2013-10-11 at 09:27 +0200, Marek Szyprowski wrote:
+>> Hi all!
 >>
->> Then include the OPP required for that board design. You could have
->> dtsi files of OPPs that can be included based on the board.
->>
-> 
-> I will let Nishanth comment on this.
+>> Benjamin Herrenschmidt pointed a few issues in the proposed design of
+>> device tree bindings for contiguous memory allocator and reserved memory
+>> regions:
+>> https://lkml.org/lkml/2013/9/15/151
+>> http://www.spinics.net/lists/arm-kernel/msg273548.html
+>
+> Are you guys in Edinburgh ?
+>
+> I'll be there from Tuesday PM (so really Wed) to Friday (fly out on
+> Sat). We should catch up, brainstorm and come up with something.
+>
+> Cheers,
+> Ben.
 
-there are couple of angles to this[1] that Sudeep already pointed at:
+This may be late, but please can you consider re-using the CHRP
+reserved node (i.e. device_type = "reserved")?
 
-A) SoCs like OMAP3430, 3630, 3530, 3730, omap4430, omap4460, omap4470,
-omap5430, omap5432, there will at least be 2 dtsi *per* OPPset dtsi
-per chip - and we have OPP sets per device inside the SoC - one for
-CPU, one for GPU, one for IVA(accelerator), one for l3 (interconnect).
-Further, when we go to newer variants like AM335x,AM437x,DRA7 - the
-opp sets can increase to around 4/5 per domain per chip. Most of these
-are deterministic based on Efused bit fields.
--> On this angle, arch/arm/mach-imx/mach-imx6q.c is a good example of
-a similar challenge - here OPP enable/disable of hardcoded frequency
-is kept in kernel, but data is picked up from SoC dts - not a good
-story when we want to maintain old dtb compatibility - if frequency
-changes in either dts/kernel, we wont function.
--> We are working internally to a potentially generic solution to
-address this - not yet in a stage even for RFC -> if that is possible
-to be done, then we dont need profiles to handle things, instead an
-alternative constraint description is provided in dts. or we could
-force folks to use specific dtsis OR allow generic handling based on
-profiles.
+Since it does exactly the same thing, is well defined since the dark ages?
 
-B) now we can have a chip which can support a high frequency (efuse
-will say so), however board characteristics(Power Distribution Network
-requirements) may not be capable of allowing the chip to perform. We
-can argue saying that "why would anyone put a higher performing chip
-on a not-capable board?" - but we all know the reality of marketting
-folks and cost of chip story.. but this is a real constraint when we
-try to support our SoCs on as many platforms as possible and enabling
-Linux on all those platforms.
--> We could use profiles to deal with this.
--> we could use dtsi override with OPP to deal with this
-OR
--> we could use custom properties (something like
-ti,non-optimal-board-design ;) ).
+It's CHRP 1.7 section 5.9 by the way (just before /chosen gets defined).
 
-My personal preference is to state hardware capability solely in dts
-and kernel is just operations on the dts data. OPP profiles did seem
-to me to be the intutive way to do that job as it does describe
-exactly wha the hardware capabilities were. Creating n different dtsis
-is possible per device, but it essentially does describe the same
-information.
+It would solve a selection of the issues; and require zero binding
+work except describing perhaps a couple freakish Linux-specific
+properties that may be only as intrusive as, say, linux,initrd would
+be in /chosen.
 
-[1] http://www.spinics.net/lists/cpufreq/msg06685.html
--- 
-Regards,
-Nishanth Menon
+The most effective, multi-OS way of using it ("available" property not
+currently implemented in Linux for some reason, but it could come in
+so handy - not only because it matches the way Linux resource
+structures are handled)
+
+memory@0x70000000 {
+   device_type = "memory";
+   reg = <0x70000000 0x40000000>;
+   available = <0x70000000 0x10000000
+                     0x90000000 0x1ffc00000>; /* top 16KiB of memory
+is where the secure firmware keeps it's mailboxes */
+};
+
+freaky-codec-memory: reserved@0x80000000 {
+    device_type = "reserved";
+    reg = <0x80000000 0x10000000>;
+    available = <0x80000000 0x8000000
+                      0x88000000 0x8000000>; /* two 128MiB buffers */
+    non-objectionable-mark-as-contiguous-property-name-here;
+    cacheable;
+};
+
+Any driver that has, previously, required a bunch of it's own memory
+carved out of DDR *should* be gaining a phandle reference to that
+reserved node however it likes (it would be up to that devices'
+binding).
+
+On Linux under CMA, it may well be ignored and just stuffed into the
+generic CMA regions, and the driver MAY allocate anywhere it likes,
+but it COULD ask for memory based on a region phandle or, horribly, by
+name (since there's no other way to search for it, the OF "name" for
+reserved SHALL be "reserved") and be given memory in that region
+defined by the reserved node if it had any addressing restrictions.
+
+/videodecoder@0x43f01000 {
+    compatible = "freaky,codec";
+    :
+    decode-buffer = &freaky-codec-memory;
+};
+
+On another OS it may manually map and use a custom allocator for that
+memory region, since otherwise the OS would not have even looked at
+it.
+
+Also this discussion of Jeremy Kerr's proposal seems to be 'missing'
+on Google. Do you happen to have a link to it?
+
+Thanks,
+Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
