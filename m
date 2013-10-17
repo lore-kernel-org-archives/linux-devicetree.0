@@ -1,117 +1,49 @@
-From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v11 3/3] DMA: Freescale: update driver to support 8-channel
- DMA engine
-Date: Thu, 17 Oct 2013 13:56:40 +0800
-Message-ID: <525F7C18.3010409@freescale.com>
-References: <1380188023-3936-1-git-send-email-hongbo.zhang@freescale.com> <1380188023-3936-4-git-send-email-hongbo.zhang@freescale.com>
+From: Christian Daudt <bcm@fixthebug.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Wed, 16 Oct 2013 23:03:49 -0700
+Message-ID: <CAEPRUYqfpdp1GqxBgx-q=hyvQDe4uyi6okzHPW2QmfmPG_Z3NQ@mail.gmail.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+	<1380846199-12829-4-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380188023-3936-4-git-send-email-hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380846199-12829-4-git-send-email-syin@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-I have gotten ACK from Mark for both the 1/3 and 2/3 patches.
-Thanks.
-
-
-On 09/26/2013 05:33 PM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Thu, Oct 3, 2013 at 5:23 PM, Sherman Yin <syin@broadcom.com> wrote:
+> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
 >
-> This patch adds support to 8-channel DMA engine, thus the driver works for both
-> the new 8-channel and the legacy 4-channel DMA engines.
->
-> Signed-off-by: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Sherman Yin <syin@broadcom.com>
+> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
 > ---
->   drivers/dma/Kconfig  |    9 +++++----
->   drivers/dma/fsldma.c |    9 ++++++---
->   drivers/dma/fsldma.h |    2 +-
->   3 files changed, 12 insertions(+), 8 deletions(-)
+>  arch/arm/mach-bcm/Kconfig       |    2 +
+>  drivers/pinctrl/Kconfig         |   10 +
+>  drivers/pinctrl/Makefile        |    1 +
+>  drivers/pinctrl/pinctrl-capri.c | 1727 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 1740 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-capri.c
 >
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 6825957..3979c65 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -89,14 +89,15 @@ config AT_HDMAC
->   	  Support the Atmel AHB DMA controller.
->   
->   config FSL_DMA
-> -	tristate "Freescale Elo and Elo Plus DMA support"
-> +	tristate "Freescale Elo series DMA support"
->   	depends on FSL_SOC
->   	select DMA_ENGINE
->   	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
->   	---help---
-> -	  Enable support for the Freescale Elo and Elo Plus DMA controllers.
-> -	  The Elo is the DMA controller on some 82xx and 83xx parts, and the
-> -	  Elo Plus is the DMA controller on 85xx and 86xx parts.
-> +	  Enable support for the Freescale Elo series DMA controllers.
-> +	  The Elo is the DMA controller on some mpc82xx and mpc83xx parts, the
-> +	  EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 is on
-> +	  some Txxx and Bxxx parts.
->   
->   config MPC512X_DMA
->   	tristate "Freescale MPC512x built-in DMA engine support"
-> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-> index 49e8fbd..16a9a48 100644
-> --- a/drivers/dma/fsldma.c
-> +++ b/drivers/dma/fsldma.c
-> @@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
->   	WARN_ON(fdev->feature != chan->feature);
->   
->   	chan->dev = fdev->dev;
-> -	chan->id = ((res.start - 0x100) & 0xfff) >> 7;
-> +	chan->id = (res.start & 0xfff) < 0x300 ?
-> +		   ((res.start - 0x100) & 0xfff) >> 7 :
-> +		   ((res.start - 0x200) & 0xfff) >> 7;
->   	if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
->   		dev_err(fdev->dev, "too many channels for device\n");
->   		err = -EINVAL;
-> @@ -1434,6 +1436,7 @@ static int fsldma_of_remove(struct platform_device *op)
->   }
->   
->   static const struct of_device_id fsldma_of_ids[] = {
-> +	{ .compatible = "fsl,elo3-dma", },
->   	{ .compatible = "fsl,eloplus-dma", },
->   	{ .compatible = "fsl,elo-dma", },
->   	{}
-> @@ -1455,7 +1458,7 @@ static struct platform_driver fsldma_of_driver = {
->   
->   static __init int fsldma_init(void)
->   {
-> -	pr_info("Freescale Elo / Elo Plus DMA driver\n");
-> +	pr_info("Freescale Elo series DMA driver\n");
->   	return platform_driver_register(&fsldma_of_driver);
->   }
->   
-> @@ -1467,5 +1470,5 @@ static void __exit fsldma_exit(void)
->   subsys_initcall(fsldma_init);
->   module_exit(fsldma_exit);
->   
-> -MODULE_DESCRIPTION("Freescale Elo / Elo Plus DMA driver");
-> +MODULE_DESCRIPTION("Freescale Elo series DMA driver");
->   MODULE_LICENSE("GPL");
-> diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-> index f5c3879..1ffc244 100644
-> --- a/drivers/dma/fsldma.h
-> +++ b/drivers/dma/fsldma.h
-> @@ -112,7 +112,7 @@ struct fsldma_chan_regs {
->   };
->   
->   struct fsldma_chan;
-> -#define FSL_DMA_MAX_CHANS_PER_DEVICE 4
-> +#define FSL_DMA_MAX_CHANS_PER_DEVICE 8
->   
->   struct fsldma_device {
->   	void __iomem *regs;	/* DGSR register base */
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 69d67f7..2546365 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -10,6 +10,8 @@ config ARCH_BCM
+>         select GENERIC_CLOCKEVENTS
+>         select GENERIC_TIME
+>         select GPIO_BCM
+> +       select PINCTRL
+> +       select PINCTRL_CAPRI
+>         select SPARSE_IRQ
+>         select TICK_ONESHOT
+>         select CACHE_L2X0
 
+On your subsequent patchset pls move this from Kconfig to
+arm/configs/bcm_defconfig, and break that modification into a separate
+patch from the drivers/* modification.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ thanks,
+   csd
