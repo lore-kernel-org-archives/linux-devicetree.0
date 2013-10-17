@@ -1,34 +1,70 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v9 6/9] mtd: nand: omap: clean-up ecc layout for BCH
- ecc schemes
-Date: Wed, 16 Oct 2013 19:06:58 -0700
-Message-ID: <20131017020658.GB23337@ld-irv-0074.broadcom.com>
-References: <1381816197-20477-1-git-send-email-pekon@ti.com>
- <1381816197-20477-7-git-send-email-pekon@ti.com>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device tree
+Date: Thu, 17 Oct 2013 02:08:31 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+ <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+ <1381518433.7979.536.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381788786.7979.643.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381858855.7979.693.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381942009.7979.727.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381816197-20477-7-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: mark.rutland@arm.com, olof@lixom.net, dedekind1@gmail.com, tony@atomide.com, bcousson@baylibre.com, robherring2@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1381942009.7979.727.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2013 at 11:19:54AM +0530, Pekon Gupta wrote:
-> In current implementation omap3_init_bch_tail() is a common function to
-> define ecc layout for different BCHx ecc schemes.This patch:
-> (1) removes omap3_init_bch_tail() and defines ecc layout for individual
->     ecc-schemes along with populating their nand_chip->ecc data in
->     omap_nand_probe(). This improves the readability and scalability of
->     code for add new ecc schemes in future.
-> (2) removes 'struct nand_bbt_descr bb_descrip_flashbased' because default
->     nand_bbt_descr in nand_bbt.c matches the same (.len=1 for x8 devices).
-> (3) add the check to see if NAND device has enough OOB/Spare bytes to
->     store ECC signature of whole page, as defined by ecc-scheme.
+> > > That shows the dividers as being somewhere in between the PLL and the
+> MUX.
+> > > The MUX is where the divider is selected.  There's nothing in the
+> > > PLL's programming interface that relates to the dividers.  As such
+> > > it's simpler to model it as being part of the MUX.
+> > >
+> > > -Scott
+> > >
+> > I don't know whether it is simpler, but "modeling divider as being part
+> of the MUX"
+> > is your guess, right?
+> > If the "divider" is included in MUX, the MUX would not be called "MUX".
 > 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> It's still selecting from multiple PLLs.
+> 
+> > I don't know whether "divider" module exists or not. If it exists, it
+> > should be part of PLL or between PLL and MUX. wherever it was, the
+> device tree binding is appropriate.
+> 
+> The device tree binding is unnecessarily complicated.
+> 
+> > The P3041RM shows exactly each PLL has 2 outputs which definitely have
+> no "divider" at all.
+> 
+> That diagram is a bit weird -- one of the outputs is used as is, and the
+> other is split into 1/2 and 1/4.  It doesn't really matter though; the
+> end result is the same.  We're describing the programming interface, not
+> artwork choices in the manual.
+> 
+> -Scott
+> 
+If the device tree needs to be modified, could you give me your suggestions?
 
-This patch also looks OK.
-
-Brian
+Regards,
+Yuantian
