@@ -1,371 +1,143 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 7/8] ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
-Date: Thu, 17 Oct 2013 08:37:51 +0200
-Message-ID: <1381991872-8199-1-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1381235073-17134-8-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381235073-17134-8-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Thu, 17 Oct 2013 09:27:25 +0200
+Message-ID: <525F915D.9020501@st.com>
+References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
+ <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+ <20131016151419.GA14104@ns203013.ovh.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131016151419.GA14104-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
+Content-Language: en-US
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds very basic device tree files for the Marvell Armada 1500 SoC
-(Berlin BG2) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
-nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
-uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
-device comprising the Armada 1500 SoC above.
+Hi Jean-Christophe,
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Reviewed-by: Jason Cooper <jason@lakedaemon.net>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Jisheng Zhang <jszhang@marvell.com>
----
-Changelog:
-v1->v2:
-- add "arm,pl310-cache" compatible to l2cc (Suggested by Mark Rutland)
-- replace 88DE3xxx numbering with SoC variant name
-  (Requested by Jisheng Zhang)
-RCFv2->v1:
-- switch to (soon to be) correct "marvell,pj4b" cpu compatible
-- reference fixed-clock for uarts instead of hard-coded clock-frequency
-- disable timers except two for clksrc and clkevt
-RFCv1->RFCv2:
-- add binding documentation (Reported by Jason Cooper)
-- change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
-- add copyright reference
-- adapt compatibles to mach-berlin instead of mach-mvebu
+On 10/16/2013 05:14 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
 
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Jisheng Zhang <jszhang@marvell.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
- arch/arm/boot/dts/Makefile                         |    2 +
- arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
- arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
- 4 files changed, 282 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
- create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
- create mode 100644 arch/arm/boot/dts/berlin2.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-new file mode 100644
-index 0000000..737afa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-@@ -0,0 +1,24 @@
-+Marvell Berlin SoC Family Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Boards with a SoC of the Marvell Berlin family, e.g. Armada 1500
-+shall have the following properties:
-+
-+* Required root node properties:
-+compatible: must contain "marvell,berlin"
-+
-+In addition, the above compatible shall be extended with the specific
-+SoC and board used. Currently known SoC compatibles are:
-+    "marvell,berlin2"      for Marvell Armada 1500 (BG2, 88DE3100),
-+    "marvell,berlin2cd"    for Marvell Armada 1500-mini (BG2CD, 88DE3005)
-+    "marvell,berlin2ct"    for Marvell Armada ? (BG2CT, 88DE????)
-+    "marvell,berlin3"      for Marvell Armada ? (BG3, 88DE????)
-+
-+* Example:
-+
-+/ {
-+	model = "Sony NSZ-GS7";
-+	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
-+
-+	...
-+}
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 802720e..c9c1a6c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -46,6 +46,8 @@ dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
- 	bcm28155-ap.dtb
-+dtb-$(CONFIG_ARCH_BERLIN) += \
-+	berlin2-sony-nsz-gs7.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
- dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-new file mode 100644
-index 0000000..c72bfd4
---- /dev/null
-+++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-@@ -0,0 +1,29 @@
-+/*
-+ * Device Tree file for Sony NSZ-GS7
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+
-+#include "berlin2.dtsi"
-+
-+/ {
-+	model = "Sony NSZ-GS7";
-+	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x40000000>; /* 1 GB */
-+	};
-+};
-+
-+&uart0 { status = "okay"; };
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-new file mode 100644
-index 0000000..56a1af2
---- /dev/null
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -0,0 +1,227 @@
-+/*
-+ * Device Tree Include file for Marvell Armada 1500 (Berlin BG2) SoC
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * based on GPL'ed 2.6 kernel sources
-+ *  (c) Marvell International Ltd.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Marvell Armada 1500 (BG2) SoC";
-+	compatible = "marvell,berlin2", "marvell,berlin";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "marvell,pj4b";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "marvell,pj4b";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <1>;
-+		};
-+	};
-+
-+	clocks {
-+		smclk: sysmgr-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		cfgclk: cfg-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <100000000>;
-+		};
-+
-+		sysclk: system-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <400000000>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-parent = <&gic>;
-+
-+		ranges = <0 0xf7000000 0x1000000>;
-+
-+		l2: l2-cache-controller@ac0000 {
-+			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
-+			reg = <0xac0000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		gic: interrupt-controller@ad1000 {
-+			compatible = "arm,cortex-a9-gic";
-+			reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		local-timer@ad0600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0xad0600 0x20>;
-+			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sysclk>;
-+		};
-+
-+		apb@e80000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0xe80000 0x10000>;
-+			interrupt-parent = <&aic>;
-+
-+			timer0: timer@2c00 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c00 0x14>;
-+				interrupts = <8>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "okay";
-+			};
-+
-+			timer1: timer@2c14 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c14 0x14>;
-+				interrupts = <9>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "okay";
-+			};
-+
-+			timer2: timer@2c28 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c28 0x14>;
-+				interrupts = <10>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer3: timer@2c3c {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c3c 0x14>;
-+				interrupts = <11>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer4: timer@2c50 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c50 0x14>;
-+				interrupts = <12>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer5: timer@2c64 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c64 0x14>;
-+				interrupts = <13>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer6: timer@2c78 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c78 0x14>;
-+				interrupts = <14>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer7: timer@2c8c {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c8c 0x14>;
-+				interrupts = <15>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			aic: interrupt-controller@3000 {
-+				compatible = "snps,dw-apb-ictl";
-+				reg = <0x3000 0xc00>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		apb@fc0000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0xfc0000 0x10000>;
-+			interrupt-parent = <&sic>;
-+
-+			uart0: serial@9000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0x9000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <8>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@a000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0xa000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <9>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@b000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0xb000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <10>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
-+			sic: interrupt-controller@e000 {
-+				compatible = "snps,dw-apb-ictl";
-+				reg = <0xe000 0x400>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+	};
-+};
--- 
-1.7.10.4
+...
+>> +
+>> +static inline void st_i2c_set_bits(void __iomem *reg, u32 mask)
+>> +{
+>> +     writel(readl(reg) | mask, reg);
+>> +}
+>> +
+>> +static inline void st_i2c_clr_bits(void __iomem *reg, u32 mask)
+>> +{
+>> +     writel(readl(reg) & ~mask, reg);
+> use set_bit api and use relaxed version
+Using the set_bit api here does not match with the purpose of these 
+functions.
+We want to be able to set/clear multiple bits, and AFAICS the set_bit 
+api does not
+provide this possibility.
+
+I took example on i2c-nomadik for these functions.
+
+>> +}
+>> +
+>> +/* From I2C Specifications v0.5 */
+>> +static struct st_i2c_timings i2c_timings[] = {
+>> +     [I2C_MODE_STANDARD] = {
+>> +             .rate                   = 100000,
+>> +             .rep_start_hold         = 4000,
+>> +             .rep_start_setup        = 4700,
+>> +             .start_hold             = 4000,
+>> +             .data_setup_time        = 250,
+>> +             .stop_setup_time        = 4000,
+>> +             .bus_free_time          = 4700,
+>> +     },
+>> +     [I2C_MODE_FAST] = {
+>> +             .rate                   = 400000,
+>> +             .rep_start_hold         = 600,
+>> +             .rep_start_setup        = 600,
+>> +             .start_hold             = 600,
+>> +             .data_setup_time        = 100,
+>> +             .stop_setup_time        = 600,
+>> +             .bus_free_time          = 1300,
+>> +     },
+>> +};
+> so how do you plane to support other rate that 100k and 400k?
+The SSC IP only supports Standard and Fast modes.
+There are no plans to support faster modes.
+>> +
+>> +static void st_i2c_flush_rx_fifo(struct st_i2c_dev *i2c_dev)
+>> +{
+>> +     int count, i;
+>> +
+>> +     /*
+>> +      * Counter only counts up to 7 but fifo size is 8...
+>> +      * When fifo is full, counter is 0 and RIR bit of status register is
+>> +      * set
+>> +      */
+>> +     if (readl(i2c_dev->base + SSC_STA) & SSC_STA_RIR)
+>> +             count = SSC_RXFIFO_SIZE;
+>> +     else
+>> +             count = readl(i2c_dev->base + SSC_RX_FSTAT) &
+>> +                     SSC_RX_FSTAT_STATUS;
+>> +
+>> +     for (i = 0; i < count; i++)
+>> +             readl(i2c_dev->base + SSC_RBUF);
+> use readsl
+Since the read content is flushed, I prefer keeping it as it is instead 
+of allocating
+a buffer of the FIFO's size.
+>
+> use relaxed version as much as possible
+I was not comfortable with the different possibilities (_raw_readl, 
+readl_relaxed, readl...).
+I found this interresting discussion: 
+_http://comments.gmane.org/gmane.linux.ports.arm.kernel/117626
+ From what I understood, you are right, I should be able to use 
+readl_relaxed everywhere.
+
+Maybe I should perform a readl on the interrupt mask register before 
+returning from the interrupt handler,
+in order to ensure that the write to the IEN register is effective 
+before the IRQ for the device is re-enabled at GIC level.
+Maybe this could avoid the few spurious interrupts I face sometimes, I 
+will have a try.
+
+>> +}
+>> +
+...
+>> +
+>> +static int st_i2c_wait_free_bus(struct st_i2c_dev *i2c_dev)
+>> +{
+>> +     u32 sta;
+>> +     int i;
+>> +
+>> +     for (i = 0; i < 10; i++) {
+>> +             sta = readl(i2c_dev->base + SSC_STA);
+>> +             if (!(sta & SSC_STA_BUSY))
+>> +                     return 0;
+>> +
+>> +             usleep_range(2000, 4000);
+> can not use interrupt?
+Sadly, no.
+There is no interrupt linked to the busy bit.
+>> +     }
+>> +
+...
+>> +
+>> +static struct of_device_id st_i2c_match[] = {
+>> +     { .compatible = "st,comms-ssc-i2c", },
+> the rules is to put the first soc that use the ip in the compatible
+> as st,sti7100-scc-i2c
+Ok. There are no plans to upstream the SH4 platforms, it will only 
+remains in stlinux.com.
+Maybe I can set the first ARM platform (STiH415)?
+That would give st,stih415-ssc-i2c.
+
+Thanks for the review,
+Maxime
+
+>
+> Best Regards,
+> J.
