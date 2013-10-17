@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 17/37] DT: Add basic support for imx35-based devices.
-Date: Thu, 17 Oct 2013 17:02:15 +0200
-Message-ID: <1382022155-21954-18-git-send-email-denis@eukrea.com>
+Subject: [Patch v2][ 16/37] ASoC: eukrea-tlv320: Add DT support.
+Date: Thu, 17 Oct 2013 17:02:14 +0200
+Message-ID: <1382022155-21954-17-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,10 +10,8 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-=46rom: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
@@ -21,813 +19,293 @@ Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/clock/imx35-clock.txt      |  115 +++++
- arch/arm/boot/dts/imx35.dtsi                       |  449 ++++++++++++=
-++++++++
- arch/arm/mach-imx/Kconfig                          |   11 +
- arch/arm/mach-imx/Makefile                         |    1 +
- arch/arm/mach-imx/clk-imx35.c                      |   34 +-
- arch/arm/mach-imx/common.h                         |    1 +
- arch/arm/mach-imx/imx35-dt.c                       |   48 +++
- 7 files changed, 658 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/imx35-clock=
-=2Etxt
- create mode 100644 arch/arm/boot/dts/imx35.dtsi
- create mode 100644 arch/arm/mach-imx/imx35-dt.c
+ .../devicetree/bindings/sound/eukrea-tlv320.txt    |   23 ++++
+ sound/soc/fsl/Kconfig                              |    5 +-
+ sound/soc/fsl/eukrea-tlv320.c                      |  125 ++++++++++++=
++++++---
+ 3 files changed, 133 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/eukrea-tlv3=
+20.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt b/=
-Documentation/devicetree/bindings/clock/imx35-clock.txt
+diff --git a/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt =
+b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
 new file mode 100644
-index 0000000..9f9a60d
+index 0000000..8791037
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
-@@ -0,0 +1,115 @@
-+* Clock bindings for Freescale i.MX35
++++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
+@@ -0,0 +1,23 @@
++Audio complex for Eukrea boards with tlv320aic23 codec.
 +
 +Required properties:
-+- compatible: Should be "fsl,imx35-ccm"
-+- reg: Address and length of the register set
-+- interrupts: Should contain CCM interrupt
-+- #clock-cells: Should be <1>
++- compatible : "eukrea,eukrea-tlv320"
++- model : The user-visible name of this sound complex.
++- ssi-controller : The phandle of the SSI controller.
++- audio-codec : The phandle of the tlv320aic23 audio codec.
++- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
++- mux-ext-port : The external port of the i.MX audio muxer.
 +
-+The clock consumer should specify the desired clock by having the cloc=
-k
-+ID in its "clocks" phandle cell.  The following is a full list of i.MX=
-35
-+clocks and IDs.
++Note: The AUDMUX port numbering should start at 1, which is consistent=
+ with
++hardware manual.
 +
-+	Clock			ID
-+	---------------------------
-+	ckih			0
-+	mpll			1
-+	ppll			2
-+	mpll_075		3
-+	arm			4
-+	hsp			5
-+	hsp_div			6
-+	hsp_sel			7
-+	ahb			8
-+	ipg			9
-+	arm_per_div		10
-+	ahb_per_div		11
-+	ipg_per			12
-+	uart_sel		13
-+	uart_div		14
-+	esdhc_sel		15
-+	esdhc1_div		16
-+	esdhc2_div		17
-+	esdhc3_div		18
-+	spdif_sel		19
-+	spdif_div_pre		20
-+	spdif_div_post		21
-+	ssi_sel			22
-+	ssi1_div_pre		23
-+	ssi1_div_post		24
-+	ssi2_div_pre		25
-+	ssi2_div_post		26
-+	usb_sel			27
-+	usb_div			28
-+	nfc_div			29
-+	asrc_gate		30
-+	pata_gate		31
-+	audmux_gate		32
-+	can1_gate		33
-+	can2_gate		34
-+	cspi1_gate		35
-+	cspi2_gate		36
-+	ect_gate		37
-+	edio_gate		38
-+	emi_gate		39
-+	epit1_gate		40
-+	epit2_gate		41
-+	esai_gate		42
-+	esdhc1_gate		43
-+	esdhc2_gate		44
-+	esdhc3_gate		45
-+	fec_gate		46
-+	gpio1_gate		47
-+	gpio2_gate		48
-+	gpio3_gate		49
-+	gpt_gate		50
-+	i2c1_gate		51
-+	i2c2_gate		52
-+	i2c3_gate		53
-+	iomuxc_gate		54
-+	ipu_gate		55
-+	kpp_gate		56
-+	mlb_gate		57
-+	mshc_gate		58
-+	owire_gate		59
-+	pwm_gate		60
-+	rngc_gate		61
-+	rtc_gate		62
-+	rtic_gate		63
-+	scc_gate		64
-+	sdma_gate		65
-+	spba_gate		66
-+	spdif_gate		67
-+	ssi1_gate		68
-+	ssi2_gate		69
-+	uart1_gate		70
-+	uart2_gate		71
-+	uart3_gate		72
-+	usbotg_gate		73
-+	wdog_gate		74
-+	max_gate		75
-+	admux_gate		76
-+	csi_gate		77
-+	csi_div			78
-+	csi_sel			79
-+	iim_gate		80
-+	gpu2d_gate		81
-+	clk_max			82
++Example:
 +
-+Examples:
-+
-+clks: ccm@53f80000 {
-+	compatible =3D "fsl,imx35-ccm";
-+	reg =3D <0x53f80000 0x4000>;
-+	interrupts =3D <31>;
-+	#clock-cells =3D <1>;
++	sound {
++		compatible =3D "eukrea,eukrea-tlv320";
++		model =3D "imx51-eukrea-tlv320aic23";
++		ssi-controller =3D <&ssi2>;
++		fsl,audio-codec =3D <&tlv320aic23>;
++		mux-int-port =3D <2>;
++		mux-ext-port =3D <3>;
++	};
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index b7ab71f..9c3cd64 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -161,12 +161,15 @@ config SND_SOC_EUKREA_TLV320
+ 	depends on MACH_EUKREA_MBIMX27_BASEBOARD \
+ 		|| MACH_EUKREA_MBIMXSD25_BASEBOARD \
+ 		|| MACH_EUKREA_MBIMXSD35_BASEBOARD \
+-		|| MACH_EUKREA_MBIMXSD51_BASEBOARD
++		|| MACH_EUKREA_MBIMXSD51_BASEBOARD \
++		|| OF
+ 	depends on I2C
+ 	select SND_SOC_TLV320AIC23
+ 	select SND_SOC_IMX_PCM_FIQ
+ 	select SND_SOC_IMX_AUDMUX
+ 	select SND_SOC_IMX_SSI
++	select SND_SOC_FSL_SSI
++	select SND_SOC_IMX_PCM_DMA
+ 	help
+ 	  Enable I2S based access to the TLV320AIC23B codec attached
+ 	  to the SSI interface
+diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv32=
+0.c
+index 9a4a0ca..975af57 100644
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -17,6 +17,8 @@
+=20
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <linux/device.h>
+ #include <linux/i2c.h>
+ #include <sound/core.h>
+@@ -26,24 +28,33 @@
+=20
+ #include "../codecs/tlv320aic23.h"
+ #include "imx-ssi.h"
++#include "fsl_ssi.h"
+ #include "imx-audmux.h"
+=20
+ #define CODEC_CLOCK 12000000
+=20
++struct eukrea_tlv320 {
++	char of;
 +};
 +
-+esdhc1: esdhc@53fb4000 {
-+	compatible =3D "fsl,imx35-esdhc";
-+	reg =3D <0x53fb4000 0x4000>;
-+	interrupts =3D <7>;
-+	clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
-+	clock-names =3D "ipg", "ahb", "per";
-+	status =3D "disabled";
-+};
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dts=
-i
-new file mode 100644
-index 0000000..f4318c5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -0,0 +1,449 @@
-+/*
-+ * Copyright 2012 Steffen Trumtrar, Pengutronix
-+ *
-+ * based on imx27.dtsi
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y it under
-+ * the terms of the GNU General Public License version 2 as published =
-by the
-+ * Free Software Foundation.
-+ */
-+
-+#include "skeleton.dtsi"
-+#include "imx35-pinfunc.h"
-+
-+/ {
-+	aliases {
-+		serial0 =3D &uart1;
-+		serial1 =3D &uart2;
-+		serial2 =3D &uart3;
-+		gpio0 =3D &gpio1;
-+		gpio1 =3D &gpio2;
-+		gpio2 =3D &gpio3;
-+	};
-+
-+	avic: avic-interrupt-controller@68000000 {
-+		compatible =3D "fsl,imx35-avic", "fsl,avic";
-+		interrupt-controller;
-+		#interrupt-cells =3D <1>;
-+		reg =3D <0x68000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		ckil {
-+			compatible =3D "fsl,imx-ckil", "fixed-clock";
-+			clock-frequency =3D <32768>;
-+		};
-+
-+		osc {
-+			compatible =3D "fsl,imx-osc", "fixed-clock";
-+			clock-frequency =3D <24000000>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		compatible =3D "simple-bus";
-+		interrupt-parent =3D <&avic>;
-+		ranges;
-+
-+		L2: l2-cache@30000000 {
-+			compatible =3D "arm,l210-cache";
-+			reg =3D <0x30000000 0x1000>;
-+			cache-unified;
-+			cache-level =3D <2>;
-+		};
-+
-+		aips1: aips@43f00000 {
-+			compatible =3D "fsl,aips", "simple-bus";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			reg =3D <0x43f00000 0x100000>;
-+			ranges;
-+
-+			i2c1: i2c@43f80000 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
-+				reg =3D <0x43f80000 0x4000>;
-+				interrupts =3D <10>;
-+				status =3D "disabled";
-+			};
-+
-+			i2c3: i2c@43f84000 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
-+				reg =3D <0x43f84000 0x4000>;
-+				interrupts =3D <3>;
-+				status =3D "disabled";
-+			};
-+
-+			uart1: serial@43f90000 {
-+				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
-+				reg =3D <0x43f90000 0x4000>;
-+				interrupts =3D <45>;
-+				status =3D "disabled";
-+			};
-+
-+			uart2: serial@43f94000 {
-+				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
-+				reg =3D <0x43f94000 0x4000>;
-+				interrupts =3D <32>;
-+				status =3D "disabled";
-+			};
-+
-+			i2c2: i2c@43f98000 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
-+				reg =3D <0x43f98000 0x4000>;
-+				interrupts =3D <4>;
-+				status =3D "disabled";
-+			};
-+
-+			ssi1: ssi@43fa0000 {
-+				compatible =3D "fsl,imx35-ssi", "fsl,imx21-ssi";
-+				reg =3D <0x43fa0000 0x4000>;
-+				interrupts =3D <11>;
-+				clocks =3D <&clks 68>;
-+				dmas =3D <&sdma 28 0 0>,
-+				       <&sdma 29 0 0>;
-+				dma-names =3D "rx", "tx";
-+				fsl,fifo-depth =3D <15>;
-+				fsl,ssi-dma-events =3D <29 28 27 26>; /* TX0 RX0 TX1 RX1 */
-+				status =3D "disabled";
-+			};
-+
-+			iomuxc: iomuxc@43fac000 {
-+				compatible =3D "fsl,imx35-iomuxc";
-+				reg =3D <0x43fac000 0x4000>;
-+
-+				i2c1 {
-+					pinctrl_i2c1_1: i2c1grp-1 {
-+						fsl,pins =3D <
-+								MX35_PAD_I2C1_CLK__I2C1_SCL 0x80000000
-+								MX35_PAD_I2C1_DAT__I2C1_SDA 0x80000000
-+						>;
-+					};
-+				};
-+
-+				i2c3 {
-+					pinctrl_i2c3_1: i2c3grp-1 {
-+						fsl,pins =3D <MX35_PAD_ATA_DATA12__I2C3_SCL 0x1c0
-+							    MX35_PAD_ATA_DATA13__I2C3_SDA 0x1c0>;
-+					};
-+				};
-+
-+				can1 {
-+					pinctrl_can1_1: can1grp-1 {
-+						fsl,pins =3D <MX35_PAD_I2C2_CLK__CAN1_TXCAN 0x1c0
-+							    MX35_PAD_I2C2_DAT__CAN1_RXCAN 0x1c0>;
-+					};
-+				};
-+
-+				can2 {
-+					pinctrl_can2_1: can2grp-1 {
-+						fsl,pins =3D <MX35_PAD_TX5_RX0__CAN2_TXCAN 0x1c0
-+							MX35_PAD_TX4_RX1__CAN2_RXCAN 0x1c0>;
-+					};
-+				};
-+
-+				uart1 {
-+					pinctrl_uart1_1: uart1grp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_CTS1__UART1_CTS 0x80000000
-+							MX35_PAD_RTS1__UART1_RTS 0x80000000
-+							MX35_PAD_TXD1__UART1_TXD_MUX 0x80000000
-+							MX35_PAD_RXD1__UART1_RXD_MUX 0x80000000
-+						>;
-+					};
-+				};
-+
-+				uart2 {
-+					pinctrl_uart2_1: uart2grp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_RTS2__UART2_RTS 0x80000000
-+							MX35_PAD_CTS2__UART2_CTS 0x80000000
-+							MX35_PAD_RXD2__UART2_RXD_MUX 0x80000000
-+							MX35_PAD_TXD2__UART2_TXD_MUX 0x80000000
-+						>;
-+					};
-+				};
-+
-+				fec {
-+					pinctrl_fec_1: fecgrp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_FEC_TX_CLK__FEC_TX_CLK 0x80000000
-+							MX35_PAD_FEC_RX_CLK__FEC_RX_CLK 0x80000000
-+							MX35_PAD_FEC_RX_DV__FEC_RX_DV 0x80000000
-+							MX35_PAD_FEC_COL__FEC_COL 0x80000000
-+							MX35_PAD_FEC_RDATA0__FEC_RDATA_0 0x80000000
-+							MX35_PAD_FEC_TDATA0__FEC_TDATA_0 0x80000000
-+							MX35_PAD_FEC_TX_EN__FEC_TX_EN 0x80000000
-+							MX35_PAD_FEC_MDC__FEC_MDC 0x80000000
-+							MX35_PAD_FEC_MDIO__FEC_MDIO 0x80000000
-+							MX35_PAD_FEC_TX_ERR__FEC_TX_ERR 0x80000000
-+							MX35_PAD_FEC_RX_ERR__FEC_RX_ERR 0x80000000
-+							MX35_PAD_FEC_CRS__FEC_CRS 0x80000000
-+							MX35_PAD_FEC_RDATA1__FEC_RDATA_1 0x80000000
-+							MX35_PAD_FEC_TDATA1__FEC_TDATA_1 0x80000000
-+							MX35_PAD_FEC_RDATA2__FEC_RDATA_2 0x80000000
-+							MX35_PAD_FEC_TDATA2__FEC_TDATA_2 0x80000000
-+							MX35_PAD_FEC_RDATA3__FEC_RDATA_3 0x80000000
-+							MX35_PAD_FEC_TDATA3__FEC_TDATA_3 0x80000000
-+						>;
-+
-+					};
-+				};
-+
-+				esdhc1 {
-+					pinctrl_esdhc1_1: esdhc1grp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_SD1_CMD__ESDHC1_CMD    0x80000000
-+							MX35_PAD_SD1_CLK__ESDHC1_CLK    0x80000000
-+							MX35_PAD_SD1_DATA0__ESDHC1_DAT0 0x80000000
-+							MX35_PAD_SD1_DATA1__ESDHC1_DAT1 0x80000000
-+							MX35_PAD_SD1_DATA2__ESDHC1_DAT2 0x80000000
-+							MX35_PAD_SD1_DATA3__ESDHC1_DAT3 0x80000000
-+						>;
-+					};
-+				};
-+
-+				lcdc {
-+					pinctrl_lcdc_1: lcdcgp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_LD0__IPU_DISPB_DAT_0         0x80000000
-+							MX35_PAD_LD1__IPU_DISPB_DAT_1         0x80000000
-+							MX35_PAD_LD2__IPU_DISPB_DAT_2         0x80000000
-+							MX35_PAD_LD3__IPU_DISPB_DAT_3         0x80000000
-+							MX35_PAD_LD4__IPU_DISPB_DAT_4         0x80000000
-+							MX35_PAD_LD5__IPU_DISPB_DAT_5         0x80000000
-+							MX35_PAD_LD6__IPU_DISPB_DAT_6         0x80000000
-+							MX35_PAD_LD7__IPU_DISPB_DAT_7         0x80000000
-+							MX35_PAD_LD8__IPU_DISPB_DAT_8         0x80000000
-+							MX35_PAD_LD9__IPU_DISPB_DAT_9         0x80000000
-+							MX35_PAD_LD10__IPU_DISPB_DAT_10       0x80000000
-+							MX35_PAD_LD11__IPU_DISPB_DAT_11       0x80000000
-+							MX35_PAD_LD12__IPU_DISPB_DAT_12	      0x80000000
-+							MX35_PAD_LD13__IPU_DISPB_DAT_13       0x80000000
-+							MX35_PAD_LD14__IPU_DISPB_DAT_14       0x80000000
-+							MX35_PAD_LD15__IPU_DISPB_DAT_15       0x80000000
-+							MX35_PAD_LD16__IPU_DISPB_DAT_16       0x80000000
-+							MX35_PAD_LD17__IPU_DISPB_DAT_17       0x80000000
-+							MX35_PAD_D3_HSYNC__IPU_DISPB_D3_HSYNC 0x80000000
-+							MX35_PAD_D3_FPSHIFT__IPU_DISPB_D3_CLK 0x80000000
-+							MX35_PAD_D3_DRDY__IPU_DISPB_D3_DRDY   0x80000000
-+							MX35_PAD_D3_VSYNC__IPU_DISPB_D3_VSYNC 0x80000000
-+							/* Backlight */
-+							MX35_PAD_CONTRAST__IPU_DISPB_CONTR    0x80000000
-+						>;
-+					};
-+				};
-+
-+				audmux {
-+					pinctrl_audmux_1: audmuxgrp-1 {
-+						fsl,pins =3D <
-+							MX35_PAD_STXFS4__AUDMUX_AUD4_TXFS	0x80000000
-+							MX35_PAD_STXD4__AUDMUX_AUD4_TXD		0x80000000
-+							MX35_PAD_SRXD4__AUDMUX_AUD4_RXD		0x80000000
-+							MX35_PAD_SCK4__AUDMUX_AUD4_TXC		0x80000000
-+						>;
-+					};
-+
-+				};
-+			};
-+		};
-+
-+		spba: spba-bus@50000000 {
-+			compatible =3D "fsl,spba-bus", "simple-bus";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			reg =3D <0x50000000 0x100000>;
-+			ranges;
-+
-+			uart3: serial@5000c000 {
-+				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
-+				reg =3D <0x5000c000 0x4000>;
-+				interrupts =3D <18>;
-+				status =3D "disabled";
-+			};
-+
-+			fec: fec@50038000 {
-+				compatible =3D "fsl,imx35-fec", "fsl,imx27-fec";
-+				reg =3D <0x50038000 0x4000>;
-+				interrupts =3D <57>;
-+				status =3D "disabled";
-+			};
-+		};
-+
-+		aips2: aips@53f00000 {
-+			compatible =3D "fsl,aips", "simple-bus";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			reg =3D <0x53f00000 0x100000>;
-+			ranges;
-+
-+			clks: ccm@53f80000 {
-+				compatible =3D "fsl,imx35-ccm";
-+				reg =3D <0x53f80000 0x4000>;
-+				interrupts =3D <31>;
-+				#clock-cells =3D <1>;
-+			};
-+
-+			gpio3: gpio@53fa4000 {
-+				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
-+				reg =3D <0x53fa4000 0x4000>;
-+				interrupts =3D <56>;
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+			};
-+
-+			esdhc1: esdhc@53fb4000 {
-+				compatible =3D "fsl,imx35-esdhc";
-+				reg =3D <0x53fb4000 0x4000>;
-+				interrupts =3D <7>;
-+				clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
-+				clock-names =3D "ipg", "ahb", "per";
-+				status =3D "disabled";
-+			};
-+
-+			esdhc2: esdhc@53fb8000 {
-+				compatible =3D "fsl,imx35-esdhc";
-+				reg =3D <0x53fb8000 0x4000>;
-+				interrupts =3D <8>;
-+				clocks =3D <&clks 9>, <&clks 8>, <&clks 44>;
-+				clock-names =3D "ipg", "ahb", "per";
-+				status =3D "disabled";
-+			};
-+
-+			esdhc3: esdhc@53fbc000 {
-+				compatible =3D "fsl,imx35-esdhc";
-+				reg =3D <0x53fbc000 0x4000>;
-+				interrupts =3D <9>;
-+				clocks =3D <&clks 9>, <&clks 8>, <&clks 45>;
-+				clock-names =3D "ipg", "ahb", "per";
-+				status =3D "disabled";
-+			};
-+
-+			ipu: ipu@53fc0000 {
-+				compatible =3D "fsl,imx31-ipu";
-+				reg =3D <	0x53fc0000 0x5f
-+					0x53fc0088 0x2b >;
-+				interrupts =3D <42 41>;
-+				dma-channels =3D <32>;
-+				#dma-cells =3D <1>;
-+				clocks =3D <&clks 55>;
-+				clock-names =3D "";
-+				status =3D "disabled";
-+			};
-+
-+			lcdc: mx3fb@53fc00b4 {
-+				compatible =3D "fsl,mx3-fb";
-+				reg =3D <0x53fc00b4 0x0b>;
-+				dmas =3D <&ipu 14>;
-+				dma-names =3D "tx";
-+				clocks =3D <&clks 55>;
-+				status =3D "disabled";
-+			};
-+
-+
-+			audmux: audmux@53fc4000 {
-+				compatible =3D "fsl,imx35-audmux", "fsl,imx31-audmux";
-+				reg =3D <0x53fc4000 0x4000>;
-+				status =3D "disabled";
-+			};
-+
-+			gpio1: gpio@53fcc000 {
-+				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
-+				reg =3D <0x53fcc000 0x4000>;
-+				interrupts =3D <52>;
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+			};
-+
-+			gpio2: gpio@53fd0000 {
-+				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
-+				reg =3D <0x53fd0000 0x4000>;
-+				interrupts =3D <51>;
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+			};
-+
-+			sdma: sdma@53fd4000 {
-+				compatible =3D "fsl,imx35-sdma";
-+				reg =3D <0x53fd4000 0x4000>;
-+				clocks =3D <&clks 9>, <&clks 65>;
-+				clock-names =3D "ipg", "ahb";
-+				#dma-cells =3D <3>;
-+				interrupts =3D <34>;
-+				fsl,sdma-ram-script-name =3D "imx/sdma/sdma-imx35.bin";
-+			};
-+
-+			wdog: wdog@53fdc000 {
-+				compatible =3D "fsl,imx35-wdt", "fsl,imx21-wdt";
-+				reg =3D <0x53fdc000 0x4000>;
-+				clocks =3D <&clks 74>;
-+				clock-names =3D "";
-+				interrupts =3D <55>;
-+			};
-+
-+			can1: can@53fe4000 {
-+				compatible =3D "fsl,imx35-flexcan", "fsl,p1010-flexcan";
-+				reg =3D <0x53fe4000 0x1000>;
-+				interrupts =3D <43>;
-+				status =3D "disabled";
-+			};
-+
-+			can2: can@53fe8000 {
-+				compatible =3D "fsl,imx35-flexcan", "fsl,p1010-flexcan";
-+				reg =3D <0x53fe8000 0x1000>;
-+				interrupts =3D <44>;
-+				status =3D "disabled";
-+			};
-+		};
-+
-+		emi@80000000 { /* External Memory Interface */
-+			compatible =3D "fsl,emi", "simple-bus";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			reg =3D <0x80000000 0x40000000>;
-+			ranges;
-+
-+			nfc: nand@bb000000 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <1>;
-+
-+				compatible =3D "fsl,imx35-nand", "fsl,imx25-nand";
-+				reg =3D <0xbb000000 0x2000>;
-+				interrupts =3D <33>;
-+				status =3D "disabled";
-+			};
-+
-+			weim: weim@b8002000 {
-+				#address-cells =3D <2>;
-+				#size-cells =3D <1>;
-+				compatible =3D "fsl,imx35-weim";
-+				reg =3D <0xb8002000 0x1000>;
-+				ranges =3D <
-+					0 0 0xa0000000 0x8000000
-+					1 0 0xa8000000 0x8000000
-+					2 0 0xb0000000 0x2000000
-+					3 0 0xb2000000 0x2000000
-+					4 0 0xb4000000 0x2000000
-+					5 0 0xb6000000 0x2000000
-+				>;
-+				status =3D "disabled";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index 9f67338..7400c7b 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -625,6 +625,17 @@ config MACH_IMX31_DT
+ static int eukrea_tlv320_hw_params(struct snd_pcm_substream *substream=
+,
+ 			    struct snd_pcm_hw_params *params)
+ {
+ 	struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
++	struct eukrea_tlv320 *priv =3D snd_soc_card_get_drvdata(rtd->card);
+ 	struct snd_soc_dai *codec_dai =3D rtd->codec_dai;
+ 	struct snd_soc_dai *cpu_dai =3D rtd->cpu_dai;
+ 	int ret;
 =20
- comment "MX35 platforms:"
+-	ret =3D snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
+-				  SND_SOC_DAIFMT_NB_NF |
+-				  SND_SOC_DAIFMT_CBM_CFM);
+-	if (ret) {
+-		pr_err("%s: failed set cpu dai format\n", __func__);
+-		return ret;
++	/* fsl_ssi lacks the set_fmt ops. */
++	if (!priv->of) {
++		ret =3D snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
++					  SND_SOC_DAIFMT_NB_NF |
++					  SND_SOC_DAIFMT_CBM_CFM);
++		if (ret) {
++			pr_err("%s: failed set cpu dai format\n", __func__);
++			return ret;
++		}
+ 	}
 =20
-+config MACH_IMX35_DT
-+	bool "Support i.MX35 platforms from device tree"
-+	select SOC_IMX35
-+	select IMX_HAVE_PLATFORM_IMX2_WDT
-+	select IMX_HAVE_PLATFORM_MXC_NAND
-+	select PINCTRL
-+	select PINCTRL_IMX35
-+	help
-+	  Include support for Freescale i.MX35 based platforms
-+	  using the device tree for discovery.
-+
- config MACH_PCM043
- 	bool "Support Phytec pcm043 (i.MX35) platforms"
- 	select IMX_HAVE_PLATFORM_FLEXCAN
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index 5383c58..f20a117 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_MACH_MX35_3DS) +=3D mach-mx35_3ds.o
- obj-$(CONFIG_MACH_EUKREA_CPUIMX35SD) +=3D mach-cpuimx35.o
- obj-$(CONFIG_MACH_EUKREA_MBIMXSD35_BASEBOARD) +=3D eukrea_mbimxsd35-ba=
-seboard.o
- obj-$(CONFIG_MACH_VPR200) +=3D mach-vpr200.o
-+obj-$(CONFIG_MACH_IMX35_DT) +=3D imx35-dt.o
+ 	ret =3D snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
+@@ -60,15 +71,18 @@ static int eukrea_tlv320_hw_params(struct snd_pcm_s=
+ubstream *substream,
+ 		pr_err("%s: failed setting codec sysclk\n", __func__);
+ 		return ret;
+ 	}
+-	snd_soc_dai_set_tdm_slot(cpu_dai, 0xffffffc, 0xffffffc, 2, 0);
 =20
- obj-$(CONFIG_HAVE_IMX_ANATOP) +=3D anatop.o
- obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
-diff --git a/arch/arm/mach-imx/clk-imx35.c b/arch/arm/mach-imx/clk-imx3=
-5.c
-index 2193c83..a924644 100644
---- a/arch/arm/mach-imx/clk-imx35.c
-+++ b/arch/arm/mach-imx/clk-imx35.c
-@@ -45,6 +45,8 @@ static struct arm_ahb_div clk_consumer[] =3D {
- static char hsp_div_532[] =3D { 4, 8, 3, 0 };
- static char hsp_div_400[] =3D { 3, 6, 3, 0 };
+-	ret =3D snd_soc_dai_set_sysclk(cpu_dai, IMX_SSP_SYS_CLK, 0,
+-				SND_SOC_CLOCK_IN);
+-	if (ret) {
+-		pr_err("can't set CPU system clock IMX_SSP_SYS_CLK\n");
+-		return ret;
+-	}
++	/* fsl_ssi lacks the set_sysclk ops */
++	if (!priv->of) {
++		snd_soc_dai_set_tdm_slot(cpu_dai, 0xffffffc, 0xffffffc, 2, 0);
 =20
-+static struct clk_onecell_data clk_data;
-+
- static const char *std_sel[] =3D {"ppll", "arm"};
- static const char *ipg_per_sel[] =3D {"ahb_per_div", "arm_per_div"};
-=20
-@@ -127,7 +129,8 @@ int __init mx35_clocks_init(void)
- 	clk[esdhc3_div] =3D imx_clk_divider("esdhc3_div", "esdhc_sel", base +=
- MX35_CCM_PDR3, 16, 6);
-=20
- 	clk[spdif_sel] =3D imx_clk_mux("spdif_sel", base + MX35_CCM_PDR3, 22,=
- 1, std_sel, ARRAY_SIZE(std_sel));
--	clk[spdif_div_pre] =3D imx_clk_divider("spdif_div_pre", "spdif_sel", =
-base + MX35_CCM_PDR3, 29, 3); /* divide by 1 not allowed */=20
-+	/* divide by 1 not allowed */
-+	clk[spdif_div_pre] =3D imx_clk_divider("spdif_div_pre", "spdif_sel", =
-base + MX35_CCM_PDR3, 29, 3);
- 	clk[spdif_div_post] =3D imx_clk_divider("spdif_div_post", "spdif_div_=
-pre", base + MX35_CCM_PDR3, 23, 6);
-=20
- 	clk[ssi_sel] =3D imx_clk_mux("ssi_sel", base + MX35_CCM_PDR2, 6, 1, s=
-td_sel, ARRAY_SIZE(std_sel));
-@@ -204,7 +207,9 @@ int __init mx35_clocks_init(void)
- 				i, PTR_ERR(clk[i]));
-=20
- 	clk_register_clkdev(clk[pata_gate], NULL, "pata_imx");
-+	clk_register_clkdev(clk[can1_gate], NULL, "53fe4000.can");
- 	clk_register_clkdev(clk[can1_gate], NULL, "flexcan.0");
-+	clk_register_clkdev(clk[can2_gate], NULL, "53fe8000.can");
- 	clk_register_clkdev(clk[can2_gate], NULL, "flexcan.1");
- 	clk_register_clkdev(clk[cspi1_gate], "per", "imx35-cspi.0");
- 	clk_register_clkdev(clk[cspi1_gate], "ipg", "imx35-cspi.0");
-@@ -221,12 +226,16 @@ int __init mx35_clocks_init(void)
- 	clk_register_clkdev(clk[esdhc3_gate], "per", "sdhci-esdhc-imx35.2");
- 	clk_register_clkdev(clk[ipg], "ipg", "sdhci-esdhc-imx35.2");
- 	clk_register_clkdev(clk[ahb], "ahb", "sdhci-esdhc-imx35.2");
-+	clk_register_clkdev(clk[fec_gate], NULL, "50038000.fec");
- 	/* i.mx35 has the i.mx27 type fec */
- 	clk_register_clkdev(clk[fec_gate], NULL, "imx27-fec.0");
- 	clk_register_clkdev(clk[gpt_gate], "per", "imx-gpt.0");
- 	clk_register_clkdev(clk[ipg], "ipg", "imx-gpt.0");
-+	clk_register_clkdev(clk[i2c1_gate], NULL, "43f80000.i2c");
- 	clk_register_clkdev(clk[i2c1_gate], NULL, "imx21-i2c.0");
-+	clk_register_clkdev(clk[i2c2_gate], NULL, "43f98000.i2c");
- 	clk_register_clkdev(clk[i2c2_gate], NULL, "imx21-i2c.1");
-+	clk_register_clkdev(clk[i2c3_gate], NULL, "43f84000.i2c");
- 	clk_register_clkdev(clk[i2c3_gate], NULL, "imx21-i2c.2");
- 	clk_register_clkdev(clk[ipu_gate], NULL, "ipu-core");
- 	clk_register_clkdev(clk[ipu_gate], NULL, "mx3_sdc_fb");
-@@ -235,6 +244,12 @@ int __init mx35_clocks_init(void)
- 	clk_register_clkdev(clk[sdma_gate], NULL, "imx35-sdma");
- 	clk_register_clkdev(clk[ssi1_gate], NULL, "imx-ssi.0");
- 	clk_register_clkdev(clk[ssi2_gate], NULL, "imx-ssi.1");
-+	clk_register_clkdev(clk[uart1_gate], "per", "43f90000.serial");
-+	clk_register_clkdev(clk[ipg], "ipg", "43f90000.serial");
-+	clk_register_clkdev(clk[uart2_gate], "per", "43f94000.serial");
-+	clk_register_clkdev(clk[ipg], "ipg", "43f94000.serial");
-+	clk_register_clkdev(clk[uart3_gate], "per", "5000c000.serial");
-+	clk_register_clkdev(clk[ipg], "ipg", "5000c000.serial");
- 	/* i.mx35 has the i.mx21 type uart */
- 	clk_register_clkdev(clk[uart1_gate], "per", "imx21-uart.0");
- 	clk_register_clkdev(clk[ipg], "ipg", "imx21-uart.0");
-@@ -255,6 +270,7 @@ int __init mx35_clocks_init(void)
- 	clk_register_clkdev(clk[ipg], "ipg", "imx-udc-mx27");
- 	clk_register_clkdev(clk[usbotg_gate], "ahb", "imx-udc-mx27");
- 	clk_register_clkdev(clk[wdog_gate], NULL, "imx2-wdt.0");
-+	clk_register_clkdev(clk[nfc_div], NULL, "bb000000.nand");
- 	clk_register_clkdev(clk[nfc_div], NULL, "imx25-nand.0");
- 	clk_register_clkdev(clk[csi_gate], NULL, "mx3-camera.0");
- 	clk_register_clkdev(clk[admux_gate], "audmux", NULL);
-@@ -286,3 +302,19 @@ int __init mx35_clocks_init(void)
-=20
++		ret =3D snd_soc_dai_set_sysclk(cpu_dai, IMX_SSP_SYS_CLK, 0,
++					SND_SOC_CLOCK_IN);
++		if (ret) {
++			pr_err("can't set CPU system clock IMX_SSP_SYS_CLK\n");
++			return ret;
++		}
++	}
  	return 0;
  }
+=20
+@@ -80,7 +94,6 @@ static struct snd_soc_dai_link eukrea_tlv320_dai =3D =
+{
+ 	.name		=3D "tlv320aic23",
+ 	.stream_name	=3D "TLV320AIC23",
+ 	.codec_dai_name	=3D "tlv320aic23-hifi",
+-	.platform_name	=3D "imx-ssi.0",
+ 	.codec_name	=3D "tlv320aic23-codec.0-001a",
+ 	.cpu_dai_name	=3D "imx-ssi.0",
+ 	.ops		=3D &eukrea_tlv320_snd_ops,
+@@ -97,8 +110,56 @@ static int eukrea_tlv320_probe(struct platform_devi=
+ce *pdev)
+ {
+ 	int ret;
+ 	int int_port =3D 0, ext_port;
++	struct platform_device *ssi_pdev;
++	struct device_node *np =3D pdev->dev.of_node;
++	struct device_node *ssi_np;
++	struct eukrea_tlv320 *priv;
 +
-+int __init mx35_clocks_init_dt(void)
-+{
-+	struct device_node *np;
-+	void __iomem *base;
-+	int irq;
++	priv =3D devm_kzalloc(&pdev->dev,
++				sizeof(struct eukrea_tlv320), GFP_KERNEL);
++	if (priv =3D=3D NULL)
++		return -ENOMEM;
 +
-+	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx35-ccm");
-+	clk_data.clks =3D clk;
-+	clk_data.clk_num =3D ARRAY_SIZE(clk);
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++	if (np) {
++		ssi_np =3D of_parse_phandle(pdev->dev.of_node,
++					  "ssi-controller", 0);
++		ssi_pdev =3D of_find_device_by_node(ssi_np);
++		if (!ssi_pdev) {
++			dev_err(&pdev->dev, "ssi-controller missing or "
++				"invalid.\n");
++			ret =3D -ENODEV;
++			goto err;
++		}
 +
-+	mx35_clocks_init();
++		ret =3D of_property_read_u32(np, "mux-int-port", &int_port);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"mux-int-port missing or invalid\n");
++			return ret;
++		}
++		ret =3D of_property_read_u32(np, "mux-ext-port", &ext_port);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"mux-ext-port missing or invalid\n");
++			return ret;
++		}
 +
-+	return 0;
-+}
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 4517fd7..58db4d2 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -68,6 +68,7 @@ extern int mx53_clocks_init(unsigned long ckil, unsig=
-ned long osc,
- extern int mx25_clocks_init_dt(void);
- extern int mx27_clocks_init_dt(void);
- extern int mx31_clocks_init_dt(void);
-+extern int mx35_clocks_init_dt(void);
- extern int mx51_clocks_init_dt(void);
- extern int mx53_clocks_init_dt(void);
- extern struct platform_device *mxc_register_gpio(char *name, int id,
-diff --git a/arch/arm/mach-imx/imx35-dt.c b/arch/arm/mach-imx/imx35-dt.=
-c
-new file mode 100644
-index 0000000..6e83638
---- /dev/null
-+++ b/arch/arm/mach-imx/imx35-dt.c
-@@ -0,0 +1,48 @@
-+/*
-+ * Copyright 2012 Steffen Trumtrar, Pengutronix
-+ *
-+ * based on imx27-dt.c
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y it under
-+ * the terms of the GNU General Public License version 2 as published =
-by the
-+ * Free Software Foundation.
-+ */
++		/*
++		 * The port numbering in the hardware manual starts at 1, while
++		 * the audmux API expects it starts at 0.
++		 */
++		int_port--;
++		ext_port--;
 +
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/time.h>
-+#include <asm/hardware/cache-l2x0.h>
-+#include "common.h"
-+#include "mx35.h"
++		eukrea_tlv320_dai.cpu_dai_name =3D dev_name(&ssi_pdev->dev);
++		eukrea_tlv320_dai.platform_of_node =3D ssi_np;
++		priv->of =3D 1;
++	} else {
++		eukrea_tlv320_dai.platform_name =3D "imx-ssi.0";
++	}
+=20
+-	if (machine_is_eukrea_cpuimx27()) {
++	if (machine_is_eukrea_cpuimx27() ||
++	    of_find_compatible_node(NULL, NULL, "fsl,imx21-audmux")) {
+ 		imx_audmux_v1_configure_port(MX27_AUDMUX_HPCR1_SSI0,
+ 			IMX_AUDMUX_V1_PCR_SYN |
+ 			IMX_AUDMUX_V1_PCR_TFSDIR |
+@@ -115,8 +176,12 @@ static int eukrea_tlv320_probe(struct platform_dev=
+ice *pdev)
+ 		);
+ 	} else if (machine_is_eukrea_cpuimx25sd() ||
+ 		   machine_is_eukrea_cpuimx35sd() ||
+-		   machine_is_eukrea_cpuimx51sd()) {
+-		ext_port =3D machine_is_eukrea_cpuimx25sd() ? 4 : 3;
++		   machine_is_eukrea_cpuimx51sd() ||
++		   of_find_compatible_node(NULL, NULL, "fsl,imx31-audmux")) {
++		if (!np)
++			ext_port =3D machine_is_eukrea_cpuimx25sd() ?
++				4 : 3;
 +
-+static void __init imx35_dt_init(void)
-+{
-+	l2x0_of_init(0x00030024, 0x00000000);
-+
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			     NULL, NULL);
-+}
-+
-+static void __init imx35_timer_init(void)
-+{
-+	mx35_clocks_init_dt();
-+}
-+
-+static const char *imx35_dt_board_compat[] __initdata =3D {
-+	"fsl,imx35",
-+	NULL
+ 		imx_audmux_v2_configure_port(int_port,
+ 			IMX_AUDMUX_V2_PTCR_SYN |
+ 			IMX_AUDMUX_V2_PTCR_TFSDIR |
+@@ -130,14 +195,29 @@ static int eukrea_tlv320_probe(struct platform_de=
+vice *pdev)
+ 			IMX_AUDMUX_V2_PDCR_RXDSEL(int_port)
+ 		);
+ 	} else {
+-		/* return happy. We might run on a totally different machine */
+-		return 0;
++		if (np) {
++			/* The eukrea,eukrea-tlv320 driver was explicitely
++			 * requested (through the device tree).
++			 */
++			dev_err(&pdev->dev,
++				"Missing audmux DT node.\n");
++			return -ENODEV;
++		} else {
++			/* Return happy.
++			 * We might run on a totally different machine.
++			 */
++			return 0;
++		}
+ 	}
+=20
+ 	eukrea_tlv320.dev =3D &pdev->dev;
++	snd_soc_card_set_drvdata(&eukrea_tlv320, priv);
+ 	ret =3D snd_soc_register_card(&eukrea_tlv320);
++err:
+ 	if (ret)
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
++	if (np)
++		of_node_put(ssi_np);
+=20
+ 	return ret;
+ }
+@@ -149,10 +229,17 @@ static int eukrea_tlv320_remove(struct platform_d=
+evice *pdev)
+ 	return 0;
+ }
+=20
++static const struct of_device_id imx_tlv320_dt_ids[] =3D {
++	{ .compatible =3D "eukrea,eukrea-tlv320"},
++	{ /* sentinel */ }
 +};
++MODULE_DEVICE_TABLE(of, imx_tlv320_dt_ids);
 +
-+DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
-+	.map_io		=3D mx35_map_io,
-+	.init_early	=3D imx35_init_early,
-+	.init_irq	=3D mx35_init_irq,
-+	.handle_irq	=3D imx35_handle_irq,
-+	.init_time      =3D imx35_timer_init,
-+	.init_machine	=3D imx35_dt_init,
-+	.dt_compat	=3D imx35_dt_board_compat,
-+	.restart	=3D mxc_restart,
-+MACHINE_END
+ static struct platform_driver eukrea_tlv320_driver =3D {
+ 	.driver =3D {
+ 		.name =3D "eukrea_tlv320",
+ 		.owner =3D THIS_MODULE,
++		.of_match_table =3D imx_tlv320_dt_ids,
+ 	},
+ 	.probe =3D eukrea_tlv320_probe,
+ 	.remove =3D eukrea_tlv320_remove,};
 --=20
 1.7.9.5
 
