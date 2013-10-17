@@ -1,92 +1,80 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [RESEND PATCH 3/4] ARM: dts: bcm281xx: Add i2c busses
-Date: Wed, 16 Oct 2013 21:32:51 -0700
-Message-ID: <CAEPRUYqqxLevwM6dRpGUnfCgF2qZ_NVTDYTzKoFg+zbOPggfMQ@mail.gmail.com>
-References: <1381960909-1735-1-git-send-email-tim.kryger@linaro.org>
-	<1381960909-1735-4-git-send-email-tim.kryger@linaro.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v9 4/9] mtd: nand: omap: enable auto-detection of
+ bus-width for omap-nand drivers
+Date: Thu, 17 Oct 2013 04:42:23 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA27917@DBDE04.ent.ti.com>
+References: <1381816197-20477-1-git-send-email-pekon@ti.com>
+ <1381816197-20477-5-git-send-email-pekon@ti.com>
+ <20131016222248.GZ23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381960909-1735-4-git-send-email-tim.kryger@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131016222248.GZ23337@ld-irv-0074.broadcom.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
- This patch does not work as it relies on the yet-unmerged clock code
-for bcm11351. This patch does not apply to -rc, and when tweaked it
-does not compile as it references  non-existent bsc_clks.
- Has the clk patches been submitted yet ? Applying this will have to
-wait until those have been accepted.
+Hi Brian,
 
- thanks,
-   csd
+> From: Brian Norris [mailto:computersforpeace@gmail.com]
+> > On Tue, Oct 15, 2013 at 11:19:52AM +0530, Pekon Gupta wrote:
+> > Autodetection of NAND device bus-width was added in generic NAND
+> driver as
+[...]
+> > @@ -1904,6 +1903,21 @@ static int omap_nand_probe(struct
+> platform_device *pdev)
+> >  		nand_chip->chip_delay = 50;
+> >  	}
+> >
+> > +	/* scan for NAND device connected to chip controller */
+> > +	if (nand_scan_ident(mtd, 1, NULL)) {
+> > +		err = -ENXIO;
+> > +		goto out_release_mem_region;
+> > +	}
+> > +	if ((nand_chip->options & NAND_BUSWIDTH_16) !=
+> > +			(pdata->devsize & NAND_BUSWIDTH_16)) {
+> > +		pr_err("%s: detected %s device but driver configured for
+> %s\n",
+> > +			DRIVER_NAME,
+> > +			(nand_chip->options & NAND_BUSWIDTH_16) ?
+> "x16" : "x8",
+> > +			(pdata->devsize & NAND_BUSWIDTH_16) ? "x16" :
+> "x8");
+> 
+> I'm not sure on the policy choice here; if you're using BUSWIDTH_AUTO,
+> do you even want to try to configure the buswidth by platform data?
+> You're not really getting the full use out of NAND_BUSWIDTH_AUTO because
+> the platform data has to guess the same buswidth that nand_base.c
+> determines. This is worse than the previous behavior, in which you would
+> try both buswidths if the specified type failed.
+> 
+> IOW, what are you trying to achieve with auto-buswidth? Automatic
+> determination of the buswidth or just automatic validation? What do you
+> achieve with platform data's selection of buswidth? Specification of the
+> buswidth or just a hint? Do the goals conflict? Perhaps you can just
+> warn, and not error out if the two selections don't match? Or maybe you
+> really wanted to replace the platform data selection mechanism entirely
+> with auto-buswidth?
+> 
+This is 'automatic validation' of value set in DT binding "nand-bus-width"
+So this approach is other way round, where controller is configured
+based on DT binding "nand-bus-width" and then it checks whether
+device actual buswidth matches DT binding value or not.
+
+- GPMC controller is pre-configured to support "x8" or "x16" device based
+   on DT binding "nand-bus-width".
+   Reference: $LINUX/arch/arm/mach-omap2/gpmc.c
+  @@gpmc_probe_nand_child()
+	val = of_get_nand_bus_width(child);
+
+- But, bus-width of NAND device is only known during NAND driver
+   Probe in nand_scan_ident().
+
+Going forward when all NAND devices are compliant to ONFI,
+then we can deprecate "nand-bus-width".
 
 
-On Wed, Oct 16, 2013 at 3:01 PM, Tim Kryger <tim.kryger@linaro.org> wrote:
-> Add the DTS nodes for all the i2c busses in the SoC.
->
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Christian Daudt <csd@broadcom.com>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> ---
->  arch/arm/boot/dts/bcm11351.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> index 1246885..4bfd7e3 100644
-> --- a/arch/arm/boot/dts/bcm11351.dtsi
-> +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -146,6 +146,46 @@
->                 status = "disabled";
->         };
->
-> +       i2c@3e016000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e016000 0x80>;
-> +               interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc1_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3e017000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e017000 0x80>;
-> +               interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc2_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3e018000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e018000 0x80>;
-> +               interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc3_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3500d000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3500d000 0x80>;
-> +               interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&pmu_bsc_clk>;
-> +               status = "disabled";
-> +       };
-> +
->         clocks {
->                 bsc1_clk: bsc1 {
->                         compatible = "fixed-clock";
-> --
-> 1.8.0.1
->
->
+with regards, pekon
