@@ -1,147 +1,135 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3 v6] thermal: samsung: add intclr_fall_shift bit in
- exynos_tmu_register
-Date: Thu, 17 Oct 2013 12:03:50 +0200
-Message-ID: <2064487.sPVcMNRS4J@amdc1032>
-References: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
- <1381979473-7079-1-git-send-email-ch.naveen@samsung.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v9 7/9] mtd: nand: omap: use drivers/mtd/nand/nand_bch.c
+ wrapper for BCH ECC instead of lib/bch.c
+Date: Thu, 17 Oct 2013 10:14:40 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA27C63@DBDE04.ent.ti.com>
+References: <1381816197-20477-1-git-send-email-pekon@ti.com>
+ <1381816197-20477-8-git-send-email-pekon@ti.com>
+ <20131017022237.GC23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1381979473-7079-1-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, eduardo.valentin-l0cyMroinI0@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131017022237.GC23337@ld-irv-0074.broadcom.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivan Djelic <ivan.djelic@parrot.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>
 List-Id: devicetree@vger.kernel.org
 
+> From: Brian Norris [mailto:computersforpeace@gmail.com]
+> > On Tue, Oct 15, 2013 at 11:19:55AM +0530, Pekon Gupta wrote:
+[snip]
 
-Hi Naveen,
-
-On Thursday, October 17, 2013 08:41:13 AM Naveen Krishna Chatradhi wrote:
-> On Exynos5250, the FALL interrupt related en, status and clear bits are
-> available at an offset of
-> 16 in INTEN, INTSTAT registers and at an offset of
-> 12 in INTCLEAR register.
+> > diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> > index d885298..5836039 100644
+> > --- a/drivers/mtd/nand/Kconfig
+> > +++ b/drivers/mtd/nand/Kconfig
+> > @@ -96,35 +96,13 @@ config MTD_NAND_OMAP2
+> >
+> >  config MTD_NAND_OMAP_BCH
+> >  	depends on MTD_NAND && MTD_NAND_OMAP2 && ARCH_OMAP3
+> > -	tristate "Enable support for hardware BCH error correction"
+> > +	tristate "Support hardware based BCH error correction"
+> >  	default n
+> >  	select BCH
+> > -	select BCH_CONST_PARAMS
 > 
-> On Exynos5420, the FALL interrupt related en, status and clear bits are
-> available at an offset of
-> 16 in INTEN, INTSTAT and INTCLEAR registers.
+> Do you know what will happen now if someone configures
+> BCH_CONST_PARAMS?
+> Would this cause problems?
 > 
-> On Exynos5440,
-> the FALL_IRQEN bits are at an offset of 4
-> and the RISE_IRQEN bits are at an offset of 0
+As per comments in lib/bch.c 
+--------------------------- 
+* Option CONFIG_BCH_CONST_PARAMS can be used to force fixed values of
+ * parameters m and t; thus allowing extra compiler optimizations and providing
+ * better (up to 2x) encoding performance. Using this option makes sense when
+ * (m,t) are fixed and known in advance, e.g. when using BCH error correction
+ * on a particular NAND flash device.
+---------------------------
+'BCH_CONST_PARAMS' is required for optimization when BCH algorithm
+is fixed. But in omap-nand case selection of type of BCH algorithm
+(BCH4 or BCH8) comes from DT binding "ti,nand-ecc-opts".
+
+If enabled (CONFIG_BCH_CONST_PARAMS) will optimize lib/bch.c
+for BCH8 algorithm by default, so 
+CASE: if BCH8 is selected by DT, then no issues
+CASE: if BCH4 is selected  then nand_bch_init() fails with following error
++ if (!info->nand.ecc.priv) {
+		pr_err("nand: error: unable to use s/w BCH library\n");
+		err = -EINVAL;
+		goto out_release_mem_region;
+}
+
+[snip] 
+
+> >  if MTD_NAND_OMAP_BCH
+> >  config BCH_CONST_M
 > 
-> This patch introduces a new bit field intclr_fall_shift to handle the
-> offset for exyns5250 and exynos5440
+> Do you need to to also kill of the Kconfig stuff for BCH_CONST_M and
+> BCH_CONST_T, which were tied to the MTD_NAND_OMAP_BCH4 and
+> MTD_NAND_OMAP_BCH8 configs you just removed?
 > 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes since v1:
-> Changes since v2:
-> Changes since v3:
->   None
-> Changes since v4:
->  Correct the CLEAR_FALL_INT_SHIFT for Exynos5250/Exynos5440
-> Changes since v5:
->  Modify the commit message
+Thanks, good catch. I dint really notice.
+So, the driver is now updated to separate out two flavours of BCHx scheme.
+(a) OMAP_ECC_BCHx_CODE_HW: which uses ELM hardware
+(b) OMAP_ECC_BCHx_CODE_HW_DETECTION_SW: which uses lib/bch.c
+These BCH_CONST_M and BCH_CONST_T now belongs to (b) family only.
+-  if MTD_NAND_OMAP_BCH
++ if MTD_NAND_ECC_BCH
+       config BCH_CONST_M
+(I'll update that)..
 
-Thank you but v5 had more issues which are not fixed yet. Please see below.
 
->  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
->  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
->  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->  drivers/thermal/samsung/exynos_tmu_data.h |    4 +++-
->  4 files changed, 8 insertions(+), 2 deletions(-)
+> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+[snip]
+> > -		info->bch = init_bch(nand_chip->ecc.bytes,
+> > -					nand_chip->ecc.strength,
+> > -					OMAP_ECC_BCH8_POLYNOMIAL);
+> > -		if (!info->bch) {
+> > +		info->nand.ecc.priv	= nand_bch_init(mtd,
+> > +						info->nand.ecc.size,
+> > +						info->nand.ecc.bytes,
+> > +						&info->nand.ecc.layout);
 > 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index 32f38b9..b2202fa 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -265,7 +265,7 @@ skip_calib_data:
->  				data->base + reg->threshold_th1);
->  
->  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
-> -			(reg->inten_fall_mask << reg->inten_fall_shift),
-> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
->  				data->base + reg->tmu_intclear);
->  
->  		/* if last threshold limit is also present */
-> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-> index 3fb6554..5f4fe6c 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.h
-> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> @@ -136,6 +136,7 @@ enum soc_type {
->   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
->   * @tmu_intstat: Register containing the interrupt status values.
->   * @tmu_intclear: Register for clearing the raised interrupt status.
-> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
->   * @emul_con: TMU emulation controller register.
->   * @emul_temp_shift: shift bits of emulation temperature.
->   * @emul_time_shift: shift bits of emulation time.
-> @@ -207,6 +208,7 @@ struct exynos_tmu_registers {
->  	u32	tmu_intstat;
->  
->  	u32	tmu_intclear;
-> +	u32	intclr_fall_shift;
->  
->  	u32	emul_con;
->  	u32	emul_temp_shift;
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-> index 073c292..09a8a27 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> @@ -123,6 +123,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
->  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
->  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
->  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
-> +	.intclr_fall_shift = EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT,
->  	.emul_con = EXYNOS_EMUL_CON,
->  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
->  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
-> @@ -228,6 +229,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
->  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
->  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
->  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
-> +	.intclr_fall_shift = EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT,
->  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
->  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
->  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-> index a1ea19d..9c1e2c8 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.h
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
-> @@ -69,9 +69,11 @@
->  #define EXYNOS_TMU_RISE_INT_MASK	0x111
->  #define EXYNOS_TMU_RISE_INT_SHIFT	0
->  #define EXYNOS_TMU_FALL_INT_MASK	0x111
-> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
-> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
->  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
->  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
-> +#define EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT	12
+> Are you sure nand_bch_init() is a proper drop-in replacement for the
+> implementation you had based on init_bch()? It looks to me like they at
+> least use a differnt polynomial value (0x201b vs. 0). Is this a problem
+> for backwards compatibility?
+> 
+It's not the polynomial value = 0. Rather 0x201b is selected in both cases
+Refer below code.
+---------------
+When init_bch(m,t, 0) is called from nand_bch_init() then,
+lib/bch.c @@ init_bch(int m, int t, unsigned int prim_poly)
+(a)	/* default primitive polynomials */
+	static const unsigned int prim_poly_tab[] = {
+		0x25, 0x43, 0x83, 0x11d, 0x211, 0x409, 0x805, 0x1053, 0x201b,
+		0x402b, 0x8003,
+	};
+(b)	/* select a primitive polynomial for generating GF(2^m) */
+	if (prim_poly == 0)
+		prim_poly = prim_poly_tab[m-min_m];
+(c) And, const int min_m = 5;
 
-The better name would be EXYNOS_TMU_CLEAR_FALL_INT_SHIFT because it is
-also used on EXYNOS4412.
+So, for BCH8 m=13, min_m=5; So 
+prim_poly = prim_poly_tab[13-5] = prim_poly_tab[8] = 0x201b
+---------------
 
-Also in patch #3 you should define EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT
-instead of re-using EXYNOS_TMU_FALL_INT_SHIFT.
+Hence, there is no change in polynomial, it's just that instead of
+hard-coding the value, polynomial selection depends on 'm' and 't'.
 
-Finally please remove no longer used inten_fall_shift field and related
-defines (EXYNOS_TMU_FALL_INT_MASK and EXYNOS5440_TMU_FALL_INT_MASK).
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
 
-> +#define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT	4
->  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
->  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
->  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+> [...]
+> 
+> A related question: do we have any current users of this driver that can
+> provide testing results for this series? Or is this work just tested
+> with new hardware?
+> 
+Got a tested-by: jp.francois@cynove.com for BCH4
+But that was in May,2013 :-)
+http://lists.infradead.org/pipermail/linux-mtd/2013-May/047065.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+with regards, pekon
