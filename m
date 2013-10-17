@@ -1,188 +1,172 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
- indicates the presence of PHY's
-Date: Thu, 17 Oct 2013 11:38:28 -0500
-Message-ID: <20131017163828.GH11611@gimli>
-References: <1381866857-3861-1-git-send-email-kishon@ti.com>
- <1381866857-3861-2-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Thu, 17 Oct 2013 17:41:40 +0100
+Message-ID: <20131017164140.GL24056@e106331-lin.cambridge.arm.com>
+References: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
+ <522E3770.9020305@wwwdotorg.org>
+ <522F2F3A.5070406@cogentembedded.com>
+ <522F37A7.90804@wwwdotorg.org>
+ <522F5E67.8070006@cogentembedded.com>
+ <522F7BF1.80100@wwwdotorg.org>
+ <522F93A5.6010709@cogentembedded.com>
+ <522F9B65.1020606@wwwdotorg.org>
+ <525F1637.3040709@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pMCBjikF2xGw87uL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381866857-3861-2-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+In-Reply-To: <525F1637.3040709@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Magnus Damm <magnus.damm@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "nobuhiro.iwamatsu.yj@renesas.com" <nobuhiro.iwamatsu.yj@renesas.com>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
---pMCBjikF2xGw87uL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Oct 16, 2013 at 11:41:59PM +0100, Sergei Shtylyov wrote:
+> Hello.
 
-Hi,
+Hello,
 
-On Wed, Oct 16, 2013 at 01:24:11AM +0530, Kishon Vijay Abraham I wrote:
-> There can be systems which does not have a external usb_phy, so get
-> usb_phy only if dt data indicates the presence of PHY in the case of dt b=
-oot or
-> if platform_data indicates the presence of PHY. Also remove checking if
-> return value is -ENXIO since it's now changed to always enable usb_phy la=
-yer.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> On 09/11/2013 02:21 AM, Stephen Warren wrote:
+> 
+> >>>>>>> Do you need any clocks properties, IP block reset signals, power
+> >>>>>>> domains?
+> 
+> >>>>>>       Currently not.
+> 
+> >>>>> What does "currently" mean? Does that mean that the Linux driver simply
+> >>>>> doesn't touch those entities at present?
+> 
+> >>>>      There's Ether clock but the driver doesn't manipulate it directly,
+> >>>> assumingly it does this thru the runtime PM interface. As for the
+> >>>> others, I simply don't know.
+> 
+> >>> If there's a clock, it should be represented in DT, even if the kernel
+> >>> somehow gets access to the clock through some means other than parsing
+> >>> DT.
+> 
+> >>     Frankly speaking, I don't see the point.
+> 
+> > To be honest, that doesn't exactly make me care about reviewing the
+> > binding then.
+> 
+>     Well, that would seem to make my task easier unless you mean that you'd 
+> just NAK my further attempts of pushing this patch. :-)
+>     It seems somewhat unfair to require clock DT support for the Ethernet 
+> driver (which doesn't even use clocks directly), while R-Car I2C driver DT 
+> support has been queued successfully at the same time (this driver uses clock 
+> API directly).
 
-I'm fine with this patch, but one comment below:
+To me it seems entirely fair that to support a device we require support
+for the devices it depends upon.
 
-> @@ -387,16 +388,49 @@ static int dwc3_probe(struct platform_device *pdev)
->  	if (node) {
->  		dwc->maximum_speed =3D of_usb_get_maximum_speed(node);
-> =20
-> -		dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
-> -		dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
-> +		count =3D of_count_phandle_with_args(node, "usb-phy", NULL);
-> +		switch (count) {
-> +		case 2:
-> +			dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(dev,
-> +				"usb-phy", 1);
-> +			if (IS_ERR(dwc->usb3_phy)) {
-> +				dev_err(dev, "usb3 phy not found\n");
-> +				return PTR_ERR(dwc->usb3_phy);
-> +			}
-> +		case 1:
-> +			dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev,
-> +				"usb-phy", 0);
-> +			if (IS_ERR(dwc->usb2_phy)) {
-> +				dev_err(dev, "usb2 phy not found\n");
-> +				return PTR_ERR(dwc->usb2_phy);
-> +			}
-> +			break;
-> +		default:
-> +			dev_err(dev, "usb phy nodes not configured\n");
-> +		}
-> =20
->  		dwc->needs_fifo_resize =3D of_property_read_bool(node, "tx-fifo-resize=
-");
->  		dwc->dr_mode =3D of_usb_get_dr_mode(node);
->  	} else if (pdata) {
->  		dwc->maximum_speed =3D pdata->maximum_speed;
-> =20
-> -		dwc->usb2_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> -		dwc->usb3_phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
-> +		if (pdata->usb2_phy) {
-> +			dwc->usb2_phy =3D devm_usb_get_phy(dev,
-> +				USB_PHY_TYPE_USB2);
-> +			if (IS_ERR(dwc->usb2_phy)) {
-> +				dev_err(dev, "usb2 phy not found\n");
-> +				return PTR_ERR(dwc->usb2_phy);
-> +			}
-> +		}
-> +
-> +		if (pdata->usb3_phy) {
-> +			dwc->usb3_phy =3D devm_usb_get_phy(dev,
-> +				USB_PHY_TYPE_USB3);
-> +			if (IS_ERR(dwc->usb3_phy)) {
-> +				dev_err(dev, "usb3 phy not found\n");
-> +				return PTR_ERR(dwc->usb3_phy);
-> +			}
-> +		}
-> =20
->  		dwc->needs_fifo_resize =3D pdata->tx_fifo_resize;
->  		dwc->dr_mode =3D pdata->dr_mode;
-> @@ -409,36 +443,6 @@ static int dwc3_probe(struct platform_device *pdev)
->  	if (dwc->maximum_speed =3D=3D USB_SPEED_UNKNOWN)
->  		dwc->maximum_speed =3D USB_SPEED_SUPER;
-> =20
-> -	if (IS_ERR(dwc->usb2_phy)) {
-> -		ret =3D PTR_ERR(dwc->usb2_phy);
-> -
-> -		/*
-> -		 * if -ENXIO is returned, it means PHY layer wasn't
-> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
-> -		 * in that case, since no PHY driver will ever probe.
-> -		 */
-> -		if (ret =3D=3D -ENXIO)
-> -			return ret;
-> -
-> -		dev_err(dev, "no usb2 phy configured\n");
-> -		return -EPROBE_DEFER;
-> -	}
-> -
-> -	if (IS_ERR(dwc->usb3_phy)) {
-> -		ret =3D PTR_ERR(dwc->usb3_phy);
-> -
-> -		/*
-> -		 * if -ENXIO is returned, it means PHY layer wasn't
-> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
-> -		 * in that case, since no PHY driver will ever probe.
-> -		 */
-> -		if (ret =3D=3D -ENXIO)
-> -			return ret;
-> -
-> -		dev_err(dev, "no usb3 phy configured\n");
-> -		return -EPROBE_DEFER;
-> -	}
+The fact that the R-Car I2C driver doesn't acquire its clocks from DT is
+a deficiency of the R-Car I2C binding and driver that should be fixed.
+It does not excuse making the same mistake again.
 
-the idea for doing the error checking here was actually to avoid
-duplicating it in all previous cases, as you did. Please keep the error
-checking here and you're good to go.
+We know now that we will have to describe the clocks at some point in
+the future. Taking a shortcut now by relying on the board files to
+provide the clocks or assuming they're handled elsewhere, and not
+providing a way to provide them via the DT is lazy and actively harmful.
 
-> -
->  	dwc->xhci_resources[0].start =3D res->start;
->  	dwc->xhci_resources[0].end =3D dwc->xhci_resources[0].start +
->  					DWC3_XHCI_REGS_END;
-> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform=
-_data.h
-> index 7db34f0..49ffa6d 100644
-> --- a/drivers/usb/dwc3/platform_data.h
-> +++ b/drivers/usb/dwc3/platform_data.h
-> @@ -24,4 +24,6 @@ struct dwc3_platform_data {
->  	enum usb_device_speed maximum_speed;
->  	enum usb_dr_mode dr_mode;
->  	bool tx_fifo_resize;
-> +	bool usb2_phy;
-> +	bool usb3_phy;
+We _will_ have to change this in future, we know exactly how we will
+have to change it, and we know that said changes will break previously
+working DTBs. People _will_ complain when their board no longer
+functions, and if we're serious about not having functional regressions,
+we cannot remove all the ad-hoc support code that allows the incomplete
+device trees to boot a useful kernel.
 
-This would look better as a quirks flag, then we could:
+The current approach for converting platforms to device tree is a train
+wreck, and the practice of relying on board files during the conversion
+is fundamentally flawed. It allows us to take shortcuts today that we
+know will cause pain for everyone further down the line, rather than
+ensuring everything is working and stable from the outset.
 
-unsigned long quirks;
-#define DWC3_QUIRK_NO_USB3_PHY	BIT(0)
-#define DWC3_QUIRK_NO_USB2_PHY	BIT(1)
+We've admittedly been inconsistent in the review of bindings. That is a
+procedural failing that we need to sort out, but that's orthogonal to
+the issue at hand.
 
-=2E..
+> 
+> >>>>> If so, that's not enough to say
+> >>>>> that those entities should not be described in the DT binding. We
+> >>>>> should
+> >>>>> strive to make the binding completely describe all aspects of the HW,
+> >>>>> irrespective of whether a particular driver happens to use that
+> >>>>> information at present.
+> 
+> >>>> There's no DT representation for the clocks in SH-Mobile subarch yet.
+> >>>> The same applies to the other entities you mentioned.
+> 
+> >>> You can still write the binding to say that the appropriate clock
+> >>> property must be present; the overall format of this property won't be
+> >>> affected by the representation chosen for the SH-Mobile clocks.
+> 
+> >>     Where can I find an example of such property, independent of the
+> >> parent clock node? All I could find with quick search refers with a
+> >> phandle to a clock node (we don't have now).
+> 
+> > All clock property definitions are independent of the source of the clock.
+> 
+> > Now the actual value you put in the DT file is dependent on which source
+> > it's describing.
+> 
+>     AFAIU, we'd need the "root" clock node still to which the clock properties 
+> would refer via phandle.
 
-if (!test_bit(DWC3_QUIRK_NO_USB3_PHY), &dwc->quirks &&
-	dwc->has_usb3_phy) {
-	grab_usb3_phy();
-}
+The binding for the device is independent from the source.The binding
+can say:
 
-cheers
+- clocks: A list of clock-specifiers. Should contain a clock-specifier
+          for each entry in clock-names
+- clock-names: A list of strings. Should contain (in any order):
+    * "apb_pclk" for the clock driving the AMBA interface (optional)
+    * "refclk" for the reference clock
+    * "syncclk" for the synchronisation clock, if wired up (optional)
 
---=20
-balbi
+The implementation of the clock sources has no bearing on the consumer.
 
---pMCBjikF2xGw87uL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The driver can do its best to try to make something work with the clocks
+it is given. Some clocks may be necessary because we really need to know
+their rate to do anything useful with the hardware. Some we might be
+able to ignore if not present (e.g. we just assume they're always on).
+Some we might not need now (maybe we don't use a portion of a device),
+but might use in future.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+You must have some reference manual for the hardware, so you should know
+the set of clock inputs the hardware has. If you know that, you can add
+the clock inputs to the binding.
 
-iQIcBAEBAgAGBQJSYBKDAAoJEIaOsuA1yqREpSAQAK58qSjzBkKsgfkFlv8ryg1E
-39FEmmRPE0Md5D62NrdBZsG1Rxg6eNkw5rMOWa8V5/6WG2khKQSPXyFpxIcIZZrv
-yEDWNnUg80PSPqThorGPvxhLrf01aOSEs+fXBM1/oXG3Bkb4K59f7xWIMCITfdEu
-55ZF4/sTKA6QrHKTDhigrbpXiTunSqKUaOhoUVHYvHcl2pfbx9V46vXS3Gd2azh8
-elRr3QnKuDNGbpMCCco4G69+81uXFKCrHVbQ1GHrT0CtnEYWqpWqW1ryvknqlrgy
-IQdZPLWYffudNq1nohbADxwhjQLfsMdubfW5Ai292Z8bPiGW/MCLOlXIHIJ2yJWR
-CSf/PcttvHgIISABjzvRgBF0grS8U5+bDwCeZOysihWvbcUpcwYwFcx0ZPUo4GoY
-3AXcY21FD6k82V/U+1ojRWq1++Q75j3SqzneIMsDay/W25nqO3Zi9Xz+lImdLgNm
-F8snr0kVyYD8epH6oWKLP6uQH+V/vVCYqP2DGSzW6n6NIDfva1zj5gelFWsTgvgL
-McetN7YNlTgB/YiuqiXXpK8oq9uRaUq/FiqWXnNsxFEBqcCIysVbgWZDndrJ8OXx
-5pmFhEc8VOaxbH3+Lv7cbNk4Sg7mnHyBKPZcvr1FSxsYztJFE5W7YYcMkpkcU2+Y
-Hx5OfP23gsQqmBX/jzaW
-=286k
------END PGP SIGNATURE-----
+> 
+> >>> It seems like it'd be best to get the basic resources (like clocks)
+> >>> represented in DT before trying to build blocks that use them.
+> 
+> >>     We don't use them directly. And we need the Ether device tree support *now*,
+> >> while clock-related work will probably take months (there are plans to switch Sh-Mobile to CCF in like 6 months).
+> 
+> > What/who is "we".
+> 
+>     Our customer Renesas, and therefore we, Cogent Embedded. Note that clock 
+> DT support is not the part of our tasks.
 
---pMCBjikF2xGw87uL--
+There are plenty of businesses involved in Linux development. Note that
+their commercial interests do not justify the addition of infrastructure
+with known problems. Note that maintaining DT support is part of my
+tasks.
+
+> 
+> > If it's just a matter of the driver-vs-runtime-pm
+> > code, then it's not relevant.
+> 
+> > I don't think needing something now is a good excuse.
+> 
+>     Hm, perhaps we still can do things in the planned order? Magnus, could you 
+> clarify again what are the plans on clock DT support for the R8A777x/R8A779x SoCs?
+>     I'm still hoping we can deal with the Ethernet DT support first and then 
+> we'd add the clock property to the binding when it would become availble.
+
+I would hope that in future we build DT support without crutches. If $X
+depends on $Y, get $Y working, then get $X working.
+
+Thanks,
+Mark.
