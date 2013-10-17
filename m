@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 01/37] =?UTF-8?q?of:=20add=20vendor=20prefix=20for=20Eu?= =?UTF-8?q?kr=C3=A9a=20Electromatique.?=
-Date: Thu, 17 Oct 2013 17:01:59 +0200
-Message-ID: <1382022155-21954-2-git-send-email-denis@eukrea.com>
+Subject: [Patch v2][ 02/37] dma: ipu: Add devicetree support.
+Date: Thu, 17 Oct 2013 17:02:00 +0200
+Message-ID: <1382022155-21954-3-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,11 +10,8 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-Trivial patch to add Eukr=C3=A9a Electromatique to the list
-of devicetree vendor prefixes.
 
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
@@ -22,27 +19,123 @@ Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/dma/fsl-imx-ipu.txt        |   53 ++++++++++++=
+++++++++
+ drivers/dma/ipu/ipu_idmac.c                        |    8 +++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-ipu.t=
+xt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
-cumentation/devicetree/bindings/vendor-prefixes.txt
-index 2956800..a0329cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -25,6 +25,7 @@ denx	Denx Software Engineering
- emmicro	EM Microelectronic
- epson	Seiko Epson Corp.
- est	ESTeem Wireless Modems
-+eukrea  Eukr=C3=A9a Electromatique
- fsl	Freescale Semiconductor
- GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt b/Do=
+cumentation/devicetree/bindings/dma/fsl-imx-ipu.txt
+new file mode 100644
+index 0000000..a901c33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
+@@ -0,0 +1,53 @@
++* Freescale Image Processing Unit DMA support for i.MX3x.
++
++This document will only describe differences to the generic DMA Contro=
+ller and
++DMA request bindings as described in dma/dma.txt .
++
++This dma driver supports the imx31 and imx35 devices.
++
++* DMA controller
++
++Required properties:
++- compatible : Should be "fsl,imx31-ipu".
++- reg : Should contain DMA registers location and length
++- interrupts : First item should be DMA interrupt, second one is optio=
+nal and
++    should contain DMA Error interrupt.
++- #dma-cells : Has to be 1. The ipu driver does not support anything e=
+lse.
++
++Optional properties:
++- dma-channels : Number of DMA channels supported. Should be 32.
++- #dma-requests : Number of DMA requests supported.
++
++Example:
++
++	ipu: ipu@53fc0000 {
++		compatible =3D "fsl,imx31-ipu";
++		reg =3D <	0x53fc0000 0x5f
++			0x53fc0088 0x2b >;
++		interrupts =3D <42 41>;
++		dma-channels =3D <32>;
++		#dma-cells =3D <1>;
++		clocks =3D <&clks 55>;
++		clock-names =3D "";
++		status =3D "disabled";
++	};
++
++* DMA client
++
++Clients have to specify the DMA requests with phandles in a list.
++
++Required properties:
++- dmas: List of one or more DMA request specifiers. One DMA request sp=
+ecifier
++    consists of a phandle to the DMA controller followed by the intege=
+r
++    specifying the request line.
++- dma-names: List of string identifiers for the DMA requests. For the =
+correct
++    names, have a look at the specific client driver.
++
++Example:
++
++	lcdc: mx3fb@53fc00b4 {
++		...
++		dmas =3D <&ipu 14>;
++		dma-names =3D "tx";
++		...
++	};
+diff --git a/drivers/dma/ipu/ipu_idmac.c b/drivers/dma/ipu/ipu_idmac.c
+index cb9c0bc..d853ee1 100644
+--- a/drivers/dma/ipu/ipu_idmac.c
++++ b/drivers/dma/ipu/ipu_idmac.c
+@@ -22,6 +22,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/dma/ipu-dma.h>
+=20
+ #include "../dmaengine.h"
+@@ -1768,6 +1769,12 @@ static int ipu_remove(struct platform_device *pd=
+ev)
+ 	return 0;
+ }
+=20
++static const struct of_device_id ipu_dma_of_dev_id[] =3D {
++	{ .compatible =3D "fsl,imx31-ipu", },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ipu_dma_of_dev_id);
++
+ /*
+  * We need two MEM resources - with IPU-common and Image Converter reg=
+isters,
+  * including PF_CONF and IDMAC_* registers, and two IRQs - function an=
+d error
+@@ -1775,6 +1782,7 @@ static int ipu_remove(struct platform_device *pde=
+v)
+ static struct platform_driver ipu_platform_driver =3D {
+ 	.driver =3D {
+ 		.name	=3D "ipu-core",
++		.of_match_table =3D of_match_ptr(ipu_dma_of_dev_id),
+ 		.owner	=3D THIS_MODULE,
+ 	},
+ 	.remove		=3D ipu_remove,
 --=20
 1.7.9.5
 
