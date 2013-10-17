@@ -1,32 +1,74 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v9 4/9] mtd: nand: omap: enable auto-detection of
- bus-width for omap-nand drivers
-Date: Thu, 17 Oct 2013 21:26:09 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA280EA@DBDE04.ent.ti.com>
-References: <1381816197-20477-1-git-send-email-pekon@ti.com>
- <1381816197-20477-5-git-send-email-pekon@ti.com>
- <20131016222248.GZ23337@ld-irv-0074.broadcom.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA27917@DBDE04.ent.ti.com>
- <20131017183016.GG23337@ld-irv-0074.broadcom.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA280A4@DBDE04.ent.ti.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] iio: cm36651: Add CM36651 proximity/light sensor
+Date: Thu, 17 Oct 2013 23:42:39 +0100
+Message-ID: <526067DF.3020801@kernel.org>
+References: <525F49F8.70604@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA280A4@DBDE04.ent.ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525F49F8.70604-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/17/13 03:22, Beomho Seo wrote:
 > 
-> Hi Brain,
+> This patch adds a new driver for Capella CM36651 proximity and RGB sensor.
 > 
-Oop sorry .. 
-s/Brain/Brian
+> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+I have fixed the typo in the makefile and applied this to the
+togreg branch of iio.git.
 
-synonymous though :-)
+It does make me a little nervous that you clearly have not tested
+the last few versions, but the changes have been simple enough, I'm
+assuming that nothing has broken from the point of view of the driver
+actually working.
 
-
-with regards, pekon
+Thanks,
+> ---
+>  drivers/iio/light/Kconfig   |   11 +
+>  drivers/iio/light/Makefile  |    1 +
+>  drivers/iio/light/cm36651.c |  708 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 720 insertions(+)
+>  create mode 100644 drivers/iio/light/cm36651.c
+> 
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 0a25ae6..f98c2b5 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -27,6 +27,17 @@ config APDS9300
+>  	 To compile this driver as a module, choose M here: the
+>  	 module will be called apds9300.
+>  
+> +config CM36651
+> +	depends on I2C
+> +	tristate "CM36651 driver"
+> +	help
+> +	 Say Y here if you use cm36651.
+> +	 This option enables proximity & RGB sensor using
+> +	 Capella cm36651 device driver.
+> +
+> +	 To compile this driver as a module, choose M here:
+> +	 the module will be called cm36651.
+> +
+>  config GP2AP020A00F
+>  	tristate "Sharp GP2AP020A00F Proximity/ALS sensor"
+>  	depends on I2C
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index cef590f..b615cf3 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -5,6 +5,7 @@
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
+>  obj-$(CONFIG_APDS9300)		+= apds9300.o
+> +obj-$(CONFIG_COM36651)		+= cm36651.o
+CONFIG_CM36651
+>  obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+>  obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+>  obj-$(CONFIG_SENSORS_LM3533)	+= lm3533-als.o
+> diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
+> new file mode 100644
+> index 0000000..ff4bcd2
