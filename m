@@ -1,113 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5] gpio: Add MOXA ART GPIO driver
-Date: Thu, 17 Oct 2013 11:24:12 +0200
-Message-ID: <CACRpkdasrZ-rhbL1RMo1ZGA=kwmA==hQ-2-iP9zW+EvW_JZaWg@mail.gmail.com>
-References: <1375103161-12460-1-git-send-email-jonas.jensen@gmail.com>
-	<1381503190-5733-1-git-send-email-jonas.jensen@gmail.com>
-	<CACRpkda23nUF8i03RWePj+dGa9Wj6E1L8vfPMfxvnGkazfKS5w@mail.gmail.com>
-	<CACmBeS1NoyHWhS5ydONf3x_z8SQu5-vh_XzMazuY9-uYXdg_wQ@mail.gmail.com>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Thu, 17 Oct 2013 10:33:33 +0100
+Message-ID: <525FAEED.7030207@st.com>
+References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
+ <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+ <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACmBeS1NoyHWhS5ydONf3x_z8SQu5-vh_XzMazuY9-uYXdg_wQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <525F915D.9020501@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 14, 2013 at 1:15 PM, Jonas Jensen <jonas.jensen@gmail.com> wrote:
-> On 11 October 2013 17:44, Linus Walleij <linus.walleij@linaro.org> wrote:
+On 17/10/13 08:27, Maxime COQUELIN wrote:
+> ...
+>>> >> +
+>>> >> +static struct of_device_id st_i2c_match[] = {
+>>> >> +     { .compatible = "st,comms-ssc-i2c", },
+>> > the rules is to put the first soc that use the ip in the compatible
+>> > as st,sti7100-scc-i2c
+> Ok. There are no plans to upstream the SH4 platforms, it will only 
+> remains in stlinux.com.
+> Maybe I can set the first ARM platform (STiH415)?
+> That would give st,stih415-ssc-i2c.
+NAK, for st,stih415-ssc-i2c naming.
 
->>>     The register responsible for doing enable/disable is located
->>>     at <0x98100100 0x4>, the clock register is very close at
->>>     <0x98100000 0x34>.
-(...)
-> Arnd made a similar comment suggesting syscon back when MMC mapped the
-> same register:
-> https://groups.google.com/d/msg/linux.kernel/eeS7vhMWMAc/zNYhzyKilh8J
->
-> I think I prefer to have this in the clock driver opposed to using syscon.
+IMO, this makes sense when the same IP integration done on different SOC
+changes slightly/very differently.
 
-OK I can live with this. I've seen both approaches in practice.
+But in this case the "comms" IP remains unchanged across all the SOCs.
 
-> The one downside I can see, individual control of the pins would be
-> lost? Does it make sense to enable all pins once? this is acceptable
-> for at least UC-7112-LX, it doesn't need to disable/enable pins beyond
-> the initial clk_enable().
->
-> I say the above because I currently have nothing that requires
-> individual pin control. However, I removed one line from MMC that
-> turned out to be unnecessary. That line directly access the "PMU"
-> register disabling pins 10-17 with the following comment:
->
-> "
-> /* change I/O multiplexing to SD, so the GPIO 17-10 will be fail */
-> moxart_gpio_mp_clear(0xff << 10);
-> "
-> http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/mmc/host/moxasd.c#619
+I would still prefer "st,comms-ssc-i2c", allowing a single device driver
+to match against several SoCs. ST "comms" IP it is integrated across all
+the STi series of SoCs, so we don't want to add new entry in compatible
+for every new SOC.
 
-Sorry I don't fully follow this. But don't poke into pin control registers
-from other drivers, for separation of concerns. Request and handle
-pins through the pin control API.
 
-What you mean is likely that power-on states and boot loaders
-have set up the pins for your immediate use cases and everything
-seems to work, that is of course nice.
+Thanks,
+srini
 
-However as development and requirements progress people start
-to come in with complex usecases where devices need pins set
-to states that differ from the power-on defaults, for example for
-power management. And then you run into this.
-
-When/if you need pin control you can wither implement that as
-a separate driver which is used by this GPIO driver as a "back-end"
-or you can move this driver over to drivers/pinctrl and extend it
-with a pin control API there, making it a combined pin control
-and GPIO driver.
-
->>>     I don't think gpio_poweroff driver is right for this hardware
->>>     because the pin is not connected to anything that can do reset.
->>>     The old 2.6.9 kernel driver uses timer poll with eventual call
->>>     to userspace.
->>>
->>>     To test that it works, I added gpio_poweroff anyway, modified
->>>     with gpio_export() the pin can then be seen switching between
->>>     0 and 1 (on "cat /sys/class/gpio/gpio25/value").
->>
->> Hmmmm not quite following this...
->
-> I'll try to elaborate. What happens in gpio_poweroff driver does not
-> look like something that can reset the hardware. Reset on UC-7112-LX
-> is implemented using the same register as the watchdog, in platform
-> code hooked up to arm_pm_restart.
->
-> The old sources "solved" this by polling the reset pin with eventual
-> call_usermodehelper (/sbin/reboot):
-> http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/char/moxa_watchdog.c#174
->
-> What was previously in a kernel driver, would now be solved in userspace?
->
-> gpio_export() allowed me to verify the pin number, pressing reset
-> toggles the value.
->
-> Adding the gpio-leds driver, that pin was automatically exported to
-> sysfs, that got me thinking:
->
-> How do I export the reset button to sysfs? Should gpio_export() be
-> added to platform code?
-
-Aha argh what a mess. No the GPIO poweroff driver is not
-intended to fix this. I *think* you should do this:
-
-- Register the gpio pin as a polled input device using
-  drivers/input/keyboard/gpio_keys_polled.c
-
-- Have it emit KEY_POWER (from include/uapi/linux/input.h)
-
-- Have your userspace input event (whatever issues select()
-  on the /dev/input/* stuff) react to this input by calling
-  /sbin/reboot or issueing the same thing that does, i.e.
-  call reboot() with magic 0x01234567 I think.
-
-Yours,
-Linus Walleij
+> 
+> Thanks for the review,
+> Maxime
+> 
+>> >
