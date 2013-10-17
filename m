@@ -1,25 +1,100 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [alsa-devel] [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface
- driver.
-Date: Thu, 17 Oct 2013 08:22:19 -0500
-Message-ID: <525FE48B.7020709@tabi.org>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com> <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com> <525FD4C7.3050806@tabi.org> <525FD65B.3040004@metafoo.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle of
+ another node for OPP
+Date: Thu, 17 Oct 2013 08:22:44 -0500
+Message-ID: <CAL_JsqKPprCKorvfgCH3usvX6hw5moypQYvKTdAznFVoTV-pyg@mail.gmail.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+	<1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+	<5252DAD3.6040903@gmail.com>
+	<525400B4.8060203@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <525FD65B.3040004@metafoo.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <525400B4.8060203@arm.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Lars-Peter Clausen wrote:
->>> >>+    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> >>+    sai->base = devm_ioremap_resource(&pdev->dev, res);
->> >
->> >Why not use of_iomap()?
-> Because it won't check for conflicting resource regions.
+On Tue, Oct 8, 2013 at 7:55 AM, Sudeep KarkadaNagesha
+<Sudeep.KarkadaNagesha@arm.com> wrote:
+> On 07/10/13 17:01, Rob Herring wrote:
+>> On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
+>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>
+>>> If more than one similar devices share the same operating points(OPPs)
+>>> being in the same clock domain, currently we need to replicate the
+>>> OPP entries in all the nodes.
+>>>
+>>> This patch extends existing binding by adding a new property named
+>>> 'operating-points-phandle' to specify the phandle in any device node
+>>> pointing to another node which contains the actual OPP tuples.
+>>> This helps to avoid replication if multiple devices share the OPPs.
+>>>
 
-Maybe I've been out of the loop for too long, but why is that a 
-particular problem with this driver?
+[snip]
+
+>>> +    opps-table {
+>>> +            cpu_opp: cpu_opp {
+>>> +                    operating-points = <
+>>> +                            /* kHz    uV */
+>>> +                            792000  1100000
+>>> +                            396000  950000
+>>> +                            198000  850000
+>>> +                    >;
+>>> +            };
+>>> +            ... /* other device OPP nodes */
+>>
+>> But this is a subnode of /cpus. IMO, OPPs should be located near what
+>> they control.
+>>
+> No, the idea was to group all the shared OPPs in a container node like clocks or
+> pinmux. So opps-table in above example need not be subnode of /cpus.
+
+Clocks are typically defined in a clock controller node. pinmux
+doesn't fit anywhere well so it is an exception. We don't want to
+expand on that. OPP's at least for cpu's would typically follow the
+topology, so put them there.
+
+>>> +    cpu3: cpu@101 {
+>>> +            compatible = "arm,cortex-a7";
+>>> +            reg = <101>;
+>>> +            operating-points-phandle = <&cluster1_opp>;
+>>> +    };
+>>> +
+>>> +    opps-table {
+>>> +            cluster0_opp: cluster0_opp {
+>>
+>> Why not use the cpu topology? Then the operating point can apply to
+>> cores based on the position in the topology. You don't even need a
+>> phandle in that case. You can look for OPPs in either a cpu node or in
+>> the topology.
+>>
+> Agreed but few thoughts behind this binding:
+>
+> 1. OPPs are not just cpu specific:
+>    How do we share OPPs for 2 devices in the same clock domain ?
+>    Also moving the OPP into cpu-topo makes parsing specific to cpu.
+>    Currently the OPP library fetches the of_node from the device struct
+>    which is applicable to any devices.
+
+But an OPP for a cpu is cpu specific, so put it there. For devices, we
+may need something different. Perhaps it should be part of the clock
+binding in some way.
+
+> 2. Should cpu topology(i.e. cpu-map) just contain the topology info ? and
+>    phandles to these nodes should be used to setup any affinity ?
+
+Can't the OPP just be in the topology nodes at the appropriate level.
+Then the kernel can look for the OPPs in either place. Perhaps Lorenzo
+has thoughts on this.
+
+> 3. As part of RFC[1][2], it was also discussed that on some SoCs we need
+>    multiple OPP profiles/options which it provides but only one of them can
+>    be used based on the board design. phandle to OPP will also help resolve
+>    that issue.
+
+Then include the OPP required for that board design. You could have
+dtsi files of OPPs that can be included based on the board.
+
+Rob
