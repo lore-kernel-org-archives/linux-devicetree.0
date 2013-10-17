@@ -1,146 +1,89 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 02/37] dma: ipu: Add devicetree support.
-Date: Thu, 17 Oct 2013 17:02:00 +0200
-Message-ID: <1382022155-21954-3-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [Patch v2][ 13/37] staging: imx-drm: Add RGB666 support for parallel
+ display
+Date: Thu, 17 Oct 2013 17:02:11 +0200
+Message-ID: <1382022155-21954-14-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, dri-devel@lists.freedesktop.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/dma/fsl-imx-ipu.txt        |   53 ++++++++++++=
-++++++++
- drivers/dma/ipu/ipu_idmac.c                        |    8 +++
- 2 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-ipu.t=
-xt
-
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt b/Do=
-cumentation/devicetree/bindings/dma/fsl-imx-ipu.txt
-new file mode 100644
-index 0000000..a901c33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
-@@ -0,0 +1,53 @@
-+* Freescale Image Processing Unit DMA support for i.MX3x.
-+
-+This document will only describe differences to the generic DMA Contro=
-ller and
-+DMA request bindings as described in dma/dma.txt .
-+
-+This dma driver supports the imx31 and imx35 devices.
-+
-+* DMA controller
-+
-+Required properties:
-+- compatible : Should be "fsl,imx31-ipu".
-+- reg : Should contain DMA registers location and length
-+- interrupts : First item should be DMA interrupt, second one is optio=
-nal and
-+    should contain DMA Error interrupt.
-+- #dma-cells : Has to be 1. The ipu driver does not support anything e=
-lse.
-+
-+Optional properties:
-+- dma-channels : Number of DMA channels supported. Should be 32.
-+- #dma-requests : Number of DMA requests supported.
-+
-+Example:
-+
-+	ipu: ipu@53fc0000 {
-+		compatible =3D "fsl,imx31-ipu";
-+		reg =3D <	0x53fc0000 0x5f
-+			0x53fc0088 0x2b >;
-+		interrupts =3D <42 41>;
-+		dma-channels =3D <32>;
-+		#dma-cells =3D <1>;
-+		clocks =3D <&clks 55>;
-+		clock-names =3D "";
-+		status =3D "disabled";
-+	};
-+
-+* DMA client
-+
-+Clients have to specify the DMA requests with phandles in a list.
-+
-+Required properties:
-+- dmas: List of one or more DMA request specifiers. One DMA request sp=
-ecifier
-+    consists of a phandle to the DMA controller followed by the intege=
-r
-+    specifying the request line.
-+- dma-names: List of string identifiers for the DMA requests. For the =
-correct
-+    names, have a look at the specific client driver.
-+
-+Example:
-+
-+	lcdc: mx3fb@53fc00b4 {
-+		...
-+		dmas =3D <&ipu 14>;
-+		dma-names =3D "tx";
-+		...
-+	};
-diff --git a/drivers/dma/ipu/ipu_idmac.c b/drivers/dma/ipu/ipu_idmac.c
-index cb9c0bc..d853ee1 100644
---- a/drivers/dma/ipu/ipu_idmac.c
-+++ b/drivers/dma/ipu/ipu_idmac.c
-@@ -22,6 +22,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/dma/ipu-dma.h>
-=20
- #include "../dmaengine.h"
-@@ -1768,6 +1769,12 @@ static int ipu_remove(struct platform_device *pd=
-ev)
- 	return 0;
- }
-=20
-+static const struct of_device_id ipu_dma_of_dev_id[] =3D {
-+	{ .compatible =3D "fsl,imx31-ipu", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ipu_dma_of_dev_id);
-+
- /*
-  * We need two MEM resources - with IPU-common and Image Converter reg=
-isters,
-  * including PF_CONF and IDMAC_* registers, and two IRQs - function an=
-d error
-@@ -1775,6 +1782,7 @@ static int ipu_remove(struct platform_device *pde=
-v)
- static struct platform_driver ipu_platform_driver =3D {
- 	.driver =3D {
- 		.name	=3D "ipu-core",
-+		.of_match_table =3D of_match_ptr(ipu_dma_of_dev_id),
- 		.owner	=3D THIS_MODULE,
- 	},
- 	.remove		=3D ipu_remove,
---=20
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+U3VwcG9ydCB0aGUgUkdCNjY2IGZvcm1hdCBvbiB0aGUgSVBVdjMgcGFyYWxsZWwgZGlzcGxheS4K
+CkNjOiBSb2IgSGVycmluZyA8cm9iLmhlcnJpbmdAY2FseGVkYS5jb20+CkNjOiBQYXdlbCBNb2xs
+IDxwYXdlbC5tb2xsQGFybS5jb20+CkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPgpDYzogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5Ad3d3ZG90b3JnLm9yZz4KQ2M6IElhbiBD
+YW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+CkNjOiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZwpDYzogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0
+aW9uLm9yZz4KQ2M6IGRyaXZlcmRldi1kZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCkNjOiBE
+YXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCkNjOiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG0uY2hlaGFiQHNhbXN1bmcuY29t
+PgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29t
+PgpDYzogbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnCkNjOiBTYXNjaGEgSGF1ZXIgPGtlcm5l
+bEBwZW5ndXRyb25peC5kZT4KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpDYzogRXJpYyBCw6luYXJkIDxlcmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlz
+IENhcmlrbGkgPGRlbmlzQGV1a3JlYS5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL3N0YWdpbmcvaW14
+LWRybS9mc2wtaW14LWRybS50eHQgICAgICAgfCAgICAyICstCiBkcml2ZXJzL3N0YWdpbmcvaW14
+LWRybS9pcHUtdjMvaXB1LWRjLmMgICAgICAgICAgICB8ICAgIDkgKysrKysrKysrCiBkcml2ZXJz
+L3N0YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMgICAgICAgICB8ICAgIDIgKysKIDMg
+ZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdGFnaW5nL2lteC1kcm0vZnNs
+LWlteC1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcv
+aW14LWRybS9mc2wtaW14LWRybS50eHQKaW5kZXggYjg3NmQ0OS4uMmQyNDQyNSAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcvaW14LWRybS9mc2wt
+aW14LWRybS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdp
+bmcvaW14LWRybS9mc2wtaW14LWRybS50eHQKQEAgLTI5LDcgKzI5LDcgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoKIC0gY3J0YzogdGhlIGNydGMgdGhpcyBkaXNwbGF5IGlzIGNvbm5lY3RlZCB0bywg
+c2VlIGJlbG93CiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBpbnRlcmZhY2VfcGl4X2ZtdDogSG93
+IHRoaXMgZGlzcGxheSBpcyBjb25uZWN0ZWQgdG8gdGhlCi0gIGNydGMuIEN1cnJlbnRseSBzdXBw
+b3J0ZWQgdHlwZXM6ICJyZ2IyNCIsICJyZ2I1NjUiLCAiYmdyNjY2IgorICBjcnRjLiBDdXJyZW50
+bHkgc3VwcG9ydGVkIHR5cGVzOiAicmdiMjQiLCAicmdiNTY1IiwgImJncjY2NiIsICJyZ2I2NjYi
+CiAtIGVkaWQ6IHZlcmJhdGltIEVESUQgZGF0YSBibG9jayBkZXNjcmliaW5nIGF0dGFjaGVkIGRp
+c3BsYXkuCiAtIGRkYzogcGhhbmRsZSBkZXNjcmliaW5nIHRoZSBpMmMgYnVzIGhhbmRsaW5nIHRo
+ZSBkaXNwbGF5IGRhdGEKICAgY2hhbm5lbApkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lt
+eC1kcm0vaXB1LXYzL2lwdS1kYy5jIGIvZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaXB1LXYzL2lw
+dS1kYy5jCmluZGV4IDIxYmYxYzguLmM4NGFkMjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2lu
+Zy9pbXgtZHJtL2lwdS12My9pcHUtZGMuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvaW14LWRybS9p
+cHUtdjMvaXB1LWRjLmMKQEAgLTkxLDYgKzkxLDcgQEAgZW51bSBpcHVfZGNfbWFwIHsKIAlJUFVf
+RENfTUFQX1JHQjU2NSwKIAlJUFVfRENfTUFQX0dCUjI0LCAvKiBUVkV2MiAqLwogCUlQVV9EQ19N
+QVBfQkdSNjY2LAorCUlQVV9EQ19NQVBfUkdCNjY2LAogfTsKIAogc3RydWN0IGlwdV9kYyB7CkBA
+IC0xNTIsNiArMTUzLDggQEAgc3RhdGljIGludCBpcHVfcGl4Zm10X3RvX21hcCh1MzIgZm10KQog
+CQlyZXR1cm4gSVBVX0RDX01BUF9HQlIyNDsKIAljYXNlIFY0TDJfUElYX0ZNVF9CR1I2NjY6CiAJ
+CXJldHVybiBJUFVfRENfTUFQX0JHUjY2NjsKKwljYXNlIFY0TDJfUElYX0ZNVF9SR0I2NjY6CisJ
+CXJldHVybiBJUFVfRENfTUFQX1JHQjY2NjsKIAlkZWZhdWx0OgogCQlyZXR1cm4gLUVJTlZBTDsK
+IAl9CkBAIC0zOTUsNiArMzk4LDEyIEBAIGludCBpcHVfZGNfaW5pdChzdHJ1Y3QgaXB1X3NvYyAq
+aXB1LCBzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJaXB1X2RjX21hcF9jb25maWcocHJpdiwgSVBVX0RD
+X01BUF9CR1I2NjYsIDEsIDExLCAweGZjKTsgLyogZ3JlZW4gKi8KIAlpcHVfZGNfbWFwX2NvbmZp
+Zyhwcml2LCBJUFVfRENfTUFQX0JHUjY2NiwgMiwgMTcsIDB4ZmMpOyAvKiByZWQgKi8KIAorCS8q
+IHJnYjY2NiAqLworCWlwdV9kY19tYXBfY2xlYXIocHJpdiwgSVBVX0RDX01BUF9CR1I2NjYpOwor
+CWlwdV9kY19tYXBfY29uZmlnKHByaXYsIElQVV9EQ19NQVBfUkdCNjY2LCAyLCAxNywgMHhmYyk7
+IC8qIHJlZCAqLworCWlwdV9kY19tYXBfY29uZmlnKHByaXYsIElQVV9EQ19NQVBfUkdCNjY2LCAx
+LCAxMSwgMHhmYyk7IC8qIGdyZWVuICovCisJaXB1X2RjX21hcF9jb25maWcocHJpdiwgSVBVX0RD
+X01BUF9SR0I2NjYsIDAsIDUsIDB4ZmMpOyAvKiBibHVlICovCisKIAlyZXR1cm4gMDsKIH0KIApk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jIGIv
+ZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jCmluZGV4IGMwNGIwMTcu
+LjFjOGY2M2YgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL3BhcmFsbGVsLWRp
+c3BsYXkuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMK
+QEAgLTIzOCw2ICsyMzgsOCBAQCBzdGF0aWMgaW50IGlteF9wZF9wcm9iZShzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2KQogCQkJaW14cGQtPmludGVyZmFjZV9waXhfZm10ID0gVjRMMl9QSVhf
+Rk1UX1JHQjU2NTsKIAkJZWxzZSBpZiAoIXN0cmNtcChmbXQsICJiZ3I2NjYiKSkKIAkJCWlteHBk
+LT5pbnRlcmZhY2VfcGl4X2ZtdCA9IFY0TDJfUElYX0ZNVF9CR1I2NjY7CisJCWVsc2UgaWYgKCFz
+dHJjbXAoZm10LCAicmdiNjY2IikpCisJCQlpbXhwZC0+aW50ZXJmYWNlX3BpeF9mbXQgPSBWNEwy
+X1BJWF9GTVRfUkdCNjY2OwogCX0KIAogCWlteHBkLT5kZXYgPSAmcGRldi0+ZGV2OwotLSAKMS43
+LjkuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
+ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZl
+cmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRl
+dmVsCg==
