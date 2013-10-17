@@ -1,115 +1,63 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/6] mmc: omap_hsmmc: start using generic non-removable
- DT binding
-Date: Thu, 17 Oct 2013 16:25:53 +0100
-Message-ID: <20131017152553.GI24056@e106331-lin.cambridge.arm.com>
-References: <1381936707-10336-1-git-send-email-balajitk@ti.com>
- <1381936707-10336-2-git-send-email-balajitk@ti.com>
- <20131017083856.GA24056@e106331-lin.cambridge.arm.com>
- <525FC1BC.9080207@ti.com>
+From: Christian Daudt <bcm@fixthebug.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Thu, 17 Oct 2013 08:31:31 -0700
+Message-ID: <CAEPRUYq5DA982AqAmrUpsb3qc30VaFBawaXKTp2pcDvdbM-S1g@mail.gmail.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+	<1380846199-12829-4-git-send-email-syin@broadcom.com>
+	<CAEPRUYqfpdp1GqxBgx-q=hyvQDe4uyi6okzHPW2QmfmPG_Z3NQ@mail.gmail.com>
+	<525FFA40.9050901@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <525FC1BC.9080207@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "uri.y@variscite.com" <uri.y@variscite.com>, Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <525FFA40.9050901@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@linaro.org>
+Cc: Sherman Yin <syin@broadcom.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 11:53:48AM +0100, Balaji T K wrote:
-> On Thursday 17 October 2013 02:08 PM, Mark Rutland wrote:
-> > On Wed, Oct 16, 2013 at 04:18:22PM +0100, Balaji T K wrote:
-> >> From: Sekhar Nori <nsekhar@ti.com>
-> >>
-> >> add generic "non-removable" binding support for omap_hsmmc
-> >>
-> >> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> >> Signed-off-by: Balaji T K <balajitk@ti.com>
-> >> ---
-> >>   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +-
-> >>   drivers/mmc/host/omap_hsmmc.c                      |    3 +++
-> >>   2 files changed, 4 insertions(+), 1 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> >> index 8c8908a..3b95719 100644
-> >> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> >> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> >> @@ -17,7 +17,7 @@ Optional properties:
-> >>   ti,dual-volt: boolean, supports dual voltage cards
-> >>   <supply-name>-supply: phandle to the regulator device tree node
-> >>   "supply-name" examples are "vmmc", "vmmc_aux" etc
-> >> -ti,non-removable: non-removable slot (like eMMC)
-> >> +ti,non-removable: non-removable eMMC with always on vccq and configurable vcc
-> >
-> > Why this change?
-> >
-> Hi,
-> 
-> earlier ti,non-removable was used for all eMMC and SDIO card, now it will
-> be used only for eMMC with always on vccq and configurable vcc.
+On Thu, Oct 17, 2013 at 7:54 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 10/17/2013 12:03 AM, Christian Daudt wrote:
+>> On Thu, Oct 3, 2013 at 5:23 PM, Sherman Yin <syin@broadcom.com> wrote:
+>>> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
+>>>
+>>> Signed-off-by: Sherman Yin <syin@broadcom.com>
+>>> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+>>> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+>>> ---
+>>>  arch/arm/mach-bcm/Kconfig       |    2 +
+>>>  drivers/pinctrl/Kconfig         |   10 +
+>>>  drivers/pinctrl/Makefile        |    1 +
+>>>  drivers/pinctrl/pinctrl-capri.c | 1727 +++++++++++++++++++++++++++++++++++++++
+>>>  4 files changed, 1740 insertions(+)
+>>>  create mode 100644 drivers/pinctrl/pinctrl-capri.c
+>>>
+>>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+>>> index 69d67f7..2546365 100644
+>>> --- a/arch/arm/mach-bcm/Kconfig
+>>> +++ b/arch/arm/mach-bcm/Kconfig
+>>> @@ -10,6 +10,8 @@ config ARCH_BCM
+>>>         select GENERIC_CLOCKEVENTS
+>>>         select GENERIC_TIME
+>>>         select GPIO_BCM
+>>> +       select PINCTRL
+>>> +       select PINCTRL_CAPRI
+>>>         select SPARSE_IRQ
+>>>         select TICK_ONESHOT
+>>>         select CACHE_L2X0
+>>
+>> On your subsequent patchset pls move this from Kconfig to
+>> arm/configs/bcm_defconfig, and break that modification into a separate
+>> patch from the drivers/* modification.
+>
+> The other SoCs I'm familiar with all select this from their ARCH_xxx
+> config symbol.
+>
+I had a discussion on what is best left under ARCH and what is best
+left to defconfig with Kevin Hilman a while back and the conclusion
+was that any config not strictly required for bootup is best left to
+defconfig. This will allow multiplatform kernels to switch to using
+them as loadable modules later on, something not possible with configs
+put under ARCH_xxx.
 
-Please expand the commit message to mention this. It wasn't clear why
-adding support for a property meant modifying the description of
-another.
-
-> 
-> > What do "vccq" and "vcc" correspond to? The regulators are called "vmmc"
-> > and "vmmc_aux"...
-> >
-> 
-> vccq and vcc are supply names of eMMC part
-
-The binding has vmmc-supply and vmmc_aux-supply. How do {vmmc,vmmc_aux}
-and {vcc,vccq} relate? That should be clarified in the binding document,
-something like:
-
-- vmmc-supply: phandle of the regulator for the VCC input
-- vmmc_aux-supply: phandle of the regulator for the VCCQ input
-
-> 
-> > Why is no mention of "non-removable" added, given that it's added to the
-> > code?
-> 
-> Because this file makes a reference to mmc.txt and the core properties described
-> by mmc.txt are not added in ti-omap-hsmmc.txt
-
-There is room for confusion here. While "non-removable" is a generic
-property, it would be good to contrast "non-removable" and
-"ti,non-removable" in the binding as they imply different things.
-
-> 
-> >
-> > Is one preferred over the other? That should be noted.
-> >
-> >>   ti,needs-special-reset: Requires a special softreset sequence
-> >>   ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
-> >>   dmas: List of DMA specifiers with the controller specific format
-> >> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> >> index 6ac63df..5992048 100644
-> >> --- a/drivers/mmc/host/omap_hsmmc.c
-> >> +++ b/drivers/mmc/host/omap_hsmmc.c
-> >> @@ -1738,6 +1738,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
-> >>   	pdata->slots[0].switch_pin = cd_gpio;
-> >>   	pdata->slots[0].gpio_wp = wp_gpio;
-> >>
-> >> +	if (of_find_property(np, "non-removable", NULL)) {
-> >> +		pdata->slots[0].nonremovable = true;
-> >> +	}
-> >
-> > This wasn't mentioned in the binding, and it seems to have different
-> > semantics to "ti,non-removable". Why is it different?
-> >
-> 
-> When ti,non-removable was added, Only OMAP platform that had eMMC was that on OMAP4
-> where power to eMMC cannot be switched off without sending CMD5 sleep command,
-> so no_regulator_off_init was needed to get it detected during boot.
-> 
-> Now start using generic non-removable for all removable cards which do not
-> have such limitation.
-
-OK. I think this would be much clearer with something in the binding
-contrasting the two properties.
-
-Thanks,
-Mark.
+ Thanks,
+    csd
