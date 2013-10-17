@@ -1,57 +1,116 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Thu, 17 Oct 2013 10:33:33 +0100
-Message-ID: <525FAEED.7030207@st.com>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
- <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
- <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface driver.
+Date: Thu, 17 Oct 2013 11:42:08 +0200
+Message-ID: <20131017114208.595a4224@ipc1.ka-ro>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+	<1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <525F915D.9020501@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/13 08:27, Maxime COQUELIN wrote:
-> ...
->>> >> +
->>> >> +static struct of_device_id st_i2c_match[] = {
->>> >> +     { .compatible = "st,comms-ssc-i2c", },
->> > the rules is to put the first soc that use the ip in the compatible
->> > as st,sti7100-scc-i2c
-> Ok. There are no plans to upstream the SH4 platforms, it will only 
-> remains in stlinux.com.
-> Maybe I can set the first ARM platform (STiH415)?
-> That would give st,stih415-ssc-i2c.
-NAK, for st,stih415-ssc-i2c naming.
+Hi,
 
-IMO, this makes sense when the same IP integration done on different SOC
-changes slightly/very differently.
+Xiubo Li <Li.Xiubo@freescale.com> wrote:
+[...]
+> diff --git a/sound/soc/fsl/fsl-pcm-dma.c b/sound/soc/fsl/fsl-pcm-dma.=
+c
+> new file mode 100644
+> index 0000000..c4d925e
+> --- /dev/null
+> +++ b/sound/soc/fsl/fsl-pcm-dma.c
+> @@ -0,0 +1,51 @@
+[...]
+> +
+> +static int fsl_sai_probe(struct platform_device *pdev)
+> +{
+> +	struct of_phandle_args	dma_args;
+> +	int index;
+> +	struct resource *res;
+> +	struct fsl_sai *sai;
+> +	int ret =3D 0;
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +
+> +	sai =3D devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
+> +	if (!sai)
+> +		return -ENOMEM;
+> +
+> +	sai->fbt =3D FSL_SAI_FBT_MSB;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	sai->base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(sai->base)) {
+> +		ret =3D PTR_ERR(sai->base);
+> +		return ret;
+>
+could be:
+		return PTR_ERR(sai->base);
 
-But in this case the "comms" IP remains unchanged across all the SOCs.
+[...]
+> +static const struct of_device_id fsl_sai_ids[] =3D {
+> +	{ .compatible =3D "fsl,vf610-sai", },
+> +	{ /*sentinel*/ },
+>
+The comma after the last entry in a struct initializer is there to make
+patches that append another entry cleaner. Since this entry is and
+always must be the last entry, the comma is useless here.
 
-I would still prefer "st,comms-ssc-i2c", allowing a single device driver
-to match against several SoCs. ST "comms" IP it is integrated across all
-the STi series of SoCs, so we don't want to add new entry in compatible
-for every new SOC.
+> diff --git a/sound/soc/fsl/fsl-sai.h b/sound/soc/fsl/fsl-sai.h
+> new file mode 100644
+> index 0000000..ab76a8e
+> --- /dev/null
+> +++ b/sound/soc/fsl/fsl-sai.h
+> @@ -0,0 +1,127 @@
+> +/*
+> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef __FSL_SAI_H
+> +#define __FSL_SAI_H
+> +
+> +#include <sound/dmaengine_pcm.h>
+> +
+> +#define FSL_SAI_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
+> +			 SNDRV_PCM_FMTBIT_S20_3LE |\
+> +			 SNDRV_PCM_FMTBIT_S24_LE)
+> +
+> +#define FSL_SAI_DMABUF_SIZE	(32 * 1024)
+> +#define TCD_NUMBER		4
+> +#define EDMA_PRIO_HIGH          6
+> +
+strange indentation with mixed spaces and tabs.
+
+> +/* SAI Transmit and Recieve Configuration 2 Register */
+> +#define SAI_TCR2		0x08
+> +#define SAI_RCR2		0x88
+> +#define SAI_CR2_SYNC		BIT(30)
+> +#define SAI_CR2_MSEL_MASK	(0xff << 26)
+> +#define SAI_CR2_MSEL_BUS	0
+> +#define SAI_CR2_MSEL_MCLK1	BIT(26)
+> +#define SAI_CR2_MSEL_MCLK2	BIT(27)
+> +#define SAI_CR2_MSEL_MCLK3	(BIT(26)|BIT(27))
+>
+spaces around '|'?
 
 
-Thanks,
-srini
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
-> 
-> Thanks for the review,
-> Maxime
-> 
->> >
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
