@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [Patch v2][ 25/37] arm/dts: imx51.dtsi: Add some pinmux pins.
-Date: Thu, 17 Oct 2013 17:02:23 +0200
-Message-ID: <1382022155-21954-26-git-send-email-denis@eukrea.com>
+Subject: [Patch v2][ 22/37] arm/dts: i.MX25: Add sdma script path.
+Date: Thu, 17 Oct 2013 17:02:20 +0200
+Message-ID: <1382022155-21954-23-git-send-email-denis@eukrea.com>
 References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -24,44 +24,22 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx51.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/imx25.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dts=
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
 i
-index f4dcff3..48fa41b 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -621,6 +621,15 @@
- 		};
- 	};
+index 09ce4b8..b8cc282 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -556,6 +556,7 @@
+ 				clock-names =3D "ipg", "ahb";
+ 				#dma-cells =3D <3>;
+ 				interrupts =3D <34>;
++				fsl,sdma-ram-script-name =3D "imx/sdma/sdma-imx25.bin";
+ 			};
 =20
-+	i2c1 {
-+		pinctrl_i2c1_1: i2c1grp-1 {
-+			fsl,pins =3D <
-+				MX51_PAD_SD2_CMD__I2C1_SCL 0x400001ed
-+				MX51_PAD_SD2_CLK__I2C1_SDA 0x400001ed
-+			>;
-+		};
-+	};
-+
- 	i2c2 {
- 		pinctrl_i2c2_1: i2c2grp-1 {
- 			fsl,pins =3D <
-@@ -801,6 +810,13 @@
- 				MX51_PAD_UART3_TXD__UART3_TXD 0x1c5
- 			>;
- 		};
-+
-+		pinctrl_uart3_rtscts_2: uart3rtscts-2 {
-+			fsl,pins =3D <
-+				MX51_PAD_KEY_COL4__UART3_RTS 0x1c5
-+				MX51_PAD_KEY_COL5__UART3_CTS 0x1c5
-+			>;
-+		};
- 	};
-=20
- 	usbh1 {
+ 			wdog@53fdc000 {
 --=20
 1.7.9.5
 
