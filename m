@@ -1,87 +1,76 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Thu, 17 Oct 2013 15:34:00 +0530
-Message-ID: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, amit.daniel@samsung.com, cpgs@samsung.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: add export with name from dts
+Date: Thu, 17 Oct 2013 11:47:11 +0200
+Message-ID: <CACRpkdZ30LYdVRWT7QtSq35D8NX3dg3EKadKEVSA2OYahynoZA@mail.gmail.com>
+References: <1382001269-6334-1-git-send-email-jiri.prchal@aksignal.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1382001269-6334-1-git-send-email-jiri.prchal@aksignal.cz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jiri Prchal <jiri.prchal@aksignal.cz>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Exynos5420 SoC has per core thermal management unit, this patch adds
-tmu device nodes to the DT device list.
+On Thu, Oct 17, 2013 at 11:14 AM, Jiri Prchal <jiri.prchal@aksignal.cz> wrote:
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
----
+> Add export possibility to sysfs with given name in device tree. It is nice for users to have board specific gpios exportet at boottime and with their names.
 
-Note: This patch has been tested on kgene's for-next branch 
-after applying Naveen's patchset
+s/exportet/exported
+s/bottime/boot-time
 
-[1/3,v6] thermal: samsung: add intclr_fall_shift bit in exynos_tmu_register
-https://patchwork.kernel.org/patch/3058501/
-[2/3,v6] thermal: samsung: change base_common to more meaningful base_second
-https://patchwork.kernel.org/patch/3058541/
-[3/3,v6] thermal: samsung: Add TMU support for Exynos5420 SoCs
-https://patchwork.kernel.org/patch/3058571/
+> It renames some functions in gpiolib and adds name as parameter. If is passed NULL as name everythink works like before, export by chip name.
 
- arch/arm/boot/dts/exynos5420.dtsi |   45 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+if IT is passed ...
+s/everythink/everything
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 09aa06c..c6270cd 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -190,6 +190,51 @@
- 		status = "okay";
- 	};
- 
-+	/* tmu for CPU0 */
-+	tmu@10060000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10060000 0x100>;
-+		interrupts = <0 65 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU1 */
-+	tmu@10064000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10064000 0x100>;
-+		interrupts = <0 183 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU2 */
-+	tmu@10068000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10068000 0x100>;
-+		interrupts = <0 184 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU3 */
-+	tmu@1006c000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x1006c000 0x100>;
-+		interrupts = <0 185 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for GPU */
-+	tmu@100a0000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x100a0000 0x100>;
-+		interrupts = <0 215 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
- 	serial@12C00000 {
- 		clocks = <&clock 257>, <&clock 128>;
- 		clock-names = "uart", "clk_uart_baud0";
--- 
-1.7.10.4
+> It can be done by extra function export_with_name without changing original export function but I think there would not to be twice almost the same.
+> Even if gpio sysfs interface is almost to be deprecated, I would like to add this, cause new chardev interface is in farness future.
+> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
+>
+> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
+
+Try to linebreak the commit message at column 70 or so.
+
+(I'll fix up the spellings etc, so don't worry too much about this.)
+
+> +3) gpio-export
+> +--------------
+> +
+> +gpio-export will allow you to automatically export gpio to linux sysfs.
+
+s/gpio/a GPIO line (I prefer upper-case and clear specification of what
+GPIO is. Why do you say it is automatic? How else would it be done
+if not by automation?
+
+> +Can be used to describe hw gpio by "name" and to have them exported at
+> +boot time to make it convenient for users.
+> +
+> +required properties:
+> +- compatible: Should be "linux-gpio-export"
+
+It seems other subsystems are using "linux," as prefix so change
+this to "linux,gpio-export"
+
+> +in each child node will represent a gpio or if no name is specified
+> +a list of gpio to export
+
+I don't quite understand this sentence. Do you mean:
+
+"each child node of the compatible node represents  a GPIO line
+ or, if it does not have a name specified, a list if GPIOs to export"
+
+I don't think this works, the nodes get messy if some of
+them specify a single GPIO line and set it as output or input,
+and some specify an array.
+
+You have to make your mind up here: either we export
+exactly *one* GPIO line per node, or all nodes can export
+an array and also pass in arrays of output values and so
+on.
+
+One node per GPIO is arguably easiest and most readable,
+so please rewrite the patch in accordance.
+
+Yours,
+Linus Walleij
