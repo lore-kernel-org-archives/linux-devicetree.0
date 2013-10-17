@@ -1,246 +1,154 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
- of another node for OPP
-Date: Thu, 17 Oct 2013 12:15:45 +0100
-Message-ID: <525FC6E1.5060401@arm.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <5252DAD3.6040903@gmail.com> <525400B4.8060203@arm.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 17 Oct 2013 14:21:58 +0300
+Message-ID: <525FC856.8060804@ti.com>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <1381947912-11741-3-git-send-email-treding@nvidia.com> <1695169.rzbDl9PeRX@avalon> <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com> <525FA4B0.8060504@ti.com> <20131017091614.GC2502@ulmo.nvidia.com> <525FB368.6020003@ti.com> <20131017104856.GA10993@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <525400B4.8060203@arm.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@codeaurora.org>
-Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="5K2c5jK7Kx3tar0AmPS0u0To1GirMBexA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131017104856.GA10993-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi DT-folks,
+--5K2c5jK7Kx3tar0AmPS0u0To1GirMBexA
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 08/10/13 13:55, Sudeep KarkadaNagesha wrote:
-> On 07/10/13 17:01, Rob Herring wrote:
->> On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
->>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>>
->>> If more than one similar devices share the same operating points(OPPs)
->>> being in the same clock domain, currently we need to replicate the
->>> OPP entries in all the nodes.
->>>
->>> This patch extends existing binding by adding a new property named
->>> 'operating-points-phandle' to specify the phandle in any device node
->>> pointing to another node which contains the actual OPP tuples.
->>> This helps to avoid replication if multiple devices share the OPPs.
->>>
->>> Cc: Rob Herring <rob.herring@calxeda.com>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Stephen Warren <swarren@wwwdotorg.org>
->>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
->>> Cc: Nishanth Menon <nm@ti.com>
->>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>> ---
->>>  Documentation/devicetree/bindings/power/opp.txt | 161 ++++++++++++++++++++++--
->>>  1 file changed, 149 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
->>> index 74499e5..f59b878 100644
->>> --- a/Documentation/devicetree/bindings/power/opp.txt
->>> +++ b/Documentation/devicetree/bindings/power/opp.txt
->>> @@ -4,22 +4,159 @@ SoCs have a standard set of tuples consisting of frequency and
->>>  voltage pairs that the device will support per voltage domain. These
->>>  are called Operating Performance Points or OPPs.
->>>  
->>> -Properties:
->>> +Required Properties:
->>>  - operating-points: An array of 2-tuples items, and each item consists
->>>    of frequency and voltage like <freq-kHz vol-uV>.
->>>  	freq: clock frequency in kHz
->>>  	vol: voltage in microvolt
->>>  
->>> +- operating-points-phandle: phandle to the device tree node which contains
->>> +	the operating points tuples(recommended to be used if multiple
->>> +	devices are in the same clock domain and hence share OPPs, as it
->>> +	avoids replication of OPPs)
->>> +
->>> +  operating-points and operating-points-phandle are mutually exclusive, only
->>> +  one of them can be present in any device node.
->>> +
->>>  Examples:
->>>  
->>> -cpu@0 {
->>> -	compatible = "arm,cortex-a9";
->>> -	reg = <0>;
->>> -	next-level-cache = <&L2>;
->>> -	operating-points = <
->>> -		/* kHz    uV */
->>> -		792000  1100000
->>> -		396000  950000
->>> -		198000  850000
->>> -	>;
->>> -};
->>> +1. A uniprocessor system (phandle not required)
->>> +
->>> +	cpu0: cpu@0 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <0>;
->>> +		operating-points = <
->>> +			/* kHz    uV */
->>> +			792000  1100000
->>> +			396000  950000
->>> +			198000  850000
->>> +		>;
->>> +	};
->>> +
->>> +2a. Consider a SMP system with 4 CPUs in the same clock domain(no phandle)
->>> +    Some existing DTs describe homogenous SMP systems by only listing the
->>> +    OPPs in the cpu@0 node. For compatiblity with existing DTs, an
->>> +    operating system may handle this case specially.
->>> +
->>> +	cpu0: cpu@0 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <0>;
->>> +		operating-points = <
->>> +			/* kHz    uV */
->>> +			792000  1100000
->>> +			396000  950000
->>> +			198000  850000
->>> +		>;
->>> +	};
->>> +
->>> +	cpu1: cpu@1 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <1>;
->>> +	};
->>> +
->>> +	cpu2: cpu@2 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <2>;
->>> +	};
->>> +
->>> +	cpu3: cpu@3 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <3>;
->>> +	};
->>> +
->>> +2b. Consider a SMP system with 4 CPUs in the same clock domain(with phandle)
->>> +    If more than one device of same type share the same OPPs, for example
->>> +    all the CPUs on a SoC or in a single cluster on a SoC, then we can avoid
->>> +    replicating the OPPs in all the nodes. We can specify the phandle of
->>> +    the node which contains the OPP tuples instead.
->>> +
->>> +	cpu0: cpu@0 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <0>;
->>> +		operating-points-phandle = <&cpu_opp>;
->>> +	};
->>> +
->>> +	cpu1: cpu@1 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <1>;
->>> +		operating-points-phandle = <&cpu_opp>;
->>> +	};
->>> +
->>> +	cpu2: cpu@2 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <2>;
->>> +		operating-points-phandle = <&cpu_opp>;
->>> +	};
->>> +
->>> +	cpu3: cpu@3 {
->>> +		compatible = "arm,cortex-a9";
->>> +		reg = <3>;
->>> +		operating-points-phandle = <&cpu_opp>;
->>> +	};
->>> +
->>> +	opps-table {
->>> +		cpu_opp: cpu_opp {
->>> +			operating-points = <
->>> +				/* kHz    uV */
->>> +				792000  1100000
->>> +				396000  950000
->>> +				198000  850000
->>> +			>;
->>> +		};
->>> +		... /* other device OPP nodes */
->>
->> But this is a subnode of /cpus. IMO, OPPs should be located near what
->> they control.
->>
-> No, the idea was to group all the shared OPPs in a container node like clocks or
-> pinmux. So opps-table in above example need not be subnode of /cpus.
-> 
->>
->>> +	}
->>> +
->>> +4. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of
->>> +   CPUs. Each cluster has 2 CPUs and all the CPUs within the cluster share
->>> +   the clock domain.
->>> +
->>> +	cpu0: cpu@0 {
->>> +		compatible = "arm,cortex-a15";
->>> +		reg = <0>;
->>> +		operating-points-phandle = <&cluster0_opp>;
->>> +	};
->>> +
->>> +	cpu1: cpu@1 {
->>> +		compatible = "arm,cortex-a15";
->>> +		reg = <1>;
->>> +		operating-points-phandle = <&cluster0_opp>;
->>> +	};
->>> +
->>> +	cpu2: cpu@100 {
->>> +		compatible = "arm,cortex-a7";
->>> +		reg = <100>;
->>> +		operating-points-phandle = <&cluster1_opp>;
->>> +	};
->>> +
->>> +	cpu3: cpu@101 {
->>> +		compatible = "arm,cortex-a7";
->>> +		reg = <101>;
->>> +		operating-points-phandle = <&cluster1_opp>;
->>> +	};
->>> +
->>> +	opps-table {
->>> +		cluster0_opp: cluster0_opp {
->>
->> Why not use the cpu topology? Then the operating point can apply to
->> cores based on the position in the topology. You don't even need a
->> phandle in that case. You can look for OPPs in either a cpu node or in
->> the topology.
->>
-> Agreed but few thoughts behind this binding:
-> 
-> 1. OPPs are not just cpu specific:
->    How do we share OPPs for 2 devices in the same clock domain ?
->    Also moving the OPP into cpu-topo makes parsing specific to cpu.
->    Currently the OPP library fetches the of_node from the device struct
->    which is applicable to any devices.
-> 
-> 2. Should cpu topology(i.e. cpu-map) just contain the topology info ? and
->    phandles to these nodes should be used to setup any affinity ?
-> 
-> 3. As part of RFC[1][2], it was also discussed that on some SoCs we need
->    multiple OPP profiles/options which it provides but only one of them can
->    be used based on the board design. phandle to OPP will also help resolve
->    that issue.
-> 
-> Let me know your thoughts.
-> 
+On 17/10/13 13:48, Thierry Reding wrote:
 
-(pinging to get this discussion alive again)
-Is this extension to the binding to support shared OPPs acceptable ?
-If not, any ideas to progress on this is helpful.
+> As far as the simple panel device tree binding is concerned, it covers
+> all the cases I know of. I can't seriously be expected to do any better=
 
-Regards,
-Sudeep
+> than that. These panels are dumb. They only come with a power supply
+> that needs to be switched on and an additional GPIO to enable it once
+> powered up. All three panels just work with that set of properties. So
+> anything that doesn't can arguably be covered by some other, not-so-
+> simple binding.
 
-> 
-> [1] http://www.spinics.net/lists/cpufreq/msg06556.html
-> [2] http://www.spinics.net/lists/cpufreq/msg06685.html
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Agreed. I thought the DT bindings were missing information about the
+video path, but I didn't realize you have a reference from the video
+output to the panel.
+
+However, I think there's usually a bit more information needed than what
+you describe above. All the dump panels I know have requirements on the
+sequences related to the video signal, powers and gpios, and delays
+between those.
+
+I guess the most common enable scenario is something like:
+
+- enable video signal
+- enable power
+- wait n msecs
+- set GPIO
+
+For some panels, the enable GPIO might actually be a reset GPIO, not
+enable. Some could want the video signal only be enabled after the
+enable/reset is done.
+
+Anyway, I think what you describe fits most of the panels, so no need to
+worry about the possible ones I described. I just wanted to point out
+that there may be very dump panels that are still different.
+
+> I'm still missing the point here. For one, I don't see any reason that
+> this driver would ever need to gain CDF support. At the same time, CDF
+> could easily be supported by just adding a few required properties and
+> it should be easy to support any non-CDF cases just as well to remain
+> backwards-compatible.
+
+Well, I guess the point here is that if you have a SoC display
+controller driver and panel drivers, and you want to support complex
+panels using CDF, you need to implement CDF support into your SoC
+display controller driver in addition to adding CDF support to the panel
+driver.
+
+And, you still want to be able to use the simple panels. So either you
+support both CDF panels and non-CDF panels with your SoC dispc, which
+could be a bit messy, or you add CDF support to all panel drivers you use=
+=2E
+
+>> I guess one option there would be to implement a new driver for the sa=
+me
+>> panel devices, one that supports CDF, and leave the old one as is. Not=
+
+>> so nice option, though.
+>=20
+> As I said, anything that really needs a CDF binding to work likely isn'=
+t
+> "simple" anymore, therefore a separate driver can easily be justified.
+
+I think it's rarely the case that a panel specifically needs CDF. It's
+more that CDF offers a common framework for display components, making
+it easy to make them independent of the platform used. And if you make
+your SoC support CDF, you are able to use all the CDF drivers already
+implemented.
+
+That said, I don't see anything technically preventing from having
+support for both CDF and non-CDF panels. It's just more complex, and
+they cannot be mixed freely. For example, if I have CDF support in my
+SoC driver and a panel driver, I can easily add a CDF encoder driver in
+between. But if the panel driver is a custom one, then I need a custom
+encoder driver there also.
+
+> Indeed. The fundamental point here seems to be that we don't represent
+> things in DT which we don't need. In the same way that we don't add
+
+Surely we should represent the things about the HW we don't need now, if
+we know they might be needed in the future? (But that's not the case
+here, see below)
+
+> device nodes for enumerable devices, why would we need to explicitly ad=
+d
+> information about connections between devices that cannot be controlled=
+
+> anyway. If the board connects an RGB/LVDS output to a panel directly, i=
+t
+> is only required that the output knows what it is connected to because
+> there is no other way besides DT to obtain any information about the
+> panel. Therefore a unidirectional connection is more than enough. Using=
+
+> that the output can access the panel and query it for information such
+> as the mode timings as well as switch it on or off as required.
+
+Right, in that case, you do have all the necessary information in the
+DT. I don't think it really matters if the link in DT is from the SoC to
+the panel, vice versa, or both ways. It still describes the same thing.
+Even with unidirectional link you can always find the reverse link, you
+just need to do more work going throught the DT data.
+
+ Tomi
 
 
+
+--5K2c5jK7Kx3tar0AmPS0u0To1GirMBexA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSX8hWAAoJEPo9qoy8lh711zUQAJywsDynJSo59aywR11QVQnn
+UZSTLQ2kM4EP08dlxP/tufgJokAF9Bg9eA/gXZYE6/Z/NoTY68UsPMWoG8aJOKEk
+5AyHF7yKpB7r8V1p0LZowrYzaf9pq0DQT/+mGoNdXDb4km6KvwFxYuhiQC/PEZ+e
+OpP68X9DKC4jV1adJQxHZ8OgzwuRnNdlBCWMWMbi/x1EcdYPZfrsFuEYoAUzyPKj
+wRDhBxpxIf14nQLHDWbJ+fxNOPYvuHF7akm6VQPXvwey72FUV8q7P7M5RifpzZq7
++gyCTV3rP/FZZSIlF3D2prU+wp0dB4lAaxEYRkfVA5F/SK6br+e5iud+hl5PYyuR
+DskxpmDjlCWL4OD6k8vEhW+zjOaEQuPEqCXBuw95Z0YXSaJPJVziNkKm+TJTX4a+
+35atBiki9BfNUVSMes5LYJlCS0na6h699cx0w2J5pofHfgiYpAR4/k9r55+SN4uy
+K+slhGrGFbR9ZbSGrV/MgQICuODUpvSyIBkK97bgUd00FU2w1964mWeUN2UZ6wh3
+uGqPWZpXmwxXMpV7zV8Gxbd0RUJ7Ugh1avLEzGMm6KfS8Y9Qm7fJIln7609Vl6Wi
+slK6JQXUnEgnPfEB/9uCa6z8QJpRbVWsxCbqmF2yRMZ++S4N5aK6uPJmJdDl79xd
+wS1BB5khdnptsA1190+K
+=6KvH
+-----END PGP SIGNATURE-----
+
+--5K2c5jK7Kx3tar0AmPS0u0To1GirMBexA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
