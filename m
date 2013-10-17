@@ -1,118 +1,80 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v9 4/9] mtd: nand: omap: enable auto-detection of
- bus-width for omap-nand drivers
-Date: Thu, 17 Oct 2013 11:30:16 -0700
-Message-ID: <20131017183016.GG23337@ld-irv-0074.broadcom.com>
-References: <1381816197-20477-1-git-send-email-pekon@ti.com>
- <1381816197-20477-5-git-send-email-pekon@ti.com>
- <20131016222248.GZ23337@ld-irv-0074.broadcom.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA27917@DBDE04.ent.ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
+ of another node for OPP
+Date: Thu, 17 Oct 2013 13:36:42 -0500
+Message-ID: <52602E3A.6080000@ti.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>	<1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>	<5252DAD3.6040903@gmail.com>	<525400B4.8060203@arm.com> <CAL_JsqKPprCKorvfgCH3usvX6hw5moypQYvKTdAznFVoTV-pyg@mail.gmail.com> <52601CCD.9020705@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA27917@DBDE04.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52601CCD.9020705@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Rob Herring <robherring2@gmail.com>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 04:42:23AM +0000, Pekon Gupta wrote:
-> > From: Brian Norris [mailto:computersforpeace@gmail.com]
-> > > On Tue, Oct 15, 2013 at 11:19:52AM +0530, Pekon Gupta wrote:
-> > > Autodetection of NAND device bus-width was added in generic NAND
-> > driver as
-> [...]
-> > > @@ -1904,6 +1903,21 @@ static int omap_nand_probe(struct
-> > platform_device *pdev)
-> > >  		nand_chip->chip_delay = 50;
-> > >  	}
-> > >
-> > > +	/* scan for NAND device connected to chip controller */
-> > > +	if (nand_scan_ident(mtd, 1, NULL)) {
-> > > +		err = -ENXIO;
-> > > +		goto out_release_mem_region;
-> > > +	}
-> > > +	if ((nand_chip->options & NAND_BUSWIDTH_16) !=
-> > > +			(pdata->devsize & NAND_BUSWIDTH_16)) {
-> > > +		pr_err("%s: detected %s device but driver configured for
-> > %s\n",
-> > > +			DRIVER_NAME,
-> > > +			(nand_chip->options & NAND_BUSWIDTH_16) ?
-> > "x16" : "x8",
-> > > +			(pdata->devsize & NAND_BUSWIDTH_16) ? "x16" :
-> > "x8");
-> > 
-> > I'm not sure on the policy choice here; if you're using BUSWIDTH_AUTO,
-> > do you even want to try to configure the buswidth by platform data?
-> > You're not really getting the full use out of NAND_BUSWIDTH_AUTO because
-> > the platform data has to guess the same buswidth that nand_base.c
-> > determines. This is worse than the previous behavior, in which you would
-> > try both buswidths if the specified type failed.
-> > 
-> > IOW, what are you trying to achieve with auto-buswidth? Automatic
-> > determination of the buswidth or just automatic validation? What do you
-> > achieve with platform data's selection of buswidth? Specification of the
-> > buswidth or just a hint? Do the goals conflict? Perhaps you can just
-> > warn, and not error out if the two selections don't match? Or maybe you
-> > really wanted to replace the platform data selection mechanism entirely
-> > with auto-buswidth?
-> > 
-> This is 'automatic validation' of value set in DT binding "nand-bus-width"
-
-You mean you intend for the patched driver to simply validate, not
-configure the buswidth?
-
-> So this approach is other way round, where controller is configured
-> based on DT binding "nand-bus-width" and then it checks whether
-> device actual buswidth matches DT binding value or not.
-
-If this is the case, then you really don't want to use
-NAND_BUSWIDTH_AUTO. The default nand_base.c just *validates* the
-pre-selected buswidth and exits with an error, in much the same way that
-you're doing here (you're just duplicating the functionality).
-NAND_BUSWIDTH_AUTO is useful if you want to turn control of the buswidth
-configuration entirely over to nand_base.c.
-
-> - GPMC controller is pre-configured to support "x8" or "x16" device based
->    on DT binding "nand-bus-width".
->    Reference: $LINUX/arch/arm/mach-omap2/gpmc.c
->   @@gpmc_probe_nand_child()
-> 	val = of_get_nand_bus_width(child);
+On 10/17/2013 12:22 PM, Sudeep KarkadaNagesha wrote:
+> On 17/10/13 14:22, Rob Herring wrote:
+>> On Tue, Oct 8, 2013 at 7:55 AM, Sudeep KarkadaNagesha
+>> <Sudeep.KarkadaNagesha@arm.com> wrote:
+>>> On 07/10/13 17:01, Rob Herring wrote:
+>>>> On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
+[...]
+>>> 3. As part of RFC[1][2], it was also discussed that on some SoCs we need
+>>>    multiple OPP profiles/options which it provides but only one of them can
+>>>    be used based on the board design. phandle to OPP will also help resolve
+>>>    that issue.
+>>
+>> Then include the OPP required for that board design. You could have
+>> dtsi files of OPPs that can be included based on the board.
+>>
 > 
-> - But, bus-width of NAND device is only known during NAND driver
->    Probe in nand_scan_ident().
-> 
-> Going forward when all NAND devices are compliant to ONFI,
-> then we can deprecate "nand-bus-width".
+> I will let Nishanth comment on this.
 
-Buswidth auto-detection is not actually restricted to ONFI. nand_base.c
-has (corretly, AFAIK) been detecting buswidths for a long time, using
-some form of ID decode detection. But it was just that: detection. It
-did not actually configure the buswidth, since it left that
-responsibility to the low-level driver to get right.
+there are couple of angles to this[1] that Sudeep already pointed at:
 
-Another thing to consider: I think this current patch is a regression
-from previous behavior. Previously, you would run nand_scan_ident()
-twice if the first one failed; once with the platform-configured
-buswidth and once with the opposite. But now, you only run
-nand_scan_ident() once, and then you quit if it detects differently than
-you expected.
+A) SoCs like OMAP3430, 3630, 3530, 3730, omap4430, omap4460, omap4470,
+omap5430, omap5432, there will at least be 2 dtsi *per* OPPset dtsi
+per chip - and we have OPP sets per device inside the SoC - one for
+CPU, one for GPU, one for IVA(accelerator), one for l3 (interconnect).
+Further, when we go to newer variants like AM335x,AM437x,DRA7 - the
+opp sets can increase to around 4/5 per domain per chip. Most of these
+are deterministic based on Efused bit fields.
+-> On this angle, arch/arm/mach-imx/mach-imx6q.c is a good example of
+a similar challenge - here OPP enable/disable of hardcoded frequency
+is kept in kernel, but data is picked up from SoC dts - not a good
+story when we want to maintain old dtb compatibility - if frequency
+changes in either dts/kernel, we wont function.
+-> We are working internally to a potentially generic solution to
+address this - not yet in a stage even for RFC -> if that is possible
+to be done, then we dont need profiles to handle things, instead an
+alternative constraint description is provided in dts. or we could
+force folks to use specific dtsis OR allow generic handling based on
+profiles.
 
-My opinion: the platform- and device-tree-provided buswidth is
-unnecessary; it was previouisly only a suggestion which your driver
-would readily discard, and it isn't really needed now. You can probably
-get by with just NAND_BUSWIDTH_AUTO and (at most) a warning if the
-auto-configured buswidth is different than the platform specified.
+B) now we can have a chip which can support a high frequency (efuse
+will say so), however board characteristics(Power Distribution Network
+requirements) may not be capable of allowing the chip to perform. We
+can argue saying that "why would anyone put a higher performing chip
+on a not-capable board?" - but we all know the reality of marketting
+folks and cost of chip story.. but this is a real constraint when we
+try to support our SoCs on as many platforms as possible and enabling
+Linux on all those platforms.
+-> We could use profiles to deal with this.
+-> we could use dtsi override with OPP to deal with this
+OR
+-> we could use custom properties (something like
+ti,non-optimal-board-design ;) ).
 
-But the real point: you need to clearly communicate what you are
-choosing in this patch. Either you want to
+My personal preference is to state hardware capability solely in dts
+and kernel is just operations on the dts data. OPP profiles did seem
+to me to be the intutive way to do that job as it does describe
+exactly wha the hardware capabilities were. Creating n different dtsis
+is possible per device, but it essentially does describe the same
+information.
 
- (1) strictly follow the buswidth provided by the platform or
-
- (2) use the nand_base.c BUSWIDTH_AUTO automatic configuration.
-
-Trying to mix both (as your patch currently does) just makes everything
-worse.
-
-Brian
+[1] http://www.spinics.net/lists/cpufreq/msg06685.html
+-- 
+Regards,
+Nishanth Menon
