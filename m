@@ -1,42 +1,58 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v3 00/19] Introduce common infra for tegra clocks
-Date: Thu, 17 Oct 2013 10:52:34 +0300
-Message-ID: <20131017075233.GP5643@tbergstrom-lnx.Nvidia.com>
-References: <1381848794-11761-1-git-send-email-pdeschrijver@nvidia.com>
- <525D8009.5040907@wwwdotorg.org>
- <20131016090643.GI5643@tbergstrom-lnx.Nvidia.com>
- <525EC973.7060802@wwwdotorg.org>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
+Date: Thu, 17 Oct 2013 09:52:42 +0200
+Message-ID: <20131017095242.155725b6@ipc1.ka-ro>
+References: <1381939443-7318-1-git-send-email-aida.mynzhasova@skitlab.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <525EC973.7060802@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hiroshi Doyu <hdoyu@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381939443-7318-1-git-send-email-aida.mynzhasova@skitlab.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2013 at 07:14:27PM +0200, Stephen Warren wrote:
-> On 10/16/2013 03:06 AM, Peter De Schrijver wrote:
-> > On Tue, Oct 15, 2013 at 07:48:57PM +0200, Stephen Warren wrote:
-> >> On 10/15/2013 08:52 AM, Peter De Schrijver wrote:
-> >>> This patchset introduces common infrastructure for clocks which exist in                                                                                       
-> >>> several Tegra SoCs. We also also move Tegra20, Tegra30 and Tegra114 to
-> >>> this new infrastructure.
-> ...
-> >> Testing on Venice2 (Tegra124): I see the following WARN during boot,
-> >> which I think is new relative to the internal branch you gave me yesterday:
-> >>
-> >>> [    0.300450] WARNING: CPU: 0 PID: 1 at drivers/clk/tegra/clk.c:187 tegra_init_from_table+0x78/0x158()
-> ...
-> >>> [    0.372440] [<c07b4c1c>] (tegra_init_from_table+0x78/0x158) from [<c07b4e10>] (tegra_clocks_apply_init_table+0x18/0x20)
-> >>> [    0.384138] [<c07b4e10>] (tegra_clocks_apply_init_table+0x18/0x20) from [<c079f9cc>] (tegra_dt_init+0xc/0xd8)
-> >>> [    0.394903] [<c079f9cc>] (tegra_dt_init+0xc/0xd8) from [<c079a580>] (customize_machine+0x1c/0x40)
-> ...
-> > Did you see  'tegra_init_from_table: Failed to set parent pll_c2 of epp ' before? Tegra124 doesn't have EPP...
-> 
-> Yes, I get exactly that message. Sorry, I forgot to paste in the most
-> relevant line:-( I assume fixing this simply means removing an entry in
-> the init table in clk-tegra124.c, so should be simple.
-
-Yep. Part of the next version.
+SGksCgpBaWRhIE15bnpoYXNvdmEgPGFpZGEubXluemhhc292YUBza2l0bGFiLnJ1PiB3cm90ZToK
+PiBBZGQgYXVhcnQyIHBpbnMgY29uZmlndXJhdGlvbiBvbiBpdHMgbWFpbiBwYWRzCj4gCj4gU2ln
+bmVkLW9mZi1ieTogQWlkYSBNeW56aGFzb3ZhIDxhaWRhLm15bnpoYXNvdmFAc2tpdGxhYi5ydT4K
+PiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14MjguZHRzaSB8IDEzICsrKysrKysrKysrKysK
+PiAgMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14MjguZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LmR0c2kK
+PiBpbmRleCA3MzYzZmRlLi44MTEwMmIyIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDI4LmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyOC5kdHNpCj4gQEAgLTMy
+MCw2ICszMjAsMTkgQEAKPiAgCQkJCQlmc2wscHVsbC11cCA9IDwwPjsKPiAgCQkJCX07Cj4gIAo+
+ICsJCQkJYXVhcnQyX3BpbnNfYTogYXVhcnQyQDAgewo+ICsJCQkJCXJlZyA9IDwwPjsKPiArCQkJ
+CQlmc2wscGlubXV4LWlkcyA9IDwKPiArCQkJCQkJMHgzMDgwIC8qIE1YMjhfUEFEX0FVQVJUMl9S
+WF9fQVVBUlQyX1JYCSovCj4gKwkJCQkJCTB4MzA5MCAvKiBNWDI4X1BBRF9BVUFSVDJfVFhfX0FV
+QVJUMl9UWCAqLwo+ICsJCQkJCQkweDMwYTAgLyogTVgyOF9QQURfQVVBUlQyX0NUU19fQVVBUlQy
+X0NUUyAqLwo+ICsJCQkJCQkweDMwYjAgLyogTVgyOF9QQURfQVVBUlQyX1JUU19fQVVBUlQyX1JU
+UyAqLwo+ClNpbmNlIGNvbW1pdCAyNzU3MmEyZiBBUk06IGR0czogbXhzOiBhZGQgcGluY3RybCBo
+ZWFkZXIgZmlsZXMKaXQgaXMgbm8gbG9uZ2VyIG5lY2Vzc2FyeSB0byBzcGVjaWZ5IHRoZSBwYWRj
+b25maWcgdmFsdWVzIGFzIG51bWJlcnMuCllvdSBzaG91bGQgdXNlIHRoZSBzeW1ib2xpYyBuYW1l
+cyBpbnN0ZWFkLgoKPiArCQkJCQk+Owo+ICsJCQkJCWZzbCxkcml2ZS1zdHJlbmd0aCA9IDwwPjsK
+PiArCQkJCQlmc2wsdm9sdGFnZSA9IDwxPjsKPiArCQkJCQlmc2wscHVsbC11cCA9IDwwPjsKQWxz
+byB0aGVzZSBzaG91bGQgYmU6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBmc2wsZHJpdmUtc3RyZW5ndGggPSA8TVhTX0RSSVZFXzRtQT47CiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBmc2wsdm9sdGFnZSA9IDxNWFNfVk9MVEFHRV9ISUdIPjsK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZzbCxwdWxsLXVwID0gPE1Y
+U19QVUxMX0RJU0FCTEU+OwoKWW91IHByb2JhYmx5IHNob3VsZCByZWJhc2UgeW91ciBwYXRjaCB0
+byBhIG1vcmUgcmVjZW50IHZlcnNpb24gb2YKbGludXgtbmV4dC4KCgpMb3RoYXIgV2HDn21hbm4K
+LS0gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCgpLYS1SbyBlbGVjdHJvbmljcyBHbWJIIHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1
+MjA3NiBBYWNoZW4KUGhvbmU6ICs0OSAyNDA4IDE0MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0x
+MApHZXNjaMOkZnRzZsO8aHJlcjogTWF0dGhpYXMgS2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50
+cmFnOiBBbXRzZ2VyaWNodCBBYWNoZW4sIEhSQiA0OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5k
+ZSB8IGluZm9Aa2Fyby1lbGVjdHJvbmljcy5kZQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
