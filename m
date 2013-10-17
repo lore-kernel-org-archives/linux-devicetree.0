@@ -1,116 +1,87 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface driver.
-Date: Thu, 17 Oct 2013 11:42:08 +0200
-Message-ID: <20131017114208.595a4224@ipc1.ka-ro>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
-	<1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+Date: Thu, 17 Oct 2013 15:34:00 +0530
+Message-ID: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, amit.daniel@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Exynos5420 SoC has per core thermal management unit, this patch adds
+tmu device nodes to the DT device list.
 
-Xiubo Li <Li.Xiubo@freescale.com> wrote:
-[...]
-> diff --git a/sound/soc/fsl/fsl-pcm-dma.c b/sound/soc/fsl/fsl-pcm-dma.=
-c
-> new file mode 100644
-> index 0000000..c4d925e
-> --- /dev/null
-> +++ b/sound/soc/fsl/fsl-pcm-dma.c
-> @@ -0,0 +1,51 @@
-[...]
-> +
-> +static int fsl_sai_probe(struct platform_device *pdev)
-> +{
-> +	struct of_phandle_args	dma_args;
-> +	int index;
-> +	struct resource *res;
-> +	struct fsl_sai *sai;
-> +	int ret =3D 0;
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +
-> +	sai =3D devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
-> +	if (!sai)
-> +		return -ENOMEM;
-> +
-> +	sai->fbt =3D FSL_SAI_FBT_MSB;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	sai->base =3D devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(sai->base)) {
-> +		ret =3D PTR_ERR(sai->base);
-> +		return ret;
->
-could be:
-		return PTR_ERR(sai->base);
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+---
 
-[...]
-> +static const struct of_device_id fsl_sai_ids[] =3D {
-> +	{ .compatible =3D "fsl,vf610-sai", },
-> +	{ /*sentinel*/ },
->
-The comma after the last entry in a struct initializer is there to make
-patches that append another entry cleaner. Since this entry is and
-always must be the last entry, the comma is useless here.
+Note: This patch has been tested on kgene's for-next branch 
+after applying Naveen's patchset
 
-> diff --git a/sound/soc/fsl/fsl-sai.h b/sound/soc/fsl/fsl-sai.h
-> new file mode 100644
-> index 0000000..ab76a8e
-> --- /dev/null
-> +++ b/sound/soc/fsl/fsl-sai.h
-> @@ -0,0 +1,127 @@
-> +/*
-> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef __FSL_SAI_H
-> +#define __FSL_SAI_H
-> +
-> +#include <sound/dmaengine_pcm.h>
-> +
-> +#define FSL_SAI_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
-> +			 SNDRV_PCM_FMTBIT_S20_3LE |\
-> +			 SNDRV_PCM_FMTBIT_S24_LE)
-> +
-> +#define FSL_SAI_DMABUF_SIZE	(32 * 1024)
-> +#define TCD_NUMBER		4
-> +#define EDMA_PRIO_HIGH          6
-> +
-strange indentation with mixed spaces and tabs.
+[1/3,v6] thermal: samsung: add intclr_fall_shift bit in exynos_tmu_register
+https://patchwork.kernel.org/patch/3058501/
+[2/3,v6] thermal: samsung: change base_common to more meaningful base_second
+https://patchwork.kernel.org/patch/3058541/
+[3/3,v6] thermal: samsung: Add TMU support for Exynos5420 SoCs
+https://patchwork.kernel.org/patch/3058571/
 
-> +/* SAI Transmit and Recieve Configuration 2 Register */
-> +#define SAI_TCR2		0x08
-> +#define SAI_RCR2		0x88
-> +#define SAI_CR2_SYNC		BIT(30)
-> +#define SAI_CR2_MSEL_MASK	(0xff << 26)
-> +#define SAI_CR2_MSEL_BUS	0
-> +#define SAI_CR2_MSEL_MCLK1	BIT(26)
-> +#define SAI_CR2_MSEL_MCLK2	BIT(27)
-> +#define SAI_CR2_MSEL_MCLK3	(BIT(26)|BIT(27))
->
-spaces around '|'?
+ arch/arm/boot/dts/exynos5420.dtsi |   45 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 09aa06c..c6270cd 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -190,6 +190,51 @@
+ 		status = "okay";
+ 	};
+ 
++	/* tmu for CPU0 */
++	tmu@10060000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x10060000 0x100>;
++		interrupts = <0 65 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	/* tmu for CPU1 */
++	tmu@10064000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x10064000 0x100>;
++		interrupts = <0 183 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	/* tmu for CPU2 */
++	tmu@10068000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x10068000 0x100>;
++		interrupts = <0 184 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	/* tmu for CPU3 */
++	tmu@1006c000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x1006c000 0x100>;
++		interrupts = <0 185 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	/* tmu for GPU */
++	tmu@100a0000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x100a0000 0x100>;
++		interrupts = <0 215 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
+ 	serial@12C00000 {
+ 		clocks = <&clock 257>, <&clock 128>;
+ 		clock-names = "uart", "clk_uart_baud0";
+-- 
+1.7.10.4
