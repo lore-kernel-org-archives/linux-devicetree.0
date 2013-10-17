@@ -1,126 +1,165 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] usb: gadget: s3c-hsotg: support configurable UTMI
- PHY width
-Date: Thu, 17 Oct 2013 08:40:37 -0400
-Message-ID: <20131017124037.GA2721@beef>
-References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
- <1381140752-312-3-git-send-email-matt.porter@linaro.org>
- <20131010152922.GF28375@radagast>
- <5256DBD0.8030008@linaro.org>
- <20131010174620.GC19802@radagast>
- <A2CA0424C0A6F04399FB9E1CD98E030458E16893@US01WEMBX2.internal.synopsys.com>
- <5256FAFA.1020509@linaro.org>
- <52576EBA.9000502@linaro.org>
- <20131011133731.GD25706@radagast>
+From: jean-philippe francois <jp.francois@cynove.com>
+Subject: Re: [PATCH v9 7/9] mtd: nand: omap: use drivers/mtd/nand/nand_bch.c
+ wrapper for BCH ECC instead of lib/bch.c
+Date: Thu, 17 Oct 2013 14:42:17 +0200
+Message-ID: <CAGGh5h3PU0PR1SMa_aWUvPxccWS9A+Rxp7pm0U8u6fBnPcOvjw@mail.gmail.com>
+References: <1381816197-20477-1-git-send-email-pekon@ti.com>
+	<1381816197-20477-8-git-send-email-pekon@ti.com>
+	<20131017022237.GC23337@ld-irv-0074.broadcom.com>
+	<20980858CB6D3A4BAE95CA194937D5E73EA27C63@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131011133731.GD25706@radagast>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA27C63@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivan Djelic <ivan.djelic@parrot.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2013 at 08:37:31AM -0500, Felipe Balbi wrote:
-> Hi,
-> 
-> On Thu, Oct 10, 2013 at 11:21:30PM -0400, Matt Porter wrote:
-> > On 10/10/2013 03:07 PM, Matt Porter wrote:
-> > >On 10/10/2013 01:57 PM, Paul Zimmerman wrote:
-> > >>>From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
-> > >>>Sent: Thursday, October 10, 2013 10:46 AM
-> > >>>
-> > >>>On Thu, Oct 10, 2013 at 12:54:40PM -0400, Matt Porter wrote:
-> > >>>>On 10/10/2013 11:29 AM, Felipe Balbi wrote:
-> > >>>>>On Mon, Oct 07, 2013 at 06:12:29AM -0400, Matt Porter wrote:
-> > >>>>>>Extend dwc2 binding with an optional utmi phy width property.
-> > >>>>>>Enable the s3c-hsotg.c driver to use standard dwc2 binding
-> > >>>>>>and enable configuration of the UTMI phy width based on the
-> > >>>>>>property.
-> > >>>>>>
-> > >>>>>>Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>>>>>Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>>>>>Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>>>>>---
-> > >>>>>>  Documentation/devicetree/bindings/staging/dwc2.txt |  4 ++++
-> > >>>>>>  drivers/usb/gadget/s3c-hsotg.c                     | 18
-> > >>>>>>+++++++++++++++++-
-> > >>>>>>  drivers/usb/gadget/s3c-hsotg.h                     |  1 +
-> > >>>>>>  3 files changed, 22 insertions(+), 1 deletion(-)
-> > >>>>>>
-> > >>>>>>diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt
-> > >>>b/Documentation/devicetree/bindings/staging/dwc2.txt
-> > >>>>>>index 1a1b7cf..fb6b8ee 100644
-> > >>>>>>--- a/Documentation/devicetree/bindings/staging/dwc2.txt
-> > >>>>>>+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-> > >>>>>>@@ -6,10 +6,14 @@ Required properties:
-> > >>>>>>  - reg : Should contain 1 register range (address and length)
-> > >>>>>>  - interrupts : Should contain 1 interrupt
-> > >>>>>>
-> > >>>>>>+Optional properties:
-> > >>>>>>+- snps,phy-utmi-width: Must contain the UTMI data width (either 8
-> > >>>>>>or 16)
-> > >>>>>
-> > >>>>>isn't this available in any of the configuration registers ?
-> > >>>>
-> > >>>>Yes and no. HWCFG4 has a UTMI data width field. However, it has 3
-> > >>>>valid states, "8", "16", or "8 or 16". The BCM281xx implementation is
-> > >>>>set to the latter and the attached phy is 8-bit.
-> > >>>>
-> > >>>>Looking at dwc2 prior to Matthijs Kooijman's patch [1] which starts
-> > >>>>validating the value of phy_utmi_width in that driver, the pci.c
-> > >>>>dwc2_module_params .phy_utmi_width field there even had the comment,
-> > >>>>"/* 16 bits - NOT DETECTABLE */". The autodetect code in
-> > >>>>dwc2_set_param_phy_utmi_width() will fail if HWCFG4 has the "8 or 16"
-> > >>>>option as it just decides to default to a phy width of 16 if nothing
-> > >>>>is configured by the platform glue. This property would also allow
-> > >>>>this issue to be addressed in that driver.
-> > >>>
-> > >>>fair enough, but I'd really like to hear from DT folks if your suggested
-> > >>>binding is acceptable. It seems like we can equally argue that it's a SW
-> > >>>configuration or HW description.
-> > >>
-> > >>It's definitely a HW description - the width of the UTMI data connection.
-> > >>
-> > >>But, which PHY is this? Does it have a register that could tell what
-> > >>the data width is? The dwc2 core has an (optional) PHY Vendor Control
-> > >>Register that allows reading the PHY registers.
-> > >
-> > >This is the integrated PHY on the bcm28155 part (the entire
-> > >bcm281xx/11351 family shares it). My register doc doesn't show the
-> > >optional PHY vendor control register as being present in this dwc2
-> > >implementation. I'll track down with the design team if this is
-> > >accurate...but it appears we can't go that route.
-> > 
-> > The design team confirmed that we do not have any registers that can
-> > be accessed via the PHY Vendor Control Register. All PHY control
-> > registers are implemented in the MMIO control block which is
-> > supported in the PHY control driver later in this series.They also
-> > confirmed there's no other way to detect that it's an 8-bit data
-> > path.
-> 
-> then we need the DT binding, let's see what DT maintainers say.
+2013/10/17 Gupta, Pekon <pekon@ti.com>:
+>> From: Brian Norris [mailto:computersforpeace@gmail.com]
+>> > On Tue, Oct 15, 2013 at 11:19:55AM +0530, Pekon Gupta wrote:
+> [snip]
+>
+>> > diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+>> > index d885298..5836039 100644
+>> > --- a/drivers/mtd/nand/Kconfig
+>> > +++ b/drivers/mtd/nand/Kconfig
+>> > @@ -96,35 +96,13 @@ config MTD_NAND_OMAP2
+>> >
+>> >  config MTD_NAND_OMAP_BCH
+>> >     depends on MTD_NAND && MTD_NAND_OMAP2 && ARCH_OMAP3
+>> > -   tristate "Enable support for hardware BCH error correction"
+>> > +   tristate "Support hardware based BCH error correction"
+>> >     default n
+>> >     select BCH
+>> > -   select BCH_CONST_PARAMS
+>>
+>> Do you know what will happen now if someone configures
+>> BCH_CONST_PARAMS?
+>> Would this cause problems?
+>>
+> As per comments in lib/bch.c
+> ---------------------------
+> * Option CONFIG_BCH_CONST_PARAMS can be used to force fixed values of
+>  * parameters m and t; thus allowing extra compiler optimizations and=
+ providing
+>  * better (up to 2x) encoding performance. Using this option makes se=
+nse when
+>  * (m,t) are fixed and known in advance, e.g. when using BCH error co=
+rrection
+>  * on a particular NAND flash device.
+> ---------------------------
+> 'BCH_CONST_PARAMS' is required for optimization when BCH algorithm
+> is fixed. But in omap-nand case selection of type of BCH algorithm
+> (BCH4 or BCH8) comes from DT binding "ti,nand-ecc-opts".
+>
+> If enabled (CONFIG_BCH_CONST_PARAMS) will optimize lib/bch.c
+> for BCH8 algorithm by default, so
+> CASE: if BCH8 is selected by DT, then no issues
+> CASE: if BCH4 is selected  then nand_bch_init() fails with following =
+error
+> + if (!info->nand.ecc.priv) {
+>                 pr_err("nand: error: unable to use s/w BCH library\n"=
+);
+>                 err =3D -EINVAL;
+>                 goto out_release_mem_region;
+> }
+>
+> [snip]
+>
+>> >  if MTD_NAND_OMAP_BCH
+>> >  config BCH_CONST_M
+>>
+>> Do you need to to also kill of the Kconfig stuff for BCH_CONST_M and
+>> BCH_CONST_T, which were tied to the MTD_NAND_OMAP_BCH4 and
+>> MTD_NAND_OMAP_BCH8 configs you just removed?
+>>
+> Thanks, good catch. I dint really notice.
+> So, the driver is now updated to separate out two flavours of BCHx sc=
+heme.
+> (a) OMAP_ECC_BCHx_CODE_HW: which uses ELM hardware
+> (b) OMAP_ECC_BCHx_CODE_HW_DETECTION_SW: which uses lib/bch.c
+> These BCH_CONST_M and BCH_CONST_T now belongs to (b) family only.
+> -  if MTD_NAND_OMAP_BCH
+> + if MTD_NAND_ECC_BCH
+>        config BCH_CONST_M
+> (I'll update that)..
+>
+>
+>> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> [snip]
+>> > -           info->bch =3D init_bch(nand_chip->ecc.bytes,
+>> > -                                   nand_chip->ecc.strength,
+>> > -                                   OMAP_ECC_BCH8_POLYNOMIAL);
+>> > -           if (!info->bch) {
+>> > +           info->nand.ecc.priv     =3D nand_bch_init(mtd,
+>> > +                                           info->nand.ecc.size,
+>> > +                                           info->nand.ecc.bytes,
+>> > +                                           &info->nand.ecc.layout=
+);
+>>
+>> Are you sure nand_bch_init() is a proper drop-in replacement for the
+>> implementation you had based on init_bch()? It looks to me like they=
+ at
+>> least use a differnt polynomial value (0x201b vs. 0). Is this a prob=
+lem
+>> for backwards compatibility?
+>>
+> It's not the polynomial value =3D 0. Rather 0x201b is selected in bot=
+h cases
+> Refer below code.
+> ---------------
+> When init_bch(m,t, 0) is called from nand_bch_init() then,
+> lib/bch.c @@ init_bch(int m, int t, unsigned int prim_poly)
+> (a)     /* default primitive polynomials */
+>         static const unsigned int prim_poly_tab[] =3D {
+>                 0x25, 0x43, 0x83, 0x11d, 0x211, 0x409, 0x805, 0x1053,=
+ 0x201b,
+>                 0x402b, 0x8003,
+>         };
+> (b)     /* select a primitive polynomial for generating GF(2^m) */
+>         if (prim_poly =3D=3D 0)
+>                 prim_poly =3D prim_poly_tab[m-min_m];
+> (c) And, const int min_m =3D 5;
+>
+> So, for BCH8 m=3D13, min_m=3D5; So
+> prim_poly =3D prim_poly_tab[13-5] =3D prim_poly_tab[8] =3D 0x201b
+> ---------------
+>
+> Hence, there is no change in polynomial, it's just that instead of
+> hard-coding the value, polynomial selection depends on 'm' and 't'.
+>
+>
+>
+>> [...]
+>>
+>> A related question: do we have any current users of this driver that=
+ can
+>> provide testing results for this series? Or is this work just tested
+>> with new hardware?
+>>
+> Got a tested-by: jp.francois@cynove.com for BCH4
+> But that was in May,2013 :-)
+> http://lists.infradead.org/pipermail/linux-mtd/2013-May/047065.html
+>
+>
+> with regards, pekon
 
-I've reworked all of this against the generic phy layer. Things are
-simplified, of course, but this needs to be clarified to move forward
-on either the phy driver or the s3c-hsotg support.
+Yes, but I am currently stuck on 3.10, and I need to migrate my out of =
+tree
+board file to a device tree, and I currently have no bandwidth for this=
+, so I
+won't be able to test the whole serie, but may be some parts are
+testable independently ?
 
-DT maintainers: can you weigh in here please?
+I will take a look and tell you.
 
-Summary is that we have a 8-bit data path UTMI phy attached to a dwc2.
-The width is undetectable and a fixed h/w configuration. I would
-actually view this as a property of the phy itself. It's 8-bit only and
-thus puts the constraint on the controller it's attached to (internally)
-to operate in 8-bit UTMI mode. However, I see no way with the generic
-phy binding to provide this information to the controller h/w.
-
-The original approach above adds a phy-utmi-width property to the dwc2
-binding which is simple, but in retrospect may not reflect where that
-constraint actually comes into play.
-
--Matt
+Regards,
+Jean-Philippe Fran=C3=A7ois
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
