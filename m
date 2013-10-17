@@ -1,341 +1,838 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] gpio: add export with name from dts
-Date: Thu, 17 Oct 2013 16:04:55 +0100
-Message-ID: <20131017150455.GH24056@e106331-lin.cambridge.arm.com>
-References: <1382011682-18595-1-git-send-email-jiri.prchal@aksignal.cz>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [Patch v2][ 17/37] DT: Add basic support for imx35-based devices.
+Date: Thu, 17 Oct 2013 17:02:15 +0200
+Message-ID: <1382022155-21954-18-git-send-email-denis@eukrea.com>
+References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382011682-18595-1-git-send-email-jiri.prchal@aksignal.cz>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jiri Prchal <jiri.prchal@aksignal.cz>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "acourbot@nvidia.com" <acourbot@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cooloney@gmail.com" <cooloney@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jiri,
+=46rom: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Thu, Oct 17, 2013 at 01:08:02PM +0100, Jiri Prchal wrote:
-> Add export possibility to sysfs with given name in device tree. It is nice for
-> users to have board specific gpios exported at boot-time and with their names.
-> It renames some functions in gpiolib and adds name as parameter. If it is passed
-> NULL as name everything works like before, export by chip name.
-> It can be done by extra function export_with_name without changing original
-> export function but I think there would not to be twice almost the same.
-> Even if gpio sysfs interface is almost to be deprecated, I would like to add
-> this, cause new chardev interface is in farness future.
-> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
-> v3:
-> change to "linux,gpio-export"
-> removed arrays of gpios, just one child node -> one GPIO line
-> simplified node properties like as it's in gpio-leds
-> if not label -> uses child node name
-> 
-> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio.txt |   44 ++++++++++++++++++
->  drivers/gpio/gpiolib-of.c                       |   56 +++++++++++++++++++++++
->  drivers/gpio/gpiolib.c                          |   27 +++++++----
->  include/asm-generic/gpio.h                      |    6 ++-
->  include/linux/gpio.h                            |   23 +++++++++-
->  5 files changed, 144 insertions(+), 12 deletions(-)
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/clock/imx35-clock.txt      |  115 +++++
+ arch/arm/boot/dts/imx35.dtsi                       |  449 ++++++++++++=
+++++++++
+ arch/arm/mach-imx/Kconfig                          |   11 +
+ arch/arm/mach-imx/Makefile                         |    1 +
+ arch/arm/mach-imx/clk-imx35.c                      |   34 +-
+ arch/arm/mach-imx/common.h                         |    1 +
+ arch/arm/mach-imx/imx35-dt.c                       |   48 +++
+ 7 files changed, 658 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx35-clock=
+=2Etxt
+ create mode 100644 arch/arm/boot/dts/imx35.dtsi
+ create mode 100644 arch/arm/mach-imx/imx35-dt.c
 
-As I mentioned on v1 of this patch [1], I do not think that this is the
-right way to go about exporting GPIOs to userspace. Why do we need a
-binding for a non-device to tell Linux (specifically Linux) whether or
-not to represent a device to userspace, and how to do so?
+diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt b/=
+Documentation/devicetree/bindings/clock/imx35-clock.txt
+new file mode 100644
+index 0000000..9f9a60d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
+@@ -0,0 +1,115 @@
++* Clock bindings for Freescale i.MX35
++
++Required properties:
++- compatible: Should be "fsl,imx35-ccm"
++- reg: Address and length of the register set
++- interrupts: Should contain CCM interrupt
++- #clock-cells: Should be <1>
++
++The clock consumer should specify the desired clock by having the cloc=
+k
++ID in its "clocks" phandle cell.  The following is a full list of i.MX=
+35
++clocks and IDs.
++
++	Clock			ID
++	---------------------------
++	ckih			0
++	mpll			1
++	ppll			2
++	mpll_075		3
++	arm			4
++	hsp			5
++	hsp_div			6
++	hsp_sel			7
++	ahb			8
++	ipg			9
++	arm_per_div		10
++	ahb_per_div		11
++	ipg_per			12
++	uart_sel		13
++	uart_div		14
++	esdhc_sel		15
++	esdhc1_div		16
++	esdhc2_div		17
++	esdhc3_div		18
++	spdif_sel		19
++	spdif_div_pre		20
++	spdif_div_post		21
++	ssi_sel			22
++	ssi1_div_pre		23
++	ssi1_div_post		24
++	ssi2_div_pre		25
++	ssi2_div_post		26
++	usb_sel			27
++	usb_div			28
++	nfc_div			29
++	asrc_gate		30
++	pata_gate		31
++	audmux_gate		32
++	can1_gate		33
++	can2_gate		34
++	cspi1_gate		35
++	cspi2_gate		36
++	ect_gate		37
++	edio_gate		38
++	emi_gate		39
++	epit1_gate		40
++	epit2_gate		41
++	esai_gate		42
++	esdhc1_gate		43
++	esdhc2_gate		44
++	esdhc3_gate		45
++	fec_gate		46
++	gpio1_gate		47
++	gpio2_gate		48
++	gpio3_gate		49
++	gpt_gate		50
++	i2c1_gate		51
++	i2c2_gate		52
++	i2c3_gate		53
++	iomuxc_gate		54
++	ipu_gate		55
++	kpp_gate		56
++	mlb_gate		57
++	mshc_gate		58
++	owire_gate		59
++	pwm_gate		60
++	rngc_gate		61
++	rtc_gate		62
++	rtic_gate		63
++	scc_gate		64
++	sdma_gate		65
++	spba_gate		66
++	spdif_gate		67
++	ssi1_gate		68
++	ssi2_gate		69
++	uart1_gate		70
++	uart2_gate		71
++	uart3_gate		72
++	usbotg_gate		73
++	wdog_gate		74
++	max_gate		75
++	admux_gate		76
++	csi_gate		77
++	csi_div			78
++	csi_sel			79
++	iim_gate		80
++	gpu2d_gate		81
++	clk_max			82
++
++Examples:
++
++clks: ccm@53f80000 {
++	compatible =3D "fsl,imx35-ccm";
++	reg =3D <0x53f80000 0x4000>;
++	interrupts =3D <31>;
++	#clock-cells =3D <1>;
++};
++
++esdhc1: esdhc@53fb4000 {
++	compatible =3D "fsl,imx35-esdhc";
++	reg =3D <0x53fb4000 0x4000>;
++	interrupts =3D <7>;
++	clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
++	clock-names =3D "ipg", "ahb", "per";
++	status =3D "disabled";
++};
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dts=
+i
+new file mode 100644
+index 0000000..f4318c5
+--- /dev/null
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -0,0 +1,449 @@
++/*
++ * Copyright 2012 Steffen Trumtrar, Pengutronix
++ *
++ * based on imx27.dtsi
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y it under
++ * the terms of the GNU General Public License version 2 as published =
+by the
++ * Free Software Foundation.
++ */
++
++#include "skeleton.dtsi"
++#include "imx35-pinfunc.h"
++
++/ {
++	aliases {
++		serial0 =3D &uart1;
++		serial1 =3D &uart2;
++		serial2 =3D &uart3;
++		gpio0 =3D &gpio1;
++		gpio1 =3D &gpio2;
++		gpio2 =3D &gpio3;
++	};
++
++	avic: avic-interrupt-controller@68000000 {
++		compatible =3D "fsl,imx35-avic", "fsl,avic";
++		interrupt-controller;
++		#interrupt-cells =3D <1>;
++		reg =3D <0x68000000 0x10000000>;
++	};
++
++	clocks {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		ckil {
++			compatible =3D "fsl,imx-ckil", "fixed-clock";
++			clock-frequency =3D <32768>;
++		};
++
++		osc {
++			compatible =3D "fsl,imx-osc", "fixed-clock";
++			clock-frequency =3D <24000000>;
++		};
++	};
++
++	soc {
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++		compatible =3D "simple-bus";
++		interrupt-parent =3D <&avic>;
++		ranges;
++
++		L2: l2-cache@30000000 {
++			compatible =3D "arm,l210-cache";
++			reg =3D <0x30000000 0x1000>;
++			cache-unified;
++			cache-level =3D <2>;
++		};
++
++		aips1: aips@43f00000 {
++			compatible =3D "fsl,aips", "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0x43f00000 0x100000>;
++			ranges;
++
++			i2c1: i2c@43f80000 {
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
++				reg =3D <0x43f80000 0x4000>;
++				interrupts =3D <10>;
++				status =3D "disabled";
++			};
++
++			i2c3: i2c@43f84000 {
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
++				reg =3D <0x43f84000 0x4000>;
++				interrupts =3D <3>;
++				status =3D "disabled";
++			};
++
++			uart1: serial@43f90000 {
++				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
++				reg =3D <0x43f90000 0x4000>;
++				interrupts =3D <45>;
++				status =3D "disabled";
++			};
++
++			uart2: serial@43f94000 {
++				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
++				reg =3D <0x43f94000 0x4000>;
++				interrupts =3D <32>;
++				status =3D "disabled";
++			};
++
++			i2c2: i2c@43f98000 {
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				compatible =3D "fsl,imx35-i2c", "fsl,imx1-i2c";
++				reg =3D <0x43f98000 0x4000>;
++				interrupts =3D <4>;
++				status =3D "disabled";
++			};
++
++			ssi1: ssi@43fa0000 {
++				compatible =3D "fsl,imx35-ssi", "fsl,imx21-ssi";
++				reg =3D <0x43fa0000 0x4000>;
++				interrupts =3D <11>;
++				clocks =3D <&clks 68>;
++				dmas =3D <&sdma 28 0 0>,
++				       <&sdma 29 0 0>;
++				dma-names =3D "rx", "tx";
++				fsl,fifo-depth =3D <15>;
++				fsl,ssi-dma-events =3D <29 28 27 26>; /* TX0 RX0 TX1 RX1 */
++				status =3D "disabled";
++			};
++
++			iomuxc: iomuxc@43fac000 {
++				compatible =3D "fsl,imx35-iomuxc";
++				reg =3D <0x43fac000 0x4000>;
++
++				i2c1 {
++					pinctrl_i2c1_1: i2c1grp-1 {
++						fsl,pins =3D <
++								MX35_PAD_I2C1_CLK__I2C1_SCL 0x80000000
++								MX35_PAD_I2C1_DAT__I2C1_SDA 0x80000000
++						>;
++					};
++				};
++
++				i2c3 {
++					pinctrl_i2c3_1: i2c3grp-1 {
++						fsl,pins =3D <MX35_PAD_ATA_DATA12__I2C3_SCL 0x1c0
++							    MX35_PAD_ATA_DATA13__I2C3_SDA 0x1c0>;
++					};
++				};
++
++				can1 {
++					pinctrl_can1_1: can1grp-1 {
++						fsl,pins =3D <MX35_PAD_I2C2_CLK__CAN1_TXCAN 0x1c0
++							    MX35_PAD_I2C2_DAT__CAN1_RXCAN 0x1c0>;
++					};
++				};
++
++				can2 {
++					pinctrl_can2_1: can2grp-1 {
++						fsl,pins =3D <MX35_PAD_TX5_RX0__CAN2_TXCAN 0x1c0
++							MX35_PAD_TX4_RX1__CAN2_RXCAN 0x1c0>;
++					};
++				};
++
++				uart1 {
++					pinctrl_uart1_1: uart1grp-1 {
++						fsl,pins =3D <
++							MX35_PAD_CTS1__UART1_CTS 0x80000000
++							MX35_PAD_RTS1__UART1_RTS 0x80000000
++							MX35_PAD_TXD1__UART1_TXD_MUX 0x80000000
++							MX35_PAD_RXD1__UART1_RXD_MUX 0x80000000
++						>;
++					};
++				};
++
++				uart2 {
++					pinctrl_uart2_1: uart2grp-1 {
++						fsl,pins =3D <
++							MX35_PAD_RTS2__UART2_RTS 0x80000000
++							MX35_PAD_CTS2__UART2_CTS 0x80000000
++							MX35_PAD_RXD2__UART2_RXD_MUX 0x80000000
++							MX35_PAD_TXD2__UART2_TXD_MUX 0x80000000
++						>;
++					};
++				};
++
++				fec {
++					pinctrl_fec_1: fecgrp-1 {
++						fsl,pins =3D <
++							MX35_PAD_FEC_TX_CLK__FEC_TX_CLK 0x80000000
++							MX35_PAD_FEC_RX_CLK__FEC_RX_CLK 0x80000000
++							MX35_PAD_FEC_RX_DV__FEC_RX_DV 0x80000000
++							MX35_PAD_FEC_COL__FEC_COL 0x80000000
++							MX35_PAD_FEC_RDATA0__FEC_RDATA_0 0x80000000
++							MX35_PAD_FEC_TDATA0__FEC_TDATA_0 0x80000000
++							MX35_PAD_FEC_TX_EN__FEC_TX_EN 0x80000000
++							MX35_PAD_FEC_MDC__FEC_MDC 0x80000000
++							MX35_PAD_FEC_MDIO__FEC_MDIO 0x80000000
++							MX35_PAD_FEC_TX_ERR__FEC_TX_ERR 0x80000000
++							MX35_PAD_FEC_RX_ERR__FEC_RX_ERR 0x80000000
++							MX35_PAD_FEC_CRS__FEC_CRS 0x80000000
++							MX35_PAD_FEC_RDATA1__FEC_RDATA_1 0x80000000
++							MX35_PAD_FEC_TDATA1__FEC_TDATA_1 0x80000000
++							MX35_PAD_FEC_RDATA2__FEC_RDATA_2 0x80000000
++							MX35_PAD_FEC_TDATA2__FEC_TDATA_2 0x80000000
++							MX35_PAD_FEC_RDATA3__FEC_RDATA_3 0x80000000
++							MX35_PAD_FEC_TDATA3__FEC_TDATA_3 0x80000000
++						>;
++
++					};
++				};
++
++				esdhc1 {
++					pinctrl_esdhc1_1: esdhc1grp-1 {
++						fsl,pins =3D <
++							MX35_PAD_SD1_CMD__ESDHC1_CMD    0x80000000
++							MX35_PAD_SD1_CLK__ESDHC1_CLK    0x80000000
++							MX35_PAD_SD1_DATA0__ESDHC1_DAT0 0x80000000
++							MX35_PAD_SD1_DATA1__ESDHC1_DAT1 0x80000000
++							MX35_PAD_SD1_DATA2__ESDHC1_DAT2 0x80000000
++							MX35_PAD_SD1_DATA3__ESDHC1_DAT3 0x80000000
++						>;
++					};
++				};
++
++				lcdc {
++					pinctrl_lcdc_1: lcdcgp-1 {
++						fsl,pins =3D <
++							MX35_PAD_LD0__IPU_DISPB_DAT_0         0x80000000
++							MX35_PAD_LD1__IPU_DISPB_DAT_1         0x80000000
++							MX35_PAD_LD2__IPU_DISPB_DAT_2         0x80000000
++							MX35_PAD_LD3__IPU_DISPB_DAT_3         0x80000000
++							MX35_PAD_LD4__IPU_DISPB_DAT_4         0x80000000
++							MX35_PAD_LD5__IPU_DISPB_DAT_5         0x80000000
++							MX35_PAD_LD6__IPU_DISPB_DAT_6         0x80000000
++							MX35_PAD_LD7__IPU_DISPB_DAT_7         0x80000000
++							MX35_PAD_LD8__IPU_DISPB_DAT_8         0x80000000
++							MX35_PAD_LD9__IPU_DISPB_DAT_9         0x80000000
++							MX35_PAD_LD10__IPU_DISPB_DAT_10       0x80000000
++							MX35_PAD_LD11__IPU_DISPB_DAT_11       0x80000000
++							MX35_PAD_LD12__IPU_DISPB_DAT_12	      0x80000000
++							MX35_PAD_LD13__IPU_DISPB_DAT_13       0x80000000
++							MX35_PAD_LD14__IPU_DISPB_DAT_14       0x80000000
++							MX35_PAD_LD15__IPU_DISPB_DAT_15       0x80000000
++							MX35_PAD_LD16__IPU_DISPB_DAT_16       0x80000000
++							MX35_PAD_LD17__IPU_DISPB_DAT_17       0x80000000
++							MX35_PAD_D3_HSYNC__IPU_DISPB_D3_HSYNC 0x80000000
++							MX35_PAD_D3_FPSHIFT__IPU_DISPB_D3_CLK 0x80000000
++							MX35_PAD_D3_DRDY__IPU_DISPB_D3_DRDY   0x80000000
++							MX35_PAD_D3_VSYNC__IPU_DISPB_D3_VSYNC 0x80000000
++							/* Backlight */
++							MX35_PAD_CONTRAST__IPU_DISPB_CONTR    0x80000000
++						>;
++					};
++				};
++
++				audmux {
++					pinctrl_audmux_1: audmuxgrp-1 {
++						fsl,pins =3D <
++							MX35_PAD_STXFS4__AUDMUX_AUD4_TXFS	0x80000000
++							MX35_PAD_STXD4__AUDMUX_AUD4_TXD		0x80000000
++							MX35_PAD_SRXD4__AUDMUX_AUD4_RXD		0x80000000
++							MX35_PAD_SCK4__AUDMUX_AUD4_TXC		0x80000000
++						>;
++					};
++
++				};
++			};
++		};
++
++		spba: spba-bus@50000000 {
++			compatible =3D "fsl,spba-bus", "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0x50000000 0x100000>;
++			ranges;
++
++			uart3: serial@5000c000 {
++				compatible =3D "fsl,imx35-uart", "fsl,imx21-uart";
++				reg =3D <0x5000c000 0x4000>;
++				interrupts =3D <18>;
++				status =3D "disabled";
++			};
++
++			fec: fec@50038000 {
++				compatible =3D "fsl,imx35-fec", "fsl,imx27-fec";
++				reg =3D <0x50038000 0x4000>;
++				interrupts =3D <57>;
++				status =3D "disabled";
++			};
++		};
++
++		aips2: aips@53f00000 {
++			compatible =3D "fsl,aips", "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0x53f00000 0x100000>;
++			ranges;
++
++			clks: ccm@53f80000 {
++				compatible =3D "fsl,imx35-ccm";
++				reg =3D <0x53f80000 0x4000>;
++				interrupts =3D <31>;
++				#clock-cells =3D <1>;
++			};
++
++			gpio3: gpio@53fa4000 {
++				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
++				reg =3D <0x53fa4000 0x4000>;
++				interrupts =3D <56>;
++				gpio-controller;
++				#gpio-cells =3D <2>;
++				interrupt-controller;
++				#interrupt-cells =3D <2>;
++			};
++
++			esdhc1: esdhc@53fb4000 {
++				compatible =3D "fsl,imx35-esdhc";
++				reg =3D <0x53fb4000 0x4000>;
++				interrupts =3D <7>;
++				clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
++				clock-names =3D "ipg", "ahb", "per";
++				status =3D "disabled";
++			};
++
++			esdhc2: esdhc@53fb8000 {
++				compatible =3D "fsl,imx35-esdhc";
++				reg =3D <0x53fb8000 0x4000>;
++				interrupts =3D <8>;
++				clocks =3D <&clks 9>, <&clks 8>, <&clks 44>;
++				clock-names =3D "ipg", "ahb", "per";
++				status =3D "disabled";
++			};
++
++			esdhc3: esdhc@53fbc000 {
++				compatible =3D "fsl,imx35-esdhc";
++				reg =3D <0x53fbc000 0x4000>;
++				interrupts =3D <9>;
++				clocks =3D <&clks 9>, <&clks 8>, <&clks 45>;
++				clock-names =3D "ipg", "ahb", "per";
++				status =3D "disabled";
++			};
++
++			ipu: ipu@53fc0000 {
++				compatible =3D "fsl,imx31-ipu";
++				reg =3D <	0x53fc0000 0x5f
++					0x53fc0088 0x2b >;
++				interrupts =3D <42 41>;
++				dma-channels =3D <32>;
++				#dma-cells =3D <1>;
++				clocks =3D <&clks 55>;
++				clock-names =3D "";
++				status =3D "disabled";
++			};
++
++			lcdc: mx3fb@53fc00b4 {
++				compatible =3D "fsl,mx3-fb";
++				reg =3D <0x53fc00b4 0x0b>;
++				dmas =3D <&ipu 14>;
++				dma-names =3D "tx";
++				clocks =3D <&clks 55>;
++				status =3D "disabled";
++			};
++
++
++			audmux: audmux@53fc4000 {
++				compatible =3D "fsl,imx35-audmux", "fsl,imx31-audmux";
++				reg =3D <0x53fc4000 0x4000>;
++				status =3D "disabled";
++			};
++
++			gpio1: gpio@53fcc000 {
++				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
++				reg =3D <0x53fcc000 0x4000>;
++				interrupts =3D <52>;
++				gpio-controller;
++				#gpio-cells =3D <2>;
++				interrupt-controller;
++				#interrupt-cells =3D <2>;
++			};
++
++			gpio2: gpio@53fd0000 {
++				compatible =3D "fsl,imx35-gpio", "fsl,imx31-gpio";
++				reg =3D <0x53fd0000 0x4000>;
++				interrupts =3D <51>;
++				gpio-controller;
++				#gpio-cells =3D <2>;
++				interrupt-controller;
++				#interrupt-cells =3D <2>;
++			};
++
++			sdma: sdma@53fd4000 {
++				compatible =3D "fsl,imx35-sdma";
++				reg =3D <0x53fd4000 0x4000>;
++				clocks =3D <&clks 9>, <&clks 65>;
++				clock-names =3D "ipg", "ahb";
++				#dma-cells =3D <3>;
++				interrupts =3D <34>;
++				fsl,sdma-ram-script-name =3D "imx/sdma/sdma-imx35.bin";
++			};
++
++			wdog: wdog@53fdc000 {
++				compatible =3D "fsl,imx35-wdt", "fsl,imx21-wdt";
++				reg =3D <0x53fdc000 0x4000>;
++				clocks =3D <&clks 74>;
++				clock-names =3D "";
++				interrupts =3D <55>;
++			};
++
++			can1: can@53fe4000 {
++				compatible =3D "fsl,imx35-flexcan", "fsl,p1010-flexcan";
++				reg =3D <0x53fe4000 0x1000>;
++				interrupts =3D <43>;
++				status =3D "disabled";
++			};
++
++			can2: can@53fe8000 {
++				compatible =3D "fsl,imx35-flexcan", "fsl,p1010-flexcan";
++				reg =3D <0x53fe8000 0x1000>;
++				interrupts =3D <44>;
++				status =3D "disabled";
++			};
++		};
++
++		emi@80000000 { /* External Memory Interface */
++			compatible =3D "fsl,emi", "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0x80000000 0x40000000>;
++			ranges;
++
++			nfc: nand@bb000000 {
++				#address-cells =3D <1>;
++				#size-cells =3D <1>;
++
++				compatible =3D "fsl,imx35-nand", "fsl,imx25-nand";
++				reg =3D <0xbb000000 0x2000>;
++				interrupts =3D <33>;
++				status =3D "disabled";
++			};
++
++			weim: weim@b8002000 {
++				#address-cells =3D <2>;
++				#size-cells =3D <1>;
++				compatible =3D "fsl,imx35-weim";
++				reg =3D <0xb8002000 0x1000>;
++				ranges =3D <
++					0 0 0xa0000000 0x8000000
++					1 0 0xa8000000 0x8000000
++					2 0 0xb0000000 0x2000000
++					3 0 0xb2000000 0x2000000
++					4 0 0xb4000000 0x2000000
++					5 0 0xb6000000 0x2000000
++				>;
++				status =3D "disabled";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 9f67338..7400c7b 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -625,6 +625,17 @@ config MACH_IMX31_DT
+=20
+ comment "MX35 platforms:"
+=20
++config MACH_IMX35_DT
++	bool "Support i.MX35 platforms from device tree"
++	select SOC_IMX35
++	select IMX_HAVE_PLATFORM_IMX2_WDT
++	select IMX_HAVE_PLATFORM_MXC_NAND
++	select PINCTRL
++	select PINCTRL_IMX35
++	help
++	  Include support for Freescale i.MX35 based platforms
++	  using the device tree for discovery.
++
+ config MACH_PCM043
+ 	bool "Support Phytec pcm043 (i.MX35) platforms"
+ 	select IMX_HAVE_PLATFORM_FLEXCAN
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 5383c58..f20a117 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_MACH_MX35_3DS) +=3D mach-mx35_3ds.o
+ obj-$(CONFIG_MACH_EUKREA_CPUIMX35SD) +=3D mach-cpuimx35.o
+ obj-$(CONFIG_MACH_EUKREA_MBIMXSD35_BASEBOARD) +=3D eukrea_mbimxsd35-ba=
+seboard.o
+ obj-$(CONFIG_MACH_VPR200) +=3D mach-vpr200.o
++obj-$(CONFIG_MACH_IMX35_DT) +=3D imx35-dt.o
+=20
+ obj-$(CONFIG_HAVE_IMX_ANATOP) +=3D anatop.o
+ obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
+diff --git a/arch/arm/mach-imx/clk-imx35.c b/arch/arm/mach-imx/clk-imx3=
+5.c
+index 2193c83..a924644 100644
+--- a/arch/arm/mach-imx/clk-imx35.c
++++ b/arch/arm/mach-imx/clk-imx35.c
+@@ -45,6 +45,8 @@ static struct arm_ahb_div clk_consumer[] =3D {
+ static char hsp_div_532[] =3D { 4, 8, 3, 0 };
+ static char hsp_div_400[] =3D { 3, 6, 3, 0 };
+=20
++static struct clk_onecell_data clk_data;
++
+ static const char *std_sel[] =3D {"ppll", "arm"};
+ static const char *ipg_per_sel[] =3D {"ahb_per_div", "arm_per_div"};
+=20
+@@ -127,7 +129,8 @@ int __init mx35_clocks_init(void)
+ 	clk[esdhc3_div] =3D imx_clk_divider("esdhc3_div", "esdhc_sel", base +=
+ MX35_CCM_PDR3, 16, 6);
+=20
+ 	clk[spdif_sel] =3D imx_clk_mux("spdif_sel", base + MX35_CCM_PDR3, 22,=
+ 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[spdif_div_pre] =3D imx_clk_divider("spdif_div_pre", "spdif_sel", =
+base + MX35_CCM_PDR3, 29, 3); /* divide by 1 not allowed */=20
++	/* divide by 1 not allowed */
++	clk[spdif_div_pre] =3D imx_clk_divider("spdif_div_pre", "spdif_sel", =
+base + MX35_CCM_PDR3, 29, 3);
+ 	clk[spdif_div_post] =3D imx_clk_divider("spdif_div_post", "spdif_div_=
+pre", base + MX35_CCM_PDR3, 23, 6);
+=20
+ 	clk[ssi_sel] =3D imx_clk_mux("ssi_sel", base + MX35_CCM_PDR2, 6, 1, s=
+td_sel, ARRAY_SIZE(std_sel));
+@@ -204,7 +207,9 @@ int __init mx35_clocks_init(void)
+ 				i, PTR_ERR(clk[i]));
+=20
+ 	clk_register_clkdev(clk[pata_gate], NULL, "pata_imx");
++	clk_register_clkdev(clk[can1_gate], NULL, "53fe4000.can");
+ 	clk_register_clkdev(clk[can1_gate], NULL, "flexcan.0");
++	clk_register_clkdev(clk[can2_gate], NULL, "53fe8000.can");
+ 	clk_register_clkdev(clk[can2_gate], NULL, "flexcan.1");
+ 	clk_register_clkdev(clk[cspi1_gate], "per", "imx35-cspi.0");
+ 	clk_register_clkdev(clk[cspi1_gate], "ipg", "imx35-cspi.0");
+@@ -221,12 +226,16 @@ int __init mx35_clocks_init(void)
+ 	clk_register_clkdev(clk[esdhc3_gate], "per", "sdhci-esdhc-imx35.2");
+ 	clk_register_clkdev(clk[ipg], "ipg", "sdhci-esdhc-imx35.2");
+ 	clk_register_clkdev(clk[ahb], "ahb", "sdhci-esdhc-imx35.2");
++	clk_register_clkdev(clk[fec_gate], NULL, "50038000.fec");
+ 	/* i.mx35 has the i.mx27 type fec */
+ 	clk_register_clkdev(clk[fec_gate], NULL, "imx27-fec.0");
+ 	clk_register_clkdev(clk[gpt_gate], "per", "imx-gpt.0");
+ 	clk_register_clkdev(clk[ipg], "ipg", "imx-gpt.0");
++	clk_register_clkdev(clk[i2c1_gate], NULL, "43f80000.i2c");
+ 	clk_register_clkdev(clk[i2c1_gate], NULL, "imx21-i2c.0");
++	clk_register_clkdev(clk[i2c2_gate], NULL, "43f98000.i2c");
+ 	clk_register_clkdev(clk[i2c2_gate], NULL, "imx21-i2c.1");
++	clk_register_clkdev(clk[i2c3_gate], NULL, "43f84000.i2c");
+ 	clk_register_clkdev(clk[i2c3_gate], NULL, "imx21-i2c.2");
+ 	clk_register_clkdev(clk[ipu_gate], NULL, "ipu-core");
+ 	clk_register_clkdev(clk[ipu_gate], NULL, "mx3_sdc_fb");
+@@ -235,6 +244,12 @@ int __init mx35_clocks_init(void)
+ 	clk_register_clkdev(clk[sdma_gate], NULL, "imx35-sdma");
+ 	clk_register_clkdev(clk[ssi1_gate], NULL, "imx-ssi.0");
+ 	clk_register_clkdev(clk[ssi2_gate], NULL, "imx-ssi.1");
++	clk_register_clkdev(clk[uart1_gate], "per", "43f90000.serial");
++	clk_register_clkdev(clk[ipg], "ipg", "43f90000.serial");
++	clk_register_clkdev(clk[uart2_gate], "per", "43f94000.serial");
++	clk_register_clkdev(clk[ipg], "ipg", "43f94000.serial");
++	clk_register_clkdev(clk[uart3_gate], "per", "5000c000.serial");
++	clk_register_clkdev(clk[ipg], "ipg", "5000c000.serial");
+ 	/* i.mx35 has the i.mx21 type uart */
+ 	clk_register_clkdev(clk[uart1_gate], "per", "imx21-uart.0");
+ 	clk_register_clkdev(clk[ipg], "ipg", "imx21-uart.0");
+@@ -255,6 +270,7 @@ int __init mx35_clocks_init(void)
+ 	clk_register_clkdev(clk[ipg], "ipg", "imx-udc-mx27");
+ 	clk_register_clkdev(clk[usbotg_gate], "ahb", "imx-udc-mx27");
+ 	clk_register_clkdev(clk[wdog_gate], NULL, "imx2-wdt.0");
++	clk_register_clkdev(clk[nfc_div], NULL, "bb000000.nand");
+ 	clk_register_clkdev(clk[nfc_div], NULL, "imx25-nand.0");
+ 	clk_register_clkdev(clk[csi_gate], NULL, "mx3-camera.0");
+ 	clk_register_clkdev(clk[admux_gate], "audmux", NULL);
+@@ -286,3 +302,19 @@ int __init mx35_clocks_init(void)
+=20
+ 	return 0;
+ }
++
++int __init mx35_clocks_init_dt(void)
++{
++	struct device_node *np;
++	void __iomem *base;
++	int irq;
++
++	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx35-ccm");
++	clk_data.clks =3D clk;
++	clk_data.clk_num =3D ARRAY_SIZE(clk);
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++
++	mx35_clocks_init();
++
++	return 0;
++}
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 4517fd7..58db4d2 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -68,6 +68,7 @@ extern int mx53_clocks_init(unsigned long ckil, unsig=
+ned long osc,
+ extern int mx25_clocks_init_dt(void);
+ extern int mx27_clocks_init_dt(void);
+ extern int mx31_clocks_init_dt(void);
++extern int mx35_clocks_init_dt(void);
+ extern int mx51_clocks_init_dt(void);
+ extern int mx53_clocks_init_dt(void);
+ extern struct platform_device *mxc_register_gpio(char *name, int id,
+diff --git a/arch/arm/mach-imx/imx35-dt.c b/arch/arm/mach-imx/imx35-dt.=
+c
+new file mode 100644
+index 0000000..6e83638
+--- /dev/null
++++ b/arch/arm/mach-imx/imx35-dt.c
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2012 Steffen Trumtrar, Pengutronix
++ *
++ * based on imx27-dt.c
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y it under
++ * the terms of the GNU General Public License version 2 as published =
+by the
++ * Free Software Foundation.
++ */
++
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/time.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "common.h"
++#include "mx35.h"
++
++static void __init imx35_dt_init(void)
++{
++	l2x0_of_init(0x00030024, 0x00000000);
++
++	of_platform_populate(NULL, of_default_bus_match_table,
++			     NULL, NULL);
++}
++
++static void __init imx35_timer_init(void)
++{
++	mx35_clocks_init_dt();
++}
++
++static const char *imx35_dt_board_compat[] __initdata =3D {
++	"fsl,imx35",
++	NULL
++};
++
++DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
++	.map_io		=3D mx35_map_io,
++	.init_early	=3D imx35_init_early,
++	.init_irq	=3D mx35_init_irq,
++	.handle_irq	=3D imx35_handle_irq,
++	.init_time      =3D imx35_timer_init,
++	.init_machine	=3D imx35_dt_init,
++	.dt_compat	=3D imx35_dt_board_compat,
++	.restart	=3D mxc_restart,
++MACHINE_END
+--=20
+1.7.9.5
 
-Why can this policy not be handled within the GPIO framework, or within
-GPIO drivers?
-
-I would appreciate a response this time.
-
-[1] http://thread.gmane.org/gmane.linux.drivers.devicetree/47822
-
-Thanks,
-Mark.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index 6cec6ff..9888186 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -117,3 +117,47 @@ Example:
->  Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
->  pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
->  pins 50..59.
-> +
-> +3) gpio-export
-> +--------------
-> +
-> +gpio-export will allow you to export a GPIO line to linux sysfs.
-> +Can be used to describe hw GPIO lines by "name" and to have them exported at
-> +boot-time to make it convenient for users.
-> +
-> +required properties:
-> +- compatible: Should be "linux,gpio-export"
-> +
-> +in each child node will represent a GPIO line
-> +
-> +required properties:
-> +- gpios: GPIO line to export
-> +
-> +optional properties:
-> + - label: export name, if not present, child node name used
-> + - output: to set it as output with default value
-> +	   if not present gpio as input
-
-Is this a boolean property, or a default value to output? This seems
-like an awfully generic name.
-
-> + - direction-may-change: boolean to allow the direction to be controllable
-> +
-> +Example:
-> +
-> +gpio_export {
-> +	compatible = "linux,gpio-export";
-> +
-> +	in {
-> +		label = "in";
-> +		gpios = <&pioC 20 0>;
-> +	};
-> +
-> +	out {
-> +		label = "out";
-> +		output = <1>;
-> +		direction-may-change;
-> +		gpios = <&pioC 21 0>;
-> +	};
-> +
-> +	in_out {
-> +		direction-may-change;
-> +		gpios = <&pioC 22 0>;
-> +	};
-> +};
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 0dfaf20..7ecdf1b 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -21,6 +21,8 @@
->  #include <linux/of_gpio.h>
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/slab.h>
-> +#include <linux/init.h>
-> +#include <linux/platform_device.h>
->  
->  /* Private data structure for of_gpiochip_find_and_xlate */
->  struct gg_data {
-> @@ -243,3 +245,57 @@ void of_gpiochip_remove(struct gpio_chip *chip)
->  	if (chip->of_node)
->  		of_node_put(chip->of_node);
->  }
-> +
-> +static struct of_device_id gpio_export_ids[] = {
-> +	{ .compatible = "linux,gpio-export" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int __init of_gpio_export_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *cnp;
-> +	u32 val;
-> +	int nb = 0;
-> +
-> +	for_each_child_of_node(np, cnp) {
-> +		const char *name = NULL;
-> +		int gpio;
-> +		bool dmc;
-> +
-> +		of_property_read_string(cnp, "label", &name);
-> +		if (!name)
-> +			name = cnp->name;
-> +
-> +		gpio = of_get_gpio(cnp, 0);
-> +		if (devm_gpio_request(&pdev->dev, gpio, name))
-> +			continue;
-> +
-> +		if (!of_property_read_u32(cnp, "output", &val))
-> +			gpio_direction_output(gpio, val);
-> +		else
-> +			gpio_direction_input(gpio);
-> +
-> +		dmc = of_property_read_bool(np, "direction-may-change");
-> +		gpio_export_with_name(gpio, dmc, name);
-> +		nb++;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "%d gpio(s) exported\n", nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver gpio_export_driver = {
-> +	.driver		= {
-> +		.name		= "linux,gpio-export",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(gpio_export_ids),
-> +	},
-> +};
-> +
-> +static int __init of_gpio_export_init(void)
-> +{
-> +	return platform_driver_probe(&gpio_export_driver, of_gpio_export_probe);
-> +}
-> +device_initcall(of_gpio_export_init);
-> \ No newline at end of file
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 86ef346..c7494d1 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -96,7 +96,8 @@ static int gpiod_get_value(const struct gpio_desc *desc);
->  static void gpiod_set_value(struct gpio_desc *desc, int value);
->  static int gpiod_cansleep(const struct gpio_desc *desc);
->  static int gpiod_to_irq(const struct gpio_desc *desc);
-> -static int gpiod_export(struct gpio_desc *desc, bool direction_may_change);
-> +static int gpiod_export_with_name(struct gpio_desc *desc,
-> +				  bool direction_may_change, const char *name);
->  static int gpiod_export_link(struct device *dev, const char *name,
->  			     struct gpio_desc *desc);
->  static int gpiod_sysfs_set_active_low(struct gpio_desc *desc, int value);
-> @@ -674,7 +675,7 @@ static ssize_t export_store(struct class *class,
->  			status = -ENODEV;
->  		goto done;
->  	}
-> -	status = gpiod_export(desc, true);
-> +	status = gpiod_export_with_name(desc, true, NULL);
->  	if (status < 0)
->  		gpiod_free(desc);
->  	else
-> @@ -736,9 +737,10 @@ static struct class gpio_class = {
->  
->  
->  /**
-> - * gpio_export - export a GPIO through sysfs
-> + * gpiod_export_with_name - export a GPIO through sysfs
->   * @gpio: gpio to make available, already requested
->   * @direction_may_change: true if userspace may change gpio direction
-> + * @name: gpio name
->   * Context: arch_initcall or later
->   *
->   * When drivers want to make a GPIO accessible to userspace after they
-> @@ -750,7 +752,8 @@ static struct class gpio_class = {
->   *
->   * Returns zero on success, else an error.
->   */
-> -static int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
-> +int gpiod_export_with_name(struct gpio_desc *desc, bool direction_may_change,
-> +			  const char *name)
->  {
->  	unsigned long		flags;
->  	int			status;
-> @@ -788,7 +791,9 @@ static int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
->  	spin_unlock_irqrestore(&gpio_lock, flags);
->  
->  	offset = gpio_chip_hwgpio(desc);
-> -	if (desc->chip->names && desc->chip->names[offset])
-> +	if (name)
-> +		ioname = name;
-> +	else if (desc->chip->names && desc->chip->names[offset])
->  		ioname = desc->chip->names[offset];
->  
->  	dev = device_create(&gpio_class, desc->chip->dev, MKDEV(0, 0),
-> @@ -829,11 +834,13 @@ fail_unlock:
->  	return status;
->  }
->  
-> -int gpio_export(unsigned gpio, bool direction_may_change)
-> +int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-> +			  const char *name)
->  {
-> -	return gpiod_export(gpio_to_desc(gpio), direction_may_change);
-> +	return gpiod_export_with_name(gpio_to_desc(gpio), direction_may_change,
-> +				      name);
->  }
-> -EXPORT_SYMBOL_GPL(gpio_export);
-> +EXPORT_SYMBOL_GPL(gpio_export_with_name);
->  
->  static int match_export(struct device *dev, const void *data)
->  {
-> @@ -1531,7 +1538,9 @@ int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
->  		goto free_gpio;
->  
->  	if (flags & GPIOF_EXPORT) {
-> -		err = gpiod_export(desc, flags & GPIOF_EXPORT_CHANGEABLE);
-> +		err = gpiod_export_with_name(desc,
-> +					     flags & GPIOF_EXPORT_CHANGEABLE,
-> +					     NULL);
->  		if (err)
->  			goto free_gpio;
->  	}
-> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-> index bde6469..d0970e3 100644
-> --- a/include/asm-generic/gpio.h
-> +++ b/include/asm-generic/gpio.h
-> @@ -202,7 +202,8 @@ extern void gpio_free_array(const struct gpio *array, size_t num);
->   * A sysfs interface can be exported by individual drivers if they want,
->   * but more typically is configured entirely from userspace.
->   */
-> -extern int gpio_export(unsigned gpio, bool direction_may_change);
-> +extern int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-> +				 const char *name);
->  extern int gpio_export_link(struct device *dev, const char *name,
->  			unsigned gpio);
->  extern int gpio_sysfs_set_active_low(unsigned gpio, int value);
-> @@ -284,7 +285,8 @@ struct device;
->  
->  /* sysfs support is only available with gpiolib, where it's optional */
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-> +					const char *name)
->  {
->  	return -ENOSYS;
->  }
-> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-> index 552e3f4..12a6cd2 100644
-> --- a/include/linux/gpio.h
-> +++ b/include/linux/gpio.h
-> @@ -169,7 +169,8 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
->  	WARN_ON(1);
->  }
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-> +					const char *name)
->  {
->  	/* GPIO can never have been requested or set as {in,out}put */
->  	WARN_ON(1);
-> @@ -236,4 +237,24 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
->  			  unsigned long flags, const char *label);
->  void devm_gpio_free(struct device *dev, unsigned int gpio);
->  
-> +/**
-> + * gpio_export - export a GPIO through sysfs
-> + * @gpio: gpio to make available, already requested
-> + * @direction_may_change: true if userspace may change gpio direction
-> + * Context: arch_initcall or later
-> + *
-> + * When drivers want to make a GPIO accessible to userspace after they
-> + * have requested it -- perhaps while debugging, or as part of their
-> + * public interface -- they may use this routine.  If the GPIO can
-> + * change direction (some can't) and the caller allows it, userspace
-> + * will see "direction" sysfs attribute which may be used to change
-> + * the gpio's direction.  A "value" attribute will always be provided.
-> + *
-> + * Returns zero on success, else an error.
-> + */
-> +static inline int gpio_export(unsigned gpio,bool direction_may_change)
-> +{
-> +	return gpio_export_with_name(gpio, direction_may_change, NULL);
-> +}
-> +
->  #endif /* __LINUX_GPIO_H */
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
