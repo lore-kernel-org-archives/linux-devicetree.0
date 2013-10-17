@@ -1,63 +1,114 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v2 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Thu, 17 Oct 2013 15:32:04 +0100
-Message-ID: <20131017143204.GE2442@localhost.localdomain>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Thu, 17 Oct 2013 15:30:48 +0100
+Message-ID: <525FF498.3060202@st.com>
+References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
+ <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+ <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
+ <525FAEED.7030207@st.com> <20131017141957.GE14104@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Pitre <nicolas.pitre@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Tarek Dakhran <t.dakhran@samsung.com>, linux-samsung-soc@vger.kernel.org, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131017141957.GE14104@ns203013.ovh.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime COQUELIN <maxime.coquelin@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 12:45:29PM +0200, Daniel Lezcano wrote:
-> On 10/14/2013 05:08 PM, Vyacheslav Tyrtov wrote:
-> > From: Tarek Dakhran <t.dakhran@samsung.com>
-> > 
-> > Add EDCS(Exynos Dual Cluster Support) for Samsung Exynos5410 SoC.
-> > This enables all 8 cores, 4 x A7 and 4 x A15 run at the same time.
+On 17/10/13 15:19, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 10:33 Thu 17 Oct     , srinivas kandagatla wrote:
+>> On 17/10/13 08:27, Maxime COQUELIN wrote:
+>>> ...
+>>>>>>> +
+>>>>>>> +static struct of_device_id st_i2c_match[] =3D {
+>>>>>>> +     { .compatible =3D "st,comms-ssc-i2c", },
+>>>>> the rules is to put the first soc that use the ip in the compatible
+>>>>> as st,sti7100-scc-i2c
+>>> Ok. There are no plans to upstream the SH4 platforms, it will only =
 
-[...]
+>>> remains in stlinux.com.
+>>> Maybe I can set the first ARM platform (STiH415)?
+>>> That would give st,stih415-ssc-i2c.
+>> NAK, for st,stih415-ssc-i2c naming.
+>>
+>> IMO, this makes sense when the same IP integration done on different SOC
+>> changes slightly/very differently.
+>>
+>> But in this case the "comms" IP remains unchanged across all the SOCs.
+>>
+>> I would still prefer "st,comms-ssc-i2c", allowing a single device driver
+>> to match against several SoCs. ST "comms" IP it is integrated across all
+>> the STi series of SoCs, so we don't want to add new entry in compatible
+>> for every new SOC.
+> =
 
-> > +	__mcpm_cpu_down(cpu, cluster);
-> > +
-> > +	if (!skip_wfi) {
-> > +		exynos_core_power_down(cpu, cluster);
-> > +		wfi();
-> > +	}
-> > +}
-> 
-> I did not looked line by line but these functions looks very similar
-> than the tc2_pm.c's function. no ?
+> you never need this you always the first SoC that's all
 
-This is true.
-
-> May be some code consolidation could be considered here.
-> 
-> Added Nico and Lorenzo in Cc.
-> 
-> Thanks
->   -- Daniel
-
-Nico can commnent further, but I think the main concern here was that
-this code shouldn't be factored prematurely.
-
-There are many low-level platform specifics involved here, so it's
-hard to be certain that all platforms could fit into a more abstracted
-framework until we have some evidence to look at.
-
-This could be revisited when we have a few diverse MCPM ports to
-compare.
+Sorry to ask this but, Where is this requirement coming from?
+I have not spotted any thing as such in ePAPR specs.
 
 
-The low-level A15/A7 cacheflush sequence is already being factored
-by Nico [1].
+All the spec says is.
+=3D=3D=3D
+The compatible property value consists of one or more strings that
+define the specific programming model for the device. This list of
+strings should be used by a client program for device driver selection.
+The property value consists of a concatenated list of null terminated
+strings, *from most specific to most general.* They allow a device to
+express its compatibility with a family of similar devices, potentially
+allowing a single device driver to match against several devices.
+The recommended format is =93manufacturer,model=94, where manufacturer is a
+string describing the name of the manufacturer (such as an OUI), and
+model specifies the model number.
 
-Cheers
----Dave
+Example:
+compatible =3D =93fsl,mpc8641-uart=94, =93ns16550";
+In this example, an operating system would first try to locate a device
+driver that supported fsl,mpc8641-uart. If a driver was not found, it
+would then try to locate a driver that supported the more general
+ns16550 device type.
+=3D=3D=3D
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-October/205085.html
-[PATCH] ARM: cacheflush: consolidate single-CPU ARMv7 cache disabling code
+The more general compatible string in this case is "st,comms-ssc-i2c",
+rather than the first soc name.
+How can a first SOC name be more general?
 
-[...]
+As this driver is not very specific to StiH415, it is generic driver for
+ST comms-ssc-i2c block.
+
+Thanks,
+srini
+
+
+
+
+> =
+
+> see other bindings on at91 as example sorry NACK
+> =
+
+> Best Regards,
+> J.
+>>
+>>
+>> Thanks,
+>> srini
+>>
+>>>
+>>> Thanks for the review,
+>>> Maxime
+>>>
+>>>>>
+>>
+> =
+
+> =
