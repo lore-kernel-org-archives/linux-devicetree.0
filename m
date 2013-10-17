@@ -1,43 +1,126 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 01/15] ARM: tegra30: add missing CLK IDs
-Date: Thu, 17 Oct 2013 15:38:32 +0300
-Message-ID: <1382013526-12800-2-git-send-email-pdeschrijver@nvidia.com>
-References: <1382013526-12800-1-git-send-email-pdeschrijver@nvidia.com>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] usb: gadget: s3c-hsotg: support configurable UTMI
+ PHY width
+Date: Thu, 17 Oct 2013 08:40:37 -0400
+Message-ID: <20131017124037.GA2721@beef>
+References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
+ <1381140752-312-3-git-send-email-matt.porter@linaro.org>
+ <20131010152922.GF28375@radagast>
+ <5256DBD0.8030008@linaro.org>
+ <20131010174620.GC19802@radagast>
+ <A2CA0424C0A6F04399FB9E1CD98E030458E16893@US01WEMBX2.internal.synopsys.com>
+ <5256FAFA.1020509@linaro.org>
+ <52576EBA.9000502@linaro.org>
+ <20131011133731.GD25706@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382013526-12800-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131011133731.GD25706@radagast>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra30 clock bindings lack few IDs for audio and clk_out muxes.
+On Fri, Oct 11, 2013 at 08:37:31AM -0500, Felipe Balbi wrote:
+> Hi,
+> 
+> On Thu, Oct 10, 2013 at 11:21:30PM -0400, Matt Porter wrote:
+> > On 10/10/2013 03:07 PM, Matt Porter wrote:
+> > >On 10/10/2013 01:57 PM, Paul Zimmerman wrote:
+> > >>>From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
+> > >>>Sent: Thursday, October 10, 2013 10:46 AM
+> > >>>
+> > >>>On Thu, Oct 10, 2013 at 12:54:40PM -0400, Matt Porter wrote:
+> > >>>>On 10/10/2013 11:29 AM, Felipe Balbi wrote:
+> > >>>>>On Mon, Oct 07, 2013 at 06:12:29AM -0400, Matt Porter wrote:
+> > >>>>>>Extend dwc2 binding with an optional utmi phy width property.
+> > >>>>>>Enable the s3c-hsotg.c driver to use standard dwc2 binding
+> > >>>>>>and enable configuration of the UTMI phy width based on the
+> > >>>>>>property.
+> > >>>>>>
+> > >>>>>>Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>>>>>Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>>>>>Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>>>>>---
+> > >>>>>>  Documentation/devicetree/bindings/staging/dwc2.txt |  4 ++++
+> > >>>>>>  drivers/usb/gadget/s3c-hsotg.c                     | 18
+> > >>>>>>+++++++++++++++++-
+> > >>>>>>  drivers/usb/gadget/s3c-hsotg.h                     |  1 +
+> > >>>>>>  3 files changed, 22 insertions(+), 1 deletion(-)
+> > >>>>>>
+> > >>>>>>diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt
+> > >>>b/Documentation/devicetree/bindings/staging/dwc2.txt
+> > >>>>>>index 1a1b7cf..fb6b8ee 100644
+> > >>>>>>--- a/Documentation/devicetree/bindings/staging/dwc2.txt
+> > >>>>>>+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+> > >>>>>>@@ -6,10 +6,14 @@ Required properties:
+> > >>>>>>  - reg : Should contain 1 register range (address and length)
+> > >>>>>>  - interrupts : Should contain 1 interrupt
+> > >>>>>>
+> > >>>>>>+Optional properties:
+> > >>>>>>+- snps,phy-utmi-width: Must contain the UTMI data width (either 8
+> > >>>>>>or 16)
+> > >>>>>
+> > >>>>>isn't this available in any of the configuration registers ?
+> > >>>>
+> > >>>>Yes and no. HWCFG4 has a UTMI data width field. However, it has 3
+> > >>>>valid states, "8", "16", or "8 or 16". The BCM281xx implementation is
+> > >>>>set to the latter and the attached phy is 8-bit.
+> > >>>>
+> > >>>>Looking at dwc2 prior to Matthijs Kooijman's patch [1] which starts
+> > >>>>validating the value of phy_utmi_width in that driver, the pci.c
+> > >>>>dwc2_module_params .phy_utmi_width field there even had the comment,
+> > >>>>"/* 16 bits - NOT DETECTABLE */". The autodetect code in
+> > >>>>dwc2_set_param_phy_utmi_width() will fail if HWCFG4 has the "8 or 16"
+> > >>>>option as it just decides to default to a phy width of 16 if nothing
+> > >>>>is configured by the platform glue. This property would also allow
+> > >>>>this issue to be addressed in that driver.
+> > >>>
+> > >>>fair enough, but I'd really like to hear from DT folks if your suggested
+> > >>>binding is acceptable. It seems like we can equally argue that it's a SW
+> > >>>configuration or HW description.
+> > >>
+> > >>It's definitely a HW description - the width of the UTMI data connection.
+> > >>
+> > >>But, which PHY is this? Does it have a register that could tell what
+> > >>the data width is? The dwc2 core has an (optional) PHY Vendor Control
+> > >>Register that allows reading the PHY registers.
+> > >
+> > >This is the integrated PHY on the bcm28155 part (the entire
+> > >bcm281xx/11351 family shares it). My register doc doesn't show the
+> > >optional PHY vendor control register as being present in this dwc2
+> > >implementation. I'll track down with the design team if this is
+> > >accurate...but it appears we can't go that route.
+> > 
+> > The design team confirmed that we do not have any registers that can
+> > be accessed via the PHY Vendor Control Register. All PHY control
+> > registers are implemented in the MMIO control block which is
+> > supported in the PHY control driver later in this series.They also
+> > confirmed there's no other way to detect that it's an 8-bit data
+> > path.
+> 
+> then we need the DT binding, let's see what DT maintainers say.
 
-Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- include/dt-bindings/clock/tegra30-car.h |   10 +++++++++-
- 1 files changed, 9 insertions(+), 1 deletions(-)
+I've reworked all of this against the generic phy layer. Things are
+simplified, of course, but this needs to be clarified to move forward
+on either the phy driver or the s3c-hsotg support.
 
-diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
-index e40fae8..2244582 100644
---- a/include/dt-bindings/clock/tegra30-car.h
-+++ b/include/dt-bindings/clock/tegra30-car.h
-@@ -260,6 +260,14 @@
- /* 298 */
- /* 299 */
- #define TEGRA30_CLK_CLK_OUT_1_MUX 300
--#define TEGRA30_CLK_CLK_MAX 301
-+#define TEGRA30_CLK_CLK_OUT_2_MUX 301
-+#define TEGRA30_CLK_CLK_OUT_3_MUX 302
-+#define TEGRA30_CLK_AUDIO0_MUX 303
-+#define TEGRA30_CLK_AUDIO1_MUX 304
-+#define TEGRA30_CLK_AUDIO2_MUX 305
-+#define TEGRA30_CLK_AUDIO3_MUX 306
-+#define TEGRA30_CLK_AUDIO4_MUX 307
-+#define TEGRA30_CLK_SPDIF_MUX 308
-+#define TEGRA30_CLK_CLK_MAX 309
- 
- #endif	/* _DT_BINDINGS_CLOCK_TEGRA30_CAR_H */
--- 
-1.7.7.rc0.72.g4b5ea.dirty
+DT maintainers: can you weigh in here please?
+
+Summary is that we have a 8-bit data path UTMI phy attached to a dwc2.
+The width is undetectable and a fixed h/w configuration. I would
+actually view this as a property of the phy itself. It's 8-bit only and
+thus puts the constraint on the controller it's attached to (internally)
+to operate in 8-bit UTMI mode. However, I see no way with the generic
+phy binding to provide this information to the controller h/w.
+
+The original approach above adds a phy-utmi-width property to the dwc2
+binding which is simple, but in retrospect may not reflect where that
+constraint actually comes into play.
+
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
