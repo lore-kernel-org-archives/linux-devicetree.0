@@ -1,157 +1,95 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Thu, 17 Oct 2013 12:48:57 +0200
-Message-ID: <20131017104856.GA10993@ulmo.nvidia.com>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com>
- <1381947912-11741-3-git-send-email-treding@nvidia.com>
- <1695169.rzbDl9PeRX@avalon>
- <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com>
- <525FA4B0.8060504@ti.com>
- <20131017091614.GC2502@ulmo.nvidia.com>
- <525FB368.6020003@ti.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH 1/6] mmc: omap_hsmmc: start using generic non-removable
+ DT binding
+Date: Thu, 17 Oct 2013 16:23:48 +0530
+Message-ID: <525FC1BC.9080207@ti.com>
+References: <1381936707-10336-1-git-send-email-balajitk@ti.com> <1381936707-10336-2-git-send-email-balajitk@ti.com> <20131017083856.GA24056@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <525FB368.6020003-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131017083856.GA24056@e106331-lin.cambridge.arm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "uri.y@variscite.com" <uri.y@variscite.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 17 October 2013 02:08 PM, Mark Rutland wrote:
+> On Wed, Oct 16, 2013 at 04:18:22PM +0100, Balaji T K wrote:
+>> From: Sekhar Nori <nsekhar@ti.com>
+>>
+>> add generic "non-removable" binding support for omap_hsmmc
+>>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +-
+>>   drivers/mmc/host/omap_hsmmc.c                      |    3 +++
+>>   2 files changed, 4 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> index 8c8908a..3b95719 100644
+>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> @@ -17,7 +17,7 @@ Optional properties:
+>>   ti,dual-volt: boolean, supports dual voltage cards
+>>   <supply-name>-supply: phandle to the regulator device tree node
+>>   "supply-name" examples are "vmmc", "vmmc_aux" etc
+>> -ti,non-removable: non-removable slot (like eMMC)
+>> +ti,non-removable: non-removable eMMC with always on vccq and configurable vcc
+>
+> Why this change?
+>
+Hi,
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+earlier ti,non-removable was used for all eMMC and SDIO card, now it will
+be used only for eMMC with always on vccq and configurable vcc.
 
-On Thu, Oct 17, 2013 at 12:52:40PM +0300, Tomi Valkeinen wrote:
-> On 17/10/13 12:16, Thierry Reding wrote:
-> > On Thu, Oct 17, 2013 at 11:49:52AM +0300, Tomi Valkeinen wrote:
->=20
-> >> Just my opinion, but yes, DT is that inflexible. DT bindings are like a
-> >> syscall. Once they are there, you need to support them forever. That
-> >> support can, of course, include some kind of DT data converters or suc=
-h,
-> >> that try to convert old bindings to new bindings at kernel boot.
-> >=20
-> > That's not entirely true. DT bindings are allowed to change, the only
-> > restriction being that they don't break backwards compatibility. So if
->=20
-> True, but afaik the same goes for syscalls. But yes, it's probably
-> easier to add, say, new properties to DT bindings than adding new flags
-> to a syscall.
->=20
-> > Am I the only one refusing to accept that we can't provide even the most
-> > basic functionality simply because we haven't been able to come up with
-> > the ultimately "perfect" DT binding yet? By definition it's not very
-> > likely that any binding will ever be perfect.
->=20
-> With "perfect" I meant without any obvious features missing. I agree
-> that DT bindings will never be perfect, but I at least would like them
-> to be good enough to cover all the cases we know of.
+> What do "vccq" and "vcc" correspond to? The regulators are called "vmmc"
+> and "vmmc_aux"...
+>
 
-As far as the simple panel device tree binding is concerned, it covers
-all the cases I know of. I can't seriously be expected to do any better
-than that. These panels are dumb. They only come with a power supply
-that needs to be switched on and an additional GPIO to enable it once
-powered up. All three panels just work with that set of properties. So
-anything that doesn't can arguably be covered by some other, not-so-
-simple binding.
+vccq and vcc are supply names of eMMC part
 
-> > I don't think we're doing ourselves any good by letting DT actively
-> > hinder us in merging any of these features. I would personally prefer
-> > having to support several bindings rather than not be able to provide
-> > the functionality at all.
->=20
-> I'd say the driver writer is of course free to create basic bindings for
-> the device in question as long as the bindings are sane, and he agrees
-> to later create any needed converters. I don't see any problem with
-> having a driver supporting several versions of the bindings.
->=20
-> But I don't think it's fair to push a driver with basic bindings,
-> knowing that the bindings won't be enough in the future, and leave all
-> the converter-mess to other people (not saying that's the case here).
->=20
-> As a fbdev maintainer, I'm ok with adding DT bindings to device specific
-> fb drivers, as those can be just left as they are. Even when CDF is
-> merged, the specific fb drivers just work with the old bindings. If the
-> driver maintainer wants to use CDF, it's up to him to create any needed
-> binding-converters.
->=20
-> But a generic driver for panels is more problematic, as that one should
-> be maintained and refreshed to new features like CDF. If such was
-> proposed to be merged to fbdev, I'd be very reluctant to merge it if
-> there were any concerns about it.
+> Why is no mention of "non-removable" added, given that it's added to the
+> code?
 
-I'm still missing the point here. For one, I don't see any reason that
-this driver would ever need to gain CDF support. At the same time, CDF
-could easily be supported by just adding a few required properties and
-it should be easy to support any non-CDF cases just as well to remain
-backwards-compatible.
+Because this file makes a reference to mmc.txt and the core properties described
+by mmc.txt are not added in ti-omap-hsmmc.txt
 
-> I guess one option there would be to implement a new driver for the same
-> panel devices, one that supports CDF, and leave the old one as is. Not
-> so nice option, though.
+>
+> Is one preferred over the other? That should be noted.
+>
+>>   ti,needs-special-reset: Requires a special softreset sequence
+>>   ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+>>   dmas: List of DMA specifiers with the controller specific format
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 6ac63df..5992048 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -1738,6 +1738,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+>>   	pdata->slots[0].switch_pin = cd_gpio;
+>>   	pdata->slots[0].gpio_wp = wp_gpio;
+>>
+>> +	if (of_find_property(np, "non-removable", NULL)) {
+>> +		pdata->slots[0].nonremovable = true;
+>> +	}
+>
+> This wasn't mentioned in the binding, and it seems to have different
+> semantics to "ti,non-removable". Why is it different?
+>
 
-As I said, anything that really needs a CDF binding to work likely isn't
-"simple" anymore, therefore a separate driver can easily be justified.
+When ti,non-removable was added, Only OMAP platform that had eMMC was that on OMAP4
+where power to eMMC cannot be switched off without sending CMD5 sleep command,
+so no_regulator_off_init was needed to get it detected during boot.
 
-> > For crying out loud, we can use the 3D engine to render to a framebuffer
-> > but we can't look at the result because we can't make the bloody panel
-> > light up! Seriously!?
->=20
-> Ah, but do you have DT bindings for the 3D engine yet, which represent
-> how different internal blocks in the 3D engine are connected? If not,
-> better start designing it! Then the problem is solved, you won't even
-> have working 3D engine. ;)
->=20
-> But seriously speaking, I'm with you. I don't get this DT stuff.
->=20
-> And the funny thing is, DT should just represent the hardware, it
-> doesn't matter what kind of SW drivers there are, so in a sense talking
-> about DT problems with a SW framework like CDF is a bit silly. How hard
-> can it be to describe the hardware properly?
->=20
-> Very, obviously =3D).
+Now start using generic non-removable for all removable cards which do not
+have such limitation.
 
-Indeed. The fundamental point here seems to be that we don't represent
-things in DT which we don't need. In the same way that we don't add
-device nodes for enumerable devices, why would we need to explicitly add
-information about connections between devices that cannot be controlled
-anyway. If the board connects an RGB/LVDS output to a panel directly, it
-is only required that the output knows what it is connected to because
-there is no other way besides DT to obtain any information about the
-panel. Therefore a unidirectional connection is more than enough. Using
-that the output can access the panel and query it for information such
-as the mode timings as well as switch it on or off as required.
-
-Thierry
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSX8CYAAoJEN0jrNd/PrOhvEEP/3a8D2hEBTpPn5Ekgvf7oDCc
-fgHcKZbrRAYZ4Hrbnucw4/XTPhE6m4zvvRF479FLFIJn/iu/7BnT/DB/kZz5SbEu
-7AtUhBevZU67lj2mE+x9URHBuvbvXjDg1Ah0M6Y3SkGrVnADsrMppQzS75Nxb9nU
-U8f1tezAXUGnqNWNfTxuDclgXZqSuQ9b9Ivx7AwbZI3QRW7Mi/nlfnyHHd5pR+j5
-5gUtOWYUacNVVXCDzxcGU9JaiMA22fnbBS/fuswl9M9levVr6mXGQ/E+kpFGJX4q
-guXMc87dcAeinFEet8YiSdISFO0agPXRohgKZqEJx+u0PvxTO613TSCTvFRCqTu2
-NmDzL4mGI06jJf+NBGPwf+xPIoiFC4QgeB/eETx+CnN4iFhhwmYOZIvnWjA0/H/3
-kRpOTKJDmxkAjTa3oEY0HZuUvjh7C0QzqrzDeGXlRyPhaQ5C9rm1S2TgTm8miT0E
-g2JStlhWsbxDjBzTlKz8LK27+q71TopgnnUoLpbl7jjuZC1lOxXfYRgdd0jNzYbK
-jppmJ/S8fYxMxSh63fmXIFGiKqUUkswURnE6S0499zBFh8o7Jju3DN6L7Md1YHWT
-StvzcA5/HlWgej/7Rp1YgSemhI8mMUW9QH3HAK5c7Iww6W6IG43VGTy32Otr4/j1
-qtu5IvDvZYs9Skf2+rCV
-=yNef
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   	if (of_find_property(np, "ti,non-removable", NULL)) {
+>>   		pdata->slots[0].nonremovable = true;
+>>   		pdata->slots[0].no_regulator_off_init = true;
+>
+> Cheers,
+> Mark.
+>
