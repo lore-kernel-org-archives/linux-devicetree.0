@@ -1,133 +1,113 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Thu, 17 Oct 2013 11:16:15 +0200
-Message-ID: <20131017091614.GC2502@ulmo.nvidia.com>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com>
- <1381947912-11741-3-git-send-email-treding@nvidia.com>
- <1695169.rzbDl9PeRX@avalon>
- <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com>
- <525FA4B0.8060504@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5] gpio: Add MOXA ART GPIO driver
+Date: Thu, 17 Oct 2013 11:24:12 +0200
+Message-ID: <CACRpkdasrZ-rhbL1RMo1ZGA=kwmA==hQ-2-iP9zW+EvW_JZaWg@mail.gmail.com>
+References: <1375103161-12460-1-git-send-email-jonas.jensen@gmail.com>
+	<1381503190-5733-1-git-send-email-jonas.jensen@gmail.com>
+	<CACRpkda23nUF8i03RWePj+dGa9Wj6E1L8vfPMfxvnGkazfKS5w@mail.gmail.com>
+	<CACmBeS1NoyHWhS5ydONf3x_z8SQu5-vh_XzMazuY9-uYXdg_wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <525FA4B0.8060504-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACmBeS1NoyHWhS5ydONf3x_z8SQu5-vh_XzMazuY9-uYXdg_wQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 14, 2013 at 1:15 PM, Jonas Jensen <jonas.jensen@gmail.com> wrote:
+> On 11 October 2013 17:44, Linus Walleij <linus.walleij@linaro.org> wrote:
 
---6zdv2QT/q3FMhpsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>     The register responsible for doing enable/disable is located
+>>>     at <0x98100100 0x4>, the clock register is very close at
+>>>     <0x98100000 0x34>.
+(...)
+> Arnd made a similar comment suggesting syscon back when MMC mapped the
+> same register:
+> https://groups.google.com/d/msg/linux.kernel/eeS7vhMWMAc/zNYhzyKilh8J
+>
+> I think I prefer to have this in the clock driver opposed to using syscon.
 
-On Thu, Oct 17, 2013 at 11:49:52AM +0300, Tomi Valkeinen wrote:
-> Hi,
->=20
-> On 17/10/13 11:28, Dave Airlie wrote:
-> >>
-> >> My biggest concern here is that this will not be compatible with the C=
-DF DT
-> >> bindings. They're not complete yet, but they will require connections =
-between
-> >> entities to be described in DT, in a way very similar (or actually ide=
-ntical)
-> >> to the V4L2 DT bindings, documented in
-> >> Documentation/devicetree/bindings/media/video-interfaces.txt. Could yo=
-u have a
-> >> look at that ? Please ignore all optional properties beside remote-end=
-point,
-> >> as they're V4L2 specific.
-> >>
-> >> I also plan to specify video bus parameters in DT for CDF, but this ha=
-sn't
-> >> been finalized yet.
-> >>
-> >=20
-> > While I understand this, I don't see why CDF can't enhance these
-> > bindings if it has
-> > requirements > than they have without disturbing the panel ones,
-> >=20
-> > is DT really that inflexible?
-> >=20
-> > It seems that have a simple description for basic panels like Thierry w=
-ants
-> > to support, that can be enhanced for the other cases in the future shou=
-ld
-> > suffice, I really don't like blocking stuff that makes things work on t=
-he chance
-> > of something that isn't upstream yet, its sets a bad precedent, its als=
-o breaks
-> > the perfect is the enemy of good rule
->=20
-> Just my opinion, but yes, DT is that inflexible. DT bindings are like a
-> syscall. Once they are there, you need to support them forever. That
-> support can, of course, include some kind of DT data converters or such,
-> that try to convert old bindings to new bindings at kernel boot.
+OK I can live with this. I've seen both approaches in practice.
 
-That's not entirely true. DT bindings are allowed to change, the only
-restriction being that they don't break backwards compatibility. So if
-there's ever a need to support new functionality, be it in the form of
-new nodes or properties to support something like CDF, that's not a
-problem as long as the code continues to work with existing bindings.
+> The one downside I can see, individual control of the pins would be
+> lost? Does it make sense to enable all pins once? this is acceptable
+> for at least UC-7112-LX, it doesn't need to disable/enable pins beyond
+> the initial clk_enable().
+>
+> I say the above because I currently have nothing that requires
+> individual pin control. However, I removed one line from MMC that
+> turned out to be unnecessary. That line directly access the "PMU"
+> register disabling pins 10-17 with the following comment:
+>
+> "
+> /* change I/O multiplexing to SD, so the GPIO 17-10 will be fail */
+> moxart_gpio_mp_clear(0xff << 10);
+> "
+> http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/mmc/host/moxasd.c#619
 
-> In practice even such converter may be enough, if some important piece
-> of data in the new bindings is missing, and this data was implicit in a
-> driver. In that case the conversion, or parts of it, must be done later,
-> in that specific driver.
->=20
-> Even that may be difficult, if the piece of data should actually be
-> handled by some other driver. In that case there's probably need for
-> some kind of global look-up table or such, so that the drivers can work
-> around the problem of missing information.
->=20
-> I've been working with DT bindings for OMAP display subsystem for
-> something like 1.5 years. Still not merged, as they are not perfect, and
-> I'm scared to push them in non-perfect form, as that could result in
-> some kind of DT-binding-converter-hell described above.
+Sorry I don't fully follow this. But don't poke into pin control registers
+from other drivers, for separation of concerns. Request and handle
+pins through the pin control API.
 
-Am I the only one refusing to accept that we can't provide even the most
-basic functionality simply because we haven't been able to come up with
-the ultimately "perfect" DT binding yet? By definition it's not very
-likely that any binding will ever be perfect.
+What you mean is likely that power-on states and boot loaders
+have set up the pins for your immediate use cases and everything
+seems to work, that is of course nice.
 
-I don't think we're doing ourselves any good by letting DT actively
-hinder us in merging any of these features. I would personally prefer
-having to support several bindings rather than not be able to provide
-the functionality at all.
+However as development and requirements progress people start
+to come in with complex usecases where devices need pins set
+to states that differ from the power-on defaults, for example for
+power management. And then you run into this.
 
-For crying out loud, we can use the 3D engine to render to a framebuffer
-but we can't look at the result because we can't make the bloody panel
-light up! Seriously!?
+When/if you need pin control you can wither implement that as
+a separate driver which is used by this GPIO driver as a "back-end"
+or you can move this driver over to drivers/pinctrl and extend it
+with a pin control API there, making it a combined pin control
+and GPIO driver.
 
-Thierry
+>>>     I don't think gpio_poweroff driver is right for this hardware
+>>>     because the pin is not connected to anything that can do reset.
+>>>     The old 2.6.9 kernel driver uses timer poll with eventual call
+>>>     to userspace.
+>>>
+>>>     To test that it works, I added gpio_poweroff anyway, modified
+>>>     with gpio_export() the pin can then be seen switching between
+>>>     0 and 1 (on "cat /sys/class/gpio/gpio25/value").
+>>
+>> Hmmmm not quite following this...
+>
+> I'll try to elaborate. What happens in gpio_poweroff driver does not
+> look like something that can reset the hardware. Reset on UC-7112-LX
+> is implemented using the same register as the watchdog, in platform
+> code hooked up to arm_pm_restart.
+>
+> The old sources "solved" this by polling the reset pin with eventual
+> call_usermodehelper (/sbin/reboot):
+> http://code.google.com/p/linux-2-6-9-moxart/source/browse/drivers/char/moxa_watchdog.c#174
+>
+> What was previously in a kernel driver, would now be solved in userspace?
+>
+> gpio_export() allowed me to verify the pin number, pressing reset
+> toggles the value.
+>
+> Adding the gpio-leds driver, that pin was automatically exported to
+> sysfs, that got me thinking:
+>
+> How do I export the reset button to sysfs? Should gpio_export() be
+> added to platform code?
 
---6zdv2QT/q3FMhpsV
-Content-Type: application/pgp-signature
+Aha argh what a mess. No the GPIO poweroff driver is not
+intended to fix this. I *think* you should do this:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+- Register the gpio pin as a polled input device using
+  drivers/input/keyboard/gpio_keys_polled.c
 
-iQIcBAEBAgAGBQJSX6reAAoJEN0jrNd/PrOhyUEP+wUIhaqhSv5aVwhaV76AmKPN
-wUkgGlXc33VNSqeMYl4LOcIMTP+CKpMElCiUyReEL5eEQN81MCt3y3Pg88kJuy01
-sDmYGY92QcziR48LzndSzXdBGW5Z+r8EkZUzU8DnmJ7wYf+MfZUdmDvYcP+RWDHW
-ABGZG72pPDo8MQlriy21+4BNTifX4Cg1aNt8tOi1XdlHSkRvBmVDnF+tooKJPj7w
-V67AaqTWuVQzC/TImYUw/dapmKva8xpBY7z4XnbvmZfe1rQyBqu1Ww9ItnYejp2Q
-UEKNm5AT1XQifV5YWb/0QUqPqgNtmvLKc59rD7BlqKY/7sH6HhXJsONk+TwAGoal
-daSPJ78gdesO24wTKeVIsfF3GgA0YZoVcU1OQ6pWopMbsjh2dPPsoIWEJSS/rALO
-foZVybheEIfCBxKFtKCL21IJSxRDckIb6CGm0dNB3L1bn8LkAY9aKo5UhR6WbWG5
-l3VbksuJeVnE2Eed1Zk3WabDrLRfo9Hjoc3fdkpH41JTBG8XpDqeBxpW0Y/MB7eE
-G5X4c4OziLIq8hKJD33IEsePL52GHUjXHT1h9a8WFiDct1aInQe8StZOuSNKy1Z3
-smhaAd9gaymZYIG90ckNaPYKLyPwAhsISx1A+u52SQHTfmhJhgk2ClYgygHX1CCh
-R0+ySQBAi+reHME/C319
-=ZFhn
------END PGP SIGNATURE-----
+- Have it emit KEY_POWER (from include/uapi/linux/input.h)
 
---6zdv2QT/q3FMhpsV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Have your userspace input event (whatever issues select()
+  on the /dev/input/* stuff) react to this input by calling
+  /sbin/reboot or issueing the same thing that does, i.e.
+  call reboot() with magic 0x01234567 I think.
+
+Yours,
+Linus Walleij
