@@ -1,30 +1,82 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
-	Interface driver.
-Date: Thu, 17 Oct 2013 07:15:03 -0500
-Message-ID: <525FD4C7.3050806@tabi.org>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 17 Oct 2013 14:17:17 +0200
+Message-ID: <3768216.eiA2v5KI6a@avalon>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <4885946.7Zgjf9zNXx@avalon> <525FD12D.3000200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, lgirdwood@gmail.com, broonie@kernel.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, b18965@freescale.com, LW@KARO-electronics.de, linux@arm.linux.org.uk, b42378@freescale.com, oskar@scara.com, grant.likely@linaro.org, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@freescale.com, linux-kernel@vger.kernel.org, rob@landley.net, r64188@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; boundary="nextPart2515265.AjPQXgySzm"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525FD12D.3000200-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Xiubo Li wrote:
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	sai->base = devm_ioremap_resource(&pdev->dev, res);
 
-Why not use of_iomap()?
+--nextPart2515265.AjPQXgySzm
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+Hi Tomi,
+
+On Thursday 17 October 2013 14:59:41 Tomi Valkeinen wrote:
+> On 17/10/13 14:51, Laurent Pinchart wrote:
+> >> I'm not sure if there's a specific need for the port or endpoint nodes
+> >> in cases like the above. Even if we have common properties describing
+> >> the endpoint, I guess they could just be in the parent node.
+> >> 
+> >> panel {
+> >> 	remote = <&dc>;
+> >> 	common-video-property = <asd>;
+> >> };
+> >> 
+> >> The above would imply one port and one endpoint. Would that work? If we
+> >> had a function like parse_endpoint(node), we could just point it to
+> >> either a real endpoint node, or to the device's node.
+> > 
+> > You reference the display controller here, not a specific display
+> > controller output. Don't most display controllers have several outputs ?
+> 
+> Sure. Then the display controller could have more verbose description.
+> But the panel could still have what I wrote above, except the 'remote'
+> property would point to a real endpoint node inside the dispc node, not
+> to the dispc node.
+> 
+> This would, of course, need some extra code to handle the different
+> cases, but just from DT point of view, I think all the relevant
+> information is there.
+
+There's many ways to describe the same information in DT. While we could have 
+DT bindings that use different descriptions for different devices and still 
+support all of them in our code, why should we opt for that option that will 
+make the implementation much more complex when we can describe connections in 
+a simple and generic way ?
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--nextPart2515265.AjPQXgySzm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJSX9VNAAoJEIkPb2GL7hl1F4MIAILdvdwkl9Lbry1tum9SEmPn
+RpRDoTXa/E4DyHO7ydp9Xi13BpYzL67RvRahubXRJZlKEEElVY3ijtoPwXiKWxMv
+UwaLEjF30T2xPNF35meULnaEnI82aAF8j3wp10RlbuQPbewRsdDiAvEdrgBqCnvg
+or16m6K9htA1HrSvExPCFUgt4HB6mOTr7QM2S3E0DsSZ1HPWN/QXfZ8PdV9ULUqw
+LG6Gz7b5OtU5DxMwDXhnnU5A+2R326l7v23fWcC9iYKh/sL5AVQLUqoPAxIRw7St
+LH7UxxENRzmd0tmaLLBixpvFnxzxl61kx2gFLy2wBhXHuziGSII5/3A7z2dr/Dk=
+=8j1f
+-----END PGP SIGNATURE-----
+
+--nextPart2515265.AjPQXgySzm--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
