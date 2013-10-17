@@ -1,50 +1,58 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Thu, 17 Oct 2013 08:54:56 -0600
-Message-ID: <525FFA40.9050901@wwwdotorg.org>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>	<1380846199-12829-4-git-send-email-syin@broadcom.com> <CAEPRUYqfpdp1GqxBgx-q=hyvQDe4uyi6okzHPW2QmfmPG_Z3NQ@mail.gmail.com>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [Patch v2][ 04/37] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel
+ format.
+Date: Thu, 17 Oct 2013 17:02:02 +0200
+Message-ID: <1382022155-21954-5-git-send-email-denis@eukrea.com>
+References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEPRUYqfpdp1GqxBgx-q=hyvQDe4uyi6okzHPW2QmfmPG_Z3NQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Sherman Yin <syin@broadcom.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1382022155-21954-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, dri-devel@lists.freedesktop.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 12:03 AM, Christian Daudt wrote:
-> On Thu, Oct 3, 2013 at 5:23 PM, Sherman Yin <syin@broadcom.com> wrote:
->> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
->>
->> Signed-off-by: Sherman Yin <syin@broadcom.com>
->> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
->> Reviewed-by: Matt Porter <matt.porter@linaro.org>
->> ---
->>  arch/arm/mach-bcm/Kconfig       |    2 +
->>  drivers/pinctrl/Kconfig         |   10 +
->>  drivers/pinctrl/Makefile        |    1 +
->>  drivers/pinctrl/pinctrl-capri.c | 1727 +++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 1740 insertions(+)
->>  create mode 100644 drivers/pinctrl/pinctrl-capri.c
->>
->> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
->> index 69d67f7..2546365 100644
->> --- a/arch/arm/mach-bcm/Kconfig
->> +++ b/arch/arm/mach-bcm/Kconfig
->> @@ -10,6 +10,8 @@ config ARCH_BCM
->>         select GENERIC_CLOCKEVENTS
->>         select GENERIC_TIME
->>         select GPIO_BCM
->> +       select PINCTRL
->> +       select PINCTRL_CAPRI
->>         select SPARSE_IRQ
->>         select TICK_ONESHOT
->>         select CACHE_L2X0
-> 
-> On your subsequent patchset pls move this from Kconfig to
-> arm/configs/bcm_defconfig, and break that modification into a separate
-> patch from the drivers/* modification.
-
-The other SoCs I'm familiar with all select this from their ARCH_xxx
-config symbol.
+VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
+Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
+YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
+IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
+QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
+SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
+dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
+Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
+Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
+a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCkNjOiBFcmljIELDqW5hcmQgPGVyaWNAZXVrcmVhLmNvbT4KU2lnbmVkLW9mZi1ieTog
+RGVuaXMgQ2FyaWtsaSA8ZGVuaXNAZXVrcmVhLmNvbT4KLS0tCiBpbmNsdWRlL3VhcGkvbGludXgv
+dmlkZW9kZXYyLmggfCAgICAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlm
+ZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaCBiL2luY2x1ZGUvdWFwaS9s
+aW51eC92aWRlb2RldjIuaAppbmRleCA0MzdmMWIwLi5lOGZmNDEwIDEwMDY0NAotLS0gYS9pbmNs
+dWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKKysrIGIvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVv
+ZGV2Mi5oCkBAIC0yOTQsNiArMjk0LDcgQEAgc3RydWN0IHY0bDJfcGl4X2Zvcm1hdCB7CiAjZGVm
+aW5lIFY0TDJfUElYX0ZNVF9SR0I1NTVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdRJykg
+LyogMTYgIFJHQi01LTUtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX1JHQjU2NVggdjRs
+Ml9mb3VyY2MoJ1InLCAnRycsICdCJywgJ1InKSAvKiAxNiAgUkdCLTUtNi01IEJFICAqLwogI2Rl
+ZmluZSBWNEwyX1BJWF9GTVRfQkdSNjY2ICB2NGwyX2ZvdXJjYygnQicsICdHJywgJ1InLCAnSCcp
+IC8qIDE4ICBCR1ItNi02LTYJICAqLworI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNjY2ICB2NGwy
+X2ZvdXJjYygnUicsICdHJywgJ0InLCAnSCcpIC8qIDE4ICBSR0ItNi02LTYJICAqLwogI2RlZmlu
+ZSBWNEwyX1BJWF9GTVRfQkdSMjQgICB2NGwyX2ZvdXJjYygnQicsICdHJywgJ1InLCAnMycpIC8q
+IDI0ICBCR1ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9SR0IyNCAgIHY0bDJf
+Zm91cmNjKCdSJywgJ0cnLCAnQicsICczJykgLyogMjQgIFJHQi04LTgtOCAgICAgKi8KICNkZWZp
+bmUgVjRMMl9QSVhfRk1UX0JHUjMyICAgdjRsMl9mb3VyY2MoJ0InLCAnRycsICdSJywgJzQnKSAv
+KiAzMiAgQkdSLTgtOC04LTggICAqLwotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4
+ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
