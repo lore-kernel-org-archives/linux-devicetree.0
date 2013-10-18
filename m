@@ -1,98 +1,62 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Fri, 18 Oct 2013 11:31:20 -0500
-Message-ID: <1382113880.7979.836.camel@snotra.buserror.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-	 <1381518433.7979.536.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381788786.7979.643.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381858855.7979.693.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381942009.7979.727.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1382027085.7979.774.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 0/1] Device Tree Schema Source format proposal
+Date: Fri, 18 Oct 2013 12:35:57 -0400
+Message-ID: <CAKON4OzqFtp8YKNvAxBnEwjTL1NS28OZW3AoVdCmu=+q9XWXog@mail.gmail.com>
+References: <9610740.2oBMxfeRkE@amdc1227>
+	<526158F3.4060104@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150C5CAB-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <526158F3.4060104-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-10-17 at 21:06 -0500, Tang Yuantian-B29983 wrote:
-> > On Wed, 2013-10-16 at 21:08 -0500, Tang Yuantian-B29983 wrote:
-> > > > > > That shows the dividers as being somewhere in between the PLL
-> > > > > > and the
-> > > > MUX.
-> > > > > > The MUX is where the divider is selected.  There's nothing in
-> > > > > > the PLL's programming interface that relates to the dividers.
-> > > > > > As such it's simpler to model it as being part of the MUX.
-> > > > > >
-> > > > > > -Scott
-> > > > > >
-> > > > > I don't know whether it is simpler, but "modeling divider as being
-> > > > > part
-> > > > of the MUX"
-> > > > > is your guess, right?
-> > > > > If the "divider" is included in MUX, the MUX would not be called
-> > "MUX".
-> > > >
-> > > > It's still selecting from multiple PLLs.
-> > > >
-> > > > > I don't know whether "divider" module exists or not. If it exists,
-> > > > > it should be part of PLL or between PLL and MUX. wherever it was,
-> > > > > the
-> > > > device tree binding is appropriate.
-> > > >
-> > > > The device tree binding is unnecessarily complicated.
-> > > >
-> > > > > The P3041RM shows exactly each PLL has 2 outputs which definitely
-> > > > > have
-> > > > no "divider" at all.
-> > > >
-> > > > That diagram is a bit weird -- one of the outputs is used as is, and
-> > > > the other is split into 1/2 and 1/4.  It doesn't really matter
-> > > > though; the end result is the same.  We're describing the
-> > > > programming interface, not artwork choices in the manual.
-> > > >
-> > > > -Scott
-> > > >
-> > > If the device tree needs to be modified, could you give me your
-> > suggestions?
-> > 
-> > My suggestion is to have only one output per PLL node.  The MUX node
-> > would have one input per PLL.  Dividers would be handled internally to
-> > the MUX driver.
-> > 
-> > -Scott
-> > 
-> I don't think your suggestion is constructive.
+Long ago when I first started talking about schemas the main thing I
+had envisioned was a single schema for all of Linux.  You should be
+able to take every dts file in the kernel and validate it against this
+single schema.  This global schema would become the mechanism to
+control how the various dts files evolve.
 
-Hmm?
+In this vision there would be a schema file for uarts. And another one
+for spi. Another one for gpio, etc. These file would document all
+possible attributes for these nodes. Lot of comments in these files
+relative to the schema content.  The subsystem maintainers would
+control this file which would then enable them to control the
+proliferation of attributes.  No more things like num-cs, spi-num-cs,
+cselects, ncs - all meaning the same thing, number of chip selects.
+Higher level schema files would then describe how these subsystem
+schemas can be combined.
 
-> Your suggestion is on the premise of that the "divider" is part of MUX,
-> And I think it should be part of PLL.
-> MUX can't CREATE clock which PLL can. So my thought is more reasonable.
-> If the device tree documents like what you said, it would have few help for driver.
-> The reason is obvious that the driver is still going to deal with the "divider" 
-> detail which varies from platform to platform.
-> I will document as it was unless you prove your suggestion.
+As a side effect these files now make it much easier to define the
+device tree syntax for new hardware. There is a single file to read to
+find out the attributes is use for this class of subsystem device.  So
+any new DTS would have to validate against this global scheme before
+being accepted.  If you need new attributes you will have to talk to
+subsystem maintainer into adding them to the schema file before your
+code will be accepted.
 
-I can't follow this.  My point is that my suggestion better matches the
-programming model, and is simpler.
+So in general this scheme is a fair loose specification primarily
+aimed at helping people reuse existing attributes instead of creating
+new ones.  These subsystem schemas will be closely aligned with helper
+libraries provided by the subsystem.  The more commonality we find,
+the more code that can be refactored into helper libraries.
 
--Scott
+Also, having this loose schema framework doesn't preclude having more
+than one schema. For example TI might want to provide a much tighter
+schema that is only useful for validating Omap device trees.
 
+One way to look at this is to envision two types of schemas. The
+global Linux schema is a horizontal schema whose goal is to achieve as
+much cross platform compatibility as possible. The TI Omap schema is a
+vertical schema whose goal is to do as much error checking as
+possible. Both of these schemas can be developed using the same schema
+processor.
 
-
+-- 
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
