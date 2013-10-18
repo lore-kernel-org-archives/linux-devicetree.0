@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3][ 08/11] ARM: dts: i.MX25: Add sdma script path.
-Date: Fri, 18 Oct 2013 17:16:59 +0200
-Message-ID: <1382109422-24454-8-git-send-email-denis@eukrea.com>
+Subject: [PATCHv3][ 09/11] ARM: dts: imx25.dtsi: Add an alias for the Audio Multiplexer.
+Date: Fri, 18 Oct 2013 17:17:00 +0200
+Message-ID: <1382109422-24454-9-git-send-email-denis@eukrea.com>
 References: <1382109422-24454-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -24,22 +24,23 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx25.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx25.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
 i
-index cce0669..7c0a019 100644
+index 7c0a019..800fe7f 100644
 --- a/arch/arm/boot/dts/imx25.dtsi
 +++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -556,6 +556,7 @@
- 				clock-names =3D "ipg", "ahb";
- 				#dma-cells =3D <3>;
- 				interrupts =3D <34>;
-+				fsl,sdma-ram-script-name =3D "imx/sdma/sdma-imx25.bin";
+@@ -281,7 +281,7 @@
+ 				};
  			};
 =20
- 			wdog@53fdc000 {
+-			audmux@43fb0000 {
++			audmux: audmux@43fb0000 {
+ 				compatible =3D "fsl,imx25-audmux", "fsl,imx31-audmux";
+ 				reg =3D <0x43fb0000 0x4000>;
+ 				status =3D "disabled";
 --=20
 1.7.9.5
 
