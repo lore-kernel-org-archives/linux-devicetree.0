@@ -1,104 +1,95 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [Patch v2][ 02/37] dma: ipu: Add devicetree support.
-Date: Fri, 18 Oct 2013 08:42:25 +0200
-Message-ID: <20131018064224.GR30088@pengutronix.de>
-References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
- <1382022155-21954-3-git-send-email-denis@eukrea.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH 0/2] ARM: dts: AM4372: Add more nodes
+Date: Fri, 18 Oct 2013 08:56:44 +0200
+Message-ID: <5260DBAC.6090107@baylibre.com>
+References: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com> <5260AFB2.9010300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382022155-21954-3-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-15?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5260AFB2.9010300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mugunthanvnm@ti.com, sourav.poddar@ti.com, linux@arm.linux.org.uk, akpm@linux-foundation.org, rnayak@ti.com, afzal@ti.com, nsekhar@ti.com, r.sricharan@ti.com, balajitk@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 05:02:00PM +0200, Denis Carikli wrote:
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/dma/fsl-imx-ipu.txt        |   53 ++++++++++=
-++++++++++
->  drivers/dma/ipu/ipu_idmac.c                        |    8 +++
->  2 files changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-ipu=
-=2Etxt
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt b/=
-Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
-> new file mode 100644
-> index 0000000..a901c33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
-> @@ -0,0 +1,53 @@
-> +* Freescale Image Processing Unit DMA support for i.MX3x.
-> +
-> +This document will only describe differences to the generic DMA Cont=
-roller and
-> +DMA request bindings as described in dma/dma.txt .
-> +
-> +This dma driver supports the imx31 and imx35 devices.
-> +
-> +* DMA controller
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,imx31-ipu".
-> +- reg : Should contain DMA registers location and length
-> +- interrupts : First item should be DMA interrupt, second one is opt=
-ional and
-> +    should contain DMA Error interrupt.
-> +- #dma-cells : Has to be 1. The ipu driver does not support anything=
- else.
-> +
-> +Optional properties:
-> +- dma-channels : Number of DMA channels supported. Should be 32.
-> +- #dma-requests : Number of DMA requests supported.
-> +
-> +Example:
-> +
-> +	ipu: ipu@53fc0000 {
-> +		compatible =3D "fsl,imx31-ipu";
-> +		reg =3D <	0x53fc0000 0x5f
-> +			0x53fc0088 0x2b >;
-> +		interrupts =3D <42 41>;
-> +		dma-channels =3D <32>;
-> +		#dma-cells =3D <1>;
-> +		clocks =3D <&clks 55>;
-> +		clock-names =3D "";
-> +		status =3D "disabled";
-> +	};
+Hi Lokesh,
 
-We already have a binding for the IPUv3. We shouldn't introduce a
-completely different binding for the IPUv1. We shouldn't expose the dma
-channels to dt and the lcdc should either be not exported to dt or be a
-subnode of the ipu node. The above binding is very close to what Linux
-has implemented, but not so close to the hardware.
+On 18/10/2013 05:49, Lokesh Vutla wrote:
+> Hi Benoit,
+> On Friday 11 October 2013 12:44 AM, Lokesh Vutla wrote:
+>> This patch series add nodes for l2-cache-controller, EDMA, mailbox, =
+mmc, sham,
+>> and updates the properties for cpsw, i2c0, matrix-keypad.
+>>
+>> These patches are applied on top of Benoit's for_3.13/dts branch
+>> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt=
+=2Egit for_3.13/dts
+> Can you take this patch series for 3.13?
 
-Sascha
+I've just applied it after a sloght change in the subject and in the So=
+B=20
+list.
+
+     ARM: dts: AM4372: Add L2, EDMA, mailbox, MMC and SHAM nodes
+
+     Populate nodes for l2-cache-controller, EDMA, mailbox,
+     mmc, sham.
+
+     Update as well DT properties for epwmss, aes, des.
+
+     Signed-off-by: Suman Anna <s-anna@ti.com>
+     Signed-off-by: Balaji T K <balajitk@ti.com>
+     Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+     Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+     Signed-off-by: Benoit Cousson <bcousson@baylibre.com>
+
+
+I added all the author you listed in a more formal way.
+
+Regards,
+Benoit
+
+>
+> Thanks and regards,
+> Lokesh
+>>
+>> Testing:
+>> Tested EDMA, mmc, sham, aes, des, i2c0, cpsw, matric-keypad on AM437=
+2 EPOS EVM
+>> with the addition of following two series:
+>> -> Tero's V8 of OMAP DT clock conversion
+>>    http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96769.h=
+tml
+>> -> Afzal's V5 of AM43x PRCM basic support
+>>    http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96275.h=
+tml
+>>
+>> Lokesh Vutla (1):
+>>    ARM: dts: AM4372: Add more nodes
+>>
+>> Mugunthan V N (1):
+>>    ARM: dts: AM4372: Update Support for EPOS EVM
+>>
+>>   arch/arm/boot/dts/am4372.dtsi        |  210 ++++++++++++++++++++++=
++++++++++++-
+>>   arch/arm/boot/dts/am43x-epos-evm.dts |  168 ++++++++++++++++++++++=
++++++
+>>   include/dt-bindings/pinctrl/am43xx.h |   31 +++++
+>>   3 files changed, 408 insertions(+), 1 deletion(-)
+>>   create mode 100644 include/dt-bindings/pinctrl/am43xx.h
+>>
+>
+
 
 --=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
