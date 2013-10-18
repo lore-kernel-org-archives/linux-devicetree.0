@@ -1,115 +1,110 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2] usb: phy: omap: Add omap-control Support for AM437x
-Date: Fri, 18 Oct 2013 10:24:15 +0300
-Message-ID: <5260E21F.8060001@ti.com>
-References: <1381831334-8840-1-git-send-email-george.cherian@ti.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Fri, 18 Oct 2013 00:27:51 -0700
+Message-ID: <CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
+	<CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
+	<0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381831334-8840-1-git-send-email-george.cherian@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tony@atomide.com, kishon@ti.com, gregkh@linuxfoundation.org, balbi@ti.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhu Richard-R65037 <r65037@freescale.com>
+Cc: Sean Cross <xobs@kosagi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 01:02 PM, George Cherian wrote:
-> This adds omap control module support for USBSS in AM437x SoC.
-> Update DT binding information to reflect these changes.
-> 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
+On Thu, Oct 17, 2013 at 11:34 PM, Zhu Richard-R65037
+<r65037@freescale.com> wrote:
 
-Acked-by: Roger Quadros <rogerq@ti.com>
+[...]
 
-> ---
-> Changes from v1:
-> 	Make ON and OFF operations symmetric.
-> 
->  Documentation/devicetree/bindings/usb/omap-usb.txt |  2 ++
->  drivers/usb/phy/phy-omap-control.c                 | 19 +++++++++++++++++++
->  include/linux/usb/omap_control_usb.h               |  6 ++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index 090e5e2..c495135 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -87,6 +87,8 @@ Required properties:
->  			e.g. USB3 PHY and SATA PHY on OMAP5.
->   "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
->  			DRA7 platform.
-> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
-> +			AM437 platform.
->   - reg : Address and length of the register set for the device. It contains
->     the address of "otghs_control" for control-phy-otghs or "power" register
->     for other types.
-> diff --git a/drivers/usb/phy/phy-omap-control.c b/drivers/usb/phy/phy-omap-control.c
-> index 09c5ace..e725318 100644
-> --- a/drivers/usb/phy/phy-omap-control.c
-> +++ b/drivers/usb/phy/phy-omap-control.c
-> @@ -84,6 +84,20 @@ void omap_control_usb_phy_power(struct device *dev, int on)
->  		else
->  			val |= OMAP_CTRL_USB2_PHY_PD;
->  		break;
-> +
-> +	case OMAP_CTRL_TYPE_AM437USB2:
-> +		if (on) {
-> +			val &= ~(AM437X_CTRL_USB2_PHY_PD |
-> +					AM437X_CTRL_USB2_OTG_PD);
-> +			val |= (AM437X_CTRL_USB2_OTGVDET_EN |
-> +					AM437X_CTRL_USB2_OTGSESSEND_EN);
-> +		} else {
-> +			val &= ~(AM437X_CTRL_USB2_OTGVDET_EN |
-> +					AM437X_CTRL_USB2_OTGSESSEND_EN);
-> +			val |= (AM437X_CTRL_USB2_PHY_PD |
-> +					 AM437X_CTRL_USB2_OTG_PD);
-> +		}
-> +		break;
->  	default:
->  		dev_err(dev, "%s: type %d not recognized\n",
->  					__func__, control_usb->type);
-> @@ -197,6 +211,7 @@ static const enum omap_control_usb_type otghs_data = OMAP_CTRL_TYPE_OTGHS;
->  static const enum omap_control_usb_type usb2_data = OMAP_CTRL_TYPE_USB2;
->  static const enum omap_control_usb_type pipe3_data = OMAP_CTRL_TYPE_PIPE3;
->  static const enum omap_control_usb_type dra7usb2_data = OMAP_CTRL_TYPE_DRA7USB2;
-> +static const enum omap_control_usb_type am437usb2_data = OMAP_CTRL_TYPE_AM437USB2;
->  
->  static const struct of_device_id omap_control_usb_id_table[] = {
->  	{
-> @@ -215,6 +230,10 @@ static const struct of_device_id omap_control_usb_id_table[] = {
->  		.compatible = "ti,control-phy-dra7usb2",
->  		.data = &dra7usb2_data,
->  	},
-> +	{
-> +		.compatible = "ti,control-phy-am437usb2",
-> +		.data = &am437usb2_data,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, omap_control_usb_id_table);
-> diff --git a/include/linux/usb/omap_control_usb.h b/include/linux/usb/omap_control_usb.h
-> index 596b019..69ae383 100644
-> --- a/include/linux/usb/omap_control_usb.h
-> +++ b/include/linux/usb/omap_control_usb.h
-> @@ -24,6 +24,7 @@ enum omap_control_usb_type {
->  	OMAP_CTRL_TYPE_USB2,	/* USB2_PHY, power down in CONTROL_DEV_CONF */
->  	OMAP_CTRL_TYPE_PIPE3,	/* PIPE3 PHY, DPLL & seperate Rx/Tx power */
->  	OMAP_CTRL_TYPE_DRA7USB2, /* USB2 PHY, power and power_aux e.g. DRA7 */
-> +	OMAP_CTRL_TYPE_AM437USB2, /* USB2 PHY, power e.g. AM437x */
->  };
->  
->  struct omap_control_usb {
-> @@ -64,6 +65,11 @@ enum omap_control_usb_mode {
->  
->  #define OMAP_CTRL_USB2_PHY_PD		BIT(28)
->  
-> +#define AM437X_CTRL_USB2_PHY_PD		BIT(0)
-> +#define AM437X_CTRL_USB2_OTG_PD		BIT(1)
-> +#define AM437X_CTRL_USB2_OTGVDET_EN	BIT(19)
-> +#define AM437X_CTRL_USB2_OTGSESSEND_EN	BIT(20)
-> +
->  #if IS_ENABLED(CONFIG_OMAP_CONTROL_USB)
->  extern void omap_control_usb_phy_power(struct device *dev, int on);
->  extern void omap_control_usb_set_mode(struct device *dev,
-> 
+> Hi Tim:
+> Regarding to my experience, the difference shouldn't be related with the bus hang.
+> Here are my DT region setup when I trying to bring up imx6 pcie on 3.1x kernel by my own driver.
+>                         clock-names = "pcie_axi", "pcie_ref", "pcie_bus_in", "pcie_bus_out";
+>                         #address-cells = <3>;
+>                         #size-cells = <2>;
+>                         ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000   /* configuration space */
+>                                   0x81000000 0 0          0x01f80000 0 0x00010000   /* downstream I/O */
+>                                   0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+>                         num-lanes = <1>;
+>
+> It works sometimes, although that there is random kernel panic and system hang(log is pasted below):(
+> LOGS, when pericom's PI7C9X2G303EL and Intel e1000e network card is used.
+> ...
+> imx-pcie 1ffc000.pcie: legacy_irq 155
+> imx-pcie 1ffc000.pcie: map [mem 0x01ffc000-0x01ffffff]
+> IMX PCIe port: link up.
+> PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [io  0x1000-0x10000]
+> pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
+> pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
+> PCI: bus0: Fast back to back transfers disabled
+> PCI: bus1: Fast back to back transfers disabled
+> pci 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> PCI: bus2: Fast back to back transfers disabled
+> pci 0000:02:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> PCI: bus3: Fast back to back transfers disabled
+> PCI: bus4: Fast back to back transfers enabled
+> pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff 64bit]
+> pci 0000:00:00.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+> pci 0000:00:00.0: BAR 6: assigned [mem 0x01300000-0x0130ffff pref]
+> pci 0000:00:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:01:00.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+> pci 0000:01:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:02:01.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+> pci 0000:02:01.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:03:00.0: BAR 1: assigned [mem 0x01100000-0x011fffff]
+> pci 0000:03:00.0: BAR 0: assigned [mem 0x01200000-0x0121ffff]
+> pci 0000:03:00.0: BAR 3: assigned [mem 0x01220000-0x01223fff]
+> pci 0000:03:00.0: BAR 2: assigned [io  0x1000-0x101f]
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:02:01.0:   bridge window [mem 0x01100000-0x012fffff]
+> pci 0000:02:02.0: PCI bridge to [bus 04]
+> pci 0000:01:00.0: PCI bridge to [bus 02-04]
+> pci 0000:01:00.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:01:00.0:   bridge window [mem 0x01100000-0x012fffff]
+> pci 0000:00:00.0: PCI bridge to [bus 01-04]
+> pci 0000:00:00.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:00:00.0:   bridge window [mem 0x01100000-0x012fffff]
+> PCI: enabling device 0000:01:00.0 (0140 -> 0143)
+> PCI: enabling device 0000:02:01.0 (0140 -> 0143)
+> PCI: enabling device 0000:02:02.0 (0140 -> 0143)
+> ...
+> e1000e: Intel(R) PRO/1000 Network Driver - 2.3.2-k
+> e1000e: Copyright(c) 1999 - 2013 Intel Corporation.
+> e1000e 0000:03:00.0: Disabling ASPM L0s L1
+> PCI: enabling device 0000:03:00.0 (0140 -> 0142)
+> e1000e 0000:03:00.0: Interrupt Throttling Rate (ints/sec) set to dynamic conservative mode
+> e1000e 0000:03:00.0 eth1: registered PHC clock
+> e1000e 0000:03:00.0 eth1: (PCI Express:2.5GT/s:Width x1) 00:1b:21:3a:18:8b
+> e1000e 0000:03:00.0 eth1: Intel(R) PRO/1000 Network Connection
+> e1000e 0000:03:00.0 eth1: MAC: 3, PHY: 8, PBA No: E42641-005
+> igb: Intel(R) Gigabit Ethernet Network Driver - version 5.0.3-k
+> igb: Copyright (c) 2007-2013 Intel Corporation.
+> ...
+>
+> ALSA device list:
+>   #0: wm8962-audio
+> VFS: Mounted root (nfs filesystem) on device 0:11.
+> devtmpfs: mounted
+> Freeing unused kernel memory: 324K (8082d000 - 8087e000)
+> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b  <-- Kernel panic here randomly. Same phenomena when the root-fs is located in SD.
 
+Richard,
+
+I would suspect this is the imprecise abort issue.  Please see my
+patch (http://thread.gmane.org/gmane.linux.kernel.pci/26159) resolves
+that for you and reply to that thread if so.
+
+I believe that the imprecise abort's only occurs if you have a PCIe
+switch on the bus - is this your topology and if so are you
+experiencing any issues with devices behind the bus that use io
+regions?  If you do have a switch, perhaps you can provide me with an
+'lspci -v' for comparison.
+
+Tim
