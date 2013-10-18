@@ -1,7 +1,7 @@
 From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Fri, 18 Oct 2013 13:26:42 +0300
-Message-ID: <1382092020-13170-2-git-send-email-hdoyu@nvidia.com>
+Subject: [PATCHv3 02/19] [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+Date: Fri, 18 Oct 2013 13:26:43 +0300
+Message-ID: <1382092020-13170-3-git-send-email-hdoyu@nvidia.com>
 References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,56 @@ To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren 
 Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To prevent of_platform_populate() from trying to populate duplicate
-devices if a device has been already populated.
+Populate AHB/IOMMU earlier than others. IOMMU depends on AHB. IOMMU
+needs to be instanciated earlier than others so that IOMMU can
+register other platform devices as IOMMU'able. Once IOMMU is
+populated, IOMMU/AHB nodes are detached to prevent another
+registeration.
 
 Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/of/platform.c | 6 ++++++
- include/linux/of.h    | 1 +
- 2 files changed, 7 insertions(+)
+ arch/arm/mach-tegra/tegra.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9b439ac..994cea4 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -208,6 +208,11 @@ static struct platform_device *of_platform_device_create_pdata(
- 	if (!of_device_is_available(np))
- 		return NULL;
- 
-+	if (np->dev) {
-+		dev_info(np->dev, "Already populated\n");
-+		return to_platform_device(np->dev);
-+	}
-+
- 	dev = of_device_alloc(np, bus_id, parent);
- 	if (!dev)
- 		return NULL;
-@@ -232,6 +237,7 @@ static struct platform_device *of_platform_device_create_pdata(
- 		return NULL;
- 	}
- 
-+	np->dev = &dev->dev;
- 	return dev;
+diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+index 40b031c..9098a88 100644
+--- a/arch/arm/mach-tegra/tegra.c
++++ b/arch/arm/mach-tegra/tegra.c
+@@ -108,6 +108,26 @@ static void __init tegra_dt_init_irq(void)
+ 	tegra_legacy_irq_syscore_init();
  }
  
-diff --git a/include/linux/of.h b/include/linux/of.h
-index f95aee3..638a88a 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -60,6 +60,7 @@ struct device_node {
- 	struct	kref kref;
- 	unsigned long _flags;
- 	void	*data;
-+	struct device *dev;		/* Set only after populated */
- #if defined(CONFIG_SPARC)
- 	const char *path_component_name;
- 	unsigned int unique_id;
++static void tegra_of_platform_populate_iommu(void)
++{
++	int i;
++	struct platform_device *pdev;
++	const char * const path[] = {"/ahb", "/iommu", };
++
++	for (i = 0; i < ARRAY_SIZE(path); i++) {
++		struct device_node *np;
++
++		np  = of_find_node_by_path(path[i]);
++		if (!np)
++			break;
++
++		pdev = of_platform_device_create(np, NULL, NULL);
++		of_node_put(np);
++		if (!pdev)
++			break;
++	}
++}
++
+ static void __init tegra_dt_init(void)
+ {
+ 	struct soc_device_attribute *soc_dev_attr;
+@@ -137,6 +157,8 @@ static void __init tegra_dt_init(void)
+ 
+ 	parent = soc_device_to_device(soc_dev);
+ 
++	tegra_of_platform_populate_iommu();
++
+ 	/*
+ 	 * Finished with the static registrations now; fill in the missing
+ 	 * devices
 -- 
 1.8.1.5
