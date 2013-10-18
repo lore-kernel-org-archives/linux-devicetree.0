@@ -1,74 +1,74 @@
-From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Fri, 18 Oct 2013 02:06:09 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-	 <1381518433.7979.536.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381788786.7979.643.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381858855.7979.693.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381942009.7979.727.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
- <1382027085.7979.774.camel@snotra.buserror.net>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH v9 12/13] V4L: s5k6a3: Change sensor min/max resolutions
+Date: Fri, 18 Oct 2013 08:15:20 +0530
+Message-ID: <CALt3h7_pMQsfXcEtr6VRUU1P561qAV=2XtfUfQXD-3zpdn1T+g@mail.gmail.com>
+References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
+	<1380279558-21651-13-git-send-email-arun.kk@samsung.com>
+	<5260186C.1040109@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382027085.7979.774.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5260186C.1040109@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBXZWQsIDIwMTMtMTAtMTYgYXQgMjE6MDggLTA1MDAsIFRhbmcgWXVhbnRpYW4tQjI5OTgz
-IHdyb3RlOg0KPiA+ID4gPiA+IFRoYXQgc2hvd3MgdGhlIGRpdmlkZXJzIGFzIGJlaW5nIHNvbWV3
-aGVyZSBpbiBiZXR3ZWVuIHRoZSBQTEwNCj4gPiA+ID4gPiBhbmQgdGhlDQo+ID4gPiBNVVguDQo+
-ID4gPiA+ID4gVGhlIE1VWCBpcyB3aGVyZSB0aGUgZGl2aWRlciBpcyBzZWxlY3RlZC4gIFRoZXJl
-J3Mgbm90aGluZyBpbg0KPiA+ID4gPiA+IHRoZSBQTEwncyBwcm9ncmFtbWluZyBpbnRlcmZhY2Ug
-dGhhdCByZWxhdGVzIHRvIHRoZSBkaXZpZGVycy4NCj4gPiA+ID4gPiBBcyBzdWNoIGl0J3Mgc2lt
-cGxlciB0byBtb2RlbCBpdCBhcyBiZWluZyBwYXJ0IG9mIHRoZSBNVVguDQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiAtU2NvdHQNCj4gPiA+ID4gPg0KPiA+ID4gPiBJIGRvbid0IGtub3cgd2hldGhlciBp
-dCBpcyBzaW1wbGVyLCBidXQgIm1vZGVsaW5nIGRpdmlkZXIgYXMgYmVpbmcNCj4gPiA+ID4gcGFy
-dA0KPiA+ID4gb2YgdGhlIE1VWCINCj4gPiA+ID4gaXMgeW91ciBndWVzcywgcmlnaHQ/DQo+ID4g
-PiA+IElmIHRoZSAiZGl2aWRlciIgaXMgaW5jbHVkZWQgaW4gTVVYLCB0aGUgTVVYIHdvdWxkIG5v
-dCBiZSBjYWxsZWQNCj4gIk1VWCIuDQo+ID4gPg0KPiA+ID4gSXQncyBzdGlsbCBzZWxlY3Rpbmcg
-ZnJvbSBtdWx0aXBsZSBQTExzLg0KPiA+ID4NCj4gPiA+ID4gSSBkb24ndCBrbm93IHdoZXRoZXIg
-ImRpdmlkZXIiIG1vZHVsZSBleGlzdHMgb3Igbm90LiBJZiBpdCBleGlzdHMsDQo+ID4gPiA+IGl0
-IHNob3VsZCBiZSBwYXJ0IG9mIFBMTCBvciBiZXR3ZWVuIFBMTCBhbmQgTVVYLiB3aGVyZXZlciBp
-dCB3YXMsDQo+ID4gPiA+IHRoZQ0KPiA+ID4gZGV2aWNlIHRyZWUgYmluZGluZyBpcyBhcHByb3By
-aWF0ZS4NCj4gPiA+DQo+ID4gPiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZyBpcyB1bm5lY2Vzc2Fy
-aWx5IGNvbXBsaWNhdGVkLg0KPiA+ID4NCj4gPiA+ID4gVGhlIFAzMDQxUk0gc2hvd3MgZXhhY3Rs
-eSBlYWNoIFBMTCBoYXMgMiBvdXRwdXRzIHdoaWNoIGRlZmluaXRlbHkNCj4gPiA+ID4gaGF2ZQ0K
-PiA+ID4gbm8gImRpdmlkZXIiIGF0IGFsbC4NCj4gPiA+DQo+ID4gPiBUaGF0IGRpYWdyYW0gaXMg
-YSBiaXQgd2VpcmQgLS0gb25lIG9mIHRoZSBvdXRwdXRzIGlzIHVzZWQgYXMgaXMsIGFuZA0KPiA+
-ID4gdGhlIG90aGVyIGlzIHNwbGl0IGludG8gMS8yIGFuZCAxLzQuICBJdCBkb2Vzbid0IHJlYWxs
-eSBtYXR0ZXINCj4gPiA+IHRob3VnaDsgdGhlIGVuZCByZXN1bHQgaXMgdGhlIHNhbWUuICBXZSdy
-ZSBkZXNjcmliaW5nIHRoZQ0KPiA+ID4gcHJvZ3JhbW1pbmcgaW50ZXJmYWNlLCBub3QgYXJ0d29y
-ayBjaG9pY2VzIGluIHRoZSBtYW51YWwuDQo+ID4gPg0KPiA+ID4gLVNjb3R0DQo+ID4gPg0KPiA+
-IElmIHRoZSBkZXZpY2UgdHJlZSBuZWVkcyB0byBiZSBtb2RpZmllZCwgY291bGQgeW91IGdpdmUg
-bWUgeW91cg0KPiBzdWdnZXN0aW9ucz8NCj4gDQo+IE15IHN1Z2dlc3Rpb24gaXMgdG8gaGF2ZSBv
-bmx5IG9uZSBvdXRwdXQgcGVyIFBMTCBub2RlLiAgVGhlIE1VWCBub2RlDQo+IHdvdWxkIGhhdmUg
-b25lIGlucHV0IHBlciBQTEwuICBEaXZpZGVycyB3b3VsZCBiZSBoYW5kbGVkIGludGVybmFsbHkg
-dG8NCj4gdGhlIE1VWCBkcml2ZXIuDQo+IA0KPiAtU2NvdHQNCj4gDQpJIGRvbid0IHRoaW5rIHlv
-dXIgc3VnZ2VzdGlvbiBpcyBjb25zdHJ1Y3RpdmUuDQpZb3VyIHN1Z2dlc3Rpb24gaXMgb24gdGhl
-IHByZW1pc2Ugb2YgdGhhdCB0aGUgImRpdmlkZXIiIGlzIHBhcnQgb2YgTVVYLA0KQW5kIEkgdGhp
-bmsgaXQgc2hvdWxkIGJlIHBhcnQgb2YgUExMLg0KTVVYIGNhbid0IENSRUFURSBjbG9jayB3aGlj
-aCBQTEwgY2FuLiBTbyBteSB0aG91Z2h0IGlzIG1vcmUgcmVhc29uYWJsZS4NCklmIHRoZSBkZXZp
-Y2UgdHJlZSBkb2N1bWVudHMgbGlrZSB3aGF0IHlvdSBzYWlkLCBpdCB3b3VsZCBoYXZlIGZldyBo
-ZWxwIGZvciBkcml2ZXIuDQpUaGUgcmVhc29uIGlzIG9idmlvdXMgdGhhdCB0aGUgZHJpdmVyIGlz
-IHN0aWxsIGdvaW5nIHRvIGRlYWwgd2l0aCB0aGUgImRpdmlkZXIiIA0KZGV0YWlsIHdoaWNoIHZh
-cmllcyBmcm9tIHBsYXRmb3JtIHRvIHBsYXRmb3JtLg0KSSB3aWxsIGRvY3VtZW50IGFzIGl0IHdh
-cyB1bmxlc3MgeW91IHByb3ZlIHlvdXIgc3VnZ2VzdGlvbi4NCg0KVGhhbmtzLA0KWXVhbnRpYW4N
-Cg==
+Hi Sylwester,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Oct 17, 2013 at 10:33 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Hi Arun,
+>
+> My apologies for the delay.
+>
+> On 27/09/13 12:59, Arun Kumar K wrote:
+>> s5k6a3 sensor has actual pixel resolution of 1408x1402 against
+>> the active resolution 1392x1392. The real resolution is needed
+>> when raw sensor SRGB data is dumped to memory by fimc-lite.
+>>
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  drivers/media/i2c/s5k6a3.c |   10 ++++++----
+>>  1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
+>> index ccbb4fc..e70e217 100644
+>> --- a/drivers/media/i2c/s5k6a3.c
+>> +++ b/drivers/media/i2c/s5k6a3.c
+>> @@ -25,10 +25,12 @@
+>>  #include <media/v4l2-async.h>
+>>  #include <media/v4l2-subdev.h>
+>>
+>> -#define S5K6A3_SENSOR_MAX_WIDTH              1392
+>> -#define S5K6A3_SENSOR_MAX_HEIGHT     1392
+>> -#define S5K6A3_SENSOR_MIN_WIDTH              32
+>> -#define S5K6A3_SENSOR_MIN_HEIGHT     32
+>> +#define S5K6A3_SENSOR_MAX_WIDTH              1408
+>> +#define S5K6A3_SENSOR_MAX_HEIGHT     1402
+>
+> Where these numbers come from ? I digged in the datasheet and the pixel
+> array size for S5K6A3YX is 1412 x 1412 pixels. I will use this value
+> in my updated s5k6a3 driver patch I'm going to post today. And I will
+> drop this patch from this series.
+>
+
+These are the numbers used in the the reference driver. I will check if
+the values 1412x1412 works or not. There are also limitations imposed by the
+fimc-is firmware too as we just pass on the sensor_id to the firmware and I can
+see from the firmware log that it assumes max size of 1408x1402 for 6a3.
+
+>> +#define S5K6A3_SENSOR_ACTIVE_WIDTH   1392
+>> +#define S5K6A3_SENSOR_ACTIVE_HEIGHT  1392
+>
+>
+> S5K6A3_SENSOR_ACTIVE_* macros are not used anywhere ? Can they be dropped ?
+> Same applies to your S5K4E5 driver patch.
+>
+
+Yes I will drop them.
+In my next series, I will drop this 6a3 patch and keep only 4e5 sensor.
+
+Regards
+Arun
