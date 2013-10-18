@@ -1,61 +1,37 @@
-From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Fri, 18 Oct 2013 12:53:41 -0700
-Message-ID: <526191C5.7060705@newsguy.com>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com> <20131018074623.GA22291@ulmo.nvidia.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: Re: [RESEND PATCH v2 5/6] ARM: dts: Specify clocks for timer on bcm11351
+Date: Fri, 18 Oct 2013 13:25:12 -0700
+Message-ID: <CAAYSxho6shrzABy+G-Q8djcVMjxE4nvcoHUkGBDgwU8X0A0zFQ@mail.gmail.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+	<1381960030-1640-6-git-send-email-tim.kryger@linaro.org>
+	<20131017140659.GF24056@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131018074623.GA22291-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20131017140659.GF24056@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2013 12:46 AM, Thierry Reding wrote:
-> On Sun, Sep 22, 2013 at 09:59:56AM -0700, Mike Dunn wrote:
->> Currently the driver assumes that the values specified in the
->> brightness-levels device tree property increase as they are parsed from
->> left to right.  But boards that invert the signal between the PWM output
->> and the backlight will need to specify decreasing brightness-levels.
->> This patch removes the assumption that the last element of the array is
->> the maximum value, and instead searches the array for the maximum value
->> and uses that in the duty cycle calculation.
->>
->> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Changelog:
->> v2: 
->> - commit message reworded; correct line wrap used
->> - 'max_level' variable renamed to 'scale'
->> - loop counter variable type changed to unsigned int
->> - value held in scale changed from array index to actual maximum level
->> - blank lines added around loop for readability
->>
->>  drivers/video/backlight/pwm_bl.c | 12 ++++++++++--
->>  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> Hey Mike,
-> 
-> I've pushed a slightly different version of this patch which gets rid of
-> the intermediate max variable and uses the new scale field exclusively
-> to pass the same information around. Could you look at the patch from my
-> for-next branch in the PWM tree and see whether that still works for the
-> specific hardware that you need this for?
+On Thu, Oct 17, 2013 at 7:06 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+>> index 193659c..39c1395 100644
+>> --- a/arch/arm/boot/dts/bcm11351.dtsi
+>> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+>> @@ -95,7 +95,7 @@
+>>               compatible = "brcm,kona-timer";
+>>               reg = <0x35006000 0x1000>;
+>>               interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> -             clock-frequency = <32768>;
+>> +             clocks = <&hub_timer_clk>;
+>
+> This should probably be after the code change that enables support for a
+> clocks property.
+>
+> Thanks,
+> Mark.
 
+This is already the case.
 
-Yes looks good.
-
-I also tested the current HEAD of for-next on the Palm Treo 680, including the
-enable-gpios DT node property.  I will have to do more work and investigation
-before I will be able to try the power-supply property, though.
-
-Thanks,
-Mike
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The driver change is patch 4 and this dts change is patch 5 of the series.
