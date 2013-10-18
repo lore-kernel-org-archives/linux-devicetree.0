@@ -1,43 +1,88 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 01/15] ARM: tegra30: add missing CLK IDs
-Date: Fri, 18 Oct 2013 16:25:05 +0300
-Message-ID: <1382102719-5531-2-git-send-email-pdeschrijver@nvidia.com>
-References: <1382102719-5531-1-git-send-email-pdeschrijver@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382102719-5531-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [PATCH] of/lib: Export fdt routines to modules
+Date: Fri, 18 Oct 2013 16:28:29 +0300
+Message-ID: <33103C16-6472-4AAE-ADB8-50807CC96C85@antoniou-consulting.com>
+References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org> <525F2397.40203@caviumnetworks.com> <20131017002731.GA22830@codeaurora.org> <525F6D83.1050808@roeck-us.net> <20131017235132.GA6241@codeaurora.org> <52608457.5040609@roeck-us.net> <20131018025405.GA3722@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131018025405.GA3722@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Michael Bohan <mbohan@codeaurora.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Tegra30 clock bindings lack few IDs for audio and clk_out muxes.
+Hi Michael,
 
-Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- include/dt-bindings/clock/tegra30-car.h |   10 +++++++++-
- 1 files changed, 9 insertions(+), 1 deletions(-)
+On Oct 18, 2013, at 5:54 AM, Michael Bohan wrote:
 
-diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
-index e40fae8..2244582 100644
---- a/include/dt-bindings/clock/tegra30-car.h
-+++ b/include/dt-bindings/clock/tegra30-car.h
-@@ -260,6 +260,14 @@
- /* 298 */
- /* 299 */
- #define TEGRA30_CLK_CLK_OUT_1_MUX 300
--#define TEGRA30_CLK_CLK_MAX 301
-+#define TEGRA30_CLK_CLK_OUT_2_MUX 301
-+#define TEGRA30_CLK_CLK_OUT_3_MUX 302
-+#define TEGRA30_CLK_AUDIO0_MUX 303
-+#define TEGRA30_CLK_AUDIO1_MUX 304
-+#define TEGRA30_CLK_AUDIO2_MUX 305
-+#define TEGRA30_CLK_AUDIO3_MUX 306
-+#define TEGRA30_CLK_AUDIO4_MUX 307
-+#define TEGRA30_CLK_SPDIF_MUX 308
-+#define TEGRA30_CLK_CLK_MAX 309
- 
- #endif	/* _DT_BINDINGS_CLOCK_TEGRA30_CAR_H */
--- 
-1.7.7.rc0.72.g4b5ea.dirty
+> On Thu, Oct 17, 2013 at 05:44:07PM -0700, Guenter Roeck wrote:
+>> On 10/17/2013 04:51 PM, Michael Bohan wrote:
+>>> On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
+>>>> Still, what prevents you from unflattening it and just using the
+>>>> normal device tree functions as David suggested ?
+>>> 
+>>> I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
+>> 
+>> Yes, that was the idea.
+>> 
+>>> That's an interesting thought. I was planning to scan the fdt
+>>> only once and populate my own structures, but I suppose I could
+>>> use the of_* APIs equivalently.
+>>> 
+>>> It seems there are some problems though.  of_fdt_unflatten_tree()
+>>> does not return errors, and so for the purposes of my driver it
+>>> would not be sufficient to detect an invalid firmware image.
+>>> 
+>> It does so, at least partially. If there is an error, it won't set
+>> the nodes pointer. Granted, that is not perfect, but it is at least
+>> a start. Ultimately, I considered it 'good enough' for my purpose
+>> (for devicetree overlays - see [1] below), as any missing mandatory
+>> properties or nodes are detected later when trying to actually read
+>> the properties. In my case, I also have a couple of validation
+>> properties to ensure that the overlay is acceptable (specifically
+>> I use 'compatible' and 'assembly-ids', but that is really a detail).
+> 
+> That's certainly better than nothing, but I think it would be
+> useful to make a distinction between a malformed fdt and a fdt
+> that's simply missing the right information. Without error
+> codes, I think we lose this aspect.
+> 
+>>> Would people entertain changing this API
+>>> (and implicitly __unflatten_device_tree) to return errors? I'm
+>>> guessing the reason it's coded that way is because the normal
+>>> usecase is 'system boot', at which time errors aren't that
+>>> meaningful.
+>>> 
+>>> Also, there's no way to free the memory that was allocated from
+>>> the unflatten process. May I add one?
+>>> 
+>> 
+>> The patchset submitted by Pantelis Antoniou to add support for
+>> devicetree overlays adds this and other related functionality.
+>> See [1], specifically the patch titled "OF: Introduce utility
+>> helper functions". Not sure where that is going, though.
+>> It may need some cleanup to be accepted upstream.
+>> Copying Pantelis for comments.
+>> Guenter
+>> 
+>> [1] https://lkml.org/lkml/2013/1/4/276
+> 
+> Thanks. So it seems that Pantelis's __of_free_tree() is what I'm
+> looking for.
+> 
+
+I guess it's time for another try to getting it in?
+
+DT maintainers, which one of you will want to review?
+
+> Mike
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
+
+Regards
+
+-- Pantelis
