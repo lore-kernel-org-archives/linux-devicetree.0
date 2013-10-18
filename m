@@ -1,60 +1,76 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5 v2] ARM: ux500: fix I2C4 clock bit
-Date: Fri, 18 Oct 2013 13:46:59 +0100
-Message-ID: <20131018124659.GA19112@lee--X1>
-References: <1382096630-23640-1-git-send-email-linus.walleij@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
+Date: Fri, 18 Oct 2013 13:48:32 +0100
+Message-ID: <20131018124832.GK2443@sirena.org.uk>
+References: <20130924124122.64834b2a@armhf>
+ <20131018003439.GG2443@sirena.org.uk>
+ <20131018103019.GW25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mxx18rB+F1nHtdkj"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382096630-23640-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20131018103019.GW25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Oct 2013, Linus Walleij wrote:
 
-> The PCLK for I2C4 is controlled by bit 10 in the PCKEN registers
-> while the KCLK is controlled by bit 9 on the KCKEN, it's
-> one of these odd assymetric things. Correct the PCLK bit to 10.
->=20
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> - Actually do what the commit says and update the PCLK to bit
->   10 instead of screwing with the KCLK. The KCLK was right all the ti=
-me.
-> ---
->  arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/st=
-e-dbx5x0.dtsi
-> index 705bd0d..7da99fe 100644
-> --- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-> +++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-> @@ -694,7 +694,7 @@
-> =20
->  			clock-frequency =3D <400000>;
-> =20
-> -			clocks =3D <&prcc_kclk 1 9>, <&prcc_pclk 1 9>;
-> +			clocks =3D <&prcc_kclk 1 9>, <&prcc_pclk 1 10>;
->  			clock-names =3D "i2cclk", "apb_pclk";
+--mxx18rB+F1nHtdkj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ah, much better:
+On Fri, Oct 18, 2013 at 11:30:19AM +0100, Russell King - ARM Linux wrote:
+> On Fri, Oct 18, 2013 at 01:34:39AM +0100, Mark Brown wrote:
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > The last set of DPCMish patches was reported to work so should be a
+> > fairly small refactoring away from being OK - the main thing is to
+> > create back end DAIs for the physical links and then put the widgets
+> > that manage the enable of the S/PDIF and I2S interfaces between the FE
+> > and BE DAIs instead of directly connecting them to widgets on the CODEC.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> ROTFL.  You're now telling JF to do exactly what I did in my last patch.
+> Your two-faced-ness is utterly astounding.
+
+> "widgets that manage the enable of the S/PDIF and I2S interfaces between
+> the FE and BE DAIs" is exactly what I did and you told me that was wrong.
+> Make up your fscking mind.
+
+No, this is not the case.  The major problem with your last set of
+patches was that they did not create any back end DAIs, instead they
+created purely DAPM routes from the single traditional DAI out to
+widgets in the CODEC.  What I'm asking Jean-Francois to do above is
+create and use back end DAIs.
+
+Please let me also remind you that confrontational behaviour such as the
+ad hominem remarks above is not at all constructive or helpful, please
+keep the discussion civil.
+
+--mxx18rB+F1nHtdkj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSYS4dAAoJELSic+t+oim9bCUP/Ahw56i8QZFIIjoN98uRhbpg
+dmLHMohpbQeQ/6LotWSmWP4xMXS+yqlbj5ScYzE1/rk6xg8BuTyujyQOSC3IJAGC
+7Gd2BTxyUmWZz0+/kma9bD/U3+d/htuBMHnABgVlAnaZRsoFPfJinNSsq5/s5J+a
+XeROoGNONVttaaDRXTNhCUsR7C5QL9xQSI3ayD/0m0i86unPAuSGrpPGGDa7THHB
+Z4c5AvSNAlAjnTyhuE73h+qknN8Nl935Y4cff3v3MdrcXPLAQ1tA9pxHRVeQsPt3
+wI9xgymqTGT7vnVf27Yfkm7aCBG5FeEGEc9bTTeakR0gxbb+oloEeLaemuxoItWH
+ifTRIZITm7ke1KBUTj7NUbgF+Ad+rNIidbNehmruG5+Eog3KrkZe/zp9q8EstuH5
+VF10ptLg3Ap1y6Sc0Tx+Tyqxo89UDZ+ZAm+FgrVMSEPFVjY7kMj13UBSqVAF+IAw
+Mn+w/MUGV9MzavGJ3Mf4V1O4NOM4wHHb1oxZQyExc2XRUZupP3YhoQK7doCwPew9
++IkxfzhaOVsFs+FXLMqkJrvlChf4hxCTrYth4xZMWYs4hN5vPSjwG4Vsuynf4s7G
+ErXfcnrPfDABzs7zwmucetvDF/+sTkgCkyja/QENf/Pyo9z20N5+XhyjfTYaUt6g
+aNjkxV6tufNiXrUloswK
+=hqj4
+-----END PGP SIGNATURE-----
+
+--mxx18rB+F1nHtdkj--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
