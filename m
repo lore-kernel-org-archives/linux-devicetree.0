@@ -1,56 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv1 6/8] ASoC: fsl: add SGT15000 based audio machine driver.
-Date: Fri, 18 Oct 2013 18:33:31 +0100
-Message-ID: <20131018173331.GV2443@sirena.org.uk>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-7-git-send-email-Li.Xiubo@freescale.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v3 0/3] New descriptor-based GPIO interface
+Date: Fri, 18 Oct 2013 10:37:21 -0700
+Message-ID: <CAAVeFu+rj6AtKgfig6ZrYUzW9HZTg5qLyw4aGozyD31P_pEKAQ@mail.gmail.com>
+References: <1382030498-23465-1-git-send-email-acourbot@nvidia.com> <CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9ss1VCek+7fjM2m0"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382000477-17304-7-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 18, 2013 at 4:23 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Oct 17, 2013 at 7:21 PM, Alexandre Courbot <acourbot@nvidia.com> wrote:
+>
+>> Hi Linus,
+>>
+>> This version should merge as-is in your tree (I hope!). A patch for
+>> documentation will follow soon.
+>>
+>> Changes since v2:
+>> - rebased on top of Linus' for-next branch
+>> - exported new gpiod_(un)lock_as_irq() functions in driver.h
+>> - squashed a fix for a compilation error
+>
+> Thanks, let's see if I can get this into v3.13, right now it's
+> unclear if I'll dare to do this. These do not apply right off
+> as it requires the late fixes to the gpiod code which currently
+> are in Torvalds' tree and on my fixes branch, so I'll merge in
+> v3.12-rc6 as it arrives, and then attempt to apply this on
+> top, but I don't know if I dare to do this so late.
+>
+> The outage of linux-next also contributes to this situation.
+>
+> We might have to take this as the first thing after the merge
+> window and targeted for v3.14.
 
---9ss1VCek+7fjM2m0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No particular pressure from my side to get this in 3.13. Do for the
+best, and don't hesitate to delay them to 3.14 if you feel they are
+not tested enough. I'll already feel better once I know they are under
+your tree. ;)
 
-On Thu, Oct 17, 2013 at 05:01:15PM +0800, Xiubo Li wrote:
-
-> +	ret = snd_soc_register_card(&fsl_sgt1500_card);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "register soc sound card failed :%d\n",
-> +				ret);
-> +		return ret;
-> +	}
-
-Use the newly added devm_snd_soc_register_card() (in -next).
-
---9ss1VCek+7fjM2m0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSYXDnAAoJELSic+t+oim9seMP/iiRnKDJNKcdrKFo60VsGo6M
-qYoKvXuXS66QMJudg2iouuG9XhS3AklWnXhubsPCuUVddbmtGTUsliubs30YvXdo
-0R6AAG3svmUvWfS776GCFpW8runhD4nmJNrPslOQ2TNRjdYNmI8PDyyykeeoD2SX
-RfN2ZTWqrYgipBg/FXHgGNomYpCjnwmPh0onpXIi2A1LKEy1D65Np3aLgCBkXmqb
-CXfoIUGc2t4FIHDXfwQ3PRCVmJ4mVsPb9ggylHPeZiHmIKUfSNVPAJn1pUA2SNKc
-ZbdbsfxOVavbvYI3XYAVKyW3adjqNiOrYy/XhKcJvfEqD+Vgsv9JQyVM1YOenk/H
-PaKBeoe9cmGJzU6lvmRLoXynZ82PrtGCuSM5mwZaM06rSgTkuRteJU6tctIugOdK
-B2PtkCV14bpodixBuidOuSDyAewE2q+yLCDZIDSNju9n4M2tXacpnfSwMbRm/Cnv
-9Np2xWsNXro1IwuYY4MzZwU+DAx4cF0nfzHfwmuRZUvvS14ujkcaRWrsoOCisDch
-612ktvxCKAmzmNdkgaUi038QMqczxkfClpnHn3IDI0nxvdn4k1btF0WlVBbyo9zl
-cuWEpjMpY/fPV94tXyj2m4LDz7bZf/tyZY8W/rD9hoeEXDJL83wNVpQPM72OcX6g
-lSxz5AGiHxYtQqJS+PEJ
-=+/EO
------END PGP SIGNATURE-----
-
---9ss1VCek+7fjM2m0--
+Thanks,
+Alex.
