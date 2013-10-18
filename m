@@ -1,82 +1,49 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH 0/2] ARM: dts: AM4372: Add more nodes
-Date: Fri, 18 Oct 2013 12:28:36 +0530
-Message-ID: <5260DC1C.6010004@ti.com>
-References: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com> <5260AFB2.9010300@ti.com> <5260DBAC.6090107@baylibre.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [Patch v2][ 20/37] arm/dts: imx25.dtsi: Add some pinmux pins.
+Date: Fri, 18 Oct 2013 09:02:31 +0200
+Message-ID: <20131018070231.GU30088@pengutronix.de>
+References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
+ <1382022155-21954-21-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5260DBAC.6090107@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mugunthanvnm@ti.com, sourav.poddar@ti.com, linux@arm.linux.org.uk, akpm@linux-foundation.org, rnayak@ti.com, afzal@ti.com, nsekhar@ti.com, r.sricharan@ti.com, balajitk@ti.com, balbi@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382022155-21954-21-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-15?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-On Friday 18 October 2013 12:26 PM, Benoit Cousson wrote:
-> Hi Lokesh,
+On Thu, Oct 17, 2013 at 05:02:18PM +0200, Denis Carikli wrote:
+> Uart1, fec, i2c1,esdhc1 and audmux were added.
 > 
-> On 18/10/2013 05:49, Lokesh Vutla wrote:
->> Hi Benoit,
->> On Friday 11 October 2013 12:44 AM, Lokesh Vutla wrote:
->>> This patch series add nodes for l2-cache-controller, EDMA, mailbox, mmc, sham,
->>> and updates the properties for cpsw, i2c0, matrix-keypad.
->>>
->>> These patches are applied on top of Benoit's for_3.13/dts branch
->>> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
->> Can you take this patch series for 3.13?
-> 
-> I've just applied it after a sloght change in the subject and in the SoB list.
-> 
->     ARM: dts: AM4372: Add L2, EDMA, mailbox, MMC and SHAM nodes
-> 
->     Populate nodes for l2-cache-controller, EDMA, mailbox,
->     mmc, sham.
-> 
->     Update as well DT properties for epwmss, aes, des.
-> 
->     Signed-off-by: Suman Anna <s-anna@ti.com>
->     Signed-off-by: Balaji T K <balajitk@ti.com>
->     Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->     Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->     Signed-off-by: Benoit Cousson <bcousson@baylibre.com>
-> 
-> 
-> I added all the author you listed in a more formal way.
-Thanks.
+> +				fec {
+> +					pinctrl_fec_1: fecgrp-1 {
+> +						fsl,pins = <
+> +							MX25_PAD_FEC_MDC__FEC_MDC       0x80000000
+> +							MX25_PAD_FEC_MDIO__FEC_MDIO     0x400001e0
+> +							MX25_PAD_FEC_TDATA0__FEC_TDATA0 0x80000000
+> +							MX25_PAD_FEC_TDATA1__FEC_TDATA1 0x80000000
+> +							MX25_PAD_FEC_TX_EN__FEC_TX_EN   0x80000000
+> +							MX25_PAD_FEC_RDATA0__FEC_RDATA0 0x800000c0
+> +							MX25_PAD_FEC_RDATA1__FEC_RDATA1 0x800000c0
+> +							MX25_PAD_FEC_RX_DV__FEC_RX_DV   0x800000c0
 
-Regards,
-Lokesh
-> 
-> Regards,
-> Benoit
-> 
->>
->> Thanks and regards,
->> Lokesh
->>>
->>> Testing:
->>> Tested EDMA, mmc, sham, aes, des, i2c0, cpsw, matric-keypad on AM4372 EPOS EVM
->>> with the addition of following two series:
->>> -> Tero's V8 of OMAP DT clock conversion
->>>    http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96769.html
->>> -> Afzal's V5 of AM43x PRCM basic support
->>>    http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96275.html
->>>
->>> Lokesh Vutla (1):
->>>    ARM: dts: AM4372: Add more nodes
->>>
->>> Mugunthan V N (1):
->>>    ARM: dts: AM4372: Update Support for EPOS EVM
->>>
->>>   arch/arm/boot/dts/am4372.dtsi        |  210 +++++++++++++++++++++++++++++++++-
->>>   arch/arm/boot/dts/am43x-epos-evm.dts |  168 +++++++++++++++++++++++++++
->>>   include/dt-bindings/pinctrl/am43xx.h |   31 +++++
->>>   3 files changed, 408 insertions(+), 1 deletion(-)
->>>   create mode 100644 include/dt-bindings/pinctrl/am43xx.h
->>>
->>
-> 
-> 
+The 0x8000xxxx values don't make sense:
 
+NO_PAD_CTL(1 << 31): indicate this pin does not need config.
+
+So by setting bit 31 you ask to ignore the settings, still you set other
+bits.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
