@@ -1,73 +1,74 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] of/lib: Export fdt routines to modules
-Date: Thu, 17 Oct 2013 17:44:07 -0700
-Message-ID: <52608457.5040609@roeck-us.net>
-References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org> <525F2397.40203@caviumnetworks.com> <20131017002731.GA22830@codeaurora.org> <525F6D83.1050808@roeck-us.net> <20131017235132.GA6241@codeaurora.org>
+From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Fri, 18 Oct 2013 02:06:09 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+	 <1381518433.7979.536.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381788786.7979.643.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381858855.7979.693.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381942009.7979.727.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1382027085.7979.774.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131017235132.GA6241@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Michael Bohan <mbohan@codeaurora.org>
-Cc: David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382027085.7979.774.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 04:51 PM, Michael Bohan wrote:
-> On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
->> On 10/16/2013 05:27 PM, Michael Bohan wrote:
->>> My motivation is actually to use the fdt format as a firmware.
->>> I have a requirement to express driver metadata that's loadable
->> >from the filesystem. This data is not reasonable to place in the
->>> system Device Tree, since it's application specific and does not
->>> actually describe hardware. The fact that the format chosen is
->>> 'flattened device tree' is merely just a coincidence.
->>>
->> Still, what prevents you from unflattening it and just using the
->> normal device tree functions as David suggested ?
->
-> I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
+PiBPbiBXZWQsIDIwMTMtMTAtMTYgYXQgMjE6MDggLTA1MDAsIFRhbmcgWXVhbnRpYW4tQjI5OTgz
+IHdyb3RlOg0KPiA+ID4gPiA+IFRoYXQgc2hvd3MgdGhlIGRpdmlkZXJzIGFzIGJlaW5nIHNvbWV3
+aGVyZSBpbiBiZXR3ZWVuIHRoZSBQTEwNCj4gPiA+ID4gPiBhbmQgdGhlDQo+ID4gPiBNVVguDQo+
+ID4gPiA+ID4gVGhlIE1VWCBpcyB3aGVyZSB0aGUgZGl2aWRlciBpcyBzZWxlY3RlZC4gIFRoZXJl
+J3Mgbm90aGluZyBpbg0KPiA+ID4gPiA+IHRoZSBQTEwncyBwcm9ncmFtbWluZyBpbnRlcmZhY2Ug
+dGhhdCByZWxhdGVzIHRvIHRoZSBkaXZpZGVycy4NCj4gPiA+ID4gPiBBcyBzdWNoIGl0J3Mgc2lt
+cGxlciB0byBtb2RlbCBpdCBhcyBiZWluZyBwYXJ0IG9mIHRoZSBNVVguDQo+ID4gPiA+ID4NCj4g
+PiA+ID4gPiAtU2NvdHQNCj4gPiA+ID4gPg0KPiA+ID4gPiBJIGRvbid0IGtub3cgd2hldGhlciBp
+dCBpcyBzaW1wbGVyLCBidXQgIm1vZGVsaW5nIGRpdmlkZXIgYXMgYmVpbmcNCj4gPiA+ID4gcGFy
+dA0KPiA+ID4gb2YgdGhlIE1VWCINCj4gPiA+ID4gaXMgeW91ciBndWVzcywgcmlnaHQ/DQo+ID4g
+PiA+IElmIHRoZSAiZGl2aWRlciIgaXMgaW5jbHVkZWQgaW4gTVVYLCB0aGUgTVVYIHdvdWxkIG5v
+dCBiZSBjYWxsZWQNCj4gIk1VWCIuDQo+ID4gPg0KPiA+ID4gSXQncyBzdGlsbCBzZWxlY3Rpbmcg
+ZnJvbSBtdWx0aXBsZSBQTExzLg0KPiA+ID4NCj4gPiA+ID4gSSBkb24ndCBrbm93IHdoZXRoZXIg
+ImRpdmlkZXIiIG1vZHVsZSBleGlzdHMgb3Igbm90LiBJZiBpdCBleGlzdHMsDQo+ID4gPiA+IGl0
+IHNob3VsZCBiZSBwYXJ0IG9mIFBMTCBvciBiZXR3ZWVuIFBMTCBhbmQgTVVYLiB3aGVyZXZlciBp
+dCB3YXMsDQo+ID4gPiA+IHRoZQ0KPiA+ID4gZGV2aWNlIHRyZWUgYmluZGluZyBpcyBhcHByb3By
+aWF0ZS4NCj4gPiA+DQo+ID4gPiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZyBpcyB1bm5lY2Vzc2Fy
+aWx5IGNvbXBsaWNhdGVkLg0KPiA+ID4NCj4gPiA+ID4gVGhlIFAzMDQxUk0gc2hvd3MgZXhhY3Rs
+eSBlYWNoIFBMTCBoYXMgMiBvdXRwdXRzIHdoaWNoIGRlZmluaXRlbHkNCj4gPiA+ID4gaGF2ZQ0K
+PiA+ID4gbm8gImRpdmlkZXIiIGF0IGFsbC4NCj4gPiA+DQo+ID4gPiBUaGF0IGRpYWdyYW0gaXMg
+YSBiaXQgd2VpcmQgLS0gb25lIG9mIHRoZSBvdXRwdXRzIGlzIHVzZWQgYXMgaXMsIGFuZA0KPiA+
+ID4gdGhlIG90aGVyIGlzIHNwbGl0IGludG8gMS8yIGFuZCAxLzQuICBJdCBkb2Vzbid0IHJlYWxs
+eSBtYXR0ZXINCj4gPiA+IHRob3VnaDsgdGhlIGVuZCByZXN1bHQgaXMgdGhlIHNhbWUuICBXZSdy
+ZSBkZXNjcmliaW5nIHRoZQ0KPiA+ID4gcHJvZ3JhbW1pbmcgaW50ZXJmYWNlLCBub3QgYXJ0d29y
+ayBjaG9pY2VzIGluIHRoZSBtYW51YWwuDQo+ID4gPg0KPiA+ID4gLVNjb3R0DQo+ID4gPg0KPiA+
+IElmIHRoZSBkZXZpY2UgdHJlZSBuZWVkcyB0byBiZSBtb2RpZmllZCwgY291bGQgeW91IGdpdmUg
+bWUgeW91cg0KPiBzdWdnZXN0aW9ucz8NCj4gDQo+IE15IHN1Z2dlc3Rpb24gaXMgdG8gaGF2ZSBv
+bmx5IG9uZSBvdXRwdXQgcGVyIFBMTCBub2RlLiAgVGhlIE1VWCBub2RlDQo+IHdvdWxkIGhhdmUg
+b25lIGlucHV0IHBlciBQTEwuICBEaXZpZGVycyB3b3VsZCBiZSBoYW5kbGVkIGludGVybmFsbHkg
+dG8NCj4gdGhlIE1VWCBkcml2ZXIuDQo+IA0KPiAtU2NvdHQNCj4gDQpJIGRvbid0IHRoaW5rIHlv
+dXIgc3VnZ2VzdGlvbiBpcyBjb25zdHJ1Y3RpdmUuDQpZb3VyIHN1Z2dlc3Rpb24gaXMgb24gdGhl
+IHByZW1pc2Ugb2YgdGhhdCB0aGUgImRpdmlkZXIiIGlzIHBhcnQgb2YgTVVYLA0KQW5kIEkgdGhp
+bmsgaXQgc2hvdWxkIGJlIHBhcnQgb2YgUExMLg0KTVVYIGNhbid0IENSRUFURSBjbG9jayB3aGlj
+aCBQTEwgY2FuLiBTbyBteSB0aG91Z2h0IGlzIG1vcmUgcmVhc29uYWJsZS4NCklmIHRoZSBkZXZp
+Y2UgdHJlZSBkb2N1bWVudHMgbGlrZSB3aGF0IHlvdSBzYWlkLCBpdCB3b3VsZCBoYXZlIGZldyBo
+ZWxwIGZvciBkcml2ZXIuDQpUaGUgcmVhc29uIGlzIG9idmlvdXMgdGhhdCB0aGUgZHJpdmVyIGlz
+IHN0aWxsIGdvaW5nIHRvIGRlYWwgd2l0aCB0aGUgImRpdmlkZXIiIA0KZGV0YWlsIHdoaWNoIHZh
+cmllcyBmcm9tIHBsYXRmb3JtIHRvIHBsYXRmb3JtLg0KSSB3aWxsIGRvY3VtZW50IGFzIGl0IHdh
+cyB1bmxlc3MgeW91IHByb3ZlIHlvdXIgc3VnZ2VzdGlvbi4NCg0KVGhhbmtzLA0KWXVhbnRpYW4N
+Cg==
 
-Yes, that was the idea.
-
-> That's an interesting thought. I was planning to scan the fdt
-> only once and populate my own structures, but I suppose I could
-> use the of_* APIs equivalently.
->
-> It seems there are some problems though.  of_fdt_unflatten_tree()
-> does not return errors, and so for the purposes of my driver it
-> would not be sufficient to detect an invalid firmware image.
->
-It does so, at least partially. If there is an error, it won't set
-the nodes pointer. Granted, that is not perfect, but it is at least
-a start. Ultimately, I considered it 'good enough' for my purpose
-(for devicetree overlays - see [1] below), as any missing mandatory
-properties or nodes are detected later when trying to actually read
-the properties. In my case, I also have a couple of validation
-properties to ensure that the overlay is acceptable (specifically
-I use 'compatible' and 'assembly-ids', but that is really a detail).
-
-> Would people entertain changing this API
-> (and implicitly __unflatten_device_tree) to return errors? I'm
-> guessing the reason it's coded that way is because the normal
-> usecase is 'system boot', at which time errors aren't that
-> meaningful.
->
-> Also, there's no way to free the memory that was allocated from
-> the unflatten process. May I add one?
->
-
-The patchset submitted by Pantelis Antoniou to add support for
-devicetree overlays adds this and other related functionality.
-See [1], specifically the patch titled "OF: Introduce utility
-helper functions". Not sure where that is going, though.
-It may need some cleanup to be accepted upstream.
-Copying Pantelis for comments.
-
-I also updated the devicetree discussion list address to get comments
-from the experts.
-
-Thanks,
-Guenter
-
-[1] https://lkml.org/lkml/2013/1/4/276
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
