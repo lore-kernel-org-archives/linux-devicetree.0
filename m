@@ -1,59 +1,46 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Fri, 18 Oct 2013 13:56:38 +0100
-Message-ID: <20131018125638.GX25034@n2100.arm.linux.org.uk>
-References: <20130924124122.64834b2a@armhf> <20131018003439.GG2443@sirena.org.uk> <20131018103019.GW25034@n2100.arm.linux.org.uk> <20131018124832.GK2443@sirena.org.uk>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [RESEND PATCH v2 6/6] mmc: sdhci-bcm-kona: Add basic use of
+ clocks
+Date: Fri, 18 Oct 2013 09:22:57 -0400
+Message-ID: <20131018132257.GG2721@beef>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+ <1381960030-1640-7-git-send-email-tim.kryger@linaro.org>
+ <20131017141309.GG24056@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131018124832.GK2443-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20131017141309.GG24056@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Tim Kryger <tim.kryger@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "patches@linaro.org" <patches@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 01:48:32PM +0100, Mark Brown wrote:
-> On Fri, Oct 18, 2013 at 11:30:19AM +0100, Russell King - ARM Linux wrote:
-> > On Fri, Oct 18, 2013 at 01:34:39AM +0100, Mark Brown wrote:
+On Thu, Oct 17, 2013 at 03:13:09PM +0100, Mark Rutland wrote:
+> On Wed, Oct 16, 2013 at 10:47:10PM +0100, Tim Kryger wrote:
+> > +	/* Get and enable the external clock */
+> > +	kona_dev->external_clk = devm_clk_get(dev, NULL);
+> > +	if (IS_ERR(kona_dev->external_clk)) {
+> > +		dev_err(dev, "Failed to get external clock\n");
+> > +		ret = PTR_ERR(kona_dev->external_clk);
+> > +		goto err_pltfm_free;
 > 
-> > > The last set of DPCMish patches was reported to work so should be a
-> > > fairly small refactoring away from being OK - the main thing is to
-> > > create back end DAIs for the physical links and then put the widgets
-> > > that manage the enable of the S/PDIF and I2S interfaces between the FE
-> > > and BE DAIs instead of directly connecting them to widgets on the CODEC.
+> This seems like a pretty clear breakage of existing DTBs.
 > 
-> > ROTFL.  You're now telling JF to do exactly what I did in my last patch.
-> > Your two-faced-ness is utterly astounding.
-> 
-> > "widgets that manage the enable of the S/PDIF and I2S interfaces between
-> > the FE and BE DAIs" is exactly what I did and you told me that was wrong.
-> > Make up your fscking mind.
-> 
-> No, this is not the case.  The major problem with your last set of
-> patches was that they did not create any back end DAIs, instead they
-> created purely DAPM routes from the single traditional DAI out to
-> widgets in the CODEC.  What I'm asking Jean-Francois to do above is
-> create and use back end DAIs.
-> 
-> Please let me also remind you that confrontational behaviour such as the
-> ad hominem remarks above is not at all constructive or helpful, please
-> keep the discussion civil.
+> Why?
 
-Let me remind you that I had a definition of what a front end and a back
-end DAI was from Liam, and your definition is at odds with that.
+Normal kernel incremental development. The notion of breaking DTBs is
+pretty much incompatible with the long-standing tradition of developing
+kernel support in an incremental fashion.
 
-I am still of the opinion that you don't know what you're talking about
-most of the time, and nothing has changed in that regard, and I still
-regard you as a completely  obstructive and unhelpful person.
+In this case, the bootloader available on these boards has had clocks
+and regulators enabled for all the drivers currently upstream. This
+allowed development of the sdhci driver (and others) independent of having
+the common clk driver and PMU/regulator drivers ready. That's been especially
+important given the flux that the common clk framework is in with regards
+to bindings.
 
-And I think you're just wrong on what you've said above.  But... I've
-basically given up any hope of progressing that code after months of
-pissing around with your obstructive attitude, and I've elected (and
-others) to maintain it completely out of mainline for the forseeable
-future - hopefully until you get replaced by someone who can be more
-assistive and helpful.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are you suggesting that the required clock needs to be made logically
+optional in the code to retain backward compatbility?
+
+-Matt
