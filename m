@@ -1,57 +1,38 @@
-From: Rob Herring <rob.herring@calxeda.com>
-Subject: Re: [patch v2] sata, highbank: clear whole array in highbank_initialize_phys()
-Date: Fri, 18 Oct 2013 09:21:27 -0500
-Message-ID: <526143E7.4070809@calxeda.com>
-References: <20131018084409.GA14256@longonot.mountain>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
+Date: Fri, 18 Oct 2013 15:33:27 +0100
+Message-ID: <20131018143326.GZ25034@n2100.arm.linux.org.uk>
+References: <20130924124122.64834b2a@armhf> <20131018003439.GG2443@sirena.org.uk> <20131018103019.GW25034@n2100.arm.linux.org.uk> <20131018124832.GK2443@sirena.org.uk> <20131018125638.GX25034@n2100.arm.linux.org.uk> <20131018134829.GQ2443@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131018084409.GA14256@longonot.mountain>
-Sender: linux-ide-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131018134829.GQ2443-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2013 03:44 AM, Dan Carpenter wrote:
-> The original code used the wrong parameter to clear tx_atten[].  It
-> passed the number of elements instead of sizeof() the array to memset.
+On Fri, Oct 18, 2013 at 02:48:29PM +0100, Mark Brown wrote:
+> On Fri, Oct 18, 2013 at 01:56:38PM +0100, Russell King - ARM Linux wrote:
+> > And I think you're just wrong on what you've said above.  But... I've
+> > basically given up any hope of progressing that code after months of
+> > pissing around with your obstructive attitude, and I've elected (and
+> > others) to maintain it completely out of mainline for the forseeable
+> > future - hopefully until you get replaced by someone who can be more
+> > assistive and helpful.
 > 
-> The other potential issue was that cphy_base[] wasn't cleared.  I'm not
-> sure if that was a real problem or not, but I have cleared it in my
-> patch.
-> 
-> Instead of using memset(), this patch uses empty initializers as a
-> cleanup.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Once more, please be civil and constructive - a confrontational approach
+> has not been helping here.  If you are intent on behaving in this
+> fashion please at least try to avoid disrupting others who are
+> interested in working in mainline.
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-> ---
-> v2: used {} initialization instead of memset.  I also just went ahead
->     and cleared cphy_base[].
-> 
-> diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-> index 7f5e5d9..ea3b3dc 100644
-> --- a/drivers/ata/sata_highbank.c
-> +++ b/drivers/ata/sata_highbank.c
-> @@ -343,13 +343,11 @@ static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
->  {
->  	struct device_node *sata_node = dev->of_node;
->  	int phy_count = 0, phy, port = 0, i;
-> -	void __iomem *cphy_base[CPHY_PHY_COUNT];
-> -	struct device_node *phy_nodes[CPHY_PHY_COUNT];
-> -	u32 tx_atten[CPHY_PORT_COUNT];
-> +	void __iomem *cphy_base[CPHY_PHY_COUNT] = {};
-> +	struct device_node *phy_nodes[CPHY_PHY_COUNT] = {};
-> +	u32 tx_atten[CPHY_PORT_COUNT] = {};
->  
->  	memset(port_data, 0, sizeof(struct phy_lane_info) * CPHY_PORT_COUNT);
-> -	memset(phy_nodes, 0, sizeof(struct device_node*) * CPHY_PHY_COUNT);
-> -	memset(tx_atten, 0xff, CPHY_PORT_COUNT);
->  
->  	do {
->  		u32 tmp;
-> 
-
+Well, you say that but that's actually a total lie.  It is you who have
+done far more than anyone else to disrupt progress on this issue through
+your purposely misleading and unhelpful comments.  Many I remind you that
+it was _me_ who spent months implementing the suggestions you came out
+with only to be told time and time again that it was wrong.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
