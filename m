@@ -1,60 +1,80 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH v9 13/13] V4L: Add driver for s5k4e5 image sensor
-Date: Fri, 18 Oct 2013 08:16:12 +0530
-Message-ID: <CALt3h7-vYWS0KpNqm-hUWph-HrfgK0Y8mv8rrzgOQLCA4C9h5g@mail.gmail.com>
-References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
-	<1380279558-21651-14-git-send-email-arun.kk@samsung.com>
-	<526019F0.3070406@samsung.com>
+From: Michael Bohan <mbohan@codeaurora.org>
+Subject: Re: [PATCH] of/lib: Export fdt routines to modules
+Date: Thu, 17 Oct 2013 19:54:06 -0700
+Message-ID: <20131018025405.GA3722@codeaurora.org>
+References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org>
+ <525F2397.40203@caviumnetworks.com>
+ <20131017002731.GA22830@codeaurora.org>
+ <525F6D83.1050808@roeck-us.net>
+ <20131017235132.GA6241@codeaurora.org>
+ <52608457.5040609@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <526019F0.3070406@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52608457.5040609@roeck-us.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Thu, Oct 17, 2013 at 05:44:07PM -0700, Guenter Roeck wrote:
+> On 10/17/2013 04:51 PM, Michael Bohan wrote:
+> >On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
+> >>Still, what prevents you from unflattening it and just using the
+> >>normal device tree functions as David suggested ?
+> >
+> >I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
+> 
+> Yes, that was the idea.
+> 
+> >That's an interesting thought. I was planning to scan the fdt
+> >only once and populate my own structures, but I suppose I could
+> >use the of_* APIs equivalently.
+> >
+> >It seems there are some problems though.  of_fdt_unflatten_tree()
+> >does not return errors, and so for the purposes of my driver it
+> >would not be sufficient to detect an invalid firmware image.
+> >
+> It does so, at least partially. If there is an error, it won't set
+> the nodes pointer. Granted, that is not perfect, but it is at least
+> a start. Ultimately, I considered it 'good enough' for my purpose
+> (for devicetree overlays - see [1] below), as any missing mandatory
+> properties or nodes are detected later when trying to actually read
+> the properties. In my case, I also have a couple of validation
+> properties to ensure that the overlay is acceptable (specifically
+> I use 'compatible' and 'assembly-ids', but that is really a detail).
 
-On Thu, Oct 17, 2013 at 10:40 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 27/09/13 12:59, Arun Kumar K wrote:
->> This patch adds subdev driver for Samsung S5K4E5 raw image sensor.
->> Like s5k6a3, it is also another fimc-is firmware controlled
->> sensor. This minimal sensor driver doesn't do any I2C communications
->> as its done by ISP firmware. It can be updated if needed to a
->> regular sensor driver by adding the I2C communication.
->>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  .../devicetree/bindings/media/i2c/s5k4e5.txt       |   45 +++
->>  drivers/media/i2c/Kconfig                          |    8 +
->>  drivers/media/i2c/Makefile                         |    1 +
->>  drivers/media/i2c/s5k4e5.c                         |  347 ++++++++++++++++++++
->>  4 files changed, 401 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
->>  create mode 100644 drivers/media/i2c/s5k4e5.c
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
->> new file mode 100644
->> index 0000000..0fca087
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
->
-> Could you make a separate patch adding DT binding only ?
-> And can you please rename this file to:
-> Documentation/devicetree/bindings/media/samsung-s5k4e5.txt, like
-> it's done in case of other sensors ?
+That's certainly better than nothing, but I think it would be
+useful to make a distinction between a malformed fdt and a fdt
+that's simply missing the right information. Without error
+codes, I think we lose this aspect.
 
-Ok will do that.
+> >Would people entertain changing this API
+> >(and implicitly __unflatten_device_tree) to return errors? I'm
+> >guessing the reason it's coded that way is because the normal
+> >usecase is 'system boot', at which time errors aren't that
+> >meaningful.
+> >
+> >Also, there's no way to free the memory that was allocated from
+> >the unflatten process. May I add one?
+> >
+> 
+> The patchset submitted by Pantelis Antoniou to add support for
+> devicetree overlays adds this and other related functionality.
+> See [1], specifically the patch titled "OF: Introduce utility
+> helper functions". Not sure where that is going, though.
+> It may need some cleanup to be accepted upstream.
+> Copying Pantelis for comments.
+> Guenter
+> 
+> [1] https://lkml.org/lkml/2013/1/4/276
 
->
-> Should I apply patches 02...11/13 already or would you like send
-> the whole series updated ? AFAICS there are minor things pointed
-> out by Hans not addressed yet ?
+Thanks. So it seems that Pantelis's __of_free_tree() is what I'm
+looking for.
 
-Yes I will send the full series with the review comments addressed.
+Mike
 
-Regards
-Arun
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
