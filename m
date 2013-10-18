@@ -1,434 +1,190 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3][ 10/11] ARM: dts: Add support for the cpuimx25 board from Eukrea and its baseboard.
-Date: Fri, 18 Oct 2013 17:17:01 +0200
-Message-ID: <1382109422-24454-10-git-send-email-denis@eukrea.com>
-References: <1382109422-24454-1-git-send-email-denis@eukrea.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Fri, 18 Oct 2013 08:34:56 -0700
+Message-ID: <CAJ+vNU2ifxfprYsgcQs+Kkgu37+diXHJS6DEqs4d51+U3F4sLQ@mail.gmail.com>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
+	<CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
+	<0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
+	<CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
+	<0E83723C55F66F43A6041464FE31119D40FD55@039-SN2MPN1-011.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382109422-24454-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <0E83723C55F66F43A6041464FE31119D40FD55@039-SN2MPN1-011.039d.mgd.msft.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhu Richard-R65037 <r65037@freescale.com>
+Cc: Sean Cross <xobs@kosagi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-The following devices/functionalities were added:
- * Main and secondary UARTs.
- * i2c and the pcf8563 device.
- * Sound.
- * CMO-QVGA(With backlight), DVI-VGA and DVI-SVGA displays
- * Ethernet.
- * NAND.
- * The BP1 button.
- * The LED.
- * Watchdog
- * SD.
+On Fri, Oct 18, 2013 at 12:45 AM, Zhu Richard-R65037
+<r65037@freescale.com> wrote:
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   53 +++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts  |   63 +++++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts  |   50 +++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts   |   50 +++++++++
- .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  116 ++++++++++++=
-++++++++
- 5 files changed, 332 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-cmo-qvga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-svga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-vga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.=
-dts
+[...]
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/bo=
-ot/dts/imx25-eukrea-cpuimx25.dtsi
-new file mode 100644
-index 0000000..0cc7864
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX25";
-+	compatible =3D "eukrea,cpuimx25", "fsl,imx25";
-+
-+	memory {
-+		reg =3D <0x80000000 0x4000000>; /* 64M */
-+	};
-+};
-+
-+&fec {
-+	phy-mode =3D "rmii";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec_1>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1_1>;
-+	status =3D "okay";
-+
-+	pcf8563@51 {
-+		compatible =3D "nxp,pcf8563";
-+		reg =3D <0x51>;
-+	};
-+};
-+
-+&nfc {
-+	nand-bus-width =3D <8>;
-+	nand-ecc-mode =3D "hw";
-+	nand-on-flash-bbt;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-new file mode 100644
-index 0000000..cabd6f6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-@@ -0,0 +1,63 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the CMO-QVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-cmo-qvga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	cmo_qvga: display {
-+		model =3D "CMO-QVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xcad08b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&qvga_timings>;
-+		display-timings {
-+			qvga_timings: 320x240 {
-+				clock-frequency =3D <6500000>;
-+				hactive =3D <320>;
-+				vactive =3D <240>;
-+				hback-porch =3D <30>;
-+				hfront-porch =3D <38>;
-+				vback-porch =3D <20>;
-+				vfront-porch =3D <3>;
-+				hsync-len =3D <15>;
-+				vsync-len =3D <4>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_3v3: lcd-en {
-+		compatible =3D "regulator-fixed";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_reg_lcd_3v3>;
-+		regulator-name =3D "lcd-3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 26 0>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&cmo_qvga>;
-+	fsl,pwmr =3D <0x00a903ff>;
-+	lcd-supply =3D <&reg_lcd_3v3>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-new file mode 100644
-index 0000000..1089ac2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-SVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-svga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_svga: display {
-+		model =3D "DVI-SVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_svga_timings>;
-+		display-timings {
-+			dvi_svga_timings: 800x600 {
-+				clock-frequency =3D <40000000>;
-+				hactive =3D <800>;
-+				vactive =3D <600>;
-+				hback-porch =3D <75>;
-+				hfront-porch =3D <75>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <75>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_svga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga=
-=2Edts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-new file mode 100644
-index 0000000..2edbbab
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-VGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-vga", "eukrea,mbimxsd2=
-5-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_vga: display {
-+		model =3D "DVI-VGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_vga_timings>;
-+		display-timings {
-+			dvi_vga_timings: 640x480 {
-+				clock-frequency =3D <31250000>;
-+				hactive =3D <640>;
-+				vactive =3D <480>;
-+				hback-porch =3D <100>;
-+				hfront-porch =3D <100>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <100>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_vga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/a=
-rch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-new file mode 100644
-index 0000000..be24a85
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -0,0 +1,116 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+/dts-v1/;
-+#include "imx25-eukrea-cpuimx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25";
-+	compatible =3D "eukrea,mbimxsd25-baseboard", "eukrea,cpuimx25", "fsl,=
-imx25";
-+
-+	gpio_keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
-+
-+		bp1 {
-+			label =3D "BP1";
-+			gpios =3D <&gpio3 18 1>;
-+			linux,code =3D <256>;
-+			gpio-key,wakeup;
-+			linux,input-type =3D <1>;
-+		};
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpioled>;
-+
-+		led1 {
-+			label =3D "led1";
-+			gpios =3D <&gpio3 19 1>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_audmux_1>;
-+	status =3D "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_esdhc1_1>;
-+	cd-gpios =3D <&gpio1 20>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	tlv320aic23: codec@1a {
-+		compatible =3D "ti,tlv320aic23";
-+		reg =3D <0x1a>;
-+	};
-+};
-+
-+&iomuxc {
-+	gpio_keys {
-+		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_VSTBY_ACK__GPIO_3_18 0x80000000
-+			>;
-+		};
-+	};
-+
-+	leds {
-+		pinctrl_gpioled: gpioledgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_POWER_FAIL__GPIO_3_19 0x80000000
-+			>;
-+		};
-+	};
-+
-+	reg_lcd_3v3 {
-+		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-+			fsl,pins =3D <
-+				MX25_PAD_PWM__GPIO_1_26  0x80000000
-+			>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	fsl,mode =3D "i2s-slave";
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
---=20
-1.7.9.5
+>
+> >
+> > Richard,
+> >
+> > I would suspect this is the imprecise abort issue.  Please see my patch
+> > (http://thread.gmane.org/gmane.linux.kernel.pci/26159) resolves that for you
+> > and reply to that thread if so.
+> >
+> > I believe that the imprecise abort's only occurs if you have a PCIe switch on
+> > the bus - is this your topology and if so are you experiencing any issues with
+> > devices behind the bus that use io regions?  If you do have a switch, perhaps
+> > you can provide me with an 'lspci -v' for comparison.
+> >
+> Hi Tim:
+> Oh, It's great. Your patch can fix my problem.
+> My own patch-set of pcie driver works well when my Pericom's switch is used.
+> Thanks a lot.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Good to hear!  Please reply to that thread and provide an Acked-by and
+Tested-by so we can get that patch upstream.
+
+>
+> Yes, it is.
+> E1000e network card request about 32 bytes IO regions during the bus enumeration procedure,
+> and it works well behind the my Pericom's switch.
+>
+> Based on my own pcie driver(not the one up-streamed by Sean),
+
+How about with the upstream driver?  I have 'my own driver' as well
+(based on Freescale's BSP) which works, but I'm very interested in
+getting this upstream driver to work so we don't have to keep
+maintaining our own drivers.  Can you please test with this upstream
+driver?
+
+> Here are the log and the lspci -v results I got just now:
+>
+> imx-pcie 1ffc000.pcie: legacy_irq 155
+> imx-pcie 1ffc000.pcie: map [mem 0x01ffc000-0x01ffffff]
+> imx-pcie 1ffc000.pcie: starting to link pcie port.
+> imx-pcie 1ffc000.pcie: Link up
+> PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [io  0x1000-0x10000]
+> pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
+> pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-ff]
+> PCI: bus0: Fast back to back transfers disabled
+> PCI: bus1: Fast back to back transfers disabled
+> pci 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> PCI: bus2: Fast back to back transfers disabled
+> pci 0000:02:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> PCI: bus3: Fast back to back transfers disabled
+> PCI: bus4: Fast back to back transfers enabled
+> pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
+> pci 0000:00:00.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
+> pci 0000:00:00.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
+> pci 0000:00:00.0: BAR 6: assigned [mem 0x01300000-0x0130ffff pref]
+> pci 0000:00:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:01:00.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
+> pci 0000:01:00.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
+> pci 0000:01:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:02:01.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
+> pci 0000:02:01.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
+> pci 0000:02:01.0: BAR 7: assigned [io  0x1000-0x1fff]
+> pci 0000:03:00.0: BAR 1: assigned [mem 0x01100000-0x0117ffff]
+> pci 0000:03:00.0: BAR 6: assigned [mem 0x01200000-0x0123ffff pref]
+> pci 0000:03:00.0: BAR 0: assigned [mem 0x01180000-0x0119ffff]
+> pci 0000:03:00.0: BAR 3: assigned [mem 0x011a0000-0x011a3fff]
+> pci 0000:03:00.0: BAR 2: assigned [io  0x1000-0x101f]
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:02:01.0:   bridge window [mem 0x01100000-0x011fffff]
+> pci 0000:02:01.0:   bridge window [mem 0x01200000-0x012fffff pref]
+> pci 0000:02:02.0: PCI bridge to [bus 04]
+> pci 0000:01:00.0: PCI bridge to [bus 02-04]
+> pci 0000:01:00.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:01:00.0:   bridge window [mem 0x01100000-0x011fffff]
+> pci 0000:01:00.0:   bridge window [mem 0x01200000-0x012fffff pref]
+> pci 0000:00:00.0: PCI bridge to [bus 01-04]
+> pci 0000:00:00.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:00:00.0:   bridge window [mem 0x01100000-0x011fffff]
+> pci 0000:00:00.0:   bridge window [mem 0x01200000-0x012fffff pref]
+> PCI: enabling device 0000:01:00.0 (0140 -> 0143)
+> PCI: enabling device 0000:02:01.0 (0140 -> 0143)
+> PCI: enabling device 0000:02:02.0 (0140 -> 0143)
+> ...
+> root@freescale ~$ lspci -v
+> 00:00.0 PCI bridge: Unknown device 16c3:abcd (rev 01) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0
+>         Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
+>         Bus: primary=00, secondary=01, subordinate=04, sec-latency=0
+>         I/O behind bridge: 00001000-00001fff
+>         Memory behind bridge: 01100000-011fffff
+>         Prefetchable memory behind bridge: 01200000-012fffff
+>         [virtual] Expansion ROM at 01300000 [disabled] [size=64K]
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [50] Message Signalled Interrupts: Mask+ 64bit+ Queue=0/0 Enable-
+>         Capabilities: [70] Express Root Port (Slot-) IRQ 0
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Virtual Channel
+>
+> 01:00.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0
+>         Bus: primary=01, secondary=02, subordinate=04, sec-latency=0
+>         I/O behind bridge: 00001000-00001fff
+>         Memory behind bridge: 01100000-011fffff
+>         Prefetchable memory behind bridge: 0000000001200000-00000000012fffff
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [5c] Vital Product Data
+>         Capabilities: [64] Vendor Specific Information
+>         Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device 0000
+>         Capabilities: [c0] Express Upstream Port IRQ 0
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Virtual Channel
+>         Capabilities: [20c] Power Budgeting
+>         Capabilities: [230] Unknown (24)
+>
+> 02:01.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0
+>         Bus: primary=02, secondary=03, subordinate=03, sec-latency=0
+>         I/O behind bridge: 00001000-00001fff
+>         Memory behind bridge: 01100000-011fffff
+>         Prefetchable memory behind bridge: 0000000001200000-00000000012fffff
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [4c] Message Signalled Interrupts: Mask- 64bit+ Queue=0/0 Enable-
+>         Capabilities: [64] Vendor Specific Information
+>         Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device 0000
+>         Capabilities: [c0] Express Downstream Port (Slot+) IRQ 0
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Virtual Channel
+>         Capabilities: [20c] Power Budgeting
+>         Capabilities: [220] Unknown (13)
+>
+> 02:02.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0
+>         Bus: primary=02, secondary=04, subordinate=04, sec-latency=0
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [4c] Message Signalled Interrupts: Mask- 64bit+ Queue=0/0 Enable-
+>         Capabilities: [64] Vendor Specific Information
+>         Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device 0000
+>         Capabilities: [c0] Express Downstream Port (Slot+) IRQ 0
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Virtual Channel
+>         Capabilities: [20c] Power Budgeting
+>         Capabilities: [220] Unknown (13)
+>
+> 03:00.0 Ethernet controller: Intel Corporation Unknown device 10d3
+>         Subsystem: Intel Corporation Unknown device a01f
+>         Flags: bus master, fast devsel, latency 0, IRQ 154
+>         Memory at 01180000 (32-bit, non-prefetchable) [size=128K]
+>         Memory at 01100000 (32-bit, non-prefetchable) [size=512K]
+>         I/O ports at 1000 [disabled] [size=32]
+>         Memory at 011a0000 (32-bit, non-prefetchable) [size=16K]
+>         [virtual] Expansion ROM at 01200000 [disabled] [size=256K]
+>         Capabilities: [c8] Power Management version 2
+>         Capabilities: [d0] Message Signalled Interrupts: Mask- 64bit+ Queue=0/0 Enable-
+>         Capabilities: [e0] Express Endpoint IRQ 0
+>         Capabilities: [a0] MSI-X: Enable- Mask- TabSize=5
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Device Serial Number 8b-18-3a-ff-ff-21-1b-00
+>
+
+The above device does show an io resource but it says its disabled?
+I'm not sure what that means, but I'm not convinced you would see the
+same issue as I do if the io resource isn't being used.
+
+Tim
