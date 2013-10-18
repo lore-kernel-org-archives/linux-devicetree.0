@@ -1,85 +1,321 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/lib: Export fdt routines to modules
-Date: Fri, 18 Oct 2013 10:57:24 -0500
-Message-ID: <52615A64.9040803@gmail.com>
-References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org> <525F2397.40203@caviumnetworks.com> <20131017002731.GA22830@codeaurora.org> <525F6D83.1050808@roeck-us.net> <20131017235132.GA6241@codeaurora.org> <52608457.5040609@roeck-us.net> <20131018025405.GA3722@codeaurora.org> <33103C16-6472-4AAE-ADB8-50807CC96C85@antoniou-consulting.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH v3] ARM: dts: add minimal DT support for Nokia N950 &
+ N9 phones
+Date: Fri, 18 Oct 2013 17:57:17 +0200
+Message-ID: <52615A5D.7030002@baylibre.com>
+References: <1381869369-14626-1-git-send-email-aaro.koskinen@iki.fi>
+ <20131016003536.GA15154@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33103C16-6472-4AAE-ADB8-50807CC96C85@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Michael Bohan <mbohan@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131016003536.GA15154@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2013 08:28 AM, Pantelis Antoniou wrote:
-> Hi Michael,
-> 
-> On Oct 18, 2013, at 5:54 AM, Michael Bohan wrote:
-> 
->> On Thu, Oct 17, 2013 at 05:44:07PM -0700, Guenter Roeck wrote:
->>> On 10/17/2013 04:51 PM, Michael Bohan wrote:
->>>> On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
->>>>> Still, what prevents you from unflattening it and just using the
->>>>> normal device tree functions as David suggested ?
->>>>
->>>> I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
->>>
->>> Yes, that was the idea.
->>>
->>>> That's an interesting thought. I was planning to scan the fdt
->>>> only once and populate my own structures, but I suppose I could
->>>> use the of_* APIs equivalently.
->>>>
->>>> It seems there are some problems though.  of_fdt_unflatten_tree()
->>>> does not return errors, and so for the purposes of my driver it
->>>> would not be sufficient to detect an invalid firmware image.
->>>>
->>> It does so, at least partially. If there is an error, it won't set
->>> the nodes pointer. Granted, that is not perfect, but it is at least
->>> a start. Ultimately, I considered it 'good enough' for my purpose
->>> (for devicetree overlays - see [1] below), as any missing mandatory
->>> properties or nodes are detected later when trying to actually read
->>> the properties. In my case, I also have a couple of validation
->>> properties to ensure that the overlay is acceptable (specifically
->>> I use 'compatible' and 'assembly-ids', but that is really a detail).
+On 16/10/2013 02:35, Tony Lindgren wrote:
+> * Aaro Koskinen <aaro.koskinen@iki.fi> [131015 13:36]:
+>> Add minimal DT support for Nokia N950 & N9 phones. The same functionality
+>> that is provided by the current board file should work: serial console,
+>> USB, OneNAND and MMC.
 >>
->> That's certainly better than nothing, but I think it would be
->> useful to make a distinction between a malformed fdt and a fdt
->> that's simply missing the right information. Without error
->> codes, I think we lose this aspect.
->>
->>>> Would people entertain changing this API
->>>> (and implicitly __unflatten_device_tree) to return errors? I'm
->>>> guessing the reason it's coded that way is because the normal
->>>> usecase is 'system boot', at which time errors aren't that
->>>> meaningful.
->>>>
->>>> Also, there's no way to free the memory that was allocated from
->>>> the unflatten process. May I add one?
->>>>
->>>
->>> The patchset submitted by Pantelis Antoniou to add support for
->>> devicetree overlays adds this and other related functionality.
->>> See [1], specifically the patch titled "OF: Introduce utility
->>> helper functions". Not sure where that is going, though.
->>> It may need some cleanup to be accepted upstream.
->>> Copying Pantelis for comments.
->>> Guenter
->>>
->>> [1] https://lkml.org/lkml/2013/1/4/276
->>
->> Thanks. So it seems that Pantelis's __of_free_tree() is what I'm
->> looking for.
->>
-> 
-> I guess it's time for another try to getting it in?
-> 
-> DT maintainers, which one of you will want to review?
+>> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> Acked-by: Tony Lindgren <tony@atomide.com>
+>
+> Oh this is not yet merged, I'll pick this one into the
+> omap-for-v3.13/board-removal as the board removal patch is
+> already there.
 
-This falls in Grant's and my plate since we are talking kernel DT
-support code rather than bindings. Unflattening is definitely the right
-direction to go here.
+Just to be sure. Does that mean that you'll take care of that one, and =
 
-Rob
+thus I do not have to queue it?
+
+Thanks,
+Benoit
+
+> Regards,
+>
+> Tony
+>
+>> ---
+>>
+>> 	v3: Added Tony's ACK & properties for generic USB PHY framework.
+>>
+>> 	Previous version: http://marc.info/?t=3D138005105700010&r=3D1&w=3D2
+>>
+>>   arch/arm/boot/dts/Makefile           |   2 +
+>>   arch/arm/boot/dts/omap3-n9.dts       |  18 ++++
+>>   arch/arm/boot/dts/omap3-n950-n9.dtsi | 174 +++++++++++++++++++++++++++=
+++++++++
+>>   arch/arm/boot/dts/omap3-n950.dts     |  18 ++++
+>>   4 files changed, 212 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/omap3-n9.dts
+>>   create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
+>>   create mode 100644 arch/arm/boot/dts/omap3-n950.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 9df7d2c..62d0f4d 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -177,6 +177,8 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) +=3D omap2420-h4.dtb \
+>>   	omap3-gta04.dtb \
+>>   	omap3-igep0020.dtb \
+>>   	omap3-igep0030.dtb \
+>> +	omap3-n9.dtb \
+>> +	omap3-n950.dtb \
+>>   	omap4-panda.dtb \
+>>   	omap4-panda-a4.dtb \
+>>   	omap4-panda-es.dtb \
+>> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9=
+.dts
+>> new file mode 100644
+>> index 0000000..39828ce
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3-n9.dts
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * omap3-n9.dts - Device Tree file for Nokia N9
+>> + *
+>> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "omap3-n950-n9.dtsi"
+>> +
+>> +/ {
+>> +	model =3D "Nokia N9";
+>> +	compatible =3D "nokia,omap3-n9", "ti,omap3";
+>> +};
+>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/om=
+ap3-n950-n9.dtsi
+>> new file mode 100644
+>> index 0000000..94eb77d
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>> @@ -0,0 +1,174 @@
+>> +/*
+>> + * omap3-n950-n9.dtsi - Device Tree file for Nokia N950 & N9 (common st=
+uff)
+>> + *
+>> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include "omap36xx.dtsi"
+>> +
+>> +/ {
+>> +	cpus {
+>> +		cpu@0 {
+>> +			cpu0-supply =3D <&vcc>;
+>> +		};
+>> +	};
+>> +
+>> +	memory {
+>> +		device_type =3D "memory";
+>> +		reg =3D <0x80000000 0x40000000>; /* 1 GB */
+>> +	};
+>> +
+>> +	vemmc: fixedregulator@0 {
+>> +		compatible =3D "regulator-fixed";
+>> +		regulator-name =3D "VEMMC";
+>> +		regulator-min-microvolt =3D <2900000>;
+>> +		regulator-max-microvolt =3D <2900000>;
+>> +		gpio =3D <&gpio5 29 0>; /* gpio line 157 */
+>> +		startup-delay-us =3D <150>;
+>> +		enable-active-high;
+>> +	};
+>> +};
+>> +
+>> +&omap3_pmx_core {
+>> +	mmc2_pins: pinmux_mmc2_pins {
+>> +		pinctrl-single,pins =3D <
+>> +			0x128 (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_clk */
+>> +			0x12a (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_cmd */
+>> +			0x12c (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_dat0 */
+>> +			0x12e (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_dat1 */
+>> +			0x130 (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_dat2 */
+>> +			0x132 (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_dat3 */
+>> +		>;
+>> +	};
+>> +};
+>> +
+>> +&i2c1 {
+>> +	clock-frequency =3D <2900000>;
+>> +
+>> +	twl: twl@48 {
+>> +		reg =3D <0x48>;
+>> +		interrupts =3D <7>; /* SYS_NIRQ cascaded to intc */
+>> +		interrupt-parent =3D <&intc>;
+>> +	};
+>> +};
+>> +
+>> +/include/ "twl4030.dtsi"
+>> +
+>> +&twl {
+>> +	compatible =3D "ti,twl5031";
+>> +};
+>> +
+>> +&twl_gpio {
+>> +	ti,pullups	=3D <0x000001>; /* BIT(0) */
+>> +	ti,pulldowns	=3D <0x008106>; /* BIT(1) | BIT(2) | BIT(8) | BIT(15) */
+>> +};
+>> +
+>> +&i2c2 {
+>> +	clock-frequency =3D <400000>;
+>> +};
+>> +
+>> +&i2c3 {
+>> +	clock-frequency =3D <400000>;
+>> +};
+>> +
+>> +&mmc1 {
+>> +	status =3D "disabled";
+>> +};
+>> +
+>> +&mmc2 {
+>> +	pinctrl-names =3D "default";
+>> +	pinctrl-0 =3D <&mmc2_pins>;
+>> +	vmmc-supply =3D <&vemmc>;
+>> +	bus-width =3D <4>;
+>> +	ti,non-removable;
+>> +};
+>> +
+>> +&mmc3 {
+>> +	status =3D "disabled";
+>> +};
+>> +
+>> +&usb_otg_hs {
+>> +	interface-type =3D <0>;
+>> +	usb-phy =3D <&usb2_phy>;
+>> +	phys =3D <&usb2_phy>;
+>> +	phy-names =3D "usb2-phy";
+>> +	mode =3D <3>;
+>> +	power =3D <50>;
+>> +};
+>> +
+>> +&gpmc {
+>> +	ranges =3D <0 0 0x04000000 0x20000000>;
+>> +
+>> +	onenand@0,0 {
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <1>;
+>> +		reg =3D <0 0 0x20000000>;
+>> +
+>> +		gpmc,sync-read;
+>> +		gpmc,sync-write;
+>> +		gpmc,burst-length =3D <16>;
+>> +		gpmc,burst-read;
+>> +		gpmc,burst-wrap;
+>> +		gpmc,burst-write;
+>> +		gpmc,device-width =3D <2>;
+>> +		gpmc,mux-add-data =3D <2>;
+>> +		gpmc,cs-on-ns =3D <0>;
+>> +		gpmc,cs-rd-off-ns =3D <87>;
+>> +		gpmc,cs-wr-off-ns =3D <87>;
+>> +		gpmc,adv-on-ns =3D <0>;
+>> +		gpmc,adv-rd-off-ns =3D <10>;
+>> +		gpmc,adv-wr-off-ns =3D <10>;
+>> +		gpmc,oe-on-ns =3D <15>;
+>> +		gpmc,oe-off-ns =3D <87>;
+>> +		gpmc,we-on-ns =3D <0>;
+>> +		gpmc,we-off-ns =3D <87>;
+>> +		gpmc,rd-cycle-ns =3D <112>;
+>> +		gpmc,wr-cycle-ns =3D <112>;
+>> +		gpmc,access-ns =3D <81>;
+>> +		gpmc,page-burst-access-ns =3D <15>;
+>> +		gpmc,bus-turnaround-ns =3D <0>;
+>> +		gpmc,cycle2cycle-delay-ns =3D <0>;
+>> +		gpmc,wait-monitoring-ns =3D <0>;
+>> +		gpmc,clk-activation-ns =3D <5>;
+>> +		gpmc,wr-data-mux-bus-ns =3D <30>;
+>> +		gpmc,wr-access-ns =3D <81>;
+>> +		gpmc,sync-clk-ps =3D <15000>;
+>> +
+>> +		/*
+>> +		 * MTD partition table corresponding to Nokia's MeeGo 1.2
+>> +		 * Harmattan release.
+>> +		 */
+>> +		partition@0 {
+>> +			label =3D "bootloader";
+>> +			reg =3D <0x00000000 0x00100000>;
+>> +		};
+>> +		partition@1 {
+>> +			label =3D "config";
+>> +			reg =3D <0x00100000 0x002c0000>;
+>> +		};
+>> +		partition@2 {
+>> +			label =3D "kernel";
+>> +			reg =3D <0x003c0000 0x01000000>;
+>> +		};
+>> +		partition@3 {
+>> +			label =3D "log";
+>> +			reg =3D <0x013c0000 0x00200000>;
+>> +		};
+>> +		partition@4 {
+>> +			label =3D "var";
+>> +			reg =3D <0x015c0000 0x1ca40000>;
+>> +		};
+>> +		partition@5 {
+>> +			label =3D "moslo";
+>> +			reg =3D <0x1e000000 0x02000000>;
+>> +		};
+>> +		partition@6 {
+>> +			label =3D "omap2-onenand";
+>> +			reg =3D <0x00000000 0x20000000>;
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-=
+n950.dts
+>> new file mode 100644
+>> index 0000000..b076a52
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3-n950.dts
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * omap3-n950.dts - Device Tree file for Nokia N950
+>> + *
+>> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "omap3-n950-n9.dtsi"
+>> +
+>> +/ {
+>> +	model =3D "Nokia N950";
+>> +	compatible =3D "nokia,omap3-n950", "ti,omap3";
+>> +};
+>> --
+>> 1.8.4.rc3
+>>
+
+
+-- =
+
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
