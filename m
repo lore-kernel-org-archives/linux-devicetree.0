@@ -1,62 +1,202 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: ux500: fix erroneous bit assignment
-Date: Fri, 18 Oct 2013 12:06:50 +0100
-Message-ID: <20131018110650.GX19112@lee--X1>
-References: <1382087097-31627-1-git-send-email-linus.walleij@linaro.org>
+From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Subject: Re: [PATCH V7] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Fri, 18 Oct 2013 16:37:20 +0530
+Message-ID: <CAKuRcOK5x021VxTfHNRs5SK4oOmwM+WyxYVZfSQXi6g5V5-RQg@mail.gmail.com>
+References: <1378188001-22216-1-git-send-email-yuvaraj.cd@samsung.com>
+	<CAKuRcOLyEjxGjHR6ff_Fe8sXwKW2Qdm1gOM-YyhMOr0964GLMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382087097-31627-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAKuRcOLyEjxGjHR6ff_Fe8sXwKW2Qdm1gOM-YyhMOr0964GLMA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <t.figa@samsung.com>, Douglas Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Oct 2013, Linus Walleij wrote:
+Gentle Ping...
 
-> Due to a typo or similar, the peripheral group 2 clock 11
-> gate was set to bit 1 instead of bit 11. We need to fix this
-> to be able to set the correct enable bit in the device tree:
-> when trying to correct the bit assignment in the device tree,
-> the system would hang.
->=20
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Mike: seeking an ACK for this as it needs to be taken into
-> ARM SoC with the rest of the fixes so as not to cause
-> bisection problems between the trees.
-> ---
->  drivers/clk/ux500/u8500_of_clk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/ux500/u8500_of_clk.c b/drivers/clk/ux500/u85=
-00_of_clk.c
-> index b768b50..cdeff29 100644
-> --- a/drivers/clk/ux500/u8500_of_clk.c
-> +++ b/drivers/clk/ux500/u8500_of_clk.c
-> @@ -339,7 +339,7 @@ void u8500_of_clk_init(u32 clkrst1_base, u32 clkr=
-st2_base, u32 clkrst3_base,
-> =20
->  	clk =3D clk_reg_prcc_pclk("p2_pclk11", "per2clk", clkrst2_base,
->  				BIT(11), 0);
-> -	PRCC_PCLK_STORE(clk, 2, 1);
-> +	PRCC_PCLK_STORE(clk, 2, 11);
-
-Ah, you found it already. Nice.
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Sep 26, 2013 at 12:13 PM, Yuvaraj Kumar <yuvaraj.cd@gmail.com> wrote:
+> Hi Kukjin,
+>  Can you please take this patch to your tree?
+>
+> Best Regards
+> Yuvaraj
+>
+> On Tue, Sep 3, 2013 at 11:30 AM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
+>> This patch adds the mmc device tree node entries for exynos5420 SOC.
+>> Exynos5420 has a different version of DWMMC controller,so a new
+>> compatible string is used to distinguish it from the prior SOC's.
+>>
+>> This patch depends on
+>>         [1]mmc: dw_mmc: exynos: configure SMU in exynos5420
+>>         [2]mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+>>         [3]mmc: dw_mmc: update binding document exynos-dw-mshc.txt
+>>
+>> changes since v6:
+>>         1.renamed node name to mmc
+>>         2.Used compatible string "samsung,exynos5420-dw-mshc"
+>>           for controller instance which does not have SMU.
+>>         3.Used compatible string "samsung,exynos5420-dw-mshc-smu"
+>>           for controller instance which has SMU.
+>>
+>> changes since v5:
+>>         1.removed instance index from node name.
+>>         2.changed the node name to mshc.
+>>         3.changed the reg property value for mshc_2.
+>>
+>> changes since v4:
+>>         1.Droppped the bypass-smu binding property.
+>>         2.Used compatible string "samsung,exynos5250-dw-mshc"
+>>           for controller instance which does not have SMU.
+>>
+>> changes since V3:
+>>         1.change fifo-depth size from 0x80 to 0x40
+>>         2.Move the below properties
+>>                 a.card-detect-delay
+>>                 b.samsung,dw-mshc-ciu-div
+>>                 c.samsung,dw-mshc-sdr-timing
+>>                 d.samsung,dw-mshc-ddr-timing
+>>         from SOC dts to board dts file as suggested by Doug Anderson
+>>
+>> changes since V2:
+>>         1.dropped num-slots property from node as its not required
+>>           if number of card slots available is 1.
+>>
+>>         2.Move the below properties
+>>                 a.fifo-depth
+>>                 b.card-detect-delay
+>>                 c.samsung,dw-mshc-ciu-div
+>>                 d.samsung,dw-mshc-sdr-timing
+>>                 e.samsung,dw-mshc-ddr-timing
+>>         from board dts to SOC dts,as these are not board specific properties.
+>>
+>>         3.Updated the binding document exynos-dw-mshc.txt.
+>>
+>> changes since V1:
+>>         1.disable node by status = disabled in SOC file
+>>         2.enable node by status = okay in board specific file
+>>
+>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>> ---
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
+>>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
+>>  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
+>>  3 files changed, 74 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> index 6d1c098..84cd56f 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -16,6 +16,8 @@ Required Properties:
+>>           specific extensions.
+>>         - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>>           specific extensions.
+>> +       - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+>> +         specific extensions.
+>>
+>>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+>>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> index bafba25..8df4ddc 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -31,6 +31,39 @@
+>>                 };
+>>         };
+>>
+>> +       mmc@12200000 {
+>> +               status = "okay";
+>> +               broken-cd;
+>> +               supports-highspeed;
+>> +               card-detect-delay = <200>;
+>> +               samsung,dw-mshc-ciu-div = <3>;
+>> +               samsung,dw-mshc-sdr-timing = <0 4>;
+>> +               samsung,dw-mshc-ddr-timing = <0 2>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> +
+>> +               slot@0 {
+>> +                       reg = <0>;
+>> +                       bus-width = <8>;
+>> +               };
+>> +       };
+>> +
+>> +       mmc@12220000 {
+>> +               status = "okay";
+>> +               supports-highspeed;
+>> +               card-detect-delay = <200>;
+>> +               samsung,dw-mshc-ciu-div = <3>;
+>> +               samsung,dw-mshc-sdr-timing = <2 3>;
+>> +               samsung,dw-mshc-ddr-timing = <1 2>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>> +
+>> +               slot@0 {
+>> +                       reg = <0>;
+>> +                       bus-width = <4>;
+>> +               };
+>> +       };
+>> +
+>>         dp-controller@145B0000 {
+>>                 pinctrl-names = "default";
+>>                 pinctrl-0 = <&dp_hpd>;
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index d537cd7..897f7f4 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -22,6 +22,9 @@
+>>         compatible = "samsung,exynos5420";
+>>
+>>         aliases {
+>> +               mshc0 = &mmc_0;
+>> +               mshc1 = &mmc_1;
+>> +               mshc2 = &mmc_2;
+>>                 pinctrl0 = &pinctrl_0;
+>>                 pinctrl1 = &pinctrl_1;
+>>                 pinctrl2 = &pinctrl_2;
+>> @@ -84,6 +87,42 @@
+>>                 clock-names = "mfc";
+>>         };
+>>
+>> +       mmc_0: mmc@12200000 {
+>> +               compatible = "samsung,exynos5420-dw-mshc-smu";
+>> +               interrupts = <0 75 0>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <0x12200000 0x2000>;
+>> +               clocks = <&clock 351>, <&clock 132>;
+>> +               clock-names = "biu", "ciu";
+>> +               fifo-depth = <0x40>;
+>> +               status = "disabled";
+>> +       };
+>> +
+>> +       mmc_1: mmc@12210000 {
+>> +               compatible = "samsung,exynos5420-dw-mshc-smu";
+>> +               interrupts = <0 76 0>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <0x12210000 0x2000>;
+>> +               clocks = <&clock 352>, <&clock 133>;
+>> +               clock-names = "biu", "ciu";
+>> +               fifo-depth = <0x40>;
+>> +               status = "disabled";
+>> +       };
+>> +
+>> +       mmc_2: mmc@12220000 {
+>> +               compatible = "samsung,exynos5420-dw-mshc";
+>> +               interrupts = <0 77 0>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <0x12220000 0x1000>;
+>> +               clocks = <&clock 353>, <&clock 134>;
+>> +               clock-names = "biu", "ciu";
+>> +               fifo-depth = <0x40>;
+>> +               status = "disabled";
+>> +       };
+>> +
+>>         mct@101C0000 {
+>>                 compatible = "samsung,exynos4210-mct";
+>>                 reg = <0x101C0000 0x800>;
+>> --
+>> 1.7.9.5
+>>
