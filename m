@@ -1,58 +1,35 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [Patch v2 01/14] usb: doc: phy-mxs: Add more compatible strings
-Date: Wed, 23 Oct 2013 10:58:17 +0800
-Message-ID: <20131023025814.GD2839@S2101-09.ap.freescale.net>
-References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
- <1382421528-17897-2-git-send-email-peter.chen@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382421528-17897-2-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Eric Witcher <ewitcher@mindspring.com>
+Subject: [PATCH] ARM: OMAP: devicetree: fix SPI node compatible property syntax items
+Date: Fri, 18 Oct 2013 06:01:08 -0400
+Message-ID: <1382090468-6011-1-git-send-email-ewitcher@mindspring.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 01:58:35PM +0800, Peter Chen wrote:
-> Since there are three mxs PHY versions, using three compatible
-> strings for them.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  Documentation/devicetree/bindings/usb/mxs-phy.txt |    6 +++++-
->  1 files changed, 5 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> index 5835b27..912d4ad 100644
-> --- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> @@ -1,7 +1,11 @@
->  * Freescale MXS USB Phy Device
->  
->  Required properties:
-> -- compatible: Should be "fsl,imx23-usbphy"
-> +- compatible: there are three compatiable strings to stand for three
+Correct the SPI node compatible property items to match example code and
+match current DTS usage.
 
-s/compatiable/compatible
+Signed-off-by: Eric Witcher <ewitcher@mindspring.com>
+---
+ Documentation/devicetree/bindings/spi/omap-spi.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +mxs PHY verions.
-
-s/verions/versions
-
-> +"fsl,imx23-usbphy": for mx23 and mx28
-> +"fsl,imx6q-usbphy": for mx6q and mx6dl
-> +"fsl,imx6sl-usbphy": for mx6sl and later mx6 soc serial
-
-s/serial/series
-
-Shawn
-
->  - reg: Should contain registers location and length
->  - interrupts: Should contain phy interrupt
->  
-> -- 
-> 1.7.1
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
+index 4c85c4c..2ba5f9c 100644
+--- a/Documentation/devicetree/bindings/spi/omap-spi.txt
++++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
+@@ -2,8 +2,8 @@ OMAP2+ McSPI device
+ 
+ Required properties:
+ - compatible :
+-  - "ti,omap2-spi" for OMAP2 & OMAP3.
+-  - "ti,omap4-spi" for OMAP4+.
++  - "ti,omap2-mcspi" for OMAP2 & OMAP3.
++  - "ti,omap4-mcspi" for OMAP4+.
+ - ti,spi-num-cs : Number of chipselect supported  by the instance.
+ - ti,hwmods: Name of the hwmod associated to the McSPI
+ - ti,pindir-d0-out-d1-in: Select the D0 pin as output and D1 as
+-- 
+1.7.11.7
 
