@@ -1,89 +1,66 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 1/9] mtd: nand: omap: combine different flavours of
- 1-bit hamming ecc schemes
-Date: Fri, 18 Oct 2013 11:59:17 +0100
-Message-ID: <20131018105917.GE29779@e106331-lin.cambridge.arm.com>
-References: <1381816197-20477-1-git-send-email-pekon@ti.com>
- <1381816197-20477-2-git-send-email-pekon@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: ux500: fix I2C4 clock bit
+Date: Fri, 18 Oct 2013 12:03:14 +0100
+Message-ID: <20131018110314.GV19112@lee--X1>
+References: <1382087123-31702-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1381816197-20477-2-git-send-email-pekon@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1382087123-31702-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
+On Fri, 18 Oct 2013, Linus Walleij wrote:
 
-On Tue, Oct 15, 2013 at 06:49:49AM +0100, Pekon Gupta wrote:
-> OMAP NAND driver currently supports multiple flavours of 1-bit Hamming
-> ecc-scheme, like:
-> - OMAP_ECC_HAMMING_CODE_DEFAULT
-> 	1-bit hamming ecc code using software library
-> - OMAP_ECC_HAMMING_CODE_HW
-> 	1-bit hamming ecc-code using GPMC h/w engine
-> - OMAP_ECC_HAMMING_CODE_HW_ROMCODE
-> 	1-bit hamming ecc-code using GPMC h/w engin with ecc-layout compatible
-> 	to ROM code.
-> 
-> This patch combines above multiple ecc-schemes into single implementation:
-> - OMAP_ECC_HAM1_CODE_HW
-> 	1-bit hamming ecc-code using GPMC h/w engine with ROM-code compatible
-> 	ecc-layout.
-> 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> Reviewed-by: Felipe Balbi <balbi@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> The PCLK for I2C4 is controlled by bit 10 in the PCKEN registers
+> while the KCLK is controlled by bit 9 on the KCKEN, it's
+> one of these odd assymetric things. Correct the PCLK bit to 10.
+>=20
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++----
->  arch/arm/mach-omap2/board-flash.c                   | 2 +-
->  arch/arm/mach-omap2/gpmc.c                          | 4 +---
->  drivers/mtd/nand/omap2.c                            | 9 +++------
->  include/linux/platform_data/mtd-nand-omap2.h        | 6 +-----
->  5 files changed, 10 insertions(+), 19 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index df338cb..25ee232 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -22,10 +22,10 @@ Optional properties:
->  				width of 8 is assumed.
->  
->   - ti,nand-ecc-opt:		A string setting the ECC layout to use. One of:
-> -
-> -		"sw"		Software method (default)
-> -		"hw"		Hardware method
-> -		"hw-romcode"	gpmc hamming mode method & romcode layout
-> +		"sw"		<deprecated> use "ham1" instead
-> +		"hw"		<deprecated> use "ham1" instead
-> +		"hw-romcode"	<deprecated> use "ham1" instead
-> +		"ham1"		1-bit Hamming ecc code
->  		"bch4"		4-bit BCH ecc code
->  		"bch8"		8-bit BCH ecc code
+>  arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/st=
+e-dbx5x0.dtsi
+> index 5112f4c..b7d1738 100644
+> --- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
+> +++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+> @@ -694,7 +694,7 @@
+> =20
+>  			clock-frequency =3D <400000>;
+> =20
+> -			clocks =3D <&prcc_kclk 1 9>, <&prcc_pclk 1 9>;
+> +			clocks =3D <&prcc_kclk 1 10>, <&prcc_pclk 1 9>;
+>  			clock-names =3D "i2cclk", "apb_pclk";
+>  		};
+> =20
 
-[...]
+NACK: Bit 10 is MSP1
 
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 579697a..c9fb353 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-> @@ -1342,9 +1342,7 @@ static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
->  #ifdef CONFIG_MTD_NAND
->  
->  static const char * const nand_ecc_opts[] = {
-> -	[OMAP_ECC_HAMMING_CODE_DEFAULT]		= "sw",
-> -	[OMAP_ECC_HAMMING_CODE_HW]		= "hw",
-> -	[OMAP_ECC_HAMMING_CODE_HW_ROMCODE]	= "hw-romcode",
-> +	[OMAP_ECC_HAM1_CODE_HW]			= "ham1",
->  	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
->  	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
->  };
+        clk =3D clk_reg_prcc_kclk("p1_i2c4_kclk", "i2cclk",
+                        clkrst1_base, BIT(9), CLK_SET_RATE_GATE);
+        clk_register_clkdev(clk, NULL, "nmk-i2c.4");
+        PRCC_KCLK_STORE(clk, 1, 9);
+=20
+        clk =3D clk_reg_prcc_kclk("p1_msp3_kclk", "msp1clk",
+                        clkrst1_base, BIT(10), CLK_SET_RATE_GATE);
+        clk_register_clkdev(clk, NULL, "msp3");
+        clk_register_clkdev(clk, NULL, "ux500-msp-i2s.3");
+        PRCC_KCLK_STORE(clk, 1, 10);
 
-As the parsing isn't updated until the next patch, doesn't this
-temporarily break DTBs with the deprecated ti,nand-ecc-opt values?
-
-Thanks,
-Mark.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
