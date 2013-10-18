@@ -1,101 +1,153 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Thu, 17 Oct 2013 22:32:51 -0700
-Message-ID: <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
-References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
-	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1379319655-20210-4-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Zhu Richard-R65037 <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+From: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v10 00/12] Exynos5 IS driver
+Date: Fri, 18 Oct 2013 11:07:27 +0530
+Message-ID: <1382074659-31130-1-git-send-email-arun.kk@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kilyeon.im-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 1:20 AM, Sean Cross <xobs@kosagi.com> wrote:
-> Add support for the PCIe port present on the i.MX6 family of controllers.
-> These use the Synopsis Designware core tied to their own PHY.
->
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  .../devicetree/bindings/pci/designware-pcie.txt    |    7 +-
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index ccd55c2..125202e 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -116,6 +116,22 @@
->                         arm,data-latency = <4 2 3>;
->                 };
->
-> +               pcie: pcie@0x01000000 {
-> +                       compatible = "fsl,imx6q-pcie", "snps,dw-pcie";
-> +                       reg = <0x01ffc000 0x4000>; /* DBI */
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* configuration space */
-> +                                 0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
-> +                                 0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
-> +                       num-lanes = <1>;
-> +                       interrupts = <0 123 0x04>;
-> +                       clocks = <&clks 189>, <&clks 187>, <&clks 205>, <&clks 144>;
-> +                       clock-names = "pcie_ref_125m", "sata_ref_100m", "lvds_gate", "pcie_axi";
-> +                       status = "disabled";
-> +               };
-> +
+The patch series adds support for exynos5 fimc-is driver and a
+new sensor s5k4e5. The media driver part is omitted form this series
+as it is already applied.
 
-Sean,
+Changes from v9
+---------------
 
-The devicetree portion above is now here
-https://gitorious.org/thierryreding/linux-next/commit/3a57291fa4ca7f7647d826f5b47082ef306d839f
-(which I'm told gets pulled into linux-next) and I wanted to see if
-you or any of the other IMX/PCI gurus here can answer a question about
-region mapping.
+- Addressed review comments from Hans and Sylwester
+http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg67102.html
+http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg67624.html
+http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg67623.html
+- Skipped already applied media driver
 
-The above ranges look to me to allocate 15MB for mem resources, 64K
-for io resources, and 256K for cfg space.
+Changes from v8
+---------------
+- Moved i2c-isp device nodes into the fimc-is node as suggested
+  by Sylwester
+- Addressed comments given by Sylwester and Philipp Zabel
 
-Table 2.1 of the IMX6DQRM.pdf
-(http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf)
-shows:
-  01FF_C000 01FF_FFFF 16 KB PCIe registers
-  0100_0000 01FF_BFFF 16368 KB PCIe
+Changes from v7
+---------------
+- Addressed few DT related review comments from Sylwester
+  http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg66403.html
+- Few fixes added after some regression testing
 
-The driver in the fsl 3.0.35_4.1.0 BSP maps the following (see
-http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/arch/arm/mach-mx6/pcie.c?h=imx_3.0.35_4.1.0#n331):
+Changes from v6
+---------------
+- Addressed DT binding doc review comments from Sylwester
+  http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg65771.html
+  http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg65772.html
 
-0x0100_0000 --- 0x01DF_FFFF 14MB IORESOURCE_MEM
-0x01E0_0000 --- 0x01EF_FFFF 1MB IORESOURCE_IO
-0x01F0_0000 --- 0x01FF_FFFF 1MB Cfg + MSI + Registers
+Changes from v5
+---------------
+- Addressed review comments from Sylwester
+  http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg65578.html
+  http://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg65605.html
 
-and, in a discussion on the IMX Community forum
-(https://community.freescale.com/message/334959#334959) points out
-that you have more flexibility if you map the MEM resource first
-because of its more limited alignment.  So, if you were going to stick
-with the fsl mapping I would think we would want something like this
-in the dt node:
+Changes from v4
+---------------
+- Addressed all review comments from Sylwester
+- Added separate PMU node as suggested by Stephen Warren
+- Added phandle based discovery of subdevs instead of node name
 
-ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* 512K
-configuration space */
-               0x81000000 0 0          0x01e00000 0 0x00100000 /* 1MB
-downstream I/O */
-               0x82000000 0 0x01000000 0x01000000 0 0x00e00000>; /*
-14MB non-prefetchable memory */
+Changes from v3
+---------------
+- Dropped the RFC tag
+- Addressed all review comments from Sylwester and Sachin
+- Removed clock provider for media dev
+- Added s5k4e5 sensor devicetree binding doc
 
-Can these regions be moved around however you want depending on what
-kind of mem vs io resource configurations you desire?  How about the
-cfg space - is 512K really needed?
+Changes from v2
+---------------
+- Added exynos5 media device driver from Shaik to this series
+- Added ISP pipeline support in media device driver
+- Based on Sylwester's latest exynos4-is development
+- Asynchronos registration of sensor subdevs
+- Made independent IS-sensor support
+- Add s5k4e5 sensor driver
+- Addressed review comments from Sylwester, Hans, Andrzej, Sachin
 
-Are we sure the committed values to linux-next 'wrong' in any way?  I
-still am seeing bus-hangs with devices behind a bridge that use
-io-space resources and am trying to figure out where the issue is.  I
-don't get these bus-hangs when using the fsl driver which is
-structured very different so its been difficult for me to determine
-the difference.  The mappings and the way iATU mappings are done are
-very different.
+Changes from v1
+---------------
+- Addressed all review comments from Sylwester
+- Made sensor subdevs as independent i2c devices
+- Lots of cleanup
+- Debugfs support added
+- Removed PMU global register access
 
-Thanks,
 
-Tim
+Arun Kumar K (12):
+  exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings
+    documentation
+  exynos5-fimc-is: Add driver core files
+  exynos5-fimc-is: Add common driver header files
+  exynos5-fimc-is: Add register definition and context header
+  exynos5-fimc-is: Add isp subdev
+  exynos5-fimc-is: Add scaler subdev
+  exynos5-fimc-is: Add sensor interface
+  exynos5-fimc-is: Add the hardware pipeline control
+  exynos5-fimc-is: Add the hardware interface module
+  exynos5-is: Add Kconfig and Makefile
+  V4L: Add DT binding doc for s5k4e5 image sensor
+  V4L: Add s5k4e5 sensor driver
+
+ .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 +
+ .../devicetree/bindings/media/samsung-s5k4e5.txt   |   45 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5k4e5.c                         |  344 ++++
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/exynos5-is/Kconfig          |   20 +
+ drivers/media/platform/exynos5-is/Makefile         |    7 +
+ drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
+ drivers/media/platform/exynos5-is/fimc-is-core.c   |  410 +++++
+ drivers/media/platform/exynos5-is/fimc-is-core.h   |  132 ++
+ drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
+ .../media/platform/exynos5-is/fimc-is-interface.c  |  810 ++++++++++
+ .../media/platform/exynos5-is/fimc-is-interface.h  |  124 ++
+ drivers/media/platform/exynos5-is/fimc-is-isp.c    |  534 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-isp.h    |   90 ++
+ .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++
+ drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 +++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1699 ++++++++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+ drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.c |  476 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 ++
+ drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +
+ drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 +
+ drivers/media/platform/exynos5-is/fimc-is.h        |  160 ++
+ 27 files changed, 7766 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
+ create mode 100644 drivers/media/i2c/s5k4e5.c
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
