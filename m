@@ -1,95 +1,59 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH V7] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Mon, 21 Oct 2013 05:56:15 +0900
-Message-ID: <5264436F.20205@samsung.com>
-References: <1378188001-22216-1-git-send-email-yuvaraj.cd@samsung.com>	<CAKuRcOLyEjxGjHR6ff_Fe8sXwKW2Qdm1gOM-YyhMOr0964GLMA@mail.gmail.com> <CAKuRcOK5x021VxTfHNRs5SK4oOmwM+WyxYVZfSQXi6g5V5-RQg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAKuRcOK5x021VxTfHNRs5SK4oOmwM+WyxYVZfSQXi6g5V5-RQg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <t.figa@samsung.com>, Douglas Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Eric Witcher <ewitcher@mindspring.com>
+Subject: [PATCH] ARM: dts: omap5-uevm: fix mcspi node pin descriptions
+Date: Fri, 18 Oct 2013 02:42:34 -0400
+Message-ID: <1382078554-31628-1-git-send-email-ewitcher@mindspring.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: nm@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/13 20:07, Yuvaraj Kumar wrote:
-> Gentle Ping...
->
-> On Thu, Sep 26, 2013 at 12:13 PM, Yuvaraj Kumar<yuvaraj.cd@gmail.com>  wrote:
->> Hi Kukjin,
->>   Can you please take this patch to your tree?
->>
->> Best Regards
->> Yuvaraj
->>
->> On Tue, Sep 3, 2013 at 11:30 AM, Yuvaraj Kumar C D<yuvaraj.cd@gmail.com>  wrote:
->>> This patch adds the mmc device tree node entries for exynos5420 SOC.
->>> Exynos5420 has a different version of DWMMC controller,so a new
->>> compatible string is used to distinguish it from the prior SOC's.
->>>
->>> This patch depends on
->>>          [1]mmc: dw_mmc: exynos: configure SMU in exynos5420
->>>          [2]mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
->>>          [3]mmc: dw_mmc: update binding document exynos-dw-mshc.txt
->>>
+Correct mcspi pin descriptions to match corresponding node name and
+add chip select number to be consistent with OMAP5 TRM.
 
-Yuvaraj,
+Signed-off-by: Eric Witcher <ewitcher@mindspring.com>
+---
+ arch/arm/boot/dts/omap5-uevm.dts | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Looks good to me, applied but please make sure above patches are merged 
-into mmc tree for upcoming merge window.
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index d784b3a..90c7843 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -131,25 +131,25 @@
+ 			0xbc (PIN_INPUT | MUX_MODE0)		/*  mcspi2_clk */
+ 			0xbe (PIN_INPUT | MUX_MODE0)		/*  mcspi2_simo */
+ 			0xc0 (PIN_INPUT_PULLUP | MUX_MODE0)	/*  mcspi2_somi */
+-			0xc2 (PIN_OUTPUT | MUX_MODE0)		/*  mcspi2_cs */
++			0xc2 (PIN_OUTPUT | MUX_MODE0)		/*  mcspi2_cs0 */
+ 		>;
+ 	};
+ 
+ 	mcspi3_pins: pinmux_mcspi3_pins {
+ 		pinctrl-single,pins = <
+-			0x78 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_somi */
+-			0x7a (PIN_INPUT | MUX_MODE1)		/*  mcspi2_cs */
+-			0x7c (PIN_INPUT | MUX_MODE1)		/*  mcspi2_simo */
+-			0x7e (PIN_INPUT | MUX_MODE1)		/*  mcspi2_clk */
++			0x78 (PIN_INPUT | MUX_MODE1)		/*  mcspi3_somi */
++			0x7a (PIN_INPUT | MUX_MODE1)		/*  mcspi3_cs0 */
++			0x7c (PIN_INPUT | MUX_MODE1)		/*  mcspi3_simo */
++			0x7e (PIN_INPUT | MUX_MODE1)		/*  mcspi3_clk */
+ 		>;
+ 	};
+ 
+ 	mcspi4_pins: pinmux_mcspi4_pins {
+ 		pinctrl-single,pins = <
+-			0x164 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_clk */
+-			0x168 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_simo */
+-			0x16a (PIN_INPUT | MUX_MODE1)		/*  mcspi2_somi */
+-			0x16c (PIN_INPUT | MUX_MODE1)		/*  mcspi2_cs */
++			0x164 (PIN_INPUT | MUX_MODE1)		/*  mcspi4_clk */
++			0x168 (PIN_INPUT | MUX_MODE1)		/*  mcspi4_simo */
++			0x16a (PIN_INPUT | MUX_MODE1)		/*  mcspi4_somi */
++			0x16c (PIN_INPUT | MUX_MODE1)		/*  mcspi4_cs0 */
+ 		>;
+ 	};
+ 
+-- 
+1.7.11.7
 
-Thanks,
-Kukjin
-
-
->>> changes since v6:
->>>          1.renamed node name to mmc
->>>          2.Used compatible string "samsung,exynos5420-dw-mshc"
->>>            for controller instance which does not have SMU.
->>>          3.Used compatible string "samsung,exynos5420-dw-mshc-smu"
->>>            for controller instance which has SMU.
->>>
->>> changes since v5:
->>>          1.removed instance index from node name.
->>>          2.changed the node name to mshc.
->>>          3.changed the reg property value for mshc_2.
->>>
->>> changes since v4:
->>>          1.Droppped the bypass-smu binding property.
->>>          2.Used compatible string "samsung,exynos5250-dw-mshc"
->>>            for controller instance which does not have SMU.
->>>
->>> changes since V3:
->>>          1.change fifo-depth size from 0x80 to 0x40
->>>          2.Move the below properties
->>>                  a.card-detect-delay
->>>                  b.samsung,dw-mshc-ciu-div
->>>                  c.samsung,dw-mshc-sdr-timing
->>>                  d.samsung,dw-mshc-ddr-timing
->>>          from SOC dts to board dts file as suggested by Doug Anderson
->>>
->>> changes since V2:
->>>          1.dropped num-slots property from node as its not required
->>>            if number of card slots available is 1.
->>>
->>>          2.Move the below properties
->>>                  a.fifo-depth
->>>                  b.card-detect-delay
->>>                  c.samsung,dw-mshc-ciu-div
->>>                  d.samsung,dw-mshc-sdr-timing
->>>                  e.samsung,dw-mshc-ddr-timing
->>>          from board dts to SOC dts,as these are not board specific properties.
->>>
->>>          3.Updated the binding document exynos-dw-mshc.txt.
->>>
->>> changes since V1:
->>>          1.disable node by status = disabled in SOC file
->>>          2.enable node by status = okay in board specific file
->>>
->>> Signed-off-by: Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
->>> ---
->>>   .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
->>>   arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
->>>   arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
->>>   3 files changed, 74 insertions(+)
