@@ -1,75 +1,52 @@
-From: Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of/lib: Export fdt routines to modules
-Date: Fri, 18 Oct 2013 12:32:29 -0700
-Message-ID: <20131018193229.GA30141@codeaurora.org>
-References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org>
- <525F2397.40203@caviumnetworks.com>
- <20131017002731.GA22830@codeaurora.org>
- <525F6D83.1050808@roeck-us.net>
- <20131017235132.GA6241@codeaurora.org>
- <52608457.5040609@roeck-us.net>
- <20131018025405.GA3722@codeaurora.org>
- <33103C16-6472-4AAE-ADB8-50807CC96C85@antoniou-consulting.com>
- <52615A64.9040803@gmail.com>
- <52616228.80002@caviumnetworks.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: add export with name from dts
+Date: Fri, 18 Oct 2013 21:52:51 +0200
+Message-ID: <CACRpkdbG9emZg-6oOO8MgwUgCkqQB6+QqYuNAOo-QN0e+wYq2g@mail.gmail.com>
+References: <1382011682-18595-1-git-send-email-jiri.prchal@aksignal.cz>
+	<20131017150455.GH24056@e106331-lin.cambridge.arm.com>
+	<CAAVeFuJCamVumTphu-Wv2DSgepwoPgYXnCGdK=L8oem-3-K+gA@mail.gmail.com>
+	<5260DD62.2060706@aksignal.cz>
+	<20131018103601.GC29779@e106331-lin.cambridge.arm.com>
+	<52612E49.7070403@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52616228.80002-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52612E49.7070403@aksignal.cz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jiri Prchal <jiri.prchal@aksignal.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "acourbot@nvidia.com" <acourbot@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cooloney@gmail.com" <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 09:30:32AM -0700, David Daney wrote:
-> On 10/18/2013 08:57 AM, Rob Herring wrote:
-> [...]
-> >
-> >Unflattening is definitely the right
-> >direction to go here.
-> >
-> 
-> I wonder if that is really true.
-> 
-> The device tree in question is very short lived, and used to control
-> the configuration of some hardware device when loading the driver.
-> 
-> The use of it is completely contained within a single driver (at
-> least that is my understanding), it is not information that needs to
-> be shared system wide.
+On Fri, Oct 18, 2013 at 2:49 PM, Ji=C5=99=C3=AD Prchal <jiri.prchal@aks=
+ignal.cz> wrote:
+> Dne 18.10.2013 12:36, Mark Rutland napsal(a):
 
-That's correct.
+>> If there is information associated with the GPIO pins themselves, th=
+at
+>> should be described in the GPIO bindings. If we want to export named
+>> pins in sysfs, that is the duty of the GPIO framework and GPIO drive=
+rs.
+>> I do not believe having a binding for a non-device that exists solel=
+y to
+>> express a naming preference makes any sense.
+>
+>
+> I realy don't understan it, isn't it done in GPIO framework? Please, =
+coul'd
+> you explain it more.
 
-> Given that it is a driver implementation issue, rather than making
-> things work nicely system wide, I don't think it really matters what
-> is done.
-> 
-> It may be that the overhead of unflattening the tree and then
-> freeing it, is much greater than just extracting a few things from
-> the FDT.
+I think what Mark is saying is that you should not define a new node
+for exports, but instead use the node for the gpiochip and extend those
+existing gpiochip bindings, if you want to do this.
 
-Yes, this was my original thought as well. On the other hand,
-having libfdt in the kernel does add a little extra bloat, and so
-it seems a tradeoff from one-time runtime overhead to footprint.
+I.e. you should be patching this file in the end:
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-> That said, I don't really have a preference for what is done.  My
-> original questions were targeted at understanding this particular
-> use case.
-
-My preference is probably straight libfdt calls, but if others
-think that unpacking is a better solution, I'm able to go that
-route as well. My only concern there is that we provide a means
-to detect invalid dtb image (ex. handle error codes) and also
-free the device_node allocations once the device is released.
-
-Thanks,
-Mike
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Yours,
+Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
