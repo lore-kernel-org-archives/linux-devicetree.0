@@ -1,55 +1,48 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: RE: [alsa-devel] [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
- Interface driver.
-Date: Fri, 18 Oct 2013 03:42:13 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8286547C@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
- <525FD4C7.3050806@tabi.org> <525FD65B.3040004@metafoo.de>
- <525FE48B.7020709@tabi.org> <525FE728.90403@metafoo.de>
- <525FE815.1040300@tabi.org> <525FEB7A.5040406@metafoo.de>
- <20131017141003.GO2443@sirena.org.uk>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH 0/2] ARM: dts: AM4372: Add more nodes
+Date: Fri, 18 Oct 2013 09:19:06 +0530
+Message-ID: <5260AFB2.9010300@ti.com>
+References: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131017141003.GO2443@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, Timur Tabi <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-arm-ker
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mugunthanvnm@ti.com, sourav.poddar@ti.com, linux@arm.linux.org.uk, akpm@linux-foundation.org, rnayak@ti.com, afzal@ti.com, nsekhar@ti.com, r.sricharan@ti.com, balajitk@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-
-> > > I understand that, but I'm trying to figure out why of_iomap() is
-> > > okay for hundreds of other drivers, but not this one.  I've used it
-> > > dozens of times myself, without ever worrying about overlapping
-> regions.
+Hi Benoit,
+On Friday 11 October 2013 12:44 AM, Lokesh Vutla wrote:
+> This patch series add nodes for l2-cache-controller, EDMA, mailbox, mmc, sham,
+> and updates the properties for cpsw, i2c0, matrix-keypad. 
 > 
-> > The driver would work fine with just of_iomap(). But the resource
-> > range check comes basically for free and it does help to catch errors,
-> > so I'd recommend on using it rather than not using it.
+> These patches are applied on top of Benoit's for_3.13/dts branch
+> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
+Can you take this patch series for 3.13?
+
+Thanks and regards,
+Lokesh
 > 
-> There's also the fact that it's a devm_ function which means less error
-> handling code that we can break which is nice.  There's probably a case
-> for an improved OF helper here...
+> Testing:
+> Tested EDMA, mmc, sham, aes, des, i2c0, cpsw, matric-keypad on AM4372 EPOS EVM
+> with the addition of following two series:
+> -> Tero's V8 of OMAP DT clock conversion
+>   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96769.html
+> -> Afzal's V5 of AM43x PRCM basic support
+>   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96275.html
+> 
+> Lokesh Vutla (1):
+>   ARM: dts: AM4372: Add more nodes
+> 
+> Mugunthan V N (1):
+>   ARM: dts: AM4372: Update Support for EPOS EVM
+> 
+>  arch/arm/boot/dts/am4372.dtsi        |  210 +++++++++++++++++++++++++++++++++-
+>  arch/arm/boot/dts/am43x-epos-evm.dts |  168 +++++++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/am43xx.h |   31 +++++
+>  3 files changed, 408 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/pinctrl/am43xx.h
+> 
 
-
-Using this instead of of_iomap() is because "devm_" and resource range check
-as Lars and Mark said, and there are more than one SAI device here which will
-be added later, maybe the resource range check is needed.
-
-
-
-Thanks.
---
-BRS
-Xiubo
