@@ -1,77 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Fri, 18 Oct 2013 14:48:29 +0100
-Message-ID: <20131018134829.GQ2443@sirena.org.uk>
-References: <20130924124122.64834b2a@armhf>
- <20131018003439.GG2443@sirena.org.uk>
- <20131018103019.GW25034@n2100.arm.linux.org.uk>
- <20131018124832.GK2443@sirena.org.uk>
- <20131018125638.GX25034@n2100.arm.linux.org.uk>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
+Date: Fri, 18 Oct 2013 10:12:21 -0400
+Message-ID: <20131018141221.GH2721@beef>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ee4x0pvmuf3umJyO"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131018125638.GX25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Felipe Balbi <balbi@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This is a summary of an unresolved issue resulting from this thread:
+http://www.spinics.net/lists/arm-kernel/msg277700.html
 
---Ee4x0pvmuf3umJyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The BCM281xx family of SoCs contain an OTG subsystem consisting of a
+DWC2 HSOTG controller and an internal UTMI PHY. This is appears as
+follows (monospace font requirement ahead):
 
-On Fri, Oct 18, 2013 at 01:56:38PM +0100, Russell King - ARM Linux wrote:
++----------------+              +-----------------+
+|                |              |                 |
+|                |       8      |                 |
+|      DWC2      |<------/----->|     BCM Kona    |
+|                |     UTMI     |     UTMI PHY    |
+|                |              |                 |
++----------------+              +-----------------+
 
-> Let me remind you that I had a definition of what a front end and a back
-> end DAI was from Liam, and your definition is at odds with that.
+The internal UTMI phy is connected via an 8-bit data path. There is
+no way to autodetect whether the data path is 8-bit or 16-bit. As such,
+it was determined that a DT property is necessary to reflect this.
 
-Could you please provide some detail on this?  I was aware that you were
-for a time confused about this but had not been aware of the source of
-the confusion.
+In the original patch submitted this property was offered as an
+additional optional dwc2 property:
 
-> I am still of the opinion that you don't know what you're talking about
-> most of the time, and nothing has changed in that regard, and I still
-> regard you as a completely  obstructive and unhelpful person.
+--- a/Documentation/devicetree/bindings/staging/dwc2.txt
++++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+@@ -6,10 +6,14 @@ Required properties:
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
 
-> And I think you're just wrong on what you've said above.  But... I've
-> basically given up any hope of progressing that code after months of
-> pissing around with your obstructive attitude, and I've elected (and
-> others) to maintain it completely out of mainline for the forseeable
-> future - hopefully until you get replaced by someone who can be more
-> assistive and helpful.
++Optional properties:
++- snps,phy-utmi-width: Must contain the UTMI data width (either 8 or 16)
++
+ Example:
 
-Once more, please be civil and constructive - a confrontational approach
-has not been helping here.  If you are intent on behaving in this
-fashion please at least try to avoid disrupting others who are
-interested in working in mainline.
+         usb@101c0000 {
+                 compatible = "ralink,rt3050-usb, snps,dwc2";
+                 reg = <0x101c0000 40000>;
+                 interrupts = <18>;
++		snps,phy-utmi-width = <8>;
+         };
 
---Ee4x0pvmuf3umJyO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The open question is whether this required hardware property belongs to
+the DWC2 controller or the PHY itself.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+If the UTMI data path width is considered to be a property of the PHY
+then this will impact both the generic PHY framework and the PHY device
+node (producer) binding. The binding would need to be extended to carry
+the data path width property. In addition, the generic PHY framework
+would need to allow for this information to be gathered in some manner
+for use by the controller driver (PHY consumer). In the case of DWC2,
+the driver needs to know whether to program the phy interface for 8 or
+16 bit UTMI communication.
 
-iQIcBAEBAgAGBQJSYTwqAAoJELSic+t+oim9tT0P/03nBPjyJjADKvhdzAU6YwzE
-rrKrbn4VlbJJQP9gG2uC0R/gs8Nj5iVHu5s65I05MXglAXam1Q0t6sud16us4yPg
-QAYvsGZIJlEtaaDAUucVty7QtRHGS7W/iG+r0lE3apPxg996iQpUajLlhYflJULk
-n+HNSa6Ql2I4fJcNgcE8lTRyqhaer1Lq6R/4TGBUAK0pSkhqN65AMkxFsOid9nLd
-gmuR4D7cWNlf06SkzYEsaAzhX5yE54Y5TCPVZrWf5iLcKStwzGyEBcYqXIjbJGSv
-4ErLmLzweGmOcfBrKILJIaJCMwzsqmPkHbGGdxGVwUE8hSHpFrRtgqILTRENmBw3
-SqR2CDvEJL6JDOvb6ividoNjbMsQmB1bRd5I9q7Kz3YkRZ0jxjCEgz9+E0c6tOOe
-stpf34O9602xix412yaJdBOnQrrMmulFBxKw4mvwV+c/rt9q8Kwqv3jiEYDVaBDK
-iEj8S2DdPnnFBI7zrnh5FX9rOpfttnbw2sqMTV9v+itXYVIV+1Ma4z0H6q/Lbhpf
-0tKx73RL2Jb1v9A0AcpfmLnQDVTAViZrA7iiGuEPlJfoe7XgHMWgcgE41Vn4Sld7
-zhlqsPhMkVAFUMwUraYef+7VTsYHQCv2WGgzvNHCjuxl5JEaK7AhwAzEoRsMWs3X
-jrZWRJnOmU2j1GayqK3I
-=qpLB
------END PGP SIGNATURE-----
-
---Ee4x0pvmuf3umJyO--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Matt
