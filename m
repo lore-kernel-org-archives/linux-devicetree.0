@@ -1,80 +1,115 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: Re: [PATCH v3] gpio: add export with name from dts
-Date: Fri, 18 Oct 2013 09:04:02 +0200
-Message-ID: <5260DD62.2060706@aksignal.cz>
-References: <1382011682-18595-1-git-send-email-jiri.prchal@aksignal.cz> <20131017150455.GH24056@e106331-lin.cambridge.arm.com> <CAAVeFuJCamVumTphu-Wv2DSgepwoPgYXnCGdK=L8oem-3-K+gA@mail.gmail.com>
-Reply-To: jiri.prchal@aksignal.cz
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2] usb: phy: omap: Add omap-control Support for AM437x
+Date: Fri, 18 Oct 2013 10:24:15 +0300
+Message-ID: <5260E21F.8060001@ti.com>
+References: <1381831334-8840-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFuJCamVumTphu-Wv2DSgepwoPgYXnCGdK=L8oem-3-K+gA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "acourbot@nvidia.com" <acourbot@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cooloney@gmail.com" <cooloney@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381831334-8840-1-git-send-email-george.cherian@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, kishon@ti.com, gregkh@linuxfoundation.org, balbi@ti.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On 10/15/2013 01:02 PM, George Cherian wrote:
+> This adds omap control module support for USBSS in AM437x SoC.
+> Update DT binding information to reflect these changes.
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
 
-Dne 17.10.2013 20:03, Alexandre Courbot napsal(a):
-> On Thu, Oct 17, 2013 at 8:04 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> Hello Jiri,
->>
->> On Thu, Oct 17, 2013 at 01:08:02PM +0100, Jiri Prchal wrote:
->>> Add export possibility to sysfs with given name in device tree. It is nice for
->>> users to have board specific gpios exported at boot-time and with their names.
->>> It renames some functions in gpiolib and adds name as parameter. If it is passed
->>> NULL as name everything works like before, export by chip name.
->>> It can be done by extra function export_with_name without changing original
->>> export function but I think there would not to be twice almost the same.
->>> Even if gpio sysfs interface is almost to be deprecated, I would like to add
->>> this, cause new chardev interface is in farness future.
->>> Rebased from older unapplyed patch: [PATCH] owrt: GPIO: add gpio_export_with_name.
->>> v3:
->>> change to "linux,gpio-export"
->>> removed arrays of gpios, just one child node -> one GPIO line
->>> simplified node properties like as it's in gpio-leds
->>> if not label -> uses child node name
->>>
->>> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
->>> ---
->>>   Documentation/devicetree/bindings/gpio/gpio.txt |   44 ++++++++++++++++++
->>>   drivers/gpio/gpiolib-of.c                       |   56 +++++++++++++++++++++++
->>>   drivers/gpio/gpiolib.c                          |   27 +++++++----
->>>   include/asm-generic/gpio.h                      |    6 ++-
->>>   include/linux/gpio.h                            |   23 +++++++++-
->>>   5 files changed, 144 insertions(+), 12 deletions(-)
->>
->> As I mentioned on v1 of this patch [1], I do not think that this is the
->> right way to go about exporting GPIOs to userspace. Why do we need a
->> binding for a non-device to tell Linux (specifically Linux) whether or
->> not to represent a device to userspace, and how to do so?
->>
->> Why can this policy not be handled within the GPIO framework, or within
->> GPIO drivers?
->
-> Pretty much agree with Mark here. There is no reason to limit this
-> naming feature (which I'm not opposed to fundamentally) to the device
-> tree. Besides gpio_export_with_link() does something suspisciously
-> similar, and better-suited in my opinion: the GPIO keeps its
-> hard-coded, predictable name but is also accessible through a link
-> under the device that uses it. Since GPIOs are typically used as
-> functions for devices this seems to make the most sense.
->
-> But maybe I'm missing your point - could you describe a concrete
-> use-case for this feature that can *not* be achieved using
-> gpio_export_with_link()?
+Acked-by: Roger Quadros <rogerq@ti.com>
 
-The concrete use-case is that I have two boards with same I/O on them, but they use
-two different SoC. And I like to shadow it to users. On one board is some I/O on
-pioC16 and on the other it is on pioA30 for example.
-I'd like to prepare I/O just with right board names for example in11.
-I'm trying to do something like GPIOs LEDs, I like that interface, but I need it
-for both direction.
-So where else give the name then in DT. And why not to export it there. Just like
-LEDs.
-Of course I can use gpio_export_with_link() to not change gpio_export().
-But what I don't like on gpio_export_with_link() is that there will be twice more
-dirs in sysfs and it would be less transparent and users confusing "What is the pioA30?"
+> ---
+> Changes from v1:
+> 	Make ON and OFF operations symmetric.
+> 
+>  Documentation/devicetree/bindings/usb/omap-usb.txt |  2 ++
+>  drivers/usb/phy/phy-omap-control.c                 | 19 +++++++++++++++++++
+>  include/linux/usb/omap_control_usb.h               |  6 ++++++
+>  3 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+> index 090e5e2..c495135 100644
+> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+> @@ -87,6 +87,8 @@ Required properties:
+>  			e.g. USB3 PHY and SATA PHY on OMAP5.
+>   "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
+>  			DRA7 platform.
+> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
+> +			AM437 platform.
+>   - reg : Address and length of the register set for the device. It contains
+>     the address of "otghs_control" for control-phy-otghs or "power" register
+>     for other types.
+> diff --git a/drivers/usb/phy/phy-omap-control.c b/drivers/usb/phy/phy-omap-control.c
+> index 09c5ace..e725318 100644
+> --- a/drivers/usb/phy/phy-omap-control.c
+> +++ b/drivers/usb/phy/phy-omap-control.c
+> @@ -84,6 +84,20 @@ void omap_control_usb_phy_power(struct device *dev, int on)
+>  		else
+>  			val |= OMAP_CTRL_USB2_PHY_PD;
+>  		break;
+> +
+> +	case OMAP_CTRL_TYPE_AM437USB2:
+> +		if (on) {
+> +			val &= ~(AM437X_CTRL_USB2_PHY_PD |
+> +					AM437X_CTRL_USB2_OTG_PD);
+> +			val |= (AM437X_CTRL_USB2_OTGVDET_EN |
+> +					AM437X_CTRL_USB2_OTGSESSEND_EN);
+> +		} else {
+> +			val &= ~(AM437X_CTRL_USB2_OTGVDET_EN |
+> +					AM437X_CTRL_USB2_OTGSESSEND_EN);
+> +			val |= (AM437X_CTRL_USB2_PHY_PD |
+> +					 AM437X_CTRL_USB2_OTG_PD);
+> +		}
+> +		break;
+>  	default:
+>  		dev_err(dev, "%s: type %d not recognized\n",
+>  					__func__, control_usb->type);
+> @@ -197,6 +211,7 @@ static const enum omap_control_usb_type otghs_data = OMAP_CTRL_TYPE_OTGHS;
+>  static const enum omap_control_usb_type usb2_data = OMAP_CTRL_TYPE_USB2;
+>  static const enum omap_control_usb_type pipe3_data = OMAP_CTRL_TYPE_PIPE3;
+>  static const enum omap_control_usb_type dra7usb2_data = OMAP_CTRL_TYPE_DRA7USB2;
+> +static const enum omap_control_usb_type am437usb2_data = OMAP_CTRL_TYPE_AM437USB2;
+>  
+>  static const struct of_device_id omap_control_usb_id_table[] = {
+>  	{
+> @@ -215,6 +230,10 @@ static const struct of_device_id omap_control_usb_id_table[] = {
+>  		.compatible = "ti,control-phy-dra7usb2",
+>  		.data = &dra7usb2_data,
+>  	},
+> +	{
+> +		.compatible = "ti,control-phy-am437usb2",
+> +		.data = &am437usb2_data,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, omap_control_usb_id_table);
+> diff --git a/include/linux/usb/omap_control_usb.h b/include/linux/usb/omap_control_usb.h
+> index 596b019..69ae383 100644
+> --- a/include/linux/usb/omap_control_usb.h
+> +++ b/include/linux/usb/omap_control_usb.h
+> @@ -24,6 +24,7 @@ enum omap_control_usb_type {
+>  	OMAP_CTRL_TYPE_USB2,	/* USB2_PHY, power down in CONTROL_DEV_CONF */
+>  	OMAP_CTRL_TYPE_PIPE3,	/* PIPE3 PHY, DPLL & seperate Rx/Tx power */
+>  	OMAP_CTRL_TYPE_DRA7USB2, /* USB2 PHY, power and power_aux e.g. DRA7 */
+> +	OMAP_CTRL_TYPE_AM437USB2, /* USB2 PHY, power e.g. AM437x */
+>  };
+>  
+>  struct omap_control_usb {
+> @@ -64,6 +65,11 @@ enum omap_control_usb_mode {
+>  
+>  #define OMAP_CTRL_USB2_PHY_PD		BIT(28)
+>  
+> +#define AM437X_CTRL_USB2_PHY_PD		BIT(0)
+> +#define AM437X_CTRL_USB2_OTG_PD		BIT(1)
+> +#define AM437X_CTRL_USB2_OTGVDET_EN	BIT(19)
+> +#define AM437X_CTRL_USB2_OTGSESSEND_EN	BIT(20)
+> +
+>  #if IS_ENABLED(CONFIG_OMAP_CONTROL_USB)
+>  extern void omap_control_usb_phy_power(struct device *dev, int on);
+>  extern void omap_control_usb_set_mode(struct device *dev,
+> 
 
-Jiri
