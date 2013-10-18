@@ -1,576 +1,165 @@
 From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v5 13/17] clk: at91: add PMC usb clock
-Date: Fri, 18 Oct 2013 09:53:07 +0200
-Message-ID: <5260E8E3.3020400@atmel.com>
-References: <52600FE0.4090705@atmel.com> <1382028941-19640-1-git-send-email-b.brezillon@overkiz.com>
+Subject: Re: [PATCH v4 00/17] ARM: at91: move to common clk framework
+Date: Fri, 18 Oct 2013 10:18:04 +0200
+Message-ID: <5260EEBC.2090002@atmel.com>
+References: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1382028941-19640-1-git-send-email-b.brezillon@overkiz.com>
+In-Reply-To: <1381477081-6041-1-git-send-email-b.brezillon@overkiz.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/2013 18:55, Boris BREZILLON :
-> This patch adds new at91 usb clock implementation using common clk framework.
-> This clock is used to clock usb ports (ohci, ehci and udc).
+On 11/10/2013 09:37, Boris BREZILLON :
+> Hello,
 >
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> This patch series is the 4th version of the new at91 clock implementation
+> (using common clk framework).
 
-Ok, this one is now replacing the older 13/17.
+Mike, DT maintainers,
 
-Thanks Boris.
+Can you have a look at this series converting the AT91 family to common 
+clock framework and associated Device Tree description?
 
-Bye,
+Here is the thread on gmane:
+http://thread.gmane.org/gmane.linux.ports.arm.kernel/272550
 
-> ---
->   arch/arm/mach-at91/Kconfig |   11 ++
->   drivers/clk/at91/Makefile  |    1 +
->   drivers/clk/at91/clk-usb.c |  400 ++++++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/at91/pmc.c     |   15 ++
->   drivers/clk/at91/pmc.h     |    9 +
->   5 files changed, 436 insertions(+)
+Mike, I think that you already reviewed a previous version of this 
+series and I guess that we have finalized it.
+
+So gentlemen, It can be good for us if you can give us your "review" or 
+"acknowledgement" tags...
+
+Thanks, best regards,
+
+
+> Most of the clock provided by the PMC (Power Management Controller) are
+> implemented :
+> - main clock (main oscillator)
+> - pll clocks
+> - master clock
+> - programmable clocks
+> - utmi clock
+> - peripheral clocks
+> - system clocks
+>
+> This implementation is only compatible with device tree definition.
+> The goal is to define the whole clock tree in the device tree.
+>
+> Could a dt maintainer take a look at these dt bindinds.
+>
+> This patch series is based on linus tree (but should apply correctly on
+> linux-next) and has been tested on sama5d31ek.
+>
+> Best Regards,
+> Boris
+>
+> Changes since v3:
+>   - simplify master clk implementation (drop set_rate/parent support)
+>   - fix bug in set_rate function of pll driver
+>   - fix coding style issues
+>   - define macros and constants where needed
+>   - remove peripheral id macro references
+>   - remove sam9g35 specific handling (sam9g35 = sam9x5)
+>   - rework main clk prepare function to handle automatic rate calculation
+>
+> Changes since v2:
+>   - fix several bugs in clk implementations
+>   - drop non-dt boards support
+>   - split the series to ease review and tests:
+>     * 1 patch series for new clk implementations (this series)
+>     * 1 patch series to move each at91 SoC to common clk framework (coming soon)
+>   - modify dt-bindings (add atmel,clk- prefix to atmel specific properties)
+>   - add clk macros for dt-bindings
+>   - add pmc framework (helper function to access pmc registers)
+>   - add interrupt support to enable passive wait in clk_prepare functions
+>
+> Changes since v1:
+>   - fix bugs in pll, programmable and system clock implementations
+>     (wrong bit position).
+>   - add usb clock configuration support (ohci and udc drivers +
+>     clk_lookup for non dt boards)
+>   - rework of the system clock interfaces (no need to define a parent clock,
+>     system clock is a gate with no rate info)
+>   - change system, peripheral and programmable clk dt bindings (1 master node
+>     and multiple child nodes each defining a system/peripheral or prog clock)
+>   - fix bugs in sama5 dt definition
+>
+> Boris BREZILLON (17):
+>    ARM: at91: move at91_pmc.h to include/linux/clk/at91_pmc.h
+>    ARM: at91: add Kconfig options for common clk support
+>    clk: at91: add PMC base support
+>    clk: at91: add PMC macro file for dt definitions
+>    clk: at91: add PMC main clock
+>    clk: at91: add PMC pll clocks
+>    clk: at91: add PMC master clock
+>    clk: at91: add PMC system clocks
+>    clk: at91: add PMC peripheral clocks
+>    clk: at91: add peripheral clk macros for peripheral clk dt bindings
+>    clk: at91: add PMC programmable clocks
+>    clk: at91: add PMC utmi clock
+>    clk: at91: add PMC usb clock
+>    clk: at91: add PMC smd clock
+>    clk: at91: add PMC clk device tree binding doc.
+>    ARM: at91: move pit timer to common clk framework
+>    ARM: at91: add new compatible strings for pmc driver
+>
+>   .../devicetree/bindings/clock/at91-clock.txt       |  328 ++++++++++++
+>   arch/arm/mach-at91/Kconfig                         |   44 ++
+>   arch/arm/mach-at91/Kconfig.non_dt                  |    6 +
+>   arch/arm/mach-at91/Makefile                        |    2 +-
+>   arch/arm/mach-at91/at91rm9200.c                    |    2 +-
+>   arch/arm/mach-at91/at91sam9260.c                   |    2 +-
+>   arch/arm/mach-at91/at91sam9261.c                   |    2 +-
+>   arch/arm/mach-at91/at91sam9263.c                   |    2 +-
+>   arch/arm/mach-at91/at91sam926x_time.c              |   14 +-
+>   arch/arm/mach-at91/at91sam9g45.c                   |    2 +-
+>   arch/arm/mach-at91/at91sam9n12.c                   |    2 +-
+>   arch/arm/mach-at91/at91sam9rl.c                    |    2 +-
+>   arch/arm/mach-at91/at91sam9x5.c                    |    2 +-
+>   arch/arm/mach-at91/clock.c                         |    7 +-
+>   arch/arm/mach-at91/generic.h                       |    3 +-
+>   arch/arm/mach-at91/pm.c                            |    2 +-
+>   arch/arm/mach-at91/pm_slowclock.S                  |    2 +-
+>   arch/arm/mach-at91/sama5d3.c                       |    2 +-
+>   arch/arm/mach-at91/setup.c                         |    8 +-
+>   drivers/clk/Makefile                               |    1 +
+>   drivers/clk/at91/Makefile                          |   12 +
+>   drivers/clk/at91/clk-main.c                        |  189 +++++++
+>   drivers/clk/at91/clk-master.c                      |  278 ++++++++++
+>   drivers/clk/at91/clk-peripheral.c                  |  407 +++++++++++++++
+>   drivers/clk/at91/clk-pll.c                         |  539 ++++++++++++++++++++
+>   drivers/clk/at91/clk-plldiv.c                      |  137 +++++
+>   drivers/clk/at91/clk-programmable.c                |  423 +++++++++++++++
+>   drivers/clk/at91/clk-smd.c                         |  173 +++++++
+>   drivers/clk/at91/clk-system.c                      |  193 +++++++
+>   drivers/clk/at91/clk-usb.c                         |  400 +++++++++++++++
+>   drivers/clk/at91/clk-utmi.c                        |  162 ++++++
+>   drivers/clk/at91/pmc.c                             |  372 ++++++++++++++
+>   drivers/clk/at91/pmc.h                             |  113 ++++
+>   drivers/usb/gadget/atmel_usba_udc.c                |    2 +-
+>   include/dt-bindings/clk/at91.h                     |   28 +
+>   .../include/mach => include/linux/clk}/at91_pmc.h  |    4 +-
+>   36 files changed, 3847 insertions(+), 20 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
+>   create mode 100644 drivers/clk/at91/Makefile
+>   create mode 100644 drivers/clk/at91/clk-main.c
+>   create mode 100644 drivers/clk/at91/clk-master.c
+>   create mode 100644 drivers/clk/at91/clk-peripheral.c
+>   create mode 100644 drivers/clk/at91/clk-pll.c
+>   create mode 100644 drivers/clk/at91/clk-plldiv.c
+>   create mode 100644 drivers/clk/at91/clk-programmable.c
+>   create mode 100644 drivers/clk/at91/clk-smd.c
+>   create mode 100644 drivers/clk/at91/clk-system.c
 >   create mode 100644 drivers/clk/at91/clk-usb.c
->
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index 6ad37da..b76dc4c 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -3,6 +3,9 @@ if ARCH_AT91
->   config HAVE_AT91_UTMI
->   	bool
->
-> +config HAVE_AT91_USB_CLK
-> +	bool
-> +
->   config HAVE_AT91_DBGU0
->   	bool
->
-> @@ -82,6 +85,7 @@ config SOC_SAMA5D3
->   	select HAVE_AT91_DBGU1
->   	select AT91_USE_OLD_CLK
->   	select HAVE_AT91_UTMI
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's SAMA5D3 family SoC.
->   	  This support covers SAMA5D31, SAMA5D33, SAMA5D34, SAMA5D35.
-> @@ -96,12 +100,14 @@ config SOC_AT91RM9200
->   	select MULTI_IRQ_HANDLER
->   	select SPARSE_IRQ
->   	select AT91_USE_OLD_CLK
-> +	select HAVE_AT91_USB_CLK
->
->   config SOC_AT91SAM9260
->   	bool "AT91SAM9260, AT91SAM9XE or AT91SAM9G20"
->   	select HAVE_AT91_DBGU0
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's AT91SAM9260, AT91SAM9XE
->   	  or AT91SAM9G20 SoC.
-> @@ -112,6 +118,7 @@ config SOC_AT91SAM9261
->   	select HAVE_FB_ATMEL
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's AT91SAM9261 or AT91SAM9G10 SoC.
->
-> @@ -121,6 +128,7 @@ config SOC_AT91SAM9263
->   	select HAVE_FB_ATMEL
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
-> +	select HAVE_AT91_USB_CLK
->
->   config SOC_AT91SAM9RL
->   	bool "AT91SAM9RL"
-> @@ -137,6 +145,7 @@ config SOC_AT91SAM9G45
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
->   	select HAVE_AT91_UTMI
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's AT91SAM9G45 family SoC.
->   	  This support covers AT91SAM9G45, AT91SAM9G46, AT91SAM9M10 and AT91SAM9M11.
-> @@ -148,6 +157,7 @@ config SOC_AT91SAM9X5
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
->   	select HAVE_AT91_UTMI
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's AT91SAM9x5 family SoC.
->   	  This means that your SAM9 name finishes with a '5' (except if it is
-> @@ -161,6 +171,7 @@ config SOC_AT91SAM9N12
->   	select HAVE_FB_ATMEL
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
-> +	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using Atmel's AT91SAM9N12 SoC.
->
-> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-> index a824883..61db058 100644
-> --- a/drivers/clk/at91/Makefile
-> +++ b/drivers/clk/at91/Makefile
-> @@ -8,3 +8,4 @@ obj-y += clk-system.o clk-peripheral.o
->
->   obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
->   obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
-> +obj-$(CONFIG_HAVE_AT91_USB_CLK)		+= clk-usb.o
-> diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
-> new file mode 100644
-> index 0000000..0454555
-> --- /dev/null
-> +++ b/drivers/clk/at91/clk-usb.c
-> @@ -0,0 +1,400 @@
-> +/*
-> + * drivers/clk/at91/clk-usb.c
-> + *
-> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk/at91_pmc.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
-> +
-> +#include "pmc.h"
-> +
-> +#define USB_SOURCE_MAX		2
-> +
-> +#define SAM9X5_USB_DIV_SHIFT	8
-> +#define SAM9X5_USB_MAX_DIV	0xf
-> +
-> +#define RM9200_USB_DIV_SHIFT	28
-> +#define RM9200_USB_DIV_TAB_SIZE	4
-> +
-> +struct at91sam9x5_clk_usb {
-> +	struct clk_hw hw;
-> +	struct at91_pmc *pmc;
-> +};
-> +
-> +#define to_at91sam9x5_clk_usb(hw) \
-> +	container_of(hw, struct at91sam9x5_clk_usb, hw)
-> +
-> +struct at91rm9200_clk_usb {
-> +	struct clk_hw hw;
-> +	struct at91_pmc *pmc;
-> +	u32 divisors[4];
-> +};
-> +
-> +#define to_at91rm9200_clk_usb(hw) \
-> +	container_of(hw, struct at91rm9200_clk_usb, hw)
-> +
-> +static unsigned long at91sam9x5_clk_usb_recalc_rate(struct clk_hw *hw,
-> +						    unsigned long parent_rate)
-> +{
-> +	u32 tmp;
-> +	u8 usbdiv;
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	tmp = pmc_read(pmc, AT91_PMC_USB);
-> +	usbdiv = (tmp & AT91_PMC_OHCIUSBDIV) >> SAM9X5_USB_DIV_SHIFT;
-> +	return parent_rate / (usbdiv + 1);
-> +}
-> +
-> +static long at91sam9x5_clk_usb_round_rate(struct clk_hw *hw, unsigned long rate,
-> +					  unsigned long *parent_rate)
-> +{
-> +	unsigned long div;
-> +	unsigned long bestrate;
-> +	unsigned long tmp;
-> +
-> +	if (rate >= *parent_rate)
-> +		return *parent_rate;
-> +
-> +	div = *parent_rate / rate;
-> +	if (div >= SAM9X5_USB_MAX_DIV)
-> +		return *parent_rate / (SAM9X5_USB_MAX_DIV + 1);
-> +
-> +	bestrate = *parent_rate / div;
-> +	tmp = *parent_rate / (div + 1);
-> +	if (bestrate - rate > rate - tmp)
-> +		bestrate = tmp;
-> +
-> +	return bestrate;
-> +}
-> +
-> +static int at91sam9x5_clk_usb_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	u32 tmp;
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	if (index > 1)
-> +		return -EINVAL;
-> +	tmp = pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_USBS;
-> +	if (index)
-> +		tmp |= AT91_PMC_USBS;
-> +	pmc_write(pmc, AT91_PMC_USB, tmp);
-> +	return 0;
-> +}
-> +
-> +static u8 at91sam9x5_clk_usb_get_parent(struct clk_hw *hw)
-> +{
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	return pmc_read(pmc, AT91_PMC_USB) & AT91_PMC_USBS;
-> +}
-> +
-> +static int at91sam9x5_clk_usb_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				       unsigned long parent_rate)
-> +{
-> +	u32 tmp;
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +	unsigned long div = parent_rate / rate;
-> +
-> +	if (parent_rate % rate || div < 1 || div >= SAM9X5_USB_MAX_DIV)
-> +		return -EINVAL;
-> +
-> +	tmp = pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_OHCIUSBDIV;
-> +	tmp |= (div - 1) << SAM9X5_USB_DIV_SHIFT;
-> +	pmc_write(pmc, AT91_PMC_USB, tmp);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops at91sam9x5_usb_ops = {
-> +	.recalc_rate = at91sam9x5_clk_usb_recalc_rate,
-> +	.round_rate = at91sam9x5_clk_usb_round_rate,
-> +	.get_parent = at91sam9x5_clk_usb_get_parent,
-> +	.set_parent = at91sam9x5_clk_usb_set_parent,
-> +	.set_rate = at91sam9x5_clk_usb_set_rate,
-> +};
-> +
-> +static int at91sam9n12_clk_usb_enable(struct clk_hw *hw)
-> +{
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	pmc_write(pmc, AT91_PMC_USB,
-> +		  pmc_read(pmc, AT91_PMC_USB) | AT91_PMC_USBS);
-> +	return 0;
-> +}
-> +
-> +static void at91sam9n12_clk_usb_disable(struct clk_hw *hw)
-> +{
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	pmc_write(pmc, AT91_PMC_USB,
-> +		  pmc_read(pmc, AT91_PMC_USB) & ~AT91_PMC_USBS);
-> +}
-> +
-> +static int at91sam9n12_clk_usb_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct at91sam9x5_clk_usb *usb = to_at91sam9x5_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +
-> +	return !!(pmc_read(pmc, AT91_PMC_USB) & AT91_PMC_USBS);
-> +}
-> +
-> +static const struct clk_ops at91sam9n12_usb_ops = {
-> +	.enable = at91sam9n12_clk_usb_enable,
-> +	.disable = at91sam9n12_clk_usb_disable,
-> +	.is_enabled = at91sam9n12_clk_usb_is_enabled,
-> +	.recalc_rate = at91sam9x5_clk_usb_recalc_rate,
-> +	.round_rate = at91sam9x5_clk_usb_round_rate,
-> +	.set_rate = at91sam9x5_clk_usb_set_rate,
-> +};
-> +
-> +static struct clk * __init
-> +at91sam9x5_clk_register_usb(struct at91_pmc *pmc, const char *name,
-> +			    const char **parent_names, u8 num_parents)
-> +{
-> +	struct at91sam9x5_clk_usb *usb;
-> +	struct clk *clk = NULL;
-> +	struct clk_init_data init;
-> +
-> +	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
-> +	if (!usb)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = name;
-> +	init.ops = &at91sam9x5_usb_ops;
-> +	init.parent_names = parent_names;
-> +	init.num_parents = num_parents;
-> +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-> +
-> +	usb->hw.init = &init;
-> +	usb->pmc = pmc;
-> +
-> +	clk = clk_register(NULL, &usb->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(usb);
-> +
-> +	return clk;
-> +}
-> +
-> +static struct clk * __init
-> +at91sam9n12_clk_register_usb(struct at91_pmc *pmc, const char *name,
-> +			     const char *parent_name)
-> +{
-> +	struct at91sam9x5_clk_usb *usb;
-> +	struct clk *clk = NULL;
-> +	struct clk_init_data init;
-> +
-> +	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
-> +	if (!usb)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = name;
-> +	init.ops = &at91sam9n12_usb_ops;
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +	init.flags = CLK_SET_RATE_GATE;
-> +
-> +	usb->hw.init = &init;
-> +	usb->pmc = pmc;
-> +
-> +	clk = clk_register(NULL, &usb->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(usb);
-> +
-> +	return clk;
-> +}
-> +
-> +static unsigned long at91rm9200_clk_usb_recalc_rate(struct clk_hw *hw,
-> +						    unsigned long parent_rate)
-> +{
-> +	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +	u32 tmp;
-> +	u8 usbdiv;
-> +
-> +	tmp = pmc_read(pmc, AT91_CKGR_PLLBR);
-> +	usbdiv = (tmp & AT91_PMC_USBDIV) >> RM9200_USB_DIV_SHIFT;
-> +	if (usb->divisors[usbdiv])
-> +		return parent_rate / usb->divisors[usbdiv];
-> +
-> +	return 0;
-> +}
-> +
-> +static long at91rm9200_clk_usb_round_rate(struct clk_hw *hw, unsigned long rate,
-> +					  unsigned long *parent_rate)
-> +{
-> +	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
-> +	unsigned long bestrate = 0;
-> +	int bestdiff = -1;
-> +	unsigned long tmprate;
-> +	int tmpdiff;
-> +	int i = 0;
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		if (!usb->divisors[i])
-> +			continue;
-> +		tmprate = *parent_rate / usb->divisors[i];
-> +		if (tmprate < rate)
-> +			tmpdiff = rate - tmprate;
-> +		else
-> +			tmpdiff = tmprate - rate;
-> +
-> +		if (bestdiff < 0 || bestdiff > tmpdiff) {
-> +			bestrate = tmprate;
-> +			bestdiff = tmpdiff;
-> +		}
-> +
-> +		if (!bestdiff)
-> +			break;
-> +	}
-> +
-> +	return bestrate;
-> +}
-> +
-> +static int at91rm9200_clk_usb_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				       unsigned long parent_rate)
-> +{
-> +	u32 tmp;
-> +	int i;
-> +	struct at91rm9200_clk_usb *usb = to_at91rm9200_clk_usb(hw);
-> +	struct at91_pmc *pmc = usb->pmc;
-> +	unsigned long div = parent_rate / rate;
-> +
-> +	if (parent_rate % rate)
-> +		return -EINVAL;
-> +	for (i = 0; i < RM9200_USB_DIV_TAB_SIZE; i++) {
-> +		if (usb->divisors[i] == div) {
-> +			tmp = pmc_read(pmc, AT91_CKGR_PLLBR) &
-> +			      ~AT91_PMC_USBDIV;
-> +			tmp |= i << RM9200_USB_DIV_SHIFT;
-> +			pmc_write(pmc, AT91_CKGR_PLLBR, tmp);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct clk_ops at91rm9200_usb_ops = {
-> +	.recalc_rate = at91rm9200_clk_usb_recalc_rate,
-> +	.round_rate = at91rm9200_clk_usb_round_rate,
-> +	.set_rate = at91rm9200_clk_usb_set_rate,
-> +};
-> +
-> +static struct clk * __init
-> +at91rm9200_clk_register_usb(struct at91_pmc *pmc, const char *name,
-> +			    const char *parent_name, const u32 *divisors)
-> +{
-> +	struct at91rm9200_clk_usb *usb;
-> +	struct clk *clk = NULL;
-> +	struct clk_init_data init;
-> +
-> +	usb = kzalloc(sizeof(*usb), GFP_KERNEL);
-> +	if (!usb)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = name;
-> +	init.ops = &at91rm9200_usb_ops;
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +	init.flags = 0;
-> +
-> +	usb->hw.init = &init;
-> +	usb->pmc = pmc;
-> +	memcpy(usb->divisors, divisors, sizeof(usb->divisors));
-> +
-> +	clk = clk_register(NULL, &usb->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(usb);
-> +
-> +	return clk;
-> +}
-> +
-> +void __init of_at91sam9x5_clk_usb_setup(struct device_node *np,
-> +					struct at91_pmc *pmc)
-> +{
-> +	struct clk *clk;
-> +	int i;
-> +	int num_parents;
-> +	const char *parent_names[USB_SOURCE_MAX];
-> +	const char *name = np->name;
-> +
-> +	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-> +	if (num_parents <= 0 || num_parents > USB_SOURCE_MAX)
-> +		return;
-> +
-> +	for (i = 0; i < num_parents; i++) {
-> +		parent_names[i] = of_clk_get_parent_name(np, i);
-> +		if (!parent_names[i])
-> +			return;
-> +	}
-> +
-> +	of_property_read_string(np, "clock-output-names", &name);
-> +
-> +	clk = at91sam9x5_clk_register_usb(pmc, name, parent_names, num_parents);
-> +	if (IS_ERR(clk))
-> +		return;
-> +
-> +	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +void __init of_at91sam9n12_clk_usb_setup(struct device_node *np,
-> +					 struct at91_pmc *pmc)
-> +{
-> +	struct clk *clk;
-> +	const char *parent_name;
-> +	const char *name = np->name;
-> +
-> +	parent_name = of_clk_get_parent_name(np, 0);
-> +	if (!parent_name)
-> +		return;
-> +
-> +	of_property_read_string(np, "clock-output-names", &name);
-> +
-> +	clk = at91sam9n12_clk_register_usb(pmc, name, parent_name);
-> +	if (IS_ERR(clk))
-> +		return;
-> +
-> +	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +void __init of_at91rm9200_clk_usb_setup(struct device_node *np,
-> +					struct at91_pmc *pmc)
-> +{
-> +	struct clk *clk;
-> +	const char *parent_name;
-> +	const char *name = np->name;
-> +	u32 divisors[4] = {0, 0, 0, 0};
-> +
-> +	parent_name = of_clk_get_parent_name(np, 0);
-> +	if (!parent_name)
-> +		return;
-> +
-> +	of_property_read_u32_array(np, "atmel,clk-divisors", divisors, 4);
-> +	if (!divisors[0])
-> +		return;
-> +
-> +	of_property_read_string(np, "clock-output-names", &name);
-> +
-> +	clk = at91rm9200_clk_register_usb(pmc, name, parent_name, divisors);
-> +	if (IS_ERR(clk))
-> +		return;
-> +
-> +	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index 8802999..1998aadab 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -279,6 +279,21 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
->   		.data = of_at91sam9x5_clk_utmi_setup,
->   	},
->   #endif
-> +	/* USB clock */
-> +#if defined(CONFIG_HAVE_AT91_USB_CLK)
-> +	{
-> +		.compatible = "atmel,at91rm9200-clk-usb",
-> +		.data = of_at91rm9200_clk_usb_setup,
-> +	},
-> +	{
-> +		.compatible = "atmel,at91sam9x5-clk-usb",
-> +		.data = of_at91sam9x5_clk_usb_setup,
-> +	},
-> +	{
-> +		.compatible = "atmel,at91sam9n12-clk-usb",
-> +		.data = of_at91sam9n12_clk_usb_setup,
-> +	},
-> +#endif
->   	{ /*sentinel*/ }
->   };
->
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index 3ba9503..eba7334 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -96,4 +96,13 @@ extern void __init of_at91sam9x5_clk_utmi_setup(struct device_node *np,
->   						struct at91_pmc *pmc);
->   #endif
->
-> +#if defined(CONFIG_HAVE_AT91_USB_CLK)
-> +extern void __init of_at91rm9200_clk_usb_setup(struct device_node *np,
-> +					       struct at91_pmc *pmc);
-> +extern void __init of_at91sam9x5_clk_usb_setup(struct device_node *np,
-> +					       struct at91_pmc *pmc);
-> +extern void __init of_at91sam9n12_clk_usb_setup(struct device_node *np,
-> +						struct at91_pmc *pmc);
-> +#endif
-> +
->   #endif /* __PMC_H_ */
+>   create mode 100644 drivers/clk/at91/clk-utmi.c
+>   create mode 100644 drivers/clk/at91/pmc.c
+>   create mode 100644 drivers/clk/at91/pmc.h
+>   create mode 100644 include/dt-bindings/clk/at91.h
+>   rename {arch/arm/mach-at91/include/mach => include/linux/clk}/at91_pmc.h (98%)
 >
 
 
