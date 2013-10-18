@@ -1,73 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Fri, 18 Oct 2013 01:34:39 +0100
-Message-ID: <20131018003439.GG2443@sirena.org.uk>
-References: <20130924124122.64834b2a@armhf>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] of/lib: Export fdt routines to modules
+Date: Thu, 17 Oct 2013 17:44:07 -0700
+Message-ID: <52608457.5040609@roeck-us.net>
+References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org> <525F2397.40203@caviumnetworks.com> <20131017002731.GA22830@codeaurora.org> <525F6D83.1050808@roeck-us.net> <20131017235132.GA6241@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tPwux3QCgxkzM4Gx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130924124122.64834b2a@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131017235132.GA6241@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Michael Bohan <mbohan@codeaurora.org>
+Cc: David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
+On 10/17/2013 04:51 PM, Michael Bohan wrote:
+> On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
+>> On 10/16/2013 05:27 PM, Michael Bohan wrote:
+>>> My motivation is actually to use the fdt format as a firmware.
+>>> I have a requirement to express driver metadata that's loadable
+>> >from the filesystem. This data is not reasonable to place in the
+>>> system Device Tree, since it's application specific and does not
+>>> actually describe hardware. The fact that the format chosen is
+>>> 'flattened device tree' is merely just a coincidence.
+>>>
+>> Still, what prevents you from unflattening it and just using the
+>> normal device tree functions as David suggested ?
+>
+> I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
 
---tPwux3QCgxkzM4Gx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, that was the idea.
 
-On Tue, Sep 24, 2013 at 12:41:22PM +0200, Jean-Francois Moine wrote:
+> That's an interesting thought. I was planning to scan the fdt
+> only once and populate my own structures, but I suppose I could
+> use the of_* APIs equivalently.
+>
+> It seems there are some problems though.  of_fdt_unflatten_tree()
+> does not return errors, and so for the purposes of my driver it
+> would not be sufficient to detect an invalid firmware image.
+>
+It does so, at least partially. If there is an error, it won't set
+the nodes pointer. Granted, that is not perfect, but it is at least
+a start. Ultimately, I considered it 'good enough' for my purpose
+(for devicetree overlays - see [1] below), as any missing mandatory
+properties or nodes are detected later when trying to actually read
+the properties. In my case, I also have a couple of validation
+properties to ensure that the overlay is acceptable (specifically
+I use 'compatible' and 'assembly-ids', but that is really a detail).
 
-> This patch adds S/PDIF input/output for mvebu DT boards.
+> Would people entertain changing this API
+> (and implicitly __unflatten_device_tree) to return errors? I'm
+> guessing the reason it's coded that way is because the normal
+> usecase is 'system boot', at which time errors aren't that
+> meaningful.
+>
+> Also, there's no way to free the memory that was allocated from
+> the unflatten process. May I add one?
+>
 
-This got less discussion than I was expecting and then slipped under a
-lot of other patches in my queue while that was timing out, sorry...  in
-any case, this still has the issue that it used a single DAI and a
-single DAI link to represent two physical DAIs and their links.
+The patchset submitted by Pantelis Antoniou to add support for
+devicetree overlays adds this and other related functionality.
+See [1], specifically the patch titled "OF: Introduce utility
+helper functions". Not sure where that is going, though.
+It may need some cleanup to be accepted upstream.
+Copying Pantelis for comments.
 
-Please as covered in the prior threads on this either implement DPCM or
-implement two traditional DAIs which can't be used simultaneously (which
-should be simpler and can then be built on incrementally).
+I also updated the devicetree discussion list address to get comments
+from the experts.
 
-The last set of DPCMish patches was reported to work so should be a
-fairly small refactoring away from being OK - the main thing is to
-create back end DAIs for the physical links and then put the widgets
-that manage the enable of the S/PDIF and I2S interfaces between the FE
-and BE DAIs instead of directly connecting them to widgets on the CODEC.
+Thanks,
+Guenter
 
-For two traditional DAIs it should just be a case of duplicating the DAI
-with a differnet ID then setting the enable bits based on the ID of the
-DAI in use and ideally adding some code to check that they're not both
-active (or that limit can be enforced by only having machine drivers
-that use one or the other).
-
---tPwux3QCgxkzM4Gx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSYIIcAAoJELSic+t+oim9TGMP/A1E9YB6IawqUiVErkoC/l+g
-warTiBPhWiLXzmPC2PEBs8l2++S2VYpS7cVnSMVHkciddMTJTSCZ3dy8Za7700Vl
-9E3c1UjJYJhljKzziidX8DTMwz2krcZtZpuSIsuYBTgRDP5E6b+8oT3JyezVqdE+
-OYyLrLkz4X/M/nWdMV62rFkLxMQEsle9Ck8IxJVKdJPm/p+QiWtSlqLGzR5BVbz6
-IcxJnb6WoLgR30U4bcxluvocX3xMlaq4kVsNdRlvt/G5Hzafag/Y6H8VPby2MBjo
-pvLbwWwUNcCACkbwTRXFfZ/aVD7fBP2OY07qE14HHD/1mOv1ZD4nLcD31h7C8ioW
-t8FYxMho1j7KCydaF7ZV+JovRlbRPxm05fiDTH846XbSBRRM/wAeMMBQxhN1tLpr
-RdIHnSDsXivcLKAmf7ypyIhBG2ApRpEsJq/QU6l820aVWVnMeNhxcke09PnSBKci
-XTS/kzKEkfjsIhTrGCCWP79W/qniOyhlreVCZPnry79ZjuPJrb/89JzK8DlMwNRy
-UCwdl5lM0AbKOQlZLl8MIZNQS9ck5+Ja3RT6/ebNx72D+Wyj+IhQE7OTBZLXVrdY
-Z+afVitblo+EaJ4dUVX2KxJSby9wkfdyVTu/M0evZ4qpuryPsN09s6dMUdEmIXOT
-JW4VyI4OG5F7//SJDgBo
-=0rnc
------END PGP SIGNATURE-----
-
---tPwux3QCgxkzM4Gx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://lkml.org/lkml/2013/1/4/276
