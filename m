@@ -1,66 +1,59 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Fri, 18 Oct 2013 10:12:21 -0400
-Message-ID: <20131018141221.GH2721@beef>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
+Date: Fri, 18 Oct 2013 15:27:40 +0100
+Message-ID: <20131018142740.GY25034@n2100.arm.linux.org.uk>
+References: <20130924124122.64834b2a@armhf> <20131018003439.GG2443@sirena.org.uk> <20131018103019.GW25034@n2100.arm.linux.org.uk> <20131018124832.GK2443@sirena.org.uk> <20131018125638.GX25034@n2100.arm.linux.org.uk> <20131018134829.GQ2443@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Felipe Balbi <balbi@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <20131018134829.GQ2443-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a summary of an unresolved issue resulting from this thread:
-http://www.spinics.net/lists/arm-kernel/msg277700.html
+On Fri, Oct 18, 2013 at 02:48:29PM +0100, Mark Brown wrote:
+> On Fri, Oct 18, 2013 at 01:56:38PM +0100, Russell King - ARM Linux wrote:
+> 
+> > Let me remind you that I had a definition of what a front end and a back
+> > end DAI was from Liam, and your definition is at odds with that.
+> 
+> Could you please provide some detail on this?  I was aware that you were
+> for a time confused about this but had not been aware of the source of
+> the confusion.
 
-The BCM281xx family of SoCs contain an OTG subsystem consisting of a
-DWC2 HSOTG controller and an internal UTMI PHY. This is appears as
-follows (monospace font requirement ahead):
+Let's see:
 
-+----------------+              +-----------------+
-|                |              |                 |
-|                |       8      |                 |
-|      DWC2      |<------/----->|     BCM Kona    |
-|                |     UTMI     |     UTMI PHY    |
-|                |              |                 |
-+----------------+              +-----------------+
-
-The internal UTMI phy is connected via an 8-bit data path. There is
-no way to autodetect whether the data path is 8-bit or 16-bit. As such,
-it was determined that a DT property is necessary to reflect this.
-
-In the original patch submitted this property was offered as an
-additional optional dwc2 property:
-
---- a/Documentation/devicetree/bindings/staging/dwc2.txt
-+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-@@ -6,10 +6,14 @@ Required properties:
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
-
-+Optional properties:
-+- snps,phy-utmi-width: Must contain the UTMI data width (either 8 or 16)
-+
- Example:
-
-         usb@101c0000 {
-                 compatible = "ralink,rt3050-usb, snps,dwc2";
-                 reg = <0x101c0000 40000>;
-                 interrupts = <18>;
-+		snps,phy-utmi-width = <8>;
-         };
-
-The open question is whether this required hardware property belongs to
-the DWC2 controller or the PHY itself.
-
-If the UTMI data path width is considered to be a property of the PHY
-then this will impact both the generic PHY framework and the PHY device
-node (producer) binding. The binding would need to be extended to carry
-the data path width property. In addition, the generic PHY framework
-would need to allow for this information to be gathered in some manner
-for use by the controller driver (PHY consumer). In the case of DWC2,
-the driver needs to know whether to program the phy interface for 8 or
-16 bit UTMI communication.
-
-Thanks,
-Matt
+16:10 < rmk> broonie: can you explain this pcm frontend/backend stuff in
+	asoc. what exactly is a frontend and backend pcm, and how do they
+	relate to the CPU hardware and codec links?  Which are the ones
+	which are given ALSA PCMs?
+17:22 < broonie> rmk: A front end is the bit that does DMA from memory, a
+	back end is a physical interface.
+17:22 < broonie> The bit in the middle is usually a DSP.
+17:23 < broonie> To be frank I've not actually *used* this stuff myself
+	except in bolting a new CODEC on the edge of it during system
+	integrations - going to be rectifying that very soon with the
+	Samsung drivers I hope.
+17:24 < broonie> But the general idea is that the front end is what the
+	application sees, the back end is what comes out of the hardware
+	at the other end.
+17:25 < broonie> And the bit in the middle does any routing an rewriting
+	of formats between the two.
+17:26 < broonie> (The Samsung picture should be very similar to Kirkwood
+	but the opposite way around - two front ends mixed togther to a
+	single back end)
+...
+16:49 < rmk> oh, another question
+16:49 < rmk> .dynamic in the dai link structure, that's for backends only,
+	right?
+16:50 < broonie> Think so, yes.
+16:52 < rmk> hmm
+16:52 < rmk>         if (rtd->dai_link->dynamic) {
+16:52 < rmk>                 rtd->ops.open           = dpcm_fe_dai_open;
+16:52 < rmk> probably needed for frontends
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
