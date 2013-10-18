@@ -1,328 +1,177 @@
-From: Zhu Richard-R65037 <r65037@freescale.com>
-Subject: RE: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Fri, 18 Oct 2013 07:45:09 +0000
-Message-ID: <0E83723C55F66F43A6041464FE31119D40FD55@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
-	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
-	<CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
-	<0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
- <CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH v3 3/4] mmc: omap_hsmmc: Remux pins to support SDIO
+ interrupt on AM335x
+Date: Fri, 18 Oct 2013 18:45:52 +1100
+Message-ID: <20131018184552.1c65117d@notabene.brown>
+References: <1380971830-21492-1-git-send-email-afenkart@gmail.com>
+	<1380971830-21492-4-git-send-email-afenkart@gmail.com>
+	<20131018172053.70cf2c2b@notabene.brown>
+	<5260E374.6050804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Sean Cross <xobs@kosagi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?iso-8859-2?Q?Marek_Va=B9ut?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/HqFK.ZmhUn3b7+9jrSjaGRm"; protocol="application/pgp-signature"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5260E374.6050804@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: Andreas Fenkart <afenkart@gmail.com>, Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+--Sig_/HqFK.ZmhUn3b7+9jrSjaGRm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, 18 Oct 2013 12:59:56 +0530 Balaji T K <balajitk@ti.com> wrote:
 
-> -----Original Message-----
-> From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-owner@vger.ke=
-rnel.org]
-> On Behalf Of Tim Harvey
-> Sent: Friday, October 18, 2013 3:28 PM
-> To: Zhu Richard-R65037
-> Cc: Sean Cross; devicetree@vger.kernel.org; linux-pci@vger.kernel.org=
-; linux-
-> arm-kernel@lists.infradead.org; Sascha Hauer; Shawn Guo; Bjorn Helgaa=
-s; Marek
-> Va=B9ut; Jingoo Han; Pratyush Anand; Troy Kisky
-> Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe con=
-troller
->=20
-> On Thu, Oct 17, 2013 at 11:34 PM, Zhu Richard-R65037 <r65037@freescal=
-e.com>
-> wrote:
->=20
-> [...]
->=20
-> > Hi Tim:
-> > Regarding to my experience, the difference shouldn't be related wit=
-h the bus
-> hang.
-> > Here are my DT region setup when I trying to bring up imx6 pcie on =
-3.1x
-> kernel by my own driver.
-> >                         clock-names =3D "pcie_axi", "pcie_ref", "pc=
-ie_bus_in",
-> "pcie_bus_out";
-> >                         #address-cells =3D <3>;
-> >                         #size-cells =3D <2>;
-> >                         ranges =3D <0x00000800 0 0x01f00000 0x01f00=
-000 0
-> 0x00080000   /* configuration space */
-> >                                   0x81000000 0 0          0x01f8000=
-0 0
-> 0x00010000   /* downstream I/O */
-> >                                   0x82000000 0 0x01000000 0x0100000=
-0 0
-> 0x00f00000>; /* non-prefetchable memory */
-> >                         num-lanes =3D <1>;
+> On Friday 18 October 2013 11:50 AM, NeilBrown wrote:
+> > On Sat,  5 Oct 2013 13:17:09 +0200 Andreas Fenkart <afenkart@gmail.com>=
+ wrote:
 > >
-> > It works sometimes, although that there is random kernel panic and
-> > system hang(log is pasted below):( LOGS, when pericom's PI7C9X2G303=
-EL and
-> Intel e1000e network card is used.
-> > ...
-> > imx-pcie 1ffc000.pcie: legacy_irq 155
-> > imx-pcie 1ffc000.pcie: map [mem 0x01ffc000-0x01ffffff] IMX PCIe por=
-t:
-> > link up.
-> > PCI host bridge to bus 0000:00
-> > pci_bus 0000:00: root bus resource [io  0x1000-0x10000] pci_bus
-> > 0000:00: root bus resource [mem 0x01000000-0x01efffff] pci_bus
-> > 0000:00: No busn resource found for root bus, will use [bus 00-ff]
-> > PCI: bus0: Fast back to back transfers disabled
-> > PCI: bus1: Fast back to back transfers disabled pci 0000:01:00.0:
-> > bridge configuration invalid ([bus 00-00]), reconfiguring
-> > PCI: bus2: Fast back to back transfers disabled pci 0000:02:01.0:
-> > bridge configuration invalid ([bus 00-00]), reconfiguring pci
-> > 0000:02:02.0: bridge configuration invalid ([bus 00-00]),
-> > reconfiguring
-> > PCI: bus3: Fast back to back transfers disabled
-> > PCI: bus4: Fast back to back transfers enabled pci 0000:00:00.0: BA=
-R
-> > 0: assigned [mem 0x01000000-0x010fffff 64bit] pci 0000:00:00.0: BAR=
- 8:
-> > assigned [mem 0x01100000-0x012fffff] pci 0000:00:00.0: BAR 6: assig=
-ned
-> > [mem 0x01300000-0x0130ffff pref] pci 0000:00:00.0: BAR 7: assigned =
-[io
-> > 0x1000-0x1fff] pci 0000:01:00.0: BAR 8: assigned [mem
-> > 0x01100000-0x012fffff] pci 0000:01:00.0: BAR 7: assigned [io
-> > 0x1000-0x1fff] pci 0000:02:01.0: BAR 8: assigned [mem
-> > 0x01100000-0x012fffff] pci 0000:02:01.0: BAR 7: assigned [io
-> > 0x1000-0x1fff] pci 0000:03:00.0: BAR 1: assigned [mem
-> > 0x01100000-0x011fffff] pci 0000:03:00.0: BAR 0: assigned [mem
-> > 0x01200000-0x0121ffff] pci 0000:03:00.0: BAR 3: assigned [mem
-> > 0x01220000-0x01223fff] pci 0000:03:00.0: BAR 2: assigned [io
-> > 0x1000-0x101f] pci 0000:02:01.0: PCI bridge to [bus 03]
-> > pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:02:01.0:   bridge window [mem 0x01100000-0x012fffff]
-> > pci 0000:02:02.0: PCI bridge to [bus 04] pci 0000:01:00.0: PCI brid=
-ge
-> > to [bus 02-04]
-> > pci 0000:01:00.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:01:00.0:   bridge window [mem 0x01100000-0x012fffff]
-> > pci 0000:00:00.0: PCI bridge to [bus 01-04]
-> > pci 0000:00:00.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:00:00.0:   bridge window [mem 0x01100000-0x012fffff]
-> > PCI: enabling device 0000:01:00.0 (0140 -> 0143)
-> > PCI: enabling device 0000:02:01.0 (0140 -> 0143)
-> > PCI: enabling device 0000:02:02.0 (0140 -> 0143) ...
-> > e1000e: Intel(R) PRO/1000 Network Driver - 2.3.2-k
-> > e1000e: Copyright(c) 1999 - 2013 Intel Corporation.
-> > e1000e 0000:03:00.0: Disabling ASPM L0s L1
-> > PCI: enabling device 0000:03:00.0 (0140 -> 0142) e1000e 0000:03:00.=
-0:
-> > Interrupt Throttling Rate (ints/sec) set to dynamic conservative mo=
-de
-> > e1000e 0000:03:00.0 eth1: registered PHC clock e1000e 0000:03:00.0
-> > eth1: (PCI Express:2.5GT/s:Width x1) 00:1b:21:3a:18:8b e1000e
-> > 0000:03:00.0 eth1: Intel(R) PRO/1000 Network Connection e1000e
-> > 0000:03:00.0 eth1: MAC: 3, PHY: 8, PBA No: E42641-005
-> > igb: Intel(R) Gigabit Ethernet Network Driver - version 5.0.3-k
-> > igb: Copyright (c) 2007-2013 Intel Corporation.
-> > ...
+> >> The am335x can't detect pending cirq in PM runtime suspend.
+> >> This patch reconfigures dat1 as a GPIO before going to suspend.
+> >> SDIO interrupts are detected with the GPIO, while in runtime
+> >> suspend, standard detection of the module block otherwise.
+> >>
+> >> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b=
+/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> >> index 1136e6b..146f3ad 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> >> @@ -21,8 +21,11 @@ ti,non-removable: non-removable slot (like eMMC)
+> >>   ti,needs-special-reset: Requires a special softreset sequence
+> >>   ti,needs-special-hs-handling: HSMMC IP needs special setting for han=
+dling High Speed
+> >>   ti,quirk-swakup-missing: SOC missing the swakeup line, will not dete=
+ct
+> >> -SDIO irq while in suspend. Fallback to polling. Affected chips are
+> >> -am335x,
+> >> +SDIO irq while in suspend. The workaround is to reconfigure the dat1 =
+line as a
+> >> +GPIO upon suspend. Beyond this option and the GPIO config, you also n=
+eed to set
+> >> +named pinctrl states "default", "active" and "idle ", see example bel=
+ow.  The
+> >> +MMC driver will then then toggle between default and idle during the =
+runtime
+> >> +Affected chips are am335x,
+> >>
+> >>                               ------
+> >>                               | PRCM |
+> >> @@ -49,3 +52,24 @@ Example:
+> >>   		vmmc-supply =3D <&vmmc>; /* phandle to regulator node */
+> >>   		ti,non-removable;
+> >>   	};
+> >> +
+> >> +[am335x with with gpio for sdio irq]
+> >> +
+> >> +	mmc1_cirq_pin: pinmux_cirq_pin {
+> >> +		pinctrl-single,pins =3D <
+> >> +			0x0f8 0x3f	/* MMC0_DAT1 as GPIO2_28 */
+> >> +		>;
+> >> +	};
+> >> +
+> >> +	mmc1: mmc@48060000 {
+> >> +		ti,non-removable;
+> >> +		bus-width =3D <4>;
+> >> +		vmmc-supply =3D <&ldo2_reg>;
+> >> +		vmmc_aux-supply =3D <&vmmc>;
+> >> +	        ti,quirk-swakeup-missing;
+> >> +		pinctrl-names =3D "default", "active", "idle";
+> >> +		pinctrl-0 =3D <&mmc1_pins>;
+> >> +		pinctrl-1 =3D <&mmc1_pins>;
+> >> +		pinctrl-2 =3D <&mmc1_cirq_pin>;
+> >> +		ti,cirq-gpio =3D <&gpio3 28 0>;
+> >> +	};
 > >
-> > ALSA device list:
-> >   #0: wm8962-audio
-> > VFS: Mounted root (nfs filesystem) on device 0:11.
-> > devtmpfs: mounted
-> > Freeing unused kernel memory: 324K (8082d000 - 8087e000) Kernel pan=
-ic
-> > - not syncing: Attempted to kill init! exitcode=3D0x0000000b  <-- K=
-ernel panic
-> here randomly. Same phenomena when the root-fs is located in SD.
+> >
+> > hi,
+> >   I've been trying to get SD irq to work on my  OMAP3 DM3730.
+> > I seems to need the magic to catch interrupts while FCLK is off, as
+> > the only way I can get it to work at the moment is to keep FCLK on.
+> >
+> > I discovered your patch and tried it out, but it doesn't seem to work f=
+or me.
+> >
+> > I have a Libertas WIFI chip attached to the second mmc (which is someti=
+mes
+> > called mmc1, and sometimes mmc2 - very confusing!).
+> > I added:
+> > 	mmc2_cirq_pin: pinmux_cirq_pin {
+> > 		pinctrl-single,pins =3D <
+> > 			0x012e (PIN_INPUT_PULLUP | MUX_MODE4)	/* MMC2_DAT1 as GPIO5_5 */
+> > 		>;
+> > 	};
+> >
+> > and
+> >
+> > &mmc2 {
+> > 	ti,quirk-swakeup-missing;
+> > 	pinctrl-names =3D "default", "active", "idle";
+> > 	pinctrl-0 =3D <&mmc2_pins>;
+> > 	pinctrl-1 =3D <&mmc2_pins>;
+> > 	pinctrl-2 =3D <&mmc2_cirq_pin>;
+> > 	ti,cirq-gpio =3D <&gpio5 5 0>; /* GPIO133 =3D 128+5 */
+> > };
+> >
+> > to my dts file but it doesn't make any apparent difference.
+> >
+> > Any idea what I might be doing wrong?
+> > (the base kernel I am applying patches to is from 8th Oct,
+> >   commit 0e7a3ed04f0cd4311096d691888f88569310ee6c)
+> >
+> > BTW,
+> >   - with the default polling, I get about 1Mb/sec with iperf
+> >   - with sd-irq enabled and FCLK kept on the whole time, I get 4Mb/sec
+> >   - with sd-irq enable, FCLK kept on, and the 5ms polling also
+> >     running, I get over 5Mb/sec!
+> > Still much less than the 40Mb/sec that I would like to get...
+> >
+> (removing svenkatr@ti.com)
 >=20
-> Richard,
+> Hi,
 >=20
-> I would suspect this is the imprecise abort issue.  Please see my pat=
-ch
-> (http://thread.gmane.org/gmane.linux.kernel.pci/26159) resolves that =
-for you
-> and reply to that thread if so.
+> Can you check if you have bus-width property set ?
+> 	bus-width =3D <4>;
 >=20
-> I believe that the imprecise abort's only occurs if you have a PCIe s=
-witch on
-> the bus - is this your topology and if so are you experiencing any is=
-sues with
-> devices behind the bus that use io regions?  If you do have a switch,=
- perhaps
-> you can provide me with an 'lspci -v' for comparison.
->=20
-Hi Tim:
-Oh, It's great. Your patch can fix my problem.=20
-My own patch-set of pcie driver works well when my Pericom's switch is =
-used.
-Thanks a lot.
+>
+Yes I do.
+as well as the settings above I have:
 
-Yes, it is.
-E1000e network card request about 32 bytes IO regions during the bus en=
-umeration procedure,=20
-and it works well behind the my Pericom's switch.
-
-Based on my own pcie driver(not the one up-streamed by Sean),
-Here are the log and the lspci -v results I got just now:
-
-imx-pcie 1ffc000.pcie: legacy_irq 155
-imx-pcie 1ffc000.pcie: map [mem 0x01ffc000-0x01ffffff]
-imx-pcie 1ffc000.pcie: starting to link pcie port.
-imx-pcie 1ffc000.pcie: Link up
-PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [io  0x1000-0x10000]
-pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
-pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-=
-ff]
-PCI: bus0: Fast back to back transfers disabled
-PCI: bus1: Fast back to back transfers disabled
-pci 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfigu=
-ring
-PCI: bus2: Fast back to back transfers disabled
-pci 0000:02:01.0: bridge configuration invalid ([bus 00-00]), reconfigu=
-ring
-pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfigu=
-ring
-PCI: bus3: Fast back to back transfers disabled
-PCI: bus4: Fast back to back transfers enabled
-pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
-pci 0000:00:00.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
-pci 0000:00:00.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
-pci 0000:00:00.0: BAR 6: assigned [mem 0x01300000-0x0130ffff pref]
-pci 0000:00:00.0: BAR 7: assigned [io  0x1000-0x1fff]
-pci 0000:01:00.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
-pci 0000:01:00.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
-pci 0000:01:00.0: BAR 7: assigned [io  0x1000-0x1fff]
-pci 0000:02:01.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
-pci 0000:02:01.0: BAR 9: assigned [mem 0x01200000-0x012fffff pref]
-pci 0000:02:01.0: BAR 7: assigned [io  0x1000-0x1fff]
-pci 0000:03:00.0: BAR 1: assigned [mem 0x01100000-0x0117ffff]
-pci 0000:03:00.0: BAR 6: assigned [mem 0x01200000-0x0123ffff pref]
-pci 0000:03:00.0: BAR 0: assigned [mem 0x01180000-0x0119ffff]
-pci 0000:03:00.0: BAR 3: assigned [mem 0x011a0000-0x011a3fff]
-pci 0000:03:00.0: BAR 2: assigned [io  0x1000-0x101f]
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
-pci 0000:02:01.0:   bridge window [mem 0x01100000-0x011fffff]
-pci 0000:02:01.0:   bridge window [mem 0x01200000-0x012fffff pref]
-pci 0000:02:02.0: PCI bridge to [bus 04]
-pci 0000:01:00.0: PCI bridge to [bus 02-04]
-pci 0000:01:00.0:   bridge window [io  0x1000-0x1fff]
-pci 0000:01:00.0:   bridge window [mem 0x01100000-0x011fffff]
-pci 0000:01:00.0:   bridge window [mem 0x01200000-0x012fffff pref]
-pci 0000:00:00.0: PCI bridge to [bus 01-04]
-pci 0000:00:00.0:   bridge window [io  0x1000-0x1fff]
-pci 0000:00:00.0:   bridge window [mem 0x01100000-0x011fffff]
-pci 0000:00:00.0:   bridge window [mem 0x01200000-0x012fffff pref]
-PCI: enabling device 0000:01:00.0 (0140 -> 0143)
-PCI: enabling device 0000:02:01.0 (0140 -> 0143)
-PCI: enabling device 0000:02:02.0 (0140 -> 0143)
-=2E..
-root@freescale ~$ lspci -v
-00:00.0 PCI bridge: Unknown device 16c3:abcd (rev 01) (prog-if 00 [Norm=
-al decode])
-        Flags: bus master, fast devsel, latency 0
-        Memory at 01000000 (32-bit, non-prefetchable) [size=3D1M]
-        Bus: primary=3D00, secondary=3D01, subordinate=3D04, sec-latenc=
-y=3D0
-        I/O behind bridge: 00001000-00001fff
-        Memory behind bridge: 01100000-011fffff
-        Prefetchable memory behind bridge: 01200000-012fffff
-        [virtual] Expansion ROM at 01300000 [disabled] [size=3D64K]
-        Capabilities: [40] Power Management version 3
-        Capabilities: [50] Message Signalled Interrupts: Mask+ 64bit+ Q=
-ueue=3D0/0 Enable-
-        Capabilities: [70] Express Root Port (Slot-) IRQ 0
-        Capabilities: [100] Advanced Error Reporting
-        Capabilities: [140] Virtual Channel
-
-01:00.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) =
-(prog-if 00 [Normal decode])
-        Flags: bus master, fast devsel, latency 0
-        Bus: primary=3D01, secondary=3D02, subordinate=3D04, sec-latenc=
-y=3D0
-        I/O behind bridge: 00001000-00001fff
-        Memory behind bridge: 01100000-011fffff
-        Prefetchable memory behind bridge: 0000000001200000-00000000012=
-fffff
-        Capabilities: [40] Power Management version 3
-        Capabilities: [5c] Vital Product Data
-        Capabilities: [64] Vendor Specific Information
-        Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device =
-0000
-        Capabilities: [c0] Express Upstream Port IRQ 0
-        Capabilities: [100] Advanced Error Reporting
-        Capabilities: [140] Virtual Channel
-        Capabilities: [20c] Power Budgeting
-        Capabilities: [230] Unknown (24)
-
-02:01.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) =
-(prog-if 00 [Normal decode])
-        Flags: bus master, fast devsel, latency 0
-        Bus: primary=3D02, secondary=3D03, subordinate=3D03, sec-latenc=
-y=3D0
-        I/O behind bridge: 00001000-00001fff
-        Memory behind bridge: 01100000-011fffff
-        Prefetchable memory behind bridge: 0000000001200000-00000000012=
-fffff
-        Capabilities: [40] Power Management version 3
-        Capabilities: [4c] Message Signalled Interrupts: Mask- 64bit+ Q=
-ueue=3D0/0 Enable-
-        Capabilities: [64] Vendor Specific Information
-        Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device =
-0000
-        Capabilities: [c0] Express Downstream Port (Slot+) IRQ 0
-        Capabilities: [100] Advanced Error Reporting
-        Capabilities: [140] Virtual Channel
-        Capabilities: [20c] Power Budgeting
-        Capabilities: [220] Unknown (13)
-
-02:02.0 PCI bridge: Pericom Semiconductor Unknown device 2303 (rev 05) =
-(prog-if 00 [Normal decode])
-        Flags: bus master, fast devsel, latency 0
-        Bus: primary=3D02, secondary=3D04, subordinate=3D04, sec-latenc=
-y=3D0
-        Capabilities: [40] Power Management version 3
-        Capabilities: [4c] Message Signalled Interrupts: Mask- 64bit+ Q=
-ueue=3D0/0 Enable-
-        Capabilities: [64] Vendor Specific Information
-        Capabilities: [b0] Subsystem: Gammagraphx, Inc. Unknown device =
-0000
-        Capabilities: [c0] Express Downstream Port (Slot+) IRQ 0
-        Capabilities: [100] Advanced Error Reporting
-        Capabilities: [140] Virtual Channel
-        Capabilities: [20c] Power Budgeting
-        Capabilities: [220] Unknown (13)
-
-03:00.0 Ethernet controller: Intel Corporation Unknown device 10d3
-        Subsystem: Intel Corporation Unknown device a01f
-        Flags: bus master, fast devsel, latency 0, IRQ 154
-        Memory at 01180000 (32-bit, non-prefetchable) [size=3D128K]
-        Memory at 01100000 (32-bit, non-prefetchable) [size=3D512K]
-        I/O ports at 1000 [disabled] [size=3D32]
-        Memory at 011a0000 (32-bit, non-prefetchable) [size=3D16K]
-        [virtual] Expansion ROM at 01200000 [disabled] [size=3D256K]
-        Capabilities: [c8] Power Management version 2
-        Capabilities: [d0] Message Signalled Interrupts: Mask- 64bit+ Q=
-ueue=3D0/0 Enable-
-        Capabilities: [e0] Express Endpoint IRQ 0
-        Capabilities: [a0] MSI-X: Enable- Mask- TabSize=3D5
-        Capabilities: [100] Advanced Error Reporting
-        Capabilities: [140] Device Serial Number 8b-18-3a-ff-ff-21-1b-0=
-0
+	vmmc-supply =3D <&vaux4>;
+	bus-width =3D <4>;
+	ti,non-removable;
+	cap-power-off-card;
 
 
-> Tim
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in the
-> body of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+vaux4 is from a twl4030 and powers the wifi chip.
+'cap-power-off-card' I added support for myself to so the card would power
+off when not in use.
 
-Best Regards
-Richard
+Thanks,
+NeilBrown
+
+--Sig_/HqFK.ZmhUn3b7+9jrSjaGRm
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUmDnPTnsnt1WYoG5AQIxRg//Ydrldz3H2v7xltx8IUe0h2b66/HbTZJr
+gTgJE5KxLeiLajAQPr5Rvm+ohAzWrdkyYnLjA+vAmOI2JA0cCwn9jJ9PDyov5CcH
+he2lscxDzxrXz7Ae7JxRPWYDQwlvMkQbNDE+BTuUZCCg4PGxPP4lvyGJRGIc32Fh
++o8mr+99UHCREjA79gi7tol913mzoCHU5hSfkV/jCz4lURcn2rMrrmMsc+0Ie54e
+WVRRM2ZBDYyWvzLobcd558oy3dSJmuSO1SLah0TtdSyfodDfFapnyn1rVGPL9Uc0
+0PYnD2vBC7Vd1xZ/EPbcSf25CY3kUC52u0ukvJ8rp494ZbSvdLsK/PKWQX9t2yTe
+Jpw6WYHHSOweDjHXO4C30E+qoa904zuQqCmVhda3utawIySeOxWLG9kbW1OFJI+w
+0ixBQGYLFE5CoR3nw45/EWvCUGf/w0PDcNKM9mTfbeBhjNXbzdB6MO1acjRn2ba+
+3pM949IMpc8CHBpIgzleYw7Hw7CuEe4zCBylQKZrkII4wDYQ4lQpcH49rINbw3l3
+2R7RUgRB8PzSTC7hb7DMpH4O4XnywKIaGlUT00GL1eaeFC30WdjIk2IkvYTVZOjR
+lYBTRCecccTP+AdSOcoWsZBQqGbx7N4gOP0t9niPMYPj5lKSCFT9T/q1EvHRGxrd
+fEXC8MZrZxk=
+=G1I7
+-----END PGP SIGNATURE-----
+
+--Sig_/HqFK.ZmhUn3b7+9jrSjaGRm--
