@@ -1,40 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 0/3] New descriptor-based GPIO interface
-Date: Fri, 18 Oct 2013 13:23:36 +0200
-Message-ID: <CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
-References: <1382030498-23465-1-git-send-email-acourbot@nvidia.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: ux500: fix I2C4 clock bit
+Date: Fri, 18 Oct 2013 13:30:40 +0200
+Message-ID: <CACRpkdYwndBD7dAVC6EitOQ4HHVoP1fhmVztV5g78bLQoeOiqg@mail.gmail.com>
+References: <1382087123-31702-1-git-send-email-linus.walleij@linaro.org>
+	<20131018110314.GV19112@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382030498-23465-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131018110314.GV19112@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 7:21 PM, Alexandre Courbot <acourbot@nvidia.com> wrote:
-
-> Hi Linus,
+On Fri, Oct 18, 2013 at 1:03 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, 18 Oct 2013, Linus Walleij wrote:
 >
-> This version should merge as-is in your tree (I hope!). A patch for
-> documentation will follow soon.
+>> The PCLK for I2C4 is controlled by bit 10 in the PCKEN registers
+>> while the KCLK is controlled by bit 9 on the KCKEN, it's
+>> one of these odd assymetric things. Correct the PCLK bit to 10.
+>>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> index 5112f4c..b7d1738 100644
+>> --- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> +++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+>> @@ -694,7 +694,7 @@
+>>
+>>                       clock-frequency = <400000>;
+>>
+>> -                     clocks = <&prcc_kclk 1 9>, <&prcc_pclk 1 9>;
+>> +                     clocks = <&prcc_kclk 1 10>, <&prcc_pclk 1 9>;
+>>                       clock-names = "i2cclk", "apb_pclk";
+>>               };
+>>
 >
-> Changes since v2:
-> - rebased on top of Linus' for-next branch
-> - exported new gpiod_(un)lock_as_irq() functions in driver.h
-> - squashed a fix for a compilation error
+> NACK: Bit 10 is MSP1
 
-Thanks, let's see if I can get this into v3.13, right now it's
-unclear if I'll dare to do this. These do not apply right off
-as it requires the late fixes to the gpiod code which currently
-are in Torvalds' tree and on my fixes branch, so I'll merge in
-v3.12-rc6 as it arrives, and then attempt to apply this on
-top, but I don't know if I dare to do this so late.
+You mean MSP3?
 
-The outage of linux-next also contributes to this situation.
+>         clk = clk_reg_prcc_kclk("p1_i2c4_kclk", "i2cclk",
+>                         clkrst1_base, BIT(9), CLK_SET_RATE_GATE);
+>         clk_register_clkdev(clk, NULL, "nmk-i2c.4");
+>         PRCC_KCLK_STORE(clk, 1, 9);
+>
+>         clk = clk_reg_prcc_kclk("p1_msp3_kclk", "msp1clk",
+>                         clkrst1_base, BIT(10), CLK_SET_RATE_GATE);
+>         clk_register_clkdev(clk, NULL, "msp3");
+>         clk_register_clkdev(clk, NULL, "ux500-msp-i2s.3");
+>         PRCC_KCLK_STORE(clk, 1, 10);
 
-We might have to take this as the first thing after the merge
-window and targeted for v3.14.
+This does not correspond to the datasheet, which says MSP3
+is at bit 11. Oh that is *another* assymetric thing.
+
+I'll make a combined
+patch that fix both things and double-check with the older
+clock framework so we get this 100% right.
+
+Ulf: any hints?
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
