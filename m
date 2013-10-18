@@ -1,80 +1,41 @@
-From: Michael Bohan <mbohan@codeaurora.org>
-Subject: Re: [PATCH] of/lib: Export fdt routines to modules
-Date: Thu, 17 Oct 2013 19:54:06 -0700
-Message-ID: <20131018025405.GA3722@codeaurora.org>
-References: <1381966065-16854-1-git-send-email-mbohan@codeaurora.org>
- <525F2397.40203@caviumnetworks.com>
- <20131017002731.GA22830@codeaurora.org>
- <525F6D83.1050808@roeck-us.net>
- <20131017235132.GA6241@codeaurora.org>
- <52608457.5040609@roeck-us.net>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: RE: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface driver.
+Date: Fri, 18 Oct 2013 03:19:42 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82865423@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131017114208.595a4224@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52608457.5040609@roeck-us.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: David Daney <ddaney@caviumnetworks.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131017114208.595a4224@ipc1.ka-ro>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "perex@perex.cz" <perex@perex.cz>, Guo Shawn-R65073 <r65073@freescale.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>, osk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 05:44:07PM -0700, Guenter Roeck wrote:
-> On 10/17/2013 04:51 PM, Michael Bohan wrote:
-> >On Wed, Oct 16, 2013 at 09:54:27PM -0700, Guenter Roeck wrote:
-> >>Still, what prevents you from unflattening it and just using the
-> >>normal device tree functions as David suggested ?
-> >
-> >I'm assuming you're suggesting to use of_fdt_unflatten_tree()?
-> 
-> Yes, that was the idea.
-> 
-> >That's an interesting thought. I was planning to scan the fdt
-> >only once and populate my own structures, but I suppose I could
-> >use the of_* APIs equivalently.
-> >
-> >It seems there are some problems though.  of_fdt_unflatten_tree()
-> >does not return errors, and so for the purposes of my driver it
-> >would not be sufficient to detect an invalid firmware image.
-> >
-> It does so, at least partially. If there is an error, it won't set
-> the nodes pointer. Granted, that is not perfect, but it is at least
-> a start. Ultimately, I considered it 'good enough' for my purpose
-> (for devicetree overlays - see [1] below), as any missing mandatory
-> properties or nodes are detected later when trying to actually read
-> the properties. In my case, I also have a couple of validation
-> properties to ensure that the overlay is acceptable (specifically
-> I use 'compatible' and 'assembly-ids', but that is really a detail).
-
-That's certainly better than nothing, but I think it would be
-useful to make a distinction between a malformed fdt and a fdt
-that's simply missing the right information. Without error
-codes, I think we lose this aspect.
-
-> >Would people entertain changing this API
-> >(and implicitly __unflatten_device_tree) to return errors? I'm
-> >guessing the reason it's coded that way is because the normal
-> >usecase is 'system boot', at which time errors aren't that
-> >meaningful.
-> >
-> >Also, there's no way to free the memory that was allocated from
-> >the unflatten process. May I add one?
-> >
-> 
-> The patchset submitted by Pantelis Antoniou to add support for
-> devicetree overlays adds this and other related functionality.
-> See [1], specifically the patch titled "OF: Introduce utility
-> helper functions". Not sure where that is going, though.
-> It may need some cleanup to be accepted upstream.
-> Copying Pantelis for comments.
-> Guenter
-> 
-> [1] https://lkml.org/lkml/2013/1/4/276
-
-Thanks. So it seems that Pantelis's __of_free_tree() is what I'm
-looking for.
-
-Mike
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+SGksDQoNCj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNF
+X01FTSwgMCk7DQo+ID4gKwlzYWktPmJhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYt
+PmRldiwgcmVzKTsNCj4gPiArCWlmIChJU19FUlIoc2FpLT5iYXNlKSkgew0KPiA+ICsJCXJldCA9
+IFBUUl9FUlIoc2FpLT5iYXNlKTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+DQo+IGNvdWxkIGJl
+Og0KPiAJCXJldHVybiBQVFJfRVJSKHNhaS0+YmFzZSk7DQo+DQoNClllc++8jFRoaXMgbG9va3Mg
+YmV0dGVyLg0KDQogDQo+ID4gKyNkZWZpbmUgRlNMX1NBSV9ETUFCVUZfU0laRQkoMzIgKiAxMDI0
+KQ0KPiA+ICsjZGVmaW5lIFRDRF9OVU1CRVIJCTQNCj4gPiArI2RlZmluZSBFRE1BX1BSSU9fSElH
+SCAgICAgICAgICA2DQo+ID4gKw0KPiBzdHJhbmdlIGluZGVudGF0aW9uIHdpdGggbWl4ZWQgc3Bh
+Y2VzIGFuZCB0YWJzLg0KPiANCg0KVGhpcyB3aWxsIGJlIHJldmlzZWQgaW4gdGhlIG5leHQgdmVy
+c2lvbi4NCg0KDQoNCj4gPiArI2RlZmluZSBTQUlfQ1IyX01TRUxfTUNMSzMJKEJJVCgyNil8QklU
+KDI3KSkNCj4gPg0KPiBzcGFjZXMgYXJvdW5kICd8Jz8NCj4gDQoNCkFuZCB0aGlzIHRvby4NCg0K
+DQoNCg0KLS0NCkJSUywNClhpdWJvDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
