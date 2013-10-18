@@ -1,149 +1,248 @@
-From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH v3 3/4] mmc: omap_hsmmc: Remux pins to support SDIO
- interrupt on AM335x
-Date: Fri, 18 Oct 2013 17:20:53 +1100
-Message-ID: <20131018172053.70cf2c2b@notabene.brown>
-References: <1380971830-21492-1-git-send-email-afenkart@gmail.com>
-	<1380971830-21492-4-git-send-email-afenkart@gmail.com>
+From: Zhu Richard-R65037 <r65037@freescale.com>
+Subject: RE: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Fri, 18 Oct 2013 06:34:05 +0000
+Message-ID: <0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
+ <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/.i2Ap0RDt8DcOydutI46yBm"; protocol="application/pgp-signature"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380971830-21492-4-git-send-email-afenkart@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Venkatraman S <svenkatr@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>, Sean Cross <xobs@kosagi.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?iso-8859-2?Q?Marek_Va=B9ut?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/.i2Ap0RDt8DcOydutI46yBm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Sat,  5 Oct 2013 13:17:09 +0200 Andreas Fenkart <afenkart@gmail.com> wro=
-te:
-
-> The am335x can't detect pending cirq in PM runtime suspend.
-> This patch reconfigures dat1 as a GPIO before going to suspend.
-> SDIO interrupts are detected with the GPIO, while in runtime
-> suspend, standard detection of the module block otherwise.
+> -----Original Message-----
+> From: Tim Harvey [mailto:tharvey@gateworks.com]
+> Sent: Friday, October 18, 2013 1:33 PM
+> To: Sean Cross
+> Cc: devicetree@vger.kernel.org; linux-pci@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; Sascha Hauer; Zhu Richard-R65037; Shawn G=
+uo; Bjorn
+> Helgaas; Marek Va=B9ut; Jingoo Han; Pratyush Anand; Troy Kisky
+> Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe con=
+troller
 >=20
-> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
+> On Mon, Sep 16, 2013 at 1:20 AM, Sean Cross <xobs@kosagi.com> wrote:
+> > Add support for the PCIe port present on the i.MX6 family of contro=
+llers.
+> > These use the Synopsis Designware core tied to their own PHY.
+> >
+> > Signed-off-by: Sean Cross <xobs@kosagi.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  .../devicetree/bindings/pci/designware-pcie.txt    |    7 +-
+> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi
+> > b/arch/arm/boot/dts/imx6qdl.dtsi index ccd55c2..125202e 100644
+> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> > @@ -116,6 +116,22 @@
+> >                         arm,data-latency =3D <4 2 3>;
+> >                 };
+> >
+> > +               pcie: pcie@0x01000000 {
+> > +                       compatible =3D "fsl,imx6q-pcie", "snps,dw-p=
+cie";
+> > +                       reg =3D <0x01ffc000 0x4000>; /* DBI */
+> > +                       #address-cells =3D <3>;
+> > +                       #size-cells =3D <2>;
+> > +                       device_type =3D "pci";
+> > +                       ranges =3D <0x00000800 0 0x01f00000 0x01f00=
+000 0
+> 0x00080000 /* configuration space */
+> > +                                 0x81000000 0 0          0x01f8000=
+0 0
+> 0x00010000 /* downstream I/O */
+> > +                                 0x82000000 0 0x01000000 0x0100000=
+0 0
+> 0x00f00000>; /* non-prefetchable memory */
+> > +                       num-lanes =3D <1>;
+> > +                       interrupts =3D <0 123 0x04>;
+> > +                       clocks =3D <&clks 189>, <&clks 187>, <&clks=
+ 205>,
+> <&clks 144>;
+> > +                       clock-names =3D "pcie_ref_125m", "sata_ref_=
+100m",
+> "lvds_gate", "pcie_axi";
+> > +                       status =3D "disabled";
+> > +               };
+> > +
 >=20
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Do=
-cumentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index 1136e6b..146f3ad 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -21,8 +21,11 @@ ti,non-removable: non-removable slot (like eMMC)
->  ti,needs-special-reset: Requires a special softreset sequence
->  ti,needs-special-hs-handling: HSMMC IP needs special setting for handlin=
-g High Speed
->  ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
-> -SDIO irq while in suspend. Fallback to polling. Affected chips are
-> -am335x,
-> +SDIO irq while in suspend. The workaround is to reconfigure the dat1 lin=
-e as a
-> +GPIO upon suspend. Beyond this option and the GPIO config, you also need=
- to set
-> +named pinctrl states "default", "active" and "idle ", see example below.=
-  The
-> +MMC driver will then then toggle between default and idle during the run=
-time
-> +Affected chips are am335x,
-> =20
->                              ------
->                              | PRCM |
-> @@ -49,3 +52,24 @@ Example:
->  		vmmc-supply =3D <&vmmc>; /* phandle to regulator node */
->  		ti,non-removable;
->  	};
-> +
-> +[am335x with with gpio for sdio irq]
-> +
-> +	mmc1_cirq_pin: pinmux_cirq_pin {
-> +		pinctrl-single,pins =3D <
-> +			0x0f8 0x3f	/* MMC0_DAT1 as GPIO2_28 */
-> +		>;
-> +	};
-> +
-> +	mmc1: mmc@48060000 {
-> +		ti,non-removable;
-> +		bus-width =3D <4>;
-> +		vmmc-supply =3D <&ldo2_reg>;
-> +		vmmc_aux-supply =3D <&vmmc>;
-> +	        ti,quirk-swakeup-missing;
-> +		pinctrl-names =3D "default", "active", "idle";
-> +		pinctrl-0 =3D <&mmc1_pins>;
-> +		pinctrl-1 =3D <&mmc1_pins>;
-> +		pinctrl-2 =3D <&mmc1_cirq_pin>;
-> +		ti,cirq-gpio =3D <&gpio3 28 0>;
-> +	};
+> Sean,
+>=20
+> The devicetree portion above is now here
+> https://gitorious.org/thierryreding/linux-
+> next/commit/3a57291fa4ca7f7647d826f5b47082ef306d839f
+> (which I'm told gets pulled into linux-next) and I wanted to see if y=
+ou or any
+> of the other IMX/PCI gurus here can answer a question about region ma=
+pping.
+>=20
+> The above ranges look to me to allocate 15MB for mem resources, 64K f=
+or io
+> resources, and 256K for cfg space.
+>=20
+> Table 2.1 of the IMX6DQRM.pdf
+> (http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf)
+> shows:
+>   01FF_C000 01FF_FFFF 16 KB PCIe registers
+>   0100_0000 01FF_BFFF 16368 KB PCIe
+>=20
+> The driver in the fsl 3.0.35_4.1.0 BSP maps the following (see
+> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-
+> imx.git/tree/arch/arm/mach-mx6/pcie.c?h=3Dimx_3.0.35_4.1.0#n331):
+>=20
+> 0x0100_0000 --- 0x01DF_FFFF 14MB IORESOURCE_MEM
+> 0x01E0_0000 --- 0x01EF_FFFF 1MB IORESOURCE_IO
+> 0x01F0_0000 --- 0x01FF_FFFF 1MB Cfg + MSI + Registers
+>=20
+> and, in a discussion on the IMX Community forum
+> (https://community.freescale.com/message/334959#334959) points out th=
+at you
+> have more flexibility if you map the MEM resource first because of it=
+s more
+> limited alignment.  So, if you were going to stick with the fsl mappi=
+ng I
+> would think we would want something like this in the dt node:
+>=20
+> ranges =3D <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* 512K
+> configuration space */
+>                0x81000000 0 0          0x01e00000 0 0x00100000 /* 1MB
+> downstream I/O */
+>                0x82000000 0 0x01000000 0x01000000 0 0x00e00000>; /* 1=
+4MB non-
+> prefetchable memory */
+>=20
+> Can these regions be moved around however you want depending on what =
+kind of
+> mem vs io resource configurations you desire?  How about the cfg spac=
+e - is
+> 512K really needed?
+>=20
+> Are we sure the committed values to linux-next 'wrong' in any way?  I=
+ still am
+> seeing bus-hangs with devices behind a bridge that use io-space resou=
+rces and
+> am trying to figure out where the issue is.  I don't get these bus-ha=
+ngs when
+> using the fsl driver which is structured very different so its been d=
+ifficult
+> for me to determine the difference.  The mappings and the way iATU ma=
+ppings
+> are done are very different.
+
+Hi Tim:
+Regarding to my experience, the difference shouldn't be related with th=
+e bus hang.
+Here are my DT region setup when I trying to bring up imx6 pcie on 3.1x=
+ kernel by my own driver.
+                        clock-names =3D "pcie_axi", "pcie_ref", "pcie_b=
+us_in", "pcie_bus_out";
+                        #address-cells =3D <3>;
+                        #size-cells =3D <2>;
+                        ranges =3D <0x00000800 0 0x01f00000 0x01f00000 =
+0 0x00080000   /* configuration space */
+                                  0x81000000 0 0          0x01f80000 0 =
+0x00010000   /* downstream I/O */
+                                  0x82000000 0 0x01000000 0x01000000 0 =
+0x00f00000>; /* non-prefetchable memory */
+                        num-lanes =3D <1>;
+
+It works sometimes, although that there is random kernel panic and syst=
+em hang(log is pasted below):(
+LOGS, when pericom's PI7C9X2G303EL and Intel e1000e network card is use=
+d.
+=2E..
+imx-pcie 1ffc000.pcie: legacy_irq 155
+imx-pcie 1ffc000.pcie: map [mem 0x01ffc000-0x01ffffff]
+IMX PCIe port: link up.
+PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [io  0x1000-0x10000]
+pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
+pci_bus 0000:00: No busn resource found for root bus, will use [bus 00-=
+ff]
+PCI: bus0: Fast back to back transfers disabled
+PCI: bus1: Fast back to back transfers disabled
+pci 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfigu=
+ring
+PCI: bus2: Fast back to back transfers disabled
+pci 0000:02:01.0: bridge configuration invalid ([bus 00-00]), reconfigu=
+ring
+pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfigu=
+ring
+PCI: bus3: Fast back to back transfers disabled
+PCI: bus4: Fast back to back transfers enabled
+pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff 64bit]
+pci 0000:00:00.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+pci 0000:00:00.0: BAR 6: assigned [mem 0x01300000-0x0130ffff pref]
+pci 0000:00:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+pci 0000:01:00.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+pci 0000:01:00.0: BAR 7: assigned [io  0x1000-0x1fff]
+pci 0000:02:01.0: BAR 8: assigned [mem 0x01100000-0x012fffff]
+pci 0000:02:01.0: BAR 7: assigned [io  0x1000-0x1fff]
+pci 0000:03:00.0: BAR 1: assigned [mem 0x01100000-0x011fffff]
+pci 0000:03:00.0: BAR 0: assigned [mem 0x01200000-0x0121ffff]
+pci 0000:03:00.0: BAR 3: assigned [mem 0x01220000-0x01223fff]
+pci 0000:03:00.0: BAR 2: assigned [io  0x1000-0x101f]
+pci 0000:02:01.0: PCI bridge to [bus 03]
+pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+pci 0000:02:01.0:   bridge window [mem 0x01100000-0x012fffff]
+pci 0000:02:02.0: PCI bridge to [bus 04]
+pci 0000:01:00.0: PCI bridge to [bus 02-04]
+pci 0000:01:00.0:   bridge window [io  0x1000-0x1fff]
+pci 0000:01:00.0:   bridge window [mem 0x01100000-0x012fffff]
+pci 0000:00:00.0: PCI bridge to [bus 01-04]
+pci 0000:00:00.0:   bridge window [io  0x1000-0x1fff]
+pci 0000:00:00.0:   bridge window [mem 0x01100000-0x012fffff]
+PCI: enabling device 0000:01:00.0 (0140 -> 0143)
+PCI: enabling device 0000:02:01.0 (0140 -> 0143)
+PCI: enabling device 0000:02:02.0 (0140 -> 0143)
+=2E..
+e1000e: Intel(R) PRO/1000 Network Driver - 2.3.2-k
+e1000e: Copyright(c) 1999 - 2013 Intel Corporation.
+e1000e 0000:03:00.0: Disabling ASPM L0s L1
+PCI: enabling device 0000:03:00.0 (0140 -> 0142)
+e1000e 0000:03:00.0: Interrupt Throttling Rate (ints/sec) set to dynami=
+c conservative mode
+e1000e 0000:03:00.0 eth1: registered PHC clock
+e1000e 0000:03:00.0 eth1: (PCI Express:2.5GT/s:Width x1) 00:1b:21:3a:18=
+:8b
+e1000e 0000:03:00.0 eth1: Intel(R) PRO/1000 Network Connection
+e1000e 0000:03:00.0 eth1: MAC: 3, PHY: 8, PBA No: E42641-005
+igb: Intel(R) Gigabit Ethernet Network Driver - version 5.0.3-k
+igb: Copyright (c) 2007-2013 Intel Corporation.
+=2E..
+
+ALSA device list:
+  #0: wm8962-audio
+VFS: Mounted root (nfs filesystem) on device 0:11.
+devtmpfs: mounted
+=46reeing unused kernel memory: 324K (8082d000 - 8087e000)
+Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x000000=
+0b  <-- Kernel panic here randomly. Same phenomena when the root-fs is =
+located in SD.
+
+CPU1: stopping
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 3.11.0-rc3+ #13
+Backtrace:=20
+[<80011b58>] (dump_backtrace+0x0/0x10c) from [<80011cf8>] (show_stack+0=
+x18/0x1c)
+ r6:bf896000 r5:8087dd84 r4:00000000 r3:00000000
+[<80011ce0>] (show_stack+0x0/0x1c) from [<80642d8c>] (dump_stack+0x78/0=
+x94)
+[<80642d14>] (dump_stack+0x0/0x94) from [<80014a60>] (handle_IPI+0x138/=
+0x174)
+>=20
+> Thanks,
+>=20
+> Tim
 
 
-hi,
- I've been trying to get SD irq to work on my  OMAP3 DM3730.
-I seems to need the magic to catch interrupts while FCLK is off, as
-the only way I can get it to work at the moment is to keep FCLK on.
+Thanks.
 
-I discovered your patch and tried it out, but it doesn't seem to work for m=
-e.
-
-I have a Libertas WIFI chip attached to the second mmc (which is sometimes
-called mmc1, and sometimes mmc2 - very confusing!).
-I added:
-	mmc2_cirq_pin: pinmux_cirq_pin {
-		pinctrl-single,pins =3D <
-			0x012e (PIN_INPUT_PULLUP | MUX_MODE4)	/* MMC2_DAT1 as GPIO5_5 */
-		>;
-	};
-
-and
-
-&mmc2 {
-	ti,quirk-swakeup-missing;
-	pinctrl-names =3D "default", "active", "idle";
-	pinctrl-0 =3D <&mmc2_pins>;
-	pinctrl-1 =3D <&mmc2_pins>;
-	pinctrl-2 =3D <&mmc2_cirq_pin>;
-	ti,cirq-gpio =3D <&gpio5 5 0>; /* GPIO133 =3D 128+5 */
-};
-
-to my dts file but it doesn't make any apparent difference.
-
-Any idea what I might be doing wrong?
-(the base kernel I am applying patches to is from 8th Oct,
- commit 0e7a3ed04f0cd4311096d691888f88569310ee6c)
-
-BTW,
- - with the default polling, I get about 1Mb/sec with iperf
- - with sd-irq enabled and FCLK kept on the whole time, I get 4Mb/sec
- - with sd-irq enable, FCLK kept on, and the 5ms polling also
-   running, I get over 5Mb/sec!
-Still much less than the 40Mb/sec that I would like to get...
-
-Thanks,
-NeilBrown
-
---Sig_/.i2Ap0RDt8DcOydutI46yBm
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIVAwUBUmDTRTnsnt1WYoG5AQJ53hAAsE2v2MrDYKDpBDpSIHQzhaZ4SE57Mzl3
-SrGc536xSAy8Skxz1+9m/WkjOhzssF/q9LE6jJtYL8INa8Fg6c7izFtZm0yLBLbb
-pgYxNvcYKbueAcT4RbcwTxnODJOw7VZL1/NrSRKfvKCx7FOyKv+UpRHGwFwgGfmP
-e5ND7m8lYP3rk5LzZ8X8RQTCL5gVKOpD2UXdMAwWDalMedsbI5Z8tY8I+w242ASX
-Ul+lsoJNeA/BckTKxJK9S/GxN76ZMbOFkf1O+oFAmeV+jmKx/mqg4mdkcGVulqEo
-6HNn2vOv1weNj48Z/yoln6WXJL+x/1oLmnTjxlN78KKhW/eKBlEG0yuL4PSdeo2h
-MTSXIIlGrD+4uzDAqypFAT8rpG1lvd5bOk4nNvIPDMUKjV/6fEDtArQWIOcwaxN1
-LBNYs7kNw3IwR22t+o5oK+/1OFD0y+7gHGDY+NSS4YuxLdeb5RLkvjjT19SCFw6o
-2pcpLKZFlbFVl3nk33z1l3NPR498DXvKBwD7BNjdxuV8JKWRGXRd5PzYS5hqZXnc
-w44oxzeLxVPrPiiIB6G74EBBXWDk+0uhIqT0G9H2pMIETbCTGeOrjkmuRYA1zwXv
-01bLWDT0CoYEHzMnPrn3J8i4wa5JW47xWcik5HNl3u0l9XjRYbAPzEgHiRdYhRLP
-tEk2JyUl864=
-=M33O
------END PGP SIGNATURE-----
-
---Sig_/.i2Ap0RDt8DcOydutI46yBm--
+Best Regards
+Richard Zhu
