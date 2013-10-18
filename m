@@ -1,72 +1,126 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: ux500: fix I2C4 clock bit
-Date: Fri, 18 Oct 2013 13:30:40 +0200
-Message-ID: <CACRpkdYwndBD7dAVC6EitOQ4HHVoP1fhmVztV5g78bLQoeOiqg@mail.gmail.com>
-References: <1382087123-31702-1-git-send-email-linus.walleij@linaro.org>
-	<20131018110314.GV19112@lee--X1>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH 1/6] mmc: omap_hsmmc: start using generic non-removable
+ DT binding
+Date: Fri, 18 Oct 2013 17:03:44 +0530
+Message-ID: <52611C98.8050109@ti.com>
+References: <1381936707-10336-1-git-send-email-balajitk@ti.com> <1381936707-10336-2-git-send-email-balajitk@ti.com> <20131017083856.GA24056@e106331-lin.cambridge.arm.com> <525FC1BC.9080207@ti.com> <20131017152553.GI24056@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131018110314.GV19112@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20131017152553.GI24056@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "uri.y@variscite.com" <uri.y@variscite.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 1:03 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 18 Oct 2013, Linus Walleij wrote:
+On Thursday 17 October 2013 08:55 PM, Mark Rutland wrote:
+> On Thu, Oct 17, 2013 at 11:53:48AM +0100, Balaji T K wrote:
+>> On Thursday 17 October 2013 02:08 PM, Mark Rutland wrote:
+>>> On Wed, Oct 16, 2013 at 04:18:22PM +0100, Balaji T K wrote:
+>>>> From: Sekhar Nori <nsekhar@ti.com>
+>>>>
+>>>> add generic "non-removable" binding support for omap_hsmmc
+>>>>
+>>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>>>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>>>> ---
+>>>>    .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +-
+>>>>    drivers/mmc/host/omap_hsmmc.c                      |    3 +++
+>>>>    2 files changed, 4 insertions(+), 1 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>>>> index 8c8908a..3b95719 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>>>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>>>> @@ -17,7 +17,7 @@ Optional properties:
+>>>>    ti,dual-volt: boolean, supports dual voltage cards
+>>>>    <supply-name>-supply: phandle to the regulator device tree node
+>>>>    "supply-name" examples are "vmmc", "vmmc_aux" etc
+>>>> -ti,non-removable: non-removable slot (like eMMC)
+>>>> +ti,non-removable: non-removable eMMC with always on vccq and configurable vcc
+>>>
+>>> Why this change?
+>>>
+>> Hi,
+>>
+>> earlier ti,non-removable was used for all eMMC and SDIO card, now it will
+>> be used only for eMMC with always on vccq and configurable vcc.
 >
->> The PCLK for I2C4 is controlled by bit 10 in the PCKEN registers
->> while the KCLK is controlled by bit 9 on the KCKEN, it's
->> one of these odd assymetric things. Correct the PCLK bit to 10.
->>
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
->> index 5112f4c..b7d1738 100644
->> --- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
->> +++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
->> @@ -694,7 +694,7 @@
->>
->>                       clock-frequency = <400000>;
->>
->> -                     clocks = <&prcc_kclk 1 9>, <&prcc_pclk 1 9>;
->> +                     clocks = <&prcc_kclk 1 10>, <&prcc_pclk 1 9>;
->>                       clock-names = "i2cclk", "apb_pclk";
->>               };
->>
+> Please expand the commit message to mention this. It wasn't clear why
+> adding support for a property meant modifying the description of
+> another.
 >
-> NACK: Bit 10 is MSP1
+Hi,
 
-You mean MSP3?
+Ok
 
->         clk = clk_reg_prcc_kclk("p1_i2c4_kclk", "i2cclk",
->                         clkrst1_base, BIT(9), CLK_SET_RATE_GATE);
->         clk_register_clkdev(clk, NULL, "nmk-i2c.4");
->         PRCC_KCLK_STORE(clk, 1, 9);
+>>
+>>> What do "vccq" and "vcc" correspond to? The regulators are called "vmmc"
+>>> and "vmmc_aux"...
+>>>
+>>
+>> vccq and vcc are supply names of eMMC part
 >
->         clk = clk_reg_prcc_kclk("p1_msp3_kclk", "msp1clk",
->                         clkrst1_base, BIT(10), CLK_SET_RATE_GATE);
->         clk_register_clkdev(clk, NULL, "msp3");
->         clk_register_clkdev(clk, NULL, "ux500-msp-i2s.3");
->         PRCC_KCLK_STORE(clk, 1, 10);
+> The binding has vmmc-supply and vmmc_aux-supply. How do {vmmc,vmmc_aux}
+> and {vcc,vccq} relate? That should be clarified in the binding document,
+> something like:
+>
+> - vmmc-supply: phandle of the regulator for the VCC input
+> - vmmc_aux-supply: phandle of the regulator for the VCCQ input
+>
 
-This does not correspond to the datasheet, which says MSP3
-is at bit 11. Oh that is *another* assymetric thing.
+It can be different for SD card, so will add vcc to vmmc mapping to ti,non-removable
+description.
 
-I'll make a combined
-patch that fix both things and double-check with the older
-clock framework so we get this 100% right.
+>>
+>>> Why is no mention of "non-removable" added, given that it's added to the
+>>> code?
+>>
+>> Because this file makes a reference to mmc.txt and the core properties described
+>> by mmc.txt are not added in ti-omap-hsmmc.txt
+>
+> There is room for confusion here. While "non-removable" is a generic
+> property, it would be good to contrast "non-removable" and
+> "ti,non-removable" in the binding as they imply different things.
+>
+>>
+>>>
+>>> Is one preferred over the other? That should be noted.
+>>>
+>>>>    ti,needs-special-reset: Requires a special softreset sequence
+>>>>    ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+>>>>    dmas: List of DMA specifiers with the controller specific format
+>>>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>>>> index 6ac63df..5992048 100644
+>>>> --- a/drivers/mmc/host/omap_hsmmc.c
+>>>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>>>> @@ -1738,6 +1738,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+>>>>    	pdata->slots[0].switch_pin = cd_gpio;
+>>>>    	pdata->slots[0].gpio_wp = wp_gpio;
+>>>>
+>>>> +	if (of_find_property(np, "non-removable", NULL)) {
+>>>> +		pdata->slots[0].nonremovable = true;
+>>>> +	}
+>>>
+>>> This wasn't mentioned in the binding, and it seems to have different
+>>> semantics to "ti,non-removable". Why is it different?
+>>>
+>>
+>> When ti,non-removable was added, Only OMAP platform that had eMMC was that on OMAP4
+>> where power to eMMC cannot be switched off without sending CMD5 sleep command,
+>> so no_regulator_off_init was needed to get it detected during boot.
+>>
+>> Now start using generic non-removable for all removable cards which do not
+>> have such limitation.
+>
+> OK. I think this would be much clearer with something in the binding
+> contrasting the two properties.
 
-Ulf: any hints?
+Thanks for comments, will add those info.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Mark.
+>
+
