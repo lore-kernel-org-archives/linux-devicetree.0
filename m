@@ -1,68 +1,50 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle of
- another node for OPP
-Date: Fri, 18 Oct 2013 09:40:41 +0100
-Message-ID: <20131018084041.GC398@e102568-lin.cambridge.arm.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <5252DAD3.6040903@gmail.com>
- <525400B4.8060203@arm.com>
- <CAL_JsqKPprCKorvfgCH3usvX6hw5moypQYvKTdAznFVoTV-pyg@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch v2] sata, highbank: clear whole array in
+ highbank_initialize_phys()
+Date: Fri, 18 Oct 2013 11:44:09 +0300
+Message-ID: <20131018084409.GA14256@longonot.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKPprCKorvfgCH3usvX6hw5moypQYvKTdAznFVoTV-pyg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: cpufreq-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 02:22:44PM +0100, Rob Herring wrote:
+The original code used the wrong parameter to clear tx_atten[].  It
+passed the number of elements instead of sizeof() the array to memset.
 
-[...]
+The other potential issue was that cphy_base[] wasn't cleared.  I'm not
+sure if that was a real problem or not, but I have cleared it in my
+patch.
 
-> >>> +    cpu3: cpu@101 {
-> >>> +            compatible = "arm,cortex-a7";
-> >>> +            reg = <101>;
-> >>> +            operating-points-phandle = <&cluster1_opp>;
-> >>> +    };
-> >>> +
-> >>> +    opps-table {
-> >>> +            cluster0_opp: cluster0_opp {
-> >>
-> >> Why not use the cpu topology? Then the operating point can apply to
-> >> cores based on the position in the topology. You don't even need a
-> >> phandle in that case. You can look for OPPs in either a cpu node or in
-> >> the topology.
-> >>
-> > Agreed but few thoughts behind this binding:
-> >
-> > 1. OPPs are not just cpu specific:
-> >    How do we share OPPs for 2 devices in the same clock domain ?
-> >    Also moving the OPP into cpu-topo makes parsing specific to cpu.
-> >    Currently the OPP library fetches the of_node from the device struct
-> >    which is applicable to any devices.
-> 
-> But an OPP for a cpu is cpu specific, so put it there. For devices, we
-> may need something different. Perhaps it should be part of the clock
-> binding in some way.
-> 
-> > 2. Should cpu topology(i.e. cpu-map) just contain the topology info ? and
-> >    phandles to these nodes should be used to setup any affinity ?
-> 
-> Can't the OPP just be in the topology nodes at the appropriate level.
-> Then the kernel can look for the OPPs in either place. Perhaps Lorenzo
-> has thoughts on this.
+Instead of using memset(), this patch uses empty initializers as a
+cleanup.
 
-The reason we introduced the topology nodes (ie cpu-map) was to provide
-a topology description of the system with leaf nodes linked to cpu
-nodes; nodes in the topology do not map to HW entities.
-Put it differently, IMHO we should attach no HW meaning to nodes in the
-cpu-map so we should not add eg OPPs under cluster nodes because those
-nodes do not represent HW entities, I would like to keep cpu-map a pure
-DT representation of the topology, no more, but debate is open.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: used {} initialization instead of memset.  I also just went ahead
+    and cleared cphy_base[].
 
-Lorenzo
-
+diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+index 7f5e5d9..ea3b3dc 100644
+--- a/drivers/ata/sata_highbank.c
++++ b/drivers/ata/sata_highbank.c
+@@ -343,13 +343,11 @@ static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
+ {
+ 	struct device_node *sata_node = dev->of_node;
+ 	int phy_count = 0, phy, port = 0, i;
+-	void __iomem *cphy_base[CPHY_PHY_COUNT];
+-	struct device_node *phy_nodes[CPHY_PHY_COUNT];
+-	u32 tx_atten[CPHY_PORT_COUNT];
++	void __iomem *cphy_base[CPHY_PHY_COUNT] = {};
++	struct device_node *phy_nodes[CPHY_PHY_COUNT] = {};
++	u32 tx_atten[CPHY_PORT_COUNT] = {};
+ 
+ 	memset(port_data, 0, sizeof(struct phy_lane_info) * CPHY_PORT_COUNT);
+-	memset(phy_nodes, 0, sizeof(struct device_node*) * CPHY_PHY_COUNT);
+-	memset(tx_atten, 0xff, CPHY_PORT_COUNT);
+ 
+ 	do {
+ 		u32 tmp;
