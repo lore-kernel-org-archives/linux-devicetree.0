@@ -1,52 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: add export with name from dts
-Date: Fri, 18 Oct 2013 21:52:51 +0200
-Message-ID: <CACRpkdbG9emZg-6oOO8MgwUgCkqQB6+QqYuNAOo-QN0e+wYq2g@mail.gmail.com>
-References: <1382011682-18595-1-git-send-email-jiri.prchal@aksignal.cz>
-	<20131017150455.GH24056@e106331-lin.cambridge.arm.com>
-	<CAAVeFuJCamVumTphu-Wv2DSgepwoPgYXnCGdK=L8oem-3-K+gA@mail.gmail.com>
-	<5260DD62.2060706@aksignal.cz>
-	<20131018103601.GC29779@e106331-lin.cambridge.arm.com>
-	<52612E49.7070403@aksignal.cz>
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
+ levels
+Date: Fri, 18 Oct 2013 12:53:41 -0700
+Message-ID: <526191C5.7060705@newsguy.com>
+References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com> <20131018074623.GA22291@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52612E49.7070403@aksignal.cz>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jiri Prchal <jiri.prchal@aksignal.cz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "acourbot@nvidia.com" <acourbot@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cooloney@gmail.com" <cooloney@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131018074623.GA22291-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 2:49 PM, Ji=C5=99=C3=AD Prchal <jiri.prchal@aks=
-ignal.cz> wrote:
-> Dne 18.10.2013 12:36, Mark Rutland napsal(a):
+On 10/18/2013 12:46 AM, Thierry Reding wrote:
+> On Sun, Sep 22, 2013 at 09:59:56AM -0700, Mike Dunn wrote:
+>> Currently the driver assumes that the values specified in the
+>> brightness-levels device tree property increase as they are parsed from
+>> left to right.  But boards that invert the signal between the PWM output
+>> and the backlight will need to specify decreasing brightness-levels.
+>> This patch removes the assumption that the last element of the array is
+>> the maximum value, and instead searches the array for the maximum value
+>> and uses that in the duty cycle calculation.
+>>
+>> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>> Changelog:
+>> v2: 
+>> - commit message reworded; correct line wrap used
+>> - 'max_level' variable renamed to 'scale'
+>> - loop counter variable type changed to unsigned int
+>> - value held in scale changed from array index to actual maximum level
+>> - blank lines added around loop for readability
+>>
+>>  drivers/video/backlight/pwm_bl.c | 12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> Hey Mike,
+> 
+> I've pushed a slightly different version of this patch which gets rid of
+> the intermediate max variable and uses the new scale field exclusively
+> to pass the same information around. Could you look at the patch from my
+> for-next branch in the PWM tree and see whether that still works for the
+> specific hardware that you need this for?
 
->> If there is information associated with the GPIO pins themselves, th=
-at
->> should be described in the GPIO bindings. If we want to export named
->> pins in sysfs, that is the duty of the GPIO framework and GPIO drive=
-rs.
->> I do not believe having a binding for a non-device that exists solel=
-y to
->> express a naming preference makes any sense.
->
->
-> I realy don't understan it, isn't it done in GPIO framework? Please, =
-coul'd
-> you explain it more.
 
-I think what Mark is saying is that you should not define a new node
-for exports, but instead use the node for the gpiochip and extend those
-existing gpiochip bindings, if you want to do this.
+Yes looks good.
 
-I.e. you should be patching this file in the end:
-Documentation/devicetree/bindings/gpio/gpio.txt
+I also tested the current HEAD of for-next on the Palm Treo 680, including the
+enable-gpios DT node property.  I will have to do more work and investigation
+before I will be able to try the power-supply property, though.
 
-Yours,
-Linus Walleij
+Thanks,
+Mike
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
