@@ -1,69 +1,220 @@
-From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 0/1] Device Tree Schema Source format proposal
-Date: Fri, 18 Oct 2013 17:51:15 +0200
-Message-ID: <526158F3.4060104@baylibre.com>
-References: <9610740.2oBMxfeRkE@amdc1227>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH] ARM: dts: Add missing reg, interrupt and dma entries
+ for omap3
+Date: Fri, 18 Oct 2013 17:55:23 +0200
+Message-ID: <526159EB.8070301@baylibre.com>
+References: <20131017221522.GE15154@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9610740.2oBMxfeRkE@amdc1227>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131017221522.GE15154@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi Tony,
 
-I'm glad you're back, we were missing you on that topic :-)
-
-On 18/10/2013 16:56, Tomasz Figa wrote:
-> Hi All,
+On 18/10/2013 00:15, Tony Lindgren wrote:
+> Looks like omap3 is still relying on hwmod data for some basic
+> device tree information. Let's add the information to omap3.dtsi
+> so we can remove the related hwmod data once omap3 is DT only.
 >
-> Since the ARM Kernel Summit in Edinburgh is coming by big steps and w=
-e
-> need some food for thought for discussions that will be happening the=
-re,
-> I am posting my work in progress on Device Tree Schema Source format.
->
-> I know I've been supposed to actively work on this and come up with
-> something working long time ago already, but due to unexpected
-> circumstances (aka neverending streams of other work) I could spend w=
-ay
-> less time than I wanted on it.
->
-> How miserably I failed can be seen on an example of Benoit's and Fabi=
-en's
-> attempt to solve this problem that has likely taken much less time an=
-d
-> is in an already working state.
+> Cc: Benoit Cousson <bcousson@baylibre.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-That was more a proof of concept that helped us checking our assumption=
-s=20
-and the feasibility. Based on the first feedbacks, we were working on a=
-=20
-slightly different v2, that will anyway not be ready for ELCE. Your=20
-inputs are thus very welcome and will help progressing and converging o=
-n=20
-the schema definition.
-Well, at least, I hope :-)
+Acked-by: Benoit Cousson <bcousson@baylibre.com>
 
-> So here I am, posting whatever I have done till now to present my ide=
-as
-> that came to my mind while working on this and possibly allow wider
-> discussion on this topic.
-
-Great, I'll review that during the flight to be able to discuss that=20
-next week.
-
-> A work in progress text on DTSS format will be sent in a follow-up
-> message, for clarity.
-
-Thanks,
-See you next week,
-
+Regards,
 Benoit
+
+>
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -37,6 +37,7 @@
+>
+>   	pmu {
+>   		compatible =3D "arm,cortex-a8-pmu";
+> +		reg =3D <0x54000000 0x800000>;
+>   		interrupts =3D <3>;
+>   		ti,hwmods =3D "debugss";
+>   	};
+> @@ -71,6 +72,8 @@
+>   	 */
+>   	ocp {
+>   		compatible =3D "simple-bus";
+> +		reg =3D <0x68000000 0x10000>;
+> +		interrupts =3D <9 10>;
+>   		#address-cells =3D <1>;
+>   		#size-cells =3D <1>;
+>   		ranges;
+> @@ -193,24 +196,40 @@
+>
+>   		uart1: serial@4806a000 {
+>   			compatible =3D "ti,omap3-uart";
+> +			reg =3D <0x4806a000 0x2000>;
+> +			interrupts =3D <72>;
+> +			dmas =3D <&sdma 49 &sdma 50>;
+> +			dma-names =3D "tx", "rx";
+>   			ti,hwmods =3D "uart1";
+>   			clock-frequency =3D <48000000>;
+>   		};
+>
+>   		uart2: serial@4806c000 {
+>   			compatible =3D "ti,omap3-uart";
+> +			reg =3D <0x4806c000 0x400>;
+> +			interrupts =3D <73>;
+> +			dmas =3D <&sdma 51 &sdma 52>;
+> +			dma-names =3D "tx", "rx";
+>   			ti,hwmods =3D "uart2";
+>   			clock-frequency =3D <48000000>;
+>   		};
+>
+>   		uart3: serial@49020000 {
+>   			compatible =3D "ti,omap3-uart";
+> +			reg =3D <0x49020000 0x400>;
+> +			interrupts =3D <74>;
+> +			dmas =3D <&sdma 53 &sdma 54>;
+> +			dma-names =3D "tx", "rx";
+>   			ti,hwmods =3D "uart3";
+>   			clock-frequency =3D <48000000>;
+>   		};
+>
+>   		i2c1: i2c@48070000 {
+>   			compatible =3D "ti,omap3-i2c";
+> +			reg =3D <0x48070000 0x80>;
+> +			interrupts =3D <56>;
+> +			dmas =3D <&sdma 27 &sdma 28>;
+> +			dma-names =3D "tx", "rx";
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "i2c1";
+> @@ -218,6 +237,10 @@
+>
+>   		i2c2: i2c@48072000 {
+>   			compatible =3D "ti,omap3-i2c";
+> +			reg =3D <0x48072000 0x80>;
+> +			interrupts =3D <57>;
+> +			dmas =3D <&sdma 29 &sdma 30>;
+> +			dma-names =3D "tx", "rx";
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "i2c2";
+> @@ -225,6 +248,10 @@
+>
+>   		i2c3: i2c@48060000 {
+>   			compatible =3D "ti,omap3-i2c";
+> +			reg =3D <0x48060000 0x80>;
+> +			interrupts =3D <61>;
+> +			dmas =3D <&sdma 25 &sdma 26>;
+> +			dma-names =3D "tx", "rx";
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "i2c3";
+> @@ -232,6 +259,8 @@
+>
+>   		mcspi1: spi@48098000 {
+>   			compatible =3D "ti,omap2-mcspi";
+> +			reg =3D <0x48098000 0x100>;
+> +			interrupts =3D <65>;
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "mcspi1";
+> @@ -250,6 +279,8 @@
+>
+>   		mcspi2: spi@4809a000 {
+>   			compatible =3D "ti,omap2-mcspi";
+> +			reg =3D <0x4809a000 0x100>;
+> +			interrupts =3D <66>;
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "mcspi2";
+> @@ -263,6 +294,8 @@
+>
+>   		mcspi3: spi@480b8000 {
+>   			compatible =3D "ti,omap2-mcspi";
+> +			reg =3D <0x480b8000 0x100>;
+> +			interrupts =3D <91>;
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "mcspi3";
+> @@ -276,6 +309,8 @@
+>
+>   		mcspi4: spi@480ba000 {
+>   			compatible =3D "ti,omap2-mcspi";
+> +			reg =3D <0x480ba000 0x100>;
+> +			interrupts =3D <48>;
+>   			#address-cells =3D <1>;
+>   			#size-cells =3D <0>;
+>   			ti,hwmods =3D "mcspi4";
+> @@ -284,8 +319,17 @@
+>   			dma-names =3D "tx0", "rx0";
+>   		};
+>
+> +		hdqw1w: 1w@480b2000 {
+> +			compatible =3D "ti,omap3-1w";
+> +			reg =3D <0x480b2000 0x1000>;
+> +			interrupts =3D <58>;
+> +			ti,hwmods =3D "hdq1w";
+> +		};
+> +
+>   		mmc1: mmc@4809c000 {
+>   			compatible =3D "ti,omap3-hsmmc";
+> +			reg =3D <0x4809c000 0x200>;
+> +			interrupts =3D <83>;
+>   			ti,hwmods =3D "mmc1";
+>   			ti,dual-volt;
+>   			dmas =3D <&sdma 61>, <&sdma 62>;
+> @@ -294,6 +338,8 @@
+>
+>   		mmc2: mmc@480b4000 {
+>   			compatible =3D "ti,omap3-hsmmc";
+> +			reg =3D <0x480b4000 0x200>;
+> +			interrupts =3D <86>;
+>   			ti,hwmods =3D "mmc2";
+>   			dmas =3D <&sdma 47>, <&sdma 48>;
+>   			dma-names =3D "tx", "rx";
+> @@ -301,6 +347,8 @@
+>
+>   		mmc3: mmc@480ad000 {
+>   			compatible =3D "ti,omap3-hsmmc";
+> +			reg =3D <0x480ad000 0x200>;
+> +			interrupts =3D <94>;
+>   			ti,hwmods =3D "mmc3";
+>   			dmas =3D <&sdma 77>, <&sdma 78>;
+>   			dma-names =3D "tx", "rx";
+> @@ -308,6 +356,7 @@
+>
+>   		wdt2: wdt@48314000 {
+>   			compatible =3D "ti,omap3-wdt";
+> +			reg =3D <0x48314000 0x80>;
+>   			ti,hwmods =3D "wd_timer2";
+>   		};
+>
+> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap=
+36xx.dtsi
+> index f8b3765..380c22e 100644
+> --- a/arch/arm/boot/dts/omap36xx.dtsi
+> +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> @@ -31,6 +31,10 @@
+>   	ocp {
+>   		uart4: serial@49042000 {
+>   			compatible =3D "ti,omap3-uart";
+> +			reg =3D <0x49042000 0x400>;
+> +			interrupts =3D <80>;
+> +			dmas =3D <&sdma 81 &sdma 82>;
+> +			dma-names =3D "tx", "rx";
+>   			ti,hwmods =3D "uart4";
+>   			clock-frequency =3D <48000000>;
+>   		};
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
 
 --=20
 Beno=EEt Cousson
@@ -71,7 +222,7 @@ BayLibre
 Embedded Linux Technology Lab
 www.baylibre.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
