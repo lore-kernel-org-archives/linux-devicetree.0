@@ -1,37 +1,58 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Fri, 18 Oct 2013 15:33:27 +0100
-Message-ID: <20131018143326.GZ25034@n2100.arm.linux.org.uk>
-References: <20130924124122.64834b2a@armhf> <20131018003439.GG2443@sirena.org.uk> <20131018103019.GW25034@n2100.arm.linux.org.uk> <20131018124832.GK2443@sirena.org.uk> <20131018125638.GX25034@n2100.arm.linux.org.uk> <20131018134829.GQ2443@sirena.org.uk>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dma: atmel-dma: correct typo in the device tree bindings
+ documentation
+Date: Fri, 18 Oct 2013 16:42:49 +0200
+Message-ID: <526148E9.8060706@atmel.com>
+References: <1380876411-706-1-git-send-email-ludovic.desroches@atmel.com> <524E8169.6010801@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131018134829.GQ2443-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <524E8169.6010801-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 02:48:29PM +0100, Mark Brown wrote:
-> On Fri, Oct 18, 2013 at 01:56:38PM +0100, Russell King - ARM Linux wrote:
-> > And I think you're just wrong on what you've said above.  But... I've
-> > basically given up any hope of progressing that code after months of
-> > pissing around with your obstructive attitude, and I've elected (and
-> > others) to maintain it completely out of mainline for the forseeable
-> > future - hopefully until you get replaced by someone who can be more
-> > assistive and helpful.
-> 
-> Once more, please be civil and constructive - a confrontational approach
-> has not been helping here.  If you are intent on behaving in this
-> fashion please at least try to avoid disrupting others who are
-> interested in working in mainline.
+On 04/10/2013 10:50, Nicolas Ferre :
+> On 04/10/2013 10:46, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
+>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>
+>> The value to set ASAP mode for FIFO configuration is 2 instead of 1.
+>>
+>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+> Yes, sure: thanks for having corrected it!
+>
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Well, you say that but that's actually a total lie.  It is you who have
-done far more than anyone else to disrupt progress on this issue through
-your purposely misleading and unhelpful comments.  Many I remind you that
-it was _me_ who spent months implementing the suggestions you came out
-with only to be told time and time again that it was wrong.
+Vinod, ping?
+
+>
+>> ---
+>>    Documentation/devicetree/bindings/dma/atmel-dma.txt | 2 +-
+>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+>> index c280a0e..434f74e 100644
+>> --- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+>> @@ -28,7 +28,7 @@ The three cells in order are:
+>>    dependant:
+>>      - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+>>      identifier can be different for tx and rx.
+>> -  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 1 for ASAP.
+>> +  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 2 for ASAP.
+>>
+>>    Example:
+>>
+>>
+>
+>
+
+
+-- 
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
