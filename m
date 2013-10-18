@@ -1,119 +1,187 @@
-From: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Fri, 18 Oct 2013 09:22:52 +0100
-Message-ID: <5260EFDC.804@st.com>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>  <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>  <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>  <525FAEED.7030207@st.com> <20131017141957.GE14104@ns203013.ovh.net>  <525FF498.3060202@st.com> <1382021369.4093.44.camel@weser.hi.pengutronix.de>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [Patch v2][ 15/37] Input: tsc2007: Add device tree support.
+Date: Fri, 18 Oct 2013 10:36:11 +0200
+Message-ID: <20131018103611.4c6baabb@ipc1.ka-ro>
+References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
+	<1382022155-21954-16-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382021369.4093.44.camel-WzVe3FnzCwFR6QfukMTsflXZhhPuCNm+@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1382022155-21954-16-git-send-email-denis@eukrea.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/13 15:49, Lucas Stach wrote:
-> Am Donnerstag, den 17.10.2013, 15:30 +0100 schrieb srinivas kandagatl=
-a:
-> [...]
->> Sorry to ask this but, Where is this requirement coming from?
->> I have not spotted any thing as such in ePAPR specs.
->>
->>
->> All the spec says is.
->> =3D=3D=3D
->> The compatible property value consists of one or more strings that
->> define the specific programming model for the device. This list of
->> strings should be used by a client program for device driver selecti=
-on.
->> The property value consists of a concatenated list of null terminate=
-d
->> strings, *from most specific to most general.* They allow a device t=
-o
->> express its compatibility with a family of similar devices, potentia=
-lly
->> allowing a single device driver to match against several devices.
->> The recommended format is =E2=80=9Cmanufacturer,model=E2=80=9D, wher=
-e manufacturer is a
->> string describing the name of the manufacturer (such as an OUI), and
->> model specifies the model number.
->>
->> Example:
->> compatible =3D =E2=80=9Cfsl,mpc8641-uart=E2=80=9D, =E2=80=9Cns16550"=
-;
->> In this example, an operating system would first try to locate a dev=
-ice
->> driver that supported fsl,mpc8641-uart. If a driver was not found, i=
-t
->> would then try to locate a driver that supported the more general
->> ns16550 device type.
->> =3D=3D=3D
->>
->> The more general compatible string in this case is "st,comms-ssc-i2c=
-",
->> rather than the first soc name.
->> How can a first SOC name be more general?
->>
->> As this driver is not very specific to StiH415, it is generic driver=
- for
->> ST comms-ssc-i2c block.
->>
->=20
-> You just can't know if someone in the future decides to subtly change
-> the register layout or make some other incompatible change to the
-> comms-ssc-i2c block.
->=20
-This is not the case for comms-ssc-i2c block, This IP is kind of reused
-from past 10+ years(I think!!). Am not predicting the future here, but =
-I
-am making a informed guess from past experience that this IP would not
-change in future.
+Hi,
 
-Am still not happy with the idea of using first SoC for the compatible
-for following reasons:
+Denis Carikli <denis@eukrea.com> wrote:
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2=
+007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.t=
+xt
+> new file mode 100644
+> index 0000000..d67b33f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> @@ -0,0 +1,44 @@
+> +* Texas Instruments tsc2007 touchscreen controller
+> +
+> +Required properties:
+> +- compatible: must be "ti,tsc2007".
+> +- reg: I2C address of the chip.
+> +- pinctrl-0: Should specify pin control groups used for this control=
+ler
+> +  (see pinctrl bindings[0]).
+> +- pinctrl-names: Should contain only one value - "default"
+> +  (see pinctrl bindings[0]).
+> +- interrupt-parent: the phandle for the interrupt controller
+> +  (see interrupt binding[1]).
+> +- interrupts: interrupt to which the chip is connected
+> +  (see interrupt binding[1]).
+> +- x-plate-ohms: X-plate resistance in ohms.
+> +
+There is already a property 'ti,x-plate-ohms' (used for ads7846).
+Should this be used here too instead of inventing a new one?
 
-1> Generic IPs can be integrated into various vendor SoCs. For example
-synopsis IP can be integrated by ST parts and other non-ST parts. What
-would be the first SoC name in this case?
+[...]
+> @@ -175,10 +192,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, vo=
+id *handle)
+> =20
+>  		/* pen is down, continue with the measurement */
+>  		tsc2007_read_values(ts, &tc);
+> -
+>  		rt =3D tsc2007_calculate_pressure(ts, &tc);
+> =20
+> -		if (rt =3D=3D 0 && !ts->get_pendown_state) {
+> +		if ((ts->of && rt =3D=3D 0 && ts->gpio < 0) ||
+=2E.. && !gpio_is_valid(ts->gpio)) ||
+for consistency?
 
-2> Looking at example like "arm,pl310-cache", "arm,l220-cache"... or an=
-y
-other generic ips, why are these IPs not encoding the first SoC name in
-there compatible string? I think the answer is generic IP.
+> @@ -273,34 +294,64 @@ static void tsc2007_close(struct input_dev *inp=
+ut_dev)
+>  	tsc2007_stop(ts);
+>  }
+> =20
+> -static int tsc2007_probe(struct i2c_client *client,
+> -				   const struct i2c_device_id *id)
+> +#ifdef CONFIG_OF
+> +static int tsc2007_probe_dt(struct i2c_client *client, struct tsc200=
+7 *ts,
+> +			    struct device_node *np)
+>  {
+> -	struct tsc2007 *ts;
+> -	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
+> -	struct input_dev *input_dev;
+> -	int err;
+> -
+> -	if (!pdata) {
+> -		dev_err(&client->dev, "platform data is required!\n");
+> +	int err =3D 0;
+> +	u32 val32;
+> +	u64 val64;
+> +
+> +	if (!of_property_read_u32(np, "max-rt", &val32))
+> +		ts->max_rt =3D val32;
+> +	else
+> +		ts->max_rt =3D MAX_12BIT;
+> +
+> +	if (!of_property_read_u32(np, "fuzzy", &val32))
+> +		ts->fuzzy =3D val32;
+> +
+> +	if (!of_property_read_u64(np, "poll-period", &val64))
+> +		ts->poll_period =3D val64;
+> +	else
+> +		ts->poll_period =3D 1;
+> +
+> +	if (!of_property_read_u32(np, "x-plate-ohms", &val32)) {
+> +		ts->x_plate_ohms =3D val32;
+> +	} else {
+> +		dev_err(&client->dev,
+> +			"x-plate-ohms is not set up in the devicetree."
+> +			" (err %d).", err);
+>
+It's a bad habit to split messages like this, since it makes it harder
+to grep the kernel source for a message in a logfile.
 
-3> IMHO, the idea of first SoC might solve the problem you described,
-but why would some one know about the first SoC when this was available=
-=2E
-In this case this IP was available may be 10+ years back on an ST40
-platform. Having such old SoC names in compatible strings in the device
-trees for a modern chip looks bit confusing.
+>  		return -EINVAL;
+>  	}
+> =20
+> -	if (!i2c_check_functionality(client->adapter,
+> -				     I2C_FUNC_SMBUS_READ_WORD_DATA))
+> -		return -EIO;
+> +	ts->gpio =3D of_get_gpio(np, 0);
+> +	if (!gpio_is_valid(ts->gpio))
+> +		dev_err(&client->dev, "GPIO not found "
+> +			"(of_get_gpio returned %d)\n", ts->gpio);
+> =20
+dito (at least you should be consistent putting the space either in the
+end of the first line or in the beginning of the next line!)
 
-4> ST generic drivers which are in kernel still use st,<IP> name, so I
-would like this consistency across all the st drivers (at least the one=
-s
-which are going to be used by mach-sti platforms).
+[...]
+> @@ -309,13 +360,59 @@ static int tsc2007_probe(struct i2c_client *cli=
+ent,
+>  	ts->poll_period       =3D pdata->poll_period ? : 1;
+>  	ts->get_pendown_state =3D pdata->get_pendown_state;
+>  	ts->clear_penirq      =3D pdata->clear_penirq;
+> +	ts->fuzzy             =3D pdata->fuzzy;
+> =20
+>  	if (pdata->x_plate_ohms =3D=3D 0) {
+>  		dev_err(&client->dev, "x_plate_ohms is not set up in platform data=
+");
+> -		err =3D -EINVAL;
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Used to detect if it is probed trough the device tree,
+> +	 * in order to be able to use that information in the IRQ handler.
+> +	 */
+> +	ts->of =3D 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tsc2007_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct device_node *np =3D client->dev.of_node;
+> +	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
+> +	struct tsc2007 *ts;
+> +	struct input_dev *input_dev;
+> +	int err =3D 0;
+> +
+> +	ts =3D kzalloc(sizeof(struct tsc2007), GFP_KERNEL);
+>
+devm_kzalloc()?
 
-5> ePAPR spec clearly says that compatible string should contain "most
-specific to most general" names. In this case using more generic name
-makes more sense than having a specific name because its generic IP.
-Allowing a single device driver to match against several devices.
+> @@ -389,10 +494,19 @@ static const struct i2c_device_id tsc2007_idtab=
+le[] =3D {
+> =20
+>  MODULE_DEVICE_TABLE(i2c, tsc2007_idtable);
+> =20
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tsc2007_of_match[] =3D {
+> +	{ .compatible =3D "ti,tsc2007" },
+> +	{ /* sentinel */ },
+>
+the redundant comma after the last entry in a struct initializer is
+useful to ease adding more entries lateron. Since the empty entry
+always has to be the last one, the comma doesn't make any sense here.
 
-6> IMHO, the compatible string should be "vendor,<IP-name>-<IP-version>=
-"
-rather than first SoC.
 
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
-Thanks,
-srini
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
-> So as a general rule of thumb you take the first SoC where a particul=
-ar
-> IP block appeared as the compatible string, so you can just pick the
-> name of the SoC where the incompatible change was made as the next
-> string and not need to invent generic and unspecific comms-ssc-i2c-v2
-> compatibles.
->=20
-> Regards,
-> Lucas
->=20
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
