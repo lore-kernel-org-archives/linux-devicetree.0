@@ -1,48 +1,147 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH 0/2] ARM: dts: AM4372: Add more nodes
-Date: Fri, 18 Oct 2013 09:19:06 +0530
-Message-ID: <5260AFB2.9010300@ti.com>
-References: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH v9 09/13] [media] exynos5-fimc-is: Add the hardware
+ pipeline control
+Date: Fri, 18 Oct 2013 10:18:36 +0530
+Message-ID: <CALt3h7-F91rz4xP_2K=WExiKkYbRNW2v=4i2XMiq6LoYgOJ2Nw@mail.gmail.com>
+References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
+	<1380279558-21651-10-git-send-email-arun.kk@samsung.com>
+	<524971FC.5030907@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381432494-20498-1-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mugunthanvnm@ti.com, sourav.poddar@ti.com, linux@arm.linux.org.uk, akpm@linux-foundation.org, rnayak@ti.com, afzal@ti.com, nsekhar@ti.com, r.sricharan@ti.com, balajitk@ti.com, balbi@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <524971FC.5030907@xs4all.nl>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-On Friday 11 October 2013 12:44 AM, Lokesh Vutla wrote:
-> This patch series add nodes for l2-cache-controller, EDMA, mailbox, mmc, sham,
-> and updates the properties for cpsw, i2c0, matrix-keypad. 
-> 
-> These patches are applied on top of Benoit's for_3.13/dts branch
-> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
-Can you take this patch series for 3.13?
+Hi Hans,
 
-Thanks and regards,
-Lokesh
-> 
-> Testing:
-> Tested EDMA, mmc, sham, aes, des, i2c0, cpsw, matric-keypad on AM4372 EPOS EVM
-> with the addition of following two series:
-> -> Tero's V8 of OMAP DT clock conversion
->   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96769.html
-> -> Afzal's V5 of AM43x PRCM basic support
->   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg96275.html
-> 
-> Lokesh Vutla (1):
->   ARM: dts: AM4372: Add more nodes
-> 
-> Mugunthan V N (1):
->   ARM: dts: AM4372: Update Support for EPOS EVM
-> 
->  arch/arm/boot/dts/am4372.dtsi        |  210 +++++++++++++++++++++++++++++++++-
->  arch/arm/boot/dts/am43x-epos-evm.dts |  168 +++++++++++++++++++++++++++
->  include/dt-bindings/pinctrl/am43xx.h |   31 +++++
->  3 files changed, 408 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/pinctrl/am43xx.h
-> 
+Thank you for the review.
 
+On Mon, Sep 30, 2013 at 6:13 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> On 09/27/2013 12:59 PM, Arun Kumar K wrote:
+>> This patch adds the crucial hardware pipeline control for the
+>> fimc-is driver. All the subdev nodes will call this pipeline
+>> interfaces to reach the hardware. Responsibilities of this module
+>> involves configuring and maintaining the hardware pipeline involving
+>> multiple sub-ips like ISP, DRC, Scalers, ODC, 3DNR, FD etc.
+>>
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+>> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1708 ++++++++++++++++++++
+>>  .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+>>  2 files changed, 1837 insertions(+)
+>>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+>>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+>>
+>> diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.c b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+>> new file mode 100644
+>> index 0000000..a73d952
+>> --- /dev/null
+>> +++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+>
+> <snip>
+>
+>> +int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
+>> +                     struct fimc_is_sensor *sensor)
+>> +{
+>> +     struct fimc_is *is = pipeline->is;
+>> +     struct is_region *region;
+>> +     unsigned long index[2] = {0};
+>> +     int ret;
+>> +
+>> +     if (!sensor)
+>> +             return -EINVAL;
+>> +
+>> +     mutex_lock(&pipeline->pipe_lock);
+>> +
+>> +     if (test_bit(PIPELINE_OPEN, &pipeline->state)) {
+>> +             dev_err(pipeline->dev, "Pipeline already open\n");
+>> +             ret = -EINVAL;
+>> +             goto err_exit;
+>> +     }
+>> +
+>> +     pipeline->fcount = 0;
+>> +     pipeline->sensor = sensor;
+>> +
+>> +     if (is->num_pipelines == 0) {
+>> +             /* Init memory */
+>> +             ret = fimc_is_pipeline_initmem(pipeline);
+>> +             if (ret) {
+>> +                     dev_err(pipeline->dev, "Pipeline memory init failed\n");
+>> +                     goto err_exit;
+>> +             }
+>> +
+>> +             /* Load firmware */
+>> +             ret = fimc_is_pipeline_load_firmware(pipeline);
+>> +             if (ret) {
+>> +                     dev_err(pipeline->dev, "Firmware load failed\n");
+>> +                     goto err_fw;
+>> +             }
+>> +
+>> +             /* Power ON */
+>> +             ret = fimc_is_pipeline_power(pipeline, 1);
+>> +             if (ret) {
+>> +                     dev_err(pipeline->dev, "A5 power on failed\n");
+>> +                     goto err_fw;
+>> +             }
+>> +
+>> +             /* Wait for FW Init to complete */
+>> +             ret = fimc_is_itf_wait_init_state(&is->interface);
+>> +             if (ret) {
+>> +                     dev_err(pipeline->dev, "FW init failed\n");
+>> +                     goto err_fw;
+>> +             }
+>> +     }
+>> +
+>> +     /* Open Sensor */
+>> +     region = pipeline->is_region;
+>> +     ret = fimc_is_itf_open_sensor(&is->interface,
+>> +                     pipeline->instance,
+>> +                     sensor->drvdata->id,
+>> +                     sensor->i2c_bus,
+>> +                     pipeline->minfo->shared.paddr);
+>> +     if (ret) {
+>> +             dev_err(pipeline->dev, "Open sensor failed\n");
+>> +             goto err_exit;
+>> +     }
+>> +
+>> +     /* Load setfile */
+>> +     ret = fimc_is_pipeline_setfile(pipeline);
+>> +     if (ret)
+>> +             goto err_exit;
+>> +
+>> +     /* Stream off */
+>> +     ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
+>> +     if (ret)
+>> +             goto err_exit;
+>> +
+>> +     /* Process off */
+>> +     ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
+>> +     if (ret)
+>> +             goto err_exit;
+>> +
+>> +     if (is->num_pipelines == 0) {
+>> +             /* Copy init params to FW region */
+>> +             memset(&region->parameter, 0x0, sizeof(struct is_param_region));
+>> +
+>> +             memcpy(&region->parameter.sensor, &init_sensor_param,
+>> +                             sizeof(struct sensor_param));
+>
+> How about:
+>
+>                 region->parameter.sensor = init_sensor_param;
+>
+> Shorter and type-safe.
+>
+> Ditto for the memcpy's below.
+>
+
+Yes this would make nicer code.
+Will make this change.
+
+Regards
+Arun
