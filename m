@@ -1,147 +1,101 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH v9 09/13] [media] exynos5-fimc-is: Add the hardware
- pipeline control
-Date: Fri, 18 Oct 2013 10:18:36 +0530
-Message-ID: <CALt3h7-F91rz4xP_2K=WExiKkYbRNW2v=4i2XMiq6LoYgOJ2Nw@mail.gmail.com>
-References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
-	<1380279558-21651-10-git-send-email-arun.kk@samsung.com>
-	<524971FC.5030907@xs4all.nl>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Thu, 17 Oct 2013 22:32:51 -0700
+Message-ID: <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+	<1379319655-20210-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <524971FC.5030907@xs4all.nl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1379319655-20210-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, Zhu Richard-R65037 <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, Sep 16, 2013 at 1:20 AM, Sean Cross <xobs@kosagi.com> wrote:
+> Add support for the PCIe port present on the i.MX6 family of controllers.
+> These use the Synopsis Designware core tied to their own PHY.
+>
+> Signed-off-by: Sean Cross <xobs@kosagi.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  .../devicetree/bindings/pci/designware-pcie.txt    |    7 +-
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index ccd55c2..125202e 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -116,6 +116,22 @@
+>                         arm,data-latency = <4 2 3>;
+>                 };
+>
+> +               pcie: pcie@0x01000000 {
+> +                       compatible = "fsl,imx6q-pcie", "snps,dw-pcie";
+> +                       reg = <0x01ffc000 0x4000>; /* DBI */
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +                       device_type = "pci";
+> +                       ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* configuration space */
+> +                                 0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
+> +                                 0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+> +                       num-lanes = <1>;
+> +                       interrupts = <0 123 0x04>;
+> +                       clocks = <&clks 189>, <&clks 187>, <&clks 205>, <&clks 144>;
+> +                       clock-names = "pcie_ref_125m", "sata_ref_100m", "lvds_gate", "pcie_axi";
+> +                       status = "disabled";
+> +               };
+> +
 
-Thank you for the review.
+Sean,
 
-On Mon, Sep 30, 2013 at 6:13 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 09/27/2013 12:59 PM, Arun Kumar K wrote:
->> This patch adds the crucial hardware pipeline control for the
->> fimc-is driver. All the subdev nodes will call this pipeline
->> interfaces to reach the hardware. Responsibilities of this module
->> involves configuring and maintaining the hardware pipeline involving
->> multiple sub-ips like ISP, DRC, Scalers, ODC, 3DNR, FD etc.
->>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1708 ++++++++++++++++++++
->>  .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
->>  2 files changed, 1837 insertions(+)
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
->>
->> diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.c b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
->> new file mode 100644
->> index 0000000..a73d952
->> --- /dev/null
->> +++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
->
-> <snip>
->
->> +int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
->> +                     struct fimc_is_sensor *sensor)
->> +{
->> +     struct fimc_is *is = pipeline->is;
->> +     struct is_region *region;
->> +     unsigned long index[2] = {0};
->> +     int ret;
->> +
->> +     if (!sensor)
->> +             return -EINVAL;
->> +
->> +     mutex_lock(&pipeline->pipe_lock);
->> +
->> +     if (test_bit(PIPELINE_OPEN, &pipeline->state)) {
->> +             dev_err(pipeline->dev, "Pipeline already open\n");
->> +             ret = -EINVAL;
->> +             goto err_exit;
->> +     }
->> +
->> +     pipeline->fcount = 0;
->> +     pipeline->sensor = sensor;
->> +
->> +     if (is->num_pipelines == 0) {
->> +             /* Init memory */
->> +             ret = fimc_is_pipeline_initmem(pipeline);
->> +             if (ret) {
->> +                     dev_err(pipeline->dev, "Pipeline memory init failed\n");
->> +                     goto err_exit;
->> +             }
->> +
->> +             /* Load firmware */
->> +             ret = fimc_is_pipeline_load_firmware(pipeline);
->> +             if (ret) {
->> +                     dev_err(pipeline->dev, "Firmware load failed\n");
->> +                     goto err_fw;
->> +             }
->> +
->> +             /* Power ON */
->> +             ret = fimc_is_pipeline_power(pipeline, 1);
->> +             if (ret) {
->> +                     dev_err(pipeline->dev, "A5 power on failed\n");
->> +                     goto err_fw;
->> +             }
->> +
->> +             /* Wait for FW Init to complete */
->> +             ret = fimc_is_itf_wait_init_state(&is->interface);
->> +             if (ret) {
->> +                     dev_err(pipeline->dev, "FW init failed\n");
->> +                     goto err_fw;
->> +             }
->> +     }
->> +
->> +     /* Open Sensor */
->> +     region = pipeline->is_region;
->> +     ret = fimc_is_itf_open_sensor(&is->interface,
->> +                     pipeline->instance,
->> +                     sensor->drvdata->id,
->> +                     sensor->i2c_bus,
->> +                     pipeline->minfo->shared.paddr);
->> +     if (ret) {
->> +             dev_err(pipeline->dev, "Open sensor failed\n");
->> +             goto err_exit;
->> +     }
->> +
->> +     /* Load setfile */
->> +     ret = fimc_is_pipeline_setfile(pipeline);
->> +     if (ret)
->> +             goto err_exit;
->> +
->> +     /* Stream off */
->> +     ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
->> +     if (ret)
->> +             goto err_exit;
->> +
->> +     /* Process off */
->> +     ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
->> +     if (ret)
->> +             goto err_exit;
->> +
->> +     if (is->num_pipelines == 0) {
->> +             /* Copy init params to FW region */
->> +             memset(&region->parameter, 0x0, sizeof(struct is_param_region));
->> +
->> +             memcpy(&region->parameter.sensor, &init_sensor_param,
->> +                             sizeof(struct sensor_param));
->
-> How about:
->
->                 region->parameter.sensor = init_sensor_param;
->
-> Shorter and type-safe.
->
-> Ditto for the memcpy's below.
->
+The devicetree portion above is now here
+https://gitorious.org/thierryreding/linux-next/commit/3a57291fa4ca7f7647d826f5b47082ef306d839f
+(which I'm told gets pulled into linux-next) and I wanted to see if
+you or any of the other IMX/PCI gurus here can answer a question about
+region mapping.
 
-Yes this would make nicer code.
-Will make this change.
+The above ranges look to me to allocate 15MB for mem resources, 64K
+for io resources, and 256K for cfg space.
 
-Regards
-Arun
+Table 2.1 of the IMX6DQRM.pdf
+(http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf)
+shows:
+  01FF_C000 01FF_FFFF 16 KB PCIe registers
+  0100_0000 01FF_BFFF 16368 KB PCIe
+
+The driver in the fsl 3.0.35_4.1.0 BSP maps the following (see
+http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/arch/arm/mach-mx6/pcie.c?h=imx_3.0.35_4.1.0#n331):
+
+0x0100_0000 --- 0x01DF_FFFF 14MB IORESOURCE_MEM
+0x01E0_0000 --- 0x01EF_FFFF 1MB IORESOURCE_IO
+0x01F0_0000 --- 0x01FF_FFFF 1MB Cfg + MSI + Registers
+
+and, in a discussion on the IMX Community forum
+(https://community.freescale.com/message/334959#334959) points out
+that you have more flexibility if you map the MEM resource first
+because of its more limited alignment.  So, if you were going to stick
+with the fsl mapping I would think we would want something like this
+in the dt node:
+
+ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* 512K
+configuration space */
+               0x81000000 0 0          0x01e00000 0 0x00100000 /* 1MB
+downstream I/O */
+               0x82000000 0 0x01000000 0x01000000 0 0x00e00000>; /*
+14MB non-prefetchable memory */
+
+Can these regions be moved around however you want depending on what
+kind of mem vs io resource configurations you desire?  How about the
+cfg space - is 512K really needed?
+
+Are we sure the committed values to linux-next 'wrong' in any way?  I
+still am seeing bus-hangs with devices behind a bridge that use
+io-space resources and am trying to figure out where the issue is.  I
+don't get these bus-hangs when using the fsl driver which is
+structured very different so its been difficult for me to determine
+the difference.  The mappings and the way iATU mappings are done are
+very different.
+
+Thanks,
+
+Tim
