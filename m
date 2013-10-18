@@ -1,163 +1,57 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [RFC][PATCH v5 02/14] ARM: sched: clear SD_SHARE_POWERDOMAIN
-Date: Fri, 18 Oct 2013 13:54:53 +0200
-Message-ID: <1382097293-30245-1-git-send-email-vincent.guittot@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@kernel.org, pjt@google.com, Morten.Rasmussen@arm.com, cmetcalf@tilera.com, tony.luck@intel.com, alex.shi@intel.com, preeti@linux.vnet.ibm.com, linaro-kernel@lists.linaro.org, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, rob.herring@calxeda.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
-Cc: rjw@sisk.pl, paulmck@linux.vnet.ibm.com, corbet@lwn.net, tglx@linutronix.de, len.brown@intel.com, arjan@linux.intel.com, amit.kucheria@linaro.org, l.majewski@samsung.com, Vincent Guittot <vincent.guittot@linaro.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: omap3-beagle: Adapt USB OTG to generic PHY
+ framework
+Date: Fri, 18 Oct 2013 15:00:04 +0300
+Message-ID: <526122C4.4090702@ti.com>
+References: <1381142810-14541-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381142810-14541-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ARM platforms take advantage of packing tasks on few cores if the latters
-can be powergated independantly. We use DT and the cpu topology descirption
-to define at which level a core can be independantly powergated to the others
-and the SD_SHARE_POWERDOMAIN will be set accordingly at MC and CPU sched_domain
-level.
+Hi Benoit,
 
-The power-gate properties should be added with the value 1 in cpu and cluster
-node when then can power gate independantly from the other.
+Could you please include this one for 3.13?
+Without this OTG port will be broken for beagle. Thanks.
 
-As an example of a quad cores system which can power gate each core
-independantly, we should have a DT similar to the example below
+cheers,
+-roger
 
-	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
+On 10/07/2013 01:46 PM, Roger Quadros wrote:
+> The generic PHY framewrok expects different properties than the
+> old USB PHY framework. Supply those properties.
+> 
+> Fixes USB OTG port on beagle after the Generic PHY framework was
+> merged in greg/usb-next. [1]
+> 
+> [1] - https://lkml.org/lkml/2013/9/27/581
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-beagle.dts |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+> index 7669c16..fa532aa 100644
+> --- a/arch/arm/boot/dts/omap3-beagle.dts
+> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+> @@ -173,6 +173,8 @@
+>  &usb_otg_hs {
+>  	interface-type = <0>;
+>  	usb-phy = <&usb2_phy>;
+> +	phys = <&usb2_phy>;
+> +	phy-names = "usb2-phy";
+>  	mode = <3>;
+>  	power = <50>;
+>  };
+> 
 
-	       cpu-map {
-	               cluster0 {
-				power-gate = <1>;
-				core0 {
-	                               cpu = <&cpu0>;
-					power-gate = <1>;
-				};
-				core1 {
-				        cpu = <&cpu1>;
-					power-gate = <1>;
-				};
-				core2 {
-					cpu = <&cpu2>;
-					power-gate = <1>;
-				};
-				core3 {
-					cpu = <&cpu3>;
-					power-gate = <1>;
-				};
-			};
-		};
-
-	...
-
-	};
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- arch/arm/include/asm/topology.h |    4 ++++
- arch/arm/kernel/topology.c      |   50 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 53 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-index 58b8b84..5102847 100644
---- a/arch/arm/include/asm/topology.h
-+++ b/arch/arm/include/asm/topology.h
-@@ -5,12 +5,16 @@
- 
- #include <linux/cpumask.h>
- 
-+#define CPU_CORE_GATE		0x1
-+#define CPU_CLUSTER_GATE	0x2
-+
- struct cputopo_arm {
- 	int thread_id;
- 	int core_id;
- 	int socket_id;
- 	cpumask_t thread_sibling;
- 	cpumask_t core_sibling;
-+	int flags;
- };
- 
- extern struct cputopo_arm cpu_topology[NR_CPUS];
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 85a8737..f38f1f9 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -24,6 +24,7 @@
- 
- #include <asm/cputype.h>
- #include <asm/topology.h>
-+#include <asm/smp_plat.h>
- 
- /*
-  * cpu power scale management
-@@ -79,6 +80,51 @@ unsigned long *__cpu_capacity;
- 
- unsigned long middle_capacity = 1;
- 
-+static int __init get_dt_power_topology(struct device_node *topo)
-+{
-+	const u32 *reg;
-+	int len, power = 0;
-+	int flag = CPU_CORE_GATE;
-+
-+	for (; topo; topo = of_get_next_parent(topo)) {
-+		reg = of_get_property(topo, "power-gate", &len);
-+		if (reg && len == 4 && be32_to_cpup(reg))
-+			power |= flag;
-+		flag <<= 1;
-+	}
-+
-+	return power;
-+}
-+
-+#define for_each_subnode_with_property(dn, pn, prop_name) \
-+	for (dn = of_find_node_with_property(pn, prop_name); dn; \
-+	     dn = of_find_node_with_property(dn, prop_name))
-+
-+static void __init init_dt_power_topology(void)
-+{
-+	struct device_node *cn, *topo;
-+
-+	/* Get power domain topology information */
-+	cn = of_find_node_by_path("/cpus/cpu-map");
-+	if (!cn) {
-+		pr_warn("Missing cpu-map node, bailing out\n");
-+		return;
-+	}
-+
-+	for_each_subnode_with_property(topo, cn, "cpu") {
-+		struct device_node *cpu;
-+
-+		cpu = of_parse_phandle(topo, "cpu", 0);
-+		if (cpu) {
-+			u32 hwid;
-+
-+			of_property_read_u32(cpu, "reg", &hwid);
-+			cpu_topology[get_logical_index(hwid)].flags = get_dt_power_topology(topo);
-+
-+		}
-+	}
-+}
-+
- /*
-  * Iterate all CPUs' descriptor in DT and compute the efficiency
-  * (as per table_efficiency). Also calculate a middle efficiency
-@@ -151,6 +197,8 @@ static void __init parse_dt_topology(void)
- 		middle_capacity = ((max_capacity / 3)
- 				>> (SCHED_POWER_SHIFT-1)) + 1;
- 
-+	/* Retrieve power topology information from DT */
-+	init_dt_power_topology();
- }
- 
- /*
-@@ -283,7 +331,7 @@ void __init init_cpu_topology(void)
- 		cpu_topo->socket_id = -1;
- 		cpumask_clear(&cpu_topo->core_sibling);
- 		cpumask_clear(&cpu_topo->thread_sibling);
--
-+		cpu_topo->flags = 0;
- 		set_power_scale(cpu, SCHED_POWER_SCALE);
- 	}
- 	smp_wmb();
--- 
-1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
