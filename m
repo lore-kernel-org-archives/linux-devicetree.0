@@ -1,127 +1,80 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v3 3/4] mmc: omap_hsmmc: Remux pins to support SDIO
- interrupt on AM335x
-Date: Fri, 18 Oct 2013 12:12:48 +0200
-Message-ID: <CAAwP0s1vNcRrekDbJOdm5vzk3VEWRm-5g8c9s+6KPczFj7LBsA@mail.gmail.com>
-References: <1380971830-21492-1-git-send-email-afenkart@gmail.com>
- <1380971830-21492-4-git-send-email-afenkart@gmail.com> <20131018172053.70cf2c2b@notabene.brown>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3 00/19] Unifying SMMU driver among Tegra SoCs
+Date: Fri, 18 Oct 2013 13:26:41 +0300
+Message-ID: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131018172053.70cf2c2b@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Andreas Fenkart <afenkart@gmail.com>, Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Venkatraman S <svenkatr@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 8:20 AM, NeilBrown <neilb@suse.de> wrote:
-> On Sat,  5 Oct 2013 13:17:09 +0200 Andreas Fenkart <afenkart@gmail.com> wrote:
->
->> The am335x can't detect pending cirq in PM runtime suspend.
->> This patch reconfigures dat1 as a GPIO before going to suspend.
->> SDIO interrupts are detected with the GPIO, while in runtime
->> suspend, standard detection of the module block otherwise.
->>
->> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> index 1136e6b..146f3ad 100644
->> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> @@ -21,8 +21,11 @@ ti,non-removable: non-removable slot (like eMMC)
->>  ti,needs-special-reset: Requires a special softreset sequence
->>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
->>  ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
->> -SDIO irq while in suspend. Fallback to polling. Affected chips are
->> -am335x,
->> +SDIO irq while in suspend. The workaround is to reconfigure the dat1 line as a
->> +GPIO upon suspend. Beyond this option and the GPIO config, you also need to set
->> +named pinctrl states "default", "active" and "idle ", see example below.  The
->> +MMC driver will then then toggle between default and idle during the runtime
->> +Affected chips are am335x,
->>
->>                              ------
->>                              | PRCM |
->> @@ -49,3 +52,24 @@ Example:
->>               vmmc-supply = <&vmmc>; /* phandle to regulator node */
->>               ti,non-removable;
->>       };
->> +
->> +[am335x with with gpio for sdio irq]
->> +
->> +     mmc1_cirq_pin: pinmux_cirq_pin {
->> +             pinctrl-single,pins = <
->> +                     0x0f8 0x3f      /* MMC0_DAT1 as GPIO2_28 */
->> +             >;
->> +     };
->> +
->> +     mmc1: mmc@48060000 {
->> +             ti,non-removable;
->> +             bus-width = <4>;
->> +             vmmc-supply = <&ldo2_reg>;
->> +             vmmc_aux-supply = <&vmmc>;
->> +             ti,quirk-swakeup-missing;
->> +             pinctrl-names = "default", "active", "idle";
->> +             pinctrl-0 = <&mmc1_pins>;
->> +             pinctrl-1 = <&mmc1_pins>;
->> +             pinctrl-2 = <&mmc1_cirq_pin>;
->> +             ti,cirq-gpio = <&gpio3 28 0>;
->> +     };
->
->
-> hi,
->  I've been trying to get SD irq to work on my  OMAP3 DM3730.
-> I seems to need the magic to catch interrupts while FCLK is off, as
-> the only way I can get it to work at the moment is to keep FCLK on.
->
-> I discovered your patch and tried it out, but it doesn't seem to work for me.
->
-> I have a Libertas WIFI chip attached to the second mmc (which is sometimes
-> called mmc1, and sometimes mmc2 - very confusing!).
+Hi,
 
-Hi Neil,
+This series provides:
 
-I have a DM3730 board with the same setup, Libertas (Marvell SD8686)
-wifi + bt chip attached to mmc2.
+(1) Unified SMMU driver among Tegra SoCs
+(2) Multiple Address Space support(MASID) in IOMMU(SMMMU)
+(3) Tegra IOMMU'able devices, most of platform devices are IOMMU'able.
 
-I was going to try to add support for this to the DTS but it would be
-great if I can use your as a reference.
+There's some discussion[1] about device population order, which could
+solve the following patches.
 
-Would you be so kind to share your DTS?
+  patch 1: [HACK] of: dev_node has struct device pointer
+  patch 2: [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+  patch 3: [HACK] amba: Move AHB to core_initcall
+  patch 4: [HACK] iommu/tegra: smmu: Move IOMMU to core_initcall
 
-Thanks a lot and best regards,
-Javier
+Tested IOMMU functionality with T30 SD/MMC. Any further testing with
+T114 and/or other devices would be really appreciated.
 
-> I added:
->         mmc2_cirq_pin: pinmux_cirq_pin {
->                 pinctrl-single,pins = <
->                         0x012e (PIN_INPUT_PULLUP | MUX_MODE4)   /* MMC2_DAT1 as GPIO5_5 */
->                 >;
->         };
->
-> and
->
-> &mmc2 {
->         ti,quirk-swakeup-missing;
->         pinctrl-names = "default", "active", "idle";
->         pinctrl-0 = <&mmc2_pins>;
->         pinctrl-1 = <&mmc2_pins>;
->         pinctrl-2 = <&mmc2_cirq_pin>;
->         ti,cirq-gpio = <&gpio5 5 0>; /* GPIO133 = 128+5 */
-> };
->
-> to my dts file but it doesn't make any apparent difference.
->
-> Any idea what I might be doing wrong?
-> (the base kernel I am applying patches to is from 8th Oct,
->  commit 0e7a3ed04f0cd4311096d691888f88569310ee6c)
->
-> BTW,
->  - with the default polling, I get about 1Mb/sec with iperf
->  - with sd-irq enabled and FCLK kept on the whole time, I get 4Mb/sec
->  - with sd-irq enable, FCLK kept on, and the 5ms polling also
->    running, I get over 5Mb/sec!
-> Still much less than the 40Mb/sec that I would like to get...
->
-> Thanks,
-> NeilBrown
+v3:
+Updated based on Stephen Warren's feedback
+
+v2:
+Updated based on Thierry Reding's and Stephen Warren's feedback
+
+v2: http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/181888.html
+v1: http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/180267.html
+
+Available in the git repository at:
+
+  git://git-HoETi0wPbwRDw2glCA4ptUEOCMrvLtNR@public.gmane.org/user/hdoyu/linux.git smmu-upstreaming@20131018
+
+Hiroshi Doyu (19):
+  [HACK] of: dev_node has struct device pointer
+  [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+  [HACK] amba: Move AHB to core_initcall
+  [HACK] iommu/tegra: smmu: Move IOMMU to core_initcall
+  ARM: dt: tegra114: iommu: Fix IOMMU register address
+  iommu/tegra: smmu: Select ARM_DMA_USE_IOMMU in Kconfig
+  iommu/tegra: smmu: Create default IOVA maps
+  iommu/tegra: smmu: Register platform_device to IOMMU dynamically
+  iommu/tegra: smmu: Calculate ASID register offset by ID
+  iommu/tegra: smmu: Get "nvidia,swgroups" from DT
+  ARM: dt: tegra30: iommu: Add "nvidia,swgroups"
+  ARM: dt: tegra114: iommu: Add "nvidia,swgroups"
+  iommu/tegra: smmu: Workaround PCIe IOMMU'able
+  iommu/tegra: smmu: Get "nvidia,memory-clients" from DT
+  ARM: tegra: Create a DT header defining SWGROUP ID
+  iommu/tegra: smmu: Use dt-bindings MACRO
+  ARM: dt: tegra30: iommu: Add "nvidia,memory-clients"
+  ARM: dt: tegra114: iommu: Add "nvidia,memory-clients"
+  iommu/tegra: smmu: Support Multiple ASID
+
+ .../bindings/iommu/nvidia,tegra30-smmu.txt         |  22 ++-
+ arch/arm/boot/dts/tegra114.dtsi                    |  15 +-
+ arch/arm/boot/dts/tegra30.dtsi                     |  23 ++-
+ arch/arm/mach-tegra/tegra.c                        |  22 +++
+ drivers/amba/tegra-ahb.c                           |   7 +-
+ drivers/iommu/Kconfig                              |   1 +
+ drivers/iommu/tegra-smmu.c                         | 198 ++++++++++++---------
+ drivers/of/platform.c                              |   6 +
+ include/dt-bindings/memory/tegra-swgroup.h         |  46 +++++
+ include/linux/of.h                                 |   1 +
+ 10 files changed, 253 insertions(+), 88 deletions(-)
+ create mode 100644 include/dt-bindings/memory/tegra-swgroup.h
+
+-- 
+1.8.1.5
