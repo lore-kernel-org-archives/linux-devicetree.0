@@ -1,92 +1,104 @@
 From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 15/19] ARM: tegra: Create a DT header defining SWGROUP ID
-Date: Fri, 18 Oct 2013 13:26:56 +0300
-Message-ID: <1382092020-13170-16-git-send-email-hdoyu@nvidia.com>
+Subject: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients" from DT
+Date: Fri, 18 Oct 2013 13:26:55 +0300
+Message-ID: <1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
 References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1382092020-13170-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
-binding. "swgroups" is a group of H/W clients which Tegra SoCs
-support. This unique ID can be used to calculate MC_SMMU_<swgroup
-name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
-register bit. This will allow the same header to be used by both
-device tree files, and drivers implementing this binding, which
-guarantees that the two stay in sync. This also makes device trees
-more readable by using names instead of magic numbers.
+This provides the info about which swgroups a device belongs to. This
+info is passed from DT. This is necessary for the unified SMMU driver
+among Tegra SoCs since each has different H/W accelerators.
 
 Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- include/dt-bindings/memory/tegra-swgroup.h | 46 ++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 include/dt-bindings/memory/tegra-swgroup.h
+ .../bindings/iommu/nvidia,tegra30-smmu.txt         | 16 ++++++++++++-
+ drivers/iommu/tegra-smmu.c                         | 27 ++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
-new file mode 100644
-index 0000000..434cdcb
---- /dev/null
-+++ b/include/dt-bindings/memory/tegra-swgroup.h
-@@ -0,0 +1,46 @@
-+/*
-+ * This header provides constants for binding nvidia,swgroup ID
-+ */
+diff --git a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
+index 6a844b3..7456104 100644
+--- a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
+@@ -13,9 +13,12 @@ Required properties:
+   file <dt-bindings/memory/tegra-swgroup.h>. Its max is 64. 2 cells
+   are required. This unique ID info can be used to calculate
+   MC_SMMU_<SWGROUP name>_ASID_0 offset and HOTRESET bit.
++- nvidia,memory-clients: phandle to a smmu device which a device is
++  attached to and indicates which swgroups a device belongs to(SWGROUP ID).
++  SWGROUP ID is from 0 to 63, and a device can belong to multiple SWGROUPS.
+ 
+ Example:
+-	smmu {
++	smmu: iommu {
+ 		compatible = "nvidia,tegra30-smmu";
+ 		reg = <0x7000f010 0x02c
+ 		       0x7000f1f0 0x010
+@@ -25,3 +28,14 @@ Example:
+ 		nvidia,swgroups = <0x00000000 0x000779ff>;
+ 		nvidia,ahb = <&ahb>;
+ 	};
 +
-+#ifndef _DT_BINDINGS_MEMORY_TEGRA_SWGROUP_H
-+#define _DT_BINDINGS_MEMORY_TEGRA_SWGROUP_H
++	host1x {
++		compatible = "nvidia,tegra30-host1x", "simple-bus";
++		nvidia,memory-clients = <&smmu TEGRA_SWGROUP_HC>;
++		....
++		gr3d {
++			compatible = "nvidia,tegra30-gr3d";
++			nvidia,memory-clients = <&smmu TEGRA_SWGROUP_NV
++						       TEGRA_SWGROUP_NV2>;
++			....
++		};
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index f0ff48e..1db9e89 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -368,6 +368,29 @@ static inline void smmu_write(struct smmu_device *smmu, u32 val, size_t offs)
+ 
+ #define smmu_client_hwgrp(c)	(c->as->smmu->swgroups)
+ 
++static u64 smmu_of_get_memory_client(struct device *dev)
++{
++	size_t bytes;
++	const char *propname = "nvidia,memory-clients";
++	const __be32 *prop;
++	int i;
++	u64 swgroup = 0;
++	struct device_node *np;
 +
-+#define TEGRA_SWGROUP_AFI	0	/* 0x238 */
-+#define TEGRA_SWGROUP_AVPC	1	/* 0x23c */
-+#define TEGRA_SWGROUP_DC	2	/* 0x240 */
-+#define TEGRA_SWGROUP_DCB	3	/* 0x244 */
-+#define TEGRA_SWGROUP_EPP	4	/* 0x248 */
-+#define TEGRA_SWGROUP_G2	5	/* 0x24c */
-+#define TEGRA_SWGROUP_HC	6	/* 0x250 */
-+#define TEGRA_SWGROUP_HDA	7	/* 0x254 */
-+#define TEGRA_SWGROUP_ISP	8	/* 0x258 */
-+#define TEGRA_SWGROUP_ISP2	SWGROUP_ISP
-+#define TEGRA_SWGROUP_DC14	9	/* 0x490 *//* Exceptionally non-linear */
-+#define TEGRA_SWGROUP_DC12	10	/* 0xa88 *//* Exceptionally non-linear */
-+#define TEGRA_SWGROUP_MPE	11	/* 0x264 */
-+#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
-+#define TEGRA_SWGROUP_NV	12	/* 0x268 */
-+#define TEGRA_SWGROUP_NV2	13	/* 0x26c */
-+#define TEGRA_SWGROUP_PPCS	14	/* 0x270 */
-+#define TEGRA_SWGROUP_SATA2	15	/* 0x274 */
-+#define TEGRA_SWGROUP_SATA	16	/* 0x278 */
-+#define TEGRA_SWGROUP_VDE	17	/* 0x27c */
-+#define TEGRA_SWGROUP_VI	18	/* 0x280 */
-+#define TEGRA_SWGROUP_VIC	19	/* 0x284 */
-+#define TEGRA_SWGROUP_XUSB_HOST	20	/* 0x288 */
-+#define TEGRA_SWGROUP_XUSB_DEV	21	/* 0x28c */
-+#define TEGRA_SWGROUP_A9AVP	22	/* 0x290 */
-+#define TEGRA_SWGROUP_TSEC	23	/* 0x294 */
-+#define TEGRA_SWGROUP_PPCS1	24	/* 0x298 */
-+#define TEGRA_SWGROUP_SDMMC1A	25	/* 0xa94 *//* Linear shift starts from here */
-+#define TEGRA_SWGROUP_SDMMC2A	26	/* 0xa98 */
-+#define TEGRA_SWGROUP_SDMMC3A	27	/* 0xa9c */
-+#define TEGRA_SWGROUP_SDMMC4A	28	/* 0xaa0 */
-+#define TEGRA_SWGROUP_ISP2B	29	/* 0xaa4 */
-+#define TEGRA_SWGROUP_GPU	30	/* 0xaa8 */
-+#define TEGRA_SWGROUP_GPUB	31	/* 0xaac */
-+#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
++	np = of_parse_phandle(dev->of_node, propname, 0);
++	if (np != smmu_handle->dev->of_node)
++		return ~0;
 +
-+#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
++	prop = of_get_property(dev->of_node, propname, &bytes);
++	if (!prop || !bytes)
++		return ~0;
 +
-+#endif /* _DT_BINDINGS_MEMORY_TEGRA_SWGROUP_H */
++	for (i = 1; i < bytes / sizeof(u32); i++, prop++)
++		swgroup |= 1ULL << be32_to_cpup(prop);
++
++	return swgroup;
++}
++
+ static int __smmu_client_set_hwgrp(struct smmu_client *c,
+ 				   u64 map, int on)
+ {
+@@ -779,8 +802,8 @@ static int smmu_iommu_attach_dev(struct iommu_domain *domain,
+ 		return -ENOMEM;
+ 	client->dev = dev;
+ 	client->as = as;
+-	map = smmu->swgroups;
+-	if (!map)
++	map = smmu_of_get_memory_client(dev);
++	if (map == ~0)
+ 		return -EINVAL;
+ 
+ 	err = smmu_client_enable_hwgrp(client, map);
 -- 
 1.8.1.5
