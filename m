@@ -1,88 +1,77 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v5 06/12] ASoC: davinci-mcasp: Improve DT bindings document
-Date: Fri, 18 Oct 2013 18:37:45 +0300
-Message-ID: <668306c88da19a61b88c45111a27e3602b0def7e.1382110090.git.jsarha@ti.com>
-References: <cover.1382110089.git.jsarha@ti.com>
+From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 0/1] Device Tree Schema Source format proposal
+Date: Fri, 18 Oct 2013 17:51:15 +0200
+Message-ID: <526158F3.4060104@baylibre.com>
+References: <9610740.2oBMxfeRkE@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1382110089.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, bcousson@baylibre.com, mark.rutland@arm.com
-Cc: linux-omap@vger.kernel.org, broonie@kernel.org, joelf@ti.com, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9610740.2oBMxfeRkE@amdc1227>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Makes interrupts property optional as the interrupts are not currently
-used by the driver and adds interrupt-names property to name listed
-interrupts. Currently know interrupt names are "tx" and "rx".
+Hi Tomasz,
 
-- Improve tdm-slots propery description
+I'm glad you're back, we were missing you on that topic :-)
 
-- Improve op-mode property description
+On 18/10/2013 16:56, Tomasz Figa wrote:
+> Hi All,
+>
+> Since the ARM Kernel Summit in Edinburgh is coming by big steps and w=
+e
+> need some food for thought for discussions that will be happening the=
+re,
+> I am posting my work in progress on Device Tree Schema Source format.
+>
+> I know I've been supposed to actively work on this and come up with
+> something working long time ago already, but due to unexpected
+> circumstances (aka neverending streams of other work) I could spend w=
+ay
+> less time than I wanted on it.
+>
+> How miserably I failed can be seen on an example of Benoit's and Fabi=
+en's
+> attempt to solve this problem that has likely taken much less time an=
+d
+> is in an already working state.
 
-- Add pinctrl-names and pinctrl-0 properties
+That was more a proof of concept that helped us checking our assumption=
+s=20
+and the feasibility. Based on the first feedbacks, we were working on a=
+=20
+slightly different v2, that will anyway not be ready for ELCE. Your=20
+inputs are thus very welcome and will help progressing and converging o=
+n=20
+the schema definition.
+Well, at least, I hope :-)
 
-- Remove #address-cells and #size-cells as they are not needed.
+> So here I am, posting whatever I have done till now to present my ide=
+as
+> that came to my mind while working on this and possibly allow wider
+> discussion on this topic.
 
-- Bracket named interrupts property tuples for uniformity.
+Great, I'll review that during the flight to be able to discuss that=20
+next week.
 
-- Add missing "for" to serial-dir prop in DT bindings doc.
+> A work in progress text on DTSS format will be sent in a follow-up
+> message, for clarity.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- .../bindings/sound/davinci-mcasp-audio.txt         |   24 ++++++++++++--------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+Thanks,
+See you next week,
 
-diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-index 1945aec..b925bf9 100644
---- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-+++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-@@ -11,13 +11,14 @@ Required properties:
-          * "mpu" for the main registers (required). For compatibility with
-            existing software, it is recommended this is the first entry.
-          * "dat" for separate data port register access (optional).
--- interrupts : Interrupt number for McASP
--- op-mode : I2S/DIT ops mode.
--- tdm-slots : Slots for TDM operation.
-+- op-mode : I2S/DIT ops mode. 0 for I2S mode. 1 for DIT mode used for S/PDIF,
-+  	    IEC60958-1, and AES-3 formats.
-+- tdm-slots : Slots for TDM operation. Indicates number of channels transmitted
-+  	      or received over one serializer.
- - num-serializer : Serializers used by McASP.
--- serial-dir : A list of serializer pin mode. The list number should be equal
--		to "num-serializer" parameter. Each entry is a number indication
--		serializer pin direction. (0 - INACTIVE, 1 - TX, 2 - RX)
-+- serial-dir : A list of serializer configuration. Each entry is a number
-+               indication for serializer pin direction.
-+               (0 - INACTIVE, 1 - TX, 2 - RX)
- - dmas: two element list of DMA controller phandles and DMA request line
-         ordered pairs.
- - dma-names: identifier string for each DMA request line in the dmas property.
-@@ -31,16 +32,21 @@ Optional properties:
- - rx-num-evt : FIFO levels.
- - sram-size-playback : size of sram to be allocated during playback
- - sram-size-capture  : size of sram to be allocated during capture
-+- interrupts : Interrupt numbers for McASP, currently not used by the driver
-+- interrupt-names : Known interrupt names are "tx" and "rx"
-+- pinctrl-0: Should specify pin control group used for this controller.
-+- pinctrl-names: Should contain only one value - "default", for more details
-+  		 please refer to pinctrl-bindings.txt
-+  
- 
- Example:
- 
- mcasp0: mcasp0@1d00000 {
- 	compatible = "ti,da830-mcasp-audio";
--	#address-cells = <1>;
--	#size-cells = <0>;
- 	reg = <0x100000 0x3000>;
- 	reg-names "mpu";
--	interrupts = <82 83>;
-+	interrupts = <82>, <83>;
-+	interrupts-names = "tx", "rx";
- 	op-mode = <0>;		/* MCASP_IIS_MODE */
- 	tdm-slots = <2>;
- 	num-serializer = <16>;
--- 
-1.7.9.5
+Benoit
 
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
