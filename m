@@ -1,217 +1,68 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 18 Oct 2013 19:10:50 +0200
-Message-ID: <1382116250-8808-1-git-send-email-denis@eukrea.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv1 5/8] ASoC: sgtl5000: Revise the bugs about the sgt15000
+ codec.
+Date: Fri, 18 Oct 2013 18:28:14 +0100
+Message-ID: <20131018172814.GT2443@sirena.org.uk>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ozmrAWQcVMJcOLTa"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v2->v3:
-- The dev_err are not split between multiples lines anymore, in order t=
-o
-  improve grepping. Thanks to Lothar Wa=C3=9Fmann for the advise.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   18 +++++
- drivers/video/backlight/gpio_backlight.c           |   72 ++++++++++++=
-++++++--
- 2 files changed, 83 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
-pio-backlight.txt
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt
-new file mode 100644
-index 0000000..362dd40
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
-txt
-@@ -0,0 +1,18 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the =
-backlight
-+     (see GPIO binding[0] for more details).
-+  - default-brightness-level: the default brightness level (can be 0(o=
-ff) or
-+      1(on) since GPIOs only support theses levels).
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible =3D "gpio-backlight";
-+		gpios =3D <&gpio3 4 0>;
-+		default-brightness-level =3D <1>;
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-index 81fb127..3bf38a0 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,6 +25,7 @@ struct gpio_backlight {
-=20
- 	int gpio;
- 	int active;
-+	int def_value;
- };
-=20
- static int gpio_backlight_update_status(struct backlight_device *bl)
-@@ -60,6 +63,42 @@ static const struct backlight_ops gpio_backlight_ops=
- =3D {
- 	.check_fb	=3D gpio_backlight_check_fb,
- };
-=20
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+	int ret;
-+
-+	gbl->fbdev =3D NULL;
-+	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	if (gbl->gpio =3D=3D -EPROBE_DEFER) {
-+		return ERR_PTR(-EPROBE_DEFER);
-+	} else if (gbl->gpio < 0) {
-+		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
-+		return gbl->gpio;
-+	}
-+
-+	ret =3D of_property_read_u32(np, "default-brightness-level",
-+				   &gbl->def_value);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev,
-+			"Error: default-brightness-level is a required parameter.\n");
-+		return ret;
-+	}
-+
-+	if (gbl->def_value < 0 || gbl->def_value > 1) {
-+		dev_err(&pdev->dev,
-+			"Error: Invalid default-brightness-level value. Its value can be ei=
-ther 0(off) or 1(on).\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =3D
-@@ -67,10 +106,12 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
-=20
-@@ -79,14 +120,21 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 		return -ENOMEM;
-=20
- 	gbl->dev =3D &pdev->dev;
--	gbl->fbdev =3D pdata->fbdev;
--	gbl->gpio =3D pdata->gpio;
--	gbl->active =3D pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev =3D pdata->fbdev;
-+		gbl->gpio =3D pdata->gpio;
-+		gbl->active =3D pdata->active_low ? 0 : 1;
-+	}
-=20
- 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -103,17 +151,27 @@ static int gpio_backlight_probe(struct platform_d=
-evice *pdev)
- 		return PTR_ERR(bl);
- 	}
-=20
--	bl->props.brightness =3D pdata->def_value;
-+	if (np)
-+		bl->props.brightness =3D gbl->def_value;
-+	else
-+		bl->props.brightness =3D pdata->def_value;
-+
- 	backlight_update_status(bl);
-=20
- 	platform_set_drvdata(pdev, bl);
- 	return 0;
- }
-=20
-+static struct of_device_id gpio_backlight_of_match[] =3D {
-+	{ .compatible =3D "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver gpio_backlight_driver =3D {
- 	.driver		=3D {
- 		.name		=3D "gpio-backlight",
- 		.owner		=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
- 	},
- 	.probe		=3D gpio_backlight_probe,
- };
---=20
-1.7.9.5
+--ozmrAWQcVMJcOLTa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Oct 17, 2013 at 05:01:14PM +0800, Xiubo Li wrote:
+
+> @@ -883,14 +883,19 @@ static int ldo_regulator_register(struct snd_soc_codec *codec,
+>  				struct regulator_init_data *init_data,
+>  				int voltage)
+>  {
+> +#ifdef CONFIG_SND_SOC_FSL_SGTL5000
+> +	return 0;
+> +#else
+>  	dev_err(codec->dev, "this setup needs regulator support in the kernel\n");
+>  	return -EINVAL;
+> +#endif
+>  }
+
+If these systems don't actually need the internal regulator then should
+they not be trying to enable it?  Alternatively if it's OK to ignore
+this then why is this conditional in the board?
+
+If this is something that it's safe to ignore then it should either be
+ignored all the time or should be controlled by platform data not by a
+compile time #define.
+
+--ozmrAWQcVMJcOLTa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSYW+rAAoJELSic+t+oim9e1cP/iq+FRM1OthmKupHcsx75mPo
+/BSHzbRMV3vQg8d5stwzWn2iH0cDe8uu61lc/clarnoWdBdscb3dgvsRMrV4SO1X
+K/VGYDmdC/baGPYNL+Mx6CFEgO5bv0HOzYh0ItCbfht1DJWe7WK8YPW3xidxutsN
+2vc4SiBdYepNKPpeqMP+OLdS1TFxn+nZKKxERsDoMrdAt9XsDW6MSaqXt7/q7cUd
+fUEnXTINIJl+KhNqsrsf+pxhds6ezL0SkyCjuRDdXpUyw1ur0HBndJsTL4XKtClU
+gr022z5LRSwXano+JbtpWoydBJ2t7qhUL956CG29JVjHfzGNJvep2k2vW7bXC4lB
+UWjfy7xBf+NZNlQtTvIGi6tSlMvqEEKF5EKOMZoNMGa1+Pk0vtx3eqdjZk/9GFzJ
+82cW0sRdS1l2fNvF4LYb5jC8rcqV43UKjG0SWOT0vxEKaLdWGFMSXHwgZaepwBx9
+TAIclxB5+F20Yfo6cxUDmaVwywyCf1xJNL3pjqOFDYwEdX82SHqh+xabGp+Bsf9l
+QtLpmAB6o1nvMNj/l45hDPoO7Vz5c1P1WwuDcppVtz72M4HIBlGRVna9Q2DDX60s
+/luBFR/1qhLsDzE5ZGm+rqcb8gftbZqmLDLCZmO4gf9lbkgtwLuIavytfXKZUrAb
+1EzNihFkatoctVTdBBN0
+=tZKV
+-----END PGP SIGNATURE-----
+
+--ozmrAWQcVMJcOLTa--
