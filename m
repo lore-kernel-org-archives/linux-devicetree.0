@@ -1,40 +1,273 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3] ARM: dts: add minimal DT support for Nokia N950 &
- N9 phones
-Date: Fri, 18 Oct 2013 09:06:57 -0700
-Message-ID: <20131018160656.GN15154@atomide.com>
-References: <1381869369-14626-1-git-send-email-aaro.koskinen@iki.fi>
- <20131016003536.GA15154@atomide.com>
- <52615A5D.7030002@baylibre.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3][ 2/3] arm/dts: Add support for the cpuimx35 board from Eukrea and its baseboard.
+Date: Fri, 18 Oct 2013 18:11:47 +0200
+Message-ID: <1382112708-7424-2-git-send-email-denis@eukrea.com>
+References: <1382112708-7424-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52615A5D.7030002@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382112708-7424-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <bcousson@baylibre.com> [131018 08:57]:
-> On 16/10/2013 02:35, Tony Lindgren wrote:
-> >* Aaro Koskinen <aaro.koskinen@iki.fi> [131015 13:36]:
-> >>Add minimal DT support for Nokia N950 & N9 phones. The same functionality
-> >>that is provided by the current board file should work: serial console,
-> >>USB, OneNAND and MMC.
-> >>
-> >>Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> >>Acked-by: Tony Lindgren <tony@atomide.com>
-> >
-> >Oh this is not yet merged, I'll pick this one into the
-> >omap-for-v3.13/board-removal as the board removal patch is
-> >already there.
-> 
-> Just to be sure. Does that mean that you'll take care of that one,
-> and thus I do not have to queue it?
+The following devices/functionalities were added:
+ * Main and secondary UARTs.
+ * i2c and the pcf8563 device.
+ * Ethernet.
+ * NAND.
+ * The BP1 button.
+ * The LED.
+ * Watchdog
+ * SD.
 
-Yes I have it already in omap-for-v3.13/board-removal.
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v2->v3:
+- This patch was splitted, the part that enabled the display, the audio=
+, and
+  the touchscreen was removed and will be submited in a new patch
+  serie(because they depend on changes touching other subsystems).
+- The pads for the tsc2007 were moved in the imx35-eukrea-cpuimx35.dtsi=
+ file
+  because the tsc2007 touchscreen controller is on the cpuimx35 module =
+and not
+  on its baseboard.
+---
+ arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   61 +++++++++
+ .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  134 ++++++++++++=
+++++++++
+ 2 files changed, 195 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+ create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.=
+dts
 
-Regards,
+diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/bo=
+ot/dts/imx35-eukrea-cpuimx35.dtsi
+new file mode 100644
+index 0000000..2c2d4cd
+--- /dev/null
++++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+@@ -0,0 +1,61 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++#include "imx35.dtsi"
++
++/ {
++	model =3D "Eukrea CPUIMX35";
++	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
++
++	memory {
++		reg =3D <0x80000000 0x8000000>; /* 128M */
++	};
++};
++
++&fec {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_fec_1>;
++	status =3D "okay";
++};
++
++&i2c1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_i2c1_1>;
++	status =3D "okay";
++	pcf8563@51 {
++		compatible =3D "nxp,pcf8563";
++		reg =3D <0x51>;
++	};
++};
++
++&iomuxc {
++	tsc2007 {
++		pinctrl_tsc2007_1: tsc2007grp-1 {
++			fsl,pins =3D <
++				MX35_PAD_ATA_DA2__GPIO3_2 0x80000000
++			>;
++		};
++	};
++};
++
++&nfc {
++	nand-bus-width =3D <8>;
++	nand-ecc-mode =3D "hw";
++	nand-on-flash-bbt;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
+rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+new file mode 100644
+index 0000000..1378b8d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+@@ -0,0 +1,134 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++/dts-v1/;
++#include "imx35-eukrea-cpuimx35.dtsi"
++
++/ {
++	model =3D "Eukrea CPUIMX35";
++	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fsl,=
+imx35";
++
++	gpio_keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
++
++		bp1 {
++			label =3D "BP1";
++			gpios =3D <&gpio3 25 1>;
++			linux,code =3D <256>;
++			gpio-key,wakeup;
++			linux,input-type =3D <1>;
++		};
++	};
++
++	leds {
++		compatible =3D "gpio-leds";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpioled>;
++
++		led1 {
++			label =3D "led1";
++			gpios =3D <&gpio3 29 1>;
++			linux,default-trigger =3D "heartbeat";
++		};
++	};
++};
++
++&audmux {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_audmux_1>;
++	status =3D "okay";
++};
++
++&esdhc1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_esdhc1_1 &pinctrl_esdhc1_cd>;
++	cd-gpios =3D <&gpio3 24 0>;
++	status =3D "okay";
++};
++
++&i2c1 {
++	tlv320aic23: codec@1a {
++		compatible =3D "ti,tlv320aic23";
++		reg =3D <0x1a>;
++	};
++};
++
++&iomuxc {
++	esdhc1 {
++		pinctrl_esdhc1_cd: esdhc1_cd_grp-1 {
++			fsl,pins =3D <
++				MX35_PAD_LD18__GPIO3_24 0x80000000
++			>;
++		};
++	};
++
++	gpio_keys {
++		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
++			fsl,pins =3D <
++				MX35_PAD_LD19__GPIO3_25 0x80000000
++			>;
++		};
++	};
++
++	leds {
++		pinctrl_gpioled: gpioledgrp-1 {
++			fsl,pins =3D <
++				MX35_PAD_LD23__GPIO3_29 0x80000000
++			>;
++		};
++	};
++
++	reg_lcd_3v3 {
++		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
++			fsl,pins =3D <
++				MX35_PAD_D3_CLS__GPIO1_4 0x80000000
++			>;
++		};
++	};
++};
++
++&ipu {
++	status =3D "okay";
++};
++
++&lcdc {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_lcdc_1>;
++	ipu-disp-format =3D "rgb666";
++};
++
++&ssi1 {
++	fsl,mode =3D "i2s-slave";
++	status =3D "okay";
++};
++
++&uart1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart1_1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
++
++&uart2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart2_1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
+--=20
+1.7.9.5
 
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
