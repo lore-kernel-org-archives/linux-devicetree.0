@@ -1,46 +1,29 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v3 0/3] New descriptor-based GPIO interface
-Date: Fri, 18 Oct 2013 10:37:21 -0700
-Message-ID: <CAAVeFu+rj6AtKgfig6ZrYUzW9HZTg5qLyw4aGozyD31P_pEKAQ@mail.gmail.com>
-References: <1382030498-23465-1-git-send-email-acourbot@nvidia.com> <CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] ARM: DT: msm: Add Qualcomm's PRNG driver binding
+ document
+Date: Fri, 18 Oct 2013 11:35:00 -0700
+Message-ID: <52617F54.8080707@codeaurora.org>
+References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com> <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 4:23 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Oct 17, 2013 at 7:21 PM, Alexandre Courbot <acourbot@nvidia.com> wrote:
+On 10/15/13 07:11, Stanimir Varbanov wrote:
+> This adds Qualcomm PRNG driver device tree binding documentation
+> to use as an example in dts trees.
 >
->> Hi Linus,
->>
->> This version should merge as-is in your tree (I hope!). A patch for
->> documentation will follow soon.
->>
->> Changes since v2:
->> - rebased on top of Linus' for-next branch
->> - exported new gpiod_(un)lock_as_irq() functions in driver.h
->> - squashed a fix for a compilation error
->
-> Thanks, let's see if I can get this into v3.13, right now it's
-> unclear if I'll dare to do this. These do not apply right off
-> as it requires the late fixes to the gpiod code which currently
-> are in Torvalds' tree and on my fixes branch, so I'll merge in
-> v3.12-rc6 as it arrives, and then attempt to apply this on
-> top, but I don't know if I dare to do this so late.
->
-> The outage of linux-next also contributes to this situation.
->
-> We might have to take this as the first thing after the merge
-> window and targeted for v3.14.
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> ---
 
-No particular pressure from my side to get this in 3.13. Do for the
-best, and don't hesitate to delay them to 3.14 if you feel they are
-not tested enough. I'll already feel better once I know they are under
-your tree. ;)
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Thanks,
-Alex.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
