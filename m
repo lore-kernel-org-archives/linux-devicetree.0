@@ -1,118 +1,67 @@
-From: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: makedts, a script that runs CPP and then dtc to produce a single
- ascii-formatted file
-Date: Sat, 19 Oct 2013 15:35:39 +0000
-Message-ID: <60BA5429A0E1584BA3633194F6F993B50EAB5218@NA-MBX-03.mgc.mentorg.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
+Date: Sat, 19 Oct 2013 18:03:26 +0200
+Message-ID: <1816869.ggMDlA1qNY@flatron>
+References: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: rjw@sisk.pl, kgene.kim@samsung.com, mturquette@linaro.org
+Cc: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, kyungmin.park@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, t.stanislaws@samsung.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Produces a similar result to fdtdump's output on a matching DTB, but with the advantage of having ASCII-formatted strings rather than hex ones.    With a further manipulation to turn the ASCII codes into hex ones, another transform can match makedts' output with fdtdump's in order to answer the question, "Can this set of DTS files produce this DTB file?"    The transform and matching part of the script is, ahem, not quite finished.
+Hi Mike, Kukjin, Rafael,
 
-The script assumes that the CPP need not be run on DTS from kernels older than 3.8.
+On Tuesday 24 of September 2013 14:50:06 Mateusz Krawczuk wrote:
+> This patch series is the new s5pv210 clock implementation
+> (using common clk framework).
+> 
+> This implementation is compatible with device tree definition and board
+> files.
+> 
+> This patch series is based on linux-next and has been tested on goni and
+> aquila
+> boards using board file.
+> 
+> Since v4:
+> Corrected mux flags for finpll.
+> 
+> Since v3:
+> 
+> Replace s5pv210_clk_register_finpll, by creating mux finpll
+> with xusbxti and xxti as parrents.
+> 
+> 
+> Mateusz Krawczuk (3):
+>   clk: samsung: Add clock driver for s5pc110/s5pv210
+>   Cpufreq: s5pv210 cpufreq fixes for CCF
+>   ARM: s5pv210: Migrate clock handling to Common Clock Framework
+> 
+>  .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
+>  arch/arm/mach-s5pv210/Kconfig                      |   9 +
+>  arch/arm/mach-s5pv210/Makefile                     |   4 +-
+>  arch/arm/mach-s5pv210/common.c                     |  17 +
+>  arch/arm/mach-s5pv210/common.h                     |  10 +
+>  arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
+>  arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
+>  arch/arm/plat-samsung/Kconfig                      |   2 +-
+>  drivers/clk/samsung/Makefile                       |   3 +
+>  drivers/clk/samsung/clk-s5pv210.c                  | 673
+> +++++++++++++++++++++ drivers/cpufreq/s5pv210-cpufreq.c                
+>  |   6 +-
+>  include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
+>  12 files changed, 1019 insertions(+), 8 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
+> create mode 100644 drivers/clk/samsung/clk-s5pv210.c
+>  create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
 
--- 
-Alison Chaiken
-Mentor Embedded Software
+I believe this series is reasonable to be applied. Could we agree on
+the tree it would go through and get all tne required acks?
 
-------------
+Best regards,
+Tomasz
 
-# makedts
-# Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-#
-# Run dtc on a single device-tree source, invoking the
-# C-preprocessor if appropriate, and processing all dependencies,
-# to produce a single human-readable ASCII output.  Output is
-# similar to fdtdump except that it operates on source files and
-# emits strings as characters rather than hex equivalents.
-#
-# Copyright (c) 2013 Mentor Graphics.
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 2 of
-# the License, or (at your option) any later version.
-
-#!/bin/bash
-
-CC=arm-none-linux-gnueabi-gcc
-SRCARCH=arm
-BASE=`basename $1 .dts`
-DTC_CPP_FLAGS="-E -Wp,-MD,$BASE.pre.tmp -nostdinc -Iarch/$SRCARCH/boot/dts -Iarch/$SRCARCH/boot/dts/include -undef -D__DTS__  -x assembler-with-cpp"
-
-function usage()
-{
-    echo ""
-    echo "makedts compiles a top-level 'board file' device-tree source file "
-    echo "by processing all its dependencies and producing output with the suffix out.dts."
-    echo ""
-    echo "Run this script from the kernel top-level source directory and "
-    echo "provide the name of one device-tree file to preprocess."
-    exit 1
-}
-
-function calc_kernel_version()
-{
-    VERSION=0
-    VERSION=`head -1 Makefile | awk {'print $3;'}`
-    PATCHLEVEL=`grep PATCHLEVEL Makefile | head -1 | awk {'print $3;'}`
-    SUBLEVEL=`grep SUBLEVEL Makefile | head -1 | awk {'print $3;'}`
-    EXTRAVERSION=`grep EXTRAVERSION Makefile | head -1 | awk {'print $3;'}`
-
-    if [[ $VERSION -eq 0 ]]
-       then
-        usage
-    fi
-
-    KERNELVERSION_HUMAN=$VERSION.$PATCHLEVEL.$SUBLEVEL$EXTRAVERSION
-    return $KERNELVERSION_HUMAN
-}
-
-if [[ $# -ne 1 ]] ; then
-   usage
-fi
-
-if ( [ ! -d arch ] || [ ! -d scripts ] ) ; then
-   usage
-fi
-
-calc_kernel_version
-echo "KERNELVERSION_HUMAN is $KERNELVERSION_HUMAN"
-KERNELVERSION=`expr $VERSION \* 65536 + $PATCHLEVEL \* 256 + $SUBLEVEL `
-echo "KERNELVERSION is $KERNELVERSION"
-
-if [[ $KERNELVERSION -lt 198656 ]]
-   then
-    echo "Older kernel: no cpp invocation."
-    scripts/dtc/dtc -O dts -o $BASE.out.dts $1
-    echo "Produced $BASE.out.dts"
-    exit 0
-fi
-
-$CC $DTC_CPP_FLAGS -o $BASE.tmp $1
-
-if [[ $? -ne 0 ]]
-  then
-     echo "C preprocessor parsing of DTS failed."
-     exit
-fi
-
-scripts/dtc/dtc -O dts -o $BASE.out.dts -b 0 -i arch/arm/boot/dts -d $BASE.dtc.tmp $BASE.tmp
-
-if [[ $? -eq 0 ]]
-  then
-     echo "Produced $BASE.out.dts"
-fi
-
-#rm *.tmp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
