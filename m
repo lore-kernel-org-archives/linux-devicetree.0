@@ -1,65 +1,249 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v9 3/9] mtd: nand: omap: cleanup: replace local
- references with generic framework names
-Date: Sat, 19 Oct 2013 05:10:51 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA28C91@DBDE04.ent.ti.com>
-References: <1381816197-20477-1-git-send-email-pekon@ti.com>
- <1381816197-20477-4-git-send-email-pekon@ti.com>
- <20131016213024.GY23337@ld-irv-0074.broadcom.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCHv3] video: backlight: gpio-backlight: Add DT support.
+Date: Sat, 19 Oct 2013 08:55:54 +0200
+Message-ID: <20131019065554.GA17512@ns203013.ovh.net>
+References: <1382116250-8808-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131016213024.GY23337@ld-irv-0074.broadcom.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1382116250-8808-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Eric B??nard <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Lothar Wa??mann <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-> From: Brian Norris [mailto:computersforpeace@gmail.com]
-> > On Tue, Oct 15, 2013 at 11:19:51AM +0530, Pekon Gupta wrote:
-> > This patch updates following in omap_nand_probe() and
-> omap_nand_remove()
-> > - replaces "info->nand" with "nand_chip" (struct nand_chip *nand_chip)
-> > - replaces "info->mtd" with "mtd" (struct mtd_info *mtd)
-> > - white-space and formatting cleanup
-> >
-> > Signed-off-by: Pekon Gupta <pekon@ti.com>
-> 
-> This patch looks good. Thanks for being consistent.
-> 
+On 19:10 Fri 18 Oct     , Denis Carikli wrote:
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Jingoo Han <jg1.han@samsung.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> Cc: Eric B=E9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> ---
+> ChangeLog v2->v3:
+> - The dev_err are not split between multiples lines anymore, in order to
+>   improve grepping. Thanks to Lothar Wa=DFmann for the advise.
+> ---
+>  .../bindings/video/backlight/gpio-backlight.txt    |   18 +++++
+>  drivers/video/backlight/gpio_backlight.c           |   72 ++++++++++++++=
+++++--
+>  2 files changed, 83 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight/gpi=
+o-backlight.txt
+> =
 
-> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> > index 8d521aa..5596368 100644
-> > --- a/drivers/mtd/nand/omap2.c
-> > +++ b/drivers/mtd/nand/omap2.c
-> 
-> ...
-> 
-> > @@ -1846,17 +1848,16 @@ static int omap_nand_probe(struct
-> > -
-> > -	info->nand.options	= pdata->devsize;
-> > -	info->nand.options	|= NAND_SKIP_BBTSCAN;
-> > +	mtd			= &info->mtd;
-> > +	mtd->priv		= &info->nand;
-> > +	mtd->name		= dev_name(&pdev->dev);
-> > +	mtd->owner		= THIS_MODULE;
-> > +	nand_chip		= &info->nand;
-> > +	nand_chip->options	= pdata->devsize;
-> 
-> Trivial side comment: the 'devsize' field is not named very
-> informatively. It is apparently just a way to specify nand_chip.options,
-> and it is only actually used for setting a buswidth. (It is also badly
-> named nand_type in other places.) Not sure if it's worth improving, or
-> even dropping at some later point in time.
-> 
-For now I'm keeping this name consistent for now, as this would require
-touching GPMC driver also, where 'devsize' is used to configure
-GPMC controller registers.
+> diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-backl=
+ight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-backlight=
+.txt
+> new file mode 100644
+> index 0000000..362dd40
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
+> @@ -0,0 +1,18 @@
+> +gpio-backlight bindings
+> +
+> +Required properties:
+> +  - compatible: "gpio-backlight"
+> +  - gpios: describes the gpio that is used for enabling/disabling the ba=
+cklight
+> +     (see GPIO binding[0] for more details).
+> +  - default-brightness-level: the default brightness level (can be 0(off=
+) or
+> +      1(on) since GPIOs only support theses levels).
+> +
+> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
+> +
+> +Example:
+> +
+> +	backlight {
+> +		compatible =3D "gpio-backlight";
+> +		gpios =3D <&gpio3 4 0>;
+> +		default-brightness-level =3D <1>;
+why mandatory if optionnal put 0
+> +	};
+> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/bac=
+klight/gpio_backlight.c
+> index 81fb127..3bf38a0 100644
+> --- a/drivers/video/backlight/gpio_backlight.c
+> +++ b/drivers/video/backlight/gpio_backlight.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/platform_data/gpio_backlight.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> @@ -23,6 +25,7 @@ struct gpio_backlight {
+>  =
 
-I'll keep this feedback as pending for independent patch where I probe
-driver with "NAND_BUSWIDTH_AUTO".
+>  	int gpio;
+>  	int active;
+> +	int def_value;
+>  };
+>  =
 
+>  static int gpio_backlight_update_status(struct backlight_device *bl)
+> @@ -60,6 +63,42 @@ static const struct backlight_ops gpio_backlight_ops =
+=3D {
+>  	.check_fb	=3D gpio_backlight_check_fb,
+>  };
+>  =
 
-with regards, pekon
+> +static int gpio_backlight_probe_dt(struct platform_device *pdev,
+> +				   struct gpio_backlight *gbl)
+> +{
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +	enum of_gpio_flags gpio_flags;
+> +	int ret;
+> +
+> +	gbl->fbdev =3D NULL;
+> +	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
+> +
+> +	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
+> +
+> +	if (gbl->gpio =3D=3D -EPROBE_DEFER) {
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +	} else if (gbl->gpio < 0) {
+> +		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
+> +		return gbl->gpio;
+> +	}
+> +
+> +	ret =3D of_property_read_u32(np, "default-brightness-level",
+> +				   &gbl->def_value);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Error: default-brightness-level is a required parameter.\n");
+> +		return ret;
+> +	}
+> +
+> +	if (gbl->def_value < 0 || gbl->def_value > 1) {
+> +		dev_err(&pdev->dev,
+> +			"Error: Invalid default-brightness-level value. Its value can be eith=
+er 0(off) or 1(on).\n");
+> +		return -EINVAL;
+> +	}
+
+if > 1 force 1 and report a warning
+> +
+> +	return 0;
+> +}
+> +
+>  static int gpio_backlight_probe(struct platform_device *pdev)
+>  {
+>  	struct gpio_backlight_platform_data *pdata =3D
+> @@ -67,10 +106,12 @@ static int gpio_backlight_probe(struct platform_devi=
+ce *pdev)
+>  	struct backlight_properties props;
+>  	struct backlight_device *bl;
+>  	struct gpio_backlight *gbl;
+> +	struct device_node *np =3D pdev->dev.of_node;
+>  	int ret;
+>  =
+
+> -	if (!pdata) {
+> -		dev_err(&pdev->dev, "failed to find platform data\n");
+> +	if (!pdata && !np) {
+> +		dev_err(&pdev->dev,
+> +			"failed to find platform data or device tree node.\n");
+>  		return -ENODEV;
+>  	}
+>  =
+
+> @@ -79,14 +120,21 @@ static int gpio_backlight_probe(struct platform_devi=
+ce *pdev)
+>  		return -ENOMEM;
+>  =
+
+>  	gbl->dev =3D &pdev->dev;
+> -	gbl->fbdev =3D pdata->fbdev;
+> -	gbl->gpio =3D pdata->gpio;
+> -	gbl->active =3D pdata->active_low ? 0 : 1;
+> +
+> +	if (np) {
+> +		ret =3D gpio_backlight_probe_dt(pdev, gbl);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		gbl->fbdev =3D pdata->fbdev;
+> +		gbl->gpio =3D pdata->gpio;
+> +		gbl->active =3D pdata->active_low ? 0 : 1;
+store the default value here
+		gbl->def_value =3D pdata->def_value;
+> +	}
+
+after here you does not need to care if it's dt or not
+>  =
+
+>  	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
+>  				    (gbl->active ? GPIOF_INIT_LOW
+>  						 : GPIOF_INIT_HIGH),
+> -				    pdata->name);
+> +				    pdata ? pdata->name : "backlight");
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "unable to request GPIO\n");
+>  		return ret;
+> @@ -103,17 +151,27 @@ static int gpio_backlight_probe(struct platform_dev=
+ice *pdev)
+>  		return PTR_ERR(bl);
+>  	}
+>  =
+
+> -	bl->props.brightness =3D pdata->def_value;
+> +	if (np)
+> +		bl->props.brightness =3D gbl->def_value;
+> +	else
+> +		bl->props.brightness =3D pdata->def_value;
+	so no need to check np again here
+> +
+>  	backlight_update_status(bl);
+>  =
+
+>  	platform_set_drvdata(pdev, bl);
+>  	return 0;
+>  }
+>  =
+
+> +static struct of_device_id gpio_backlight_of_match[] =3D {
+> +	{ .compatible =3D "gpio-backlight" },
+> +	{ /* sentinel */ }
+> +};
+> +
+>  static struct platform_driver gpio_backlight_driver =3D {
+>  	.driver		=3D {
+>  		.name		=3D "gpio-backlight",
+>  		.owner		=3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
+>  	},
+>  	.probe		=3D gpio_backlight_probe,
+>  };
+> -- =
+
+> 1.7.9.5
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
