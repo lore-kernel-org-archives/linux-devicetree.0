@@ -1,47 +1,65 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] of/lib: Export fdt routines to modules
-Date: Fri, 18 Oct 2013 20:41:01 -0700
-Message-ID: <5261FF4D.1080005@roeck-us.net>
-References: <20131017002731.GA22830@codeaurora.org> <525F6D83.1050808@roeck-us.net> <20131017235132.GA6241@codeaurora.org> <52608457.5040609@roeck-us.net> <20131018025405.GA3722@codeaurora.org> <33103C16-6472-4AAE-ADB8-50807CC96C85@antoniou-consulting.com> <52615A64.9040803@gmail.com> <52616228.80002@caviumnetworks.com> <20131018193229.GA30141@codeaurora.org> <5261A609.1020605@gmail.com> <20131019014919.GB30244@codeaurora.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v9 3/9] mtd: nand: omap: cleanup: replace local
+ references with generic framework names
+Date: Sat, 19 Oct 2013 05:10:51 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA28C91@DBDE04.ent.ti.com>
+References: <1381816197-20477-1-git-send-email-pekon@ti.com>
+ <1381816197-20477-4-git-send-email-pekon@ti.com>
+ <20131016213024.GY23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131019014919.GB30244@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Michael Bohan <mbohan@codeaurora.org>, Rob Herring <robherring2@gmail.com>
-Cc: David Daney <ddaney@caviumnetworks.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, ralf@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, david.daney@cavium.com, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131016213024.GY23337@ld-irv-0074.broadcom.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2013 06:49 PM, Michael Bohan wrote:
-> On Fri, Oct 18, 2013 at 04:20:09PM -0500, Rob Herring wrote:
->> On 10/18/2013 02:32 PM, Michael Bohan wrote:
->>> My preference is probably straight libfdt calls, but if others
->>> think that unpacking is a better solution, I'm able to go that
->>> route as well. My only concern there is that we provide a means
->>> to detect invalid dtb image (ex. handle error codes) and also
->>> free the device_node allocations once the device is released.
->>
->> I think we need to understand what you are putting in the DT first.
->
-> That's understandable. Please see my response to Mark.
->
->> Given there are other desired uses like overlays which need to add the
->> necessary loading and unflattening support, a common solution is likely
->> more desirable.
->
-> But by convention, would overlays allow for 'application
-> specific' data, or are they expected to meet the more rigid
-> requirements of a real Device Tree?
->
+> From: Brian Norris [mailto:computersforpeace@gmail.com]
+> > On Tue, Oct 15, 2013 at 11:19:51AM +0530, Pekon Gupta wrote:
+> > This patch updates following in omap_nand_probe() and
+> omap_nand_remove()
+> > - replaces "info->nand" with "nand_chip" (struct nand_chip *nand_chip)
+> > - replaces "info->mtd" with "mtd" (struct mtd_info *mtd)
+> > - white-space and formatting cleanup
+> >
+> > Signed-off-by: Pekon Gupta <pekon@ti.com>
+> 
+> This patch looks good. Thanks for being consistent.
+> 
 
-Not that I am the authority on it, but the idea is that devicetree overlays
-will be merged with the existing devicetree, which implies that the same
-requirements would apply.
+> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> > index 8d521aa..5596368 100644
+> > --- a/drivers/mtd/nand/omap2.c
+> > +++ b/drivers/mtd/nand/omap2.c
+> 
+> ...
+> 
+> > @@ -1846,17 +1848,16 @@ static int omap_nand_probe(struct
+> > -
+> > -	info->nand.options	= pdata->devsize;
+> > -	info->nand.options	|= NAND_SKIP_BBTSCAN;
+> > +	mtd			= &info->mtd;
+> > +	mtd->priv		= &info->nand;
+> > +	mtd->name		= dev_name(&pdev->dev);
+> > +	mtd->owner		= THIS_MODULE;
+> > +	nand_chip		= &info->nand;
+> > +	nand_chip->options	= pdata->devsize;
+> 
+> Trivial side comment: the 'devsize' field is not named very
+> informatively. It is apparently just a way to specify nand_chip.options,
+> and it is only actually used for setting a buswidth. (It is also badly
+> named nand_type in other places.) Not sure if it's worth improving, or
+> even dropping at some later point in time.
+> 
+For now I'm keeping this name consistent for now, as this would require
+touching GPMC driver also, where 'devsize' is used to configure
+GPMC controller registers.
 
-However, you would not really use overlays. You would use the devicetree
-infrastructure to create a logically separate instance of a devicetree
-to dynamically configure your driver (which I think is an ingenious idea).
-I don't think the same rules would or should apply there.
+I'll keep this feedback as pending for independent patch where I probe
+driver with "NAND_BUSWIDTH_AUTO".
 
-Guenter
+
+with regards, pekon
