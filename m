@@ -1,22 +1,62 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v5 01/15] ARM: tegra30: add missing CLK IDs
-Date: Sun, 20 Oct 2013 22:31:43 +0100
-Message-ID: <52644BBF.2050704@wwwdotorg.org>
-References: <1382102719-5531-1-git-send-email-pdeschrijver@nvidia.com> <1382102719-5531-2-git-send-email-pdeschrijver@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Sun, 20 Oct 2013 22:35:04 +0100
+Message-ID: <52644C88.5060608@wwwdotorg.org>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <5231E44C.9070800@ahsoftware.de> <20130918003632.CBF48C42BC5@trevor.secretlab.ca> <1805938.y3dym69kEh@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382102719-5531-2-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1805938.y3dym69kEh@avalon>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Alexander Holler <holler@ahsoftware.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2013 02:25 PM, Peter De Schrijver wrote:
-> The Tegra30 clock bindings lack few IDs for audio and clk_out muxes.
+On 10/20/2013 01:41 PM, Laurent Pinchart wrote:
+> Hi Grant,
+> 
+> On Tuesday 17 September 2013 17:36:32 Grant Likely wrote:
+>> On Thu, 12 Sep 2013 17:57:00 +0200, Alexander Holler wrote:
+>>> Am 12.09.2013 17:19, schrieb Stephen Warren:
+>>>> IRQs, DMA channels, and GPIOs are all different things. Their bindings
+>>>> are defined independently. While it's good to define new types of
+>>>> bindings consistently with other bindings, this hasn't always happened,
+>>>> so you can make zero assumptions about the IRQ bindings by reading the
+>>>> documentation for any other kind of binding.
+>>>>
+>>>> Multiple interrupts are defined as follows:
+>>>> 	// Optional; otherwise inherited from parent/grand-parent/...
+>>>> 	interrupt-parent = <&gpio6>;
+>>>> 	// Must be in a fixed order, unless binding defines that the
+>>>> 	// optional interrupt-names property is to be used.
+>>>> 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
+>>>> 	// Optional; binding for device defines whether it must
+>>>> 	// be present
+>>>> 	interrupt-names = "foo", "bar";
+>>>>
+>>>> If you need multiple interrupts, each with a different parent, you need
+>>>> to use an interrupt-map property...
+...
+>> Actually, I think it is solveable but doing so requires a new binding
+>> for interrupts. I took a shot at implementing it earlier this week and
+>> I've got working patches that I'll be posting soon. I created a new
+>> "interrupts-extended" property that uses a phandle+args type of
+>> binding like this:
+...
+>> device@3000 {
+>> 	interrupts-extended = <&intc1 5> <&intc2 3 4> <&intc1 6>;
+>> };
+...
+> Any progress on this ? I'll need to use multiple interrupts with different 
+> parents in the near future, I can take this over if needed.
+> 
+> I've also been thinking that we could possibly reuse the "interrupts" property 
+> without defining a new "interrupts-extended". When parsing the property the 
+> code would use the current DT bindings if an interrupt-parent is present, and 
+> the new DT bindings if it isn't.
 
-Is there a list of changes for V5?
-
-Don't forget that I gave tested-by/acked-by for V4(?), unless you've
-changed so much you consider that to no longer apply?
+interrupt-parents doesn't have to be present in individual nodes; it can
+be inherited from the parent. That means you'd have to convert whole
+sub-trees at once. It seems much more flexible to use a new property and
+hence make it explicit what format the data is in.
