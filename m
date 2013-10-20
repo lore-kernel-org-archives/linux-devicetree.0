@@ -1,33 +1,92 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 0/3] New descriptor-based GPIO interface
-Date: Sat, 19 Oct 2013 23:26:58 +0200
-Message-ID: <CACRpkdbpRkiANA32ZMEhm-XTB_FKCfmKQuGSmsD_0rLi96kPtQ@mail.gmail.com>
-References: <1382030498-23465-1-git-send-email-acourbot@nvidia.com>
-	<CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
-	<CAAVeFu+rj6AtKgfig6ZrYUzW9HZTg5qLyw4aGozyD31P_pEKAQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Sun, 20 Oct 2013 14:41:41 +0200
+Message-ID: <1805938.y3dym69kEh@avalon>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <5231E44C.9070800@ahsoftware.de> <20130918003632.CBF48C42BC5@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFu+rj6AtKgfig6ZrYUzW9HZTg5qLyw4aGozyD31P_pEKAQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130918003632.CBF48C42BC5@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Alexander Holler <holler@ahsoftware.de>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 7:37 PM, Alexandre Courbot <gnurou@gmail.com> wrote:
-> On Fri, Oct 18, 2013 at 4:23 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Grant,
 
->> We might have to take this as the first thing after the merge
->> window and targeted for v3.14.
->
-> No particular pressure from my side to get this in 3.13. Do for the
-> best, and don't hesitate to delay them to 3.14 if you feel they are
-> not tested enough. I'll already feel better once I know they are under
-> your tree. ;)
+On Tuesday 17 September 2013 17:36:32 Grant Likely wrote:
+> On Thu, 12 Sep 2013 17:57:00 +0200, Alexander Holler wrote:
+> > Am 12.09.2013 17:19, schrieb Stephen Warren:
+> > > IRQs, DMA channels, and GPIOs are all different things. Their bindings
+> > > are defined independently. While it's good to define new types of
+> > > bindings consistently with other bindings, this hasn't always happened,
+> > > so you can make zero assumptions about the IRQ bindings by reading the
+> > > documentation for any other kind of binding.
+> > > 
+> > > Multiple interrupts are defined as follows:
+> > > 	// Optional; otherwise inherited from parent/grand-parent/...
+> > > 	interrupt-parent = <&gpio6>;
+> > > 	// Must be in a fixed order, unless binding defines that the
+> > > 	// optional interrupt-names property is to be used.
+> > > 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
+> > > 	// Optional; binding for device defines whether it must
+> > > 	// be present
+> > > 	interrupt-names = "foo", "bar";
+> > > 
+> > > If you need multiple interrupts, each with a different parent, you need
+> > > to use an interrupt-map property (Google it for a more complete
+> > > explanation I guess). Unlike "interrupts", "interrupt-map" has a phandle
+> > > in each entry, and hence each entry can refer to a different IRQ
+> > > controller. You end up defining a dummy interrupt controller node (which
+> > > may be the leaf node with multiple IRQ outputs, which then points at
+> > > itself as the interrupt parent), pointing the leaf node's
+> > > interrupt-parent at that node, and then having interrupt-map "demux" the
+> > > N interrupt outputs to the various interrupt controllers.
+> > 
+> > What a mess. I assume that is the price that bindings don't have to
+> > change.
+> > 
+> > Thanks for clarifying that,
+> > 
+> > Alexander Holler
+> 
+> Actually, I think it is solveable but doing so requires a new binding
+> for interrupts. I took a shot at implementing it earlier this week and
+> I've got working patches that I'll be posting soon. I created a new
+> "interrupts-extended" property that uses a phandle+args type of
+> binding like this:
+> 
+> intc1: intc@1000 {
+> 	interrupt-controller;
+> 	#interrupt-cells = <1>;
+> };
+> 
+> intc2: intc@2000 {
+> 	interrupt-controller;
+> 	#interrupt-cells = <2>;
+> };
+> 
+> device@3000 {
+> 	interrupts-extended = <&intc1 5> <&intc2 3 4> <&intc1 6>;
+> };
+> 
+> 'interrupts-extended' will be proposed as a directly replacement of the
+> 'interrupts' property and it will eliminate the need for an
+> interrupt-map property. A node will be allowed to have one or the other,
+> but not both.
+> 
+> I'll write up a proper binding document and post for review.
 
-I applied it now anyway, I will try to also apply the ACPI stuff
-making use of this interface and then throw it at the autobuild
-to see what happens.
+Any progress on this ? I'll need to use multiple interrupts with different 
+parents in the near future, I can take this over if needed.
 
-Yours,
-Linus Walleij
+I've also been thinking that we could possibly reuse the "interrupts" property 
+without defining a new "interrupts-extended". When parsing the property the 
+code would use the current DT bindings if an interrupt-parent is present, and 
+the new DT bindings if it isn't.
+
+-- 
+Regards,
+
+Laurent Pinchart
