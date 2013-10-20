@@ -1,62 +1,73 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Sun, 20 Oct 2013 22:35:04 +0100
-Message-ID: <52644C88.5060608@wwwdotorg.org>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <5231E44C.9070800@ahsoftware.de> <20130918003632.CBF48C42BC5@trevor.secretlab.ca> <1805938.y3dym69kEh@avalon>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Sun, 20 Oct 2013 23:01:20 +0100
+Message-ID: <526452B0.6080206@wwwdotorg.org>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com>	<1381947912-11741-3-git-send-email-treding@nvidia.com>	<1695169.rzbDl9PeRX@avalon> <CAPM=9tzU36cwcM0pH0J_Vgc6UOj5MHdVNDvn3wpGNuihbMqdQQ@mail.gmail.com> <525FA4B0.8060504@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1805938.y3dym69kEh@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Alexander Holler <holler@ahsoftware.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525FA4B0.8060504-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2013 01:41 PM, Laurent Pinchart wrote:
-> Hi Grant,
+On 10/17/2013 09:49 AM, Tomi Valkeinen wrote:
+> Hi,
 > 
-> On Tuesday 17 September 2013 17:36:32 Grant Likely wrote:
->> On Thu, 12 Sep 2013 17:57:00 +0200, Alexander Holler wrote:
->>> Am 12.09.2013 17:19, schrieb Stephen Warren:
->>>> IRQs, DMA channels, and GPIOs are all different things. Their bindings
->>>> are defined independently. While it's good to define new types of
->>>> bindings consistently with other bindings, this hasn't always happened,
->>>> so you can make zero assumptions about the IRQ bindings by reading the
->>>> documentation for any other kind of binding.
->>>>
->>>> Multiple interrupts are defined as follows:
->>>> 	// Optional; otherwise inherited from parent/grand-parent/...
->>>> 	interrupt-parent = <&gpio6>;
->>>> 	// Must be in a fixed order, unless binding defines that the
->>>> 	// optional interrupt-names property is to be used.
->>>> 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
->>>> 	// Optional; binding for device defines whether it must
->>>> 	// be present
->>>> 	interrupt-names = "foo", "bar";
->>>>
->>>> If you need multiple interrupts, each with a different parent, you need
->>>> to use an interrupt-map property...
-...
->> Actually, I think it is solveable but doing so requires a new binding
->> for interrupts. I took a shot at implementing it earlier this week and
->> I've got working patches that I'll be posting soon. I created a new
->> "interrupts-extended" property that uses a phandle+args type of
->> binding like this:
-...
->> device@3000 {
->> 	interrupts-extended = <&intc1 5> <&intc2 3 4> <&intc1 6>;
->> };
-...
-> Any progress on this ? I'll need to use multiple interrupts with different 
-> parents in the near future, I can take this over if needed.
+> On 17/10/13 11:28, Dave Airlie wrote:
+>>> 
+>>> My biggest concern here is that this will not be compatible
+>>> with the CDF DT bindings. They're not complete yet, but they
+>>> will require connections between entities to be described in
+>>> DT, in a way very similar (or actually identical) to the V4L2
+>>> DT bindings, documented in 
+>>> Documentation/devicetree/bindings/media/video-interfaces.txt.
+>>> Could you have a look at that ? Please ignore all optional
+>>> properties beside remote-endpoint, as they're V4L2 specific.
+>>> 
+>>> I also plan to specify video bus parameters in DT for CDF, but
+>>> this hasn't been finalized yet.
+>>> 
+>> 
+>> While I understand this, I don't see why CDF can't enhance these 
+>> bindings if it has requirements > than they have without
+>> disturbing the panel ones,
+>> 
+>> is DT really that inflexible?
+>> 
+>> It seems that have a simple description for basic panels like
+>> Thierry wants to support, that can be enhanced for the other
+>> cases in the future should suffice, I really don't like blocking
+>> stuff that makes things work on the chance of something that
+>> isn't upstream yet, its sets a bad precedent, its also breaks the
+>> perfect is the enemy of good rule
 > 
-> I've also been thinking that we could possibly reuse the "interrupts" property 
-> without defining a new "interrupts-extended". When parsing the property the 
-> code would use the current DT bindings if an interrupt-parent is present, and 
-> the new DT bindings if it isn't.
+> Just my opinion, but yes, DT is that inflexible.
 
-interrupt-parents doesn't have to be present in individual nodes; it can
-be inherited from the parent. That means you'd have to convert whole
-sub-trees at once. It seems much more flexible to use a new property and
-hence make it explicit what format the data is in.
+I don't really agree.
+
+A specific DT binding is supposed to be an ABI; something that can
+only be changed in a backwards-compatible way (perhaps only in a
+forwards-compatible way too).
+
+However, I see no reason you can't have a simple DT binding now, and
+create a more complex DT binding later. Both can exist (be defined).
+Now, because DT is an ABI, we can't remove kernel support for the old
+binding.
+
+> DT bindings are like a syscall. Once they are there, you need to
+> support them forever. That support can, of course, include some
+> kind of DT data converters or such, that try to convert old
+> bindings to new bindings at kernel boot.
+
+I don't think we need a converter for that; just leave in both the old
+and new parser/driver and treat them as different things. There's no
+reason that a new kernel must provide new features when given an old
+DT written to the old binding, and hence a new kernel can just treat
+the old DT with the old code.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
