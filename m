@@ -1,127 +1,72 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Sun, 20 Oct 2013 21:29:10 +0200
-Message-ID: <52642F06.8010102@gmail.com>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <4885946.7Zgjf9zNXx@avalon> <525FD12D.3000200@ti.com> <3768216.eiA2v5KI6a@avalon> <525FD8DD.3090509@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH V4 0/4] exynos dwmmc device tree node cleanup
+Date: Mon, 21 Oct 2013 05:42:54 +0900
+Message-ID: <5264404E.5090607@samsung.com>
+References: <1378188264-22382-1-git-send-email-yuvaraj.cd@samsung.com>	<1530001.y8QaeTojjb@flatron>	<CA+NduCDRJwt=583ETOM0Tb+eNHJi-Pr7+-AwrAtFgvi+gi6JFA@mail.gmail.com> <CAKuRcO+1FXZ+JCebcxv-CE4XunbctFMR1KwQDzfRUdafz4CYpQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <525FD8DD.3090509-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAKuRcO+1FXZ+JCebcxv-CE4XunbctFMR1KwQDzfRUdafz4CYpQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <t.figa@samsung.com>, Douglas Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 02:32 PM, Tomi Valkeinen wrote:
-> On 17/10/13 15:17, Laurent Pinchart wrote:
->> On Thursday 17 October 2013 14:59:41 Tomi Valkeinen wrote:
->>> On 17/10/13 14:51, Laurent Pinchart wrote:
->>>>> I'm not sure if there's a specific need for the port or endpoint nodes
->>>>> in cases like the above. Even if we have common properties describing
->>>>> the endpoint, I guess they could just be in the parent node.
->>>>>
->>>>> panel {
->>>>> 	remote =<&dc>;
->>>>> 	common-video-property =<asd>;
->>>>> };
->>>>>
->>>>> The above would imply one port and one endpoint. Would that work? If we
->>>>> had a function like parse_endpoint(node), we could just point it to
->>>>> either a real endpoint node, or to the device's node.
->>>>
->>>> You reference the display controller here, not a specific display
->>>> controller output. Don't most display controllers have several outputs ?
->>>
->>> Sure. Then the display controller could have more verbose description.
->>> But the panel could still have what I wrote above, except the 'remote'
->>> property would point to a real endpoint node inside the dispc node, not
->>> to the dispc node.
->>>
->>> This would, of course, need some extra code to handle the different
->>> cases, but just from DT point of view, I think all the relevant
->>> information is there.
+On 10/18/13 20:07, Yuvaraj Kumar wrote:
+> Gentle Ping...
+>
+Sorry for late response due to missing :(
+
+> On Thu, Sep 26, 2013 at 10:51 AM, Yuvaraj Cd<yuvaraj.lkml@gmail.com>  wrote:
+>> Hi Kukjin,
+>>   Can you please take this series to your tree?
 >>
->> There's many ways to describe the same information in DT. While we could have
->> DT bindings that use different descriptions for different devices and still
->> support all of them in our code, why should we opt for that option that will
->> make the implementation much more complex when we can describe connections in
->> a simple and generic way ?
->
-> My suggestion was simple and generic. I'm not proposing per-device
-> custom bindings.
->
-> My point was, if we can describe the connections as I described above,
-> which to me sounds possible, we can simplify the panel DT data for 99.9%
-> of the cases.
->
-> To me, the first of these looks much nicer:
->
-> panel {
-> 	remote =<&remote-endpoint>;
-> 	common-video-property =<asd>;
-> };
->
-> panel {
-> 	port {
-> 		endpoint {
-> 			remote =<&remote-endpoint>;
-> 			common-video-property =<asd>;
-> 		};
-> 	};
-> };
->
-> If that can be supported in the SW by adding complexity to a few
-> functions, and it covers practically all the panels, isn't it worth it?
->
-> Note that I have not tried this, so I don't know if there are issues.
-> It's just a thought. Even if there's need for a endpoint node, perhaps
-> the port node can be made optional.
+Yeah, looks good to me, applied.
 
-Each endpoint node was originally supposed to contain the port configuration
-properties specific to a single remote device. So there would be more than
-one endpoint sub-mode of a port node only if, e.g. a display controller 
-could
-output data through a single port to more than one panel (not necessarily
-simultaneously).
-
-If it is known in the display subsystems there is no use case where single
-data output (port) is being switched between (connected to) multiple data
-sinks we could probably omit the endpoint nodes in order to simplify the
-bindings a bit.
-
-We could have something like:
-
-dispc {
-	disp_port: port {
-		remote-port = <&p_port>;
-		common-video-property = <>;
-	};
-};
-
-panel {
-	p_port: port {
-		remote-port = <&disp_port>;
-		common-video-property = <>;
-	};
-};
-
-Alternatively we could say, that for only one endpoint node needed such an
-endpoint node can be omitted and the common video properties can be 
-specified
-directly in the port node.
-
-This would require introducing 'remote-port' phandle property, as
-remote-endpoint is supposed to point to an endpoint, not a port node.
-
-Regarding the reverse link phandle, I was wondering if it shouldn't be made
-optional. We would have to think twice about such a change though, since
-making an optional property back mandatory wouldn't be possible.
-
---
 Thanks,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kukjin
+
+
+>> Best Regards
+>> Yuvaraj
+>>
+>> On Tue, Sep 3, 2013 at 1:41 PM, Tomasz Figa<tomasz.figa@gmail.com>  wrote:
+>>> Hi Yuvaraj,
+>>>
+>>> On Tuesday 03 of September 2013 11:34:20 Yuvaraj Kumar C D wrote:
+>>>> changes from V3:
+>>>>        1.Added two new patch in the series
+>>>>                [1] ARM: dts: Move fifo-depth property from board dts
+>>>>                [2] ARM: dts: rename mmc dts node for exynos5 series
+>>>> changes from V2:
+>>>>        1.remove from exynos5.dtsi and add in exynos5250.dtsi
+>>>>          in single patch.Suggested by Tomasz Figa.
+>>>>        2.Separate patch for changing status property of dwmmc node
+>>>>          in smdk5250 and arndale board dts file.
+>>>>
+>>>> V1 Patches:
+>>>> 1.[PATCH 1/2] ARM: dts: remove dwmmc nodes from exynos5 common dts file.
+>>>> http://www.spinics.net/lists/linux-samsung-soc/msg21602.html
+>>>> 2.[PATCH 2/2] ARM: dts: Add dwmmc nodes in SOC specific dts file
+>>>>        http://www.spinics.net/lists/linux-samsung-soc/msg21603.html
+>>>>
+>>>> Yuvaraj Kumar C D (4):
+>>>>    ARM: dts: Move dwmmc nodes from exynos5.dtsi to exynos5250.dtsi
+>>>>    ARM: dts: exynos: change status property of dwmmc nodes
+>>>>    ARM: dts: Move fifo-depth property from board dts
+>>>>    ARM: dts: rename mmc dts node for exynos5 series
+>>>>
+>>>>   arch/arm/boot/dts/cros5250-common.dtsi    |    8 +++----
+>>>>   arch/arm/boot/dts/exynos5.dtsi            |   21 -----------------
+>>>>   arch/arm/boot/dts/exynos5250-arndale.dts  |   16 ++++---------
+>>>>   arch/arm/boot/dts/exynos5250-smdk5250.dts |   16 ++++---------
+>>>>   arch/arm/boot/dts/exynos5250-snow.dts     |    2 +-
+>>>>   arch/arm/boot/dts/exynos5250.dtsi         |   36
+>>>> ++++++++++++++++++++++------- 6 files changed, 41 insertions(+), 58
+>>>> deletions(-)
+>>>
+>>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
+>>>
+>>> Best regards,
+>>> Tomasz
