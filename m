@@ -1,43 +1,63 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Sun, 20 Oct 2013 23:07:36 +0100
-Message-ID: <52645428.9080607@wwwdotorg.org>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <525FB368.6020003@ti.com> <20131017104856.GA10993@ulmo.nvidia.com> <3592147.9IprvsogX6@avalon>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Sun, 20 Oct 2013 23:08:39 +0100
+Message-ID: <20131020220839.GT2443@sirena.org.uk>
+References: <52644A9E.3060007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IVjrjjcVVZvl1nZf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3592147.9IprvsogX6@avalon>
+Content-Disposition: inline
+In-Reply-To: <52644A9E.3060007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
-...
->> As I said, anything that really needs a CDF binding to work
->> likely isn't "simple" anymore, therefore a separate driver can
->> easily be justified.
-> 
-> The system as a whole would be more complex, but the panel could be
-> the same. We can't have two drivers for the same piece of hardware
-> in the DT world, as there will be a single compatible string and no
-> way to choose between the drivers (unlike the board code world that
-> could set device names to "foo- encoder-v4l2" or "foo-encoder-drm"
-> and live happily with that ever after).
 
-That's not true. We can certainly define two different compatible
-values for a piece of HW if we have to. We can easily control whether
-they are handled by the same or different drivers in the OS.
+--IVjrjjcVVZvl1nZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Now, we should try to avoid this, because then that means that the
-original binding wasn't fully describing the HW. However, at least in
-the case of these simple LCD panels, it's hard to see that there is
-anything more than what's already in Thierry's binding. Remember, the
-binding is a description of the HW, not any Linux-internal details of
-how e.g. a CDF or DRM subsystem is supposed to use the HW; that had
-better be embodied into the driver or subsystem code, which aren't
-ABIs, and hence can be easily modified/enhanced.
+On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+
+> IIRC (and perhaps I don't; it was really slightly before my active
+> involvement in kernel development) Linus triggered the whole ARM DT
+> conversion in response to disliking the volume of changes, and
+> conflicts, in board files. The idea of DT conversion being that all the
+> board-specific details could be moved out of the kernel and into DT
+> files, thus causing him not to have to see it.
+
+A large part of this was to do with the needs of distros and their users
+- they have a strong need to ship a device neutral kernel and to have a
+reasonable ability to have their kernel deploy on hardware unknown to
+them.  Allowing the device tree to be delivered with the system rather
+than have the board configuration in the kernel helps achieve that goal.
+
+--IVjrjjcVVZvl1nZf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZFRjAAoJELSic+t+oim9BL4P/3UHVM2YotuxKU+jR88T09z5
+UaC8BYaFkF/5IZzT0aqUFZ/dYcY4fKrdAM7FeSujkNb3wuwLRGImx70gZ0zlg9cX
+vycQF2svyPhd8KHZBm4FxpvTbgIUnVxJWaX+K/5z4nR5pFyQbeqRUlJeM8L+ZaM5
+M1ZMhw+J1l9fZrNyiG8SjIo5gsGAQOP4+ZdoEYlKZ9pDsKci5dhicZNvJZn+ZsPY
+1cwXJaDnLI/zPH2jIMkWHx7nWWWj8q75vvYPu/2K9E5/F4r5reKuxZlfTMy+aZym
+JWOBG1w6vWzgvzG8LseQjMx0yFWGiGxyapcaIUg0gZVhkSdAyJ8O7Jc4X41+l1/l
+z/Kz5PXNt8CEM3IsXTMYLm0kKJITzaXARLQu3jFbo7SLRIvG1b9VsMPZpWTg1+m0
+13qGdEFZ2YMLGiUaJVLyR2nCFlv/cx+859nH/KrszZH1phihATg1iXQmDOuNUin8
+Hzr/xmkPNqkhIQ6+s91W8tYARSePw4gxvsWqwpjvkbkNGlBBBnnPZUpMgXucKPYE
+jV1ta6OzTIfIRpWwqekTOJHHk36/uMluykCstJwFj12qfLxYrdr9zqcYorT8phQM
+apUh5SHPpyTs3h0j2AeGt24CbXsMNwoxP9k60h/SpitlwLOEuAwI0Id29Iky0hhp
+ju1FGI1mOtJkwD4pmQk3
+=gISj
+-----END PGP SIGNATURE-----
+
+--IVjrjjcVVZvl1nZf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
