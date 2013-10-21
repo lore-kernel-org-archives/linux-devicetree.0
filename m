@@ -1,58 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv4][ 09/11] ARM: dts: imx25.dtsi: Add an alias for the
- Audio Multiplexer.
-Date: Mon, 21 Oct 2013 23:03:22 +0400
-Message-ID: <52657A7A.2010507@cogentembedded.com>
-References: <1382349098-11502-1-git-send-email-denis@eukrea.com> <1382349098-11502-9-git-send-email-denis@eukrea.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
+ or is there something	better?
+Date: Mon, 21 Oct 2013 21:05:44 +0100
+Message-ID: <52658918.1060708@wwwdotorg.org>
+References: <52644A9E.3060007@wwwdotorg.org> <20131020231134.GR25034@n2100.arm.linux.org.uk> <52646AF9.3050309@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382349098-11502-9-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <52646AF9.3050309-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 10/21/2013 12:44 AM, Guenter Roeck wrote:
+> On 10/20/2013 04:11 PM, Russell King - ARM Linux wrote:
+>> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+>>> The only thing we've really moved out of the kernel is the exact IDs of
+>>> which GPIOS, interrupts, I2C/SPI ports the devices are connected to; the
+>>> simple stuff not the hard stuff. The code hasn't really been simplified
+>>> by DT - if anything, it's more complicated since we now have to parse
+>>> those values from DT rather than putting them into simple
+>>> data-structures.
+>>
+>> Here's my random thoughts this evening on DT, orientated mostly on a
+>> problem area I've been paying attention to recently.
+>>
+>> In some ways, DT has made things much harder.  I don't know whether
+> 
+> On the other side, DT has made some things much simpler.
+> 
+> Problem case: Chip A's interrupt pin is connected to gpio pin of chip B.
+> Chip B's interrupt pin is connected to a gpio pin on chip C. Chip C's
+> interrupt pin is connected to the interrupt controller. Chips B and C
+> are multi-function FPGAs. Exact gpio pins used vary from board to board.
+> 
+> With DT, this relationship is easy to describe, and none of the chip
+> drivers
+> really needs to know what is connected to what. Without DT, it would be
+> much more complex.
 
-On 10/21/2013 01:51 PM, Denis Carikli wrote:
-
-    I think alias is something different, defined in the "aliases" node=
-=2E
-You probably mean a label.
-
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
->   arch/arm/boot/dts/imx25.dtsi |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-
-> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.d=
-tsi
-> index 7c0a019..800fe7f 100644
-> --- a/arch/arm/boot/dts/imx25.dtsi
-> +++ b/arch/arm/boot/dts/imx25.dtsi
-> @@ -281,7 +281,7 @@
->   				};
->   			};
->
-> -			audmux@43fb0000 {
-> +			audmux: audmux@43fb0000 {
-
-WBR, Sergei
-
+I thought that was very easy with board files. For every chip that gets
+instantiated, you tell it which base IRQ ID to use. For every chip that
+outputs a IRQ, you tell it which IRQ ID that signal is, simply by adding
+the recipient chip's IRQ base and an offset. That seems very simple. If
+you don't want to add the base/offset together, we could always have
+invented some lookup table similar to what regulators had, and pinctrl
+has now, which says for each (device name, IRQ name/number) output,
+here's the (device name, IRQ name/number) of the associated input.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
