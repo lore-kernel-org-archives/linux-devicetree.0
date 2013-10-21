@@ -1,81 +1,67 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
-Date: Mon, 21 Oct 2013 05:16:05 -0700
-Message-ID: <20131021121605.11944.74007@quantum>
-References: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
- <1816869.ggMDlA1qNY@flatron> <5264425E.4040301@samsung.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH] of: fix iteration bug over CPU reg properties
+Date: Mon, 21 Oct 2013 13:38:26 +0100
+Message-ID: <52652042.4090200@arm.com>
+References: <1380904802-10432-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5264425E.4040301@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: rjw@sisk.pl, kgene.kim@samsung.com, mark.rutland@arm.com, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, viresh.kumar@linaro.org, s.nawrocki@samsung.com, m.szyprowski@samsung.com, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org, thomas.abraham@linaro.org, b.zolnierkie@samsung.com, t.stanislaws@samsung.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rob.herring@calxeda.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob@landley.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380904802-10432-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kukjin Kim (2013-10-20 13:51:42)
-> On 10/20/13 01:03, Tomasz Figa wrote:
-> > Hi Mike, Kukjin, Rafael,
-> >
-> > On Tuesday 24 of September 2013 14:50:06 Mateusz Krawczuk wrote:
-> >> This patch series is the new s5pv210 clock implementation
-> >> (using common clk framework).
-> >>
-> >> This implementation is compatible with device tree definition and board
-> >> files.
-> >>
-> >> This patch series is based on linux-next and has been tested on goni and
-> >> aquila
-> >> boards using board file.
-> >>
-> >> Since v4:
-> >> Corrected mux flags for finpll.
-> >>
-> >> Since v3:
-> >>
-> >> Replace s5pv210_clk_register_finpll, by creating mux finpll
-> >> with xusbxti and xxti as parrents.
-> >>
-> >>
-> >> Mateusz Krawczuk (3):
-> >>    clk: samsung: Add clock driver for s5pc110/s5pv210
-> >>    Cpufreq: s5pv210 cpufreq fixes for CCF
-> >>    ARM: s5pv210: Migrate clock handling to Common Clock Framework
-> >>
-> >>   .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
-> >>   arch/arm/mach-s5pv210/Kconfig                      |   9 +
-> >>   arch/arm/mach-s5pv210/Makefile                     |   4 +-
-> >>   arch/arm/mach-s5pv210/common.c                     |  17 +
-> >>   arch/arm/mach-s5pv210/common.h                     |  10 +
-> >>   arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
-> >>   arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
-> >>   arch/arm/plat-samsung/Kconfig                      |   2 +-
-> >>   drivers/clk/samsung/Makefile                       |   3 +
-> >>   drivers/clk/samsung/clk-s5pv210.c                  | 673
-> >> +++++++++++++++++++++ drivers/cpufreq/s5pv210-cpufreq.c
-> >>   |   6 +-
-> >>   include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
-> >>   12 files changed, 1019 insertions(+), 8 deletions(-)
-> >>   create mode 100644
-> >> Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
-> >> create mode 100644 drivers/clk/samsung/clk-s5pv210.c
-> >>   create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
-> >
-> > I believe this series is reasonable to be applied. Could we agree on
-> > the tree it would go through and get all tne required acks?
-> >
-> > Best regards,
-> > Tomasz
-> 
-> I agree.
-> 
-> Mike, how do you think the common clk stuff for s5pv210?
+Hi Grant,
 
-Clock code looks good to me. Which tree do you want to take it through?
+On 04/10/13 17:40, Grant Likely wrote:
+> The size of each hwid in a cpu nodes 'reg' property is defined by the
+> parents #address-cells property in the normal way. The cpu parsing code
+> has a bug where it will overrun the end of the property if
+> address-cells is greater than one. This commit fixes the problem by
+> adjusting the array size by the number of address cells. It also makes
+> sure address-cells isn't zero for that would cause an infinite loop.
+> 
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+> 
+> I discovered this during code inspection. I don't think it is an actual
+> bug seen in the wild, but the code does look wrong. I'd appreciate
+> someone take a look and confirm that I've read the code right.
+> 
+
+Thanks for finding and fixing the bug.
+I have tested this on ARM64 with 2 cell reg value using [1].
+
+Tested-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 
 Regards,
-Mike
+Sudeep
 
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-October/206401.html
+
+>  drivers/of/base.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> - Kukjin
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index e4c9945..470b871 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -263,11 +263,11 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
+>  	int ac, prop_len, tid;
+>  	u64 hwid;
+>  
+> -	ac = of_n_addr_cells(cpun);
+> +	ac = of_n_addr_cells(cpun) ? : OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+>  	cell = of_get_property(cpun, prop_name, &prop_len);
+>  	if (!cell)
+>  		return false;
+> -	prop_len /= sizeof(*cell);
+> +	prop_len /= sizeof(*cell) * ac;
+>  	for (tid = 0; tid < prop_len; tid++) {
+>  		hwid = of_read_number(cell, ac);
+>  		if (arch_match_cpu_phys_id(cpu, hwid)) {
+> 
