@@ -1,83 +1,56 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Mon, 21 Oct 2013 14:57:26 +0530
-Message-ID: <5264F37E.9060307@ti.com>
-References: <20131018141221.GH2721@beef>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 3/8] clk: max77686: Refactor successful exit of probe function
+Date: Mon, 21 Oct 2013 15:11:21 +0530
+Message-ID: <CAK9yfHxesuwz-+ERYJ2joHZ4_O04E7e3ZSjYWQUDxfV7Wxoebw@mail.gmail.com>
+References: <1382027442-1992-1-git-send-email-t.figa@samsung.com>
+	<1382027442-1992-4-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131018141221.GH2721@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <matt.porter@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1382027442-1992-4-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 October 2013 07:42 PM, Matt Porter wrote:
-> This is a summary of an unresolved issue resulting from this thread:
-> http://www.spinics.net/lists/arm-kernel/msg277700.html
-> 
-> The BCM281xx family of SoCs contain an OTG subsystem consisting of a
-> DWC2 HSOTG controller and an internal UTMI PHY. This is appears as
-> follows (monospace font requirement ahead):
-> 
-> +----------------+              +-----------------+
-> |                |              |                 |
-> |                |       8      |                 |
-> |      DWC2      |<------/----->|     BCM Kona    |
-> |                |     UTMI     |     UTMI PHY    |
-> |                |              |                 |
-> +----------------+              +-----------------+
-> 
-> The internal UTMI phy is connected via an 8-bit data path. There is
-> no way to autodetect whether the data path is 8-bit or 16-bit. As such,
-> it was determined that a DT property is necessary to reflect this.
-> 
-> In the original patch submitted this property was offered as an
-> additional optional dwc2 property:
-> 
-> --- a/Documentation/devicetree/bindings/staging/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-> @@ -6,10 +6,14 @@ Required properties:
->  - reg : Should contain 1 register range (address and length)
->  - interrupts : Should contain 1 interrupt
-> 
-> +Optional properties:
-> +- snps,phy-utmi-width: Must contain the UTMI data width (either 8 or 16)
-> +
->  Example:
-> 
->          usb@101c0000 {
->                  compatible = "ralink,rt3050-usb, snps,dwc2";
->                  reg = <0x101c0000 40000>;
->                  interrupts = <18>;
-> +		snps,phy-utmi-width = <8>;
->          };
-> 
-> The open question is whether this required hardware property belongs to
-> the DWC2 controller or the PHY itself.
+Hi Tomasz,
 
-I think it makes sense to keep the data width property in the dwc2 node itself.
-I mean it describes how the dwc2 IP is configured in that particular SoC (given
-that it can be either <8> or <16>).
+On 17 October 2013 22:00, Tomasz Figa <t.figa@samsung.com> wrote:
+> The function can simply return 0, without jumping to a separate label,
+> which does exactly the same. This patch does not introduce any
+> functional change, just a clean-up.
+>
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/clk/clk-max77686.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
+> index e40ecdb..5d78460 100644
+> --- a/drivers/clk/clk-max77686.c
+> +++ b/drivers/clk/clk-max77686.c
+> @@ -178,7 +178,7 @@ static int max77686_clk_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, max77686_clks);
+>
+> -       goto out;
+> +       return 0;
+>
+>  err_clk_pmic:
+>         clkdev_drop(max77686_clks[MAX77686_CLK_CP]->lookup);
+> @@ -187,7 +187,6 @@ err_clk_cp:
+>         clkdev_drop(max77686_clks[MAX77686_CLK_AP]->lookup);
+>         kfree(max77686_clks[MAX77686_CLK_AP]->hw.clk);
+>  err_clk_ap:
 
-Thanks
-Kishon
+You could probably do the same for this label too.
 
-> 
-> If the UTMI data path width is considered to be a property of the PHY
-> then this will impact both the generic PHY framework and the PHY device
-> node (producer) binding. The binding would need to be extended to carry
-> the data path width property. In addition, the generic PHY framework
-> would need to allow for this information to be gathered in some manner
-> for use by the controller driver (PHY consumer). In the case of DWC2,
-> the driver needs to know whether to program the phy interface for 8 or
-> 16 bit UTMI communication.
-> 
-> Thanks,
-> Matt
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> -out:
+>         return ret;
+>  }
+>
+
+-- 
+With warm regards,
+Sachin
