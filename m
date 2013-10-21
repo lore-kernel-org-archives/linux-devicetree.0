@@ -1,43 +1,91 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH 2/2] arm: dts: am335x sk: add touchscreen support
-Date: Mon, 21 Oct 2013 15:13:24 -0500
-Message-ID: <1382386404-6659-3-git-send-email-balbi@ti.com>
-References: <1382386404-6659-1-git-send-email-balbi@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
+Date: Mon, 21 Oct 2013 21:19:21 +0100
+Message-ID: <52658C49.80400@wwwdotorg.org>
+References: <52644A9E.3060007@wwwdotorg.org> <20131021085420.GA21518@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1382386404-6659-1-git-send-email-balbi@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131021085420.GA21518-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing nodes for the touchscreen available
-on AM335x EVM SK.
+On 10/21/2013 09:54 AM, Thierry Reding wrote:
+> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+...
+>> I wonder if DT is solving the problem at the right level of
+>> abstraction? The kernel still needs to be aware of all the
+>> nitty-gritty details of how each board is hooked up different,
+>> and have explicit code to deal the union of all the different
+>> board designs.
+>> 
+>> For example, if some boards have a SW-controlled regulator for a
+>> device but others don't, the kernel still needs to have driver
+>> code to actively control that regulator, /plus/ the regulator
+>> subsystem needs to be able to substitute a dummy regulator if
+>> it's optional or simply missing from the DT.
+>> 
+>> Another example: MMC drivers need to support some boards
+>> detecting SD card presence or write-protect via arbitrary GPIOs,
+>> and others via dedicated logic in the MMC controller.
+>> 
+>> In general, the kernel still needs a complete driver to every
+>> last device on every strange board, and needs to support every
+>> strange way some random board hooks all the devices together.
+> 
+> I have some difficulty understanding what you think should've been
+> moved out of the kernel. There's only so much you can put into data
+> structures and at some point you need to start writing device
+> specific code for the peripherals that you want to drive.
 
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+My point was that (part of) the intent of adding DT support to the
+kernel was to get rid of all the board-specific code/churn in the
+kernel. That's not really possible, since DT is just representing the
+data about the HW (e.g. which GPIO/IRQ numbers) and not the behaviour.
+In order to really remove signifcant board-specific code from the
+kernel, you need to move behaviour out of the kernel too, i.e. hide it
+behind some kind of firmware or virtualization interface, and hence
+have simpler drivers that don't know all the details.
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 4f339fa..d7c2c0c 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -419,3 +419,13 @@
- 	phy_id = <&davinci_mdio>, <1>;
- 	phy-mode = "rgmii-txid";
- };
-+
-+&tscadc {
-+	status = "okay";
-+	tsc {
-+		ti,wires = <4>;
-+		ti,x-plate-resistance = <200>;
-+		ti,coordinate-readouts = <5>;
-+		ti,wire-config = <0x00 0x11 0x22 0x33>;
-+	};
-+};
--- 
-1.8.4.GIT
+...
+>> * Would UEFI/ACPI/similar fulfill this role?
+> 
+> If I recall correctly, the original OpenFirmware that introduced
+> the DT concept used to have something similar to UEFI/ACPI.
+> Essentially it was possible to not only pass the DT to the
+> operating system but also allow the operating system to call back
+> into the firmware to request service.
 
+Yes, OpenFirmware might be another possible firmware interface. I
+don't know anything about it...
+
+>> * Perhaps a standard virtualization interface could fulfil this
+>> role?
+...
+> What will likely happen with such a solution is that we'll have to
+> come up with a standard interface that the guest OS expects.
+
+I think much of that is already defined for a paravirt KVM guest
+though, right?
+
+...
+> Vendor kernels that implement the host OS will effectively become
+> forks of their own since there's no incentive to upstream code
+> anymore. Linux upstream becomes a single unified architecture
+> because all interfaces are now the same. Vendors are back to
+> brewing their own.
+
+True. Many/most(?) vendors work like that for most *products* though
+already...
+
+> ...
+
+(Yes, I fully acknowledge there are many issues with
+firmware/virtualization as a platform...)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
