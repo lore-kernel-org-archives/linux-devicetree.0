@@ -1,95 +1,109 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
- timer.
-Date: Mon, 21 Oct 2013 12:05:33 +0100
-Message-ID: <20131021110532.GA8144@kartoffel>
-References: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
+Subject: Re: [RFC v2 PATCH 11/14] Documentation: Add st_magn binding
+ documentation
+Date: Mon, 21 Oct 2013 12:16:32 +0100
+Message-ID: <20131021111631.GB8144@kartoffel>
+References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
+ <1380299538-22047-12-git-send-email-l.czerwinski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380739472-26172-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380299538-22047-12-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "denis.ciocca-qxv4g6HH51o@public.gmane.org" <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2013 at 07:44:32PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Fri, Sep 27, 2013 at 05:32:15PM +0100, Lukasz Czerwinski wrote:
+> This patch adds the document for STMicroeletronics Magnetic Sensors driver under
+> Documentation/devicetree/bindings/iio/.
 > 
-> Add device tree support to the DW watchdog timer.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
-> v2:
-> - Use of_match_ptr() for of_match_table
-> ---
->  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
->  drivers/watchdog/dw_wdt.c                          |    8 ++++++++
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>  .../bindings/iio/magnetometer/st_magnometer.txt    |   33 ++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/st_magnometer.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/st_magnometer.txt b/Documentation/devicetree/bindings/iio/magnetometer/st_magnometer.txt
 > new file mode 100644
-> index 0000000..29e150b
+> index 0000000..fb4f473
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> @@ -0,0 +1,16 @@
-> +Synopsys Designware Watchdog Timer
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/st_magnometer.txt
+> @@ -0,0 +1,33 @@
+> +STMicroelectronics Magnetic Sensors
 > +
-> +Required Properties:
+> +Required properties:
 > +
-> +- Compatiblity	: "snps,dw-wdt"
+> +  - compatible : value should be one of the following:
 
-This should presumably be:
+s/should be/should contain/ -- we might have a future variant that's compatible.
 
-- compatbile: should contain "snps,dw-wdt"
+> +	(a) "st,lsm303dlhc" for magnetometer in LSM330DLHC
+> +	(b) "st,lsm303dlm" for magnetometer in LIS3DH
+> +	(c) "st,lis3mdl" for magnetometer in LSM330
 
-> +- reg		: Base address of the watchdog timer register.
+I'd drop the (a), (b), (c) here, it'll just make it more painful to add future
+variants. It's probably better to use "*" instead.
 
-And the size...
+> +
+> +  - reg : the I2C address of the magnetometer
+> +
+> +Optional properties:
+> +
+> +  - st,drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
+
+Could you elaborate on this?
+
+What does this property mena?
+
+What values are valid?
+
+> +
+> +  - interrupts : Interrupt numbers for the ST accelerometers, as an array
+> +	in case the magnetometer have more interrupt lines:
+> +	<DataReady irq>,
+> +	<Event irq>;
+> +
+> +  - interrupt-names : Array of strings associated with the interrupt numbers
+
+Nit: Interrupts are described by interrupt-specifiers.
+
+Please describe the names explicitly, otherwise there's no point having them at
+all, as no-one knows what they are...
+
+How about something like:
+
+- interrupts: a list of interrupt-specifiers, one for each entry in interrupt-names
+- interrupt names: a list of strings. Should contain
+  * "drdy" for the ???? interrupt
+  * "event" for the ???? interrupt
+
 
 > +
 > +Example:
 > +
-> +	watchdog0: wd@ffd02000 {
-> +		compatible = "snps,dw-wdt";
-> +		reg = <0xffd02000 0x1000>;
-> +		interrupts = <0 171 4>;
+> +lis3mdl@1c {
+> +	compatible = "st,lis3mdl";
+> +	reg = <0x1C>;
+> +
+> +	st,drdy-int-pin = /bits/ 8 <1>;
 
-This wasn't mentioned.
-
-Is it necessary?
-
-Is it the only interrupt?
-
-> +		clocks = <&per_base_clk>;
-
-Similarly, is this the only clock?
-
-Is it necessary?
-
-> +		status = "okay";
-
-This is unnecessary.
+The use of /bits/ is remarkably uncommon, why do you need it here?
 
 Thanks,
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +	interrupt-parent = <&gpf0>;
+> +	interrupts = <5 0>, <6 0>;
+> +	interrupt-names = "drdy-int", "event-int";
+> +};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
