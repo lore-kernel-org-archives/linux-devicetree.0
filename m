@@ -1,95 +1,235 @@
-From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 4/6] clocksource: kona: Add basic use of
- external clock
-Date: Mon, 21 Oct 2013 14:07:14 -0700
-Message-ID: <CAAYSxhoBvr2Q=ZEQX6hgBjLorgjCjeLLqB9WP2RQ1YFBejjHbg@mail.gmail.com>
-References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
-	<1381960030-1640-5-git-send-email-tim.kryger@linaro.org>
-	<20131017140542.GE24056@e106331-lin.cambridge.arm.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 104 board
+Date: Mon, 21 Oct 2013 23:57:46 +0200
+Message-ID: <20131021215746.GF23593@lunn.ch>
+References: <87txgapcas.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131017140542.GE24056-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87txgapcas.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 7:05 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Oct 16, 2013 at 10:47:08PM +0100, Tim Kryger wrote:
->> When an clock handle is specified in the device tree, enable it and use
->> it to determine the external clock frequency.
->
-> I'd drop handle here and just say "When a clock is specified".
->
-> This will need a binding document update.
+> +++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> @@ -0,0 +1,197 @@
+> +/*
+> + * Device Tree file for NETGEAR ReadyNAS 104
+> + *
+> + * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-370.dtsi"
+> +
+> +/ {
+> +	model = "NETGEAR ReadyNAS 104";
+> +	compatible = "netgear,readynas-104", "marvell,armada370", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x20000000>; /* 512 MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
+> +			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
+> +
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			/* Connected to FL1009 USB 3.0 controller */
+> +			pcie@1,0 {
+> +				/* Port 0, Lane 0 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* Connected to Marvell 88SE9215 SATA controller */
+> +			pcie@2,0 {
+> +				/* Port 1, Lane 0 */
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		internal-regs {
+> +			serial@12000 {
+> +				clock-frequency = <200000000>;
+> +				status = "okay";
+> +			};
+> +
+> +			sata@a0000 {
+> +				status = "disabled";
+> +			};
 
-Can you be more specific about what you are looking for here?
+It should be disabled by default, so you can skip this.
 
-Shall I just say that the frequency property is now deprecated since
-it actually belongs to the external clock whose association with a
-kona timer instance might be declared in the DT using the common clock
-bindings but could also be declared through other means?
+> +
+> +			pinctrl {
+> +				poweroff: poweroff {
+> +					marvell,pins = "mpp60";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				backup_key_pin: backup-key-pin {
+> +					marvell,pins = "mpp52";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				power_key_pin: power-key-pin {
+> +					marvell,pins = "mpp62";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				backup_led_pin: backup-led-pin {
+> +					marvell,pins = "mpp63";
+> +					marvell,function = "gpo";
+> +				};
+> +
+> +				power_led_pin: power-led-pin {
+> +					marvell,pins = "mpp64";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				reset_key_pin: reset-key-pin {
+> +					marvell,pins = "mpp65";
+> +					marvell,function = "gpio";
+> +				};
+> +			};
 
->> Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  drivers/clocksource/bcm_kona_timer.c | 14 +++++++++++---
->>  1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/clocksource/bcm_kona_timer.c b/drivers/clocksource/bcm_kona_timer.c
->> index 0d7d8c3..fd11f96 100644
->> --- a/drivers/clocksource/bcm_kona_timer.c
->> +++ b/drivers/clocksource/bcm_kona_timer.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/jiffies.h>
->>  #include <linux/clockchips.h>
->>  #include <linux/types.h>
->> +#include <linux/clk.h>
->>
->>  #include <linux/io.h>
->>  #include <asm/mach/time.h>
->> @@ -107,11 +108,18 @@ static const struct of_device_id bcm_timer_ids[] __initconst = {
->>  static void __init kona_timers_init(struct device_node *node)
->>  {
->>       u32 freq;
->> +     struct clk *external_clk;
->>
->> -     if (!of_property_read_u32(node, "clock-frequency", &freq))
->> +     external_clk = of_clk_get_by_name(node, NULL);
->
-> Is there only a single external clock input to the kona timer, or is
-> only one relevant here?
->
-> Are there any other inputs currently not modelled (e.g. regulators)?
+You can also skip these. The gpio driver will put the pin into gpio
+mode when the leds/keys driver claims it. It is a case of, i didn't
+know that, put entries like this into a number of files, and people
+have been copying my mistake ever since. Thomas made an effort to
+correct this for some boards.
 
-The timer block relies upon a single clock and does not use any regulators.
+> +
+> +			mdio {
+> +				phy0: ethernet-phy@0 {
+> +					reg = <0>;
+> +				};
+> +
+> +				phy1: ethernet-phy@1 {
+> +					reg = <1>;
+> +				};
+> +			};
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			ethernet@74000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				compatible = "marvell,mv64xxx-i2c";
+> +				clock-frequency = <100000>;
+> +				status = "okay";
+> +
+> +				g762: g762@3e {
+> +					compatible = "gmt,g762";
+> +					reg = <0x3e>;
+> +					clocks = <&g762_clk>; /* input clock */
+> +					fan_gear_mode = <0>;
+> +					fan_startv = <1>;
+> +					pwm_polarity = <0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	clocks {
+> +	       #address-cells = <1>;
+> +	       #size-cells = <0>;
+> +
+> +	       g762_clk: fixedclk {
+> +			 compatible = "fixed-clock";
+> +			 #clock-cells = <0>;
+> +			 clock-frequency = <8192>;
+> +	       };
+> +	};
+> +
+> +	gpio_leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&backup_led_pin &power_led_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		blue_backup_led {
+> +			label = "rn104:blue:backup";
+> +			gpios = <&gpio1 31 1>;  /* GPIO 63 Active Low */
+> +			default-state = "on";
+> +		};
+> +
+> +		blue_power_led {
+> +			label = "rn104:blue:pwr";
+> +			gpios = <&gpio2 0 1>;   /* GPIO 64 Active Low */
+> +			linux,default-trigger = "heartbeat";
 
->> +
->> +     if (!IS_ERR(external_clk)) {
->> +             arch_timer_rate = clk_get_rate(external_clk);
->> +             clk_prepare_enable(external_clk);
->> +     } else if (!of_property_read_u32(node, "clock-frequency", &freq)) {
->>               arch_timer_rate = freq;
->> -     else
->> -             panic("clock-frequency not set in the .dts file");
->> +     } else {
->> +             panic("neither clock-frequency or clocks handle in .dts file");
->
-> Nit: it's not a handle, it's a phandle+args pair.
->
-> Why not just "Unable to determine clock frequency"?
+Jason might not like this. He submitted a patch a few days ago
+removing all blinking LEDs.
 
-Sure that sounds fine.
-
->
-> Do we need to panic here? Might a system have other clocks it could use
-> to continue?
-
-I completely agree that this driver could be improved.  However, this
-is unrelated to the topic of this series so I will address it later in
-a separate patch.
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&backup_key_pin
+> +			     &power_key_pin
+> +			     &reset_key_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		button@1 {
+> +			label = "Backup Button";
+> +			linux,code = <133>;     /* KEY_COPY */
+> +			gpios = <&gpio1 20 1>;
+> +		};
+> +
+> +		button@2 {
+> +			label = "Power Button";
+> +			linux,code = <116>;     /* KEY_POWER */
+> +			gpios = <&gpio1 30 0>;
+> +		};
+> +
+> +		button@3 {
+> +			label = "Reset Button";
+> +			linux,code = <0x198>;   /* KEY_RESTART */
+> +			gpios = <&gpio2 1 1>;
+> +		};
+> +	};
+> +
+> +	gpio_poweroff {
+> +		compatible = "gpio-poweroff";
+> +		pinctrl-0 = <&poweroff>;
+> +		pinctrl-names = "default";
+> +		gpios = <&gpio1 28 1>;
+> +	};
+> +};
+> -- 
+> 1.8.4.rc3
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
