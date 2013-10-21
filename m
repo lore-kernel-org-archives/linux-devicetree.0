@@ -1,27 +1,16 @@
-From: Tang Yuantian-B29983 <B29983@freescale.com>
-Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device tree
-Date: Mon, 21 Oct 2013 02:55:21 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C62BA@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
- <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
- <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
- <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
- <1381518433.7979.536.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
- <1381788786.7979.643.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
- <1381858855.7979.693.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
- <1381942009.7979.727.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
- <1382027085.7979.774.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
- <1382113880.7979.836.camel@snotra.buserror.net>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: RE: [PATCHv1 5/8] ASoC: sgtl5000: Revise the bugs about the
+ sgt15000 codec.
+Date: Mon, 21 Oct 2013 04:07:06 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82866732@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131017095619.GA27044@MrMyself>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1382113880.7979.836.camel@snotra.buserror.net>
+In-Reply-To: <20131017095619.GA27044@MrMyself>
 Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
  <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
@@ -33,84 +22,79 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Sender: "Linuxppc-dev"
  <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Wood Scott-B07421 <B07421@freescale.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
+To: Chen Guangyu-B42378 <B42378@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "perex@perex.cz" <perex@perex.cz>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > >
-> > > > > It's still selecting from multiple PLLs.
-> > > > >
-> > > > > > I don't know whether "divider" module exists or not. If it
-> > > > > > exists, it should be part of PLL or between PLL and MUX.
-> > > > > > wherever it was, the
-> > > > > device tree binding is appropriate.
-> > > > >
-> > > > > The device tree binding is unnecessarily complicated.
-> > > > >
-> > > > > > The P3041RM shows exactly each PLL has 2 outputs which
-> > > > > > definitely have
-> > > > > no "divider" at all.
-> > > > >
-> > > > > That diagram is a bit weird -- one of the outputs is used as is,
-> > > > > and the other is split into 1/2 and 1/4.  It doesn't really
-> > > > > matter though; the end result is the same.  We're describing the
-> > > > > programming interface, not artwork choices in the manual.
-> > > > >
-> > > > > -Scott
-> > > > >
-> > > > If the device tree needs to be modified, could you give me your
-> > > suggestions?
-> > >
-> > > My suggestion is to have only one output per PLL node.  The MUX node
-> > > would have one input per PLL.  Dividers would be handled internally
-> > > to the MUX driver.
-> > >
-> > > -Scott
-> > >
-> > I don't think your suggestion is constructive.
-> 
-> Hmm?
-> 
-> > Your suggestion is on the premise of that the "divider" is part of
-> > MUX, And I think it should be part of PLL.
-> > MUX can't CREATE clock which PLL can. So my thought is more reasonable.
-> > If the device tree documents like what you said, it would have few help
-> for driver.
-> > The reason is obvious that the driver is still going to deal with the
-> "divider"
-> > detail which varies from platform to platform.
-> > I will document as it was unless you prove your suggestion.
-> 
-> I can't follow this.  My point is that my suggestion better matches the
-> programming model, and is simpler.
-> 
-> -Scott
-> 
-I didn't see how your suggestion is a better matching.
 
- OSC ----> PLL1 ----> mux ----> CPU
-      |           |
-      |--> PLL2 --| 
-        ........
-As your suggestion, the clock tree looks like the above.
-In this case, the MUX driver will not know the divider
-details(/2, /4, or /3).
-I think the MUX should act like "switch" which choose one
-of the input clock as a output clock. It should not CREATE
-clock(like PLL1/2, PLL1/4).
-The purpose of clock driver is to establish the clock tree.
-The clock tree will not be established in your suggestion
-because the divider is missing, we don't know where PLL/2 comes from.
+> > When the CONFIG_REGULATOR is disabled there will be some warnings
+> > printed out.
+> 
+> A little confused by the title. But after looking at the comments, is the
+> patch just gonna add some debug info for the case when the
+> CONFIG_REGULATOR's been un-selected?
+> 
+> Well first, I think at least the title should be more explicit.
+> And second, the necessity of this patch might just a little...
+> if CONFIG_REGULATOR is required to power it up, why not turn it on.
+> 
 
-If you really like your proposal, it should be changed to this:
+Sorry, I will add some more detail and explicit description about this patch.
 
-OSC ------> PLL1 -----> PLL1 /1 ---------> MUX ------->CPU
-     |            |___> PLL1 /2 _______|
-     |                                 |
-     |____> PLL2 -----> PLL2 /2 -------|
-                  |___> PLL2/ 4 _______|
+In VF610 board there has not Power Manager module. So if the CONFIG_REGULATOR is
+turned on the SGTL5000 cannot be brought up correctly.
+If it's turned off there will also some other errors for the SGTL5000 codec driver 
+using the CONFIG_REGULATOR mirco not very correctly.
 
-(it is possible that PLLs have different divider).
+> >
+> > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > ---
+> >  sound/soc/codecs/sgtl5000.c | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+> > index 1f4093f..4e2e4c9 100644
+> > --- a/sound/soc/codecs/sgtl5000.c
+> > +++ b/sound/soc/codecs/sgtl5000.c
+> > @@ -883,14 +883,19 @@ static int ldo_regulator_register(struct
+> snd_soc_codec *codec,
+> >  				struct regulator_init_data *init_data,
+> >  				int voltage)
+> >  {
+> > +#ifdef CONFIG_SND_SOC_FSL_SGTL5000
+> 
+> Why there's FSL_SGTL5000 here? Not supposed to be CONFIG_REGULATOR?
+> 
 
-Regards,
-Yuantian
+I will enhance this patch later.
+Using CONFIG_SND_SOC_FSL_SGTL5000 instead of CONFIG_REGULATOR here just for not affecting other boards.
+
+> >  static int ldo_regulator_remove(struct snd_soc_codec *codec)  {
+> >  	return 0;
+> >  }
+> > +
+> 
+> I don't think it's fair to add a meaningless line. It doesn't make any
+> sense according to the title and comments.
+> 
+
+I will drop it later.
+
+> >  #endif
+> >
+> >  /*
+> > @@ -1137,6 +1142,7 @@ static int sgtl5000_resume(struct snd_soc_codec
+> > *codec)  #define sgtl5000_resume  NULL
+> >  #endif	/* CONFIG_SUSPEND */
+> >
+> > +#ifdef CONFIG_REGULATOR
+> 
+> The inline regulator-related functions are already have REGULATOR
+> dependency.
+> Is that necessary to put an additional one here?
+> 
+
+If not, the " warning: 'XXXXX' defined but not used [-Wunused-function] " log will print out.
+
+
+This patch will be enhanced later.
