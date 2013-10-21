@@ -1,434 +1,74 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv4][ 10/11] ARM: dts: Add support for the cpuimx25 board from Eukrea and its baseboard.
-Date: Mon, 21 Oct 2013 11:51:37 +0200
-Message-ID: <1382349098-11502-10-git-send-email-denis@eukrea.com>
-References: <1382349098-11502-1-git-send-email-denis@eukrea.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+	better?
+Date: Mon, 21 Oct 2013 10:57:57 +0100
+Message-ID: <20131021095757.GY25034@n2100.arm.linux.org.uk>
+References: <52644A9E.3060007@wwwdotorg.org> <20131020231134.GR25034@n2100.arm.linux.org.uk> <20131021083242.GB30088@pengutronix.de> <20131021084854.GV25034@n2100.arm.linux.org.uk> <20131021092730.GF30088@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382349098-11502-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131021092730.GF30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following devices/functionalities were added:
- * Main and secondary UARTs.
- * i2c and the pcf8563 device.
- * Sound.
- * CMO-QVGA(With backlight), DVI-VGA and DVI-SVGA displays
- * Ethernet.
- * NAND.
- * The BP1 button.
- * The LED.
- * Watchdog
- * SD.
+On Mon, Oct 21, 2013 at 11:27:30AM +0200, Sascha Hauer wrote:
+> If you have a better vision how imx-drm can be implemented without
+> getting crazy I'd love to hear about it. Please also think about the two
+> IPUs the i.MX6 has, the single one on i.MX5, parallel displays, HDMI
+> displays, LVDS displays, VGA encoder on i.MX53, external I2C slave
+> encoders,...
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   53 +++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts  |   63 +++++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts  |   50 +++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts   |   50 +++++++++
- .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  116 ++++++++++++=
-++++++++
- 5 files changed, 332 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-cmo-qvga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-svga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-vga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.=
-dts
+Well, the multi-driver solution is just too fragile: the problem
+with it is you can never be sure when all the drivers have definitely
+finished initialising.  This problem is made much worse should one of
+them use deferred probing.
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/bo=
-ot/dts/imx25-eukrea-cpuimx25.dtsi
-new file mode 100644
-index 0000000..0cc7864
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX25";
-+	compatible =3D "eukrea,cpuimx25", "fsl,imx25";
-+
-+	memory {
-+		reg =3D <0x80000000 0x4000000>; /* 64M */
-+	};
-+};
-+
-+&fec {
-+	phy-mode =3D "rmii";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec_1>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1_1>;
-+	status =3D "okay";
-+
-+	pcf8563@51 {
-+		compatible =3D "nxp,pcf8563";
-+		reg =3D <0x51>;
-+	};
-+};
-+
-+&nfc {
-+	nand-bus-width =3D <8>;
-+	nand-ecc-mode =3D "hw";
-+	nand-on-flash-bbt;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-new file mode 100644
-index 0000000..cabd6f6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-@@ -0,0 +1,63 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the CMO-QVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-cmo-qvga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	cmo_qvga: display {
-+		model =3D "CMO-QVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xcad08b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&qvga_timings>;
-+		display-timings {
-+			qvga_timings: 320x240 {
-+				clock-frequency =3D <6500000>;
-+				hactive =3D <320>;
-+				vactive =3D <240>;
-+				hback-porch =3D <30>;
-+				hfront-porch =3D <38>;
-+				vback-porch =3D <20>;
-+				vfront-porch =3D <3>;
-+				hsync-len =3D <15>;
-+				vsync-len =3D <4>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_3v3: lcd-en {
-+		compatible =3D "regulator-fixed";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_reg_lcd_3v3>;
-+		regulator-name =3D "lcd-3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 26 0>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&cmo_qvga>;
-+	fsl,pwmr =3D <0x00a903ff>;
-+	lcd-supply =3D <&reg_lcd_3v3>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-new file mode 100644
-index 0000000..1089ac2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-SVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-svga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_svga: display {
-+		model =3D "DVI-SVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_svga_timings>;
-+		display-timings {
-+			dvi_svga_timings: 800x600 {
-+				clock-frequency =3D <40000000>;
-+				hactive =3D <800>;
-+				vactive =3D <600>;
-+				hback-porch =3D <75>;
-+				hfront-porch =3D <75>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <75>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_svga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga=
-=2Edts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-new file mode 100644
-index 0000000..2edbbab
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-VGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-vga", "eukrea,mbimxsd2=
-5-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_vga: display {
-+		model =3D "DVI-VGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_vga_timings>;
-+		display-timings {
-+			dvi_vga_timings: 640x480 {
-+				clock-frequency =3D <31250000>;
-+				hactive =3D <640>;
-+				vactive =3D <480>;
-+				hback-porch =3D <100>;
-+				hfront-porch =3D <100>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <100>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_vga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/a=
-rch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-new file mode 100644
-index 0000000..be24a85
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -0,0 +1,116 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+/dts-v1/;
-+#include "imx25-eukrea-cpuimx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25";
-+	compatible =3D "eukrea,mbimxsd25-baseboard", "eukrea,cpuimx25", "fsl,=
-imx25";
-+
-+	gpio_keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
-+
-+		bp1 {
-+			label =3D "BP1";
-+			gpios =3D <&gpio3 18 1>;
-+			linux,code =3D <256>;
-+			gpio-key,wakeup;
-+			linux,input-type =3D <1>;
-+		};
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpioled>;
-+
-+		led1 {
-+			label =3D "led1";
-+			gpios =3D <&gpio3 19 1>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_audmux_1>;
-+	status =3D "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_esdhc1_1>;
-+	cd-gpios =3D <&gpio1 20>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	tlv320aic23: codec@1a {
-+		compatible =3D "ti,tlv320aic23";
-+		reg =3D <0x1a>;
-+	};
-+};
-+
-+&iomuxc {
-+	gpio_keys {
-+		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_VSTBY_ACK__GPIO_3_18 0x80000000
-+			>;
-+		};
-+	};
-+
-+	leds {
-+		pinctrl_gpioled: gpioledgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_POWER_FAIL__GPIO_3_19 0x80000000
-+			>;
-+		};
-+	};
-+
-+	reg_lcd_3v3 {
-+		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-+			fsl,pins =3D <
-+				MX25_PAD_PWM__GPIO_1_26  0x80000000
-+			>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	fsl,mode =3D "i2s-slave";
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
---=20
-1.7.9.5
+To put it another way - with a multi-driver solution, there is no
+definite point you can say "okay, we got everything".
 
+So, as long as a subsystem contains something that needs to be done
+once everything is known (such as initialising the fb_helper), there
+is a fundamental disconnect between a multi-driver solution and the
+subsystem.  To put it another way, a multi-driver solution should
+not be used.
+
+The I2C slave encoder problem doesn't really come into this because
+it's not really a separate driver - yes, it's modelled by a separate
+driver but when analysed, it's not really using the driver model at
+all.  The driver model is only really used to locate the required
+driver.
+
+Conceptually, the imx-drm hardware is not much different from the the
+Armada/Dove display hardware: it too has the problem that there
+can be several CRTCs and several display outputs.  In some ways it's
+worse there because there isn't the same level of integration found
+on i.MX - it just has VGA and parallel outputs.  If you want something
+else, you need to stick a chip on the output.  In the case of HDMI,
+that's a TDA998x device.
+
+For that, I've opted not to even _try_ to come up with a DT solution
+at present, because I know that trying to come up something that
+represents the hardware will not work properly with DRM.  That's
+exactly what everyone else should have done.
+
+Then the effort would not be spent trying to come up with individual
+DT solutions and driver specific hacks, but instead would be spent on
+trying to sort out the DRM core to allow it to handle separately
+pluggable connectors, encoders and crtcs.
+
+I have been getting is pressure to come up with a fudge for the Armada
+DRM to make it work with DT just like everything else: there was even
+suggestions that the driver should not be merged because it doesn't
+support DT, and as everyone is going DT, it would have very few users.
+Quite rightfully, I refuse to fudge the driver and create yet another
+abomination.  Thankfully, the subsystem maintainers agree that this
+is something that can be worked on independently: it should be, it's
+not a specific driver problem, it's a subsystem problem and it needs
+solving for everyone.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
