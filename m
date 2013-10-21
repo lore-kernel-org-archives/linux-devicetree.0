@@ -1,204 +1,222 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
- better?
-Date: Mon, 21 Oct 2013 10:54:22 +0200
-Message-ID: <20131021085420.GA21518@ulmo.nvidia.com>
-References: <52644A9E.3060007@wwwdotorg.org>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Mon, 21 Oct 2013 11:13:33 +0200
+Message-ID: <1382346813-8449-1-git-send-email-denis@eukrea.com>
+References: <20131019104555.GI18477@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52644A9E.3060007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131019104555.GI18477-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v3->v4:
+- The default-brightness property is now optional, it defaults to 1 if =
+not set.
+- def_value int becomes an u32.
+- gbl->def_value was set to pdata->def_value in pdata mode to avoid an =
+extra
+  check.
+---
+ .../bindings/video/backlight/gpio-backlight.txt    |   20 ++++++
+ drivers/video/backlight/gpio_backlight.c           |   69 ++++++++++++=
+++++++--
+ 2 files changed, 82 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
+pio-backlight.txt
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt
+new file mode 100644
+index 0000000..3474d4a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
+txt
+@@ -0,0 +1,20 @@
++gpio-backlight bindings
++
++Required properties:
++  - compatible: "gpio-backlight"
++  - gpios: describes the gpio that is used for enabling/disabling the =
+backlight
++     (see GPIO binding[0] for more details).
++
++Optional properties:
++  - default-brightness-level: the default brightness level (can be 0(o=
+ff) or
++      1(on) since GPIOs only support theses levels).
++
++[0]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++	backlight {
++		compatible =3D "gpio-backlight";
++		gpios =3D <&gpio3 4 0>;
++		default-brightness-level =3D <0>;
++	};
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
+acklight/gpio_backlight.c
+index 81fb127..248124d 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -13,6 +13,8 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_data/gpio_backlight.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -23,6 +25,7 @@ struct gpio_backlight {
+=20
+ 	int gpio;
+ 	int active;
++	u32 def_value;
+ };
+=20
+ static int gpio_backlight_update_status(struct backlight_device *bl)
+@@ -60,6 +63,41 @@ static const struct backlight_ops gpio_backlight_ops=
+ =3D {
+ 	.check_fb	=3D gpio_backlight_check_fb,
+ };
+=20
++static int gpio_backlight_probe_dt(struct platform_device *pdev,
++				   struct gpio_backlight *gbl)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	enum of_gpio_flags gpio_flags;
++	int ret;
++
++	gbl->fbdev =3D NULL;
++	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
++
++	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
++
++	if (gbl->gpio =3D=3D -EPROBE_DEFER) {
++		return ERR_PTR(-EPROBE_DEFER);
++	} else if (gbl->gpio < 0) {
++		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
++		return gbl->gpio;
++	}
++
++	ret =3D of_property_read_u32(np, "default-brightness-level",
++				   &gbl->def_value);
++	if (ret < 0) {
++		/* The property is optional. */
++		gbl->def_value =3D 1;
++	}
++
++	if (gbl->def_value > 1) {
++		dev_warn(&pdev->dev,
++			"Warning: Invalid default-brightness-level value. Its value can be =
+either 0(off) or 1(on).\n");
++		gbl->def_value =3D 1;
++	}
++
++	return 0;
++}
++
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_backlight_platform_data *pdata =3D
+@@ -67,10 +105,12 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
++	struct device_node *np =3D pdev->dev.of_node;
+ 	int ret;
+=20
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "failed to find platform data\n");
++	if (!pdata && !np) {
++		dev_err(&pdev->dev,
++			"failed to find platform data or device tree node.\n");
+ 		return -ENODEV;
+ 	}
+=20
+@@ -79,14 +119,22 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 		return -ENOMEM;
+=20
+ 	gbl->dev =3D &pdev->dev;
+-	gbl->fbdev =3D pdata->fbdev;
+-	gbl->gpio =3D pdata->gpio;
+-	gbl->active =3D pdata->active_low ? 0 : 1;
++
++	if (np) {
++		ret =3D gpio_backlight_probe_dt(pdev, gbl);
++		if (ret)
++			return ret;
++	} else {
++		gbl->fbdev =3D pdata->fbdev;
++		gbl->gpio =3D pdata->gpio;
++		gbl->active =3D pdata->active_low ? 0 : 1;
++		gbl->def_value =3D pdata->def_value;
++	}
+=20
+ 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
+ 				    (gbl->active ? GPIOF_INIT_LOW
+ 						 : GPIOF_INIT_HIGH),
+-				    pdata->name);
++				    pdata ? pdata->name : "backlight");
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "unable to request GPIO\n");
+ 		return ret;
+@@ -103,17 +151,24 @@ static int gpio_backlight_probe(struct platform_d=
+evice *pdev)
+ 		return PTR_ERR(bl);
+ 	}
+=20
+-	bl->props.brightness =3D pdata->def_value;
++	bl->props.brightness =3D gbl->def_value;
++
+ 	backlight_update_status(bl);
+=20
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
+ }
+=20
++static struct of_device_id gpio_backlight_of_match[] =3D {
++	{ .compatible =3D "gpio-backlight" },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver gpio_backlight_driver =3D {
+ 	.driver		=3D {
+ 		.name		=3D "gpio-backlight",
+ 		.owner		=3D THIS_MODULE,
++		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
+ 	},
+ 	.probe		=3D gpio_backlight_probe,
+ };
+--=20
+1.7.9.5
 
-On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-> IIRC (and perhaps I don't; it was really slightly before my active
-> involvement in kernel development) Linus triggered the whole ARM DT
-> conversion in response to disliking the volume of changes, and
-> conflicts, in board files. The idea of DT conversion being that all the
-> board-specific details could be moved out of the kernel and into DT
-> files, thus causing him not to have to see it.
->=20
-> Note: As part of implementing DT on ARM, we've also cleaned up and
-> modularized a lot of code, and created new subsystems and APIs. I think
-> this is a separate issue, and much of that could have happened
-> completely independently from doard->DT conversion.
-
-Perhaps this would even have been enough. It looks to me that we've
-created much better, more rigorous processes as a side-effect. I can
-easily imagine that if we had done all of that but without moving to DT,
-the end result may have been equally good.
-
-I'm not saying that DT is bad. There are a whole lot of good things
-about it that I really like. On the other hand, I've recently realized
-that it has become increasingly difficult to upstream even the most
-trivial functionality because now everybody wants to design the perfect
-DT binding with the effect of new features not going anywhere.
-
-But I digress, and I should probably start a separate discussion about
-that.
-
-> I wonder if DT is solving the problem at the right level of abstraction?
-> The kernel still needs to be aware of all the nitty-gritty details of
-> how each board is hooked up different, and have explicit code to deal
-> the union of all the different board designs.
->=20
-> For example, if some boards have a SW-controlled regulator for a device
-> but others don't, the kernel still needs to have driver code to actively
-> control that regulator, /plus/ the regulator subsystem needs to be able
-> to substitute a dummy regulator if it's optional or simply missing from
-> the DT.
->=20
-> Another example: MMC drivers need to support some boards detecting SD
-> card presence or write-protect via arbitrary GPIOs, and others via
-> dedicated logic in the MMC controller.
->=20
-> In general, the kernel still needs a complete driver to every last
-> device on every strange board, and needs to support every strange way
-> some random board hooks all the devices together.
-
-I have some difficulty understanding what you think should've been moved
-out of the kernel. There's only so much you can put into data structures
-and at some point you need to start writing device specific code for the
-peripherals that you want to drive.
-
-> The only thing we've really moved out of the kernel is the exact IDs of
-> which GPIOS, interrupts, I2C/SPI ports the devices are connected to; the
-> simple stuff not the hard stuff. The code hasn't really been simplified
-> by DT - if anything, it's more complicated since we now have to parse
-> those values from DT rather than putting them into simple data-structures.
->=20
-> I wonder if some other solution with a higher level of abstraction
-> wouldn't be a better idea? Would it make more sense to define some kind
-> of firmware interface that the kernel deals with, so that all HW details
-> are hidden behind that firmware interface, and the kernel just deals
-> with the firmware interface, which hopefully has less variation than the
-> actual HW (or even zero variation).
->=20
-> * Would UEFI/ACPI/similar fulfill this role?
-
-If I recall correctly, the original OpenFirmware that introduced the DT
-concept used to have something similar to UEFI/ACPI. Essentially it was
-possible to not only pass the DT to the operating system but also allow
-the operating system to call back into the firmware to request service.
-
-Of course this brings up the issue about the degree to which we want to
-rely on the firmware to do the right thing. If it's difficult to update
-firmware (which it usually is), then we'll likely end up reimplementing
-some of the functionality in the kernel because firmware might end up
-being buggy and therefore we can't trust it.
-
-On the other hand, one thing that I very much like about the concept is
-that DT isn't only used as a way to describe the hardware but also uses
-the notion of services provided by nodes. That means that a DT binding
-not only defines the properties that characterize hardware but also a
-set of operations that can be performed on a compatible node. This does
-not only apply on a per-compatible basis but also depending on device
-type. A PCI device for instance provides standard services to read the
-configuration space.
-
-Most of this applies to Linux already because when a device referred to
-by phandle is used by some other device, the phandle needs to be
-resolved to some Linux-specific object (regulator, clock, backlight...)
-before it can be used and the given subsystem already defines all the
-operations that can be performed. So perhaps this isn't really all that
-relevant after all...
-
-> * Perhaps a standard virtualization interface could fulfil this role?
-> IIUC, there are already standard mechanisms of exposing e.g. disks, USB
-> devices, PCI devices, etc. into VMs, and recent ARM HW[1] supports
-> virtualization well now. A sticking point might be graphics, but it
-> sounds like there's work to transport GL or Gallium command streams over
-> the virtualization divide.
->=20
-> Downsides might be:
->=20
-> - Overhead, due to invoking the para-virtualized VM host for IO, and
-> extra resources to run the host.
->=20
-> - The host SW still has to address the HW differences. Would it be more
-> acceptable to run a vendor kernel as the VM host if it meant that the
-> VMs could be a more standardized environment, with a more single-purpose
-> upstream kernel? Would it be easier to create a simple VM host than a
-> full Linux kernel with a full arbitrary Linux distro, thus allowing the
-> HW differences to be addressed in a simple way?
->=20
-> These techniques would allow distros to target a single HW environment,
-> e.g. para-virtualized KVM, rather than many many different SoCs and
-> boards each with different bootloaders, bootloader configurations, IO
-> peripherals, DT storage locations, etc. Perhaps a solution like this
-> would allow distros to easily support a similar environment across a
-> range of HW in a way that "just works" for many users, while not
-> preventing people with more specific needs crafting more HW-specific
-> environments?
-
-That sounds very much like a sledgehammer solution. Also I'm not sure if
-it would solve all that many problems. I guess what it could solve is to
-move a whole lot of the underlying specifics of the various SoCs to some
-other place (the host). It's fundamentally very similar to ACPI, and it
-comes with the same set of advantages and disadvantages.
-
-What will likely happen with such a solution is that we'll have to come
-up with a standard interface that the guest OS expects. Once that has
-been defined, vendors will have to implement that interface. Naturally
-most of them will choose Linux as a host OS. What we'll end up with is
-unlikely to be any better than the current situation.
-
-Vendor kernels that implement the host OS will effectively become forks
-of their own since there's no incentive to upstream code anymore. Linux
-upstream becomes a single unified architecture because all interfaces
-are now the same. Vendors are back to brewing their own. Except for the
-rare occasions where something needs to be added to the guest interface
-there won't be much interaction between kernel developers. We will also
-need to specify stable interfaces between host and guest and I think
-everyone involved with DT lately has some experience as to how painful
-that can be. So instead of being able to add new features to the kernel
-within a single release cycle, we'll likely end up having to wait for a
-few cycles because it needs to be implemented in both guest and host,
-which may or may not have the same release cycles.
-
-The above is the worst case scenario, but the alternative would be that
-Linux is still forked into host and guest, yet vendors keep working on
-one upstream host Linux. In that case, we're not solving anything. All
-the same problems that we have now will remain. Well, we might be able
-to make it somewhat easier for distributions, but there are a whole lot
-of disadvantages to it as well.
-
-Thierry
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZOu8AAoJEN0jrNd/PrOh0HEP/jmlPmfi9ffGoD1khIBulEJ6
-yVMQjlld0A9rjoh9PXJ1MUC+kAcqOqQjcqLoWhZyW2eRBN3uMRjdyEvjWBt+3HKk
-WbHqUHtvcDEKUib2xm6r98wXcGsY1kvXfO1fBl6B2IE7p6XTncnCjkJzaGcV1fQG
-+Aokfgoi3RX/cNFN+s/4xY3+fungNicUG6kMt2d4Qd3k/4BTW2Lh7CNLjnxamAXR
-6CcUvPmW2ThsvgZPaWnDNClPVDsElvvz5goM+vNTqwJ9UNogSU2oVi8PTXPyoYag
-N0DiVuK7rHQpl15OlcnBc4cCdKBXixKxpHxJrALo/8ClcK6RJY+T36rSnFuZ/caN
-HVE8SAbjP2a4x1PqRNRI4defjBTcaodwdtSAAf/XSpQQDbPRHEyJnFYZxsb8AvgG
-Qy1Sch0JDJvMuLCYFuH3QULAhuWhj2wjocsc+UO0HEGfHeRWJwWLvfyg2wcLGH8r
-vUhCJMbrNSTODpnCoW8kWADyco3o4VkDdzOnALejDLvoH88fYsGfFZ9TeqqvWt01
-jHCUMd5/VNhLqm6gKtbhTObZQ8pH9Vx0XgN4Vh126WAdQqVQ82dWkBqsgZM9cGTo
-gP1trZoXW/inSwI7rAWr+d9tXoPk6TPaOZUjltegR+6tjUmkF3s4jEp6Ja98Oix8
-gyuJEh0EIEJUHgXyQ5G6
-=DhPT
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
