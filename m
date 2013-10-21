@@ -1,180 +1,99 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
  better?
-Date: Mon, 21 Oct 2013 12:04:07 +0200
-Message-ID: <20131021100406.GC21518@ulmo.nvidia.com>
+Date: Mon, 21 Oct 2013 12:24:49 +0200
+Message-ID: <20131021102448.GD21518@ulmo.nvidia.com>
 References: <52644A9E.3060007@wwwdotorg.org>
  <20131020231134.GR25034@n2100.arm.linux.org.uk>
  <20131021083242.GB30088@pengutronix.de>
  <20131021084854.GV25034@n2100.arm.linux.org.uk>
+ <20131021092730.GF30088@pengutronix.de>
+ <20131021095757.GY25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+	protocol="application/pgp-signature"; boundary="9dgjiU4MmWPVapMU"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131021084854.GV25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20131021095757.GY25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---da4uJneut+ArUgXk
+--9dgjiU4MmWPVapMU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2013 at 09:48:54AM +0100, Russell King - ARM Linux wrote:
-> On Mon, Oct 21, 2013 at 10:32:42AM +0200, Sascha Hauer wrote:
-> > On Mon, Oct 21, 2013 at 12:11:34AM +0100, Russell King - ARM Linux wrot=
-e:
-> > > On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-> > > > The only thing we've really moved out of the kernel is the exact ID=
-s of
-> > > > which GPIOS, interrupts, I2C/SPI ports the devices are connected to=
-; the
-> > > > simple stuff not the hard stuff. The code hasn't really been simpli=
-fied
-> > > > by DT - if anything, it's more complicated since we now have to par=
-se
-> > > > those values from DT rather than putting them into simple data-stru=
-ctures.
-> > >=20
-> > > Here's my random thoughts this evening on DT, orientated mostly on a
-> > > problem area I've been paying attention to recently.
-> > >=20
-> > > In some ways, DT has made things much harder.  I don't know whether
-> > > you've taken a look at DRM and the various drivers we have under ther=
-e,
-> > > it's quite a mess of unreliable code which is trying to bend the DRM
-> > > card based model to a DT based multi-device component based descripti=
-on
-> > > with lots of sub-drivers.
-> > >=20
-> > > What DRM currently expects is a certain initialisation order: the main
-> > > drm_device structure is created by the DRM code, and then supplied to
-> > > the DRM driver to populate all the different parts of the "DRM card".
-> > >=20
-> > > Once all parts of the card have been setup (the CRTCs, encoders,
-> > > connectors, etc) then some helpers can be initialised.  Once the
-> > > helpers have been initialised, the "dimensions" of the "DRM card"
-> > > become rather fixed until the helper is torn down.
-> > >=20
-> > > The problem is this: if you have a multi-driver based card, there is
-> > > no way to prevent any of those sub-drivers from being unbound from
-> > > their drivers at any time.  module refcounts don't save you from this.
-> > > Meanwhile, (at the moment) you can't half-tear down a "DRM card" and
-> > > have it still in a usable state.  The internals just don't allow for
-> > > it at present.
-> > >=20
-> > > Yes, work can be put in to solve this problem, but it's being solved
-> > > because of a desire to bend the subsystem to the DT way of doing thin=
-gs.
-> > > That may or may not be the best idea.  However, what I do know is that
-> > > there is now great pressure to "bend stuff so that it works with DT
-> > > at all costs".  Evidence is the Exynos driver and the imx-drm driver.
-> >=20
-> > In fact it was the other way round. We modeled the IPU devicetree
-> > binding after the hardware and bended the driver around it. The DRM
-> > single-card model is the limiting fator here, not the devicetree.
+On Mon, Oct 21, 2013 at 10:57:57AM +0100, Russell King - ARM Linux wrote:
+> On Mon, Oct 21, 2013 at 11:27:30AM +0200, Sascha Hauer wrote:
+> > If you have a better vision how imx-drm can be implemented without
+> > getting crazy I'd love to hear about it. Please also think about the two
+> > IPUs the i.MX6 has, the single one on i.MX5, parallel displays, HDMI
+> > displays, LVDS displays, VGA encoder on i.MX53, external I2C slave
+> > encoders,...
 >=20
-> There are several points which I think you failed to understand:
+> Well, the multi-driver solution is just too fragile: the problem
+> with it is you can never be sure when all the drivers have definitely
+> finished initialising.  This problem is made much worse should one of
+> them use deferred probing.
 >=20
-> 1. DRM vs device tree is an incompatibility.
-> 2. Trying to bend DRM to DT with independent driver solutions such as
->    the abomination that is imx-drm creates its own set of problems.
+> To put it another way - with a multi-driver solution, there is no
+> definite point you can say "okay, we got everything".
 >=20
-> If a subsystem doesn't work well with DT, then the choices are either:
->=20
-> (a) don't use DT with the subsystem
-> (b) fix the subsystem
->=20
-> The choices do not include:
->=20
-> (c) creating an abomination that is fragile, and is trivially easy to
-> oops the kernel.
->=20
-> This comes back to the root problem I'm trying to highlight: we are not
-> trying to strive for DT forsaking everything else.  If moving to DT
-> means we give up with proper code design, then we've quite literally
-> lost the plot.
+> So, as long as a subsystem contains something that needs to be done
+> once everything is known (such as initialising the fb_helper), there
+> is a fundamental disconnect between a multi-driver solution and the
+> subsystem.  To put it another way, a multi-driver solution should
+> not be used.
 
-I'm honestly not sure if we have much of a choice right now. I've only
-recently hit the stable ABI wall, which effectively keeps me from adding
-new functionality. Even worse, the matter isn't that some patches would
-need more work or anything, but the problem is that we can't merge code
-until everybody and their cat has acked the patches, or more precisely,
-the DT bindings. Typically this is a subsystem maintainer, the port
-maintainer and now with DT also the device tree binding maintainers.
-That's an awful lot of people you have to convince. In this particular
-case these patches were even required to be acked by yet another group
-of people.
+Multi-driver with DRM has worked pretty well for Tegra. Essentially what
+I created was a sort of abstraction layer between DRM and the individual
+drivers so that each driver can register itself with that layer. Once it
+has been determined that all drivers have been probed, that glue layer
+can load the DRM driver and call back into the sub-drivers to register
+their respective components with DRM.
 
-Now, I can't blame anyone in particular and I certainly made my own set
-of mistakes in the process, but the issue is systemic. If you need to
-run a set of patches by three or four groups of people, each with their
-own set of interests, it becomes very difficult to find any sort of
-concensus. And not only that: it also means that every group needs to
-find the time to at least look at the patches and to some degree
-understand it.
+That even works fairly nicely with deferred probing. Note that the code
+currently in Linus' tree has some issues, but I've reworked it since in
+linux-next and the final result isn't all that bad. I've even attempted
+to make it somewhat generic so that it could potentially be reused by
+other drivers. It's not reusable as-is, but perhaps it can be further
+improved.
 
-So instead of requiring concensus on the binding from everyone involved,
-I went to investigate alternative means to get the code out and provide
-new features to our users with the goal to migrate to a proper device
-tree binding incrementally. The problem is that we can't expose all the
-device nodes in DT because their bindings haven't been acknowledged, but
-without a device node there won't be a device for the driver to bind
-against. So the obvious solution seemed to be to just create the device
-programmatically. Naively I thought: "Well, this won't be pretty, but
-it should be easy."
-
-Far from it. It turns out to be very difficult to do. With all the
-cross-referencing that DT allows to do so easily, the same is very
-cumbersome to do with code. Not only do you need to look up device nodes
-by path, but you also need to do things like fixing up phandles because
-the DT doesn't contain them for all nodes, yet the kernel needs them to
-look up the corresponding devices.
-
-Once you've actually created a device node, you still need to inject it
-into what the device tree core created from the DTB at boot time. Turns
-out that there's actually some code to do that, but it requires the
-OF_DYNAMIC option to be selected. Turning that on triggers a couple of
-warnings because code doesn't take and drop references on device nodes
-properly.
-
-To round things off there's the problem on how to preserve compatibility
-with future device trees where the nodes already exist because we've
-finally agreed on a binding...
-
-So unfortunately there is no easy way to mix DT with non-DT. So we can
-decide to just merge code that's not supported on DT platforms, but what
-good is that if the platform we want to run that code on supports only
-DT?
+I agree that hotpluggability within DRM might have made things easier,
+but it would likely also have made the core more complex. Furthermore
+there simply was no need for DRM to provide that kind of flexibility,
+simple because no driver has had that need so far. Quite a few ARM SoC
+drivers have appeared lately, and hopefully that'll provide more of an
+incentive to evolve DRM as needed, but I don't think we can hold it
+against anyone that they haven't provided us with the ideal subsystem.
 
 Thierry
 
---da4uJneut+ArUgXk
+--9dgjiU4MmWPVapMU
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSZPwWAAoJEN0jrNd/PrOh4WwP/3HxohsEuEfNPpq6+X0EmRtQ
-syLeR39tlxH36EUvYgh4ZU5hqOX90DsnmGjK6olu2/ZGHpksKVcpOoJ1eCCzc9v5
-iC7dNTGp7hZeNlrQO2eeQ6w54hgBiR9TKQFkXBBQrrj/PLfsvjFB8llGdDEHZj37
-j+7zpiwSvQ8mB5IlS5IIpSzRJfK6hFWv8p49m26Ons7/Ff7VwRfW6WKsXx0EpEyM
-t3qeXObCxfbOG9BqkV2lFfH4TI3daDNr23xWcXnu6G8E/qUqegMLpDXrHM5XM1VP
-GWu93roNB0gGikPoDoOLYSIWc1pxQrzXlJmvxp9s851Cg0TgoZ3nVNe5l2n9OqZT
-XSoSwd+lFbJcviuFVBdkDEH5Utp7EoO+EYIJ9OQTSFZE7rNWBBPYKKb4R8/PRskD
-0/uIp0kyUN6dE+I59gvCpGod8fXN/S0hrdBNtopm1C8FDG3jcxLddO2/8RI/5afL
-+i/qT0vXjkek6EEE+bZyF/yZdx8x2Bb2OEauGKklwWXv6K4KiBxSgU7Yt5W3y6fj
-bAkQAuPdt2B4CKixpsNALx0w5iSPRBwTKXxSrc+RvkRKgnFXYmg0TImc7uEyztRc
-5R8WRpWAdiJuG5bb9UJ4Xrt1pG5hsH4ZXvXViZgq6RIltta96LCeYL40AAr2+55X
-gKX6Tk9RNuF5CZFk73Ta
-=/bRc
+iQIcBAEBAgAGBQJSZQDwAAoJEN0jrNd/PrOhrPAP/jrpC2A0UAuhP6juHefUCzX3
+DEM7gkjlSECkpXyuqJySfn01Pvb0EBgmhhtybf7nSL8i5J1i+BcNGUM44aZFgzyO
+74bjkKTGF3z7O4HdGQnQYSB390EAjvtJrK6BaQ2cAE0qfFiGB0jooKr/P+p5fmr6
+ot0XEgmtexrKNJ20y6DG9iIO+jGIpvo8NMvdYqlXNna/oTLefFsK11TIolFU7MrO
+K4l8l4PuEMuAaUISeu7rpErKdDZKSceutjFfcTMPKeXqjqsclKatmNZipmbEXis/
+f5EfhX/yYS40kN7ia2DMNsDs8jk6upWP157xkT23oYRTHbDQxbtyokZVJyqCy4GW
+fDYUthz5PKtRaHxdk8WhYKQtJrgwJRSoafMdu5VjXag1LGWLMUYKCPztm1JAaYiP
+EBzkhRidHRhZZbBzvl03qvmfpbzaPANps8E5IXGPF4dvBb3Tegpx5ZsI4Tc8X+Jr
+s96ubh3Lz784YYNAii9hjZwXARjEFG8XW8jTmL/WvZj7BoTo8zqTEjBe6ww4wLc7
+xGvqLQ3eNF8OKgyOCKbelYkPsqYPy+zB1cdTcvKH15gz5lihC2xYLr+7ymKZpvYG
+c07gTEOl72KP8xq2dDJGrxX8uIzPTli6kqij7I7ZIUI3LYbEiVVDlbp2J+T9BCBr
+SKZT57HijdSKpvA9VKqA
+=ZGj0
 -----END PGP SIGNATURE-----
 
---da4uJneut+ArUgXk--
+--9dgjiU4MmWPVapMU--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
