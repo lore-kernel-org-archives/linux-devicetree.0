@@ -1,112 +1,116 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
- or is there something better?
-Date: Sun, 20 Oct 2013 21:00:08 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk> <5264576F.6050307@wwwdotorg.org>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device tree
+Date: Mon, 21 Oct 2013 02:55:21 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C62BA@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+ <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+ <1381518433.7979.536.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381788786.7979.643.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381858855.7979.693.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381942009.7979.727.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1382027085.7979.774.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1382113880.7979.836.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5264576F.6050307-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1382113880.7979.836.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 20 Oct 2013, Stephen Warren wrote:
-
-> On 10/20/2013 11:08 PM, Mark Brown wrote:
-> > On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-> > 
-> >> IIRC (and perhaps I don't; it was really slightly before my
-> >> active involvement in kernel development) Linus triggered the
-> >> whole ARM DT conversion in response to disliking the volume of
-> >> changes, and conflicts, in board files. The idea of DT conversion
-> >> being that all the board-specific details could be moved out of
-> >> the kernel and into DT files, thus causing him not to have to see
-> >> it.
-> > 
-> > A large part of this was to do with the needs of distros and their
-> > users - they have a strong need to ship a device neutral kernel and
-> > to have a reasonable ability to have their kernel deploy on
-> > hardware unknown to them.  Allowing the device tree to be delivered
-> > with the system rather than have the board configuration in the
-> > kernel helps achieve that goal.
+> > > > >
+> > > > > It's still selecting from multiple PLLs.
+> > > > >
+> > > > > > I don't know whether "divider" module exists or not. If it
+> > > > > > exists, it should be part of PLL or between PLL and MUX.
+> > > > > > wherever it was, the
+> > > > > device tree binding is appropriate.
+> > > > >
+> > > > > The device tree binding is unnecessarily complicated.
+> > > > >
+> > > > > > The P3041RM shows exactly each PLL has 2 outputs which
+> > > > > > definitely have
+> > > > > no "divider" at all.
+> > > > >
+> > > > > That diagram is a bit weird -- one of the outputs is used as is,
+> > > > > and the other is split into 1/2 and 1/4.  It doesn't really
+> > > > > matter though; the end result is the same.  We're describing the
+> > > > > programming interface, not artwork choices in the manual.
+> > > > >
+> > > > > -Scott
+> > > > >
+> > > > If the device tree needs to be modified, could you give me your
+> > > suggestions?
+> > >
+> > > My suggestion is to have only one output per PLL node.  The MUX node
+> > > would have one input per PLL.  Dividers would be handled internally
+> > > to the MUX driver.
+> > >
+> > > -Scott
+> > >
+> > I don't think your suggestion is constructive.
 > 
-> Yes.
+> Hmm?
 > 
-> I guess one thing I didn't make clear was my hope that whatever
-> firmware API or VM host implementation exists would be pre-installed
-> on the system so that distros never had to deal with it, or even know
-> it existed. That would then transform the many different HW
-> configurations into a single HW configuration as far as distros are
-> concerned, since they only target running as firmware clients or VM
-> guests. Essentially, we are creating a standard platform in SW, which
-> perhaps is still possible, rather than in HW, which seems unlikely at
-> present.
+> > Your suggestion is on the premise of that the "divider" is part of
+> > MUX, And I think it should be part of PLL.
+> > MUX can't CREATE clock which PLL can. So my thought is more reasonable.
+> > If the device tree documents like what you said, it would have few help
+> for driver.
+> > The reason is obvious that the driver is still going to deal with the
+> "divider"
+> > detail which varies from platform to platform.
+> > I will document as it was unless you prove your suggestion.
+> 
+> I can't follow this.  My point is that my suggestion better matches the
+> programming model, and is simpler.
+> 
+> -Scott
+> 
+I didn't see how your suggestion is a better matching.
 
-The idea of some firmware to abstract hardware differences in order to 
-greatly simplify kernel development and maintenance comes up with some 
-regularity.  In other words, you are far from being the first one to 
-suggest that.
+ OSC ----> PLL1 ----> mux ----> CPU
+      |           |
+      |--> PLL2 --| 
+        ........
+As your suggestion, the clock tree looks like the above.
+In this case, the MUX driver will not know the divider
+details(/2, /4, or /3).
+I think the MUX should act like "switch" which choose one
+of the input clock as a output clock. It should not CREATE
+clock(like PLL1/2, PLL1/4).
+The purpose of clock driver is to establish the clock tree.
+The clock tree will not be established in your suggestion
+because the divider is missing, we don't know where PLL/2 comes from.
 
-However this needs some reality check.
+If you really like your proposal, it should be changed to this:
 
-Every hardware system has its share of complexity that the software has 
-to deal with.
+OSC ------> PLL1 -----> PLL1 /1 ---------> MUX ------->CPU
+     |            |___> PLL1 /2 _______|
+     |                                 |
+     |____> PLL2 -----> PLL2 /2 -------|
+                  |___> PLL2/ 4 _______|
 
-If that complexity is not in the kernel, it has to be in the firmware.  
-Given we already struggles to have proper and bug free hardware support 
-in the kernel today, even with all the debugging aid and peer review 
-available from the kernel community, I really don't see how you'd manage 
-to make it any less complex in some firmware implementation.
+(it is possible that PLLs have different divider).
 
-If a firmware is involved, that implies a standard API you have to 
-implement your firmware for.  And if that firmware API has to cater for 
-different hardware variations and differences, it will have to be very 
-generic and abstract.  And the more generic and remote from the hardware 
-details the API is, the more complex the code making the bridge between 
-the hardware and the API will have to be.
-
-And if it is complex, it *will* have bugs.  Fixing those bugs implies 
-firmware updates which is likely to be just as difficult as bootloaders, 
-if not more, to update in the field.
-
-And expecting the firmware implementation to be ready before the 
-hardware ships is almost impossible.  Some tradeoff will need to be made 
-in order to meet the shipping deadline which normally implies a lot of 
-pressure from other departments in your company.  Most of the time that 
-tradeoff translates into quality reduction in your firmware 
-implementation.
-
-There is simply no magic.  If some hardware driver needs a year to be 
-top quality in the kernel, then the equivalent hardware abstraction in 
-the firmware would require the same level of development effort. You're 
-only moving the implementation complexity around.
-
-And there will always come a case for which the firmware API doesn't 
-cover the hardware needs well, and you'll start adding hardware specific 
-quirks in the kernel directly anyway, or attempt to bypass the firmware 
-entirely for performance reasons.
-
-So in theory the firmware idea always looks great.  but that works only 
-if the firmware is perfect in the first place and from the beginning.  
-In practice that never works like that.
-
-The hardware support in the kernel, on the other hand, can be improved 
-incrementally with time.  It doesn't matter if it is not optimal at 
-first. It can be revisited, optimized, reviewed, and sometimes even 
-redesigned.  And only when it reaches maturity would be the time to use 
-the experience from the kernel development and make some firmware out of 
-it.  But what would be the point then?
-
-IMHO the idea of simplifying our lives with firmware is an illusion.
-
-
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Yuantian
