@@ -1,43 +1,181 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap5-uevm: remove always_on, boot_on from
- smps10_out1
-Date: Mon, 21 Oct 2013 15:33:20 +0530
-Message-ID: <5264FBE8.4070704@ti.com>
-References: <1381402195-29257-1-git-send-email-kishon@ti.com> <525E9206.9010501@ti.com> <525E9434.1090006@ti.com> <526043E3.3070302@baylibre.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 21 Oct 2013 12:04:07 +0200
+Message-ID: <20131021100406.GC21518@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <526043E3.3070302@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Nishanth Menon <nm@ti.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131021084854.GV25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 October 2013 01:39 AM, Benoit Cousson wrote:
-> Hi Kishon,
-> 
-> On 16/10/2013 15:27, Nishanth Menon wrote:
->> On 10/16/2013 08:17 AM, Kishon Vijay Abraham I wrote:
->>> Benoit,
->>>
->>> On Thursday 10 October 2013 04:19 PM, Kishon Vijay Abraham I wrote:
->>>> smps10 should be enabled only in the case of host mode. So stop
->>>> doing always_on, boot_on from smps10_out1. The driver will enable it in host
->>>> mode.
->>>
->>> Can you take this patch too?
->>
->> Acked-by: Nishanth Menon <nm@ti.com>
-> 
-> I've just applied it.
 
-Thanks :-)
+--da4uJneut+ArUgXk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Kishon
-> 
-> Thanks,
-> Benoit
-> 
-> 
+On Mon, Oct 21, 2013 at 09:48:54AM +0100, Russell King - ARM Linux wrote:
+> On Mon, Oct 21, 2013 at 10:32:42AM +0200, Sascha Hauer wrote:
+> > On Mon, Oct 21, 2013 at 12:11:34AM +0100, Russell King - ARM Linux wrot=
+e:
+> > > On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+> > > > The only thing we've really moved out of the kernel is the exact ID=
+s of
+> > > > which GPIOS, interrupts, I2C/SPI ports the devices are connected to=
+; the
+> > > > simple stuff not the hard stuff. The code hasn't really been simpli=
+fied
+> > > > by DT - if anything, it's more complicated since we now have to par=
+se
+> > > > those values from DT rather than putting them into simple data-stru=
+ctures.
+> > >=20
+> > > Here's my random thoughts this evening on DT, orientated mostly on a
+> > > problem area I've been paying attention to recently.
+> > >=20
+> > > In some ways, DT has made things much harder.  I don't know whether
+> > > you've taken a look at DRM and the various drivers we have under ther=
+e,
+> > > it's quite a mess of unreliable code which is trying to bend the DRM
+> > > card based model to a DT based multi-device component based descripti=
+on
+> > > with lots of sub-drivers.
+> > >=20
+> > > What DRM currently expects is a certain initialisation order: the main
+> > > drm_device structure is created by the DRM code, and then supplied to
+> > > the DRM driver to populate all the different parts of the "DRM card".
+> > >=20
+> > > Once all parts of the card have been setup (the CRTCs, encoders,
+> > > connectors, etc) then some helpers can be initialised.  Once the
+> > > helpers have been initialised, the "dimensions" of the "DRM card"
+> > > become rather fixed until the helper is torn down.
+> > >=20
+> > > The problem is this: if you have a multi-driver based card, there is
+> > > no way to prevent any of those sub-drivers from being unbound from
+> > > their drivers at any time.  module refcounts don't save you from this.
+> > > Meanwhile, (at the moment) you can't half-tear down a "DRM card" and
+> > > have it still in a usable state.  The internals just don't allow for
+> > > it at present.
+> > >=20
+> > > Yes, work can be put in to solve this problem, but it's being solved
+> > > because of a desire to bend the subsystem to the DT way of doing thin=
+gs.
+> > > That may or may not be the best idea.  However, what I do know is that
+> > > there is now great pressure to "bend stuff so that it works with DT
+> > > at all costs".  Evidence is the Exynos driver and the imx-drm driver.
+> >=20
+> > In fact it was the other way round. We modeled the IPU devicetree
+> > binding after the hardware and bended the driver around it. The DRM
+> > single-card model is the limiting fator here, not the devicetree.
+>=20
+> There are several points which I think you failed to understand:
+>=20
+> 1. DRM vs device tree is an incompatibility.
+> 2. Trying to bend DRM to DT with independent driver solutions such as
+>    the abomination that is imx-drm creates its own set of problems.
+>=20
+> If a subsystem doesn't work well with DT, then the choices are either:
+>=20
+> (a) don't use DT with the subsystem
+> (b) fix the subsystem
+>=20
+> The choices do not include:
+>=20
+> (c) creating an abomination that is fragile, and is trivially easy to
+> oops the kernel.
+>=20
+> This comes back to the root problem I'm trying to highlight: we are not
+> trying to strive for DT forsaking everything else.  If moving to DT
+> means we give up with proper code design, then we've quite literally
+> lost the plot.
 
+I'm honestly not sure if we have much of a choice right now. I've only
+recently hit the stable ABI wall, which effectively keeps me from adding
+new functionality. Even worse, the matter isn't that some patches would
+need more work or anything, but the problem is that we can't merge code
+until everybody and their cat has acked the patches, or more precisely,
+the DT bindings. Typically this is a subsystem maintainer, the port
+maintainer and now with DT also the device tree binding maintainers.
+That's an awful lot of people you have to convince. In this particular
+case these patches were even required to be acked by yet another group
+of people.
+
+Now, I can't blame anyone in particular and I certainly made my own set
+of mistakes in the process, but the issue is systemic. If you need to
+run a set of patches by three or four groups of people, each with their
+own set of interests, it becomes very difficult to find any sort of
+concensus. And not only that: it also means that every group needs to
+find the time to at least look at the patches and to some degree
+understand it.
+
+So instead of requiring concensus on the binding from everyone involved,
+I went to investigate alternative means to get the code out and provide
+new features to our users with the goal to migrate to a proper device
+tree binding incrementally. The problem is that we can't expose all the
+device nodes in DT because their bindings haven't been acknowledged, but
+without a device node there won't be a device for the driver to bind
+against. So the obvious solution seemed to be to just create the device
+programmatically. Naively I thought: "Well, this won't be pretty, but
+it should be easy."
+
+Far from it. It turns out to be very difficult to do. With all the
+cross-referencing that DT allows to do so easily, the same is very
+cumbersome to do with code. Not only do you need to look up device nodes
+by path, but you also need to do things like fixing up phandles because
+the DT doesn't contain them for all nodes, yet the kernel needs them to
+look up the corresponding devices.
+
+Once you've actually created a device node, you still need to inject it
+into what the device tree core created from the DTB at boot time. Turns
+out that there's actually some code to do that, but it requires the
+OF_DYNAMIC option to be selected. Turning that on triggers a couple of
+warnings because code doesn't take and drop references on device nodes
+properly.
+
+To round things off there's the problem on how to preserve compatibility
+with future device trees where the nodes already exist because we've
+finally agreed on a binding...
+
+So unfortunately there is no easy way to mix DT with non-DT. So we can
+decide to just merge code that's not supported on DT platforms, but what
+good is that if the platform we want to run that code on supports only
+DT?
+
+Thierry
+
+--da4uJneut+ArUgXk
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZPwWAAoJEN0jrNd/PrOh4WwP/3HxohsEuEfNPpq6+X0EmRtQ
+syLeR39tlxH36EUvYgh4ZU5hqOX90DsnmGjK6olu2/ZGHpksKVcpOoJ1eCCzc9v5
+iC7dNTGp7hZeNlrQO2eeQ6w54hgBiR9TKQFkXBBQrrj/PLfsvjFB8llGdDEHZj37
+j+7zpiwSvQ8mB5IlS5IIpSzRJfK6hFWv8p49m26Ons7/Ff7VwRfW6WKsXx0EpEyM
+t3qeXObCxfbOG9BqkV2lFfH4TI3daDNr23xWcXnu6G8E/qUqegMLpDXrHM5XM1VP
+GWu93roNB0gGikPoDoOLYSIWc1pxQrzXlJmvxp9s851Cg0TgoZ3nVNe5l2n9OqZT
+XSoSwd+lFbJcviuFVBdkDEH5Utp7EoO+EYIJ9OQTSFZE7rNWBBPYKKb4R8/PRskD
+0/uIp0kyUN6dE+I59gvCpGod8fXN/S0hrdBNtopm1C8FDG3jcxLddO2/8RI/5afL
++i/qT0vXjkek6EEE+bZyF/yZdx8x2Bb2OEauGKklwWXv6K4KiBxSgU7Yt5W3y6fj
+bAkQAuPdt2B4CKixpsNALx0w5iSPRBwTKXxSrc+RvkRKgnFXYmg0TImc7uEyztRc
+5R8WRpWAdiJuG5bb9UJ4Xrt1pG5hsH4ZXvXViZgq6RIltta96LCeYL40AAr2+55X
+gKX6Tk9RNuF5CZFk73Ta
+=/bRc
+-----END PGP SIGNATURE-----
+
+--da4uJneut+ArUgXk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
