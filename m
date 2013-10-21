@@ -1,75 +1,57 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [Patch v2][ 08/37] video: mx3fb: Add device tree suport.
-Date: Mon, 21 Oct 2013 10:03:27 +0200
-Message-ID: <20131021080327.GA30088@pengutronix.de>
-References: <1382022155-21954-1-git-send-email-denis@eukrea.com>
- <1382022155-21954-9-git-send-email-denis@eukrea.com>
- <20131019110459.GM18477@ns203013.ovh.net>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv1 5/8] ASoC: sgtl5000: Revise the bugs
+ about the sgt15000 codec.
+Date: Mon, 21 Oct 2013 10:11:17 +0200
+Message-ID: <20131021101117.5c0c71aa@ipc1.ka-ro>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131017121721.43e1b34b@ipc1.ka-ro>
+ <1DD289F6464F0949A2FCA5AA6DC23F82866756@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131019110459.GM18477-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82866756@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Xiubo Li-B47053 <B47053@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>, "oskar@scara.com" <oskar@scara.com>, Es
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 19, 2013 at 01:04:59PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 17:02 Thu 17 Oct     , Denis Carikli wrote:
-> > diff --git a/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt b/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
-> > new file mode 100644
-> > index 0000000..ae0b343
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
-> > @@ -0,0 +1,52 @@
-> > +Freescale mx3 Framebuffer
-> > +
-> > +This framebuffer driver supports the imx31 and imx35 devices.
-> > +
-> > +Required properties:
-> > +- compatible : Must be "fsl,mx3-fb".
-> > +- reg : Should contain 1 register ranges(address and length).
-> > +- dmas : Phandle to the ipu dma node as described in
-> > +	Documentation/devicetree/bindings/dma/dma.txt
-> > +- dma-names : Must be "tx".
-> > +- clocks : Phandle to the ipu source clock.
-> > +- display: Phandle to a display node as described in
-> > +	Documentation/devicetree/bindings/video/display-timing.txt
-> > +	Additional, the display node has to define properties:
-> > +	- bits-per-pixel: lcd panel bit-depth.
-> > +
-> > +Optional properties:
-> > +- ipu-disp-format: could be "rgb666", "rgb565", or "rgb888".
-> > +  If not specified defaults to "rgb666".
-> > +
-> > +Example:
-> > +
-> > +	lcdc: mx3fb@53fc00b4 {
-> > +		compatible = "fsl,mx3-fb";
-> > +		reg = <0x53fc00b4 0x0b>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_lcdc_1>;
-> > +		clocks = <&clks 55>;
-> > +		dmas = <&ipu 14>;
-> > +		dma-names = "tx";
-> > +	};
-
-As mentioned to the v1 patch: This should really be closer to the IPUv3
-binding. IPUv1 and IPUv3 are very similar hardwares. Having two
-different bindings for it is painful.
-
-Implementing IPUv1 as a DMA driver was the wrong decision back then, now
-exposing the IPU to dt using the DMA binding makes it worse.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgo+ID4gPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5jIGIvc291
+bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5jCj4gPiA+IGluZGV4IDFmNDA5M2YuLjRlMmU0YzkgMTAw
+NjQ0Cj4gPiA+IC0tLSBhL3NvdW5kL3NvYy9jb2RlY3Mvc2d0bDUwMDAuYwo+ID4gPiArKysgYi9z
+b3VuZC9zb2MvY29kZWNzL3NndGw1MDAwLmMKPiA+ID4gQEAgLTg4MywxNCArODgzLDE5IEBAIHN0
+YXRpYyBpbnQgbGRvX3JlZ3VsYXRvcl9yZWdpc3RlcihzdHJ1Y3QKPiA+IHNuZF9zb2NfY29kZWMg
+KmNvZGVjLAo+ID4gPiAgCQkJCXN0cnVjdCByZWd1bGF0b3JfaW5pdF9kYXRhICppbml0X2RhdGEs
+Cj4gPiA+ICAJCQkJaW50IHZvbHRhZ2UpCj4gPiA+ICB7Cj4gPiA+ICsjaWZkZWYgQ09ORklHX1NO
+RF9TT0NfRlNMX1NHVEw1MDAwCj4gPiA+ICsJcmV0dXJuIDA7Cj4gPiA+ICsjZWxzZQo+ID4gPiAg
+CWRldl9lcnIoY29kZWMtPmRldiwgInRoaXMgc2V0dXAgbmVlZHMgcmVndWxhdG9yIHN1cHBvcnQg
+aW4gdGhlCj4gPiBrZXJuZWxcbiIpOwo+ID4gPiAgCXJldHVybiAtRUlOVkFMOwo+ID4gPiArI2Vu
+ZGlmCj4gPiA+Cj4gPiBUaGlzIGxvb2tzIHdyb25nIHRvIG1lLCBhcyB0aGlzIHdpbGwgZGlzYWJs
+ZSB0aGUgZXJyb3IgZm9yIHVuc29saWNpdGVkCj4gPiBwbGF0Zm9ybXMgaW4gYSBtdWx0aSBhcmNo
+IGtlcm5lbCEKPiA+IAo+IAo+IFRoZSBDT05GSUdfU05EX1NPQ19GU0xfU0dUTDUwMDAgbWljcm8g
+d2lsbCBiZSByZW5hbWVkIHRvIENPTkZJR19TTkRfU09DX0ZTTF9TR1RMNTAwMF9WRjYxMC4KPiBJ
+biBWRjYxMCwgdGhlcmUgaGFzIG5vdCBQb3dlciBNYW5hZ2VyIE1vZHVsZSwgc28gd2hldGhlciB0
+aGUgQ09ORklHX1JFR1VMQVRPUiBpcyBlbmFibGUgb3IgCj4gRGlzYWJsZWQsIHRoZXJlIHdpbGwg
+YWx3YXlzIHNvbWUgZXJyb3JzIGJvb3RpbmcuLi4KPiAKWWVzLCBidXQgeW91IGFyZSBhbHRlcmlu
+ZyBjb2RlIHRoYXQgbWF5IGJlIHJ1biBvbiBhIGRpZmZlcmVudCBtYWNoaW5lCnRoYW4gVkY2MTAg
+aW4gYSBtdWx0aWFyY2gga2VybmVsISBZb3Ugc2hvdWxkIGhhdmUgYSBSVU5USU1FIGNoZWNrIGZv
+cgp0aGUgbWFjaGluZSB0eXBlIGlmIHlvdSBuZWVkIHRvIGRvIG1hY2hpbmUgdHlwZSBzcGVjaWZp
+YyBzdHVmZi4KCgpMb3RoYXIgV2HDn21hbm4KLS0gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpLYS1SbyBlbGVjdHJvbmljcyBHbWJI
+IHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1MjA3NiBBYWNoZW4KUGhvbmU6ICs0OSAyNDA4IDE0
+MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0xMApHZXNjaMOkZnRzZsO8aHJlcjogTWF0dGhpYXMg
+S2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50cmFnOiBBbXRzZ2VyaWNodCBBYWNoZW4sIEhSQiA0
+OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5kZSB8IGluZm9Aa2Fyby1lbGVjdHJvbmljcy5kZQpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRl
+dmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxt
+YW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
