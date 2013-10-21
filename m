@@ -1,66 +1,170 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv4][ 4/4] ARM: dts: cpuimx35, mbimxsd35: Add sound support.
-Date: Mon, 21 Oct 2013 14:02:28 +0200
-Message-ID: <1382356948-2905-4-git-send-email-denis@eukrea.com>
-References: <1382356948-2905-1-git-send-email-denis@eukrea.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY
+ Framework
+Date: Mon, 21 Oct 2013 15:13:08 +0300
+Message-ID: <52651A54.3020403@ti.com>
+References: <1381866857-3861-1-git-send-email-kishon@ti.com> <1381866857-3861-3-git-send-email-kishon@ti.com> <525E9232.9050502@ti.com> <525E9A11.7080501@ti.com> <525EA171.9010402@ti.com> <52651614.5040309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382356948-2905-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52651614.5040309@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v2->v4:
-- This patch was splitted, only the part enabling the audio was kept.
-  Part of the rest has already been submited, and the remaining parts
-  will be submited later, because they depend on changes touching other
-  subsystems.
----
- .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |    9 +++++++++
- 1 file changed, 9 insertions(+)
+On 10/21/2013 02:55 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Wednesday 16 October 2013 07:53 PM, Roger Quadros wrote:
+>> On 10/16/2013 04:52 PM, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Wednesday 16 October 2013 06:48 PM, Roger Quadros wrote:
+>>>> Hi,
+>>>>
+>>>> On 10/15/2013 10:54 PM, Kishon Vijay Abraham I wrote:
+>>>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>>>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>>>>> phy_power_on() and phy_power_off().
+>>>>>
+>>>>> However using the old USB phy library wont be removed till the PHYs of all
+>>>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>>>>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>>>>  drivers/usb/dwc3/Kconfig                       |    1 +
+>>>>>  drivers/usb/dwc3/core.c                        |   52 ++++++++++++++++++++++++
+>>>>>  drivers/usb/dwc3/core.h                        |    7 ++++
+>>>>>  drivers/usb/dwc3/platform_data.h               |    2 +
+>>>>>  5 files changed, 66 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> index e807635..471366d 100644
+>>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>> @@ -6,11 +6,13 @@ Required properties:
+>>>>>   - compatible: must be "snps,dwc3"
+>>>>>   - reg : Address and length of the register set for the device
+>>>>>   - interrupts: Interrupts used by the dwc3 controller.
+>>>>> +
+>>>>> +Optional properties:
+>>>>>   - usb-phy : array of phandle for the PHY device.  The first element
+>>>>>     in the array is expected to be a handle to the USB2/HS PHY and
+>>>>>     the second element is expected to be a handle to the USB3/SS PHY
+>>>>> -
+>>>>> -Optional properties:
+>>>>> + - phys: from the *Generic PHY* bindings
+>>>>> + - phy-names: from the *Generic PHY* bindings
+>>>>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>>>>  
+>>>>>  This is usually a subnode to DWC3 glue to which it is connected.
+>>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>>>>> index 8e385b4..64eed6f 100644
+>>>>> --- a/drivers/usb/dwc3/Kconfig
+>>>>> +++ b/drivers/usb/dwc3/Kconfig
+>>>>> @@ -2,6 +2,7 @@ config USB_DWC3
+>>>>>  	tristate "DesignWare USB3 DRD Core Support"
+>>>>>  	depends on (USB || USB_GADGET) && HAS_DMA
+>>>>>  	select USB_PHY
+>>>>> +	select GENERIC_PHY
+>>>>>  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>>>>>  	help
+>>>>>  	  Say Y or M here if your system has a Dual Role SuperSpeed
+>>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>>> index cb91d70..28bfa5b 100644
+>>>>> --- a/drivers/usb/dwc3/core.c
+>>>>> +++ b/drivers/usb/dwc3/core.c
+>>>>> @@ -82,6 +82,12 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>>>>  
+>>>>>  	usb_phy_init(dwc->usb2_phy);
+>>>>>  	usb_phy_init(dwc->usb3_phy);
+>>>>> +
+>>>>> +	if (dwc->usb2_generic_phy)
+>>>>> +		phy_init(dwc->usb2_generic_phy);
+>>>>> +	if (dwc->usb3_generic_phy)
+>>>>> +		phy_init(dwc->usb3_generic_phy);
+>>>>> +
+>>>>
+>>>> dwc3_core_soft_reset() is called from dwc3_core_init() which is called from
+>>>> dwc3_probe() but before the PHYs are initialized.
+>>>>
+>>>> This will cause phy power_on() to be called before phy_init() which is wrong.
+>>>>
+>>
+>> You overlooked the above?
+> 
+> No. Forgot to comment back.
+> Yeah, you are right.. that should be fixed.
+>>
+>>>>>  	mdelay(100);
+>>>>>  
+>>>>>  	/* Clear USB3 PHY reset */
+>>>>> @@ -343,6 +349,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>>>>  {
+>>>>>  	usb_phy_shutdown(dwc->usb2_phy);
+>>>>>  	usb_phy_shutdown(dwc->usb3_phy);
+>>>>> +
+>>>>> +	if (dwc->usb2_generic_phy)
+>>>>> +		phy_power_off(dwc->usb2_generic_phy);
+>>>>> +	if (dwc->usb3_generic_phy)
+>>>>> +		phy_power_off(dwc->usb3_generic_phy);
+>>>>>  }
+>>>>>  
+>>>>>  #define DWC3_ALIGN_MASK		(16 - 1)
+>>>>> @@ -439,6 +450,26 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>>>  		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+>>>>>  	}
+>>>>>  
+>>>>> +	count = of_property_match_string(node, "phy-names", "usb2-phy");
+>>>>> +	if (count >= 0 || (pdata && pdata->usb2_generic_phy)) {
+>>>>> +		dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>>>>> +		if (IS_ERR(dwc->usb2_generic_phy)) {
+>>>>> +			dev_err(dev, "no usb2 phy configured yet");
+>>>>> +			return PTR_ERR(dwc->usb2_generic_phy);
+>>>>> +		}
+>>>>> +		dwc->usb2_phy = NULL;
+>>>>> +	}
+>>>>> +
+>>>>> +	count = of_property_match_string(node, "phy-names", "usb3-phy");
+>>>>> +	if (count >= 0 || (pdata && pdata->usb3_generic_phy)) {
+>>>>> +		dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>>>>> +		if (IS_ERR(dwc->usb3_generic_phy)) {
+>>>>> +			dev_err(dev, "no usb3 phy configured yet");
+>>>>> +			return PTR_ERR(dwc->usb3_generic_phy);
+>>>>> +		}
+>>>>> +		dwc->usb3_phy = NULL;
+>>>>> +	}
+>>>>> +
+>>>>
+>>>> There are a couple of issues here.
+>>>> - The above code must be executed only if it node is valid.
+>>>
+>>> of_property_match_string will give a error value if the node is not present.
+>>> *count >= 0* can take care of this.
+>>
+>> OK. 
+>>
+>>>> - We must either get both PHYs via old method or via new method and not support mix matching
+>>>> them. e.g. it is possible with this code that usb2_phy is set and usb3_generic_phy is set.
+>>>
+>>> Why? As long as both the frameworks co-exist (and we support both in dwc3), I
+>>> don't see any reason why we shouldn't allow it. We can avoid adding a few more
+>>> checks by leaving it the way it is currently.
+>>
+>> Because it just doesn't seem elegant. Why would you want to even allow both types of PHY
+>> to be used simultaneously?
+> 
+> We actually don't allow both types of PHYs to be used simultaneously.  We set
+> usb2_phy/usb3_phy to NULL, if we had got the the generic PHY.
+> If you just doesn't even want to get PHY by the second method if we have got
+> PHY by the first method, then we might need to add more *if* checks which IMO
+> don't make it any elegant either.
+> Having a clean dt data wont have both types of PHYs anyway.
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
-rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-index 1378b8d..4045c5d 100644
---- a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-@@ -48,6 +48,15 @@
- 			linux,default-trigger =3D "heartbeat";
- 		};
- 	};
-+
-+	sound {
-+		compatible =3D "eukrea,eukrea-tlv320";
-+		model =3D "imx35-eukrea-tlv320aic23";
-+		ssi-controller =3D <&ssi1>;
-+		fsl,audio-codec =3D <&tlv320aic23>;
-+		mux-int-port =3D <1>;
-+		mux-ext-port =3D <4>;
-+	};
- };
-=20
- &audmux {
---=20
-1.7.9.5
+OK.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
