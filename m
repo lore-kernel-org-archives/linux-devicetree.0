@@ -1,261 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
-Date: Tue, 22 Oct 2013 00:48:08 +0200
-Message-ID: <1671561.1xYjjYivUO@avalon>
-References: <20131019104555.GI18477@ns203013.ovh.net> <1382346813-8449-1-git-send-email-denis@eukrea.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
+ or is there something better?
+Date: Mon, 21 Oct 2013 15:51:25 -0700
+Message-ID: <5265AFED.1040503@roeck-us.net>
+References: <52644A9E.3060007@wwwdotorg.org>	<20131021085420.GA21518@ulmo.nvidia.com> <52658C49.80400@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382346813-8449-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <52658C49.80400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?ISO-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Denis,
+On 10/21/2013 01:19 PM, Stephen Warren wrote:
+> On 10/21/2013 09:54 AM, Thierry Reding wrote:
+>> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+> ...
+>>> I wonder if DT is solving the problem at the right level of
+>>> abstraction? The kernel still needs to be aware of all the
+>>> nitty-gritty details of how each board is hooked up different,
+>>> and have explicit code to deal the union of all the different
+>>> board designs.
+>>>
+>>> For example, if some boards have a SW-controlled regulator for a
+>>> device but others don't, the kernel still needs to have driver
+>>> code to actively control that regulator, /plus/ the regulator
+>>> subsystem needs to be able to substitute a dummy regulator if
+>>> it's optional or simply missing from the DT.
+>>>
+>>> Another example: MMC drivers need to support some boards
+>>> detecting SD card presence or write-protect via arbitrary GPIOs,
+>>> and others via dedicated logic in the MMC controller.
+>>>
+>>> In general, the kernel still needs a complete driver to every
+>>> last device on every strange board, and needs to support every
+>>> strange way some random board hooks all the devices together.
+>>
+>> I have some difficulty understanding what you think should've been
+>> moved out of the kernel. There's only so much you can put into data
+>> structures and at some point you need to start writing device
+>> specific code for the peripherals that you want to drive.
+>
+> My point was that (part of) the intent of adding DT support to the
+> kernel was to get rid of all the board-specific code/churn in the
+> kernel. That's not really possible, since DT is just representing the
+> data about the HW (e.g. which GPIO/IRQ numbers) and not the behaviour.
+> In order to really remove signifcant board-specific code from the
+> kernel, you need to move behaviour out of the kernel too, i.e. hide it
+> behind some kind of firmware or virtualization interface, and hence
+> have simpler drivers that don't know all the details.
+>
 
-Thanks for the patch. Please see below for a couple of small comment.
+In my opinion, not being able to describe behavior (or what people refer
+to as "describe how the hardware is used") is a severe limitation of
+devicetree usage in Linux. That is not a devicetree limitation per se,
+though, it is simply a matter of choice (or, in some cases, the ability
+of those arguing for new bindings to sell those bindings as "hardware
+description").
 
-On Monday 21 October 2013 11:13:33 Denis Carikli wrote:
-> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
-> ChangeLog v3->v4:
-> - The default-brightness property is now optional, it defaults to 1 i=
-f not
-> set. - def_value int becomes an u32.
-> - gbl->def_value was set to pdata->def_value in pdata mode to avoid a=
-n extra
-> check.
-> ---
->  .../bindings/video/backlight/gpio-backlight.txt    |   20 ++++++
->  drivers/video/backlight/gpio_backlight.c           |   69 ++++++++++=
-+++++--
->  2 files changed, 82 insertions(+), 7 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
->=20
-> diff --git
-> a/Documentation/devicetree/bindings/video/backlight/gpio-backlight.tx=
-t
-> b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.tx=
-t new
-> file mode 100644
-> index 0000000..3474d4a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/gpio-backligh=
-t.txt
-> @@ -0,0 +1,20 @@
-> +gpio-backlight bindings
-> +
-> +Required properties:
-> +  - compatible: "gpio-backlight"
-> +  - gpios: describes the gpio that is used for enabling/disabling th=
-e
-> backlight
-> +     (see GPIO binding[0] for more details).
-> +
-> +Optional properties:
-> +  - default-brightness-level: the default brightness level (can be 0=
-(off)
-> or
-> +      1(on) since GPIOs only support theses levels).
-
-I believe you should specify what the default value is when the propert=
-y isn't=20
-available.
-
-> +
-> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible =3D "gpio-backlight";
-> +		gpios =3D <&gpio3 4 0>;
-> +		default-brightness-level =3D <0>;
-> +	};
-> diff --git a/drivers/video/backlight/gpio_backlight.c
-> b/drivers/video/backlight/gpio_backlight.c index 81fb127..248124d 100=
-644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -13,6 +13,8 @@
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/platform_data/gpio_backlight.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> @@ -23,6 +25,7 @@ struct gpio_backlight {
->=20
->  	int gpio;
->  	int active;
-> +	u32 def_value;
->  };
->=20
->  static int gpio_backlight_update_status(struct backlight_device *bl)
-> @@ -60,6 +63,41 @@ static const struct backlight_ops gpio_backlight_o=
-ps =3D {
->  	.check_fb	=3D gpio_backlight_check_fb,
->  };
->=20
-> +static int gpio_backlight_probe_dt(struct platform_device *pdev,
-> +				   struct gpio_backlight *gbl)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	enum of_gpio_flags gpio_flags;
-> +	int ret;
-> +
-> +	gbl->fbdev =3D NULL;
-> +	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-> +
-> +	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-
-I would move this line after the error check below.
-
-> +
-> +	if (gbl->gpio =3D=3D -EPROBE_DEFER) {
-> +		return ERR_PTR(-EPROBE_DEFER);
-
-Any reason not to retrun -EPROBE_DEFER directly ?
-
-> +	} else if (gbl->gpio < 0) {
-> +		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
-> +		return gbl->gpio;
-> +	}
-
-Maybe you would do something like
-
-	if (gbl->gpio < 0) {
-		if (gbl->gpio =3D=3D -EPROBE_DEFER)
-			dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
-		return gbl->gpio;
-	}
-
-> +
-> +	ret =3D of_property_read_u32(np, "default-brightness-level",
-> +				   &gbl->def_value);
-> +	if (ret < 0) {
-> +		/* The property is optional. */
-> +		gbl->def_value =3D 1;
-> +	}
-> +
-> +	if (gbl->def_value > 1) {
-> +		dev_warn(&pdev->dev,
-> +			"Warning: Invalid default-brightness-level value. Its value can=20
-be
-> either 0(off) or 1(on).\n");
-
-I believe a less verbose message (without the second sentence) would ha=
-ve=20
-done, but that's up to you.
-
-> +		gbl->def_value =3D 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int gpio_backlight_probe(struct platform_device *pdev)
->  {
->  	struct gpio_backlight_platform_data *pdata =3D
-> @@ -67,10 +105,12 @@ static int gpio_backlight_probe(struct platform_=
-device
-> *pdev) struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
-> +	struct device_node *np =3D pdev->dev.of_node;
->  	int ret;
->=20
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "failed to find platform data\n");
-> +	if (!pdata && !np) {
-> +		dev_err(&pdev->dev,
-> +			"failed to find platform data or device tree node.\n");
->  		return -ENODEV;
->  	}
->=20
-> @@ -79,14 +119,22 @@ static int gpio_backlight_probe(struct platform_=
-device
-> *pdev) return -ENOMEM;
->=20
->  	gbl->dev =3D &pdev->dev;
-> -	gbl->fbdev =3D pdata->fbdev;
-> -	gbl->gpio =3D pdata->gpio;
-> -	gbl->active =3D pdata->active_low ? 0 : 1;
-> +
-> +	if (np) {
-> +		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		gbl->fbdev =3D pdata->fbdev;
-> +		gbl->gpio =3D pdata->gpio;
-> +		gbl->active =3D pdata->active_low ? 0 : 1;
-> +		gbl->def_value =3D pdata->def_value;
-> +	}
->=20
->  	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
->  				    (gbl->active ? GPIOF_INIT_LOW
->=20
->  						 : GPIOF_INIT_HIGH),
->=20
-> -				    pdata->name);
-> +				    pdata ? pdata->name : "backlight");
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "unable to request GPIO\n");
->  		return ret;
-> @@ -103,17 +151,24 @@ static int gpio_backlight_probe(struct platform=
-_device
-> *pdev) return PTR_ERR(bl);
->  	}
->=20
-> -	bl->props.brightness =3D pdata->def_value;
-> +	bl->props.brightness =3D gbl->def_value;
-> +
->  	backlight_update_status(bl);
->=20
->  	platform_set_drvdata(pdev, bl);
->  	return 0;
->  }
->=20
-> +static struct of_device_id gpio_backlight_of_match[] =3D {
-> +	{ .compatible =3D "gpio-backlight" },
-> +	{ /* sentinel */ }
-> +};
-> +
->  static struct platform_driver gpio_backlight_driver =3D {
->  	.driver		=3D {
->  		.name		=3D "gpio-backlight",
->  		.owner		=3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
->  	},
->  	.probe		=3D gpio_backlight_probe,
->  };
---=20
-Regards,
-
-Laurent Pinchart
+Guenter
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
