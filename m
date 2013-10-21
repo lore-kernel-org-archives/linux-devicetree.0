@@ -1,56 +1,85 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [RFCv3 0/7] OMAP SSI driver
-Date: Mon, 21 Oct 2013 11:23:09 +0200
-Message-ID: <20131021092309.GA13414@earth.universe>
-References: <1381091235-18293-1-git-send-email-sre@debian.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 21 Oct 2013 11:27:30 +0200
+Message-ID: <20131021092730.GF30088@pengutronix.de>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1381091235-18293-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 'Pali =?iso-8859-1?Q?Roh=E1r'?= <pali.rohar@gmail.com>, =?utf-8?B?J9CY0LLQsNC50LvQviDQlNC40LzQuNGC0YDQvtCyJw==?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>
+In-Reply-To: <20131021084854.GV25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 21, 2013 at 09:48:54AM +0100, Russell King - ARM Linux wrote:
+> On Mon, Oct 21, 2013 at 10:32:42AM +0200, Sascha Hauer wrote:
+> > On Mon, Oct 21, 2013 at 12:11:34AM +0100, Russell King - ARM Linux wrote:
+> > 
+> > In fact it was the other way round. We modeled the IPU devicetree
+> > binding after the hardware and bended the driver around it. The DRM
+> > single-card model is the limiting fator here, not the devicetree.
+> 
+> There are several points which I think you failed to understand:
+> 
+> 1. DRM vs device tree is an incompatibility.
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I do understand that.
 
-Hi,
+> 2. Trying to bend DRM to DT with independent driver solutions such as
+>    the abomination that is imx-drm creates its own set of problems.
 
-On Sun, Oct 06, 2013 at 10:27:08PM +0200, Sebastian Reichel wrote:
-> Here is the third round of the OMAP SSI driver patches.
+I also see this.
 
-ping!
+> 
+> If a subsystem doesn't work well with DT, then the choices are either:
+> 
+> (a) don't use DT with the subsystem
 
-I'm still waiting for feedback from DT maintainers.
-Can you review the changes and Ack them or tell me how to proceed?
+The underlying problem has nothing to do with DT. Multi component
+hardware does exist and won't vanish when we stop using DT.
 
--- Sebastian
+> (b) fix the subsystem
 
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I'd love to do that. Step one to this seems to be to increase the
+awareness that there's something wrong with DRM.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+> 
+> The choices do not include:
+> 
+> (c) creating an abomination that is fragile, and is trivially easy to
+> oops the kernel.
+> 
+> This comes back to the root problem I'm trying to highlight: we are not
+> trying to strive for DT forsaking everything else.  If moving to DT
+> means we give up with proper code design, then we've quite literally
+> lost the plot.
 
-iQIcBAEBCAAGBQJSZPJ9AAoJENju1/PIO/qa9gIQAJV5q894NhVlyrSUN3etVhbs
-d7RwL64q44Qv4Gjl5pxIJJV4+E9LvFhLvgmdx5OggB0mxDrCaI63IELjMKVpWgDT
-Wpugy/FOZ+OJD9REwSVKNyG5qLSlFCekv6Eck+M+g3hkOefy2MySiTx1qDjaAzL4
-pmiDceZCvK4sCN3EmUsE7IRfYrGEEHJAFzev6z+SnX6yijTeWya07S8g/9L3+6R+
-3E1BOXt9f6pSL0AOM5hYhnn148dNkE2DZ9O3xswG4HX2z+FpZSztwn1rtg16dCAX
-p3eWL8S04nSe6FDqVUWX9CwFl7l0g0rgwPralW0RqoAHdq/+143bDqRE513vfHVu
-I/Ch8T/t7F54r5AeAYKVTcAxkALy4zNiboxpnBzuuURVIVghTve9mUpC6iPeJ8Be
-KbtR9s5R3mAUpmhX+0W/6dCkp/3FppOPwNPv8AgsUplu/XqmcyoVOLeNzXXHYeC1
-KMBouivaJNASvI8kTF0N9L3Jtg95fhcaytVAZ9WlEB9jt9i7blpXNucTB4LuBGeu
-Xu4ez+6ApFqsBa05tYBol4T2iWSmD/WsjrLIz9RvIeK+UdLYL9cAbnhsa7jkh/YV
-+0AnxRz0FfKu0sdRy0tobgXFqXJ4kxiIw4Oo4uztLkjXhnjXdlSqNvlC2Nqfv5S+
-y6t0ab9/DAl2ziJyd1zz
-=FAnh
------END PGP SIGNATURE-----
+The imx-drm driver has problems, but I don't see how they can be solved
+by not using DT.
 
---liOOAslEiF7prFVr--
+I think imx-drm shouldn't be used as a vehicle to show that DT is a
+failure.
+
+If you have a better vision how imx-drm can be implemented without
+getting crazy I'd love to hear about it. Please also think about the two
+IPUs the i.MX6 has, the single one on i.MX5, parallel displays, HDMI
+displays, LVDS displays, VGA encoder on i.MX53, external I2C slave
+encoders,...
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
