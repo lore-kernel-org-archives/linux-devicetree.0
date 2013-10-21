@@ -1,44 +1,93 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
-	better?
-Date: Mon, 21 Oct 2013 11:30:14 +0100
-Message-ID: <20131021103014.GZ25034@n2100.arm.linux.org.uk>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020231134.GR25034@n2100.arm.linux.org.uk> <20131021083242.GB30088@pengutronix.de> <20131021084854.GV25034@n2100.arm.linux.org.uk> <20131021092730.GF30088@pengutronix.de> <20131021095757.GY25034@n2100.arm.linux.org.uk> <20131021102448.GD21518@ulmo.nvidia.com>
+ better?
+Date: Mon, 21 Oct 2013 12:41:13 +0200
+Message-ID: <20131021104112.GA24722@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
+ <20131021092730.GF30088@pengutronix.de>
+ <20131021095757.GY25034@n2100.arm.linux.org.uk>
+ <20131021102448.GD21518@ulmo.nvidia.com>
+ <20131021103014.GZ25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131021102448.GD21518-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <20131021103014.GZ25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2013 at 12:24:49PM +0200, Thierry Reding wrote:
-> Multi-driver with DRM has worked pretty well for Tegra. Essentially what
-> I created was a sort of abstraction layer between DRM and the individual
-> drivers so that each driver can register itself with that layer. Once it
-> has been determined that all drivers have been probed, that glue layer
-> can load the DRM driver and call back into the sub-drivers to register
-> their respective components with DRM.
-> 
-> That even works fairly nicely with deferred probing. Note that the code
-> currently in Linus' tree has some issues, but I've reworked it since in
-> linux-next and the final result isn't all that bad. I've even attempted
-> to make it somewhat generic so that it could potentially be reused by
-> other drivers. It's not reusable as-is, but perhaps it can be further
-> improved.
-> 
-> I agree that hotpluggability within DRM might have made things easier,
-> but it would likely also have made the core more complex. Furthermore
-> there simply was no need for DRM to provide that kind of flexibility,
-> simple because no driver has had that need so far. Quite a few ARM SoC
-> drivers have appeared lately, and hopefully that'll provide more of an
-> incentive to evolve DRM as needed, but I don't think we can hold it
-> against anyone that they haven't provided us with the ideal subsystem.
 
-Right, so how do you feel about rewriting it again so that everyone
-can benefit from it instead of it being specific to just Tegra? :)
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 21, 2013 at 11:30:14AM +0100, Russell King - ARM Linux wrote:
+> On Mon, Oct 21, 2013 at 12:24:49PM +0200, Thierry Reding wrote:
+> > Multi-driver with DRM has worked pretty well for Tegra. Essentially what
+> > I created was a sort of abstraction layer between DRM and the individual
+> > drivers so that each driver can register itself with that layer. Once it
+> > has been determined that all drivers have been probed, that glue layer
+> > can load the DRM driver and call back into the sub-drivers to register
+> > their respective components with DRM.
+> >=20
+> > That even works fairly nicely with deferred probing. Note that the code
+> > currently in Linus' tree has some issues, but I've reworked it since in
+> > linux-next and the final result isn't all that bad. I've even attempted
+> > to make it somewhat generic so that it could potentially be reused by
+> > other drivers. It's not reusable as-is, but perhaps it can be further
+> > improved.
+> >=20
+> > I agree that hotpluggability within DRM might have made things easier,
+> > but it would likely also have made the core more complex. Furthermore
+> > there simply was no need for DRM to provide that kind of flexibility,
+> > simple because no driver has had that need so far. Quite a few ARM SoC
+> > drivers have appeared lately, and hopefully that'll provide more of an
+> > incentive to evolve DRM as needed, but I don't think we can hold it
+> > against anyone that they haven't provided us with the ideal subsystem.
+>=20
+> Right, so how do you feel about rewriting it again so that everyone
+> can benefit from it instead of it being specific to just Tegra? :)
+
+You are surely aware that by general concensus the responsibility for a
+generic implementation falls to the third person to reimplement it from
+scratch, which in this case wasn't me for a change... =3D)
+
+But seriously, I have that somewhere on my TODO list, it's just not top
+priority at the moment. I'm also not familiar with what the requirements
+are for other SoCs, so I don't have much of an idea what specific areas
+require rework.
+
+Thierry
+
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZQTHAAoJEN0jrNd/PrOhCwQP/0F3RayXAa5kJ0xjeE9RuNgr
+j2Z2TT0Xpdu28oeEcxXjmpDwPuWuQGxxFjQhoyg83R4S0oMw+Azk+QBLPm88D92j
+1yK6GyZOIDAIdrmCU80bbDM0AqW5phEC1ZjOPvyKfGh2fWdDKN2ffX8Pub22zEk0
+usVX1SuVbaFzn1igCF0zEM+4swX5hD9+meATmmsO8ENUHQ4JXoUzRKFmcOPmvAEE
+A5JLSBu7o4gAmZs//gxmNQjPL2qnhqmifoOSi/c88Vrzp78/dtRG/hA7J4cfpniU
+wRJOt7eu2YqoQWRhPG63FPifbkgbLyjLjLRKHEAfL2vabM56ohcCnEA/J8Lq5abW
+y6lGoUqGFVjCnXaXMObufPbqwolikQ0t9Pa571CKrPHFP/ORN+HjNP549UgOoHnL
+SkyFFGUgTQcdwHfnSyfVpReUnGKNiKtk2gXSOQSONYIJy38+noYlzkv13UXWA9Pw
+eOOr+/PqzdsiFMCAA2QmnHumBAIn3IOCvJ+acxuGVHseTz8QkG9XSninLp3WV+vb
+bmK/zT6aE3N4G3cgjtRRHr8bHq6gQWb6wnUCJg2V6RWPK1eHbMQ5XIVwFevL3ZZ1
+593cgTSJ2JbkFmggyrqLWNWHbRTb4ltz4MkobReoOw2vwh4tBD/57kJ3qIflra1Z
+4xNYQ12f24Gu6qSyVWRB
+=NTzI
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
