@@ -1,100 +1,96 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [RESEND PATCH v2 6/6] mmc: sdhci-bcm-kona: Add basic use of clocks
-Date: Mon, 21 Oct 2013 16:13:10 -0700
-Message-ID: <CAAYSxhorTkuMHU=mqWG5WsNYE1c2dh9-44yLhT6DGhEpgWSZxw@mail.gmail.com>
-References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
-	<1381960030-1640-7-git-send-email-tim.kryger@linaro.org>
-	<20131017141309.GG24056@e106331-lin.cambridge.arm.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Tue, 22 Oct 2013 01:18:00 +0200
+Message-ID: <20131021231800.GG30088@pengutronix.de>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
+ <20131021092730.GF30088@pengutronix.de>
+ <20131021095757.GY25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20131017141309.GG24056@e106331-lin.cambridge.arm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131021095757.GY25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2013 at 7:13 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Wed, Oct 16, 2013 at 10:47:10PM +0100, Tim Kryger wrote:
->> Enable the external clock needed by the host controller during the
->> probe and disable it during the remove.
->
-> This requires a biding document update.
+On Mon, Oct 21, 2013 at 10:57:57AM +0100, Russell King - ARM Linux wrote:
+> On Mon, Oct 21, 2013 at 11:27:30AM +0200, Sascha Hauer wrote:
+> > If you have a better vision how imx-drm can be implemented without
+> > getting crazy I'd love to hear about it. Please also think about the two
+> > IPUs the i.MX6 has, the single one on i.MX5, parallel displays, HDMI
+> > displays, LVDS displays, VGA encoder on i.MX53, external I2C slave
+> > encoders,...
+> 
+> Well, the multi-driver solution is just too fragile: the problem
+> with it is you can never be sure when all the drivers have definitely
+> finished initialising.  This problem is made much worse should one of
+> them use deferred probing.
+> 
+> To put it another way - with a multi-driver solution, there is no
+> definite point you can say "okay, we got everything".
+> 
+> So, as long as a subsystem contains something that needs to be done
+> once everything is known (such as initialising the fb_helper), there
+> is a fundamental disconnect between a multi-driver solution and the
+> subsystem.  To put it another way, a multi-driver solution should
+> not be used.
+> 
+> The I2C slave encoder problem doesn't really come into this because
+> it's not really a separate driver - yes, it's modelled by a separate
+> driver but when analysed, it's not really using the driver model at
+> all.  The driver model is only really used to locate the required
+> driver.
+> 
+> Conceptually, the imx-drm hardware is not much different from the the
+> Armada/Dove display hardware: it too has the problem that there
+> can be several CRTCs and several display outputs.  In some ways it's
+> worse there because there isn't the same level of integration found
+> on i.MX - it just has VGA and parallel outputs.  If you want something
+> else, you need to stick a chip on the output.  In the case of HDMI,
+> that's a TDA998x device.
+> 
+> For that, I've opted not to even _try_ to come up with a DT solution
+> at present, because I know that trying to come up something that
+> represents the hardware will not work properly with DRM.  That's
+> exactly what everyone else should have done.
+> 
+> Then the effort would not be spent trying to come up with individual
+> DT solutions and driver specific hacks, but instead would be spent on
+> trying to sort out the DRM core to allow it to handle separately
+> pluggable connectors, encoders and crtcs.
 
-The current best practice for declaring the association of a clock
-with a consumer device is to embed the common clock bindings 'clocks'
-property inside its node but this is not the only way it may be done.
+Been there, done that:
 
-Given that clk_get() still works for clocks found using string
-matching, is it appropriate to mandate that all drivers that uses the
-clk api mention the common clock bindings 'clocks' property in the
-documentation for their device's binding?
+http://www.mail-archive.com/dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org/msg20927.html
 
-> I note that the binding is already incomplete (it does not describe the
-> interrupts or reg).
+The only relevant reaction I received (from Dave) was frustrating:
 
-The current document reflects the standard for
-Documentation/devicetree/bindings/mmc where normal properties are
-described in mmc.txt and only the deviations described in vendor
-specific files.
+> I'm sorry to say I totally hate this on every level. I think I said to
+> you before that midlayers are not the answer, and this is a hella big
+> midlayer.
 
->>
->> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
->> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
->> Reviewed-by: Matt Porter <matt.porter@linaro.org>
->> ---
->>  drivers/mmc/host/sdhci-bcm-kona.c | 30 ++++++++++++++++++++++++++++--
->>  1 file changed, 28 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
->> index 85472d3..91db099 100644
->> --- a/drivers/mmc/host/sdhci-bcm-kona.c
->> +++ b/drivers/mmc/host/sdhci-bcm-kona.c
->> @@ -54,6 +54,7 @@
->>
->>  struct sdhci_bcm_kona_dev {
->>       struct mutex    write_lock; /* protect back to back writes */
->> +     struct clk      *external_clk;
->
-> Is this the only clock input the unit has?
+With this reaction it became basically impossible to sort out the DRM
+core. Now we ended up with variants of the above layer implemented in
+each driver, see the Exynos, imx-drm and Tegra drivers.
 
-The SDHCI block only receives one clock.
+I hope Laurent has more success with CDF than I had with SDRM. We already
+have patches adding CDF support for the imx-drm driver which look
+promising.
 
-> Are there any other external resources the device needs (e.g. gpios,
-> regulators)?
+Sascha
 
-Yes but the cd-gpio and vmmc/vqmmc regulators are handled by the
-common SDHCI driver.
-
->
->>  };
->>
->>
->> @@ -252,11 +253,29 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
->>       mmc_of_parse(host->mmc);
->>
->>       if (!host->mmc->f_max) {
->> -             dev_err(&pdev->dev, "Missing max-freq for SDHCI cfg\n");
->> +             dev_err(dev, "Missing max-freq for SDHCI cfg\n");
->
-> This seems like an unrelated change.
-
-Agreed.  I will remove this change.
-
->>               ret = -ENXIO;
->>               goto err_pltfm_free;
->>       }
->>
->> +     /* Get and enable the external clock */
->> +     kona_dev->external_clk = devm_clk_get(dev, NULL);
->> +     if (IS_ERR(kona_dev->external_clk)) {
->> +             dev_err(dev, "Failed to get external clock\n");
->> +             ret = PTR_ERR(kona_dev->external_clk);
->> +             goto err_pltfm_free;
->
-> This seems like a pretty clear breakage of existing DTBs.
->
-> Why?
-
-The defconfig that builds this driver and DTBs currently sets
-CONFIG_ARM_APPENDED_DTB=y so there isn't any actual breakage risk.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
