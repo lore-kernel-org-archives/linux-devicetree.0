@@ -1,29 +1,94 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V4] clk: palmas: add clock driver for palmas
-Date: Mon, 21 Oct 2013 17:43:05 +0530
-Message-ID: <52651A51.6030908@nvidia.com>
-References: <1381316687-1756-1-git-send-email-ldewangan@nvidia.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC v2 PATCH 01/14] iio: st_common: New interrupt interface
+Date: Mon, 21 Oct 2013 12:48:46 +0100
+Message-ID: <20131021114845.GF8144@kartoffel>
+References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
+ <1380299538-22047-2-git-send-email-l.czerwinski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381316687-1756-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "mturquette@linaro.org" <mturquette@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "broonie@linaro.org" <broonie@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "nm@ti.com" <nm@ti.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1380299538-22047-2-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "denis.ciocca-qxv4g6HH51o@public.gmane.org" <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+On Fri, Sep 27, 2013 at 05:32:05PM +0100, Lukasz Czerwinski wrote:
+> This patch adds two interrupts handling by the st_common library.
+> Additional second interrupt is used to indetify enabled event support for
+> chosen ST device. It supports board files and dt.
+> 
+> For dt interface multiple interrupts are passed through interrupt-names
+> property.
+> 
+> Read drdy_int_pin value is moved to the st_sensors_parse_platform_data()
+> in the st_sensors_i2c.c and st_sensors_spi.c Now drdy_int_pin can be
+> also configured via dt.
+> 
+> Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/iio/common/st_sensors/st_sensors_core.c |   36 +----------
+>  drivers/iio/common/st_sensors/st_sensors_i2c.c  |   75 +++++++++++++++++++++-
+>  drivers/iio/common/st_sensors/st_sensors_spi.c  |   77 ++++++++++++++++++++++-
+>  include/linux/iio/common/st_sensors.h           |   13 +++-
+>  include/linux/platform_data/st_sensors_pdata.h  |    2 +
+>  5 files changed, 160 insertions(+), 43 deletions(-)
+ 
+[...]
 
-On Wednesday 09 October 2013 04:34 PM, Laxman Dewangan wrote:
-> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
-> which can be enable/disable through software.
->
-> Add clock driver support for the Palmas 32KHz clocks.
+> +static void st_sensors_parse_platform_data(struct i2c_client *client,
+> +               struct iio_dev *indio_dev)
+> +{
+> +       struct st_sensor_data *sdata = iio_priv(indio_dev);
+> +       struct device_node *np = client->dev.of_node;
+> +       struct st_sensors_platform_data *pdata = client->dev.platform_data;
+> +
+> +       if (pdata)
+> +               sdata->drdy_int_pin = pdata->drdy_int_pin;
+> +       else if (np)
+> +               of_property_read_u8(np, "st,drdy-int-pin",
+> +                       (u8 *)&sdata->drdy_int_pin);
 
+Why the cast?
 
-Can you please review this version? I have taken care of all earlier 
-feedbacks.
+What are valid values for this propertyy and what does it mean?
+
+No sanity checking? Are there 256 pins?
+
+> +}
+> +
+> +static unsigned int st_sensors_i2c_map_irq(struct i2c_client *client,
+> +               unsigned int irq_num)
+> +{
+> +       struct device_node *np = client->dev.of_node;
+> +       struct st_sensors_platform_data *pdata = client->dev.platform_data;
+> +       int index = 0;
+> +
+> +       if (pdata)
+> +               return pdata->irqs[irq_num];
+> +       else if (np) {
+> +               switch (irq_num) {
+> +               case ST_SENSORS_INT1:
+> +                       index = of_property_match_string(np,
+> +                                       "interrupt-names",
+> +                                       ST_SENSORS_DRDY_IRQ_NAME);
+> +                       break;
+> +               case ST_SENSORS_INT2:
+> +                       index = of_property_match_string(np,
+> +                                       "interrupt-names",
+> +                                       ST_SENSORS_EVENT_IRQ_NAME);
+> +               default:
+> +                       break;
+> +               }
+> +               return index < 0 ? 0 : irq_of_parse_and_map(np, index);
+> +       }
+> +       return 0;
+> +}
+
+Is there no platform_get_irq_byname equivalent for i2c devices? It seems like
+naming the irq resources and using that would be a better solution.
 
 Thanks,
-Laxman
+Mark.
