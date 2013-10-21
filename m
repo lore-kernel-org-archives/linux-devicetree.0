@@ -1,165 +1,366 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
- or is there something	better?
-Date: Mon, 21 Oct 2013 12:18:49 +0100
-Message-ID: <52650D99.80602@gmail.com>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020231134.GR25034@n2100.arm.linux.org.uk>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131020231134.GR25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V6 3/3] drivers/rtc/rtc-as3722: add RTC driver
+Date: Mon, 21 Oct 2013 17:17:21 +0530
+Message-ID: <1382356041-30973-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: akpm@linux-foundation.org
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Laxman Dewangan <ldewangan@nvidia.com>, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2013 12:11 AM, Russell King - ARM Linux wrote:
-> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
->> The only thing we've really moved out of the kernel is the exact IDs of
->> which GPIOS, interrupts, I2C/SPI ports the devices are connected to; the
->> simple stuff not the hard stuff. The code hasn't really been simplified
->> by DT - if anything, it's more complicated since we now have to parse
->> those values from DT rather than putting them into simple data-structures.
->
-> Here's my random thoughts this evening on DT, orientated mostly on a
-> problem area I've been paying attention to recently.
->
-> In some ways, DT has made things much harder.  I don't know whether
-> you've taken a look at DRM and the various drivers we have under there,
-> it's quite a mess of unreliable code which is trying to bend the DRM
-> card based model to a DT based multi-device component based description
-> with lots of sub-drivers.
->
-> What DRM currently expects is a certain initialisation order: the main
-> drm_device structure is created by the DRM code, and then supplied to
-> the DRM driver to populate all the different parts of the "DRM card".
->
-> Once all parts of the card have been setup (the CRTCs, encoders,
-> connectors, etc) then some helpers can be initialised.  Once the
-> helpers have been initialised, the "dimensions" of the "DRM card"
-> become rather fixed until the helper is torn down.
->
-> The problem is this: if you have a multi-driver based card, there is
-> no way to prevent any of those sub-drivers from being unbound from
-> their drivers at any time.  module refcounts don't save you from this.
-> Meanwhile, (at the moment) you can't half-tear down a "DRM card" and
-> have it still in a usable state.  The internals just don't allow for
-> it at present.
->
-> Yes, work can be put in to solve this problem, but it's being solved
-> because of a desire to bend the subsystem to the DT way of doing things.
-> That may or may not be the best idea.  However, what I do know is that
-> there is now great pressure to "bend stuff so that it works with DT
-> at all costs".  Evidence is the Exynos driver and the imx-drm driver.
->
-> Now, the flip side to this is that some DRM solutions include an I2C
-> device, which is itself a separate driver, and would appear to suffer
-> from this same problem.  This is handled via the drm_encoder_slave
-> infrastructure.  As it currently is written (ignoring DT) it get
-> around the problem by not actually using the driver model "properly".
-> If it were to, it would run into this same problem.
->
-> How would we sort this out pre-DT?  We'd pass a chunk of platform data
-> into a driver to describe the various options: eg, whether we wanted
-> HDMI output, the I2C bus details of the DDC bus, etc., which results
-> in a simpler solution - though traditionally a driver specific solution.
->
-> However, "driver specific solution" is bad - always has been.  What was
-> missed is that the platform datas should never have been specific to
-> any particular device.  They should have been class specific.  I tried
-> to do that with flash_platform_data for example - some people got the
-> idea, but the vast majority didn't.
->
-> What is clear to me is that there is no panacea "one size fits all"
-> approach to the problem of device driver bindings and turning them into
-> generic drivers.  Everyone has their own pet ideas and solutions to
-> this.  Some favour DT.  Others favour other solutions.
->
-> At the end of the day, the question should be - what is the easiest
-> solution.  In the case of DRM, it may well be that the easiest solution
-> is to have a translation layer which presents a DT multi-node
-> description (note the change in terminology: multi-node not multi-device)
-> to DRM as platform data so that DRM can preserve its "single card"
-> solution.  Or whatever other translation layer is necessary for whatever
-> solution is chosen in the future.
->
-> There's much much more to the DRM vs DT problem than the above.  In
-> short:
-> - we have several driver specific solutions to this same problem
-> - on the balance of probabilities, their solutions are buggy in some
->    way, some more buggy than others.
->
-> I have one DRM driver which I've recently submitted to David Airlie
-> which I have *not* implemented DT support for and that is because I
-> don't want to solve this same problem in another driver specific way.
-> I'd rather the driver wasn't directly supportable by DT until there's
-> proper work in infrastructure than to create yet another driver
-> specific solution - or the DT mess is dealt with outside the main
-> driver.  (I believe that has already been done by Sebastian...)
+The ams AS3722 is a compact system PMU suitable for mobile phones,
+tablets etc.
 
-IMHO, making a driver DT-aware should never really depend on re-writing
-the core driver itself but help the subsystem to build up proper driver-
-specific structs from it. When I started to make Armada DRM to work with
-DT, I didn't look for places to modify the driver but what it expects
-in terms of resources. So, for Armada DRM and most likely most SoC DRM
-drivers DT should only be used to build up the platform_data required
-for the driver.
+Add a driver to support accessing the RTC found on the ams AS3722
+PMIC using RTC framework.
 
-IIRC, in the early DT days, everybody of_iomap'ed resources, with
-device core translating those to resources you can limit some drivers
-to the match table to make it DT aware. I guess this also has to be
-done within other subsystems, drm and propably asoc too.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
+---
+Changes from V1: 
+- Get rid of clk32k out configuration from RTC. Will add clock driver.
 
-What DT really allows us to do, is describing dependencies between
-nodes, i.e. RGB scan-out connected to HDMI transmitter on I2C bus
-foo. That is what we really should exploit to build up a proper
-representation of the devices used for e.g. a video card. Except some
-very IP specific properties, there should be no need to parse the
-DT yourself. Of course, there will be over-complicated boards or
-designs that make it hard to deal with, but it would have been with or
-without DT.
+Changes from V2: 
+- None. 
 
-I definitely may have a limited view over the overall complexity
-involved especially with non-SoC drivers. Nonetheless, I am looking
-forward to meet some of you at ELCE and get more insight in this.
+Changes form V3: 
+- Change AMS to ams.
 
-> Other thoughts on DT... it's a pain in the backside as it's far too
-> easy to make a subtle mistake in a DT source file and have it "build"
-> to a blob. You can then spend hours trying to debug why something isn't
-> working, and it's very simply because you typo'd something.  A recent
-> example:
->
-> 	pintctrl-0 = <...>;
+Changes form V4: 
+- None
+Changes from V5:
+- Use CONFIG_PM_SLEEP instead of CONFIG_PM
+- Remove compatiable as it is not used.
+- use masked updates for bit enable in place of write to avoid unintentional
+  change.
 
-Aren't there proposals for DT schematas that could possibly solve this?
+ drivers/rtc/Kconfig      |   10 ++
+ drivers/rtc/Makefile     |    1 +
+ drivers/rtc/rtc-as3722.c |  280 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 291 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/rtc/rtc-as3722.c
 
-Sebastian
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 9654aa3..d8785d7 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -153,6 +153,16 @@ config RTC_DRV_88PM80X
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-88pm80x.
+ 
++config RTC_DRV_AS3722
++	tristate "ams AS3722 RTC driver"
++	depends on MFD_AS3722
++	help
++	  If you say yes here you get support for the RTC of ams AS3722 PMIC
++	  chips.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-as3722.
++
+ config RTC_DRV_DS1307
+ 	tristate "Dallas/Maxim DS1307/37/38/39/40, ST M41T00, EPSON RX-8025"
+ 	help
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 2dff3d2..fdb5764 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_RTC_DRV_88PM860X)  += rtc-88pm860x.o
+ obj-$(CONFIG_RTC_DRV_88PM80X)	+= rtc-88pm80x.o
+ obj-$(CONFIG_RTC_DRV_AB3100)	+= rtc-ab3100.o
+ obj-$(CONFIG_RTC_DRV_AB8500)	+= rtc-ab8500.o
++obj-$(CONFIG_RTC_DRV_AS3722)	+= rtc-as3722.o
+ obj-$(CONFIG_RTC_DRV_AT32AP700X)+= rtc-at32ap700x.o
+ obj-$(CONFIG_RTC_DRV_AT91RM9200)+= rtc-at91rm9200.o
+ obj-$(CONFIG_RTC_DRV_AT91SAM9)	+= rtc-at91sam9.o
+diff --git a/drivers/rtc/rtc-as3722.c b/drivers/rtc/rtc-as3722.c
+new file mode 100644
+index 0000000..a796e8f
+--- /dev/null
++++ b/drivers/rtc/rtc-as3722.c
+@@ -0,0 +1,280 @@
++/*
++ * rtc-as3722.c - Real Time Clock driver for ams AS3722 PMICs
++ *
++ * Copyright (C) 2013 ams AG
++ * Copyright (c) 2013, NVIDIA Corporation. All rights reserved.
++ *
++ * Author: Florian Lobmaier <florian.lobmaier@ams.com>
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
++ *
++ */
++
++#include <linux/bcd.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/ioctl.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mfd/as3722.h>
++#include <linux/platform_device.h>
++#include <linux/rtc.h>
++#include <linux/time.h>
++
++#define AS3722_RTC_START_YEAR	  2000
++struct as3722_rtc {
++	struct rtc_device	*rtc;
++	struct device		*dev;
++	struct as3722		*as3722;
++	int			alarm_irq;
++	bool			irq_enable;
++};
++
++static void as3722_time_to_reg(u8 *rbuff, struct rtc_time *tm)
++{
++	rbuff[0] = bin2bcd(tm->tm_sec);
++	rbuff[1] = bin2bcd(tm->tm_min);
++	rbuff[2] = bin2bcd(tm->tm_hour);
++	rbuff[3] = bin2bcd(tm->tm_mday);
++	rbuff[4] = bin2bcd(tm->tm_mon);
++	rbuff[5] = bin2bcd(tm->tm_year - (AS3722_RTC_START_YEAR - 1900));
++}
++
++static void as3722_reg_to_time(u8 *rbuff, struct rtc_time *tm)
++{
++	tm->tm_sec = bcd2bin(rbuff[0] & 0x7F);
++	tm->tm_min = bcd2bin(rbuff[1] & 0x7F);
++	tm->tm_hour = bcd2bin(rbuff[2] & 0x3F);
++	tm->tm_mday = bcd2bin(rbuff[3] & 0x3F);
++	tm->tm_mon = bcd2bin(rbuff[4] & 0x1F);
++	tm->tm_year = (AS3722_RTC_START_YEAR - 1900) + bcd2bin(rbuff[5] & 0x7F);
++	return;
++}
++
++static int as3722_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++	struct as3722 *as3722 = as3722_rtc->as3722;
++	u8 as_time_array[6];
++	int ret;
++
++	ret = as3722_block_read(as3722, AS3722_RTC_SECOND_REG,
++			6, as_time_array);
++	if (ret < 0) {
++		dev_err(dev, "RTC_SECOND reg block read failed %d\n", ret);
++		return ret;
++	}
++	as3722_reg_to_time(as_time_array, tm);
++	return 0;
++}
++
++static int as3722_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++	struct as3722 *as3722 = as3722_rtc->as3722;
++	u8 as_time_array[6];
++	int ret;
++
++	if (tm->tm_year < (AS3722_RTC_START_YEAR - 1900))
++		return -EINVAL;
++
++	as3722_time_to_reg(as_time_array, tm);
++	ret = as3722_block_write(as3722, AS3722_RTC_SECOND_REG, 6,
++			as_time_array);
++	if (ret < 0)
++		dev_err(dev, "RTC_SECOND reg block write failed %d\n", ret);
++	return ret;
++}
++
++static int as3722_rtc_alarm_irq_enable(struct device *dev,
++		unsigned int enabled)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++
++	if (enabled && !as3722_rtc->irq_enable) {
++		enable_irq(as3722_rtc->alarm_irq);
++		as3722_rtc->irq_enable = true;
++	} else if (!enabled && as3722_rtc->irq_enable)  {
++		disable_irq(as3722_rtc->alarm_irq);
++		as3722_rtc->irq_enable = false;
++	}
++	return 0;
++}
++
++static int as3722_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++	struct as3722 *as3722 = as3722_rtc->as3722;
++	u8 as_time_array[6];
++	int ret;
++
++	ret = as3722_block_read(as3722, AS3722_RTC_ALARM_SECOND_REG, 6,
++			as_time_array);
++	if (ret < 0) {
++		dev_err(dev, "RTC_ALARM_SECOND block read failed %d\n", ret);
++		return ret;
++	}
++
++	as3722_reg_to_time(as_time_array, &alrm->time);
++	return 0;
++}
++
++static int as3722_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++	struct as3722 *as3722 = as3722_rtc->as3722;
++	u8 as_time_array[6];
++	int ret;
++
++	if (alrm->time.tm_year < (AS3722_RTC_START_YEAR - 1900))
++		return -EINVAL;
++
++	ret = as3722_rtc_alarm_irq_enable(dev, 0);
++	if (ret < 0) {
++		dev_err(dev, "Disable RTC alarm failed\n");
++		return ret;
++	}
++
++	as3722_time_to_reg(as_time_array, &alrm->time);
++	ret = as3722_block_write(as3722, AS3722_RTC_ALARM_SECOND_REG, 6,
++			as_time_array);
++	if (ret < 0) {
++		dev_err(dev, "RTC_ALARM_SECOND block write failed %d\n", ret);
++		return ret;
++	}
++
++	if (alrm->enabled)
++		ret = as3722_rtc_alarm_irq_enable(dev, alrm->enabled);
++	return ret;
++}
++
++static irqreturn_t as3722_alarm_irq(int irq, void *data)
++{
++	struct as3722_rtc *as3722_rtc = data;
++
++	rtc_update_irq(as3722_rtc->rtc, 1, RTC_IRQF | RTC_AF);
++	return IRQ_HANDLED;
++}
++
++static const struct rtc_class_ops as3722_rtc_ops = {
++	.read_time = as3722_rtc_read_time,
++	.set_time = as3722_rtc_set_time,
++	.read_alarm = as3722_rtc_read_alarm,
++	.set_alarm = as3722_rtc_set_alarm,
++	.alarm_irq_enable = as3722_rtc_alarm_irq_enable,
++};
++
++static int as3722_rtc_probe(struct platform_device *pdev)
++{
++	struct as3722 *as3722 = dev_get_drvdata(pdev->dev.parent);
++	struct as3722_rtc *as3722_rtc;
++	int ret;
++
++	as3722_rtc = devm_kzalloc(&pdev->dev, sizeof(*as3722_rtc), GFP_KERNEL);
++	if (!as3722_rtc)
++		return -ENOMEM;
++
++	as3722_rtc->as3722 = as3722;
++	as3722_rtc->dev = &pdev->dev;
++	platform_set_drvdata(pdev, as3722_rtc);
++
++	/* Enable the RTC to make sure it is running. */
++	ret = as3722_update_bits(as3722, AS3722_RTC_CONTROL_REG,
++			AS3722_RTC_ON | AS3722_RTC_ALARM_WAKEUP_EN,
++			AS3722_RTC_ON | AS3722_RTC_ALARM_WAKEUP_EN);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "RTC_CONTROL reg write failed: %d\n", ret);
++		return ret;
++	}
++
++	device_init_wakeup(&pdev->dev, 1);
++
++	as3722_rtc->rtc = rtc_device_register("as3722", &pdev->dev,
++				&as3722_rtc_ops, THIS_MODULE);
++	if (IS_ERR(as3722_rtc->rtc)) {
++		ret = PTR_ERR(as3722_rtc->rtc);
++		dev_err(&pdev->dev, "RTC register failed: %d\n", ret);
++		return ret;
++	}
++
++	as3722_rtc->alarm_irq = platform_get_irq(pdev, 0);
++	dev_info(&pdev->dev, "RTC interrupt %d\n", as3722_rtc->alarm_irq);
++
++	ret = request_threaded_irq(as3722_rtc->alarm_irq, NULL,
++			as3722_alarm_irq, IRQF_ONESHOT | IRQF_EARLY_RESUME,
++			"rtc-alarm", as3722_rtc);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
++				as3722_rtc->alarm_irq, ret);
++		goto scrub;
++	}
++	disable_irq(as3722_rtc->alarm_irq);
++	return 0;
++scrub:
++	rtc_device_unregister(as3722_rtc->rtc);
++	return ret;
++}
++
++static int as3722_rtc_remove(struct platform_device *pdev)
++{
++	struct as3722_rtc *as3722_rtc = platform_get_drvdata(pdev);
++
++	free_irq(as3722_rtc->alarm_irq, as3722_rtc);
++	rtc_device_unregister(as3722_rtc->rtc);
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int as3722_rtc_suspend(struct device *dev)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(as3722_rtc->alarm_irq);
++
++	return 0;
++}
++
++static int as3722_rtc_resume(struct device *dev)
++{
++	struct as3722_rtc *as3722_rtc = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(as3722_rtc->alarm_irq);
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops as3722_rtc_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(as3722_rtc_suspend, as3722_rtc_resume)
++};
++
++static struct platform_driver as3722_rtc_driver = {
++	.probe = as3722_rtc_probe,
++	.remove = as3722_rtc_remove,
++	.driver = {
++		.name = "as3722-rtc",
++		.pm = &as3722_rtc_pm_ops,
++	},
++};
++module_platform_driver(as3722_rtc_driver);
++
++MODULE_DESCRIPTION("RTC driver for AS3722 PMICs");
++MODULE_ALIAS("platform:as3722-rtc");
++MODULE_AUTHOR("Florian Lobmaier <florian.lobmaier@ams.com>");
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_LICENSE("GPL");
+-- 
+1.7.1.1
 
-> and then you start wondering why aren't I getting signals out from the
-> pins you want, and you start chasing around trying to find out if its
-> something that you haven't thought of, whether some setting in the
-> pin settings is wrong or whatever.  You completely fail to notice the
-> additional 't' for hours and hours.  Eventually, you start pasting it
-> onto IRC and at that point you spot the error.
->
-> You may laugh at that, but that's exactly what has happened - all
-> because the DT compiler is freeform - provided the strings look okay
-> to it, that's all it cares about.  Whether the description is correct
-> for the device or not is outside of its concern.
->
-> I'm pretty certain that I won't be the only one who has gone through
-> this - and I'm probably not going to be the last.
->
-> We already know that "board firmware" has a tendency to be buggy.  Well,
-> the DT compiler as it stands today does nothing what so ever to help
-> people make sure that what they _think_ they're typing into the DT
-> file is actually correct.  All the time that we're have a tool which
-> allows typos through we're going to encounter bugs like this.  Not a
-> problem when DT is shipped with the kernel, but when it isn't, what
-> then...
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
