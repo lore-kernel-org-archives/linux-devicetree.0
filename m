@@ -1,94 +1,181 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC v2 PATCH 01/14] iio: st_common: New interrupt interface
-Date: Mon, 21 Oct 2013 12:48:46 +0100
-Message-ID: <20131021114845.GF8144@kartoffel>
-References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
- <1380299538-22047-2-git-send-email-l.czerwinski@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY
+ Framework
+Date: Mon, 21 Oct 2013 17:25:00 +0530
+Message-ID: <52651614.5040309@ti.com>
+References: <1381866857-3861-1-git-send-email-kishon@ti.com>
+ <1381866857-3861-3-git-send-email-kishon@ti.com> <525E9232.9050502@ti.com>
+ <525E9A11.7080501@ti.com> <525EA171.9010402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380299538-22047-2-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "denis.ciocca-qxv4g6HH51o@public.gmane.org" <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <525EA171.9010402@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux@arm.linux.org.uk, bcousson@baylibre.com, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, balbi@ti.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 05:32:05PM +0100, Lukasz Czerwinski wrote:
-> This patch adds two interrupts handling by the st_common library.
-> Additional second interrupt is used to indetify enabled event support for
-> chosen ST device. It supports board files and dt.
+Hi,
+
+On Wednesday 16 October 2013 07:53 PM, Roger Quadros wrote:
+> On 10/16/2013 04:52 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Wednesday 16 October 2013 06:48 PM, Roger Quadros wrote:
+>>> Hi,
+>>>
+>>> On 10/15/2013 10:54 PM, Kishon Vijay Abraham I wrote:
+>>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>>>> phy_power_on() and phy_power_off().
+>>>>
+>>>> However using the old USB phy library wont be removed till the PHYs of all
+>>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>>>  drivers/usb/dwc3/Kconfig                       |    1 +
+>>>>  drivers/usb/dwc3/core.c                        |   52 ++++++++++++++++++++++++
+>>>>  drivers/usb/dwc3/core.h                        |    7 ++++
+>>>>  drivers/usb/dwc3/platform_data.h               |    2 +
+>>>>  5 files changed, 66 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> index e807635..471366d 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> @@ -6,11 +6,13 @@ Required properties:
+>>>>   - compatible: must be "snps,dwc3"
+>>>>   - reg : Address and length of the register set for the device
+>>>>   - interrupts: Interrupts used by the dwc3 controller.
+>>>> +
+>>>> +Optional properties:
+>>>>   - usb-phy : array of phandle for the PHY device.  The first element
+>>>>     in the array is expected to be a handle to the USB2/HS PHY and
+>>>>     the second element is expected to be a handle to the USB3/SS PHY
+>>>> -
+>>>> -Optional properties:
+>>>> + - phys: from the *Generic PHY* bindings
+>>>> + - phy-names: from the *Generic PHY* bindings
+>>>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>>>  
+>>>>  This is usually a subnode to DWC3 glue to which it is connected.
+>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>>>> index 8e385b4..64eed6f 100644
+>>>> --- a/drivers/usb/dwc3/Kconfig
+>>>> +++ b/drivers/usb/dwc3/Kconfig
+>>>> @@ -2,6 +2,7 @@ config USB_DWC3
+>>>>  	tristate "DesignWare USB3 DRD Core Support"
+>>>>  	depends on (USB || USB_GADGET) && HAS_DMA
+>>>>  	select USB_PHY
+>>>> +	select GENERIC_PHY
+>>>>  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>>>>  	help
+>>>>  	  Say Y or M here if your system has a Dual Role SuperSpeed
+>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>> index cb91d70..28bfa5b 100644
+>>>> --- a/drivers/usb/dwc3/core.c
+>>>> +++ b/drivers/usb/dwc3/core.c
+>>>> @@ -82,6 +82,12 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>>>  
+>>>>  	usb_phy_init(dwc->usb2_phy);
+>>>>  	usb_phy_init(dwc->usb3_phy);
+>>>> +
+>>>> +	if (dwc->usb2_generic_phy)
+>>>> +		phy_init(dwc->usb2_generic_phy);
+>>>> +	if (dwc->usb3_generic_phy)
+>>>> +		phy_init(dwc->usb3_generic_phy);
+>>>> +
+>>>
+>>> dwc3_core_soft_reset() is called from dwc3_core_init() which is called from
+>>> dwc3_probe() but before the PHYs are initialized.
+>>>
+>>> This will cause phy power_on() to be called before phy_init() which is wrong.
+>>>
 > 
-> For dt interface multiple interrupts are passed through interrupt-names
-> property.
+> You overlooked the above?
+
+No. Forgot to comment back.
+Yeah, you are right.. that should be fixed.
 > 
-> Read drdy_int_pin value is moved to the st_sensors_parse_platform_data()
-> in the st_sensors_i2c.c and st_sensors_spi.c Now drdy_int_pin can be
-> also configured via dt.
+>>>>  	mdelay(100);
+>>>>  
+>>>>  	/* Clear USB3 PHY reset */
+>>>> @@ -343,6 +349,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>>>  {
+>>>>  	usb_phy_shutdown(dwc->usb2_phy);
+>>>>  	usb_phy_shutdown(dwc->usb3_phy);
+>>>> +
+>>>> +	if (dwc->usb2_generic_phy)
+>>>> +		phy_power_off(dwc->usb2_generic_phy);
+>>>> +	if (dwc->usb3_generic_phy)
+>>>> +		phy_power_off(dwc->usb3_generic_phy);
+>>>>  }
+>>>>  
+>>>>  #define DWC3_ALIGN_MASK		(16 - 1)
+>>>> @@ -439,6 +450,26 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>>  		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+>>>>  	}
+>>>>  
+>>>> +	count = of_property_match_string(node, "phy-names", "usb2-phy");
+>>>> +	if (count >= 0 || (pdata && pdata->usb2_generic_phy)) {
+>>>> +		dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>>>> +		if (IS_ERR(dwc->usb2_generic_phy)) {
+>>>> +			dev_err(dev, "no usb2 phy configured yet");
+>>>> +			return PTR_ERR(dwc->usb2_generic_phy);
+>>>> +		}
+>>>> +		dwc->usb2_phy = NULL;
+>>>> +	}
+>>>> +
+>>>> +	count = of_property_match_string(node, "phy-names", "usb3-phy");
+>>>> +	if (count >= 0 || (pdata && pdata->usb3_generic_phy)) {
+>>>> +		dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>>>> +		if (IS_ERR(dwc->usb3_generic_phy)) {
+>>>> +			dev_err(dev, "no usb3 phy configured yet");
+>>>> +			return PTR_ERR(dwc->usb3_generic_phy);
+>>>> +		}
+>>>> +		dwc->usb3_phy = NULL;
+>>>> +	}
+>>>> +
+>>>
+>>> There are a couple of issues here.
+>>> - The above code must be executed only if it node is valid.
+>>
+>> of_property_match_string will give a error value if the node is not present.
+>> *count >= 0* can take care of this.
 > 
-> Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/iio/common/st_sensors/st_sensors_core.c |   36 +----------
->  drivers/iio/common/st_sensors/st_sensors_i2c.c  |   75 +++++++++++++++++++++-
->  drivers/iio/common/st_sensors/st_sensors_spi.c  |   77 ++++++++++++++++++++++-
->  include/linux/iio/common/st_sensors.h           |   13 +++-
->  include/linux/platform_data/st_sensors_pdata.h  |    2 +
->  5 files changed, 160 insertions(+), 43 deletions(-)
- 
-[...]
+> OK. 
+> 
+>>> - We must either get both PHYs via old method or via new method and not support mix matching
+>>> them. e.g. it is possible with this code that usb2_phy is set and usb3_generic_phy is set.
+>>
+>> Why? As long as both the frameworks co-exist (and we support both in dwc3), I
+>> don't see any reason why we shouldn't allow it. We can avoid adding a few more
+>> checks by leaving it the way it is currently.
+> 
+> Because it just doesn't seem elegant. Why would you want to even allow both types of PHY
+> to be used simultaneously?
 
-> +static void st_sensors_parse_platform_data(struct i2c_client *client,
-> +               struct iio_dev *indio_dev)
-> +{
-> +       struct st_sensor_data *sdata = iio_priv(indio_dev);
-> +       struct device_node *np = client->dev.of_node;
-> +       struct st_sensors_platform_data *pdata = client->dev.platform_data;
-> +
-> +       if (pdata)
-> +               sdata->drdy_int_pin = pdata->drdy_int_pin;
-> +       else if (np)
-> +               of_property_read_u8(np, "st,drdy-int-pin",
-> +                       (u8 *)&sdata->drdy_int_pin);
+We actually don't allow both types of PHYs to be used simultaneously.  We set
+usb2_phy/usb3_phy to NULL, if we had got the the generic PHY.
+If you just doesn't even want to get PHY by the second method if we have got
+PHY by the first method, then we might need to add more *if* checks which IMO
+don't make it any elegant either.
+Having a clean dt data wont have both types of PHYs anyway.
 
-Why the cast?
-
-What are valid values for this propertyy and what does it mean?
-
-No sanity checking? Are there 256 pins?
-
-> +}
-> +
-> +static unsigned int st_sensors_i2c_map_irq(struct i2c_client *client,
-> +               unsigned int irq_num)
-> +{
-> +       struct device_node *np = client->dev.of_node;
-> +       struct st_sensors_platform_data *pdata = client->dev.platform_data;
-> +       int index = 0;
-> +
-> +       if (pdata)
-> +               return pdata->irqs[irq_num];
-> +       else if (np) {
-> +               switch (irq_num) {
-> +               case ST_SENSORS_INT1:
-> +                       index = of_property_match_string(np,
-> +                                       "interrupt-names",
-> +                                       ST_SENSORS_DRDY_IRQ_NAME);
-> +                       break;
-> +               case ST_SENSORS_INT2:
-> +                       index = of_property_match_string(np,
-> +                                       "interrupt-names",
-> +                                       ST_SENSORS_EVENT_IRQ_NAME);
-> +               default:
-> +                       break;
-> +               }
-> +               return index < 0 ? 0 : irq_of_parse_and_map(np, index);
-> +       }
-> +       return 0;
-> +}
-
-Is there no platform_get_irq_byname equivalent for i2c devices? It seems like
-naming the irq resources and using that would be a better solution.
-
-Thanks,
-Mark.
+Thanks
+Kishon
+> 
+> cheers,
+> -roger
+> 
