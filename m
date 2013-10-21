@@ -1,86 +1,203 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
-	better?
-Date: Mon, 21 Oct 2013 09:48:54 +0100
-Message-ID: <20131021084854.GV25034@n2100.arm.linux.org.uk>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020231134.GR25034@n2100.arm.linux.org.uk> <20131021083242.GB30088@pengutronix.de>
+ better?
+Date: Mon, 21 Oct 2013 10:54:22 +0200
+Message-ID: <20131021085420.GA21518@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131021083242.GB30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <52644A9E.3060007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2013 at 10:32:42AM +0200, Sascha Hauer wrote:
-> On Mon, Oct 21, 2013 at 12:11:34AM +0100, Russell King - ARM Linux wrote:
-> > On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-> > > The only thing we've really moved out of the kernel is the exact IDs of
-> > > which GPIOS, interrupts, I2C/SPI ports the devices are connected to; the
-> > > simple stuff not the hard stuff. The code hasn't really been simplified
-> > > by DT - if anything, it's more complicated since we now have to parse
-> > > those values from DT rather than putting them into simple data-structures.
-> > 
-> > Here's my random thoughts this evening on DT, orientated mostly on a
-> > problem area I've been paying attention to recently.
-> > 
-> > In some ways, DT has made things much harder.  I don't know whether
-> > you've taken a look at DRM and the various drivers we have under there,
-> > it's quite a mess of unreliable code which is trying to bend the DRM
-> > card based model to a DT based multi-device component based description
-> > with lots of sub-drivers.
-> > 
-> > What DRM currently expects is a certain initialisation order: the main
-> > drm_device structure is created by the DRM code, and then supplied to
-> > the DRM driver to populate all the different parts of the "DRM card".
-> > 
-> > Once all parts of the card have been setup (the CRTCs, encoders,
-> > connectors, etc) then some helpers can be initialised.  Once the
-> > helpers have been initialised, the "dimensions" of the "DRM card"
-> > become rather fixed until the helper is torn down.
-> > 
-> > The problem is this: if you have a multi-driver based card, there is
-> > no way to prevent any of those sub-drivers from being unbound from
-> > their drivers at any time.  module refcounts don't save you from this.
-> > Meanwhile, (at the moment) you can't half-tear down a "DRM card" and
-> > have it still in a usable state.  The internals just don't allow for
-> > it at present.
-> > 
-> > Yes, work can be put in to solve this problem, but it's being solved
-> > because of a desire to bend the subsystem to the DT way of doing things.
-> > That may or may not be the best idea.  However, what I do know is that
-> > there is now great pressure to "bend stuff so that it works with DT
-> > at all costs".  Evidence is the Exynos driver and the imx-drm driver.
-> 
-> In fact it was the other way round. We modeled the IPU devicetree
-> binding after the hardware and bended the driver around it. The DRM
-> single-card model is the limiting fator here, not the devicetree.
 
-There are several points which I think you failed to understand:
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1. DRM vs device tree is an incompatibility.
-2. Trying to bend DRM to DT with independent driver solutions such as
-   the abomination that is imx-drm creates its own set of problems.
+On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
+> IIRC (and perhaps I don't; it was really slightly before my active
+> involvement in kernel development) Linus triggered the whole ARM DT
+> conversion in response to disliking the volume of changes, and
+> conflicts, in board files. The idea of DT conversion being that all the
+> board-specific details could be moved out of the kernel and into DT
+> files, thus causing him not to have to see it.
+>=20
+> Note: As part of implementing DT on ARM, we've also cleaned up and
+> modularized a lot of code, and created new subsystems and APIs. I think
+> this is a separate issue, and much of that could have happened
+> completely independently from doard->DT conversion.
 
-If a subsystem doesn't work well with DT, then the choices are either:
+Perhaps this would even have been enough. It looks to me that we've
+created much better, more rigorous processes as a side-effect. I can
+easily imagine that if we had done all of that but without moving to DT,
+the end result may have been equally good.
 
-(a) don't use DT with the subsystem
-(b) fix the subsystem
+I'm not saying that DT is bad. There are a whole lot of good things
+about it that I really like. On the other hand, I've recently realized
+that it has become increasingly difficult to upstream even the most
+trivial functionality because now everybody wants to design the perfect
+DT binding with the effect of new features not going anywhere.
 
-The choices do not include:
+But I digress, and I should probably start a separate discussion about
+that.
 
-(c) creating an abomination that is fragile, and is trivially easy to
-oops the kernel.
+> I wonder if DT is solving the problem at the right level of abstraction?
+> The kernel still needs to be aware of all the nitty-gritty details of
+> how each board is hooked up different, and have explicit code to deal
+> the union of all the different board designs.
+>=20
+> For example, if some boards have a SW-controlled regulator for a device
+> but others don't, the kernel still needs to have driver code to actively
+> control that regulator, /plus/ the regulator subsystem needs to be able
+> to substitute a dummy regulator if it's optional or simply missing from
+> the DT.
+>=20
+> Another example: MMC drivers need to support some boards detecting SD
+> card presence or write-protect via arbitrary GPIOs, and others via
+> dedicated logic in the MMC controller.
+>=20
+> In general, the kernel still needs a complete driver to every last
+> device on every strange board, and needs to support every strange way
+> some random board hooks all the devices together.
 
-This comes back to the root problem I'm trying to highlight: we are not
-trying to strive for DT forsaking everything else.  If moving to DT
-means we give up with proper code design, then we've quite literally
-lost the plot.
+I have some difficulty understanding what you think should've been moved
+out of the kernel. There's only so much you can put into data structures
+and at some point you need to start writing device specific code for the
+peripherals that you want to drive.
 
-Honestly, I don't see imx-drm ever moving out of drivers/staging except
-by deletion or being rewritten.
+> The only thing we've really moved out of the kernel is the exact IDs of
+> which GPIOS, interrupts, I2C/SPI ports the devices are connected to; the
+> simple stuff not the hard stuff. The code hasn't really been simplified
+> by DT - if anything, it's more complicated since we now have to parse
+> those values from DT rather than putting them into simple data-structures.
+>=20
+> I wonder if some other solution with a higher level of abstraction
+> wouldn't be a better idea? Would it make more sense to define some kind
+> of firmware interface that the kernel deals with, so that all HW details
+> are hidden behind that firmware interface, and the kernel just deals
+> with the firmware interface, which hopefully has less variation than the
+> actual HW (or even zero variation).
+>=20
+> * Would UEFI/ACPI/similar fulfill this role?
+
+If I recall correctly, the original OpenFirmware that introduced the DT
+concept used to have something similar to UEFI/ACPI. Essentially it was
+possible to not only pass the DT to the operating system but also allow
+the operating system to call back into the firmware to request service.
+
+Of course this brings up the issue about the degree to which we want to
+rely on the firmware to do the right thing. If it's difficult to update
+firmware (which it usually is), then we'll likely end up reimplementing
+some of the functionality in the kernel because firmware might end up
+being buggy and therefore we can't trust it.
+
+On the other hand, one thing that I very much like about the concept is
+that DT isn't only used as a way to describe the hardware but also uses
+the notion of services provided by nodes. That means that a DT binding
+not only defines the properties that characterize hardware but also a
+set of operations that can be performed on a compatible node. This does
+not only apply on a per-compatible basis but also depending on device
+type. A PCI device for instance provides standard services to read the
+configuration space.
+
+Most of this applies to Linux already because when a device referred to
+by phandle is used by some other device, the phandle needs to be
+resolved to some Linux-specific object (regulator, clock, backlight...)
+before it can be used and the given subsystem already defines all the
+operations that can be performed. So perhaps this isn't really all that
+relevant after all...
+
+> * Perhaps a standard virtualization interface could fulfil this role?
+> IIUC, there are already standard mechanisms of exposing e.g. disks, USB
+> devices, PCI devices, etc. into VMs, and recent ARM HW[1] supports
+> virtualization well now. A sticking point might be graphics, but it
+> sounds like there's work to transport GL or Gallium command streams over
+> the virtualization divide.
+>=20
+> Downsides might be:
+>=20
+> - Overhead, due to invoking the para-virtualized VM host for IO, and
+> extra resources to run the host.
+>=20
+> - The host SW still has to address the HW differences. Would it be more
+> acceptable to run a vendor kernel as the VM host if it meant that the
+> VMs could be a more standardized environment, with a more single-purpose
+> upstream kernel? Would it be easier to create a simple VM host than a
+> full Linux kernel with a full arbitrary Linux distro, thus allowing the
+> HW differences to be addressed in a simple way?
+>=20
+> These techniques would allow distros to target a single HW environment,
+> e.g. para-virtualized KVM, rather than many many different SoCs and
+> boards each with different bootloaders, bootloader configurations, IO
+> peripherals, DT storage locations, etc. Perhaps a solution like this
+> would allow distros to easily support a similar environment across a
+> range of HW in a way that "just works" for many users, while not
+> preventing people with more specific needs crafting more HW-specific
+> environments?
+
+That sounds very much like a sledgehammer solution. Also I'm not sure if
+it would solve all that many problems. I guess what it could solve is to
+move a whole lot of the underlying specifics of the various SoCs to some
+other place (the host). It's fundamentally very similar to ACPI, and it
+comes with the same set of advantages and disadvantages.
+
+What will likely happen with such a solution is that we'll have to come
+up with a standard interface that the guest OS expects. Once that has
+been defined, vendors will have to implement that interface. Naturally
+most of them will choose Linux as a host OS. What we'll end up with is
+unlikely to be any better than the current situation.
+
+Vendor kernels that implement the host OS will effectively become forks
+of their own since there's no incentive to upstream code anymore. Linux
+upstream becomes a single unified architecture because all interfaces
+are now the same. Vendors are back to brewing their own. Except for the
+rare occasions where something needs to be added to the guest interface
+there won't be much interaction between kernel developers. We will also
+need to specify stable interfaces between host and guest and I think
+everyone involved with DT lately has some experience as to how painful
+that can be. So instead of being able to add new features to the kernel
+within a single release cycle, we'll likely end up having to wait for a
+few cycles because it needs to be implemented in both guest and host,
+which may or may not have the same release cycles.
+
+The above is the worst case scenario, but the alternative would be that
+Linux is still forked into host and guest, yet vendors keep working on
+one upstream host Linux. In that case, we're not solving anything. All
+the same problems that we have now will remain. Well, we might be able
+to make it somewhat easier for distributions, but there are a whole lot
+of disadvantages to it as well.
+
+Thierry
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZOu8AAoJEN0jrNd/PrOh0HEP/jmlPmfi9ffGoD1khIBulEJ6
+yVMQjlld0A9rjoh9PXJ1MUC+kAcqOqQjcqLoWhZyW2eRBN3uMRjdyEvjWBt+3HKk
+WbHqUHtvcDEKUib2xm6r98wXcGsY1kvXfO1fBl6B2IE7p6XTncnCjkJzaGcV1fQG
++Aokfgoi3RX/cNFN+s/4xY3+fungNicUG6kMt2d4Qd3k/4BTW2Lh7CNLjnxamAXR
+6CcUvPmW2ThsvgZPaWnDNClPVDsElvvz5goM+vNTqwJ9UNogSU2oVi8PTXPyoYag
+N0DiVuK7rHQpl15OlcnBc4cCdKBXixKxpHxJrALo/8ClcK6RJY+T36rSnFuZ/caN
+HVE8SAbjP2a4x1PqRNRI4defjBTcaodwdtSAAf/XSpQQDbPRHEyJnFYZxsb8AvgG
+Qy1Sch0JDJvMuLCYFuH3QULAhuWhj2wjocsc+UO0HEGfHeRWJwWLvfyg2wcLGH8r
+vUhCJMbrNSTODpnCoW8kWADyco3o4VkDdzOnALejDLvoH88fYsGfFZ9TeqqvWt01
+jHCUMd5/VNhLqm6gKtbhTObZQ8pH9Vx0XgN4Vh126WAdQqVQ82dWkBqsgZM9cGTo
+gP1trZoXW/inSwI7rAWr+d9tXoPk6TPaOZUjltegR+6tjUmkF3s4jEp6Ja98Oix8
+gyuJEh0EIEJUHgXyQ5G6
+=DhPT
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
