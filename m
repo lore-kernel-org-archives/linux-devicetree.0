@@ -1,68 +1,100 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
- or is there something better?
-Date: Mon, 21 Oct 2013 15:51:25 -0700
-Message-ID: <5265AFED.1040503@roeck-us.net>
-References: <52644A9E.3060007@wwwdotorg.org>	<20131021085420.GA21518@ulmo.nvidia.com> <52658C49.80400@wwwdotorg.org>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: Re: [RESEND PATCH v2 6/6] mmc: sdhci-bcm-kona: Add basic use of clocks
+Date: Mon, 21 Oct 2013 16:13:10 -0700
+Message-ID: <CAAYSxhorTkuMHU=mqWG5WsNYE1c2dh9-44yLhT6DGhEpgWSZxw@mail.gmail.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+	<1381960030-1640-7-git-send-email-tim.kryger@linaro.org>
+	<20131017141309.GG24056@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52658C49.80400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20131017141309.GG24056@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2013 01:19 PM, Stephen Warren wrote:
-> On 10/21/2013 09:54 AM, Thierry Reding wrote:
->> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-> ...
->>> I wonder if DT is solving the problem at the right level of
->>> abstraction? The kernel still needs to be aware of all the
->>> nitty-gritty details of how each board is hooked up different,
->>> and have explicit code to deal the union of all the different
->>> board designs.
->>>
->>> For example, if some boards have a SW-controlled regulator for a
->>> device but others don't, the kernel still needs to have driver
->>> code to actively control that regulator, /plus/ the regulator
->>> subsystem needs to be able to substitute a dummy regulator if
->>> it's optional or simply missing from the DT.
->>>
->>> Another example: MMC drivers need to support some boards
->>> detecting SD card presence or write-protect via arbitrary GPIOs,
->>> and others via dedicated logic in the MMC controller.
->>>
->>> In general, the kernel still needs a complete driver to every
->>> last device on every strange board, and needs to support every
->>> strange way some random board hooks all the devices together.
+On Thu, Oct 17, 2013 at 7:13 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Wed, Oct 16, 2013 at 10:47:10PM +0100, Tim Kryger wrote:
+>> Enable the external clock needed by the host controller during the
+>> probe and disable it during the remove.
+>
+> This requires a biding document update.
+
+The current best practice for declaring the association of a clock
+with a consumer device is to embed the common clock bindings 'clocks'
+property inside its node but this is not the only way it may be done.
+
+Given that clk_get() still works for clocks found using string
+matching, is it appropriate to mandate that all drivers that uses the
+clk api mention the common clock bindings 'clocks' property in the
+documentation for their device's binding?
+
+> I note that the binding is already incomplete (it does not describe the
+> interrupts or reg).
+
+The current document reflects the standard for
+Documentation/devicetree/bindings/mmc where normal properties are
+described in mmc.txt and only the deviations described in vendor
+specific files.
+
 >>
->> I have some difficulty understanding what you think should've been
->> moved out of the kernel. There's only so much you can put into data
->> structures and at some point you need to start writing device
->> specific code for the peripherals that you want to drive.
+>> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+>> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+>> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+>> ---
+>>  drivers/mmc/host/sdhci-bcm-kona.c | 30 ++++++++++++++++++++++++++++--
+>>  1 file changed, 28 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
+>> index 85472d3..91db099 100644
+>> --- a/drivers/mmc/host/sdhci-bcm-kona.c
+>> +++ b/drivers/mmc/host/sdhci-bcm-kona.c
+>> @@ -54,6 +54,7 @@
+>>
+>>  struct sdhci_bcm_kona_dev {
+>>       struct mutex    write_lock; /* protect back to back writes */
+>> +     struct clk      *external_clk;
 >
-> My point was that (part of) the intent of adding DT support to the
-> kernel was to get rid of all the board-specific code/churn in the
-> kernel. That's not really possible, since DT is just representing the
-> data about the HW (e.g. which GPIO/IRQ numbers) and not the behaviour.
-> In order to really remove signifcant board-specific code from the
-> kernel, you need to move behaviour out of the kernel too, i.e. hide it
-> behind some kind of firmware or virtualization interface, and hence
-> have simpler drivers that don't know all the details.
+> Is this the only clock input the unit has?
+
+The SDHCI block only receives one clock.
+
+> Are there any other external resources the device needs (e.g. gpios,
+> regulators)?
+
+Yes but the cd-gpio and vmmc/vqmmc regulators are handled by the
+common SDHCI driver.
+
 >
+>>  };
+>>
+>>
+>> @@ -252,11 +253,29 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
+>>       mmc_of_parse(host->mmc);
+>>
+>>       if (!host->mmc->f_max) {
+>> -             dev_err(&pdev->dev, "Missing max-freq for SDHCI cfg\n");
+>> +             dev_err(dev, "Missing max-freq for SDHCI cfg\n");
+>
+> This seems like an unrelated change.
 
-In my opinion, not being able to describe behavior (or what people refer
-to as "describe how the hardware is used") is a severe limitation of
-devicetree usage in Linux. That is not a devicetree limitation per se,
-though, it is simply a matter of choice (or, in some cases, the ability
-of those arguing for new bindings to sell those bindings as "hardware
-description").
+Agreed.  I will remove this change.
 
-Guenter
+>>               ret = -ENXIO;
+>>               goto err_pltfm_free;
+>>       }
+>>
+>> +     /* Get and enable the external clock */
+>> +     kona_dev->external_clk = devm_clk_get(dev, NULL);
+>> +     if (IS_ERR(kona_dev->external_clk)) {
+>> +             dev_err(dev, "Failed to get external clock\n");
+>> +             ret = PTR_ERR(kona_dev->external_clk);
+>> +             goto err_pltfm_free;
+>
+> This seems like a pretty clear breakage of existing DTBs.
+>
+> Why?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The defconfig that builds this driver and DTBs currently sets
+CONFIG_ARM_APPENDED_DTB=y so there isn't any actual breakage risk.
