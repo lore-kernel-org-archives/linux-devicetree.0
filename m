@@ -1,119 +1,138 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add initial support for cm-fx6
-Date: Mon, 21 Oct 2013 13:06:13 +0800
-Message-ID: <20131021050610.GA9716@S2101-09.ap.freescale.net>
-References: <1381848564-29839-1-git-send-email-valentin@compulab.co.il>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: RE: [alsa-devel] [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
+ Interface driver.
+Date: Mon, 21 Oct 2013 06:59:10 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828667B8@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+ <526021B0.6050206@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1381848564-29839-1-git-send-email-valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <526021B0.6050206@metafoo.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, broonie
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2013 at 05:49:24PM +0300, Valentin Raevsky wrote:
-> Add initial support for cm-fx6 module.
-> 
-> cm-fx6 is a module based on mx6q SoC with the following features:
-> - Up to 4GB of DDR3
-> - 1 LCD/DVI output port
-> - 1 HDMI output port
-> - 2 LVDS LCD ports
-> - Gigabit Ethernet
-> - Analog Audio
-> - CAN
-> - SATA
-> - NAND
-> - PCIE
-> 
-> This patch allows to boot up the module, configures the serial console,
-> the Ethernet adapter and the hearbeat led.
-> 
-> Signed-off-by: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/cm-fx6.dts |   51 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 arch/arm/boot/dts/cm-fx6.dts
 
-Please name the file with 'imx6q-' prefix, and add dtb target into
-arch/arm/boot/dts/Makefile.
-
+> > +static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+> > +		struct snd_pcm_hw_params *params,
+> > +		struct snd_soc_dai *cpu_dai)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = fsl_sai_hw_params_tr(substream, params, cpu_dai,
+> > +				FSL_FMT_TRANSMITTER);
+> > +	if (ret) {
+> > +		dev_err(cpu_dai->dev,
+> > +				"Cannot set sai transmitter hw params: %d\n",
+> > +				ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = fsl_sai_hw_params_tr(substream, params, cpu_dai,
+> > +				FSL_FMT_RECEIVER);
+> > +	if (ret) {
+> > +		dev_err(cpu_dai->dev,
+> > +				"Cannot set sai's receiver hw params: %d\n",
+> > +				ret);
+> > +		return ret;
+> > +	}
 > 
-> diff --git a/arch/arm/boot/dts/cm-fx6.dts b/arch/arm/boot/dts/cm-fx6.dts
-> new file mode 100644
-> index 0000000..1080215
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/cm-fx6.dts
-> @@ -0,0 +1,51 @@
-> +/*
-> + * Copyright 2013 CompuLab Ltd.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6q.dtsi"
-> +
-> +/ {
-> +	model = "CompuLab CM-FX6";
-> +	compatible = "compulab,cm-fx6", "fsl,imx6q";
-> +
-> +	memory {
-> +		reg = <0x10000000 0x80000000>;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		debug-led {
-> +			label = "Heartbeat";
-> +			gpios = <&gpio2 31 0>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&gpmi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
-> +	status = "okay";
-> +};
-> +
-> +&fec {
-
-Please sort the nodes alphabetically in label names.
-
-Shawn
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet_1>;
-> +	phy-mode = "rgmii";
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart4_1>;
-> +	status = "okay";
-> +};
-> -- 
-> 1.7.9.5
+> Shouldn't, depending on the substream direction, either transmit or
+> receiver be configured, instead of always configuring both?
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, this can be configed separately. Please see the next version.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int fsl_sai_trigger(struct snd_pcm_substream *substream, int
+> cmd,
+> > +		struct snd_soc_dai *dai)
+> > +{
+> > +	struct fsl_sai *sai = snd_soc_dai_get_drvdata(dai);
+> > +	unsigned int tcsr, rcsr;
+> > +
+> > +	tcsr = readl(sai->base + SAI_TCSR);
+> > +	rcsr = readl(sai->base + SAI_RCSR);
+> > +
+> > +	switch (cmd) {
+> > +	case SNDRV_PCM_TRIGGER_START:
+> > +	case SNDRV_PCM_TRIGGER_RESUME:
+> > +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+> > +		rcsr |= SAI_CSR_TERE | SAI_CSR_FRDE;
+> > +		tcsr |= SAI_CSR_TERE | SAI_CSR_FRDE;
+> > +		writel(rcsr, sai->base + SAI_RCSR);
+> > +		udelay(10);
+> > +		writel(tcsr, sai->base + SAI_TCSR);
+> > +		break;
+> > +
+> > +	case SNDRV_PCM_TRIGGER_STOP:
+> > +	case SNDRV_PCM_TRIGGER_SUSPEND:
+> > +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+> > +		tcsr &= ~(SAI_CSR_TERE | SAI_CSR_FRDE);
+> > +		rcsr &= ~(SAI_CSR_TERE | SAI_CSR_FRDE);
+> > +		writel(tcsr, sai->base + SAI_TCSR);
+> > +		udelay(10);
+> > +		writel(rcsr, sai->base + SAI_RCSR);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> 
+> Same here, shouldn't tx and rx be started independently depending on the
+> substream direction?
+> 
+
+But this couldn't, from the SAI's spec we can see that:
+------
+The SAI transmitter and receiver can be configured to operate with synchronous bit clock
+and frame sync.
+
+1), 
+If the transmitter bit clock and frame sync are to be used by both the transmitter and
+receiver:
+* The transmitter must be configured for asynchronous operation and the receiver for
+synchronous operation.
+* In synchronous mode, the receiver is enabled only when both the transmitter and
+receiver are enabled.
+* It is recommended that the transmitter is the last enabled and the first disabled.
+
+2),
+If the receiver bit clock and frame sync are to be used by both the transmitter and
+receiver:
+* The receiver must be configured for asynchronous operation and the transmitter for
+synchronous operation.
+* In synchronous mode, the transmitter is enabled only when both the receiver and
+transmitter are both enabled.
+* It is recommended that the receiver is the last enabled and the first disabled.
+------
+
+The receiver and transmitter should be both enabled at the same time if any of them is alive.
+
+
+> > +	return 0;
+> > +}
+> > +
+> > +static struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
+> 
+> const
+> 
+
+Please see the next version.
