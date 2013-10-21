@@ -1,38 +1,54 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
  or is there something better?
-Date: Mon, 21 Oct 2013 21:24:20 +0100
-Message-ID: <52658D74.3010504@wwwdotorg.org>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020220839.GT2443@sirena.org.uk> <5264576F.6050307@wwwdotorg.org> <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg> <20131021091555.GB21518@ulmo.nvidia.com> <20131021170711.GA5256@netboy>
+Date: Mon, 21 Oct 2013 21:29:48 +0100
+Message-ID: <52658EBC.8020800@wwwdotorg.org>
+References: <52644A9E.3060007@wwwdotorg.org> <20131020220839.GT2443@sirena.org.uk> <5264576F.6050307@wwwdotorg.org> <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131021170711.GA5256@netboy>
+In-Reply-To: <alpine.LFD.2.03.1310201911190.1951-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2013 06:07 PM, Richard Cochran wrote:
-> On Mon, Oct 21, 2013 at 11:15:56AM +0200, Thierry Reding wrote:
->>
->> Right now, we're taking away much of that flexibility and I see progress
->> on ARM actively hindered.
+On 10/21/2013 02:00 AM, Nicolas Pitre wrote:
+...
+> The idea of some firmware to abstract hardware differences in order to 
+> greatly simplify kernel development and maintenance comes up with some 
+> regularity.  In other words, you are far from being the first one to 
+> suggest that.
 > 
-> Baloney.
+> However this needs some reality check.
 > 
-> No one is taking away your flexibility or hindering progress. It is
-> really very simple. Just make an arm-dt-devel tree where you can both
-> change the bindings at will and recommend to people. Once bindings
-> have seen some real world testing and have had time to mature, then
-> request a merge into mainline.
+> Every hardware system has its share of complexity that the software has 
+> to deal with.
+> 
+> If that complexity is not in the kernel, it has to be in the firmware.  
+> Given we already struggles to have proper and bug free hardware support 
+> in the kernel today, even with all the debugging aid and peer review 
+> available from the kernel community, I really don't see how you'd manage 
+> to make it any less complex in some firmware implementation.
 
-Thierry already has working patches for LCD support, and the "request
-[for] a merge into mainline" is just "send the patch to be applied to
-mainline", which he did, and was blocked on, because of the potential
-existance of CDF if the future.
+True. Hiding all the HW details sucks in some ways.
 
+So, if we have chosen not to do that, and instead have the kernel know
+all the details of the HW, then why not simply do that? What do we get
+from DT that we don't get from board files? The driver complexity still
+all needs to be present in the kernel.
+
+The only thing we can move out is some of the board-specific
+parameterization data. That might reduce the code-size of kernel board
+files a bit (or rather, eliminate them), but taking the big picture into
+account, observe that we make life a lot more difficult for distros,
+since they need to get the device tree from somewhere. Distros now are
+forced to work out which DTB goes with which board, or perhaps we need
+to define a firmware interface to obtain the DTB and pass it to the
+kernel. It'd be a lot simpler just to embed the data into the kernel. I
+think we can still have a hack-free, churn-free, multi-platform kernel
+without requiring DT, but by using board files.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
