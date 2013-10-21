@@ -1,7 +1,7 @@
 From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: [RFC 07/12] drm: exynos: hdmi: use hdmiphy as PHY
-Date: Mon, 21 Oct 2013 16:18:26 +0200
-Message-ID: <1382365111-6533-8-git-send-email-t.stanislaws@samsung.com>
+Subject: [RFC 10/12] arm: dts: exynos4: add i2c controller for HDMIPHY
+Date: Mon, 21 Oct 2013 16:18:29 +0200
+Message-ID: <1382365111-6533-11-git-send-email-t.stanislaws@samsung.com>
 References: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com>
@@ -10,67 +10,46 @@ To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@
 Cc: dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, t.figa@samsung.com, kishon@ti.com, sw0312.kim@samsung.com, inki.dae@samsung.com, rahul.sharma@samsung.com, kgene.kim@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, mturquette@linaro.org, Tomasz Stanislawski <t.stanislaws@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The HDMIPHY (physical interface) is controlled by a single
-bit in a power controller's regiter. It was implemented
-as clock. It was a simple but effective hack.
-
-This patch makes HDMI driver to control HDMIPHY via PHY interface.
+This patch adds DT nodes for I2C controller dedicated for HDMIPHY.
 
 Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
 ---
- drivers/gpu/drm/exynos/exynos_hdmi.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/exynos4.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index fcfa23a..e36588a 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -34,6 +34,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
-+#include <linux/phy/phy.h>
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index caadc02..a5f6b8b 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -36,6 +36,7 @@
+ 		i2c5 = &i2c_5;
+ 		i2c6 = &i2c_6;
+ 		i2c7 = &i2c_7;
++		i2c8 = &i2c_8;
+ 		csis0 = &csis_0;
+ 		csis1 = &csis_1;
+ 		fimc0 = &fimc_0;
+@@ -399,6 +400,21 @@
+ 		status = "disabled";
+ 	};
  
- #include <drm/exynos_drm.h>
- 
-@@ -82,7 +83,7 @@ struct hdmi_resources {
- 	struct clk			*sclk_hdmi;
- 	struct clk			*sclk_pixel;
- 	struct clk			*sclk_hdmiphy;
--	struct clk			*hdmiphy;
-+	struct phy			*hdmiphy;
- 	struct regulator_bulk_data	*regul_bulk;
- 	int				regul_count;
- };
-@@ -1685,7 +1686,7 @@ static void hdmi_poweron(struct hdmi_context *hdata)
- 	if (regulator_bulk_enable(res->regul_count, res->regul_bulk))
- 		DRM_DEBUG_KMS("failed to enable regulator bulk\n");
- 
--	clk_prepare_enable(res->hdmiphy);
-+	phy_power_on(res->hdmiphy);
- 	clk_prepare_enable(res->hdmi);
- 	clk_prepare_enable(res->sclk_hdmi);
- 
-@@ -1710,7 +1711,7 @@ static void hdmi_poweroff(struct hdmi_context *hdata)
- 
- 	clk_disable_unprepare(res->sclk_hdmi);
- 	clk_disable_unprepare(res->hdmi);
--	clk_disable_unprepare(res->hdmiphy);
-+	phy_power_off(res->hdmiphy);
- 	regulator_bulk_disable(res->regul_count, res->regul_bulk);
- 
- 	mutex_lock(&hdata->hdmi_mutex);
-@@ -1809,9 +1810,9 @@ static int hdmi_resources_init(struct hdmi_context *hdata)
- 		DRM_ERROR("failed to get clock 'sclk_hdmiphy'\n");
- 		goto fail;
- 	}
--	res->hdmiphy = devm_clk_get(dev, "hdmiphy");
-+	res->hdmiphy = devm_phy_get(dev, "hdmiphy");
- 	if (IS_ERR(res->hdmiphy)) {
--		DRM_ERROR("failed to get clock 'hdmiphy'\n");
-+		DRM_ERROR("failed to get phy 'hdmiphy'\n");
- 		goto fail;
- 	}
- 
++	i2c_8: i2c@138E0000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "samsung,s3c2440-hdmiphy-i2c";
++		reg = <0x138E0000 0x100>;
++		interrupts = <0 93 0>;
++		clocks = <&clock 325>;
++		clock-names = "i2c";
++
++		hdmiphy@38 {
++			compatible = "samsung,exynos5-hdmiphy";
++			reg = <0x38>;
++		};
++	};
++
+ 	spi_0: spi@13920000 {
+ 		compatible = "samsung,exynos4210-spi";
+ 		reg = <0x13920000 0x100>;
 -- 
 1.7.9.5
