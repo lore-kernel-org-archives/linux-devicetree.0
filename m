@@ -1,59 +1,51 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: am4372: Add McASP nodes
-Date: Mon, 21 Oct 2013 12:45:58 +0300
-Message-ID: <1382348758-1083-1-git-send-email-peter.ujfalusi@ti.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv4][ 01/11] of: add vendor prefix for Eukrea Electromatique.
+Date: Mon, 21 Oct 2013 11:51:28 +0200
+Message-ID: <1382349098-11502-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for McASP0 and McASP1 for AM43xx.
+Trivial patch to add Eukr=C3=A9a Electromatique to the list
+of devicetree vendor prefixes.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index c328d5c..defaad1 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -633,5 +633,32 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		mcasp0: mcasp@48038000 {
-+			compatible = "ti,am33xx-mcasp-audio";
-+			ti,hwmods = "mcasp0";
-+			reg = <0x48038000 0x2000>,
-+			      <0x46000000 0x400000>;
-+			reg-names = "mpu", "dat";
-+			interrupts = <80>, <81>;
-+			interrupts-names = "tx", "rx";
-+			status = "disabled";
-+			dmas = <&edma 8>,
-+			       <&edma 9>;
-+			dma-names = "tx", "rx";
-+		};
-+
-+		mcasp1: mcasp@4803C000 {
-+			compatible = "ti,am33xx-mcasp-audio";
-+			ti,hwmods = "mcasp1";
-+			reg = <0x4803C000 0x2000>,
-+			      <0x46400000 0x400000>;
-+			reg-names = "mpu", "dat";
-+			interrupts = <82>, <83>;
-+			interrupts-names = "tx", "rx";
-+			status = "disabled";
-+			dmas = <&edma 10>,
-+			       <&edma 11>;
-+			dma-names = "tx", "rx";
-+		};
- 	};
- };
--- 
-1.8.4
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index 2956800..a0329cf 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -25,6 +25,7 @@ denx	Denx Software Engineering
+ emmicro	EM Microelectronic
+ epson	Seiko Epson Corp.
+ est	ESTeem Wireless Modems
++eukrea  Eukr=C3=A9a Electromatique
+ fsl	Freescale Semiconductor
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+--=20
+1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
