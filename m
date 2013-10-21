@@ -1,91 +1,24 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
-Date: Mon, 21 Oct 2013 21:19:21 +0100
-Message-ID: <52658C49.80400@wwwdotorg.org>
-References: <52644A9E.3060007@wwwdotorg.org> <20131021085420.GA21518@ulmo.nvidia.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 01/15] ARM: tegra30: add missing CLK IDs
+Date: Mon, 21 Oct 2013 13:23:43 -0700
+Message-ID: <CAL1qeaG9RDMWdN0vxq4Q3NgNbci1xZXCXcPT1L8G7F_U25C17A@mail.gmail.com>
+References: <1382363634-10870-1-git-send-email-pdeschrijver@nvidia.com>
+	<1382363634-10870-2-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131021085420.GA21518-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382363634-10870-2-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2013 09:54 AM, Thierry Reding wrote:
-> On Sun, Oct 20, 2013 at 10:26:54PM +0100, Stephen Warren wrote:
-...
->> I wonder if DT is solving the problem at the right level of
->> abstraction? The kernel still needs to be aware of all the
->> nitty-gritty details of how each board is hooked up different,
->> and have explicit code to deal the union of all the different
->> board designs.
->> 
->> For example, if some boards have a SW-controlled regulator for a
->> device but others don't, the kernel still needs to have driver
->> code to actively control that regulator, /plus/ the regulator
->> subsystem needs to be able to substitute a dummy regulator if
->> it's optional or simply missing from the DT.
->> 
->> Another example: MMC drivers need to support some boards
->> detecting SD card presence or write-protect via arbitrary GPIOs,
->> and others via dedicated logic in the MMC controller.
->> 
->> In general, the kernel still needs a complete driver to every
->> last device on every strange board, and needs to support every
->> strange way some random board hooks all the devices together.
-> 
-> I have some difficulty understanding what you think should've been
-> moved out of the kernel. There's only so much you can put into data
-> structures and at some point you need to start writing device
-> specific code for the peripherals that you want to drive.
+Hi Peter,
 
-My point was that (part of) the intent of adding DT support to the
-kernel was to get rid of all the board-specific code/churn in the
-kernel. That's not really possible, since DT is just representing the
-data about the HW (e.g. which GPIO/IRQ numbers) and not the behaviour.
-In order to really remove signifcant board-specific code from the
-kernel, you need to move behaviour out of the kernel too, i.e. hide it
-behind some kind of firmware or virtualization interface, and hence
-have simpler drivers that don't know all the details.
+> The Tegra30 clock bindings lack few IDs for audio and clk_out muxes.
+>
+> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-...
->> * Would UEFI/ACPI/similar fulfill this role?
-> 
-> If I recall correctly, the original OpenFirmware that introduced
-> the DT concept used to have something similar to UEFI/ACPI.
-> Essentially it was possible to not only pass the DT to the
-> operating system but also allow the operating system to call back
-> into the firmware to request service.
+For the entire series,
 
-Yes, OpenFirmware might be another possible firmware interface. I
-don't know anything about it...
-
->> * Perhaps a standard virtualization interface could fulfil this
->> role?
-...
-> What will likely happen with such a solution is that we'll have to
-> come up with a standard interface that the guest OS expects.
-
-I think much of that is already defined for a paravirt KVM guest
-though, right?
-
-...
-> Vendor kernels that implement the host OS will effectively become
-> forks of their own since there's no incentive to upstream code
-> anymore. Linux upstream becomes a single unified architecture
-> because all interfaces are now the same. Vendors are back to
-> brewing their own.
-
-True. Many/most(?) vendors work like that for most *products* though
-already...
-
-> ...
-
-(Yes, I fully acknowledge there are many issues with
-firmware/virtualization as a platform...)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
