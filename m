@@ -1,19 +1,19 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCHv3] watchdog: dw: Enable OF support for DW watchdog timer
-Date: Tue, 22 Oct 2013 06:26:12 -0700
-Message-ID: <52667CF4.6060302@roeck-us.net>
-References: <1382434181-16936-1-git-send-email-dinguyen@altera.com>
+Subject: Re: [PATCHv4] watchdog: dw: Enable OF support for DW watchdog timer
+Date: Tue, 22 Oct 2013 06:30:17 -0700
+Message-ID: <52667DE9.2000605@roeck-us.net>
+References: <1382441671-18444-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382434181-16936-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1382441671-18444-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2013 02:29 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+On 10/22/2013 04:34 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
 > From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 >
 > Add device tree support to the DW watchdog timer.
@@ -34,40 +34,47 @@ On 10/22/2013 02:29 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
 > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
+> v4:
+> - Add interrupts as an optional property, use "should contain".
 > v3:
 > - Clean up documentation
 > v2:
 > - Use of_match_ptr() for of_match_table
 > ---
->   .../devicetree/bindings/watchdog/dw_wdt.txt        |   14 ++++++++++++++
+>   .../devicetree/bindings/watchdog/dw_wdt.txt        |   19 +++++++++++++++++++
 >   drivers/watchdog/dw_wdt.c                          |    8 ++++++++
->   2 files changed, 22 insertions(+)
+>   2 files changed, 27 insertions(+)
 >   create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 >
 > diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 > new file mode 100644
-> index 0000000..c5e9b65
+> index 0000000..8f5948a
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> @@ -0,0 +1,14 @@
+> @@ -0,0 +1,19 @@
 > +Synopsys Designware Watchdog Timer
 > +
 > +Required Properties:
 > +
-> +- compatible	: Should be "snps,dw-wdt"
+> +- compatible	: Should contain "snps,dw-wdt"
 > +- reg		: Base address and size of the watchdog timer register.
 > +
 
-'clocks' is still missing.
+Still missing 'clocks' here.
 
 Thanks,
 Guenter
 
+> +Optional Properties:
+> +
+> +- interrupts	: The interrupt used for the watchdog timeout warning.
+> +
 > +Example:
 > +
 > +	watchdog0: wd@ffd02000 {
 > +		compatible = "snps,dw-wdt";
 > +		reg = <0xffd02000 0x1000>;
+> +		interrupts = <0 171 4>;
 > +		clocks = <&per_base_clk>;
 > +	};
 > diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
