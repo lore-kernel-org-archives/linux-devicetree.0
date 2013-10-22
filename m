@@ -1,49 +1,76 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [Patch v2 05/14] ARM: dts: imx6: add anatop phandle for usbphy
-Date: Tue, 22 Oct 2013 13:58:39 +0800
-Message-ID: <1382421528-17897-6-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [Patch v2 06/14] usb: phy-mxs: Add anatop regmap
+Date: Tue, 22 Oct 2013 13:58:40 +0800
+Message-ID: <1382421528-17897-7-git-send-email-peter.chen@freescale.com>
 References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add anatop phandle for usbphy
+It is needed by mx6 SoC serial, but not for mx23 and mx28.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   17 ++++++++++++++++-
+ 1 files changed, 16 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index ef51342..145ece2 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -541,6 +541,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks 182>;
-+				fsl,anatop = <&anatop>;
- 			};
+diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+index 87ba429..6d48bde 100644
+--- a/drivers/usb/phy/phy-mxs-usb.c
++++ b/drivers/usb/phy/phy-mxs-usb.c
+@@ -21,6 +21,8 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
  
- 			usbphy2: usbphy@020ca000 {
-@@ -548,6 +549,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks 183>;
-+				fsl,anatop = <&anatop>;
- 			};
+ #define DRIVER_NAME "mxs_phy"
  
- 			snvs@020cc000 {
+@@ -52,6 +54,7 @@ struct mxs_phy {
+ 	struct usb_phy phy;
+ 	struct clk *clk;
+ 	enum imx_phy_type devtype;
++	struct regmap *regmap_anatop;
+ };
+ 
+ static inline int is_mx6q_phy(struct mxs_phy *data)
+@@ -193,9 +196,10 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 	int ret;
+ 	const struct of_device_id *of_id =
+ 			of_match_device(mxs_phy_dt_ids, &pdev->dev);
++	struct device_node *np = pdev->dev.of_node;
+ 
+ 	/* This driver is DT-only version now */
+-	if (!of_id)
++	if (!of_id || !np)
+ 		return -ENXIO;
+ 
+ 	pdev->id_entry = of_id->data;
+@@ -218,6 +222,17 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	/* Some SoCs don't have anatop registers */
++	if (of_get_property(np, "fsl,anatop", NULL)) {
++		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
++			(np, "fsl,anatop");
++		if (IS_ERR(mxs_phy->regmap_anatop)) {
++			dev_dbg(&pdev->dev,
++				"failed to find regmap for anatop\n");
++			return PTR_ERR(mxs_phy->regmap_anatop);
++		}
++	}
++
+ 	mxs_phy->phy.io_priv		= base;
+ 	mxs_phy->phy.dev		= &pdev->dev;
+ 	mxs_phy->phy.label		= DRIVER_NAME;
 -- 
 1.7.1
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
