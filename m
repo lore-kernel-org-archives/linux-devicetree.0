@@ -1,58 +1,118 @@
-From: Matthijs Kooijman <matthijs-gZv8Wpyq0Kk@public.gmane.org>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Tue, 22 Oct 2013 12:48:29 +0200
-Message-ID: <20131022104829.GF15425@login.drsnuggles.stderr.nl>
-References: <20131018141221.GH2721@beef>
- <5264F37E.9060307@ti.com>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
+ timer.
+Date: Tue, 22 Oct 2013 05:57:34 -0500
+Message-ID: <52665A1E.5020700@gmail.com>
+References: <1380739472-26172-1-git-send-email-dinguyen@altera.com> <20131021110532.GA8144@kartoffel> <5265C9B0.2060003@roeck-us.net> <20131022103936.GA5511@kartoffel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L2Brqb15TUChFOBK"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5264F37E.9060307-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20131022103936.GA5511@kartoffel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
---L2Brqb15TUChFOBK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/22/13 5:39 AM, Mark Rutland wrote:
+> On Tue, Oct 22, 2013 at 01:41:20AM +0100, Guenter Roeck wrote:
+>> On 10/21/2013 04:05 AM, Mark Rutland wrote:
+>>> On Wed, Oct 02, 2013 at 07:44:32PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+>>>> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> Add device tree support to the DW watchdog timer.
+>>>>
+>>>> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+>>>> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+>>>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>>> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+>>>> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+>>>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+>>>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>>> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> ---
+>>>> v2:
+>>>> - Use of_match_ptr() for of_match_table
+>>>> ---
+>>>>    .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+>>>>    drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+>>>>    2 files changed, 24 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>>>> new file mode 100644
+>>>> index 0000000..29e150b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>>>> @@ -0,0 +1,16 @@
+>>>> +Synopsys Designware Watchdog Timer
+>>>> +
+>>>> +Required Properties:
+>>>> +
+>>>> +- Compatiblity	: "snps,dw-wdt"
+>>> This should presumably be:
+>>>
+>>> - compatbile: should contain "snps,dw-wdt"
+>>>
+>> Hi Mark,
+>>
+>> s/compatbile/compatible/ :-)
+> Indeed :)
+Changed for v3.
+>
+>> "must be" or "should contain" ? I see both in various bindings.
+>> Is there a preference ?
+> I would prefer "should contain" -- it doesn't preclude future compatible
+> variants.
+Oops..v3 has "should be"...will change to "should contain" in v4.
+>
+>>>> +- reg		: Base address of the watchdog timer register.
+>>> And the size...
+>>>
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +	watchdog0: wd@ffd02000 {
+>>>> +		compatible = "snps,dw-wdt";
+>>>> +		reg = <0xffd02000 0x1000>;
+>>>> +		interrupts = <0 171 4>;
+>>> This wasn't mentioned.
+>>>
+>>> Is it necessary?
+>>>
+>>   From looking into the code ...
+>>
+>> The driver doesn't use interrupts, so I guess the answer is no. Cut-and-paste error, maybe ?
+> Does the device have any interrupts, even if they're unused?
+Yes, the device does have an interrupt. Should I add it as an optional 
+property?
+>
+>>> Is it the only interrupt?
+>>>
+>>>> +		clocks = <&per_base_clk>;
+>>> Similarly, is this the only clock?
+>>>
+>> The driver uses one clock, and it is mandatory.
+> Is this the only clock into the unit?
+>
+> Does it have a name?
+Yes, this is is the only clock into the unit. No, it does not have name.
 
-Hi Kishon,
+Thanks,
+Dinh
+>
+> Thanks,
+> Mark.
 
-On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
-> I think it makes sense to keep the data width property in the dwc2 node itself.
-> I mean it describes how the dwc2 IP is configured in that particular SoC (given
-> that it can be either <8> or <16>).
-If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
-can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
-and 16 supported" would make sense as a property of dwc2 (though this
-value should be autodetectable through GHWCFG4), while the actual 8 or
-16 supported by the PHY would make sense as property of a phy.
-
-Note sure if this is really useful in practice as well, or if just
-setting the actual width to use on dwc2 makes more sense...
-
-Gr.
-
-Matthijs
-
---L2Brqb15TUChFOBK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAlJmV/0ACgkQz0nQ5oovr7wK2wCgn3SiRjbqky+YLRJ/40XWcUpN
-n+AAn0PGfchNovg/dACI0f/vrn8YK7KB
-=jIvk
------END PGP SIGNATURE-----
-
---L2Brqb15TUChFOBK--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
