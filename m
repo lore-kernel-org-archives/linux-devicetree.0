@@ -1,86 +1,65 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCH 01/14] DTS: ARM: OMAP3-N900: Add pinctrl for i2c devices
-Date: Wed, 23 Oct 2013 00:49:30 +0200
-Message-ID: <1382482183-14426-2-git-send-email-sre@debian.org>
-References: <1382482183-14426-1-git-send-email-sre@debian.org>
+From: "Sherman Yin" <syin@broadcom.com>
+Subject: RE: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Tue, 22 Oct 2013 23:29:14 +0000
+Message-ID: <051069C10411E24D9749790C498526FA1BE0841D@SJEXCHMB12.corp.ad.broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <1380846199-12829-4-git-send-email-syin@broadcom.com>
+ <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
+ <051069C10411E24D9749790C498526FA1BE027EA@SJEXCHMB12.corp.ad.broadcom.com>
+ <CACRpkdarPC+LxAAezT2LRiz=Y2RduUsb75YYHUgq7HqePzkD3Q@mail.gmail.com>
+ <051069C10411E24D9749790C498526FA1BE03D43@SJEXCHMB12.corp.ad.broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382482183-14426-1-git-send-email-sre@debian.org>
+In-Reply-To: <051069C10411E24D9749790C498526FA1BE03D43@SJEXCHMB12.corp.ad.broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
+To: Sherman Yin <syin@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pin muxing support for the Nokia N900 i2c controllers.
+>>>>> +static const struct capri_cfg_param capri_pinconf_params[] = {
+>>>>> +       {"brcm,hysteresis",     CAPRI_PINCONF_PARAM_HYST},
+>>>>> +       {"brcm,pull",           CAPRI_PINCONF_PARAM_PULL},
+>>>>> +       {"brcm,slew",           CAPRI_PINCONF_PARAM_SLEW},
+>>>>> +       {"brcm,input_dis",      CAPRI_PINCONF_PARAM_INPUT_DIS},
+>>>>> +       {"brcm,drive_str",      CAPRI_PINCONF_PARAM_DRV_STR},
+>>>>> +       {"brcm,pull_up_str",    CAPRI_PINCONF_PARAM_PULL_UP_STR},
+>>>>> +       {"brcm,mode",           CAPRI_PINCONF_PARAM_MODE},
+>>>>> +};
+>>>>
+>>>>As well as all this stuff...
+>>>
+>>> OK.  Will see if I can find something suitable for "input disable" and "mode"
+>>
+>>Let's discuss this. What exactly does "input disable" and "mode"
+>>mean, in electrical terms?
+>>
+>>When you come down to what actually happens it may turn out that
+>>"input disable" is PIN_CONFIG_OUTPUT, which implicitly turns
+>>off input does it not?
+>
+>I'm going to verify the details with our hardware team first, and will let you
+>know if we think we can use one of the existing generic parameters or if we
+>need a new one.
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- arch/arm/boot/dts/omap3-n900.dts | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+"input disable"
+This setting disconnects the input (DIN) to the internal logic from the pin pad.  
+However, the output (DOUT) can still drive the pad.  It seems to match 
+PIN_CONFIG_OUTPUT, but the current generic option is either "output-low" or
+"output-high" - are these referring to a static output of 0 and 1? 
+ 
+"mode"
+This controls several aspect of the pin (slew rate, pull up strength, etc) to meet
+I2C specs for Standard/Fast mode vs High Speed mode.  I think the best
+way is to map this to slew rate, which would require some explanation because
+the meaning of slew rate differs depending on what pin function is selected:
+- When I2C (*_SCL or *_SDA) function is selected for the pin: 0: Standard (100kbps)
+  & Fast mode (400kbps), 1: High Speed mode (3.4Mbps)
+- When IC_DM or IC_DP function is selected, 0: normal slew rate, 1: fast slew rate
+- Else: 0: fast slew rate, 1: normal slew rate 
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index e13b697..ad4edd9 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -28,7 +28,35 @@
- 
- };
- 
-+&omap3_pmx_core {
-+	pinctrl-names = "default";
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			0x18a (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
-+			0x18c (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0x18e (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_scl */
-+			0x190 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_sda */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			0x192 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_scl */
-+			0x194 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_sda */
-+		>;
-+	};
-+};
-+
- &i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
- 	clock-frequency = <2200000>;
- 
- 	twl: twl@48 {
-@@ -39,6 +67,7 @@
- };
- 
- #include "twl4030.dtsi"
-+#include "twl4030_omap3.dtsi"
- 
- &twl_gpio {
- 	ti,pullups	= <0x0>;
-@@ -46,10 +75,16 @@
- };
- 
- &i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
- 	clock-frequency = <400000>;
- };
- 
- &i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+
- 	clock-frequency = <100000>;
- };
- 
--- 
-1.8.4.rc3
+Also, it seems like I have to add "slew-rate" to dt_params[] in pinconf-generic.c and
+pinctrl-bindings.txt.
