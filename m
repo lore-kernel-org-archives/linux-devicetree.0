@@ -1,56 +1,51 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv4][ 1/4] Input: tsc2007: Add device tree support.
-Date: Tue, 22 Oct 2013 15:35:05 -0700
-Message-ID: <20131022223504.GA19819@core.coreip.homeip.net>
-References: <1382363667-10341-1-git-send-email-denis@eukrea.com>
- <20131021155927.GB4255@core.coreip.homeip.net>
- <20131022114947.30dc9c07@ipc1.ka-ro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131022114947.30dc9c07@ipc1.ka-ro>
-Sender: linux-input-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Denis Carikli <denis@eukrea.com>, linux-input@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH 00/14] DTS: ARM: OMAP3-N900: Add misc. HW
+Date: Wed, 23 Oct 2013 00:49:29 +0200
+Message-ID: <1382482183-14426-1-git-send-email-sre@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 11:49:47AM +0200, Lothar Wa=DFmann wrote:
-> Hi,
->=20
-> > On Mon, Oct 21, 2013 at 03:54:24PM +0200, Denis Carikli wrote:
-> > > =20
-> > > +	if (ts->of)
-> > > +		return tsc2007_get_pendown_state_dt(ts);
-> > > +
-> > >  	if (!ts->get_pendown_state)
-> > >  		return true;
-> >=20
-> > Instead of special casing "if (ts->of)" all over the place why don'=
-t you
-> > set up the device structure as:
-> >=20
-> > 	if (<configuring_tsc2007_form_dt>)
-> > 		ts->get_pendown_state =3D tsc2007_get_pendown_state_dt;
-> >=20
-> > and be done with it?
-> >
-> I also thought about that, but the existing function does not have an=
-y
-> parameters, while the DT version of get_pendown_state() requires to g=
-et
-> the GPIO passed to it somehow.
+This patchset adds misc. hardware elements to the Nokia N900 DTS
+file. Apart from the last two patches the kernel drivers in 3.12
+are already capable of handling the DT entries.
 
-You can always have tsc2007_get_pendown_state_platform() wrapping the
-call. Or we just go and fix board code.
+The series is based on bcousson/linux-omap-dt.git:for_3.13/dts.
 
-Thanks.
+Additional notes:
 
---=20
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* LP5523 support depends on [0], which goes through the
+  Bryan Wu's tree.
+* TWL4030 supports depends on [1], which is not yet queued.
+* Apart from those two I did not include any patches, which
+  also need changes in the drivers.
+
+[0] https://lkml.org/lkml/2013/10/22/166
+[1] https://lkml.org/lkml/2013/10/22/147
+
+-- Sebastian
+
+Sebastian Reichel (14):
+  DTS: ARM: OMAP3-N900: Add pinctrl for i2c devices
+  DTS: ARM: OMAP3-N900: Fix i2c bus speed
+  DTS: ARM: OMAP3-N900: Add UART support
+  DTS: ARM: OMAP3-N900: Add support for SD cards
+  DTS: ARM: OMAP3-N900: GPIO key definitions
+  DTS: ARM: OMAP3-N900: Add vibrator device
+  DTS: ARM: OMAP3-N900: Add LP5523 support
+  DTS: TWL4030: Add missing regulators
+  DTS: ARM: OMAP3-N900: Specify regulator info
+  DTS: ARM: OMAP3-N900: Add NAND support
+  DTS: ARM: OMAP3-N900: Mux RX51_LCD_RESET_GPIO in DTS
+  DTS: ARM: OMAP3-N900: Add TLV320AIC3X support
+  DTS: ARM: OMAP3-N900: Add LP5523 support
+  DTS: TWL4030: Add power button support
+
+ arch/arm/boot/dts/omap3-n900.dts | 396 ++++++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/twl4030.dtsi   |  49 ++++-
+ 2 files changed, 438 insertions(+), 7 deletions(-)
+
+-- 
+1.8.4.rc3
