@@ -1,105 +1,67 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH V7 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree
- boot
-Date: Tue, 22 Oct 2013 17:49:10 +0200
-Message-ID: <52669E76.2010702@baylibre.com>
-References: <1381937948-27057-1-git-send-email-nm@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 104 board
+Date: Tue, 22 Oct 2013 18:02:13 +0200
+Message-ID: <20131022160213.GB26694@lunn.ch>
+References: <87txgapcas.fsf@natisbad.org>
+ <20131021215746.GF23593@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381937948-27057-1-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131021215746.GF23593-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
+> > +			pinctrl {
+> > +				poweroff: poweroff {
+> > +					marvell,pins = "mpp60";
+> > +					marvell,function = "gpio";
+> > +				};
+> > +
+> > +				backup_key_pin: backup-key-pin {
+> > +					marvell,pins = "mpp52";
+> > +					marvell,function = "gpio";
+> > +				};
+> > +
+> > +				power_key_pin: power-key-pin {
+> > +					marvell,pins = "mpp62";
+> > +					marvell,function = "gpio";
+> > +				};
+> > +
+> > +				backup_led_pin: backup-led-pin {
+> > +					marvell,pins = "mpp63";
+> > +					marvell,function = "gpo";
+> > +				};
+> > +
+> > +				power_led_pin: power-led-pin {
+> > +					marvell,pins = "mpp64";
+> > +					marvell,function = "gpio";
+> > +				};
+> > +
+> > +				reset_key_pin: reset-key-pin {
+> > +					marvell,pins = "mpp65";
+> > +					marvell,function = "gpio";
+> > +				};
+> > +			};
+> 
+> You can also skip these. The gpio driver will put the pin into gpio
+> mode when the leds/keys driver claims it. It is a case of, i didn't
+> know that, put entries like this into a number of files, and people
+> have been copying my mistake ever since. Thomas made an effort to
+> correct this for some boards.
 
-On 16/10/2013 17:39, Nishanth Menon wrote:
-> Hi,
->
-> This series enables the use of cpufreq-cpu0 generic driver for all
-> OMAP and related derivatives. Only patch#8 in the series, which
-> introduces CPU clock nodes, depends on Tero's V8 patch series for clo=
-ck
-> nodes[1]
->
-> I will stop copy pasting the series complete history and point at [2]=
-=2E
->
-> Main changes since V6[3]:
-> - squashed patches for a minimal set
-> - i have organized the series such that 1 to 7 can immediately be mer=
-ged
->    if desired:
-> 	- patches 1,2,3 can go to Tony's omap-for-v3.13/quirk [4]
-> 	- patches 4-7 can go to Benoit's for_3.13/dts [5]
+Thomas just talked to me about this. What i said is right, but wrong.
 
-I've just applied them in my DTS tree.
+It is correct they are not required. The gpio driver and pinctrl will
+do the right thing without these. However, having these entries is
+good because it improves what you see in /debugfs/pinctrl. There is a
+name in the output. So please do keep these entries, and sorry for the
+noise.
 
-Thanks,
-Benoit
-
-> 	- patch 8 needs to depend on [1] and should eventually go to [5]
->
-> NOTES: obviously without clock nodes cpufreq will not function.
->
-> Test Script: http://pastebin.com/VvJPjsne
->
-> Test-log:
-> BeagleBoard-XM (OMAP36xx): http://pastebin.com/XZDNaHPf
-> PandaBoard-ES (OMAP4460): http://pastebin.com/qQCmA2ng
-> BeagleBone-Black(AM335x): http://pastebin.com/98FX4uYW
-> OMAP5uEVM (OMAP5432): http://pastebin.com/NXj3L636
-> DRA7-EVM (DRA7xx): http://pastebin.com/0kKT3TXy
->
-> J Keerthy (3):
->    ARM: dts: dra7-evm: add smps123 supply for CPU
->    ARM: dts: OMAP5: Add CPU OPP table
->    ARM: dts: DRA7: Add CPU OPP table
->
-> Nishanth Menon (5):
->    ARM: OMAP3+: do not register non-dt OPP tables for device tree boo=
-t
->    ARM: OMAP2+: add missing lateinit hook for calling pm late init
->    ARM: OMAP3+: use cpu0-cpufreq driver in device tree supported boot
->    ARM: dts: omap5-uevm: add smps123 supply for CPU
->    ARM: dts: OMAP3: add clock nodes for CPU
->
-> [1] http://marc.info/?t=3D138133284200006&r=3D1&w=3D2
-> [2] http://marc.info/?l=3Dlinux-arm-kernel&m=3D136804009618594&w=3D2
-> [3] http://marc.info/?l=3Ddevicetree&m=3D138135419203492&w=3D2
-> [4] https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.gi=
-t/log/?h=3Domap-for-v3.13/quirk
->
->   arch/arm/boot/dts/am33xx.dtsi       |    4 ++++
->   arch/arm/boot/dts/dra7-evm.dts      |    4 ++++
->   arch/arm/boot/dts/dra7.dtsi         |   13 ++++++++++++-
->   arch/arm/boot/dts/omap3.dtsi        |    5 +++++
->   arch/arm/boot/dts/omap4.dtsi        |    5 +++++
->   arch/arm/boot/dts/omap5-uevm.dts    |    4 ++++
->   arch/arm/boot/dts/omap5.dtsi        |   15 ++++++++++++++-
->   arch/arm/mach-omap2/board-generic.c |    4 ++++
->   arch/arm/mach-omap2/common.h        |    4 ++++
->   arch/arm/mach-omap2/io.c            |   20 ++++++++++++++++++++
->   arch/arm/mach-omap2/opp.c           |    4 ++++
->   arch/arm/mach-omap2/pm.c            |   12 +++++++++---
->   12 files changed, 89 insertions(+), 5 deletions(-)
->
-> Regards,
-> Nishanth Menon
->
-
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
+	Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
