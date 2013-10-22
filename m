@@ -1,29 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] leds: lp55xx: handle enable pin in driver
-Date: Tue, 22 Oct 2013 10:06:04 -0700
-Message-ID: <20131022170604.GP15154@atomide.com>
-References: <1382446896-28436-1-git-send-email-sre@debian.org>
- <1382446896-28436-2-git-send-email-sre@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382446896-28436-2-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org
+From: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] Devicetree description for Voipac i.MX53 module
+Date: Tue, 22 Oct 2013 19:07:19 +0200
+Message-ID: <1382461643-16790-1-git-send-email-lisovy@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131022 06:02]:
-> This patch moves the handling of the chip's enable pin from the board
-> code into the driver. It also updates all board-code files using the
-> driver to incorporate this change.
-> 
-> This is needed for device tree support of the enable pin.
+This patchset adds devicetree description for Voipac X53-DMM-668 module
+which uses i.MX53 CPU. More information about the module may be found at:
+http://www.voipac.com/#X53-DMM-668
+The support for the baseboard used with this module is also provided.
+More information about the baseboard: http://www.voipac.com/#X25-BSB-000
 
-This seems safe to merge along with the other LED patches, the
-changes to arch/arm/mach-omap2 should not conflict with anything.
+Working peripherals are:
+* UART0
+* Ethernet
+* Buttons (with keyboard controller)
+* Sound (headphone output)
+* SD-card
+* LEDs (through GPIOs)
 
-So for the arch/arm/mach-omap2 changes:
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Rostislav Lisovy (4):
+  ARM: dts: i.MX53: Add alternate pinmux option for i2c_3
+  ARM: dts: i.MX53: Internal keyboard controller
+  ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+  ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668
+    module
+
+ arch/arm/boot/dts/imx53-voipac-bsb.dts      |  135 +++++++++++++++++++
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |  195 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx53.dtsi                |   15 +++
+ 3 files changed, 345 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
