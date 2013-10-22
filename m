@@ -1,109 +1,55 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv4] watchdog: dw: Enable OF support for DW watchdog timer
-Date: Tue, 22 Oct 2013 06:34:31 -0500
-Message-ID: <1382441671-18444-1-git-send-email-dinguyen@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH] DTS: ARM: OMAP3-N900: Add support for SD cards
+Date: Tue, 22 Oct 2013 13:43:58 +0200
+Message-ID: <1382442238-24637-1-git-send-email-sre@debian.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Add support for external SD card slot.
 
-Add device tree support to the DW watchdog timer.
-
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sebastian Reichel <sre@debian.org>
 ---
-v4:
-- Add interrupts as an optional property, use "should contain".
-v3:
-- Clean up documentation
-v2:
-- Use of_match_ptr() for of_match_table
----
- .../devicetree/bindings/watchdog/dw_wdt.txt        |   19 +++++++++++++++++++
- drivers/watchdog/dw_wdt.c                          |    8 ++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+ arch/arm/boot/dts/omap3-n900.dts | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-new file mode 100644
-index 0000000..8f5948a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -0,0 +1,19 @@
-+Synopsys Designware Watchdog Timer
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 99d0668..ab62afa 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -65,6 +65,17 @@
+ 			0x194 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_sda */
+ 		>;
+ 	};
 +
-+Required Properties:
-+
-+- compatible	: Should contain "snps,dw-wdt"
-+- reg		: Base address and size of the watchdog timer register.
-+
-+Optional Properties:
-+
-+- interrupts	: The interrupt used for the watchdog timeout warning.
-+
-+Example:
-+
-+	watchdog0: wd@ffd02000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0xffd02000 0x1000>;
-+		interrupts = <0 171 4>;
-+		clocks = <&per_base_clk>;
++	mmc1_pins: pinmux_mmc1_pins {
++		pinctrl-single,pins = <
++			0x114 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_clk */
++			0x116 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_cmd */
++			0x118 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat0 */
++			0x11a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat1 */
++			0x11c (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat2 */
++			0x11e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat3 */
++		>;
 +	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index e621098..261fa42 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -29,6 +29,7 @@
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -340,12 +341,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
+ };
  
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &dw_wdt_pm_ops,
- #endif /* CONFIG_PM */
+ &i2c1 {
+@@ -103,7 +114,11 @@
+ };
+ 
+ &mmc1 {
+-	status = "disabled";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&vmmc1>;
++	bus-width = <4>;
++	cd-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>; /* 160 */
+ };
+ 
+ &mmc2 {
 -- 
-1.7.9.5
+1.8.4.rc3
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
