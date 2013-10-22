@@ -1,65 +1,26 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 11:04:26 -0400
-Message-ID: <20131022150426.GF29341@beef>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V7 3/8] ARM: OMAP3+: use cpu0-cpufreq driver in device
+ tree supported boot
+Date: Tue, 22 Oct 2013 08:11:35 -0700
+Message-ID: <20131022151135.GN15154@atomide.com>
+References: <1381937948-27057-1-git-send-email-nm@ti.com>
+ <1381937948-27057-4-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131022093923.GC15640-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1381937948-27057-4-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 11:39:24AM +0200, Thierry Reding wrote:
-> On Mon, Oct 21, 2013 at 04:40:15PM -0400, Nicolas Pitre wrote:
-> > On Mon, 21 Oct 2013, Stephen Warren wrote:
-> > > I
-> > > think we can still have a hack-free, churn-free, multi-platform kernel
-> > > without requiring DT, but by using board files.
-> > 
-> > I kinda agree with you, but this is too late for that now.
-> > 
-> > We have DT, and the best way forward is to fix the process which is, 
-> > arguably, somewhat obstructive and broken at the moment.
-> 
-> I agree that the process could use some enhancements. But I also think
-> that we should be open to move away from DT again if it turns out to not
-> be a good enough solution. "It's too late" doesn't sound like a very
-> good argument to me.
-> 
-> Essentially DT is just a different way to represent what we used to have
-> in platform data, so we haven't fundamentally changed anything at that
-> level. Well, we've made things worse to some degree.
+* Nishanth Menon <nm@ti.com> [131016 08:39]:
+> With OMAP3+ and AM33xx supported SoC having defined CPU device tree
+> entries with operating-points and clock nodes defined, we can now use
+> the SoC generic cpufreq-cpu0 driver by registering appropriate device.
 
-DT started that way. However, the direction set by binding reviews have
-essentially limited DT to only external hardware configuration. So, yes,
-we've made things worse. DT, as defined and maintained today, does not
-replace platform data since it's been de facto limited to a tiny subset
-of system configuration info. Further, the current approach to "breaking
-compatibility" with old DTBs that has resulted from the claims of "DT as
-ABI" is completely tied to the vision of moving DT independent of the
-kernel. Platform data in code never had this compatibility issue.
+Thanks I'm taking patches 1 - 3 from this series into
+omap-for-v3.13/board-removal-take2 because of the dependencies.
 
-DT has many benefits. It would be great to leverage them as long as it
-doesn't interfere with the rate of change and willingness to evolve code
-that's always been the strength of the kernel process. That strength is
-too valuable to trade away for the "DT as ABI" vision.
-
-All these failings can start to be fixed by addressing the process and
-what DT *is*.
-
--Matt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
