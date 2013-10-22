@@ -1,93 +1,178 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 22:12:29 +0200
-Message-ID: <20131022201228.GB8037@mithrandir>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com>
- <20131022150426.GF29341@beef>
- <alpine.LFD.2.03.1310221333300.1951@syhkavp.arg>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v10 04/10] mtd: nand: omap: fix device scan:
+ NAND_CMD_READID, NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
+Date: Tue, 22 Oct 2013 13:16:24 -0700
+Message-ID: <20131022201624.GL23337@ld-irv-0074.broadcom.com>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-5-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1310221333300.1951-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1382172254-12448-5-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: mark.rutland@arm.com, olof@lixom.net, dedekind1@gmail.com, robherring2@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, jp.francois@cynove.com, ivan.djelic@parrot.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Pekon,
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Oct 19, 2013 at 02:14:08PM +0530, Pekon Gupta wrote:
+> As per comments below, NAND_CMD_RESET, NAND_CMD_READID, and NAND_CMD_PARAM would
+> work only in x8 mode.
+>     commit 64b37b2a63eb2f80b65c7185f0013f8ffc637ae3
+>     Author:     Matthieu CASTET <matthieu.castet@parrot.com>
+>     AuthorDate: 2012-11-06
+>     Note that nand_scan_ident send command (NAND_CMD_RESET, NAND_CMD_READID, NAND_CMD_PARAM), address and read data
+>     The ONFI specificication is not very clear for x16 device if high byte of address should be driven to 0,
+>     but according to [1] it should be ok to not drive it during autodetection.
+> 
+>     [1]
+>     3.3.2. Target Initialization
+> 
+>     [...]
+>     The Read ID and Read Parameter Page commands only use the lower 8-bits of the data bus.
+>     The host shall not issue commands that use a word data width on x16 devices until the host
+>     determines the device supports a 16-bit data bus width in the parameter page.
+> 
+> Thus this patch run nand_scan_ident() with driver configured as x8 device.
 
-On Tue, Oct 22, 2013 at 01:42:48PM -0400, Nicolas Pitre wrote:
-> On Tue, 22 Oct 2013, Matt Porter wrote:
->=20
-> > DT has many benefits. It would be great to leverage them as long as it
-> > doesn't interfere with the rate of change and willingness to evolve code
-> > that's always been the strength of the kernel process. That strength is
-> > too valuable to trade away for the "DT as ABI" vision.
->=20
-> Amen.  This is the best statement I've read about DT so far.
->=20
-> Having "stable" DT bindings is just a dream.  Experience so far is=20
-> showing that this is neither practical nor realistic.
->=20
-> The unstructured free-for-all approach isn't good either.  Some=20
-> compromise between the two extremes needs to be found.
+So are you saying that the driver currently doesn't work if you started
+in x16 buswidth? Are you having problems with a particular setup? What
+sort of devices are you testing?
 
-I agree. I think we need an easy way to mark bindings as unstable. One
-possible solution that I can think of would be to use some kind of
-special marker within the compatible value defined by a binding that
-would be used to qualify it as unstable. Perhaps something as simple as
-a preceding exclamation mark (!) would do.
+Running nand_scan_ident() with x8 when the device is actualy x16 will
+just cause nand_scan_ident() to abort with an error. It doesn't help you
+with the fact that RESET/READID/PARAM need special 8-bit handling on x16
+devices, so you're not solving the problem alluded to by Matthieu.
 
-	gpio {
-		compatible =3D "!foo-gpio";
-	};
+> Once the NAND device is detected, and its ONFI params are read, the driver
+> is re-configured based on device-width as passed by DT bindinig 'nand-bus-width'
+> 
+> In-case there is a mis-match between the DT binding 'nand-bus-width' and actual
+> device-width detected during nand_get_flash_type() then probe returns failure.
+> 
+> All other low-level callback updates happen after the device detection.
+> 
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
 
-The DT core code could look for that when matching device nodes to the
-list of compatible values supported by a driver and output a big warning
-message to make users aware of the fact that the binding may change. The
-driver could use the same marker in the OF device ID table to make it
-clear that it implements an experimental binding. Whenever a binding is
-deemed stable we can simply remove the marker from both the driver and
-the binding, as well as DTS files.
+What is your patch trying to solve? It seems like it's just a distortion
+of the same code that existed previously. It tries running
+nand_scan_ident() in one buswidth configuration, and then it tries the
+other if it failed. You still aren't doing either of the options we
+talked about previously. I'll repeat them:
 
-Thierry
+(1) You specify the buswidth given by device-tree/platform-data; if this
+    is incorrect, you fail
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature
+(2) You auto-configure using NAND_BUSWIDTH_AUTO, and you use that to
+    validate the platform data; you just warn if the buswidth provided
+    by device-tree/platform-data was incorrect
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Am I sensing that you are having some implementation problem with one of
+these? You really shouldn't need to run nand_scan_ident() twice.
 
-iQIcBAEBAgAGBQJSZtwsAAoJEN0jrNd/PrOhXjwP/iB0Yg38wb/oQOHrDRK7XPXQ
-AJ+Y10R6d8F08HnIS78HsVYoC0I9pu56SGJg8keijoMMjKFbNcdJ+qC5ooqXRFa2
-eOoBbXJvaXO0Xi3xqhyYYPVXRtZD10Weh3d56Xri3C5y3mLnWgeAyn2agqpIGpbF
-l5cL6rbQL4gHMYWJXGyNdny3srm1KubRk1OXdrW8xJZbNkUV838n8Ls2C/7LROzV
-rBAZ4bzDv1kCK84V2HfSxCwRs9uNlpjWlZ7MOpLggrr1rhdf6j12zGsl06HIqNZx
-XhF5Eru3dGjz4AnSxyEneTX0Fy8P0Yfk+RvsZsGXzpAekvv2GBfcqJoy3lvox3Rt
-s7Id14dZ0KlRAG+52QbVMq14DPukIZNs9wVmFUjkx2E9Jy1kqAFVWXZrzLQXuSrU
-HqC7Kxryy37AL42R9DjRCTpfjNI+S9ta/V5M9IkSv4Zyk0vSATMRJHwjeBuntbV0
-v/asCWxWqkH6QfPzFlMhoHxUbwfWeFsEdNQjz3l3VQ9bWngA2QZ+2gB9ZAOf+NBo
-aYRAcMOOYgK+mK5xkFkEhO3BqrL8vHF4oRXWlm0fURlJoLRvWz/QshmFtDQFW0jC
-2fAmyApeVJNxR9V3xij/TrqMJs5yVj7fb5BsVPhbv3k6XH9RjpG2VXjQB+5Phf4a
-h6hbFVLfDfPhKzQ3znBF
-=yU2E
------END PGP SIGNATURE-----
+Or perhaps the "solution" in this patch is just that you're moving
+around the reassignment of the callback functions? If so, this is not
+obvious... see below.
 
---rS8CxjVDS/+yyDmU--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/mtd/nand/omap2.c | 45 +++++++++++++++++++++++++++++++++------------
+>  1 file changed, 33 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 5596368..d29edda 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -1856,7 +1856,6 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  	mtd->name		= dev_name(&pdev->dev);
+>  	mtd->owner		= THIS_MODULE;
+>  	nand_chip		= &info->nand;
+> -	nand_chip->options	= pdata->devsize;
+>  	nand_chip->options	|= NAND_SKIP_BBTSCAN;
+>  #ifdef CONFIG_MTD_NAND_OMAP_BCH
+>  	info->of_node		= pdata->of_node;
+> @@ -1904,6 +1903,39 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  		nand_chip->chip_delay = 50;
+>  	}
+>  
+> +	/* scan NAND device connected to chip controller */
+
+Why is this comment separated from the comment below it? Either give a
+newline between them (if they're really separate) or make it a single
+comment block.
+
+> +	/* configure driver in x8 mode to read ONFI parameter page, as
+> +	 * NAND_CMD_READID & NAND_CMD_PARAM may not work in x16 mode */
+> +	nand_chip->options &= ~NAND_BUSWIDTH_16;
+> +	if (nand_scan_ident(mtd, 1, NULL)) {
+> +		/* nand_scan_ident failed */
+> +		if (pdata->devsize) {
+> +			/* may be because of mis-match of device-width,
+> +			 * platform data (DT binding) also says its x16 device
+> +			 * So re-scan with proper device-width */
+> +			nand_chip->options |= pdata->devsize;
+> +			if (nand_scan_ident(mtd, 1, NULL)) {
+> +				err = -ENXIO;
+> +				goto out_release_mem_region;
+> +			}
+> +		} else {
+> +			/* some genuine failure, because even platform-data
+> +			 * (DT binding) says that bus-width is x8 */
+> +			err = -ENXIO;
+> +			goto out_release_mem_region;
+> +		}
+> +	} else {
+> +		/* nand_scan_ident passed with x8 mode */
+> +		if (pdata->devsize) {
+> +			/* but platform-data (DT binding) say its x16 device */
+> +			pr_err("%s: incorrect bus-width config\n", DRIVER_NAME);
+
+You only print this message in one case (detect x8, but DT said x16) and
+not the other (detect x16, but DT said x8). This is a result of your
+unnecessarily complicated logic here.
+
+> +			err = -EINVAL;
+> +			err = -ENXIO;
+> +			goto out_release_mem_region;
+> +		}
+> +	}
+> +
+> +	/* re-populate low-level callbacks based on xfer modes */
+
+So am I to understand that the main purpose of this patch is not about
+the detection of the buswidth type, but about the (re)assignment of the
+callback functions? If so, you aren't making it very clear. (I wasn't
+paying too much attention to the fact that this code block is being
+moved across all the callback assignments.) The above code is just a
+more verbose way of doing the same thing as the code you're replacing,
+with an extra check to compare with the device-tree/platform-data.
+
+>  	switch (pdata->xfer_type) {
+>  	case NAND_OMAP_PREFETCH_POLLED:
+>  		nand_chip->read_buf   = omap_read_buf_pref;
+> @@ -2011,17 +2043,6 @@ static int omap_nand_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	/* DIP switches on some boards change between 8 and 16 bit
+> -	 * bus widths for flash.  Try the other width if the first try fails.
+> -	 */
+> -	if (nand_scan_ident(mtd, 1, NULL)) {
+> -		nand_chip->options ^= NAND_BUSWIDTH_16;
+> -		if (nand_scan_ident(mtd, 1, NULL)) {
+> -			err = -ENXIO;
+> -			goto out_release_mem_region;
+> -		}
+> -	}
+> -
+>  	/* rom code layout */
+>  	if (pdata->ecc_opt == OMAP_ECC_HAM1_CODE_HW) {
+>  
+
+Anyway, I'm just going to have to flat out NAK this patch for now.
+Please rework the series without this patch and we can continue
+discussion of this patch independently (for one, this thread does not
+need to CC all of the device-tree folks).
+
+Brian
