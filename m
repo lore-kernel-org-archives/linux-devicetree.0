@@ -1,152 +1,61 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [Patch v2 08/14] usb: phy-mxs: Add implementation of nofity_suspend and notify_resume
-Date: Tue, 22 Oct 2013 13:58:42 +0800
-Message-ID: <1382421528-17897-9-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [Patch v2 09/14] usb: phy-mxs: Enable IC fixes for mx6 SoC serial
+Date: Tue, 22 Oct 2013 13:58:43 +0800
+Message-ID: <1382421528-17897-10-git-send-email-peter.chen@freescale.com>
 References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add notify_suspend and notify_resume according to different SoCs.
+After adding IC fixes bits, some PHY bugs are fixed by
+IC logic.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   91 +++++++++++++++++++++++++++++++++++++++--
- 1 files changed, 87 insertions(+), 4 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 6d48bde..4416ed6 100644
+index 4416ed6..af2a9cf 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -164,8 +164,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
- static int mxs_phy_on_connect(struct usb_phy *phy,
- 		enum usb_device_speed speed)
- {
--	dev_dbg(phy->dev, "%s speed device has connected\n",
--		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
-+	dev_dbg(phy->dev, "%s device has connected\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+@@ -31,6 +31,10 @@
+ #define HW_USBPHY_CTRL_SET			0x34
+ #define HW_USBPHY_CTRL_CLR			0x38
  
- 	if (speed == USB_SPEED_HIGH)
- 		writel(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-@@ -177,8 +177,8 @@ static int mxs_phy_on_connect(struct usb_phy *phy,
- static int mxs_phy_on_disconnect(struct usb_phy *phy,
- 		enum usb_device_speed speed)
- {
--	dev_dbg(phy->dev, "%s speed device has disconnected\n",
--		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
-+	dev_dbg(phy->dev, "%s device has disconnected\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
++#define HW_USBPHY_IP				0x90
++#define HW_USBPHY_IP_SET			0x94
++#define HW_USBPHY_IP_CLR			0x98
++
+ #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+ #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
+@@ -42,6 +46,8 @@
+ #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+ #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
  
- 	if (speed == USB_SPEED_HIGH)
- 		writel(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-@@ -187,6 +187,88 @@ static int mxs_phy_on_disconnect(struct usb_phy *phy,
++#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
++
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+ 
+ enum imx_phy_type {
+@@ -121,6 +127,10 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 		BM_USBPHY_CTRL_ENUTMILEVEL3,
+ 	       base + HW_USBPHY_CTRL_SET);
+ 
++	/* Enable IC solution */
++	if (is_mx6q_phy(mxs_phy) || is_mx6sl_phy(mxs_phy))
++		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
++
  	return 0;
  }
- 
-+static int mxs_phy_on_suspend_workaround(struct usb_phy *phy,
-+		enum usb_device_speed speed)
-+{
-+	dev_dbg(phy->dev, "%s device has suspended\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-+
-+	/* delay 4ms to wait bus entering idle */
-+	usleep_range(4000, 5000);
-+
-+	/*
-+	 * Workaround for wakeup signal between portsc.suspendM
-+	 * and PHY enters low power mode.
-+	 */
-+	writel_relaxed(0xffffffff, phy->io_priv + HW_USBPHY_PWD);
-+	writel_relaxed(0, phy->io_priv + HW_USBPHY_PWD);
-+
-+	if (speed == USB_SPEED_HIGH)
-+		writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-+				phy->io_priv + HW_USBPHY_CTRL_CLR);
-+
-+	return 0;
-+}
-+
-+static int mxs_phy_on_suspend(struct usb_phy *phy,
-+		enum usb_device_speed speed)
-+{
-+	dev_dbg(phy->dev, "%s device has suspended\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-+
-+	/* delay 4ms to wait bus entering idle */
-+	usleep_range(4000, 5000);
-+
-+	if (speed == USB_SPEED_HIGH)
-+		writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-+				phy->io_priv + HW_USBPHY_CTRL_CLR);
-+
-+	return 0;
-+}
-+
-+/*
-+ * The resume signal must be finished here.
-+ */
-+static int mxs_phy_on_resume(struct usb_phy *phy,
-+		enum usb_device_speed speed)
-+{
-+	dev_dbg(phy->dev, "%s device has resumed\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-+
-+	if (speed == USB_SPEED_HIGH) {
-+		/* Make sure the device has switched to High-Speed mode */
-+		udelay(500);
-+		writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-+				phy->io_priv + HW_USBPHY_CTRL_SET);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * For mxs PHY, there are two PHY issues related to suspend/resume.
-+ *
-+ * 1. The PHY will be in messy if there is an wakeup after putting
-+ * bus to suspend (set portsc.suspendM) but before setting PHY to low
-+ * power mode (set portsc.phcd).
-+ * 2. The SOF sends too fast after resuming, it will cause disconnection
-+ * between host and high speed device.
-+ *
-+ * For mx23 and mx28, both of two issues are existed.
-+ * For mx6q and mx6dl, only the second issue is existed.
-+ * For mx6 sololite and later SoCs, none issue is existed.
-+ */
-+static void mxs_phy_workaround(struct mxs_phy *mxs_phy)
-+{
-+	if (is_mx23_phy(mxs_phy)) {
-+		mxs_phy->phy.notify_suspend = mxs_phy_on_suspend_workaround;
-+		mxs_phy->phy.notify_resume = mxs_phy_on_resume;
-+	} else if (is_mx6q_phy(mxs_phy)) {
-+		mxs_phy->phy.notify_suspend = mxs_phy_on_suspend;
-+		mxs_phy->phy.notify_resume = mxs_phy_on_resume;
-+	}
-+}
-+
- static int mxs_phy_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -247,6 +329,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 
- 	mxs_phy->clk = clk;
- 	mxs_phy->devtype = pdev->id_entry->driver_data;
-+	mxs_phy_workaround(mxs_phy);
- 
- 	platform_set_drvdata(pdev, &mxs_phy->phy);
  
 -- 
 1.7.1
 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
