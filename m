@@ -1,25 +1,49 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 2/2] DTS: ARM: OMAP3-N900: Add LP5523 support
-Date: Tue, 22 Oct 2013 10:47:21 -0700
-Message-ID: <CAK5ve-LcKfFz1RVh8rrC8axyW0MNKr_dtKzQKuNMMu=SBmibDA@mail.gmail.com>
-References: <1382446896-28436-1-git-send-email-sre@debian.org>
- <1382446896-28436-3-git-send-email-sre@debian.org> <20131022173821.GR15154@atomide.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Tue, 22 Oct 2013 10:49:08 -0700
+Message-ID: <20131022174908.GA11614@roeck-us.net>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20131022173821.GR15154@atomide.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131022171346.GE4061-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 10:38 AM, Tony Lindgren <tony@atomide.com> wrote:
-> * Sebastian Reichel <sre@debian.org> [131022 06:02]:
->> Add support for LP5523 device.
->
-> This patch should be queued separately by Benoit.
->
+On Tue, Oct 22, 2013 at 11:13:46AM -0600, Jason Gunthorpe wrote:
+> On Tue, Oct 22, 2013 at 11:04:26AM -0400, Matt Porter wrote:
+> 
+> > DT has many benefits. It would be great to leverage them as long as it
+> > doesn't interfere with the rate of change and willingness to evolve code
+> > that's always been the strength of the kernel process. That strength is
+> > too valuable to trade away for the "DT as ABI" vision.
+> 
+> I agree with this, and have posted similar things before.
+> 
+> The question I asked last time this came up, which was left unaswered:
+> 
+>  Who does this stable DT ABI vision benifit, and how much is that
+>  benifit worth?
+> 
 
-OK, got it. I will merge Patch 1.
+You might add: Who does the DT restriction to "hardware description only"
+(ie it must not describe what the system is supposed to do with the hardware)
+benefit, and how much is that benefit (or restriction) worth ?
 
--Bryan
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
