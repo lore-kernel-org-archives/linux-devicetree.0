@@ -1,112 +1,56 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv6] watchdog: dw: Enable OF support for DW watchdog timer
-Date: Tue, 22 Oct 2013 11:59:12 -0500
-Message-ID: <1382461152-22891-1-git-send-email-dinguyen@altera.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Tue, 22 Oct 2013 11:22:14 -0600
+Message-ID: <20131022172214.GF4061@obsidianresearch.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <20131021091555.GB21518@ulmo.nvidia.com>
+ <20131021170711.GA5256@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131021170711.GA5256@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Mon, Oct 21, 2013 at 07:07:11PM +0200, Richard Cochran wrote:
+> On Mon, Oct 21, 2013 at 11:15:56AM +0200, Thierry Reding wrote:
+> > 
+> > Right now, we're taking away much of that flexibility and I see progress
+> > on ARM actively hindered.
+> 
+> Baloney.
+> 
+> No one is taking away your flexibility or hindering progress. It is
+> really very simple. Just make an arm-dt-devel tree where you can both
+> change the bindings at will and recommend to people. Once bindings
+> have seen some real world testing and have had time to mature, then
+> request a merge into mainline.
 
-Add device tree support to the DW watchdog timer.
+The argument is that DT is a stable ABI we must never change it once
+it hits mainline.
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v6:
-- Minor documentation fix and add Acked-by: Mark Rutland
-v5:
-- Add documentation for clocks property
-v4:
-- Add interrupts as an optional property, use "should contain".
-v3:
-- Clean up documentation
-v2:
-- Use of_match_ptr() for of_match_table
----
- .../devicetree/bindings/watchdog/dw_wdt.txt        |   21 ++++++++++++++++++++
- drivers/watchdog/dw_wdt.c                          |    8 ++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+This leads to not accepting patches into mainline until they are
+'stable'.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-new file mode 100644
-index 0000000..08e16f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -0,0 +1,21 @@
-+Synopsys Designware Watchdog Timer
-+
-+Required Properties:
-+
-+- compatible	: Should contain "snps,dw-wdt"
-+- reg		: Base address and size of the watchdog timer registers.
-+- clocks	: phandle + clock-specifier for the clock that drives the
-+		watchdog timer.
-+
-+Optional Properties:
-+
-+- interrupts	: The interrupt used for the watchdog timeout warning.
-+
-+Example:
-+
-+	watchdog0: wd@ffd02000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0xffd02000 0x1000>;
-+		interrupts = <0 171 4>;
-+		clocks = <&per_base_clk>;
-+	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index e621098..261fa42 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -29,6 +29,7 @@
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -340,12 +341,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &dw_wdt_pm_ops,
- #endif /* CONFIG_PM */
--- 
-1.7.9.5
+Whihc leads to vendors shipping code in real systems to real customers
+with those out of tree patches. (Deadlines are a bitch)
 
+The vendors are now forced to treat the DT as an *UNSTABLE* ABI
+because they are shipping non-mainline DT schemas and plan to upgrade
+to mainline someday.
 
+Now the vendors no longer value DT as a stable ABI.
+
+So, why are we making argument #1? Seems pretty self defeating to me.
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
