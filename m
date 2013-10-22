@@ -1,111 +1,293 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv5] watchdog: dw: Enable OF support for DW watchdog timer
-Date: Tue, 22 Oct 2013 09:38:47 -0500
-Message-ID: <1382452727-20685-1-git-send-email-dinguyen@altera.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 104 board
+Date: Tue, 22 Oct 2013 15:44:05 +0100
+Message-ID: <52668F35.9050203@free-electrons.com>
+References: <87txgapcas.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87txgapcas.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Hi Arnaud,
 
-Add device tree support to the DW watchdog timer.
+On 21/10/2013 22:02, Arnaud Ebalard wrote:
+> 
+> Main hardware parts of the (Armada 370 based) NETGEAR ReadyNAS 104 are
+> supported by mainline kernel (USB 3.0 rear ports, USB 2.0 front port,
+> Gigabit controller and PHYs, serial port, LEDs, buttons, SATA ports,
+> G762 fan controller) and referenced in provided .dts file. Some additonal
+> work remains for:
+> 
+>  - Intersil ISL12057 I2C RTC and Alarm chip: working driver but needs
+>    to be splitted for submission of RTC part first;
+>  - Front LCD (Winstar 1602G): driver needs to be written
+>  - Armada NAND controller (to access onboard 128MB of NAND): support
+>    being pushed by @free-electrons people
+>  - 4 front SATA LEDs controlled via GPIO brought by NXP PCA9554:
+>    driver is available upstream. Not referenced/tested yet.
+> 
+> but the device is usable w/o those.
+> 
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+> Jason and Andrew,
+> 
+> I do not think there is any good way to share much between RN102 and
+> RN104 .dts in a common .dtsi file because MPP are used in a different
+> fashion on the two boards. But if you have ideas ...
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v5:
-- Add documentation for clocks property
-v4:
-- Add interrupts as an optional property, use "should contain".
-v3:
-- Clean up documentation
-v2:
-- Use of_match_ptr() for of_match_table
----
- .../devicetree/bindings/watchdog/dw_wdt.txt        |   20 ++++++++++++++++++++
- drivers/watchdog/dw_wdt.c                          |    8 ++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-new file mode 100644
-index 0000000..3af5c13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -0,0 +1,20 @@
-+Synopsys Designware Watchdog Timer
-+
-+Required Properties:
-+
-+- compatible	: Should contain "snps,dw-wdt"
-+- reg		: Base address and size of the watchdog timer register.
-+- clocks	: phandle to the clock that drives the watchdog timer.
-+
-+Optional Properties:
-+
-+- interrupts	: The interrupt used for the watchdog timeout warning.
-+
-+Example:
-+
-+	watchdog0: wd@ffd02000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0xffd02000 0x1000>;
-+		interrupts = <0 171 4>;
-+		clocks = <&per_base_clk>;
-+	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index e621098..261fa42 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -29,6 +29,7 @@
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -340,12 +341,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &dw_wdt_pm_ops,
- #endif /* CONFIG_PM */
+
+It seems to me that you can share at least half of the nodes in a common
+dtsi. But I prefer having two dts files, it remains easier to understand.
+Latter if a 3rd board share the same amount of nodes, then we can
+consider to use a dtsi.
+
+Gregory
+> 
+> I do intend to document the hardware parts and setup of the device as I
+> did for the Duo v2 and RN102 but I wanted to get the patch submitted for
+> inclusion in 3.13 first.
+> 
+> Comments welcome,
+> 
+> Cheers,
+> 
+> a+
+> 
+>  arch/arm/boot/dts/Makefile                     |   1 +
+>  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 197 +++++++++++++++++++++++++
+>  2 files changed, 198 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 802720e..be682cb 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -108,6 +108,7 @@ dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+>  	armada-370-mirabox.dtb \
+>  	armada-370-netgear-rn102.dtb \
+> +	armada-370-netgear-rn104.dtb \
+>  	armada-370-rd.dtb \
+>  	armada-xp-axpwifiap.dtb \
+>  	armada-xp-db.dtb \
+> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> new file mode 100644
+> index 0000000..e3855e8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+> @@ -0,0 +1,197 @@
+> +/*
+> + * Device Tree file for NETGEAR ReadyNAS 104
+> + *
+> + * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-370.dtsi"
+> +
+> +/ {
+> +	model = "NETGEAR ReadyNAS 104";
+> +	compatible = "netgear,readynas-104", "marvell,armada370", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x20000000>; /* 512 MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
+> +			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
+> +
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			/* Connected to FL1009 USB 3.0 controller */
+> +			pcie@1,0 {
+> +				/* Port 0, Lane 0 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* Connected to Marvell 88SE9215 SATA controller */
+> +			pcie@2,0 {
+> +				/* Port 1, Lane 0 */
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		internal-regs {
+> +			serial@12000 {
+> +				clock-frequency = <200000000>;
+> +				status = "okay";
+> +			};
+> +
+> +			sata@a0000 {
+> +				status = "disabled";
+> +			};
+> +
+> +			pinctrl {
+> +				poweroff: poweroff {
+> +					marvell,pins = "mpp60";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				backup_key_pin: backup-key-pin {
+> +					marvell,pins = "mpp52";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				power_key_pin: power-key-pin {
+> +					marvell,pins = "mpp62";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				backup_led_pin: backup-led-pin {
+> +					marvell,pins = "mpp63";
+> +					marvell,function = "gpo";
+> +				};
+> +
+> +				power_led_pin: power-led-pin {
+> +					marvell,pins = "mpp64";
+> +					marvell,function = "gpio";
+> +				};
+> +
+> +				reset_key_pin: reset-key-pin {
+> +					marvell,pins = "mpp65";
+> +					marvell,function = "gpio";
+> +				};
+> +			};
+> +
+> +			mdio {
+> +				phy0: ethernet-phy@0 {
+> +					reg = <0>;
+> +				};
+> +
+> +				phy1: ethernet-phy@1 {
+> +					reg = <1>;
+> +				};
+> +			};
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			ethernet@74000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				compatible = "marvell,mv64xxx-i2c";
+> +				clock-frequency = <100000>;
+> +				status = "okay";
+> +
+> +				g762: g762@3e {
+> +					compatible = "gmt,g762";
+> +					reg = <0x3e>;
+> +					clocks = <&g762_clk>; /* input clock */
+> +					fan_gear_mode = <0>;
+> +					fan_startv = <1>;
+> +					pwm_polarity = <0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	clocks {
+> +	       #address-cells = <1>;
+> +	       #size-cells = <0>;
+> +
+> +	       g762_clk: fixedclk {
+> +			 compatible = "fixed-clock";
+> +			 #clock-cells = <0>;
+> +			 clock-frequency = <8192>;
+> +	       };
+> +	};
+> +
+> +	gpio_leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&backup_led_pin &power_led_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		blue_backup_led {
+> +			label = "rn104:blue:backup";
+> +			gpios = <&gpio1 31 1>;  /* GPIO 63 Active Low */
+> +			default-state = "on";
+> +		};
+> +
+> +		blue_power_led {
+> +			label = "rn104:blue:pwr";
+> +			gpios = <&gpio2 0 1>;   /* GPIO 64 Active Low */
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&backup_key_pin
+> +			     &power_key_pin
+> +			     &reset_key_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		button@1 {
+> +			label = "Backup Button";
+> +			linux,code = <133>;     /* KEY_COPY */
+> +			gpios = <&gpio1 20 1>;
+> +		};
+> +
+> +		button@2 {
+> +			label = "Power Button";
+> +			linux,code = <116>;     /* KEY_POWER */
+> +			gpios = <&gpio1 30 0>;
+> +		};
+> +
+> +		button@3 {
+> +			label = "Reset Button";
+> +			linux,code = <0x198>;   /* KEY_RESTART */
+> +			gpios = <&gpio2 1 1>;
+> +		};
+> +	};
+> +
+> +	gpio_poweroff {
+> +		compatible = "gpio-poweroff";
+> +		pinctrl-0 = <&poweroff>;
+> +		pinctrl-names = "default";
+> +		gpios = <&gpio1 28 1>;
+> +	};
+> +};
+> 
+
+
 -- 
-1.7.9.5
-
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
