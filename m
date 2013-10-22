@@ -1,81 +1,114 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 22 Oct 2013 01:26:05 +0200
-Message-ID: <3264724.noW9GbyjJ9@avalon>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <1805938.y3dym69kEh@avalon> <52644C88.5060608@wwwdotorg.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
+ timer.
+Date: Mon, 21 Oct 2013 17:41:20 -0700
+Message-ID: <5265C9B0.2060003@roeck-us.net>
+References: <1380739472-26172-1-git-send-email-dinguyen@altera.com> <20131021110532.GA8144@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52644C88.5060608-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131021110532.GA8144@kartoffel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 10/21/2013 04:05 AM, Mark Rutland wrote:
+> On Wed, Oct 02, 2013 at 07:44:32PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+>> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>
+>> Add device tree support to the DW watchdog timer.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+>> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+>> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>> v2:
+>> - Use of_match_ptr() for of_match_table
+>> ---
+>>   .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+>>   drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+>>   2 files changed, 24 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>> new file mode 100644
+>> index 0000000..29e150b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>> @@ -0,0 +1,16 @@
+>> +Synopsys Designware Watchdog Timer
+>> +
+>> +Required Properties:
+>> +
+>> +- Compatiblity	: "snps,dw-wdt"
+>
+> This should presumably be:
+>
+> - compatbile: should contain "snps,dw-wdt"
+>
 
-On Sunday 20 October 2013 22:35:04 Stephen Warren wrote:
-> On 10/20/2013 01:41 PM, Laurent Pinchart wrote:
-> > On Tuesday 17 September 2013 17:36:32 Grant Likely wrote:
-> >> On Thu, 12 Sep 2013 17:57:00 +0200, Alexander Holler wrote:
-> >>> Am 12.09.2013 17:19, schrieb Stephen Warren:
-> >>>> IRQs, DMA channels, and GPIOs are all different things. Their bindings
-> >>>> are defined independently. While it's good to define new types of
-> >>>> bindings consistently with other bindings, this hasn't always happened,
-> >>>> so you can make zero assumptions about the IRQ bindings by reading the
-> >>>> documentation for any other kind of binding.
-> >>>> 
-> >>>> Multiple interrupts are defined as follows:
-> >>>> 	// Optional; otherwise inherited from parent/grand-parent/...
-> >>>> 	interrupt-parent = <&gpio6>;
-> >>>> 	// Must be in a fixed order, unless binding defines that the
-> >>>> 	// optional interrupt-names property is to be used.
-> >>>> 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
-> >>>> 	// Optional; binding for device defines whether it must
-> >>>> 	// be present
-> >>>> 	interrupt-names = "foo", "bar";
-> >>>> 
-> >>>> If you need multiple interrupts, each with a different parent, you need
-> >>>> to use an interrupt-map property...
-> 
-> ...
-> 
-> >> Actually, I think it is solveable but doing so requires a new binding
-> >> for interrupts. I took a shot at implementing it earlier this week and
-> >> I've got working patches that I'll be posting soon. I created a new
-> >> "interrupts-extended" property that uses a phandle+args type of
-> 
-> >> binding like this:
-> ...
-> 
-> >> device@3000 {
-> >> 	interrupts-extended = <&intc1 5> <&intc2 3 4> <&intc1 6>;
-> >> };
-> 
-> ...
-> 
-> > Any progress on this ? I'll need to use multiple interrupts with different
-> > parents in the near future, I can take this over if needed.
-> > 
-> > I've also been thinking that we could possibly reuse the "interrupts"
-> > property without defining a new "interrupts-extended". When parsing the
-> > property the code would use the current DT bindings if an
-> > interrupt-parent is present, and the new DT bindings if it isn't.
-> 
-> interrupt-parents doesn't have to be present in individual nodes; it can
-> be inherited from the parent. That means you'd have to convert whole
-> sub-trees at once.
+Hi Mark,
 
-Very good point. I agree with you, a new property is then better.
+s/compatbile/compatible/ :-)
 
-> It seems much more flexible to use a new property and hence make it explicit
-> what format the data is in.
+"must be" or "should contain" ? I see both in various bindings.
+Is there a preference ?
 
--- 
-Regards,
+>> +- reg		: Base address of the watchdog timer register.
+>
+> And the size...
+>
+>> +
+>> +Example:
+>> +
+>> +	watchdog0: wd@ffd02000 {
+>> +		compatible = "snps,dw-wdt";
+>> +		reg = <0xffd02000 0x1000>;
+>> +		interrupts = <0 171 4>;
+>
+> This wasn't mentioned.
+>
+> Is it necessary?
+>
 
-Laurent Pinchart
+ From looking into the code ...
+
+The driver doesn't use interrupts, so I guess the answer is no. Cut-and-paste error, maybe ?
+
+> Is it the only interrupt?
+>
+>> +		clocks = <&per_base_clk>;
+>
+> Similarly, is this the only clock?
+>
+The driver uses one clock, and it is mandatory.
+
+Guenter
+
+> Is it necessary?
+>
+>> +		status = "okay";
+>
+> This is unnecessary.
+>
+> Thanks,
+> Mark.
+>
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
