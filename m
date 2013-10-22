@@ -1,119 +1,85 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
- timer.
-Date: Tue, 22 Oct 2013 05:57:34 -0500
-Message-ID: <52665A1E.5020700@gmail.com>
-References: <1380739472-26172-1-git-send-email-dinguyen@altera.com> <20131021110532.GA8144@kartoffel> <5265C9B0.2060003@roeck-us.net> <20131022103936.GA5511@kartoffel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131022103936.GA5511@kartoffel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH] DTS: ARM: OMAP3-N900: Add pinctrl for i2c devices
+Date: Tue, 22 Oct 2013 13:00:26 +0200
+Message-ID: <1382439626-16093-1-git-send-email-sre@debian.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add pin muxing support for the Nokia N900 i2c controllers.
 
-On 10/22/13 5:39 AM, Mark Rutland wrote:
-> On Tue, Oct 22, 2013 at 01:41:20AM +0100, Guenter Roeck wrote:
->> On 10/21/2013 04:05 AM, Mark Rutland wrote:
->>> On Wed, Oct 02, 2013 at 07:44:32PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->>>> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> Add device tree support to the DW watchdog timer.
->>>>
->>>> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>>> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
->>>> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
->>>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
->>>> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
->>>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
->>>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> ---
->>>> v2:
->>>> - Use of_match_ptr() for of_match_table
->>>> ---
->>>>    .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
->>>>    drivers/watchdog/dw_wdt.c                          |    8 ++++++++
->>>>    2 files changed, 24 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
->>>> new file mode 100644
->>>> index 0000000..29e150b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
->>>> @@ -0,0 +1,16 @@
->>>> +Synopsys Designware Watchdog Timer
->>>> +
->>>> +Required Properties:
->>>> +
->>>> +- Compatiblity	: "snps,dw-wdt"
->>> This should presumably be:
->>>
->>> - compatbile: should contain "snps,dw-wdt"
->>>
->> Hi Mark,
->>
->> s/compatbile/compatible/ :-)
-> Indeed :)
-Changed for v3.
->
->> "must be" or "should contain" ? I see both in various bindings.
->> Is there a preference ?
-> I would prefer "should contain" -- it doesn't preclude future compatible
-> variants.
-Oops..v3 has "should be"...will change to "should contain" in v4.
->
->>>> +- reg		: Base address of the watchdog timer register.
->>> And the size...
->>>
->>>> +
->>>> +Example:
->>>> +
->>>> +	watchdog0: wd@ffd02000 {
->>>> +		compatible = "snps,dw-wdt";
->>>> +		reg = <0xffd02000 0x1000>;
->>>> +		interrupts = <0 171 4>;
->>> This wasn't mentioned.
->>>
->>> Is it necessary?
->>>
->>   From looking into the code ...
->>
->> The driver doesn't use interrupts, so I guess the answer is no. Cut-and-paste error, maybe ?
-> Does the device have any interrupts, even if they're unused?
-Yes, the device does have an interrupt. Should I add it as an optional 
-property?
->
->>> Is it the only interrupt?
->>>
->>>> +		clocks = <&per_base_clk>;
->>> Similarly, is this the only clock?
->>>
->> The driver uses one clock, and it is mandatory.
-> Is this the only clock into the unit?
->
-> Does it have a name?
-Yes, this is is the only clock into the unit. No, it does not have name.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ arch/arm/boot/dts/omap3-n900.dts | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Thanks,
-Dinh
->
-> Thanks,
-> Mark.
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index d64fa04..57f5a2a 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -28,7 +28,35 @@
+ 
+ };
+ 
++&omap3_pmx_core {
++	pinctrl-names = "default";
++
++	i2c1_pins: pinmux_i2c1_pins {
++		pinctrl-single,pins = <
++			0x18a (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
++			0x18c (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda */
++		>;
++	};
++
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0x18e (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_scl */
++			0x190 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_sda */
++		>;
++	};
++
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			0x192 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_scl */
++			0x194 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_sda */
++		>;
++	};
++};
++
+ &i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
+ 	clock-frequency = <2200000>;
+ 
+ 	twl: twl@48 {
+@@ -39,6 +67,7 @@
+ };
+ 
+ #include "twl4030.dtsi"
++#include "twl4030_omap3.dtsi"
+ 
+ &twl_gpio {
+ 	ti,pullups	= <0x0>;
+@@ -46,10 +75,16 @@
+ };
+ 
+ &i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
+ 	clock-frequency = <400000>;
+ };
+ 
+ &i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
++
+ 	clock-frequency = <100000>;
+ };
+ 
+-- 
+1.8.4.rc3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
