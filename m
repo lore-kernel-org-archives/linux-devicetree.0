@@ -1,37 +1,45 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
-Date: Tue, 22 Oct 2013 09:40:20 +0100
-Message-ID: <20131022084020.GD19112@lee--X1>
-References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in TSC/ADC
+ DT binding
+Date: Tue, 22 Oct 2013 10:42:00 +0200
+Message-ID: <52663A58.9070706@linutronix.de>
+References: <1382386404-6659-1-git-send-email-balbi@ti.com> <1382386404-6659-2-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382386404-6659-2-git-send-email-balbi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: dmitry.torokhov@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013, Laxman Dewangan wrote:
+On 10/21/2013 10:13 PM, Felipe Balbi wrote:
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> index e1c5300..b61df9d 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct platform_device *pdev,
+>  	if (err < 0)
+>  		return err;
+>  
+> -	err = of_property_read_u32(node, "ti,coordiante-readouts",
+> +	/*
+> +	 * try with new binding first. If it fails, still try with
+> +	 * bogus, miss-spelled version.
+> +	 */
+> +	err = of_property_read_u32(node, "ti,coordinate-readouts",
+>  			&ts_dev->coordinate_readouts);
+>  	if (err < 0)
+> +		err = of_property_read_u32(node, "ti,coordiante-readouts",
+> +				&ts_dev->coordinate_readouts);
+> +	if (err < 0)
+>  		return err;
 
-> The ams AS3722 is a compact system PMU suitable for mobile phones,
-> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
-> controller, 11 LDOs, RTC, automatic battery, temperature and
-> over-current monitoring, 8 GPIOs, ADC and a watchdog.
->=20
-> Add MFD core driver for the AS3722 to support core functionality.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+Thanks, very good. Do we keep this fallback for ever or just for a year
+or two?
 
-Applied, thanks.
+>  
+>  	return of_property_read_u32_array(node, "ti,wire-config",
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Sebastian
