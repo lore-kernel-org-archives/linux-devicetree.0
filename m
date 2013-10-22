@@ -1,101 +1,92 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: fix the ecc regression
-Date: Tue, 22 Oct 2013 14:34:50 +0100
-Message-ID: <20131022133446.GA2766@kartoffel>
-References: <1382418628-4521-1-git-send-email-b32955@freescale.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/4] Input: twl4030-pwrbutton - add device tree support
+Date: Tue, 22 Oct 2013 08:50:40 -0500
+Message-ID: <20131022135040.GN9340@gimli>
+References: <1382446504-27837-1-git-send-email-sre@debian.org>
+ <1382446504-27837-2-git-send-email-sre@debian.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XFI+TFG+M3u0jUjZ"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1382418628-4521-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org" <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1382446504-27837-2-git-send-email-sre@debian.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, linux-input@vger.kernel.org, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 06:10:28AM +0100, Huang Shijie wrote:
-> The patch "2febcdf mtd: gpmi: set the BCHs geometry with the ecc info"
-> makes the gpmi to use the ECC info provided by the MTD code, and creates
-> a different NAND ecc layout for the BCH which brings a regression to us:
->    We can not mount the ubifs which was created by the old NAND ecc layout.
-> 
-> This patch adds a new property : "fsl,use-mtd-ecc-info".
+--XFI+TFG+M3u0jUjZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This name sounds _extremely_ Linux-specific, and that's not the direction I'd
-like to see bindings take.
+Hi,
 
-> 
-> If we do not enable it, we will use the ecc strength calculated by ourselves
-> and use all the OOB area (this is the legacy method);
-> 
-> If we enable it, we will use the ecc strength provided by the MTD layer,
-> and create a new NAND ecc layout which may has free space in the OOB
-> (for some SLC nand, we may support the JFFS2 with the new NAND ecc layout).
-
-If the patch you referenced changed the layout without maintainng backwards
-compatibility, it sounds like it is broken and has caused a regression.
-
-This is a work around, not a fix.
-
-> 
-> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Oct 22, 2013 at 02:55:01PM +0200, Sebastian Reichel wrote:
+> Add device tree support for twl4030 power button driver.
+>=20
+> Signed-off-by: Sebastian Reichel <sre@debian.org>
 > ---
->  .../devicetree/bindings/mtd/gpmi-nand.txt          |    4 ++++
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    7 ++++++-
->  2 files changed, 10 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> index 551b2a1..fe84a3d 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> @@ -17,6 +17,10 @@ Required properties:
->  Optional properties:
->    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
->                         present false
-> +  - fsl,use-mtd-ecc-info: By enabling this boolean property, the gpmi can uses
-> +                       the MTD's ECC info (if the MTD has). So we may have free
-> +                       space in the OOB area, and we may support the JFFS2 with
-> +                       some SLC nand, such as Micron's SLC nand.
-
-I'm not very familiar with MTDs. Where exactly does this ECC info come from? Is
-it data internal to Linux, or is it probed from the device itself?
-
->  
->  The device tree may optionally contain sub-nodes describing partitions of the
->  address space. See partition.txt for more detail.
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> index 5a1bbc7..62c0712 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> @@ -271,7 +271,9 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
->  		dev_err(this->dev,
->  			"We can not support this nand chip."
->  			" Its required ecc strength(%d) is beyond our"
-> -			" capability(%d).\n", geo->ecc_strength,
-> +			" capability(%d). If you have not enabled the"
-> +			"'fsl,use-mtd-ecc-info', enable it and try again.\n",
-> +			geo->ecc_strength,
-
-Why are we telling people to do that with no description as to when to do so?
-Can we not just fall back to this instead?
-
->  			(GPMI_IS_MX6Q(this) ? MX6_ECC_STRENGTH_MAX
->  					: MXS_ECC_STRENGTH_MAX));
->  		return -EINVAL;
-> @@ -352,6 +354,9 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
->  
->  int common_nfc_set_geometry(struct gpmi_nand_data *this)
+>  drivers/input/misc/twl4030-pwrbutton.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/=
+twl4030-pwrbutton.c
+> index b9a05fd..e450947 100644
+> --- a/drivers/input/misc/twl4030-pwrbutton.c
+> +++ b/drivers/input/misc/twl4030-pwrbutton.c
+> @@ -52,7 +52,7 @@ static irqreturn_t powerbutton_irq(int irq, void *_pwr)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> -static int __init twl4030_pwrbutton_probe(struct platform_device *pdev)
+> +static int twl4030_pwrbutton_probe(struct platform_device *pdev)
 >  {
-> +	if (!of_property_read_bool(this->dev->of_node, "fsl,use-mtd-ecc-info"))
-> +		return legacy_set_geometry(this);
-> +
->  	return set_geometry_by_ecc_info(this) ? 0 : legacy_set_geometry(this);
+>  	struct input_dev *pwr;
+>  	int irq =3D platform_get_irq(pdev, 0);
+> @@ -106,16 +106,27 @@ static int __exit twl4030_pwrbutton_remove(struct p=
+latform_device *pdev)
+>  	return 0;
+>  }
+> =20
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id twl4030_pwrbutton_dt_match_table[] =3D {
+> +       { .compatible =3D "ti,twl4030-pwrbutton" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, twl4030_pwrbutton_dt_match_table);
+> +#define twl4030_pwrbutton_dt_match of_match_ptr(twl4030_pwrbutton_dt_mat=
+ch_table)
+> +#else
+> +#define twl4030_pwrbutton_dt_match NULL
+> +#endif
 
-This looks like it could be reorganised to fall back if necessary.
+you don't ned this trickery.. just always device the match table.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+balbi
+
+--XFI+TFG+M3u0jUjZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZoKvAAoJEIaOsuA1yqREH5EP/RS0Nl8ppNk75V08SuxgTsWZ
+rCJvBEVX8CQEz2Qc2uEswR1N5YxR47BCjyY4yY2Rx2joUGY+t8jXtiuH+4c/luc5
+HOnOS2JbO8AYlRAjqFaLi/vTdfCVw8O7hsL5yGdHYQoHDdZCf2ts0FR4aenryVZG
+LRZwXnRIR8KVIsk+yuIMA71ngvpsdBUa5j05RZuNzxyfTqU84ENawBZs31kRVbTQ
+v49BJiWHbUtFVpVUgukMTw/WC6Dqzi1x3A4FcbgEFrDhpd+TOQYCencLJPdsIfiE
+J7WUmfVA2X5A86Kl9u6TFAgS5p+yo4kOtgnTG9k1QO1LqAGJQu4to1fHd93P99mH
+lLEqkLEcjYyxUdOYVLynJT3wRrkkt+8rpCa21mk5ie30Rv7EmHp8arQBcq2Ls39d
+j/4QZ4zCeq+m/VNSfKaQeA/aJ7PrD9pOPWlolzxwBAPl2fapxIIRsy8LCvQuM+A8
+jXe2iht2ZKUQKHrQJASNcuaboAo/Xe0k9GrYMYTO9mcVEpa6gaqEctPZ9lxlY/3M
+PMNQVqeLCG5DoFv+LCLB68CXYnse8H85ZN2GZEJ/jC8Tuc+u6HVn4UeCqq/6gaoG
+TR8NnvkAWKqFuSaJkZMkmb6VlZ5V+mOreLm4M5x5ADWE2IXpS2NScm0wuACJSZiC
+tPSwYj0hmOYAyZ6b+5kK
+=Uejm
+-----END PGP SIGNATURE-----
+
+--XFI+TFG+M3u0jUjZ--
