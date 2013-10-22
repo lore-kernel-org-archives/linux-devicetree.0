@@ -1,37 +1,46 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 13:42:48 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1310221333300.1951@syhkavp.arg>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020220839.GT2443@sirena.org.uk> <5264576F.6050307@wwwdotorg.org> <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg> <52658EBC.8020800@wwwdotorg.org> <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH 1/2] leds: lp55xx: handle enable pin in driver
+Date: Tue, 22 Oct 2013 10:46:41 -0700
+Message-ID: <CAK5ve-JhehHHAU_2tN-RVb8+u2AbUS_Yx=k+i0Ponnm9Wir+OQ@mail.gmail.com>
+References: <1382446896-28436-1-git-send-email-sre@debian.org>
+ <1382446896-28436-2-git-send-email-sre@debian.org> <20131022170604.GP15154@atomide.com>
+ <CAK5ve-KWdJFuJsvQ+JS2y7bpa9j4hGdU=ceb4nAz8BKQ1M9_XA@mail.gmail.com> <20131022173742.GQ15154@atomide.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131022150426.GF29341@beef>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20131022173742.GQ15154@atomide.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013, Matt Porter wrote:
+On Tue, Oct 22, 2013 at 10:37 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Bryan Wu <cooloney@gmail.com> [131022 10:23]:
+>> On Tue, Oct 22, 2013 at 10:06 AM, Tony Lindgren <tony@atomide.com> wrote:
+>> > * Sebastian Reichel <sre@debian.org> [131022 06:02]:
+>> >> This patch moves the handling of the chip's enable pin from the board
+>> >> code into the driver. It also updates all board-code files using the
+>> >> driver to incorporate this change.
+>> >>
+>> >> This is needed for device tree support of the enable pin.
+>> >
+>> > This seems safe to merge along with the other LED patches, the
+>> > changes to arch/arm/mach-omap2 should not conflict with anything.
+>> >
+>> > So for the arch/arm/mach-omap2 changes:
+>> >
+>> > Acked-by: Tony Lindgren <tony@atomide.com>
+>>
+>> I'm OK for LED parts, will this patch go through omap tree? If so,
+>> please add my ack.
+>>
+>> Acked-by: Bryan Wu <cooloney@gmail.com>
+>
+> It's probably best that you take it via with the LED patches.
+>
 
-> DT has many benefits. It would be great to leverage them as long as it
-> doesn't interfere with the rate of change and willingness to evolve code
-> that's always been the strength of the kernel process. That strength is
-> too valuable to trade away for the "DT as ABI" vision.
+OK, I will do it. what about PATCH 2 of this patch set? Will you take
+care of it?
 
-Amen.  This is the best statement I've read about DT so far.
-
-Having "stable" DT bindings is just a dream.  Experience so far is 
-showing that this is neither practical nor realistic.
-
-The unstructured free-for-all approach isn't good either.  Some 
-compromise between the two extremes needs to be found.
-
-
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+-Bryan
