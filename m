@@ -1,84 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv5] watchdog: dw: Enable OF support for DW watchdog timer
-Date: Tue, 22 Oct 2013 16:02:02 +0100
-Message-ID: <20131022150201.GB4691@kartoffel>
-References: <1382452727-20685-1-git-send-email-dinguyen@altera.com>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Tue, 22 Oct 2013 11:04:26 -0400
+Message-ID: <20131022150426.GF29341@beef>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382452727-20685-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20131022093923.GC15640-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 03:38:47PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Tue, Oct 22, 2013 at 11:39:24AM +0200, Thierry Reding wrote:
+> On Mon, Oct 21, 2013 at 04:40:15PM -0400, Nicolas Pitre wrote:
+> > On Mon, 21 Oct 2013, Stephen Warren wrote:
+> > > I
+> > > think we can still have a hack-free, churn-free, multi-platform kernel
+> > > without requiring DT, but by using board files.
+> > 
+> > I kinda agree with you, but this is too late for that now.
+> > 
+> > We have DT, and the best way forward is to fix the process which is, 
+> > arguably, somewhat obstructive and broken at the moment.
 > 
-> Add device tree support to the DW watchdog timer.
+> I agree that the process could use some enhancements. But I also think
+> that we should be open to move away from DT again if it turns out to not
+> be a good enough solution. "It's too late" doesn't sound like a very
+> good argument to me.
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> v5:
-> - Add documentation for clocks property
-> v4:
-> - Add interrupts as an optional property, use "should contain".
-> v3:
-> - Clean up documentation
-> v2:
-> - Use of_match_ptr() for of_match_table
-> ---
->  .../devicetree/bindings/watchdog/dw_wdt.txt        |   20 ++++++++++++++++++++
->  drivers/watchdog/dw_wdt.c                          |    8 ++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> new file mode 100644
-> index 0000000..3af5c13
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> @@ -0,0 +1,20 @@
-> +Synopsys Designware Watchdog Timer
-> +
-> +Required Properties:
-> +
-> +- compatible	: Should contain "snps,dw-wdt"
-> +- reg		: Base address and size of the watchdog timer register.
+> Essentially DT is just a different way to represent what we used to have
+> in platform data, so we haven't fundamentally changed anything at that
+> level. Well, we've made things worse to some degree.
 
-s/register/registers/ ?
+DT started that way. However, the direction set by binding reviews have
+essentially limited DT to only external hardware configuration. So, yes,
+we've made things worse. DT, as defined and maintained today, does not
+replace platform data since it's been de facto limited to a tiny subset
+of system configuration info. Further, the current approach to "breaking
+compatibility" with old DTBs that has resulted from the claims of "DT as
+ABI" is completely tied to the vision of moving DT independent of the
+kernel. Platform data in code never had this compatibility issue.
 
-> +- clocks	: phandle to the clock that drives the watchdog timer.
+DT has many benefits. It would be great to leverage them as long as it
+doesn't interfere with the rate of change and willingness to evolve code
+that's always been the strength of the kernel process. That strength is
+too valuable to trade away for the "DT as ABI" vision.
 
-Nit: clocks aren't necessarily described by just a phandle.
+All these failings can start to be fixed by addressing the process and
+what DT *is*.
 
-How about:
-
-- clocks: phandle + clock-specifier for the clock that drives the watchdog
-          timer.
-
-Otherwise, given previous comments this looks fine to me.
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
+-Matt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
