@@ -1,45 +1,51 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Mon, 21 Oct 2013 23:47:23 -0700
-Message-ID: <20131022064723.GA15861@codeaurora.org>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2 PATCH 11/14] Documentation: Add st_magn binding documentation
+Date: Tue, 22 Oct 2013 07:55:29 +0100
+Message-ID: <CAF2Aj3iZT5J=UQNFahZy2Vngst8mfxGDoV7B0Q6gQNsq2Xg-aw@mail.gmail.com>
+References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
+	<1380299538-22047-12-git-send-email-l.czerwinski@samsung.com>
+	<524AF86D.7010200@kernel.org>
+	<524AEEFC.8010201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1310201911190.1951-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <524AEEFC.8010201-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 20, 2013 at 09:00:08PM -0400, Nicolas Pitre wrote:
+On 1 October 2013 16:49, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 10/01/2013 11:29 AM, Jonathan Cameron wrote:
+>> On 09/27/13 17:32, Lukasz Czerwinski wrote:
+>>> This patch adds the document for STMicroeletronics Magnetic Sensors=
+ driver under
+>>> Documentation/devicetree/bindings/iio/.
+>>>
+>>> Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>
+>> So right now we have two different approaches to documenting these b=
+indings.  Lee
+>> proposed doing it on a per device name, here you are proposing a sin=
+gle file
+>> per type.
+>>
+>> What is the prefered approach?
+>>
+>> Lee/Lukasz why would you two favour one way or the other?
+>>
+>> Device tree maintainers, which is preferred?
+>
+> If the only difference is compatible string, then I think one doc is
+> fine and preferred by me.
 
->The hardware support in the kernel, on the other hand, can be improved
->incrementally with time.  It doesn't matter if it is not optimal at
->first. It can be revisited, optimized, reviewed, and sometimes even
->redesigned.  And only when it reaches maturity would be the time to use
->the experience from the kernel development and make some firmware out of
->it.  But what would be the point then?
+I have no strong feelings either way.
 
-One other point that is kind of overlooked, but I think is important,
-is that firmware will tend to be closed source.  The advantages we get
-to having drivers shared in the kernel would be gone, and we would end
-up with multiple implementations of essentially the same driver,
-especially with reference hardware blocks that get used in different
-platforms.
-
-David
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro ST Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
