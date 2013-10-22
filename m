@@ -1,48 +1,37 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: [PATCH] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
-Date: Tue, 22 Oct 2013 12:34:38 +0400
-Message-ID: <1382430878-14950-1-git-send-email-aida.mynzhasova@skitlab.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
+Date: Tue, 22 Oct 2013 09:40:20 +0100
+Message-ID: <20131022084020.GD19112@lee--X1>
+References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-Add auart2 pins configuration on its main pads
+On Tue, 22 Oct 2013, Laxman Dewangan wrote:
 
-Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> The ams AS3722 is a compact system PMU suitable for mobile phones,
+> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
+> controller, 11 LDOs, RTC, automatic battery, temperature and
+> over-current monitoring, 8 GPIOs, ADC and a watchdog.
+>=20
+> Add MFD core driver for the AS3722 to support core functionality.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 918d419..cab4c22 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -343,6 +343,19 @@
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
-+				auart2_pins_a: auart2-pins@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART2_RX__AUART2_RX
-+						MX28_PAD_AUART2_TX__AUART2_TX
-+						MX28_PAD_AUART2_CTS__AUART2_CTS
-+						MX28_PAD_AUART2_RTS__AUART2_RTS
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
- 				auart3_pins_a: auart3@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
--- 
-1.8.1.2
+Applied, thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
