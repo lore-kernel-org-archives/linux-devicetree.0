@@ -1,48 +1,112 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 11:13:46 -0600
-Message-ID: <20131022171346.GE4061@obsidianresearch.com>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com>
- <20131022150426.GF29341@beef>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv6] watchdog: dw: Enable OF support for DW watchdog timer
+Date: Tue, 22 Oct 2013 11:59:12 -0500
+Message-ID: <1382461152-22891-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131022150426.GF29341@beef>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 11:04:26AM -0400, Matt Porter wrote:
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-> DT has many benefits. It would be great to leverage them as long as it
-> doesn't interfere with the rate of change and willingness to evolve code
-> that's always been the strength of the kernel process. That strength is
-> too valuable to trade away for the "DT as ABI" vision.
+Add device tree support to the DW watchdog timer.
 
-I agree with this, and have posted similar things before.
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v6:
+- Minor documentation fix and add Acked-by: Mark Rutland
+v5:
+- Add documentation for clocks property
+v4:
+- Add interrupts as an optional property, use "should contain".
+v3:
+- Clean up documentation
+v2:
+- Use of_match_ptr() for of_match_table
+---
+ .../devicetree/bindings/watchdog/dw_wdt.txt        |   21 ++++++++++++++++++++
+ drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 
-The question I asked last time this came up, which was left unaswered:
+diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+new file mode 100644
+index 0000000..08e16f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+@@ -0,0 +1,21 @@
++Synopsys Designware Watchdog Timer
++
++Required Properties:
++
++- compatible	: Should contain "snps,dw-wdt"
++- reg		: Base address and size of the watchdog timer registers.
++- clocks	: phandle + clock-specifier for the clock that drives the
++		watchdog timer.
++
++Optional Properties:
++
++- interrupts	: The interrupt used for the watchdog timeout warning.
++
++Example:
++
++	watchdog0: wd@ffd02000 {
++		compatible = "snps,dw-wdt";
++		reg = <0xffd02000 0x1000>;
++		interrupts = <0 171 4>;
++		clocks = <&per_base_clk>;
++	};
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index e621098..261fa42 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -29,6 +29,7 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/of.h>
+ #include <linux/pm.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+@@ -340,12 +341,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_wdt_of_match[] = {
++	{ .compatible = "snps,dw-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
++
+ static struct platform_driver dw_wdt_driver = {
+ 	.probe		= dw_wdt_drv_probe,
+ 	.remove		= dw_wdt_drv_remove,
+ 	.driver		= {
+ 		.name	= "dw_wdt",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(dw_wdt_of_match),
+ #ifdef CONFIG_PM
+ 		.pm	= &dw_wdt_pm_ops,
+ #endif /* CONFIG_PM */
+-- 
+1.7.9.5
 
- Who does this stable DT ABI vision benifit, and how much is that
- benifit worth?
 
-As an embedded ODM, I don't get very much value out of it, and I think
-others in my space would say the same.
-
-I continue to think the embedded vs not embedded are different and it
-makes no sense to pretend that my embedded system has the same
-requirements as something like a chromebook.
-
-Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
