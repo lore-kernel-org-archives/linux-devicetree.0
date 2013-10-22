@@ -1,85 +1,85 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: omap5-uevm: fix mcspi node pin descriptions
-Date: Tue, 22 Oct 2013 16:54:03 +0200
-Message-ID: <5266918B.8070109@baylibre.com>
-References: <1382078554-31628-1-git-send-email-ewitcher@mindspring.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv5] watchdog: dw: Enable OF support for DW watchdog timer
+Date: Tue, 22 Oct 2013 16:02:02 +0100
+Message-ID: <20131022150201.GB4691@kartoffel>
+References: <1382452727-20685-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1382078554-31628-1-git-send-email-ewitcher@mindspring.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Eric Witcher <ewitcher@mindspring.com>, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382452727-20685-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+On Tue, Oct 22, 2013 at 03:38:47PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
+> Add device tree support to the DW watchdog timer.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> v5:
+> - Add documentation for clocks property
+> v4:
+> - Add interrupts as an optional property, use "should contain".
+> v3:
+> - Clean up documentation
+> v2:
+> - Use of_match_ptr() for of_match_table
+> ---
+>  .../devicetree/bindings/watchdog/dw_wdt.txt        |   20 ++++++++++++++++++++
+>  drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> new file mode 100644
+> index 0000000..3af5c13
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> @@ -0,0 +1,20 @@
+> +Synopsys Designware Watchdog Timer
+> +
+> +Required Properties:
+> +
+> +- compatible	: Should contain "snps,dw-wdt"
+> +- reg		: Base address and size of the watchdog timer register.
 
-On 18/10/2013 08:42, Eric Witcher wrote:
-> Correct mcspi pin descriptions to match corresponding node name and
-> add chip select number to be consistent with OMAP5 TRM.
->
-> Signed-off-by: Eric Witcher <ewitcher@mindspring.com>
+s/register/registers/ ?
 
-Applied on my tree.
+> +- clocks	: phandle to the clock that drives the watchdog timer.
+
+Nit: clocks aren't necessarily described by just a phandle.
+
+How about:
+
+- clocks: phandle + clock-specifier for the clock that drives the watchdog
+          timer.
+
+Otherwise, given previous comments this looks fine to me.
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
 Thanks,
-Benoit
-
-> ---
->   arch/arm/boot/dts/omap5-uevm.dts | 18 +++++++++---------
->   1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/oma=
-p5-uevm.dts
-> index d784b3a..90c7843 100644
-> --- a/arch/arm/boot/dts/omap5-uevm.dts
-> +++ b/arch/arm/boot/dts/omap5-uevm.dts
-> @@ -131,25 +131,25 @@
->   			0xbc (PIN_INPUT | MUX_MODE0)		/*  mcspi2_clk */
->   			0xbe (PIN_INPUT | MUX_MODE0)		/*  mcspi2_simo */
->   			0xc0 (PIN_INPUT_PULLUP | MUX_MODE0)	/*  mcspi2_somi */
-> -			0xc2 (PIN_OUTPUT | MUX_MODE0)		/*  mcspi2_cs */
-> +			0xc2 (PIN_OUTPUT | MUX_MODE0)		/*  mcspi2_cs0 */
->   		>;
->   	};
->
->   	mcspi3_pins: pinmux_mcspi3_pins {
->   		pinctrl-single,pins =3D <
-> -			0x78 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_somi */
-> -			0x7a (PIN_INPUT | MUX_MODE1)		/*  mcspi2_cs */
-> -			0x7c (PIN_INPUT | MUX_MODE1)		/*  mcspi2_simo */
-> -			0x7e (PIN_INPUT | MUX_MODE1)		/*  mcspi2_clk */
-> +			0x78 (PIN_INPUT | MUX_MODE1)		/*  mcspi3_somi */
-> +			0x7a (PIN_INPUT | MUX_MODE1)		/*  mcspi3_cs0 */
-> +			0x7c (PIN_INPUT | MUX_MODE1)		/*  mcspi3_simo */
-> +			0x7e (PIN_INPUT | MUX_MODE1)		/*  mcspi3_clk */
->   		>;
->   	};
->
->   	mcspi4_pins: pinmux_mcspi4_pins {
->   		pinctrl-single,pins =3D <
-> -			0x164 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_clk */
-> -			0x168 (PIN_INPUT | MUX_MODE1)		/*  mcspi2_simo */
-> -			0x16a (PIN_INPUT | MUX_MODE1)		/*  mcspi2_somi */
-> -			0x16c (PIN_INPUT | MUX_MODE1)		/*  mcspi2_cs */
-> +			0x164 (PIN_INPUT | MUX_MODE1)		/*  mcspi4_clk */
-> +			0x168 (PIN_INPUT | MUX_MODE1)		/*  mcspi4_simo */
-> +			0x16a (PIN_INPUT | MUX_MODE1)		/*  mcspi4_somi */
-> +			0x16c (PIN_INPUT | MUX_MODE1)		/*  mcspi4_cs0 */
->   		>;
->   	};
->
->
-
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
