@@ -1,335 +1,99 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH RESEND v5 5/5] ARM: rockchip: add smp bringup code
-Date: Tue, 22 Oct 2013 17:28:29 +0200
-Message-ID: <201310221728.29854.heiko@sntech.de>
-References: <201310221724.21550.heiko@sntech.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Tue, 22 Oct 2013 17:34:45 +0200
+Message-ID: <20131022153445.GD17512@ns203013.ovh.net>
+References: <20131019104555.GI18477@ns203013.ovh.net>
+ <1382346813-8449-1-git-send-email-denis@eukrea.com>
+ <20131022045833.GB17512@ns203013.ovh.net>
+ <20131022072307.GA8681@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201310221724.21550.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20131022072307.GA8681@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric B??nard <eric@eukrea.com>, linux-arm-kernel@lists.infradead.org, Lothar Wa??mann <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds the necessary smp-operations and startup code to use
-additional cores on Rockchip SoCs.
+On 09:23 Tue 22 Oct     , Thierry Reding wrote:
+> On Tue, Oct 22, 2013 at 06:58:33AM +0200, Jean-Christophe PLAGNIOL-VILLAR=
+D wrote:
+> > On 11:13 Mon 21 Oct     , Denis Carikli wrote:
+> > > Cc: Richard Purdie <rpurdie@rpsys.net>
+> > > Cc: Jingoo Han <jg1.han@samsung.com>
+> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Cc: Rob Herring <rob.herring@calxeda.com>
+> > > Cc: Pawel Moll <pawel.moll@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Stephen Warren <swarren@wwwdotorg.org>
+> > > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> > > Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+> > > Cc: Eric B=E9nard <eric@eukrea.com>
+> > > Signed-off-by: Denis Carikli <denis@eukrea.com>
+> > > ---
+> > > ChangeLog v3->v4:
+> > > - The default-brightness property is now optional, it defaults to 1 i=
+f not set.
+> > by default we set OFF not ON
+> > =
 
-We currently hog the power management unit in the smp code, as it is
-necessary to control the power to the cpu core and nothing else is
-currently using it, so a generic implementation can be done later.
+> > do not actiate driver or properti by default you can not known to conse=
+quence
+> > on the hw
+> =
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/mach-rockchip/Makefile   |    1 +
- arch/arm/mach-rockchip/core.h     |   22 +++++
- arch/arm/mach-rockchip/headsmp.S  |   30 ++++++
- arch/arm/mach-rockchip/platsmp.c  |  195 +++++++++++++++++++++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c |    2 +
- 5 files changed, 252 insertions(+)
- create mode 100644 arch/arm/mach-rockchip/core.h
- create mode 100644 arch/arm/mach-rockchip/headsmp.S
- create mode 100644 arch/arm/mach-rockchip/platsmp.c
+> Turning on a backlight by default is what pretty much every backlight
+> driver does. I personally think that's the wrong default, I even tried
+> to get some discussion started recently about how we could change this.
+> However, given that this has been the case for possibly as long as the
+> subsystem has existed, suddenly changing it might cause quite a few of
+> our users to boot the new kernel and not see their display come up. As
+> with any other ABI, this isn't something we can just change without a
+> very good migration path.
 
-diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchip/Makefile
-index 1547d4f..4377a14 100644
---- a/arch/arm/mach-rockchip/Makefile
-+++ b/arch/arm/mach-rockchip/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARCH_ROCKCHIP) += rockchip.o
-+obj-$(CONFIG_SMP) += headsmp.o platsmp.o
-diff --git a/arch/arm/mach-rockchip/core.h b/arch/arm/mach-rockchip/core.h
-new file mode 100644
-index 0000000..e2e7c9d
---- /dev/null
-+++ b/arch/arm/mach-rockchip/core.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+extern char rockchip_secondary_trampoline;
-+extern char rockchip_secondary_trampoline_end;
-+
-+extern unsigned long rockchip_boot_fn;
-+extern void rockchip_secondary_startup(void);
-+
-+extern struct smp_operations rockchip_smp_ops;
-diff --git a/arch/arm/mach-rockchip/headsmp.S b/arch/arm/mach-rockchip/headsmp.S
-new file mode 100644
-index 0000000..3dd72f7
---- /dev/null
-+++ b/arch/arm/mach-rockchip/headsmp.S
-@@ -0,0 +1,30 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/linkage.h>
-+#include <linux/init.h>
-+
-+ENTRY(rockchip_secondary_startup)
-+	bl	v7_invalidate_l1
-+	b	secondary_startup
-+ENDPROC(rockchip_secondary_startup)
-+
-+ENTRY(rockchip_secondary_trampoline)
-+	ldr	pc, 1f
-+ENDPROC(rockchip_secondary_trampoline)
-+	.globl	rockchip_boot_fn
-+rockchip_boot_fn:
-+1:	.space	4
-+
-+ENTRY(rockchip_secondary_trampoline_end)
-diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
-new file mode 100644
-index 0000000..5b3f69c
---- /dev/null
-+++ b/arch/arm/mach-rockchip/platsmp.c
-@@ -0,0 +1,195 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/smp.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/smp_scu.h>
-+#include <asm/smp_plat.h>
-+#include <asm/mach/map.h>
-+
-+#include "core.h"
-+
-+static void __iomem *scu_base_addr;
-+static void __iomem *sram_base_addr;
-+static int ncores;
-+
-+/*
-+ * temporary PMU handling
-+ */
-+
-+#define PMU_PWRDN_CON		0x08
-+#define PMU_PWRDN_ST		0x0c
-+
-+static void __iomem *pmu_base_addr;
-+
-+static inline bool pmu_power_domain_is_on(int pd)
-+{
-+	return !(readl_relaxed(pmu_base_addr + PMU_PWRDN_ST) & BIT(pd));
-+}
-+
-+static void pmu_set_power_domain(int pd, bool on)
-+{
-+	u32 val = readl_relaxed(pmu_base_addr + PMU_PWRDN_CON);
-+	if (on)
-+		val &= ~BIT(pd);
-+	else
-+		val |=  BIT(pd);
-+	writel(val, pmu_base_addr + PMU_PWRDN_CON);
-+
-+	while (pmu_power_domain_is_on(pd) != on) { }
-+}
-+
-+/*
-+ * Handling of CPU cores
-+ */
-+
-+static int __cpuinit rockchip_boot_secondary(unsigned int cpu,
-+					     struct task_struct *idle)
-+{
-+	if (!sram_base_addr || !pmu_base_addr) {
-+		pr_err("%s: sram or pmu missing for cpu boot\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	if (cpu >= ncores) {
-+		pr_err("%s: cpu %d outside maximum number of cpus %d\n",
-+							__func__, cpu, ncores);
-+		return -ENXIO;
-+	}
-+
-+	/* start the core */
-+	pmu_set_power_domain(0 + cpu, true);
-+
-+	return 0;
-+}
-+
-+/**
-+ * rockchip_smp_prepare_sram - populate necessary sram block
-+ * Starting cores execute the code residing at the start of the on-chip sram
-+ * after power-on. Therefore make sure, this sram region is reserved and
-+ * big enough. After this check, copy the trampoline code that directs the
-+ * core to the real startup code in ram into the sram-region.
-+ * @node: mmio-sram device node
-+ */
-+static int __init rockchip_smp_prepare_sram(struct device_node *node)
-+{
-+	unsigned int trampoline_sz = &rockchip_secondary_trampoline_end -
-+					    &rockchip_secondary_trampoline;
-+	const __be32 *avail_list = NULL;
-+	int avail_size;
-+	int astart = -1;
-+	unsigned int asize;
-+	unsigned int i;
-+
-+	avail_list = of_get_property(node, "available",
-+					&avail_size);
-+	if (!avail_list) {
-+		pr_err("%s: available property for sram missing\n",
-+		       __func__);
-+		return -ENOENT;
-+	}
-+
-+	avail_size /= sizeof(*avail_list);
-+	if (!avail_size || avail_size % 2) {
-+		pr_err("%s: wrong number of arguments for available chunks\n",
-+		       __func__);
-+		return -EINVAL;
-+	}
-+
-+	/* Check that the area for the trampoline is not generally available */
-+	for (i = 0; i < avail_size; i += 2) {
-+		/* get the next reserved block */
-+		astart = be32_to_cpu(*avail_list++);
-+		asize = be32_to_cpu(*avail_list++);
-+
-+		if (astart + asize < trampoline_sz) {
-+			pr_err("%s: trampoline area in sram is not reserved\n",
-+			       __func__);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	sram_base_addr = of_iomap(node, 0);
-+
-+	/* set the boot function for the sram code */
-+	rockchip_boot_fn = virt_to_phys(rockchip_secondary_startup);
-+
-+	/* copy the trampoline to sram, that runs during startup of the core */
-+	memcpy(sram_base_addr, &rockchip_secondary_trampoline, trampoline_sz);
-+	flush_cache_all();
-+	outer_clean_range(0, trampoline_sz);
-+
-+	dsb_sev();
-+
-+	return 0;
-+}
-+
-+static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	struct device_node *node;
-+	unsigned int i;
-+
-+	node = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-+	if (!node) {
-+		pr_err("%s: missing scu\n", __func__);
-+		return;
-+	}
-+
-+	scu_base_addr = of_iomap(node, 0);
-+	if (!scu_base_addr) {
-+		pr_err("%s: could not map scu registers\n", __func__);
-+		return;
-+	}
-+
-+	node = of_find_compatible_node(NULL, NULL, "rockchip,rk3066-sram");
-+	if (!node) {
-+		pr_err("%s: could not find sram dt node\n", __func__);
-+		return;
-+	}
-+
-+	if (rockchip_smp_prepare_sram(node))
-+		return;
-+
-+	node = of_find_compatible_node(NULL, NULL, "rockchip,rk3066-pmu");
-+	if (!node) {
-+		pr_err("%s: could not find sram dt node\n", __func__);
-+		return;
-+	}
-+
-+	pmu_base_addr = of_iomap(node, 0);
-+
-+	/*
-+	 * While the number of cpus is gathered from dt, also get the number
-+	 * of cores from the scu to verify this value when booting the cores.
-+	 */
-+	ncores = scu_get_core_count(scu_base_addr);
-+
-+	scu_enable(scu_base_addr);
-+
-+	/* Make sure that all cores except the first are really off */
-+	for (i = 1; i < ncores; i++)
-+		pmu_set_power_domain(0 + i, false);
-+}
-+
-+struct smp_operations rockchip_smp_ops __initdata = {
-+	.smp_prepare_cpus	= rockchip_smp_prepare_cpus,
-+	.smp_boot_secondary	= rockchip_boot_secondary,
-+};
-diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
-index 724d2d8..a0c1f19 100644
---- a/arch/arm/mach-rockchip/rockchip.c
-+++ b/arch/arm/mach-rockchip/rockchip.c
-@@ -24,6 +24,7 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include "core.h"
- 
- static void __init rockchip_timer_init(void)
- {
-@@ -46,6 +47,7 @@ static const char * const rockchip_board_dt_compat[] = {
- };
- 
- DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
-+	.smp		= smp_ops(rockchip_smp_ops),
- 	.init_machine	= rockchip_dt_init,
- 	.init_time	= rockchip_timer_init,
- 	.dt_compat	= rockchip_board_dt_compat,
--- 
-1.7.10.4
+I'm sorry but the blacklight descibe in DT have nothing to do with the comm=
+on
+pratice that the current driver have today
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+put on by default if wrong specially without the property define. Even put =
+it
+on by default it wrong as the bootloader may have set it already for splash
+screen and to avoid glitch the drivers need to detect this.
+
+For me this should not even be a property but handled by the driver them
+selves in C.
+
+Best Regards,
+J.
+> =
+
+> In my opinion every backlight should be hooked up to a display panel,
+> and the display panel driver should be the one responsible for turning
+> the backlight on or off. That's the only way we can guarantee that the
+> backlight is turned on at the right moment so that glitches can be
+> avoided.
+> =
+
+> One possible migration path would be to update all display panel drivers
+> to cope with an associated backlight device, but even if somebody would
+> even find the time to write the code to do that, I can imagine that we'd
+> have a hard time getting this tested since a lot of the boards that rely
+> on these backlight drivers are legacy and probably no longer very
+> actively used.
+> =
+
+> Thierry
