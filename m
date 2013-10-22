@@ -1,74 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 10:19:59 +0100
-Message-ID: <20131022091959.GC20821@sirena.org.uk>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020231134.GR25034@n2100.arm.linux.org.uk>
- <20131021083242.GB30088@pengutronix.de>
- <20131021084854.GV25034@n2100.arm.linux.org.uk>
- <20131021092730.GF30088@pengutronix.de>
- <20131021095757.GY25034@n2100.arm.linux.org.uk>
- <20131021102448.GD21518@ulmo.nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv1 8/8] Documentation: Add device tree bindings for
+ Freescale VF610 sound.
+Date: Tue, 22 Oct 2013 10:47:08 +0100
+Message-ID: <20131022094708.GA2883@sirena.org.uk>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
+ <20131018173126.GU2443@sirena.org.uk>
+ <1DD289F6464F0949A2FCA5AA6DC23F82866807@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131021102448.GD21518-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2948204017731858731=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82866807@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xiubo Li-B47053 <B47053@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "perex@perex.cz" <perex@perex.cz>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.co>
 List-Id: devicetree@vger.kernel.org
 
 
---gr/z0/N6AeWAPJVB
+--===============2948204017731858731==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Content-Disposition: inline
+
+
+--EVF5PPMfhYS0aIcm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Oct 21, 2013 at 12:24:49PM +0200, Thierry Reding wrote:
+On Mon, Oct 21, 2013 at 07:24:56AM +0000, Xiubo Li-B47053 wrote:
 
-> Multi-driver with DRM has worked pretty well for Tegra. Essentially what
-> I created was a sort of abstraction layer between DRM and the individual
-> drivers so that each driver can register itself with that layer. Once it
-> has been determined that all drivers have been probed, that glue layer
-> can load the DRM driver and call back into the sub-drivers to register
-> their respective components with DRM.
+> Yes, the "-- SGTL5000 pins:" should be in the CODEC binding.
+> But, actually the CODEC binding hasn't any reference about this.
 
-This is pretty much what ASoC always did, it's been working out
-reasonably well.
+> So I added it here, but not very sure.
 
-We do still don't really handle what happens if someone tries to unbind
-one of the supporting devices while things are in use sensibly.  Since
-generally this would involve someone manually removing the driver for
-pracical purposes we're OK now but it's an issue and we probably will
-have to deal with systems that trigger this for sensible reasons at some
-point.
+Please add them to the CODEC binding instead.
 
---gr/z0/N6AeWAPJVB
+--EVF5PPMfhYS0aIcm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSZkM7AAoJELSic+t+oim9ZX0P/3ojFWMjpO97xtwNuF5z1pW3
-rElEb25oLb30GpHm47JLQghhF8ZWfL6glF5Fh3x7qSywfMCJgVWKq3fGYI/QpOhJ
-W9aiQI52YuXyHVyqPLncCZZaPplQuodWd0yzJJqjf4G4E+1SgxXO46GS6pRyKqQf
-HgyQz436RqtQBjLHUF0PulUxdn1Ow5GlVO6FTckAWYuifHQO8/s6kgtjqnDeuIqR
-dwrSfZmtE3//y9i2mufOsXukBNysjfPFM9MCmCt094ORS3bl6TzvGTGOQY3CiejH
-RUJ3JRQOCOpKEHoHgdUKcqrY6tvCgS22izTF2ruVSkHy8bN51/ywsl1G4YCb2i+3
-bleCItwkDNN5YUisCY4Nm1JabQgPvXiGwBkccogUS9hB9MalGaP5QrWM6VlC33t2
-FdP2I6D12CcgWI5V4e/xzC/IPvBplEomfhiFDt+N1Vyp5Mr1INNe5wO71xZPlWUM
-/Yf/Xj4nsU+nqO4En8PNQkJDaiRiM8Mnyja0Kl095EGvixpLWOLx3IT3AxRGxEsG
-lJkElQlVxcK4k1Ae9cuFBar+CsztxJIIJxSqzHpPuFkV9EE5mUQCmv/bfBkaBBLX
-Z1/vgoF0ex3meieh2TP8FqktmHwezG0Z1etqu0z7d8J1+U/O+MkHQ0aL/HCYsPIB
-5KrToMxQV4Fq6MIT+kTS
-=PtBM
+iQIcBAEBAgAGBQJSZkmVAAoJELSic+t+oim9WE8P/jOtCT9+1ZxQ8Dv0pN2DjbGa
+YCyJYQMjzU/KuIl5iLZBpXqCPuccq8oZw41xr6cQbIE6lWS58g7QakJxtc3Eh/Kt
+tzhXFN4hD2/Mhg4ruNRa/lV/B8V2WyHydhNyII6yLZ7x0znZHLgkkpKZNdwN0eQl
+cmYQ+FlHmFujx2RaeLi5OOORNX8R0ugMjCi0ouCFQy1JoPJmXzdPnb+woM/7Gqg4
+NP0lGt7G6WKF+XURykOrekbLEDZiuZixxyJv5gQYg1GWoMQdNH2pTeJbEDtlk5GB
+pqB6Ib6ErS4/wQehuc4VcWIkjIZ8LH9b7VjVCs+hp25a0w0/jqq/V+sl27HNjo+f
+4hz3Houy938UpKfrRE5yTC+XNroJqWPBmXwjKcGd/TuH9RQwjqD0JlO1Fpw/SZRp
+H/w42KYZbX5HBvMjPxRQYuEMCIQI+SuLZJKEZehiv6CEAskW+9BnKdiZ51F50YUt
+sRqa9BTZuVqaG0BmHzPRDehBDQ6kALTbAf9gK+jaoSyk1GRJlb96pGLx7XwFnv05
+KMUHjv0FbYouzRla+lGOmFl4ZOk61zUpcD+jk3MFUgTAKbH50yMKKNHAMHkGqAlV
+KjFy4xcssY7Pd6MA0PwAfRhLP4H/85NX5EFgHJcY95hUMpon7ZwZzmTzlBa3lbLU
+b3cwlP6Hg63FtN6Mw8qa
+=fjJL
 -----END PGP SIGNATURE-----
 
---gr/z0/N6AeWAPJVB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--EVF5PPMfhYS0aIcm--
+
+
+--===============2948204017731858731==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2948204017731858731==--
