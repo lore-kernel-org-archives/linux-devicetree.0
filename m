@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [Patch v2 06/14] usb: phy-mxs: Add anatop regmap
-Date: Tue, 22 Oct 2013 13:58:40 +0800
-Message-ID: <1382421528-17897-7-git-send-email-peter.chen@freescale.com>
+Subject: [Patch v2 07/14] usb: phy: add notify suspend and resume callback
+Date: Tue, 22 Oct 2013 13:58:41 +0800
+Message-ID: <1382421528-17897-8-git-send-email-peter.chen@freescale.com>
 References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,64 +12,55 @@ To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@li
 Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It is needed by mx6 SoC serial, but not for mx23 and mx28.
+They are used to notify PHY that the controller enters suspend
+or finishes resume.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   17 ++++++++++++++++-
- 1 files changed, 16 insertions(+), 1 deletions(-)
+ include/linux/usb/phy.h |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 87ba429..6d48bde 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -21,6 +21,8 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- 
- #define DRIVER_NAME "mxs_phy"
- 
-@@ -52,6 +54,7 @@ struct mxs_phy {
- 	struct usb_phy phy;
- 	struct clk *clk;
- 	enum imx_phy_type devtype;
-+	struct regmap *regmap_anatop;
+diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+index 6c0b1c5..a747960 100644
+--- a/include/linux/usb/phy.h
++++ b/include/linux/usb/phy.h
+@@ -116,6 +116,11 @@ struct usb_phy {
+ 			enum usb_device_speed speed);
+ 	int	(*notify_disconnect)(struct usb_phy *x,
+ 			enum usb_device_speed speed);
++	int	(*notify_suspend)(struct usb_phy *x,
++			enum usb_device_speed speed);
++	int	(*notify_resume)(struct usb_phy *x,
++			enum usb_device_speed speed);
++
  };
  
- static inline int is_mx6q_phy(struct mxs_phy *data)
-@@ -193,9 +196,10 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	int ret;
- 	const struct of_device_id *of_id =
- 			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
+ /**
+@@ -282,6 +287,24 @@ usb_phy_notify_disconnect(struct usb_phy *x, enum usb_device_speed speed)
+ 		return 0;
+ }
  
- 	/* This driver is DT-only version now */
--	if (!of_id)
-+	if (!of_id || !np)
- 		return -ENXIO;
- 
- 	pdev->id_entry = of_id->data;
-@@ -218,6 +222,17 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	/* Some SoCs don't have anatop registers */
-+	if (of_get_property(np, "fsl,anatop", NULL)) {
-+		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
-+			(np, "fsl,anatop");
-+		if (IS_ERR(mxs_phy->regmap_anatop)) {
-+			dev_dbg(&pdev->dev,
-+				"failed to find regmap for anatop\n");
-+			return PTR_ERR(mxs_phy->regmap_anatop);
-+		}
-+	}
++static inline int usb_phy_notify_suspend
++	(struct usb_phy *x, enum usb_device_speed speed)
++{
++	if (x && x->notify_suspend)
++		return x->notify_suspend(x, speed);
++	else
++		return 0;
++}
 +
- 	mxs_phy->phy.io_priv		= base;
- 	mxs_phy->phy.dev		= &pdev->dev;
- 	mxs_phy->phy.label		= DRIVER_NAME;
++static inline int usb_phy_notify_resume
++	(struct usb_phy *x, enum usb_device_speed speed)
++{
++	if (x && x->notify_resume)
++		return x->notify_resume(x, speed);
++	else
++		return 0;
++}
++
+ /* notifiers */
+ static inline int
+ usb_register_notifier(struct usb_phy *x, struct notifier_block *nb)
 -- 
 1.7.1
 
