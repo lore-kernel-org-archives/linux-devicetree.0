@@ -1,294 +1,71 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 104 board
-Date: Tue, 22 Oct 2013 15:44:05 +0100
-Message-ID: <52668F35.9050203@free-electrons.com>
-References: <87txgapcas.fsf@natisbad.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [RFCv3 7/7] ARM: dts: N900: Add SSI information
+Date: Tue, 22 Oct 2013 16:44:14 +0200
+Message-ID: <20131022144413.GA31867@earth.universe>
+References: <1381091235-18293-1-git-send-email-sre@debian.org>
+ <1381091235-18293-8-git-send-email-sre@debian.org>
+ <5266742D.9050604@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87txgapcas.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5266742D.9050604@baylibre.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 'Pali =?iso-8859-1?Q?Roh=E1r'?= <pali.rohar@gmail.com>, =?utf-8?B?J9CY0LLQsNC50LvQviDQlNC40LzQuNGC0YDQvtCyJw==?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
 
-On 21/10/2013 22:02, Arnaud Ebalard wrote:
-> 
-> Main hardware parts of the (Armada 370 based) NETGEAR ReadyNAS 104 are
-> supported by mainline kernel (USB 3.0 rear ports, USB 2.0 front port,
-> Gigabit controller and PHYs, serial port, LEDs, buttons, SATA ports,
-> G762 fan controller) and referenced in provided .dts file. Some additonal
-> work remains for:
-> 
->  - Intersil ISL12057 I2C RTC and Alarm chip: working driver but needs
->    to be splitted for submission of RTC part first;
->  - Front LCD (Winstar 1602G): driver needs to be written
->  - Armada NAND controller (to access onboard 128MB of NAND): support
->    being pushed by @free-electrons people
->  - 4 front SATA LEDs controlled via GPIO brought by NXP PCA9554:
->    driver is available upstream. Not referenced/tested yet.
-> 
-> but the device is usable w/o those.
-> 
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
-> Jason and Andrew,
-> 
-> I do not think there is any good way to share much between RN102 and
-> RN104 .dts in a common .dtsi file because MPP are used in a different
-> fashion on the two boards. But if you have ideas ...
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Benoit,
 
+On Tue, Oct 22, 2013 at 02:48:45PM +0200, Benoit Cousson wrote:
+> Thanks to Tony, I've just realized that I missed all your patches,
+> that for some reason ended-up in my junk folder :-(
 
-It seems to me that you can share at least half of the nodes in a common
-dtsi. But I prefer having two dts files, it remains easier to understand.
-Latter if a 3rd board share the same amount of nodes, then we can
-consider to use a dtsi.
+oh :( Can you check why they ended up in junk? I would like to
+prevent more mails going there.
 
-Gregory
-> 
-> I do intend to document the hardware parts and setup of the device as I
-> did for the Duo v2 and RN102 but I wanted to get the patch submitted for
-> inclusion in 3.13 first.
-> 
-> Comments welcome,
-> 
-> Cheers,
-> 
-> a+
-> 
->  arch/arm/boot/dts/Makefile                     |   1 +
->  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 197 +++++++++++++++++++++++++
->  2 files changed, 198 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 802720e..be682cb 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -108,6 +108,7 @@ dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
->  	armada-370-mirabox.dtb \
->  	armada-370-netgear-rn102.dtb \
-> +	armada-370-netgear-rn104.dtb \
->  	armada-370-rd.dtb \
->  	armada-xp-axpwifiap.dtb \
->  	armada-xp-db.dtb \
-> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> new file mode 100644
-> index 0000000..e3855e8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> @@ -0,0 +1,197 @@
-> +/*
-> + * Device Tree file for NETGEAR ReadyNAS 104
-> + *
-> + * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "armada-370.dtsi"
-> +
-> +/ {
-> +	model = "NETGEAR ReadyNAS 104";
-> +	compatible = "netgear,readynas-104", "marvell,armada370", "marvell,armada-370-xp";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x20000000>; /* 512 MB */
-> +	};
-> +
-> +	soc {
-> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
-> +			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			/* Connected to FL1009 USB 3.0 controller */
-> +			pcie@1,0 {
-> +				/* Port 0, Lane 0 */
-> +				status = "okay";
-> +			};
-> +
-> +			/* Connected to Marvell 88SE9215 SATA controller */
-> +			pcie@2,0 {
-> +				/* Port 1, Lane 0 */
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		internal-regs {
-> +			serial@12000 {
-> +				clock-frequency = <200000000>;
-> +				status = "okay";
-> +			};
-> +
-> +			sata@a0000 {
-> +				status = "disabled";
-> +			};
-> +
-> +			pinctrl {
-> +				poweroff: poweroff {
-> +					marvell,pins = "mpp60";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				backup_key_pin: backup-key-pin {
-> +					marvell,pins = "mpp52";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				power_key_pin: power-key-pin {
-> +					marvell,pins = "mpp62";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				backup_led_pin: backup-led-pin {
-> +					marvell,pins = "mpp63";
-> +					marvell,function = "gpo";
-> +				};
-> +
-> +				power_led_pin: power-led-pin {
-> +					marvell,pins = "mpp64";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				reset_key_pin: reset-key-pin {
-> +					marvell,pins = "mpp65";
-> +					marvell,function = "gpio";
-> +				};
-> +			};
-> +
-> +			mdio {
-> +				phy0: ethernet-phy@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				phy1: ethernet-phy@1 {
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy = <&phy0>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			ethernet@74000 {
-> +				status = "okay";
-> +				phy = <&phy1>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c@11000 {
-> +				compatible = "marvell,mv64xxx-i2c";
-> +				clock-frequency = <100000>;
-> +				status = "okay";
-> +
-> +				g762: g762@3e {
-> +					compatible = "gmt,g762";
-> +					reg = <0x3e>;
-> +					clocks = <&g762_clk>; /* input clock */
-> +					fan_gear_mode = <0>;
-> +					fan_startv = <1>;
-> +					pwm_polarity = <0>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	clocks {
-> +	       #address-cells = <1>;
-> +	       #size-cells = <0>;
-> +
-> +	       g762_clk: fixedclk {
-> +			 compatible = "fixed-clock";
-> +			 #clock-cells = <0>;
-> +			 clock-frequency = <8192>;
-> +	       };
-> +	};
-> +
-> +	gpio_leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&backup_led_pin &power_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		blue_backup_led {
-> +			label = "rn104:blue:backup";
-> +			gpios = <&gpio1 31 1>;  /* GPIO 63 Active Low */
-> +			default-state = "on";
-> +		};
-> +
-> +		blue_power_led {
-> +			label = "rn104:blue:pwr";
-> +			gpios = <&gpio2 0 1>;   /* GPIO 64 Active Low */
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-0 = <&backup_key_pin
-> +			     &power_key_pin
-> +			     &reset_key_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		button@1 {
-> +			label = "Backup Button";
-> +			linux,code = <133>;     /* KEY_COPY */
-> +			gpios = <&gpio1 20 1>;
-> +		};
-> +
-> +		button@2 {
-> +			label = "Power Button";
-> +			linux,code = <116>;     /* KEY_POWER */
-> +			gpios = <&gpio1 30 0>;
-> +		};
-> +
-> +		button@3 {
-> +			label = "Reset Button";
-> +			linux,code = <0x198>;   /* KEY_RESTART */
-> +			gpios = <&gpio2 1 1>;
-> +		};
-> +	};
-> +
-> +	gpio_poweroff {
-> +		compatible = "gpio-poweroff";
-> +		pinctrl-0 = <&poweroff>;
-> +		pinctrl-names = "default";
-> +		gpios = <&gpio1 28 1>;
-> +	};
-> +};
-> 
+> That being said, I cannot apply any of your DTS patches! What base
+> branch are you using?
 
+Currently torvalds/master with pavel's n900 patch and some more
+patches from me.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Could you repost all your pending DTS patches in one series rebased
+> on top of my for_3.13/dts?
+
+Sure. DT maintainers haven't given feedback since the last patchset
+[0]. Do you want to wait for feedback from them?
+
+[0] https://lkml.org/lkml/2013/9/23/529
+
+-- Sebastian
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSZo89AAoJENju1/PIO/qanvYP/AziPMIxUU/F7i8hwk/TfJQk
+XnTPEALj2pb0XWf53osh8BibTPNn++8BVlfb2b3NuZG3d726W6VLiAf3413C7d2x
+Wz9zLO17X6oaxPIVwVSSPZp6cOAJorkzGQTkcQot/3bviWZ7+ALEhs1OMCk5oa9D
+Xj0TOcm304nX+UzwHvEalrCIk5X0CbPXlYfx12qFh7v849+pXYuMOVM51H/65ipU
+4ROjbLoxHl9l9k5PoiTQoHxzF3aVANbBpu8v2/3E4hfvwY7Pf9Up0Vc0vHFdQ6G3
+G5CRNa3U2PofFNg1tgyiJHcnofmJR0BfsM3iIhw5IzO/hwOkTLT3U8uYH1hgeMP8
+m4d6Gbmp/ufdcceuk2Pur3/k0eSHID52eVpdqEMFa/vIQDqCxO1gjk6/x6wypHkc
+22JkkYu+33XiPPGWeONM1U9hgbyxGVIwAsHj92IW/BkgqBhDdQTBsSjqoPI/o12Z
+6D95uivxW6rTrR8dmYehuElw4TJ+TzCZ7/ks4EXWzKwlHtSDqayFO1LlNe2f7qyj
+xjwfTvWML5p2gO83pw+P60HUbo4IkGXIHY3tvpQhA5U7aPUQnX4X4i24f03G8Znf
+VSvHjJDFg9irTdInwT9k+BCDsaIm3/nAIlDs/s8rfed/WkQDzp42rLIiy1q2xlql
+Tyebt/6/MSY934V9p8ZO
+=imvT
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
