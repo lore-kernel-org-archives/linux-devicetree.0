@@ -1,62 +1,55 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCH] DTS: ARM: OMAP3-N900: Add UART support
-Date: Tue, 22 Oct 2013 13:05:13 +0200
-Message-ID: <1382439913-16534-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
+Date: Tue, 22 Oct 2013 07:25:20 -0400
+Message-ID: <20131022112520.GE29341@beef>
+References: <20131018141221.GH2721@beef>
+ <5264F37E.9060307@ti.com>
+ <20131022104829.GF15425@login.drsnuggles.stderr.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131022104829.GF15425-tJobPqrNDpleFRaWBN1JIYg6o0x57dKM8/qWW+O4k6E@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthijs Kooijman <matthijs-gZv8Wpyq0Kk@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add UART support to Nokia N900.
+On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
+> Hi Kishon,
+> 
+> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
+> > I think it makes sense to keep the data width property in the dwc2 node itself.
+> > I mean it describes how the dwc2 IP is configured in that particular SoC (given
+> > that it can be either <8> or <16>).
+> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
+> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
+> and 16 supported" would make sense as a property of dwc2 (though this
+> value should be autodetectable through GHWCFG4), while the actual 8 or
+> 16 supported by the PHY would make sense as property of a phy.
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- arch/arm/boot/dts/omap3-n900.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+There would be no value in adding a property for an already detectable
+value to dwc2's binding. To be honest, it's pretty much useless
+information due to the existence of the "8 and 16" option.
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 2374b9a..99d0668 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -31,6 +31,20 @@
- &omap3_pmx_core {
- 	pinctrl-names = "default";
- 
-+	uart2_pins: pinmux_uart2_pins {
-+		pinctrl-single,pins = <
-+			0x14a (PIN_INPUT | MUX_MODE0)		/* uart2_rx */
-+			0x148 (PIN_OUTPUT | MUX_MODE0)		/* uart2_tx */
-+		>;
-+	};
-+
-+	uart3_pins: pinmux_uart3_pins {
-+		pinctrl-single,pins = <
-+			0x16e (PIN_INPUT | MUX_MODE0)		/* uart3_rx */
-+			0x170 (PIN_OUTPUT | MUX_MODE0)		/* uart3_tx */
-+		>;
-+	};
-+
- 	i2c1_pins: pinmux_i2c1_pins {
- 		pinctrl-single,pins = <
- 			0x18a (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
-@@ -125,3 +139,17 @@
- 	mode = <2>;
- 	power = <50>;
- };
-+
-+&uart1 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+};
--- 
-1.8.4.rc3
+> Note sure if this is really useful in practice as well, or if just
+> setting the actual width to use on dwc2 makes more sense...
+
+The GHWCFG4 information itself is not useful in practice, as described
+in the original thread: https://lkml.org/lkml/2013/10/10/477
+
+It's certainly useful in practice to have this width property in either
+the dwc2 or the phy binding. One can make a case for either. As I
+mentioned in the original post, if we put it in the phy binding we'll be
+updating the generic phy binding. We'll then need an api added into the
+generic phy framework to fetch the width of a phy.
+
+Both cases are doable and trivial, we just need the canonical decision
+from a DT maintainer as to where the property belongs. Given that they
+are in ARM ksummit, I'm not expecting to hear anything right this
+moment. :)
+
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
