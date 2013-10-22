@@ -1,105 +1,129 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 02/12] ASoC: davinci-evm: Add device
-	tree binding
-Date: Tue, 22 Oct 2013 12:01:47 +0100
-Message-ID: <20131022110147.GA9388@sirena.org.uk>
-References: <cover.1382110089.git.jsarha@ti.com>
- <66c21e66320e30453e6deded0f37ef582b4fba7c.1382110089.git.jsarha@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
+ timer.
+Date: Tue, 22 Oct 2013 12:02:29 +0100
+Message-ID: <20131022110224.GD5511@kartoffel>
+References: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
+ <20131021110532.GA8144@kartoffel>
+ <5265C9B0.2060003@roeck-us.net>
+ <20131022103936.GA5511@kartoffel>
+ <52665A1E.5020700@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2615543784846279692=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <66c21e66320e30453e6deded0f37ef582b4fba7c.1382110089.git.jsarha@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, joelf@ti.com, "Hebbar,
- Gururaja" <gururaja.hebbar@ti.com>, Darren Etheridge <detheridge@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52665A1E.5020700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 22, 2013 at 11:57:34AM +0100, Dinh Nguyen wrote:
+> Hi Mark,
+> 
+> On 10/22/13 5:39 AM, Mark Rutland wrote:
+> > On Tue, Oct 22, 2013 at 01:41:20AM +0100, Guenter Roeck wrote:
+> >> On 10/21/2013 04:05 AM, Mark Rutland wrote:
+> >>> On Wed, Oct 02, 2013 at 07:44:32PM +0100, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> >>>> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> >>>>
+> >>>> Add device tree support to the DW watchdog timer.
+> >>>>
+> >>>> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> >>>> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> >>>> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> >>>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> >>>> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> >>>> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>>> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> >>>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> >>>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >>>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> >>>> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> >>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>>> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>>> ---
+> >>>> v2:
+> >>>> - Use of_match_ptr() for of_match_table
+> >>>> ---
+> >>>>    .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+> >>>>    drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+> >>>>    2 files changed, 24 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..29e150b
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> >>>> @@ -0,0 +1,16 @@
+> >>>> +Synopsys Designware Watchdog Timer
+> >>>> +
+> >>>> +Required Properties:
+> >>>> +
+> >>>> +- Compatiblity	: "snps,dw-wdt"
+> >>> This should presumably be:
+> >>>
+> >>> - compatbile: should contain "snps,dw-wdt"
+> >>>
+> >> Hi Mark,
+> >>
+> >> s/compatbile/compatible/ :-)
+> > Indeed :)
+> Changed for v3.
+> >
+> >> "must be" or "should contain" ? I see both in various bindings.
+> >> Is there a preference ?
+> > I would prefer "should contain" -- it doesn't preclude future compatible
+> > variants.
+> Oops..v3 has "should be"...will change to "should contain" in v4.
 
---===============2615543784846279692==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Content-Disposition: inline
+Cheers.
 
+> >
+> >>>> +- reg		: Base address of the watchdog timer register.
+> >>> And the size...
+> >>>
+> >>>> +
+> >>>> +Example:
+> >>>> +
+> >>>> +	watchdog0: wd@ffd02000 {
+> >>>> +		compatible = "snps,dw-wdt";
+> >>>> +		reg = <0xffd02000 0x1000>;
+> >>>> +		interrupts = <0 171 4>;
+> >>> This wasn't mentioned.
+> >>>
+> >>> Is it necessary?
+> >>>
+> >>   From looking into the code ...
+> >>
+> >> The driver doesn't use interrupts, so I guess the answer is no. Cut-and-paste error, maybe ?
+> > Does the device have any interrupts, even if they're unused?
+> Yes, the device does have an interrupt. Should I add it as an optional 
+> property?
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes please, given it's easy to add. We might want to use it in future so it
+would be nice to have now.
 
-On Fri, Oct 18, 2013 at 06:37:41PM +0300, Jyri Sarha wrote:
+> >
+> >>> Is it the only interrupt?
+> >>>
+> >>>> +		clocks = <&per_base_clk>;
+> >>> Similarly, is this the only clock?
+> >>>
+> >> The driver uses one clock, and it is mandatory.
+> > Is this the only clock into the unit?
+> >
+> > Does it have a name?
+> Yes, this is is the only clock into the unit. No, it does not have name.
 
-> +  TLV320AIC3X pins:
-> +
-> +  * LLOUT
-> +  * RLOUT
-> +  * MONO_LOUT
-> +  * HPLOUT
-> +  * HPROUT
-> +  * HPLCOM
-> +  * HPRCOM
-> +  * MIC3L
-> +  * MIC3R
-> +  * LINE1L
-> +  * LINE2L
-> +  * LINE1R
-> +  * LINE2R
+Ok.
 
-These should be documented in the CODEC binding and not in the card
-driver, that way this doesn't need to be replicated in every machine and
-any future software compatible devices can just work with the existing
-binding.
-
-> +	ret = snd_soc_register_card(&evm_soc_card);
-
-This should be using devm_snd_soc_register_card().
-
-> +	/*
-> +	 * If dtb is there, the devices will be created dynamically.
-> +	 * Only register platfrom driver structure.
-> +	 */
-> +	if (of_have_populated_dt())
-> +		return platform_driver_register(&davinci_evm_driver);
-> +
-
-Why not register the driver unconditionally?
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZlsYAAoJELSic+t+oim9G+4P/iduB+vcrbdcgoUJbp0WfAFR
-LhzacMejreGH+NWZOzaPUklY0eo+8eUNjPqDAsgWv5mbNb11RowdW/hU81PL7vfp
-ThVLP3qXRtukgLJOk7vXqU9KleLkTS7HrP5qp7uSfJYZXd1i9uLwCy6Kmu4zNvk2
-Rcw+7S7jLvcWW3FFN1LjfRVr1LNj+w+cU6+7sLRrwbshM+4+0g7AcCr2Ewc1lhso
-CRv2XMxxJeXB/YNYQtkDi5y9TiMkq5tVvXc4Z0kWDkfkRp77u22fTJTw9dijJP+j
-WSwk0kDBoHmdKJEg6yfjI6JnlWfa/IwBhh8nNuLEwiAmZRQ+NWbkTen4rAVaDf4R
-IKY7SMTVgSO/20jWIA0iIDbjTTQIJSAJYGCMsaN11SgJ2JLeLIwGuRLCv4EN7Bf2
-WfdS4sqQf3hDaIqJdMm1SmpY+lZ/eV8FIQpdSbjqfVqmyWl+qahBMVyN8DGtxTAS
-YGwy4WjiMrxiP0mUFzlfvZaijD+OjgK7IlMWb20cfHdXb9qTu5H6Qz57/grrOAwY
-uOUW7q6p0eSiZkhPZFBBDgqTXeFlPSJimacmwLAa6S1m2ml3Gpl8bnNmkrp5V4CW
-7BtjSmhr4ldQQLuMg+XqU+qzeGecrVeoS8WdaytosrzTncTOHpn3ntFe3TXoAAsr
-eXAGtPrWnXst4jhrVQ90
-=sLK7
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
-
---===============2615543784846279692==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2615543784846279692==--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
