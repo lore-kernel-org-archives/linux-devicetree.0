@@ -1,21 +1,29 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Tue, 22 Oct 2013 16:41:23 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1310221624390.1951@syhkavp.arg>
-References: <52644A9E.3060007@wwwdotorg.org> <20131020220839.GT2443@sirena.org.uk> <5264576F.6050307@wwwdotorg.org> <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg> <52658EBC.8020800@wwwdotorg.org> <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef> <alpine.LFD.2.03.1310221333300.1951@syhkavp.arg> <20131022201228.GB8037@mithrandir>
+Date: Tue, 22 Oct 2013 16:42:38 -0400
+Message-ID: <20131022204238.GG29341@beef>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <alpine.LFD.2.03.1310221333300.1951@syhkavp.arg>
+ <20131022201228.GB8037@mithrandir>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20131022201228.GB8037@mithrandir>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013, Thierry Reding wrote:
-
+On Tue, Oct 22, 2013 at 10:12:29PM +0200, Thierry Reding wrote:
 > On Tue, Oct 22, 2013 at 01:42:48PM -0400, Nicolas Pitre wrote:
 > > On Tue, 22 Oct 2013, Matt Porter wrote:
 > > 
@@ -32,27 +40,33 @@ On Tue, 22 Oct 2013, Thierry Reding wrote:
 > > The unstructured free-for-all approach isn't good either.  Some 
 > > compromise between the two extremes needs to be found.
 > 
-> I agree. I think we need an easy way to mark bindings as unstable.
+> I agree. I think we need an easy way to mark bindings as unstable. One
+> possible solution that I can think of would be to use some kind of
+> special marker within the compatible value defined by a binding that
+> would be used to qualify it as unstable. Perhaps something as simple as
+> a preceding exclamation mark (!) would do.
+> 
+> 	gpio {
+> 		compatible = "!foo-gpio";
+> 	};
+> 
+> The DT core code could look for that when matching device nodes to the
+> list of compatible values supported by a driver and output a big warning
+> message to make users aware of the fact that the binding may change. The
+> driver could use the same marker in the OF device ID table to make it
+> clear that it implements an experimental binding. Whenever a binding is
+> deemed stable we can simply remove the marker from both the driver and
+> the binding, as well as DTS files.
 
-No, that's not a solution.
+>From a technical POV this seems nice.
 
-It is fairly easy to qualify a small set of bindings as "stable" for 
-interoperability purpose (e.g. for qemu/kvm).
+What does stable mean at this point? DTBs using the stable binding are
+forever guaranteed compatibility with newer kernels? We really need to
+define *exactly* what this implies for future support. More than likely,
+most bindings will choose to stay experimental/testing indefinitely if
+stable means a lifetime of ugly backward compatibility hacks.
 
-But for the vast majority it is very hard to decide when a particular 
-binding has reached stability.  By definition, a binding may be 
-considered "stable" only after seeing no change for a reasonable period 
-of time being tested and used.  So stability may simply not be a 
-criterion for upstream merging.
-
-I think it is best to establish any process around DT assuming no strong 
-binding stability.  Eventually the DT binding update frequency will 
-converge to zero while the kernel will continue to be developed.  But 
-the DTB for a particular hardware might have to change from time to 
-time.
-
-
-Nicolas
+-Matt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
