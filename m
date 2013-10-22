@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [Patch v2 09/14] usb: phy-mxs: Enable IC fixes for mx6 SoC serial
-Date: Tue, 22 Oct 2013 13:58:43 +0800
-Message-ID: <1382421528-17897-10-git-send-email-peter.chen@freescale.com>
+Subject: [Patch v2 10/14] usb: doc: phy-mxs: update binding for adding disconnect line property
+Date: Tue, 22 Oct 2013 13:58:44 +0800
+Message-ID: <1382421528-17897-11-git-send-email-peter.chen@freescale.com>
 References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,34 @@ To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@li
 Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-After adding IC fixes bits, some PHY bugs are fixed by
-IC logic.
+This property is used to disconnect line between USB PHY and
+USB controller.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 4416ed6..af2a9cf 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -31,6 +31,10 @@
- #define HW_USBPHY_CTRL_SET			0x34
- #define HW_USBPHY_CTRL_CLR			0x38
+diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+index 5837963..356c9b6 100644
+--- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
++++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+@@ -9,6 +9,9 @@ mxs PHY verions.
+ - reg: Should contain registers location and length
+ - interrupts: Should contain phy interrupt
+ - fsl,anatop: phandle for anatop register, it is only for mx6 SoC serial
++- disconnect-line-without-vbus: needs to disconnect
++connection between USB PHY and controller, it can avoid
++unexpected wakeup interrupt when the PHY is out of power
  
-+#define HW_USBPHY_IP				0x90
-+#define HW_USBPHY_IP_SET			0x94
-+#define HW_USBPHY_IP_CLR			0x98
-+
- #define BM_USBPHY_CTRL_SFTRST			BIT(31)
- #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
- #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
-@@ -42,6 +46,8 @@
- #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
- #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
- 
-+#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
-+
- #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
- 
- enum imx_phy_type {
-@@ -121,6 +127,10 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- 		BM_USBPHY_CTRL_ENUTMILEVEL3,
- 	       base + HW_USBPHY_CTRL_SET);
- 
-+	/* Enable IC solution */
-+	if (is_mx6q_phy(mxs_phy) || is_mx6sl_phy(mxs_phy))
-+		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
-+
- 	return 0;
- }
- 
+ Example:
+ usbphy1: usbphy@020c9000 {
+@@ -16,4 +19,5 @@ usbphy1: usbphy@020c9000 {
+ 	reg = <0x020c9000 0x1000>;
+ 	interrupts = <0 44 0x04>;
+ 	fsl,anatop = <&anatop>;
++	disconnect-line-without-vbus;
+ };
 -- 
 1.7.1
 
