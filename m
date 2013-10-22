@@ -1,51 +1,47 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 PATCH 11/14] Documentation: Add st_magn binding documentation
-Date: Tue, 22 Oct 2013 07:55:29 +0100
-Message-ID: <CAF2Aj3iZT5J=UQNFahZy2Vngst8mfxGDoV7B0Q6gQNsq2Xg-aw@mail.gmail.com>
-References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
-	<1380299538-22047-12-git-send-email-l.czerwinski@samsung.com>
-	<524AF86D.7010200@kernel.org>
-	<524AEEFC.8010201@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 1/3] mfd: add support for ams AS3722 PMIC
+Date: Tue, 22 Oct 2013 07:58:03 +0100
+Message-ID: <CAF2Aj3g-jc9X+MRxDNwxYkNUuk2f0p_sLagXUNQELrHsLmBXqQ@mail.gmail.com>
+References: <1381321761-8898-1-git-send-email-ldewangan@nvidia.com>
+	<1381321761-8898-2-git-send-email-ldewangan@nvidia.com>
+	<525580A8.5050902@wwwdotorg.org>
+	<52650DA2.60609@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524AEEFC.8010201-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52650DA2.60609@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@kernel.org" <broonie@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob@landley.net" <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Florian Lobmaier <florian.lobmaier@ams.co>
 List-Id: devicetree@vger.kernel.org
 
-On 1 October 2013 16:49, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 10/01/2013 11:29 AM, Jonathan Cameron wrote:
->> On 09/27/13 17:32, Lukasz Czerwinski wrote:
->>> This patch adds the document for STMicroeletronics Magnetic Sensors=
- driver under
->>> Documentation/devicetree/bindings/iio/.
+>>> The ams AS3722 is a compact system PMU suitable for mobile phones,
+>>> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
+>>> controller, 11 LDOs, RTC, automatic battery, temperature and
+>>> over-current monitoring, 8 GPIOs, ADC and a watchdog.
 >>>
->>> Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
+>>> Add MFD core driver for the AS3722 to support core functionality.
 >>
->> So right now we have two different approaches to documenting these b=
-indings.  Lee
->> proposed doing it on a per device name, here you are proposing a sin=
-gle file
->> per type.
->>
->> What is the prefered approach?
->>
->> Lee/Lukasz why would you two favour one way or the other?
->>
->> Device tree maintainers, which is preferred?
+>> OK, I think the binding here is about clear enough, so the binding,
+>> Acked-by: Stephen Warren <swarren@nvidia.com>
 >
-> If the only difference is compatible string, then I think one doc is
-> fine and preferred by me.
+> I saw that Lee has already acked this (V4) for the nondt side.
+>
+> As there is no issue on dt side also, can it be apply please?
 
-I have no strong feelings either way.
+There is no IMAP access here at the Summit.
+
+Would you be able to do me a favour and resend this patch with
+Stephen's and my Acks and I will apply?
 
 --=20
 Lee Jones
 Linaro ST Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
