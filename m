@@ -1,92 +1,42 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/4] Input: twl4030-pwrbutton - add device tree support
-Date: Tue, 22 Oct 2013 08:50:40 -0500
-Message-ID: <20131022135040.GN9340@gimli>
-References: <1382446504-27837-1-git-send-email-sre@debian.org>
- <1382446504-27837-2-git-send-email-sre@debian.org>
-Reply-To: <balbi@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
+ for DW PHY's
+Date: Tue, 22 Oct 2013 15:32:43 +0100
+Message-ID: <20131022143242.GA4691@kartoffel>
+References: <1381131897-13910-1-git-send-email-iivanov@mm-sol.com>
+ <1381131897-13910-3-git-send-email-iivanov@mm-sol.com>
+ <52527D38.1070505@mm-sol.com>
+ <1381246952.24031.83.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XFI+TFG+M3u0jUjZ"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1382446504-27837-2-git-send-email-sre@debian.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, linux-input@vger.kernel.org, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+In-Reply-To: <1381246952.24031.83.camel@iivanov-dev.int.mm-sol.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---XFI+TFG+M3u0jUjZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-Hi,
+> > > +   phy->sleep_a_clk = devm_clk_get(phy->dev, "sleep_a");
+> >
+> > What means the "_a" in clock name?
+> 
+> They are 2 PHY's on 8074 chip. This drivers is supposed to
+> operate on PHY 0, thus sleep_a. PHY 1 is using sleep_b. Take a look
+> here http://www.spinics.net/lists/arm-kernel/msg276945.html
 
-On Tue, Oct 22, 2013 at 02:55:01PM +0200, Sebastian Reichel wrote:
-> Add device tree support for twl4030 power button driver.
->=20
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
->  drivers/input/misc/twl4030-pwrbutton.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/=
-twl4030-pwrbutton.c
-> index b9a05fd..e450947 100644
-> --- a/drivers/input/misc/twl4030-pwrbutton.c
-> +++ b/drivers/input/misc/twl4030-pwrbutton.c
-> @@ -52,7 +52,7 @@ static irqreturn_t powerbutton_irq(int irq, void *_pwr)
->  	return IRQ_HANDLED;
->  }
-> =20
-> -static int __init twl4030_pwrbutton_probe(struct platform_device *pdev)
-> +static int twl4030_pwrbutton_probe(struct platform_device *pdev)
->  {
->  	struct input_dev *pwr;
->  	int irq =3D platform_get_irq(pdev, 0);
-> @@ -106,16 +106,27 @@ static int __exit twl4030_pwrbutton_remove(struct p=
-latform_device *pdev)
->  	return 0;
->  }
-> =20
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id twl4030_pwrbutton_dt_match_table[] =3D {
-> +       { .compatible =3D "ti,twl4030-pwrbutton" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, twl4030_pwrbutton_dt_match_table);
-> +#define twl4030_pwrbutton_dt_match of_match_ptr(twl4030_pwrbutton_dt_mat=
-ch_table)
-> +#else
-> +#define twl4030_pwrbutton_dt_match NULL
-> +#endif
+When you say two PHYs, do you mean the HS PHY and the SS PHY?
 
-you don't ned this trickery.. just always device the match table.
+Or are there two HS PHYs? If so, would the other HS PHY have a sleep_b clock?
 
---=20
-balbi
+The clock-names property should describe the clocks from the view of the device
+itself. As we're describing the PHY in isolation, rather than a big block that
+contains the PHY, the presesnce or absence of other PHYs should not affect the
+name. If the "_a" suffix is only to differentiate the instance of PHY, it
+should be dropped.
 
---XFI+TFG+M3u0jUjZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZoKvAAoJEIaOsuA1yqREH5EP/RS0Nl8ppNk75V08SuxgTsWZ
-rCJvBEVX8CQEz2Qc2uEswR1N5YxR47BCjyY4yY2Rx2joUGY+t8jXtiuH+4c/luc5
-HOnOS2JbO8AYlRAjqFaLi/vTdfCVw8O7hsL5yGdHYQoHDdZCf2ts0FR4aenryVZG
-LRZwXnRIR8KVIsk+yuIMA71ngvpsdBUa5j05RZuNzxyfTqU84ENawBZs31kRVbTQ
-v49BJiWHbUtFVpVUgukMTw/WC6Dqzi1x3A4FcbgEFrDhpd+TOQYCencLJPdsIfiE
-J7WUmfVA2X5A86Kl9u6TFAgS5p+yo4kOtgnTG9k1QO1LqAGJQu4to1fHd93P99mH
-lLEqkLEcjYyxUdOYVLynJT3wRrkkt+8rpCa21mk5ie30Rv7EmHp8arQBcq2Ls39d
-j/4QZ4zCeq+m/VNSfKaQeA/aJ7PrD9pOPWlolzxwBAPl2fapxIIRsy8LCvQuM+A8
-jXe2iht2ZKUQKHrQJASNcuaboAo/Xe0k9GrYMYTO9mcVEpa6gaqEctPZ9lxlY/3M
-PMNQVqeLCG5DoFv+LCLB68CXYnse8H85ZN2GZEJ/jC8Tuc+u6HVn4UeCqq/6gaoG
-TR8NnvkAWKqFuSaJkZMkmb6VlZ5V+mOreLm4M5x5ADWE2IXpS2NScm0wuACJSZiC
-tPSwYj0hmOYAyZ6b+5kK
-=Uejm
------END PGP SIGNATURE-----
-
---XFI+TFG+M3u0jUjZ--
+Thanks,
+Mark.
