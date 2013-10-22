@@ -1,151 +1,101 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 11:24:11 +0200
-Message-ID: <20131022092410.GB15640@ulmo.nvidia.com>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <20131021091555.GB21518@ulmo.nvidia.com>
- <20131021170711.GA5256@netboy>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3] watchdog: dw: Enable OF support for DW watchdog timer
+Date: Tue, 22 Oct 2013 04:29:41 -0500
+Message-ID: <1382434181-16936-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131021170711.GA5256@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
---DBIVS5p969aUjpLe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add device tree support to the DW watchdog timer.
 
-On Mon, Oct 21, 2013 at 07:07:11PM +0200, Richard Cochran wrote:
-> On Mon, Oct 21, 2013 at 11:15:56AM +0200, Thierry Reding wrote:
-> >=20
-> > Right now, we're taking away much of that flexibility and I see progress
-> > on ARM actively hindered.
->=20
-> Baloney.
->=20
-> No one is taking away your flexibility or hindering progress. It is
-> really very simple. Just make an arm-dt-devel tree where you can both
-> change the bindings at will and recommend to people.
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v3:
+- Clean up documentation
+v2:
+- Use of_match_ptr() for of_match_table
+---
+ .../devicetree/bindings/watchdog/dw_wdt.txt        |   14 ++++++++++++++
+ drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 
-Oh, I've been doing that for quite a while. In fact the patches that
-gave rise to the current frustration have been in a separate tree in
-various forms for over a year. But that's not what we want, is it? I
-used to think that we actively wanted people to contribute code back
-upstream, so telling everyone to keep code in their own trees isn't
-helping anyone.
+diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+new file mode 100644
+index 0000000..c5e9b65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+@@ -0,0 +1,14 @@
++Synopsys Designware Watchdog Timer
++
++Required Properties:
++
++- compatible	: Should be "snps,dw-wdt"
++- reg		: Base address and size of the watchdog timer register.
++
++Example:
++
++	watchdog0: wd@ffd02000 {
++		compatible = "snps,dw-wdt";
++		reg = <0xffd02000 0x1000>;
++		clocks = <&per_base_clk>;
++	};
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index e621098..261fa42 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -29,6 +29,7 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/of.h>
+ #include <linux/pm.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+@@ -340,12 +341,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_wdt_of_match[] = {
++	{ .compatible = "snps,dw-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
++
+ static struct platform_driver dw_wdt_driver = {
+ 	.probe		= dw_wdt_drv_probe,
+ 	.remove		= dw_wdt_drv_remove,
+ 	.driver		= {
+ 		.name	= "dw_wdt",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(dw_wdt_of_match),
+ #ifdef CONFIG_PM
+ 		.pm	= &dw_wdt_pm_ops,
+ #endif /* CONFIG_PM */
+-- 
+1.7.9.5
 
-Besides, we all know that people are reluctant to test trees other than
-Linus'. That's just the way it is. There is the occasional tester for a
-new feature who will be happy to run code from a different tree. I think
-those people are an invaluable resource, but I'm pretty sure they'd be
-even happier to test the code if they could just take it from Linus'
-tree. Nothing ever gets any widespread testing unless it goes into the
-mainline kernel.
 
-That's the primary reason why we have things like drivers/staging: we
-want people to test code, even things that are considered low quality,
-buggy and incomplete. Because that's the way we can make it easy for
-people to test code and that allows us to make it better. It is also a
-good way to get more people involved. Also, I think that people, given
-the choice, often tend to choose functionality over stability.
-
-There's no point at all in running a Linux kernel that never crashes if
-it prevents you from using half of the hardware you have. I don't think
-we should dictate what drivers people can use based on what we perceive
-as qualifying criteria.
-
-Instead what we should be doing is give people a choice. If we tell them
-up front that using a given driver (or DT binding) might require them to
-update the kernel or DTB at some point because it's likely to change and
-if they choose to use it nevertheless, then by all means they should be
-allowed to do that.
-
-We're already doing this with staging drivers. I don't see any reason
-why we shouldn't be able to do the same with DT bindings. Let's give our
-users a warning about tentative or experimental bindings. That way they
-can be aware of the potential issues and choose not to use or rely on
-them if they want to play it safe. But if they don't mind the occasional
-inconvenience, then we shouldn't prevent them from making the best use
-of the devices that they have.
-
-> Once bindings have seen some real world testing and have had time to
-> mature, then request a merge into mainline.
-
-I don't think that's the way the world works. There simply is no way to
-get any real world testing of DT bindings outside of mainline. Sure you
-can test-drive code in downstream kernels, but most downstream kernels
-have not yet converted to DT and those that have are nothing like the
-upstream kernel. Bindings in downstream kernels are likely to be very
-broken by upstream standards and therefore any real world testing done
-with those will be useless in an upstream context.
-
-We've been preaching for years that vendors should contribute to the
-upstream Linux kernel more actively. But I think the only way we can get
-them to do that is by making upstream a viable solution. Currently it
-isn't for most SoC vendors, because by the time we've finally settled on
-a DT binding the hardware for which it was designed has already been
-obsoleted. That has resulted in the endless game of catch-up that we've
-been playing.
-
-People have been telling vendors that they need to get involved with
-Linux upstreaming very early on, at best even prior to having silicon
-available. But if it takes months or even years before a driver can be
-put to any active use, being blocked by the DT binding being considered
-immature, then we loose. There's no point for vendors in contributing to
-upstream Linux if they can't eventually take advantage of it. If we ever
-want to be able to have something reasonably close to upstream Linux
-ship on recent hardware we need to find ways to make it easier to get
-code merged faster. Creating additional roadblocks won't help at all.
-
-If that's impossible with DT, then perhaps we really ought to second-
-guess whether DT is the right technology. I don't think anyone's been
-able to point out a fundamental flaw in DT that would make it useless
-for the intended purpose, but various people have pointed out that our
-current process may be flawed.
-
-Which brings me back to my earlier point: I think what could really help
-alleviate the pain is experimental bindings. If we make it abundantly
-clear that someone is using an experimental binding, I don't see why we
-shouldn't be able to provide those. This gives us an easy way to test-
-drive new bindings and code, but it preserves the possibility to turn
-the bindings into stable ones when they are ready, so that they can be
-used in production devices.
-
-Thierry
-
---DBIVS5p969aUjpLe
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZkQ6AAoJEN0jrNd/PrOhkFEQAJvXohpYVvBfjw+pm19A2d6k
-LwEmfdzTdX6atFGBH1kwc+GqHAx6ShqtDCHDli3OGpCOfcEnUd9XjSbKRQymWaDW
-McvuyxnEuE7lffkxLtK17qEKU2QKmf3Trm2j9fQQuDXXbK5Qy2hJW/BqJ9oT28iD
-vB5Pb/RE3BxTwZRPNnHecM4jJ+PKs2HvelMYHyuM9acx89xFcJCCIozs7sEBvvLc
-IuMQAoXPfqTF9OdeDAujxS3mh2XF8AktNj+4kzaezBN6E/l+KA7Gj8est652prbk
-KMNSJ0aA88zYFOVfyrNAd/ZMidl5jxRzJov69sTvzq48ybbhzXZmEIHGEfutge/B
-JXPpqXDnCo5o3KFWP2YLLfr/u/JStMIKdYFawACfVsg/JR4zgikvVwygj7sqt1CD
-7FgTdDyJYm/IqVYOz4bmWCN9uEVtScpuC1qWsb0gIvHL+SdvVFTEHV8RkvuC3kYH
-KIwsEq2jkXAbrVuDWUFCUeSzdpmeocjydypSFEd2zStp6OjS5s98nLt1eT4Ba6tu
-euucHDsjGEC5sDryONCNgRq7L7zDTtTOxmurWVT9iunaSP0s2IC4Byl1sqrJRr/w
-J5fOi5lXQDNZms60gtQGvyrri4hBtiTUi3ofMifA/4SqGdDnTWBU+AInNMmxBTHn
-hAv+qxW/9ieMvsfvQhWn
-=ol/N
------END PGP SIGNATURE-----
-
---DBIVS5p969aUjpLe--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
