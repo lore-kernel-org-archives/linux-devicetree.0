@@ -1,57 +1,37 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Tue, 22 Oct 2013 11:22:14 -0600
-Message-ID: <20131022172214.GF4061@obsidianresearch.com>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <20131021091555.GB21518@ulmo.nvidia.com>
- <20131021170711.GA5256@netboy>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH 1/2] leds: lp55xx: handle enable pin in driver
+Date: Tue, 22 Oct 2013 10:22:59 -0700
+Message-ID: <CAK5ve-KWdJFuJsvQ+JS2y7bpa9j4hGdU=ceb4nAz8BKQ1M9_XA@mail.gmail.com>
+References: <1382446896-28436-1-git-send-email-sre@debian.org>
+ <1382446896-28436-2-git-send-email-sre@debian.org> <20131022170604.GP15154@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131021170711.GA5256@netboy>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131022170604.GP15154@atomide.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2013 at 07:07:11PM +0200, Richard Cochran wrote:
-> On Mon, Oct 21, 2013 at 11:15:56AM +0200, Thierry Reding wrote:
-> > 
-> > Right now, we're taking away much of that flexibility and I see progress
-> > on ARM actively hindered.
-> 
-> Baloney.
-> 
-> No one is taking away your flexibility or hindering progress. It is
-> really very simple. Just make an arm-dt-devel tree where you can both
-> change the bindings at will and recommend to people. Once bindings
-> have seen some real world testing and have had time to mature, then
-> request a merge into mainline.
+On Tue, Oct 22, 2013 at 10:06 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Sebastian Reichel <sre@debian.org> [131022 06:02]:
+>> This patch moves the handling of the chip's enable pin from the board
+>> code into the driver. It also updates all board-code files using the
+>> driver to incorporate this change.
+>>
+>> This is needed for device tree support of the enable pin.
+>
+> This seems safe to merge along with the other LED patches, the
+> changes to arch/arm/mach-omap2 should not conflict with anything.
+>
+> So for the arch/arm/mach-omap2 changes:
+>
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-The argument is that DT is a stable ABI we must never change it once
-it hits mainline.
+I'm OK for LED parts, will this patch go through omap tree? If so,
+please add my ack.
 
-This leads to not accepting patches into mainline until they are
-'stable'.
+Acked-by: Bryan Wu <cooloney@gmail.com>
 
-Whihc leads to vendors shipping code in real systems to real customers
-with those out of tree patches. (Deadlines are a bitch)
-
-The vendors are now forced to treat the DT as an *UNSTABLE* ABI
-because they are shipping non-mainline DT schemas and plan to upgrade
-to mainline someday.
-
-Now the vendors no longer value DT as a stable ABI.
-
-So, why are we making argument #1? Seems pretty self defeating to me.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+-Bryan
