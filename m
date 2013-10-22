@@ -1,16 +1,14 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv1 8/8] Documentation: Add device tree bindings for
- Freescale VF610 sound.
-Date: Tue, 22 Oct 2013 10:47:08 +0100
-Message-ID: <20131022094708.GA2883@sirena.org.uk>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-9-git-send-email-Li.Xiubo@freescale.com>
- <20131018173126.GU2443@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F82866807@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v5] PWM: atmel-pwm: add PWM controller driver
+Date: Tue, 22 Oct 2013 18:13:10 +0800
+Message-ID: <52664FB6.4000004@atmel.com>
+References: <1380532240-18650-1-git-send-email-voice.shen@atmel.com>
+ <20131008131727.GB12839@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2948204017731858731=="
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82866807@039-SN2MPN1-013.039d.mgd.msft.net>
+In-Reply-To: <20131008131727.GB12839@ulmo.nvidia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,64 +18,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xiubo Li-B47053 <B47053@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "perex@perex.cz" <perex@perex.cz>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.co>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
 
---===============2948204017731858731==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
+On 10/8/2013 21:17, Thierry Reding wrote:
+> On Mon, Sep 30, 2013 at 05:10:40PM +0800, Bo Shen wrote:
+>> Add Atmel PWM controller driver based on PWM framework.
+>>
+>> This is the basic function implementation of Atmel PWM controller.
+>> It can work with PWM based led and backlight.
+>>
+>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>>
+>> ---
+>> Changes in v5:
+>>    - call clk_disable directly, if so, it won't cause more than one channel
+>>      enabled, the clock can not be disabled.
+>>
+>> Changes in v4:
+>>    - check the return value of clk_prepare()
+>>    - change channel register size as constant
+>>
+>> Changes in v3:
+>>    - change compatible string from "atmel,sama5-pwm" to "atmel,sama5d3-pwm"
+>>    - Add PWM led example in binding documentation
+>>    - Using micro replace hard code
+>>
+>> Changes in v2:
+>>    - Address the comments from Thierry Reding
+>>
+>>   .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 +++
+>>   drivers/pwm/Kconfig                                |    9 +
+>>   drivers/pwm/Makefile                               |    1 +
+>>   drivers/pwm/pwm-atmel.c                            |  344 ++++++++++++++++++++
+>>   4 files changed, 395 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+>>   create mode 100644 drivers/pwm/pwm-atmel.c
+>
+> I haven't seen an Acked-by from the device tree bindings maintainers on
+> this. I've Cc'ed them, so hopefully one of them has time to review.
 
+Any comments?
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Oct 21, 2013 at 07:24:56AM +0000, Xiubo Li-B47053 wrote:
-
-> Yes, the "-- SGTL5000 pins:" should be in the CODEC binding.
-> But, actually the CODEC binding hasn't any reference about this.
-
-> So I added it here, but not very sure.
-
-Please add them to the CODEC binding instead.
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZkmVAAoJELSic+t+oim9WE8P/jOtCT9+1ZxQ8Dv0pN2DjbGa
-YCyJYQMjzU/KuIl5iLZBpXqCPuccq8oZw41xr6cQbIE6lWS58g7QakJxtc3Eh/Kt
-tzhXFN4hD2/Mhg4ruNRa/lV/B8V2WyHydhNyII6yLZ7x0znZHLgkkpKZNdwN0eQl
-cmYQ+FlHmFujx2RaeLi5OOORNX8R0ugMjCi0ouCFQy1JoPJmXzdPnb+woM/7Gqg4
-NP0lGt7G6WKF+XURykOrekbLEDZiuZixxyJv5gQYg1GWoMQdNH2pTeJbEDtlk5GB
-pqB6Ib6ErS4/wQehuc4VcWIkjIZ8LH9b7VjVCs+hp25a0w0/jqq/V+sl27HNjo+f
-4hz3Houy938UpKfrRE5yTC+XNroJqWPBmXwjKcGd/TuH9RQwjqD0JlO1Fpw/SZRp
-H/w42KYZbX5HBvMjPxRQYuEMCIQI+SuLZJKEZehiv6CEAskW+9BnKdiZ51F50YUt
-sRqa9BTZuVqaG0BmHzPRDehBDQ6kALTbAf9gK+jaoSyk1GRJlb96pGLx7XwFnv05
-KMUHjv0FbYouzRla+lGOmFl4ZOk61zUpcD+jk3MFUgTAKbH50yMKKNHAMHkGqAlV
-KjFy4xcssY7Pd6MA0PwAfRhLP4H/85NX5EFgHJcY95hUMpon7ZwZzmTzlBa3lbLU
-b3cwlP6Hg63FtN6Mw8qa
-=fjJL
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
-
-
---===============2948204017731858731==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2948204017731858731==--
+Best Regards,
+Bo Shen
