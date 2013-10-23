@@ -1,58 +1,76 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [Patch v2 10/14] usb: doc: phy-mxs: update binding for adding
- disconnect line property
-Date: Wed, 23 Oct 2013 15:08:25 +0800
-Message-ID: <20131023070824.GH8534@shlinux1.ap.freescale.net>
-References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
- <1382421528-17897-11-git-send-email-peter.chen@freescale.com>
- <20131023063154.GG2839@S2101-09.ap.freescale.net>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv4][ 1/4] Input: tsc2007: Add device tree support.
+Date: Wed, 23 Oct 2013 09:25:53 +0200
+Message-ID: <20131023092553.6989a592@ipc1.ka-ro>
+References: <1382363667-10341-1-git-send-email-denis@eukrea.com>
+	<20131021155927.GB4255@core.coreip.homeip.net>
+	<20131022114947.30dc9c07@ipc1.ka-ro>
+	<20131022223504.GA19819@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131023063154.GG2839@S2101-09.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131022223504.GA19819@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 02:31:56PM +0800, Shawn Guo wrote:
-> On Tue, Oct 22, 2013 at 01:58:44PM +0800, Peter Chen wrote:
-> > This property is used to disconnect line between USB PHY and
-> > USB controller.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/mxs-phy.txt |    4 ++++
-> >  1 files changed, 4 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > index 5837963..356c9b6 100644
-> > --- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > @@ -9,6 +9,9 @@ mxs PHY verions.
-> >  - reg: Should contain registers location and length
-> >  - interrupts: Should contain phy interrupt
-> >  - fsl,anatop: phandle for anatop register, it is only for mx6 SoC serial
-> > +- disconnect-line-without-vbus: needs to disconnect
-> > +connection between USB PHY and controller, it can avoid
-> > +unexpected wakeup interrupt when the PHY is out of power
-> 
-> If it's a mxs-phy specific property, we may need to have vendor prefix
-> 'fsl,' for it.
-> 
-> I see you set the property in imx6qdl.dtsi.  Is it true that we should
-> always set it for imx6q/dl?  If yes, why cannot we have the driver to
-> force it for imx6q type of phy.  If no, where do we need to set it and
-> where not?
-> 
+Hi,
 
-One more thing: it is a SoC feature, so I can delete it from DT, and
-using compatible string (or of_device_id.data) to judge if it is needed
-at driver, do you think so?
+> On Tue, Oct 22, 2013 at 11:49:47AM +0200, Lothar Wa=C3=9Fmann wrote:
+> > Hi,
+> >=20
+> > > On Mon, Oct 21, 2013 at 03:54:24PM +0200, Denis Carikli wrote:
+> > > > =20
+> > > > +	if (ts->of)
+> > > > +		return tsc2007_get_pendown_state_dt(ts);
+> > > > +
+> > > >  	if (!ts->get_pendown_state)
+> > > >  		return true;
+> > >=20
+> > > Instead of special casing "if (ts->of)" all over the place why do=
+n't you
+> > > set up the device structure as:
+> > >=20
+> > > 	if (<configuring_tsc2007_form_dt>)
+> > > 		ts->get_pendown_state =3D tsc2007_get_pendown_state_dt;
+> > >=20
+> > > and be done with it?
+> > >
+> > I also thought about that, but the existing function does not have =
+any
+> > parameters, while the DT version of get_pendown_state() requires to=
+ get
+> > the GPIO passed to it somehow.
+>=20
+> You can always have tsc2007_get_pendown_state_platform() wrapping the
+>
+Yes, but how would you pass the GPIO number to the
+get_pendown_state_dt() function? Global variables are just ugly.
 
--- 
+> call. Or we just go and fix board code.
+>
+That's IMO a better option, but not easy to achieve without breaking
+anything. The in-kernel platforms would be easy to fix, but there may b=
+e
+external users that still use the old hook, so you can't just remove it
+or change its semantics.
 
-Best Regards,
-Peter Chen
 
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
