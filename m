@@ -1,53 +1,48 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv5][ 9/9] ARM: dts: imx25.dtsi: Add a label for the Audio Multiplexer.
-Date: Wed, 23 Oct 2013 10:29:34 +0200
-Message-ID: <1382516974-13371-9-git-send-email-denis@eukrea.com>
-References: <1382516974-13371-1-git-send-email-denis@eukrea.com>
+From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: move wl12xx pins to the proper pinmux for pandaboard
+Date: Wed, 23 Oct 2013 10:33:51 +0200
+Message-ID: <526789EF.7000507@baylibre.com>
+References: <525852A4.6090500@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382516974-13371-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <525852A4.6090500-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Andrey Konovalov <andrey.konovalov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rnayak-l0cyMroinI0@public.gmane.org, luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org, p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v4->v5:
-Changed the description to label (was wrongly named alias).
----
- arch/arm/boot/dts/imx25.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Andrey,
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
-i
-index 7c0a019..800fe7f 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -281,7 +281,7 @@
- 				};
- 			};
-=20
--			audmux@43fb0000 {
-+			audmux: audmux@43fb0000 {
- 				compatible =3D "fsl,imx25-audmux", "fsl,imx31-audmux";
- 				reg =3D <0x43fb0000 0x4000>;
- 				status =3D "disabled";
+On 11/10/2013 21:33, Andrey Konovalov wrote:
+> Commit 851320e (ARM: dts: Fix muxing and regulator for wl12xx on the
+> SDIO bus for pandaboard) put the wl12xx pins into omap4_pmx_wkup. Thi=
+s
+> is not correct, and results in the following messages at the boot tim=
+e:
+>
+>   pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38=
+)
+>   pinctrl-single 4a31e040.pinmux: could not add functions for
+> pinmux_wl12xx_pins 56x
+>
+> Actually these pins belong to omap4_pmx_core.
+>
+> Signed-off-by: Andrey Konovalov <andrey.konovalov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+That patch does not apply on any on my branches. Could you rebase it
+on top of my for_3.13/dts branch.
+
+Thanks,
+Benoit
+
 --=20
-1.7.9.5
-
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
