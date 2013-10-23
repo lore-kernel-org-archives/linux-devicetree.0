@@ -1,46 +1,56 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Wed, 23 Oct 2013 20:51:17 +0200
-Message-ID: <20131023185116.GJ5208@netboy>
-References: <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
+Date: Wed, 23 Oct 2013 12:54:35 -0600
+Message-ID: <20131023185435.GD32563@obsidianresearch.com>
+References: <52658EBC.8020800@wwwdotorg.org>
  <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
  <20131022093923.GC15640@ulmo.nvidia.com>
  <20131022150426.GF29341@beef>
  <20131022171346.GE4061@obsidianresearch.com>
  <20131023080630.GA14413@netboy>
  <20131023172955.GA17145@obsidianresearch.com>
- <20131023174458.GC5208@netboy>
- <1382553982.31058.10.camel@sakura.staff.proxad.net>
+ <20131023180108.GA23728@roeck-us.net>
+ <20131023182502.GC32563@obsidianresearch.com>
+ <20131023183041.GH5208@netboy>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382553982.31058.10.camel-MdnFuL0m/hCw+z8RR+d9WEZ2mhrpEnA6@public.gmane.org>
+In-Reply-To: <20131023183041.GH5208@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 08:46:22PM +0200, Maxime Bizon wrote:
-> 
-> the first iteration of your DTB would be incomplete, the bindings to
-> describe that hardware block would not exist inside it.
-> 
-> real life example with Marvell Kirkwood, hw crypto support was added 1
-> year after initial SOC support.
-> 
-> I'm happy I can use it now on existing boards by "just" upgrading the
-> kernel.
+On Wed, Oct 23, 2013 at 08:30:42PM +0200, Richard Cochran wrote:
+> On Wed, Oct 23, 2013 at 12:25:02PM -0600, Jason Gunthorpe wrote:
 
-I have no problem with new kernel features unlocked by new DT
-bindings.
+> > On ARM the package of 'stuff' can very reasonably include dtb. Distro
+> > scripts can package modules+DTB+vmlinuz into something the bootloader
+> > can understand. (The next pain point will be to standardize that)
+> > 
+> > The DTB doesn't have to be 'outside' the distro/kernel to give users a
+> > seamless upgrade experience.
+> 
+> How can a distro possibly provide me a DTB?
+> 
+> They don't know what hardware I am using. Only I know that.
 
-I *do* have a problem with new kernels breaking existing DT bindings.
+I'm not sure what you are asking? Treat DTBs like kernel drivers. If
+you make hardware and you want distros to run on it, you have to
+provide the DTB for that hardware to mainline+distros.
 
-Thanks,
-Richard
+Remember, there are two ways to view DTB:
+  a) It comes from the firmware and you have to live with whatever
+     crap the firmware does
+  b) It comes from the kernel, must match the kernel, and we don't
+     have to tolerate crap in the DTB.
+
+Both make sense, but, IMHO, minimizing the occurrence of 'a' is a
+good goal...
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
