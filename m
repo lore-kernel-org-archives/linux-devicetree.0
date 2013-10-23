@@ -1,59 +1,31 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH 0/2] ARM: dts: omap5-uevm: Audio related fixes
-Date: Wed, 23 Oct 2013 11:38:42 +0200
-Message-ID: <52679922.1050004@baylibre.com>
-References: <1382520740-11197-1-git-send-email-peter.ujfalusi@ti.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 2/2] hwrng: msm: Add PRNG support for MSM SoC's
+Date: Wed, 23 Oct 2013 12:41:10 +0300
+Message-ID: <526799B6.1090904@mm-sol.com>
+References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com> <1381846278-9529-3-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1382520740-11197-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1381846278-9529-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On 10/15/2013 05:11 PM, Stanimir Varbanov wrote:
+> This adds a driver for hardware random number generator present
+> on Qualcomm MSM SoC's.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-On 23/10/2013 11:32, Peter Ujfalusi wrote:
-> Hi,
->
-> When the omap5-evm.dts file has been renamed to omap5-uevm.dts and th=
-e sEVM
-> support got deprecated in favor of uEVM (or Panda5) the content was n=
-ot
-> validated.
-> The reset GPIO is different on uEVM compared to sEVM and uEVM does no=
-t have
-> support for dmic.
->
-> Regards,
-> Peter
+Hi Matt, Herbert,
 
-I've just applied your series, let's try to push that for 3.13.
+Sorry for the noise but this patch staying for a while in mailing list
+and I'd like to get some attention to this driver. Do you think it needs
+another re-spin or it has obvious issues / concerns?
 
-Thanks,
-Benoit
+Thanks for your time.
 
-
-> ---
-> Peter Ujfalusi (2):
->    ARM: dts: omap5-uevm: Correct twl6040 reset GPIO pinmux
->    ARM: dts: omap5-uevm: Remove pinmux for dmic pins
->
->   arch/arm/boot/dts/omap5-uevm.dts | 12 +-----------
->   1 file changed, 1 insertion(+), 11 deletions(-)
->
-
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Stan
