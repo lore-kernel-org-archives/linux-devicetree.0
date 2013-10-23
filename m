@@ -1,50 +1,116 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv2 2/3] Input: twl4030-pwrbutton: use dev_err for errors
-Date: Wed, 23 Oct 2013 17:01:21 +0200
-Message-ID: <1382540482-12261-3-git-send-email-sre@debian.org>
-References: <1382540482-12261-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382540482-12261-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@debian.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] of: Allow for experimental device tree bindings
+Date: Wed, 23 Oct 2013 17:06:19 +0200
+Message-ID: <1382540779-6334-1-git-send-email-treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use dev_err() to output errors instead of dev_dbg().
+Past and recent discussions have shown that there's some concensus that
+device tree bindings should be considered an ABI and therefore need to
+remain backwards-compatible once code to implement them is included in
+the final release of a Linux kernel.
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
+At the same time there is a desire to keep some manoeuvre while we're
+trying to figure things out. The fact is that many of us lack the
+experience to design good bindings from the start. At the same time
+there is a shortage of people that can review bindings and help design
+better ones.
+
+Progress and the addition of new features (and restoration of features
+that used to work before the advent of DT for that matter) are blocked
+to a large degree because of that.
+
+This patch attempts to restore some degree of freedom by introducing an
+easy way to mark device tree bindings as experimental as well as a way
+for users to disable the use of experimental bindings if they choose
+functionality at the cost of potential device tree incompatibilities.
+
+Bindings are marked experimental by prefixing the compatible value with
+an exclamation mark (!). In order to make it clear that experimental
+bindings are undesirable in the long run, a warning will be output when
+an experimental binding is encountered.
+
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/input/misc/twl4030-pwrbutton.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/of/Kconfig |  7 +++++++
+ drivers/of/base.c  | 32 +++++++++++++++++++++++++++++++-
+ 2 files changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/twl4030-pwrbutton.c
-index a3a0fe3..3efbb13 100644
---- a/drivers/input/misc/twl4030-pwrbutton.c
-+++ b/drivers/input/misc/twl4030-pwrbutton.c
-@@ -60,7 +60,7 @@ static int twl4030_pwrbutton_probe(struct platform_device *pdev)
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 78cc760..dc482f8 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -24,6 +24,13 @@ config OF_SELFTEST
  
- 	pwr = input_allocate_device();
- 	if (!pwr) {
--		dev_dbg(&pdev->dev, "Can't allocate power button\n");
-+		dev_err(&pdev->dev, "Can't allocate power button\n");
- 		return -ENOMEM;
- 	}
+ 	  If unsure, say N here, but this option is safe to enable.
  
-@@ -74,13 +74,13 @@ static int twl4030_pwrbutton_probe(struct platform_device *pdev)
- 			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
- 			"twl4030_pwrbutton", pwr);
- 	if (err < 0) {
--		dev_dbg(&pdev->dev, "Can't get IRQ for pwrbutton: %d\n", err);
-+		dev_err(&pdev->dev, "Can't get IRQ for pwrbutton: %d\n", err);
- 		goto free_input_dev;
- 	}
++config OF_EXPERIMENTAL
++	bool "Support experimental device tree bindings"
++	help
++	  This option allows experimental device tree bindings to be used.
++	  Note that experimental bindings are subject to change, possibly
++	  requiring the DTB to be updated.
++
+ config OF_FLATTREE
+ 	bool
+ 	select DTC
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a96f850..b0b8371 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -342,6 +342,36 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+ }
+ EXPORT_SYMBOL(of_get_cpu_node);
  
- 	err = input_register_device(pwr);
- 	if (err) {
--		dev_dbg(&pdev->dev, "Can't register power button: %d\n", err);
-+		dev_err(&pdev->dev, "Can't register power button: %d\n", err);
- 		goto free_irq;
- 	}
- 
++static int of_compat_match(const char *device, const char *driver,
++			   const struct device_node *np)
++{
++	const char *dev = device;
++	const char *drv = driver;
++
++	if (device[0] == '!')
++		device++;
++
++	if (driver[0] == '!')
++		driver++;
++
++	if (of_compat_cmp(device, driver, strlen(driver)) != 0)
++		return 0;
++
++	/* check if binding is experimental */
++	if (dev != device || drv != driver) {
++		pr_warn("of: device %s (%s) uses an experimental binding\n",
++			np->name, np->full_name);
++
++		/* don't match if we don't want experimental bindings */
++		if (!IS_ENABLED(CONFIG_OF_EXPERIMENTAL)) {
++			pr_err("of: refusing to use binding \"%s\"\n", device);
++			return 0;
++		}
++	}
++
++	return 1;
++}
++
+ /** Checks if the given "compat" string matches one of the strings in
+  * the device's "compatible" property
+  */
+@@ -355,7 +385,7 @@ static int __of_device_is_compatible(const struct device_node *device,
+ 	if (cp == NULL)
+ 		return 0;
+ 	while (cplen > 0) {
+-		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
++		if (of_compat_match(cp, compat, device))
+ 			return 1;
+ 		l = strlen(cp) + 1;
+ 		cp += l;
 -- 
-1.8.4.rc3
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
