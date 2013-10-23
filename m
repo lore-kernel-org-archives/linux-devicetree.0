@@ -1,60 +1,31 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv6][ 4/4] ARM: dts: mbimxsd35: Add sound support.
-Date: Wed, 23 Oct 2013 11:16:06 +0200
-Message-ID: <1382519766-17359-4-git-send-email-denis@eukrea.com>
-References: <1382519766-17359-1-git-send-email-denis@eukrea.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/2] ARM: DT: msm: Add Qualcomm's PRNG driver binding
+ document
+Date: Wed, 23 Oct 2013 12:27:29 +0300
+Message-ID: <52679681.4050803@mm-sol.com>
+References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com> <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382519766-17359-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |    9 +++++++++
- 1 file changed, 9 insertions(+)
+On 10/15/2013 05:11 PM, Stanimir Varbanov wrote:
+> This adds Qualcomm PRNG driver device tree binding documentation
+> to use as an example in dts trees.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
-rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-index 1378b8d..4045c5d 100644
---- a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-@@ -48,6 +48,15 @@
- 			linux,default-trigger =3D "heartbeat";
- 		};
- 	};
-+
-+	sound {
-+		compatible =3D "eukrea,eukrea-tlv320";
-+		model =3D "imx35-eukrea-tlv320aic23";
-+		ssi-controller =3D <&ssi1>;
-+		fsl,audio-codec =3D <&tlv320aic23>;
-+		mux-int-port =3D <1>;
-+		mux-ext-port =3D <4>;
-+	};
- };
-=20
- &audmux {
---=20
-1.7.9.5
+Dear DT binding maintainers,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd like to receive some comments or maybe an Ack to this patch. Or if
+you think it needs another re-spin please let me know.
+
+Thanks in advance for your time!
+
+regards,
+Stan
