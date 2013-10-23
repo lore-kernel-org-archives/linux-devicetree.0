@@ -1,449 +1,85 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Wed, 23 Oct 2013 21:03:16 +0800
-Message-ID: <1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v10 04/10] mtd: nand: omap: fix device scan:
+ NAND_CMD_READID, NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
+Date: Wed, 23 Oct 2013 13:15:20 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA2A0CB@DBDE04.ent.ti.com>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-5-git-send-email-pekon@ti.com>
+ <20131022201624.GL23337@ld-irv-0074.broadcom.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
+ <5267690C.9080005@gmail.com> <20131023125516.GA2458@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20131023125516.GA2458@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "Balbi,
+ Felipe" <balbi@ti.com>, "olof@lixom.net" <olof@lixom.net>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-update: fix typo
+Hi,
 
-Add dw_mmc-k3.c for k3v2, support sd/emmc
+> From: Ezequiel Garcia [mailto:ezequiel.garcia@free-electrons.com]
+[...]
+> FWIW, I have a Beaglebone with a 16-bit bus NAND attached to it.
+> 
+> Coincidentally, yesterday I was doing some tests as I'm ramping up the
+> NAND and I found that weird double nand_scan_ident() call.
+> The whole thing looks buggy to me, so I'm happy to help, review, test
+> and patches to take care of this.
+> 
+Yes, thanks .. that would be of great help.. 
+And may be your experience of Atmel drivers would help me here..
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Tested-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
----
- .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   77 +++++
- drivers/mmc/host/Kconfig                           |   10 +
- drivers/mmc/host/Makefile                          |    1 +
- drivers/mmc/host/dw_mmc-k3.c                       |  297 ++++++++++++++++++++
- 4 files changed, 385 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
- create mode 100644 drivers/mmc/host/dw_mmc-k3.c
+*Correct, should not be double calls to nand_scan_ident()..*
+But there is a constrain in nand_base.c, that it does not allow ONFI
+page reading in x16 mode.. So how to overcome that..
 
-diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-new file mode 100644
-index 0000000..0de8c27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-@@ -0,0 +1,77 @@
-+* Hisilicon specific extensions to the Synopsys Designware Mobile
-+  Storage Host Controller
-+
-+Read synopsis-dw-mshc.txt for more details
-+The Synopsys designware mobile storage host controller is used to interface
-+a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-+differences between the core Synopsys dw mshc controller properties described
-+by synopsis-dw-mshc.txt and the properties used by the Hisilicon specific
-+extensions to the Synopsys Designware Mobile Storage Host Controller.
-+
-+Required Properties:
-+
-+* compatible: should be
-+	- "hisilicon,hi4511-dw-mshc": for controllers with hi4511
-+	  specific extentions.
-+* vmmc-supply: should be vmmc used in dwmmc
-+* fifo-depth: should be provided if register can not provide correct value
-+* clken-reg: should be clock enable register and offset
-+* drv-sel-reg: should be driver delay select register, offset and bits
-+* sam-sel-reg: should be sample delay select register, offset and bits
-+* div-reg: should be divider register, offset and bits
-+* tune-table: should be array of clock tune mmc controller
-+
-+Example:
-+
-+  The MSHC controller node can be split into two portions, SoC specific and
-+  board specific portions as listed below.
-+
-+	dwmmc_0: dwmmc0@fcd03000 {
-+		compatible = "hisilicon,hi4511-dw-mshc";
-+		reg = <0xfcd03000 0x1000>;
-+		interrupts = <0 16 4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&clk_sd>, <&clk_ddrc_per>;
-+		clock-names = "ciu", "biu";
-+		clken-reg = <0x1f8 0>;
-+		drv-sel-reg = <0x1f8 4 4>;
-+		sam-sel-reg = <0x1f8 8 4>;
-+		div-reg = <0x1f8 1 3>;
-+		tune-table =
-+		<180000000 6 6 13 13 25000000>,
-+		<0 0 0 0 0 0>,
-+		<360000000 6 4 2 0 50000000>,
-+		<180000000 6 4 13 13 25000000>,
-+		<360000000 6 4 2 0 50000000>,
-+		<720000000 6 1 9 4 100000000>,
-+		<0 0 0 0 0 0>,
-+		<360000000 7 1 3 0 50000000>;
-+	};
-+	dwmmc0@fcd03000 {
-+		num-slots = <1>;
-+		vmmc-supply = <&ldo12>;
-+		fifo-depth = <0x100>;
-+		supports-highspeed;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+			disable-wp;
-+			cd-gpios = <&gpio10 3 0>;
-+		};
-+	};
-+
-+PCTRL:
-+
-+Required Properties:
-+* compatible: should be
-+	- "hisilicon,pctrl": Peripheral control
-+
-+Example:
-+
-+	pctrl: pctrl@fca09000 {
-+		compatible = "hisilicon,pctrl";
-+		reg = <0xfca09000 0x1000>;
-+	};
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 7fc5099..45aaa2d 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -575,6 +575,16 @@ config MMC_DW_SOCFPGA
- 	  This selects support for Altera SoCFPGA specific extensions to the
- 	  Synopsys DesignWare Memory Card Interface driver.
- 
-+config MMC_DW_K3
-+	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
-+	depends on MMC_DW
-+	select MMC_DW_PLTFM
-+	select MMC_DW_IDMAC
-+	help
-+	  This selects support for Hisilicon K3 SoC specific extensions to the
-+	  Synopsys DesignWare Memory Card Interface driver. Select this option
-+	  for platforms based on Hisilicon K3 SoC's.
-+
- config MMC_DW_PCI
- 	tristate "Synopsys Designware MCI support on PCI bus"
- 	depends on MMC_DW && PCI
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index c41d0c3..64f5f8d 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_MMC_DW)		+= dw_mmc.o
- obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
- obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
- obj-$(CONFIG_MMC_DW_SOCFPGA)	+= dw_mmc-socfpga.o
-+obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
- obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
- obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
- obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
-diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-new file mode 100644
-index 0000000..0ff75328
---- /dev/null
-+++ b/drivers/mmc/host/dw_mmc-k3.c
-@@ -0,0 +1,297 @@
-+/*
-+ * Copyright (c) 2013 Linaro Ltd.
-+ * Copyright (c) 2013 Hisilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/mmc/host.h>
-+#include <linux/mmc/dw_mmc.h>
-+#include <linux/of_address.h>
-+
-+#include "dw_mmc.h"
-+#include "dw_mmc-pltfm.h"
-+
-+enum dw_mci_k3_type {
-+	DW_MCI_TYPE_HI4511,
-+};
-+
-+static struct dw_mci_k3_compatible {
-+	char				*compatible;
-+	enum dw_mci_k3_type		type;
-+} k3_compat[] = {
-+	{
-+		.compatible	= "hisilicon,hi4511-dw-mshc",
-+		.type		= DW_MCI_TYPE_HI4511,
-+	},
-+};
-+
-+#define TABLE_WIDTH 6
-+#define TABLE_HEIGHT 8
-+struct dw_mci_k3_priv_data {
-+	enum dw_mci_k3_type	type;
-+	int			old_timing;
-+	u32			table[TABLE_WIDTH * TABLE_HEIGHT];
-+	u32			clken_reg;
-+	u32			clken_bit;
-+	u32			sam_reg;
-+	u32			sam_off;
-+	u32			sam_bits;
-+	u32			drv_reg;
-+	u32			drv_off;
-+	u32			drv_bits;
-+	u32			div_reg;
-+	u32			div_off;
-+	u32			div_bits;
-+};
-+
-+static void __iomem *pctrl;
-+static DEFINE_SPINLOCK(mmc_tuning_lock);
-+
-+static u32 dw_mci_k3_delay(u32 val, u32 para, u32 off, u32 len)
-+{
-+	u32 i;
-+
-+	if (para >= 0) {
-+		for (i = 0; i < len; i++) {
-+			if (para % 2)
-+				val |= 1<<(off + i);
-+			else
-+				val &= ~(1<<(off + i));
-+			para = para >> 1;
-+		}
-+	}
-+	return val;
-+}
-+
-+static void dw_mci_k3_set_timing(struct dw_mci_k3_priv_data *priv,
-+					u32 sam, u32 drv, u32 div)
-+{
-+	u32 val;
-+	unsigned long flags;
-+
-+	if (!pctrl || !priv->clken_reg || !priv->sam_reg
-+		|| !priv->drv_reg || !priv->div_reg)
-+		return;
-+
-+	spin_lock_irqsave(&mmc_tuning_lock, flags);
-+
-+	val = readl(pctrl + priv->clken_reg);
-+	val &= ~(1 << priv->clken_bit);
-+	writel(val, pctrl + priv->clken_reg);
-+
-+	val = readl(pctrl + priv->sam_reg);
-+	val = dw_mci_k3_delay(val, sam, priv->sam_off, priv->sam_bits);
-+	writel(val, pctrl + priv->sam_reg);
-+
-+	val = readl(pctrl + priv->drv_reg);
-+	val = dw_mci_k3_delay(val, drv, priv->drv_off, priv->drv_bits);
-+	writel(val, pctrl + priv->drv_reg);
-+
-+	val = readl(pctrl + priv->div_reg);
-+	val = dw_mci_k3_delay(val, div, priv->div_off, priv->div_bits);
-+	writel(val, pctrl + priv->div_reg);
-+
-+	val = readl(pctrl + priv->clken_reg);
-+	val |= 1 << priv->clken_bit;
-+	writel(val, pctrl + priv->clken_reg);
-+
-+	spin_unlock_irqrestore(&mmc_tuning_lock, flags);
-+}
-+
-+static void dw_mci_k3_tun(struct dw_mci *host, int timing)
-+{
-+	struct dw_mci_k3_priv_data *priv = host->priv;
-+	int ret;
-+	u32 *table = &priv->table[TABLE_WIDTH * timing];
-+
-+	if (priv->old_timing == timing)
-+		return;
-+
-+	ret = clk_set_rate(host->ciu_clk, table[0]);
-+	if (ret) {
-+		dev_err(host->dev, "clk_set_rate failed\n");
-+		return;
-+	}
-+	dw_mci_k3_set_timing(priv, (table[3] + table[4]) / 2,
-+			table[2], table[1]);
-+	host->bus_hz = table[5];
-+	priv->old_timing = timing;
-+}
-+
-+static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	struct dw_mci_k3_priv_data *priv = host->priv;
-+
-+	if (priv->type == DW_MCI_TYPE_HI4511)
-+		dw_mci_k3_tun(host, ios->timing);
-+}
-+
-+static int dw_mci_k3_priv_init(struct dw_mci *host)
-+{
-+	struct dw_mci_k3_priv_data *priv;
-+	int i, ret;
-+
-+	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		dev_err(host->dev, "mem alloc failed for private data\n");
-+		return -ENOMEM;
-+	}
-+	priv->old_timing = -1;
-+	host->priv = priv;
-+
-+	for (i = 0; i < ARRAY_SIZE(k3_compat); i++) {
-+		if (of_device_is_compatible(host->dev->of_node,
-+					k3_compat[i].compatible))
-+			priv->type = k3_compat[i].type;
-+	}
-+
-+	if (priv->type == DW_MCI_TYPE_HI4511) {
-+		ret = of_property_read_u32_array(host->dev->of_node,
-+			"tune-table", priv->table, TABLE_WIDTH * TABLE_HEIGHT);
-+		if (ret) {
-+			dev_err(host->dev, "not found tune-table\n");
-+			return -EINVAL;
-+		}
-+
-+		if (!pctrl) {
-+			struct device_node *node;
-+
-+			node = of_find_compatible_node(NULL, NULL,
-+						"hisilicon,pctrl");
-+			pctrl = of_iomap(node, 0);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int dw_mci_k3_setup_clock(struct dw_mci *host)
-+{
-+	struct dw_mci_k3_priv_data *priv = host->priv;
-+
-+	if (priv->type == DW_MCI_TYPE_HI4511)
-+		dw_mci_k3_tun(host, MMC_TIMING_LEGACY);
-+
-+	return 0;
-+}
-+
-+static int dw_mci_k3_parse_dt(struct dw_mci *host)
-+{
-+	struct dw_mci_k3_priv_data *priv = host->priv;
-+	struct device_node *np = host->dev->of_node;
-+	u32 data[3];
-+	int ret;
-+
-+	if (priv->type == DW_MCI_TYPE_HI4511) {
-+		ret = of_property_read_u32_array(np,
-+				"clken-reg", data, 2);
-+		if (!ret) {
-+			priv->clken_reg = data[0];
-+			priv->clken_bit = data[1];
-+		}
-+
-+		ret = of_property_read_u32_array(np,
-+				"drv-sel-reg", data, 3);
-+		if (!ret) {
-+			priv->drv_reg = data[0];
-+			priv->drv_off = data[1];
-+			priv->drv_bits = data[2];
-+		}
-+
-+		ret = of_property_read_u32_array(np,
-+				"sam-sel-reg", data, 3);
-+		if (!ret) {
-+			priv->sam_reg = data[0];
-+			priv->sam_off = data[1];
-+			priv->sam_bits = data[2];
-+		}
-+
-+		ret = of_property_read_u32_array(np,
-+				"div-reg", data, 3);
-+		if (!ret) {
-+			priv->div_reg = data[0];
-+			priv->div_off = data[1];
-+			priv->div_bits = data[2];
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static unsigned long k3_dwmmc_caps[4] = {
-+	MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED,
-+	MMC_CAP_8_BIT_DATA | MMC_CAP_MMC_HIGHSPEED,
-+	0,
-+	0,
-+};
-+
-+static const struct dw_mci_drv_data k3_drv_data = {
-+	.caps			= k3_dwmmc_caps,
-+	.init			= dw_mci_k3_priv_init,
-+	.set_ios		= dw_mci_k3_set_ios,
-+	.setup_clock		= dw_mci_k3_setup_clock,
-+	.parse_dt		= dw_mci_k3_parse_dt,
-+};
-+
-+static const struct of_device_id dw_mci_k3_match[] = {
-+	{ .compatible = "hisilicon,hi4511-dw-mshc",
-+			.data = &k3_drv_data, },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
-+
-+static int dw_mci_k3_probe(struct platform_device *pdev)
-+{
-+	const struct dw_mci_drv_data *drv_data;
-+	const struct of_device_id *match;
-+
-+	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
-+	drv_data = match->data;
-+
-+	return dw_mci_pltfm_register(pdev, drv_data);
-+}
-+
-+static int dw_mci_k3_suspend(struct device *dev)
-+{
-+	struct dw_mci *host = dev_get_drvdata(dev);
-+
-+	return dw_mci_suspend(host);
-+}
-+
-+static int dw_mci_k3_resume(struct device *dev)
-+{
-+	struct dw_mci *host = dev_get_drvdata(dev);
-+	struct dw_mci_k3_priv_data *priv = host->priv;
-+
-+	if (priv->type == DW_MCI_TYPE_HI4511) {
-+		priv->old_timing = -1;
-+		dw_mci_k3_tun(host, MMC_TIMING_LEGACY);
-+	}
-+
-+	return dw_mci_resume(host);
-+}
-+
-+SIMPLE_DEV_PM_OPS(dw_mci_k3_pmops, dw_mci_k3_suspend, dw_mci_k3_resume);
-+
-+static struct platform_driver dw_mci_k3_pltfm_driver = {
-+	.probe		= dw_mci_k3_probe,
-+	.remove		= dw_mci_pltfm_remove,
-+	.driver		= {
-+		.name		= "dwmmc_k3",
-+		.of_match_table	= dw_mci_k3_match,
-+		.pm		= &dw_mci_k3_pmops,
-+	},
-+};
-+
-+module_platform_driver(dw_mci_k3_pltfm_driver);
-+
-+MODULE_DESCRIPTION("K3 Specific DW-MSHC Driver Extension");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:dwmmc-k3");
--- 
-1.7.9.5
+I see the similar implementation in your ATMEL driver, it does not use
+NAND_BUSWIDTH_AUTO so how do you perform ONFI read
+for x16 devices ?
+drivers/mtd/nand/atmel_nand.c @@atmel_nand_probe()
+/* here you move to x16 mode based on your DT or platform data */
+	if (host->board.bus_width_16)	/* 16-bit bus width */
+		nand_chip->options |= NAND_BUSWIDTH_16;
+/* And then you call nand_scan_ident */
+/* first scan to find the device and get the page size */
+	if (nand_scan_ident(mtd, 1, NULL)) {
+		res = -ENXIO;
+		goto err_scan_ident;
+	}
 
+Wouldn't this fail, _unless_ your device is listed in nand_flash_id[] ?
+because it would not be able to read ONFI params.. 
+Refer below commit.. 
+commit 0ce82b7f7b7373b16ecf7b5725e21e2975204500
+Author:     Matthieu CASTET <matthieu.castet@parrot.com>
+AuthorDate: 2013-01-16
+
+Thanks for pitching in, this would help me to understand this better.
+
+
+
+> I'm using some TI SDK with some ancient v3.2.x (with no git history!),
+> but from this discussion it seems the issue is still present in
+> mainline.
+> 
+Aah sorry, then you might have some problem here in rebasing the
+patches. But still if you can, thanks much ..
+
+
+with regards, pekon
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
