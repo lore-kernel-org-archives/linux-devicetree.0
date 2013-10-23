@@ -1,47 +1,36 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Wed, 23 Oct 2013 19:47:37 +0200
-Message-ID: <20131023174736.GD5208@netboy>
-References: <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com>
- <20131022150426.GF29341@beef>
- <20131022171346.GE4061@obsidianresearch.com>
- <20131023080630.GA14413@netboy>
- <20131023172955.GA17145@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131023172955.GA17145-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv4 0/3] DT Support for TWL4030 power button
+Date: Wed, 23 Oct 2013 19:54:09 +0200
+Message-ID: <1382550852-11508-1-git-send-email-sre@debian.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@debian.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 11:29:55AM -0600, Jason Gunthorpe wrote:
-> 
-> I've seen that nebulous answer before. It is awfully vauge. Don't you
-> think a better, more excting answer is required to commit the kernel
-> community to such a huge amount of work+pain?
-> 
-> What users? What use cases? Who exactly?
+Hi,
 
-Gimme a break. The use case I mentioned is not at all vague. It is
-about a specific a use case as you'll ever see.
- 
-> Crucially: Does the above justify the huge effort on the kernel side?
+This is the fourth iteration of DT support for the TWL4030
+power button.
 
-The effort is no more or less than is required of every other kernel
-development.
+Changes since v3 [0]:
+* remove twl4030_pwrbutton_remove function, which is no
+  longer needed after devm_ conversion.
 
-Thanks,
-Richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0] https://lkml.org/lkml/2013/10/23/353
+
+-- Sebastian
+
+Sebastian Reichel (3):
+  Input: twl4030-pwrbutton - add device tree support
+  Input: twl4030-pwrbutton: use dev_err for errors
+  Input: twl4030-pwrbutton: simplify driver using devm_*
+
+ .../bindings/input/twl4030-pwrbutton.txt           | 13 ++++++
+ drivers/input/misc/twl4030-pwrbutton.c             | 46 +++++++++-------------
+ 2 files changed, 31 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
+
+-- 
+1.8.4.rc3
+
