@@ -1,48 +1,88 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [Patch v2 13/14] usb: phy-mxs: Add implementation of set_wakeup
-Date: Wed, 23 Oct 2013 14:54:45 +0800
-Message-ID: <20131023065444.GG8534@shlinux1.ap.freescale.net>
-References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
- <1382421528-17897-14-git-send-email-peter.chen@freescale.com>
- <20131023063521.GH2839@S2101-09.ap.freescale.net>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: Usage of for_each_child_of_node()
+Date: Wed, 23 Oct 2013 09:10:07 +0200
+Message-ID: <20131023071006.GA7708@ulmo.nvidia.com>
+References: <5259B6F8.3070701@roeck-us.net>
+ <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131023063521.GH2839@S2101-09.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 02:35:23PM +0800, Shawn Guo wrote:
-> >  
-> > +static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
-> > +{
-> > +	void __iomem *base = mxs_phy->phy.io_priv;
-> > +	bool vbus_is_on = false;
-> > +	static bool line_is_disconnected;
-> > +	unsigned int vbus_value = 0;
-> > +
-> > +	/* Only the SoCs have anatop need below operation */
-> > +	if (!mxs_phy->disconnect_line_without_vbus_is_needed)
-> > +		return;
-> 
-> As per the comment, shouldn't the if-clause be the following?  Or is the
-> comment incorrect?
-> 
-> 	if (!mxs_phy->regmap_anatop)
-> 
-> Shawn
-> 
 
-Thanks,
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will change the comment to 
-	/* If the SoC doesn't need to disconnect line without vbus, quit */
+On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
+> On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> > Hi all,
+> >
+> > for_each_child_of_node() and similar functions increase the refcount
+> > on each returned node and expect the caller to release the node by
+> > calling of_node_put() when done.
+> >
+> > Looking through the kernel code, it appears this is hardly ever done,
+> > if at all. Some code even calls of_node_get() on returned nodes again.
+> >
+> > I guess this doesn't matter in cases where devicetree is a static entit=
+y.
+> > However, this is not (or no longer) the case with devicetree overlays,
+> > or more generically in cases where devicetree nodes are added and
+> > removed dynamically.
+> >
+> > Fundamental question: Would patches to fix this problem be accepted ups=
+tream
+> > ?
+>=20
+> Certainly.
+>=20
+> > Or, of course, stepping a bit back: Am I missing something essential ?
+>=20
+> No. I think this is frequently wrong since it typically doesn't matter
+> for static entries as you mention.
 
--- 
+Actually, I think it actually happens to be correct most of the time.
+The reason is that for_each_child_of_node() internally calls the
+of_get_next_child() to iterate over all children. And that function
+already calls of_node_put() on the "previous" node. So if all the code
+does is to iterate over all nodes to query them, then all should be
+fine.
 
-Best Regards,
-Peter Chen
+The only case where you actually need to drop the reference on a node is
+if you break out of the loop (so that of_get_next_child() will not be
+called). But that's usually the case when you need to perform some
+operation on the node, in which case it is the right thing to hold on to
+a reference until you're done with the node.
 
+Thierry
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSZ3ZOAAoJEN0jrNd/PrOhEGUP/1RaUAUcOIe3ixiw5iFlpaSJ
+uaF31EJUwcrOa83F6hSDRMhkmjuywy+2EXKXnpvOZ6cvG+VuB72XYqi5T//+r7G6
+Ygg4oTrqDXRRy0YT2TUcO0u4WqMATWoBGYssC84gu8oWsKmv11QYIi2rQuBtE6Df
+fET8i32n6ckWGlowyaPynrARyMvmwXUh4dkJM+7hqw89P6LA345+RjOqJ4N1RLs1
+cDFfaF9hKV5hM95FfTf2f8DPWqgciF2tVVNHWcVzzMM9JphAH8s+BLqjfFjpZxAY
+PWDQa3MM75vYGd1Comk1m16jzFnh6sEOIGEAwKk2ICWhnwUjzQl1i+BKO0/ZcPdn
+TR/qBowsdlRp/mCk0nfeEPBG8TTwLjpvXqRAJMesGFg+UkPMx4m4PpxplBZiRJSw
+6cR4SLW4dqZUC795mfxzuCvKooVtA4i1Z/BENCobPdozSCerBVGTjopsMDpkqkQU
+RLCgDPOMc65JCsSgEjT9obVODjpzerwpiqcHsUO2v43hUkzE3Lc19BQL4DZsxr5A
+VS+l2eL8f22EH8N+Ih4w9b5XZjtFb4k8l7FrumatbK6rjUezMIRcivNTv1TLTKIt
+GCnulJaBE+XsIUvoBW0fl9hZsKW06ymfiWYvwE8d4oOK5nS61XlMJkJqNM9tpuxx
+f1zi2c8sXgfzS0ekDP2m
+=0FWF
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
