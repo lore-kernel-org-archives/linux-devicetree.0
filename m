@@ -1,69 +1,32 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
-Date: Wed, 23 Oct 2013 19:31:36 +0800
-Message-ID: <20131023113128.GA9489@S2101-09.ap.freescale.net>
-References: <1382511537-5072-1-git-send-email-aida.mynzhasova@skitlab.ru>
+From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
+Date: Wed, 23 Oct 2013 12:41:44 +0100
+Message-ID: <CAFEAcA8rPn7x8W4T3qE5OUeSVQd-GB9+EQPnxMsmyNQ0HKoMPw@mail.gmail.com>
+References: <52644A9E.3060007@wwwdotorg.org> <CAHCPf3uKp-aEavjrEbHGBc_Ga-JgJoEDF+io4kOuvtL6H05eRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1382511537-5072-1-git-send-email-aida.mynzhasova@skitlab.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHCPf3uKp-aEavjrEbHGBc_Ga-JgJoEDF+io4kOuvtL6H05eRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 10:58:57AM +0400, Aida Mynzhasova wrote:
-> Add auart2 pins configuration on its main pads
-> 
-> Signed-off-by: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+On 22 October 2013 22:44, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org> wrote:
+> Any driver that fails probing for an optional property is
+> broken and needs fixing.
 
-Applied, thanks.
+I agree, but I note that by this rule all the primecell peripheral
+drivers are broken, because the binding docs say that the
+"clocks" and "clock-names" properties are optional but if you
+omit them from the dt node then the kernel refuses to even
+call the driver's probe code. (This is specifically irritating for
+QEMU because it means we have to create a dummy clock
+node in our device tree just to placate the kernel sufficiently
+that we can get it to talk to a PL011 UART model.)
 
-Shawn
-
-> ---
->  arch/arm/boot/dts/imx28.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 918d419..cab4c22 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -343,6 +343,19 @@
->  					fsl,pull-up = <MXS_PULL_DISABLE>;
->  				};
->  
-> +				auart2_pins_a: auart2-pins@0 {
-> +					reg = <0>;
-> +					fsl,pinmux-ids = <
-> +						MX28_PAD_AUART2_RX__AUART2_RX
-> +						MX28_PAD_AUART2_TX__AUART2_TX
-> +						MX28_PAD_AUART2_CTS__AUART2_CTS
-> +						MX28_PAD_AUART2_RTS__AUART2_RTS
-> +					>;
-> +					fsl,drive-strength = <MXS_DRIVE_4mA>;
-> +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-> +					fsl,pull-up = <MXS_PULL_DISABLE>;
-> +				};
-> +
->  				auart3_pins_a: auart3@0 {
->  					reg = <0>;
->  					fsl,pinmux-ids = <
-> -- 
-> 1.8.1.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- PMM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
