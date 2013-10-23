@@ -1,51 +1,69 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Wed, 23 Oct 2013 19:30:33 +0200
-Message-ID: <20131023173032.GB5208@netboy>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <20131021091555.GB21518@ulmo.nvidia.com>
- <20131021170711.GA5256@netboy>
- <20131022092410.GB15640@ulmo.nvidia.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv3 3/3] Input: twl4030-pwrbutton: simplify driver using
+ devm_*
+Date: Wed, 23 Oct 2013 12:44:20 -0500
+Message-ID: <20131023174419.GH25954@gimli>
+References: <1382546835-20212-1-git-send-email-sre@debian.org>
+ <1382546835-20212-4-git-send-email-sre@debian.org>
+ <20131023172524.GE24448@blackmetal.musicnaut.iki.fi>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9iyR+p8Z2cn535Lj"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131022092410.GB15640-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131023172524.GE24448@blackmetal.musicnaut.iki.fi>
+Sender: linux-input-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 11:24:11AM +0200, Thierry Reding wrote:
-> 
-> Oh, I've been doing that for quite a while. In fact the patches that
-> gave rise to the current frustration have been in a separate tree in
-> various forms for over a year. But that's not what we want, is it?
+--9iyR+p8Z2cn535Lj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can't see anything wrong with that. Your code is not the first to
-have to wait for a long time before being finally merged. Think of
-alsa, or of the pps stuff, or wakelocks, or preempt_rt, etc, etc.
+On Wed, Oct 23, 2013 at 08:25:24PM +0300, Aaro Koskinen wrote:
+> Hi,
+>=20
+> On Wed, Oct 23, 2013 at 06:47:15PM +0200, Sebastian Reichel wrote:
+> >  static int __exit twl4030_pwrbutton_remove(struct platform_device *pde=
+v)
+> >  {
+> >  	struct input_dev *pwr =3D platform_get_drvdata(pdev);
+> > -	int irq =3D platform_get_irq(pdev, 0);
+> > =20
+> > -	free_irq(irq, pwr);
+> >  	input_unregister_device(pwr);
+>=20
+> The same bug still exists. You don't need to unregister manually any more,
+> this whole function can be just reduced to "return 0;".
 
-As an end user, I don't mind waiting for a feature if that means
-stability and QA. If I get impatient, still I always have the choice
-to take a development version. But I do not want to be forced to take
-unfinished work in a released kernel.
+then it can be removed altogether, no ?
 
-> I
-> used to think that we actively wanted people to contribute code back
-> upstream, so telling everyone to keep code in their own trees isn't
-> helping anyone.
+--=20
+balbi
 
-Actually, I mean to propose that the ARM/DT people use a single
-marshaling tree, one step away in the process from mainline.
+--9iyR+p8Z2cn535Lj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaArzAAoJEIaOsuA1yqREYOwP/3PVEzbBfW/1fQHrll8mKHHe
+P2kmqyb5JwBIv89PwHVQ74gJYDKCU/p0gRMyywrYwUAT9mQ+77amtWV/1RXPdzRG
+//UfSl4+s2gFmigk8aY/ob0JwYPWib+r+IaAb9P+0IX/OvlvhV6S0FQYc5PHIbuv
+IdJ7FPsObQxD/VLpaN+7jzzcCuHX0Je4FATah/2XVbHSx7Fmt3ZN83Xd0Xb8f7T/
+/8+ktign0YRgHYo4sJQrvO2NzIt0RL7xecjXIRvZRlqjT+G9hUDVNl0DQn15u6g6
+58ALl2uRTPM4nEbYHcXDQPYDkQfwHwB1/udfjf8Ihuq7kqZUNfU5Pf2F0FR0OrIM
+iFTVHHlBRPfdskcOPOmUr7brjElDhvW8B4yIwOEq/s8/9SdCrfkUviBKnfHI5FF2
+lLFDZv1wtcxHvuf8ldoaueslc0gboKElQH7GdCdsumbgo21Z+rNTCRJEs8xWNE79
+BS+uuModXMa7Iaa3qhlx0dr8Y6WBoXpIUay1f48n79ssVdoCbIuvG4csBsdgbg3H
+ithAjwWNh/pkdVVgPEuVg/PVb8wNc6O4cf3DlJmVyqTTyqWp90W/ki0Yexhcmib/
+NWuKH9yxPazLk3UwU8O3quTFnejzTpYjwQ6AO/sj+k8GbyEXctQwAHYEHRNkS+9v
+N44VCo4YHWy14XD6wle7
+=rUCi
+-----END PGP SIGNATURE-----
+
+--9iyR+p8Z2cn535Lj--
