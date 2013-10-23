@@ -1,73 +1,40 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] imx: add PCI fixup for PEX860X on Gateworks board
-Date: Wed, 23 Oct 2013 16:33:54 +0800
-Message-ID: <20131023083352.GP2839@S2101-09.ap.freescale.net>
-References: <1382503888-3962-1-git-send-email-tharvey@gateworks.com>
- <1382503888-3962-5-git-send-email-tharvey@gateworks.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH 00/14] DTS: ARM: OMAP3-N900: Add misc. HW
+Date: Wed, 23 Oct 2013 10:36:56 +0200
+Message-ID: <52678AA8.1040105@baylibre.com>
+References: <1382482183-14426-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382503888-3962-5-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382482183-14426-1-git-send-email-sre@debian.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 09:51:28PM -0700, Tim Harvey wrote:
+Hi Sebastian,
 
-<snip>
+On 23/10/2013 00:49, Sebastian Reichel wrote:
+> This patchset adds misc. hardware elements to the Nokia N900 DTS
+> file. Apart from the last two patches the kernel drivers in 3.12
+> are already capable of handling the DT entries.
+>
+> The series is based on bcousson/linux-omap-dt.git:for_3.13/dts.
 
-> @@ -78,6 +80,37 @@ static int ksz9031rn_phy_fixup(struct phy_device *dev)
->  	return 0;
->  }
->  
-> +/*
-> + * fixup for PLX PEX8909 bridge to configure GPIO1-7 as output High
-> + * as they are used for slots1-7 PERST#
-> + */
-> +static void mx6_ventana_pciesw_early_fixup(struct pci_dev *dev)
+Thanks, I've just applied the whole series.
 
-Please use 'imx' instead of 'mx' where you need an imx prefix.  In this
-case, it's even fine without the prefix.  So I just drop the 'mx6_' from
-function name, and applied the patch.  Thanks.
+Regards,
+Benoit
 
-Shawn
-
-> +{
-> +	u32 dw;
-> +
-> +	if (!of_machine_is_compatible("gw,ventana"))
-> +		return;
-> +
-> +	if (dev->devfn != 0)
-> +		return;
-> +
-> +	pci_read_config_dword(dev, 0x62c, &dw);
-> +	dw |= 0xaaa8; // GPIO1-7 outputs
-> +	pci_write_config_dword(dev, 0x62c, dw);
-> +
-> +	pci_read_config_dword(dev, 0x644, &dw);
-> +	dw |= 0xfe;   // GPIO1-7 output high
-> +	pci_write_config_dword(dev, 0x644, dw);
-> +
-> +	msleep(100);
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8609,
-> +	mx6_ventana_pciesw_early_fixup);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8606,
-> +	mx6_ventana_pciesw_early_fixup);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8604,
-> +	mx6_ventana_pciesw_early_fixup);
-> +
->  static int ar8031_phy_fixup(struct phy_device *dev)
->  {
->  	u16 val;
-> -- 
-> 1.7.9.5
-> 
-
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
