@@ -1,141 +1,30 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: added several new imx-pinmux groups
-Date: Wed, 23 Oct 2013 16:15:41 +0800
-Message-ID: <20131023081538.GN2839@S2101-09.ap.freescale.net>
-References: <1382503888-3962-1-git-send-email-tharvey@gateworks.com>
- <1382503888-3962-2-git-send-email-tharvey@gateworks.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 0/3] New descriptor-based GPIO interface
+Date: Wed, 23 Oct 2013 10:17:20 +0200
+Message-ID: <CACRpkdZnj1n-Uegu0TwNiTHXXBti0ukZ8hzmm22+Jg6OFnEi5Q@mail.gmail.com>
+References: <1382030498-23465-1-git-send-email-acourbot@nvidia.com>
+	<CACRpkdYx07Kfs6zOQmTg2cTSmEmsGgP=7wMCSG_30NW=dfYRPQ@mail.gmail.com>
+	<CAAVeFu+rj6AtKgfig6ZrYUzW9HZTg5qLyw4aGozyD31P_pEKAQ@mail.gmail.com>
+	<CACRpkdbpRkiANA32ZMEhm-XTB_FKCfmKQuGSmsD_0rLi96kPtQ@mail.gmail.com>
+	<CAAVeFuJ=Qvj2pT57T88eURrUOFURRFSXrFA+pL4xiA9c5sh9ig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382503888-3962-2-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuJ=Qvj2pT57T88eURrUOFURRFSXrFA+pL4xiA9c5sh9ig@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 09:51:25PM -0700, Tim Harvey wrote:
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+On Mon, Oct 21, 2013 at 12:18 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
 
-Applied, thanks.
+> Autobuild was unfortunately not too happy with one of the patches,
+> sorry about that. I have sent a small series that addresses the issues
+> it highlighted. Not sure if you are ok with squashing the first two
+> into bae48da2, but IMHO that would be the preferred way.
 
-Shawn
+I applied them as-is. I don't think it's going to be a major
+issue.
 
-> ---
->  arch/arm/boot/dts/imx6qdl.dtsi |   60 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 59154dc..caa88f9 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -637,6 +637,14 @@
->  							MX6QDL_PAD_DISP0_DAT19__AUD5_RXD  0x80000000
->  						>;
->  					};
-> +
-> +					pinctrl_audmux_4: audmux-4 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_EIM_D24__AUD5_RXFS     0x80000000
-> +							MX6QDL_PAD_EIM_D25__AUD5_RXC      0x80000000
-> +							MX6QDL_PAD_DISP0_DAT19__AUD5_RXD  0x80000000
-> +						>;
-> +					};
->  				};
->  
->  				ecspi1 {
-> @@ -809,6 +817,28 @@
->  							MX6QDL_PAD_SD4_DAT0__NAND_DQS      0x00b1
->  						>;
->  					};
-> +
-> +					/* No Strobe */
-> +					pinctrl_gpmi_nand_2: gpmi-nand-2 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
-> +							MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
-> +							MX6QDL_PAD_NANDF_WP_B__NAND_WP_B   0xb0b1
-> +							MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
-> +							MX6QDL_PAD_NANDF_CS0__NAND_CE0_B   0xb0b1
-> +							MX6QDL_PAD_NANDF_CS1__NAND_CE1_B   0xb0b1
-> +							MX6QDL_PAD_SD4_CMD__NAND_RE_B      0xb0b1
-> +							MX6QDL_PAD_SD4_CLK__NAND_WE_B      0xb0b1
-> +							MX6QDL_PAD_NANDF_D0__NAND_DATA00   0xb0b1
-> +							MX6QDL_PAD_NANDF_D1__NAND_DATA01   0xb0b1
-> +							MX6QDL_PAD_NANDF_D2__NAND_DATA02   0xb0b1
-> +							MX6QDL_PAD_NANDF_D3__NAND_DATA03   0xb0b1
-> +							MX6QDL_PAD_NANDF_D4__NAND_DATA04   0xb0b1
-> +							MX6QDL_PAD_NANDF_D5__NAND_DATA05   0xb0b1
-> +							MX6QDL_PAD_NANDF_D6__NAND_DATA06   0xb0b1
-> +							MX6QDL_PAD_NANDF_D7__NAND_DATA07   0xb0b1
-> +						>;
-> +					};
->  				};
->  
->  				hdmi_hdcp {
-> @@ -1056,6 +1086,13 @@
->  							MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
->  						>;
->  					};
-> +
-> +					pinctrl_uart1_2: uart1grp-2 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA 0x1b0b1
-> +							MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA 0x1b0b1
-> +						>;
-> +					};
->  				};
->  
->  				uart2 {
-> @@ -1074,6 +1111,13 @@
->  							MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B 0x1b0b1
->  						>;
->  					};
-> +
-> +					pinctrl_uart2_3: uart2grp-3 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA 0x1b0b1
-> +							MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA 0x1b0b1
-> +						>;
-> +					};
->  				};
->  
->  				uart3 {
-> @@ -1094,6 +1138,13 @@
->  							MX6QDL_PAD_EIM_EB3__UART3_RTS_B	  0x1b0b1
->  						>;
->  					};
-> +
-> +					pinctrl_uart3_3: uart3grp-3 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_EIM_D24__UART3_TX_DATA 0x1b0b1
-> +							MX6QDL_PAD_EIM_D25__UART3_RX_DATA 0x1b0b1
-> +						>;
-> +					};
->  				};
->  
->  				uart4 {
-> @@ -1105,6 +1156,15 @@
->  					};
->  				};
->  
-> +				uart5 {
-> +					pinctrl_uart5_1: uart5grp-1 {
-> +						fsl,pins = <
-> +							MX6QDL_PAD_KEY_COL1__UART5_TX_DATA 0x1b0b1
-> +							MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA 0x1b0b1
-> +						>;
-> +					};
-> +				};
-> +
->  				usbotg {
->  					pinctrl_usbotg_1: usbotggrp-1 {
->  						fsl,pins = <
-> -- 
-> 1.7.9.5
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
