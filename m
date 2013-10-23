@@ -1,39 +1,56 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v10 00/10] mtd:nand:omap2: clean-up of supported ECC
- schemes
-Date: Wed, 23 Oct 2013 05:10:21 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA29DCC@DBDE04.ent.ti.com>
-References: <1382172254-12448-1-git-send-email-pekon@ti.com>
- <20131022203009.GM23337@ld-irv-0074.broadcom.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v2 01/14] usb: doc: phy-mxs: Add more compatible strings
+Date: Wed, 23 Oct 2013 13:56:00 +0800
+Message-ID: <20131023055557.GE2839@S2101-09.ap.freescale.net>
+References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
+ <1382421528-17897-2-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131022203009.GM23337@ld-irv-0074.broadcom.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382421528-17897-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-> From: Brian Norris [mailto:computersforpeace@gmail.com]
-> > [PATCH 4/10]
-> >   dropped [PATCH v9 4/9] introducing NAND_BUSWIDTH_AUTO, instead
-> >   using DT 'nand-bus-width' for device bus-width
+On Tue, Oct 22, 2013 at 01:58:35PM +0800, Peter Chen wrote:
+> Since there are three mxs PHY versions, using three compatible
+> strings for them.
 > 
-> As mentioned in reply to the patch, I don't think this patch belongs in
-> this series now, and it is still not adequate (the original code there
-> is wrong in some ways, but your changes are not clearly better).
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/mxs-phy.txt |    6 +++++-
+>  1 files changed, 5 insertions(+), 1 deletions(-)
 > 
-Probably there was some confusion in review this patch.. 
-I have added my comments and replies to you.
-Request you to please re-review..
+> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> index 5835b27..912d4ad 100644
+> --- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+> @@ -1,7 +1,11 @@
+>  * Freescale MXS USB Phy Device
+>  
+>  Required properties:
+> -- compatible: Should be "fsl,imx23-usbphy"
+> +- compatible: there are three compatiable strings to stand for three
+> +mxs PHY verions.
+> +"fsl,imx23-usbphy": for mx23 and mx28
+> +"fsl,imx6q-usbphy": for mx6q and mx6dl
+> +"fsl,imx6sl-usbphy": for mx6sl and later mx6 soc serial
 
-And as I suppose this is the only remaining piece in this series, so
-If that's ok, request you to please pull-in this series..
-So, I can re-work on next pending series.. 
+Also, please use string 'imx' rather than 'mx' for consistency.
 
+Shawn
 
-with regards, pekon
+>  - reg: Should contain registers location and length
+>  - interrupts: Should contain phy interrupt
+>  
+> -- 
+> 1.7.1
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
