@@ -1,114 +1,81 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Wed, 23 Oct 2013 16:07:50 -0400
-Message-ID: <20131023200750.GP29341@beef>
-References: <20131018141221.GH2721@beef>
- <5264F37E.9060307@ti.com>
- <20131022104829.GF15425@login.drsnuggles.stderr.nl>
- <20131022112520.GE29341@beef>
- <5266F06C.2080701@gmail.com>
- <20131023144242.GI29341@beef>
- <20131023181115.GJ25954@gimli>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Wed, 23 Oct 2013 22:08:09 +0200
+Message-ID: <20131023200808.GC8828@mithrandir>
+References: <20131019104555.GI18477@ns203013.ovh.net>
+ <1382346813-8449-1-git-send-email-denis@eukrea.com>
+ <20131022045833.GB17512@ns203013.ovh.net>
+ <20131022072307.GA8681@ulmo.nvidia.com>
+ <20131022153445.GD17512@ns203013.ovh.net>
+ <20131022200141.GA8037@mithrandir>
+ <20131023134236.GE17512@ns203013.ovh.net>
+ <5267FE02.6000001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2/5bycvrmDh4d1IB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131023181115.GJ25954@gimli>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, Matthijs Kooijman <matthijs@stdin.nl>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <5267FE02.6000001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lothar Wa??mann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 01:11:15PM -0500, Felipe Balbi wrote:
-> Hi,
-> 
-> On Wed, Oct 23, 2013 at 10:42:42AM -0400, Matt Porter wrote:
-> > On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
-> > > On 10/22/2013 06:25 AM, Matt Porter wrote:
-> > > > On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
-> > > >> Hi Kishon,
-> > > >>
-> > > >> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
-> > > >>> I think it makes sense to keep the data width property in the dwc2 node itself.
-> > > >>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
-> > > >>> that it can be either <8> or <16>).
-> > > >> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
-> > > >> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
-> > > >> and 16 supported" would make sense as a property of dwc2 (though this
-> > > >> value should be autodetectable through GHWCFG4), while the actual 8 or
-> > > >> 16 supported by the PHY would make sense as property of a phy.
-> > > > 
-> > > > There would be no value in adding a property for an already detectable
-> > > > value to dwc2's binding. To be honest, it's pretty much useless
-> > > > information due to the existence of the "8 and 16" option.
-> > > > 
-> > > >> Note sure if this is really useful in practice as well, or if just
-> > > >> setting the actual width to use on dwc2 makes more sense...
-> > > > 
-> > > > The GHWCFG4 information itself is not useful in practice, as described
-> > > > in the original thread: https://lkml.org/lkml/2013/10/10/477
-> > > > 
-> > > > It's certainly useful in practice to have this width property in either
-> > > > the dwc2 or the phy binding. One can make a case for either. As I
-> > > > mentioned in the original post, if we put it in the phy binding we'll be
-> > > > updating the generic phy binding. We'll then need an api added into the
-> > > > generic phy framework to fetch the width of a phy.
-> > > > 
-> > > > Both cases are doable and trivial, we just need the canonical decision
-> > > > from a DT maintainer as to where the property belongs. Given that they
-> > > > are in ARM ksummit, I'm not expecting to hear anything right this
-> > > > moment. :)
-> > > 
-> > > The host can support both, so it is not a property of the host and is a
-> > > property of the phy. It is no different than what mode a SPI slave
-> > > requires or whether an i2c slave supports 8 or 10-bit addressing. Those
-> > > examples are all 1 to many rather than 1 to 1 where it doesn't really
-> > > matter, but the same logic applies.
-> > 
-> > Makes good sense, thanks.
-> > 
-> > In this case, given the PHY ownership of width, we can completely avoid
-> > any DT properties. The generic phy compliant BCM Kona phy driver can
-> > report via the generic phy framework that it is 8-bit wide. There's no
-> > support for this type of thing now but it's pretty trivial to add.
-> > 
-> > I went ahead and did a quick proof-of-concept that adds a free-form
-> > phy attributes struct for the generic phy. Given that generic phys can
-> > be for any transmission technology this could be filled with a jumble
-> > unrelated and often unpopulated attributes over time. In any case, the
-> > below patch allows the phy provider to choose to specify utmi_width and
-> > a controller driver that cares can use phy_get_attrs() to fetch the
-> > optional phy attributes and use the utmi_width field if applicable.
-> > 
-> > Kishon: I'll start a separate thread to discuss what approach you'd like
-> > to see in the generic phy framework to manage this.
-> > 
-> > -Matt
-> > 
-> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> > index 6d72269..b763d7b 100644
-> > --- a/include/linux/phy/phy.h
-> > +++ b/include/linux/phy/phy.h
-> > @@ -38,6 +38,14 @@ struct phy_ops {
-> >  };
-> > 
-> >  /**
-> > + * struct phy_attrs - represents phy attributes
-> > + * @utmi_width: Data path width implemented by UTMI PHY
-> > + */
-> > +struct phy_attrs {
-> > +	int			utmi_width;
-> 
-> this is supposed to be a generic PHY layer and as such, it shouldn't
-> know about USB details such as the UTMI bus. How about calling bus_width
-> just to make it more generic ? Then it would work for UTMI, PIPE3, ULPI,
-> SLPI (did that even fly ?) or any other PHY <-> link interconnect.
 
-That sounds much better. Yeah, I was also thinking about embedding a
-per-phy-class attribute struct and that just looked ugly. I like the simple
-generic bus_width.
+--2/5bycvrmDh4d1IB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll update and post a real patch.
+On Wed, Oct 23, 2013 at 05:49:06PM +0100, Stephen Warren wrote:
+> On 10/23/2013 02:42 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> ...
+> > For me gpio_get_value can return the value of a an output gpio but this=
+ need
+> > to be checked with LinusW
+>=20
+> That's certainly not true for all possible GPIO controllers; there are
+> at least some that can't read either:
+>=20
+> * The value of the physical wire, if the GPIO is configured as an output.
+>=20
+> * The value that the GPIO controller is driving as an output.
 
-Thanks,
-Matt
+My point originally was that since it's an output pin, you need to
+configure it as an output before you can use it. The way to do that in
+Linux is to call gpio_direction_output(). But that will automatically
+also force the output value to whatever you specify as the second
+parameter.
+
+I suppose that could be remedied by adding a separate function that
+doesn't set the value, but as Stephen points out, reading the value of
+an output pin may not be supported on all hardware.
+
+Thierry
+
+--2/5bycvrmDh4d1IB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaCyoAAoJEN0jrNd/PrOh+IEP/36fiiVQC4AugeLmNB2LmAdf
+jkRZOFpiNPM27Xb+eCU/HBJgYbZxoY1SH/0qUnlBRTSMIaQ451MG3nHOr4UH1Q0E
+64GnyHxOyFc9/Vp94IITvnJgYsKATllUIGklJC3MajlgKCmVtlUSkVoVphXsh7r/
+j5U+fKaVsvlRSWBO25cYvNSWZtTzEb/gmjWeRdZlI2PcCmFGpQSAvBs23KHHxIFd
+HH7PGCFrRyNk09RRRfSz3Ax+X4E/0Y0Mvl2ZdWhlGETij72V3uYEbJ9O7U3rV+kT
+H3PorXpKFAvLTcSkguNN1kATcZ/fJmalbFUN4zlB8xjSwls6UCLp3ZCSmA1cl7cJ
+uRiDHzW9eQMQM4/GOm0YEa0dfRsMBDHHBfATE6XaqYztt9KT2I5NoRjoVWXwZm4i
+Dy39NsrwaxT9T/bEM9RjDQpKjfbPCyMV5hCc/0myJIBcM/b6gzUodxpLEduSNTiJ
+7NpqCs9qjWNT199LRf8W074tn8OvYTLUtp9+nak0fkxkqL3uvt2Rl5hNdTxTN8fz
+9z17QyahM8+BRrEBGnAuRbS/apbR9MqQ5BFsIx/iuCwdFIOljAIl0SrhxciNkWOJ
+tnAIT2R12mAzieEVisn9orlwmzN42OaCiUPDnpypzNhHCuxFJVca11l+W+94brD/
+twDDzcAKiBe8G0rcvbll
+=3e4C
+-----END PGP SIGNATURE-----
+
+--2/5bycvrmDh4d1IB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
