@@ -1,78 +1,114 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Wed, 23 Oct 2013 22:05:00 +0200
-Message-ID: <20131023200459.GB8828@mithrandir>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
- <5267FA58.9050002@wwwdotorg.org>
- <20131023172001.GA3379@katana>
- <20131023185909.GC7863@ulmo.nvidia.com>
- <20131023193959.GA6777@katana>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
+Date: Wed, 23 Oct 2013 16:07:50 -0400
+Message-ID: <20131023200750.GP29341@beef>
+References: <20131018141221.GH2721@beef>
+ <5264F37E.9060307@ti.com>
+ <20131022104829.GF15425@login.drsnuggles.stderr.nl>
+ <20131022112520.GE29341@beef>
+ <5266F06C.2080701@gmail.com>
+ <20131023144242.GI29341@beef>
+ <20131023181115.GJ25954@gimli>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131023193959.GA6777@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20131023181115.GJ25954@gimli>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, Matthijs Kooijman <matthijs@stdin.nl>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 23, 2013 at 01:11:15PM -0500, Felipe Balbi wrote:
+> Hi,
+> 
+> On Wed, Oct 23, 2013 at 10:42:42AM -0400, Matt Porter wrote:
+> > On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
+> > > On 10/22/2013 06:25 AM, Matt Porter wrote:
+> > > > On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
+> > > >> Hi Kishon,
+> > > >>
+> > > >> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
+> > > >>> I think it makes sense to keep the data width property in the dwc2 node itself.
+> > > >>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
+> > > >>> that it can be either <8> or <16>).
+> > > >> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
+> > > >> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
+> > > >> and 16 supported" would make sense as a property of dwc2 (though this
+> > > >> value should be autodetectable through GHWCFG4), while the actual 8 or
+> > > >> 16 supported by the PHY would make sense as property of a phy.
+> > > > 
+> > > > There would be no value in adding a property for an already detectable
+> > > > value to dwc2's binding. To be honest, it's pretty much useless
+> > > > information due to the existence of the "8 and 16" option.
+> > > > 
+> > > >> Note sure if this is really useful in practice as well, or if just
+> > > >> setting the actual width to use on dwc2 makes more sense...
+> > > > 
+> > > > The GHWCFG4 information itself is not useful in practice, as described
+> > > > in the original thread: https://lkml.org/lkml/2013/10/10/477
+> > > > 
+> > > > It's certainly useful in practice to have this width property in either
+> > > > the dwc2 or the phy binding. One can make a case for either. As I
+> > > > mentioned in the original post, if we put it in the phy binding we'll be
+> > > > updating the generic phy binding. We'll then need an api added into the
+> > > > generic phy framework to fetch the width of a phy.
+> > > > 
+> > > > Both cases are doable and trivial, we just need the canonical decision
+> > > > from a DT maintainer as to where the property belongs. Given that they
+> > > > are in ARM ksummit, I'm not expecting to hear anything right this
+> > > > moment. :)
+> > > 
+> > > The host can support both, so it is not a property of the host and is a
+> > > property of the phy. It is no different than what mode a SPI slave
+> > > requires or whether an i2c slave supports 8 or 10-bit addressing. Those
+> > > examples are all 1 to many rather than 1 to 1 where it doesn't really
+> > > matter, but the same logic applies.
+> > 
+> > Makes good sense, thanks.
+> > 
+> > In this case, given the PHY ownership of width, we can completely avoid
+> > any DT properties. The generic phy compliant BCM Kona phy driver can
+> > report via the generic phy framework that it is 8-bit wide. There's no
+> > support for this type of thing now but it's pretty trivial to add.
+> > 
+> > I went ahead and did a quick proof-of-concept that adds a free-form
+> > phy attributes struct for the generic phy. Given that generic phys can
+> > be for any transmission technology this could be filled with a jumble
+> > unrelated and often unpopulated attributes over time. In any case, the
+> > below patch allows the phy provider to choose to specify utmi_width and
+> > a controller driver that cares can use phy_get_attrs() to fetch the
+> > optional phy attributes and use the utmi_width field if applicable.
+> > 
+> > Kishon: I'll start a separate thread to discuss what approach you'd like
+> > to see in the generic phy framework to manage this.
+> > 
+> > -Matt
+> > 
+> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> > index 6d72269..b763d7b 100644
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -38,6 +38,14 @@ struct phy_ops {
+> >  };
+> > 
+> >  /**
+> > + * struct phy_attrs - represents phy attributes
+> > + * @utmi_width: Data path width implemented by UTMI PHY
+> > + */
+> > +struct phy_attrs {
+> > +	int			utmi_width;
+> 
+> this is supposed to be a generic PHY layer and as such, it shouldn't
+> know about USB details such as the UTMI bus. How about calling bus_width
+> just to make it more generic ? Then it would work for UTMI, PIPE3, ULPI,
+> SLPI (did that even fly ?) or any other PHY <-> link interconnect.
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That sounds much better. Yeah, I was also thinking about embedding a
+per-phy-class attribute struct and that just looked ugly. I like the simple
+generic bus_width.
 
-On Wed, Oct 23, 2013 at 08:40:00PM +0100, Wolfram Sang wrote:
->=20
-> > > I'd even go further and use "unstable-" as the prefix instead of "!"
-> > > which is way more explicit.
-> >=20
-> > I guess unstable- is as good as anything. I personally think that "!" is
-> > disturbing enough to the eye to make it abundantly clear that something
-> > is fishy.
->=20
-> "!" marks the binding as "special" whatever that is. A busy person might
-> decide to not look that up as long as it works right now. "unstable-"
-> (or maybe "unstable!-" ;)) is explicit so people know what they get.
+I'll update and post a real patch.
 
-We'll need to document this somewhere to make people aware of it. And if
-nobody bothers to read that documentation then they're not entitled to
-complain.
-
-That said, in my experience people are just as likely to ignore anything
-with an "unstable" in it until it breaks. Also I don't think "unstable"
-is the right term. "unstable" implies that it somehow influences the
-system stability. But that's not the case. "experimental" is much more
-accurate in that developers are experimenting with the representation.
-
-Thierry
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaCvrAAoJEN0jrNd/PrOhMLUP/3daxa2Fj9G7LjhZVCUook6v
-9IaXzkB4ytYmOF+KY8gSJRwnaZC4YWFZhTgR49FKjjBOk7ARHcl/cZmX0moXMLZX
-r26cf1UK3sx/rYW7I38HfoINn0QNELBSGII9E6NbuuBt2zWmBkDcopVJLlpv7cWH
-e3kYkC3kszohtE9nmgwoGtOJiIOUg70Qv9h0sVHWBaPJyTu52xXBerp9LbBC1d5+
-oPBv46V4GSgLI2s8LMua6RTlzAGIGfBLm4kOs/tEQxyorbEZm+EUdrCV+B7U2LqT
-h37yONfFYDkRmhUHNyUb1jOcArZ2doW9RN2IInXawXmXc28OBJKZZBjLOOz+kBDy
-NibUcHRpfn2Y1kP1THb6mjbk+NJI/kOoMrCO21OOK7lEdVa/FGqPiriPiKQPUWD0
-+4nsmpbuEzaKfO2s5Eag7F+iyEOnSStXyap2u0alH0KnKgZd4Aa0+E8QLHO2jcpA
-oPvwXDtug8xQ1iULc09bzefqIchAPtuPU5v/EHoXeEJ5IO5tqpmzN4d9KhsDA7Aa
-V/U8sbX4t0m1AXgtW/1Kje0pCxxfBvr0Ym9046SQkf6Lezb/tktV/o1ZnLoC2OAx
-QkEAq++bTC8cBoZhsobBkobzHMs5zDWjcE2qhsYQXTEkfUJmceIbPTGtrcKDugO1
-4cFQPrPWbVk+DgEbQOyM
-=Ghhm
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Matt
