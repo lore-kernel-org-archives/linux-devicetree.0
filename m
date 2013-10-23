@@ -1,57 +1,51 @@
-From: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Wed, 23 Oct 2013 20:46:22 +0200
-Message-ID: <1382553982.31058.10.camel@sakura.staff.proxad.net>
-References: <20131020220839.GT2443@sirena.org.uk>
-	 <5264576F.6050307@wwwdotorg.org>
-	 <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
-	 <52658EBC.8020800@wwwdotorg.org>
-	 <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
-	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
-	 <20131022171346.GE4061@obsidianresearch.com>
-	 <20131023080630.GA14413@netboy>
-	 <20131023172955.GA17145@obsidianresearch.com>
-	 <20131023174458.GC5208@netboy>
-Reply-To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
+ tree bindings
+Date: Wed, 23 Oct 2013 20:51:15 +0200
+Message-ID: <20131023185114.GA7863@ulmo.nvidia.com>
+References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
+ <1382544332.8522.40.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ANSI_X3.4-1968"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131023174458.GC5208@netboy>
+Content-Disposition: inline
+In-Reply-To: <1382544332.8522.40.camel-Fexsq3y4057IgHVZqg5X0TlWvGAXklZc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 2013-10-23 at 19:45 +0200, Richard Cochran wrote:
+On Wed, Oct 23, 2013 at 05:05:32PM +0100, David Woodhouse wrote:
+> On Wed, 2013-10-23 at 17:06 +0200, Thierry Reding wrote:
+> > +       /* check if binding is experimental */
+> > +       if (dev != device || drv != driver) {
+> > +               pr_warn("of: device %s (%s) uses an experimental binding\n",
+> > +                       np->name, np->full_name);
+> > +
 > 
-> Once I design my board, and it goes into production, the hardware is
-> fixed. It doesn't change, and neither should the description of the
-> hardware, also known as the DTB. If I have to research all of the
-> ways 
+> In the discussions earlier I think we decided that this should set a
+> taint flag too.
 
-SOC support are never completely finished; subsystems are getting new
-features.
- 
-It's possible to ship a product with a kernel version that does not
-handle all the chip goodies, then want to upgrade the kernel later when
-someone has written the driver for a previously unused hardware block.
+A taint flag seems somewhat drastic. It's not like using an experimental
+binding should have an influence on the stability of the running kernel.
+I always thought that taint flags were supposed to flag conditions where
+code of unknown origin or code known to be broken was being executed
+because they may destabilize the running kernel.
 
-the first iteration of your DTB would be incomplete, the bindings to
-describe that hardware block would not exist inside it.
+The worst that should happen if you run an experimental binding is that
+some part of the system will just not come up.
 
-real life example with Marvell Kirkwood, hw crypto support was added 1
-year after initial SOC support.
+> If you've built a kernel with CONFIG_OF_EXPERIMENTAL (which I think we
+> were calling CONFIG_UNSTABLE_DT) then you have no expectation that it
+> will boot tomorrow, although it might work with your DTB today.
 
-I'm happy I can use it now on existing boards by "just" upgrading the
-kernel.
+Yes, something like that. Although I would hope that we can actually
+come up with reasonably simple and stable bindings for essential things
+required to boot. That way you could at least output some kind of
+warning to the user that something went wrong. If the system just won't
+boot at all then a taint flag won't help very much either.
 
--- 
-Maxime
-
-
+Thierry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
