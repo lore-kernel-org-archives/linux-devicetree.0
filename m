@@ -1,50 +1,30 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv3 2/3] Input: twl4030-pwrbutton: use dev_err for errors
-Date: Wed, 23 Oct 2013 18:47:14 +0200
-Message-ID: <1382546835-20212-3-git-send-email-sre@debian.org>
-References: <1382546835-20212-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382546835-20212-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@debian.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Wed, 23 Oct 2013 17:49:06 +0100
+Message-ID: <5267FE02.6000001@wwwdotorg.org>
+References: <20131019104555.GI18477@ns203013.ovh.net> <1382346813-8449-1-git-send-email-denis@eukrea.com> <20131022045833.GB17512@ns203013.ovh.net> <20131022072307.GA8681@ulmo.nvidia.com> <20131022153445.GD17512@ns203013.ovh.net> <20131022200141.GA8037@mithrandir> <20131023134236.GE17512@ns203013.ovh.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131023134236.GE17512-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lothar Wa??mann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use dev_err() to output errors instead of dev_dbg().
+On 10/23/2013 02:42 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+...
+> For me gpio_get_value can return the value of a an output gpio but this need
+> to be checked with LinusW
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- drivers/input/misc/twl4030-pwrbutton.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+That's certainly not true for all possible GPIO controllers; there are
+at least some that can't read either:
 
-diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/twl4030-pwrbutton.c
-index a3a0fe3..3efbb13 100644
---- a/drivers/input/misc/twl4030-pwrbutton.c
-+++ b/drivers/input/misc/twl4030-pwrbutton.c
-@@ -60,7 +60,7 @@ static int twl4030_pwrbutton_probe(struct platform_device *pdev)
- 
- 	pwr = input_allocate_device();
- 	if (!pwr) {
--		dev_dbg(&pdev->dev, "Can't allocate power button\n");
-+		dev_err(&pdev->dev, "Can't allocate power button\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -74,13 +74,13 @@ static int twl4030_pwrbutton_probe(struct platform_device *pdev)
- 			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
- 			"twl4030_pwrbutton", pwr);
- 	if (err < 0) {
--		dev_dbg(&pdev->dev, "Can't get IRQ for pwrbutton: %d\n", err);
-+		dev_err(&pdev->dev, "Can't get IRQ for pwrbutton: %d\n", err);
- 		goto free_input_dev;
- 	}
- 
- 	err = input_register_device(pwr);
- 	if (err) {
--		dev_dbg(&pdev->dev, "Can't register power button: %d\n", err);
-+		dev_err(&pdev->dev, "Can't register power button: %d\n", err);
- 		goto free_irq;
- 	}
- 
--- 
-1.8.4.rc3
+* The value of the physical wire, if the GPIO is configured as an output.
+
+* The value that the GPIO controller is driving as an output.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
