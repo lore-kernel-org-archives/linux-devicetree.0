@@ -1,243 +1,79 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3][ 5/5] ARM: dts: mbimxsd35 Add video and displays support.
-Date: Wed, 23 Oct 2013 14:43:49 +0200
-Message-ID: <1382532229-32755-5-git-send-email-denis@eukrea.com>
-References: <1382532229-32755-1-git-send-email-denis@eukrea.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v10 04/10] mtd: nand: omap: fix device scan:
+ NAND_CMD_READID, NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
+Date: Wed, 23 Oct 2013 09:55:17 -0300
+Message-ID: <20131023125516.GA2458@localhost>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-5-git-send-email-pekon@ti.com>
+ <20131022201624.GL23337@ld-irv-0074.broadcom.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
+ <5267690C.9080005@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382532229-32755-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5267690C.9080005@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "Gupta, Pekon" <pekon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "olof@lixom.net" <olof@lixom.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Brian,
 
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v2->v3:
-- The dts were adapted to the new DT bindings which looks more like the=
- IPUv3
-  ones.
----
- .../imx35-eukrea-mbimxsd35-baseboard-cmo-qvga.dts  |   61 ++++++++++++=
-++++++++
- .../imx35-eukrea-mbimxsd35-baseboard-dvi-svga.dts  |   51 ++++++++++++=
-++++
- .../imx35-eukrea-mbimxsd35-baseboard-dvi-vga.dts   |   51 ++++++++++++=
-++++
- 3 files changed, 163 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-=
-cmo-qvga.dts
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-=
-dvi-svga.dts
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-=
-dvi-vga.dts
+On Tue, Oct 22, 2013 at 11:13:32PM -0700, Brian Norris wrote:
+> On 10/22/2013 10:07 PM, Gupta, Pekon wrote:
+> >> From: Brian Norris [mailto:computersforpeace@gmail.com]
+> >> On Sat, Oct 19, 2013 at 02:14:08PM +0530, Pekon Gupta wrote:
+> > [...]
+> >=20
+> >>>
+> >>> Thus this patch run nand_scan_ident() with driver configured as x=
+8 device.
+> >>
+> >> So are you saying that the driver currently doesn't work if you st=
+arted
+> >> in x16 buswidth? Are you having problems with a particular setup? =
+What
+> >> sort of devices are you testing?
+> >>
+> > No, I'm saying that you cannot read ONFI params in x16 mode.
+> > And, that is what was pointed out in following commit log also ..
+> > (Reference to 3.3.2. Target Initialization: given above)
+> > So, if I run nand_scan_ident() in x16 mode, my ONFI detection would=
+=20
+> > fail for sure ..
+>=20
+> But you cannot just run nand_scan_ident() with !(chip->options &
+> NAND_BUSWIDTH_16) when your devices is x16. You need to solve the ONF=
+I
+> detection problem while correctly specifying NAND_BUSWIDTH_16.
+>=20
+> Since you didn't answer the other 2 questions there: are you testing =
+any
+> x16 devices?
+>=20
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-cmo-qvg=
-a.dts b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-cmo-qvga.dts
-new file mode 100644
-index 0000000..6d186ca
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-cmo-qvga.dts
-@@ -0,0 +1,61 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx35-eukrea-mbimxsd35-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD35 with the CMO-QVGA Display";
-+	compatible =3D "eukrea,mbimxsd35-baseboard-cmo-qvga", "eukrea,mbimxsd=
-35-baseboard", "eukrea,cpuimx35", "fsl,imx35";
-+
-+	display@di0 {
-+		regulator-name =3D "lcd";
-+		interface-pix-fmt =3D "rgb666";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_lcdc_1>;
-+		model =3D "CMO-QVGA";
-+		display-timings {
-+			qvga_timings: 320x240 {
-+				clock-frequency =3D <6500000>;
-+				hactive =3D <320>;
-+				vactive =3D <240>;
-+				hback-porch =3D <68>;
-+				hfront-porch =3D <20>;
-+				vback-porch =3D <15>;
-+				vfront-porch =3D <4>;
-+				hsync-len =3D <30>;
-+				vsync-len =3D <3>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_3v3: lcd-en {
-+		compatible =3D "regulator-fixed";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_reg_lcd_3v3>;
-+		regulator-name =3D "lcd";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 4 0>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lcdc {
-+	lcd-supply =3D <&reg_lcd_3v3>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-svg=
-a.dts b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-svga.dts
-new file mode 100644
-index 0000000..ccf5f48
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-svga.dts
-@@ -0,0 +1,51 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx35-eukrea-mbimxsd35-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD35 with the DVI-SVGA Display";
-+	compatible =3D "eukrea,mbimxsd35-baseboard-dvi-svga", "eukrea,mbimxsd=
-35-baseboard", "eukrea,cpuimx35", "fsl,imx35";
-+	display@di0 {
-+		interface-pix-fmt =3D "rgb666";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_lcdc_1>;
-+		model =3D "DVI-SVGA";
-+		display-timings {
-+			svga_timings: 800x600 {
-+				clock-frequency =3D <40000000>;
-+				hactive =3D <800>;
-+				vactive =3D <600>;
-+				hback-porch =3D <75>;
-+				hfront-porch =3D <75>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <75>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+				hsync-active =3D <1>;
-+				vsync-active =3D <1>;
-+				de-active =3D <1>;
-+				pixelclk-active =3D <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-vga=
-=2Edts b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-vga.dts
-new file mode 100644
-index 0000000..6e31684
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard-dvi-vga.dts
-@@ -0,0 +1,51 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-+ * MA 02110-1301, USA.
-+ */
-+
-+#include "imx35-eukrea-mbimxsd35-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD35 with the DVI-VGA Display";
-+	compatible =3D "eukrea,mbimxsd35-baseboard-dvi-vga", "eukrea,mbimxsd3=
-5-baseboard", "eukrea,cpuimx35", "fsl,imx35";
-+	display@di0 {
-+		interface-pix-fmt =3D "rgb666";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_lcdc_1>;
-+		model =3D "DVI-VGA";
-+		display-timings {
-+			vga_timings: 640x480 {
-+				clock-frequency =3D <31250000>;
-+				hactive =3D <640>;
-+				vactive =3D <480>;
-+				hback-porch =3D <100>;
-+				hfront-porch =3D <100>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <100>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+				hsync-active =3D <1>;
-+				vsync-active =3D <1>;
-+				de-active =3D <1>;
-+				pixelclk-active =3D <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	status =3D "okay";
-+};
+I'm jumping on this thread without having read all the discussion, sorr=
+y
+about that.
+
+=46WIW, I have a Beaglebone with a 16-bit bus NAND attached to it.
+
+Coincidentally, yesterday I was doing some tests as I'm ramping up the
+NAND and I found that weird double nand_scan_ident() call.
+The whole thing looks buggy to me, so I'm happy to help, review, test
+and patches to take care of this.
+
+I'm using some TI SDK with some ancient v3.2.x (with no git history!),
+but from this discussion it seems the issue is still present in
+mainline.
 --=20
-1.7.9.5
-
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
