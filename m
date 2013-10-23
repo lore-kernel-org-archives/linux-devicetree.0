@@ -1,39 +1,88 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Wed, 23 Oct 2013 17:45:30 +0800
-Message-ID: <20131023094530.GA21796@gondor.apana.org.au>
-References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
- <1381846278-9529-3-git-send-email-svarbanov@mm-sol.com>
- <526799B6.1090904@mm-sol.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: [GIT PULL] ARM: OMAP: Some more more Device Tree for 3.13
+Date: Wed, 23 Oct 2013 11:48:55 +0200
+Message-ID: <52679B87.5020108@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <526799B6.1090904@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Matt Mackall <mpm@selenic.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 12:41:10PM +0300, Stanimir Varbanov wrote:
-> On 10/15/2013 05:11 PM, Stanimir Varbanov wrote:
-> > This adds a driver for hardware random number generator present
-> > on Qualcomm MSM SoC's.
-> > 
-> > Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
-> Hi Matt, Herbert,
-> 
-> Sorry for the noise but this patch staying for a while in mailing list
-> and I'd like to get some attention to this driver. Do you think it needs
-> another re-spin or it has obvious issues / concerns?
-> 
-> Thanks for your time.
+Hi Tony,
 
-Well if the ARM folks are OK with it I'm happy to take them.
+Please pull the branch for even more OMAP Device Tree for v3.13 or later.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+Benoit
+
+
+The following changes since commit 6a96867844895008558810853c7838af39dd317c:
+
+  ARM: dts: AM33xx+: Add i2c aliases (2013-10-22 11:05:42 +0200)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git tags/for_3.13_super_late/dts_signed
+
+for you to fetch changes up to b306e7b819edd0515e18f5ca7e0d1cb4b0e4e58a:
+
+  ARM: dts: omap5-uevm: Remove pinmux for dmic pins (2013-10-23 11:40:47 +0200)
+
+----------------------------------------------------------------
+Add a lot of N900 nodes
+Add OPP table to OMAP5/DRA7
+Add support for Newflow NanoBone board
+
+----------------------------------------------------------------
+Eric Witcher (1):
+      ARM: dts: omap5-uevm: fix mcspi node pin descriptions
+
+J Keerthy (3):
+      ARM: dts: dra7-evm: add smps123 supply for CPU
+      ARM: dts: OMAP5: Add CPU OPP table
+      ARM: dts: DRA7: Add CPU OPP table
+
+Mark Jackson (1):
+      ARM: dts: Add support for Newflow NanoBone board
+
+Markus Pargmann (1):
+      ARM: dts: am33xx, change usb ctrl module label
+
+Nishanth Menon (1):
+      ARM: dts: omap5-uevm: add smps123 supply for CPU
+
+Peter Ujfalusi (2):
+      ARM: dts: omap5-uevm: Correct twl6040 reset GPIO pinmux
+      ARM: dts: omap5-uevm: Remove pinmux for dmic pins
+
+Sebastian Reichel (14):
+      ARM: dts: omap3-n900: Add pinctrl for i2c devices
+      ARM: dts: omap3-n900: Fix i2c bus speed
+      ARM: dts: omap3-n900: Add UART support
+      ARM: dts: omap3-n900: Add support for SD cards
+      ARM: dts: omap3-n900: GPIO key definitions
+      ARM: dts: omap3-n900: Add vibrator device
+      ARM: dts: omap3-n900: Add LP5523 support
+      ARM: dts: TWL4030: Add missing regulators
+      ARM: dts: omap3-n900: Specify regulator info
+      ARM: dts: omap3-n900: Add NAND support
+      ARM: dts: omap3-n900:: Mux RX51_LCD_RESET_GPIO in DTS
+      ARM: dts: omap3-n900: Add TLV320AIC3X support
+      ARM: dts: omap3-n900: Add LP5523 support
+      ARM: dts: TWL4030: Add power button support
+
+ MAINTAINERS                       |   6 +
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/am335x-nano.dts | 431 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi     |   6 +-
+ arch/arm/boot/dts/dra7-evm.dts    |   4 +
+ arch/arm/boot/dts/dra7.dtsi       |   8 +-
+ arch/arm/boot/dts/omap3-n900.dts  | 396 +++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/omap5-uevm.dts  |  34 ++-
+ arch/arm/boot/dts/omap5.dtsi      |   9 +-
+ arch/arm/boot/dts/twl4030.dtsi    |  49 ++++-
+ 10 files changed, 912 insertions(+), 32 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am335x-nano.dts
