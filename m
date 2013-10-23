@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv5][ 7/9] ARM: dts: i.MX25: Add ssi clocks and DMA events.
-Date: Wed, 23 Oct 2013 10:29:32 +0200
-Message-ID: <1382516974-13371-7-git-send-email-denis@eukrea.com>
+Subject: [PATCHv5][ 8/9] ARM: dts: i.MX25: Add sdma script path.
+Date: Wed, 23 Oct 2013 10:29:33 +0200
+Message-ID: <1382516974-13371-8-git-send-email-denis@eukrea.com>
 References: <1382516974-13371-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -24,47 +24,22 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx25.dtsi |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx25.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
 i
-index 6ac4c98..cce0669 100644
+index cce0669..7c0a019 100644
 --- a/arch/arm/boot/dts/imx25.dtsi
 +++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -339,6 +339,11 @@
- 				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
- 				reg =3D <0x50014000 0x4000>;
- 				interrupts =3D <11>;
-+				clocks =3D <&clks 118>;
-+				clock-names =3D "ipg";
-+				dmas =3D <&sdma 24 1 0>,
-+				       <&sdma 25 1 0>;
-+				dma-names =3D "rx", "tx";
- 				status =3D "disabled";
+@@ -556,6 +556,7 @@
+ 				clock-names =3D "ipg", "ahb";
+ 				#dma-cells =3D <3>;
+ 				interrupts =3D <34>;
++				fsl,sdma-ram-script-name =3D "imx/sdma/sdma-imx25.bin";
  			};
 =20
-@@ -369,6 +374,11 @@
- 				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
- 				reg =3D <0x50034000 0x4000>;
- 				interrupts =3D <12>;
-+				clocks =3D <&clks 117>;
-+				clock-names =3D "ipg";
-+				dmas =3D <&sdma 28 1 0>,
-+				       <&sdma 29 1 0>;
-+				dma-names =3D "rx", "tx";
- 				status =3D "disabled";
- 			};
-=20
-@@ -539,7 +549,7 @@
- 				#interrupt-cells =3D <2>;
- 			};
-=20
--			sdma@53fd4000 {
-+			sdma: sdma@53fd4000 {
- 				compatible =3D "fsl,imx25-sdma", "fsl,imx35-sdma";
- 				reg =3D <0x53fd4000 0x4000>;
- 				clocks =3D <&clks 112>, <&clks 68>;
+ 			wdog@53fdc000 {
 --=20
 1.7.9.5
 
