@@ -1,92 +1,60 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Wed, 23 Oct 2013 21:06:11 +0200
-Message-ID: <20131023190610.GD7863@ulmo.nvidia.com>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <20131021091555.GB21518@ulmo.nvidia.com>
- <20131021170711.GA5256@netboy>
- <20131022092410.GB15640@ulmo.nvidia.com>
- <20131023173032.GB5208@netboy>
+Date: Wed, 23 Oct 2013 21:12:31 +0200
+Message-ID: <1382555551.31058.24.camel@sakura.staff.proxad.net>
+References: <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+	 <52658EBC.8020800@wwwdotorg.org>
+	 <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
+	 <20131022171346.GE4061@obsidianresearch.com>
+	 <20131023080630.GA14413@netboy>
+	 <20131023172955.GA17145@obsidianresearch.com>
+	 <20131023174458.GC5208@netboy>
+	 <1382553982.31058.10.camel@sakura.staff.proxad.net>
+	 <20131023185116.GJ5208@netboy>
+Reply-To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1SQmhf2mF2YjsYvc"
+Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131023173032.GB5208@netboy>
+In-Reply-To: <20131023185116.GJ5208@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---1SQmhf2mF2YjsYvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2013-10-23 at 20:51 +0200, Richard Cochran wrote:
 
-On Wed, Oct 23, 2013 at 07:30:33PM +0200, Richard Cochran wrote:
-> On Tue, Oct 22, 2013 at 11:24:11AM +0200, Thierry Reding wrote:
-> >=20
-> > Oh, I've been doing that for quite a while. In fact the patches that
-> > gave rise to the current frustration have been in a separate tree in
-> > various forms for over a year. But that's not what we want, is it?
->=20
-> I can't see anything wrong with that. Your code is not the first to
-> have to wait for a long time before being finally merged. Think of
-> alsa, or of the pps stuff, or wakelocks, or preempt_rt, etc, etc.
+> I have no problem with new kernel features unlocked by new DT
+> bindings.
+> 
+> I *do* have a problem with new kernels breaking existing DT bindings.
 
-Heh... that's no news for me.
+well this assume the new feature does not need modifying an existing
+binding.
 
-> As an end user, I don't mind waiting for a feature if that means
-> stability and QA. If I get impatient, still I always have the choice
-> to take a development version. But I do not want to be forced to take
-> unfinished work in a released kernel.
+again taking the Kirkwood crypto example, the driver was written using
+lets say "PIO" mode, and a patch has been posted recently that mostly
+rewrite the driver to use DMA mode after.
 
-This isn't about stability and QA. The DT binding has nothing to do
-whatsoever with the quality of the code. Also in many cases with DT we
-end up with work that's actually finished and pretty well tested, and
-the only thing blocking it is the DT binding.
+chances are the binding written by the first developer would not be the
+same at all as the second
 
-> > I
-> > used to think that we actively wanted people to contribute code back
-> > upstream, so telling everyone to keep code in their own trees isn't
-> > helping anyone.
->=20
-> Actually, I mean to propose that the ARM/DT people use a single
-> marshaling tree, one step away in the process from mainline.
+does the "DT bindings validation team" will have to look inside SOC
+datasheet and decide whether the developer described the hardware
+correctly ?
 
-I don't think fragmentation of that sort will do us any good. It will
-only make it harder to get things merged because they get developed
-outside of the upstream process.
+In another post, someone proposed that time would tell if a binding was
+"stable" enough. In that case that's not true, 2 years have passed
+before someone took a glance at what the hardware could do and proposed
+a different implementation.
 
-Thierry
+-- 
+Maxime
 
---1SQmhf2mF2YjsYvc
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaB4iAAoJEN0jrNd/PrOhGd0P/RQ6VVfWIzyqk007V4ZchrZ1
-hA6eWdh6ZnpaLu8DfkQSlKh1WlKBcUSPQCQ1kQmVZPP+mOAFTf581srqzU9YM/Xi
-m4PUNGrZB0BhmBRpqmKY3raYB1AtvWdYi+hkDDEmuONNQLm3nBke17KlEPI4Ox//
-9nY96jCSmUaqS32bcTozclDDw0/cxAYL69/dShIV+hbptXFgpm3FqHhci2kDDQW7
-0JlIH5Kt72Wr73mkoxCWcukYqOj1Uq9tCUy7clPT4x5Ia3CzOK6EYQDxCQMWG0wC
-C63nZni/fl3IIC9yeqzO+ELUSaov62n9nNlVGY5lh74P4azIxu5BhSECN5u8/ZiT
-TbcbvkUgNosNhtC/lLYa4n3NP6jGNT1i9zcmetI9TSgGNT9ujXOJohS2xuva5VDO
-Zg6N0Sa37dvGvsi51TpyTKztjKVn8C8xJTh9FtgVvup3UxjFIvLw2u7JR52te0J3
-1k4Yi5rl2BUT8ZSfdXxkpbFq3oCmGdUw10xr6epGiuEH1aioi78XgkAQV5LFGGVP
-q3gTWvLUh2sGj+Th8IzMMxjfbYYuNa/d3gSYTzY+UcghGgoOtKvZ4MxukUxWHBdw
-Suc2jZ8FMcqrpt1plXF8QmvH1fx94tgzQIDCAHp/lPVcYe606c77IyBUoYl6+fhk
-SLOAHN+32idnf2NyqsPJ
-=LN+T
------END PGP SIGNATURE-----
-
---1SQmhf2mF2YjsYvc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
