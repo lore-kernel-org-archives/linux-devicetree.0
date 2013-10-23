@@ -1,123 +1,183 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Wed, 23 Oct 2013 22:35:50 +0200
-Message-ID: <20131023203549.GE8828@mithrandir>
-References: <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com>
- <20131022150426.GF29341@beef>
- <20131022171346.GE4061@obsidianresearch.com>
- <20131023080630.GA14413@netboy>
- <20131023094903.GD11954@ulmo.nvidia.com>
- <20131023171620.GA5208@netboy>
- <alpine.LFD.2.03.1310231355160.1951@syhkavp.arg>
- <20131023181328.GF5208@netboy>
+Date: Wed, 23 Oct 2013 23:07:16 +0200
+Message-ID: <20131023210715.GF8828@mithrandir>
+References: <20131021085420.GA21518@ulmo.nvidia.com>
+ <52658C49.80400@wwwdotorg.org>
+ <5265AFED.1040503@roeck-us.net>
+ <52665314.2040904@imgtec.com>
+ <232aa6e4-19fe-4460-8101-8bf1d639ff3c@email.android.com>
+ <20131022164922.GA29852@roeck-us.net>
+ <20131022203546.GC8037@mithrandir>
+ <20131022211000.GA30394@roeck-us.net>
+ <20131023075758.GA7404@ulmo.nvidia.com>
+ <20131023160131.GA20675@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FN+gV9K+162wdwwF"
+	protocol="application/pgp-signature"; boundary="Il7n/DHsA0sMLmDu"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131023181328.GF5208@netboy>
+In-Reply-To: <20131023160131.GA20675-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---FN+gV9K+162wdwwF
+--Il7n/DHsA0sMLmDu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2013 at 08:13:55PM +0200, Richard Cochran wrote:
-> On Wed, Oct 23, 2013 at 01:55:24PM -0400, Nicolas Pitre wrote:
-> > On Wed, 23 Oct 2013, Richard Cochran wrote:
-> > > I still don't understand why someone (linario?) can't host an
-> > > arm-dt-devel tree that allows the freedom to change bindings and
-> > > features the best source for supporting the latest ARM SoCs. I don't
-> > > buy the argument that only Linus' tree gets enough testing. If another
-> > > tree really is the best ARM tree, then it will get plenty of attention
-> > > and testing.
+On Wed, Oct 23, 2013 at 09:01:31AM -0700, Guenter Roeck wrote:
+> On Wed, Oct 23, 2013 at 09:57:58AM +0200, Thierry Reding wrote:
+[...]
+> > 	pic1i2c: i2c-controller {
+> > 		...
 > >=20
-> > So you're basically saying that we should split the development effort=
-=20
-> > across multiple trees instead of encouraging people to converge on the=
-=20
-> > same tree?  This is completely contrary to all the efforts we've been=
-=20
-> > deploying to encourage people to submit their code upstream.
->=20
-> No, just a single tree, please.
-
-In that case, why not just go one step further and leave out that
-intermediary tree in the first place? If only code that's completely
-finished and never subject to change goes into the upstream kernel, then
-it's very unlikely that we'll ever see any support at all for new SoCs
-upstream. What would be the incentive for vendors to upstream code if
-there's another canonical tree that users can pull from. How is that
-different from any other vendor tree?
-
-> > ii> As an end user, I don't mind waiting for a feature if that means
-> > > stability and QA. If I get impatient, still I always have the choice
-> > > to take a development version. But I do not want to be forced to take
-> > > unfinished work in a released kernel.
+> > 		eeprom@55 {
+> > 			/* insert all other properties here */
+> > 		};
+> > 	};
 > >=20
-> > If as an end user you want full QA, you should go with a distro kernel.
+> If I add the above to the i2c controller node, the kernel will try to
+> instantiate the eeprom when the system comes up. If no card is
+> inserted at that time, this will fail. The above describes the devices
+> which needs to be instantiated after a card is inserted into the connecto=
+r,
+> and only then (and removed when the card is pulled).
+> In addition, I use the 'ideeprom' property to establish a callback
+> to be able to read the eeprom contents and trigger loading the DT overlay.
+
+That's an interesting setup and a pretty elegant solution.
+
+> > But that breaks down once you start needing to represent more than just
+> > a single EEPROM behind the connector.
+> >=20
+> And if insertion is dynamic, triggered by card insertion.
 >=20
-> No, no, NO! I won't ship a distro kernel because they screw things
-> up (at least, in my experience). I will ship a 3.x.y stable kernel,
-> though.
+> There are actually several additional i2c devices on the same bus.
+> To instantiate those I use devicetree overlays, but that is done
+> after the eeprom is read and I know which overlay to load.
 
-If you want full QA and feature set, perhaps you should be using a
-vendor kernel.
+Yes, I see why you need something less traditional to pull that off. And
+we should be able to describe that kind of setup using DT as well. The
+world would of course be much better if this was all discoverable and we
+didn't have to describe it in the first place...
 
-> > We're talking about the upstream kernel here, and given the current=20
-> > development and release rate we hardly can guarantee you that it'll be=
-=20
-> > free of unfinished work (as long as it doesn't regress existing=20
-> > features).
+> > > > > not the very least because DT isn't supported on x86 and I have t=
+o deal with
+> > > > > that situation as well (and, no, ACPI doesn't solve my problems t=
+here either).
+> > > >=20
+> > > > Actually DT is supported very well on x86. There's at least one pla=
+tform
+> > > > in mainline that uses it (arch/x86/platform/ce4100/falconfalls.dts)=
+ and
+> > > > I've ported a platform that I worked on in the past to use DT on x8=
+6 as
+> > > > well.
+> > > >=20
+> > > But presumably that was DT only, or was it a system that needs to use
+> > > DT on top of ACPI ? If so, I would be very interested in that experie=
+nce,
+> > > especially if you had any issues to get it working.
+> >=20
+> > I'm not quite sure I understand what you mean by "on top of ACPI". The
+> > device certainly did support ACPI, but I was using DT more as a
+> > supplement to describe what ACPI and PCI couldn't.
+> >=20
+> > To be somewhat more specific, the platform used an FPGA connected to the
+> > chipset using PCIe. That itself was excellent because all of a sudden
+> > devices were actually discoverable. So it was easy to just implement a
+> > GPIO, SPI or I2C controller and whatnot within that FPGA, but once a
+> > device behind SPI or I2C needed to be hooked up, you loose all benefits
+> > from having something like PCI and you're back to square one.
+> >=20
+> > One example where this became essential was that the touchscreen on the
+> > device was controlled by an I2C chip, and the touchscreen controller's
+> > interrupt pin was connected to the GPIO controller on the PCI bus. So
+> > what we ended up with looked roughly something like this:
+> >=20
+> > 	pci@3fc {
+> > 		[...bunch of nodes to describe PCI hierarchy...]
+> >=20
+> > 		pci@2,0 {
+> > 			/* GPIO expander */
+> > 			gpio: pci@0,0 {
+> > 				...
+> > 				interrupt-controller;
+> > 				...
+> > 			};
+> > 		};
+> >=20
+> > 		[...more nodes...]
+> >=20
+> > 		pci@8,0 {
+> > 			/* I2C controller */
+> > 			pci@0,0 {
+> > 				touchscreen@48 {
+> > 					...
+> > 					interrupt-parent =3D <&gpio>;
+> > 					interrupts =3D <1 0x8>;
+> > 					...
+> > 				};
+> > 			};
+> > 		};
+> > 	};
+> >=20
+> > That's a *very* simplified form. The complete device tree is much more
+> > complex because it requires the exact hierarchy of PCI to be represented
+> > in order for the right device nodes to end up attached to the right PCI
+> > devices.
+> >=20
+> > But perhaps that doesn't help you at all with the problems that you've
+> > encountered?
+> >=20
+> Actually, the use case sounds pretty similar, so maybe you have solved the
+> problem at least to some degree. In my case, I'll also need devicetree ov=
+erlays,
+> since I also need to be able to handle OIR capable cards, but that is a s=
+eparate
+> set of problems.
 >=20
-> I read a quote from a Big Cheese saying how the Linux kernel is a
-> stable release cycle. There are bugs, to be sure, but, in my
-> experience, each release is pretty stable on x86 (but not on arm).
+> Was this just a matter of enabling OF on this platform, or do you have an
+> out-of-tree set of patches ? If the latter, is it available somewhere
+> to look at (including the complete devicetree from your above example) ?
 
-I've already stated this elsewhere, but I'll gladly repeat it here: the
-DT, whether with or without stable bindings, should not influence the
-stability of the kernel as a whole. That's why I prefer to refer to
-bindings that aren't finalized yet as "experimental" rather than
-"unstable". Any driver using any binding should not crash if that
-binding doesn't look like what it expects.
+It was mostly a matter of enabling OF and writing the device tree. Most
+of the generic kernel code changes I even got merged, but there were a
+few patches that I never got around to merge. Some weren't anywhere
+close to a mergeable state either.
 
-I also think it's accepted for things to not be perfect from the start.
-Nobody expects support for an SoC to be rock-solid when merged. Often
-you can't do very much with the initial SoC support when it is merged,
-so whether it's stable or not is largely irrelevant.
+I no longer work for the company and don't have access to the patches.
+But I can ping a few people and see if I can dig up something for you.
 
 Thierry
 
---FN+gV9K+162wdwwF
+--Il7n/DHsA0sMLmDu
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSaDMlAAoJEN0jrNd/PrOhQ28P/AjgBRrMf8OwLr+H9fV91QpX
-t2wAT9DlqD4L9R0toGZ6sAA6dd/60F10JH75zD9GbFqZJWNOWz4so3nbru9t5vmR
-mUuzzDCaTdKyFwwJAvWaEUEnglrrJygBhl620ZYm+T6Ggs4KT1S0Mz4/LY42j/fz
-YdOENW9NUtjKrWUS8L1UDb9Q4D4MPGejR5Q2gom6d3a3U1bOxIZpg7WzNVYMH8L3
-38GgMdH3Hs68A1MX+bymi8/K+li4b7Ai4MmO1W6w0329Zq0sdzLtUVyAE2QTmGUJ
-5sxvUnxck14u6kwIOkvDvdJ8M074cBgPAELzm0YWWo82Ul/8Y3oQjWOIVMOd15oZ
-fiFTNXFPQiiEQp7BLM/5IKlYBOamcwZLQ4nEM2tyv2lZBfyKy5AZkCZYu+Fq0plO
-FhTy0HdT2Z+24kQjwnUgLqNbPGRkdjUE4/BWksGzFWnTFeo4GRPvut5kVa1P4ZAS
-8JO4rssWIggteR8Aq9Z/gY2AXxCenrXdWEAhTX031EoP83G0F/l6ZvkPm89MZisw
-05Yk8s9ORNywd3TsEw1BNmqycPE5JIJPLSX9eBPAvTzEWkEBghT8MEL2Tq2zcP5v
-fKqYidy4cAUDx+P4wzqMo8Ngo8CwUirh6vpaj5fWAXUebK1WSzJmmw0PRPszIOr2
-JxwEcurI9NFt8oxkHCZx
-=O+cX
+iQIcBAEBAgAGBQJSaDqDAAoJEN0jrNd/PrOhK3cQALI2wwydqAPRzAN8Bu6rMu/9
+t1b5lsNER4pImA5XrizN0FfX3gG3OtJHcpt9G69ekZvg785ktdD0qNEpiOe9Xp6C
+ee29STLiLJeTMfqhDnU0v6mRArdsS64sGjCMLAHcZ/4U66P2nHicbFDES1VK38c+
+FaXsY+jPdg7fRrYO/27tx5OQ+aE3GBEg90SPJU5b8LOXwbL07lcFy1R0+3Ei7V1O
+eVmNF1Lm7KUea9+qgfYhpEfhhawjH3DJErGN/d+ReG4UkkeB1f+xVHVj382wiM3I
+HuOHyKWLRt5HQWqtIY+oJ++CrfeZRSD+LBwNNHEwzXQofMf6YvtXNViMlUwSHXef
+39blwLUZunqfDlxHCatwBFyZQuX9GThdg8s6ARwFXyjoLTMM7Hn/R9b30EAOHR0i
+F6dOHwdRWw0+ge8YwqU2YxndguhIRedFOXPsTKkqgim8Ljymefe756xIQ22hjzEp
+J/gf7T4h9U1RR7H5G6V7LVlC45CBS/zHEMmGbpm5/ZFQAKKtC/2SED4mDG2gR6sg
+G0zw17WovNEIMoGUgMyy1L50423BxT4gdGruGBXC4ln3Jvv3G4szdIL4AWGWBuvS
+vWiGLszB2PyM/czHR+BBtjP0NAaaRmP6m3bJNSSKPsdUNK+Kuz/plP57GWmILwLT
+WTVwNlkIn82IjUoQuUW+
+=QaZe
 -----END PGP SIGNATURE-----
 
---FN+gV9K+162wdwwF--
+--Il7n/DHsA0sMLmDu--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
