@@ -1,56 +1,103 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5][ 1/9] of: add vendor prefix for Eukrea Electromatique.
-Date: Wed, 23 Oct 2013 17:54:15 -0500
-Message-ID: <52685397.90106@gmail.com>
-References: <1382516974-13371-1-git-send-email-denis@eukrea.com>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH] MAINTAINERS: Don't send to devicetree list for
+ "arch/*/boot/dts"
+Date: Wed, 23 Oct 2013 23:54:48 +0100
+Message-ID: <20131023235448.4de21b8d.m.chehab@samsung.com>
+References: <1382534520-15688-1-git-send-email-dianders@chromium.org>
+ <52680380.7020204@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382516974-13371-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <52680380.7020204@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Doug Anderson <dianders@chromium.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Cesar Eduardo Barros <cesarb@cesarb.net>, Joe Perches <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2013 03:29 AM, Denis Carikli wrote:
-> Trivial patch to add Eukr=C3=A9a Electromatique to the list
-> of devicetree vendor prefixes.
->=20
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Em Wed, 23 Oct 2013 12:12:32 -0500
+Rob Herring <robherring2@gmail.com> escreveu:
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
+> On 10/23/2013 08:22 AM, Doug Anderson wrote:
+> > As discussed in the ARM kernel summit, people on the devicetree lis=
+t
+> > would no longer like to receive emails about all dts changes.  Remo=
+ve
+> > from MAINTAINERS.
 >=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2956800..a0329cf 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -25,6 +25,7 @@ denx	Denx Software Engineering
->  emmicro	EM Microelectronic
->  epson	Seiko Epson Corp.
->  est	ESTeem Wireless Modems
-> +eukrea  Eukr=C3=A9a Electromatique
->  fsl	Freescale Semiconductor
->  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+> We need to make sure platform maintainers are copied though. That may=
+ be
+> hard since we don't have standard layout/naming of dts files.
+>=20
+> We might also want to drop these:
+> K:      of_get_property
+> K:      of_match_table
+>=20
+> They are at least on the wrong maintainer list now as they should be
+> associated with the binding maintainers and not DT core code if we do
+> keep them.
+>=20
+> Also based on the discussion, we need to add
+> Documentation/devicetree/bindings/* to appropriate subsystem
+> maintainers, but that should probably wait until after Friday at leas=
+t.
+
+/me is confused. What's the procedure for the DT patches for the device=
+s
+supported by the subsystem I maintain, e. g. patches for
+/drivers/media/platform?=20
+
+Should I just apply them, if I think that it is needed by the hardware?=
+=20
+Are there any criteria to be followed? If so, what criteria?
+
+/me hopes that all those questions will be discussed/answered at KS on
+=46riday's discussions ;)
+
+In any case, my suggestion is that this patch should be a way more verb=
+ose,
+and should come together with a patch adding something at Documentation
+(SubmittingPatches, or maybe SubmitingDTPatches) in order to be sure th=
+at
+both developers and subsystem maintainers will do the right thing.
+
+Thanks,
+Mauro
+>=20
+> Rob
+>=20
+> >=20
+> > Signed-off-by: Doug Anderson <dianders@chromium.org>
+> > ---
+> >  MAINTAINERS | 2 --
+> >  1 file changed, 2 deletions(-)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ebaf8bd..0166e8e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -5987,7 +5987,6 @@ OMAP DEVICE TREE SUPPORT
+> >  M:	Beno=C3=AEt Cousson <bcousson@baylibre.com>
+> >  M:	Tony Lindgren <tony@atomide.com>
+> >  L:	linux-omap@vger.kernel.org
+> > -L:	devicetree@vger.kernel.org
+> >  S:	Maintained
+> >  F:	arch/arm/boot/dts/*omap*
+> >  F:	arch/arm/boot/dts/*am3*
+> > @@ -6167,7 +6166,6 @@ M:	Ian Campbell <ijc+devicetree@hellion.org.u=
+k>
+> >  L:	devicetree@vger.kernel.org
+> >  S:	Maintained
+> >  F:	Documentation/devicetree/
+> > -F:	arch/*/boot/dts/
+> >  F:	include/dt-bindings/
+> > =20
+> >  OPENRISC ARCHITECTURE
+> >=20
 >=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+
+Cheers,
+Mauro
