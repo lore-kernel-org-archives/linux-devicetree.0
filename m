@@ -1,85 +1,56 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv5 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Thu, 24 Oct 2013 00:49:42 +0200
-Message-ID: <20131023224940.GA19522@earth.universe>
-References: <1382560002-6299-1-git-send-email-sre@debian.org>
- <1382560002-6299-2-git-send-email-sre@debian.org>
- <52684C8E.6080802@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv5][ 1/9] of: add vendor prefix for Eukrea Electromatique.
+Date: Wed, 23 Oct 2013 17:54:15 -0500
+Message-ID: <52685397.90106@gmail.com>
+References: <1382516974-13371-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52684C8E.6080802@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382516974-13371-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/23/2013 03:29 AM, Denis Carikli wrote:
+> Trivial patch to add Eukr=C3=A9a Electromatique to the list
+> of devicetree vendor prefixes.
+>=20
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On Wed, Oct 23, 2013 at 05:24:14PM -0500, Rob Herring wrote:
-> So a twl4030 device is only a power button? DT should describe the h/w
-> not a node for a sub-function of a device.
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2956800..a0329cf 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -25,6 +25,7 @@ denx	Denx Software Engineering
+>  emmicro	EM Microelectronic
+>  epson	Seiko Epson Corp.
+>  est	ESTeem Wireless Modems
+> +eukrea  Eukr=C3=A9a Electromatique
+>  fsl	Freescale Semiconductor
+>  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>=20
 
-No. TWL4030 is a companion chip for the OMAP3 processor. It provides
-miscellaneous functionality, e.g.:
-
- * RTC
- * Watchdog
- * Regulators
- * Keypad Matrix
- * USB
- * Audio
- * Vibrator
- * GPIO
- * ...
-
-One part of the functionality is the power button. The patch
-assumes, that the twl4030-pwrbutton node is used as follows:
-
-twl {
-    /* ... common stuff ... */
-
-    pwrbutton {
-        compatible = "ti,twl4030-pwrbutton";
-		interrupts = <8>;
-    };
-};
-
-See also:
-* Documentation/devicetree/bindings/mfd/twl-familly.txt
-* Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-* Documentation/devicetree/bindings/sound/omap-twl4030.txt
-* Documentation/devicetree/bindings/mfd/twl4030-power.txt
-* Documentation/devicetree/bindings/mfd/twl4030-audio.txt
-* Documentation/devicetree/bindings/gpio/gpio-twl4030.txt
-
--- Sebastian
-
---cNdxnHkX5QqsyA0e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSaFKEAAoJENju1/PIO/qaThIP/RIh/gXpohEecXYYShzhNfoz
-LVoMrx876PcWtzUl79aXWKu5YvrWio2H2yoc/5VcS3zQTUEIWaXDRowVQ/Zm0ltb
-Up+tNwP3IKQBjLXTAY8cUqXyqIerA9lxHlSSd2fEfdp8b5GwxKxBPRm7IZ2KZ3yO
-YWvnPHXLcV6mTkthNQf4WHUUW4AmqRdwdtzbn4ZuqTwv5IPygUz3YdwVw0J0EXVK
-fGdQN9PAGJ09APwYyTDbSOmmqG2mWqadr8OQiaHddrjDBZQ9SBFHoUovu8LfDJ92
-4O5Dx1cG3xKVut5UXU1mvexLU/QHKzfCnc5lspRRwHAbzniH0zm5Rmcf7p3kK5ZF
-9sSLGqJF2lqSJB3gDotmIanPXXggcF/Si21GBJQkaeW8mmYl7mi4Wa89dVyukZDE
-1acFbTOrUbqa+W9TxyiPuQmbotVdus+RJi/aholbCC1HQK1xvJ3xEqNXT6rP43Og
-6igAjKIgbY4TP2vb4wVrJdHpw8FVPtg0MqOF0tdmFCmQSzuXKMblzMUyhA+l+sq7
-xB3o0kp8mrRGaF+Vmz4heuDDkhZoDAXcQ2LXl5e7iBXTyLrQ9IvbnkQNJbsxQxtx
-T6nXURxqTD7wn2d5UMO7RvBm760Wa7rCa6PUPQWBZh54oXqkjGaLeq8gzXs/k+3u
-OzlPrnZu2ulaaAcV2YEU
-=VSpi
------END PGP SIGNATURE-----
-
---cNdxnHkX5QqsyA0e--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
