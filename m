@@ -1,122 +1,55 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Wed, 23 Oct 2013 10:42:42 -0400
-Message-ID: <20131023144242.GI29341@beef>
-References: <20131018141221.GH2721@beef>
- <5264F37E.9060307@ti.com>
- <20131022104829.GF15425@login.drsnuggles.stderr.nl>
- <20131022112520.GE29341@beef>
- <5266F06C.2080701@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v10 04/10] mtd: nand: omap: fix device scan:
+ NAND_CMD_READID, NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
+Date: Wed, 23 Oct 2013 11:46:53 -0300
+Message-ID: <20131023144652.GI2458@localhost>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-5-git-send-email-pekon@ti.com>
+ <20131022201624.GL23337@ld-irv-0074.broadcom.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
+ <5267690C.9080005@gmail.com>
+ <20131023125516.GA2458@localhost>
+ <20980858CB6D3A4BAE95CA194937D5E73EA2A0CB@DBDE04.ent.ti.com>
+ <20131023132457.GD2458@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5266F06C.2080701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthijs Kooijman <matthijs-gZv8Wpyq0Kk@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131023132457.GD2458@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "olof@lixom.net" <olof@lixom.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, dwmw2@i
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
-> On 10/22/2013 06:25 AM, Matt Porter wrote:
-> > On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
-> >> Hi Kishon,
-> >>
-> >> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
-> >>> I think it makes sense to keep the data width property in the dwc2 node itself.
-> >>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
-> >>> that it can be either <8> or <16>).
-> >> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
-> >> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
-> >> and 16 supported" would make sense as a property of dwc2 (though this
-> >> value should be autodetectable through GHWCFG4), while the actual 8 or
-> >> 16 supported by the PHY would make sense as property of a phy.
-> > 
-> > There would be no value in adding a property for an already detectable
-> > value to dwc2's binding. To be honest, it's pretty much useless
-> > information due to the existence of the "8 and 16" option.
-> > 
-> >> Note sure if this is really useful in practice as well, or if just
-> >> setting the actual width to use on dwc2 makes more sense...
-> > 
-> > The GHWCFG4 information itself is not useful in practice, as described
-> > in the original thread: https://lkml.org/lkml/2013/10/10/477
-> > 
-> > It's certainly useful in practice to have this width property in either
-> > the dwc2 or the phy binding. One can make a case for either. As I
-> > mentioned in the original post, if we put it in the phy binding we'll be
-> > updating the generic phy binding. We'll then need an api added into the
-> > generic phy framework to fetch the width of a phy.
-> > 
-> > Both cases are doable and trivial, we just need the canonical decision
-> > from a DT maintainer as to where the property belongs. Given that they
-> > are in ARM ksummit, I'm not expecting to hear anything right this
-> > moment. :)
-> 
-> The host can support both, so it is not a property of the host and is a
-> property of the phy. It is no different than what mode a SPI slave
-> requires or whether an i2c slave supports 8 or 10-bit addressing. Those
-> examples are all 1 to many rather than 1 to 1 where it doesn't really
-> matter, but the same logic applies.
+Pekon,
 
-Makes good sense, thanks.
+On Wed, Oct 23, 2013 at 10:24:57AM -0300, Ezequiel Garcia wrote:
+[..]
+>=20
+> I'm currently trying mainline (just for this issue not for my product=
+).
+> I just need some time to prepare the bootargs and write a DT node for
+> the NAND cape.
+>=20
+> Again, not sure if I'll make some progress, but I'll give it a shot :=
+-)
 
-In this case, given the PHY ownership of width, we can completely avoid
-any DT properties. The generic phy compliant BCM Kona phy driver can
-report via the generic phy framework that it is 8-bit wide. There's no
-support for this type of thing now but it's pretty trivial to add.
+I won't be able to make too much progress without some help or without
+squeezing my brains out :P
 
-I went ahead and did a quick proof-of-concept that adds a free-form
-phy attributes struct for the generic phy. Given that generic phys can
-be for any transmission technology this could be filled with a jumble
-unrelated and often unpopulated attributes over time. In any case, the
-below patch allows the phy provider to choose to specify utmi_width and
-a controller driver that cares can use phy_get_attrs() to fetch the
-optional phy attributes and use the utmi_width field if applicable.
+Care to push some git branch on some random repo with DT support for
+the NAND cape in the Beaglebone?
 
-Kishon: I'll start a separate thread to discuss what approach you'd like
-to see in the generic phy framework to manage this.
+Please base it in either some recent l2-mtd or some tag from Linus.
 
--Matt
-
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 6d72269..b763d7b 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -38,6 +38,14 @@ struct phy_ops {
- };
-
- /**
-+ * struct phy_attrs - represents phy attributes
-+ * @utmi_width: Data path width implemented by UTMI PHY
-+ */
-+struct phy_attrs {
-+	int			utmi_width;
-+};
-+
-+/**
-  * struct phy - represents the phy device
-  * @dev: phy device
-  * @id: id of the phy device
-@@ -51,6 +59,7 @@ struct phy {
- 	struct device		dev;
- 	int			id;
- 	const struct phy_ops	*ops;
-+	struct phy_attrs	*attrs;
- 	struct phy_init_data	*init_data;
- 	struct mutex		mutex;
- 	int			init_count;
-@@ -127,6 +136,9 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+static inline struct phy_attrs *phy_get_attrs(struct phy *phy) {
-+	return phy->attrs;
-+};
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
- void phy_put(struct phy *phy);
+Thanks!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
