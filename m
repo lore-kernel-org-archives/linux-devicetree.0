@@ -1,81 +1,92 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Wed, 23 Oct 2013 20:59:10 +0200
-Message-ID: <20131023185909.GC7863@ulmo.nvidia.com>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
- <5267FA58.9050002@wwwdotorg.org>
- <20131023172001.GA3379@katana>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Wed, 23 Oct 2013 21:06:11 +0200
+Message-ID: <20131023190610.GD7863@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <20131021091555.GB21518@ulmo.nvidia.com>
+ <20131021170711.GA5256@netboy>
+ <20131022092410.GB15640@ulmo.nvidia.com>
+ <20131023173032.GB5208@netboy>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
+	protocol="application/pgp-signature"; boundary="1SQmhf2mF2YjsYvc"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131023172001.GA3379@katana>
+In-Reply-To: <20131023173032.GB5208@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---9zSXsLTf0vkW971A
+--1SQmhf2mF2YjsYvc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2013 at 06:20:02PM +0100, Wolfram Sang wrote:
+On Wed, Oct 23, 2013 at 07:30:33PM +0200, Richard Cochran wrote:
+> On Tue, Oct 22, 2013 at 11:24:11AM +0200, Thierry Reding wrote:
+> >=20
+> > Oh, I've been doing that for quite a while. In fact the patches that
+> > gave rise to the current frustration have been in a separate tree in
+> > various forms for over a year. But that's not what we want, is it?
 >=20
-> > Do we really want to polute the drivers and DT files with a ! in the
-> > compatible values? I thought we'd considered that, but chosen having the
-> > drivers that use unstable bindings depend on a Kconfig option as an
-> > alternative, not an additional step?
+> I can't see anything wrong with that. Your code is not the first to
+> have to wait for a long time before being finally merged. Think of
+> alsa, or of the pps stuff, or wakelocks, or preempt_rt, etc, etc.
+
+Heh... that's no news for me.
+
+> As an end user, I don't mind waiting for a feature if that means
+> stability and QA. If I get impatient, still I always have the choice
+> to take a development version. But I do not want to be forced to take
+> unfinished work in a released kernel.
+
+This isn't about stability and QA. The DT binding has nothing to do
+whatsoever with the quality of the code. Also in many cases with DT we
+end up with work that's actually finished and pretty well tested, and
+the only thing blocking it is the DT binding.
+
+> > I
+> > used to think that we actively wanted people to contribute code back
+> > upstream, so telling everyone to keep code in their own trees isn't
+> > helping anyone.
 >=20
-> I'd even go further and use "unstable-" as the prefix instead of "!"
-> which is way more explicit.
+> Actually, I mean to propose that the ARM/DT people use a single
+> marshaling tree, one step away in the process from mainline.
 
-I guess unstable- is as good as anything. I personally think that "!" is
-disturbing enough to the eye to make it abundantly clear that something
-is fishy.
-
-> > The one issue with doing this is that if a binding is thought to be
-> > unstable, but becomes stable later without any changes, we'll have to do
-> > busy-work to remove the ! in all the DT files, thus artificially
-> > introducing an incompatibility. Perhaps that's fine though?
->=20
-> I'd say yes. Going from unstable to stable is quite a step for a binding
-> and that should be visible and worth a patch IMO. Also, when looking at
-> a DTS file or some driver code, it will avoid
-> confusion/misinterpretation if one can see immediately the status of a
-> binding.
-
-Yes, I fully agree. It might look like churn, but I think this could
-actually be a part of the formal process to stabilize a binding. It
-would be final step of that process, actually.
+I don't think fragmentation of that sort will do us any good. It will
+only make it harder to get things merged because they get developed
+outside of the upstream process.
 
 Thierry
 
---9zSXsLTf0vkW971A
+--1SQmhf2mF2YjsYvc
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSaBx9AAoJEN0jrNd/PrOhEIUP/0nNAlgicFic5yEHsKXpdt4a
-XVyACFK7h/XI+X6BnrOGUEF6qlIB8VanOtcxWVYdhws2LcPZ59gM9o+AoCC98UQP
-hoASd3BPQSv4MlkjO0cD22DkYUICSGhKFEv5WpFEP7vdeYh/Yk7dWbQpVNdTv/j3
-gkn32X2c7FVbzU3wiStS3YECm96x7+0Ue37GzOs83AnDdMC6e4+H3NeOyuDhR1Bn
-8XnO95Hsv2tPMjGqa5lA7b8NaGJ5ZuglXU0IQHw6DGJQbUTp6EBQyxNcmfGIDQWM
-1/tM/mT67Le/qwJRXFL5lO8Y8a1PZ4+C2IAERCdYM4qLn+tVe5E/CfqAjE9qR/Oi
-frEoBw2ZnTvM31K5TQk5EV047yb8pJPFVBbPGhrxhOB6waK+bnKcEoaXWLKpLieL
-s71Ql6hJjxLTOEPs0eEEg5UivIzBYu+yVjh1qYm3MCUgKZH1lAejOVY4rokoOkCH
-kWcCU7Jopbe8rxS5yq7nBguGNFitTSuI8pW2D+ajgjgMt5JTr1NAa/RmqBF/WHF3
-3Z2TSl9N8nAYF7KqCIRfYVVkfsk0bWD+0t73KZIcOa8DoNgBowFPwoYiPIU3ATE/
-x8QiV3hDHsKKaKyavYJkZ1LxKiU0JUoRuEhuAfJ34Y1SraPje/dukmZ1FkJqVYqf
-KZBoLXC0I/UjuAZHerHk
-=Nzad
+iQIcBAEBAgAGBQJSaB4iAAoJEN0jrNd/PrOhGd0P/RQ6VVfWIzyqk007V4ZchrZ1
+hA6eWdh6ZnpaLu8DfkQSlKh1WlKBcUSPQCQ1kQmVZPP+mOAFTf581srqzU9YM/Xi
+m4PUNGrZB0BhmBRpqmKY3raYB1AtvWdYi+hkDDEmuONNQLm3nBke17KlEPI4Ox//
+9nY96jCSmUaqS32bcTozclDDw0/cxAYL69/dShIV+hbptXFgpm3FqHhci2kDDQW7
+0JlIH5Kt72Wr73mkoxCWcukYqOj1Uq9tCUy7clPT4x5Ia3CzOK6EYQDxCQMWG0wC
+C63nZni/fl3IIC9yeqzO+ELUSaov62n9nNlVGY5lh74P4azIxu5BhSECN5u8/ZiT
+TbcbvkUgNosNhtC/lLYa4n3NP6jGNT1i9zcmetI9TSgGNT9ujXOJohS2xuva5VDO
+Zg6N0Sa37dvGvsi51TpyTKztjKVn8C8xJTh9FtgVvup3UxjFIvLw2u7JR52te0J3
+1k4Yi5rl2BUT8ZSfdXxkpbFq3oCmGdUw10xr6epGiuEH1aioi78XgkAQV5LFGGVP
+q3gTWvLUh2sGj+Th8IzMMxjfbYYuNa/d3gSYTzY+UcghGgoOtKvZ4MxukUxWHBdw
+Suc2jZ8FMcqrpt1plXF8QmvH1fx94tgzQIDCAHp/lPVcYe606c77IyBUoYl6+fhk
+SLOAHN+32idnf2NyqsPJ
+=LN+T
 -----END PGP SIGNATURE-----
 
---9zSXsLTf0vkW971A--
+--1SQmhf2mF2YjsYvc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
