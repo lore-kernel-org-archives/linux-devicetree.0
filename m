@@ -1,69 +1,49 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv3 3/3] Input: twl4030-pwrbutton: simplify driver using
- devm_*
-Date: Wed, 23 Oct 2013 12:44:20 -0500
-Message-ID: <20131023174419.GH25954@gimli>
-References: <1382546835-20212-1-git-send-email-sre@debian.org>
- <1382546835-20212-4-git-send-email-sre@debian.org>
- <20131023172524.GE24448@blackmetal.musicnaut.iki.fi>
-Reply-To: <balbi@ti.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Wed, 23 Oct 2013 19:45:00 +0200
+Message-ID: <20131023174458.GC5208@netboy>
+References: <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9iyR+p8Z2cn535Lj"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131023172524.GE24448@blackmetal.musicnaut.iki.fi>
-Sender: linux-input-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20131023172955.GA17145-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---9iyR+p8Z2cn535Lj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Oct 23, 2013 at 11:29:55AM -0600, Jason Gunthorpe wrote:
+> 
+> As far as I can see, all stable DTB gets you is the ability to flash
+> the DTB into the firmware and never change it. Who does that actually
+> help?
 
-On Wed, Oct 23, 2013 at 08:25:24PM +0300, Aaro Koskinen wrote:
-> Hi,
->=20
-> On Wed, Oct 23, 2013 at 06:47:15PM +0200, Sebastian Reichel wrote:
-> >  static int __exit twl4030_pwrbutton_remove(struct platform_device *pde=
-v)
-> >  {
-> >  	struct input_dev *pwr =3D platform_get_drvdata(pdev);
-> > -	int irq =3D platform_get_irq(pdev, 0);
-> > =20
-> > -	free_irq(irq, pwr);
-> >  	input_unregister_device(pwr);
->=20
-> The same bug still exists. You don't need to unregister manually any more,
-> this whole function can be just reduced to "return 0;".
+Once I design my board, and it goes into production, the hardware is
+fixed. It doesn't change, and neither should the description of the
+hardware, also known as the DTB. If I have to research all of the ways
+that the bindings changed in order to upgrade my kernel, then I am
+better off with the old, static, platform data. At least there the
+compiler would complain if fields are removed or renamed. 
 
-then it can be removed altogether, no ?
+I understand that having the bindings in flux makes life easier for
+kernel developers, as it frees them from the burden of having to think
+about the consequences of their hasty decisions. But those people are
+not the only users. There is a much larger body of users than that.
 
---=20
-balbi
-
---9iyR+p8Z2cn535Lj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaArzAAoJEIaOsuA1yqREYOwP/3PVEzbBfW/1fQHrll8mKHHe
-P2kmqyb5JwBIv89PwHVQ74gJYDKCU/p0gRMyywrYwUAT9mQ+77amtWV/1RXPdzRG
-//UfSl4+s2gFmigk8aY/ob0JwYPWib+r+IaAb9P+0IX/OvlvhV6S0FQYc5PHIbuv
-IdJ7FPsObQxD/VLpaN+7jzzcCuHX0Je4FATah/2XVbHSx7Fmt3ZN83Xd0Xb8f7T/
-/8+ktign0YRgHYo4sJQrvO2NzIt0RL7xecjXIRvZRlqjT+G9hUDVNl0DQn15u6g6
-58ALl2uRTPM4nEbYHcXDQPYDkQfwHwB1/udfjf8Ihuq7kqZUNfU5Pf2F0FR0OrIM
-iFTVHHlBRPfdskcOPOmUr7brjElDhvW8B4yIwOEq/s8/9SdCrfkUviBKnfHI5FF2
-lLFDZv1wtcxHvuf8ldoaueslc0gboKElQH7GdCdsumbgo21Z+rNTCRJEs8xWNE79
-BS+uuModXMa7Iaa3qhlx0dr8Y6WBoXpIUay1f48n79ssVdoCbIuvG4csBsdgbg3H
-ithAjwWNh/pkdVVgPEuVg/PVb8wNc6O4cf3DlJmVyqTTyqWp90W/ki0Yexhcmib/
-NWuKH9yxPazLk3UwU8O3quTFnejzTpYjwQ6AO/sj+k8GbyEXctQwAHYEHRNkS+9v
-N44VCo4YHWy14XD6wle7
-=rUCi
------END PGP SIGNATURE-----
-
---9iyR+p8Z2cn535Lj--
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
