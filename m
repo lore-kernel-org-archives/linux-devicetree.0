@@ -1,59 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 07/12] ASoC: davinci-mcasp: Remove redundant
- num-serializer DT parameter
-Date: Wed, 23 Oct 2013 12:15:43 +0100
-Message-ID: <20131023111543.GM9388@sirena.org.uk>
-References: <cover.1382110089.git.jsarha@ti.com>
- <1a9937bd0cad470b43e41a7fc537b354e2795535.1382110090.git.jsarha@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
+Date: Wed, 23 Oct 2013 19:31:36 +0800
+Message-ID: <20131023113128.GA9489@S2101-09.ap.freescale.net>
+References: <1382511537-5072-1-git-send-email-aida.mynzhasova@skitlab.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pFpMklMRdxwSC3Yi"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1a9937bd0cad470b43e41a7fc537b354e2795535.1382110090.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, bcousson@baylibre.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, joelf@ti.com, Peter Ujfalusi <peter.ujfalusi@ti.com>
+In-Reply-To: <1382511537-5072-1-git-send-email-aida.mynzhasova@skitlab.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---pFpMklMRdxwSC3Yi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Oct 18, 2013 at 06:37:46PM +0300, Jyri Sarha wrote:
-> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
->=20
-> The serial-dir array gives this information so there is no need to have t=
-he
-> num-serializer property in DT description.
-> Just ignore the property in the driver the DTS files can be updated
-> separately without regression.
-> Update the documentation at the same time for davinci-mcasp
+On Wed, Oct 23, 2013 at 10:58:57AM +0400, Aida Mynzhasova wrote:
+> Add auart2 pins configuration on its main pads
+> 
+> Signed-off-by: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
 
 Applied, thanks.
 
---pFpMklMRdxwSC3Yi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Shawn
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSZ6/cAAoJELSic+t+oim9+ycP/RM0DthBmcs2ynQnuHKL8K60
-d7job/Vwev+8DGPr1TIyxwW8QGs9HUP1uTRzxz/x43k15j8CCEJChaAm6dZRDDSh
-1bEsKGa8OeOGJZebOWsdKs2WMg+GerCINqktbJCA0XWrWHM/cIhxLweITHZN3+2V
-FUXQyTdOLeuovj3YgCrUA/DOCjuVkxS/uR2Jx4p9Sxj1EUDZiddJo2UW8ct6dup6
-kbLT0rdzC2Ot4TEBgN8TZd9ApPzUMJy+HPfR3CZEMhnCpxRN0l+EioKhwezdInak
-6r1rKeaNM60Ctmdcm6dtozzZ9K/fWwvAl2jm3vS7cub80rKC3BZuXTkWid/z5zX+
-s+dPQAjmTolabShc1ULohK02gKzXgr+OVuVW6MHuK3ip86FhI7IXE3tOoI8CqTZv
-NM8wuSQISvpvPyyeJD9XiJpLqi+SyzFRt5agqsETURLqFdLtTONnXvmyjcG66jgV
-n0Cp5NeT867bhj6omuOQ17F84H7PZwu9HBm/eM1aRRDY5U9PR0NU9W2Q8WF2OFyR
-D4s43QwNraib4q8JoCG/d0PTGdYetvQfQFkcGMuYbItR27841tWi7MM4BVXP8EXd
-leoYxU60N0irDMMzrTk+hx6PN+WlAvxqyom2dr4jGNe+vVaknS97w9e1fv2IccaZ
-2cYOBnb5kdmwsnn8XLti
-=ZKCw
------END PGP SIGNATURE-----
-
---pFpMklMRdxwSC3Yi--
+> ---
+>  arch/arm/boot/dts/imx28.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 918d419..cab4c22 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -343,6 +343,19 @@
+>  					fsl,pull-up = <MXS_PULL_DISABLE>;
+>  				};
+>  
+> +				auart2_pins_a: auart2-pins@0 {
+> +					reg = <0>;
+> +					fsl,pinmux-ids = <
+> +						MX28_PAD_AUART2_RX__AUART2_RX
+> +						MX28_PAD_AUART2_TX__AUART2_TX
+> +						MX28_PAD_AUART2_CTS__AUART2_CTS
+> +						MX28_PAD_AUART2_RTS__AUART2_RTS
+> +					>;
+> +					fsl,drive-strength = <MXS_DRIVE_4mA>;
+> +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> +					fsl,pull-up = <MXS_PULL_DISABLE>;
+> +				};
+> +
+>  				auart3_pins_a: auart3@0 {
+>  					reg = <0>;
+>  					fsl,pinmux-ids = <
+> -- 
+> 1.8.1.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
