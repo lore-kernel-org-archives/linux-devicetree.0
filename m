@@ -1,163 +1,136 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [Patch v2 02/14] usb: phy-mxs: Add platform judgement code
-Date: Wed, 23 Oct 2013 14:13:24 +0800
-Message-ID: <20131023061322.GF2839@S2101-09.ap.freescale.net>
-References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
- <1382421528-17897-3-git-send-email-peter.chen@freescale.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v10 04/10] mtd: nand: omap: fix device scan: NAND_CMD_READID,
+ NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
+Date: Tue, 22 Oct 2013 23:13:32 -0700
+Message-ID: <5267690C.9080005@gmail.com>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com> <1382172254-12448-5-git-send-email-pekon@ti.com> <20131022201624.GL23337@ld-irv-0074.broadcom.com> <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382421528-17897-3-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 01:58:36PM +0800, Peter Chen wrote:
-> The mxs-phy has three versions until now, each versions have
-> some differences among PHY operations. the 1st version is
-> for mx23/mx28 SoC, The 2nd version is for mx6q and mx6dl, the
-> 3rd version is for mx6sl and later mx6 platform.
+On 10/22/2013 10:07 PM, Gupta, Pekon wrote:
+>> From: Brian Norris [mailto:computersforpeace@gmail.com]
+>> On Sat, Oct 19, 2013 at 02:14:08PM +0530, Pekon Gupta wrote:
+> [...]
 > 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |   65 ++++++++++++++++++++++++++++++++++++-----
->  1 files changed, 57 insertions(+), 8 deletions(-)
+>>>
+>>> Thus this patch run nand_scan_ident() with driver configured as x8 device.
+>>
+>> So are you saying that the driver currently doesn't work if you started
+>> in x16 buswidth? Are you having problems with a particular setup? What
+>> sort of devices are you testing?
+>>
+> No, I'm saying that you cannot read ONFI params in x16 mode.
+> And, that is what was pointed out in following commit log also ..
+> (Reference to 3.3.2. Target Initialization: given above)
+> So, if I run nand_scan_ident() in x16 mode, my ONFI detection would 
+> fail for sure ..
+
+But you cannot just run nand_scan_ident() with !(chip->options &
+NAND_BUSWIDTH_16) when your devices is x16. You need to solve the ONFI
+detection problem while correctly specifying NAND_BUSWIDTH_16.
+
+Since you didn't answer the other 2 questions there: are you testing any
+x16 devices?
+
+>> Running nand_scan_ident() with x8 when the device is actualy x16 will
+>> just cause nand_scan_ident() to abort with an error. It doesn't help you
+>> with the fact that RESET/READID/PARAM need special 8-bit handling on x16
+>> devices, so you're not solving the problem alluded to by Matthieu.
+>>
+> Yes, absolutely agree.. 
+> The original code was calling nand_scan_ident() twice, without taking
+> into consideration whether the first nand_scan_ident() failed because
+> of bus-width mismatch or something else.
 > 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index fdd33b4..a0628d6 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
->   * Copyright (C) 2012 Marek Vasut <marex@denx.de>
->   * on behalf of DENX Software Engineering GmbH
->   *
-> @@ -20,6 +20,7 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/of_device.h>
->  
->  #define DRIVER_NAME "mxs_phy"
->  
-> @@ -34,12 +35,57 @@
->  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
->  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
->  
-> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> +
-> +enum imx_phy_type {
-> +	IMX6Q_USB_PHY,
-> +	IMX6SL_USB_PHY,
-> +	IMX23_USB_PHY,
-> +};
-> +
->  struct mxs_phy {
->  	struct usb_phy phy;
->  	struct clk *clk;
-> +	enum imx_phy_type devtype;
->  };
->  
-> -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> +static inline int is_mx6q_phy(struct mxs_phy *data)
-> +{
-> +	return data->devtype == IMX6Q_USB_PHY;
-> +}
-> +
-> +static inline int is_mx6sl_phy(struct mxs_phy *data)
-> +{
-> +	return data->devtype == IMX6SL_USB_PHY;
-> +}
-> +
-> +static inline int is_mx23_phy(struct mxs_phy *data)
-> +{
-> +	return data->devtype == IMX23_USB_PHY;
-> +}
-> +
-> +static struct platform_device_id imx_phy_devtype[] = {
-> +	{
-> +		.name = "usb-phy-imx6q",
-> +		.driver_data = IMX6Q_USB_PHY,
-> +	}, {
-> +		.name = "usb-phy-imx6sl",
-> +		.driver_data = IMX6SL_USB_PHY,
-> +	}, {
-> +		.name = "usb-phy-imx23",
-> +		.driver_data = IMX23_USB_PHY,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
+> I'm also calling nand_scan_ident() twice, but only when the failure may
+> be due to bus-width mis-match. I'm just avoiding an extra call to
+> nand_scan_ident() if the failure was genuine.
 
-I know many imx device drivers have this platform_device_id table, but
-that's because they need to support both non-DT and DT probe.  Since
-this driver supports DT probe only, we can save this table by passing
-imx_phy_type value through of_device_id.data directly.
+You NEVER need to call nand_scan_ident() twice for the same chip.
+Period. I will reject any patch that retains this pattern. It is wrong,
+and I seriously doubt the code does what you think it does when you do this.
 
-> +static const struct of_device_id mxs_phy_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx_phy_devtype[IMX6Q_USB_PHY], },
-> +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx_phy_devtype[IMX6SL_USB_PHY], },
-> +	{ .compatible = "fsl,imx23-usbphy", .data = &imx_phy_devtype[IMX23_USB_PHY], },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
->  
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  {
-> @@ -131,6 +177,14 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	struct clk *clk;
->  	struct mxs_phy *mxs_phy;
->  	int ret;
-> +	const struct of_device_id *of_id =
-> +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-> +
-> +	/* This driver is DT-only version now */
-> +	if (!of_id)
-> +		return -ENXIO;
+I think nand_scan_ident() may have a weak point where it won't support
+ONFI properly for x16 devices. I believe NAND_BUSWIDTH_AUTO was added to
+help with this fact. (I don't have any x16 devices to test it.) But if
+this is a problem for you, fix it. Don't work around it.
 
-Since it's DT-only, I'm not sure you will run into the case that
-mxs_phy_probe() is called with a NULL of_id.  The check looks
-unnecessary to me.
+>> What is your patch trying to solve? It seems like it's just a distortion
+>> of the same code that existed previously. It tries running
+>> nand_scan_ident() in one buswidth configuration, and then it tries the
+>> other if it failed. You still aren't doing either of the options we
+>> talked about previously. I'll repeat them:
+>>
+> Absolutely.. probably you missed my replies in [PATCH v9 4/9]...
 
-> +
-> +	pdev->id_entry = of_id->data;
+No, I did not. I just don't see how you think that your code matches the
+options (1) or (2) that I described. Perhaps it's a failure in
+communication. I will try to be absolutely clear.
 
-Some imx device drivers did the same thing, but we should keep
-pdev->id_entry immutable.  The removal of that platform_device_id table
-will help save this.
+>> (1) You specify the buswidth given by device-tree/platform-data; if this
+>>     is incorrect, you fail
+>>
+> Absolutely this is what I'm doing.
 
-Shawn
+No it isn't. You are ignoring the provided buswidth information and
+UNCONDITIONALLY trying x8. If/when that fails, you then error out or
+retry in x16 (depending on the DT/platform-data).
 
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -163,6 +217,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
->  
->  	mxs_phy->clk = clk;
-> +	mxs_phy->devtype = pdev->id_entry->driver_data;
->  
->  	platform_set_drvdata(pdev, &mxs_phy->phy);
->  
-> @@ -182,12 +237,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id mxs_phy_dt_ids[] = {
-> -	{ .compatible = "fsl,imx23-usbphy", },
-> -	{ /* sentinel */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> -
->  static struct platform_driver mxs_phy_driver = {
->  	.probe = mxs_phy_probe,
->  	.remove = mxs_phy_remove,
-> -- 
-> 1.7.1
-> 
-> 
+This is plain wrong.
 
+nand_base is designed (and it's documented in the comments) that the
+driver must set the buswidth correctly BEFORE calling nand_scan_ident().
+You may not use nand_scan_ident() as a trial-and-error identification
+function.
+
+So, to properly do (1), you should only have something like this, just
+like all the other NAND drivers:
+
+  nand_chip->options = pdata->devsize & NAND_BUSWIDTH_16;
+
+  ret = nand_scan_ident(...);
+  if (ret) {
+      // exit with error code...
+  }
+
+If there is a problem with this, then you have to fix your driver or
+nand_scan_ident(). Perhaps you have to adjust your readbuf() or
+cmdfunc() callbacks to do this. But do not add complicated workaround
+logic in your driver.
+
+> But tell me how would you know the actual device-width if
+> nand_scan_ident()  fails 
+
+If you are not using NAND_BUSWIDTH_AUTO, then you MUST know the correct
+buswidth before calling nand_scan_ident(). If your
+device-tree/platform-data is wrong, then fix that.
+
+> (a) to probe ONFI params and 
+> - your device is  not in nand_ids[]
+> So get the actual device width, I call the first nand_scan_ident() in x8 mode.
+> so that ONFI params are read.
+
+You don't call nand_scan_ident() with !(chip->options &
+NAND_BUSWIDTH_16) when you have an x16 device.
+
+Now, if this causes NAND_CMD_PARAM to fail, then you have a *different*
+problem to solve. But you are not solving this problem.
+
+[snipping the rest]
+
+I read your patch, and I gave you my review. I will not accept this
+patch, nor any patch that works around nand_scan_ident() by calling it
+twice. Fix the framework if the framework is giving you problems.
+
+I believe that this patch is not integral to the rest of the series, so
+I will repeat: separate this patch out so I can take the rest of this
+series without it.
+
+Brian
