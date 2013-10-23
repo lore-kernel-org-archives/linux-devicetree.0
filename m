@@ -1,50 +1,73 @@
-From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: move wl12xx pins to the proper pinmux for pandaboard
-Date: Wed, 23 Oct 2013 10:33:51 +0200
-Message-ID: <526789EF.7000507@baylibre.com>
-References: <525852A4.6090500@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] imx: add PCI fixup for PEX860X on Gateworks board
+Date: Wed, 23 Oct 2013 16:33:54 +0800
+Message-ID: <20131023083352.GP2839@S2101-09.ap.freescale.net>
+References: <1382503888-3962-1-git-send-email-tharvey@gateworks.com>
+ <1382503888-3962-5-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <525852A4.6090500-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382503888-3962-5-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Konovalov <andrey.konovalov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rnayak-l0cyMroinI0@public.gmane.org, luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org, p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
+On Tue, Oct 22, 2013 at 09:51:28PM -0700, Tim Harvey wrote:
 
-On 11/10/2013 21:33, Andrey Konovalov wrote:
-> Commit 851320e (ARM: dts: Fix muxing and regulator for wl12xx on the
-> SDIO bus for pandaboard) put the wl12xx pins into omap4_pmx_wkup. Thi=
-s
-> is not correct, and results in the following messages at the boot tim=
-e:
->
->   pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38=
-)
->   pinctrl-single 4a31e040.pinmux: could not add functions for
-> pinmux_wl12xx_pins 56x
->
-> Actually these pins belong to omap4_pmx_core.
->
-> Signed-off-by: Andrey Konovalov <andrey.konovalov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+<snip>
 
-That patch does not apply on any on my branches. Could you rebase it
-on top of my for_3.13/dts branch.
+> @@ -78,6 +80,37 @@ static int ksz9031rn_phy_fixup(struct phy_device *dev)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * fixup for PLX PEX8909 bridge to configure GPIO1-7 as output High
+> + * as they are used for slots1-7 PERST#
+> + */
+> +static void mx6_ventana_pciesw_early_fixup(struct pci_dev *dev)
 
-Thanks,
-Benoit
+Please use 'imx' instead of 'mx' where you need an imx prefix.  In this
+case, it's even fine without the prefix.  So I just drop the 'mx6_' from
+function name, and applied the patch.  Thanks.
 
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
+Shawn
+
+> +{
+> +	u32 dw;
+> +
+> +	if (!of_machine_is_compatible("gw,ventana"))
+> +		return;
+> +
+> +	if (dev->devfn != 0)
+> +		return;
+> +
+> +	pci_read_config_dword(dev, 0x62c, &dw);
+> +	dw |= 0xaaa8; // GPIO1-7 outputs
+> +	pci_write_config_dword(dev, 0x62c, dw);
+> +
+> +	pci_read_config_dword(dev, 0x644, &dw);
+> +	dw |= 0xfe;   // GPIO1-7 output high
+> +	pci_write_config_dword(dev, 0x644, dw);
+> +
+> +	msleep(100);
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8609,
+> +	mx6_ventana_pciesw_early_fixup);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8606,
+> +	mx6_ventana_pciesw_early_fixup);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLX, 0x8604,
+> +	mx6_ventana_pciesw_early_fixup);
+> +
+>  static int ar8031_phy_fixup(struct phy_device *dev)
+>  {
+>  	u16 val;
+> -- 
+> 1.7.9.5
+> 
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
