@@ -1,92 +1,70 @@
-From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: RE: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Wed, 23 Oct 2013 21:29:22 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E030458E1DB5B@US01WEMBX2.internal.synopsys.com>
-References: <20131018141221.GH2721@beef> <5264F37E.9060307@ti.com>
- <20131022104829.GF15425@login.drsnuggles.stderr.nl>
- <20131022112520.GE29341@beef> <5266F06C.2080701@gmail.com>
- <20131023144242.GI29341@beef>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131023144242.GI29341@beef>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthijs Kooijman <matthijs-gZv8Wpyq0Kk@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH] iio:light:tsl2563: Add DT support
+Date: Wed, 23 Oct 2013 23:51:03 +0200
+Message-ID: <1382565063-17083-1-git-send-email-sre@debian.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, linux-iio@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@cam.ac.uk>, Sebastian Reichel <sre@debian.org>, Peter Meerwald <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Matt Porter [mailto:matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, October 23, 2013 7:43 AM
-> 
-> On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
-> > On 10/22/2013 06:25 AM, Matt Porter wrote:
-> > > On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
-> > >> Hi Kishon,
-> > >>
-> > >> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
-> > >>> I think it makes sense to keep the data width property in the dwc2 node itself.
-> > >>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
-> > >>> that it can be either <8> or <16>).
-> > >> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
-> > >> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
-> > >> and 16 supported" would make sense as a property of dwc2 (though this
-> > >> value should be autodetectable through GHWCFG4), while the actual 8 or
-> > >> 16 supported by the PHY would make sense as property of a phy.
-> > >
-> > > There would be no value in adding a property for an already detectable
-> > > value to dwc2's binding. To be honest, it's pretty much useless
-> > > information due to the existence of the "8 and 16" option.
-> > >
-> > >> Note sure if this is really useful in practice as well, or if just
-> > >> setting the actual width to use on dwc2 makes more sense...
-> > >
-> > > The GHWCFG4 information itself is not useful in practice, as described
-> > > in the original thread: https://lkml.org/lkml/2013/10/10/477
-> > >
-> > > It's certainly useful in practice to have this width property in either
-> > > the dwc2 or the phy binding. One can make a case for either. As I
-> > > mentioned in the original post, if we put it in the phy binding we'll be
-> > > updating the generic phy binding. We'll then need an api added into the
-> > > generic phy framework to fetch the width of a phy.
-> > >
-> > > Both cases are doable and trivial, we just need the canonical decision
-> > > from a DT maintainer as to where the property belongs. Given that they
-> > > are in ARM ksummit, I'm not expecting to hear anything right this
-> > > moment. :)
-> >
-> > The host can support both, so it is not a property of the host and is a
-> > property of the phy. It is no different than what mode a SPI slave
-> > requires or whether an i2c slave supports 8 or 10-bit addressing. Those
-> > examples are all 1 to many rather than 1 to 1 where it doesn't really
-> > matter, but the same logic applies.
-> 
-> Makes good sense, thanks.
-> 
-> In this case, given the PHY ownership of width, we can completely avoid
-> any DT properties. The generic phy compliant BCM Kona phy driver can
-> report via the generic phy framework that it is 8-bit wide. There's no
-> support for this type of thing now but it's pretty trivial to add.
+Add Device Tree support for the TSL2563 driver
+and document the binding.
 
-> I went ahead and did a quick proof-of-concept that adds a free-form
-> phy attributes struct for the generic phy. Given that generic phys can
-> be for any transmission technology this could be filled with a jumble
-> unrelated and often unpopulated attributes over time. In any case, the
-> below patch allows the phy provider to choose to specify utmi_width and
-> a controller driver that cares can use phy_get_attrs() to fetch the
-> optional phy attributes and use the utmi_width field if applicable.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
+ drivers/iio/light/tsl2563.c                           |  4 ++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
 
-As an alternate approach, you could add a 'utmi_width' property to the
-PHY's DT node, and have the dwc2 driver scan the tree until it finds its
-PHY, and then check it for that property. That would avoid the need to
-add anything new to the PHY framework. I don't know if that would be
-considered good practice by the DT guys, though.
-
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+new file mode 100644
+index 0000000..b52cf4b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+@@ -0,0 +1,19 @@
++* TAOS TSL2563 ambient light sensor
++
++Required properties:
++
++  - compatible : should be "taos,tsl2563"
++  - reg : the I2C address of the sensor
++
++Optional properties:
++
++  - cover-comp-gain : integer used as multiplier for gain
++                      compensation (default = 1)
++
++Example:
++
++tsl2563@29 {
++	compatible = "taos,tsl2563";
++	reg = <0x29>;
++	cover-comp-gain = <16>;
++};
+diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
+index ebb962c..bd30b1d 100644
+--- a/drivers/iio/light/tsl2563.c
++++ b/drivers/iio/light/tsl2563.c
+@@ -699,6 +699,7 @@ static int tsl2563_probe(struct i2c_client *client,
+ 	struct iio_dev *indio_dev;
+ 	struct tsl2563_chip *chip;
+ 	struct tsl2563_platform_data *pdata = client->dev.platform_data;
++	struct device_node *np = client->dev.of_node;
+ 	int err = 0;
+ 	u8 id = 0;
+ 
+@@ -735,6 +736,9 @@ static int tsl2563_probe(struct i2c_client *client,
+ 
+ 	if (pdata)
+ 		chip->cover_comp_gain = pdata->cover_comp_gain;
++	else if (np)
++		of_property_read_u32_index(np, "cover-comp-gain", 0,
++							&chip->cover_comp_gain);
+ 	else
+ 		chip->cover_comp_gain = 1;
+ 
 -- 
-Paul
+1.8.4.rc3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
