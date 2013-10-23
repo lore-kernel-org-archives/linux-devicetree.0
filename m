@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3][ 2/5] dma: ipu: Add devicetree support.
-Date: Wed, 23 Oct 2013 14:43:46 +0200
-Message-ID: <1382532229-32755-2-git-send-email-denis@eukrea.com>
+Subject: [PATCHv3][ 3/5] video: mx3fb: Add device tree suport.
+Date: Wed, 23 Oct 2013 14:43:47 +0200
+Message-ID: <1382532229-32755-3-git-send-email-denis@eukrea.com>
 References: <1382532229-32755-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,112 +10,311 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1382532229-32755-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
 ChangeLog v2->v3:
-- The DMA channels are not exposed anymore in order to look more like t=
-he IPUv3
-  bindings.
+- The device tree bindings were reworked in order to make it look more =
+like the
+  IPUv3 bindings.
+- The interface_pix_fmt property now looks like the IPUv3 one.
 ---
- .../devicetree/bindings/dma/fsl-imx-ipu.txt        |   33 ++++++++++++=
-++++++++
- drivers/dma/ipu/ipu_idmac.c                        |    8 +++++
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-ipu.t=
-xt
+ .../devicetree/bindings/video/fsl,mx3-fb.txt       |   35 ++++++
+ drivers/video/Kconfig                              |    2 +
+ drivers/video/mx3fb.c                              |  125 ++++++++++++=
++++++---
+ 3 files changed, 147 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/fsl,mx3-fb.=
+txt
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt b/Do=
-cumentation/devicetree/bindings/dma/fsl-imx-ipu.txt
+diff --git a/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt b/D=
+ocumentation/devicetree/bindings/video/fsl,mx3-fb.txt
 new file mode 100644
-index 0000000..ee66e1a
+index 0000000..0b31374
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
-@@ -0,0 +1,33 @@
-+* Freescale Image Processing Unit DMA support for i.MX3x.
-+
-+This dma driver supports the imx31 and imx35 devices.
++++ b/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
+@@ -0,0 +1,35 @@
++Freescale MX3 fb
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
 +Required properties:
-+- compatible : Should be "fsl,imx31-ipu".
-+- reg : Should contain DMA registers location and length
-+- interrupts : First item should be DMA interrupt, second one is optio=
-nal and
-+    should contain DMA Error interrupt.
++- compatible: Should be "fsl,mx3fb". compatible chips include the imx3=
+1 and the
++  imx35.
++- reg: should be register base and length as documented in the datashe=
+et.
++- clocks: Handle to the ipu_gate clock.
 +
 +Example:
 +
-+	ipu: ipu@53fc0000 {
-+		compatible =3D "fsl,imx31-ipu";
-+		reg =3D <	0x53fc0000 0x5f
-+			0x53fc0088 0x2b >;
-+		interrupts =3D <42 41>;
-+		clocks =3D <&clks 55>;
-+		clock-names =3D "";
-+		status =3D "disabled";
-+	};
++lcdc: mx3fb@53fc00b4 {
++	compatible =3D "fsl,mx3-fb";
++	reg =3D <0x53fc00b4 0x0b>;
++	clocks =3D <&clks 55>;
++};
 +
-+* DMA client
-+
-+Clients have to specify the DMA requests with phandles in a list.
-+
++Display support
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +Required properties:
++- model : The user-visible name of the display.
++
++Optional properties:
++- interface_pix_fmt: How this display is connected to the
++  crtc. Currently supported types: "rgb24", "rgb565", "rgb666"
++
++It can also have an optional timing subnode as described in
++  Documentation/devicetree/bindings/video/display-timing.txt.
++
 +Example:
 +
-+	lcdc: mx3fb@53fc00b4 {
-+		...
-+		...
-+	};
-diff --git a/drivers/dma/ipu/ipu_idmac.c b/drivers/dma/ipu/ipu_idmac.c
-index cb9c0bc..d853ee1 100644
---- a/drivers/dma/ipu/ipu_idmac.c
-+++ b/drivers/dma/ipu/ipu_idmac.c
-@@ -22,6 +22,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/dma/ipu-dma.h>
++display@di0 {
++	    interface-pix-fmt =3D "rgb666";
++	    model =3D "CMO-QVGA";
++};
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index 14317b7..2a638df 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -2359,6 +2359,8 @@ config FB_MX3
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
++	select VIDEOMODE_HELPERS
++	select FB_MODE_HELPERS
+ 	default y
+ 	help
+ 	  This is a framebuffer device for the i.MX31 LCD Controller. So
+diff --git a/drivers/video/mx3fb.c b/drivers/video/mx3fb.c
+index 804f874..de5a6c8 100644
+--- a/drivers/video/mx3fb.c
++++ b/drivers/video/mx3fb.c
+@@ -31,6 +31,8 @@
+ #include <linux/platform_data/dma-imx.h>
+ #include <linux/platform_data/video-mx3fb.h>
 =20
- #include "../dmaengine.h"
-@@ -1768,6 +1769,12 @@ static int ipu_remove(struct platform_device *pd=
-ev)
++#include <video/of_display_timing.h>
++
+ #include <asm/io.h>
+ #include <asm/uaccess.h>
+=20
+@@ -757,11 +759,13 @@ static int __set_par(struct fb_info *fbi, bool lo=
+ck)
+ 			sig_cfg.Hsync_pol =3D true;
+ 		if (fbi->var.sync & FB_SYNC_VERT_HIGH_ACT)
+ 			sig_cfg.Vsync_pol =3D true;
+-		if (fbi->var.sync & FB_SYNC_CLK_INVERT)
++		if ((fbi->var.sync & FB_SYNC_CLK_INVERT) ||
++		    (fbi->var.sync & FB_SYNC_PIXDAT_HIGH_ACT))
+ 			sig_cfg.clk_pol =3D true;
+ 		if (fbi->var.sync & FB_SYNC_DATA_INVERT)
+ 			sig_cfg.data_pol =3D true;
+-		if (fbi->var.sync & FB_SYNC_OE_ACT_HIGH)
++		if ((fbi->var.sync & FB_SYNC_OE_ACT_HIGH) ||
++		    (fbi->var.sync & FB_SYNC_DE_HIGH_ACT))
+ 			sig_cfg.enable_pol =3D true;
+ 		if (fbi->var.sync & FB_SYNC_CLK_IDLE_EN)
+ 			sig_cfg.clkidle_en =3D true;
+@@ -1351,21 +1355,75 @@ static struct fb_info *mx3fb_init_fbinfo(struct=
+ device *dev, struct fb_ops *ops)
+ 	return fbi;
+ }
+=20
++static int match_dt_disp_data(const char *property)
++{
++	if (!strcmp("rgb666", property))
++		return IPU_DISP_DATA_MAPPING_RGB666;
++	else if (!strcmp("rgb565", property))
++		return IPU_DISP_DATA_MAPPING_RGB565;
++	else if (!strcmp("rgb24", property))
++		return IPU_DISP_DATA_MAPPING_RGB888;
++	else
++		return -EINVAL;
++}
++
+ static int init_fb_chan(struct mx3fb_data *mx3fb, struct idmac_channel=
+ *ichan)
+ {
+ 	struct device *dev =3D mx3fb->dev;
+ 	struct mx3fb_platform_data *mx3fb_pdata =3D dev_get_platdata(dev);
+-	const char *name =3D mx3fb_pdata->name;
++	struct device_node *np =3D dev->of_node;
++	const char *name;
++	const char *ipu_disp_format;
+ 	unsigned int irq;
+ 	struct fb_info *fbi;
+ 	struct mx3fb_info *mx3fbi;
+ 	const struct fb_videomode *mode;
+ 	int ret, num_modes;
++	struct fb_videomode of_mode;
++	struct device_node *display_np, *root_np;
++
++	if (np) {
++		root_np =3D of_find_node_by_path("/");
++		if (!root_np) {
++			dev_err(dev, "Can't get the \"/\" node.\n");
++			return -EINVAL;
++		}
++
++		display_np =3D of_find_node_by_name(root_np, "display");
++		if (!display_np) {
++			dev_err(dev, "Can't get the display device node.\n");
++			return -EINVAL;
++		}
++
++		of_property_read_string(display_np, "interface-pix-fmt",
++					&ipu_disp_format);
++		if (!ipu_disp_format) {
++			mx3fb->disp_data_fmt =3D IPU_DISP_DATA_MAPPING_RGB666;
++			dev_warn(dev,
++				"ipu display data mapping was not defined, using the default rgb66=
+6.\n");
++		} else {
++			mx3fb->disp_data_fmt =3D
++				match_dt_disp_data(ipu_disp_format);
++		}
++
++		if (mx3fb->disp_data_fmt =3D=3D -EINVAL) {
++			dev_err(dev, "Illegal display data format \"%s\"\n",
++				ipu_disp_format);
++			return -EINVAL;
++		}
+=20
+-	if (mx3fb_pdata->disp_data_fmt >=3D ARRAY_SIZE(di_mappings)) {
+-		dev_err(dev, "Illegal display data format %d\n",
++		of_property_read_string(display_np, "model", &name);
++		if (ret) {
++			dev_err(dev, "Missing display model name\n");
++			return -EINVAL;
++		}
++	} else {
++		name =3D mx3fb_pdata->name;
++		if (mx3fb_pdata->disp_data_fmt >=3D ARRAY_SIZE(di_mappings)) {
++			dev_err(dev, "Illegal display data format %d\n",
+ 				mx3fb_pdata->disp_data_fmt);
+-		return -EINVAL;
++			return -EINVAL;
++		}
+ 	}
+=20
+ 	ichan->client =3D mx3fb;
+@@ -1386,12 +1444,24 @@ static int init_fb_chan(struct mx3fb_data *mx3f=
+b, struct idmac_channel *ichan)
+ 		goto emode;
+ 	}
+=20
+-	if (mx3fb_pdata->mode && mx3fb_pdata->num_modes) {
+-		mode =3D mx3fb_pdata->mode;
+-		num_modes =3D mx3fb_pdata->num_modes;
++	if (np) {
++		ret =3D of_get_fb_videomode(display_np, &of_mode,
++					  OF_USE_NATIVE_MODE);
++		if (!ret) {
++			mode =3D &of_mode;
++			num_modes =3D 1;
++		} else {
++			mode =3D mx3fb_modedb;
++			num_modes =3D ARRAY_SIZE(mx3fb_modedb);
++		}
+ 	} else {
+-		mode =3D mx3fb_modedb;
+-		num_modes =3D ARRAY_SIZE(mx3fb_modedb);
++		if (mx3fb_pdata->mode || !mx3fb_pdata->num_modes) {
++			mode =3D mx3fb_pdata->mode;
++			num_modes =3D mx3fb_pdata->num_modes;
++		} else {
++			mode =3D mx3fb_modedb;
++			num_modes =3D ARRAY_SIZE(mx3fb_modedb);
++		}
+ 	}
+=20
+ 	if (!fb_find_mode(&fbi->var, fbi, fb_mode, mode,
+@@ -1421,7 +1491,8 @@ static int init_fb_chan(struct mx3fb_data *mx3fb,=
+ struct idmac_channel *ichan)
+ 	mx3fbi->mx3fb		=3D mx3fb;
+ 	mx3fbi->blank		=3D FB_BLANK_NORMAL;
+=20
+-	mx3fb->disp_data_fmt	=3D mx3fb_pdata->disp_data_fmt;
++	if (!np)
++		mx3fb->disp_data_fmt =3D mx3fb_pdata->disp_data_fmt;
+=20
+ 	init_completion(&mx3fbi->flip_cmpl);
+ 	disable_irq(ichan->eof_irq);
+@@ -1449,13 +1520,26 @@ emode:
+ 	return ret;
+ }
+=20
++static int imx_dma_is_dt_ipu(struct dma_chan *chan)
++{
++	/* Example: 53fc0000.ipu */
++	if (chan && chan->device && chan->device->dev) {
++		char *name =3D dev_name(chan->device->dev);
++		name =3D strchr(name, '.');
++		if (name)
++			return !strcmp(name, ".ipu");
++	}
++
++	return 0;
++}
++
+ static bool chan_filter(struct dma_chan *chan, void *arg)
+ {
+ 	struct dma_chan_request *rq =3D arg;
+ 	struct device *dev;
+ 	struct mx3fb_platform_data *mx3fb_pdata;
+=20
+-	if (!imx_dma_is_ipu(chan))
++	if (!imx_dma_is_ipu(chan) && !imx_dma_is_dt_ipu(chan))
+ 		return false;
+=20
+ 	if (!rq)
+@@ -1464,8 +1548,12 @@ static bool chan_filter(struct dma_chan *chan, v=
+oid *arg)
+ 	dev =3D rq->mx3fb->dev;
+ 	mx3fb_pdata =3D dev_get_platdata(dev);
+=20
+-	return rq->id =3D=3D chan->chan_id &&
+-		mx3fb_pdata->dma_dev =3D=3D chan->device->dev;
++	/* When using the devicetree, mx3fb_pdata is NULL */
++	if (imx_dma_is_dt_ipu(chan))
++		return rq->id =3D=3D chan->chan_id;
++	else
++		return rq->id =3D=3D chan->chan_id &&
++			mx3fb_pdata->dma_dev =3D=3D chan->device->dev;
+ }
+=20
+ static void release_fbi(struct fb_info *fbi)
+@@ -1565,9 +1653,16 @@ static int mx3fb_remove(struct platform_device *=
+dev)
  	return 0;
  }
 =20
-+static const struct of_device_id ipu_dma_of_dev_id[] =3D {
-+	{ .compatible =3D "fsl,imx31-ipu", },
-+	{ /* Sentinel */ }
++static struct of_device_id mx3fb_of_dev_id[] =3D {
++	{ .compatible =3D "fsl,mx3-fb", },
++	{ /* sentinel */ },
 +};
-+MODULE_DEVICE_TABLE(of, ipu_dma_of_dev_id);
++MODULE_DEVICE_TABLE(of, mx3fb_of_dev_id);
 +
- /*
-  * We need two MEM resources - with IPU-common and Image Converter reg=
-isters,
-  * including PF_CONF and IDMAC_* registers, and two IRQs - function an=
-d error
-@@ -1775,6 +1782,7 @@ static int ipu_remove(struct platform_device *pde=
-v)
- static struct platform_driver ipu_platform_driver =3D {
+ static struct platform_driver mx3fb_driver =3D {
  	.driver =3D {
- 		.name	=3D "ipu-core",
-+		.of_match_table =3D of_match_ptr(ipu_dma_of_dev_id),
- 		.owner	=3D THIS_MODULE,
+ 		.name =3D MX3FB_NAME,
++		.of_match_table =3D mx3fb_of_dev_id,
+ 		.owner =3D THIS_MODULE,
  	},
- 	.remove		=3D ipu_remove,
+ 	.probe =3D mx3fb_probe,
 --=20
 1.7.9.5
 
