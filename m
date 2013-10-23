@@ -1,115 +1,258 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC] of: Allow for experimental device tree bindings
-Date: Wed, 23 Oct 2013 17:06:19 +0200
-Message-ID: <1382540779-6334-1-git-send-email-treding@nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Wed, 23 Oct 2013 09:01:31 -0700
+Message-ID: <20131023160131.GA20675@roeck-us.net>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131021085420.GA21518@ulmo.nvidia.com>
+ <52658C49.80400@wwwdotorg.org>
+ <5265AFED.1040503@roeck-us.net>
+ <52665314.2040904@imgtec.com>
+ <232aa6e4-19fe-4460-8101-8bf1d639ff3c@email.android.com>
+ <20131022164922.GA29852@roeck-us.net>
+ <20131022203546.GC8037@mithrandir>
+ <20131022211000.GA30394@roeck-us.net>
+ <20131023075758.GA7404@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131023075758.GA7404-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Past and recent discussions have shown that there's some concensus that
-device tree bindings should be considered an ABI and therefore need to
-remain backwards-compatible once code to implement them is included in
-the final release of a Linux kernel.
+On Wed, Oct 23, 2013 at 09:57:58AM +0200, Thierry Reding wrote:
+> On Tue, Oct 22, 2013 at 02:10:00PM -0700, Guenter Roeck wrote:
+> [...]
+> > Thinking about it, much of a hardware description can be seen as "use
+> > case", at least when it comes to gpio pins or adc channels.
+> 
+> There are many more examples where this is the case. Regulators are one
+> example. A regulator is pretty much useless until you connect it up to
+> some other device.
+> 
+> The same goes for things like a backlight. Sure we can expose backlights
+> via sysfs and tell people to use that interface to control the backlight
+> but that just doesn't always work. Furthermore, backlights don't always
+> need to be associated with display panels. They can be used together
+> with keyboards too...
+> 
+> In order to effectively make use of these basic building blocks we need
+> some way to interconnect them, because they cannot be correlated to each
+> other without some form of meta data.
+> 
+Yes. I think the problem starts if the interconnect point is not another chip.
+It is easy to say "this gpio pin is connected to the interrupt pin of chip X",
+but things become murky if you need to express that a gpio pin connects to a
+pushbutton or presence detect pin, or if you need to express that an ADC input
+pin is used as voltage sensor.
 
-At the same time there is a desire to keep some manoeuvre while we're
-trying to figure things out. The fact is that many of us lack the
-experience to design good bindings from the start. At the same time
-there is a shortage of people that can review bindings and help design
-better ones.
+The common theme nowadays seems to be "you can't do that, it is a use case".
+It might be more helpful if the feedback was "you can not describe it that way,
+let's find another binding that works".
 
-Progress and the addition of new features (and restoration of features
-that used to work before the advent of DT for that matter) are blocked
-to a large degree because of that.
+> > > But on the other hand we do the same with other "resources". GPIOs for
+> > > example are rather useless if you don't associate them with specific
+> > > functionality. And we actually do that quite often. They are used in
+> > > properties such as:
+> > > 
+> > > 	foo {
+> > > 		...
+> > > 		enable-gpios = <&gpio 42 0>;
+> > > 		...
+> > > 	};
+> > > 
+> > > I don't see how that is different to the ADC/sensor example above.
+> > > Perhaps there's no real physical device that is the sensor, but if we
+> > > can't even represent simple yet essential things like that in DT, then
+> > > we definitely need something better.
+> > > 
+> > I don't think the issue is "can". After all, the restriction that DT shall only
+> > describe HW and not its use is purely arbitrary.
+> 
+> That's what I was trying to say. "can" in the sense of "not able because
+> we're arbitrarily restricting what we can express with DT".
+> 
+ok.
 
-This patch attempts to restore some degree of freedom by introducing an
-easy way to mark device tree bindings as experimental as well as a way
-for users to disable the use of experimental bindings if they choose
-functionality at the cost of potential device tree incompatibilities.
+> Now, I can even understand why it's a good idea to keep Linux-specifics
+> out of the DT and not encode software policy within it, but all these
+> examples aren't software policy nor Linux-specifics. In my opinion they
+> describe hardware. They may not restrict themselves to the bare minimum,
+> but they give meaning to the hardware so that an operating system can
+> use it.
+> 
+> If we cannot describe these things in DT but have to come up with some
+> alternative method to describe it, then any other operating system would
+> either need to copy that alternative method (in which case there's no
+> point at all in keeping it separate from DT) or invent yet something
+> different to describe those relationships.
+> 
+> I've said above that I understand why it can be good to keep DT hardware
+> specific, but I also think that if that's what we end up deciding, we'll
+> still need to supplement it with something that can describe software
+> policy. With our concept of DT right now we're regressing with respect
+> to board files because some things can no longer be described.
+> 
+Agreed.
 
-Bindings are marked experimental by prefixing the compatible value with
-an exclamation mark (!). In order to make it clear that experimental
-bindings are undesirable in the long run, a warning will be output when
-an experimental binding is encountered.
+> > > We do pretty much the same thing with regulators. We can have fixed
+> > > regulators that control a GPIO, yet there's no physical device that one
+> > > could associate with such regulators either.
+> > > 
+> > > > Another example is my recent attempt to add dt support to gpio based connectors.
+> > > > Even though a connector is as much hardware as it can get (or at least one
+> > > > should think so), that was rejected because it isn't generic enough and,
+> > > > after all, it describes the _use_ of gpio pins which apparently is already
+> > > > borderline. So now I have my own out of tree driver (where I can add as many
+> > > > bindings and as much functionality as I want and see fit, so I am not too
+> > > > unhappy about that).
+> > > 
+> > > That's odd. This sounds exactly like a variant of the above. Would you
+> > > mind posting the binding (or a usage example here)? I'd be interested to
+> > > understand why it would be inappropriate.
+> > > 
+> > 
+> > Patch 4 and 5 of https://lkml.org/lkml/2013/8/30/23.
+> > 
+> > The bindings I currently use are actually a bit more complex.
+> > Here is an example.
+> > 
+> >         pic1 {
+> >             compatible = "jnpr,pic-connector";
+> >             presence-detect-gpios = <&gpio20 36 0x10013>;
+> >             request-button-gpios = <&gpio20 38 0x10013>;
+> >             power-enable-gpios = <&gpio20 42 0x0>;
+> >             power-status-gpios = <&gpio20 39 0x3>;
+> >             reset-gpios = <&gpio20 41 0x10000>;
+> >             power-enable-timeout = <2000>;
+> >             debounce-interval = <1>;
+> >             led-green = <&pic1_green>;
+> >             led-red = <&pic1_red>;
+> > 
+> >             i2c-bus {
+> >                 #address-cells = <1>;
+> >                 #size-cells = <0>;
+> > 
+> >                 i2c-parent = <&pic1i2c>;
+> > 
+> >                 eeprom@55 {
+> >                     compatible = "atmel,24c02";
+> >                     reg = <0x55>;
+> >                     ideeprom;
+> >                 };
+> >             };
+> >         };
+> > 
+> > [ Note this is preliminary, and I expect some of the bindings to change.
+> >   Also, I have no plan to even try to get this code upstream ;) ]
+> 
+> This is rather complex, but then, describing relationships within one
+> board is already difficult, so I'm not surprised that describing
+> connections between boards is even more difficult. I suspect that the
+> above could more traditionally be written as:
+> 
+> 	pic1i2c: i2c-controller {
+> 		...
+> 
+> 		eeprom@55 {
+> 			/* insert all other properties here */
+> 		};
+> 	};
+> 
+If I add the above to the i2c controller node, the kernel will try to
+instantiate the eeprom when the system comes up. If no card is
+inserted at that time, this will fail. The above describes the devices
+which needs to be instantiated after a card is inserted into the connector,
+and only then (and removed when the card is pulled).
+In addition, I use the 'ideeprom' property to establish a callback
+to be able to read the eeprom contents and trigger loading the DT overlay.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/Kconfig |  7 +++++++
- drivers/of/base.c  | 32 +++++++++++++++++++++++++++++++-
- 2 files changed, 38 insertions(+), 1 deletion(-)
+> But that breaks down once you start needing to represent more than just
+> a single EEPROM behind the connector.
+> 
+And if insertion is dynamic, triggered by card insertion.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 78cc760..dc482f8 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -24,6 +24,13 @@ config OF_SELFTEST
- 
- 	  If unsure, say N here, but this option is safe to enable.
- 
-+config OF_EXPERIMENTAL
-+	bool "Support experimental device tree bindings"
-+	help
-+	  This option allows experimental device tree bindings to be used.
-+	  Note that experimental bindings are subject to change, possibly
-+	  requiring the DTB to be updated.
-+
- config OF_FLATTREE
- 	bool
- 	select DTC
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index a96f850..b0b8371 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -342,6 +342,36 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- }
- EXPORT_SYMBOL(of_get_cpu_node);
- 
-+static int of_compat_match(const char *device, const char *driver,
-+			   const struct device_node *np)
-+{
-+	const char *dev = device;
-+	const char *drv = driver;
-+
-+	if (device[0] == '!')
-+		device++;
-+
-+	if (driver[0] == '!')
-+		driver++;
-+
-+	if (of_compat_cmp(device, driver, strlen(driver)) != 0)
-+		return 0;
-+
-+	/* check if binding is experimental */
-+	if (dev != device || drv != driver) {
-+		pr_warn("of: device %s (%s) uses an experimental binding\n",
-+			np->name, np->full_name);
-+
-+		/* don't match if we don't want experimental bindings */
-+		if (!IS_ENABLED(CONFIG_OF_EXPERIMENTAL)) {
-+			pr_err("of: refusing to use binding \"%s\"\n", device);
-+			return 0;
-+		}
-+	}
-+
-+	return 1;
-+}
-+
- /** Checks if the given "compat" string matches one of the strings in
-  * the device's "compatible" property
-  */
-@@ -355,7 +385,7 @@ static int __of_device_is_compatible(const struct device_node *device,
- 	if (cp == NULL)
- 		return 0;
- 	while (cplen > 0) {
--		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-+		if (of_compat_match(cp, compat, device))
- 			return 1;
- 		l = strlen(cp) + 1;
- 		cp += l;
--- 
-1.8.4
+There are actually several additional i2c devices on the same bus.
+To instantiate those I use devicetree overlays, but that is done
+after the eeprom is read and I know which overlay to load.
 
+> > > > not the very least because DT isn't supported on x86 and I have to deal with
+> > > > that situation as well (and, no, ACPI doesn't solve my problems there either).
+> > > 
+> > > Actually DT is supported very well on x86. There's at least one platform
+> > > in mainline that uses it (arch/x86/platform/ce4100/falconfalls.dts) and
+> > > I've ported a platform that I worked on in the past to use DT on x86 as
+> > > well.
+> > > 
+> > But presumably that was DT only, or was it a system that needs to use
+> > DT on top of ACPI ? If so, I would be very interested in that experience,
+> > especially if you had any issues to get it working.
+> 
+> I'm not quite sure I understand what you mean by "on top of ACPI". The
+> device certainly did support ACPI, but I was using DT more as a
+> supplement to describe what ACPI and PCI couldn't.
+> 
+> To be somewhat more specific, the platform used an FPGA connected to the
+> chipset using PCIe. That itself was excellent because all of a sudden
+> devices were actually discoverable. So it was easy to just implement a
+> GPIO, SPI or I2C controller and whatnot within that FPGA, but once a
+> device behind SPI or I2C needed to be hooked up, you loose all benefits
+> from having something like PCI and you're back to square one.
+> 
+> One example where this became essential was that the touchscreen on the
+> device was controlled by an I2C chip, and the touchscreen controller's
+> interrupt pin was connected to the GPIO controller on the PCI bus. So
+> what we ended up with looked roughly something like this:
+> 
+> 	pci@3fc {
+> 		[...bunch of nodes to describe PCI hierarchy...]
+> 
+> 		pci@2,0 {
+> 			/* GPIO expander */
+> 			gpio: pci@0,0 {
+> 				...
+> 				interrupt-controller;
+> 				...
+> 			};
+> 		};
+> 
+> 		[...more nodes...]
+> 
+> 		pci@8,0 {
+> 			/* I2C controller */
+> 			pci@0,0 {
+> 				touchscreen@48 {
+> 					...
+> 					interrupt-parent = <&gpio>;
+> 					interrupts = <1 0x8>;
+> 					...
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> That's a *very* simplified form. The complete device tree is much more
+> complex because it requires the exact hierarchy of PCI to be represented
+> in order for the right device nodes to end up attached to the right PCI
+> devices.
+> 
+> But perhaps that doesn't help you at all with the problems that you've
+> encountered?
+> 
+Actually, the use case sounds pretty similar, so maybe you have solved the
+problem at least to some degree. In my case, I'll also need devicetree overlays,
+since I also need to be able to handle OIR capable cards, but that is a separate
+set of problems.
+
+Was this just a matter of enabling OF on this platform, or do you have an
+out-of-tree set of patches ? If the latter, is it available somewhere
+to look at (including the complete devicetree from your above example) ?
+
+Thanks,
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
