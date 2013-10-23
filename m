@@ -1,75 +1,96 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: Usage of for_each_child_of_node()
-Date: Wed, 23 Oct 2013 09:16:44 -0700
-Message-ID: <20131023161644.GB20675@roeck-us.net>
-References: <5259B6F8.3070701@roeck-us.net>
- <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
- <20131023071006.GA7708@ulmo.nvidia.com>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCHv2 1/3] Input: twl4030-pwrbutton - add device tree support
+Date: Wed, 23 Oct 2013 18:17:53 +0200
+Message-ID: <20131023161752.GA14745@earth.universe>
+References: <1382540482-12261-1-git-send-email-sre@debian.org>
+ <1382540482-12261-2-git-send-email-sre@debian.org>
+ <20131023160934.GA6042@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131023071006.GA7708-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131023160934.GA6042@kartoffel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 09:10:07AM +0200, Thierry Reding wrote:
-> On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
-> > On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> > > Hi all,
-> > >
-> > > for_each_child_of_node() and similar functions increase the refcount
-> > > on each returned node and expect the caller to release the node by
-> > > calling of_node_put() when done.
-> > >
-> > > Looking through the kernel code, it appears this is hardly ever done,
-> > > if at all. Some code even calls of_node_get() on returned nodes again.
-> > >
-> > > I guess this doesn't matter in cases where devicetree is a static entity.
-> > > However, this is not (or no longer) the case with devicetree overlays,
-> > > or more generically in cases where devicetree nodes are added and
-> > > removed dynamically.
-> > >
-> > > Fundamental question: Would patches to fix this problem be accepted upstream
-> > > ?
-> > 
-> > Certainly.
-> > 
-> > > Or, of course, stepping a bit back: Am I missing something essential ?
-> > 
-> > No. I think this is frequently wrong since it typically doesn't matter
-> > for static entries as you mention.
-> 
-> Actually, I think it actually happens to be correct most of the time.
-> The reason is that for_each_child_of_node() internally calls the
-> of_get_next_child() to iterate over all children. And that function
-> already calls of_node_put() on the "previous" node. So if all the code
-> does is to iterate over all nodes to query them, then all should be
-> fine.
-> 
-Good, that reduces the scope of the problem significantly.
 
-> The only case where you actually need to drop the reference on a node is
-> if you break out of the loop (so that of_get_next_child() will not be
-> called). But that's usually the case when you need to perform some
-> operation on the node, in which case it is the right thing to hold on to
-> a reference until you're done with the node.
-> 
-Unfortunately, there are many cases with code such as
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	if (error)
-		return;	/* or break; */
+Hi,
 
-or even
-	if (found node)
-		return of_node_get(node);
+On Wed, Oct 23, 2013 at 05:09:36PM +0100, Mark Rutland wrote:
+> On Wed, Oct 23, 2013 at 04:01:20PM +0100, Sebastian Reichel wrote:
+> > Add device tree support for twl4030 power button driver.
+>=20
+> This requires a binding document. As it is it's not possible to review.
 
-in the loop.
+Right. I will add it and sent a v3.
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre@debian.org>
+> > ---
+> >  drivers/input/misc/twl4030-pwrbutton.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/mis=
+c/twl4030-pwrbutton.c
+> > index b9a05fd..a3a0fe3 100644
+> > --- a/drivers/input/misc/twl4030-pwrbutton.c
+> > +++ b/drivers/input/misc/twl4030-pwrbutton.c
+> > @@ -52,7 +52,7 @@ static irqreturn_t powerbutton_irq(int irq, void *_pw=
+r)
+> >  	return IRQ_HANDLED;
+> >  }
+> > =20
+> > -static int __init twl4030_pwrbutton_probe(struct platform_device *pdev)
+> > +static int twl4030_pwrbutton_probe(struct platform_device *pdev)
+> >  {
+> >  	struct input_dev *pwr;
+> >  	int irq =3D platform_get_irq(pdev, 0);
+> > @@ -106,16 +106,24 @@ static int __exit twl4030_pwrbutton_remove(struct=
+ platform_device *pdev)
+> >  	return 0;
+> >  }
+> > =20
+> > +#if IS_ENABLED(CONFIG_OF)
+> > +static const struct of_device_id twl4030_pwrbutton_dt_match_table[] =
+=3D {
+> > +       { .compatible =3D "ti,twl4030-pwrbutton" },
+>=20
+> There's no need to shorten this, "ti,twl4030-power-button" would be far e=
+asier
+> to understand. Unless the datasheet refers to it as pwrbutton?
+
+Yes it's abbreviated in the datasheet.
+
+-- Sebastian
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSZ/awAAoJENju1/PIO/qak7EQAIt2KMQix8La8p3JTbAgAT+g
+kmyMdouP1VVijHkkPRW3RTo2jqtSdf87W23QhgeUlCaRo1+y11pkpi+B7Db79TFN
+2R5yijCXbZv6wOhwYn5DJzm0aNliUeQyZxfsxUKRQfdjQsV3QJizX6m9qCzBnLi/
+5GS0aSOozf8IgUPzlysPeBjPNgCVcZN3M78Ne3LUEoDhSUHMH0VkS6PKPjTDQNDF
+ol0UY6SadiSUBhQRYbHVxZX6fxrGWeR5wntIpOQu4W86n+zk6s78tjk2qvBRSRts
+pg2MC5sGL1xe5FUNYvft100wxabFGSJNSFbE68Dc+JOEWHlw4AoQsbokJXNNMkW7
+QmYdd0jKrbitNIKVSBMBMFH/liHiywGF/hqMGvtUQMULK+9Mlnw2m6MI7reOkvH8
+a8uDxnzGYKjgDGq6lWqmQagICr/hbynZPEoybx05JMm15NIQJ3EdGLTBNtCdJe1c
+ZvcV1/mliAiCDN0yvpTXeSyLhRL375ZM7pGk/+UXcnwwLN6lEJNM/J953PsGOK5I
+TvKC993JFLaQV+UuGo7PnJM2WFJmBNCvY8nge6Jj44s8w/sJSA+SHC54pTudm5R6
+LVYqKkl5but1J1bG0W0eT8VccdDGCmSCPbf7J8K8PxNPAxQisC+iQVKDyU3MXXHr
+P3vWSkReiwVA8DMOvE9f
+=RZGE
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
