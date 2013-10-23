@@ -1,48 +1,122 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: mxs: add auart2 pinmux to imx28.dtsi
-Date: Wed, 23 Oct 2013 10:58:57 +0400
-Message-ID: <1382511537-5072-1-git-send-email-aida.mynzhasova@skitlab.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [Patch v2 02/14] usb: phy-mxs: Add platform judgement code
+Date: Wed, 23 Oct 2013 14:46:04 +0800
+Message-ID: <20131023064604.GE8534@shlinux1.ap.freescale.net>
+References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
+ <1382421528-17897-3-git-send-email-peter.chen@freescale.com>
+ <20131023061322.GF2839@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131023061322.GF2839@S2101-09.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add auart2 pins configuration on its main pads
+On Wed, Oct 23, 2013 at 02:13:24PM +0800, Shawn Guo wrote:
+> > +
+> > +enum imx_phy_type {
+> > +	IMX6Q_USB_PHY,
+> > +	IMX6SL_USB_PHY,
+> > +	IMX23_USB_PHY,
+> > +};
+> > +
+> >  struct mxs_phy {
+> >  	struct usb_phy phy;
+> >  	struct clk *clk;
+> > +	enum imx_phy_type devtype;
+> >  };
+> >  
+> > -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> > +static inline int is_mx6q_phy(struct mxs_phy *data)
+> > +{
+> > +	return data->devtype == IMX6Q_USB_PHY;
+> > +}
+> > +
+> > +static inline int is_mx6sl_phy(struct mxs_phy *data)
+> > +{
+> > +	return data->devtype == IMX6SL_USB_PHY;
+> > +}
+> > +
+> > +static inline int is_mx23_phy(struct mxs_phy *data)
+> > +{
+> > +	return data->devtype == IMX23_USB_PHY;
+> > +}
+> > +
+> > +static struct platform_device_id imx_phy_devtype[] = {
+> > +	{
+> > +		.name = "usb-phy-imx6q",
+> > +		.driver_data = IMX6Q_USB_PHY,
+> > +	}, {
+> > +		.name = "usb-phy-imx6sl",
+> > +		.driver_data = IMX6SL_USB_PHY,
+> > +	}, {
+> > +		.name = "usb-phy-imx23",
+> > +		.driver_data = IMX23_USB_PHY,
+> > +	}, {
+> > +		/* sentinel */
+> > +	}
+> > +};
+> 
+> I know many imx device drivers have this platform_device_id table, but
+> that's because they need to support both non-DT and DT probe.  Since
+> this driver supports DT probe only, we can save this table by passing
+> imx_phy_type value through of_device_id.data directly.
 
-Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+How about compare compatible string directly at probe?
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 918d419..cab4c22 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -343,6 +343,19 @@
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
-+				auart2_pins_a: auart2-pins@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART2_RX__AUART2_RX
-+						MX28_PAD_AUART2_TX__AUART2_TX
-+						MX28_PAD_AUART2_CTS__AUART2_CTS
-+						MX28_PAD_AUART2_RTS__AUART2_RTS
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
- 				auart3_pins_a: auart3@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
+	if (of_device_is_compatible(np, "fsl,imx6q-usbphy"))
+		mxs_phy->devtype = IMX6Q_USB_PHY;
+	else if ((of_device_is_compatible(np, "fsl,imx6sl-usbphy"))
+		mxs_phy->devtype = IMX6SL_USB_PHY;
+	else if (...)
+		...;
+
+I don't know how to passing imx_phy_type value through below table
+directly? imx_phy_type is a enum variable, not a arrary.
+
+> 
+> > +static const struct of_device_id mxs_phy_dt_ids[] = {
+> > +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx_phy_devtype[IMX6Q_USB_PHY], },
+> > +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx_phy_devtype[IMX6SL_USB_PHY], },
+> > +	{ .compatible = "fsl,imx23-usbphy", .data = &imx_phy_devtype[IMX23_USB_PHY], },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> >  
+> >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> >  {
+> > @@ -131,6 +177,14 @@ static int mxs_phy_probe(struct platform_device *pdev)
+> >  	struct clk *clk;
+> >  	struct mxs_phy *mxs_phy;
+> >  	int ret;
+> > +	const struct of_device_id *of_id =
+> > +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
+> > +
+> > +	/* This driver is DT-only version now */
+> > +	if (!of_id)
+> > +		return -ENXIO;
+> 
+> Since it's DT-only, I'm not sure you will run into the case that
+> mxs_phy_probe() is called with a NULL of_id.  The check looks
+> unnecessary to me.
+
+Will change.
+
+> 
+> > +
+> > +	pdev->id_entry = of_id->data;
+> 
+> Some imx device drivers did the same thing, but we should keep
+> pdev->id_entry immutable.  The removal of that platform_device_id table
+> will help save this.
+
+Surely we can delete this line if no platform_device_id table.
+
 -- 
-1.8.1.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
+
