@@ -1,8 +1,8 @@
 From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Wed, 23 Oct 2013 19:45:00 +0200
-Message-ID: <20131023174458.GC5208@netboy>
+Date: Wed, 23 Oct 2013 19:47:37 +0200
+Message-ID: <20131023174736.GD5208@netboy>
 References: <20131020220839.GT2443@sirena.org.uk>
  <5264576F.6050307@wwwdotorg.org>
  <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
@@ -25,21 +25,19 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Oct 23, 2013 at 11:29:55AM -0600, Jason Gunthorpe wrote:
 > 
-> As far as I can see, all stable DTB gets you is the ability to flash
-> the DTB into the firmware and never change it. Who does that actually
-> help?
+> I've seen that nebulous answer before. It is awfully vauge. Don't you
+> think a better, more excting answer is required to commit the kernel
+> community to such a huge amount of work+pain?
+> 
+> What users? What use cases? Who exactly?
 
-Once I design my board, and it goes into production, the hardware is
-fixed. It doesn't change, and neither should the description of the
-hardware, also known as the DTB. If I have to research all of the ways
-that the bindings changed in order to upgrade my kernel, then I am
-better off with the old, static, platform data. At least there the
-compiler would complain if fields are removed or renamed. 
+Gimme a break. The use case I mentioned is not at all vague. It is
+about a specific a use case as you'll ever see.
+ 
+> Crucially: Does the above justify the huge effort on the kernel side?
 
-I understand that having the bindings in flux makes life easier for
-kernel developers, as it frees them from the burden of having to think
-about the consequences of their hasty decisions. But those people are
-not the only users. There is a much larger body of users than that.
+The effort is no more or less than is required of every other kernel
+development.
 
 Thanks,
 Richard
