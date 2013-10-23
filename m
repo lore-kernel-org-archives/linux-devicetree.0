@@ -1,31 +1,37 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v3 1/2] ARM: DT: msm: Add Qualcomm's PRNG driver binding
- document
-Date: Wed, 23 Oct 2013 12:27:29 +0300
-Message-ID: <52679681.4050803@mm-sol.com>
-References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com> <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: omap5-uevm: Audio related fixes
+Date: Wed, 23 Oct 2013 12:32:18 +0300
+Message-ID: <1382520740-11197-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381846278-9529-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 05:11 PM, Stanimir Varbanov wrote:
-> This adds Qualcomm PRNG driver device tree binding documentation
-> to use as an example in dts trees.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Hi,
 
-Dear DT binding maintainers,
+When the omap5-evm.dts file has been renamed to omap5-uevm.dts and the sEVM
+support got deprecated in favor of uEVM (or Panda5) the content was not
+validated.
+The reset GPIO is different on uEVM compared to sEVM and uEVM does not have
+support for dmic.
 
-I'd like to receive some comments or maybe an Ack to this patch. Or if
-you think it needs another re-spin please let me know.
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  ARM: dts: omap5-uevm: Correct twl6040 reset GPIO pinmux
+  ARM: dts: omap5-uevm: Remove pinmux for dmic pins
 
-Thanks in advance for your time!
+ arch/arm/boot/dts/omap5-uevm.dts | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-regards,
-Stan
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
