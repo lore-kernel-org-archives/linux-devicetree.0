@@ -1,241 +1,190 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCHv5] video: backlight: gpio-backlight: Add DT support.
-Date: Wed, 23 Oct 2013 18:34:01 +0200
-Message-ID: <20131023163401.GF17512@ns203013.ovh.net>
-References: <1382536214-2095-1-git-send-email-denis@eukrea.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V4 1/2] tps6507x-ts: Add DT support
+Date: Wed, 23 Oct 2013 17:45:49 +0100
+Message-ID: <20131023164548.GB6042@kartoffel>
+References: <1382545733-8865-1-git-send-email-badarkhe.manish@gmail.com>
+ <1382545733-8865-2-git-send-email-badarkhe.manish@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1382536214-2095-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric B??nard <eric@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Lothar Wa??mann <LW@KARO-electronics.de>
+In-Reply-To: <1382545733-8865-2-git-send-email-badarkhe.manish@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Manish Badarkhe <badarkhe.manish@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On 15:50 Wed 23 Oct     , Denis Carikli wrote:
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Jingoo Han <jg1.han@samsung.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Eric B=E9nard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
+On Wed, Oct 23, 2013 at 05:28:52PM +0100, Manish Badarkhe wrote:
+> Add device tree based support for TI's tps6507x touchscreen.
+> 
+> Signed-off-by: Manish Badarkhe <badarkhe.manish@gmail.com>
 > ---
-> ChangeLog v4->v5:
-> - The default-brightness property now defaults to 0 in the driver.
-as said in the v4 NACK on this proporty drop it
+> Changes since V3:
+>  - Rebased on top of Dmitry's changes
+>  - Removed error handling for optional DT properties
+> 
+> Changes since V2:
+>  - Removed unnecessary code.
+>  - Updated Documentation to provide proper names of
+>    devicetree properties.
+> 
+> Changes since V1:
+>  - Updated documentation to specify tps6507x as multifunctional
+>    device.
+>  - return proper error value in absence of platform and DT
+>    data for touchscreen.
+>  - Updated commit message.
+> 
+> :100755 100755 8fffa3c... e1b9cfd... M	Documentation/devicetree/bindings/mfd/tps6507x.txt
+> :100644 100644 db604e0... 0cf0eb1... M	drivers/input/touchscreen/tps6507x-ts.c
+>  Documentation/devicetree/bindings/mfd/tps6507x.txt |   24 ++++++-
+>  drivers/input/touchscreen/tps6507x-ts.c            |   72 ++++++++++++--------
+>  2 files changed, 67 insertions(+), 29 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/tps6507x.txt b/Documentation/devicetree/bindings/mfd/tps6507x.txt
+> index 8fffa3c..e1b9cfd 100755
+> --- a/Documentation/devicetree/bindings/mfd/tps6507x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/tps6507x.txt
+> @@ -1,4 +1,8 @@
+> -TPS6507x Power Management Integrated Circuit
+> +TPS6507x Multifunctional Device.
+> +
+> +Features provided by TPS6507x:
+> +        1.Power Management Integrated Circuit.
+> +        2.Touch-Screen.
+>  
+>  Required properties:
+>  - compatible: "ti,tps6507x"
+> @@ -23,6 +27,9 @@ Required properties:
+>         vindcdc1_2-supply: VDCDC1 and VDCDC2 input.
+>         vindcdc3-supply  : VDCDC3 input.
+>         vldo1_2-supply   : VLDO1 and VLDO2 input.
+> +- tsc: This node specifies touch screen data.
 
-this ned to be handled in C not in DT
-> - def_value int becomes a bool.
-> - The check for the gpio validity has been reworked.
-> ---
->  .../bindings/video/backlight/gpio-backlight.txt    |   21 ++++++
->  drivers/video/backlight/gpio_backlight.c           |   70 ++++++++++++++=
-++++--
->  2 files changed, 84 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/gpi=
-o-backlight.txt
-> =
+This is a node, but is listed un "Required properties". That seems odd.
 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-backl=
-ight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-backlight=
-.txt
-> new file mode 100644
-> index 0000000..9584357
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-> @@ -0,0 +1,21 @@
-> +gpio-backlight bindings
+When is it required?
+
+Why is the data under the tsc subnode? Why not directly under the main node?
+
+> +	ti,poll-period : Time at which touch input is getting sampled in ms.
+
+Is this for debounce? Other bindings have similar but differently named
+properties.
+
+Why is this necessary? Can the driver not choose a sane value?
+
+> +	ti,min-pressure: Minimum pressure value to trigger touch.
+
+What type are these? Single (u32) cells?
+
+What units is ti,min-pressure in?
+
+>  
+>  Regulator Optional properties:
+>  - defdcdc_default: It's property of DCDC2 and DCDC3 regulators.
+> @@ -30,6 +37,14 @@ Regulator Optional properties:
+>  			1: If defdcdc pin of DCDC2/DCDC3 is driven HIGH.
+>    If this property is not defined, it defaults to 0 (not enabled).
+>  
+> +Touchscreen Optional properties:
+> +- ti,vendor : Touchscreen vendor id to populate
+> +	      in sysclass interface.
+> +- ti,product: Touchscreen product id to populate
+> +	      in sysclass interface.
+> +- ti,version: Touchscreen version id to populate
+> +	      in sysclass interface.
+
+Are these integers, strings, or something else?
+
+What values make sense?
+
+What's the sysclass interface? That sounds like a Linux detail. The properties
+might be fine but the description shouldn't need to refer to Linux internals.
+
 > +
-> +Required properties:
-> +  - compatible: "gpio-backlight"
-> +  - gpios: describes the gpio that is used for enabling/disabling the ba=
-cklight
-> +     (see GPIO binding[0] for more details).
-> +
-> +Optional properties:
-> +  - default-brightness-level: the default brightness level (can be 0(off=
-) or
-> +    1(on) since GPIOs only support theses levels). If not set will defau=
-lt to
-> +    0.
-> +
-> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible =3D "gpio-backlight";
-> +		gpios =3D <&gpio3 4 0>;
-> +		default-brightness-level =3D <1>;
-> +	};
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/bac=
-klight/gpio_backlight.c
-> index 81fb127..3a5e1ba 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -13,6 +13,8 @@
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
+>  Example:
+>  
+>  	pmu: tps6507x@48 {
+> @@ -88,4 +103,11 @@ Example:
+>  			};
+>  		};
+>  
+> +		tsc {
+> +			ti,poll-period = <30>;
+> +			ti,min-pressure = <0x30>;
+> +			ti,vendor = <0>;
+> +			ti,product = <65070>;
+> +			ti,version = <0x100>;
+> +		};
+>  	};
+> diff --git a/drivers/input/touchscreen/tps6507x-ts.c b/drivers/input/touchscreen/tps6507x-ts.c
+> index db604e0..0cf0eb1 100644
+> --- a/drivers/input/touchscreen/tps6507x-ts.c
+> +++ b/drivers/input/touchscreen/tps6507x-ts.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/mfd/tps6507x.h>
+>  #include <linux/input/tps6507x-ts.h>
+>  #include <linux/delay.h>
 > +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/platform_data/gpio_backlight.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> @@ -23,6 +25,7 @@ struct gpio_backlight {
->  =
-
->  	int gpio;
->  	int active;
-> +	bool def_value;
->  };
->  =
-
->  static int gpio_backlight_update_status(struct backlight_device *bl)
-> @@ -60,6 +63,42 @@ static const struct backlight_ops gpio_backlight_ops =
-=3D {
->  	.check_fb	=3D gpio_backlight_check_fb,
->  };
->  =
-
-> +static int gpio_backlight_probe_dt(struct platform_device *pdev,
-> +				   struct gpio_backlight *gbl)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	enum of_gpio_flags gpio_flags;
-> +	int ret;
-> +
-> +	gbl->fbdev =3D NULL;
-> +	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-> +
-> +	if (!gpio_is_valid(gbl->gpio)) {
-> +		if (gbl->gpio !=3D -EPROBE_DEFER) {
-> +			dev_err(&pdev->dev,
-> +				"Error: The gpios parameter is missing or invalid.\n");
-> +		}
-> +		return gbl->gpio;
-> +	}
-> +
-> +	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-> +
-> +	ret =3D of_property_read_u32(np, "default-brightness-level",
-> +				   &gbl->def_value);
-> +	if (ret < 0) {
-> +		/* The property is optional. */
-> +		gbl->def_value =3D 0;
-> +	}
-> +
-> +	if (gbl->def_value > 1) {
-> +		dev_warn(&pdev->dev,
-> +			"Warning: Invalid default-brightness-level value.\n");
-> +		gbl->def_value =3D 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int gpio_backlight_probe(struct platform_device *pdev)
->  {
->  	struct gpio_backlight_platform_data *pdata =3D
-> @@ -67,10 +106,12 @@ static int gpio_backlight_probe(struct platform_devi=
-ce *pdev)
->  	struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
-> +	struct device_node *np =3D pdev->dev.of_node;
->  	int ret;
->  =
-
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "failed to find platform data\n");
-> +	if (!pdata && !np) {
-> +		dev_err(&pdev->dev,
-> +			"failed to find platform data or device tree node.\n");
->  		return -ENODEV;
->  	}
->  =
-
-> @@ -79,14 +120,22 @@ static int gpio_backlight_probe(struct platform_devi=
-ce *pdev)
->  		return -ENOMEM;
->  =
-
->  	gbl->dev =3D &pdev->dev;
-> -	gbl->fbdev =3D pdata->fbdev;
-> -	gbl->gpio =3D pdata->gpio;
-> -	gbl->active =3D pdata->active_low ? 0 : 1;
-> +
-> +	if (np) {
-> +		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		gbl->fbdev =3D pdata->fbdev;
-> +		gbl->gpio =3D pdata->gpio;
-> +		gbl->active =3D pdata->active_low ? 0 : 1;
-> +		gbl->def_value =3D pdata->def_value;
-> +	}
->  =
-
->  	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
->  				    (gbl->active ? GPIOF_INIT_LOW
->  						 : GPIOF_INIT_HIGH),
-> -				    pdata->name);
-> +				    pdata ? pdata->name : "backlight");
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "unable to request GPIO\n");
->  		return ret;
-> @@ -103,17 +152,24 @@ static int gpio_backlight_probe(struct platform_dev=
-ice *pdev)
->  		return PTR_ERR(bl);
->  	}
->  =
-
-> -	bl->props.brightness =3D pdata->def_value;
-> +	bl->props.brightness =3D gbl->def_value;
-> +
->  	backlight_update_status(bl);
->  =
-
->  	platform_set_drvdata(pdev, bl);
->  	return 0;
+> +#include <linux/of_device.h>
+>  
+>  #define TSC_DEFAULT_POLL_PERIOD 30 /* ms */
+>  #define TPS_DEFAULT_MIN_PRESSURE 0x30
+> @@ -206,33 +208,54 @@ done:
+>  	tps6507x_adc_standby(tsc);
 >  }
->  =
-
-> +static struct of_device_id gpio_backlight_of_match[] =3D {
-> +	{ .compatible =3D "gpio-backlight" },
-> +	{ /* sentinel */ }
-> +};
+>  
+> +static void tsc_init_data(struct tps6507x_ts *tsc,
+> +		struct input_dev *input_dev)
+> +{
+> +	struct device_node *node = tsc->dev->of_node;
+> +	const struct tps6507x_board *tps_board =
+> +			dev_get_platdata(tsc->dev);
+> +	const struct touchscreen_init_data *init_data = NULL;
 > +
->  static struct platform_driver gpio_backlight_driver =3D {
->  	.driver		=3D {
->  		.name		=3D "gpio-backlight",
->  		.owner		=3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
->  	},
->  	.probe		=3D gpio_backlight_probe,
->  };
-> -- =
+> +	if (node)
+> +		node = of_find_node_by_name(node, "tsc");
 
-> 1.7.9.5
-> =
+As of_find_node_by_name traverses the list of all nodes (not just children),
+this may match nodes other than what you expect.
+
+> +	if (tps_board)
+> +		/*
+> +		 * init_data points to array of touchscreen_init structure
+> +		 * coming from the board-evm file.
+> +		 */
+> +		init_data = tps_board->tps6507x_ts_init_data;
+> +
+> +	if (node == NULL || init_data == NULL) {
+> +		tsc->poll_dev->poll_interval = TSC_DEFAULT_POLL_PERIOD;
+> +		tsc->min_pressure = TPS_DEFAULT_MIN_PRESSURE;
+> +	} else if (init_data) {
+> +		tsc->poll_dev->poll_interval = init_data->poll_period;
+> +		tsc->min_pressure = init_data->min_pressure;
+> +		input_dev->id.vendor = init_data->vendor;
+> +		input_dev->id.product = init_data->product;
+> +		input_dev->id.version = init_data->version;
+> +	} else if (node) {
+> +		of_property_read_u32(node, "ti,poll-period",
+> +				&tsc->poll_dev->poll_interval);
+> +		of_property_read_u16(node, "ti,min-pressure",
+> +				&tsc->min_pressure);
+
+You didn't mention these were 16-bit values in the binding.
+
+As DTB is encoded big-endian, and you didn't use a /bits/ 16 declaration
+(making the property a u32 cell), won't this read 0 in all cases you have a
+value in the expected range (as in your example)?
+
+> +		of_property_read_u16(node, "ti,vendor",
+> +				&input_dev->id.vendor);
+> +		of_property_read_u16(node, "ti,product",
+> +				&input_dev->id.product);
+> +		of_property_read_u16(node, "ti,version",
+> +				&input_dev->id.version);
+
+Similarly for these three.
+
+Thanks,
+Mark.
