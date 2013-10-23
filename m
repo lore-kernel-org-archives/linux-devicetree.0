@@ -1,55 +1,34 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v10 04/10] mtd: nand: omap: fix device scan:
- NAND_CMD_READID, NAND_CMD_RESET, CMD_CMD_PARAM use only x8 bus
-Date: Wed, 23 Oct 2013 11:46:53 -0300
-Message-ID: <20131023144652.GI2458@localhost>
-References: <1382172254-12448-1-git-send-email-pekon@ti.com>
- <1382172254-12448-5-git-send-email-pekon@ti.com>
- <20131022201624.GL23337@ld-irv-0074.broadcom.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA29DB8@DBDE04.ent.ti.com>
- <5267690C.9080005@gmail.com>
- <20131023125516.GA2458@localhost>
- <20980858CB6D3A4BAE95CA194937D5E73EA2A0CB@DBDE04.ent.ti.com>
- <20131023132457.GD2458@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131023132457.GD2458@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "olof@lixom.net" <olof@lixom.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, dwmw2@i
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv2 0/3] DT Support for TWL4030 power button
+Date: Wed, 23 Oct 2013 17:01:19 +0200
+Message-ID: <1382540482-12261-1-git-send-email-sre@debian.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@debian.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pekon,
+Hi,
 
-On Wed, Oct 23, 2013 at 10:24:57AM -0300, Ezequiel Garcia wrote:
-[..]
->=20
-> I'm currently trying mainline (just for this issue not for my product=
-).
-> I just need some time to prepare the bootargs and write a DT node for
-> the NAND cape.
->=20
-> Again, not sure if I'll make some progress, but I'll give it a shot :=
--)
+This is the second iteration of DT support for the TWL4030
+power button.
 
-I won't be able to make too much progress without some help or without
-squeezing my brains out :P
+Changes since v1 [0]:
+ * Simplify OF handling of twl4030_pwrbutton_dt_match_table
+ * Remove Patch 4 (queued by Benoit)
 
-Care to push some git branch on some random repo with DT support for
-the NAND cape in the Beaglebone?
+[0] https://lkml.org/lkml/2013/10/22/151
 
-Please base it in either some recent l2-mtd or some tag from Linus.
+-- Sebastian
 
-Thanks!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian Reichel (3):
+  Input: twl4030-pwrbutton - add device tree support
+  Input: twl4030-pwrbutton: use dev_err for errors
+  Input: twl4030-pwrbutton: simplify driver using devm_*
+
+ drivers/input/misc/twl4030-pwrbutton.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+
+-- 
+1.8.4.rc3
+
