@@ -1,73 +1,57 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv4 2/3] Input: twl4030-pwrbutton: use dev_err for errors
-Date: Wed, 23 Oct 2013 21:31:12 +0200
-Message-ID: <20131023193112.GB30437@earth.universe>
-References: <1382550852-11508-1-git-send-email-sre@debian.org>
- <1382550852-11508-3-git-send-email-sre@debian.org>
- <1382552266.22433.36.camel@joe-AO722>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
+ tree bindings
+Date: Wed, 23 Oct 2013 13:34:50 -0600
+Message-ID: <20131023193450.GE32563@obsidianresearch.com>
+References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
+ <5267FA58.9050002@wwwdotorg.org>
+ <20131023172001.GA3379@katana>
+ <20131023185909.GC7863@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382552266.22433.36.camel@joe-AO722>
-Sender: linux-input-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20131023185909.GC7863-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 23, 2013 at 08:59:10PM +0200, Thierry Reding wrote:
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > I'd say yes. Going from unstable to stable is quite a step for a binding
+> > and that should be visible and worth a patch IMO. Also, when looking at
+> > a DTS file or some driver code, it will avoid
+> > confusion/misinterpretation if one can see immediately the status of a
+> > binding.
+> 
+> Yes, I fully agree. It might look like churn, but I think this could
+> actually be a part of the formal process to stabilize a binding. It
+> would be final step of that process, actually.
 
-On Wed, Oct 23, 2013 at 11:17:46AM -0700, Joe Perches wrote:
-> On Wed, 2013-10-23 at 19:54 +0200, Sebastian Reichel wrote:
-> > Use dev_err() to output errors instead of dev_dbg().
-> []
-> > diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/mis=
-c/twl4030-pwrbutton.c
-> []
-> > @@ -60,7 +60,7 @@ static int twl4030_pwrbutton_probe(struct platform_de=
-vice *pdev)
-> > =20
-> >  	pwr =3D input_allocate_device();
-> >  	if (!pwr) {
-> > -		dev_dbg(&pdev->dev, "Can't allocate power button\n");
-> > +		dev_err(&pdev->dev, "Can't allocate power button\n");
-> >  		return -ENOMEM;
-> >  	}
->=20
-> input_allocate_device uses kzalloc and it will emit a
-> standardized OOM message along with a dump_stack()
-> so this dev_err/dev_dbg is redundant and not necessary.
+I actually think this makes things worse.
 
-I saw you sent a big patchset changing this for all drivers.
-Should I drop this patch?
+Ostensibly the purpose of stable DT is to allow the DT and kernel to
+be separate, so you should minimize the churn in the DTs, and they
+should trend to stable.
 
--- Sebastian
+Having a flag day where someone goes and churns the DT to remove a !,
+and then changes the kernel so all old DTs with a ! won't work at all
+makes this whole thing seem kinda contrary to the basic motivating
+premis.
 
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Also, what happens during development? If you incompatibly change the
+binding you should change the name, so maybe <version>!marvell,foo is
+the way to go. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+v1 of the binding is 1!marvell,foo - version 2 is 2!marvell,foo, etc.
 
-iQIcBAEBCAAGBQJSaCQAAAoJENju1/PIO/qa6m8P/3pSlYlEIrdc/ZCFHkRKfOIP
-Z1TsVJLGNnXJ3uY/PEU2/fFzWBilSgrH8eK0Iuv0SFig69hJnGYw+/BWr102ACQ/
-GIPJOrFM9zlCN2qgpN0rZ4i7/yaK+JKd4WlyiroRnrcC9sWPmL+b2uw0hRaDi5IV
-n0Ib9C4Oi7V0J76HGz1Tzp0lT/+Z2DBfK6Y7bRqo7vLreLn1khTfjXHIGbR3e9th
-wLdw3Pj2xHHfMj96xdkzNsZLvKUleKN3D7tZHh2PLaEKNZTn3eZZblScFsculkPz
-Dopuc7Kjy1SQGMPy7ZY/JPCY9ZeA7HDH3zE/90kcBJF+xUROUCALq/jxovw9i3NM
-Ppp0tm0+oGxOcjTSwKZTKx0CiRJ+e4TZZcMDwIJw3o3iOSLY7+JatD6hSAoDnPcw
-nEMgYQJgP4+ZxlCG/2Da+ZV5u0GR7sTUaf998oBFJ8IwtLRdxkUsiaElfu4KLtk8
-z6OWr1/aZ5w3rMTkVI7yriwyZjKJfi3jYFOzaQnZsJdPZ23N7U1nezXUgGWEfgZU
-4MbNIreE8f8MnEUALe1DGnyE2cGSe1bdYd0D8mEVRry3VAAyJLmYWkQ9EWyNlsmN
-LLDGymdDyBfJcMbytXWyXiA9ob7iMUgorGkgXzS8d6m8nYqNd+GdLliyx8Tl7Pft
-v9y91ej4ZRreyun7EQwB
-=+Y67
------END PGP SIGNATURE-----
+When stablized the last bang is kept and the non-bang version is
+added. The boot warning is supressed once stable no matter the
+compatible string used in the dt...
 
---kXdP64Ggrk/fb43R--
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
