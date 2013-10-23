@@ -1,15 +1,27 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv4 1/2] ARM: dts: imx51.dtsi: Add some pinmux pins.
-Date: Wed, 23 Oct 2013 11:09:52 +0200
-Message-ID: <1382519393-17055-1-git-send-email-denis@eukrea.com>
+Subject: [PATCHv4 2/2] ARM: dts: Add support for the cpuimx51 board from Eukrea and its baseboard.
+Date: Wed, 23 Oct 2013 11:09:53 +0200
+Message-ID: <1382519393-17055-2-git-send-email-denis@eukrea.com>
+References: <1382519393-17055-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382519393-17055-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+The following devices/functionalities were added:
+ * Main and secondary UARTs.
+ * i2c and the pcf8563 device.
+ * Ethernet.
+ * NAND.
+ * The BP1 button.
+ * The LED.
+ * Watchdog
+ * SD.
 
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
@@ -22,44 +34,223 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx51.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi       |   63 ++++++++++
+ .../boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts  |  132 ++++++++++++=
+++++++++
+ 2 files changed, 195 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+ create mode 100644 arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.=
+dts
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dts=
-i
-index f4dcff3..48fa41b 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -621,6 +621,15 @@
- 		};
- 	};
-=20
-+	i2c1 {
-+		pinctrl_i2c1_1: i2c1grp-1 {
+diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/bo=
+ot/dts/imx51-eukrea-cpuimx51.dtsi
+new file mode 100644
+index 0000000..8638656
+--- /dev/null
++++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+@@ -0,0 +1,63 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++#include "imx51.dtsi"
++
++/ {
++	model =3D "Eukrea CPUIMX51";
++	compatible =3D "eukrea,cpuimx51", "fsl,imx51";
++
++	memory {
++		reg =3D <0x90000000 0x10000000>; /* 256M */
++	};
++};
++
++&fec {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_fec_2>;
++	status =3D "okay";
++};
++
++&i2c1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_i2c1_1>;
++	status =3D "okay";
++
++	pcf8563@51 {
++		compatible =3D "nxp,pcf8563";
++		reg =3D <0x51>;
++	};
++};
++
++&iomuxc {
++	tsc2007 {
++		pinctrl_tsc2007_1: tsc2007grp-1 {
 +			fsl,pins =3D <
-+				MX51_PAD_SD2_CMD__I2C1_SCL 0x400001ed
-+				MX51_PAD_SD2_CLK__I2C1_SDA 0x400001ed
++				MX51_PAD_GPIO_NAND__GPIO_NAND 0x1f5
++				MX51_PAD_NANDF_D8__GPIO4_0 0x1f5
++			>;
++		};
++	};
++};
++
++&nfc {
++	nand-bus-width =3D <8>;
++	nand-ecc-mode =3D "hw";
++	nand-on-flash-bbt;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts b/a=
+rch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts
+new file mode 100644
+index 0000000..64d8082
+--- /dev/null
++++ b/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts
+@@ -0,0 +1,132 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++/dts-v1/;
++#include "imx51-eukrea-cpuimx51.dtsi"
++
++/ {
++	model =3D "Eukrea CPUIMX51";
++	compatible =3D "eukrea,mbimxsd51","eukrea,cpuimx51", "fsl,imx51";
++
++	gpio_keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
++
++		button-1 {
++			label =3D "BP1";
++			gpios =3D <&gpio3 31 1>;
++			linux,code =3D <256>;
++			gpio-key,wakeup;
++			linux,input-type =3D <1>;
++		};
++	};
++
++	leds {
++		compatible =3D "gpio-leds";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpioled>;
++
++		led1 {
++			label =3D "led1";
++			gpios =3D <&gpio3 30 1>;
++			linux,default-trigger =3D "heartbeat";
++		};
++	};
++};
++
++&audmux {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_audmux_1>;
++	status =3D "okay";
++};
++
++&esdhc1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_esdhc1_1 &pinctrl_esdhc1_cd>;
++	fsl,cd-controller;
++	status =3D "okay";
++};
++
++&i2c1 {
++	tlv320aic23: codec@1a {
++		compatible =3D "ti,tlv320aic23";
++		reg =3D <0x1a>;
++	};
++};
++
++&iomuxc {
++	backlight {
++		pinctrl_backlight_1: backlightgrp-1 {
++			fsl,pins =3D <
++				MX51_PAD_DI1_D1_CS__GPIO3_4 0x1f5
 +			>;
 +		};
 +	};
 +
- 	i2c2 {
- 		pinctrl_i2c2_1: i2c2grp-1 {
- 			fsl,pins =3D <
-@@ -801,6 +810,13 @@
- 				MX51_PAD_UART3_TXD__UART3_TXD 0x1c5
- 			>;
- 		};
-+
-+		pinctrl_uart3_rtscts_2: uart3rtscts-2 {
++	esdhc1 {
++		pinctrl_esdhc1_cd: esdhc1_cd {
 +			fsl,pins =3D <
-+				MX51_PAD_KEY_COL4__UART3_RTS 0x1c5
-+				MX51_PAD_KEY_COL5__UART3_CTS 0x1c5
++				MX51_PAD_GPIO1_0__SD1_CD 0x20d5
 +			>;
 +		};
- 	};
-=20
- 	usbh1 {
++	};
++
++	gpio-keys {
++		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
++			fsl,pins =3D <
++				MX51_PAD_NANDF_D9__GPIO3_31 0x1f5
++			>;
++		};
++	};
++
++	leds {
++		pinctrl_gpioled: gpioledgrp-1 {
++			fsl,pins =3D <
++				MX51_PAD_NANDF_D10__GPIO3_30 0x80000000
++			>;
++		};
++	};
++
++	reg_lcd_3v3 {
++		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
++			fsl,pins =3D <
++				MX51_PAD_CSI1_D9__GPIO3_13 0x1f5
++			>;
++		};
++	};
++};
++
++&ssi2 {
++	fsl,mode =3D "i2s-slave";
++	status =3D "okay";
++};
++
++&uart1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart1_1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
++
++&uart3 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart3_2 &pinctrl_uart3_rtscts_2>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
 --=20
 1.7.9.5
 
