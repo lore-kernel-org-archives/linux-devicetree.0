@@ -1,74 +1,55 @@
-From: "David Woodhouse" <dwmw2@infradead.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 12:22:18 -0000
-Message-ID: <f20013b8c402dacccd865d143e14a3ee.squirrel@twosheds.infradead.org>
-References: <20131020220839.GT2443@sirena.org.uk>
- <5264576F.6050307@wwwdotorg.org>
- <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
- <52658EBC.8020800@wwwdotorg.org>
- <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
- <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
- <20131022171346.GE4061@obsidianresearch.com>
- <20131023080630.GA14413@netboy>
- <20131023172955.GA17145@obsidianresearch.com>
- <20131023174458.GC5208@netboy>
- <1382553982.31058.10.camel@sakura.staff.proxad.net>
- <20131024095232.27BBCC4039D@trevor.secretlab.ca>
- <1382614439.6040.16.camel@sakura.staff.proxad.net>
- <1382615278.8522.72.camel@shinybook.infradead.org>
- <1382616801.6040.26.camel@sakura.staff.proxad.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv7][ 1/5] ASoC: eukrea-tlv320: Use dev_err instead of
+ pr_err.
+Date: Thu, 24 Oct 2013 13:23:29 +0100
+Message-ID: <20131024122329.GE18506@sirena.org.uk>
+References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382616801.6040.26.camel@sakura.staff.proxad.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mbizon@freebox.fr
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-2013-discuss@lists.linuxfoundation.org" <ksummit-2013-discuss@lists.linuxfoundation.org>, Nicolas Pitre <nico@fluxnic.net>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@gmail.com>, Matt Porter <matt.porter@linaro.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HeFlAV5LIbMFYYuh"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382616832-23593-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
->
-> On Thu, 2013-10-24 at 12:47 +0100, David Woodhouse wrote:
->
->> If you can automatically infer the correct clock/interrupt/etc in order
->> to do DMA correctly, despite the fact that it wasn't explicitly spelled
->> out in the old DT, then the property is *not* a "required" property.
->> It's optional, and you have a default behaviour for when it's not
->> present.
->
-> so inside the new version of driver-hwcrypto.c:
->
-> if (irq_of_parse_and_map(...) == NO_IRQ) {
-> 	switch (get_soc_model()) {
-> 		case SOC1:
-> 			irq = 51;
-> 			break;
->
-> 		case SOC2:
-> 			irq = 62;
-> 			break;
->
-> 		[...]
-> 	}
-> }
+--HeFlAV5LIbMFYYuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Oct 24, 2013 at 02:13:48PM +0200, Denis Carikli wrote:
 
-If you are correct to insist that DMA needs yo be supported in the new
-driver *even* with old firmware, then yes, maybe.
+> It also contains a minor style cleanup.
 
-The alternative is a quirk to "fix" the DT up on the affected boards and
-not actually doing the special cases in the driver itself. But that can be
-seen as an implementation detail.
+Applied, thanks.
 
--- 
-dwmw2
+--HeFlAV5LIbMFYYuh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaRE6AAoJELSic+t+oim9qD4P/jGJeXlsqg/VI9pgZy7CgxlS
+v+eJW0blRyO3lyoMyJ4qkmfqNawd/BQbzHukyLDjotGbZxTstVqzN5DNwR8HEc5H
+AG52t5ySbBzsA6B9UqIhVufcW8eXxk0pXJujxNmHkBrBt6OPHNX8dIVg7zieQNoI
+yqQqSjUPMaZSf1aJ/fWNcFf8TAU2xiUNf/X+EfcdePjPs4lOLsJfcU1u5lttqd2+
++jm52Y2iyKmlj6p72GuiIYYeDTFGTv8ODdxsNOcgQ5OUJ3OPz44oezfOvlaq4oqx
+p2Y3brzv9ZKOyzbASe0AvGvIS1bGb9hgGXTjZllh1/e1n9kty0F/tJn5dhbZhmGm
+0Jgoz+h+SCAAsL5q8Awdx2eH/qYN62/1He6i2AM5GEihyeBRhF63UtI6tCNlZ8l3
+R+88R0K4AYw3J4JuaJiyaL0+R8Sxdq79PcciFvW4GzcONiMH5kE3zLgZF484Rl9b
+9MXVLMTnomAAPCGKVAr2LLL5xFlse7yfsDAwgKXU4UJAOf+KZmwRPKnRcIP6aVXi
+FZVdx2Mq96TdnnysJZyKNdo8jsDyn4Olsl8h70h4j5LbJPtXJivOAP+AvY7dyL8V
+YYEoCdDMm1tvhuMr7FOCkGV13+Zfefc6Ol0NTdW5YZrbUXTfECwovO5SA5PTRd9R
+YJlzskmqnRNTEXlwwGi0
+=FEt0
+-----END PGP SIGNATURE-----
+
+--HeFlAV5LIbMFYYuh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
