@@ -1,116 +1,52 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [RFC PATCH 2/6] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
-Date: Thu, 24 Oct 2013 06:00:02 -0500
-Message-ID: <202C69F5-3DEB-4735-9CE3-13B38126BD68@codeaurora.org>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-3-git-send-email-r.sricharan@ti.com> <2FD881B8-1A59-418E-AF9C-EF5B9C5D0623@codeaurora.org> <5268F9C5.3090106@ti.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5268F9C5.3090106@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
+From: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 15:30:31 +0200
+Message-ID: <1382621431.6040.66.camel@sakura.staff.proxad.net>
+References: <20131022093923.GC15640@ulmo.nvidia.com>
+	 <20131022150426.GF29341@beef> <20131022171346.GE4061@obsidianresearch.com>
+	 <20131023080630.GA14413@netboy>
+	 <20131023172955.GA17145@obsidianresearch.com>
+	 <20131023174458.GC5208@netboy>
+	 <1382553982.31058.10.camel@sakura.staff.proxad.net>
+	 <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+	 <1382614439.6040.16.camel@sakura.staff.proxad.net>
+	 <1382615278.8522.72.camel@shinybook.infradead.org>
+	 <20131024122346.GD11296@ulmo.nvidia.com>
+	 <1382619655.6040.52.camel@sakura.staff.proxad.net>
+	 <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
+Reply-To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <516bfc7f9366ff3ef9187c36dd160888.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 24, 2013, at 5:43 AM, Sricharan R wrote:
+On Thu, 2013-10-24 at 13:10 +0000, David Woodhouse wrote:
 
-> Hi Kumar,
-> 
-> On Thursday 24 October 2013 03:03 PM, Kumar Gala wrote:
->> On Sep 30, 2013, at 8:59 AM, Sricharan R wrote:
->> 
->>> Some socs have a large number of interrupts requests to service
->>> the needs of its many peripherals and subsystems. All of the
->>> interrupt lines from the subsystems are not needed at the same
->>> time, so they have to be muxed to the irq-controller appropriately.
->>> In such places a interrupt controllers are preceded by an CROSSBAR
->>> that provides flexibility in muxing the device requests to the controller
->>> inputs.
->>> 
->>> This driver takes care a allocating a free irq and then configuring the
->>> crossbar IP as a part of the mpu's irqchip callbacks. crossbar_init should
->>> be called right before the irqchip_init, so that it is setup to handle the
->>> irqchip callbacks.
->>> 
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Cc: Russell King <linux@arm.linux.org.uk>
->>> Cc: Tony Lindgren <tony@atomide.com>
->>> Cc: Rajendra Nayak <rnayak@ti.com>
->>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>> Cc: Grant Likely <grant.likely@linaro.org>
->>> Cc: Rob Herring <rob.herring@calxeda.com>
->>> Signed-off-by: Sricharan R <r.sricharan@ti.com>
->>> ---
->>> .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
->>> drivers/irqchip/Kconfig                            |    8 +
->>> drivers/irqchip/Makefile                           |    1 +
->>> drivers/irqchip/irq-crossbar.c                     |  195 ++++++++++++++++++++
->>> include/linux/irqchip/irq-crossbar.h               |   11 ++
->>> 5 files changed, 242 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/arm/omap/crossbar.txt
->>> create mode 100644 drivers/irqchip/irq-crossbar.c
->>> create mode 100644 include/linux/irqchip/irq-crossbar.h
->>> 
->>> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
->>> new file mode 100644
->>> index 0000000..cdec2cd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
->>> @@ -0,0 +1,27 @@
->>> +Some socs have a large number of interrupts requests to service
->>> +the needs of its many peripherals and subsystems. All of the
->>> +interrupt lines from the subsystems are not needed at the same
->>> +time, so they have to be muxed to the irq-controller appropriately.
->>> +In such places a interrupt controllers are preceded by an CROSSBAR
->>> +that provides flexibility in muxing the device requests to the controller
->>> +inputs.
->>> +
->>> +Required properties:
->>> +- compatible : Should be "ti,irq-crossbar"
->>> +- reg: Base address and the size of the crossbar registers.
->>> +- max-irqs: Total number of irqs available at the interrupt controller.
->> Should be 'ti,max-irqs
-> Ok, will correct.
->>> +- reg-size: Size of a individual register in bytes. Every individual
->>> +	    register is assumed to be of same size. Valid sizes are 1, 2, 4.
->> Is this something that really needs to be encoded in the dts?
->> 
->> If we keep it should be ti,reg-size
-> Currently, this is the only IP with a fixed register-size.
-> So this can be in the driver also. I thought keeping it
-> DT will avoid any hard-coding in driver.
+> Note that you are not describing a normal "DT scenario" here. You are
+> describing a case in which we screwed up
 
-I'd go with less in the DT at this point, if in the future you need this you can always add it later.
+AKA "real world"
 
->>> +- irqs-reserved: List of the reserved irq lines that are not muxed using
->>> +		 crossbar. These interrupt lines are reserved in the soc,
->>> +		 so crossbar bar driver should not consider them as free
->>> +		 lines.
->>> +
->> ti,irqs-reserved
-> Ok, will correct
->>> +Examples:
->>> +		crossbar_mpu: @4a020000 {
->> Did you mean for there to be a label and no node name?
->> 
-> ya, name is missing. Will add.
->>> +			compatible = "ti,irq-crossbar";
->>> +			reg = <0x4a002a48 0x130>;
->>> +			max-irqs = <160>;
->>> +			reg-size = <2>;
->>> +			irqs-reserved = <0 1 2 3 5 6 131 132 139 140>;
->>> +		};
-> 
-> Regards,
-> Sricharan
+> So yes, after the public flogging has happened, and we're trying to
+> work out how best to cope with the screwup, we don't necessarily have
+> any perfect choices. The perfect choice was to do it properly in the
+> first place.
 
-- k
+or avoid shooting ourselves in the foot in the first place, and keep
+these unmodifiable stuff in kernel :)
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Maxime
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
