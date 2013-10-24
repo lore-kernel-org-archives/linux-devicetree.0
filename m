@@ -1,75 +1,98 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: Usage of for_each_child_of_node()
-Date: Thu, 24 Oct 2013 06:31:21 -0700
-Message-ID: <52692129.3070207@roeck-us.net>
-References: <5259B6F8.3070701@roeck-us.net> <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com> <20131023071006.GA7708@ulmo.nvidia.com> <20131023161644.GB20675@roeck-us.net> <20131024075058.GD9403@ulmo.nvidia.com>
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio:light:tsl2563: Add DT support
+Date: Thu, 24 Oct 2013 15:43:00 +0200
+Message-ID: <20131024134259.GB3681@earth.universe>
+References: <1382565063-17083-1-git-send-email-sre@debian.org>
+ <5268DA76.6060503@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131024075058.GD9403@ulmo.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5268DA76.6060503-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Brenner - TAOS <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2013 12:50 AM, Thierry Reding wrote:
-> On Wed, Oct 23, 2013 at 09:16:44AM -0700, Guenter Roeck wrote:
->> On Wed, Oct 23, 2013 at 09:10:07AM +0200, Thierry Reding wrote:
->>> On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
->>>> On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
->>>>> Hi all,
->>>>>
->>>>> for_each_child_of_node() and similar functions increase the refcount
->>>>> on each returned node and expect the caller to release the node by
->>>>> calling of_node_put() when done.
->>>>>
->>>>> Looking through the kernel code, it appears this is hardly ever done,
->>>>> if at all. Some code even calls of_node_get() on returned nodes again.
->>>>>
->>>>> I guess this doesn't matter in cases where devicetree is a static entity.
->>>>> However, this is not (or no longer) the case with devicetree overlays,
->>>>> or more generically in cases where devicetree nodes are added and
->>>>> removed dynamically.
->>>>>
->>>>> Fundamental question: Would patches to fix this problem be accepted upstream
->>>>> ?
->>>>
->>>> Certainly.
->>>>
->>>>> Or, of course, stepping a bit back: Am I missing something essential ?
->>>>
->>>> No. I think this is frequently wrong since it typically doesn't matter
->>>> for static entries as you mention.
->>>
->>> Actually, I think it actually happens to be correct most of the time.
->>> The reason is that for_each_child_of_node() internally calls the
->>> of_get_next_child() to iterate over all children. And that function
->>> already calls of_node_put() on the "previous" node. So if all the code
->>> does is to iterate over all nodes to query them, then all should be
->>> fine.
->>>
->> Good, that reduces the scope of the problem significantly.
->>
->>> The only case where you actually need to drop the reference on a node is
->>> if you break out of the loop (so that of_get_next_child() will not be
->>> called). But that's usually the case when you need to perform some
->>> operation on the node, in which case it is the right thing to hold on to
->>> a reference until you're done with the node.
->>>
->> Unfortunately, there are many cases with code such as
->>
->> 	if (error)
->> 		return;	/* or break; */
->
-> Well, a break isn't necessarily bad, since you could be using the node
-> subsequently. I imagine that depending on the exact block following the
 
-Correct, but I meant the error case. Randomly looking through several
-drivers, most of them get error return handling wrong. "Winner" so far
-is of_regulator_match(), which doesn't release the node on error return,
-but does not acquire references for use afterwards either.
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Something to do with my non-existing free time ;-).
+On Thu, Oct 24, 2013 at 09:29:42AM +0100, Jonathan Cameron wrote:
+> On 10/23/13 22:51, Sebastian Reichel wrote:
+> > Add Device Tree support for the TSL2563 driver
+> > and document the binding.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++=
+++++++++
+> >  drivers/iio/light/tsl2563.c                           |  4 ++++
+> >  2 files changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563=
+=2Etxt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/=
+Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> > new file mode 100644
+> > index 0000000..b52cf4b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> > @@ -0,0 +1,19 @@
+> > +* TAOS TSL2563 ambient light sensor
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible : should be "taos,tsl2563"
+> > +  - reg : the I2C address of the sensor
+> > +
+> > +Optional properties:
+> > +
+> So two options for this one.  Either pitch it as a possible general param=
+eter, or
+> mark it with a vendor prefix.  It seems like something fairly general, bu=
+t in that case it
+> probably needs a more detailed proposal and explanation of exactly what i=
+t is.
 
-Guenter
+OK, I will add a vendor prefix in a PATCHv2. When I converted the driver
+to DT I had a look how this is used and I don't think it's "fairly general".
+
+> Also, is taos listed in vendor-prefixes.txt?  Jon, is that the right vend=
+or prefix to use?
+> I'm guessing you have some non mainline bindings out there already so it =
+would be good
+> to match those...
+
+taos is currently not listed in the vendor-prefixes.txt file. Also
+it seems that "TAOS Inc." has been absorbed by "ams AG" in 2011.
+So how to proceed with the patch?
+
+-- Sebastian
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSaSPjAAoJENju1/PIO/qaqqkP/RkWc6EDdRaKNkNRtahjKtQz
+/vBR1C5oaM9TkAT61aXNNcC4ggIUXHS/GmyebntVVIaNcQkVEpf95C5nalPc9qMZ
+kHIHouvwNgv8UCZGxhp47Io4lZfzaqkNTmfJEjVnuKMYZuUvIx31UjTXWI6OaB3U
+p84EtPOUozc+9OtNq/v30UXjVmR+b+kuoppmjZUni1kovAzVFDr9uNA7r229YOK+
+YrWPKeCdwRDSHvJAuAqyMb+QiCwE/EZsVr23mGEOwU8U2/9IsqEK7/emWFTg1gZW
+OlD+QYup8XCDEKstssmZRbj0Mlt8zqAt3PluDgwyUYgArfjkpV2DJBo8MWgUbsZn
+zmPJ5PZOz3whPAOsK+6uI1JZ5saye1IJ1ByMId/Hzff0EZwR27yhPDVxYLnOMGQ0
+W08bBJkQqyH4SIzq2jx0sm0C0HFtDWn18bCpZTuKewwPSplxg4U9eVfMrqCEYjIf
+9Ha7t+B59JNvNKZ/l9GbNZM1o2uNcpSndQvJndeSXHu7I3ezYVFi9o2wLerK7Ulk
+dJSPlSy3DYLTkQemSWh4EEwMaUOF4pcXIlNsJwy9lwO8gZgamtO/azlFjSToU7RB
+U/t6MDfnPh/uwThJd7gIPYYbL/beBOF2m4fEli6LTzCOvIqyYXvDn78N7bml0y3N
+cCtbtICayHI8ROz7WESX
+=e1tl
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
