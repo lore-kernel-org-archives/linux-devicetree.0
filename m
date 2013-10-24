@@ -1,48 +1,46 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 08:18:53 -0700
-Message-ID: <20131024151853.GB25355@roeck-us.net>
-References: <52658C49.80400@wwwdotorg.org>
- <5265AFED.1040503@roeck-us.net>
- <52665314.2040904@imgtec.com>
- <232aa6e4-19fe-4460-8101-8bf1d639ff3c@email.android.com>
- <20131022164922.GA29852@roeck-us.net>
- <20131022203546.GC8037@mithrandir>
- <20131022211000.GA30394@roeck-us.net>
- <20131023075758.GA7404@ulmo.nvidia.com>
- <20131023160131.GA20675@roeck-us.net>
- <20131023210715.GF8828@mithrandir>
+From: Eric =?ISO-8859-1?B?QuluYXJk?= <eric@eukrea.com>
+Subject: Re: [PATCHv7][ 1/4] Input: tsc2007: Add device tree support.
+Date: Thu, 24 Oct 2013 17:26:44 +0200
+Message-ID: <20131024172644.45816152@e6520eb>
+References: <1382618536-25320-1-git-send-email-denis@eukrea.com>
+	<20131024151736.GE9044@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131023210715.GF8828@mithrandir>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131024151736.GE9044@ulmo.nvidia.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Denis Carikli <denis@eukrea.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Lothar =?ISO-8859-1?B?V2HfbWFubg==?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 11:07:16PM +0200, Thierry Reding wrote:
-[ ... ]
-> > 
-> > Was this just a matter of enabling OF on this platform, or do you have an
-> > out-of-tree set of patches ? If the latter, is it available somewhere
-> > to look at (including the complete devicetree from your above example) ?
-> 
-> It was mostly a matter of enabling OF and writing the device tree. Most
-> of the generic kernel code changes I even got merged, but there were a
-> few patches that I never got around to merge. Some weren't anywhere
-> close to a mergeable state either.
-> 
-> I no longer work for the company and don't have access to the patches.
-> But I can ping a few people and see if I can dig up something for you.
-> 
-That would be great.
+Hi Thierry,
+
+Le Thu, 24 Oct 2013 17:17:37 +0200,
+Thierry Reding <thierry.reding@gmail.com> a =E9crit :
+> > +- ti,max-rt: maximum pressure.
+> > +- ti,fuzzy: specifies the absolute input fuzz value.
+> > +  If set, it will permit noise in the data up to +- the value give=
+n to the fuzz
+> > +  parameter, that is used to filter noise from the event stream.
+>=20
+> Any reason why these can't be specified per axis? From my experience
+> with this chip it can make sense to use different values for the
+> different axes. Well, perhaps X and Y axes can share one fuzz factor,
+> but the Z axis is sometimes different.
+>=20
+> You also modify the driver to ignore the X and Z axes fuzz factor eve=
+n
+> for platform data where specifying all three separately was explicitl=
+y
+> allowed. Have you verified that this doesn't cause any regressions?
+>=20
+That was not intended, that's an error, we will fix that.
 
 Thanks,
-Guenter
+Eric
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
