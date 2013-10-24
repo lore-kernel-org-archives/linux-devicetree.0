@@ -1,62 +1,88 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Thu, 24 Oct 2013 11:32:38 -0600
-Message-ID: <20131024173238.GA23910@obsidianresearch.com>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
- <5267FA58.9050002@wwwdotorg.org> <20131023172001.GA3379@katana>
- <20131023185909.GC7863@ulmo.nvidia.com>
- <20131023193450.GE32563@obsidianresearch.com>
- <20131023195849.GA8828@mithrandir>
- <20131023210849.GB2912@obsidianresearch.com>
- <20131024080418.GE9403@ulmo.nvidia.com>
+From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce of_get_available_child_count
+Date: Thu, 24 Oct 2013 11:09:54 -0700
+Message-ID: <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw@mail.gmail.com>
+References: <1380045009-21149-1-git-send-email-cooloney@gmail.com>
+ <52420118.9050501@gmail.com> <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20131024080418.GE9403@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, ksummit-2013-discuss@lists.linuxfoundation.org, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 10:04:19AM +0200, Thierry Reding wrote:
+On Tue, Sep 24, 2013 at 2:22 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Sep 24, 2013 at 2:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 09/24/2013 12:50 PM, Bryan Wu wrote:
+>>> Some drivers keep counting available child by themselves. So
+>>> introduce a new simple API like of_get_child_count() but for
+>>> available childs.
+>>>
+>>> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>
+>> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
 
-> > The rule for experimental bindings should be that incompatible changes
-> > to the binding must bump the version number at the same time, clearly
-> > signalling to everyone using that binding that they need to take some
-> > action.
-> 
-> I disagree. I think that we should apply the same rule to DT bindings
-> (at least experimental ones) that we apply to code within the Linux
-> kernel. If you change an experimental binding in an incompatible way
-> then it should be your responsibility to update all users of it so that
-> they don't break.
+Will this patch be merged through you guys or need I take care of it?
 
-Absolutely, but these things are going to get out of the kernel tree
-and people are going to be using them in broad contexts (eg flashing
-them into firmware) - especially if we imagine the stablization window
-is multiple kernel releases.
+Thanks,
+-Bryan
 
-Clearly designating which revision is supported lets people know what
-is going on, very explicitly.
-
-Also, it lets people that might have the need to support multiple
-versions in their out-of-tree DT by having repeated nodes.
-
-I just think it is good practice to get people into the habit that the
-compatible string indicates a single exact schema, and if you change
-the schema you have to change the compatible string.
-
-Always.
-
-Jason
+>> I assume you have some user and will take this dependency thru that tree?
+>>
+>
+> Exactly, a patch from Josh [1] inspired me to create this API.
+>
+> Thanks,
+> -Bryan
+>
+> [1]: https://lkml.org/lkml/2013/9/24/68
+>
+>
+>>>  include/linux/of.h | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>> index f95aee3..54c2560 100644
+>>> --- a/include/linux/of.h
+>>> +++ b/include/linux/of.h
+>>> @@ -226,6 +226,17 @@ static inline int of_get_child_count(const struct device_node *np)
+>>>       return num;
+>>>  }
+>>>
+>>> +static inline int of_get_available_child_count(const struct device_node *np)
+>>> +{
+>>> +     struct device_node *child;
+>>> +     int num = 0;
+>>> +
+>>> +     for_each_available_child_of_node(np, child)
+>>> +             num++;
+>>> +
+>>> +     return num;
+>>> +}
+>>> +
+>>>  extern struct device_node *of_find_node_with_property(
+>>>       struct device_node *from, const char *prop_name);
+>>>  #define for_each_node_with_property(dn, prop_name) \
+>>> @@ -376,6 +387,11 @@ static inline int of_get_child_count(const struct device_node *np)
+>>>       return 0;
+>>>  }
+>>>
+>>> +static inline int of_get_available_child_count(const struct device_node *np)
+>>> +{
+>>> +     return 0;
+>>> +}
+>>> +
+>>>  static inline int of_device_is_compatible(const struct device_node *device,
+>>>                                         const char *name)
+>>>  {
+>>>
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
