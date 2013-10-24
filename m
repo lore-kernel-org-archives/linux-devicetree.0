@@ -1,107 +1,82 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Thu, 24 Oct 2013 10:50:38 +0200
-Message-ID: <20131024085037.GA10650@ulmo.nvidia.com>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
- <5267FA58.9050002@wwwdotorg.org>
- <20131023172001.GA3379@katana>
- <20131024083459.48FE3C4039D@trevor.secretlab.ca>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 10:52:47 +0200
+Message-ID: <20131024085247.GW30088@pengutronix.de>
+References: <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023180108.GA23728@roeck-us.net>
+ <20131023182502.GC32563@obsidianresearch.com>
+ <20131023183041.GH5208@netboy>
+ <20131023185435.GD32563@obsidianresearch.com>
+ <20131024080624.GV30088@pengutronix.de>
+ <20131024081733.GG9403@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131024083459.48FE3C4039D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20131024081733.GG9403-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 24, 2013 at 10:17:33AM +0200, Thierry Reding wrote:
+> On Thu, Oct 24, 2013 at 10:06:24AM +0200, Sascha Hauer wrote:
+> > On Wed, Oct 23, 2013 at 12:54:35PM -0600, Jason Gunthorpe wrote:
+> > > On Wed, Oct 23, 2013 at 08:30:42PM +0200, Richard Cochran wrote:
+> > > > On Wed, Oct 23, 2013 at 12:25:02PM -0600, Jason Gunthorpe wrote:
+> > > 
+> > > > > On ARM the package of 'stuff' can very reasonably include dtb. Distro
+> > > > > scripts can package modules+DTB+vmlinuz into something the bootloader
+> > > > > can understand. (The next pain point will be to standardize that)
+> > > > > 
+> > > > > The DTB doesn't have to be 'outside' the distro/kernel to give users a
+> > > > > seamless upgrade experience.
+> > > > 
+> > > > How can a distro possibly provide me a DTB?
+> > > > 
+> > > > They don't know what hardware I am using. Only I know that.
+> > > 
+> > > I'm not sure what you are asking? Treat DTBs like kernel drivers. If
+> > > you make hardware and you want distros to run on it, you have to
+> > > provide the DTB for that hardware to mainline+distros.
+> > > 
+> > > Remember, there are two ways to view DTB:
+> > >   a) It comes from the firmware and you have to live with whatever
+> > >      crap the firmware does
+> > >   b) It comes from the kernel, must match the kernel, and we don't
+> > >      have to tolerate crap in the DTB.
+> > 
+> > c) It comes from the firmware and is at least good enough to bring up a
+> >    kernel to install a better devicetree.
+> 
+> That's an interesting new view. And I think that makes a lot of sense
+> because it matches the product cycle pretty well. Typically I wouldn't
+> expect an upstream kernel to be fully featured when first shipped in a
+> product, for all the known reasons, but it should be possible to come
+> up with stable bindings good enough to perhaps boot to a command-line
+> prompt and have some way of accessing other files (network, block
+> device, ...).
+> 
+> Then again you could argue that the bootloader should be able to update
+> itself (and the DTB while at it).
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+barebox/u-boot usually can do this, but I think distributions can
+provide a much better and more consistent user interface. Also it offers
+a distribution to provide a way to update the devicetree. Otherwise
+the distributions can only say: See your boards documentation how to update
+the devicetree.
 
-On Thu, Oct 24, 2013 at 09:34:59AM +0100, Grant Likely wrote:
-> On Wed, 23 Oct 2013 18:20:02 +0100, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrot=
-e:
-> >=20
-> > > Do we really want to polute the drivers and DT files with a ! in the
-> > > compatible values? I thought we'd considered that, but chosen having =
-the
-> > > drivers that use unstable bindings depend on a Kconfig option as an
-> > > alternative, not an additional step?
-> >=20
-> > I'd even go further and use "unstable-" as the prefix instead of "!"
-> > which is way more explicit.
-> >=20
-> >=20
-> > > The one issue with doing this is that if a binding is thought to be
-> > > unstable, but becomes stable later without any changes, we'll have to=
- do
-> > > busy-work to remove the ! in all the DT files, thus artificially
-> > > introducing an incompatibility. Perhaps that's fine though?
-> >=20
-> > I'd say yes. Going from unstable to stable is quite a step for a binding
-> > and that should be visible and worth a patch IMO. Also, when looking at
-> > a DTS file or some driver code, it will avoid
-> > confusion/misinterpretation if one can see immediately the status of a
-> > binding.
->=20
-> No, it shouldn't. Going from unstable to stable is not a large step,
-> rather it is coming to the point of looking around and realizing that
-> the binding is working quite well.
+Sascha
 
-Yes, the difference between the unstable binding before it is declared
-stable and the stable one shouldn't be big. In fact it should be no
-different at all.
-
-However the decision is still a conscious one. And it is a big step,
-because when you declare it stable you assert that it will never change
-in an incompatible way.
-
-> I don't think the solution is to put this into the kernel to be checked
-> at runtime. The better solution is to put it into DTC and make it
-> complain (either warn or error; depending on build config?) about usage
-> of compatible strings that are marked in the binding documentation as
-> unstable.
-
-Perhaps. Doing it in the kernel seemed easier. Furthermore not every
-user might generate their own DTB and whoever generates the DTB may not
-make the same choice as every user might have made. Granted, that might
-be a little far fetched.
-
-I personally don't mind where exactly it is checked for, as long as we
-can settle on something. What I'm primarily concerned about is that the
-current situation hinders progress and early adoption, which I consider
-both essential for upstream Linux development.
-
-Thierry
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaN9dAAoJEN0jrNd/PrOhxqEP/iRiQlOQOsHFBXa4ZnfnKoIu
-0P/KemqXfCDkRnw8moXU/Ue+EbvZAq55M6dPtN1D1YzI4S4RE8p8c8P6jA0b8GBu
-7Q9fdEJE2N+wpwt0Tpt+FS+Oos1x29xgF0tIZtKRcuC7p8o3JFMhlMWUfHnrRGow
-LPcVPZ76qNqEJqaBgKLlQbr6ZSYwVplzCMRu1K7Vh6PbDrLVlus4xJRNwY7tMDuL
-YRMnc5+ax2gi1ukGmOzH8aeKvt4tDFvp0wMBO9mLq3dGaDyccJ/nEOpCSRHid4u2
-6CVx3Xl/FsLiHJh+hx8DiPlgOSvNTLaZlmiEtj2nq0to/hqtm6lM9DghS8nofmxm
-vceaiHYlCsIgUylUm0a2f3ZKh4tHYHzcW1Pk7crgahquJfrGpr2wTuIhlLnJi6LC
-CivdlA5kjTQ2LnZWxYissjPc7/4AQhXKA/m5+yyxnq7hgA04jrJsW2cic6Kon5C0
-OAF3z35LyCUcZ2ZWmU42CuMsRb4Perp460lFntLgSyPLz/Q08y/UoHr3RpIT23Ec
-lwt1xh/S7fkzZ114ytF/LDjCS6CvMrbBtNRLa3i69654WB5hgIgwUiyl8NkuR7IE
-DUPK/l0tEe0qS6U63wGGXL7hGLUUMRrRVeDjpVfzcNjCZjV/Dfbc2b/SHMayHuWt
-ZFz0VVWMZC7fyxMya0pK
-=vfhU
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
