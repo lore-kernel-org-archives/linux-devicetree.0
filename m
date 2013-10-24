@@ -1,35 +1,61 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: fix the ecc regression
-Date: Thu, 24 Oct 2013 16:38:38 +0800
-Message-ID: <5268DC8E.1040908@freescale.com>
-References: <1382418628-4521-1-git-send-email-b32955@freescale.com> <20131022185639.GK23337@ld-irv-0074.broadcom.com> <5268C56E.8050806@freescale.com> <20131024075249.GB9863@norris.computersforpeace.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] ARM: imx27 pinctrl
+Date: Thu, 24 Oct 2013 16:35:52 +0800
+Message-ID: <20131024083550.GC13614@S2101-09.ap.freescale.net>
+References: <1382601233-24253-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024075249.GB9863-7ciq9WCbhwJWVhifINYOO1poFGfAdsVx5NbjCUgZEJk@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382601233-24253-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2013=E5=B9=B410=E6=9C=8824=E6=97=A5 15:52, Brian Norris =E5=86=
-=99=E9=81=93:
-> David seemed to suggest that something like your current binding migh=
-t
-> be OK. (I still thing it was too vague, but if you can describe it
-> better, it may be sufficient.) A possible starting point:
-> "fsl,use-minimum-ecc". Does this properly reflect your intention of
-> using the datasheet's minimum required ECC (from ONFI or from the
-> driver's full ID table)?
-yes, it's okay to me.
+Linus,
 
-thanks
-Huang Shijie
+On Thu, Oct 24, 2013 at 09:53:46AM +0200, Markus Pargmann wrote:
+> Markus Pargmann (7):
+>   pinctrl: imx1 core driver
+>   pinctrl: imx27: imx27 pincontrol driver
+
+Is it still possible to queue these two patches for 3.13 merge window,
+so that we get imx27 device tree machine work on 3.13-rc?
+
+Shawn
+
+>   ARM: dts: imx27 pin functions
+>   ARM: dts: imx27 pinctrl
+>   ARM: dts: imx27 phyCARD-S pinctrl
+>   ARM: dts: imx27 phycore pinctrl
+>   ARM: imx27: enable pinctrl
+> 
+>  .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  50 ++
+>  arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts   |  10 +
+>  arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts   |   4 +
+>  arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts     |   2 +
+>  arch/arm/boot/dts/imx27-phytec-phycore-som.dts     |   6 +
+>  arch/arm/boot/dts/imx27-pinfunc.h                  | 524 +++++++++++++++++
+>  arch/arm/boot/dts/imx27.dtsi                       | 102 ++++
+>  arch/arm/mach-imx/Kconfig                          |   2 +
+>  drivers/pinctrl/Kconfig                            |  13 +
+>  drivers/pinctrl/Makefile                           |   2 +
+>  drivers/pinctrl/pinctrl-imx1-core.c                | 653 +++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-imx1.h                     |  73 +++
+>  drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++
+>  13 files changed, 1918 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
+>  create mode 100644 arch/arm/boot/dts/imx27-pinfunc.h
+>  create mode 100644 drivers/pinctrl/pinctrl-imx1-core.c
+>  create mode 100644 drivers/pinctrl/pinctrl-imx1.h
+>  create mode 100644 drivers/pinctrl/pinctrl-imx27.c
+> 
+> -- 
+> 1.8.4.rc3
+> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
