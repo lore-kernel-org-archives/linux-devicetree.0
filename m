@@ -1,77 +1,75 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCHv4 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Thu, 24 Oct 2013 11:16:22 +0200
-Message-ID: <5268E566.2060309@epfl.ch>
-References: <1382550852-11508-1-git-send-email-sre@debian.org> <1382550852-11508-2-git-send-email-sre@debian.org> <5268D095.3060302@epfl.ch> <20131024083837.GA28938@earth.universe>
-Reply-To: florian.vaussard@epfl.ch
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 2/6] DRIVERS: IRQCHIP: CROSSBAR: Add support for
+ Crossbar IP
+Date: Thu, 24 Oct 2013 11:20:12 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1310241112310.4983@ionos.tec.linutronix.de>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-3-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20131024083837.GA28938@earth.universe>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380549564-31045-3-git-send-email-r.sricharan@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 30 Sep 2013, Sricharan R wrote:
+> +/*
+> + * @int_max: maximum number of supported interrupts
+> + * @irq_map: array of interrupts to crossbar number mapping
+> + * @crossbar_base: crossbar base address
+> + * @register_offsets: offsets for each irq number
+> + */
+> +struct crossbar_device {
+> +	uint int_max;
+> +	uint *irq_map;
 
-On 10/24/2013 10:38 AM, Sebastian Reichel wrote:
-> Hi Florian,
->
-> On Thu, Oct 24, 2013 at 09:47:33AM +0200, Florian Vaussard wrote:
->>> +Required SoC Specific Properties:
->>> +- compatible: should be one of the following
->>> +   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
->>> +- interrupt: should be one of the following
->>> +   - <8>: For controllers compatible with twl4030
->>
->> This is <8> for your particular case, but it will depend on your
->> SoC, won't it?  Moreover, this property will be most likely
->> inherited from the root twl node, so I do not see the need to
->> document it here. See:
->>
->> Documentation/devicetree/bindings/mfd/twl-familly.txt
->
-> No. This is an internal twl4030 interrupt. TWL4030 functions
-> itself as an interrupt controller.
->
+Why do you need another map here?
 
-So if it does not belong to the TWL parent, where is it used in your code?
-You should be parsing this property, so you can set up the IRQ properly.
-I am a bit confused here. If it is fixed, no need for a OF property.
+Isn't the linear_revmap of the irqdomain sufficient?
 
->>> +
->>> +Example:
->>> +	twl_pwrbutton: pwrbutton {
->>> +		compatible = "ti,twl4030-pwrbutton";
->>> +		interrupts = <8>;
->>> +	};
->>
->> You are missing the root twl node here, no?
->
-> So should I document it like this?
->
+> +static inline const u32 allocate_free_irq(int cb_no)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < cb->int_max; i++) {
+> +		if (cb->irq_map[i] == IRQ_FREE) {
+> +			cb->irq_map[i] = cb_no;
+> +			return i;
+> +		}
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int crossbar_domain_xlate(struct irq_domain *d,
+> +				 struct device_node *controller,
+> +				 const u32 *intspec, unsigned int intsize,
+> +				 unsigned long *out_hwirq,
+> +				 unsigned int *out_type)
+> +{
+> +	return allocate_free_irq(intspec[1]) + GIC_IRQ_START;
 
-IMHO it is more clear for the user.
+Mooo. In the error case you return:
 
-> twl4030 {
->     compatible = "ti,twl4030";
->
->     pwrbutton {
->         compatible = "ti,twl4030-pwrbutton";
->         interrupts = <8>;
->     };
-> };
+      -ENODEV + GIC_IRQ_START == -19 + 32 == 13
 
-Nit, but existing documentations follow the "name@address"
-form for the root node, as the TWL is on an I2C bus.
-Either it is already defined, thus you should use "&twl4030"
-to reference it, or you create the TWL node and something like
-"twl4030@48" should be used.
+Yikes.
 
-For an example, you can refer to existing bindings, like
-Documentation/devicetree/bindings/mfd/twl4030-audio.txt.
+> +
+> +	/*
+> +	 * Register offsets are not linear because of the
+> +	 * reserved irqs. so find and store the offsets once.
+> +	 */
+> +	for (i = 0; i < max; i++) {
+> +		if (!cb->irq_map[i])
+> +			continue;
+> +
+> +		cb->register_offsets[i] = reserved;
+> +		reserved += size;
 
-Best regards,
+I'm amazed by such a brilliant hardware design.
 
-Florian
+Thanks,
+
+	tglx
