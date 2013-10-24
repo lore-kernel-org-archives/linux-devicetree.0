@@ -1,40 +1,150 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 11:37:05 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1310241134260.1951@syhkavp.arg>
-References: <1382553982.31058.10.camel@sakura.staff.proxad.net> <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net> <1382615278.8522.72.camel@shinybook.infradead.org> <20131024122346.GD11296@ulmo.nvidia.com>
- <1382619655.6040.52.camel@sakura.staff.proxad.net> <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org> <1382621431.6040.66.camel@sakura.staff.proxad.net> <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
- <20131024141955.GB25061@ulmo.nvidia.com> <20131024143251.GA4096@netboy>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v5 4/8] ARM: dts: imx27 pinctrl
+Date: Thu, 24 Oct 2013 17:38:30 +0200
+Message-ID: <1382629114-8628-5-git-send-email-mpa@pengutronix.de>
+References: <1382629114-8628-1-git-send-email-mpa@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024143251.GA4096@netboy>
+In-Reply-To: <1382629114-8628-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Oct 2013, Richard Cochran wrote:
+Pinctrl driver node and pin group definitions for other driver nodes.
 
-> On Thu, Oct 24, 2013 at 04:19:56PM +0200, Thierry Reding wrote:
-> > 
-> > While I agree that many of these screwups shouldn't have happened in the
-> > first place, it's nothing that we were prepared for two years ago. At
-> > some point everyone agreed that DT was the way forward, so DT is what we
-> > did. Nobody said anything about stable ABI back then, so nobody cared.
-> 
-> The idea of a device tree has not changed. I guess the arm crowd
-> jumped on the DT bandwagon with no clue what it was about.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27.dtsi | 102 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-No no no.  The ARM crowd _resisted_ the introduction of DT but the 
-PowerPC refugees convinced us this was a good idea and that it would 
-solve most of our problems.
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index b7a1c6d..641a63d 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include "skeleton.dtsi"
++#include "imx27-pinfunc.h"
+ 
+ / {
+ 	aliases {
+@@ -235,6 +236,12 @@
+ 				status = "disabled";
+ 			};
+ 
++			iomuxc: iomuxc@10015000 {
++				compatible = "fsl,imx27-iomuxc";
++				reg = <0x10015000 0x600>;
++
++			};
++
+ 			gpio1: gpio@10015000 {
+ 				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+ 				reg = <0x10015000 0x100>;
+@@ -467,3 +474,98 @@
+ 		};
+ 	};
+ };
++
++&iomuxc {
++	fec {
++		pinctrl_fec1_1: fec1-1 {
++			fsl,pins = <
++				MX27_PAD_SD3_CMD__FEC_TXD0 0x0
++				MX27_PAD_SD3_CLK__FEC_TXD1 0x0
++				MX27_PAD_ATA_DATA0__FEC_TXD2 0x0
++				MX27_PAD_ATA_DATA1__FEC_TXD3 0x0
++				MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0
++				MX27_PAD_ATA_DATA3__FEC_RXD1 0x0
++				MX27_PAD_ATA_DATA4__FEC_RXD2 0x0
++				MX27_PAD_ATA_DATA5__FEC_RXD3 0x0
++				MX27_PAD_ATA_DATA6__FEC_MDIO 0x0
++				MX27_PAD_ATA_DATA7__FEC_MDC 0x0
++				MX27_PAD_ATA_DATA8__FEC_CRS 0x0
++				MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0
++				MX27_PAD_ATA_DATA10__FEC_RXD0 0x0
++				MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0
++				MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0
++				MX27_PAD_ATA_DATA13__FEC_COL 0x0
++				MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0
++				MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
++			>;
++		};
++	};
++
++	i2c {
++		pinctrl_i2c1_1: i2c1-1 {
++			fsl,pins = <
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
++			>;
++		};
++
++		pinctrl_i2c2_1: i2c2-1 {
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
++		};
++	};
++
++	owire {
++		pinctrl_owire1_1: owire1-1 {
++			fsl,pins = <
++				MX27_PAD_RTCK__OWIRE 0x0
++			>;
++		};
++	};
++
++	uart {
++		pinctrl_uart1_1: uart1-1 {
++			fsl,pins = <
++				MX27_PAD_UART1_TXD__UART1_TXD 0x0
++				MX27_PAD_UART1_RXD__UART1_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart1_rtscts_1: uart1-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART1_CTS__UART1_CTS 0x0
++				MX27_PAD_UART1_RTS__UART1_RTS 0x0
++			>;
++		};
++
++		pinctrl_uart2_1: uart2-1 {
++			fsl,pins = <
++				MX27_PAD_UART2_TXD__UART2_TXD 0x0
++				MX27_PAD_UART2_RXD__UART2_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart2_rtscts_1: uart2-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART2_CTS__UART2_CTS 0x0
++				MX27_PAD_UART2_RTS__UART2_RTS 0x0
++			>;
++		};
++
++		pinctrl_uart3_1: uart3-1 {
++			fsl,pins = <
++				MX27_PAD_UART3_TXD__UART3_TXD 0x0
++				MX27_PAD_UART3_RXD__UART3_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart3_rtscts_1: uart3-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART3_CTS__UART3_CTS 0x0
++				MX27_PAD_UART3_RTS__UART3_RTS 0x0
++			>;
++		};
++	};
++};
+-- 
+1.8.4.rc3
 
-DT did solve some problems indeed.  But it brought new ones with it.
-
-
-Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
