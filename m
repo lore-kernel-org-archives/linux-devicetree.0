@@ -1,58 +1,94 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/5] mtd: m25p80: remove 'disabled' device check
-Date: Wed, 23 Oct 2013 19:58:23 -0700
-Message-ID: <1382583503-13748-5-git-send-email-computersforpeace@gmail.com>
-References: <1382583503-13748-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382583503-13748-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sourav.poddar-l0cyMroinI0@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH V3 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Wed, 23 Oct 2013 23:46:10 -0500
+Message-ID: <2768383C-CD3B-4873-9EA8-81F99CE3E21E@codeaurora.org>
+References: <1382582652-21057-1-git-send-email-thloh@altera.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382582652-21057-1-git-send-email-thloh@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: thloh@altera.com
+Cc: linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, thloh.linux@gmail.com, lftan@altera.com
 List-Id: devicetree@vger.kernel.org
 
-It seems like the following commit was never necessary
 
-    commit 5f949137952020214cd167093dd7be448f21c079
-    Author: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-    Date:   Fri Oct 14 15:49:00 2011 +0800
+On Oct 23, 2013, at 9:44 PM, thloh@altera.com wrote:
 
-        mtd: m25p80: don't probe device which has status of 'disabled'
+> From: Tien Hock Loh <thloh@altera.com>
+> 
+> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+> 
+> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+> ---
+> .../devicetree/bindings/gpio/gpio-altera.txt       |  34 ++
+> drivers/gpio/Kconfig                               |   7 +
+> drivers/gpio/Makefile                              |   1 +
+> drivers/gpio/gpio-altera.c                         | 395 +++++++++++++++++++++
+> 4 files changed, 437 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> create mode 100644 drivers/gpio/gpio-altera.c
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> new file mode 100644
+> index 0000000..641cec2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> @@ -0,0 +1,34 @@
+> +Altera GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible:
+> +  - "altr,pio-1.0"
 
-because it duplicates the code in of_platform_device_create_pdata()
-which ensures that 'disabled' nodes are never instantiated.
+any reason not to be "altr,gpio-1.0"?
 
-Also, drop the __maybe_unused.
+> +- reg: Physical base address and length of the controller's registers.
+> +- #gpio-cells : Should be 1
+> +  - first cell is the gpio offset number
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- #interrupt-cells : Should be 1.
+> +- interrupts: Specify the interrupt.
+> +- interrupt-controller: Mark the device node as an interrupt controller
+> +  The first cell is the local interrupt offset number to the GPIO controller.
+> +
+> +Altera GPIO specific properties:
+> +- width: Width of the GPIO bank, range from 1-32
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
----
- drivers/mtd/devices/m25p80.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+This description isn't terrible helpful.  I'm not at all sure what this means.
 
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index d6c5c57..a1dc49a 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -935,12 +935,7 @@ static int m25p_probe(struct spi_device *spi)
- 	struct flash_info		*info;
- 	unsigned			i;
- 	struct mtd_part_parser_data	ppdata;
--	struct device_node __maybe_unused *np = spi->dev.of_node;
--
--#ifdef CONFIG_MTD_OF_PARTS
--	if (!of_device_is_available(np))
--		return -ENODEV;
--#endif
-+	struct device_node *np = spi->dev.of_node;
- 
- 	/* Platform data helps sort out which chip type we have, as
- 	 * well as how this board partitions it.  If we don't have
+> +- interrupt_trigger: Specifies the interrupt trigger type the GPIO hardware is
+> +  synthesized. This field is required if the Altera GPIO controller used has
+> +  IRQ enabled as the interrupt type is not software controlled, but hardware
+> +  synthesized.
+
+Any vendor specific properties should be vendor prefixed:
+
+"altr,width"
+"altr,interrupt_trigger"
+
+I'd also recommend that "altr,width" be a bit more specific like "altr,gpio-bank-width"
+
+> +
+> +Example:
+> +
+> +gpio_altr: gpio_altr {
+> +    compatible = "altr,pio-1.0";
+> +    reg = <0xff200000 0x10>;
+> +    interrupts = <0 45 4>;
+> +    width = <32>;
+> +    interrupt_trigger = <0>;
+> +    #gpio-cells = <1>;
+> +    gpio-controller;
+> +    #interrupt-cells = <1>;
+> +    interrupt-controller;
+> +};
+
+- k
+
 -- 
-1.8.4
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
