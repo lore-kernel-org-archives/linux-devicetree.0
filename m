@@ -1,57 +1,99 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Thu, 24 Oct 2013 23:29:33 +0100
-Message-ID: <52699F4D.7030805@wwwdotorg.org>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com> <5267FA58.9050002@wwwdotorg.org> <20131023172001.GA3379@katana> <20131024083459.48FE3C4039D@trevor.secretlab.ca>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v11 04/10] mtd: nand: omap: use DT specified bus-width
+ only for scanning NAND device
+Date: Thu, 24 Oct 2013 15:43:00 -0700
+Message-ID: <20131024224300.GG20061@ld-irv-0074.broadcom.com>
+References: <1382619026-4182-1-git-send-email-pekon@ti.com>
+ <1382619026-4182-5-git-send-email-pekon@ti.com>
+ <20131024212714.GB2520@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024083459.48FE3C4039D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131024212714.GB2520@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Pekon Gupta <pekon@ti.com>, mark.rutland@arm.com, olof@lixom.net, dedekind1@gmail.com, devicetree@vger.kernel.org, Pawel.Moll@arm.com, arnd@arndb.de, swarren@wwwdotorg.org, tony@atomide.com, jp.francois@cynove.com, ijc+devicetree@hellion.org.uk, avinashphilipk@gmail.com, balbi@ti.com, robherring2@gmail.com, bcousson@baylibre.com, linux-mtd@lists.infradead.org, ivan.djelic@parrot.com, linux-omap@vger.kernel.org, dwmw2@infradead.org, Alexander Shiyan <shc_work@mail.ru>, Matthieu Castet <matthieu.castet@parrot.com>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2013 09:34 AM, Grant Likely wrote:
-> On Wed, 23 Oct 2013 18:20:02 +0100, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->>
->>> Do we really want to polute the drivers and DT files with a ! in the
->>> compatible values? I thought we'd considered that, but chosen having the
->>> drivers that use unstable bindings depend on a Kconfig option as an
->>> alternative, not an additional step?
->>
->> I'd even go further and use "unstable-" as the prefix instead of "!"
->> which is way more explicit.
->>
->>
->>> The one issue with doing this is that if a binding is thought to be
->>> unstable, but becomes stable later without any changes, we'll have to do
->>> busy-work to remove the ! in all the DT files, thus artificially
->>> introducing an incompatibility. Perhaps that's fine though?
->>
->> I'd say yes. Going from unstable to stable is quite a step for a binding
->> and that should be visible and worth a patch IMO. Also, when looking at
->> a DTS file or some driver code, it will avoid
->> confusion/misinterpretation if one can see immediately the status of a
->> binding.
+On Thu, Oct 24, 2013 at 06:27:15PM -0300, Ezequiel Garcia wrote:
+> On Thu, Oct 24, 2013 at 06:20:20PM +0530, Pekon Gupta wrote:
+> > This patch:
+> > - calls nand_scan_ident() using bus-width as passed by DT
+> > - removes double calls to nand_scan_ident(), incase first call fails
+> >   then omap_nand_probe just returns error.
+> > 
+> > Signed-off-by: Pekon Gupta <pekon@ti.com>
+> > ---
+> >  drivers/mtd/nand/omap2.c | 21 +++++++++------------
+> >  1 file changed, 9 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> > index 5596368..f464321 100644
+> > --- a/drivers/mtd/nand/omap2.c
+> > +++ b/drivers/mtd/nand/omap2.c
+> > @@ -1856,7 +1856,6 @@ static int omap_nand_probe(struct platform_device *pdev)
+> >  	mtd->name		= dev_name(&pdev->dev);
+> >  	mtd->owner		= THIS_MODULE;
+> >  	nand_chip		= &info->nand;
+> > -	nand_chip->options	= pdata->devsize;
+> >  	nand_chip->options	|= NAND_SKIP_BBTSCAN;
+> >  #ifdef CONFIG_MTD_NAND_OMAP_BCH
+> >  	info->of_node		= pdata->of_node;
+> > @@ -1904,6 +1903,15 @@ static int omap_nand_probe(struct platform_device *pdev)
+> >  		nand_chip->chip_delay = 50;
+> >  	}
+> >  
+> > +	/* scan NAND device connected to chip controller */
+> > +	nand_chip->options |= pdata->devsize & NAND_BUSWIDTH_16;
 > 
-> No, it shouldn't. Going from unstable to stable is not a large step, rather it is coming to the point of looking around and realizing that the binding is working quite well.
-> 
-> I don't think the solution is to put this into the kernel to be checked
-> at runtime. The better solution is to put it into DTC and make it
-> complain (either warn or error; depending on build config?) about usage
-> of compatible strings that are marked in the binding documentation as
-> unstable.
+> Hm.. this only works if the device is listed in nand_flash_ids[] array,
+> so that ONFI detection is not used.
 
-I don't think that's what we talked about on Wednesday though. At a
-quick glance, this didn't make it into the meeting notes though[1], but
-is in the presentation we created for the kernel summit readout. Is
-sharing a link to that before it's presented OK?
+But this is no more broken than it used to be, no? I mean, you would
+never properly detect an x16 ONFI flash with the old
+double-nand_scan_ident() method, right?
 
-[1] http://etherpad.osuosl.org/arm-ksummit-2013-day-2
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To make ONFI detection work I think you
+> need to do as Brian suggested and use NAND_BUSWIDTH_AUTO.
+
+I think that is the correct way forward. But Pekon seems to think that
+will require more invasive changes to the GPMC code. But I'm not sure
+why.
+
+> (Odd: why is there no current user of that auto-width option?)
+
+Hmm, I could have sworn somebody was using that... I know there was some
+pending work on using it for GPIO NAND, but Alexander Shiyan never
+followed up on the latest comments. It also seems like the original
+author (Matthieu Castet) was working on OMAP support about a year ago,
+but things stalled when there wasn't proper mainline support for much of
+it:
+
+  http://thread.gmane.org/gmane.linux.ports.arm.omap/88550/focus=44770
+
+Personally, I've only ever used x8 NAND, so I don't have much to go on
+here.
+
+> Anyway, I really think we should fix this now and independently
+> of the evolution of this ECC DT binding discussion.
+> That way you can keep sending a smaller ECC DT binding patchset and
+> make reviewers focus on what's really important in each case.
+
+AFAIK, the ECC DT bindings were all approved, and the code looked OK to
+my knowledge, except for this single patch. I had recommended either its
+total removal or its simplification (i.e., this current patch).
+
+I will be taking a last look and queueing this series up soon, I
+believe.
+
+> I have a few fixes (based on your work) and I'll send them now, after
+> I complete the tests. We can continue our discussion there.
+
+I'll take a look at those soon.
+
+So am I to understand you have hardware for testing Pekon's work now,
+Ezequiel? That will be great if we can have better Reviewed-by/Tested-by
+results.
+
+Brian
