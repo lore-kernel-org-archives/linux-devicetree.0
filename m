@@ -1,96 +1,69 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Thu, 24 Oct 2013 16:48:44 +0200
-Message-ID: <1382626126-12565-2-git-send-email-sre@debian.org>
-References: <1382626126-12565-1-git-send-email-sre@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382626126-12565-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jon Brenner <Jon.Brenner@ams.com>
+Subject: RE: [PATCH] iio:light:tsl2563: Add DT support
+Date: Thu, 24 Oct 2013 15:58:54 +0200
+Message-ID: <3C879D35B299F147B1DEDFBEE12F2E06012E5631C1@SUX2182.office.amsiag.com>
+References: <1382565063-17083-1-git-send-email-sre@debian.org>
+ <5268DA76.6060503@kernel.org> <20131024134259.GB3681@earth.universe>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131024134259.GB3681@earth.universe>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@cam.ac.uk>, Peter Meerwald <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for twl4030 power button driver.
+AMS-TAOS
 
-Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/input/twl4030-pwrbutton.txt | 21 +++++++++++++++++++++
- drivers/input/misc/twl4030-pwrbutton.c              | 16 ++++++++++++----
- 2 files changed, 33 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
+-----Original Message-----
+From: Sebastian Reichel [mailto:sre@debian.org] 
+Sent: Thursday, October 24, 2013 8:43 AM
+To: Jonathan Cameron
+Cc: linux-iio@vger.kernel.org; Rob Herring; Pawel Moll; Mark Rutland; Stephen Warren; Ian Campbell; Rob Landley; Jonathan Cameron; Peter Meerwald; Greg Kroah-Hartman; Bill Pemberton; Sachin Kamat; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; Jon Brenner
+Subject: Re: [PATCH] iio:light:tsl2563: Add DT support
 
-diff --git a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-new file mode 100644
-index 0000000..4375646
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-@@ -0,0 +1,21 @@
-+Texas Instruments TWL family (twl4030) pwrbutton module
-+
-+This module is part of the TWL4030. For more details about the whole
-+chip see Documentation/devicetree/bindings/mfd/twl-familly.txt.
-+
-+This module provides a simple power button event via an Interrupt.
-+
-+Required properties:
-+- compatible: should be one of the following
-+   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
-+- interrupt: should be one of the following
-+   - <8>: For controllers compatible with twl4030
-+
-+Example:
-+
-+&twl {
-+	twl_pwrbutton: pwrbutton {
-+		compatible = "ti,twl4030-pwrbutton";
-+		interrupts = <8>;
-+	};
-+};
-diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/twl4030-pwrbutton.c
-index b9a05fd..a3a0fe3 100644
---- a/drivers/input/misc/twl4030-pwrbutton.c
-+++ b/drivers/input/misc/twl4030-pwrbutton.c
-@@ -52,7 +52,7 @@ static irqreturn_t powerbutton_irq(int irq, void *_pwr)
- 	return IRQ_HANDLED;
- }
- 
--static int __init twl4030_pwrbutton_probe(struct platform_device *pdev)
-+static int twl4030_pwrbutton_probe(struct platform_device *pdev)
- {
- 	struct input_dev *pwr;
- 	int irq = platform_get_irq(pdev, 0);
-@@ -106,16 +106,24 @@ static int __exit twl4030_pwrbutton_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id twl4030_pwrbutton_dt_match_table[] = {
-+       { .compatible = "ti,twl4030-pwrbutton" },
-+       {},
-+};
-+MODULE_DEVICE_TABLE(of, twl4030_pwrbutton_dt_match_table);
-+#endif
-+
- static struct platform_driver twl4030_pwrbutton_driver = {
-+	.probe		= twl4030_pwrbutton_probe,
- 	.remove		= __exit_p(twl4030_pwrbutton_remove),
- 	.driver		= {
- 		.name	= "twl4030_pwrbutton",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(twl4030_pwrbutton_dt_match_table),
- 	},
- };
--
--module_platform_driver_probe(twl4030_pwrbutton_driver,
--			twl4030_pwrbutton_probe);
-+module_platform_driver(twl4030_pwrbutton_driver);
- 
- MODULE_ALIAS("platform:twl4030_pwrbutton");
- MODULE_DESCRIPTION("Triton2 Power Button");
--- 
-1.8.4.rc3
+On Thu, Oct 24, 2013 at 09:29:42AM +0100, Jonathan Cameron wrote:
+> On 10/23/13 22:51, Sebastian Reichel wrote:
+> > Add Device Tree support for the TSL2563 driver and document the 
+> > binding.
+> > 
+> > Signed-off-by: Sebastian Reichel <sre@debian.org>
+> > ---
+> >  .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
+> >  drivers/iio/light/tsl2563.c                           |  4 ++++
+> >  2 files changed, 23 insertions(+)
+> >  create mode 100644 
+> > Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt 
+> > b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> > new file mode 100644
+> > index 0000000..b52cf4b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> > @@ -0,0 +1,19 @@
+> > +* TAOS TSL2563 ambient light sensor
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible : should be "taos,tsl2563"
+> > +  - reg : the I2C address of the sensor
+> > +
+> > +Optional properties:
+> > +
+> So two options for this one.  Either pitch it as a possible general 
+> parameter, or mark it with a vendor prefix.  It seems like something 
+> fairly general, but in that case it probably needs a more detailed proposal and explanation of exactly what it is.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, I will add a vendor prefix in a PATCHv2. When I converted the driver to DT I had a look how this is used and I don't think it's "fairly general".
+
+> Also, is taos listed in vendor-prefixes.txt?  Jon, is that the right vendor prefix to use?
+> I'm guessing you have some non mainline bindings out there already so 
+> it would be good to match those...
+
+taos is currently not listed in the vendor-prefixes.txt file. Also it seems that "TAOS Inc." has been absorbed by "ams AG" in 2011.
+So how to proceed with the patch?
+
+-- Sebastian
