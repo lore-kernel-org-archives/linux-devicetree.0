@@ -1,125 +1,45 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Usage of for_each_child_of_node()
-Date: Thu, 24 Oct 2013 16:21:43 +0200
-Message-ID: <20131024142143.GC25061@ulmo.nvidia.com>
-References: <5259B6F8.3070701@roeck-us.net>
- <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
- <20131023071006.GA7708@ulmo.nvidia.com>
- <20131023161644.GB20675@roeck-us.net>
- <20131024075058.GD9403@ulmo.nvidia.com>
- <52692129.3070207@roeck-us.net>
+From: "David Woodhouse" <dwmw2@infradead.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 14:22:06 -0000
+Message-ID: <99db70b50b3ddcf20d940d5855c657e0.squirrel@twosheds.infradead.org>
+References: <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023174458.GC5208@netboy>
+ <1382553982.31058.10.camel@sakura.staff.proxad.net>
+ <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+ <1382614439.6040.16.camel@sakura.staff.proxad.net>
+ <1382615278.8522.72.camel@shinybook.infradead.org>
+ <20131024122346.GD11296@ulmo.nvidia.com>
+ <1382619655.6040.52.camel@sakura.staff.proxad.net>
+ <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
+ <20131024141241.GA25061@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52692129.3070207-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131024141241.GA25061@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-2013-discuss@lists.linuxfoundation.org" <ksummit-2013-discuss@lists.linuxfoundation.org>, Nicolas Pitre <nico@fluxnic.net>, Grant Likely <grant.likely@secretlab.ca>, Matt Porter <matt.porter@linaro.org>, mbizon@freebox.fr, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Experimental bindings could be a suitable temporary measure, but perhaps
+> other, better solutions exist.
 
-On Thu, Oct 24, 2013 at 06:31:21AM -0700, Guenter Roeck wrote:
-> On 10/24/2013 12:50 AM, Thierry Reding wrote:
-> >On Wed, Oct 23, 2013 at 09:16:44AM -0700, Guenter Roeck wrote:
-> >>On Wed, Oct 23, 2013 at 09:10:07AM +0200, Thierry Reding wrote:
-> >>>On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
-> >>>>On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> w=
-rote:
-> >>>>>Hi all,
-> >>>>>
-> >>>>>for_each_child_of_node() and similar functions increase the refcount
-> >>>>>on each returned node and expect the caller to release the node by
-> >>>>>calling of_node_put() when done.
-> >>>>>
-> >>>>>Looking through the kernel code, it appears this is hardly ever done,
-> >>>>>if at all. Some code even calls of_node_get() on returned nodes agai=
-n.
-> >>>>>
-> >>>>>I guess this doesn't matter in cases where devicetree is a static en=
-tity.
-> >>>>>However, this is not (or no longer) the case with devicetree overlay=
-s,
-> >>>>>or more generically in cases where devicetree nodes are added and
-> >>>>>removed dynamically.
-> >>>>>
-> >>>>>Fundamental question: Would patches to fix this problem be accepted =
-upstream
-> >>>>>?
-> >>>>
-> >>>>Certainly.
-> >>>>
-> >>>>>Or, of course, stepping a bit back: Am I missing something essential=
- ?
-> >>>>
-> >>>>No. I think this is frequently wrong since it typically doesn't matter
-> >>>>for static entries as you mention.
-> >>>
-> >>>Actually, I think it actually happens to be correct most of the time.
-> >>>The reason is that for_each_child_of_node() internally calls the
-> >>>of_get_next_child() to iterate over all children. And that function
-> >>>already calls of_node_put() on the "previous" node. So if all the code
-> >>>does is to iterate over all nodes to query them, then all should be
-> >>>fine.
-> >>>
-> >>Good, that reduces the scope of the problem significantly.
-> >>
-> >>>The only case where you actually need to drop the reference on a node =
-is
-> >>>if you break out of the loop (so that of_get_next_child() will not be
-> >>>called). But that's usually the case when you need to perform some
-> >>>operation on the node, in which case it is the right thing to hold on =
-to
-> >>>a reference until you're done with the node.
-> >>>
-> >>Unfortunately, there are many cases with code such as
-> >>
-> >>	if (error)
-> >>		return;	/* or break; */
-> >
-> >Well, a break isn't necessarily bad, since you could be using the node
-> >subsequently. I imagine that depending on the exact block following the
->=20
-> Correct, but I meant the error case. Randomly looking through several
-> drivers, most of them get error return handling wrong. "Winner" so far
-> is of_regulator_match(), which doesn't release the node on error return,
-> but does not acquire references for use afterwards either.
->=20
-> Something to do with my non-existing free time ;-).
+Yes, unstable bindings are part of the currently-documented plan. You are
+not expected to need it as a matter of course, but that facility will
+exist.
 
-Well, that's better than boring, isn't it? =3D)
 
-Thierry
-
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaSz3AAoJEN0jrNd/PrOhEL4QAKYYfPq8yY3iNBzQVs60JsTz
-Q3Q+WSzxqCoMszEmrQrnQkEM8OWdsYxH2mpoDklY7E13XkCE0xrpsHLBzzs27Um9
-wo1FBKnn68V8j6ZwqV4ChQPcFQPQdwh5v8pI9hgssOIjoU+NOqJ98gUEk41+JGde
-IWtq1rHXS7P9v3pc5pPyM5opdIx2i9yNJWzxlCf9seBpCL3Ogc8JyNxw7F+zsB+c
-ZsXaTT2yhQtqAb4gskHD0w7KOHEYzNtMeGbvdpXjwfrvruYQEnafSzt8JGNs+LB2
-36mkm4gvbgWaLADw3IX4EqLNJRuZDqE4HBKh5xLjpfH3xYIsA4T7SJBGwmEK1F+m
-+ppx1+bjgdRMtEMpP3+4IfRodiNQOxuoi5G6Ig5O+C8CWxWcO/3E4l+SK6T88FIL
-Y6o3WCIgwnbEpgsuFLMtJD9vHgKU/nyt9q2sXuAsF92CTGY9APmdedGIoYxE047G
-8NgrV2hOYHTd34HhL7WJcDzrxEoet5JhFf+/uK0967JwSQ9cgA64/l8Xy5EjMdpb
-ZfdRbRbbEZ3UJTaiq0xlzgiRev+tMFBB9BnIwnUV2nC2Drp7U1pOdsGtuKRsdQLE
-E5vWO96iLl8ZZzdB6rh/4CqN9rG1NOUT3kBz5sYXPtNKE9LayY+u98r9MoxFof7s
-pe8xSE93wl01pEYdF4ka
-=/x3g
------END PGP SIGNATURE-----
-
---xo44VMWPx7vlQ2+2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+dwmw2
