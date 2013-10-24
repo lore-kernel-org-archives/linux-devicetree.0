@@ -1,66 +1,73 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
-Date: Thu, 24 Oct 2013 17:21:54 -0400
-Message-ID: <CAF6AEGuEho9Ms7ifTE-EmBoQ-=_AXgvGcJxi5qEC0vsZ+H9C+A@mail.gmail.com>
-References: <52644A9E.3060007@wwwdotorg.org>
-	<20131020231134.GR25034@n2100.arm.linux.org.uk>
-	<20131021083242.GB30088@pengutronix.de>
-	<20131021084854.GV25034@n2100.arm.linux.org.uk>
-	<20131021092730.GF30088@pengutronix.de>
-	<CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
-	<20131024072811.GS30088@pengutronix.de>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v11 04/10] mtd: nand: omap: use DT specified bus-width
+ only for scanning NAND device
+Date: Thu, 24 Oct 2013 18:27:15 -0300
+Message-ID: <20131024212714.GB2520@localhost>
+References: <1382619026-4182-1-git-send-email-pekon@ti.com>
+ <1382619026-4182-5-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024072811.GS30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1382619026-4182-5-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: mark.rutland@arm.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com, devicetree@vger.kernel.org, Pawel.Moll@arm.com, arnd@arndb.de, swarren@wwwdotorg.org, tony@atomide.com, jp.francois@cynove.com, ijc+devicetree@hellion.org.uk, avinashphilipk@gmail.com, balbi@ti.com, robherring2@gmail.com, bcousson@baylibre.com, linux-mtd@lists.infradead.org, ivan.djelic@parrot.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 3:28 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Wed, Oct 23, 2013 at 09:14:17PM -0400, Rob Clark wrote:
->> On Mon, Oct 21, 2013 at 5:27 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> >> If a subsystem doesn't work well with DT, then the choices are either:
->> >>
->> >> (a) don't use DT with the subsystem
->> >
->> > The underlying problem has nothing to do with DT. Multi component
->> > hardware does exist and won't vanish when we stop using DT.
->> >
->> >> (b) fix the subsystem
->> >
->> > I'd love to do that. Step one to this seems to be to increase the
->> > awareness that there's something wrong with DRM.
->>
->>
->> Note that I suspect your idea of "fixing drm" is going to break some
->> userspace assumptions about the hw (ie. userspace isn't expecting
->> crtcs/encoders/connectors to suddenly appear/disappear.  And the funny
->> thing is, on all of this hw, that isn't going to happen anyways.
->
-> I was talking about all SoC DRM drivers implementing variants of the
-> same glue between drm and the multidevice nature of the components.
->
-> To make that sure: I never had the intention to implement hotplug for
-> drm. Also what the imx-drm driver does is not for hotplug, but only for
-> binding different components together.
+On Thu, Oct 24, 2013 at 06:20:20PM +0530, Pekon Gupta wrote:
+> This patch:
+> - calls nand_scan_ident() using bus-width as passed by DT
+> - removes double calls to nand_scan_ident(), incase first call fails
+>   then omap_nand_probe just returns error.
+>=20
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  drivers/mtd/nand/omap2.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 5596368..f464321 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -1856,7 +1856,6 @@ static int omap_nand_probe(struct platform_devi=
+ce *pdev)
+>  	mtd->name		=3D dev_name(&pdev->dev);
+>  	mtd->owner		=3D THIS_MODULE;
+>  	nand_chip		=3D &info->nand;
+> -	nand_chip->options	=3D pdata->devsize;
+>  	nand_chip->options	|=3D NAND_SKIP_BBTSCAN;
+>  #ifdef CONFIG_MTD_NAND_OMAP_BCH
+>  	info->of_node		=3D pdata->of_node;
+> @@ -1904,6 +1903,15 @@ static int omap_nand_probe(struct platform_dev=
+ice *pdev)
+>  		nand_chip->chip_delay =3D 50;
+>  	}
+> =20
+> +	/* scan NAND device connected to chip controller */
+> +	nand_chip->options |=3D pdata->devsize & NAND_BUSWIDTH_16;
 
-ahh, ok.  Yeah, we do need some way to make this easier, as it is a
-too-common pattern.  I do think we do need a way to know if something
-is missing because it isn't there vs it hasn't been probed yet.  Ie.
-late_initcall() is not the awesome solution.
+Hm.. this only works if the device is listed in nand_flash_ids[] array,
+so that ONFI detection is not used. To make ONFI detection work I think=
+ you
+need to do as Brian suggested and use NAND_BUSWIDTH_AUTO.
 
-BR,
--R
+(Odd: why is there no current user of that auto-width option?)
 
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Anyway, I really think we should fix this now and independently
+of the evolution of this ECC DT binding discussion.
+That way you can keep sending a smaller ECC DT binding patchset and
+make reviewers focus on what's really important in each case.
+
+I have a few fixes (based on your work) and I'll send them now, after
+I complete the tests. We can continue our discussion there.
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
