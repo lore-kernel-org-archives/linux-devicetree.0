@@ -1,81 +1,62 @@
-From: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 10:35:59 +0100
-Message-ID: <1382607359.6315.61.camel@deadeye.wl.decadent.org.uk>
-References: <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
-	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
-	 <20131022171346.GE4061@obsidianresearch.com>
-	 <20131023080630.GA14413@netboy>
-	 <20131023172955.GA17145@obsidianresearch.com>
-	 <20131023180108.GA23728@roeck-us.net>
-	 <20131023182502.GC32563@obsidianresearch.com>
-	 <20131023183041.GH5208@netboy>
-	 <1382570963.6315.48.camel@deadeye.wl.decadent.org.uk>
-	 <20131024073236.GA4690@netboy>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-Obwh7WmPMs2ffNgtMwJ0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024073236.GA4690@netboy>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Thu, 24 Oct 2013 04:36:30 -0500
+Message-ID: <3E007970-C2E3-4A2E-B2E3-8388DB7A98F9@codeaurora.org>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com><1382092020-13170-2-git-send-email-hdoyu@nvidia.com><20131024085531.680A4C4039D@trevor.secretlab.ca> <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131024.122115.1035609747068925560.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---=-Obwh7WmPMs2ffNgtMwJ0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Oct 24, 2013, at 4:21 AM, Hiroshi Doyu wrote:
 
-On Thu, 2013-10-24 at 09:32 +0200, Richard Cochran wrote:
-> On Thu, Oct 24, 2013 at 12:29:23AM +0100, Ben Hutchings wrote:
-> >=20
-> > It starts by looking up the machine ID (in procfs, but may be overridde=
-n
-> > because some board vendors don't set it correctly).  If the machine is
-> > supported using FDT then there is an associated DTB file which will hav=
-e
-> > been installed with the kernel.  The script copies/appends this to the
-> > appropriate place for the boot loader.
->=20
-> And if the ID is not recognized, then what?
+> Hi Grant,
+> 
+> Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Thu, 24 Oct 2013 10:55:31 +0200:
+> ....
+>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>> index f95aee3..638a88a 100644
+>>> --- a/include/linux/of.h
+>>> +++ b/include/linux/of.h
+>>> @@ -60,6 +60,7 @@ struct device_node {
+>>> 	struct	kref kref;
+>>> 	unsigned long _flags;
+>>> 	void	*data;
+>>> +	struct device *dev;		/* Set only after populated */
+>> 
+>> Is this being used merely to indicate that a device has been processed
+>> by of_platform_device_create()? Or do you intend to dereference this
+>> pointer? I've avoided putting the struct device in to the device_node
+>> structure up to this point simply becuase there aren't any good clues
+>> for what /kind/ of device it actually points to. I worry that bad
+>> assumptions will get made when other subsystems try to use the
+>> same pointer. ie. if one subsystem creates its own device and sets this
+>> pointer, and then of_platform_device_create() comes along behind, sees
+>> that it is already created, and then returns a platform_device pointer
+>> *for something that isn't a struct platform_device*. This is very bad.
+>> 
+>> Instead of using a pointer to the struct device, would a flag be
+>> sufficient for your purposes? Would it be fine to return NULL if the
+>> device has already been created?
+> 
+> Yes, a flag would be enough for this purpose.
+> 
+> This patch is a part of HACK to control device instanciation order. We
+> have an IOMMU device(platform) which needs to be instanciated earlier
+> than other (platform)devices so that IOMMU driver would configure them
+> as IOMMU'able device.
+> 
+> Is there any better way to control device instanciation order from DT?
 
-Then we have no idea even where to install the kernel, or what wrapper
-might be needed, so the boot loader will load it.  Lack of a DTB file is
-a small problem; it would be easy to add an option to provide one
-outside the kernel package.
+I was also thinking being able to call of_platform_populate multiple times and have explicit lists to control device init order might be a workable solution.  So might be worth continuing down this path to make device nodes that have already be created.
 
-Ben.
-
---=20
-Ben Hutchings
-Teamwork is essential - it allows you to blame someone else.
-
---=-Obwh7WmPMs2ffNgtMwJ0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIVAwUAUmjp/+e/yOyVhhEJAQou3BAAqecuz34EzB+vDbF7St9MsgbwFmOd+iSU
-r0Z+FkkYBMnZ6uj8vD0669d6dUXdnCJvVysPbIi5x8fS1T+RoPQ+kdywGoRCe4jZ
-1+WkFyzuzETa1vI7PUDpDaWv2Y284PVX8Mqw8GLgXKD6+GgF+i7YQ6keamkXH6Qi
-GgKQ4e/Vb7jpmoWmBAKZw51WXNso3z/ejfu5Evnz6BIzlywwL6df50x5rJaDuKLH
-GC495f9C/Ae3orFcA4QZ8RTmJnUMw/4da0r1cwjn3Z/od016Qx2dmDjPKgeGisSV
-qsuzesXy4SP7i750IMQDJCZuTLQGrYEEymELxCbmfzR3IKSays928gwJAHbx7554
-+AKa9SQmQhbK5EZax79UNV0U0VtY+xvXIyLFxbsjPG5R73Q7I9EPMJec1gFqismR
-EpupWQy7dSrT3pwmJBGFhYog3ObD9Scgdgg1HtFfzFaNBACWEWabRpl7A7aNuzEZ
-rhCa9202Y0Hn4n9gkSdbi30Gq3ZuQeWDBhAVneCYXJ5aqaEM7FV2X1ZL3FRqXlrM
-U4N4C59eOSMKVA3ZODS0GBbdE5UGzboVpbWPwjINhJd1vY5fAcCWzzdeZyLQ5Q/g
-/kZ1DdBgbsoUextZ7bodv5x4x95j7gMdsyZAsvhYz6RgrH5jAEbBQfr8Sj+DYzjt
-eRIe/Zs6qmc=
-=fdsS
------END PGP SIGNATURE-----
-
---=-Obwh7WmPMs2ffNgtMwJ0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- k
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
