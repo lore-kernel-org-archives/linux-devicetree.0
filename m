@@ -1,51 +1,95 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv6][ 3/7] ARM: imx{25,27} DT: Permit the selection of the
- imxfb framebuffer driver.
-Date: Thu, 24 Oct 2013 16:31:45 +0800
-Message-ID: <20131024083143.GB13614@S2101-09.ap.freescale.net>
-References: <1382601665-6830-1-git-send-email-denis@eukrea.com>
- <1382601665-6830-3-git-send-email-denis@eukrea.com>
- <20131024081531.GA13614@S2101-09.ap.freescale.net>
- <20131024102011.610e5d8b@e6520eb>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 10:34:12 +0200
+Message-ID: <20131024083411.GH9403@ulmo.nvidia.com>
+References: <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023174736.GD5208@netboy>
+ <20131023180240.GA32563@obsidianresearch.com>
+ <20131023182345.GG5208@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bygAmIonOAIqBxQB"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131024102011.610e5d8b@e6520eb>
+In-Reply-To: <20131023182345.GG5208@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 10:20:11AM +0200, Eric B=E9nard wrote:
-> Hi Shawn,
+
+--bygAmIonOAIqBxQB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Oct 23, 2013 at 08:23:47PM +0200, Richard Cochran wrote:
+> On Wed, Oct 23, 2013 at 12:02:40PM -0600, Jason Gunthorpe wrote:
+> > On Wed, Oct 23, 2013 at 07:47:37PM +0200, Richard Cochran wrote:
+> > >=20
+> > > The effort is no more or less than is required of every other kernel
+> > > development.
+> >=20
+> > Bollocks. User space API development is the single most difficult
+> > thing to do in the kernel. It is much harder than any other change,
+> > and stable ABI DT is elevated to *that* level.=20
 >=20
-> Le Thu, 24 Oct 2013 16:15:34 +0800,
-> Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> a =E9crit :
-> > >  config FB_IMX
-> > >  	tristate "Freescale i.MX1/21/25/27 LCD support"
-> > > -	depends on FB && IMX_HAVE_PLATFORM_IMX_FB
-> > > +	depends on FB && HAVE_IMX_FB
-> >=20
-> > Or simply have it depend on ARCH_MXC?
-> >=20
-> > 	depends on FB && ARCH_MXC
-> >=20
-> but not all MXC have IMX_FB : isn't that a problem ?
+> Yes, that is the kind of effort needed. It comes with the territory.
+> System calls and ioctls are added all the time. Yes, they do require
+> some thought and review to get them right.
+>=20
+> Creating new DT bindings also requires effort, but I don't agree with
+> the idea of making a mess for the end user just to avoid this effort.
 
-Is it really a problem that you see this option when you configure an
-imx51 kernel?  The prompt clearly tells you do not need this option for
-an imx51 kernel.  Or will it cause any real problem even if you select
-it for an imx51 kernel, except you build in a driver which will never b=
-e
-instantiated?  I've seen drivers even start drop ARCH_* dependency to
-get a better randconfig build test coverage.
+There's another thing with DT bindings that makes them needlessly hard
+to settle on. Let's say you come up with a binding that accurately
+describes the hardware at hand and has been proven to work. Now people
+keep telling you that it might not be good enough, for whatever reason
+so eventually you decide to be bold and tell them that you're aware of
+everything that stable DT bindings imply and that there might be some
+risk of having to maintain two bindings because the first one didn't
+turn out to be perfect and yada yada.
 
-Shawn
+So you are actually prepared to take the risk of having to maintain two
+different bindings and do all the work to get a new feature supported.
+Now people tell you that you can't do that either because you might not
+be around forever and some poor sod will have to maintain it for you.
 
+What do you do then? You try to convince people that we are in a big
+mess right now and that we need to find a way out of it.
+
+Thierry
+
+--bygAmIonOAIqBxQB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaNuDAAoJEN0jrNd/PrOh9ksP/1mo/ggpoookiimbJAB68kqA
+uE6JRa6bmBRR49H7RCYCRofihuzq4EscDsVgW4HoOVHyKW07vQsUjwtgPY+0kKjN
+K/xv4qPMqh/UgCDhaXv1PXkqb1ZK9G62RS6WQTgZivUAvLvFkRs7s/v5Rw2jqssR
+WwXqZyVCmbkaY1cbf93aoHptCkU6lrduyR34D6pVtAAIlPSWCYms1KTMa/XujK6Q
+FPoA9roVd6ZrmdFNnmyUBkFY6otT2zchbc5BtBTLhgmHtXZeuxD5+doD03bEW7nJ
+txSZFvV8RwMowF2Am7/KWbj1KZNNyXe5pb/mqGxWRNB6enBVoHSXq1nt7t6XUE3c
+1pD7yN2Uexk1qp2DA9FILaCyv01RYkJu6f/gT6EoAhBR7YdvyiEwYwML7R15GpF/
+dxfnvh29N+GsZ4NR3JJ4iVaJLFa3dpSuIhJLmEtNoNJoFE+6mz0TmBC1+I1Gbrhl
+M2M9MHBZK6fkYv+IqL9XP74kKFkodEtt+MUOv5ACpRz/Ypzjy9L4mrluuZuBNMHv
+1w7pd8UKA17gC4vFFA6Iw8lFAWsDlGWLsrtBypbY0rsuHBh2v0cXzMh7VnnXwuXJ
+h0x35aTfatU2kpEzo50UjT24ZJ3x/tEE+Lk2HV7jQwb+EAWF5ub+HrZKR0XAFlZ8
+UleKN76/kybh09MSQr/S
+=CR5I
+-----END PGP SIGNATURE-----
+
+--bygAmIonOAIqBxQB--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
