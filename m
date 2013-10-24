@@ -1,43 +1,41 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC 05/12] phy: use of_phy_simple_xlate for NULL xlate function
-Date: Thu, 24 Oct 2013 21:03:21 +0530
-Message-ID: <52693DC1.1060503@ti.com>
-References: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com> <1382365111-6533-6-git-send-email-t.stanislaws@samsung.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 11:37:05 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1310241134260.1951@syhkavp.arg>
+References: <1382553982.31058.10.camel@sakura.staff.proxad.net> <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net> <1382615278.8522.72.camel@shinybook.infradead.org> <20131024122346.GD11296@ulmo.nvidia.com>
+ <1382619655.6040.52.camel@sakura.staff.proxad.net> <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org> <1382621431.6040.66.camel@sakura.staff.proxad.net> <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
+ <20131024141955.GB25061@ulmo.nvidia.com> <20131024143251.GA4096@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1382365111-6533-6-git-send-email-t.stanislaws@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, t.figa@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, rahul.sharma@samsung.com, kgene.kim@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, mturquette@linaro.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131024143251.GA4096@netboy>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 24 Oct 2013, Richard Cochran wrote:
 
-On Monday 21 October 2013 07:48 PM, Tomasz Stanislawski wrote:
-> Use default handler of_phy_simple_xlate() when NULL is passed as argument to
-> of_phy_provider_register().
+> On Thu, Oct 24, 2013 at 04:19:56PM +0200, Thierry Reding wrote:
+> > 
+> > While I agree that many of these screwups shouldn't have happened in the
+> > first place, it's nothing that we were prepared for two years ago. At
+> > some point everyone agreed that DT was the way forward, so DT is what we
+> > did. Nobody said anything about stable ABI back then, so nobody cared.
 > 
-> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->  drivers/phy/phy-core.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 03cf8fb..c38ae1e7 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -575,7 +575,7 @@ struct phy_provider *__of_phy_provider_register(struct device *dev,
->  
->  	phy_provider->dev = dev;
->  	phy_provider->owner = owner;
-> -	phy_provider->of_xlate = of_xlate;
-> +	phy_provider->of_xlate = of_xlate ? of_xlate : of_phy_simple_xlate;
+> The idea of a device tree has not changed. I guess the arm crowd
+> jumped on the DT bandwagon with no clue what it was about.
 
-Lets allow the phy provider to pass the correct of_xlate (of_phy_simple_xlate
-is exported anyway). Instead you can modify the patch to check for of_xlate and
-do a WARN if it is NULL.
+No no no.  The ARM crowd _resisted_ the introduction of DT but the 
+PowerPC refugees convinced us this was a good idea and that it would 
+solve most of our problems.
 
-Thanks
-Kishon
+DT did solve some problems indeed.  But it brought new ones with it.
+
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
