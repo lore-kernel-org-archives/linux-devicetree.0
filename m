@@ -1,123 +1,139 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
-Date: Thu, 24 Oct 2013 13:05:25 +0200
-Message-ID: <20131024110524.GB11296@ulmo.nvidia.com>
-References: <20131019104555.GI18477@ns203013.ovh.net>
- <5267FE81.3070201@wwwdotorg.org>
- <20131023202011.GD8828@mithrandir>
- <2730370.0UKsY9Ox0H@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface driver.
+Date: Thu, 24 Oct 2013 12:05:43 +0100
+Message-ID: <20131024110543.GA18506@sirena.org.uk>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yNb1oOkm5a9FJOVX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2730370.0UKsY9Ox0H@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lothar Wa??mann <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+In-Reply-To: <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---yNb1oOkm5a9FJOVX
+--rwEMma7ioTxnRzrJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2013 at 12:38:59AM +0200, Laurent Pinchart wrote:
-> Hi Thierry,
->=20
-> On Wednesday 23 October 2013 22:20:12 Thierry Reding wrote:
-> > On Wed, Oct 23, 2013 at 05:51:13PM +0100, Stephen Warren wrote:
-> > > On 10/22/2013 09:01 PM, Thierry Reding wrote:
-> > > > On Tue, Oct 22, 2013 at 05:34:45PM +0200, Jean-Christophe
-> > >=20
-> > > > PLAGNIOL-VILLARD wrote:
-> > > ...
-> > >=20
-> > > >> I'm sorry but the blacklight descibe in DT have nothing to do
-> > > >> with the common pratice that the current driver have today
-> > > >=20
-> > > > That's not at all what I said. What I said was that the majority
-> > > > of backlight drivers currently default to turning the backlight on
-> > > > when probed. Therefore I think it would be consistent if this
-> > > > driver did the same.
-> > > >=20
-> > > > I also said that I don't think it's a very good default, but at the
-> > > > same time we can't just go and change the default behaviour at will
-> > > > because people may rely on it.
-> > >=20
-> > > It may well be reasonable to change the default behaviour for devices
-> > > instantiated from DT. If it's not possible to instantiate the device
-> > > from DT yet, then it's not possible for anyone to be relying on the
-> > > default behaviour yet, since there is none. So, perhaps the default
-> > > could be:
-> > >=20
-> > > * If device instantiated from a board file, default to on, for
-> > > backwards-compatibility.
-> > >=20
-> > > * If device instantiated from DT, there is no backwards compatibility
-> > > to be concerned with, since this is a new feature, hence default to
-> > > off, since we think that's the correct thing to do.
-> >=20
-> > I actually had a patch to do precisely that. However I then realized
-> > that people have actually been using pwm-backlight in DT for a while
-> > already and therefore may be relying on that behaviour as well.
-> >=20
-> > It also isn't really an issue of DT vs. non-DT. The simple fact is that
-> > besides the backlight driver there's usually no other code that enables
-> > a backlight on boot. The only way to do so that I know of is using the
-> > DRM panel patches that I've been working on.
->=20
-> I would very much welcome a refactoring of the backlight code that would=
-=20
-> remove the fbdev dependency and hook backlights to panel drivers. That's=
-=20
-> something I wanted to work on myself, but that I pushed back after CDF :-)
+On Thu, Oct 17, 2013 at 05:01:10PM +0800, Xiubo Li wrote:
 
-Yeah, that would certainly be very welcome. But it's also a pretty
-daunting job since there are a whole lot of devices out there that
-aren't easy to test because, well, they're pretty old and chances
-are that nobody that actually has one is around.
+> +static struct snd_pcm_hardware snd_fsl_hardware = {
+> +	.info = SNDRV_PCM_INFO_INTERLEAVED |
+> +		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+> +		SNDRV_PCM_INFO_MMAP |
+> +		SNDRV_PCM_INFO_MMAP_VALID |
+> +		SNDRV_PCM_INFO_PAUSE |
+> +		SNDRV_PCM_INFO_RESUME,
+> +	.formats = SNDRV_PCM_FMTBIT_S16_LE,
+> +	.rate_min = 8000,
+> +	.channels_min = 2,
+> +	.channels_max = 2,
+> +	.buffer_bytes_max = FSL_SAI_DMABUF_SIZE,
+> +	.period_bytes_min = 4096,
+> +	.period_bytes_max = FSL_SAI_DMABUF_SIZE / TCD_NUMBER,
+> +	.periods_min = TCD_NUMBER,
+> +	.periods_max = TCD_NUMBER,
+> +	.fifo_size = 0,
+> +};
 
-But I guess that we can always try to solve it on a best effort basis,
-though. Perhaps things can even be done in a backwards-compatible way.
-I'm thinking for instance that we could introduce a new property, say
-=2Eenable, but keep any of the others suhc as state, power, fb_blank for
-backwards-compatibility. Perhaps even emulate them for a while until
-we've gone and cleaned up all users.
+There's a patch in -next that lets the generic dmaengine code figure out
+some settings from the dmacontroller rather than requiring the driver to
+explicitly provide configuration - it's "ASoC: dmaengine-pcm: Provide
+default config".  Please update your driver to use this, or let's work
+out what it doesn't do any try to fix it.
 
-Or is there still a reason to have more than a single bit for backlight
-state? I don't know any hardware that actually makes a difference
-between FB_BLANK_NORMAL, FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND
-or FB_BLANK_POWERDOWN. Many drivers in drivers/video seem to be using
-those, but for backlights I can see no use other than FB_BLANK_UNBLANK
-meaning enabled and anything else meaning disabled.
+> +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
+> +					FSL_FMT_TRANSMITTER);
+> +	if (ret) {
+> +		dev_err(cpu_dai->dev,
+> +				"Cannot set sai's transmitter sysclk: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
+> +					FSL_FMT_RECEIVER);
 
-Thierry
+As other people have commented these should be exposed as separate
+clocks rather than set in sync, unless there's some hardware reason they
+need to be identical.  If that is the case then a comment explaining the
+limitation would be good.
 
---yNb1oOkm5a9FJOVX
-Content-Type: application/pgp-signature
+Similarly with several of the other functions.
+
+> +int fsl_sai_dai_remove(struct snd_soc_dai *dai)
+> +{
+> +	struct fsl_sai *sai = dev_get_drvdata(dai->dev);
+> +
+> +	clk_disable_unprepare(sai->clk);
+
+It'd be a bit nicer to only enable the clock while the driver is
+actively being used rather than all the time the system is powered up
+but it's not a blocker for merge.
+
+> +	ret = snd_soc_register_component(&pdev->dev, &fsl_component,
+> +			&fsl_sai_dai, 1);
+> +	if (ret)
+> +		return ret;
+
+There's a devm_snd_soc_register_component() in -next, please use that.
+
+> +
+> +	ret = fsl_pcm_dma_init(pdev);
+> +	if (ret)
+> +		goto out;
+> +
+> +	platform_set_drvdata(pdev, sai);
+
+These should go before the driver is registered with the subsystem
+otherwise you've got a race where something might try to use the driver
+before init is finished.
+
+> +static int fsl_sai_remove(struct platform_device *pdev)
+> +{
+> +	struct fsl_sai *sai = platform_get_drvdata(pdev);
+> +
+> +	fsl_pcm_dma_exit(pdev);
+> +
+> +	snd_soc_unregister_component(&pdev->dev);
+
+Similarly here, unregister from the subsystem then clean up after.
+
+> +#define SAI_CR5_FBT(x)		((x) << 8)
+> +#define SAI_CR5_FBT_MASK	(0x1f << 8)
+> +
+> +/* SAI audio dividers */
+> +#define FSL_SAI_TX_DIV		0
+> +#define FSL_SAI_RX_DIV		1
+
+Make the namespacing consistent please - for preference use FSL_SAI
+always.
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSaP70AAoJEN0jrNd/PrOhYFMQALPV7yg8pTM72CUXxXRzX5nJ
-OWe7x1af9AthxMdUzJ5KTk2VqhKXL7isYzOAfvt1arh5SwA6auRE2KjOZgblVyf9
-HyhFkwU+L4+1hYkpLqSFF/5m+JI/fgNnT4+Qu2KW8f7HWaOb3r4RQNDElyMARCVI
-iS6M4GA62xHXFOn59qH8ND5LnYrKhZ3K/OetigZ+9zjVo4ANR1yddcoXeKEjyS4Z
-WDGDLPXK5SZyACu8xs/HkLoxs8nq/JdKUaekjUHTyXRAuUbVoeiTZ1Zs8f41skAb
-DHA/yHQ3cn1wG823BF5XL+rLPmY4C5hhK4BCmopcVW3aQHSxT64wC/6zbXLAfx+z
-ELKxZ1+iInukMGhgY8j9RKJuu8Lm4Q+lVTAQZ9iQx0D4tHEdr1C3xVjk8F0Ukx6W
-wkH0p1qseAGSBTHViFJXY7jZ8AqaOlJlLlP/h1aP/EV764RfeBmNcGiLDhhES5Y/
-YnDmEbKhrPJ+Hde+6ZQ2deX1A0NFxQXgS1RwSo9+NA1fFWJb6VG5dcNI755QHaGa
-nWS2aws14IY/xWlvTKRolgMBuRNUzGK6odrITeP44eaI5VQY/L3hBlySu77xEPYy
-TnXYoOD0MGcITE850KauvluZ4BqHRD78x6i5S6W2f5apBOTL4R0r3Ds4Ee/EnXK+
-BdNxlRtHJfg/0YmyzDby
-=1fIk
+iQIcBAEBAgAGBQJSaP8EAAoJELSic+t+oim98ckP/0NBo4AKqrOWlBbpLWtZaoKt
+idtXIrSBEyB1yvlJJCBguE2djGe0fgOzbMIfChRSno3AkFvD7cTjz6lKrzVo0nmC
+/RDXX7EZzwuyuog/4fuTIySMZf9MTlwgjRv1YYqS5iXQ+2HlHVIi0R9V0+7A8xrl
+wPXjBwpfJmlUjbUHJtGfGHy729tPrdDyqhcV2x5YKN5LftsbP+SjHzJAq4ZEaexk
+S6RQReBmwabmpESCzj9SUZNhjuZCvA+jN8xTcyNKmVEZoIzgMXKrncmeAzuAtRik
+FYp5h1svJQCvV4s1v2nyAN9Cd2FM59AUtHO/582dSJNzfoShHQh9jAHDJDfPlW7Q
++PnuKu8d7H+vf6Bnp35y49LOMgYIYRuE8gx6ZQn+ybqErMrE+NuLQLfWIb0ONYRV
+6wpnl2czcI20YEuWLskPq8tA97alaFeiVrJOwGk/2UgdfuC4smDTZ+0GHSbdwroz
+rHaZh3gRDE3dGOhOyWLYO6XvAqv+vfvg+ZWhkSFCvsBa0SPCsFWY4tqkRRGeKgrN
+kfruj1UBt6V4evRhI1X8uoDyj+Hf4YImf6REEXmKSDPLpeai/DI+Rx7BicPJHFoo
+ah5wj8Hbg4fB6A2fhQWm/mb4wVxeK+f44fbeIGUJpHtV4cekSIyYWv8YLZZl75zk
+nt4qmQMv3lWrZk879i0f
+=3gvt
 -----END PGP SIGNATURE-----
 
---yNb1oOkm5a9FJOVX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--rwEMma7ioTxnRzrJ--
