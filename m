@@ -1,182 +1,61 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC 04/12] phy: Add simple-phy driver
-Date: Thu, 24 Oct 2013 21:22:24 +0530
-Message-ID: <52694238.7050607@ti.com>
-References: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com> <1382365111-6533-5-git-send-email-t.stanislaws@samsung.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
+Date: Thu, 24 Oct 2013 18:23:47 +0200
+Message-ID: <20131024162346.GA3769@ab42.lan>
+References: <20131008122145.GA21985@ab42.lan>
+ <1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
+ <CACRpkdaMq1bzcTP6KZCGuWSm2MB0vSmJ4aRskuQNB8at4YnWRQ@mail.gmail.com>
+ <20131015134526.GB7461@ab42.lan>
+ <CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
+ <20131016125855.GA20308@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382365111-6533-5-git-send-email-t.stanislaws@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, t.figa@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, rahul.sharma@samsung.com, kgene.kim@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, mturquette@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131016125855.GA20308@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Monday 21 October 2013 07:48 PM, Tomasz Stanislawski wrote:
-> Add simple-phy driver to support a single register
-> PHY interfaces present on Exynos4 SoC.
-
-How are these PHY interfaces modelled in the SoC? Where does the register
-actually reside?
+On Wed, Oct 16, 2013 at 02:58:55PM +0200, Christian Ruppert wrote:
+> On Wed, Oct 16, 2013 at 01:29:44PM +0200, Linus Walleij wrote:
+> > On Tue, Oct 15, 2013 at 3:45 PM, Christian Ruppert
+> > <christian.ruppert@abilis.com> wrote:
+> > > On Wed, Oct 09, 2013 at 02:19:17PM +0200, Linus Walleij wrote:
+> > 
+> > >> It's not like I'm 100% certain on where to use one or the other
+> > >> construct (a mechanism like the above is needed for threaded
+> > >> IRQs I've noticed) but the chained handler seems more to the
+> > >> point does it not?
+> > >>
+> > >> The only downside I've seen is that the parent IRQ does not get
+> > >> a name and the accumulated IRQ stats in /proc/interrupts but
+> > >> surely we can live without that (or fix it).
+> > >>
+> > >> Since I'm a bit rusty on chained IRQs correct me if I'm wrong...
+> > >
+> > > OK, it took me a while to figure this back out again because as far as
+> > > I'm familiar with the IRQ framework you're right. The reason I'm not
+> > > using irq_set_chained_handler is that we have one driver instance per
+> > > GPIO bank and all GPIO banks share the same interrupt line. This means
+> > > every driver instance needs its own (different) user data and a simple
+> > > call to irq_set_handler_data(tb10x_gpio) won't suffice. I'm not aware of
+> > > any mechanism that allows interrupt sharing with the
+> > > irq_set_chained_handler() mechanism.
+> > 
+> > OK yes makes perfect sense. We'll live with this then.
+> > 
+> > I didn't see a new version of this patch with the other two, shall
+> > I just apply this last version in the pin control tree with the
+> > two other patches?
 > 
-> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->  drivers/phy/Kconfig      |    5 ++
->  drivers/phy/Makefile     |    1 +
->  drivers/phy/phy-simple.c |  128 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 134 insertions(+)
->  create mode 100644 drivers/phy/phy-simple.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index ac239ac..619c657 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -38,4 +38,9 @@ config TWL4030_USB
->  	  This transceiver supports high and full speed devices plus,
->  	  in host mode, low speed.
->  
-> +config PHY_SIMPLE
-> +	tristate "Simple PHY driver"
+> If you don't see anything else which needs changing please do so, yes.
 
-This is too generic a name to be used. Lets name it something specific to what
-it is used for (EXYNOS/HDMI.. ?).
-> +	help
-> +	  Support for PHY controllers configured using single register.
-> +
->  endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 0dd8a98..3d68e19 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -5,3 +5,4 @@
->  obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
->  obj-$(CONFIG_OMAP_USB2)		+= phy-omap-usb2.o
->  obj-$(CONFIG_TWL4030_USB)	+= phy-twl4030-usb.o
-> +obj-$(CONFIG_PHY_SIMPLE)	+= phy-simple.o
-> diff --git a/drivers/phy/phy-simple.c b/drivers/phy/phy-simple.c
-> new file mode 100644
-> index 0000000..4a28af7
-> --- /dev/null
-> +++ b/drivers/phy/phy-simple.c
-> @@ -0,0 +1,128 @@
-> +/*
-> + * Simple PHY driver
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +
-> +struct simple_phy {
-> +	spinlock_t slock;
-> +	u32 on_value;
-> +	u32 off_value;
-> +	u32 mask;
-> +	void __iomem *regs;
-> +};
-> +
-> +static int sphy_set(struct simple_phy *sphy, bool on)
-> +{
-> +	u32 reg;
-> +
-> +	spin_lock(&sphy->slock);
+Hi Linus,
 
-Lets add spin_lock only when it is absolutely necessary. When your PHY provider
-implements only a single PHY, it is not needed. phy_power_on and phy_power_off
-is already protected by the framework.
-> +
-> +	reg = readl(sphy->regs);
-> +	reg &= ~sphy->mask;
-> +	reg |= sphy->mask & (on ? sphy->on_value : sphy->off_value);
-> +	writel(reg, sphy->regs);
-> +
-> +	spin_unlock(&sphy->slock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int simple_phy_power_on(struct phy *phy)
-> +{
-> +	return sphy_set(phy_get_drvdata(phy), 1);
-> +}
-> +
-> +static int simple_phy_power_off(struct phy *phy)
-> +{
-> +	return sphy_set(phy_get_drvdata(phy), 0);
-> +}
-> +
-> +static struct phy_ops simple_phy_ops = {
-> +	.power_on	= simple_phy_power_on,
-> +	.power_off	= simple_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int simple_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct simple_phy *sphy;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *phy;
-> +
-> +	sphy = devm_kzalloc(dev, sizeof(*sphy), GFP_KERNEL);
-> +	if (!sphy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	sphy->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(sphy->regs)) {
-> +		dev_err(dev, "failed to ioremap registers\n");
-> +		return PTR_ERR(sphy->regs);
-> +	}
-> +
-> +	spin_lock_init(&sphy->slock);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, NULL);
+I didn't see this one pop up in the git repositories yet, are there any
+issues left with the driver?
 
-pass 'of_phy_simple_xlate' instead of NULL.
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "failed to register PHY provider\n");
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	phy = devm_phy_create(dev, &simple_phy_ops, NULL);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +
-> +	sphy->mask = 1;
-> +	sphy->on_value = ~0;
-> +	sphy->off_value = 0;
-> +
-> +	of_property_read_u32(dev->of_node, "mask", &sphy->mask);
-
-This means your driver will depend on dt data to describe how the register
-should look like. Not a good idea.
-> +	of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
-> +	of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
-> +
-> +	phy_set_drvdata(phy, sphy);
-> +
-> +	dev_info(dev, "probe successful\n");
-Lets not make the boot noisy.
-
-Thanks
-Kishon
+Best regards,
+  Christian
