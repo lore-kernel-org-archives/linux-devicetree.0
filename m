@@ -1,139 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio Interface driver.
-Date: Thu, 24 Oct 2013 12:05:43 +0100
-Message-ID: <20131024110543.GA18506@sirena.org.uk>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Thu, 24 Oct 2013 13:20:02 +0200
+Message-ID: <3278905.VOXO7bPE7e@avalon>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <3592147.9IprvsogX6@avalon> <52645428.9080607@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52645428.9080607-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
+> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
+> ...
+> 
+> >> As I said, anything that really needs a CDF binding to work
+> >> likely isn't "simple" anymore, therefore a separate driver can
+> >> easily be justified.
+> > 
+> > The system as a whole would be more complex, but the panel could be
+> > the same. We can't have two drivers for the same piece of hardware
+> > in the DT world, as there will be a single compatible string and no
+> > way to choose between the drivers (unlike the board code world that
+> > could set device names to "foo- encoder-v4l2" or "foo-encoder-drm"
+> > and live happily with that ever after).
+> 
+> That's not true. We can certainly define two different compatible
+> values for a piece of HW if we have to. We can easily control whether
+> they are handled by the same or different drivers in the OS.
 
-On Thu, Oct 17, 2013 at 05:01:10PM +0800, Xiubo Li wrote:
+>From an implementation point of view, sure. But from a conceptual point of 
+view, that would make the DT bindings pretty Linux-specific, with a 
+description of what the operating system should do instead of a description of 
+what the hardware looks like. My understanding is that we've tried pretty hard 
+in the past not to open that Pandora's box.
 
-> +static struct snd_pcm_hardware snd_fsl_hardware = {
-> +	.info = SNDRV_PCM_INFO_INTERLEAVED |
-> +		SNDRV_PCM_INFO_BLOCK_TRANSFER |
-> +		SNDRV_PCM_INFO_MMAP |
-> +		SNDRV_PCM_INFO_MMAP_VALID |
-> +		SNDRV_PCM_INFO_PAUSE |
-> +		SNDRV_PCM_INFO_RESUME,
-> +	.formats = SNDRV_PCM_FMTBIT_S16_LE,
-> +	.rate_min = 8000,
-> +	.channels_min = 2,
-> +	.channels_max = 2,
-> +	.buffer_bytes_max = FSL_SAI_DMABUF_SIZE,
-> +	.period_bytes_min = 4096,
-> +	.period_bytes_max = FSL_SAI_DMABUF_SIZE / TCD_NUMBER,
-> +	.periods_min = TCD_NUMBER,
-> +	.periods_max = TCD_NUMBER,
-> +	.fifo_size = 0,
-> +};
+The case I'm mostly concerned about would be two different compatibility 
+strings to select whether the device should be handled by a KMS or V4L driver. 
+I don't think that's a good idea.
 
-There's a patch in -next that lets the generic dmaengine code figure out
-some settings from the dmacontroller rather than requiring the driver to
-explicitly provide configuration - it's "ASoC: dmaengine-pcm: Provide
-default config".  Please update your driver to use this, or let's work
-out what it doesn't do any try to fix it.
+> Now, we should try to avoid this, because then that means that the
+> original binding wasn't fully describing the HW. However, at least in
+> the case of these simple LCD panels, it's hard to see that there is
+> anything more than what's already in Thierry's binding. Remember, the
+> binding is a description of the HW, not any Linux-internal details of
+> how e.g. a CDF or DRM subsystem is supposed to use the HW; that had
+> better be embodied into the driver or subsystem code, which aren't
+> ABIs, and hence can be easily modified/enhanced.
+-- 
+Regards,
 
-> +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
-> +					FSL_FMT_TRANSMITTER);
-> +	if (ret) {
-> +		dev_err(cpu_dai->dev,
-> +				"Cannot set sai's transmitter sysclk: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
-> +					FSL_FMT_RECEIVER);
+Laurent Pinchart
 
-As other people have commented these should be exposed as separate
-clocks rather than set in sync, unless there's some hardware reason they
-need to be identical.  If that is the case then a comment explaining the
-limitation would be good.
-
-Similarly with several of the other functions.
-
-> +int fsl_sai_dai_remove(struct snd_soc_dai *dai)
-> +{
-> +	struct fsl_sai *sai = dev_get_drvdata(dai->dev);
-> +
-> +	clk_disable_unprepare(sai->clk);
-
-It'd be a bit nicer to only enable the clock while the driver is
-actively being used rather than all the time the system is powered up
-but it's not a blocker for merge.
-
-> +	ret = snd_soc_register_component(&pdev->dev, &fsl_component,
-> +			&fsl_sai_dai, 1);
-> +	if (ret)
-> +		return ret;
-
-There's a devm_snd_soc_register_component() in -next, please use that.
-
-> +
-> +	ret = fsl_pcm_dma_init(pdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	platform_set_drvdata(pdev, sai);
-
-These should go before the driver is registered with the subsystem
-otherwise you've got a race where something might try to use the driver
-before init is finished.
-
-> +static int fsl_sai_remove(struct platform_device *pdev)
-> +{
-> +	struct fsl_sai *sai = platform_get_drvdata(pdev);
-> +
-> +	fsl_pcm_dma_exit(pdev);
-> +
-> +	snd_soc_unregister_component(&pdev->dev);
-
-Similarly here, unregister from the subsystem then clean up after.
-
-> +#define SAI_CR5_FBT(x)		((x) << 8)
-> +#define SAI_CR5_FBT_MASK	(0x1f << 8)
-> +
-> +/* SAI audio dividers */
-> +#define FSL_SAI_TX_DIV		0
-> +#define FSL_SAI_RX_DIV		1
-
-Make the namespacing consistent please - for preference use FSL_SAI
-always.
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaP8EAAoJELSic+t+oim98ckP/0NBo4AKqrOWlBbpLWtZaoKt
-idtXIrSBEyB1yvlJJCBguE2djGe0fgOzbMIfChRSno3AkFvD7cTjz6lKrzVo0nmC
-/RDXX7EZzwuyuog/4fuTIySMZf9MTlwgjRv1YYqS5iXQ+2HlHVIi0R9V0+7A8xrl
-wPXjBwpfJmlUjbUHJtGfGHy729tPrdDyqhcV2x5YKN5LftsbP+SjHzJAq4ZEaexk
-S6RQReBmwabmpESCzj9SUZNhjuZCvA+jN8xTcyNKmVEZoIzgMXKrncmeAzuAtRik
-FYp5h1svJQCvV4s1v2nyAN9Cd2FM59AUtHO/582dSJNzfoShHQh9jAHDJDfPlW7Q
-+PnuKu8d7H+vf6Bnp35y49LOMgYIYRuE8gx6ZQn+ybqErMrE+NuLQLfWIb0ONYRV
-6wpnl2czcI20YEuWLskPq8tA97alaFeiVrJOwGk/2UgdfuC4smDTZ+0GHSbdwroz
-rHaZh3gRDE3dGOhOyWLYO6XvAqv+vfvg+ZWhkSFCvsBa0SPCsFWY4tqkRRGeKgrN
-kfruj1UBt6V4evRhI1X8uoDyj+Hf4YImf6REEXmKSDPLpeai/DI+Rx7BicPJHFoo
-ah5wj8Hbg4fB6A2fhQWm/mb4wVxeK+f44fbeIGUJpHtV4cekSIyYWv8YLZZl75zk
-nt4qmQMv3lWrZk879i0f
-=3gvt
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
