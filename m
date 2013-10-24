@@ -1,74 +1,131 @@
 From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 14:15:48 -0400
-Message-ID: <CAKON4OwwY9vi65kErcKasndcvxN_ndbk=Jq9ka2n6jNHaibtOg@mail.gmail.com>
-References: <20131023174458.GC5208@netboy>
-	<1382553982.31058.10.camel@sakura.staff.proxad.net>
-	<20131024095232.27BBCC4039D@trevor.secretlab.ca>
-	<1382614439.6040.16.camel@sakura.staff.proxad.net>
-	<1382615278.8522.72.camel@shinybook.infradead.org>
-	<20131024122346.GD11296@ulmo.nvidia.com>
-	<1382619655.6040.52.camel@sakura.staff.proxad.net>
-	<516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
-	<1382621431.6040.66.camel@sakura.staff.proxad.net>
-	<af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
-	<20131024141955.GB25061@ulmo.nvidia.com>
-	<465e75de15f7d79c3b57a3b88024e739.squirrel@twosheds.infradead.org>
-	<alpine.LFD.2.03.1310241143240.1951@syhkavp.arg>
-	<93d9a5ce228d03c4a183b06b00bd0442.squirrel@twosheds.infradead.org>
+Subject: Re: [RFC] of: Allow for experimental device tree bindings
+Date: Thu, 24 Oct 2013 14:39:36 -0400
+Message-ID: <CAKON4Oz_Z0-ac_1k_0wis_nMNc+PNh5iYWyk-sQdaV=DfrfS7Q@mail.gmail.com>
+References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <93d9a5ce228d03c4a183b06b00bd0442.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
+In-Reply-To: <1382540779-6334-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 12:45 PM, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
->
->> So it is time IMHO that the description of how things *shall* work be
->> itself revised.
->
-> It *is* being revised, with an explicit explicit understanding that things
-> will have to change and a defined process for how to cope with that.
->
-> That was discussed yesterday and we will be finishing the write-up to be
-> presented at the Kernel Summit tomorrow.
+On Wed, Oct 23, 2013 at 11:06 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Past and recent discussions have shown that there's some concensus that
+> device tree bindings should be considered an ABI and therefore need to
+> remain backwards-compatible once code to implement them is included in
+> the final release of a Linux kernel.
 
-Did the concept of vertical and horizontal schemas make it in?
+Doing it this way clutters up the DTS source files.
 
-Horizontal schema - generic class descriptions for subsystems (spi,
-alsa, uart, usb, etc). All specific DTS instantiations of the
-subsystem would have to validate against the subsystem schema. And
-conversely this schema would contain all of the weird chip specific
-attributes that can't be handled generically.  These schemas serve two
-purposes - they provide a generic skeleton for someone implementing a
-new instance of the subsystem to start from and they allow the
-subsystem maintainer to control the proliferation of similarly named
-attributes (nscs, numcs, cs, ti,cs, chipsel, etc all describing the
-same thing - the number of chip selects).  These schemas would be
-highly documented and discussed on device-tree list.
-
-The subsystem schemas would be included by higher level generic schema
-files. So starting at the root of this tree all DTS files in the
-kernel should validate against the tree. Anything that doesn't
-validate should produce a warning or error. Can't get your DTS
-mainlined until it can be validated without errors.
-
-Vertical schema - the main goal of these schemas is error checking.
-For example there may be an iMX6 or OMAP schema. These schemas would
-check the device trees validated against them for as many errors as
-possible. Like attribute names that are from the wrong chip or invalid
-gpio or interrupt numbers, etc. These would be maintained by the SOC
-vendors and not subject to intense review on the device-tree list.
+Schemas are a way to do this without clutter. There should be a master
+schema that would validate all accepted device tree bindings.   So
+experimental bindings naturally drop right of of this - they'll
+generate errors when validated against the master schema.  When the
+binding is finally sorted out it gets added to the master schema and
+the validation errors go away.
 
 
 >
+> At the same time there is a desire to keep some manoeuvre while we're
+> trying to figure things out. The fact is that many of us lack the
+> experience to design good bindings from the start. At the same time
+> there is a shortage of people that can review bindings and help design
+> better ones.
 >
+> Progress and the addition of new features (and restoration of features
+> that used to work before the advent of DT for that matter) are blocked
+> to a large degree because of that.
+>
+> This patch attempts to restore some degree of freedom by introducing an
+> easy way to mark device tree bindings as experimental as well as a way
+> for users to disable the use of experimental bindings if they choose
+> functionality at the cost of potential device tree incompatibilities.
+>
+> Bindings are marked experimental by prefixing the compatible value with
+> an exclamation mark (!). In order to make it clear that experimental
+> bindings are undesirable in the long run, a warning will be output when
+> an experimental binding is encountered.
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/of/Kconfig |  7 +++++++
+>  drivers/of/base.c  | 32 +++++++++++++++++++++++++++++++-
+>  2 files changed, 38 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 78cc760..dc482f8 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -24,6 +24,13 @@ config OF_SELFTEST
+>
+>           If unsure, say N here, but this option is safe to enable.
+>
+> +config OF_EXPERIMENTAL
+> +       bool "Support experimental device tree bindings"
+> +       help
+> +         This option allows experimental device tree bindings to be used.
+> +         Note that experimental bindings are subject to change, possibly
+> +         requiring the DTB to be updated.
+> +
+>  config OF_FLATTREE
+>         bool
+>         select DTC
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index a96f850..b0b8371 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -342,6 +342,36 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>  }
+>  EXPORT_SYMBOL(of_get_cpu_node);
+>
+> +static int of_compat_match(const char *device, const char *driver,
+> +                          const struct device_node *np)
+> +{
+> +       const char *dev = device;
+> +       const char *drv = driver;
+> +
+> +       if (device[0] == '!')
+> +               device++;
+> +
+> +       if (driver[0] == '!')
+> +               driver++;
+> +
+> +       if (of_compat_cmp(device, driver, strlen(driver)) != 0)
+> +               return 0;
+> +
+> +       /* check if binding is experimental */
+> +       if (dev != device || drv != driver) {
+> +               pr_warn("of: device %s (%s) uses an experimental binding\n",
+> +                       np->name, np->full_name);
+> +
+> +               /* don't match if we don't want experimental bindings */
+> +               if (!IS_ENABLED(CONFIG_OF_EXPERIMENTAL)) {
+> +                       pr_err("of: refusing to use binding \"%s\"\n", device);
+> +                       return 0;
+> +               }
+> +       }
+> +
+> +       return 1;
+> +}
+> +
+>  /** Checks if the given "compat" string matches one of the strings in
+>   * the device's "compatible" property
+>   */
+> @@ -355,7 +385,7 @@ static int __of_device_is_compatible(const struct device_node *device,
+>         if (cp == NULL)
+>                 return 0;
+>         while (cplen > 0) {
+> -               if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+> +               if (of_compat_match(cp, compat, device))
+>                         return 1;
+>                 l = strlen(cp) + 1;
+>                 cp += l;
 > --
-> dwmw2
+> 1.8.4
 >
 >
 > _______________________________________________
