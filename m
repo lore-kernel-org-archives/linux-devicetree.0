@@ -1,59 +1,61 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] of/platform: Resolve interrupt references at probe time
-Date: Thu, 24 Oct 2013 17:37:49 +0100
-Message-ID: <20131024163749.68D01C403B6@trevor.secretlab.ca>
-References: <1379510692-32435-1-git-send-email-treding@nvidia.com> <1379510692-32435-9-git-send-email-treding@nvidia.com> <20131015232436.19F61C40099@trevor.secretlab.ca>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 12:39:17 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1310241143240.1951@syhkavp.arg>
+References: <20131023174458.GC5208@netboy> <1382553982.31058.10.camel@sakura.staff.proxad.net> <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net> <1382615278.8522.72.camel@shinybook.infradead.org>
+ <20131024122346.GD11296@ulmo.nvidia.com> <1382619655.6040.52.camel@sakura.staff.proxad.net> <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org> <1382621431.6040.66.camel@sakura.staff.proxad.net> <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
+ <20131024141955.GB25061@ulmo.nvidia.com> <465e75de15f7d79c3b57a3b88024e739.squirrel@twosheds.infradead.org>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131015232436.19F61C40099-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <465e75de15f7d79c3b57a3b88024e739.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Oct 2013 00:24:36 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 18 Sep 2013 15:24:50 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Interrupt references are currently resolved very early (when a device is
-> > created). This has the disadvantage that it will fail in cases where the
-> > interrupt parent hasn't been probed and no IRQ domain for it has been
-> > registered yet. To work around that various drivers use explicit
-> > initcall ordering to force interrupt parents to be probed before devices
-> > that need them are created. That's error prone and doesn't always work.
-> > If a platform device uses an interrupt line connected to a different
-> > platform device (such as a GPIO controller), both will be created in the
-> > same batch, and the GPIO controller won't have been probed by its driver
-> > when the depending platform device is created. Interrupt resolution will
-> > fail in that case.
+On Thu, 24 Oct 2013, David Woodhouse wrote:
+
 > 
-> What is the reason for all the rework on the irq parsing return values?
-> A return value of '0' is always an error on irq parsing, regardless of
-> architecture even if NO_IRQ is defined as -1. I may have missed it, but
-> I don't see any checking for specific error values in the return paths
-> of the functions.
+> > On Thu, Oct 24, 2013 at 02:05:58PM -0000, David Woodhouse wrote:
+> >>
+> >> >
+> >> > On Thu, 2013-10-24 at 13:10 +0000, David Woodhouse wrote:
+> >> >
+> >> >> Note that you are not describing a normal "DT scenario" here. You are
+> >> >> describing a case in which we screwed up
+> >> >
+> >> > AKA "real world"
+> >>
+> >> No. Absolutely not. That was a screwup, and it needs to be *rare*. The
+> >> excuses you present for it are crappy and uunacceptable.
+> >
+> > That's not helping. The fact is that is has happened.
 > 
-> If the specific return value isn't required (and I don't think it is),
-> then you can simplify the whole series by getting rid of the rework
-> patches.
+> It has happened, yes. But we're describing how things *shall* work going
+> forward. Coping with existing mistakes is a slightly separate issue.
+> (Albeit only slightly since mistakes *will* continue to happen, but
+> hopefully more rarely so our defined processes for coping are based on the
+> assumption that it should be rare)
 
-I've not heard back about the above, but I've just had a conversation
-with Rob about what to do here. The problem that I have is that it makes
-a specific return code need to traverse several levels of function calls
-and have a meaning come out the other end. It becomes difficult to
-figure out where that code actually comes from when reading the code.
-That's more of a gut-feel reaction rather than pointing out specifics
-though.
+No.  Doing so would only be an exercice in wishful thinking and a 
+mistake.
 
-The other thing that makes me nervous how invasive the series is.
+Please let's get real.
 
-However, even with saying all of the above, I'm not saying outright no.
-I want to get this feature in. It is obviously needed and I'll even
-merge the patches piecemeal as the look ready (I've already merged 2).
-Regardless, the current series needs to be reworked. It conflicts with
-the other IRQ rework that I've already put into my tree. The best thing
-to do would probably be respin it against my current tree and repost.
-I'll take a fresh look then.... In the mean time, anything you can do to
-/sanely/ reduce the impact will probably help.  :-)
+Mistakes happen all the time.  And with all the diversity of hardware IP 
+blocks out there, and all the different ways they're been connected, we 
+have this combinatorial configuration explosion that absolutely no one 
+can have the entire knowledge about.  Obstacles in the name of binding 
+immutability is hurting more people than the amount of people who are 
+benefiting from it right now.
 
-g.
+So it is time IMHO that the description of how things *shall* work be 
+itself revised.
+
+
+Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
