@@ -1,69 +1,102 @@
-From: Jon Brenner <Jon.Brenner@ams.com>
-Subject: RE: [PATCH] iio:light:tsl2563: Add DT support
-Date: Thu, 24 Oct 2013 15:58:54 +0200
-Message-ID: <3C879D35B299F147B1DEDFBEE12F2E06012E5631C1@SUX2182.office.amsiag.com>
-References: <1382565063-17083-1-git-send-email-sre@debian.org>
- <5268DA76.6060503@kernel.org> <20131024134259.GB3681@earth.universe>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 16:57:16 +0200
+Message-ID: <20131024145715.GC9044@ulmo.nvidia.com>
+References: <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+ <1382614439.6040.16.camel@sakura.staff.proxad.net>
+ <1382615278.8522.72.camel@shinybook.infradead.org>
+ <20131024122346.GD11296@ulmo.nvidia.com>
+ <1382619655.6040.52.camel@sakura.staff.proxad.net>
+ <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
+ <1382621431.6040.66.camel@sakura.staff.proxad.net>
+ <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
+ <20131024141955.GB25061@ulmo.nvidia.com>
+ <1382625219.6040.96.camel@sakura.staff.proxad.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131024134259.GB3681@earth.universe>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@cam.ac.uk>, Peter Meerwald <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382625219.6040.96.camel-MdnFuL0m/hCw+z8RR+d9WEZ2mhrpEnA6@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-AMS-TAOS
 
------Original Message-----
-From: Sebastian Reichel [mailto:sre@debian.org] 
-Sent: Thursday, October 24, 2013 8:43 AM
-To: Jonathan Cameron
-Cc: linux-iio@vger.kernel.org; Rob Herring; Pawel Moll; Mark Rutland; Stephen Warren; Ian Campbell; Rob Landley; Jonathan Cameron; Peter Meerwald; Greg Kroah-Hartman; Bill Pemberton; Sachin Kamat; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; Jon Brenner
-Subject: Re: [PATCH] iio:light:tsl2563: Add DT support
+--O3RTKUHj+75w1tg5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2013 at 09:29:42AM +0100, Jonathan Cameron wrote:
-> On 10/23/13 22:51, Sebastian Reichel wrote:
-> > Add Device Tree support for the TSL2563 driver and document the 
-> > binding.
-> > 
-> > Signed-off-by: Sebastian Reichel <sre@debian.org>
-> > ---
-> >  .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
-> >  drivers/iio/light/tsl2563.c                           |  4 ++++
-> >  2 files changed, 23 insertions(+)
-> >  create mode 100644 
-> > Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt 
-> > b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> > new file mode 100644
-> > index 0000000..b52cf4b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> > @@ -0,0 +1,19 @@
-> > +* TAOS TSL2563 ambient light sensor
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible : should be "taos,tsl2563"
-> > +  - reg : the I2C address of the sensor
-> > +
-> > +Optional properties:
-> > +
-> So two options for this one.  Either pitch it as a possible general 
-> parameter, or mark it with a vendor prefix.  It seems like something 
-> fairly general, but in that case it probably needs a more detailed proposal and explanation of exactly what it is.
+On Thu, Oct 24, 2013 at 04:33:39PM +0200, Maxime Bizon wrote:
+>=20
+> On Thu, 2013-10-24 at 16:19 +0200, Thierry Reding wrote:
+>=20
+> > We treated DT the same way we had treated platform data before, which
+> > has inevitable lead to the current mess, which is only slightly better
+> > than what we used to have.=20
+>=20
+> Side question, in your point of view, how is that better ?
 
-OK, I will add a vendor prefix in a PATCHv2. When I converted the driver to DT I had a look how this is used and I don't think it's "fairly general".
+The representation of the data may not be all that much better. But as a
+side-effect of the whole DT shebang we've made improvements in many
+other areas as well. Granted, we could've done that without DT too, but
+DT was a pretty good motivator.
 
-> Also, is taos listed in vendor-prefixes.txt?  Jon, is that the right vendor prefix to use?
-> I'm guessing you have some non mainline bindings out there already so 
-> it would be good to match those...
+I also think that during the conversion of platform data to DT we've
+made attempts to make the representation more generic and introduce
+common or standard properties. So on the whole I think we have managed
+to unify many things, which I think is a good thing.
 
-taos is currently not listed in the vendor-prefixes.txt file. Also it seems that "TAOS Inc." has been absorbed by "ams AG" in 2011.
-So how to proceed with the patch?
+> current DT tools are not able to validate a file wrt its schema, so for
+> now we just moved platdata to DTS files and lost compiler type checking
+> in between.
 
--- Sebastian
+There's been talk about fixing that. I guess it might have been better
+if we had had such a tool two years ago, but I certainly hadn't thought
+about it before, so who am I to blame anyone else for not writing it.
+
+> I respectfully understand people fighting for *stable* DT because I see
+> the benefits behind this, even if IMO they absolutely do not outweigh
+> the pain.
+>=20
+> But I fail to see any benefits of "forever unstable" DT, if you have to
+> tie the kernel tree with a DTB file, the description could have been
+> left in C code.
+
+Well the longterm goal certainly is to separate both, and keeping both
+in lockstep was a means of easing the initial conversion. There's
+certainly a lot of pain, but I also think that whatever we had before
+just didn't work out so well. If it had all been sunshine and lollipops
+then there wouldn't have been a need to change anything, right?
+
+Thierry
+
+--O3RTKUHj+75w1tg5
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaTVLAAoJEN0jrNd/PrOhdukP/idZBrXuf9DQ+rXXpVxS4AnO
+FxVpFFTaV1sz91asnLrDm5hdPlUZp4eBdo6/3X2YEIK3itjZuybX32ZJUW9rFrpG
+xmHYynl8rDK0ugDBrLnYB4KtM41dJ6t+QkNrUDJ8mRzPz2rvPWSWJQCZ5AZMEjp3
+GFq4FrDdagsEMEx6YsCOEK1lXcJQB/U7j2T9TLdijllobn4y9QYWQPoUN/uwbAz3
+ZX1zbzzt36/7LeQmZOSL2J7jX/Pi3cLNoSFFNNAGW6QsP6KnQ4bq78JY283Zt9ZX
+/+bg8hUyHZiDEfbAEKlbz7COqkQA8QBXD2PAgOSDm4qdXirk2e/Gr8wUPZd940T3
+TuYEVbHMTDh7PqBMySxlBc6XVWTIJGQpbNAax+H4Z8QsqzfY8F62zmLPA836KXY0
+MuWdzfwztuDByPslU0R0UaYrdsCU7feFbvL7Lj+hPlAYYp8YM+FV5CymWKsLSAT1
+02spnidq55CSshZIut0dgoKJ8+GiMiVerxP8LcqhM/T61sXjSD682Bs8XcHnJicc
+kCp5N0KCSuTKO5HYUFoM3jcVDcnznz/t6zlHJ0uXy/qPZfn/yg4K+ejD8Jrdynzm
+/TmqNJ/U6e/wAvk0hlYEF5FRbq/q/YYcxJEvORazwgFEUVEEKRDStcAUYoC4pgQs
+QLt/LuASlZsEaK29Nyhp
+=IBGz
+-----END PGP SIGNATURE-----
+
+--O3RTKUHj+75w1tg5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
