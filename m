@@ -1,104 +1,81 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [RFC PATCH 2/6] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
-Date: Thu, 24 Oct 2013 04:33:37 -0500
-Message-ID: <2FD881B8-1A59-418E-AF9C-EF5B9C5D0623@codeaurora.org>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-3-git-send-email-r.sricharan@ti.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1380549564-31045-3-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
+From: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 10:35:59 +0100
+Message-ID: <1382607359.6315.61.camel@deadeye.wl.decadent.org.uk>
+References: <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
+	 <20131022171346.GE4061@obsidianresearch.com>
+	 <20131023080630.GA14413@netboy>
+	 <20131023172955.GA17145@obsidianresearch.com>
+	 <20131023180108.GA23728@roeck-us.net>
+	 <20131023182502.GC32563@obsidianresearch.com>
+	 <20131023183041.GH5208@netboy>
+	 <1382570963.6315.48.camel@deadeye.wl.decadent.org.uk>
+	 <20131024073236.GA4690@netboy>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-Obwh7WmPMs2ffNgtMwJ0"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131024073236.GA4690@netboy>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Sep 30, 2013, at 8:59 AM, Sricharan R wrote:
+--=-Obwh7WmPMs2ffNgtMwJ0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Some socs have a large number of interrupts requests to service
-> the needs of its many peripherals and subsystems. All of the
-> interrupt lines from the subsystems are not needed at the same
-> time, so they have to be muxed to the irq-controller appropriately.
-> In such places a interrupt controllers are preceded by an CROSSBAR
-> that provides flexibility in muxing the device requests to the controller
-> inputs.
-> 
-> This driver takes care a allocating a free irq and then configuring the
-> crossbar IP as a part of the mpu's irqchip callbacks. crossbar_init should
-> be called right before the irqchip_init, so that it is setup to handle the
-> irqchip callbacks.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Rajendra Nayak <rnayak@ti.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Sricharan R <r.sricharan@ti.com>
-> ---
-> .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
-> drivers/irqchip/Kconfig                            |    8 +
-> drivers/irqchip/Makefile                           |    1 +
-> drivers/irqchip/irq-crossbar.c                     |  195 ++++++++++++++++++++
-> include/linux/irqchip/irq-crossbar.h               |   11 ++
-> 5 files changed, 242 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> create mode 100644 drivers/irqchip/irq-crossbar.c
-> create mode 100644 include/linux/irqchip/irq-crossbar.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> new file mode 100644
-> index 0000000..cdec2cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> @@ -0,0 +1,27 @@
-> +Some socs have a large number of interrupts requests to service
-> +the needs of its many peripherals and subsystems. All of the
-> +interrupt lines from the subsystems are not needed at the same
-> +time, so they have to be muxed to the irq-controller appropriately.
-> +In such places a interrupt controllers are preceded by an CROSSBAR
-> +that provides flexibility in muxing the device requests to the controller
-> +inputs.
-> +
-> +Required properties:
-> +- compatible : Should be "ti,irq-crossbar"
-> +- reg: Base address and the size of the crossbar registers.
-> +- max-irqs: Total number of irqs available at the interrupt controller.
+On Thu, 2013-10-24 at 09:32 +0200, Richard Cochran wrote:
+> On Thu, Oct 24, 2013 at 12:29:23AM +0100, Ben Hutchings wrote:
+> >=20
+> > It starts by looking up the machine ID (in procfs, but may be overridde=
+n
+> > because some board vendors don't set it correctly).  If the machine is
+> > supported using FDT then there is an associated DTB file which will hav=
+e
+> > been installed with the kernel.  The script copies/appends this to the
+> > appropriate place for the boot loader.
+>=20
+> And if the ID is not recognized, then what?
 
-Should be 'ti,max-irqs
+Then we have no idea even where to install the kernel, or what wrapper
+might be needed, so the boot loader will load it.  Lack of a DTB file is
+a small problem; it would be easy to add an option to provide one
+outside the kernel package.
 
-> +- reg-size: Size of a individual register in bytes. Every individual
-> +	    register is assumed to be of same size. Valid sizes are 1, 2, 4.
+Ben.
 
-Is this something that really needs to be encoded in the dts?
+--=20
+Ben Hutchings
+Teamwork is essential - it allows you to blame someone else.
 
-If we keep it should be ti,reg-size
+--=-Obwh7WmPMs2ffNgtMwJ0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-> +- irqs-reserved: List of the reserved irq lines that are not muxed using
-> +		 crossbar. These interrupt lines are reserved in the soc,
-> +		 so crossbar bar driver should not consider them as free
-> +		 lines.
-> +
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-ti,irqs-reserved
+iQIVAwUAUmjp/+e/yOyVhhEJAQou3BAAqecuz34EzB+vDbF7St9MsgbwFmOd+iSU
+r0Z+FkkYBMnZ6uj8vD0669d6dUXdnCJvVysPbIi5x8fS1T+RoPQ+kdywGoRCe4jZ
+1+WkFyzuzETa1vI7PUDpDaWv2Y284PVX8Mqw8GLgXKD6+GgF+i7YQ6keamkXH6Qi
+GgKQ4e/Vb7jpmoWmBAKZw51WXNso3z/ejfu5Evnz6BIzlywwL6df50x5rJaDuKLH
+GC495f9C/Ae3orFcA4QZ8RTmJnUMw/4da0r1cwjn3Z/od016Qx2dmDjPKgeGisSV
+qsuzesXy4SP7i750IMQDJCZuTLQGrYEEymELxCbmfzR3IKSays928gwJAHbx7554
++AKa9SQmQhbK5EZax79UNV0U0VtY+xvXIyLFxbsjPG5R73Q7I9EPMJec1gFqismR
+EpupWQy7dSrT3pwmJBGFhYog3ObD9Scgdgg1HtFfzFaNBACWEWabRpl7A7aNuzEZ
+rhCa9202Y0Hn4n9gkSdbi30Gq3ZuQeWDBhAVneCYXJ5aqaEM7FV2X1ZL3FRqXlrM
+U4N4C59eOSMKVA3ZODS0GBbdE5UGzboVpbWPwjINhJd1vY5fAcCWzzdeZyLQ5Q/g
+/kZ1DdBgbsoUextZ7bodv5x4x95j7gMdsyZAsvhYz6RgrH5jAEbBQfr8Sj+DYzjt
+eRIe/Zs6qmc=
+=fdsS
+-----END PGP SIGNATURE-----
 
-> +Examples:
-> +		crossbar_mpu: @4a020000 {
-
-Did you mean for there to be a label and no node name?
-
-> +			compatible = "ti,irq-crossbar";
-> +			reg = <0x4a002a48 0x130>;
-> +			max-irqs = <160>;
-> +			reg-size = <2>;
-> +			irqs-reserved = <0 1 2 3 5 6 131 132 139 140>;
-> +		};
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+--=-Obwh7WmPMs2ffNgtMwJ0--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
