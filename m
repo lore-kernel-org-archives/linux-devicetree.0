@@ -1,44 +1,87 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 15:58:57 -0400
-Message-ID: <20131024195857.GZ29341@beef>
-References: <20131023174458.GC5208@netboy>
- <1382553982.31058.10.camel@sakura.staff.proxad.net>
- <20131024095232.27BBCC4039D@trevor.secretlab.ca>
- <1382614439.6040.16.camel@sakura.staff.proxad.net>
- <1382615278.8522.72.camel@shinybook.infradead.org>
- <20131024122346.GD11296@ulmo.nvidia.com>
- <1382619655.6040.52.camel@sakura.staff.proxad.net>
- <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
- <20131024141241.GA25061@ulmo.nvidia.com>
- <99db70b50b3ddcf20d940d5855c657e0.squirrel@twosheds.infradead.org>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v10 10/10] mtd: nand: omap: remove selection of BCH
+ ecc-scheme via KConfig
+Date: Thu, 24 Oct 2013 17:05:57 -0300
+Message-ID: <20131024200556.GA2520@localhost>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-11-git-send-email-pekon@ti.com>
+ <20131023134450.GE2458@localhost>
+ <20980858CB6D3A4BAE95CA194937D5E73EA2A130@DBDE04.ent.ti.com>
+ <20131023141352.GG2458@localhost>
+ <CAAwP0s0M=KruCVUana+5Nfm-0nkMGTg1OAatKzCrDeHOXuqd6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <99db70b50b3ddcf20d940d5855c657e0.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAwP0s0M=KruCVUana+5Nfm-0nkMGTg1OAatKzCrDeHOXuqd6A@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: "Gupta, Pekon" <pekon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, linux-omap@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 02:22:06PM -0000, David Woodhouse wrote:
-> 
-> > Experimental bindings could be a suitable temporary measure, but perhaps
-> > other, better solutions exist.
-> 
-> Yes, unstable bindings are part of the currently-documented plan. You are
-> not expected to need it as a matter of course, but that facility will
-> exist.
+Javier,
 
-I know I'm going to be told to wait for the plan but...
+On Thu, Oct 24, 2013 at 09:49:09PM +0200, Javier Martinez Canillas wrot=
+e:
+> Hi Ezequiel
+>=20
+> On Wed, Oct 23, 2013 at 4:13 PM, Ezequiel Garcia
+> <ezequiel.garcia@free-electrons.com> wrote:
+> > Pekon,
+> >
+> > On Wed, Oct 23, 2013 at 01:55:58PM +0000, Gupta, Pekon wrote:
+> >> >
+> >> > I'm wondering how are you testing this in your SOC_AM33XX board =
+(which
+> >> > is not ARCH_OMAP3). You probably have ARCH_OMAP3 always selected=
+?
+> >> >
+> >> Yes, omap2plus_defconfig is a super set..
+> >> arch/arm/configs/omap2plus_defconfig automatically enables ARCH_OM=
+AP3.
+> >>
+> >
+> > Yes, but I always remove what I won't use to reduce build time.
+> >
+> > And  now that you bring this issue. IMHO, the AM33xx family is goin=
+g
+> > to be more and more widely used, so maybe introducing an am33xx_def=
+config
+> > makes sense.
+> >
+> > Or is the trend to have the least possible amount of defconfigs?
+>=20
+> I'm not familiar with AM33xx so I don't know how similar is to OMAP3
+> but we used to have different defconfigs for each OMAP board before
+> and consolidated everything in only two defconfigs: omap1_defconfig t=
+o
+> be used for all OMAP1 devices and omap2plus_defconfig to be used for
+> all OMAP2+ (i.e: OMAP{2,3,4,5}) devices.
+>=20
+> Those have all the common kconfig options and board vendors can
+> customize to fit their needs and have a delta with something like:
+>=20
+> $ ./scripts/kconfig/merge_config.sh
+> arch/arm/configs/omap2plus_defconfig /foo/bar/igep_defconfig
+>=20
+> Again I'm not familiar with AM33xx but what I do know is that we
+> should keep defconfigs to a minimum.
+>=20
 
-Can you elaborate on the notion of "not expected to need [unstable
-bindings] as a matter of course"?
+=46air enough.
 
--Matt
+It's just a bit annoying to have a bigger-than-minimal kernel,
+and I get tired of stripping the options.
+
+But I can't ask the kernel to hold my favorite picks either:
+we have enough churn already ;-)
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
