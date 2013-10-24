@@ -1,185 +1,113 @@
-From: NeilBrown <neilb@suse.de>
-Subject: [PATCH] twl4030_charger: add devicetree support.
-Date: Thu, 24 Oct 2013 16:50:05 +1100
-Message-ID: <20131024165005.78bc8740@notabene.brown>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/4Qz24Bg_Jg9//8YCHXbsI_A"; protocol="application/pgp-signature"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH V3 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Thu, 24 Oct 2013 00:57:33 -0500
+Message-ID: <F923F55B-7142-4733-9EF8-F6502FE9D5C4@codeaurora.org>
+References: <1382582652-21057-1-git-send-email-thloh@altera.com> <2768383C-CD3B-4873-9EA8-81F99CE3E21E@codeaurora.org> <CAOLUe6ZGNNLiOo-Ci2RfJFFA9CMV=wKpctV0Znix+j5unrtEaQ@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAOLUe6ZGNNLiOo-Ci2RfJFFA9CMV=wKpctV0Znix+j5unrtEaQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tien Hock Loh <thloh.linux@gmail.com>
+Cc: Tien Hock Loh <thloh@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lftan@altera.com
 List-Id: devicetree@vger.kernel.org
 
---Sig_/4Qz24Bg_Jg9//8YCHXbsI_A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
+On Oct 24, 2013, at 12:09 AM, Tien Hock Loh wrote:
 
-[my first device-tree related patch.  Please let me know what I got wrong so
-I wont repeat the mistake in all the others I have queued]
+> On Thu, Oct 24, 2013 at 12:46 PM, Kumar Gala <galak@codeaurora.org> wrote:
+>> 
+>> On Oct 23, 2013, at 9:44 PM, thloh@altera.com wrote:
+>> 
+>>> From: Tien Hock Loh <thloh@altera.com>
+>>> 
+>>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+>>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>>> 
+>>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+>>> ---
+>>> .../devicetree/bindings/gpio/gpio-altera.txt       |  34 ++
+>>> drivers/gpio/Kconfig                               |   7 +
+>>> drivers/gpio/Makefile                              |   1 +
+>>> drivers/gpio/gpio-altera.c                         | 395 +++++++++++++++++++++
+>>> 4 files changed, 437 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>>> create mode 100644 drivers/gpio/gpio-altera.c
+>>> 
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>>> new file mode 100644
+>>> index 0000000..641cec2
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>>> @@ -0,0 +1,34 @@
+>>> +Altera GPIO controller bindings
+>>> +
+>>> +Required properties:
+>>> +- compatible:
+>>> +  - "altr,pio-1.0"
+>> 
+>> any reason not to be "altr,gpio-1.0"?
+> 
+> The compatible field was following the name of the component generated
+> by the verilog generator, thus pio-1.0 instead of gpio-1.0. Does it
+> need to be gpio?
 
-This allows the charger to be enabled with devicetree, and
-allows the parameters for charging the backup battery to be set.
+Its fine if its based on an auto generator.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+>>> +- reg: Physical base address and length of the controller's registers.
+>>> +- #gpio-cells : Should be 1
+>>> +  - first cell is the gpio offset number
+>>> +- gpio-controller : Marks the device node as a GPIO controller.
+>>> +- #interrupt-cells : Should be 1.
+>>> +- interrupts: Specify the interrupt.
+>>> +- interrupt-controller: Mark the device node as an interrupt controller
+>>> +  The first cell is the local interrupt offset number to the GPIO controller.
+>>> +
+>>> +Altera GPIO specific properties:
+>>> +- width: Width of the GPIO bank, range from 1-32
+>> 
+>> This description isn't terrible helpful.  I'm not at all sure what this means.
+>> 
+> The number of pins of the GPIO bank, I'll update the document
+> 
+>>> +- interrupt_trigger: Specifies the interrupt trigger type the GPIO hardware is
+>>> +  synthesized. This field is required if the Altera GPIO controller used has
+>>> +  IRQ enabled as the interrupt type is not software controlled, but hardware
+>>> +  synthesized.
+>> 
+>> Any vendor specific properties should be vendor prefixed:
+>> 
+>> "altr,width"
+>> "altr,interrupt_trigger"
+>> 
+>> I'd also recommend that "altr,width" be a bit more specific like "altr,gpio-bank-width"
+> OK, will do in patch v4. Thanks for the advice.
+> 
+>> 
+>>> +
+>>> +Example:
+>>> +
+>>> +gpio_altr: gpio_altr {
+>>> +    compatible = "altr,pio-1.0";
+>>> +    reg = <0xff200000 0x10>;
+>>> +    interrupts = <0 45 4>;
+>>> +    width = <32>;
+>>> +    interrupt_trigger = <0>;
+>>> +    #gpio-cells = <1>;
+>>> +    gpio-controller;
+>>> +    #interrupt-cells = <1>;
+>>> +    interrupt-controller;
+>>> +};
+>> 
+>> - k
+>> 
+>> --
+>> Employee of Qualcomm Innovation Center, Inc.
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>> 
 
-diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Docu=
-mentation/devicetree/bindings/power/twl-charger.txt
-new file mode 100644
-index 0000000..8afaa9a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/twl-charger.txt
-@@ -0,0 +1,20 @@
-+TWL BCI (Battery Charger Interface)
-+
-+Required properties:
-+- compatible:
-+  - "ti,twl4030-bci"
-+- interrupts: two interrupt lines from the TWL SIH (secondary
-+  interrupt handler) - interrupts 9 and 2.
-+
-+Optional properties:
-+- bb-uvolt: microvolts for charging the backup battery.
-+- bb-uamp: microamps for charging the backup battery.
-+
-+Examples:
-+
-+bci {
-+   compatible =3D "ti,twl4030-bci";
-+   interrupts =3D <9>, <2>;
-+   bb-uvolt =3D <3200000>;
-+   bb-uamp =3D <150>;
-+};
-diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
-index ae6a17a..5a12540 100644
---- a/arch/arm/boot/dts/twl4030.dtsi
-+++ b/arch/arm/boot/dts/twl4030.dtsi
-@@ -19,6 +19,12 @@
- 		interrupts =3D <11>;
- 	};
-=20
-+	charger: bci {
-+		compatible =3D "ti,twl4030-bci";
-+		interrupts =3D <9>, <2>;
-+		bci3v1-supply =3D <&vusb3v1>;
-+	};
-+
- 	watchdog {
- 		compatible =3D "ti,twl4030-wdt";
- 	};
-diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charge=
-r.c
-index d98abe9..a06b973 100644
---- a/drivers/power/twl4030_charger.c
-+++ b/drivers/power/twl4030_charger.c
-@@ -495,10 +495,38 @@ static enum power_supply_property twl4030_charger_pro=
-ps[] =3D {
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
-=20
-+#ifdef CONFIG_OF
-+static const struct twl4030_bci_platform_data *
-+twl4030_bci_parse_dt(struct device *dev)
-+{
-+	struct device_node *np =3D dev->of_node;
-+	struct twl4030_bci_platform_data *pdata;
-+	u32 num;
-+
-+	if (!np)
-+		return NULL;
-+	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return pdata;
-+
-+	if (of_property_read_u32(np, "bb-uvolt", &num) =3D=3D 0)
-+		pdata->bb_uvolt =3D num;
-+	if (of_property_read_u32(np, "bb-uamp", &num) =3D=3D 0)
-+		pdata->bb_uamp =3D num;
-+	return pdata;
-+}
-+#else
-+static inline const struct twl4030_bci_platform_data *
-+twl4030_bci_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int __init twl4030_bci_probe(struct platform_device *pdev)
- {
- 	struct twl4030_bci *bci;
--	struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
-+	const struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
- 	int ret;
- 	u32 reg;
-=20
-@@ -506,6 +534,9 @@ static int __init twl4030_bci_probe(struct platform_dev=
-ice *pdev)
- 	if (bci =3D=3D NULL)
- 		return -ENOMEM;
-=20
-+	if (!pdata)
-+		pdata =3D twl4030_bci_parse_dt(&pdev->dev);
-+
- 	bci->dev =3D &pdev->dev;
- 	bci->irq_chg =3D platform_get_irq(pdev, 0);
- 	bci->irq_bci =3D platform_get_irq(pdev, 1);
-@@ -581,8 +612,11 @@ static int __init twl4030_bci_probe(struct platform_de=
-vice *pdev)
-=20
- 	twl4030_charger_enable_ac(true);
- 	twl4030_charger_enable_usb(bci, true);
--	twl4030_charger_enable_backup(pdata->bb_uvolt,
--				      pdata->bb_uamp);
-+	if (pdata)
-+		twl4030_charger_enable_backup(pdata->bb_uvolt,
-+					      pdata->bb_uamp);
-+	else
-+		twl4030_charger_enable_backup(0, 0);
-=20
- 	return 0;
-=20
-@@ -631,10 +665,17 @@ static int __exit twl4030_bci_remove(struct platform_=
-device *pdev)
- 	return 0;
- }
-=20
-+static const struct of_device_id twl_bci_of_match[] =3D {
-+	{.compatible =3D "ti,twl4030-bci", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, twl_bci_of_match);
-+
- static struct platform_driver twl4030_bci_driver =3D {
- 	.driver	=3D {
- 		.name	=3D "twl4030_bci",
- 		.owner	=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(twl_bci_of_match),
- 	},
- 	.remove	=3D __exit_p(twl4030_bci_remove),
- };
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
---Sig_/4Qz24Bg_Jg9//8YCHXbsI_A
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIVAwUBUmi1DTnsnt1WYoG5AQIJ/g//fC6TTgweCqCIKNmLp7C1tvLdsu9ztog7
-BwjYIB+XuUZXJzETJYcwbi+MWX1B3FZvdruSZBuZcK5Hn0G+RH3OaUqJ9oRb+1fv
-ODX+eMYMpOOX/5qB4vq5bAF7QkUddOLCZYEV7ZebQW/fQLkWZl3/D8HvpH6KVab7
-BzZ9sL3NjFWeAZN5uQXxR+pDWpyzIphFjE7SoLBVdrkbtWZoKQ/7WGmAXRYBs1tj
-+LS/vPsIoxpCFFnlj1uGQaaflbD9RXJKugPHg5/GgbYe/I7JLtwOr/+CNwYahnWW
-eI+sWv0Oc8Vyj+GY8HgjVZP2pwmG2MdrK+LDBSkJXB/4LfBJLDsO8fiT0ItOGj75
-71Ar/LPlNRVypICb+IvILOKYDtdryH/+UdAoQpcFhxTZEjnY6m/5GcjkrjUFx5u6
-M+iMbjMVVGHIiIRXK1UazWtTfupTFloxlfNFsCaEUIp0l7ROrPVizmi7342aV4jz
-bR+EUzSwycRgkUtwOUK+9T1Yj3xnKqLjTQEd317CqDRJiisz+rErDareICTbeYLl
-uTzhTicDy9GjC4EqoWy7SpprK3uvcMkJ818/t49drO614Icx20mIsEOW3hzSxn2q
-Djtn3eOwjRex48oUrYhWg/YCQCz//iGGZNXKPM74on05zUrIKIhavuhpHMsiFaPJ
-izTz86rmv5k=
-=7PFI
------END PGP SIGNATURE-----
-
---Sig_/4Qz24Bg_Jg9//8YCHXbsI_A--
