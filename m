@@ -1,67 +1,44 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
- better?
-Date: Thu, 24 Oct 2013 11:21:47 +0200
-Message-ID: <20131024092147.GX30088@pengutronix.de>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020231134.GR25034@n2100.arm.linux.org.uk>
- <20131021083242.GB30088@pengutronix.de>
- <20131021084854.GV25034@n2100.arm.linux.org.uk>
- <20131021092730.GF30088@pengutronix.de>
- <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
- <20131024072811.GS30088@pengutronix.de>
- <20131024090054.GA11296@ulmo.nvidia.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] ARM: dts: imx27 phycore pinctrl
+Date: Thu, 24 Oct 2013 11:27:52 +0200
+Message-ID: <20131024092752.GB27073@pengutronix.de>
+References: <1382601233-24253-1-git-send-email-mpa@pengutronix.de>
+ <1382601233-24253-7-git-send-email-mpa@pengutronix.de>
+ <1382603424.519504719@f304.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131024090054.GA11296-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <1382603424.519504719-uDhCb/4LxRRsdVUOrk1QfQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 11:00:56AM +0200, Thierry Reding wrote:
-> On Thu, Oct 24, 2013 at 09:28:11AM +0200, Sascha Hauer wrote:
-> > On Wed, Oct 23, 2013 at 09:14:17PM -0400, Rob Clark wrote:
-> > > On Mon, Oct 21, 2013 at 5:27 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > >> If a subsystem doesn't work well with DT, then the choices are either:
-> > > >>
-> > > >> (a) don't use DT with the subsystem
-> > > >
-> > > > The underlying problem has nothing to do with DT. Multi component
-> > > > hardware does exist and won't vanish when we stop using DT.
-> > > >
-> > > >> (b) fix the subsystem
-> > > >
-> > > > I'd love to do that. Step one to this seems to be to increase the
-> > > > awareness that there's something wrong with DRM.
-> > > 
-> > > 
-> > > Note that I suspect your idea of "fixing drm" is going to break some
-> > > userspace assumptions about the hw (ie. userspace isn't expecting
-> > > crtcs/encoders/connectors to suddenly appear/disappear.  And the funny
-> > > thing is, on all of this hw, that isn't going to happen anyways.
+On Thu, Oct 24, 2013 at 12:30:24PM +0400, Alexander Shiyan wrote:
+> > Enable pinctrl for phycore devices.
 > > 
-> > I was talking about all SoC DRM drivers implementing variants of the
-> > same glue between drm and the multidevice nature of the components.
-> > 
-> > To make that sure: I never had the intention to implement hotplug for
-> > drm. Also what the imx-drm driver does is not for hotplug, but only for
-> > binding different components together.
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ...
+> > diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
+> > index 4ec402c..3dbdb5e 100644
+> > --- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
+> > +++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
+> ...
+> >  &uart1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart1_1 &pinctrl_uart1_rtscts_1>;
+> >  	status = "okay";
+> >  };
 > 
-> I think we should be able to solve that problem generically. Essentially
-> we need some sort of composite device that subdevices can register with.
-> The composite device can keep track of what devices are needed (this
-> works well by walking the device tree, looking for nodes that match by
-> compatible and see if their status property is set to"okay") and once
-> all of those have been registered do whatever the specific subsystem
-> requires.
+> No. Please put RTS & CTS pins into RDK. There are no hardware dependencies for SOM.
 
-It would be great to have a generic approach to this since subsystems
-like ASoC and v4l2 have the same problem.
+Okay, I will move both uarts into rdk.
 
-Sascha
+Thanks,
+
+Markus
 
 -- 
 Pengutronix e.K.                           |                             |
