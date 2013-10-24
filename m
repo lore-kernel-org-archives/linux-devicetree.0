@@ -1,55 +1,90 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: gpmi: fix the ecc regression
-Date: Thu, 24 Oct 2013 00:52:49 -0700
-Message-ID: <20131024075249.GB9863@norris.computersforpeace.net>
-References: <1382418628-4521-1-git-send-email-b32955@freescale.com>
- <20131022185639.GK23337@ld-irv-0074.broadcom.com>
- <5268C56E.8050806@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 5/7] ARM: dts: imx27 phyCARD-S pinctrl
+Date: Thu, 24 Oct 2013 09:53:51 +0200
+Message-ID: <1382601233-24253-6-git-send-email-mpa@pengutronix.de>
+References: <1382601233-24253-1-git-send-email-mpa@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5268C56E.8050806-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1382601233-24253-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 02:59:58PM +0800, Huang Shijie wrote:
-> Hi David & Mark & Brian:
-> 
->    thanks for your review and comments.
-> >... so why don't you just add a DT property to actually specify the ECC
-> >selection itself, rather than indirectly specifying it through a vague
-> Do you mean i should add a DT property like "fsl, gpmi-use-new-ecclayout" ?
-> 
-> I am not understand "the ECC selection itself".
+Enable pinctrl for phyCARD-S devices.
 
-Sorry if that was unclear. I was recommending that the DT property
-actually specify what the properties of the ECC layout were. Like ECC
-strength (as an integer). Or spare area/step size/whatever else needed
-to specify what these legacy and new layouts actually are. Your binding
-was too vague; it wasn't describing what the layout is.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 10 ++++++++++
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts |  4 ++++
+ 2 files changed, 14 insertions(+)
 
-David seemed to suggest that something like your current binding might
-be OK. (I still thing it was too vague, but if you can describe it
-better, it may be sufficient.) A possible starting point:
-"fsl,use-minimum-ecc". Does this properly reflect your intention of
-using the datasheet's minimum required ECC (from ONFI or from the
-driver's full ID table)?
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+index 5a31c77..505e688 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -54,6 +54,8 @@
+ };
+ 
+ &i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1_1>;
+ 	status = "okay";
+ 
+ 	rtc@51 {
+@@ -69,6 +71,8 @@
+ };
+ 
+ &owire {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_owire1_1>;
+ 	status = "okay";
+ };
+ 
+@@ -79,15 +83,21 @@
+ 
+ &uart1 {
+ 	fsl,uart-has-rtscts;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1_1 &pinctrl_uart1_rtscts_1>;
+ 	status = "okay";
+ };
+ 
+ &uart2 {
+ 	fsl,uart-has-rtscts;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2_1 &pinctrl_uart2_rtscts_1>;
+ 	status = "okay";
+ };
+ 
+ &uart3 {
+ 	fsl,uart-has-rtscts;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3_1 &pinctrl_uart3_rtscts_1>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+index c8d57d1..0cee738 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+@@ -30,10 +30,14 @@
+ };
+ 
+ &fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1_1>;
+ 	status = "okay";
+ };
+ 
+ &i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2_1>;
+ 	status = "okay";
+ 
+ 	at24@52 {
+-- 
+1.8.4.rc3
 
-But all that beside, I think your first priority is to fix the
-regression for the current release cycle. I'm not keen on trying to
-agree on a good DT binding and get it merged immediately.
-
-Can you resend in two patches? The first one will default to using
-legacy_set_geometry() to retain the old behavior and prevent
-regressions. The second one can add a DT binding to re-introduce support
-for your new layout. That way we can take the first one with no
-question, and the second one can be taken when it's ready: either for
-3.12 or 3.13.
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
