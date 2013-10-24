@@ -1,153 +1,72 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: [PATCH v5 2/8] pinctrl: imx27: imx27 pincontrol driver
-Date: Thu, 24 Oct 2013 14:46:58 -0500
-Message-ID: <CAHCPf3t0A2_9Etz7ojRSYxaedg+fuAJky+HosuxEeAsJOJccWA@mail.gmail.com>
-References: <1382629114-8628-1-git-send-email-mpa@pengutronix.de>
-	<1382629114-8628-3-git-send-email-mpa@pengutronix.de>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH v10 10/10] mtd: nand: omap: remove selection of BCH
+ ecc-scheme via KConfig
+Date: Thu, 24 Oct 2013 21:49:09 +0200
+Message-ID: <CAAwP0s0M=KruCVUana+5Nfm-0nkMGTg1OAatKzCrDeHOXuqd6A@mail.gmail.com>
+References: <1382172254-12448-1-git-send-email-pekon@ti.com>
+ <1382172254-12448-11-git-send-email-pekon@ti.com> <20131023134450.GE2458@localhost>
+ <20980858CB6D3A4BAE95CA194937D5E73EA2A130@DBDE04.ent.ti.com> <20131023141352.GG2458@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382629114-8628-3-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131023141352.GG2458@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: "Gupta, Pekon" <pekon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, linux-omap@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 10:38 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
-> similar to other imx pincontrol drivers.
+Hi Ezequiel
+
+On Wed, Oct 23, 2013 at 4:13 PM, Ezequiel Garcia
+<ezequiel.garcia@free-electrons.com> wrote:
+> Pekon,
 >
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  50 +++
->  drivers/pinctrl/Kconfig                            |   8 +
->  drivers/pinctrl/Makefile                           |   1 +
->  drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++++++++
->  4 files changed, 536 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
->  create mode 100644 drivers/pinctrl/pinctrl-imx27.c
+> On Wed, Oct 23, 2013 at 01:55:58PM +0000, Gupta, Pekon wrote:
+>> >
+>> > I'm wondering how are you testing this in your SOC_AM33XX board (w=
+hich
+>> > is not ARCH_OMAP3). You probably have ARCH_OMAP3 always selected?
+>> >
+>> Yes, omap2plus_defconfig is a super set..
+>> arch/arm/configs/omap2plus_defconfig automatically enables ARCH_OMAP=
+3.
+>>
 >
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> new file mode 100644
-> index 0000000..6619968
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> @@ -0,0 +1,50 @@
-> +* Freescale IMX27 IOMUX Controller
-> +
-> +Required properties:
-> +- compatible: "fsl,imx27-iomuxc"
-> +
-> +The iomuxc driver node should define subnodes containing of pinctrl configuration subnodes.
-> +
-> +Required properties for pin configuration node:
-> +- fsl,pins: three integers array, represents a group of pins mux and config
-> +  setting. The format is fsl,pins = <PIN MUX_ID CONFIG>. PIN and MUX_ID are
-> +  defined as macros in arch/arm/boot/dts/imx27-pinfunc.h. CONFIG can be 0 or
+> Yes, but I always remove what I won't use to reduce build time.
+>
+> And  now that you bring this issue. IMHO, the AM33xx family is going
+> to be more and more widely used, so maybe introducing an am33xx_defco=
+nfig
+> makes sense.
+>
+> Or is the trend to have the least possible amount of defconfigs?
 
-Can we get away from this concept that a binding is predicated on the
-fact that they're preprocessed? You're getting it half right.. as
-below.
+I'm not familiar with AM33xx so I don't know how similar is to OMAP3
+but we used to have different defconfigs for each OMAP board before
+and consolidated everything in only two defconfigs: omap1_defconfig to
+be used for all OMAP1 devices and omap2plus_defconfig to be used for
+all OMAP2+ (i.e: OMAP{2,3,4,5}) devices.
 
-Binding descriptions must NOT rely on preprocessing helpers, for the
-following reasons
+Those have all the common kconfig options and board vendors can
+customize to fit their needs and have a delta with something like:
 
-* Device trees could be generated by methods other than preprocessed source
-* Device trees could be generated by Linux builds and passed to other
-operating systems (therefore they need to know the definition in
-reality).
+$ ./scripts/kconfig/merge_config.sh
+arch/arm/configs/omap2plus_defconfig /foo/bar/igep_defconfig
 
-Please provide and describe the RAW data format of the property and
-then somewhere afterwards mention that as a convenience there are
-preprocessor macros which make life easier. You can also mention the
-include name, but the path (arch/arm/boot/dts) may not be fixed. This
-may not even be Linux. They may be split elsewhere in a separate tree
-that has no OS and therefore a different layout. Bindings should be OS
-agnostic - certainly source code location agnostic - where possible.
+Again I'm not familiar with AM33xx but what I do know is that we
+should keep defconfigs to a minimum.
 
-> +  PIN is a integer between 0 and 0xbf
+> --
+> Ezequiel Garc=C3=ADa, Free Electrons
+> Embedded Linux, Kernel and Android Engineering
+> http://free-electrons.com
+> --
 
-Correct.
-
->                                                                imx27 has 6 ports with 32 configurable
-> +  configurable pins each. PIN is PORT * 32 + PORT_PIN, PORT_PIN is the pin
-> +  number on the specific port (between 0 and 31).
-
-Correct.
-
-> +  MUX_ID is
-> +  function + (direction << 2) + (gpio_oconf << 4) + (gpio_iconfa << 8) + (gpio_iconfb << 10)
-> +  function:      0 - Primary function
-> +                 1 - Alternate function
-> +                 2 - GPIO
-> +  direction:     0 - Input
-> +                 1 - Output
-> +  gpio_oconf:    0 - A_IN
-> +                 1 - B_IN
-> +                 2 - C_IN
-> +                 3 - Data Register
-> +  gpio_iconfa/b: 0 - GPIO_IN
-> +                 1 - Interrupt Status Register
-> +                 2 - 0
-> +                 3 - 1
-
-Correct, but I don't like mixing register values for multiple
-registers in a single field. I guess you'd waste a ton of space any
-other way, so acceptable.
-
-If they're the bits for a single register (could be, but I don't have
-access to an i.MX27 manual right now) then just describe it as the
-content of the register as defined in a location in the manual, you
-won't need to re-describe what is already in the manual.
-
-> +Example:
-> +
-> +iomuxc: iomuxc@10015000 {
-> +       compatible = "fsl,imx27-iomuxc";
-> +       reg = <0x10015000 0x600>;
-> +
-> +       uart {
-> +               pinctrl_uart1: uart-1 {
-> +                       fsl,pins = <
-> +                               MX27_PAD_UART1_TXD__UART1_TXD 0x0
-
-Incorrect.
-
-Your example should show the raw output. Try compiling this and then
-performing the following:
-
-scripts/dtc/dtc -I dtb -O dts imx27-my-platform.dtb
-
-The place where pinctrl_uart1 is in that output is your example. Lots
-of awful, unreadable numbers.
-
-However you may provide a second example explaining the convenience of
-using the preprocessor macros exactly as above, perhaps with the
-location of the preprocessor macros include.
-
-> +                               MX27_PAD_UART1_RXD__UART1_RXD 0x0
-
-One question; are these definitions the one in the manual (for the
-names etc, in the huge enums later, especially?) or stripped from
-existing source code?
-
-Bindings - and their preprocessor helper macros - should follow the
-latest manual if they can. There are many odd differences in i.MX6
-pinctrl, but for instance if the manual describes it as SD_DAT3 with
-function SD_DATA3 then it should be SD_DAT3__SD_DATA3 rather than
-SD_DAT3__SD_DAT3 (even if the SD Association spec says DAT3, since you
-are describing an i.MX27 mux, not the SD physical layer :). That way
-the preprocessor definitions can be searched for in the manual with
-some mangling, and searched for in the headers by pasting out the
-function name or the original pin name. If they differ, then someone
-has to resolve the differences with their brain which is more work for
-the reader.
-
-Thanks,
-Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Best regards,
+Javier
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
