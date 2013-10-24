@@ -1,143 +1,47 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] of: Allow for experimental device tree bindings
-Date: Thu, 24 Oct 2013 14:39:36 -0400
-Message-ID: <CAKON4Oz_Z0-ac_1k_0wis_nMNc+PNh5iYWyk-sQdaV=DfrfS7Q@mail.gmail.com>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2 v2] Devicetree description for Voipac i.MX53 module
+Date: Thu, 24 Oct 2013 21:07:12 +0200
+Message-ID: <1382641634-18187-1-git-send-email-lisovy@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382540779-6334-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 11:06 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Past and recent discussions have shown that there's some concensus that
-> device tree bindings should be considered an ABI and therefore need to
-> remain backwards-compatible once code to implement them is included in
-> the final release of a Linux kernel.
+This patchset adds devicetree description for Voipac X53-DMM-668 module
+which uses i.MX53 CPU. More information about the module may be found at:
+http://www.voipac.com/#X53-DMM-668
+The support for the baseboard used with this module is also provided.
+More information about the baseboard: http://www.voipac.com/#X25-BSB-000
 
-Doing it this way clutters up the DTS source files.
+Working peripherals are:
+* UART0
+* Ethernet
+* Buttons (with keyboard controller)
+* Sound (headphone output)
+* SD-card
+* LEDs (through GPIOs)
+* i2c1, i2c3
+* ecspi1
 
-Schemas are a way to do this without clutter. There should be a master
-schema that would validate all accepted device tree bindings.   So
-experimental bindings naturally drop right of of this - they'll
-generate errors when validated against the master schema.  When the
-binding is finally sorted out it gets added to the master schema and
-the validation errors go away.
+Changes since v1:
+* Minor fixes according to comments by Shawn Guo
 
+Rostislav Lisovy (2):
+  ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+  ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668
+    module
 
->
-> At the same time there is a desire to keep some manoeuvre while we're
-> trying to figure things out. The fact is that many of us lack the
-> experience to design good bindings from the start. At the same time
-> there is a shortage of people that can review bindings and help design
-> better ones.
->
-> Progress and the addition of new features (and restoration of features
-> that used to work before the advent of DT for that matter) are blocked
-> to a large degree because of that.
->
-> This patch attempts to restore some degree of freedom by introducing an
-> easy way to mark device tree bindings as experimental as well as a way
-> for users to disable the use of experimental bindings if they choose
-> functionality at the cost of potential device tree incompatibilities.
->
-> Bindings are marked experimental by prefixing the compatible value with
-> an exclamation mark (!). In order to make it clear that experimental
-> bindings are undesirable in the long run, a warning will be output when
-> an experimental binding is encountered.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/of/Kconfig |  7 +++++++
->  drivers/of/base.c  | 32 +++++++++++++++++++++++++++++++-
->  2 files changed, 38 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 78cc760..dc482f8 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -24,6 +24,13 @@ config OF_SELFTEST
->
->           If unsure, say N here, but this option is safe to enable.
->
-> +config OF_EXPERIMENTAL
-> +       bool "Support experimental device tree bindings"
-> +       help
-> +         This option allows experimental device tree bindings to be used.
-> +         Note that experimental bindings are subject to change, possibly
-> +         requiring the DTB to be updated.
-> +
->  config OF_FLATTREE
->         bool
->         select DTC
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index a96f850..b0b8371 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -342,6 +342,36 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
->  }
->  EXPORT_SYMBOL(of_get_cpu_node);
->
-> +static int of_compat_match(const char *device, const char *driver,
-> +                          const struct device_node *np)
-> +{
-> +       const char *dev = device;
-> +       const char *drv = driver;
-> +
-> +       if (device[0] == '!')
-> +               device++;
-> +
-> +       if (driver[0] == '!')
-> +               driver++;
-> +
-> +       if (of_compat_cmp(device, driver, strlen(driver)) != 0)
-> +               return 0;
-> +
-> +       /* check if binding is experimental */
-> +       if (dev != device || drv != driver) {
-> +               pr_warn("of: device %s (%s) uses an experimental binding\n",
-> +                       np->name, np->full_name);
-> +
-> +               /* don't match if we don't want experimental bindings */
-> +               if (!IS_ENABLED(CONFIG_OF_EXPERIMENTAL)) {
-> +                       pr_err("of: refusing to use binding \"%s\"\n", device);
-> +                       return 0;
-> +               }
-> +       }
-> +
-> +       return 1;
-> +}
-> +
->  /** Checks if the given "compat" string matches one of the strings in
->   * the device's "compatible" property
->   */
-> @@ -355,7 +385,7 @@ static int __of_device_is_compatible(const struct device_node *device,
->         if (cp == NULL)
->                 return 0;
->         while (cplen > 0) {
-> -               if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-> +               if (of_compat_match(cp, compat, device))
->                         return 1;
->                 l = strlen(cp) + 1;
->                 cp += l;
-> --
-> 1.8.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+ arch/arm/boot/dts/Makefile                  |    1 +
+ arch/arm/boot/dts/imx53-voipac-bsb.dts      |  135 +++++++++++++++++++
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |  193 +++++++++++++++++++++++++++
+ 3 files changed, 329 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
 
 -- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+1.7.10.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
