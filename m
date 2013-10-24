@@ -1,60 +1,74 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv7][ 5/5] ARM: dts: mbimxsd35: Add sound support.
-Date: Thu, 24 Oct 2013 14:13:52 +0200
-Message-ID: <1382616832-23593-5-git-send-email-denis@eukrea.com>
-References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
+From: "David Woodhouse" <dwmw2@infradead.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 12:22:19 -0000
+Message-ID: <3726fd81259f84ef308ba9011ae35174.squirrel@twosheds.infradead.org>
+References: <20131020220839.GT2443@sirena.org.uk>
+ <5264576F.6050307@wwwdotorg.org>
+ <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+ <52658EBC.8020800@wwwdotorg.org>
+ <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+ <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023174458.GC5208@netboy>
+ <1382553982.31058.10.camel@sakura.staff.proxad.net>
+ <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+ <1382614439.6040.16.camel@sakura.staff.proxad.net>
+ <1382615278.8522.72.camel@shinybook.infradead.org>
+ <1382616801.6040.26.camel@sakura.staff.proxad.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382616832-23593-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1382616801.6040.26.camel@sakura.staff.proxad.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mbizon@freebox.fr
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-2013-discuss@lists.linuxfoundation.org" <ksummit-2013-discuss@lists.linuxfoundation.org>, Nicolas Pitre <nico@fluxnic.net>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@gmail.com>, Matt Porter <matt.porter@linaro.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
- .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |    9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
-rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-index 1378b8d..4045c5d 100644
---- a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-@@ -48,6 +48,15 @@
- 			linux,default-trigger =3D "heartbeat";
- 		};
- 	};
-+
-+	sound {
-+		compatible =3D "eukrea,eukrea-tlv320";
-+		model =3D "imx35-eukrea-tlv320aic23";
-+		ssi-controller =3D <&ssi1>;
-+		fsl,audio-codec =3D <&tlv320aic23>;
-+		mux-int-port =3D <1>;
-+		mux-ext-port =3D <4>;
-+	};
- };
-=20
- &audmux {
---=20
-1.7.9.5
+>
+> On Thu, 2013-10-24 at 12:47 +0100, David Woodhouse wrote:
+>
+>> If you can automatically infer the correct clock/interrupt/etc in order
+>> to do DMA correctly, despite the fact that it wasn't explicitly spelled
+>> out in the old DT, then the property is *not* a "required" property.
+>> It's optional, and you have a default behaviour for when it's not
+>> present.
+>
+> so inside the new version of driver-hwcrypto.c:
+>
+> if (irq_of_parse_and_map(...) == NO_IRQ) {
+> 	switch (get_soc_model()) {
+> 		case SOC1:
+> 			irq = 51;
+> 			break;
+>
+> 		case SOC2:
+> 			irq = 62;
+> 			break;
+>
+> 		[...]
+> 	}
+> }
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+If you are correct to insist that DMA needs yo be supported in the new
+driver *even* with old firmware, then yes, maybe.
+
+The alternative is a quirk to "fix" the DT up on the affected boards and
+not actually doing the special cases in the driver itself. But that can be
+seen as an implementation detail.
+
+-- 
+dwmw2
