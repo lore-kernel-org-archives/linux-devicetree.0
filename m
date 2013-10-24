@@ -1,71 +1,96 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: tpa6130a2: Add device tree support
-Date: Thu, 24 Oct 2013 10:06:59 +0100
-Message-ID: <20131024090659.GD31415@sirena.org.uk>
-References: <1382529808-28440-1-git-send-email-sre@debian.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for
+ routable irqs
+Date: Thu, 24 Oct 2013 11:12:15 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1310241104430.4983@ionos.tec.linutronix.de>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4959071921368677151=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1382529808-28440-1-git-send-email-sre@debian.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@ring0.de>, Bill Pemberton <wfp5p@virginia.edu>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 30 Sep 2013, Sricharan R wrote:
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 1760ceb..c5778ab 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -72,6 +72,8 @@ struct gic_chip_data {
+>  
+>  static DEFINE_RAW_SPINLOCK(irq_controller_lock);
+>  
+> +const struct irq_domain_ops *gic_routable_irq_domain_ops;
+> +
+>  /*
+>   * The GIC mapping of CPU interfaces does not necessarily match
+>   * the logical CPU numbering.  Let's use a mapping as returned
+> @@ -675,11 +677,26 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+>  		irq_set_chip_and_handler(irq, &gic_chip,
+>  					 handle_fasteoi_irq);
+>  		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+> +
+> +		if (gic_routable_irq_domain_ops &&
+> +		    gic_routable_irq_domain_ops->map)
+> +			gic_routable_irq_domain_ops->map(d, irq, hw);
 
---===============4959071921368677151==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
-Content-Disposition: inline
+Shudder. Why are you sprinkling these if (ops && ops->fun)
+conditionals all over the place instead of having a default ops
+implementation which handles the non crossbar case by proper empty
+functions. That code is not on a hot path so it does not matter at
+all.
 
+>  	}
+>  	irq_set_chip_data(irq, d->host_data);
+>  	return 0;
+>  }
+>  
+> +static void gic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
+> +{
+> +	irq_hw_number_t hw = irq_get_irq_data(irq)->hwirq;
+> +
+> +	if (hw > 32) {
 
---eqp4TxRxnD4KrmFZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Groan. This wants to be in the ops->unmap function. It's not related
+to the GIC core code.
 
-On Wed, Oct 23, 2013 at 02:03:28PM +0200, Sebastian Reichel wrote:
-> Add device tree support to tpa6130a2 driver and document the
-> bindings.
+> +		if (gic_routable_irq_domain_ops &&
+> +		    gic_routable_irq_domain_ops->unmap)
+> +			gic_routable_irq_domain_ops->unmap(d, irq);
+> +	}
+> +}
+> +
+>  static int gic_irq_domain_xlate(struct irq_domain *d,
+>  				struct device_node *controller,
+>  				const u32 *intspec, unsigned int intsize,
+> @@ -694,8 +711,15 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
+>  	*out_hwirq = intspec[1] + 16;
+>  
+>  	/* For SPIs, we need to add 16 more to get the GIC irq ID number */
+> -	if (!intspec[0])
+> -		*out_hwirq += 16;
+> +	if (!intspec[0]) {
+> +		if (gic_routable_irq_domain_ops &&
+> +		    gic_routable_irq_domain_ops->xlate)
+> +			*out_hwirq = gic_routable_irq_domain_ops->xlate(d,
+> +						controller, intspec, intsize,
+> +						out_hwirq, out_type);
+> +		else
+> +			*out_hwirq += 16;
+> +	}
 
-Applied, thanks.
+So if you have a default xlate ops implementation then this boils down to
 
---eqp4TxRxnD4KrmFZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+      if (!intspec[0])
+		*out_hwirq = routing_ops->xlate()
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+And the default (non crossbar) implementation would be:
 
-iQIcBAEBAgAGBQJSaOMkAAoJELSic+t+oim9JEQP/0Exs3GXPXMtPohGPPPSW8C2
-j7A+sklIqXdOesSSDaEhym8s0/ZLsdb9yU6cErRC6XjKmL67+5TaU2rPrpPWF/ls
-EabRWCmh1tNOYk46laYEWkByU+Fz+p1NmWXhx2ptlQtUXfuErwrOluU3VpjZ+pp3
-fw0P/hDthvszrO0m6BLrqR3m60uYaor9SQ+BtL6qW8LUv401HuIyXjlQRrxuHW/S
-Ps5pjLJ2sEsFpyAc/vdLYz/dp9CbvsyJ/egvk8reZiqIYnCWsh9PSjJS9SaWzjE0
-fbsG6VztfPjyU7cpyxjuuC6Y39eerUbB3vf3qfHDEjT1KOHl1dxOhs7s32fidws7
-ZhJciuKlIhRG7+DaEeYXZVvUAP7vyiPjL1uNfcBkRFDy043BomPBPReiZ3hPjBUx
-Dqt0LKj24hICfbRy8U5QoecUaZ+xRw/A3cNsg9Wbsn9c8eE5nwwlspejisVSjPMM
-cVnAXyF2CsJHaYA9SmgxscIpKsBdVQHfWtDyqDAseEKoeX30Hiv7TTq5IcxLdfXH
-Pu5ZuSKQg/hfcMMRuWSsQuUIrTmcG2Cz7Ph04ik2aQu72SDPiaAShPNoiuwi2YrZ
-AiIuGKFnWuIo+S0nVe8VOGhW2TXDky+M3Q3TcmwRf8G3NzhlO4l0BcfKlKfZtAdv
-ZG0O+Qo5MWcBdzhH647t
-=Gihs
------END PGP SIGNATURE-----
+    	return *out_hwirq + 16;
+    
 
---eqp4TxRxnD4KrmFZ--
+Thanks,
 
---===============4959071921368677151==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4959071921368677151==--
+	tglx
