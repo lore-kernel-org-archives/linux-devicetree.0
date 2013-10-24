@@ -1,59 +1,82 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
- better?
-Date: Thu, 24 Oct 2013 09:28:11 +0200
-Message-ID: <20131024072811.GS30088@pengutronix.de>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131020231134.GR25034@n2100.arm.linux.org.uk>
- <20131021083242.GB30088@pengutronix.de>
- <20131021084854.GV25034@n2100.arm.linux.org.uk>
- <20131021092730.GF30088@pengutronix.de>
- <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio:light:tsl2563: Add DT support
+Date: Thu, 24 Oct 2013 09:29:42 +0100
+Message-ID: <5268DA76.6060503@kernel.org>
+References: <1382565063-17083-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382565063-17083-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Brenner - TAOS <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 09:14:17PM -0400, Rob Clark wrote:
-> On Mon, Oct 21, 2013 at 5:27 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >> If a subsystem doesn't work well with DT, then the choices are either:
-> >>
-> >> (a) don't use DT with the subsystem
-> >
-> > The underlying problem has nothing to do with DT. Multi component
-> > hardware does exist and won't vanish when we stop using DT.
-> >
-> >> (b) fix the subsystem
-> >
-> > I'd love to do that. Step one to this seems to be to increase the
-> > awareness that there's something wrong with DRM.
+On 10/23/13 22:51, Sebastian Reichel wrote:
+> Add Device Tree support for the TSL2563 driver
+> and document the binding.
 > 
+> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
+>  drivers/iio/light/tsl2563.c                           |  4 ++++
+>  2 files changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
 > 
-> Note that I suspect your idea of "fixing drm" is going to break some
-> userspace assumptions about the hw (ie. userspace isn't expecting
-> crtcs/encoders/connectors to suddenly appear/disappear.  And the funny
-> thing is, on all of this hw, that isn't going to happen anyways.
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> new file mode 100644
+> index 0000000..b52cf4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> @@ -0,0 +1,19 @@
+> +* TAOS TSL2563 ambient light sensor
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "taos,tsl2563"
+> +  - reg : the I2C address of the sensor
+> +
+> +Optional properties:
+> +
+So two options for this one.  Either pitch it as a possible general parameter, or
+mark it with a vendor prefix.  It seems like something fairly general, but in that case it
+probably needs a more detailed proposal and explanation of exactly what it is.
 
-I was talking about all SoC DRM drivers implementing variants of the
-same glue between drm and the multidevice nature of the components.
+Also, is taos listed in vendor-prefixes.txt?  Jon, is that the right vendor prefix to use?
+I'm guessing you have some non mainline bindings out there already so it would be good
+to match those...
 
-To make that sure: I never had the intention to implement hotplug for
-drm. Also what the imx-drm driver does is not for hotplug, but only for
-binding different components together.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +  - cover-comp-gain : integer used as multiplier for gain
+> +                      compensation (default = 1)
+> +
+> +Example:
+> +
+> +tsl2563@29 {
+> +	compatible = "taos,tsl2563";
+> +	reg = <0x29>;
+> +	cover-comp-gain = <16>;
+> +};
+> diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
+> index ebb962c..bd30b1d 100644
+> --- a/drivers/iio/light/tsl2563.c
+> +++ b/drivers/iio/light/tsl2563.c
+> @@ -699,6 +699,7 @@ static int tsl2563_probe(struct i2c_client *client,
+>  	struct iio_dev *indio_dev;
+>  	struct tsl2563_chip *chip;
+>  	struct tsl2563_platform_data *pdata = client->dev.platform_data;
+> +	struct device_node *np = client->dev.of_node;
+>  	int err = 0;
+>  	u8 id = 0;
+>  
+> @@ -735,6 +736,9 @@ static int tsl2563_probe(struct i2c_client *client,
+>  
+>  	if (pdata)
+>  		chip->cover_comp_gain = pdata->cover_comp_gain;
+> +	else if (np)
+> +		of_property_read_u32_index(np, "cover-comp-gain", 0,
+> +							&chip->cover_comp_gain);
+>  	else
+>  		chip->cover_comp_gain = 1;
+>  
+> 
