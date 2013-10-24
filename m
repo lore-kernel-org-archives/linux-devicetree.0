@@ -1,63 +1,171 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCHv7][ 3/4] ARM: dts: cpuimx35 Add touchscreen support.
-Date: Thu, 24 Oct 2013 14:42:15 +0200
-Message-ID: <1382618536-25320-3-git-send-email-denis@eukrea.com>
-References: <1382618536-25320-1-git-send-email-denis@eukrea.com>
+From: Pekon Gupta <pekon@ti.com>
+Subject: [PATCH v11 01/10] ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+Date: Thu, 24 Oct 2013 18:20:17 +0530
+Message-ID: <1382619026-4182-2-git-send-email-pekon@ti.com>
+References: <1382619026-4182-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1382618536-25320-1-git-send-email-denis@eukrea.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@gmail.com>, Denis Carikli <denis@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382619026-4182-1-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: mark.rutland@arm.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com
+Cc: robherring2@gmail.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, dwmw2@infradead.org, arnd@arndb.de, tony@atomide.com, bcousson@baylibre.com, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, jp.francois@cynove.com, ivan.djelic@parrot.com, Pekon Gupta <pekon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-Cc: Eric B=C3=A9nard <eric@eukrea.com>
-Signed-off-by: Denis Carikli <denis@eukrea.com>
+OMAP NAND driver support multiple ECC scheme, which can used in different
+flavours, depending on in-build Hardware engines present on SoC.
+
+This patch updates following in DT bindings related to sectionion of ecc-schemes
+- ti,elm-id: replaces elm_id (maintains backward compatibility)
+- ti,nand-ecc-opts: selection of h/w or s/w implementation of an ecc-scheme
+	depends on ti,elm-id. (supported values ham1, bch4, and bch8)
+- maintain backward compatibility to deprecated DT bindings (sw, hw, hw-romcode)
+
+Below table shows different flavours of ecc-schemes supported by OMAP devices
++---------------------------------------+---------------+---------------+
+| ECC scheme                            |ECC calculation|Error detection|
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_HAM1_CODE_HW                  |H/W (GPMC)     |S/W            |
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
+|(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+|(requires CONFIG_MTD_NAND_OMAP_BCH &&  |               |               |
+| ti,elm-id in DT)                      |               |               |
++---------------------------------------+---------------+---------------+
+
+To optimize footprint of omap2-nand driver, selection of some ECC schemes
+also require enabling following Kconfigs, in addition to setting appropriate
+DT bindings
+- Kconfig:CONFIG_MTD_NAND_ECC_BCH        error detection done in software
+- Kconfig:CONFIG_MTD_NAND_OMAP_BCH       error detection done by h/w engine
+
+Signed-off-by: Pekon Gupta <pekon@ti.com>
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |  8 +++-
+ arch/arm/mach-omap2/gpmc.c                         | 48 +++++++++++++++-------
+ include/linux/platform_data/mtd-nand-omap2.h       | 13 +++++-
+ 3 files changed, 51 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/bo=
-ot/dts/imx35-eukrea-cpuimx35.dtsi
-index 2c2d4cd..a22230b 100644
---- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-+++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-@@ -41,6 +41,17 @@
- 		compatible =3D "nxp,pcf8563";
- 		reg =3D <0x51>;
- 	};
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index df338cb..bfe07e1 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -36,8 +36,12 @@ Optional properties:
+ 		"prefetch-dma"		Prefetch enabled sDMA mode
+ 		"prefetch-irq"		Prefetch enabled irq mode
+ 
+- - elm_id:	Specifies elm device node. This is required to support BCH
+- 		error correction using ELM module.
++ - elm_id:	<deprecated> use "ti,elm-id" instead
++ - ti,elm-id:	Specifies phandle of the ELM devicetree node.
++		ELM is an on-chip hardware engine on TI SoC which is used for
++		locating ECC errors for BCHx algorithms. SoC devices which have
++		ELM hardware engines should specify this device node in .dtsi
++		Using ELM for ECC error correction frees some CPU cycles.
+ 
+ For inline partiton table parsing (optional):
+ 
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 579697a..c877129 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -1341,14 +1341,6 @@ static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
+ 
+ #ifdef CONFIG_MTD_NAND
+ 
+-static const char * const nand_ecc_opts[] = {
+-	[OMAP_ECC_HAMMING_CODE_DEFAULT]		= "sw",
+-	[OMAP_ECC_HAMMING_CODE_HW]		= "hw",
+-	[OMAP_ECC_HAMMING_CODE_HW_ROMCODE]	= "hw-romcode",
+-	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
+-	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
+-};
+-
+ static const char * const nand_xfer_types[] = {
+ 	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-polled",
+ 	[NAND_OMAP_POLLED]			= "polled",
+@@ -1378,13 +1370,41 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
+ 	gpmc_nand_data->cs = val;
+ 	gpmc_nand_data->of_node = child;
+ 
+-	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s))
+-		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
+-			if (!strcasecmp(s, nand_ecc_opts[val])) {
+-				gpmc_nand_data->ecc_opt = val;
+-				break;
+-			}
++	/* Detect availability of ELM module */
++	gpmc_nand_data->elm_of_node = of_parse_phandle(child, "ti,elm-id", 0);
++	if (gpmc_nand_data->elm_of_node == NULL)
++		gpmc_nand_data->elm_of_node =
++					of_parse_phandle(child, "elm_id", 0);
++	if (gpmc_nand_data->elm_of_node == NULL)
++		pr_warn("%s: ti,elm-id property not found\n", __func__);
 +
-+	tsc2007: tsc2007@48 {
-+		compatible =3D "ti,tsc2007";
-+		reg =3D <0x48>;
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_tsc2007_1>;
-+		interrupt-parent =3D <&gpio3>;
-+		interrupts =3D <0x2 0x8>;
-+		gpios =3D <&gpio3 2 0>;
-+		ti,x-plate-ohms =3D <180>;
-+	};
++	/* select ecc-scheme for NAND */
++	if (of_property_read_string(child, "ti,nand-ecc-opt", &s)) {
++		pr_err("%s: ti,nand-ecc-opt not found\n", __func__);
++		return -ENODEV;
++	}
++	if (!strcmp(s, "ham1") || !strcmp(s, "sw") ||
++		!strcmp(s, "hw") || !strcmp(s, "hw-romcode"))
++		gpmc_nand_data->ecc_opt =
++				OMAP_ECC_HAM1_CODE_HW;
++	else if (!strcmp(s, "bch4"))
++		if (gpmc_nand_data->elm_of_node)
++			gpmc_nand_data->ecc_opt =
++				OMAP_ECC_BCH4_CODE_HW;
++		else
++			gpmc_nand_data->ecc_opt =
++				OMAP_ECC_BCH4_CODE_HW_DETECTION_SW;
++	else if (!strcmp(s, "bch8"))
++		if (gpmc_nand_data->elm_of_node)
++			gpmc_nand_data->ecc_opt =
++				OMAP_ECC_BCH8_CODE_HW;
++		else
++			gpmc_nand_data->ecc_opt =
++				OMAP_ECC_BCH8_CODE_HW_DETECTION_SW;
++	else
++		pr_err("%s: ti,nand-ecc-opt invalid value\n", __func__);
+ 
++	/* select data transfer mode for NAND controller */
+ 	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
+ 		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
+ 			if (!strcasecmp(s, nand_xfer_types[val])) {
+diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
+index 6bf9ef4..e4128f1 100644
+--- a/include/linux/platform_data/mtd-nand-omap2.h
++++ b/include/linux/platform_data/mtd-nand-omap2.h
+@@ -28,8 +28,16 @@ enum omap_ecc {
+ 	OMAP_ECC_HAMMING_CODE_HW, /* gpmc to detect the error */
+ 		/* 1-bit ecc: stored at beginning of spare area as romcode */
+ 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE, /* gpmc method & romcode layout */
+-	OMAP_ECC_BCH4_CODE_HW, /* 4-bit BCH ecc code */
+-	OMAP_ECC_BCH8_CODE_HW, /* 8-bit BCH ecc code */
++	/* 1-bit  ECC calculation by GPMC, Error detection by Software */
++	OMAP_ECC_HAM1_CODE_HW,
++	/* 4-bit  ECC calculation by GPMC, Error detection by Software */
++	OMAP_ECC_BCH4_CODE_HW_DETECTION_SW,
++	/* 4-bit  ECC calculation by GPMC, Error detection by ELM */
++	OMAP_ECC_BCH4_CODE_HW,
++	/* 8-bit  ECC calculation by GPMC, Error detection by Software */
++	OMAP_ECC_BCH8_CODE_HW_DETECTION_SW,
++	/* 8-bit  ECC calculation by GPMC, Error detection by ELM */
++	OMAP_ECC_BCH8_CODE_HW,
  };
-=20
- &iomuxc {
---=20
-1.7.9.5
+ 
+ struct gpmc_nand_regs {
+@@ -63,5 +71,6 @@ struct omap_nand_platform_data {
+ 
+ 	/* for passing the partitions */
+ 	struct device_node	*of_node;
++	struct device_node	*elm_of_node;
+ };
+ #endif
+-- 
+1.8.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
