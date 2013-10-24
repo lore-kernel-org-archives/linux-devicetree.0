@@ -1,46 +1,87 @@
-From: "David Woodhouse" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
- is there something better?
-Date: Thu, 24 Oct 2013 16:45:50 -0000
-Message-ID: <93d9a5ce228d03c4a183b06b00bd0442.squirrel@twosheds.infradead.org>
-References: <20131023174458.GC5208@netboy>
-    <1382553982.31058.10.camel@sakura.staff.proxad.net>
-    <20131024095232.27BBCC4039D@trevor.secretlab.ca>
-    <1382614439.6040.16.camel@sakura.staff.proxad.net>
-    <1382615278.8522.72.camel@shinybook.infradead.org>
-    <20131024122346.GD11296@ulmo.nvidia.com>
-    <1382619655.6040.52.camel@sakura.staff.proxad.net>
-    <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
-    <1382621431.6040.66.camel@sakura.staff.proxad.net>
-    <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
-    <20131024141955.GB25061@ulmo.nvidia.com>
-    <465e75de15f7d79c3b57a3b88024e739.squirrel@twosheds.infradead.org>
-    <alpine.LFD.2.03.1310241143240.1951@syhkavp.arg>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv7][ 1/4] Input: tsc2007: Add device tree support.
+Date: Thu, 24 Oct 2013 17:47:46 +0100
+Message-ID: <20131024164746.3CB36C403B6@trevor.secretlab.ca>
+References: <1382618536-25320-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.03.1310241143240.1951-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4487842815786361867=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1382618536-25320-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Denis Carikli <denis@eukrea.com>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--===============4487842815786361867==
+Content-Type: text/plain
 
-> So it is time IMHO that the description of how things *shall* work be
-> itself revised.
+On Thu, 24 Oct 2013 14:42:13 +0200, Denis Carikli <denis@eukrea.com> wrote:
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Lothar Waßmann <LW@KARO-electronics.de>
+> Cc: Eric Bénard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> ---
+> ChangeLog v6->v7:
+> - One small whitespace cleanup.
+> - The properties specific to that driver are now prefixed with "ti,".
+> - The ti,fuzzy property has now better documentation.
+> ---
+>  .../bindings/input/touchscreen/tsc2007.txt         |   45 +++++
+>  drivers/input/touchscreen/tsc2007.c                |  194 +++++++++++++++-----
+>  2 files changed, 198 insertions(+), 41 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> new file mode 100644
+> index 0000000..516b63b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> @@ -0,0 +1,45 @@
+> +* Texas Instruments tsc2007 touchscreen controller
+> +
+> +Required properties:
+> +- compatible: must be "ti,tsc2007".
+> +- reg: I2C address of the chip.
+> +- ti,x-plate-ohms: X-plate resistance in ohms.
+> +
+> +Optional properties:
+> +- gpios: the interrupt gpio the chip is connected to (trough the penirq pin)
+> +  (see GPIO binding[2] for more details).
 
-It *is* being revised, with an explicit explicit understanding that things
-will have to change and a defined process for how to cope with that.
+Hmmm, why is this needed? Is the line used for anything other than
+finding the irq number? If it is just an interrupt then an interrupts
+property is all that should be specified.
 
-That was discussed yesterday and we will be finishing the write-up to be
-presented at the Kernel Summit tomorrow.
+g.
 
 
--- 
-dwmw2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============4487842815786361867==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4487842815786361867==--
