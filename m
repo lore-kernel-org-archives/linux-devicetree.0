@@ -1,57 +1,44 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Thu, 24 Oct 2013 23:06:18 +0100
-Message-ID: <526999DA.7080409@wwwdotorg.org>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <3592147.9IprvsogX6@avalon> <52645428.9080607@wwwdotorg.org> <3278905.VOXO7bPE7e@avalon>
+Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
+ tree bindings
+Date: Thu, 24 Oct 2013 23:26:19 +0100
+Message-ID: <52699E8B.3000305@wwwdotorg.org>
+References: <1382540779-6334-1-git-send-email-treding@nvidia.com>	<1382544332.8522.40.camel@shinybook.infradead.org> <20131023185114.GA7863@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3278905.VOXO7bPE7e@avalon>
+In-Reply-To: <20131023185114.GA7863-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2013 12:20 PM, Laurent Pinchart wrote:
-> Hi Stephen,
-> 
-> On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
->> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
->> ...
+On 10/23/2013 07:51 PM, Thierry Reding wrote:
+> On Wed, Oct 23, 2013 at 05:05:32PM +0100, David Woodhouse wrote:
+>> On Wed, 2013-10-23 at 17:06 +0200, Thierry Reding wrote:
+>>> +       /* check if binding is experimental */
+>>> +       if (dev != device || drv != driver) {
+>>> +               pr_warn("of: device %s (%s) uses an experimental binding\n",
+>>> +                       np->name, np->full_name);
+>>> +
 >>
->>>> As I said, anything that really needs a CDF binding to work
->>>> likely isn't "simple" anymore, therefore a separate driver can
->>>> easily be justified.
->>>
->>> The system as a whole would be more complex, but the panel could be
->>> the same. We can't have two drivers for the same piece of hardware
->>> in the DT world, as there will be a single compatible string and no
->>> way to choose between the drivers (unlike the board code world that
->>> could set device names to "foo- encoder-v4l2" or "foo-encoder-drm"
->>> and live happily with that ever after).
->>
->> That's not true. We can certainly define two different compatible
->> values for a piece of HW if we have to. We can easily control whether
->> they are handled by the same or different drivers in the OS.
+>> In the discussions earlier I think we decided that this should set a
+>> taint flag too.
 > 
-> From an implementation point of view, sure. But from a conceptual point of 
-> view, that would make the DT bindings pretty Linux-specific, with a 
-> description of what the operating system should do instead of a description of 
-> what the hardware looks like. My understanding is that we've tried pretty hard 
-> in the past not to open that Pandora's box.
+> A taint flag seems somewhat drastic. It's not like using an experimental
+> binding should have an influence on the stability of the running kernel.
+> I always thought that taint flags were supposed to flag conditions where
+> code of unknown origin or code known to be broken was being executed
+> because they may destabilize the running kernel.
 > 
-> The case I'm mostly concerned about would be two different compatibility 
-> strings to select whether the device should be handled by a KMS or V4L driver. 
-> I don't think that's a good idea.
+> The worst that should happen if you run an experimental binding is that
+> some part of the system will just not come up.
 
-I wouldn't think of the two compatible values as selecting different
-specific Linux drivers, but rather they simply describe the HW in
-different levels of detail. The fact that if we know a certain level of
-detail about the HW means that Linux can and does create a KMS driver
-rather than a V4L2 driver seems like a detail that's completely hidden
-inside the OS.
-
+IIRC, the purpose of the taint flag was to make it clear that the kernel
+or DT was not expected to function in the future, so don't be surpised
+if you upgrade it, and it stops working, without you taking explicit
+action, such as revising your DT to match the new kernel or vice-versa.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
