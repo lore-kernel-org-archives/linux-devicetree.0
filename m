@@ -1,59 +1,77 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 0/7] ARM: imx27 pinctrl
-Date: Thu, 24 Oct 2013 09:53:46 +0200
-Message-ID: <1382601233-24253-1-git-send-email-mpa@pengutronix.de>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv6][ 2/7] video: imxfb: Also add pwmr for the device tree.
+Date: Thu, 24 Oct 2013 10:01:00 +0200
+Message-ID: <1382601665-6830-2-git-send-email-denis@eukrea.com>
+References: <1382601665-6830-1-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382601665-6830-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+pwmr has to be set to get the imxfb backlight work,
+though pwmr was only configurable trough the platform data.
 
-v4 is rebased onto v3.12-rc6, including pinconf_set changes.
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/video/fsl,imx-fb.txt       |    3 +++
+ drivers/video/imxfb.c                              |    2 ++
+ 2 files changed, 5 insertions(+)
 
-this series implements a imx27 pinctrl driver. imx1/21/27 have a register
-format that is not compatible with the rest of imx series processors. The
-series adds a imx1 core driver for the different register layout.
-
-Regards,
-
-Markus
-
-
-Markus Pargmann (7):
-  pinctrl: imx1 core driver
-  pinctrl: imx27: imx27 pincontrol driver
-  ARM: dts: imx27 pin functions
-  ARM: dts: imx27 pinctrl
-  ARM: dts: imx27 phyCARD-S pinctrl
-  ARM: dts: imx27 phycore pinctrl
-  ARM: imx27: enable pinctrl
-
- .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  50 ++
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts   |  10 +
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts   |   4 +
- arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts     |   2 +
- arch/arm/boot/dts/imx27-phytec-phycore-som.dts     |   6 +
- arch/arm/boot/dts/imx27-pinfunc.h                  | 524 +++++++++++++++++
- arch/arm/boot/dts/imx27.dtsi                       | 102 ++++
- arch/arm/mach-imx/Kconfig                          |   2 +
- drivers/pinctrl/Kconfig                            |  13 +
- drivers/pinctrl/Makefile                           |   2 +
- drivers/pinctrl/pinctrl-imx1-core.c                | 653 +++++++++++++++++++++
- drivers/pinctrl/pinctrl-imx1.h                     |  73 +++
- drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++
- 13 files changed, 1918 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
- create mode 100644 arch/arm/boot/dts/imx27-pinfunc.h
- create mode 100644 drivers/pinctrl/pinctrl-imx1-core.c
- create mode 100644 drivers/pinctrl/pinctrl-imx1.h
- create mode 100644 drivers/pinctrl/pinctrl-imx27.c
-
--- 
-1.8.4.rc3
+diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/D=
+ocumentation/devicetree/bindings/video/fsl,imx-fb.txt
+index 46da08d..ac457ae 100644
+--- a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+@@ -17,6 +17,9 @@ Required nodes:
+ Optional properties:
+ - fsl,dmacr: DMA Control Register value. This is optional. By default,=
+ the
+ 	register is not modified as recommended by the datasheet.
++- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property i=
+s
++	optional, but defining it is necessary to get the backlight working. =
+If that
++	property is ommited, the register is zeroed.
+ - fsl,lscr1: LCDC Sharp Configuration Register value.
+=20
+ Example:
+diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+index 4bf3837..f09372d 100644
+--- a/drivers/video/imxfb.c
++++ b/drivers/video/imxfb.c
+@@ -833,6 +833,8 @@ static int imxfb_init_fbinfo(struct platform_device=
+ *pdev)
+=20
+ 		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
+=20
++		of_property_read_u32(np, "fsl,pwmr", &fbi->pwmr);
++
+ 		/* These two function pointers could be used by some specific
+ 		 * platforms. */
+ 		fbi->lcd_power =3D NULL;
+--=20
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
