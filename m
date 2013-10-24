@@ -1,121 +1,102 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv6][ 3/7] ARM: imx{25,27} DT: Permit the selection of the
- imxfb framebuffer driver.
-Date: Thu, 24 Oct 2013 16:15:34 +0800
-Message-ID: <20131024081531.GA13614@S2101-09.ap.freescale.net>
-References: <1382601665-6830-1-git-send-email-denis@eukrea.com>
- <1382601665-6830-3-git-send-email-denis@eukrea.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 10:17:33 +0200
+Message-ID: <20131024081733.GG9403@ulmo.nvidia.com>
+References: <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023180108.GA23728@roeck-us.net>
+ <20131023182502.GC32563@obsidianresearch.com>
+ <20131023183041.GH5208@netboy>
+ <20131023185435.GD32563@obsidianresearch.com>
+ <20131024080624.GV30088@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5UGlQXeG3ziZS81+"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382601665-6830-3-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20131024080624.GV30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 10:01:01AM +0200, Denis Carikli wrote:
-> Without that patch, a user can't select the imxfb driver when the i.M=
-X25 and/or
->   the i.MX27 device tree board are selected and that no boards that s=
-elects
->   IMX_HAVE_PLATFORM_IMX_FB are compiled in.
+
+--5UGlQXeG3ziZS81+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 24, 2013 at 10:06:24AM +0200, Sascha Hauer wrote:
+> On Wed, Oct 23, 2013 at 12:54:35PM -0600, Jason Gunthorpe wrote:
+> > On Wed, Oct 23, 2013 at 08:30:42PM +0200, Richard Cochran wrote:
+> > > On Wed, Oct 23, 2013 at 12:25:02PM -0600, Jason Gunthorpe wrote:
+> >=20
+> > > > On ARM the package of 'stuff' can very reasonably include dtb. Dist=
+ro
+> > > > scripts can package modules+DTB+vmlinuz into something the bootload=
+er
+> > > > can understand. (The next pain point will be to standardize that)
+> > > >=20
+> > > > The DTB doesn't have to be 'outside' the distro/kernel to give user=
+s a
+> > > > seamless upgrade experience.
+> > >=20
+> > > How can a distro possibly provide me a DTB?
+> > >=20
+> > > They don't know what hardware I am using. Only I know that.
+> >=20
+> > I'm not sure what you are asking? Treat DTBs like kernel drivers. If
+> > you make hardware and you want distros to run on it, you have to
+> > provide the DTB for that hardware to mainline+distros.
+> >=20
+> > Remember, there are two ways to view DTB:
+> >   a) It comes from the firmware and you have to live with whatever
+> >      crap the firmware does
+> >   b) It comes from the kernel, must match the kernel, and we don't
+> >      have to tolerate crap in the DTB.
 >=20
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
->=20
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
-> ChangeLog v5->v6:
-> - Reworked the patch not to make DT boards depend on IMX_HAVE_PLATFOR=
-M_IMX_FB.=20
-> - Added better explanations of why that patch is needed in the commit=
- message.
-> ---
->  arch/arm/mach-imx/Kconfig         |    5 +++++
->  arch/arm/mach-imx/devices/Kconfig |    1 +
->  drivers/video/Kconfig             |    2 +-
->  3 files changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index 9f67338..3ccb5d5 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -64,6 +64,9 @@ config ARCH_HAS_RNGA
->  config HAVE_IMX_ANATOP
->  	bool
-> =20
-> +config HAVE_IMX_FB
-> +       bool
-> +
->  config HAVE_IMX_GPC
->  	bool
-> =20
-> @@ -254,6 +257,7 @@ endchoice
->  config MACH_IMX25_DT
->  	bool "Support i.MX25 platforms from device tree"
->  	select SOC_IMX25
-> +	select HAVE_IMX_FB
->  	help
->  	  Include support for Freescale i.MX25 based platforms
->  	  using the device tree for discovery
-> @@ -442,6 +446,7 @@ config MACH_IMX27IPCAM
->  config MACH_IMX27_DT
->  	bool "Support i.MX27 platforms from device tree"
->  	select SOC_IMX27
-> +	select HAVE_IMX_FB
->  	help
->  	  Include support for Freescale i.MX27 based platforms
->  	  using the device tree for discovery
-> diff --git a/arch/arm/mach-imx/devices/Kconfig b/arch/arm/mach-imx/de=
-vices/Kconfig
-> index 68c74fb..a7af9f4 100644
-> --- a/arch/arm/mach-imx/devices/Kconfig
-> +++ b/arch/arm/mach-imx/devices/Kconfig
-> @@ -26,6 +26,7 @@ config IMX_HAVE_PLATFORM_IMXDI_RTC
->  	bool
-> =20
->  config IMX_HAVE_PLATFORM_IMX_FB
-> +	select HAVE_IMX_FB
->  	bool
-> =20
->  config IMX_HAVE_PLATFORM_IMX_I2C
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 14317b7..a97529f 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -363,7 +363,7 @@ config FB_SA1100
-> =20
->  config FB_IMX
->  	tristate "Freescale i.MX1/21/25/27 LCD support"
-> -	depends on FB && IMX_HAVE_PLATFORM_IMX_FB
-> +	depends on FB && HAVE_IMX_FB
+> c) It comes from the firmware and is at least good enough to bring up a
+>    kernel to install a better devicetree.
 
-Or simply have it depend on ARCH_MXC?
+That's an interesting new view. And I think that makes a lot of sense
+because it matches the product cycle pretty well. Typically I wouldn't
+expect an upstream kernel to be fully featured when first shipped in a
+product, for all the known reasons, but it should be possible to come
+up with stable bindings good enough to perhaps boot to a command-line
+prompt and have some way of accessing other files (network, block
+device, ...).
 
-	depends on FB && ARCH_MXC
+Then again you could argue that the bootloader should be able to update
+itself (and the DTB while at it).
 
-Shawn
+Thierry
 
->  	select FB_CFB_FILLRECT
->  	select FB_CFB_COPYAREA
->  	select FB_CFB_IMAGEBLIT
-> --=20
-> 1.7.9.5
->=20
+--5UGlQXeG3ziZS81+
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaNedAAoJEN0jrNd/PrOhkgsP/3hhvstmdfXDZGz18qG41IwC
+NYbrOtOSiHbklZRUsiJWUwmpOZGXxgBClmES9rPwT5ya8blCOHgH2Z6yj0tc5Afd
+26iIceeKYLUofi/LQl2PTTmzcx1ZdaUBNTaONj82DdS6GL3JmoUKsFRQvmeLNbzd
+Q/yd0FcNNIPt9ZIWu6xuvVShYb0nghFyb7IjMBBHcVEouFNqjmbmh7yhdxsqx5cA
+UBzWi2mc4cdQvP68VfZf0/pj6hKSrK7eF1EN8B7glFLP34ewnzSl+k6sZ/fNogHf
+Acg0WZzULpJ5a9zBUPBgSjKxWzEzaWEq5XpMR7qPV1ey7KJwX4zA4NKUTgAO0Nmr
+yEcQg2Tiu8/sZo1fV7CozqeTyK2sM0OmqWHG0aU7P5enk1+43TalpDfANqgEHG7H
+pZ+NvN2laZ7QlEklMqjfCoxGz1MVLBjmzgCmgVyqy5txuA91u1+f6mtMUNkHPQ/2
+dPoXn2hIIepBlfAfwoAHuC8WSQaMIqmJKsymu0Udo4ZUQGXyQi9pwKmnQzU47k/c
+V6yah/iX0d5X4jNrxuj1LIK6W53EcmP80XAxVwVGRcYlMd925U/weCzKm6Skvk6P
+fPv7g0fBLTuKYo1uzhe0RD8Spa6ZCA86Fsv4399MZEmtrldTw9osPcmprRIR4LbG
+4DF2x5nBkmej460+HDSn
+=Qj0W
+-----END PGP SIGNATURE-----
+
+--5UGlQXeG3ziZS81+--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
