@@ -1,62 +1,73 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Thu, 24 Oct 2013 04:36:30 -0500
-Message-ID: <3E007970-C2E3-4A2E-B2E3-8388DB7A98F9@codeaurora.org>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com><1382092020-13170-2-git-send-email-hdoyu@nvidia.com><20131024085531.680A4C4039D@trevor.secretlab.ca> <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable irqs
+Date: Thu, 24 Oct 2013 04:38:23 -0500
+Message-ID: <D170CC15-C746-412F-A683-E8A73EFB8133@codeaurora.org>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024.122115.1035609747068925560.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 24, 2013, at 4:21 AM, Hiroshi Doyu wrote:
+On Sep 30, 2013, at 8:59 AM, Sricharan R wrote:
 
-> Hi Grant,
+> In some socs the gic can be preceded by a crossbar IP which
+> routes the peripheral interrupts to the gic inputs. The peripheral
+> interrupts are associated with a fixed crossbar input line and the
+> crossbar routes that to one of the free gic input line.
 > 
-> Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Thu, 24 Oct 2013 10:55:31 +0200:
-> ....
->>> diff --git a/include/linux/of.h b/include/linux/of.h
->>> index f95aee3..638a88a 100644
->>> --- a/include/linux/of.h
->>> +++ b/include/linux/of.h
->>> @@ -60,6 +60,7 @@ struct device_node {
->>> 	struct	kref kref;
->>> 	unsigned long _flags;
->>> 	void	*data;
->>> +	struct device *dev;		/* Set only after populated */
->> 
->> Is this being used merely to indicate that a device has been processed
->> by of_platform_device_create()? Or do you intend to dereference this
->> pointer? I've avoided putting the struct device in to the device_node
->> structure up to this point simply becuase there aren't any good clues
->> for what /kind/ of device it actually points to. I worry that bad
->> assumptions will get made when other subsystems try to use the
->> same pointer. ie. if one subsystem creates its own device and sets this
->> pointer, and then of_platform_device_create() comes along behind, sees
->> that it is already created, and then returns a platform_device pointer
->> *for something that isn't a struct platform_device*. This is very bad.
->> 
->> Instead of using a pointer to the struct device, would a flag be
->> sufficient for your purposes? Would it be fine to return NULL if the
->> device has already been created?
+> The DT entries for peripherals provides the fixed crossbar input line
+> as its interrupt number and the mapping code should associate this with
+> a free gic input line. This patch adds the support inside the gic irqchip
+> to handle such routable irqs. The routable irqs are registered in a linear
+> domain. The registered routable domain's callback should be implemented
+> to get a free irq and to configure the IP to route it.
 > 
-> Yes, a flag would be enough for this purpose.
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> ---
+> Documentation/devicetree/bindings/arm/gic.txt |    5 +++
+> arch/arm/boot/dts/dra7.dtsi                   |    1 +
+> drivers/irqchip/irq-gic.c                     |   57 +++++++++++++++++++++----
+> include/linux/irqchip/arm-gic.h               |    8 +++-
+> 4 files changed, 61 insertions(+), 10 deletions(-)
 > 
-> This patch is a part of HACK to control device instanciation order. We
-> have an IOMMU device(platform) which needs to be instanciated earlier
-> than other (platform)devices so that IOMMU driver would configure them
-> as IOMMU'able device.
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 3dfb0c0..2d8c680 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -49,6 +49,11 @@ Optional
+>   regions, used when the GIC doesn't have banked registers. The offset is
+>   cpu-offset * cpu-nr.
 > 
-> Is there any better way to control device instanciation order from DT?
+> +- routable-irqs	: Total number of gic irq inputs which are not directly
+> +		  connected from the peripherals, but are routed dynamically
+> +		  by a crossbar/multiplexer preceding the GIC. The GIC irq
+> +		  input line is assigned dynamically when the corresponding
+> +		  peripheral's crossbar line is mapped.
 
-I was also thinking being able to call of_platform_populate multiple times and have explicit lists to control device init order might be a workable solution.  So might be worth continuing down this path to make device nodes that have already be created.
+arm,routable-irqs
+
+> Example:
+> 
+> 	intc: interrupt-controller@fff11000 {
 
 - k
+
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
