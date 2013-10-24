@@ -1,96 +1,77 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for
- routable irqs
-Date: Thu, 24 Oct 2013 11:12:15 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1310241104430.4983@ionos.tec.linutronix.de>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCHv4 1/3] Input: twl4030-pwrbutton - add device tree support
+Date: Thu, 24 Oct 2013 11:16:22 +0200
+Message-ID: <5268E566.2060309@epfl.ch>
+References: <1382550852-11508-1-git-send-email-sre@debian.org> <1382550852-11508-2-git-send-email-sre@debian.org> <5268D095.3060302@epfl.ch> <20131024083837.GA28938@earth.universe>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380549564-31045-2-git-send-email-r.sricharan@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131024083837.GA28938@earth.universe>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Sep 2013, Sricharan R wrote:
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 1760ceb..c5778ab 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -72,6 +72,8 @@ struct gic_chip_data {
->  
->  static DEFINE_RAW_SPINLOCK(irq_controller_lock);
->  
-> +const struct irq_domain_ops *gic_routable_irq_domain_ops;
-> +
->  /*
->   * The GIC mapping of CPU interfaces does not necessarily match
->   * the logical CPU numbering.  Let's use a mapping as returned
-> @@ -675,11 +677,26 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
->  		irq_set_chip_and_handler(irq, &gic_chip,
->  					 handle_fasteoi_irq);
->  		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
-> +
-> +		if (gic_routable_irq_domain_ops &&
-> +		    gic_routable_irq_domain_ops->map)
-> +			gic_routable_irq_domain_ops->map(d, irq, hw);
+Hello,
 
-Shudder. Why are you sprinkling these if (ops && ops->fun)
-conditionals all over the place instead of having a default ops
-implementation which handles the non crossbar case by proper empty
-functions. That code is not on a hot path so it does not matter at
-all.
+On 10/24/2013 10:38 AM, Sebastian Reichel wrote:
+> Hi Florian,
+>
+> On Thu, Oct 24, 2013 at 09:47:33AM +0200, Florian Vaussard wrote:
+>>> +Required SoC Specific Properties:
+>>> +- compatible: should be one of the following
+>>> +   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
+>>> +- interrupt: should be one of the following
+>>> +   - <8>: For controllers compatible with twl4030
+>>
+>> This is <8> for your particular case, but it will depend on your
+>> SoC, won't it?  Moreover, this property will be most likely
+>> inherited from the root twl node, so I do not see the need to
+>> document it here. See:
+>>
+>> Documentation/devicetree/bindings/mfd/twl-familly.txt
+>
+> No. This is an internal twl4030 interrupt. TWL4030 functions
+> itself as an interrupt controller.
+>
 
->  	}
->  	irq_set_chip_data(irq, d->host_data);
->  	return 0;
->  }
->  
-> +static void gic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
-> +{
-> +	irq_hw_number_t hw = irq_get_irq_data(irq)->hwirq;
-> +
-> +	if (hw > 32) {
+So if it does not belong to the TWL parent, where is it used in your code?
+You should be parsing this property, so you can set up the IRQ properly.
+I am a bit confused here. If it is fixed, no need for a OF property.
 
-Groan. This wants to be in the ops->unmap function. It's not related
-to the GIC core code.
+>>> +
+>>> +Example:
+>>> +	twl_pwrbutton: pwrbutton {
+>>> +		compatible = "ti,twl4030-pwrbutton";
+>>> +		interrupts = <8>;
+>>> +	};
+>>
+>> You are missing the root twl node here, no?
+>
+> So should I document it like this?
+>
 
-> +		if (gic_routable_irq_domain_ops &&
-> +		    gic_routable_irq_domain_ops->unmap)
-> +			gic_routable_irq_domain_ops->unmap(d, irq);
-> +	}
-> +}
-> +
->  static int gic_irq_domain_xlate(struct irq_domain *d,
->  				struct device_node *controller,
->  				const u32 *intspec, unsigned int intsize,
-> @@ -694,8 +711,15 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
->  	*out_hwirq = intspec[1] + 16;
->  
->  	/* For SPIs, we need to add 16 more to get the GIC irq ID number */
-> -	if (!intspec[0])
-> -		*out_hwirq += 16;
-> +	if (!intspec[0]) {
-> +		if (gic_routable_irq_domain_ops &&
-> +		    gic_routable_irq_domain_ops->xlate)
-> +			*out_hwirq = gic_routable_irq_domain_ops->xlate(d,
-> +						controller, intspec, intsize,
-> +						out_hwirq, out_type);
-> +		else
-> +			*out_hwirq += 16;
-> +	}
+IMHO it is more clear for the user.
 
-So if you have a default xlate ops implementation then this boils down to
+> twl4030 {
+>     compatible = "ti,twl4030";
+>
+>     pwrbutton {
+>         compatible = "ti,twl4030-pwrbutton";
+>         interrupts = <8>;
+>     };
+> };
 
-      if (!intspec[0])
-		*out_hwirq = routing_ops->xlate()
+Nit, but existing documentations follow the "name@address"
+form for the root node, as the TWL is on an I2C bus.
+Either it is already defined, thus you should use "&twl4030"
+to reference it, or you create the TWL node and something like
+"twl4030@48" should be used.
 
-And the default (non crossbar) implementation would be:
+For an example, you can refer to existing bindings, like
+Documentation/devicetree/bindings/mfd/twl4030-audio.txt.
 
-    	return *out_hwirq + 16;
-    
+Best regards,
 
-Thanks,
-
-	tglx
+Florian
