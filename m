@@ -1,8 +1,8 @@
 From: "David Woodhouse" <dwmw2@infradead.org>
 Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
  is there something better?
-Date: Thu, 24 Oct 2013 12:22:19 -0000
-Message-ID: <3726fd81259f84ef308ba9011ae35174.squirrel@twosheds.infradead.org>
+Date: Thu, 24 Oct 2013 12:22:18 -0000
+Message-ID: <f20013b8c402dacccd865d143e14a3ee.squirrel@twosheds.infradead.org>
 References: <20131020220839.GT2443@sirena.org.uk>
  <5264576F.6050307@wwwdotorg.org>
  <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
