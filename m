@@ -1,85 +1,44 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Thu, 24 Oct 2013 09:55:31 +0100
-Message-ID: <20131024085531.680A4C4039D@trevor.secretlab.ca>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com> <1382092020-13170-2-git-send-email-hdoyu@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382092020-13170-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Thu, 24 Oct 2013 10:57:04 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1310241045120.4983@ionos.tec.linutronix.de>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <52499441.1030403@gmail.com> <524AAE69.8060703@ti.com> <524AD290.207@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <524AD290.207@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sricharan R <r.sricharan@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Oct 2013 13:26:42 +0300, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> To prevent of_platform_populate() from trying to populate duplicate
-> devices if a device has been already populated.
+On Tue, 1 Oct 2013, Rob Herring wrote:
+> On 10/01/2013 06:13 AM, Sricharan R wrote:
 > 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/of/platform.c | 6 ++++++
->  include/linux/of.h    | 1 +
->  2 files changed, 7 insertions(+)
+> Is there an actual usecase on a single h/w design that you run out of
+> interrupts and it is a user decision which interrupts to use?
+
+I don't think that matters. What matters is that you have a single DT
+entry which tells the driver which crossbar irq to use for that
+particular device. And that is the only information which is relevant
+because the IP block is connected to a crossbar input and not to a GIC
+line. The crossbar provides the mapping and this is really best done
+at runtime w/o having hardcoded information in the DT or at some other
+place.
+ 
+> You could fill in the interrupt-map at run-time. It would have to be
+> early (bootloader or early kernel init) and can't be at request_irq time.
+
+How is that supposed to work when you have no idea at early boot time
+which particular IP blocks are going to be used later on?
+
+> >   http://www.spinics.net/lists/linux-omap/msg97085.html
 > 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 9b439ac..994cea4 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -208,6 +208,11 @@ static struct platform_device *of_platform_device_create_pdata(
->  	if (!of_device_is_available(np))
->  		return NULL;
->  
-> +	if (np->dev) {
-> +		dev_info(np->dev, "Already populated\n");
-> +		return to_platform_device(np->dev);
-> +	}
-> +
+> This has nothing to do with the GIC, so it does not belong there.
 
-This looks racy if the intent is to prevent a device from being created
-twice. If two threads call of_platform_device_create() in parallel, this
-will fail to properly protect against dual creation. Checking the node
-and marking it as used needs to be atomic.
+Errm. crossbar is a mapping device which happens to sit between the
+GIC and the IP blocks. So how is this NOT related to GIC ?
 
->  	dev = of_device_alloc(np, bus_id, parent);
->  	if (!dev)
->  		return NULL;
-> @@ -232,6 +237,7 @@ static struct platform_device *of_platform_device_create_pdata(
->  		return NULL;
->  	}
->  
-> +	np->dev = &dev->dev;
->  	return dev;
->  }
->  
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f95aee3..638a88a 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -60,6 +60,7 @@ struct device_node {
->  	struct	kref kref;
->  	unsigned long _flags;
->  	void	*data;
-> +	struct device *dev;		/* Set only after populated */
+Thanks,
 
-Is this being used merely to indicate that a device has been processed
-by of_platform_device_create()? Or do you intend to dereference this
-pointer? I've avoided putting the struct device in to the device_node
-structure up to this point simply becuase there aren't any good clues
-for what /kind/ of device it actually points to. I worry that bad
-assumptions will get made when other subsystems try to use the
-same pointer. ie. if one subsystem creates its own device and sets this
-pointer, and then of_platform_device_create() comes along behind, sees
-that it is already created, and then returns a platform_device pointer
-*for something that isn't a struct platform_device*. This is very bad.
-
-Instead of using a pointer to the struct device, would a flag be
-sufficient for your purposes? Would it be fine to return NULL if the
-device has already been created?
-
-g.
-
->  #if defined(CONFIG_SPARC)
->  	const char *path_component_name;
->  	unsigned int unique_id;
-> -- 
-> 1.8.1.5
-> 
+	tglx
