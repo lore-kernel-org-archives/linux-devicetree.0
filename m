@@ -1,84 +1,128 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5][ 7/9] ARM: dts: i.MX25: Add ssi clocks and DMA events.
-Date: Thu, 24 Oct 2013 14:44:54 +0800
-Message-ID: <20131024064450.GD11466@S2101-09.ap.freescale.net>
-References: <1382516974-13371-1-git-send-email-denis@eukrea.com>
- <1382516974-13371-7-git-send-email-denis@eukrea.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv5][ 1/4] Input: tsc2007: Add device tree support.
+Date: Thu, 24 Oct 2013 08:51:50 +0200
+Message-ID: <20131024085150.11a81974@ipc1.ka-ro>
+References: <1382530220-27881-1-git-send-email-denis@eukrea.com>
+	<52684B33.6040109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382516974-13371-7-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <52684B33.6040109@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2013 at 10:29:32AM +0200, Denis Carikli wrote:
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Hi,
 
-Applied patches #7, #8 and #9.
-
-Shawn
-
-> ---
->  arch/arm/boot/dts/imx25.dtsi |   12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+Rob Herring wrote:
+> On 10/23/2013 07:10 AM, Denis Carikli wrote:
+[...]
+> > diff --git
+a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> > new file mode 100644
+> > index 0000000..fadd3f6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.t=
+xt
+> > @@ -0,0 +1,44 @@
+> > +* Texas Instruments tsc2007 touchscreen controller
+> > +
+> > +Required properties:
+> > +- compatible: must be "ti,tsc2007".
+> > +- reg: I2C address of the chip.
+> > +- pinctrl-0: Should specify pin control groups used for this contr=
+oller
+> > +  (see pinctrl bindings[0]).
+> > +- pinctrl-names: Should contain only one value - "default"
+> > +  (see pinctrl bindings[0]).
 >=20
-> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.d=
-tsi
-> index 6ac4c98..cce0669 100644
-> --- a/arch/arm/boot/dts/imx25.dtsi
-> +++ b/arch/arm/boot/dts/imx25.dtsi
-> @@ -339,6 +339,11 @@
->  				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
->  				reg =3D <0x50014000 0x4000>;
->  				interrupts =3D <11>;
-> +				clocks =3D <&clks 118>;
-> +				clock-names =3D "ipg";
-> +				dmas =3D <&sdma 24 1 0>,
-> +				       <&sdma 25 1 0>;
-> +				dma-names =3D "rx", "tx";
->  				status =3D "disabled";
->  			};
-> =20
-> @@ -369,6 +374,11 @@
->  				compatible =3D "fsl,imx25-ssi", "fsl,imx21-ssi";
->  				reg =3D <0x50034000 0x4000>;
->  				interrupts =3D <12>;
-> +				clocks =3D <&clks 117>;
-> +				clock-names =3D "ipg";
-> +				dmas =3D <&sdma 28 1 0>,
-> +				       <&sdma 29 1 0>;
-> +				dma-names =3D "rx", "tx";
->  				status =3D "disabled";
->  			};
-> =20
-> @@ -539,7 +549,7 @@
->  				#interrupt-cells =3D <2>;
->  			};
-> =20
-> -			sdma@53fd4000 {
-> +			sdma: sdma@53fd4000 {
->  				compatible =3D "fsl,imx25-sdma", "fsl,imx35-sdma";
->  				reg =3D <0x53fd4000 0x4000>;
->  				clocks =3D <&clks 112>, <&clks 68>;
-> --=20
-> 1.7.9.5
+> I'm confused why an i2c slave needs pinctl binding?
 >=20
+for the pendetect GPIO.
 
+[...]
+> > diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/to=
+uchscreen/tsc2007.c
+> > index 0b67ba4..0625fe1 100644
+> > --- a/drivers/input/touchscreen/tsc2007.c
+> > +++ b/drivers/input/touchscreen/tsc2007.c
+> > @@ -26,6 +26,9 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/i2c/tsc2007.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_gpio.h>
+> > =20
+> >  #define TSC2007_MEASURE_TEMP0		(0x0 << 4)
+> >  #define TSC2007_MEASURE_AUX		(0x2 << 4)
+> > @@ -74,7 +77,10 @@ struct tsc2007 {
+> >  	u16			max_rt;
+> >  	unsigned long		poll_delay;
+> >  	unsigned long		poll_period;
+> > +	int			fuzzy;
+> > +	char			of;
+> > =20
+> > +	unsigned		gpio;
+> >  	int			irq;
+> > =20
+> >  	wait_queue_head_t	wait;
+[...]
+> > @@ -273,34 +295,65 @@ static void tsc2007_close(struct input_dev *i=
+nput_dev)
+> >  	tsc2007_stop(ts);
+> >  }
+> > =20
+> > -static int tsc2007_probe(struct i2c_client *client,
+> > -				   const struct i2c_device_id *id)
+> > +#ifdef CONFIG_OF
+> > +static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2=
+007 *ts,
+> > +			    struct device_node *np)
+> >  {
+> > -	struct tsc2007 *ts;
+> > -	struct tsc2007_platform_data *pdata =3D client->dev.platform_data=
+;
+> > -	struct input_dev *input_dev;
+> > -	int err;
+> > -
+> > -	if (!pdata) {
+> > -		dev_err(&client->dev, "platform data is required!\n");
+> > +	int err =3D 0;
+> > +	u32 val32;
+> > +	u64 val64;
+> > +
+> > +	if (!of_property_read_u32(np, "max-rt", &val32))
+> > +		ts->max_rt =3D val32;
+> > +	else
+> > +		ts->max_rt =3D MAX_12BIT;
+>=20
+> These functions don't overwrite the value if the property isn't prese=
+nt.
+> So you can set the values to the defaults and just pass the variable
+> (i.e. ts->max_rt) to of_property_read_u32 directly.
+>=20
+Not quite. Since max_rt is an u16 you can't pass it to
+of_property_read_u32(). And using of_property_read_u16() requires the
+abominable DT notation: "/bits/ 16 <value>;"
+
+
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
