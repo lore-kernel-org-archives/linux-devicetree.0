@@ -1,123 +1,55 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Usage of for_each_child_of_node()
-Date: Thu, 24 Oct 2013 09:50:58 +0200
-Message-ID: <20131024075058.GD9403@ulmo.nvidia.com>
-References: <5259B6F8.3070701@roeck-us.net>
- <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
- <20131023071006.GA7708@ulmo.nvidia.com>
- <20131023161644.GB20675@roeck-us.net>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: fix the ecc regression
+Date: Thu, 24 Oct 2013 00:52:49 -0700
+Message-ID: <20131024075249.GB9863@norris.computersforpeace.net>
+References: <1382418628-4521-1-git-send-email-b32955@freescale.com>
+ <20131022185639.GK23337@ld-irv-0074.broadcom.com>
+ <5268C56E.8050806@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131023161644.GB20675-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <5268C56E.8050806-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 24, 2013 at 02:59:58PM +0800, Huang Shijie wrote:
+> Hi David & Mark & Brian:
+> 
+>    thanks for your review and comments.
+> >... so why don't you just add a DT property to actually specify the ECC
+> >selection itself, rather than indirectly specifying it through a vague
+> Do you mean i should add a DT property like "fsl, gpmi-use-new-ecclayout" ?
+> 
+> I am not understand "the ECC selection itself".
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry if that was unclear. I was recommending that the DT property
+actually specify what the properties of the ECC layout were. Like ECC
+strength (as an integer). Or spare area/step size/whatever else needed
+to specify what these legacy and new layouts actually are. Your binding
+was too vague; it wasn't describing what the layout is.
 
-On Wed, Oct 23, 2013 at 09:16:44AM -0700, Guenter Roeck wrote:
-> On Wed, Oct 23, 2013 at 09:10:07AM +0200, Thierry Reding wrote:
-> > On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
-> > > On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> w=
-rote:
-> > > > Hi all,
-> > > >
-> > > > for_each_child_of_node() and similar functions increase the refcount
-> > > > on each returned node and expect the caller to release the node by
-> > > > calling of_node_put() when done.
-> > > >
-> > > > Looking through the kernel code, it appears this is hardly ever don=
-e,
-> > > > if at all. Some code even calls of_node_get() on returned nodes aga=
-in.
-> > > >
-> > > > I guess this doesn't matter in cases where devicetree is a static e=
-ntity.
-> > > > However, this is not (or no longer) the case with devicetree overla=
-ys,
-> > > > or more generically in cases where devicetree nodes are added and
-> > > > removed dynamically.
-> > > >
-> > > > Fundamental question: Would patches to fix this problem be accepted=
- upstream
-> > > > ?
-> > >=20
-> > > Certainly.
-> > >=20
-> > > > Or, of course, stepping a bit back: Am I missing something essentia=
-l ?
-> > >=20
-> > > No. I think this is frequently wrong since it typically doesn't matter
-> > > for static entries as you mention.
-> >=20
-> > Actually, I think it actually happens to be correct most of the time.
-> > The reason is that for_each_child_of_node() internally calls the
-> > of_get_next_child() to iterate over all children. And that function
-> > already calls of_node_put() on the "previous" node. So if all the code
-> > does is to iterate over all nodes to query them, then all should be
-> > fine.
-> >=20
-> Good, that reduces the scope of the problem significantly.
->=20
-> > The only case where you actually need to drop the reference on a node is
-> > if you break out of the loop (so that of_get_next_child() will not be
-> > called). But that's usually the case when you need to perform some
-> > operation on the node, in which case it is the right thing to hold on to
-> > a reference until you're done with the node.
-> >=20
-> Unfortunately, there are many cases with code such as
->=20
-> 	if (error)
-> 		return;	/* or break; */
+David seemed to suggest that something like your current binding might
+be OK. (I still thing it was too vague, but if you can describe it
+better, it may be sufficient.) A possible starting point:
+"fsl,use-minimum-ecc". Does this properly reflect your intention of
+using the datasheet's minimum required ECC (from ONFI or from the
+driver's full ID table)?
 
-Well, a break isn't necessarily bad, since you could be using the node
-subsequently. I imagine that depending on the exact block following the
-if statement the node could also be assigned to some field within a
-structure or similar, in which case this might still be valid. So it
-really needs to be evaluated on a case by case basis.
+But all that beside, I think your first priority is to fix the
+regression for the current release cycle. I'm not keen on trying to
+agree on a good DT binding and get it merged immediately.
 
-If the above is actually verbatim, then yes, that's certainly an error.
+Can you resend in two patches? The first one will default to using
+legacy_set_geometry() to retain the old behavior and prevent
+regressions. The second one can add a DT binding to re-introduce support
+for your new layout. That way we can take the first one with no
+question, and the second one can be taken when it's ready: either for
+3.12 or 3.13.
 
-> or even
-> 	if (found node)
-> 		return of_node_get(node);
->=20
-> in the loop.
-
-Yeah, I think all of those are probably wrong too.
-
-Thierry
-
---mJm6k4Vb/yFcL9ZU
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSaNFiAAoJEN0jrNd/PrOhBkMP/j6y3CVAsKmjjoN+vXzdKUSI
-9wqIufhmKio6/45o9vNRoOOIHc0B1sT/V8KzlLMEKrW3qCLuaQuohE5FBVuu8u5y
-VWqSrxo/EeTRNc2eL+MvA8/lkAOtzh5YgfqivWVw8xIKAuislPOD5oh66uwwa0IL
-AjZCXJYhAy9BbQK/k+RabzyEQGz6pyy2da5G6cungeCQ/MJKM/q43JyBKZnZuYGy
-Meydw1w+NpSG901WwBtYp+jrKCQzJtO+S6c3hLeVO2egaCXQz0hOzenAhscome3o
-Uv02g0Pwpil6jWTEc3A0br88GGnTRpHwvWcLQOwJWi7Dxg1dTzFpivrC9E56ckx6
-nruGE5vgYmVTNY7E5ABY3B+8SKFB6qwiV8DyefzPtF3LwB02Gj8dpfTQ7uNnwz4y
-1JVUDi8Y2rVOFe3ETofF17GBkMm9LiKkzelENFk+5pnr80Tf6Nd91q99ittOCp/K
-6cevzeLHdcov3d9o1wZ6CsYgwLfdwipq3gmR4nhemfY+hw/RNnOyYcQnoebJ4eiL
-guhbIXI94fjzrUUBb3DVgSBgmeWQxp3F2tyvIFu7+KCUed43gd9qY+EmjJq0dl2N
-7SNagqXuH4Q5SWQFpXFbDAyZYqkXFNN/2cIX5Gd+PgNwMTW1PjNyPiWZG8YOSjBn
-7izD4h9CzuwMSiMtVDZf
-=34Xy
------END PGP SIGNATURE-----
-
---mJm6k4Vb/yFcL9ZU--
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
