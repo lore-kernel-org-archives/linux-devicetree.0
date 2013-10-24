@@ -1,61 +1,71 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/5] mtd: m25p80: remove 'disabled' device check
-Date: Thu, 24 Oct 2013 14:31:58 +0530
-Message-ID: <5268E206.5080602@ti.com>
-References: <1382583503-13748-1-git-send-email-computersforpeace@gmail.com> <1382583503-13748-5-git-send-email-computersforpeace@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: tpa6130a2: Add device tree support
+Date: Thu, 24 Oct 2013 10:06:59 +0100
+Message-ID: <20131024090659.GD31415@sirena.org.uk>
+References: <1382529808-28440-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382583503-13748-5-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4959071921368677151=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1382529808-28440-1-git-send-email-sre@debian.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Sebastian Reichel <sre@ring0.de>, Bill Pemberton <wfp5p@virginia.edu>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 24 October 2013 08:28 AM, Brian Norris wrote:
-> It seems like the following commit was never necessary
->
->      commit 5f949137952020214cd167093dd7be448f21c079
->      Author: Shaohui Xie<Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->      Date:   Fri Oct 14 15:49:00 2011 +0800
->
->          mtd: m25p80: don't probe device which has status of 'disabled'
->
-> because it duplicates the code in of_platform_device_create_pdata()
-> which ensures that 'disabled' nodes are never instantiated.
->
-> Also, drop the __maybe_unused.
->
-> Signed-off-by: Brian Norris<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc:<devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Reviewed-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-> ---
->   drivers/mtd/devices/m25p80.c | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index d6c5c57..a1dc49a 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -935,12 +935,7 @@ static int m25p_probe(struct spi_device *spi)
->   	struct flash_info		*info;
->   	unsigned			i;
->   	struct mtd_part_parser_data	ppdata;
-> -	struct device_node __maybe_unused *np = spi->dev.of_node;
-> -
-> -#ifdef CONFIG_MTD_OF_PARTS
-> -	if (!of_device_is_available(np))
-> -		return -ENODEV;
-> -#endif
-> +	struct device_node *np = spi->dev.of_node;
->
->   	/* Platform data helps sort out which chip type we have, as
->   	 * well as how this board partitions it.  If we don't have
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============4959071921368677151==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
+Content-Disposition: inline
+
+
+--eqp4TxRxnD4KrmFZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Oct 23, 2013 at 02:03:28PM +0200, Sebastian Reichel wrote:
+> Add device tree support to tpa6130a2 driver and document the
+> bindings.
+
+Applied, thanks.
+
+--eqp4TxRxnD4KrmFZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSaOMkAAoJELSic+t+oim9JEQP/0Exs3GXPXMtPohGPPPSW8C2
+j7A+sklIqXdOesSSDaEhym8s0/ZLsdb9yU6cErRC6XjKmL67+5TaU2rPrpPWF/ls
+EabRWCmh1tNOYk46laYEWkByU+Fz+p1NmWXhx2ptlQtUXfuErwrOluU3VpjZ+pp3
+fw0P/hDthvszrO0m6BLrqR3m60uYaor9SQ+BtL6qW8LUv401HuIyXjlQRrxuHW/S
+Ps5pjLJ2sEsFpyAc/vdLYz/dp9CbvsyJ/egvk8reZiqIYnCWsh9PSjJS9SaWzjE0
+fbsG6VztfPjyU7cpyxjuuC6Y39eerUbB3vf3qfHDEjT1KOHl1dxOhs7s32fidws7
+ZhJciuKlIhRG7+DaEeYXZVvUAP7vyiPjL1uNfcBkRFDy043BomPBPReiZ3hPjBUx
+Dqt0LKj24hICfbRy8U5QoecUaZ+xRw/A3cNsg9Wbsn9c8eE5nwwlspejisVSjPMM
+cVnAXyF2CsJHaYA9SmgxscIpKsBdVQHfWtDyqDAseEKoeX30Hiv7TTq5IcxLdfXH
+Pu5ZuSKQg/hfcMMRuWSsQuUIrTmcG2Cz7Ph04ik2aQu72SDPiaAShPNoiuwi2YrZ
+AiIuGKFnWuIo+S0nVe8VOGhW2TXDky+M3Q3TcmwRf8G3NzhlO4l0BcfKlKfZtAdv
+ZG0O+Qo5MWcBdzhH647t
+=Gihs
+-----END PGP SIGNATURE-----
+
+--eqp4TxRxnD4KrmFZ--
+
+--===============4959071921368677151==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4959071921368677151==--
