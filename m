@@ -1,134 +1,71 @@
-From: Rostislav Lisovy <lisovy@gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
-Date: Thu, 24 Oct 2013 21:12:06 +0200
-Message-ID: <1382641926.16515.2.camel@lolumad>
-References: <1382461643-16790-1-git-send-email-lisovy@gmail.com>
-	 <1382461643-16790-4-git-send-email-lisovy@gmail.com>
-	 <20131023072738.GI2839@S2101-09.ap.freescale.net>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 15:46:06 -0400
+Message-ID: <20131024194606.GX29341@beef>
+References: <20131022093923.GC15640@ulmo.nvidia.com>
+ <20131022150426.GF29341@beef>
+ <20131022171346.GE4061@obsidianresearch.com>
+ <20131023080630.GA14413@netboy>
+ <20131023172955.GA17145@obsidianresearch.com>
+ <20131023174736.GD5208@netboy>
+ <20131023180240.GA32563@obsidianresearch.com>
+ <20131023182345.GG5208@netboy>
+ <20131024083411.GH9403@ulmo.nvidia.com>
+ <20131024150016.GB4096@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131023072738.GI2839@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, pisa@cmp.felk.cvut.cz
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131024150016.GB4096@netboy>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Shawn;
-Thank you for your comments.
-Should I also add Voipac to
-Documentation/devicetree/bindings/vendor-prefixes.txt?
-
-Best regards;
-Rostislav Lisovy
-
-
-On Wed, 2013-10-23 at 15:27 +0800, Shawn Guo wrote: 
-> On Tue, Oct 22, 2013 at 07:07:22PM +0200, Rostislav Lisovy wrote:
-> > Enable UART1 and FEC
-> 
-> You have more than these two enabled.
-> 
+On Thu, Oct 24, 2013 at 05:00:16PM +0200, Richard Cochran wrote:
+> On Thu, Oct 24, 2013 at 10:34:12AM +0200, Thierry Reding wrote:
 > > 
-> > Signed-off-by: Rostislav Lisovy <lisovy@gmail.com>
-> > 
-> >  create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> > new file mode 100644
-> > index 0000000..04695c9
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> > @@ -0,0 +1,195 @@
-> > +/*
-> > + * Copyright 2013 Rostislav Lisovy <lisovy@gmail.com>, PiKRON s.r.o.
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +#include "imx53.dtsi"
-> > +
-> > +/ {
-> > +	model = "Voipac i.MX53 X53-DMM-668";
-> > +	compatible = "vp,imx53-dmm-668", "fsl,imx53";
-> > +
-> > +	memory@0 {
-> > +		device_type = "memory";
-> > +		reg = <0x70000000 0x20000000>;
-> > +	};
-> > +
-> > +	memory@1 {
-> > +		device_type = "memory";
-> > +		reg = <0xb0000000 0x20000000>;
-> > +	};
+> > There's another thing with DT bindings that makes them needlessly hard
+> > to settle on. Let's say you come up with a binding that accurately
+> > describes the hardware at hand and has been proven to work. Now people
+> > keep telling you that it might not be good enough, for whatever reason
+> > so eventually you decide to be bold and tell them that you're aware of
+> > everything that stable DT bindings imply and that there might be some
+> > risk of having to maintain two bindings because the first one didn't
+> > turn out to be perfect and yada yada.
 > 
-> The 'num' in memory@num should match the first number in 'reg' property,
-> so they should looks like:
+> You make a good point here. In my own limited experiences with DT
+> kernel development, a big debate always emerged about exactly how
+> these bindings should be called. Not being a real DT expert myself, I
+> really couldn't understand what the point was, but I just implemented
+> what the DT people wanted (or just dropped the submission altogether,
+> in one case).
 > 
-> 	memory@70000000 {
-> 		device_type = "memory";
-> 		reg = <0x70000000 0x20000000>;
-> 	}
-> 
-> 	memory@b0000000 {
-> 		device_type = "memory";
-> 		reg = <0xb0000000 0x20000000>;
-> 	}
-> 
-> > +
-> > +	regulators {
-> > +		compatible = "simple-bus";
-> > +
-> > +		reg_3p3v: 3p3v {
-> > +			compatible = "regulator-fixed";
-> > +			regulator-name = "3P3V";
-> > +			regulator-min-microvolt = <3300000>;
-> > +			regulator-max-microvolt = <3300000>;
-> > +			regulator-always-on;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&iomuxc {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_hog>;
-> > +
-> > +	hog {
-> > +		pinctrl_hog: hoggrp {
-> > +			fsl,pins = <
-> > +				/* Make DA9053 regulator functional */
-> > +				MX53_PAD_GPIO_16__GPIO7_11	0x80000000
-> > +
-> 
-> Drop these blank lines.  We generally only have blank lines between
-> nodes.
-> 
-> > +				/* FEC Power enable */
-> > +				MX53_PAD_GPIO_11__GPIO4_1	0x80000000
-> > +
-> > +				/* FEC RST */
-> > +				MX53_PAD_GPIO_12__GPIO4_2	0x80000000
-> > +			>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&uart1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart1_2>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c1 {
-> 
-> Please sort these nodes alphabetically in label name, so that new node
-> can find they slots easily.
-> 
-> Shawn
-> 
+> I think the frustration that you have experienced is simply a result
+> of the attitude on the DT list. Maybe the real issue is attitude
+> and personalities, and not the hurdle of stable bindings.
+
+Well, you both hit on something here. There's no possible self-policing
+of what is submitted as bindings.
+
+There's really no canonical documentation on best practices. Most
+bindings are inconsistent in format and deprecated in style of
+content.
+
+I'm not talking about referring back to ePAPR or the explanation of
+compatible string best practices on devicetree.org. I'm talking about
+all the decisions made in random threads. The "standards" and "best
+practices" have not been documented like our kernel patch submission
+process and best practices. As a result, people our generating
+additional traffic with every new binding submission. Stephen had
+a nice list of best practices but it's difficult to tell if that is
+agreed on by *all* the DT maintainers or his personal preference. At
+some point we need to agree on documentation for best practices acked
+by the entire maintainer team.
+
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
