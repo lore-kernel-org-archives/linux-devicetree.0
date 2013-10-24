@@ -1,73 +1,51 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v11 04/10] mtd: nand: omap: use DT specified bus-width
- only for scanning NAND device
-Date: Thu, 24 Oct 2013 18:27:15 -0300
-Message-ID: <20131024212714.GB2520@localhost>
-References: <1382619026-4182-1-git-send-email-pekon@ti.com>
- <1382619026-4182-5-git-send-email-pekon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382619026-4182-5-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: mark.rutland@arm.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com, devicetree@vger.kernel.org, Pawel.Moll@arm.com, arnd@arndb.de, swarren@wwwdotorg.org, tony@atomide.com, jp.francois@cynove.com, ijc+devicetree@hellion.org.uk, avinashphilipk@gmail.com, balbi@ti.com, robherring2@gmail.com, bcousson@baylibre.com, linux-mtd@lists.infradead.org, ivan.djelic@parrot.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
+From: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3 v3] Devicetree description for Voipac i.MX53 module
+Date: Thu, 24 Oct 2013 23:56:06 +0200
+Message-ID: <1382651769-21238-1-git-send-email-lisovy@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 06:20:20PM +0530, Pekon Gupta wrote:
-> This patch:
-> - calls nand_scan_ident() using bus-width as passed by DT
-> - removes double calls to nand_scan_ident(), incase first call fails
->   then omap_nand_probe just returns error.
->=20
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  drivers/mtd/nand/omap2.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index 5596368..f464321 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
-> @@ -1856,7 +1856,6 @@ static int omap_nand_probe(struct platform_devi=
-ce *pdev)
->  	mtd->name		=3D dev_name(&pdev->dev);
->  	mtd->owner		=3D THIS_MODULE;
->  	nand_chip		=3D &info->nand;
-> -	nand_chip->options	=3D pdata->devsize;
->  	nand_chip->options	|=3D NAND_SKIP_BBTSCAN;
->  #ifdef CONFIG_MTD_NAND_OMAP_BCH
->  	info->of_node		=3D pdata->of_node;
-> @@ -1904,6 +1903,15 @@ static int omap_nand_probe(struct platform_dev=
-ice *pdev)
->  		nand_chip->chip_delay =3D 50;
->  	}
-> =20
-> +	/* scan NAND device connected to chip controller */
-> +	nand_chip->options |=3D pdata->devsize & NAND_BUSWIDTH_16;
+This patchset adds devicetree description for Voipac X53-DMM-668 module
+which uses i.MX53 CPU. More information about the module may be found at:
+http://www.voipac.com/#X53-DMM-668
+The support for the baseboard used with this module is also provided.
+More information about the baseboard: http://www.voipac.com/#X25-BSB-000
 
-Hm.. this only works if the device is listed in nand_flash_ids[] array,
-so that ONFI detection is not used. To make ONFI detection work I think=
- you
-need to do as Brian suggested and use NAND_BUSWIDTH_AUTO.
+Working peripherals are:
+* UART0
+* Ethernet
+* Buttons (with keyboard controller)
+* Sound (headphone output)
+* SD-card
+* LEDs (through GPIOs)
+* i2c1, i2c3
+* ecspi1
 
-(Odd: why is there no current user of that auto-width option?)
+Changes since v2:
+* Changed (and properly added) Vendor prefix
 
-Anyway, I really think we should fix this now and independently
-of the evolution of this ECC DT binding discussion.
-That way you can keep sending a smaller ECC DT binding patchset and
-make reviewers focus on what's really important in each case.
+Changes since v1:
+* Minor fixes according to comments by Shawn Guo
 
-I have a few fixes (based on your work) and I'll send them now, after
-I complete the tests. We can continue our discussion there.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+Rostislav Lisovy (2):
+  ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+  ARM: dts: i.MX53: Devicetree for Voipac Baseboard using x53-dmm-668
+    module
+
+ arch/arm/boot/dts/Makefile                  |    1 +
+ arch/arm/boot/dts/imx53-voipac-bsb.dts      |  135 +++++++++++++++++++
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |  193 +++++++++++++++++++++++++++
+ 3 files changed, 329 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
+ create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+
+-- 
+1.7.10.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
