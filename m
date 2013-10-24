@@ -1,87 +1,135 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v10 10/10] mtd: nand: omap: remove selection of BCH
- ecc-scheme via KConfig
-Date: Thu, 24 Oct 2013 17:05:57 -0300
-Message-ID: <20131024200556.GA2520@localhost>
-References: <1382172254-12448-1-git-send-email-pekon@ti.com>
- <1382172254-12448-11-git-send-email-pekon@ti.com>
- <20131023134450.GE2458@localhost>
- <20980858CB6D3A4BAE95CA194937D5E73EA2A130@DBDE04.ent.ti.com>
- <20131023141352.GG2458@localhost>
- <CAAwP0s0M=KruCVUana+5Nfm-0nkMGTg1OAatKzCrDeHOXuqd6A@mail.gmail.com>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 15:11:42 -0500
+Message-ID: <CAHCPf3vtM4u6T3tnHa-UgV=WE_sJkojEpoLBpdpSdJ48NEbqQA@mail.gmail.com>
+References: <20131020220839.GT2443@sirena.org.uk>
+	<5264576F.6050307@wwwdotorg.org>
+	<alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+	<52658EBC.8020800@wwwdotorg.org>
+	<alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+	<20131022093923.GC15640@ulmo.nvidia.com>
+	<20131022150426.GF29341@beef>
+	<20131022171346.GE4061@obsidianresearch.com>
+	<20131023080630.GA14413@netboy>
+	<20131023172955.GA17145@obsidianresearch.com>
+	<20131023174458.GC5208@netboy>
+	<1382553982.31058.10.camel@sakura.staff.proxad.net>
+	<20131024095232.27BBCC4039D@trevor.secretlab.ca>
+	<1382614439.6040.16.camel@sakura.staff.proxad.net>
+	<1382615278.8522.72.camel@shinybook.infradead.org>
+	<1382616801.6040.26.camel@sakura.staff.proxad.net>
+	<3726fd81259f84ef308ba9011ae35174.squirrel@twosheds.infradead.org>
+	<1382619952.6040.57.camel@sakura.staff.proxad.net>
+	<addbb1933c62983e0114eeda7ce51342.squirrel@twosheds.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAwP0s0M=KruCVUana+5Nfm-0nkMGTg1OAatKzCrDeHOXuqd6A@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: "Gupta, Pekon" <pekon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>, linux-omap@vger.ke
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <addbb1933c62983e0114eeda7ce51342.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Javier,
+On Thu, Oct 24, 2013 at 8:14 AM, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+>
+>>
+>> On Thu, 2013-10-24 at 12:22 +0000, David Woodhouse wrote:
+>>
+>>> If you are correct to insist that DMA needs yo be supported in the new
+>>> driver *even* with old firmware, then yes, maybe.
+>>
+>> if DMA gives a performance boost for all workloads, what is the argument
+>> for not always enabling it ?
+>
+> If DMA gives a performance boost for all workloads, what bloody idiot
+> defined or reviewed a DT binding that didn't include the information which
+> is required to uae DMA? :)
 
-On Thu, Oct 24, 2013 at 09:49:09PM +0200, Javier Martinez Canillas wrot=
-e:
-> Hi Ezequiel
->=20
-> On Wed, Oct 23, 2013 at 4:13 PM, Ezequiel Garcia
-> <ezequiel.garcia@free-electrons.com> wrote:
-> > Pekon,
-> >
-> > On Wed, Oct 23, 2013 at 01:55:58PM +0000, Gupta, Pekon wrote:
-> >> >
-> >> > I'm wondering how are you testing this in your SOC_AM33XX board =
-(which
-> >> > is not ARCH_OMAP3). You probably have ARCH_OMAP3 always selected=
-?
-> >> >
-> >> Yes, omap2plus_defconfig is a super set..
-> >> arch/arm/configs/omap2plus_defconfig automatically enables ARCH_OM=
-AP3.
-> >>
-> >
-> > Yes, but I always remove what I won't use to reduce build time.
-> >
-> > And  now that you bring this issue. IMHO, the AM33xx family is goin=
-g
-> > to be more and more widely used, so maybe introducing an am33xx_def=
-config
-> > makes sense.
-> >
-> > Or is the trend to have the least possible amount of defconfigs?
->=20
-> I'm not familiar with AM33xx so I don't know how similar is to OMAP3
-> but we used to have different defconfigs for each OMAP board before
-> and consolidated everything in only two defconfigs: omap1_defconfig t=
-o
-> be used for all OMAP1 devices and omap2plus_defconfig to be used for
-> all OMAP2+ (i.e: OMAP{2,3,4,5}) devices.
->=20
-> Those have all the common kconfig options and board vendors can
-> customize to fit their needs and have a delta with something like:
->=20
-> $ ./scripts/kconfig/merge_config.sh
-> arch/arm/configs/omap2plus_defconfig /foo/bar/igep_defconfig
->=20
-> Again I'm not familiar with AM33xx but what I do know is that we
-> should keep defconfigs to a minimum.
->=20
+Two cases;
 
-=46air enough.
+1) Where nobody documented that DMA was possible - if it is via an
+external DMA controller with a configurable event number, then it is
+not part of the binding for that IP block anyway except to optionally
+specify what the dma controller in use is (phandle) and the event
+number (irq, dma-channels, whatever)
 
-It's just a bit annoying to have a bigger-than-minimal kernel,
-and I get tired of stripping the options.
+2 a) Where there was not any driver for DMA so nobody even knew it
+worked, but could only trust the documentation.
 
-But I can't ask the kernel to hold my favorite picks either:
-we have enough churn already ;-)
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+2 b) Where there are errata in older hardware which stopped it working
+and consensus was that it shouldn't be defined until it works, and
+then new hardware made it work
+
+Either way, your fix is the correct one. If an interrupt or dma
+channel for a device is totally fixed per SoC and that device is ONLY
+used on that SoC, you can add a fixup in the driver to deal with older
+bindings. This may be seen as a "huge leap backwards" but it is the
+only way to do it and that is a fact of life.
+
+This is the way the original Efika PPC was designed; Genesi/bplan did
+not put a lot of properties (including interrupt numbers and DMA
+functionality) in the tree because they were already used in pre-OF
+drivers and the mappings were ostensibly fixed and in the manual. As
+long as those drivers knew the values already, why describe them again
+and have to write hundreds of lines of code to override a static value
+with a dynamic DT-derived one?
+
+Once it hits another SoC (i.e. number of users of the driver is >1)
+then the property has to be required for the SECOND SoC unless it's
+exactly the same mapping. Then you can mandate the property defining
+the new values on newer hardware (with a particular compatible
+property that differentiates it) for the purposes of future proofing
+the driver, but on older hardware it can know what the real value is.
+In the case where it's EXACTLY the same, the property stays optional
+because drivers would always, as per older binding, know how to deal
+with it.
+
+Then came this edict that *absolutely everything* needed to be defined
+in DT, even though there were no other platforms (and still aren't)
+using those peripherals, and stuff like this got written:
+
+http://www.powerdeveloper.org/platforms/efika/devicetree
+
+Which I am quite proud of writing. And executing this script before
+loading the OS meant Linux kept working - at least during 2008 - and
+it is up to the user or distro to put that script in place when the OS
+requires it. What is infuriating is the reluctance for the
+distributions to mandate being able to script device tree changes when
+they also want to mandate scriptable boot.. it seems like a lot of "we
+don't want to, shove it on the vendors' back instead." All that is
+going to do is piss off board designers and their software engineering
+teams..
+
+>> I don't understand why having the soc-foo.h with the internal interrupt
+>> mapping in the kernel tree is a no-no, whereas it's ok to add the
+>> missing part of it in the form of fixups or directly in driver code.
+>
+> It's the difference between doing it as a matter of course, and doing it
+> only in the very rare "OMG we fucked up but we really *need* to fix it up
+> this time" case.
+
+Right. It doesn't need to be in a header or source just because it
+exists - it needs to be there as, and ONLY as, it is used.
+
+Most values are taken from the manuals anyway, so if they exist, they
+exist in the manual even if they are unused in the OS.
+
+If it really was as strict a process as some people would like it, the
+i.MX NFC NAND driver and a couple others, none of the i.MX pinctrl
+bindings currently existing or the very concept of defining clock
+providers (&clocknode XY where XY is an arbitrary enum inside the OS)
+would NEVER have hit. I absolutely loathe all 3 of these since they
+make it very very difficult for everyone involved in bringing up OS
+support on a new board, hardcoded values here and there but DT
+properties elsewhere..constant cross-referencing of bindings and
+headers and source code and Linux abstractions vs. manuals and host
+controller specs. Some of that is a fact of life.. a lot of it is
+definitely imposed by stupid design.
+
+-- 
+Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
