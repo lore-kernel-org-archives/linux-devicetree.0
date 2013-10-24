@@ -1,327 +1,298 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] ASoC: simple-card: add Device Tree
-	support
-Date: Thu, 24 Oct 2013 18:17:59 +0100
-Message-ID: <20131024171758.GA2461@kartoffel>
-References: <87eh97sqw7.wl%kuninori.morimoto.gx@renesas.com>
- <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
- <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
- <20131003104248.GI27287@sirena.org.uk>
- <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V4 1/2] tps6507x-ts: Add DT support
+Date: Thu, 24 Oct 2013 18:27:35 +0100
+Message-ID: <20131024172734.GB2461@kartoffel>
+References: <1382545733-8865-1-git-send-email-badarkhe.manish@gmail.com>
+	<1382545733-8865-2-git-send-email-badarkhe.manish@gmail.com>
+	<20131023164548.GB6042@kartoffel>
+	<CAKDJKT4+ma+KdNX0uemZUQVKHp8giGUX8EgWkY40vYOR-KR0_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <CAKDJKT4+ma+KdNX0uemZUQVKHp8giGUX8EgWkY40vYOR-KR0_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 04, 2013 at 01:04:41AM +0100, Kuninori Morimoto wrote:
-> Support for loading the simple-card module via DeviceTree.
-> It requests CPU/CODEC information,
-> and .of_xlate_dai_name support on each component driver.
+On Thu, Oct 24, 2013 at 06:05:53PM +0100, Manish Badarkhe wrote:
+> Hi Mark,
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
-> v1 -> v2
+> Thank you for your reply.
 > 
->  - add common clock support, system-clock-frequency can over-write it
->  - add some comment on code
+> On Wed, Oct 23, 2013 at 10:15 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 > 
-> v2 -> v3
+>     On Wed, Oct 23, 2013 at 05:28:52PM +0100, Manish Badarkhe wrote:
+>     > Add device tree based support for TI's tps6507x touchscreen.
+>     >
+>     > Signed-off-by: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>     > ---
+>     > Changes since V3:
+>     >  - Rebased on top of Dmitry's changes
+>     >  - Removed error handling for optional DT properties
+>     >
+>     > Changes since V2:
+>     >  - Removed unnecessary code.
+>     >  - Updated Documentation to provide proper names of
+>     >    devicetree properties.
+>     >
+>     > Changes since V1:
+>     >  - Updated documentation to specify tps6507x as multifunctional
+>     >    device.
+>     >  - return proper error value in absence of platform and DT
+>     >    data for touchscreen.
+>     >  - Updated commit message.
+>     >
+>     > :100755 100755 8fffa3c... e1b9cfd... M        Documentation/devicetree/
+>     bindings/mfd/tps6507x.txt
+>     > :100644 100644 db604e0... 0cf0eb1... M        drivers/input/touchscreen/
+>     tps6507x-ts.c
+>     >  Documentation/devicetree/bindings/mfd/tps6507x.txt |   24 ++++++-
+>     >  drivers/input/touchscreen/tps6507x-ts.c            |   72
+>     ++++++++++++--------
+>     >  2 files changed, 67 insertions(+), 29 deletions(-)
+>     >
+>     > diff --git a/Documentation/devicetree/bindings/mfd/tps6507x.txt b/
+>     Documentation/devicetree/bindings/mfd/tps6507x.txt
+>     > index 8fffa3c..e1b9cfd 100755
+>     > --- a/Documentation/devicetree/bindings/mfd/tps6507x.txt
+>     > +++ b/Documentation/devicetree/bindings/mfd/tps6507x.txt
+>     > @@ -1,4 +1,8 @@
+>     > -TPS6507x Power Management Integrated Circuit
+>     > +TPS6507x Multifunctional Device.
+>     > +
+>     > +Features provided by TPS6507x:
+>     > +        1.Power Management Integrated Circuit.
+>     > +        2.Touch-Screen.
+>     >
+>     >  Required properties:
+>     >  - compatible: "ti,tps6507x"
+>     > @@ -23,6 +27,9 @@ Required properties:
+>     >         vindcdc1_2-supply: VDCDC1 and VDCDC2 input.
+>     >         vindcdc3-supply  : VDCDC3 input.
+>     >         vldo1_2-supply   : VLDO1 and VLDO2 input.
+>     > +- tsc: This node specifies touch screen data.
 > 
->  - add devicetree ML address
+>     This is a node, but is listed un "Required properties". That seems odd.
 > 
->  .../devicetree/bindings/sound/simple-card.txt      |   85 ++++++++++++
->  sound/soc/generic/simple-card.c                    |  146 +++++++++++++++++++-
->  2 files changed, 226 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
+>     When is it required?
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-> new file mode 100644
-> index 0000000..75bbc5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-> @@ -0,0 +1,85 @@
-> +Simple-Card:
+>     Why is the data under the tsc subnode? Why not directly under the main
+>     node?
+> 
+> 
+> Yes, It seems odd to add a subnode properties here. I gone through other
+> documentation
+> for MFD devices and observed that separate documentation file is present for
+> sub node modules.
 
-It's really difficult to review this without a description. Please explain what
-this binding represents.
+I was trying to say that nodes != properties rather than that this should be
+split into separate files.
 
-What hardware is this applicable to?
-
-Does this inherit from some class of binding?
-
-> +
-> +Required properties:
-> +
-> +- compatible				: "simple-audio"
-> +- simple-audio,card-name		: simple-audio card name
-
-What's this used for?
-
-> +- simple-audio,cpu			: CPU sub-node, see below
-> +- simple-audio,codec			: CODEC sub-node, see below
-
-Describe these as required subnodes. Nodes are not properties.
-
-> +
-> +Optional properties:
-> +
-> +- simple-audio,format			: CPU/CODEC common format, see below
-> +
-> +Required cpu/codec subnode properties:
-> +
-> +- sound-dai				: phandle and port for CPU/CODEC
-> +- #sound-dai-cells			: sound-dai phandle's node
-
-This description makes no sense, the organisation seems structurally wrong.
-
-What does this mean? What does it affect?
-
-> +
-> +Optional subnode properties:
-> +
-> +- format				: specific format if needed, see below
-> +- frame-master				: frame master
-> +- bitclock-master			: bitclock master
-> +- bitclock-inversion			: clock inversion
-> +- frame-inversion			: frame inversion
-
-What do these mean? Repeating the name without a dash is completely unhelpful.
-Describe what these imply.
-
-What type are they?
-
-Which subnode(s) do they apply to?
-
-> +- clocks				: phandle for system clock rate
-
-Just one clock?
-
-Nit: clocks are specified with a phandle + clock-specifier pair, not just a phandle.
-
-> +- system-clock-frequency		: system clock rate
-> +					  it will overwrite clocks's rate
-
-This seems very odd.
-
-Why do you want to overwrite a clock's rate?
-
-> +
-> +simple-audio,format
-> +	"i2s"
-> +	"right_j"
-> +	"left_j"
-> +	"dsp_a"
-> +	"dsp_b"
-> +	"ac97"
-> +	"pdm"
-> +	"msb"
-> +	"lsb"
-
-What do these mean? Why are they not described when the property was defined above?
-
-Does this also apply for the "format" property?
-
-> +
-> +Example:
-> +
-> +clock {
-> +	osc: oscillator {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <11289600>;
-> +	};
-> +};
-> +
-> +sound {
-> +	compatible = "simple-audio";
-> +
-> +	simple-audio,card-name = "FSI2A-AK4648";
-> +	simple-audio,format = "left_j";
-> +
-> +	simple-audio,cpu {
-> +		sound-dai = <&sh_fsi2 0>;
-> +	};
-> +
-> +	simple-audio,codec {
-> +		sound-dai = <&ak4648>;
-> +		bitclock-master;
-> +		frame-master;
-> +		clocks = <&osc>;
-> +		/* it can use this instead of clocks
-> +		 * system-clock-frequency = <11289600>; */
-
-This just confuses matters. If ou want to show this off, have two examples.
-
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	ak4648: ak4648@0x12 {
-
-Nit: remove the 0x on the unit-address
-
-> +		#sound-dai-cells = <0>;
-> +		compatible = "asahi-kasei,ak4648";
-> +		reg = <0x12>;
-> +	};
-> +};
-> +
-> +sh_fsi2: sh_fsi2@0xec230000 {
-
-Again, fix the unit-address please.
-
-> +	#sound-dai-cells = <1>;
-> +	compatible = "renesas,sh_fsi2";
-> +	reg = <0xec230000 0x400>;
-> +	interrupt-parent = <&gic>;
-> +	interrupts = <0 146 0x4>;
-> +};
-> diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-> index 8c49147..62befbd 100644
-> --- a/sound/soc/generic/simple-card.c
-> +++ b/sound/soc/generic/simple-card.c
-> @@ -9,6 +9,8 @@
->   * published by the Free Software Foundation.
->   */
+> 
+> TPS6507x is multifunctional device and having touch screen submodule. As it is
+> child node for
+> TPS6507x multifunctional device, I have created child node as "tsc".
 >  
-> +#include <linux/clk.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
->  #include <sound/simple_card.h>
-> @@ -52,11 +54,135 @@ static int asoc_simple_card_dai_init(struct snd_soc_pcm_runtime *rtd)
->  	return 0;
->  }
+> 
+> 
+>     > +     ti,poll-period : Time at which touch input is getting sampled in
+>     ms.
+> 
+>     Is this for debounce? Other bindings have similar but differently named
+>     properties.
+> 
+> 
+> This is not debounce time. This time is required for input poll devices.
 >  
-> +static int
-> +__asoc_simple_card_parse_of(struct device_node *np,
-> +			    struct asoc_simple_dai *dai,
-> +			    struct device_node **node)
-> +{
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	/*
-> +	 * get node via "sound-dai = <&phandle port>"
-> +	 * it will be used as xxx_of_node on soc_bind_dai_link()
-> +	 */
-> +	*node = of_parse_phandle(np, "sound-dai", 0);
-> +	if (!*node)
-> +		return -ENODEV;
-> +
-> +	of_node_put(*node);
+> 
+>     Why is this necessary? Can the driver not choose a sane value?
+> 
+> 
+> poll-period is necessary to sample touch inputs. Driver will chose value
+> default poll
+> period if this value is not present. I was bit confused here, whether to add
+> this property
+> as optional or required. As with default period touch not achieve performance.
+> Can I make this property optional?
+
+Please elaborate. Why will the default period be sub-optimal? What's the
+tradeoff here?
+
+
+>  
+> 
+>     > +     ti,min-pressure: Minimum pressure value to trigger touch.
+> 
+>     What type are these? Single (u32) cells?
+> 
+>     What units is ti,min-pressure in?
+> 
+> 
+> No, its a u16 cell. It is measured in ohm. Again default value for min-pressure
+> is available
+> in driver code. Can I make this property optional?
+
+Why is it a u16, it's very uncommon to have u16 properties.
+
+What _physical_ units is this in, and what order of magnitude? e.g. Pascals,
+millipascals.
+
+> 
+> 
+>     >
+>     >  Regulator Optional properties:
+>     >  - defdcdc_default: It's property of DCDC2 and DCDC3 regulators.
+>     > @@ -30,6 +37,14 @@ Regulator Optional properties:
+>     >                       1: If defdcdc pin of DCDC2/DCDC3 is driven HIGH.
+>     >    If this property is not defined, it defaults to 0 (not enabled).
+>     >
+>     > +Touchscreen Optional properties:
+>     > +- ti,vendor : Touchscreen vendor id to populate
+>     > +           in sysclass interface.
+>     > +- ti,product: Touchscreen product id to populate
+>     > +           in sysclass interface.
+>     > +- ti,version: Touchscreen version id to populate
+>     > +           in sysclass interface.
+> 
+>     Are these integers, strings, or something else?
+> 
+> 
+> These are unsigned short(u16) values.
 
 Why?
 
-You're refrering to it, so why do you not want to have it refcounted?
+>  
+> 
+>     What values make sense?
+> 
+> 
+> These values are only to tell about chip details.
 
-It could disappear under your feet.
 
-> +
-> +	/* get dai->name */
-> +	ret = snd_soc_of_get_dai_name(np, &dai->name);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * bitclock-inversion, frame-inversion
-> +	 * bitclock-master,    frame-master
-> +	 * and specific "format" if it has
-> +	 */
-> +	dai->fmt = snd_soc_of_parse_daifmt(np, NULL);
-> +
-> +	/* dai->sysclk via "clolks = <xxx>" */
-> +	clk = of_clk_get(np, 0);
-> +	if (IS_ERR(clk))
-> +		dai->sysclk = 0;
-> +	else
-> +		dai->sysclk = clk_get_rate(clk);
+That does not describe the set of valid values.
 
-This seems like an odd assumption to make. Why not error?
+Is ti,vendor = <4> valid? What does this mean?
 
-> +
-> +	/*
-> +	 * overwrite dai->sysclk if it has
-> +	 * "system-clock-frequency = <xxx>"
-> +	 */
-> +	of_property_read_u32(np,
-> +			     "system-clock-frequency",
-> +			     &dai->sysclk);
+Is there some standard for assignment of vendor IDs that this follows?
 
-Is dai->sysclk defined as a u32?
+>  
+> 
+>     What's the sysclass interface? That sounds like a Linux detail. The
+>     properties
+>     might be fine but the description shouldn't need to refer to Linux
+>     internals.
+> 
+> 
+> Okay, I will update description for these properties. 
+> 
+> 
+>     > +
+>     >  Example:
+>     >
+>     >       pmu: tps6507x@48 {
+>     > @@ -88,4 +103,11 @@ Example:
+>     >                       };
+>     >               };
+>     >
+>     > +             tsc {
+>     > +                     ti,poll-period = <30>;
+>     > +                     ti,min-pressure = <0x30>;
+>     > +                     ti,vendor = <0>;
+>     > +                     ti,product = <65070>;
+>     > +                     ti,version = <0x100>;
+>     > +             };
+>     >       };
+>     > diff --git a/drivers/input/touchscreen/tps6507x-ts.c b/drivers/input/
+>     touchscreen/tps6507x-ts.c
+>     > index db604e0..0cf0eb1 100644
+>     > --- a/drivers/input/touchscreen/tps6507x-ts.c
+>     > +++ b/drivers/input/touchscreen/tps6507x-ts.c
+>     > @@ -22,6 +22,8 @@
+>     >  #include <linux/mfd/tps6507x.h>
+>     >  #include <linux/input/tps6507x-ts.h>
+>     >  #include <linux/delay.h>
+>     > +#include <linux/of.h>
+>     > +#include <linux/of_device.h>
+>     >
+>     >  #define TSC_DEFAULT_POLL_PERIOD 30 /* ms */
+>     >  #define TPS_DEFAULT_MIN_PRESSURE 0x30
+>     > @@ -206,33 +208,54 @@ done:
+>     >       tps6507x_adc_standby(tsc);
+>     >  }
+>     >
+>     > +static void tsc_init_data(struct tps6507x_ts *tsc,
+>     > +             struct input_dev *input_dev)
+>     > +{
+>     > +     struct device_node *node = tsc->dev->of_node;
+>     > +     const struct tps6507x_board *tps_board =
+>     > +                     dev_get_platdata(tsc->dev);
+>     > +     const struct touchscreen_init_data *init_data = NULL;
+>     > +
+>     > +     if (node)
+>     > +             node = of_find_node_by_name(node, "tsc");
+> 
+>     As of_find_node_by_name traverses the list of all nodes (not just
+>     children),
+>     this may match nodes other than what you expect.
+> 
+> 
+> I think, It traverse nodes from parent node (i.e. tps6507x) and find child.
+> Please correct me if I am wrong?
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int asoc_simple_card_parse_of(struct device_node *node,
-> +				     struct asoc_simple_card_info *info,
-> +				     struct device *dev,
-> +				     struct device_node **of_cpu,
-> +				     struct device_node **of_codec,
-> +				     struct device_node **of_platform)
-> +{
-> +	struct device_node *np;
-> +	int ret = 0;
-> +
-> +	/* get card name */
-> +	of_property_read_string(node, "simple-audio,card-name", &info->card);
-> +	info->name = info->card;
+No. As I said, it traverses the list of all nodes. Is there is no matching
+child, it will go on and possibly match a node that is not a direct child (e.g.
+a child of another node).
 
-What if the string is not in the DT?
+Perhaps of_get_child_by_name is what you want.
 
-Does the core code handle these being NULL?
+>  
+> 
+> 
+>     > +     if (tps_board)
+>     > +             /*
+>     > +              * init_data points to array of touchscreen_init structure
+>     > +              * coming from the board-evm file.
+>     > +              */
+>     > +             init_data = tps_board->tps6507x_ts_init_data;
+>     > +
+>     > +     if (node == NULL || init_data == NULL) {
+>     > +             tsc->poll_dev->poll_interval = TSC_DEFAULT_POLL_PERIOD;
+>     > +             tsc->min_pressure = TPS_DEFAULT_MIN_PRESSURE;
+>     > +     } else if (init_data) {
+>     > +             tsc->poll_dev->poll_interval = init_data->poll_period;
+>     > +             tsc->min_pressure = init_data->min_pressure;
+>     > +             input_dev->id.vendor = init_data->vendor;
+>     > +             input_dev->id.product = init_data->product;
+>     > +             input_dev->id.version = init_data->version;
+>     > +     } else if (node) {
+>     > +             of_property_read_u32(node, "ti,poll-period",
+>     > +                             &tsc->poll_dev->poll_interval);
+>     > +             of_property_read_u16(node, "ti,min-pressure",
+>     > +                             &tsc->min_pressure);
+> 
+>     You didn't mention these were 16-bit values in the binding.
+> 
+>     As DTB is encoded big-endian, and you didn't use a /bits/ 16 declaration
+>     (making the property a u32 cell), won't this read 0 in all cases you have a
+>     value in the expected range (as in your example)?
+> 
+> 
+> I will mention these values as 16bit. values in binding.
 
-> +
-> +	/* get CPU/CODEC common format via simple-audio,format */
-> +	info->daifmt = snd_soc_of_parse_daifmt(node, "simple-audio,") &
-> +		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
-> +
-> +	/* CPU/CODEC sub-node */
-> +	for_each_child_of_node(node, np) {
-> +		if (0 == strcmp("simple-audio,cpu", np->name))
-> +			ret = __asoc_simple_card_parse_of(np,
-> +							  &info->cpu_dai,
-> +							  of_cpu);
-> +		if (0 == strcmp("simple-audio,codec", np->name))
-> +			ret = __asoc_simple_card_parse_of(np,
-> +							  &info->codec_dai,
-> +							  of_codec);
-
-of_get_child_by_name?
-
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-
-What if there were no children?
-
-> +
-> +	/* simple-card assumes platform == cpu */
-> +	*of_platform = *of_cpu;
-> +
-> +	dev_dbg(dev, "card-name : %s\n", info->card);
-> +	dev_dbg(dev, "platform : %04x / %p\n",
-> +		info->daifmt,
-> +		*of_platform);
-
-Why is the pointer helpful, rather than the info it points to?
+Please explain _why_ they are 16-bit values. Even if they are 16-bit it may
+make sense to have them as u32 values for general consistency and least
+surprise.
 
 Thanks,
 Mark.
