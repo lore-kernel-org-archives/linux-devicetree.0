@@ -1,135 +1,185 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Thu, 24 Oct 2013 10:51:43 +0530
-Message-ID: <5268AE67.8060902@ti.com>
-References: <20131018141221.GH2721@beef> <5264F37E.9060307@ti.com>
- <20131022104829.GF15425@login.drsnuggles.stderr.nl>
- <20131022112520.GE29341@beef> <5266F06C.2080701@gmail.com>
- <20131023144242.GI29341@beef>
+From: NeilBrown <neilb@suse.de>
+Subject: [PATCH] twl4030_charger: add devicetree support.
+Date: Thu, 24 Oct 2013 16:50:05 +1100
+Message-ID: <20131024165005.78bc8740@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131023144242.GI29341@beef>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Porter <matt.porter@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Matthijs Kooijman <matthijs@stdin.nl>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/4Qz24Bg_Jg9//8YCHXbsI_A"; protocol="application/pgp-signature"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--Sig_/4Qz24Bg_Jg9//8YCHXbsI_A
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 23 October 2013 08:12 PM, Matt Porter wrote:
-> On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
->> On 10/22/2013 06:25 AM, Matt Porter wrote:
->>> On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
->>>> Hi Kishon,
->>>>
->>>> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
->>>>> I think it makes sense to keep the data width property in the dwc2 node itself.
->>>>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
->>>>> that it can be either <8> or <16>).
->>>> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
->>>> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
->>>> and 16 supported" would make sense as a property of dwc2 (though this
->>>> value should be autodetectable through GHWCFG4), while the actual 8 or
->>>> 16 supported by the PHY would make sense as property of a phy.
->>>
->>> There would be no value in adding a property for an already detectable
->>> value to dwc2's binding. To be honest, it's pretty much useless
->>> information due to the existence of the "8 and 16" option.
->>>
->>>> Note sure if this is really useful in practice as well, or if just
->>>> setting the actual width to use on dwc2 makes more sense...
->>>
->>> The GHWCFG4 information itself is not useful in practice, as described
->>> in the original thread: https://lkml.org/lkml/2013/10/10/477
->>>
->>> It's certainly useful in practice to have this width property in either
->>> the dwc2 or the phy binding. One can make a case for either. As I
->>> mentioned in the original post, if we put it in the phy binding we'll be
->>> updating the generic phy binding. We'll then need an api added into the
->>> generic phy framework to fetch the width of a phy.
->>>
->>> Both cases are doable and trivial, we just need the canonical decision
->>> from a DT maintainer as to where the property belongs. Given that they
->>> are in ARM ksummit, I'm not expecting to hear anything right this
->>> moment. :)
->>
->> The host can support both, so it is not a property of the host and is a
->> property of the phy. It is no different than what mode a SPI slave
->> requires or whether an i2c slave supports 8 or 10-bit addressing. Those
->> examples are all 1 to many rather than 1 to 1 where it doesn't really
->> matter, but the same logic applies.
-> 
-> Makes good sense, thanks.
-> 
-> In this case, given the PHY ownership of width, we can completely avoid
-> any DT properties. The generic phy compliant BCM Kona phy driver can
-> report via the generic phy framework that it is 8-bit wide. There's no
-> support for this type of thing now but it's pretty trivial to add.
-> 
-> I went ahead and did a quick proof-of-concept that adds a free-form
-> phy attributes struct for the generic phy. Given that generic phys can
-> be for any transmission technology this could be filled with a jumble
-> unrelated and often unpopulated attributes over time. In any case, the
-> below patch allows the phy provider to choose to specify utmi_width and
-> a controller driver that cares can use phy_get_attrs() to fetch the
-> optional phy attributes and use the utmi_width field if applicable.
-> 
-> Kishon: I'll start a separate thread to discuss what approach you'd like
-> to see in the generic phy framework to manage this.
-> 
-> -Matt
-> 
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 6d72269..b763d7b 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -38,6 +38,14 @@ struct phy_ops {
->  };
-> 
->  /**
-> + * struct phy_attrs - represents phy attributes
-> + * @utmi_width: Data path width implemented by UTMI PHY
-> + */
-> +struct phy_attrs {
-> +	int			utmi_width;
-> +};
-> +
-> +/**
->   * struct phy - represents the phy device
->   * @dev: phy device
->   * @id: id of the phy device
-> @@ -51,6 +59,7 @@ struct phy {
->  	struct device		dev;
->  	int			id;
->  	const struct phy_ops	*ops;
-> +	struct phy_attrs	*attrs;
->  	struct phy_init_data	*init_data;
->  	struct mutex		mutex;
->  	int			init_count;
-> @@ -127,6 +136,9 @@ int phy_init(struct phy *phy);
->  int phy_exit(struct phy *phy);
->  int phy_power_on(struct phy *phy);
->  int phy_power_off(struct phy *phy);
-> +static inline struct phy_attrs *phy_get_attrs(struct phy *phy) {
-> +	return phy->attrs;
-> +};
 
-I'd prefer to have phy_set_bus_width and phy_get_bus_width instead.
+[my first device-tree related patch.  Please let me know what I got wrong so
+I wont repeat the mistake in all the others I have queued]
 
-Thanks
-Kishon
+This allows the charger to be enabled with devicetree, and
+allows the parameters for charging the backup battery to be set.
 
->  struct phy *phy_get(struct device *dev, const char *string);
->  struct phy *devm_phy_get(struct device *dev, const char *string);
->  void phy_put(struct phy *phy);
-> 
+Signed-off-by: NeilBrown <neilb@suse.de>
+
+diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Docu=
+mentation/devicetree/bindings/power/twl-charger.txt
+new file mode 100644
+index 0000000..8afaa9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/twl-charger.txt
+@@ -0,0 +1,20 @@
++TWL BCI (Battery Charger Interface)
++
++Required properties:
++- compatible:
++  - "ti,twl4030-bci"
++- interrupts: two interrupt lines from the TWL SIH (secondary
++  interrupt handler) - interrupts 9 and 2.
++
++Optional properties:
++- bb-uvolt: microvolts for charging the backup battery.
++- bb-uamp: microamps for charging the backup battery.
++
++Examples:
++
++bci {
++   compatible =3D "ti,twl4030-bci";
++   interrupts =3D <9>, <2>;
++   bb-uvolt =3D <3200000>;
++   bb-uamp =3D <150>;
++};
+diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+index ae6a17a..5a12540 100644
+--- a/arch/arm/boot/dts/twl4030.dtsi
++++ b/arch/arm/boot/dts/twl4030.dtsi
+@@ -19,6 +19,12 @@
+ 		interrupts =3D <11>;
+ 	};
+=20
++	charger: bci {
++		compatible =3D "ti,twl4030-bci";
++		interrupts =3D <9>, <2>;
++		bci3v1-supply =3D <&vusb3v1>;
++	};
++
+ 	watchdog {
+ 		compatible =3D "ti,twl4030-wdt";
+ 	};
+diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charge=
+r.c
+index d98abe9..a06b973 100644
+--- a/drivers/power/twl4030_charger.c
++++ b/drivers/power/twl4030_charger.c
+@@ -495,10 +495,38 @@ static enum power_supply_property twl4030_charger_pro=
+ps[] =3D {
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ };
+=20
++#ifdef CONFIG_OF
++static const struct twl4030_bci_platform_data *
++twl4030_bci_parse_dt(struct device *dev)
++{
++	struct device_node *np =3D dev->of_node;
++	struct twl4030_bci_platform_data *pdata;
++	u32 num;
++
++	if (!np)
++		return NULL;
++	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return pdata;
++
++	if (of_property_read_u32(np, "bb-uvolt", &num) =3D=3D 0)
++		pdata->bb_uvolt =3D num;
++	if (of_property_read_u32(np, "bb-uamp", &num) =3D=3D 0)
++		pdata->bb_uamp =3D num;
++	return pdata;
++}
++#else
++static inline const struct twl4030_bci_platform_data *
++twl4030_bci_parse_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int __init twl4030_bci_probe(struct platform_device *pdev)
+ {
+ 	struct twl4030_bci *bci;
+-	struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
++	const struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
+ 	int ret;
+ 	u32 reg;
+=20
+@@ -506,6 +534,9 @@ static int __init twl4030_bci_probe(struct platform_dev=
+ice *pdev)
+ 	if (bci =3D=3D NULL)
+ 		return -ENOMEM;
+=20
++	if (!pdata)
++		pdata =3D twl4030_bci_parse_dt(&pdev->dev);
++
+ 	bci->dev =3D &pdev->dev;
+ 	bci->irq_chg =3D platform_get_irq(pdev, 0);
+ 	bci->irq_bci =3D platform_get_irq(pdev, 1);
+@@ -581,8 +612,11 @@ static int __init twl4030_bci_probe(struct platform_de=
+vice *pdev)
+=20
+ 	twl4030_charger_enable_ac(true);
+ 	twl4030_charger_enable_usb(bci, true);
+-	twl4030_charger_enable_backup(pdata->bb_uvolt,
+-				      pdata->bb_uamp);
++	if (pdata)
++		twl4030_charger_enable_backup(pdata->bb_uvolt,
++					      pdata->bb_uamp);
++	else
++		twl4030_charger_enable_backup(0, 0);
+=20
+ 	return 0;
+=20
+@@ -631,10 +665,17 @@ static int __exit twl4030_bci_remove(struct platform_=
+device *pdev)
+ 	return 0;
+ }
+=20
++static const struct of_device_id twl_bci_of_match[] =3D {
++	{.compatible =3D "ti,twl4030-bci", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, twl_bci_of_match);
++
+ static struct platform_driver twl4030_bci_driver =3D {
+ 	.driver	=3D {
+ 		.name	=3D "twl4030_bci",
+ 		.owner	=3D THIS_MODULE,
++		.of_match_table =3D of_match_ptr(twl_bci_of_match),
+ 	},
+ 	.remove	=3D __exit_p(twl4030_bci_remove),
+ };
+
+--Sig_/4Qz24Bg_Jg9//8YCHXbsI_A
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUmi1DTnsnt1WYoG5AQIJ/g//fC6TTgweCqCIKNmLp7C1tvLdsu9ztog7
+BwjYIB+XuUZXJzETJYcwbi+MWX1B3FZvdruSZBuZcK5Hn0G+RH3OaUqJ9oRb+1fv
+ODX+eMYMpOOX/5qB4vq5bAF7QkUddOLCZYEV7ZebQW/fQLkWZl3/D8HvpH6KVab7
+BzZ9sL3NjFWeAZN5uQXxR+pDWpyzIphFjE7SoLBVdrkbtWZoKQ/7WGmAXRYBs1tj
++LS/vPsIoxpCFFnlj1uGQaaflbD9RXJKugPHg5/GgbYe/I7JLtwOr/+CNwYahnWW
+eI+sWv0Oc8Vyj+GY8HgjVZP2pwmG2MdrK+LDBSkJXB/4LfBJLDsO8fiT0ItOGj75
+71Ar/LPlNRVypICb+IvILOKYDtdryH/+UdAoQpcFhxTZEjnY6m/5GcjkrjUFx5u6
+M+iMbjMVVGHIiIRXK1UazWtTfupTFloxlfNFsCaEUIp0l7ROrPVizmi7342aV4jz
+bR+EUzSwycRgkUtwOUK+9T1Yj3xnKqLjTQEd317CqDRJiisz+rErDareICTbeYLl
+uTzhTicDy9GjC4EqoWy7SpprK3uvcMkJ818/t49drO614Icx20mIsEOW3hzSxn2q
+Djtn3eOwjRex48oUrYhWg/YCQCz//iGGZNXKPM74on05zUrIKIhavuhpHMsiFaPJ
+izTz86rmv5k=
+=7PFI
+-----END PGP SIGNATURE-----
+
+--Sig_/4Qz24Bg_Jg9//8YCHXbsI_A--
