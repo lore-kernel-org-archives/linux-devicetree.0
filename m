@@ -1,149 +1,124 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv5][ 1/4] Input: tsc2007: Add device tree support.
-Date: Thu, 24 Oct 2013 09:46:16 +0200
-Message-ID: <20131024074615.GC9403@ulmo.nvidia.com>
-References: <1382530220-27881-1-git-send-email-denis@eukrea.com>
- <52684B33.6040109@gmail.com>
- <20131024085150.11a81974@ipc1.ka-ro>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Usage of for_each_child_of_node()
+Date: Thu, 24 Oct 2013 09:50:58 +0200
+Message-ID: <20131024075058.GD9403@ulmo.nvidia.com>
+References: <5259B6F8.3070701@roeck-us.net>
+ <CAL_Jsq+wBGV6KGo4Ngrxr4_aZ=0eWPTbt0n4bhhrpERB55bQyg@mail.gmail.com>
+ <20131023071006.GA7708@ulmo.nvidia.com>
+ <20131023161644.GB20675@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
-Return-path: <linux-input-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131024085150.11a81974@ipc1.ka-ro>
-Sender: linux-input-owner@vger.kernel.org
-To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Cc: Rob Herring <robherring2@gmail.com>, Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20131023161644.GB20675-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---nmemrqcdn5VTmUEE
-Content-Type: text/plain; charset=utf-8
+--mJm6k4Vb/yFcL9ZU
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2013 at 08:51:50AM +0200, Lothar Wa=C3=9Fmann wrote:
-> Hi,
+On Wed, Oct 23, 2013 at 09:16:44AM -0700, Guenter Roeck wrote:
+> On Wed, Oct 23, 2013 at 09:10:07AM +0200, Thierry Reding wrote:
+> > On Sat, Oct 12, 2013 at 10:15:03PM -0500, Rob Herring wrote:
+> > > On Sat, Oct 12, 2013 at 3:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> w=
+rote:
+> > > > Hi all,
+> > > >
+> > > > for_each_child_of_node() and similar functions increase the refcount
+> > > > on each returned node and expect the caller to release the node by
+> > > > calling of_node_put() when done.
+> > > >
+> > > > Looking through the kernel code, it appears this is hardly ever don=
+e,
+> > > > if at all. Some code even calls of_node_get() on returned nodes aga=
+in.
+> > > >
+> > > > I guess this doesn't matter in cases where devicetree is a static e=
+ntity.
+> > > > However, this is not (or no longer) the case with devicetree overla=
+ys,
+> > > > or more generically in cases where devicetree nodes are added and
+> > > > removed dynamically.
+> > > >
+> > > > Fundamental question: Would patches to fix this problem be accepted=
+ upstream
+> > > > ?
+> > >=20
+> > > Certainly.
+> > >=20
+> > > > Or, of course, stepping a bit back: Am I missing something essentia=
+l ?
+> > >=20
+> > > No. I think this is frequently wrong since it typically doesn't matter
+> > > for static entries as you mention.
+> >=20
+> > Actually, I think it actually happens to be correct most of the time.
+> > The reason is that for_each_child_of_node() internally calls the
+> > of_get_next_child() to iterate over all children. And that function
+> > already calls of_node_put() on the "previous" node. So if all the code
+> > does is to iterate over all nodes to query them, then all should be
+> > fine.
+> >=20
+> Good, that reduces the scope of the problem significantly.
 >=20
-> Rob Herring wrote:
-> > On 10/23/2013 07:10 AM, Denis Carikli wrote:
-> [...]
-> > > diff --git
-> a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > > new file mode 100644
-> > > index 0000000..fadd3f6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > > @@ -0,0 +1,44 @@
-> > > +* Texas Instruments tsc2007 touchscreen controller
-> > > +
-> > > +Required properties:
-> > > +- compatible: must be "ti,tsc2007".
-> > > +- reg: I2C address of the chip.
-> > > +- pinctrl-0: Should specify pin control groups used for this control=
-ler
-> > > +  (see pinctrl bindings[0]).
-> > > +- pinctrl-names: Should contain only one value - "default"
-> > > +  (see pinctrl bindings[0]).
+> > The only case where you actually need to drop the reference on a node is
+> > if you break out of the loop (so that of_get_next_child() will not be
+> > called). But that's usually the case when you need to perform some
+> > operation on the node, in which case it is the right thing to hold on to
+> > a reference until you're done with the node.
 > >=20
-> > I'm confused why an i2c slave needs pinctl binding?
-> >=20
-> for the pendetect GPIO.
+> Unfortunately, there are many cases with code such as
+>=20
+> 	if (error)
+> 		return;	/* or break; */
 
-Shouldn't that be done transparently to users of the GPIO API? I was
-under the impression that gpio_request() would set everything up (or
-return an error if unable to do so) so that the GPIO can be used,
-including any required pinmuxing.
+Well, a break isn't necessarily bad, since you could be using the node
+subsequently. I imagine that depending on the exact block following the
+if statement the node could also be assigned to some field within a
+structure or similar, in which case this might still be valid. So it
+really needs to be evaluated on a case by case basis.
 
-> [...]
-> > > diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touc=
-hscreen/tsc2007.c
-> > > index 0b67ba4..0625fe1 100644
-> > > --- a/drivers/input/touchscreen/tsc2007.c
-> > > +++ b/drivers/input/touchscreen/tsc2007.c
-> > > @@ -26,6 +26,9 @@
-> > >  #include <linux/interrupt.h>
-> > >  #include <linux/i2c.h>
-> > >  #include <linux/i2c/tsc2007.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_gpio.h>
-> > > =20
-> > >  #define TSC2007_MEASURE_TEMP0		(0x0 << 4)
-> > >  #define TSC2007_MEASURE_AUX		(0x2 << 4)
-> > > @@ -74,7 +77,10 @@ struct tsc2007 {
-> > >  	u16			max_rt;
-> > >  	unsigned long		poll_delay;
-> > >  	unsigned long		poll_period;
-> > > +	int			fuzzy;
-> > > +	char			of;
-> > > =20
-> > > +	unsigned		gpio;
-> > >  	int			irq;
-> > > =20
-> > >  	wait_queue_head_t	wait;
-> [...]
-> > > @@ -273,34 +295,65 @@ static void tsc2007_close(struct input_dev *inp=
-ut_dev)
-> > >  	tsc2007_stop(ts);
-> > >  }
-> > > =20
-> > > -static int tsc2007_probe(struct i2c_client *client,
-> > > -				   const struct i2c_device_id *id)
-> > > +#ifdef CONFIG_OF
-> > > +static int tsc2007_probe_dt(struct i2c_client *client, struct tsc200=
-7 *ts,
-> > > +			    struct device_node *np)
-> > >  {
-> > > -	struct tsc2007 *ts;
-> > > -	struct tsc2007_platform_data *pdata =3D client->dev.platform_data;
-> > > -	struct input_dev *input_dev;
-> > > -	int err;
-> > > -
-> > > -	if (!pdata) {
-> > > -		dev_err(&client->dev, "platform data is required!\n");
-> > > +	int err =3D 0;
-> > > +	u32 val32;
-> > > +	u64 val64;
-> > > +
-> > > +	if (!of_property_read_u32(np, "max-rt", &val32))
-> > > +		ts->max_rt =3D val32;
-> > > +	else
-> > > +		ts->max_rt =3D MAX_12BIT;
-> >=20
-> > These functions don't overwrite the value if the property isn't present.
-> > So you can set the values to the defaults and just pass the variable
-> > (i.e. ts->max_rt) to of_property_read_u32 directly.
-> >=20
-> Not quite. Since max_rt is an u16 you can't pass it to
-> of_property_read_u32(). And using of_property_read_u16() requires the
-> abominable DT notation: "/bits/ 16 <value>;"
+If the above is actually verbatim, then yes, that's certainly an error.
 
-In that case perhaps you need to check that whatever u32 value you read
-=66rom DT is actually in the expected range before assigning to u16?
+> or even
+> 	if (found node)
+> 		return of_node_get(node);
+>=20
+> in the loop.
+
+Yeah, I think all of those are probably wrong too.
 
 Thierry
 
---nmemrqcdn5VTmUEE
+--mJm6k4Vb/yFcL9ZU
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSaNBHAAoJEN0jrNd/PrOhytkP/2lInXs5z+1aybOuSYoysWHc
-V3/6/inO4EtsI63GSDL8r6kXvn+hRVqhXeRL7ED0NxTg5M3A2QMy6uFwn4HSxDOV
-1WoKnw/AJN/+lboD6pwvHrBt/fLXgz8ZoeGzkl1DR5y1cSZhU9cQbGnbLPyVTHKv
-ur0OjdEwCA2ZYvCqAOqUN+v2zT0eqmwFCobl7+S/kRcRXl5F0YfYSjgDjOZX0Dob
-Puq8CphF9eReRTi3w2KLPjcUTEan97drieWvaLIvNXqYvvu+zVZnN1c2lEMrEyBI
-2U6QGHt3wx5NWW5aNyEDDnYl/TBFf+6omkdE5TTVQgvTly+lDKsDUfBAQNS2Zw4D
-B5y9/Pa6mIkBjw+gw47E3lCXfqXNDw0tFE858Vt2RXXNX6w9gamIq9D87x6tS3vU
-UcxSOL1cqB4jLIqe9Kig7/8F6J6BMuo1s3oUHProdB3Z897aFzZdEDzHdDEDXO/y
-vncHczfVQNLOGIjx7OnqDXSUzgLUSFD6Exh4Z/EqdIT40HMrOdVfdvZ9ViHBx3+d
-SmH0G3ESdcU2yCpZt7InP3kkPgJKv/t66aGU8trE932VTXjMN4AS+AyN7T7Q5qOR
-KXXM/TXL35ew1g7dOa48pPHCRWdf4rE5RRtbHRqxK7p7j0ClzrEosCGULJ3N6jZ6
-HwOVUZYWMtWraxfkMYOk
-=zlNm
+iQIcBAEBAgAGBQJSaNFiAAoJEN0jrNd/PrOhBkMP/j6y3CVAsKmjjoN+vXzdKUSI
+9wqIufhmKio6/45o9vNRoOOIHc0B1sT/V8KzlLMEKrW3qCLuaQuohE5FBVuu8u5y
+VWqSrxo/EeTRNc2eL+MvA8/lkAOtzh5YgfqivWVw8xIKAuislPOD5oh66uwwa0IL
+AjZCXJYhAy9BbQK/k+RabzyEQGz6pyy2da5G6cungeCQ/MJKM/q43JyBKZnZuYGy
+Meydw1w+NpSG901WwBtYp+jrKCQzJtO+S6c3hLeVO2egaCXQz0hOzenAhscome3o
+Uv02g0Pwpil6jWTEc3A0br88GGnTRpHwvWcLQOwJWi7Dxg1dTzFpivrC9E56ckx6
+nruGE5vgYmVTNY7E5ABY3B+8SKFB6qwiV8DyefzPtF3LwB02Gj8dpfTQ7uNnwz4y
+1JVUDi8Y2rVOFe3ETofF17GBkMm9LiKkzelENFk+5pnr80Tf6Nd91q99ittOCp/K
+6cevzeLHdcov3d9o1wZ6CsYgwLfdwipq3gmR4nhemfY+hw/RNnOyYcQnoebJ4eiL
+guhbIXI94fjzrUUBb3DVgSBgmeWQxp3F2tyvIFu7+KCUed43gd9qY+EmjJq0dl2N
+7SNagqXuH4Q5SWQFpXFbDAyZYqkXFNN/2cIX5Gd+PgNwMTW1PjNyPiWZG8YOSjBn
+7izD4h9CzuwMSiMtVDZf
+=34Xy
 -----END PGP SIGNATURE-----
 
---nmemrqcdn5VTmUEE--
+--mJm6k4Vb/yFcL9ZU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
