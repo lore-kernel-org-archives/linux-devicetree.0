@@ -1,61 +1,80 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
-Date: Thu, 24 Oct 2013 18:23:47 +0200
-Message-ID: <20131024162346.GA3769@ab42.lan>
-References: <20131008122145.GA21985@ab42.lan>
- <1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
- <CACRpkdaMq1bzcTP6KZCGuWSm2MB0vSmJ4aRskuQNB8at4YnWRQ@mail.gmail.com>
- <20131015134526.GB7461@ab42.lan>
- <CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
- <20131016125855.GA20308@ab42.lan>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 12:27:29 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1310241146210.1951@syhkavp.arg>
+References: <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef> <20131022171346.GE4061@obsidianresearch.com> <20131023080630.GA14413@netboy> <20131023172955.GA17145@obsidianresearch.com> <20131023174458.GC5208@netboy>
+ <1382553982.31058.10.camel@sakura.staff.proxad.net> <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net> <1382615278.8522.72.camel@shinybook.infradead.org> <20131024122346.GD11296@ulmo.nvidia.com>
+ <1382619655.6040.52.camel@sakura.staff.proxad.net> <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org> <1382621431.6040.66.camel@sakura.staff.proxad.net> <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131016125855.GA20308@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <af289ef3cc80be8de26274ba1f598d54.squirrel-fWAbwA/6YHlc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2013 at 02:58:55PM +0200, Christian Ruppert wrote:
-> On Wed, Oct 16, 2013 at 01:29:44PM +0200, Linus Walleij wrote:
-> > On Tue, Oct 15, 2013 at 3:45 PM, Christian Ruppert
-> > <christian.ruppert@abilis.com> wrote:
-> > > On Wed, Oct 09, 2013 at 02:19:17PM +0200, Linus Walleij wrote:
-> > 
-> > >> It's not like I'm 100% certain on where to use one or the other
-> > >> construct (a mechanism like the above is needed for threaded
-> > >> IRQs I've noticed) but the chained handler seems more to the
-> > >> point does it not?
-> > >>
-> > >> The only downside I've seen is that the parent IRQ does not get
-> > >> a name and the accumulated IRQ stats in /proc/interrupts but
-> > >> surely we can live without that (or fix it).
-> > >>
-> > >> Since I'm a bit rusty on chained IRQs correct me if I'm wrong...
-> > >
-> > > OK, it took me a while to figure this back out again because as far as
-> > > I'm familiar with the IRQ framework you're right. The reason I'm not
-> > > using irq_set_chained_handler is that we have one driver instance per
-> > > GPIO bank and all GPIO banks share the same interrupt line. This means
-> > > every driver instance needs its own (different) user data and a simple
-> > > call to irq_set_handler_data(tb10x_gpio) won't suffice. I'm not aware of
-> > > any mechanism that allows interrupt sharing with the
-> > > irq_set_chained_handler() mechanism.
-> > 
-> > OK yes makes perfect sense. We'll live with this then.
-> > 
-> > I didn't see a new version of this patch with the other two, shall
-> > I just apply this last version in the pin control tree with the
-> > two other patches?
+On Thu, 24 Oct 2013, David Woodhouse wrote:
+
 > 
-> If you don't see anything else which needs changing please do so, yes.
+> >
+> > On Thu, 2013-10-24 at 13:10 +0000, David Woodhouse wrote:
+> >
+> >> Note that you are not describing a normal "DT scenario" here. You are
+> >> describing a case in which we screwed up
+> >
+> > AKA "real world"
+> 
+> No. Absolutely not. That was a screwup, and it needs to be *rare*. The
+> excuses you present for it are crappy and uunacceptable.
 
-Hi Linus,
+Let's get real please.  It is just too easy for DT reviewers in their 
+ivory tower to shot down submissions because the bindings are not to 
+their liking.
 
-I didn't see this one pop up in the git repositories yet, are there any
-issues left with the driver?
+The world out there is not stable.  Things change.  Hardware is revised 
+all the time.  Software change to cope.  And even when the hardware is 
+stable, new software solutions come about to improve things.  That's the 
+point of _soft_ware, isn't it?  Flexibility is needed in order to scale.
 
-Best regards,
-  Christian
+"DT only describe the hardware" is often brought up as if that was the 
+ultimate argument for its "stability".  But descriptions, even hardware 
+descriptions, may be subjective i.e. two humans might describe it 
+differently.  Incidentally DT bindings are created by humans and are 
+therefore imperfect and suboptimal most of the time.
+
+We used to have very lenient reviews on new DT bindings.  Sure some of 
+them were bad.  The recent reaction to that was to go 180 degrees and 
+accept only near perfect bindings.  But the cure is now hurting more 
+than the initial problem.
+
+Sure, the world would be so much better if DT bindings could be optimal 
+on the first shot.  But asking that DT bindings remain stable when the 
+world around them is not is asking for the impossible.
+
+So IMHO the failure with DT right now is actually the expectations that 
+come with it.  Those expectations are not realistic.
+
+Special cases are the norm, whether you like it or not.  In fact we all 
+hate special cases because they make what would otherwise be a very 
+straight forward and elegant process rather messy.  This is why a 
+process needs to concern itself with special cases since this is where a 
+process is even more helpful.
+
+So instead of trying to enforce even more stability in the DT bindings 
+with stricter rules, I think that the process should instead concern 
+itself with better ways to _allow_ and _facilitate_ binding updates.  
+This is much more likely to scale, and result in a better system in the 
+end.
+
+And since there is so many changes one can bring to ultimately describe 
+some piece of hardware, the DT bindings will naturally reach a stable 
+state eventually. But that cannot be known in advance when that will be.
+
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
