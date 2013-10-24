@@ -1,44 +1,32 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
-Date: Thu, 24 Oct 2013 10:57:04 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1310241045120.4983@ionos.tec.linutronix.de>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <52499441.1030403@gmail.com> <524AAE69.8060703@ti.com> <524AD290.207@gmail.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <524AD290.207@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sricharan R <r.sricharan@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 10/19] iommu/tegra: smmu: Get "nvidia,swgroups" from DT
+Date: Thu, 24 Oct 2013 09:58:11 +0100
+Message-ID: <20131024085811.A3F2CC4039D@trevor.secretlab.ca>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com> <1382092020-13170-11-git-send-email-hdoyu@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382092020-13170-11-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Oct 2013, Rob Herring wrote:
-> On 10/01/2013 06:13 AM, Sricharan R wrote:
+On Fri, 18 Oct 2013 13:26:51 +0300, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> This provides the info about which H/W Accelerators are supported on
+> Tegra SoC. This info is passed from DT. This is necessary to have the
+> unified SMMU driver among Tegra SoCs. Instead of using platform data,
+> DT passes "nvidia,swgroups" now. DT is mandatory in Tegra.
 > 
-> Is there an actual usecase on a single h/w design that you run out of
-> interrupts and it is a user decision which interrupts to use?
+> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> @@ -1200,6 +1193,9 @@ static int tegra_smmu_probe(struct platform_device *pdev)
+>  	if (of_property_read_u32(dev->of_node, "nvidia,#asids", &asids))
+>  		return -ENODEV;
+>  
+> +	if (of_property_read_u64(dev->of_node, "nvidia,swgroups", &swgroups))
+> +		return -ENODEV;
+> +
 
-I don't think that matters. What matters is that you have a single DT
-entry which tells the driver which crossbar irq to use for that
-particular device. And that is the only information which is relevant
-because the IP block is connected to a crossbar input and not to a GIC
-line. The crossbar provides the mapping and this is really best done
-at runtime w/o having hardcoded information in the DT or at some other
-place.
- 
-> You could fill in the interrupt-map at run-time. It would have to be
-> early (bootloader or early kernel init) and can't be at request_irq time.
-
-How is that supposed to work when you have no idea at early boot time
-which particular IP blocks are going to be used later on?
-
-> >   http://www.spinics.net/lists/linux-omap/msg97085.html
-> 
-> This has nothing to do with the GIC, so it does not belong there.
-
-Errm. crossbar is a mapping device which happens to sit between the
-GIC and the IP blocks. So how is this NOT related to GIC ?
-
-Thanks,
-
-	tglx
+Best practice: A new property has been created here. If the property
+isn't present, then it should default to the previous meaning instead of
+outright failing. (or make a strong argument that no one is using this
+yet and therefore is not breakage).
