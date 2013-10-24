@@ -1,84 +1,56 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv2] iio:light:tsl2563: Add DT support
-Date: Thu, 24 Oct 2013 16:27:15 +0200
-Message-ID: <1382624835-10228-1-git-send-email-sre@debian.org>
-References: <1382565063-17083-1-git-send-email-sre@debian.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382565063-17083-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "David Woodhouse" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 14:30:09 -0000
+Message-ID: <465e75de15f7d79c3b57a3b88024e739.squirrel@twosheds.infradead.org>
+References: <20131023174458.GC5208@netboy>
+    <1382553982.31058.10.camel@sakura.staff.proxad.net>
+    <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+    <1382614439.6040.16.camel@sakura.staff.proxad.net>
+    <1382615278.8522.72.camel@shinybook.infradead.org>
+    <20131024122346.GD11296@ulmo.nvidia.com>
+    <1382619655.6040.52.camel@sakura.staff.proxad.net>
+    <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
+    <1382621431.6040.66.camel@sakura.staff.proxad.net>
+    <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
+    <20131024141955.GB25061@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131024141955.GB25061-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree support for the TSL2563 driver
-and document the binding.
 
-Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
- drivers/iio/light/tsl2563.c                           |  4 ++++
- 3 files changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> On Thu, Oct 24, 2013 at 02:05:58PM -0000, David Woodhouse wrote:
+>>
+>> >
+>> > On Thu, 2013-10-24 at 13:10 +0000, David Woodhouse wrote:
+>> >
+>> >> Note that you are not describing a normal "DT scenario" here. You are
+>> >> describing a case in which we screwed up
+>> >
+>> > AKA "real world"
+>>
+>> No. Absolutely not. That was a screwup, and it needs to be *rare*. The
+>> excuses you present for it are crappy and uunacceptable.
+>
+> That's not helping. The fact is that is has happened.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-new file mode 100644
-index 0000000..f91e809
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-@@ -0,0 +1,19 @@
-+* AMS TAOS TSL2563 ambient light sensor
-+
-+Required properties:
-+
-+  - compatible : should be "amstaos,tsl2563"
-+  - reg : the I2C address of the sensor
-+
-+Optional properties:
-+
-+  - amstaos,cover-comp-gain : integer used as multiplier for gain
-+                              compensation (default = 1)
-+
-+Example:
-+
-+tsl2563@29 {
-+	compatible = "amstaos,tsl2563";
-+	reg = <0x29>;
-+	amstaos,cover-comp-gain = <16>;
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2cc3dad..d26c834 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -9,6 +9,7 @@ aeroflexgaisler	Aeroflex Gaisler AB
- ak	Asahi Kasei Corp.
- altr	Altera Corp.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
-+amstaos	AMS Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
- arm	ARM Ltd.
- atmel	Atmel Corporation
-diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
-index ebb962c..261660a 100644
---- a/drivers/iio/light/tsl2563.c
-+++ b/drivers/iio/light/tsl2563.c
-@@ -699,6 +699,7 @@ static int tsl2563_probe(struct i2c_client *client,
- 	struct iio_dev *indio_dev;
- 	struct tsl2563_chip *chip;
- 	struct tsl2563_platform_data *pdata = client->dev.platform_data;
-+	struct device_node *np = client->dev.of_node;
- 	int err = 0;
- 	u8 id = 0;
- 
-@@ -735,6 +736,9 @@ static int tsl2563_probe(struct i2c_client *client,
- 
- 	if (pdata)
- 		chip->cover_comp_gain = pdata->cover_comp_gain;
-+	else if (np)
-+		of_property_read_u32_index(np, "amstaos,cover-comp-gain", 0,
-+							&chip->cover_comp_gain);
- 	else
- 		chip->cover_comp_gain = 1;
- 
+It has happened, yes. But we're describing how things *shall* work going
+forward. Coping with existing mistakes is a slightly separate issue.
+(Albeit only slightly since mistakes *will* continue to happen, but
+hopefully more rarely so our defined processes for coping are based on the
+assumption that it should be rare)
+
+
 -- 
-1.8.4.rc3
+dwmw2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
