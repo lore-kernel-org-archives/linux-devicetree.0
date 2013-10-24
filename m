@@ -1,128 +1,35 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv5][ 1/4] Input: tsc2007: Add device tree support.
-Date: Thu, 24 Oct 2013 08:51:50 +0200
-Message-ID: <20131024085150.11a81974@ipc1.ka-ro>
-References: <1382530220-27881-1-git-send-email-denis@eukrea.com>
-	<52684B33.6040109@gmail.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: fix the ecc regression
+Date: Thu, 24 Oct 2013 14:59:58 +0800
+Message-ID: <5268C56E.8050806@freescale.com>
+References: <1382418628-4521-1-git-send-email-b32955@freescale.com> <20131022185639.GK23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <52684B33.6040109@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131022185639.GK23337-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi David & Mark & Brian:
 
-Rob Herring wrote:
-> On 10/23/2013 07:10 AM, Denis Carikli wrote:
-[...]
-> > diff --git
-a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> > new file mode 100644
-> > index 0000000..fadd3f6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.t=
-xt
-> > @@ -0,0 +1,44 @@
-> > +* Texas Instruments tsc2007 touchscreen controller
-> > +
-> > +Required properties:
-> > +- compatible: must be "ti,tsc2007".
-> > +- reg: I2C address of the chip.
-> > +- pinctrl-0: Should specify pin control groups used for this contr=
-oller
-> > +  (see pinctrl bindings[0]).
-> > +- pinctrl-names: Should contain only one value - "default"
-> > +  (see pinctrl bindings[0]).
->=20
-> I'm confused why an i2c slave needs pinctl binding?
->=20
-for the pendetect GPIO.
+    thanks for your review and comments.
+> ... so why don't you just add a DT property to actually specify the ECC
+> selection itself, rather than indirectly specifying it through a vague
+Do you mean i should add a DT property like "fsl, gpmi-use-new-ecclayout" ?
 
-[...]
-> > diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/to=
-uchscreen/tsc2007.c
-> > index 0b67ba4..0625fe1 100644
-> > --- a/drivers/input/touchscreen/tsc2007.c
-> > +++ b/drivers/input/touchscreen/tsc2007.c
-> > @@ -26,6 +26,9 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/i2c/tsc2007.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_gpio.h>
-> > =20
-> >  #define TSC2007_MEASURE_TEMP0		(0x0 << 4)
-> >  #define TSC2007_MEASURE_AUX		(0x2 << 4)
-> > @@ -74,7 +77,10 @@ struct tsc2007 {
-> >  	u16			max_rt;
-> >  	unsigned long		poll_delay;
-> >  	unsigned long		poll_period;
-> > +	int			fuzzy;
-> > +	char			of;
-> > =20
-> > +	unsigned		gpio;
-> >  	int			irq;
-> > =20
-> >  	wait_queue_head_t	wait;
-[...]
-> > @@ -273,34 +295,65 @@ static void tsc2007_close(struct input_dev *i=
-nput_dev)
-> >  	tsc2007_stop(ts);
-> >  }
-> > =20
-> > -static int tsc2007_probe(struct i2c_client *client,
-> > -				   const struct i2c_device_id *id)
-> > +#ifdef CONFIG_OF
-> > +static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2=
-007 *ts,
-> > +			    struct device_node *np)
-> >  {
-> > -	struct tsc2007 *ts;
-> > -	struct tsc2007_platform_data *pdata =3D client->dev.platform_data=
-;
-> > -	struct input_dev *input_dev;
-> > -	int err;
-> > -
-> > -	if (!pdata) {
-> > -		dev_err(&client->dev, "platform data is required!\n");
-> > +	int err =3D 0;
-> > +	u32 val32;
-> > +	u64 val64;
-> > +
-> > +	if (!of_property_read_u32(np, "max-rt", &val32))
-> > +		ts->max_rt =3D val32;
-> > +	else
-> > +		ts->max_rt =3D MAX_12BIT;
->=20
-> These functions don't overwrite the value if the property isn't prese=
-nt.
-> So you can set the values to the defaults and just pass the variable
-> (i.e. ts->max_rt) to of_property_read_u32 directly.
->=20
-Not quite. Since max_rt is an u16 you can't pass it to
-of_property_read_u32(). And using of_property_read_u16() requires the
-abominable DT notation: "/bits/ 16 <value>;"
+I am not understand "the ECC selection itself".
 
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+thanks
+Huang Shijie
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
