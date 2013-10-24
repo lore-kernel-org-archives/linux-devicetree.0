@@ -1,66 +1,60 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v11 00/10] [PATCH v10 00/10] mtd:nand:omap2: clean-up of
- supported ECC schemes
-Date: Thu, 24 Oct 2013 10:52:59 -0300
-Message-ID: <20131024135258.GC9958@localhost>
-References: <1382619026-4182-1-git-send-email-pekon@ti.com>
+From: "David Woodhouse" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 14:05:58 -0000
+Message-ID: <af289ef3cc80be8de26274ba1f598d54.squirrel@twosheds.infradead.org>
+References: <20131022093923.GC15640@ulmo.nvidia.com>
+    <20131022150426.GF29341@beef>
+    <20131022171346.GE4061@obsidianresearch.com>
+    <20131023080630.GA14413@netboy>
+    <20131023172955.GA17145@obsidianresearch.com>
+    <20131023174458.GC5208@netboy>
+    <1382553982.31058.10.camel@sakura.staff.proxad.net>
+    <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+    <1382614439.6040.16.camel@sakura.staff.proxad.net>
+    <1382615278.8522.72.camel@shinybook.infradead.org>
+    <20131024122346.GD11296@ulmo.nvidia.com>
+    <1382619655.6040.52.camel@sakura.staff.proxad.net>
+    <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org>
+    <1382621431.6040.66.camel@sakura.staff.proxad.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382619026-4182-1-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: mark.rutland@arm.com, olof@lixom.net, computersforpeace@gmail.com, dedekind1@gmail.com, devicetree@vger.kernel.org, Pawel.Moll@arm.com, arnd@arndb.de, swarren@wwwdotorg.org, tony@atomide.com, jp.francois@cynove.com, ijc+devicetree@hellion.org.uk, avinashphilipk@gmail.com, balbi@ti.com, robherring2@gmail.com, bcousson@baylibre.com, linux-mtd@lists.infradead.org, ivan.djelic@parrot.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382621431.6040.66.camel-MdnFuL0m/hCw+z8RR+d9WEZ2mhrpEnA6@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
 
-Just as suggestion, I think you should reconsider your 'upstream strate=
-gy'.
+>
+> On Thu, 2013-10-24 at 13:10 +0000, David Woodhouse wrote:
+>
+>> Note that you are not describing a normal "DT scenario" here. You are
+>> describing a case in which we screwed up
+>
+> AKA "real world"
 
-On Thu, Oct 24, 2013 at 06:20:16PM +0530, Pekon Gupta wrote:
-[..]
->=20
-> Pekon Gupta (10):
->   ARM: OMAP2+: cleaned-up DT support of various ECC schemes
->   mtd: nand: omap: combine different flavours of 1-bit hamming ecc sc=
-hemes
->   mtd: nand: omap: cleanup: replace local references with generic fra=
-mework names
+No. Absolutely not. That was a screwup, and it needs to be *rare*. The
+excuses you present for it are crappy and uunacceptable.
 
-IMHO, this patch about the dobule nand_scan_ident():
->   mtd: nand: omap: use DT specified bus-width only for scanning NAND =
-device
+>> So yes, after the public flogging has happened, and we're trying to
+>> work out how best to cope with the screwup, we don't necessarily have
+>> any perfect choices. The perfect choice was to do it properly in the
+>> first place.
+>
+> or avoid shooting ourselves in the foot in the first place, and keep
+> these unmodifiable stuff in kernel :)
 
-is a fix unrelated to this series and can be pushed independently.
-Maybe you can try to send it as a one-patch fix?
+No. That doesn't scale. It doesn't work. We can cope with special-cases
+for the rare screw-up, but that's a *long* way from always special-casing
+*everything* as we used to.
 
->   mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC configurations in =
-device_probe
->   mtd: nand: omap: clean-up ecc layout for BCH ecc schemes
->   mtd: nand: omap: use drivers/mtd/nand/nand_bch.c wrapper for BCH EC=
-C instead of lib/bch.c
->   ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+-- 
+dwmw2
 
-And also this patch:
->   mtd: nand: omap: updated devm_xx for all resource allocation and fr=
-ee calls
-
-doesn't seem to belong to this series.
-
-I think tou could send those two independently and ask Brian to merge t=
-hem earlier
-if appropriate.
-
-But again, this is just a suggestion.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
