@@ -1,7 +1,7 @@
 From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [RFCv3 0/7] OMAP SSI driver
-Date: Thu, 24 Oct 2013 08:27:33 +0000 (UTC)
-Message-ID: <19700101000313.GA1434__30337.6794247471$1382603263$gmane$org__9747.06146387092$1382603263$gmane$org@xo-6d-61-c0.localdomain>
+Date: Thu, 24 Oct 2013 08:27:37 +0000 (UTC)
+Message-ID: <19700101000313.GA1434__13399.0809008994$1382603267$gmane$org__42287.7909428038$1382603267$gmane$org@xo-6d-61-c0.localdomain>
 References: <1381091235-18293-1-git-send-email-sre@debian.org>
  <20131008172815.GA8313@atomide.com>
  <20131010172128.GF28657@earth.universe>
@@ -9,11 +9,11 @@ References: <1381091235-18293-1-git-send-email-sre@debian.org>
  <20131010200236.GA6603@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Date: Thu, 1 Jan 1970 01:03:13 +0100
 Content-Disposition: inline
 In-Reply-To: <20131010200236.GA6603@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-omap-owner@vger.kernel.org
 To: Aaro Koskinen <aaro.koskinen@iki.fi>, Stephen Rothwell <sfr@canb.auug.org.au>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, 'Beno?t Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 'Pali Roh?r' <pali.rohar@gmail.com>, '???????????? ????????????????' <freemangordon@abv.bg>, Jon
 List-Id: devicetree@vger.kernel.org
 
