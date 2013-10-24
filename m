@@ -1,61 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Thu, 24 Oct 2013 13:20:02 +0200
-Message-ID: <3278905.VOXO7bPE7e@avalon>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <3592147.9IprvsogX6@avalon> <52645428.9080607@wwwdotorg.org>
+From: Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or
+ is there something better?
+Date: Thu, 24 Oct 2013 13:33:59 +0200
+Message-ID: <1382614439.6040.16.camel@sakura.staff.proxad.net>
+References: <20131020220839.GT2443@sirena.org.uk>
+	 <5264576F.6050307@wwwdotorg.org>
+	 <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>
+	 <52658EBC.8020800@wwwdotorg.org>
+	 <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>
+	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>
+	 <20131022171346.GE4061@obsidianresearch.com>
+	 <20131023080630.GA14413@netboy>
+	 <20131023172955.GA17145@obsidianresearch.com>
+	 <20131023174458.GC5208@netboy>
+	 <1382553982.31058.10.camel@sakura.staff.proxad.net>
+	 <20131024095232.27BBCC4039D@trevor.secretlab.ca>
+Reply-To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52645428.9080607-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131024095232.27BBCC4039D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
-> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
-> ...
-> 
-> >> As I said, anything that really needs a CDF binding to work
-> >> likely isn't "simple" anymore, therefore a separate driver can
-> >> easily be justified.
-> > 
-> > The system as a whole would be more complex, but the panel could be
-> > the same. We can't have two drivers for the same piece of hardware
-> > in the DT world, as there will be a single compatible string and no
-> > way to choose between the drivers (unlike the board code world that
-> > could set device names to "foo- encoder-v4l2" or "foo-encoder-drm"
-> > and live happily with that ever after).
-> 
-> That's not true. We can certainly define two different compatible
-> values for a piece of HW if we have to. We can easily control whether
-> they are handled by the same or different drivers in the OS.
+On Thu, 2013-10-24 at 10:52 +0100, Grant Likely wrote:
 
->From an implementation point of view, sure. But from a conceptual point of 
-view, that would make the DT bindings pretty Linux-specific, with a 
-description of what the operating system should do instead of a description of 
-what the hardware looks like. My understanding is that we've tried pretty hard 
-in the past not to open that Pandora's box.
+> At this point if the hardware exists then it should be described in DTB,
+> even if it is merely compatible, reg, interrupts and maybe clocks
 
-The case I'm mostly concerned about would be two different compatibility 
-strings to select whether the device should be handled by a KMS or V4L driver. 
-I don't think that's a good idea.
+if your driver does not use them, chances are you'll get them wrong.
 
-> Now, we should try to avoid this, because then that means that the
-> original binding wasn't fully describing the HW. However, at least in
-> the case of these simple LCD panels, it's hard to see that there is
-> anything more than what's already in Thierry's binding. Remember, the
-> binding is a description of the HW, not any Linux-internal details of
-> how e.g. a CDF or DRM subsystem is supposed to use the HW; that had
-> better be embodied into the driver or subsystem code, which aren't
-> ABIs, and hence can be easily modified/enhanced.
+> properties. In many cases that is all that is required. It /is/ okay to
+> amend a binding later and to use default values if the new properties
+> aren't present.
+
+how do you handle the case of a wrong property, because you only wrote
+hardware description and not the driver ?
+
+> hardware description when enabling previously unused peripherals, but it
+> is absolutely not friendly to change a binding/driver in a what that fails on
+> previously working DTB (with the caveat that if no one notices, it
+> isn't breakage).
+
+ok then how do we solve that case:
+
+ - Marvell SOC 1 is mainlined
+ - Marvell SOC 2 is mainlined
+ - Marvell SOC 'x' is mainlined
+ - "PIO" hw crypto driver is written, working for all SOCs
+ - [1 year]
+ - SOCs bindings are marked as stable
+ - [1 year]
+ - someone rewrite the driver of hw crypto to use DMA, existing binding
+is not ok because clock 'foo' or interrupt 'bar', now required, are not
+present.
+
+what is the process merge that driver ?
+
+if the answer is that you need to keep PIO mode in driver so that
+existing DTBs still works with it, then this is just plain *wrong*.
+
 -- 
-Regards,
+Maxime
 
-Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
