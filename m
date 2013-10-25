@@ -1,86 +1,64 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
-Date: Thu, 24 Oct 2013 22:27:43 -0500
-Message-ID: <C89F2E38-4428-4AA9-B032-630F3BEA4C1D@codeaurora.org>
-References: <20131008122145.GA21985@ab42.lan> <1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv2] iio:light:tsl2563: Add DT support
+Date: Thu, 24 Oct 2013 22:32:36 -0500
+Message-ID: <35B50A0C-D1F9-4D87-86DD-951BF71F2903@codeaurora.org>
+References: <1382565063-17083-1-git-send-email-sre@debian.org> <1382624835-10228-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382624835-10228-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 8, 2013, at 7:25 AM, Christian Ruppert wrote:
+On Oct 24, 2013, at 9:27 AM, Sebastian Reichel wrote:
 
-> The GPIO driver for the Abilis Systems TB10x series of SOCs based on ARC700
-> CPUs. It supports GPIO control and GPIO interrupt generation. This driver
-> works in conjunction with the TB10x pinctrl driver.
+> Add Device Tree support for the TSL2563 driver
+> and document the binding.
 > 
-> Signed-off-by: Sascha Leuenberger <sascha.leuenberger@abilis.com>
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 > ---
-> .../devicetree/bindings/gpio/abilis,tb10x-gpio.txt |   36 ++
-> drivers/gpio/Kconfig                               |    4 +
-> drivers/gpio/Makefile                              |    1 +
-> drivers/gpio/gpio-tb10x.c                          |  341 ++++++++++++++++++++
-> 4 files changed, 382 insertions(+), 0 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
-> create mode 100644 drivers/gpio/gpio-tb10x.c
+> .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
+> Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+> drivers/iio/light/tsl2563.c                           |  4 ++++
+> 3 files changed, 24 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt b/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
 > new file mode 100644
-> index 0000000..00611ac
+> index 0000000..f91e809
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
-> @@ -0,0 +1,36 @@
-> +* Abilis TB10x GPIO controller
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> @@ -0,0 +1,19 @@
+> +* AMS TAOS TSL2563 ambient light sensor
 > +
-> +Required Properties:
-> +- compatible: Should be "abilis,tb10x-gpio"
-> +- reg: Address and length of the register set for the device
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be <2>. The first cell is the pin number and the
-> +  second cell is used to specify optional parameters:
-> +   - bit 0 specifies polarity (0 for normal, 1 for inverted).
-> +- abilis,ngpio: the number of GPIO pins this driver controls.
+> +Required properties:
 > +
-> +Optional Properties:
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: Should be <1>. Interrupts are triggered on both edges.
-> +- interrupts: Defines the interrupt line connecting this GPIO controller to
-> +  its parent interrupt controller.
-> +- interrupt-parent: Defines the parent interrupt controller.
+> +  - compatible : should be "amstaos,tsl2563"
+> +  - reg : the I2C address of the sensor
 > +
-> +GPIO ranges are specified as described in
-> +Documentation/devicetree/bindings/gpio/gpio.txt
+> +Optional properties:
+> +
+> +  - amstaos,cover-comp-gain : integer used as multiplier for gain
+> +                              compensation (default = 1)
 > +
 > +Example:
 > +
-> +	gpioa: gpio@FF140000 {
-> +		compatible = "abilis,tb10x-gpio";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		interrupt-parent = <&tb10x_ictl>;
-> +		interrupts = <27 2>;
-> +		reg = <0xFF140000 0x1000>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		abilis,ngpio = <3>;
-> +		gpio-ranges = <&iomux 0 0 0>;
-> +		gpio-ranges-group-names = "gpioa_pins";
-> +	};
+> +tsl2563@29 {
+> +	compatible = "amstaos,tsl2563";
+> +	reg = <0x29>;
+> +	amstaos,cover-comp-gain = <16>;
+> +};
 
-For the Binding part:
+For the Binding, assuming another patch to add amstoas to the vendor list
 
-Acked-by: Kumar Gala <galak@codeaurora.org>
+Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
 - k
 
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
