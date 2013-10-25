@@ -1,131 +1,131 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] Does PHY UTMI data width belong to DWC2 or PHY binding?
-Date: Fri, 25 Oct 2013 09:33:01 -0400
-Message-ID: <20131025133301.GC29341@beef>
-References: <20131018141221.GH2721@beef>
- <5264F37E.9060307@ti.com>
- <20131022104829.GF15425@login.drsnuggles.stderr.nl>
- <20131022112520.GE29341@beef>
- <5266F06C.2080701@gmail.com>
- <20131023144242.GI29341@beef>
- <5268AE67.8060902@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 25 Oct 2013 15:46:58 +0200
+Message-ID: <20131025134651.GC1551@ulmo.nvidia.com>
+References: <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+	<20131025001038.77299C403B6@trevor.secretlab.ca>
+	<20131025075652.GB19622@ulmo.nvidia.com>
+	<20131025.112202.47792301040951621.hdoyu@nvidia.com>
+	<20131025132051.GD9999@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5268AE67.8060902-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Matthijs Kooijman <matthijs-gZv8Wpyq0Kk@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0693683813122427891=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131025132051.GD9999-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 10:51:43AM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Wednesday 23 October 2013 08:12 PM, Matt Porter wrote:
-> > On Tue, Oct 22, 2013 at 04:38:52PM -0500, Rob Herring wrote:
-> >> On 10/22/2013 06:25 AM, Matt Porter wrote:
-> >>> On Tue, Oct 22, 2013 at 12:48:29PM +0200, Matthijs Kooijman wrote:
-> >>>> Hi Kishon,
-> >>>>
-> >>>> On Mon, Oct 21, 2013 at 02:57:26PM +0530, Kishon Vijay Abraham I wrote:
-> >>>>> I think it makes sense to keep the data width property in the dwc2 node itself.
-> >>>>> I mean it describes how the dwc2 IP is configured in that particular SoC (given
-> >>>>> that it can be either <8> or <16>).
-> >>>> If I'm reading the RT3052 datasheet correctly (GHWCFG4 register), the IP
-> >>>> can be configured for 8, 16 or 8 _and_ 16. In the latter case, the "8
-> >>>> and 16 supported" would make sense as a property of dwc2 (though this
-> >>>> value should be autodetectable through GHWCFG4), while the actual 8 or
-> >>>> 16 supported by the PHY would make sense as property of a phy.
-> >>>
-> >>> There would be no value in adding a property for an already detectable
-> >>> value to dwc2's binding. To be honest, it's pretty much useless
-> >>> information due to the existence of the "8 and 16" option.
-> >>>
-> >>>> Note sure if this is really useful in practice as well, or if just
-> >>>> setting the actual width to use on dwc2 makes more sense...
-> >>>
-> >>> The GHWCFG4 information itself is not useful in practice, as described
-> >>> in the original thread: https://lkml.org/lkml/2013/10/10/477
-> >>>
-> >>> It's certainly useful in practice to have this width property in either
-> >>> the dwc2 or the phy binding. One can make a case for either. As I
-> >>> mentioned in the original post, if we put it in the phy binding we'll be
-> >>> updating the generic phy binding. We'll then need an api added into the
-> >>> generic phy framework to fetch the width of a phy.
-> >>>
-> >>> Both cases are doable and trivial, we just need the canonical decision
-> >>> from a DT maintainer as to where the property belongs. Given that they
-> >>> are in ARM ksummit, I'm not expecting to hear anything right this
-> >>> moment. :)
-> >>
-> >> The host can support both, so it is not a property of the host and is a
-> >> property of the phy. It is no different than what mode a SPI slave
-> >> requires or whether an i2c slave supports 8 or 10-bit addressing. Those
-> >> examples are all 1 to many rather than 1 to 1 where it doesn't really
-> >> matter, but the same logic applies.
-> > 
-> > Makes good sense, thanks.
-> > 
-> > In this case, given the PHY ownership of width, we can completely avoid
-> > any DT properties. The generic phy compliant BCM Kona phy driver can
-> > report via the generic phy framework that it is 8-bit wide. There's no
-> > support for this type of thing now but it's pretty trivial to add.
-> > 
-> > I went ahead and did a quick proof-of-concept that adds a free-form
-> > phy attributes struct for the generic phy. Given that generic phys can
-> > be for any transmission technology this could be filled with a jumble
-> > unrelated and often unpopulated attributes over time. In any case, the
-> > below patch allows the phy provider to choose to specify utmi_width and
-> > a controller driver that cares can use phy_get_attrs() to fetch the
-> > optional phy attributes and use the utmi_width field if applicable.
-> > 
-> > Kishon: I'll start a separate thread to discuss what approach you'd like
-> > to see in the generic phy framework to manage this.
-> > 
-> > -Matt
-> > 
-> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> > index 6d72269..b763d7b 100644
-> > --- a/include/linux/phy/phy.h
-> > +++ b/include/linux/phy/phy.h
-> > @@ -38,6 +38,14 @@ struct phy_ops {
-> >  };
-> > 
-> >  /**
-> > + * struct phy_attrs - represents phy attributes
-> > + * @utmi_width: Data path width implemented by UTMI PHY
-> > + */
-> > +struct phy_attrs {
-> > +	int			utmi_width;
-> > +};
-> > +
-> > +/**
-> >   * struct phy - represents the phy device
-> >   * @dev: phy device
-> >   * @id: id of the phy device
-> > @@ -51,6 +59,7 @@ struct phy {
-> >  	struct device		dev;
-> >  	int			id;
-> >  	const struct phy_ops	*ops;
-> > +	struct phy_attrs	*attrs;
-> >  	struct phy_init_data	*init_data;
-> >  	struct mutex		mutex;
-> >  	int			init_count;
-> > @@ -127,6 +136,9 @@ int phy_init(struct phy *phy);
-> >  int phy_exit(struct phy *phy);
-> >  int phy_power_on(struct phy *phy);
-> >  int phy_power_off(struct phy *phy);
-> > +static inline struct phy_attrs *phy_get_attrs(struct phy *phy) {
-> > +	return phy->attrs;
-> > +};
-> 
-> I'd prefer to have phy_set_bus_width and phy_get_bus_width instead.
 
-Ok, will incorporate this. Thanks.
+--===============0693683813122427891==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Md/poaVZ8hnGTzuv"
+Content-Disposition: inline
 
--Matt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--Md/poaVZ8hnGTzuv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 25, 2013 at 02:20:51PM +0100, Will Deacon wrote:
+> On Fri, Oct 25, 2013 at 09:22:02AM +0100, Hiroshi Doyu wrote:
+> > Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 09:5=
+6:55 +0200:
+> >=20
+> > > I suspect that there will be enough differences between the various
+> > > IOMMU implementations that we won't be able to have a unified binding
+> > > (especially for how to associate devices with a particular virtual
+> > > address space), but perhaps that could be solved with something like =
+an
+> > > .of_xlate() that IOMMU drivers implement, much like we've done with m=
+ost
+> > > other subsystems too.
+> > >=20
+> > > The binding for Tegra's IOMMU currently only uses the HW IDs (or a ma=
+sk)
+> > > to put a device into a given address space, but I think that could be
+> > > easily extended to something like:
+> > >=20
+> > > 	memory-clients =3D <&iommu MASK>;
+> > >=20
+> > > Or similar. If other information is required, we could encode that in=
+to
+> > > a multi-cell specifier. Perhaps we could even leave away the phandle
+> > > since typically there will only be a single IOMMU in the system?
+> > >=20
+> > > Does that sound reasonable? Hiroshi is much more familiar with IOMMUs,
+> > > so I'd like to get his opinion on the above as well.
+> >=20
+> > I think that the above may be possible, but I'd like to listen from
+> > other IOMMU SOC maintainers.
+> >=20
+> > A brief explanation for "memory-clients":
+> >=20
+> > In tegra, every H/W has its own memory-client ID, and it can be
+> > associated to any address spaces. The above "memory-cilents" is used
+> > to indicate which ID a device has in DT. If the other SOC IOMMUs need
+> > this kind of "memory-clients", this would be standarized. Any comment?
+> >=20
+> > At least arm-smmu seems to have the following. multiple IOMMUs can be
+> > handled with this.
+> >=20
+> >=20
+> > - smmu-parent   : When multiple SMMUs are chained together, this
+> >                   property can be used to provide a phandle to the
+> >                   parent SMMU (that is the next SMMU on the path going
+> >                   from the mmu-masters towards memory) node for this
+> >                   SMMU.
+>=20
+> This property is for the case when IOMMUs are connected in series, which =
+is
+> fairly horrendous. However, it is extremely common to have multiple IOMMU
+> instances within an Soc (Exynos SoCs have one IOMMU per device iirc), so
+> that certainly needs to be handled.
+
+Okay, in that case perhaps some sort of generic binding should mandate
+the phandle, even for systems that only have a single one. I suspect a
+generic variant of smmu-parent (iommu-parent?) would also be useful to
+describe setups with cascaded IOMMUs.
+
+Thierry
+
+--Md/poaVZ8hnGTzuv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSanZLAAoJEN0jrNd/PrOhoZoP/2na7ElR6ejRScDZranhwy2H
+Rm4fs+u4KB8sOQOj8DBfMR1EDQaJ+1zL1xPeVGFK2c0QdHKopg8+LlYu9VKqhd9D
+MSFroyVwnaGBCDsGz58hMfcxFc3tjlrD/t7gGM/perAjnRwgAuBijtX5S2F2jYFs
+pToJVVxnvfh6DolIh58/Am/0P3R3y7IoTGKhHmYhmUlnVde1mSM5t7OB4blWwe4F
+3ejmVJQEyc0Q/Cx+AUYo3FoyRfslzAAq2LEioJK6leOs2mj9RMkc39NASzCTrm0r
+e9Tu+2GYkkA4P6dx+DTBl9XDFv5l+Q7vl30eO8LkNGfkrYiqgg5eS0fnITBKOtVG
+kVhbjOT/CTXqPixMpckacmnUegpdQjplFVAUgVF8TshR2dNCjrnIszwaxiSWWi0Z
+E+J3Fke88IRSJAIaeB05NkLJwjbt7ktJblcMBz/QJbwOXzvwjF3+sn9s12oisBJ4
+jJoh0Ehexkkur6Aap7aXhq0Gboea4vPPLIblQyLmbXkWPdRxhQcjr7zQwFgklu+R
+6qq3nwAOUnAH/yaxdXrwbNEuheS3ARb2aBP8vPq+G85DRdjprlW7PQxDF38Knrie
+iqmMVFW1bIoC6WIP3+6ufL77QbQ1x3rJvkNn/BVqfY1zfI7q8IfiMGWm8/6GJ0Bl
+3tYJvaiMNT7vjLPsLInm
+=XWQV
+-----END PGP SIGNATURE-----
+
+--Md/poaVZ8hnGTzuv--
+
+--===============0693683813122427891==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0693683813122427891==--
