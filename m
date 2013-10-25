@@ -1,168 +1,134 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Fri, 25 Oct 2013 09:56:55 +0200
-Message-ID: <20131025075652.GB19622@ulmo.nvidia.com>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-2-git-send-email-hdoyu@nvidia.com>
-	<20131024085531.680A4C4039D@trevor.secretlab.ca>
-	<20131024.122115.1035609747068925560.hdoyu@nvidia.com>
-	<20131025001038.77299C403B6@trevor.secretlab.ca>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Fri, 25 Oct 2013 10:13:15 +0200
+Message-ID: <20131025081314.GC19622@ulmo.nvidia.com>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com>
+ <3592147.9IprvsogX6@avalon>
+ <52645428.9080607@wwwdotorg.org>
+ <3278905.VOXO7bPE7e@avalon>
+ <526999DA.7080409@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8986220187826947549=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131025001038.77299C403B6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <526999DA.7080409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============8986220187826947549==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Content-Disposition: inline
-
-
---V0207lvV8h4k8FAm
+--t0UkRYy7tHLRMCai
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 25, 2013 at 01:10:38AM +0100, Grant Likely wrote:
-> On Thu, 24 Oct 2013 11:21:15 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> > Hi Grant,
+On Thu, Oct 24, 2013 at 11:06:18PM +0100, Stephen Warren wrote:
+> On 10/24/2013 12:20 PM, Laurent Pinchart wrote:
+> > Hi Stephen,
 > >=20
-> > Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Thu, 24 Oct 2013 10:55:3=
-1 +0200:
-> > ....
-> > > > diff --git a/include/linux/of.h b/include/linux/of.h
-> > > > index f95aee3..638a88a 100644
-> > > > --- a/include/linux/of.h
-> > > > +++ b/include/linux/of.h
-> > > > @@ -60,6 +60,7 @@ struct device_node {
-> > > >  	struct	kref kref;
-> > > >  	unsigned long _flags;
-> > > >  	void	*data;
-> > > > +	struct device *dev;		/* Set only after populated */
-> > >=20
-> > > Is this being used merely to indicate that a device has been processed
-> > > by of_platform_device_create()? Or do you intend to dereference this
-> > > pointer? I've avoided putting the struct device in to the device_node
-> > > structure up to this point simply becuase there aren't any good clues
-> > > for what /kind/ of device it actually points to. I worry that bad
-> > > assumptions will get made when other subsystems try to use the
-> > > same pointer. ie. if one subsystem creates its own device and sets th=
-is
-> > > pointer, and then of_platform_device_create() comes along behind, sees
-> > > that it is already created, and then returns a platform_device pointer
-> > > *for something that isn't a struct platform_device*. This is very bad.
-> > >=20
-> > > Instead of using a pointer to the struct device, would a flag be
-> > > sufficient for your purposes? Would it be fine to return NULL if the
-> > > device has already been created?
+> > On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
+> >> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
+> >> ...
+> >>
+> >>>> As I said, anything that really needs a CDF binding to work
+> >>>> likely isn't "simple" anymore, therefore a separate driver can
+> >>>> easily be justified.
+> >>>
+> >>> The system as a whole would be more complex, but the panel could be
+> >>> the same. We can't have two drivers for the same piece of hardware
+> >>> in the DT world, as there will be a single compatible string and no
+> >>> way to choose between the drivers (unlike the board code world that
+> >>> could set device names to "foo- encoder-v4l2" or "foo-encoder-drm"
+> >>> and live happily with that ever after).
+> >>
+> >> That's not true. We can certainly define two different compatible
+> >> values for a piece of HW if we have to. We can easily control whether
+> >> they are handled by the same or different drivers in the OS.
 > >=20
-> > Yes, a flag would be enough for this purpose.
+> > From an implementation point of view, sure. But from a conceptual point=
+ of=20
+> > view, that would make the DT bindings pretty Linux-specific, with a=20
+> > description of what the operating system should do instead of a descrip=
+tion of=20
+> > what the hardware looks like. My understanding is that we've tried pret=
+ty hard=20
+> > in the past not to open that Pandora's box.
 > >=20
-> > This patch is a part of HACK to control device instanciation order. We
-> > have an IOMMU device(platform) which needs to be instanciated earlier
-> > than other (platform)devices so that IOMMU driver would configure them
-> > as IOMMU'able device.
+> > The case I'm mostly concerned about would be two different compatibilit=
+y=20
+> > strings to select whether the device should be handled by a KMS or V4L =
+driver.=20
+> > I don't think that's a good idea.
 >=20
-> Ideally the drivers depending on the IOMMU would return -EPROBE_DEFER if
-> the IOMMU driver isn't set up so that you don't need to play games with
-> probe order. Creating certain platform devices early is a really ugly
-> and fragile solution.
->=20
-> Besides, probe order of device drivers is far more about link order of
-> the kernel than it is about when of_platform_device_create() is called.
-> Fiddling with the initcall level on the IOMMU driver (while not
-> recommended) may very well have the effect you desire.
+> I wouldn't think of the two compatible values as selecting different
+> specific Linux drivers, but rather they simply describe the HW in
+> different levels of detail. The fact that if we know a certain level of
+> detail about the HW means that Linux can and does create a KMS driver
+> rather than a V4L2 driver seems like a detail that's completely hidden
+> inside the OS.
 
-This is actually "the other problem that I'm aware of that could benefit
-=66rom [interrupt resolution at probe time]". My idea was that once we had
-a way within the driver core to resolve interrupt references at probe
-time it could be used for potentially many other resources as well. Some
-of the resources like GPIOs and regulators are obviously not something
-that the core can or should be requesting, but mostly resources that you
-don't actually need to control after probing (such as interrupts) would
-be a good fit because otherwise people would write the same boilerplate
-over and over again.
+I've had a somewhat similar idea the other day but couldn't really put
+it into words. Interestingly someone else mentioned a similar concept in
+a different thread which I think describes what I had in mind as well.
 
-IOMMUs seem to me to be in that same category. As far as I can tell, an
-IOMMU driver registers the IOMMU for a given bus, upon which every
-device can simply be used (mostly transparently) with that IOMMU. While
-I haven't figured out how exactly, I'm pretty sure we can take advantage
-of the resolution of resources at probe time within the core to both
-keep drivers from having to do anything in particular and at the same
-time have code to determine if the IOMMU driver hasn't been probed yet
-and return -EPROBE_DEFER appropriately.
+I was wondering if we couldn't use two compatible values to denote two
+interfaces that the device implements. Something along the lines of:
 
-I suspect that there will be enough differences between the various
-IOMMU implementations that we won't be able to have a unified binding
-(especially for how to associate devices with a particular virtual
-address space), but perhaps that could be solved with something like an
-=2Eof_xlate() that IOMMU drivers implement, much like we've done with most
-other subsystems too.
+	compatible =3D "vendor,block-name", "encoder";
 
-The binding for Tegra's IOMMU currently only uses the HW IDs (or a mask)
-to put a device into a given address space, but I think that could be
-easily extended to something like:
+So a driver could primarily match on "vendor,block-name", but at the
+same time it could use the additional information of being required to
+implement "encoder" to expose an additonal interface.
 
-	memory-clients =3D <&iommu MASK>;
+I suppose that perhaps something like a device_type property could be
+used for that as well, and that might even be the more correct thing to
+do.
 
-Or similar. If other information is required, we could encode that into
-a multi-cell specifier. Perhaps we could even leave away the phandle
-since typically there will only be a single IOMMU in the system?
+We already do something similar to make GPIO controllers expose an
+interrupt chip by adding an interrupt-controller property. We also use
+the gpio-controller property to mark a device node as exposing the GPIO
+interface for that matter.
 
-Does that sound reasonable? Hiroshi is much more familiar with IOMMUs,
-so I'd like to get his opinion on the above as well.
+So if a HW block can actually implement two different interfaces, each
+of them being optional, then there should be ways to represent that in
+DT as well. We already do that for "simpler" HW blocks, so there's no
+reason we shouldn't be able to do the same with multimedia components.
 
-Grant, I wonder if it might be more useful if I concentrate on solving
-this problem first, before tackling the interrupt reference resolution.
-I expect this to be able to use the same core functionality, so it could
-be used as a less invasive means of introducing some pieces we can later
-reuse. Also this only adds new functionality and doesn't touch anything
-that currently works, so there's less (i.e. no) risk of breaking any
-existing functionality.
+If it's really an encoder, though, the problem might be different,
+though, since the interface (at a hardware or functional level if you
+will) remains the same. But I think in that case it's something that
+needs to be figured out internally by the OS. In my opinion, if we are
+in a situation where we have two different drivers in two subsystems for
+the same device, then we're doing something wrong and it should be fixed
+at that level, not by quirking the DT into making a decision for us.
 
 Thierry
 
---V0207lvV8h4k8FAm
+--t0UkRYy7tHLRMCai
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSaiREAAoJEN0jrNd/PrOhxosP/jGIA1Cudv8Bft1t+kugMW3J
-xSOTVBMB1LTNM0eD9fKtEdSgwVE6+1/xTBJtOd3LeLE9P0SpFQVi98k8B5cTXI++
-i9B2Pn+a9ndbibQ4KZ5GCbeS0Ai6E2QMhtOCqJx8YvTSxxykf0zDDQG6FOIIaCpA
-QinTPlzrGj23Kp7vaRaT0jgB7mxpwZf7cY60FPILVbU+R7Akw16EdDuLj3fTouvW
-VS+lcJ1MLhmZevJ2cntjFIg3ShMeFaFd61lRPBQiPuoRAlWYRTkYr10ejejKq4WO
-ZuxP0WwIyCwnB+YNvAfEguHbLKxNzG1m+hEdoRmRR8xDfqE3FYVeZSbEalPNZpxj
-SWaaxtZQvaTjmO/3yu8S90lFFdXKusJ5aqgqGdhAtk9CPqKFeEoVHKlukQ57kW2c
-+2u9Pujju/0uOynmLsLXXnHoCEzAWu/Fgjkmn9Hkj3Lc2ayXEWBcKTO0rJCgRKNX
-oukMKwoUxSRvcQ9bykKihir0r7i4MHOnJpHQOmdwEDGVcQ4CSkiGLtnHeDkiDOLW
-XpCYo+wT5SJN2dce/4F5gRWkPtadad+/k4+phMBuMny1Jo1LW1JyhChDcaSr35HK
-//YJ7zLh6zoDIk600VX3c3WGoFSki70NJj6MtAXwQ6jmTNjvVCBxB7gKnsyGn3Il
-jrI5+Z6QH/qCqGEDo6iv
-=OCj4
+iQIcBAEBAgAGBQJSaigaAAoJEN0jrNd/PrOhQfUP/1s0MryLuhGMkCFDYmnScFy3
+2sQoTRaBvhF8v5N9IhJFAM447H/x+A/r6r39oGYgonT/6WL+eVcJ9WSrQb/TAwXQ
+ytfA9FaN1XCzpPkNXEDPwWjc6Cqc5xhd1McLAhWcMeTfdiJT20ETXzDCLlSFFbia
+gDOJyoYqxtNBhsZ6DXyEVAh8wkA8fEqkj+Ejpkv7bKhypXww2seA56C90sSXBwaN
+R/zgl9bQkgfuNGeXgOq1MCAYcPAf/J9jM9RFfbs0Au3ujG3Nij6l1dgoRWwbPVy6
+usngC2jsqS/bE2PigN2oPqpFO0ns+C6iHYSh/CGA60UYM8uaRzSRIBZipTAtoQM8
+wJ7WHSNFcg6Ib870zM7RaBNIL4Gn01R+G8f4W+0I0G1XAdnugLqQOwQW75zpA11P
+EVribcjXZ+ysnhHMMhUFoXNKa9Oh85TbpXFu0r5wj4tv0pwUqgPj/nmJ3EwIquJI
+SncM6VlffBM+Mu1LxVvyQ+xEitddUO7LDL0B+OkEvX1L68lUWBiaqWfzAFko8rgz
+J8exJs9NISqgQAdcFHmeuBhz/5zjYttonZLAq8UitE/aRc8UXM5cdlRXo9xWJfWL
+8y7O1ivvfXxgsfBppoZWvpA6VJ5M6StFrfAcJa700eA76fsOb2VdjaicyGlJAnYS
+zbWa22j2m9eH74GqW+ui
+=Afnu
 -----END PGP SIGNATURE-----
 
---V0207lvV8h4k8FAm--
-
---===============8986220187826947549==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8986220187826947549==--
+--t0UkRYy7tHLRMCai--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
