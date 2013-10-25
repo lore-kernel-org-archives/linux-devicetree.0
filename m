@@ -1,412 +1,145 @@
-From: Aliaksei Katovich <aliaksei.katovich@gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Fri, 25 Oct 2013 13:06:33 +0300
-Message-ID: <20131025100633.GN3061@cat.local>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
- <1381763305-7085-4-git-send-email-v.tyrtov@samsung.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 25 Oct 2013 12:49:38 +0200
+Message-ID: <20131025104937.GA25080@ulmo.nvidia.com>
+References: <20131025075652.GB19622@ulmo.nvidia.com>
+ <20131025.112549.2040849946958069337.hdoyu@nvidia.com>
+ <20131025091104.GG19622@ulmo.nvidia.com>
+ <20131025.124905.1154427805530939055.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1381763305-7085-4-git-send-email-v.tyrtov@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Tarek Dakhran <t.dakhran@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-samsung-soc@vger.kernel.org, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+In-Reply-To: <20131025.124905.1154427805530939055.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Vyacheslav;
 
-> From: Tarek Dakhran <t.dakhran@samsung.com>
-> 
-> Add EDCS(Exynos Dual Cluster Support) for Samsung Exynos5410 SoC.
-> This enables all 8 cores, 4 x A7 and 4 x A15 run at the same time.
-> 
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> ---
->  arch/arm/mach-exynos/Makefile |   2 +
->  arch/arm/mach-exynos/edcs.c   | 270 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 272 insertions(+)
->  create mode 100644 arch/arm/mach-exynos/edcs.c
-> 
-> diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
-> index 5369615..ba6efdb 100644
-> --- a/arch/arm/mach-exynos/Makefile
-> +++ b/arch/arm/mach-exynos/Makefile
-> @@ -34,3 +34,5 @@ AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
->  
->  obj-$(CONFIG_MACH_EXYNOS4_DT)		+= mach-exynos4-dt.o
->  obj-$(CONFIG_MACH_EXYNOS5_DT)		+= mach-exynos5-dt.o
-> +
-> +obj-$(CONFIG_SOC_EXYNOS5410)		+= edcs.o
-> diff --git a/arch/arm/mach-exynos/edcs.c b/arch/arm/mach-exynos/edcs.c
-> new file mode 100644
-> index 0000000..e304bd9
-> --- /dev/null
-> +++ b/arch/arm/mach-exynos/edcs.c
-> @@ -0,0 +1,270 @@
-> +/*
-> + * arch/arm/mach-exynos/edcs.c - exynos dual cluster power management support
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Tarek Dakhran <t.dakhran@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * EDCS(exynos dual cluster support) for Exynos5410 SoC.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/errno.h>
-> +
-> +#include <asm/mcpm.h>
-> +#include <asm/proc-fns.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/cputype.h>
-> +#include <asm/cp15.h>
-> +
-> +#include <linux/arm-cci.h>
-> +#include <mach/regs-pmu.h>
-> +
-> +#define EDCS_CPUS_PER_CLUSTER	4
-> +#define EDCS_CLUSTERS		2
-> +
-> +/* Exynos5410 power management registers */
-> +#define EDCS_CORE_CONFIGURATION(_nr)	(S5P_ARM_CORE0_CONFIGURATION	\
-> +						+ ((_nr) * 0x80))
-> +#define EDCS_CORE_STATUS(_nr)		(EDCS_CORE_CONFIGURATION(_nr) + 0x4)
-> +#define EDCS_CORE_OPTION(_nr)		(EDCS_CORE_CONFIGURATION(_nr) + 0x8)
-> +
-> +#define REG_CPU_STATE_ADDR0		(S5P_VA_SYSRAM_NS + 0x28)
-> +#define REG_CPU_STATE_ADDR(_nr)		(REG_CPU_STATE_ADDR0 +	\
-> +						 _nr * EDCS_CPUS_PER_CLUSTER)
-> +
-> +static arch_spinlock_t edcs_lock = __ARCH_SPIN_LOCK_UNLOCKED;
-> +
-> +static int edcs_use_count[EDCS_CPUS_PER_CLUSTER][EDCS_CLUSTERS];
-> +static int core_count[EDCS_CLUSTERS];
-> +
-> +static void exynos_core_power_control(unsigned int cpu, unsigned int cluster,
-> +				bool enable)
-> +{
-> +	unsigned int offset = cluster * EDCS_CPUS_PER_CLUSTER + cpu;
-> +	int value = enable ? S5P_CORE_LOCAL_PWR_EN : 0;
-> +
-> +	if ((__raw_readl(EDCS_CORE_STATUS(offset)) & 0x3) != value)
-> +		__raw_writel(value, EDCS_CORE_CONFIGURATION(offset));
-> +}
-> +
-> +static void exynos_core_power_up(unsigned int cpu, unsigned int cluster)
-> +{
-> +	exynos_core_power_control(cpu, cluster, true);
-> +}
-> +
-> +static void exynos_core_power_down(unsigned int cpu, unsigned int cluster)
-> +{
-> +	exynos_core_power_control(cpu, cluster, false);
-> +}
-> +
-> +void set_boot_flag(unsigned int cpu, unsigned int mode)
-> +{
-> +	__raw_writel(mode, REG_CPU_STATE_ADDR(cpu));
-> +}
-> +
-> +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
-> +{
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER || cluster >= EDCS_CLUSTERS);
-> +
-> +	local_irq_disable();
-> +	arch_spin_lock(&edcs_lock);
-> +
-> +	edcs_use_count[cpu][cluster]++;
-> +	if (edcs_use_count[cpu][cluster] == 1) {
-> +		++core_count[cluster];
-> +		set_boot_flag(cpu, 0x2);
-> +		exynos_core_power_up(cpu, cluster);
-> +	} else if (edcs_use_count[cpu][cluster] != 2) {
-> +		/*
-> +		 * The only possible values are:
-> +		 * 0 = CPU down
-> +		 * 1 = CPU (still) up
-> +		 * 2 = CPU requested to be up before it had a chance
-> +		 *     to actually make itself down.
-> +		 * Any other value is a bug.
-> +		 */
-> +		BUG();
-> +	}
-> +
-> +	arch_spin_unlock(&edcs_lock);
-> +	local_irq_enable();
-> +
-> +	return 0;
-> +}
-> +static void exynos_power_down(void)
-> +{
-> +	unsigned int mpidr, cpu, cluster;
-> +	bool last_man = false, skip_wfi = false;
-> +
-> +	mpidr = read_cpuid_mpidr();
-> +	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER  || cluster >= EDCS_CLUSTERS);
-> +
-> +	__mcpm_cpu_going_down(cpu, cluster);
-> +
-> +	arch_spin_lock(&edcs_lock);
-> +	BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
-> +	edcs_use_count[cpu][cluster]--;
-> +	if (edcs_use_count[cpu][cluster] == 0) {
-> +		--core_count[cluster];
-> +		if (core_count[cluster] == 0)
-> +			last_man = true;
-> +	} else if (edcs_use_count[cpu][cluster] == 1) {
-> +		/*
-> +		 * A power_up request went ahead of us.
-> +		 * Even if we do not want to shut this CPU down,
-> +		 * the caller expects a certain state as if the WFI
-> +		 * was aborted.  So let's continue with cache cleaning.
-> +		 */
-> +		skip_wfi = true;
-> +	} else
-> +		BUG();
-> +
-> +	if (last_man && __mcpm_outbound_enter_critical(cpu, cluster)) {
-> +		arch_spin_unlock(&edcs_lock);
-> +
-> +		if (read_cpuid_part_number() == ARM_CPU_PART_CORTEX_A15) {
-> +			/*
-> +			 * On the Cortex-A15 we need to disable
-> +			 * L2 prefetching before flushing the cache.
-> +			 */
-> +			asm volatile(
-> +			"mcr	p15, 1, %0, c15, c0, 3\n\t"
-> +			"isb\n\t"
-> +			"dsb"
-> +			: : "r" (0x400));
-> +		}
-> +
-> +		/*
-> +		 * We need to disable and flush the whole (L1 and L2) cache.
-> +		 * Let's do it in the safest possible way i.e. with
-> +		 * no memory access within the following sequence
-> +		 * including the stack.
-> +		 *
-> +		 * Note: fp is preserved to the stack explicitly prior doing
-> +		 * this since adding it to the clobber list is incompatible
-> +		 * with having CONFIG_FRAME_POINTER=y.
-> +		 */
-> +		asm volatile(
-> +		"str	fp, [sp, #-4]!\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 0	@ get CR\n\t"
-> +		"bic	r0, r0, #"__stringify(CR_C)"\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 0	@ set CR\n\t"
-> +		"isb\n\t"
-> +		"bl	v7_flush_dcache_all\n\t"
-> +		"clrex\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 1	@ get AUXCR\n\t"
-> +		"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 1	@ set AUXCR\n\t"
-> +		"isb\n\t"
-> +		"dsb\n\t"
-> +		"ldr	fp, [sp], #4"
-> +		: : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-> +			"r9", "r10", "lr", "memory");
-> +
-> +		cci_disable_port_by_cpu(mpidr);
-> +
-> +		__mcpm_outbound_leave_critical(cluster, CLUSTER_DOWN);
-> +
-> +	} else {
-> +		arch_spin_unlock(&edcs_lock);
-> +		/*
-> +			* We need to disable and flush only the L1 cache.
-> +			* Let's do it in the safest possible way as above.
-> +		*/
-> +		asm volatile(
-> +		"str	fp, [sp, #-4]!\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 0	@ get CR\n\t"
-> +		"bic	r0, r0, #"__stringify(CR_C)"\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 0	@ set CR\n\t"
-> +		"isb\n\t"
-> +		"bl	v7_flush_dcache_louis\n\t"
-> +		"clrex\n\t"
-> +		"mrc	p15, 0, r0, c1, c0, 1	@ get AUXCR\n\t"
-> +		"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t"
-> +		"mcr	p15, 0, r0, c1, c0, 1	@ set AUXCR\n\t"
-> +		"isb\n\t"
-> +		"dsb\n\t"
-> +		"ldr	fp, [sp], #4"
-> +		: : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-> +		      "r9", "r10", "lr", "memory");
-> +
-> +	}
-> +	__mcpm_cpu_down(cpu, cluster);
-> +
-> +	if (!skip_wfi) {
-> +		exynos_core_power_down(cpu, cluster);
-> +		wfi();
-> +	}
-> +}
-> +
-> +static const struct mcpm_platform_ops exynos_power_ops = {
-> +	.power_up	= exynos_power_up,
-> +	.power_down	= exynos_power_down,
-> +};
-> +
-> +static void __init edcs_data_init(void)
-> +{
-> +	unsigned int mpidr, cpu, cluster;
-> +
-> +	mpidr = read_cpuid_mpidr();
-> +	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +	BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER  || cluster >= EDCS_CLUSTERS);
-> +	edcs_use_count[cpu][cluster] = 1;
-> +	++core_count[cluster];
-> +}
-> +
-> +/*
-> + * Enable cluster-level coherency, in preparation for turning on the MMU.
-> + */
-> +static void __naked edcs_power_up_setup(unsigned int affinity_level)
-> +{
-> +	asm volatile ("\n"
-> +	"b	cci_enable_port_for_self");
-> +}
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	This code breaks odroid-xu boot with NR_CPUS set to 8. Kernel panics
-	like this:
+On Fri, Oct 25, 2013 at 11:49:05AM +0200, Hiroshi Doyu wrote:
+> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 11:11:=
+05 +0200:
+>=20
+> > > > This is actually "the other problem that I'm aware of that could be=
+nefit
+> > > > from [interrupt resolution at probe time]". My idea was that once w=
+e had
+> > > > a way within the driver core to resolve interrupt references at pro=
+be
+> > > > time it could be used for potentially many other resources as well.=
+ Some
+> > > > of the resources like GPIOs and regulators are obviously not someth=
+ing
+> > > > that the core can or should be requesting, but mostly resources tha=
+t you
+> > > > don't actually need to control after probing (such as interrupts) w=
+ould
+> > > > be a good fit because otherwise people would write the same boilerp=
+late
+> > > > over and over again.
+> > > >=20
+> > > > IOMMUs seem to me to be in that same category. As far as I can tell=
+, an
+> > > > IOMMU driver registers the IOMMU for a given bus, upon which every
+> > > > device can simply be used (mostly transparently) with that IOMMU. W=
+hile
+> > > > I haven't figured out how exactly, I'm pretty sure we can take adva=
+ntage
+> > > > of the resolution of resources at probe time within the core to both
+> > > > keep drivers from having to do anything in particular and at the sa=
+me
+> > > > time have code to determine if the IOMMU driver hasn't been probed =
+yet
+> > > > and return -EPROBE_DEFER appropriately.
+> > >=20
+> > > Can you explain the above a bit more?
+> > >=20
+> > > Originally I thought that what Grant suggested would work ok with this
+> > > patch.
+> >=20
+> > I think the objection to these patches is that they special case the
+> > instantiation of some devices. It's not a proper solution because it
+> > implies various things. For example merely instantiating the IOMMU
+> > device earlier than others is only going to work *if* the driver is
+> > actually probed before the drivers of other devices. If you want to
+> > build the driver as a module for example, probe order becomes entirely
+> > non-deterministic.
+>=20
+> I understand the above limitation. What I thought for the solution is
+> that I can make use of iommu_bus even before IOMMU is
+> instanciated. iommu_bus has its notifier which calls
+> iommu_ops()->add_device(). This could return -EPROBE_DEFER when IOMMU
+> isn't ready. Only the problem is the current "bus_notifier" doesn't
+> have the ability to return error. I'll see if it can be modified. Even
+> with this, at least IOMMU *driver* needs to be init'ed enough earlier
+> to prevent devices from being registered without IOMMU.
 
-%< -----------------------------------------------------------------------
-[    5.315000] drivers/rtc/hctosys.c: unable to open rtc device (rtc0)
-[    5.320000] Freeing unused kernel memory: 216K (c049b000 - c04d1000)
-[    5.325000] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
-[    5.340000] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000007
-[    5.340000] 
-[    5.345000] mmc_host mmc0: Bus speed (slot 0) = 100000000Hz (slot req 200000Hz, actual 200000HZ div = 250)
-[    5.355000] CPU: 3 PID: 1 Comm: init Not tainted 3.12.0-rc5-00006-g847e427-dirty #1
-[    5.365000] [<c0014d40>] (unwind_backtrace+0x0/0xf8) from [<c00117cc>] (show_stack+0x10/0x14)
-[    5.370000] [<c00117cc>] (show_stack+0x10/0x14) from [<c03633ac>] (dump_stack+0x6c/0xac)
-[    5.380000] mmc_host mmc0: Bus speed (slot 0) = 100000000Hz (slot req 196079Hz, actual 196078HZ div = 255)
-[    5.390000] [<c03633ac>] (dump_stack+0x6c/0xac) from [<c03609fc>] (panic+0x90/0x1e8)
-[    5.395000] [<c03609fc>] (panic+0x90/0x1e8) from [<c002048c>] (do_exit+0x780/0x834)
-[    5.405000] [<c002048c>] (do_exit+0x780/0x834) from [<c002062c>] (do_group_exit+0x3c/0xb0)
-[    5.410000] [<c002062c>] (do_group_exit+0x3c/0xb0) from [<c002ae80>] (get_signal_to_deliver+0x1d4/0x534)
-[    5.420000] [<c002ae80>] (get_signal_to_deliver+0x1d4/0x534) from [<c0010d08>] (do_signal+0x100/0x40c)
-[    5.430000] [<c0010d08>] (do_signal+0x100/0x40c) from [<c0011348>] (do_work_pending+0x68/0xa8)
-[    5.430000] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req 50000000Hz, actual 50000000HZ div = 1)
-[    5.430000] mmc1: new high speed SDHC card at address b368
-[    5.435000] mmcblk0: mmc1:b368 USD   14.9 GiB 
-[    5.440000]  mmcblk0: p1 p2 p3 < p5 p6 p7 >
-[    5.455000] mmc_host mmc0: Bus speed (slot 0) = 100000000Hz (slot req 400000Hz, actual 400000HZ div = 125)
-[    5.475000] [<c0011348>] (do_work_pending+0x68/0xa8) from [<c000e420>] (work_pending+0xc/0x20)
-[    5.480000] CPU1: stopping
-[    5.480000] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 3.12.0-rc5-00006-g847e427-dirty #1
-[    5.480000] [<c0014d40>] (unwind_backtrace+0x0/0xf8) from [<c00117cc>] (show_stack+0x10/0x14)
-[    5.480000] [<c00117cc>] (show_stack+0x10/0x14) from [<c03633ac>] (dump_stack+0x6c/0xac)
-[    5.480000] [<c03633ac>] (dump_stack+0x6c/0xac) from [<c0013604>] (handle_IPI+0xf8/0x11c)
-[    5.480000] [<c0013604>] (handle_IPI+0xf8/0x11c) from [<c000851c>] (gic_handle_irq+0x60/0x68)
-[    5.480000] [<c000851c>] (gic_handle_irq+0x60/0x68) from [<c00122c0>] (__irq_svc+0x40/0x70)
-[    5.480000] Exception stack(0xef0a7f88 to 0xef0a7fd0)
-[    5.480000] 7f80:                   00000001 00000000 008d20ff 00000001 00000000 00000000
-[    5.480000] 7fa0: c04d07a0 60000113 010da000 412fc0f3 c15aa7a0 00000000 00000001 ef0a7fd0
-[    5.480000] 7fc0: c0072d74 c0072d78 20000113 ffffffff
-[    5.480000] [<c00122c0>] (__irq_svc+0x40/0x70) from [<c0072d78>] (rcu_idle_exit+0x68/0xb8)
-[    5.480000] [<c0072d78>] (rcu_idle_exit+0x68/0xb8) from [<c00550a4>] (cpu_startup_entry+0x6c/0x148)
-[    5.480000] [<c00550a4>] (cpu_startup_entry+0x6c/0x148) from [<400085c4>] (0x400085c4)
-[    5.480000] CPU0: stopping
-[    5.480000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.12.0-rc5-00006-g847e427-dirty #1
-[    5.480000] [<c0014d40>] (unwind_backtrace+0x0/0xf8) from [<c00117cc>] (show_stack+0x10/0x14)
-[    5.480000] [<c00117cc>] (show_stack+0x10/0x14) from [<c03633ac>] (dump_stack+0x6c/0xac)
-[    5.480000] [<c03633ac>] (dump_stack+0x6c/0xac) from [<c0013604>] (handle_IPI+0xf8/0x11c)
-[    5.480000] [<c0013604>] (handle_IPI+0xf8/0x11c) from [<c000851c>] (gic_handle_irq+0x60/0x68)
-[    5.480000] [<c000851c>] (gic_handle_irq+0x60/0x68) from [<c00122c0>] (__irq_svc+0x40/0x70)
-[    5.480000] Exception stack(0xc04d3f70 to 0xc04d3fb8)
-[    5.480000] SMP: failed to stop secondary CPUs
-[    5.480000] 3f60:                                     00000000 00000000 00002190 00000000
-[    5.480000] 3f80: c04d2000 c050a88f 00000001 c050a88f c04da44c 412fc0f3 c036a960 00000000
-[    5.480000] 3fa0: 00000020 c04d3fb8 c000f5d4 c000f5d8 60000113 ffffffff
-[    5.480000] [<c00122c0>] (__irq_svc+0x40/0x70) from [<c000f5d8>] (arch_cpu_idle+0x28/0x30)
-[    5.480000] [<c000f5d8>] (arch_cpu_idle+0x28/0x30) from [<c0055094>] (cpu_startup_entry+0x5c/0x148)
-[    5.480000] [<c0055094>] (cpu_startup_entry+0x5c/0x148) from [<c049ba9c>] (start_kernel+0x32c/0x384)
-[    5.480000] CPU2: stopping
-[    5.480000] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 3.12.0-rc5-00006-g847e427-dirty #1
-[    5.480000] [<c0014d40>] (unwind_backtrace+0x0/0xf8) from [<c00117cc>] (show_stack+0x10/0x14)
-[    5.480000] [<c00117cc>] (show_stack+0x10/0x14) from [<c03633ac>] (dump_stack+0x6c/0xac)
-[    5.480000] [<c03633ac>] (dump_stack+0x6c/0xac) from [<c0013604>] (handle_IPI+0xf8/0x11c)
-[    5.480000] [<c0013604>] (handle_IPI+0xf8/0x11c) from [<c000851c>] (gic_handle_irq+0x60/0x68)
-[    5.480000] [<c000851c>] (gic_handle_irq+0x60/0x68) from [<c00122c0>] (__irq_svc+0x40/0x70)
-[    5.480000] Exception stack(0xef0a9fa0 to 0xef0a9fe8)
-[    5.480000] 9fa0: 00000002 00000000 008e4858 00000000 ef0a8000 c050a88f 00000001 c050a88f
-[    5.480000] 9fc0: c04da44c 412fc0f3 c036a960 00000000 00000001 ef0a9fe8 c000f5d4 c000f5d8
-[    5.480000] 9fe0: 60000113 ffffffff
-[    5.480000] [<c00122c0>] (__irq_svc+0x40/0x70) from [<c000f5d8>] (arch_cpu_idle+0x28/0x30)
-[    5.480000] [<c000f5d8>] (arch_cpu_idle+0x28/0x30) from [<c0055094>] (cpu_startup_entry+0x5c/0x148)
-[    5.480000] [<c0055094>] (cpu_startup_entry+0x5c/0x148) from [<400085c4>] (0x400085c4)
-%< -----------------------------------------------------------------------
+The way notifiers work is that they run completely hidden from whatever
+triggers them. For instance you register the IOMMU bus notifier from the
+IOMMU driver (by calling bus_set_iommu()). That registers a function to
+be called when some event happens on that bus. When a device's driver is
+probed successfully, the driver core will notify the bus, which causes
+the IOMMU callback to be run.
 
-	I checked arch/arm/mach-vexpress/tc2_pm.c to see how CCI is enabled
-	there an realized that you should follow same pattern, i.e.:
+Some of this code runs before the driver has successfully been probed,
+so I imagine it would be possible to use it to abort probing. But that's
+not possible at least with the current code.
 
-        asm volatile (" \n"
-"       cmp     r0, #1 \n"
-"       bxne    lr \n"
-"       b       cci_enable_port_for_self ");
+> > Instead of handling such dependencies implicitly by making sure all
+> > resource providers are probed earlier than any of their consumers, the
+> > dependencies are handled more explicitly, which turns out to simplify
+> > things a lot. There's some additional work required in the core, but if
+> > done consistently no driver needs to care about the dependencies and it
+> > no longer matters where the resources come from. The problem is reduced
+> > to essentially this:
+> >=20
+> > 	while (!resource_available())
+> > 		load_more_drivers();
+> >=20
+> > So my proposed solution for the IOMMU case is to treat it the same as
+> > any other resources. Perhaps resource isn't the right word, but at the
+> > core the issue is the same. A device requires the services of an IOMMU
+> > so that it can be put into the correct address space. If the IOMMU is
+> > not available yet it cannot do that, so we simply return -EPROBE_DEFER
+> > and cause the probe to be retried later.
+>=20
+> This looks somewhat similar to the above iommu_bus notifier.
+>=20
+> Is there any way to implement the same mechanism rather than using
+> bus?
 
-	In this case only one cluster (4 LITTLE cores for Exynos5410) will be
-	initialized at boot time. And no panic.
+Yes, I think it should be possible to get this to work without using the
+bus notifier at all. I can try to code something up but wanted to wait
+for feedback from Grant first.
 
---
-Aliaksei
+Thierry
 
-> +
-> +static int __init edcs_init(void)
-> +{
-> +	int ret;
-> +	struct device_node *node;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "samsung,exynos5410");
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	if (!cci_probed())
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Future entries into the kernel can now go
-> +	 * through the cluster entry vectors.
-> +	 */
-> +	__raw_writel(virt_to_phys(mcpm_entry_point),
-> +				S5P_VA_SYSRAM_NS + 0x1c);
-> +
-> +	edcs_data_init();
-> +	mcpm_smp_set_ops();
-> +
-> +	ret = mcpm_platform_register(&exynos_power_ops);
-> +	if (!ret) {
-> +		mcpm_sync_init(edcs_power_up_setup);
-> +		pr_info("EDCS power management initialized\n");
-> +	}
-> +	return ret;
-> +}
-> +
-> +early_initcall(edcs_init);
-> -- 
-> 1.8.1.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIbBAEBAgAGBQJSakzBAAoJEN0jrNd/PrOhKEEP+J8AoEBstZoDtA/mHuzoa25K
+8iN2M/VqBe/Binhy3wDBxQbLkckVJkFLan2Vgxfp0+08xNHjvS7rJVisUJ74b06E
+H6C/IdtxRpxsSAxjYgll8AywBQDcK8SE/q1J3tTL9K+hCLETtAxswDTOcvOGHVUK
+aPsLW66qNi4zPYH6oIjCRXrUYDui/m3ZZPjxns2f1twIGvZBjM8DurnDc/P0f+QN
+jnwyPf6rCbPPqx2ez7MZ+os9/VqhYBypEw6IrwQ0xu/J4g0Y2SlNK/pA79bY6VDH
+1kYUfQmkZLddsFau5oNbRVxtWNhd5bRfo8TOK2GoEpYqXmuUhMzUwpCbj6AIpJTD
+ZYze6mUuypSTq8rp6ykfvK7LewDrPNwNe0Edz12NGbmMb2Y1ysRTM1eFP+NdUTfi
+fnBEOXaDowOx6g0wEX9EagmIFrGHaSSsZBeesLG6NlCP1RfYBHqtaGPMfIPoVRgf
+WmY8X87fa8UFPnJJef4OMXUF0D7ZepPjjk1Cx8lZzxE7/KX1iwnDDadXpJnN/FnV
+vJYCWmZkG28Dn09U8gbdRpuygEqJ9gBvs1o8QjejSbXtIeXerHGlj1YAgvE93rKV
+8uNlkfeGKb3c3K1lx2QTNwrccKpR5+Q2fVpcHt/HAq4K+2uSiPIE6RuRJ9H4tsXv
+BbSAQl0hvOPtt1i3s38=
+=qFZl
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
