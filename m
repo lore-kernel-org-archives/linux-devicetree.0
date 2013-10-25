@@ -1,96 +1,95 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv7][ 2/5] ASoC: eukrea-tlv320: Add DT support.
-Date: Thu, 24 Oct 2013 22:39:10 -0500
-Message-ID: <8309A8FC-87E3-4479-BAB7-DD9B818D56BE@codeaurora.org>
-References: <1382616832-23593-1-git-send-email-denis@eukrea.com> <1382616832-23593-2-git-send-email-denis@eukrea.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] twl4030_charger: add devicetree support.
+Date: Thu, 24 Oct 2013 22:56:56 -0500
+Message-ID: <67F67DAB-B61D-4172-91BC-FE8A428FE5D1@codeaurora.org>
+References: <20131024165005.78bc8740@notabene.brown> <1C8E8D31-1261-45ED-BBD0-161DFD627ACF@codeaurora.org> <20131024100652.6B31DC4039D@trevor.secretlab.ca> <20131024214110.2845670d@notabene.brown>
 Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382616832-23593-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-8859-1?Q?Eric_B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131024214110.2845670d@notabene.brown>
+Sender: linux-omap-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 24, 2013, at 7:13 AM, Denis Carikli wrote:
+On Oct 24, 2013, at 5:41 AM, NeilBrown wrote:
 
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
->=20
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
-> ChangeLog v6->v7:
-> - The cleanups went into another patch.
-> - The support for fsl_ssi doesn't depend on dt anymore.
-> - platform_name =3D "imx-ssi.0" is still set when in non-dt mode.
-> ---
-> .../devicetree/bindings/sound/eukrea-tlv320.txt    |   23 +++++
-> sound/soc/fsl/Kconfig                              |    5 +-
-> sound/soc/fsl/eukrea-tlv320.c                      |   88 +++++++++++=
-+++++++--
-> 3 files changed, 107 insertions(+), 9 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/sound/eukrea-tlv=
-320.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/eukrea-tlv320.tx=
-t b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
-> new file mode 100644
-> index 0000000..8791037
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
-> @@ -0,0 +1,23 @@
-> +Audio complex for Eukrea boards with tlv320aic23 codec.
-> +
-> +Required properties:
-> +- compatible : "eukrea,eukrea-tlv320"
-> +- model : The user-visible name of this sound complex.
-> +- ssi-controller : The phandle of the SSI controller.
-> +- audio-codec : The phandle of the tlv320aic23 audio codec.
-> +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
-> +- mux-ext-port : The external port of the i.MX audio muxer.
+> On Thu, 24 Oct 2013 11:06:52 +0100 Grant Likely <grant.likely@linaro.org>
+> wrote:
+> 
+>> On Thu, 24 Oct 2013 04:44:03 -0500, Kumar Gala <galak@codeaurora.org> wrote:
+>>> 
+>>> On Oct 24, 2013, at 12:50 AM, NeilBrown wrote:
+>>> 
+>>>> 
+>>>> [my first device-tree related patch.  Please let me know what I got wrong so
+>>>> I wont repeat the mistake in all the others I have queued]
+>>>> 
+>>>> This allows the charger to be enabled with devicetree, and
+>>>> allows the parameters for charging the backup battery to be set.
+>>>> 
+>>>> Signed-off-by: NeilBrown <neilb@suse.de>
+>>>> 
+>>>> diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Documentation/devicetree/bindings/power/twl-charger.txt
+>>>> new file mode 100644
+>>>> index 0000000..8afaa9a
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/power/twl-charger.txt
+>>>> @@ -0,0 +1,20 @@
+>>>> +TWL BCI (Battery Charger Interface)
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:
+>>>> +  - "ti,twl4030-bci"
+>>>> +- interrupts: two interrupt lines from the TWL SIH (secondary
+>>>> +  interrupt handler) - interrupts 9 and 2.
+>>>> +
+>>>> +Optional properties:
+>>>> +- bb-uvolt: microvolts for charging the backup battery.
+>>>> +- bb-uamp: microamps for charging the backup battery.
+>>> 
+>>> prop should have vendor prefix.
+>>> 
+>>> ti,bb-uvolt, ti,bb-uamp
+>> 
+>> Agreed. Otherwise:
+> 
+> OK, I'll do that - thanks.
+> 
+> NeilBrown
 
-mux-int-port & mux-ext-port should probably be vendor prefixed. (I know=
- there are examples in tree where this isn't done).
+Ditto on the Ack once these changes are made:
 
-> +
-> +Note: The AUDMUX port numbering should start at 1, which is consiste=
-nt with
-> +hardware manual.
-> +
-> +Example:
-> +
-> +	sound {
-> +		compatible =3D "eukrea,eukrea-tlv320";
-> +		model =3D "imx51-eukrea-tlv320aic23";
-> +		ssi-controller =3D <&ssi2>;
-> +		fsl,audio-codec =3D <&tlv320aic23>;
+Acked-by: Kumar Gala <galak@codeaurora.org>
 
-this is inconsistent with the binding description above, is it audio-co=
-dec or fsl,audio-codec?
+- k
 
-> +		mux-int-port =3D <2>;
-> +		mux-ext-port =3D <3>;
-> +	};
+> 
+>> 
+>> Acked-by: Grant Likely <grant.likely@linaro.org>
+>> 
+>>> 
+>>> - k
+>>> 
+>>>> +
+>>>> +Examples:
+>>>> +
+>>>> +bci {
+>>>> +   compatible = "ti,twl4030-bci";
+>>>> +   interrupts = <9>, <2>;
+>>>> +   bb-uvolt = <3200000>;
+>>>> +   bb-uamp = <150>;
+>>>> +};
+>>> 
+>>> -- 
+>>> Employee of Qualcomm Innovation Center, Inc.
+>>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>>> 
+> 
 
---=20
+-- 
 Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
