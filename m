@@ -1,30 +1,36 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution, or is there something better?
-Date: Fri, 25 Oct 2013 00:54:37 +0100
-Message-ID: <20131024235437.9CCD8C403B6@trevor.secretlab.ca>
-References: <20131023080630.GA14413@netboy> <20131023172955.GA17145@obsidianresearch.com> <20131023174458.GC5208@netboy> <1382553982.31058.10.camel@sakura.staff.proxad.net> <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net> <1382615278.8522.72.camel@shinybook.infradead.org> <20131024122346.GD11296@ulmo.nvidia.com> <1382619655.6040.52.camel@sakura.staff.proxad.net> <516bfc7f9366ff3ef9187c36dd160888.squirrel@twosheds.infradead.org> <20131024141241.GA25061@ulmo.nvidia.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: introduce of_get_available_child_count
+Date: Fri, 25 Oct 2013 01:02:25 +0100
+Message-ID: <20131025000225.6E449C403B6@trevor.secretlab.ca>
+References: <1380045009-21149-1-git-send-email-cooloney@gmail.com> <52420118.9050501@gmail.com> <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg@mail.gmail.com> <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131024141241.GA25061-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Can we end this thread now? Please?
+On Thu, 24 Oct 2013 11:09:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Sep 24, 2013 at 2:22 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Tue, Sep 24, 2013 at 2:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> On 09/24/2013 12:50 PM, Bryan Wu wrote:
+> >>> Some drivers keep counting available child by themselves. So
+> >>> introduce a new simple API like of_get_child_count() but for
+> >>> available childs.
+> >>>
+> >>> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >>> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> ---
+> >>
+> >> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >>
+> 
+> Will this patch be merged through you guys or need I take care of it?
 
-The same arguments are going around and around. and around. Nothing new
-has been said in the past 50 emails. We've also had some pretty intense
-dicussions here in Edinburgh at the ARM summit and about 12 of us
-hammered out a proposal for a way to address the log jam of binding
-review and to attempt to address the concerns on *both* sides of the
-stable-abi debate. Mark Rutland talked a bit about it during his
-presentation at ELCE today. Tomorrow it will be discussed at kernel
-summit, and I'll be posting it to the list ASAP.
-
-Take a breath. Go for a walk in the garden. Enjoy your weekend, and we
-can start a new flame war on Monday on the devicetree list.
+Merge it with the patch that needs it.
 
 g.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
