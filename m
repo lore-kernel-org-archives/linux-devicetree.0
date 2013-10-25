@@ -1,168 +1,43 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
-Date: Fri, 25 Oct 2013 16:22:56 +0200
-Message-ID: <5967797.JK75dGoOFW@avalon>
-References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <1394972.QJSGNM8CJk@avalon> <20131025141029.GD1551@ulmo.nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Fri, 25 Oct 2013 15:44:09 +0100
+Message-ID: <526A83B9.30800@wwwdotorg.org>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <20131024234340.ADF70C403B6@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2472561.dHkZRrX6lQ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131025141029.GD1551-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <20131024234340.ADF70C403B6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---nextPart2472561.dHkZRrX6lQ
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Hi Thierry,
-
-On Friday 25 October 2013 16:10:30 Thierry Reding wrote:
-> On Fri, Oct 25, 2013 at 03:47:21PM +0200, Laurent Pinchart wrote:
-> > On Friday 25 October 2013 10:13:15 Thierry Reding wrote:
-> > > On Thu, Oct 24, 2013 at 11:06:18PM +0100, Stephen Warren wrote:
-> > > > On 10/24/2013 12:20 PM, Laurent Pinchart wrote:
-> > > > > On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
-> > > > >> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
-> > > > >> ...
-> > > > >> 
-> > > > >>>> As I said, anything that really needs a CDF binding to work
-> > > > >>>> likely isn't "simple" anymore, therefore a separate driver can
-> > > > >>>> easily be justified.
-> > > > >>> 
-> > > > >>> The system as a whole would be more complex, but the panel could
-> > > > >>> be the same. We can't have two drivers for the same piece of
-> > > > >>> hardware in the DT world, as there will be a single compatible
-> > > > >>> string and no way to choose between the drivers (unlike the board
-> > > > >>> code world that could set device names to "foo- encoder-v4l2" or
-> > > > >>> "foo-encoder-drm" and live happily with that ever after).
-> > > > >> 
-> > > > >> That's not true. We can certainly define two different compatible
-> > > > >> values for a piece of HW if we have to. We can easily control
-> > > > >> whether they are handled by the same or different drivers in the
-> > > > >> OS.
-> > > > > 
-> > > > > From an implementation point of view, sure. But from a conceptual
-> > > > > point of view, that would make the DT bindings pretty Linux-
-> > > > > specific, with a description of what the operating system should do
-> > > > > instead of a description of what the hardware looks like. My
-> > > > > understanding is that we've tried pretty hard in the past not to
-> > > > > open that Pandora's box.
-> > > > > 
-> > > > > The case I'm mostly concerned about would be two different
-> > > > > compatibility strings to select whether the device should be handled
-> > > > > by a KMS or V4L driver. I don't think that's a good idea.
-> > > > 
-> > > > I wouldn't think of the two compatible values as selecting different
-> > > > specific Linux drivers, but rather they simply describe the HW in
-> > > > different levels of detail. The fact that if we know a certain level
-> > > > of detail about the HW means that Linux can and does create a KMS
-> > > > driver rather than a V4L2 driver seems like a detail that's completely
-> > > > hidden inside the OS.
-> > > 
-> > > I've had a somewhat similar idea the other day but couldn't really put
-> > > it into words. Interestingly someone else mentioned a similar concept in
-> > > a different thread which I think describes what I had in mind as well.
-> > > 
-> > > I was wondering if we couldn't use two compatible values to denote two
-> > > 
-> > > interfaces that the device implements. Something along the lines of:
-> > > 	compatible = "vendor,block-name", "encoder";
-> > > 
-> > > So a driver could primarily match on "vendor,block-name", but at the
-> > > same time it could use the additional information of being required to
-> > > implement "encoder" to expose an additonal interface.
-> > 
-> > Let's take the hardware architecture described in
-> > http://www.ideasonboard.org/media/meetings/20131024-elce.pdf#39 (page 39)
-> > as an example. The green blocks are part of the capture pipeline and
-> > handled by the V4L subsystem. The blue blocks are part of the display
-> > pipeline and handled by the KMS subsystem. One ADV7511 HDMI transmitter
-> > instance need to be controlled by a KMS driver and the second one by a
-> > V4L driver.
-> > 
-> > The two instances are identical, so their DT nodes will show no difference
-> > if we stick to a hardware description only. There would then be no way to
-> > bind to different drivers.
+On 10/25/2013 12:43 AM, Grant Likely wrote:
+> On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> This is a very quick proof-of-concept re: how a DT schema checker might
+>> look if written in C, and integrated into dtc.
 > 
-> I don't quite see why some of the green parts couldn't be part of the
-> display (KMS) pipeline.
-
-Because there might be no blue pipeline in the device, just the green one. The 
-green pipeline is a video capture pipeline and happens to have an HDMI output 
-with a deep pipeline only, with no frame buffer. We can't create a KMS driver 
-for that, as there's no frame buffer and no CRTC.
-
-> I thought I remember you say something about implementing deep pipelining
-> support in one of the more recent talks. This sounds exactly like a case
-> where this would be useful.
+> Thanks for looking at this.
 > 
-> Obviously as long as that work isn't finished that won't help you, but I
-> think that providing a way to pass a video stream object from V4L2 to
-> DRM/KMS would be a more proper solution to this problem.
+> Very interesting. Certainly an expedient way to start checking schemas,
+> and for certain bindings it may be the best approach. The downside is it
+> forces a recompilation of DTC to bring in new bindings and it isn't a
+> great meduim for mixing schema with documentation in the bindings.
 
-We need that as well, but it won't solve the problem when no KMS device is 
-present.
+This approach would certainly require recompiling something. I threw the
+code into dtc simply because it was the easiest container for the
+demonstration. It could be a separate DT validation utility if we
+wanted, although we'd need to split the DT parser from dtc into a
+library to avoid code duplication. The resultant utility could be part
+of the repo containing the DTs, so it didn't end up as a separate
+package to manage.
 
-> > > I suppose that perhaps something like a device_type property could be
-> > > used for that as well, and that might even be the more correct thing to
-> > > do.
-> > > 
-> > > We already do something similar to make GPIO controllers expose an
-> > > interrupt chip by adding an interrupt-controller property. We also use
-> > > the gpio-controller property to mark a device node as exposing the GPIO
-> > > interface for that matter.
-> > > 
-> > > So if a HW block can actually implement two different interfaces, each
-> > > of them being optional, then there should be ways to represent that in
-> > > DT as well. We already do that for "simpler" HW blocks, so there's no
-> > > reason we shouldn't be able to do the same with multimedia components.
-> > > 
-> > > If it's really an encoder, though, the problem might be different,
-> > > though, since the interface (at a hardware or functional level if you
-> > > will) remains the same. But I think in that case it's something that
-> > > needs to be figured out internally by the OS. In my opinion, if we are
-> > > in a situation where we have two different drivers in two subsystems for
-> > > the same device, then we're doing something wrong and it should be fixed
-> > > at that level, not by quirking the DT into making a decision for us.
-> > 
-> > I tend to agree, and I'd like to be able to share drivers between V4L and
-> > KMS. This is way down the road though.
-> 
-> My point is that I don't see a need for sharing the drivers if we can
-> make both V4L2 and DRM/KMS interoperate well enough to cover such use
-> cases.
-> 
-> Why share the drivers if we can make it work by sharing the data?
-
-Would you like to try and merge the two subsystems ? :-)
-
--- 
-Regards,
-
-Laurent Pinchart
-
---nextPart2472561.dHkZRrX6lQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJSan7AAAoJEIkPb2GL7hl12OwH/ROoBE6dRWIAwwvMSbyjDHHB
-YEHTO8UjvBpqb1Q9OICRF0k0uqUBIUJ9qOZp2mFEityPjBpJoLtpUtRzewitA36r
-JtX51ZkaTWkHtL7AsgSKGBRrerDcCucFfAmG8KNBcSJCbGwZBTu4IlPmwF/ktIuh
-LmwritbNZhLUv5ZruCYdUcHXXXs7mZcBF1jfLHdlCZ5QH8lTMmtJsH5fWHiIRJUa
-Y5NUfFuOhsrDr+0IzQpxt8LRDZ2Uy1Ug4bpOq3tNDlZePc6L9xULyOTen/xEgnKo
-gwTjTVG5oQ1/1AM2SCEiKGnCJ9gLmBtJmjvw29OktEoQzjs4ftkQEKyOhKdxaek=
-=r0EZ
------END PGP SIGNATURE-----
-
---nextPart2472561.dHkZRrX6lQ--
-
+I think the additional documentation could be added as comments in the
+validation functions, just like IIRC it was to be represented as
+comments even in the .dts-based schema proposals.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
