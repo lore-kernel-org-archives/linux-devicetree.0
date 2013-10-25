@@ -1,66 +1,49 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] mtd: gpmi: add a new DT property to use the datasheet's minimum required ECC
-Date: Fri, 25 Oct 2013 16:36:24 +0800
-Message-ID: <1382690184-27124-1-git-send-email-b32955@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
+ or is there something better?
+Date: Fri, 25 Oct 2013 10:00:10 +0100
+Message-ID: <526A331A.3060200@wwwdotorg.org>
+References: <20131020220839.GT2443@sirena.org.uk>	 <5264576F.6050307@wwwdotorg.org>	 <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>	 <52658EBC.8020800@wwwdotorg.org>	 <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>	 <20131022171346.GE4061@obsidianresearch.com>	 <20131023080630.GA14413@netboy>	 <20131023172955.GA17145@obsidianresearch.com>	 <20131023174458.GC5208@netboy>	 <1382553982.31058.10.camel@sakura.staff.proxad.net>	 <20131024095232.27BBCC4039D@trevor.secretlab.ca>	 <1382614439.6040.16.camel@sakura.staff.proxad.net>	 <1382615278.8522.72.camel@shinybook.infradead.org> <1382616801.6040.26.camel@sakura.staff.proxad.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382616801.6040.26.camel-MdnFuL0m/hCw+z8RR+d9WEZ2mhrpEnA6@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In default way, we use the ecc-strength/ecc-step-size calculated by ourselves
-and use all the OOB area.
+On 10/24/2013 01:13 PM, Maxime Bizon wrote:
+> 
+> On Thu, 2013-10-24 at 12:47 +0100, David Woodhouse wrote:
+> 
+>> If you can automatically infer the correct clock/interrupt/etc in order
+>> to do DMA correctly, despite the fact that it wasn't explicitly spelled
+>> out in the old DT, then the property is *not* a "required" property.
+>> It's optional, and you have a default behaviour for when it's not
+>> present.
+> 
+> so inside the new version of driver-hwcrypto.c:
+> 
+> if (irq_of_parse_and_map(...) == NO_IRQ) {
+> 	switch (get_soc_model()) {
+> 		case SOC1:
+> 			irq = 51;
+> 			break;
+> 
+> 		case SOC2:
+> 			irq = 62;
+> 			break;
+> 
+> 		[...]
+> 	}
+> }
 
-This patch adds a new property : "fsl,use-minimum-ecc"
-
-If we enable it, we will use the datasheet's minimum required ECC provided by
-the MTD layer (the ecc_strength_ds/ecc_strength_ds fields in the nand_chip{}).
-So we may have free space in the OOB area by using the minimum ECC, and we may
-support JFFS2 with some SLC NANDs, such as Micron's SLC NAND.
-
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
- drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    4 ++++
- 2 files changed, 10 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-index 551b2a1..7a5afa8 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -17,6 +17,12 @@ Required properties:
- Optional properties:
-   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
-                        present false
-+  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
-+                       to use the datasheet's minimum required ECC provided by
-+                       the MTD layer (the ecc_strength_ds/ecc_strength_ds fields
-+                       in the nand_chip{}). So we may have free space in the OOB
-+                       area by using the minimum ECC, and we may support JFFS2
-+                       with some SLC NANDs, such as Micron's SLC NAND.
- 
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-index 43a62e8..d0ae7f4 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -352,6 +352,10 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
- 
- int common_nfc_set_geometry(struct gpmi_nand_data *this)
- {
-+	if (of_property_read_bool(this->dev->of_node, "fsl,use-minimum-ecc"))
-+		return set_geometry_by_ecc_info(this) ? 0 :
-+						legacy_set_geometry(this);
-+
- 	return legacy_set_geometry(this) ?
- 		(!set_geometry_by_ecc_info(this)) : 0;
- }
--- 
-1.7.2.rc3
-
+Uggh. Then you start embedding all the per-SoC or per-board description
+in the drivers. It doesn't seem scalable for every driver to know about
+every HW configuration. Adding extra IRQ/DMA/... properties to DT to
+enable new features should be fine.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
