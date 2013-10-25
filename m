@@ -1,27 +1,30 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v4 0/2] ARM: dts: Beaglebone MMC fixes
-Date: Fri, 25 Oct 2013 11:04:44 +0200
-Message-ID: <20131025090443.GB5474@netboy>
-References: <1379010935-25943-1-git-send-email-koen@dominion.thruhere.net>
- <5238596F.9080806@baylibre.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/2] regulator: s5m8767: Modify parse_dt function to parse
+ data related to ramp
+Date: Fri, 25 Oct 2013 18:08:32 +0900
+Message-ID: <526A3510.1020603@samsung.com>
+References: <1381369296-17101-1-git-send-email-cw00.choi@samsung.com>
+ <20131024101501.GA17157@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5238596F.9080806@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Koen Kooi <koen@dominion.thruhere.net>, linux-kernel@vger.kernel.org, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20131024101501.GA17157@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 03:30:23PM +0200, Benoit Cousson wrote:
+On 10/24/2013 07:15 PM, Mark Brown wrote:
+> On Thu, Oct 10, 2013 at 10:41:35AM +0900, Chanwoo Choi wrote:
+>> This patch parse 'buck[2-4]_ramp_enable and buck_ramp_delay' platform data
+>> from dts file.
 > 
-> I've just applied it on top of Joel's one.
+> Applied both, thanks.  Please submit a followup patch to use
+> of_property_read_bool() as noted by Mark.
+> 
 
-Benoit,
+OK, Thanks,
 
-Can you tell me where to find your git tree so that I can follow these
-patches' progress?
-
-Thanks,
-Richard
+Best regards,
+Chanwoo Choi
