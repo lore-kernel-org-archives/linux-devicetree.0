@@ -1,242 +1,99 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 25 Oct 2013 21:10:06 +0100
-Message-ID: <20131025201006.2D999C405AB@trevor.secretlab.ca>
-References: <20131019104555.GI18477@ns203013.ovh.net>
- <1382346813-8449-1-git-send-email-denis@eukrea.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7080935157248535207=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382346813-8449-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 25 Oct 2013 20:01:36 +0100
+Message-ID: <20131025190136.D55F5C403A7@trevor.secretlab.ca>
+References: <20131025075652.GB19622@ulmo.nvidia.com> <20131025.112549.2040849946958069337.hdoyu@nvidia.com> <20131025091104.GG19622@ulmo.nvidia.com> <20131025.124905.1154427805530939055.hdoyu@nvidia.com> <20131025104937.GA25080@ulmo.nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131025104937.GA25080-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============7080935157248535207==
-Content-Type: text/plain
-
-On Mon, 21 Oct 2013 11:13:33 +0200, Denis Carikli <denis@eukrea.com> wrote:
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Jingoo Han <jg1.han@samsung.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Lothar Waßmann <LW@KARO-electronics.de>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Eric Bénard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> ---
-> ChangeLog v3->v4:
-> - The default-brightness property is now optional, it defaults to 1 if not set.
-> - def_value int becomes an u32.
-> - gbl->def_value was set to pdata->def_value in pdata mode to avoid an extra
->   check.
-> ---
->  .../bindings/video/backlight/gpio-backlight.txt    |   20 ++++++
->  drivers/video/backlight/gpio_backlight.c           |   69 ++++++++++++++++++--
->  2 files changed, 82 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
+On Fri, 25 Oct 2013 12:49:38 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Oct 25, 2013 at 11:49:05AM +0200, Hiroshi Doyu wrote:
+> > Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 11:11:05 +0200:
+> > 
+> > > > > This is actually "the other problem that I'm aware of that could benefit
+> > > > > from [interrupt resolution at probe time]". My idea was that once we had
+> > > > > a way within the driver core to resolve interrupt references at probe
+> > > > > time it could be used for potentially many other resources as well. Some
+> > > > > of the resources like GPIOs and regulators are obviously not something
+> > > > > that the core can or should be requesting, but mostly resources that you
+> > > > > don't actually need to control after probing (such as interrupts) would
+> > > > > be a good fit because otherwise people would write the same boilerplate
+> > > > > over and over again.
+> > > > > 
+> > > > > IOMMUs seem to me to be in that same category. As far as I can tell, an
+> > > > > IOMMU driver registers the IOMMU for a given bus, upon which every
+> > > > > device can simply be used (mostly transparently) with that IOMMU. While
+> > > > > I haven't figured out how exactly, I'm pretty sure we can take advantage
+> > > > > of the resolution of resources at probe time within the core to both
+> > > > > keep drivers from having to do anything in particular and at the same
+> > > > > time have code to determine if the IOMMU driver hasn't been probed yet
+> > > > > and return -EPROBE_DEFER appropriately.
+> > > > 
+> > > > Can you explain the above a bit more?
+> > > > 
+> > > > Originally I thought that what Grant suggested would work ok with this
+> > > > patch.
+> > > 
+> > > I think the objection to these patches is that they special case the
+> > > instantiation of some devices. It's not a proper solution because it
+> > > implies various things. For example merely instantiating the IOMMU
+> > > device earlier than others is only going to work *if* the driver is
+> > > actually probed before the drivers of other devices. If you want to
+> > > build the driver as a module for example, probe order becomes entirely
+> > > non-deterministic.
+> > 
+> > I understand the above limitation. What I thought for the solution is
+> > that I can make use of iommu_bus even before IOMMU is
+> > instanciated. iommu_bus has its notifier which calls
+> > iommu_ops()->add_device(). This could return -EPROBE_DEFER when IOMMU
+> > isn't ready. Only the problem is the current "bus_notifier" doesn't
+> > have the ability to return error. I'll see if it can be modified. Even
+> > with this, at least IOMMU *driver* needs to be init'ed enough earlier
+> > to prevent devices from being registered without IOMMU.
 > 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-> new file mode 100644
-> index 0000000..3474d4a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-> @@ -0,0 +1,20 @@
-> +gpio-backlight bindings
-> +
-> +Required properties:
-> +  - compatible: "gpio-backlight"
-> +  - gpios: describes the gpio that is used for enabling/disabling the backlight
-> +     (see GPIO binding[0] for more details).
-> +
-> +Optional properties:
-> +  - default-brightness-level: the default brightness level (can be 0(off) or
-> +      1(on) since GPIOs only support theses levels).
+> The way notifiers work is that they run completely hidden from whatever
+> triggers them. For instance you register the IOMMU bus notifier from the
+> IOMMU driver (by calling bus_set_iommu()). That registers a function to
+> be called when some event happens on that bus. When a device's driver is
+> probed successfully, the driver core will notify the bus, which causes
+> the IOMMU callback to be run.
+> 
+> Some of this code runs before the driver has successfully been probed,
+> so I imagine it would be possible to use it to abort probing. But that's
+> not possible at least with the current code.
+> 
+> > > Instead of handling such dependencies implicitly by making sure all
+> > > resource providers are probed earlier than any of their consumers, the
+> > > dependencies are handled more explicitly, which turns out to simplify
+> > > things a lot. There's some additional work required in the core, but if
+> > > done consistently no driver needs to care about the dependencies and it
+> > > no longer matters where the resources come from. The problem is reduced
+> > > to essentially this:
+> > > 
+> > > 	while (!resource_available())
+> > > 		load_more_drivers();
+> > > 
+> > > So my proposed solution for the IOMMU case is to treat it the same as
+> > > any other resources. Perhaps resource isn't the right word, but at the
+> > > core the issue is the same. A device requires the services of an IOMMU
+> > > so that it can be put into the correct address space. If the IOMMU is
+> > > not available yet it cannot do that, so we simply return -EPROBE_DEFER
+> > > and cause the probe to be retried later.
+> > 
+> > This looks somewhat similar to the above iommu_bus notifier.
+> > 
+> > Is there any way to implement the same mechanism rather than using
+> > bus?
+> 
+> Yes, I think it should be possible to get this to work without using the
+> bus notifier at all. I can try to code something up but wanted to wait
+> for feedback from Grant first.
 
-Seems odd to call it brightness since it can only be on or off. Why not
-call it "default-state" or and empty bool named "default-on"?
-
-Otherwise looks okay to me.
+I've lost track. What feedback are you waiting for from me? I've not dug
+into this entire series so I may not provide clueful feedback.
 
 g.
-
-> +
-> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "gpio-backlight";
-> +		gpios = <&gpio3 4 0>;
-> +		default-brightness-level = <0>;
-> +	};
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-> index 81fb127..248124d 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -13,6 +13,8 @@
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/platform_data/gpio_backlight.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> @@ -23,6 +25,7 @@ struct gpio_backlight {
->  
->  	int gpio;
->  	int active;
-> +	u32 def_value;
->  };
->  
->  static int gpio_backlight_update_status(struct backlight_device *bl)
-> @@ -60,6 +63,41 @@ static const struct backlight_ops gpio_backlight_ops = {
->  	.check_fb	= gpio_backlight_check_fb,
->  };
->  
-> +static int gpio_backlight_probe_dt(struct platform_device *pdev,
-> +				   struct gpio_backlight *gbl)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	enum of_gpio_flags gpio_flags;
-> +	int ret;
-> +
-> +	gbl->fbdev = NULL;
-> +	gbl->gpio = of_get_gpio_flags(np, 0, &gpio_flags);
-> +
-> +	gbl->active = (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-> +
-> +	if (gbl->gpio == -EPROBE_DEFER) {
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +	} else if (gbl->gpio < 0) {
-> +		dev_err(&pdev->dev, "Error: gpios is a required parameter.\n");
-> +		return gbl->gpio;
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "default-brightness-level",
-> +				   &gbl->def_value);
-> +	if (ret < 0) {
-> +		/* The property is optional. */
-> +		gbl->def_value = 1;
-> +	}
-> +
-> +	if (gbl->def_value > 1) {
-> +		dev_warn(&pdev->dev,
-> +			"Warning: Invalid default-brightness-level value. Its value can be either 0(off) or 1(on).\n");
-> +		gbl->def_value = 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int gpio_backlight_probe(struct platform_device *pdev)
->  {
->  	struct gpio_backlight_platform_data *pdata =
-> @@ -67,10 +105,12 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
-> +	struct device_node *np = pdev->dev.of_node;
->  	int ret;
->  
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "failed to find platform data\n");
-> +	if (!pdata && !np) {
-> +		dev_err(&pdev->dev,
-> +			"failed to find platform data or device tree node.\n");
->  		return -ENODEV;
->  	}
->  
-> @@ -79,14 +119,22 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	gbl->dev = &pdev->dev;
-> -	gbl->fbdev = pdata->fbdev;
-> -	gbl->gpio = pdata->gpio;
-> -	gbl->active = pdata->active_low ? 0 : 1;
-> +
-> +	if (np) {
-> +		ret = gpio_backlight_probe_dt(pdev, gbl);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		gbl->fbdev = pdata->fbdev;
-> +		gbl->gpio = pdata->gpio;
-> +		gbl->active = pdata->active_low ? 0 : 1;
-> +		gbl->def_value = pdata->def_value;
-> +	}
->  
->  	ret = devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
->  				    (gbl->active ? GPIOF_INIT_LOW
->  						 : GPIOF_INIT_HIGH),
-> -				    pdata->name);
-> +				    pdata ? pdata->name : "backlight");
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "unable to request GPIO\n");
->  		return ret;
-> @@ -103,17 +151,24 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  		return PTR_ERR(bl);
->  	}
->  
-> -	bl->props.brightness = pdata->def_value;
-> +	bl->props.brightness = gbl->def_value;
-> +
->  	backlight_update_status(bl);
->  
->  	platform_set_drvdata(pdev, bl);
->  	return 0;
->  }
->  
-> +static struct of_device_id gpio_backlight_of_match[] = {
-> +	{ .compatible = "gpio-backlight" },
-> +	{ /* sentinel */ }
-> +};
-> +
->  static struct platform_driver gpio_backlight_driver = {
->  	.driver		= {
->  		.name		= "gpio-backlight",
->  		.owner		= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(gpio_backlight_of_match),
->  	},
->  	.probe		= gpio_backlight_probe,
->  };
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---===============7080935157248535207==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7080935157248535207==--
