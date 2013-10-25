@@ -1,189 +1,50 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: i.MX53: Devicetree for Voipac Baseboard
- using x53-dmm-668 module
-Date: Thu, 24 Oct 2013 19:55:45 -0500
-Message-ID: <1382662545.8819.0.camel@linux-builds1>
-References: <1382651769-21238-1-git-send-email-lisovy@gmail.com>
-	 <1382651769-21238-4-git-send-email-lisovy@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 3/4] ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+Date: Fri, 25 Oct 2013 09:27:28 +0800
+Message-ID: <20131025012725.GG14529@S2101-09.ap.freescale.net>
+References: <1382461643-16790-1-git-send-email-lisovy@gmail.com>
+ <1382461643-16790-4-git-send-email-lisovy@gmail.com>
+ <20131023072738.GI2839@S2101-09.ap.freescale.net>
+ <1382641926.16515.2.camel@lolumad>
+ <CAHCPf3vB+HYkFoBYcbVM6Ecp+8BSApG2JZi1PRwc7ag6ygszOw@mail.gmail.com>
+ <1382644733.19373.2.camel@lolumad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382651769-21238-4-git-send-email-lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1382644733.19373.2.camel@lolumad>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rostislav Lisovy <lisovy@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matt Sealey <neko@bakuhatsu.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, pisa@cmp.felk.cvut.cz
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-10-24 at 23:56 +0200, Rostislav Lisovy wrote:
-> Supported peripherals: Audio -- headphone output, LEDs, Buttons
-> (using keyboard controller), SD-card.
+On Thu, Oct 24, 2013 at 09:58:53PM +0200, Rostislav Lisovy wrote:
+> I saw that most of the vendor prefixes are somehow shortened (e.g.
+> Freescale -- fsl, etc.).
+
+The 'fsl' is the stock symbol of Freescale.  If that's not the case for
+voipac, I think 'voipac' is more appropriate.
+
+Shawn
+
+> On Thu, 2013-10-24 at 14:49 -0500, Matt Sealey wrote: 
+> > On Thu, Oct 24, 2013 at 2:12 PM, Rostislav Lisovy <lisovy@gmail.com> wrote:
+> > > Dear Shawn;
+> > > Thank you for your comments.
+> > > Should I also add Voipac to
+> > > Documentation/devicetree/bindings/vendor-prefixes.txt?
+> > 
+> > I would agree with that, but why is your chosen prefix "vp" instead of
+> > "voipac" anyway?
+> > 
 > 
-> Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
->  create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 802720e..5571af6 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -133,6 +133,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
->  	imx53-mba53.dtb \
->  	imx53-qsb.dtb \
->  	imx53-smd.dtb \
-> +	imx53-voipac-bsb.dts \
-
-I think this should be imx32-voipac-bsb.dtb.
-
-Dinh
->  	imx6dl-sabreauto.dtb \
->  	imx6dl-sabresd.dtb \
->  	imx6dl-wandboard.dtb \
-> diff --git a/arch/arm/boot/dts/imx53-voipac-bsb.dts b/arch/arm/boot/dts/imx53-voipac-bsb.dts
-> new file mode 100644
-> index 0000000..5c88c0e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx53-voipac-bsb.dts
-> @@ -0,0 +1,135 @@
-> +/*
-> + * Copyright 2013 Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, PiKRON s.r.o.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx53-voipac-dmm-668.dtsi"
-> +
-> +/ {
-> +	sound {
-> +		compatible = "fsl,imx53-voipac-sgtl5000",
-> +			     "fsl,imx-audio-sgtl5000";
-> +		model = "imx53-voipac-sgtl5000";
-> +		ssi-controller = <&ssi2>;
-> +		audio-codec = <&sgtl5000>;
-> +		audio-routing =
-> +			"Headphone Jack", "HP_OUT";
-> +		mux-int-port = <2>;
-> +		mux-ext-port = <5>;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pin_gpio>;
-> +
-> +		led1 {
-> +			label = "led-red";
-> +			gpios = <&gpio3 29 0>;
-> +			default-state = "off";
-> +		};
-> +
-> +		led2 {
-> +			label = "led-orange";
-> +			gpios = <&gpio2 31 0>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
-> +
-> +	hog {
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins = <
-> +				/* SD2_CD */
-> +				MX53_PAD_EIM_D25__GPIO3_25	0x80000000
-> +				/* SD2_WP */
-> +				MX53_PAD_EIM_A19__GPIO2_19 	0x80000000
-> +			>;
-> +		};
-> +
-> +		led_pin_gpio: led_gpio {
-> +			fsl,pins = <
-> +				MX53_PAD_EIM_D29__GPIO3_29	0x80000000
-> +				MX53_PAD_EIM_EB3__GPIO2_31	0x80000000
-> +			>;
-> +		};
-> +	};
-> +
-> +	/* Keyboard controller */
-> +	kpp {
-> +		pinctrl_kpp_1: kppgrp-1 {
-> +			fsl,pins = <
-> +				MX53_PAD_GPIO_9__KPP_COL_6	0xe8
-> +				MX53_PAD_GPIO_4__KPP_COL_7	0xe8
-> +				MX53_PAD_KEY_COL2__KPP_COL_2	0xe8
-> +				MX53_PAD_KEY_COL3__KPP_COL_3	0xe8
-> +				MX53_PAD_KEY_COL4__KPP_COL_4	0xe8
-> +
-> +				MX53_PAD_GPIO_2__KPP_ROW_6	0xe0
-> +				MX53_PAD_GPIO_5__KPP_ROW_7	0xe0
-> +				MX53_PAD_KEY_ROW2__KPP_ROW_2	0xe0
-> +				MX53_PAD_KEY_ROW3__KPP_ROW_3	0xe0
-> +				MX53_PAD_KEY_ROW4__KPP_ROW_4	0xe0
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&audmux {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_audmux_1>; /* SSI1 */
-> +	status = "okay";
-> +};
-> +
-> +&esdhc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc2_1>;
-> +	cd-gpios = <&gpio3 25 0>;
-> +	wp-gpios = <&gpio2 19 0>;
-> +	vmmc-supply = <&reg_3p3v>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c3_2>;
-> +	status = "okay";
-> +
-> +	sgtl5000: codec@0a {
-> +		compatible = "fsl,sgtl5000";
-> +		reg = <0x0a>;
-> +		VDDA-supply = <&reg_3p3v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +		clocks = <&clks 150>;
-> +	};
-> +};
-> +
-> +&kpp {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_kpp_1>;
-> +	linux,keymap = <
-> +			0x0203003b	/* KEY_F1 */
-> +			0x0603003c	/* KEY_F2 */
-> +			0x0207003d	/* KEY_F3 */
-> +			0x0607003e	/* KEY_F4 */
-> +			>;
-> +	keypad,num-rows = <8>;
-> +	keypad,num-columns = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&ssi2 {
-> +	fsl,mode = "i2s-slave";
-> +	status = "okay";
-> +};
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
