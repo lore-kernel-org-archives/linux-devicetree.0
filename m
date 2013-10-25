@@ -1,85 +1,25 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Fri, 25 Oct 2013 16:44:28 +0200
-Message-ID: <20131025144427.GA14862@earth.universe>
-References: <1382626126-12565-1-git-send-email-sre@debian.org>
- <1382626126-12565-2-git-send-email-sre@debian.org>
- <526A680A.8090308@ti.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 0/2] Add support for Qualcomm's PRNG
+Date: Fri, 25 Oct 2013 15:57:53 +0100
+Message-ID: <526A86F1.6030907@zytor.com>
+References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <526A680A.8090308@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/15/2013 03:11 PM, Stanimir Varbanov wrote:
+> This patch set adds hardware RNG driver wich is used to control the
+> Qualcomm's PRNG hardware block.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I still haven't seen anyone address the "P" bit of the "PRNG"... what is
+the (guaranteed) entropic level of the output?
 
-Hi P=E9ter,
+	-hpa
 
-On Fri, Oct 25, 2013 at 03:46:02PM +0300, Peter Ujfalusi wrote:
-> > [...]
-> > +#if IS_ENABLED(CONFIG_OF)
->=20
-> You don't need to do this.
 
-It's done like this in all the other drivers.
-
-> > +static const struct of_device_id twl4030_pwrbutton_dt_match_table[] =
-=3D {
-> > +       { .compatible =3D "ti,twl4030-pwrbutton" },
-> > +       {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, twl4030_pwrbutton_dt_match_table);
-> > +#endif
-> > +
-> >  static struct platform_driver twl4030_pwrbutton_driver =3D {
-> > +	.probe		=3D twl4030_pwrbutton_probe,
-> >  	.remove		=3D __exit_p(twl4030_pwrbutton_remove),
-> >  	.driver		=3D {
-> >  		.name	=3D "twl4030_pwrbutton",
-> >  		.owner	=3D THIS_MODULE,
-> > +		.of_match_table =3D of_match_ptr(twl4030_pwrbutton_dt_match_table),
->=20
-> If you try to compile this driver with config !CONFIG_OF it will not work=
- in
-> this way.
-
-For !CONFIG_OF of_match_ptr is defined as follows (in "include/linux/of.h"):
-
-#define of_match_ptr(_ptr)  NULL
-
-So the preprocessor will remove the undefined symbol.
-
--- Sebastian
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSaoPLAAoJENju1/PIO/qapscP/1wH218rX6suEps9GQ3nqB/8
-ttufgBcA/qofrMTgTYPSYleEZrGEA1VIW4SGLnQvsHhivnMHlavki2nbw2ib88CA
-99G6tOqaCnKjmy6pJoOyWK4VK2oreI1MGgd55dTxEMApBcyEhNi/Ch1p3xe/gBWw
-3BvlQTg1qo9rc0Bpo4qzHjHUAOOsEbJVqXVwpUHVApZGHo4nwhbiVapkEvA5pTgo
-6617/CZv5Ttoq6uHJeaD9STuQ8c5REzWMSuLtBqaMOQC8CQTcSXjmuNlai/QTFQe
-6dd9q56QDu/Ji93kT03Y3EhXek7L/rOKs4GjatmfQ63nfdCMqz7elUUTC8iuZMfl
-DOpmwhDAXKwlNRwCpMEXDUxrluV7iuavxrGTvb2/61DXtgCrKMMOuAocEscm3vNk
-sv75K8803sb2mZgvkU9jD51VXQBhjcm4oD1yYvpnwSU3/wmxOXxspYfDsas3Ppd/
-LKSZQsEpxEikalnGp5l9dvMgZ7XI00nmaj3h5xhRn/Mv+ArFqUevtF3Yuk6535Zb
-ZGVLnF60ixQEz0s7Q3W9QwCcowVr+tjiohEyUQV3jQLEuqAsJmVmcat34AqF4KIN
-h3P7VS0XAcNtHLE570PcUb4hh7DOSdKcqkMvmnUFUB0ukdtI3uSj8rIENKjJRDNt
-aX9UET3e5q5p73zZSA8F
-=WoCt
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
