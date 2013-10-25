@@ -1,63 +1,187 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] mtd: m25p80: remove 'disabled' device check
-Date: Fri, 25 Oct 2013 01:15:09 +0100
-Message-ID: <20131025001509.1924FC403B6@trevor.secretlab.ca>
-References: <1382583503-13748-1-git-send-email-computersforpeace@gmail.com> <1382583503-13748-5-git-send-email-computersforpeace@gmail.com>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: i.MX53: Devicetree for Voipac Baseboard
+ using x53-dmm-668 module
+Date: Thu, 24 Oct 2013 19:55:45 -0500
+Message-ID: <1382662545.8819.0.camel@linux-builds1>
+References: <1382651769-21238-1-git-send-email-lisovy@gmail.com>
+	 <1382651769-21238-4-git-send-email-lisovy@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382583503-13748-5-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1382651769-21238-4-git-send-email-lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sourav.poddar-l0cyMroinI0@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2013 19:58:23 -0700, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> It seems like the following commit was never necessary
+On Thu, 2013-10-24 at 23:56 +0200, Rostislav Lisovy wrote:
+> Supported peripherals: Audio -- headphone output, LEDs, Buttons
+> (using keyboard controller), SD-card.
 > 
->     commit 5f949137952020214cd167093dd7be448f21c079
->     Author: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->     Date:   Fri Oct 14 15:49:00 2011 +0800
+> Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
->         mtd: m25p80: don't probe device which has status of 'disabled'
+>  create mode 100644 arch/arm/boot/dts/imx53-voipac-bsb.dts
 > 
-> because it duplicates the code in of_platform_device_create_pdata()
-> which ensures that 'disabled' nodes are never instantiated.
-> 
-> Also, drop the __maybe_unused.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 802720e..5571af6 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -133,6 +133,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+>  	imx53-mba53.dtb \
+>  	imx53-qsb.dtb \
+>  	imx53-smd.dtb \
+> +	imx53-voipac-bsb.dts \
 
-Looks reasonable.
+I think this should be imx32-voipac-bsb.dtb.
 
-Reviewed-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Dinh
+>  	imx6dl-sabreauto.dtb \
+>  	imx6dl-sabresd.dtb \
+>  	imx6dl-wandboard.dtb \
+> diff --git a/arch/arm/boot/dts/imx53-voipac-bsb.dts b/arch/arm/boot/dts/imx53-voipac-bsb.dts
+> new file mode 100644
+> index 0000000..5c88c0e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-voipac-bsb.dts
+> @@ -0,0 +1,135 @@
+> +/*
+> + * Copyright 2013 Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, PiKRON s.r.o.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx53-voipac-dmm-668.dtsi"
+> +
+> +/ {
+> +	sound {
+> +		compatible = "fsl,imx53-voipac-sgtl5000",
+> +			     "fsl,imx-audio-sgtl5000";
+> +		model = "imx53-voipac-sgtl5000";
+> +		ssi-controller = <&ssi2>;
+> +		audio-codec = <&sgtl5000>;
+> +		audio-routing =
+> +			"Headphone Jack", "HP_OUT";
+> +		mux-int-port = <2>;
+> +		mux-ext-port = <5>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pin_gpio>;
+> +
+> +		led1 {
+> +			label = "led-red";
+> +			gpios = <&gpio3 29 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		led2 {
+> +			label = "led-orange";
+> +			gpios = <&gpio2 31 0>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	hog {
+> +		pinctrl_hog: hoggrp {
+> +			fsl,pins = <
+> +				/* SD2_CD */
+> +				MX53_PAD_EIM_D25__GPIO3_25	0x80000000
+> +				/* SD2_WP */
+> +				MX53_PAD_EIM_A19__GPIO2_19 	0x80000000
+> +			>;
+> +		};
+> +
+> +		led_pin_gpio: led_gpio {
+> +			fsl,pins = <
+> +				MX53_PAD_EIM_D29__GPIO3_29	0x80000000
+> +				MX53_PAD_EIM_EB3__GPIO2_31	0x80000000
+> +			>;
+> +		};
+> +	};
+> +
+> +	/* Keyboard controller */
+> +	kpp {
+> +		pinctrl_kpp_1: kppgrp-1 {
+> +			fsl,pins = <
+> +				MX53_PAD_GPIO_9__KPP_COL_6	0xe8
+> +				MX53_PAD_GPIO_4__KPP_COL_7	0xe8
+> +				MX53_PAD_KEY_COL2__KPP_COL_2	0xe8
+> +				MX53_PAD_KEY_COL3__KPP_COL_3	0xe8
+> +				MX53_PAD_KEY_COL4__KPP_COL_4	0xe8
+> +
+> +				MX53_PAD_GPIO_2__KPP_ROW_6	0xe0
+> +				MX53_PAD_GPIO_5__KPP_ROW_7	0xe0
+> +				MX53_PAD_KEY_ROW2__KPP_ROW_2	0xe0
+> +				MX53_PAD_KEY_ROW3__KPP_ROW_3	0xe0
+> +				MX53_PAD_KEY_ROW4__KPP_ROW_4	0xe0
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&audmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_audmux_1>; /* SSI1 */
+> +	status = "okay";
+> +};
+> +
+> +&esdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_esdhc2_1>;
+> +	cd-gpios = <&gpio3 25 0>;
+> +	wp-gpios = <&gpio2 19 0>;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c3_2>;
+> +	status = "okay";
+> +
+> +	sgtl5000: codec@0a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0x0a>;
+> +		VDDA-supply = <&reg_3p3v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +		clocks = <&clks 150>;
+> +	};
+> +};
+> +
+> +&kpp {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_kpp_1>;
+> +	linux,keymap = <
+> +			0x0203003b	/* KEY_F1 */
+> +			0x0603003c	/* KEY_F2 */
+> +			0x0207003d	/* KEY_F3 */
+> +			0x0607003e	/* KEY_F4 */
+> +			>;
+> +	keypad,num-rows = <8>;
+> +	keypad,num-columns = <1>;
+> +	status = "okay";
+> +};
+> +
+> +&ssi2 {
+> +	fsl,mode = "i2s-slave";
+> +	status = "okay";
+> +};
 
-> 
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> ---
->  drivers/mtd/devices/m25p80.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index d6c5c57..a1dc49a 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -935,12 +935,7 @@ static int m25p_probe(struct spi_device *spi)
->  	struct flash_info		*info;
->  	unsigned			i;
->  	struct mtd_part_parser_data	ppdata;
-> -	struct device_node __maybe_unused *np = spi->dev.of_node;
-> -
-> -#ifdef CONFIG_MTD_OF_PARTS
-> -	if (!of_device_is_available(np))
-> -		return -ENODEV;
-> -#endif
-> +	struct device_node *np = spi->dev.of_node;
->  
->  	/* Platform data helps sort out which chip type we have, as
->  	 * well as how this board partitions it.  If we don't have
-> -- 
-> 1.8.4
-> 
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
