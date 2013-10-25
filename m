@@ -1,170 +1,227 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 08/10] of/platform: Resolve interrupt references at
- probe time
-Date: Fri, 25 Oct 2013 09:35:35 +0200
-Message-ID: <20131025073534.GA19622@ulmo.nvidia.com>
-References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
- <1379510692-32435-9-git-send-email-treding@nvidia.com>
- <20131015232436.19F61C40099@trevor.secretlab.ca>
- <20131024163749.68D01C403B6@trevor.secretlab.ca>
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: Re: [RFC 04/12] phy: Add simple-phy driver
+Date: Fri, 25 Oct 2013 09:51:58 +0200
+Message-ID: <526A231E.2090504@samsung.com>
+References: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com>
+ <1382365111-6533-5-git-send-email-t.stanislaws@samsung.com>
+ <52694238.7050607@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131024163749.68D01C403B6@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <52694238.7050607@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, t.figa@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, rahul.sharma@samsung.com, kgene.kim@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+Please refer to the comments below.
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/24/2013 05:52 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Monday 21 October 2013 07:48 PM, Tomasz Stanislawski wrote:
+>> Add simple-phy driver to support a single register
+>> PHY interfaces present on Exynos4 SoC.
+> 
+> How are these PHY interfaces modelled in the SoC? Where does the register
+> actually reside?
 
-On Thu, Oct 24, 2013 at 05:37:49PM +0100, Grant Likely wrote:
-> On Wed, 16 Oct 2013 00:24:36 +0100, Grant Likely <grant.likely@linaro.org=
-> wrote:
-> > On Wed, 18 Sep 2013 15:24:50 +0200, Thierry Reding <thierry.reding@gmai=
-l.com> wrote:
-> > > Interrupt references are currently resolved very early (when a device=
- is
-> > > created). This has the disadvantage that it will fail in cases where =
-the
-> > > interrupt parent hasn't been probed and no IRQ domain for it has been
-> > > registered yet. To work around that various drivers use explicit
-> > > initcall ordering to force interrupt parents to be probed before devi=
-ces
-> > > that need them are created. That's error prone and doesn't always wor=
-k.
-> > > If a platform device uses an interrupt line connected to a different
-> > > platform device (such as a GPIO controller), both will be created in =
-the
-> > > same batch, and the GPIO controller won't have been probed by its dri=
-ver
-> > > when the depending platform device is created. Interrupt resolution w=
-ill
-> > > fail in that case.
-> >=20
-> > What is the reason for all the rework on the irq parsing return values?
-> > A return value of '0' is always an error on irq parsing, regardless of
-> > architecture even if NO_IRQ is defined as -1. I may have missed it, but
-> > I don't see any checking for specific error values in the return paths
-> > of the functions.
-> >=20
-> > If the specific return value isn't required (and I don't think it is),
-> > then you can simplify the whole series by getting rid of the rework
-> > patches.
->=20
-> I've not heard back about the above, but I've just had a conversation
-> with Rob about what to do here.
+Initially, I was planning to add PHY for HDMI_PHY register in
+power management register set on s5pv310 soc.
 
-I thought I had sent a reply regarding this about a week ago. Perhaps it
-got lost. I'll resend.
+However other PHYs use very similar interface (setting bit 0).
+This includes DAC_PHY, ADC_PHY, PCIe_PHY, SATA_PHY.
+Moreover it suits well to USBDEVICE_PHY, USBHOST_PHY.
+That is why I thought about using something more generic
+to handle all those phys without introducing a herd of
+200-lines-long drivers.
 
-> The problem that I have is that it makes a specific return code need
-> to traverse several levels of function calls and have a meaning come
-> out the other end. It becomes difficult to figure out where that code
-> actually comes from when reading the code. That's more of a gut-feel
-> reaction rather than pointing out specifics though.
+>>
+>> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+>> ---
+>>  drivers/phy/Kconfig      |    5 ++
+>>  drivers/phy/Makefile     |    1 +
+>>  drivers/phy/phy-simple.c |  128 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 134 insertions(+)
+>>  create mode 100644 drivers/phy/phy-simple.c
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index ac239ac..619c657 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -38,4 +38,9 @@ config TWL4030_USB
+>>  	  This transceiver supports high and full speed devices plus,
+>>  	  in host mode, low speed.
+>>  
+>> +config PHY_SIMPLE
+>> +	tristate "Simple PHY driver"
+> 
+> This is too generic a name to be used. Lets name it something specific to what
+> it is used for (EXYNOS/HDMI.. ?).
 
-To be honest, I'm not all that happy with that aspect myself, but at the
-same time I didn't feel like duplicating a lot of code to get this done
-more easily. I imagine that would've caused significant pushback as
-well. It's somewhat unfortunate that we have to propagate back through
-several level, but that's just the way the code is currently written and
-I don't think we can really get the information (EPROBE_DEFER) from any
-other place but from the lowest level.
+Ok. It could be renamed to EXYNOS-SIMPLE-PHY or EXYNOS-1BIT-PHY or EXYNOS-GENERIC-PHY
+or something similar. Any ideas?
 
-> The other thing that makes me nervous how invasive the series is.
+>> +	help
+>> +	  Support for PHY controllers configured using single register.
+>> +
+>>  endmenu
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index 0dd8a98..3d68e19 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -5,3 +5,4 @@
+>>  obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
+>>  obj-$(CONFIG_OMAP_USB2)		+= phy-omap-usb2.o
+>>  obj-$(CONFIG_TWL4030_USB)	+= phy-twl4030-usb.o
+>> +obj-$(CONFIG_PHY_SIMPLE)	+= phy-simple.o
+>> diff --git a/drivers/phy/phy-simple.c b/drivers/phy/phy-simple.c
+>> new file mode 100644
+>> index 0000000..4a28af7
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-simple.c
+>> @@ -0,0 +1,128 @@
+>> +/*
+>> + * Simple PHY driver
+>> + *
+>> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+>> + * Author: Tomasz Stanislawski <t.stanislaws@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +struct simple_phy {
+>> +	spinlock_t slock;
+>> +	u32 on_value;
+>> +	u32 off_value;
+>> +	u32 mask;
+>> +	void __iomem *regs;
+>> +};
+>> +
+>> +static int sphy_set(struct simple_phy *sphy, bool on)
+>> +{
+>> +	u32 reg;
+>> +
+>> +	spin_lock(&sphy->slock);
+> 
+> Lets add spin_lock only when it is absolutely necessary. When your PHY provider
+> implements only a single PHY, it is not needed. phy_power_on and phy_power_off
+> is already protected by the framework.
 
-Well, I guess that comes with the territory, doesn't it? Interrupts are
-used in a large number of places and they have been used in a very
-static manner so far. The end result of this patch series is that for
-most devices instantiated from the device tree interrupts end up in the
-same category as any other resources such as GPIOs, regulators or
-clocks. They become mostly dynamic.
+ok
 
-That in itself is a big change, so I don't think it's all that
-surprising that the required changes are invasive.
+>> +
+>> +	reg = readl(sphy->regs);
+>> +	reg &= ~sphy->mask;
+>> +	reg |= sphy->mask & (on ? sphy->on_value : sphy->off_value);
+>> +	writel(reg, sphy->regs);
+>> +
+>> +	spin_unlock(&sphy->slock);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int simple_phy_power_on(struct phy *phy)
+>> +{
+>> +	return sphy_set(phy_get_drvdata(phy), 1);
+>> +}
+>> +
+>> +static int simple_phy_power_off(struct phy *phy)
+>> +{
+>> +	return sphy_set(phy_get_drvdata(phy), 0);
+>> +}
+>> +
+>> +static struct phy_ops simple_phy_ops = {
+>> +	.power_on	= simple_phy_power_on,
+>> +	.power_off	= simple_phy_power_off,
+>> +	.owner		= THIS_MODULE,
+>> +};
+>> +
+>> +static int simple_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct simple_phy *sphy;
+>> +	struct resource *res;
+>> +	struct phy_provider *phy_provider;
+>> +	struct phy *phy;
+>> +
+>> +	sphy = devm_kzalloc(dev, sizeof(*sphy), GFP_KERNEL);
+>> +	if (!sphy)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +
+>> +	sphy->regs = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(sphy->regs)) {
+>> +		dev_err(dev, "failed to ioremap registers\n");
+>> +		return PTR_ERR(sphy->regs);
+>> +	}
+>> +
+>> +	spin_lock_init(&sphy->slock);
+>> +
+>> +	phy_provider = devm_of_phy_provider_register(dev, NULL);
+> 
+> pass 'of_phy_simple_xlate' instead of NULL.
+>> +	if (IS_ERR(phy_provider)) {
+>> +		dev_err(dev, "failed to register PHY provider\n");
+>> +		return PTR_ERR(phy_provider);
+>> +	}
+>> +
+>> +	phy = devm_phy_create(dev, &simple_phy_ops, NULL);
+>> +	if (IS_ERR(phy)) {
+>> +		dev_err(dev, "failed to create PHY\n");
+>> +		return PTR_ERR(phy);
+>> +	}
+>> +
+>> +	sphy->mask = 1;
+>> +	sphy->on_value = ~0;
+>> +	sphy->off_value = 0;
+>> +
+>> +	of_property_read_u32(dev->of_node, "mask", &sphy->mask);
+> 
+> This means your driver will depend on dt data to describe how the register
+> should look like. Not a good idea.
 
-And I think if we really want to solve it properly we need to make even
-more invasive changes. For example, Grygorii pointed out that we could
-have a setup in the future where the following happens:
+I can remove it. No problem. The driver can justt use fixed
+mask=1,on-value=1,off-value=0.
+Adding mentioned attributes greatly improves driver flexibility
+but such a flexibility is not needed currently for s5pv310 phys.
 
-	1) driver providing interrupts is probed
-	2) driver using interrupts is probed, interrupt references are
-	   resolved at probe time
-	3) both drivers are unloaded
-	4) both drivers are reloaded
+But frankly, I do not exactly follow what is a rationale for such police
+in DT. It forces developer to write a lot of redundant code.
+Moreover, some clock drivers seams to violate it.
+Clock "picochip,pc3x3-gated-clk" is an example. One can find similar tricks
+in pinctrl.
 
-In that case with the current set of patches the added core code assumes
-that the interrupts have already been resolved and are still valid.
+>> +	of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
+>> +	of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
+>> +
+>> +	phy_set_drvdata(phy, sphy);
+>> +
+>> +	dev_info(dev, "probe successful\n");
+> Lets not make the boot noisy.
+> 
 
-Possibly the easiest way to fix that would be to just zero out the
-interrupt resources on remove so that they can be re-resolved on next
-probe.
+ok. s/dev_info/dev_dbg is good enough?
 
-But that's somewhat cumbersome and it seems to me like a better fix
-might be to go and change struct platform_device to not use a single
-array of resources, but rather a list, or perhaps an array per type of
-resource. The current platform_device structure is simple and easy, but
-it doesn't work well with all the new dynamicity that we want/need/have
-today.
+> Thanks
+> Kishon
+> 
 
-Obviously modifying the innards of struct platform_device will likely
-turn out to be a mammoth task of its own, but if that's what it takes
-I'm prepared to do that as well. Or at least even try.
+Could you take a look on other patches in this RFC?
 
-> However, even with saying all of the above, I'm not saying outright no.
-> I want to get this feature in.
-
-That's good to hear. Last time we talked about it we seemed to have an
-agreement that this needs to be done, but you not replying had me
-worried that perhaps you had changed your mind. It seems you've been
-busy trying to address other issues that maybe are even more pressing so
-I can hardly complain. =3D)
-
-I'm good as long as we can keep moving in the right direction.
-
-> It is obviously needed and I'll even merge the patches piecemeal as the
-> look ready (I've already merged 2). Regardless, the current series needs
-> to be reworked. It conflicts with the other IRQ rework that I've already
-> put into my tree. The best thing to do would probably be respin it
-> against my current tree and repost.
-
-Sure, that won't be a problem. I might not get to it immediately, but
-I'll get back to it.
-
-> I'll take a fresh look then.... In the mean time, anything you can do to
-> /sanely/ reduce the impact will probably help.  :-)
-
-I might be able to do that. But I'll mention that in another thread in
-the right context.
-
-Thierry
-
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSah9GAAoJEN0jrNd/PrOhglEQALEA8kYxwwnW0OoScRWWD2Fw
-conQGp/mjJecS8927ypLouy7SX2DNAX/234wnaTPGVrnJ9xwXS1Y4Xd+uEd2DWQO
-9NfWP+9bdWhIbVO7oVpX6uQtUT4OXcelmMOVmvotDIAnBFHA5jLE6RwWpW8Pn3yU
-YSGaDkiOGHU0o2K5kk3+ZxqtZaDpm32MgtzB/ZcJWgJkUmebZ1gof01ARsev3+Vb
-5IC3tuhzT6uNR3fxEhoyPUN71f2+1tUNzzjVhn5A9nuAYnU4pYLkLwN3KXf7q1V2
-FfX6UhHC5mqHXkmdPqiT5Cg8rtS9nulq3zDwDd65HYq/g2Xlp/Qo5798h6xdoqeF
-EjCAOvucO333e7Ce9AiiDZsU6njVriNZU3UemPc2oW6BV1aOsUFaw/htbu1f7jze
-XmOtwGrY7fcQCVwNc7ff8aHsQ2equ6lPieN+HYI9hYQdysOpH8XBVlTP3OfJrhro
-hk2Zhhj4tJxBY80Wtd4g8TNtXa0n7HCzaTXdi7Ia7xpIlZ93XPENznOOTcXlYhhj
-dilfWfJX6ZpaPFd5bNcQr+iKNmIOM4x8DZYG8Ds+olEEgDm1uM4FsfqFZYaDJnPU
-93FDVkj/k7SLWzyk2FUnWMydi2P1A+Qr7il89cVMbazzMxRilwvpRXPGigVN69dV
-4+nSk5B422FhPGAEUZl9
-=WlHh
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+Regards,
+Tomasz Stanislawski
