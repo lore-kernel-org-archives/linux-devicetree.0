@@ -1,74 +1,42 @@
-From: Rob Herring <rob.herring@calxeda.com>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Fri, 25 Oct 2013 12:38:15 -0500
-Message-ID: <526AAC87.5070400@calxeda.com>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <20131024234340.ADF70C403B6@trevor.secretlab.ca>
- <526A83B9.30800@wwwdotorg.org> <E1VZjCU-0005RE-Vt@jdl.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5] mtd: m25p80: remove 'disabled' device check
+Date: Fri, 25 Oct 2013 11:01:09 -0700
+Message-ID: <20131025180109.GJ20061@ld-irv-0074.broadcom.com>
+References: <1382583503-13748-1-git-send-email-computersforpeace@gmail.com>
+ <1382583503-13748-5-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1VZjCU-0005RE-Vt@jdl.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, Stephen Warren <swarren@nvidia.com>, s.nawrocki@samsung.com, pawel.moll@arm.com, a.hajda@samsung.com, Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, Benoit Cousson <bcousson@baylibre.com>, galak@codeaurora.org, olof@lixom.net, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org, david@gibson.dropbear.id.au
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382583503-13748-5-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, sourav.poddar-l0cyMroinI0@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2013 10:21 AM, Jon Loeliger wrote:
->> On 10/25/2013 12:43 AM, Grant Likely wrote:
->>> On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren@wwwdotorg.org> 
->> wrote:
->>>> From: Stephen Warren <swarren@nvidia.com>
->>>>
->>>> This is a very quick proof-of-concept re: how a DT schema checker might
->>>> look if written in C, and integrated into dtc.
->>>
->>> Thanks for looking at this.
->>>
->>> Very interesting. Certainly an expedient way to start checking schemas,
->>> and for certain bindings it may be the best approach. The downside is it
->>> forces a recompilation of DTC to bring in new bindings and it isn't a
->>> great meduim for mixing schema with documentation in the bindings.
->>
->> This approach would certainly require recompiling something. I threw the
->> code into dtc simply because it was the easiest container for the
->> demonstration. It could be a separate DT validation utility if we
->> wanted, although we'd need to split the DT parser from dtc into a
->> library to avoid code duplication. The resultant utility could be part
->> of the repo containing the DTs, so it didn't end up as a separate
->> package to manage.
->>
->> I think the additional documentation could be added as comments in the
->> validation functions, just like IIRC it was to be represented as
->> comments even in the .dts-based schema proposals.
+On Wed, Oct 23, 2013 at 07:58:23PM -0700, Brian Norris wrote:
+> It seems like the following commit was never necessary
 > 
-> DTers,
+>     commit 5f949137952020214cd167093dd7be448f21c079
+>     Author: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>     Date:   Fri Oct 14 15:49:00 2011 +0800
 > 
-> I think the additional benefit of starting with a direct C
-> implementation is that it causes us to begin to actually
-> codify the schema requirements.  Sure, it may not be ideal
-> at first, but over time it may reveal consistent patterns
-> that can be extracted.  And it may reveal what a real schema
-> might look like and how it might be expressed better.  Which
-> is to say that perhaps we are letting "perfect" get in the
-> way of "good enough to start"?
+>         mtd: m25p80: don't probe device which has status of 'disabled'
 > 
-> In the meantime, someone has shown us the code and we can
-> get started.  It's a Small Matter of Refactoring later. :-)
+> because it duplicates the code in of_platform_device_create_pdata()
+> which ensures that 'disabled' nodes are never instantiated.
+> 
+> Also, drop the __maybe_unused.
+> 
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 
-I have not really looked at whether this would make sense or be low
-effort, but what if Grant's run-time checker was converted to run at
-kernel compile time. That would fall into the get something working
-sooner rather than later, but doesn't solve the documentation problem
-either.
+Pushed to l2-mtd.git.
 
-Rob
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
