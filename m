@@ -1,511 +1,169 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: [RFC PATCH 2/5] phy: Add WIP Exynos 5250 support to the Exynos USB PHY
- driver
-Date: Fri, 25 Oct 2013 16:15:26 +0200
-Message-ID: <1382710529-12082-3-git-send-email-k.debski@samsung.com>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org
-Cc: kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, Kamil Debski <k.debski@samsung.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Fri, 25 Oct 2013 16:22:56 +0200
+Message-ID: <5967797.JK75dGoOFW@avalon>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <1394972.QJSGNM8CJk@avalon> <20131025141029.GD1551@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart2472561.dHkZRrX6lQ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131025141029.GD1551-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Exynos 5250. This is work-in-progress commit. Not
-for merging.
 
-Signed-off-by: Kamil Debski <k.debski@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/phy/Kconfig              |    7 +
- drivers/phy/Makefile             |    1 +
- drivers/phy/phy-exynos-usb.c     |   10 +
- drivers/phy/phy-exynos-usb.h     |    1 +
- drivers/phy/phy-exynos5250-usb.c |  411 ++++++++++++++++++++++++++++++++++++++
- 5 files changed, 430 insertions(+)
- create mode 100644 drivers/phy/phy-exynos5250-usb.c
+--nextPart2472561.dHkZRrX6lQ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 2f7ac0a..0f598d0 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -36,4 +36,11 @@ config PHY_EXYNOS4212_USB
- 	help
- 	  Enable USB PHY support for Exynos 4212
- 
-+config PHY_EXYNOS5250_USB
-+	bool "Support for Exynos 5250"
-+	depends on PHY_EXYNOS_USB
-+	depends on SOC_EXYNOS5250
-+	help
-+	  Enable USB PHY support for Exynos 5250
-+
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index ca3dc82..0dff0dd 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -6,3 +6,4 @@ obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
- obj-$(CONFIG_PHY_EXYNOS_USB)		+= phy-exynos-usb.o
- obj-$(CONFIG_PHY_EXYNOS4210_USB)	+= phy-exynos4210-usb.o
- obj-$(CONFIG_PHY_EXYNOS4212_USB)	+= phy-exynos4212-usb.o
-+obj-$(CONFIG_PHY_EXYNOS5250_USB)	+= phy-exynos5250-usb.o
-diff --git a/drivers/phy/phy-exynos-usb.c b/drivers/phy/phy-exynos-usb.c
-index d4a26df..172b774 100644
---- a/drivers/phy/phy-exynos-usb.c
-+++ b/drivers/phy/phy-exynos-usb.c
-@@ -212,6 +212,10 @@ extern const struct uphy_config exynos4210_uphy_config;
- extern const struct uphy_config exynos4212_uphy_config;
- #endif
- 
-+#ifdef CONFIG_PHY_EXYNOS5250_USB
-+extern const struct uphy_config exynos5250_uphy_config;
-+#endif
-+
- static const struct of_device_id exynos_uphy_of_match[] = {
- #ifdef CONFIG_PHY_EXYNOS4210_USB
- 	{
-@@ -225,6 +229,12 @@ static const struct of_device_id exynos_uphy_of_match[] = {
- 		.data = &exynos4212_uphy_config,
- 	},
- #endif
-+#ifdef CONFIG_PHY_EXYNOS5250_USB
-+	{
-+		.compatible = "samsung,exynos5250-usbphy",
-+		.data = &exynos5250_uphy_config,
-+	},
-+#endif
- 	{ },
- };
- 
-diff --git a/drivers/phy/phy-exynos-usb.h b/drivers/phy/phy-exynos-usb.h
-index f45cb3c..a9febfa 100644
---- a/drivers/phy/phy-exynos-usb.h
-+++ b/drivers/phy/phy-exynos-usb.h
-@@ -42,6 +42,7 @@ enum samsung_cpu_type {
- 	TYPE_S3C64XX,
- 	TYPE_EXYNOS4210,
- 	TYPE_EXYNOS4212,
-+	TYPE_EXYNOS5250,
- };
- 
- enum uphy_state {
-diff --git a/drivers/phy/phy-exynos5250-usb.c b/drivers/phy/phy-exynos5250-usb.c
-new file mode 100644
-index 0000000..156093b
---- /dev/null
-+++ b/drivers/phy/phy-exynos5250-usb.c
-@@ -0,0 +1,411 @@
-+/*
-+ * Samsung S5P/EXYNOS SoC series USB PHY driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Kamil Debski <k.debski@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+#include "phy-exynos-usb.h"
-+
-+/* Exynos USB PHY registers */
-+#define EXYNOS_5250_REFCLKSEL_CRYSTAL	0x0
-+#define EXYNOS_5250_REFCLKSEL_XO	0x1
-+#define EXYNOS_5250_REFCLKSEL_CLKCORE	0x2
-+
-+#define EXYNOS_5250_FSEL_9MHZ6		0x0
-+#define EXYNOS_5250_FSEL_10MHZ		0x1
-+#define EXYNOS_5250_FSEL_12MHZ		0x2
-+#define EXYNOS_5250_FSEL_19MHZ2		0x3
-+#define EXYNOS_5250_FSEL_20MHZ		0x4
-+#define EXYNOS_5250_FSEL_24MHZ		0x5
-+#define EXYNOS_5250_FSEL_50MHZ		0x7
-+
-+/* Normal host */
-+#define EXYNOS_5250_HOSTPHYCTRL0			0x0
-+
-+#define EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL		(0x1 << 31)
-+#define EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_SHIFT	19
-+#define EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_MASK	\
-+		(0x3 << EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_SHIFT)
-+#define EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT		16
-+#define EXYNOS_5250_HOSTPHYCTRL0_FSEL_MASK \
-+		(0x7 << EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT)
-+#define EXYNOS_5250_HOSTPHYCTRL0_TESTBURNIN		(0x1 << 11)
-+#define EXYNOS_5250_HOSTPHYCTRL0_RETENABLE		(0x1 << 10)
-+#define EXYNOS_5250_HOSTPHYCTRL0_COMMON_ON_N		(0x1 << 9)
-+#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_MASK		(0x3 << 7)
-+#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_DUAL		(0x0 << 7)
-+#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_ID0		(0x1 << 7)
-+#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_ANALOGTEST	(0x2 << 7)
-+#define EXYNOS_5250_HOSTPHYCTRL0_SIDDQ			(0x1 << 6)
-+#define EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP		(0x1 << 5)
-+#define EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND		(0x1 << 4)
-+#define EXYNOS_5250_HOSTPHYCTRL0_WORDINTERFACE		(0x1 << 3)
-+#define EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST		(0x1 << 2)
-+#define EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST		(0x1 << 1)
-+#define EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST		(0x1 << 0)
-+
-+/* HSIC0 & HSCI1 */
-+#define EXYNOS_5250_HOSTPHYCTRL1			0x10
-+#define EXYNOS_5250_HOSTPHYCTRL2			0x20
-+
-+#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_MASK		(0x3 << 23)
-+#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_MASK		(0x7f << 16)
-+#define EXYNOS_5250_HOSTPHYCTRLX_SIDDQ			(0x1 << 6)
-+#define EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP		(0x1 << 5)
-+#define EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND		(0x1 << 4)
-+#define EXYNOS_5250_HOSTPHYCTRLX_WORDINTERFACE		(0x1 << 3)
-+#define EXYNOS_5250_HOSTPHYCTRLX_UTMISWRST		(0x1 << 2)
-+#define EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST		(0x1 << 0)
-+
-+/* EHCI control */
-+#define EXYNOS_5250_HOSTEHCICTRL			0x30
-+#define EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN		(0x1 << 29)
-+#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR4		(0x1 << 28)
-+#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR8		(0x1 << 27)
-+#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR16		(0x1 << 26)
-+#define EXYNOS_5250_HOSTEHCICTRL_AUTOPPDONOVRCUREN	(0x1 << 25)
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT	19
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_MASK	\
-+		(0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT)
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_SHIFT	13
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_MASK	\
-+		(0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_SHIFT)
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL2_SHIFT	7
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_MASK	\
-+		(0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT)
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_SHIFT	1
-+#define EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_MASK \
-+		(0x1 << EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_SHIFT)
-+#define EXYNOS_5250_HOSTEHCICTRL_SIMULATIONMODE		(0x1 << 0)
-+
-+/* OHCI control */
-+#define EXYNOS_5250_HOSTOHCICTRL                        0x34
-+#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_SHIFT	1
-+#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_MASK \
-+		(0x3ff << EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_SHIFT)
-+#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVALEN		(0x1 << 0)
-+
-+/* USBOTG */
-+#define EXYNOS_5250_USBOTGSYS				0x38
-+#define EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET		(0x1 << 14)
-+#define EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG		(0x1 << 13)
-+#define EXYNOS_5250_USBOTGSYS_PHY_SW_RST		(0x1 << 12)
-+#define EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT		9
-+#define EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK \
-+		(0x3 << EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT)
-+#define EXYNOS_5250_USBOTGSYS_ID_PULLUP			(0x1 << 8)
-+#define EXYNOS_5250_USBOTGSYS_COMMON_ON			(0x1 << 7)
-+#define EXYNOS_5250_USBOTGSYS_FSEL_SHIFT		4
-+#define EXYNOS_5250_USBOTGSYS_FSEL_MASK \
-+		(0x3 << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT)
-+#define EXYNOS_5250_USBOTGSYS_FORCE_SLEEP		(0x1 << 3)
-+#define EXYNOS_5250_USBOTGSYS_OTGDISABLE		(0x1 << 2)
-+#define EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG		(0x1 << 1)
-+#define EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND		(0x1 << 0)
-+
-+/* Isolation, configured in the power management unit */
-+#define EXYNOS_5250_USB_ISOL_OTG_OFFSET		0x0
-+#define EXYNOS_5250_USB_ISOL_OTG		(1 << 0)
-+#define EXYNOS_5250_USB_ISOL_HOST_OFFSET	0x4
-+#define EXYNOS_5250_USB_ISOL_HOST		(1 << 0)
-+
-+enum exynos4x12_phy_id {
-+	EXYNOS5250_DEVICE,
-+	EXYNOS5250_HOST,
-+	EXYNOS5250_HSIC0,
-+	EXYNOS5250_HSIC1,
-+	EXYNOS5250_NUM_PHYS,
-+};
-+
-+/* exynos5250_rate_to_clk() converts the supplied clock rate to the value that
-+ * can be written to the phy register. */
-+static u32 exynos5250_rate_to_clk(unsigned long rate)
-+{
-+	unsigned int clksel;
-+
-+	/* EXYNOS_5250_FSEL_MASK */
-+
-+	switch (rate) {
-+	case 9600 * KHZ:
-+		clksel = EXYNOS_5250_FSEL_9MHZ6;
-+		break;
-+	case 10 * MHZ:
-+		clksel = EXYNOS_5250_FSEL_10MHZ;
-+		break;
-+	case 12 * MHZ:
-+		clksel = EXYNOS_5250_FSEL_12MHZ;
-+		break;
-+	case 19200 * KHZ:
-+		clksel = EXYNOS_5250_FSEL_19MHZ2;
-+		break;
-+	case 20 * MHZ:
-+		clksel = EXYNOS_5250_FSEL_20MHZ;
-+		break;
-+	case 24 * MHZ:
-+		clksel = EXYNOS_5250_FSEL_24MHZ;
-+		break;
-+	case 50 * MHZ:
-+		clksel = EXYNOS_5250_FSEL_50MHZ;
-+		break;
-+	default:
-+		clksel = CLKSEL_ERROR;
-+	}
-+
-+	return clksel;
-+}
-+
-+static void exynos5250_isol(struct uphy_instance *inst, bool on)
-+{
-+	struct uphy_driver *drv = inst->drv;
-+	u32 offset;
-+	u32 mask;
-+	u32 tmp;
-+
-+	if (!drv->reg_isol)
-+		return;
-+
-+	switch (inst->cfg->id) {
-+	case EXYNOS5250_DEVICE:
-+		offset = EXYNOS_5250_USB_ISOL_OTG_OFFSET;
-+		mask = EXYNOS_5250_USB_ISOL_OTG;
-+		break;
-+	case EXYNOS5250_HOST:
-+		offset = EXYNOS_5250_USB_ISOL_HOST_OFFSET;
-+		mask = EXYNOS_5250_USB_ISOL_HOST;
-+		break;
-+	default:
-+		return;
-+	};
-+
-+	tmp = readl(drv->reg_isol + offset);
-+	if (on)
-+		tmp &= ~mask;
-+	else
-+		tmp |= mask;
-+	writel(tmp, drv->reg_isol + offset);
-+}
-+
-+static void exynos5250_phy_pwr(struct uphy_instance *inst, bool on)
-+{
-+	struct uphy_driver *drv = inst->drv;
-+	u32 ctrl0;
-+	u32 otg;
-+	u32 ehci;
-+	u32 ohci;
-+
-+	switch (inst->cfg->id) {
-+	case EXYNOS5250_DEVICE:
-+		writel(0, drv->reg_mode);
-+
-+		/* OTG configuration */
-+		otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-+		/* The clock */
-+		otg &= ~EXYNOS_5250_USBOTGSYS_FSEL_MASK;
-+		otg |= inst->clk << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT;
-+		/* Reset */
-+		otg &= ~(EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
-+			EXYNOS_5250_USBOTGSYS_FORCE_SLEEP |
-+			EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG);
-+		/* TODO: Clear 4 bits as the old driver does. */
-+		otg |=	EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
-+			EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET |
-+			EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
-+			EXYNOS_5250_USBOTGSYS_OTGDISABLE;
-+		/* Ref clock */
-+		otg &=	EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK;
-+		otg |=  EXYNOS_5250_REFCLKSEL_CLKCORE <<
-+					EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT;
-+		writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-+		udelay(10);
-+		otg &= ~(EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
-+			EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
-+			EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
-+
-+
-+		break;
-+	case EXYNOS5250_HOST:
-+		/* Host registers configuration */
-+		ctrl0 = readl(drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
-+		/* The clock */
-+		ctrl0 &= ~EXYNOS_5250_HOSTPHYCTRL0_FSEL_MASK;
-+		ctrl0 |= inst->clk << EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT;
-+
-+		/* Reset */
-+		ctrl0 &= ~(	EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST |
-+				EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL |
-+				EXYNOS_5250_HOSTPHYCTRL0_SIDDQ |
-+				EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND |
-+				EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP);
-+		ctrl0 |=	EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST |
-+				EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST |
-+				EXYNOS_5250_HOSTPHYCTRL0_COMMON_ON_N;
-+		writel(ctrl0, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
-+		udelay(10);
-+		ctrl0 &= ~(	EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST |
-+				EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST);
-+		writel(ctrl0, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
-+
-+		/* OTG configuration */
-+		otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-+		/* The clock */
-+		otg &= ~EXYNOS_5250_USBOTGSYS_FSEL_MASK;
-+		otg |= inst->clk << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT;
-+		/* Reset */
-+		otg &= ~(EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
-+			EXYNOS_5250_USBOTGSYS_FORCE_SLEEP |
-+			EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG);
-+		/* TODO: Clear 4 bits as the old driver does. */
-+		otg |=	EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
-+			EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET |
-+			EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
-+			EXYNOS_5250_USBOTGSYS_OTGDISABLE;
-+		/* Ref clock */
-+		otg &=	EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK;
-+		otg |=  EXYNOS_5250_REFCLKSEL_CLKCORE <<
-+					EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT;
-+		writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-+		udelay(10);
-+		otg &= ~(EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
-+			EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
-+			EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
-+
-+		/* Enable EHCI DMA burst */
-+		ehci = readl(drv->reg_phy + EXYNOS_5250_HOSTEHCICTRL);
-+		ehci |=	EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN |
-+			EXYNOS_5250_HOSTEHCICTRL_ENAINCR4 |
-+			EXYNOS_5250_HOSTEHCICTRL_ENAINCR8 |
-+			EXYNOS_5250_HOSTEHCICTRL_ENAINCR16;
-+		writel(ehci, drv->reg_phy + EXYNOS_5250_HOSTEHCICTRL);
-+
-+		/* OHCI settings */
-+		ohci = readl(drv->reg_phy + EXYNOS_5250_HOSTOHCICTRL);
-+		/* Let's do some undocumented magic (based on the old driver) */
-+		ohci |=	0x1 << 3;
-+		writel(ohci, drv->reg_phy + EXYNOS_5250_HOSTOHCICTRL);
-+
-+		break;
-+	}
-+}
-+
-+static int exynos5250_power_on(struct uphy_instance *inst)
-+{
-+	struct uphy_driver *drv = inst->drv;
-+
-+	if (inst->state == STATE_ON) {
-+		dev_err(drv->dev, "usb phy \"%s\" already on",
-+							inst->cfg->label);
-+		return -ENODEV;
-+	}
-+
-+	inst->state = STATE_ON;
-+	inst->ref_cnt++;
-+	if (inst->ref_cnt > 1)
-+		return 0;
-+
-+	exynos5250_phy_pwr(inst, 1);
-+	exynos5250_isol(inst, 0);
-+
-+	/* Power on the device, as it is necessary for HSIC to work */
-+	if (inst->cfg->id == EXYNOS5250_HSIC0) {
-+		struct uphy_instance *device =
-+					&drv->uphy_instances[EXYNOS5250_DEVICE];
-+		device->ref_cnt++;
-+		if (device->ref_cnt > 1)
-+			return 0;
-+		exynos5250_phy_pwr(device, 1);
-+		exynos5250_isol(device, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int exynos5250_power_off(struct uphy_instance *inst)
-+{
-+	struct uphy_driver *drv = inst->drv;
-+
-+	if (inst->state == STATE_OFF) {
-+		dev_err(drv->dev, "usb phy \"%s\" already off",
-+							inst->cfg->label);
-+		return -EINVAL;
-+	}
-+
-+	inst->state = STATE_OFF;
-+	inst->ref_cnt--;
-+
-+	if (inst->ref_cnt > 0)
-+		return 0;
-+
-+	exynos5250_isol(inst, 1);
-+	exynos5250_phy_pwr(inst, 0);
-+
-+	if (inst->cfg->id == EXYNOS5250_HSIC0) {
-+		struct uphy_instance *device =
-+					&drv->uphy_instances[EXYNOS5250_DEVICE];
-+		device->ref_cnt--;
-+		if (device->ref_cnt > 0)
-+			return 0;
-+		exynos5250_isol(device, 1);
-+		exynos5250_phy_pwr(device, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+
-+static const struct common_phy exynos5250_phys[] = {
-+	{
-+		.label		= "device",
-+		.type		= PHY_DEVICE,
-+		.id		= EXYNOS5250_DEVICE,
-+		.rate_to_clk	= exynos5250_rate_to_clk,
-+		.power_on	= exynos5250_power_on,
-+		.power_off	= exynos5250_power_off,
-+	},
-+	{
-+		.label		= "host",
-+		.type		= PHY_HOST,
-+		.id		= EXYNOS5250_HOST,
-+		.rate_to_clk	= exynos5250_rate_to_clk,
-+		.power_on	= exynos5250_power_on,
-+		.power_off	= exynos5250_power_off,
-+	},
-+	{
-+		.label		= "hsic0",
-+		.type		= PHY_HOST,
-+		.id		= EXYNOS5250_HSIC0,
-+		.rate_to_clk	= exynos5250_rate_to_clk,
-+		.power_on	= exynos5250_power_on,
-+		.power_off	= exynos5250_power_off,
-+	},
-+	{
-+		.label		= "hsic1",
-+		.type		= PHY_HOST,
-+		.id		= EXYNOS5250_HSIC1,
-+		.rate_to_clk	= exynos5250_rate_to_clk,
-+		.power_on	= exynos5250_power_on,
-+		.power_off	= exynos5250_power_off,
-+	},
-+	{},
-+};
-+
-+const struct uphy_config exynos5250_uphy_config = {
-+	.cpu		= TYPE_EXYNOS5250,
-+	.num_phys	= EXYNOS5250_NUM_PHYS,
-+	.phys		= exynos5250_phys,
-+};
-+
+Hi Thierry,
+
+On Friday 25 October 2013 16:10:30 Thierry Reding wrote:
+> On Fri, Oct 25, 2013 at 03:47:21PM +0200, Laurent Pinchart wrote:
+> > On Friday 25 October 2013 10:13:15 Thierry Reding wrote:
+> > > On Thu, Oct 24, 2013 at 11:06:18PM +0100, Stephen Warren wrote:
+> > > > On 10/24/2013 12:20 PM, Laurent Pinchart wrote:
+> > > > > On Sunday 20 October 2013 23:07:36 Stephen Warren wrote:
+> > > > >> On 10/17/2013 12:07 PM, Laurent Pinchart wrote:
+> > > > >> ...
+> > > > >> 
+> > > > >>>> As I said, anything that really needs a CDF binding to work
+> > > > >>>> likely isn't "simple" anymore, therefore a separate driver can
+> > > > >>>> easily be justified.
+> > > > >>> 
+> > > > >>> The system as a whole would be more complex, but the panel could
+> > > > >>> be the same. We can't have two drivers for the same piece of
+> > > > >>> hardware in the DT world, as there will be a single compatible
+> > > > >>> string and no way to choose between the drivers (unlike the board
+> > > > >>> code world that could set device names to "foo- encoder-v4l2" or
+> > > > >>> "foo-encoder-drm" and live happily with that ever after).
+> > > > >> 
+> > > > >> That's not true. We can certainly define two different compatible
+> > > > >> values for a piece of HW if we have to. We can easily control
+> > > > >> whether they are handled by the same or different drivers in the
+> > > > >> OS.
+> > > > > 
+> > > > > From an implementation point of view, sure. But from a conceptual
+> > > > > point of view, that would make the DT bindings pretty Linux-
+> > > > > specific, with a description of what the operating system should do
+> > > > > instead of a description of what the hardware looks like. My
+> > > > > understanding is that we've tried pretty hard in the past not to
+> > > > > open that Pandora's box.
+> > > > > 
+> > > > > The case I'm mostly concerned about would be two different
+> > > > > compatibility strings to select whether the device should be handled
+> > > > > by a KMS or V4L driver. I don't think that's a good idea.
+> > > > 
+> > > > I wouldn't think of the two compatible values as selecting different
+> > > > specific Linux drivers, but rather they simply describe the HW in
+> > > > different levels of detail. The fact that if we know a certain level
+> > > > of detail about the HW means that Linux can and does create a KMS
+> > > > driver rather than a V4L2 driver seems like a detail that's completely
+> > > > hidden inside the OS.
+> > > 
+> > > I've had a somewhat similar idea the other day but couldn't really put
+> > > it into words. Interestingly someone else mentioned a similar concept in
+> > > a different thread which I think describes what I had in mind as well.
+> > > 
+> > > I was wondering if we couldn't use two compatible values to denote two
+> > > 
+> > > interfaces that the device implements. Something along the lines of:
+> > > 	compatible = "vendor,block-name", "encoder";
+> > > 
+> > > So a driver could primarily match on "vendor,block-name", but at the
+> > > same time it could use the additional information of being required to
+> > > implement "encoder" to expose an additonal interface.
+> > 
+> > Let's take the hardware architecture described in
+> > http://www.ideasonboard.org/media/meetings/20131024-elce.pdf#39 (page 39)
+> > as an example. The green blocks are part of the capture pipeline and
+> > handled by the V4L subsystem. The blue blocks are part of the display
+> > pipeline and handled by the KMS subsystem. One ADV7511 HDMI transmitter
+> > instance need to be controlled by a KMS driver and the second one by a
+> > V4L driver.
+> > 
+> > The two instances are identical, so their DT nodes will show no difference
+> > if we stick to a hardware description only. There would then be no way to
+> > bind to different drivers.
+> 
+> I don't quite see why some of the green parts couldn't be part of the
+> display (KMS) pipeline.
+
+Because there might be no blue pipeline in the device, just the green one. The 
+green pipeline is a video capture pipeline and happens to have an HDMI output 
+with a deep pipeline only, with no frame buffer. We can't create a KMS driver 
+for that, as there's no frame buffer and no CRTC.
+
+> I thought I remember you say something about implementing deep pipelining
+> support in one of the more recent talks. This sounds exactly like a case
+> where this would be useful.
+> 
+> Obviously as long as that work isn't finished that won't help you, but I
+> think that providing a way to pass a video stream object from V4L2 to
+> DRM/KMS would be a more proper solution to this problem.
+
+We need that as well, but it won't solve the problem when no KMS device is 
+present.
+
+> > > I suppose that perhaps something like a device_type property could be
+> > > used for that as well, and that might even be the more correct thing to
+> > > do.
+> > > 
+> > > We already do something similar to make GPIO controllers expose an
+> > > interrupt chip by adding an interrupt-controller property. We also use
+> > > the gpio-controller property to mark a device node as exposing the GPIO
+> > > interface for that matter.
+> > > 
+> > > So if a HW block can actually implement two different interfaces, each
+> > > of them being optional, then there should be ways to represent that in
+> > > DT as well. We already do that for "simpler" HW blocks, so there's no
+> > > reason we shouldn't be able to do the same with multimedia components.
+> > > 
+> > > If it's really an encoder, though, the problem might be different,
+> > > though, since the interface (at a hardware or functional level if you
+> > > will) remains the same. But I think in that case it's something that
+> > > needs to be figured out internally by the OS. In my opinion, if we are
+> > > in a situation where we have two different drivers in two subsystems for
+> > > the same device, then we're doing something wrong and it should be fixed
+> > > at that level, not by quirking the DT into making a decision for us.
+> > 
+> > I tend to agree, and I'd like to be able to share drivers between V4L and
+> > KMS. This is way down the road though.
+> 
+> My point is that I don't see a need for sharing the drivers if we can
+> make both V4L2 and DRM/KMS interoperate well enough to cover such use
+> cases.
+> 
+> Why share the drivers if we can make it work by sharing the data?
+
+Would you like to try and merge the two subsystems ? :-)
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
+
+--nextPart2472561.dHkZRrX6lQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJSan7AAAoJEIkPb2GL7hl12OwH/ROoBE6dRWIAwwvMSbyjDHHB
+YEHTO8UjvBpqb1Q9OICRF0k0uqUBIUJ9qOZp2mFEityPjBpJoLtpUtRzewitA36r
+JtX51ZkaTWkHtL7AsgSKGBRrerDcCucFfAmG8KNBcSJCbGwZBTu4IlPmwF/ktIuh
+LmwritbNZhLUv5ZruCYdUcHXXXs7mZcBF1jfLHdlCZ5QH8lTMmtJsH5fWHiIRJUa
+Y5NUfFuOhsrDr+0IzQpxt8LRDZ2Uy1Ug4bpOq3tNDlZePc6L9xULyOTen/xEgnKo
+gwTjTVG5oQ1/1AM2SCEiKGnCJ9gLmBtJmjvw29OktEoQzjs4ftkQEKyOhKdxaek=
+=r0EZ
+-----END PGP SIGNATURE-----
+
+--nextPart2472561.dHkZRrX6lQ--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
