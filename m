@@ -1,58 +1,49 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Fri, 25 Oct 2013 10:21:22 -0500
-Message-ID: <E1VZjCU-0005RE-Vt@jdl.com>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <20131024234340.ADF70C403B6@trevor.secretlab.ca> <526A83B9.30800@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFR 2/2] drm/panel: Add simple panel support
+Date: Fri, 25 Oct 2013 16:29:27 +0100
+Message-ID: <526A8E57.6050508@wwwdotorg.org>
+References: <1381947912-11741-1-git-send-email-treding@nvidia.com> <3278905.VOXO7bPE7e@avalon> <526999DA.7080409@wwwdotorg.org> <1580941.z2CDo8WmRF@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <526A83B9.30800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1580941.z2CDo8WmRF@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On 10/25/2013 12:43 AM, Grant Likely wrote:
-> > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> 
-> wrote:
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> This is a very quick proof-of-concept re: how a DT schema checker might
-> >> look if written in C, and integrated into dtc.
-> > 
-> > Thanks for looking at this.
-> > 
-> > Very interesting. Certainly an expedient way to start checking schemas,
-> > and for certain bindings it may be the best approach. The downside is it
-> > forces a recompilation of DTC to bring in new bindings and it isn't a
-> > great meduim for mixing schema with documentation in the bindings.
+On 10/25/2013 12:33 PM, Laurent Pinchart wrote:
+> On Thursday 24 October 2013 23:06:18 Stephen Warren wrote:
+>> On 10/24/2013 12:20 PM, Laurent Pinchart wrote:
+...
+>>> The case I'm mostly concerned about would be two different compatibility
+>>> strings to select whether the device should be handled by a KMS or V4L
+>>> driver. I don't think that's a good idea.
+>>
+>> I wouldn't think of the two compatible values as selecting different
+>> specific Linux drivers, but rather they simply describe the HW in
+>> different levels of detail. The fact that if we know a certain level of
+>> detail about the HW means that Linux can and does create a KMS driver
+>> rather than a V4L2 driver seems like a detail that's completely hidden
+>> inside the OS.
 > 
-> This approach would certainly require recompiling something. I threw the
-> code into dtc simply because it was the easiest container for the
-> demonstration. It could be a separate DT validation utility if we
-> wanted, although we'd need to split the DT parser from dtc into a
-> library to avoid code duplication. The resultant utility could be part
-> of the repo containing the DTs, so it didn't end up as a separate
-> package to manage.
-> 
-> I think the additional documentation could be added as comments in the
-> validation functions, just like IIRC it was to be represented as
-> comments even in the .dts-based schema proposals.
+> I expect the same level of details to be needed on both the KMS and V4L sides. 
+> Taking the example of the ADV7511 HDMI transmitter, the only change in the DT 
+> bindings between KMS and V4L would be the compatible string. "adi,adv7511-v4l" 
+> and "adi,adv7511-kms" is an option that I don't really like. Renaming -v4l and 
+> -kms to different names wouldn't fundamentally change the problem.
 
-DTers,
+Yes, two compatible values such as "adi,adv7511-v4l" and
+"adi,adv7511-kms" sounds like a bad idea.
 
-I think the additional benefit of starting with a direct C
-implementation is that it causes us to begin to actually
-codify the schema requirements.  Sure, it may not be ideal
-at first, but over time it may reveal consistent patterns
-that can be extracted.  And it may reveal what a real schema
-might look like and how it might be expressed better.  Which
-is to say that perhaps we are letting "perfect" get in the
-way of "good enough to start"?
-
-In the meantime, someone has shown us the code and we can
-get started.  It's a Small Matter of Refactoring later. :-)
-
-Just a notion,
-jdl
+Rather, shouldn't we have just "adi,adv7511", and the driver for that
+should register itself in a way that allows either/both the top-level
+DRM or top-level V4L drivers to find it, and make use of its services.
+There are plenty of drivers in the kernel already that export services
+through two different subsystems, e.g. a GPIO HW module that registers
+as both a struct gpio_chip and a struct irq_chip, or both a struct
+gpio_chip and a pinctrl device.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
