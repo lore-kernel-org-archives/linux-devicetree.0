@@ -1,85 +1,48 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv7][ 3/6] ARM: imx{25,27} DT: Permit the selection of the
- imxfb framebuffer driver.
-Date: Fri, 25 Oct 2013 13:03:27 +0200
-Message-ID: <20131025110327.GG17512@ns203013.ovh.net>
-References: <1382605103-9595-1-git-send-email-denis@eukrea.com>
- <1382605103-9595-3-git-send-email-denis@eukrea.com>
- <20131025014652.GH14529@S2101-09.ap.freescale.net>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 25 Oct 2013 13:08:34 +0200
+Message-ID: <20131025.140834.1484720286118607126.hdoyu@nvidia.com>
+References: <20131025091104.GG19622@ulmo.nvidia.com><20131025.124905.1154427805530939055.hdoyu@nvidia.com><20131025104937.GA25080@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131025014652.GH14529-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131025104937.GA25080-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09:46 Fri 25 Oct     , Shawn Guo wrote:
-> On Thu, Oct 24, 2013 at 10:58:20AM +0200, Denis Carikli wrote:
-> > Without that patch, a user can't select the imxfb driver when the i=
-=2EMX25 and/or
-> >   the i.MX27 device tree board are selected and that no boards that=
- selects
-> >   IMX_HAVE_PLATFORM_IMX_FB are compiled in.
-> >=20
-> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
->=20
-> This is a patch that should go through FB tree, so FB maintainer shou=
-ld
-> be copied, and patch subject should look like "video: ...".  Other th=
-an
-> that,
+Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 12:49:38 +0200:
 
-I'm in Cc but this need to be send via linux-fb ML
+> The way notifiers work is that they run completely hidden from whatever
+> triggers them. For instance you register the IOMMU bus notifier from the
+> IOMMU driver (by calling bus_set_iommu()). That registers a function to
+> be called when some event happens on that bus. When a device's driver is
+> probed successfully, the driver core will notify the bus, which causes
+> the IOMMU callback to be run.
+> 
+> Some of this code runs before the driver has successfully been probed,
+> so I imagine it would be possible to use it to abort probing. But that's
+> not possible at least with the current code.
 
-so Tomi or I can see it
+At least I'll experiment this way to see if it's acceptable or not.
 
-otherswose ti's ok for me too
->=20
-> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> Shawn
->=20
-> > ---
-> > - Rework the patch to make imxfb more broadly selectable
-> >   (usefull for randconfig).
-> > ---
-> >  drivers/video/Kconfig |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> > index 14317b7..a9f2659 100644
-> > --- a/drivers/video/Kconfig
-> > +++ b/drivers/video/Kconfig
-> > @@ -363,7 +363,7 @@ config FB_SA1100
-> > =20
-> >  config FB_IMX
-> >  	tristate "Freescale i.MX1/21/25/27 LCD support"
-> > -	depends on FB && IMX_HAVE_PLATFORM_IMX_FB
-> > +	depends on FB && ARCH_MXC
-> >  	select FB_CFB_FILLRECT
-> >  	select FB_CFB_COPYAREA
-> >  	select FB_CFB_IMAGEBLIT
-> > --=20
-> > 1.7.9.5
-> >=20
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > This looks somewhat similar to the above iommu_bus notifier.
+> > 
+> > Is there any way to implement the same mechanism rather than using
+> > bus?
+> 
+> Yes, I think it should be possible to get this to work without using the
+> bus notifier at all. I can try to code something up but wanted to wait
+> for feedback from Grant first.
+
+That's interesting too.
