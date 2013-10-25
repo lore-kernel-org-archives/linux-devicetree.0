@@ -1,68 +1,33 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Fri, 25 Oct 2013 16:41:20 -0500
-Message-ID: <FC6F0077-7E61-4F64-94E5-10E8FEF1F1E4@codeaurora.org>
-References: <1382626126-12565-1-git-send-email-sre@debian.org> <1382626126-12565-2-git-send-email-sre@debian.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1382626126-12565-2-git-send-email-sre@debian.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 03/03] GPIO: Add TB10x GPIO driver
+Date: Fri, 25 Oct 2013 23:44:04 +0200
+Message-ID: <CACRpkdYa3y6kHYGzm64MRkwkS7hs3k-nVpkaOOmq2X50-iBcgA@mail.gmail.com>
+References: <20131008122145.GA21985@ab42.lan>
+	<1381235122-23730-3-git-send-email-christian.ruppert@abilis.com>
+	<CACRpkdaMq1bzcTP6KZCGuWSm2MB0vSmJ4aRskuQNB8at4YnWRQ@mail.gmail.com>
+	<20131015134526.GB7461@ab42.lan>
+	<CACRpkdZjfNJtAsbge+HsWZQjNREnJQ7msyPy9g3cMLtc8KhmPg@mail.gmail.com>
+	<20131016125855.GA20308@ab42.lan>
+	<20131024162346.GA3769@ab42.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131024162346.GA3769@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 24, 2013 at 6:23 PM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
 
-On Oct 24, 2013, at 9:48 AM, Sebastian Reichel wrote:
+> Hi Linus,
+>
+> I didn't see this one pop up in the git repositories yet, are there any
+> issues left with the driver?
 
-> Add device tree support for twl4030 power button driver.
-> 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
-> .../devicetree/bindings/input/twl4030-pwrbutton.txt | 21 +++++++++++++++++++++
-> drivers/input/misc/twl4030-pwrbutton.c              | 16 ++++++++++++----
-> 2 files changed, 33 insertions(+), 4 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-> new file mode 100644
-> index 0000000..4375646
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-> @@ -0,0 +1,21 @@
-> +Texas Instruments TWL family (twl4030) pwrbutton module
-> +
-> +This module is part of the TWL4030. For more details about the whole
-> +chip see Documentation/devicetree/bindings/mfd/twl-familly.txt.
-> +
-> +This module provides a simple power button event via an Interrupt.
-> +
-> +Required properties:
-> +- compatible: should be one of the following
-> +   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
-> +- interrupt: should be one of the following
-> +   - <8>: For controllers compatible with twl4030
+No, just me running around at the kernel meetings and being
+busy, applied with Kumar's ACK now.
 
-Just checking, but the interrupt is always 8 for this device?
-
-> +
-> +Example:
-> +
-> +&twl {
-> +	twl_pwrbutton: pwrbutton {
-> +		compatible = "ti,twl4030-pwrbutton";
-> +		interrupts = <8>;
-> +	};
-> +};
-
-Otherwise Ack on binding:
-
-Acked-by: Kumar Gala <galak@codeaurora.org>
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Yours,
+Linus Walleij
