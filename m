@@ -1,44 +1,63 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv2] iio:light:tsl2563: Add DT support
-Date: Fri, 25 Oct 2013 03:37:22 -0500
-Message-ID: <915C1A7A-6128-4B8B-A594-F2CDDED201DC@codeaurora.org>
-References: <1382565063-17083-1-git-send-email-sre@debian.org> <1382624835-10228-1-git-send-email-sre@debian.org> <35B50A0C-D1F9-4D87-86DD-951BF71F2903@codeaurora.org> <20131025082344.GA6425@earth.universe>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131025082344.GA6425@earth.universe>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: linux-iio@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@cam.ac.uk>, Peter Meerwald <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
+ tree bindings
+Date: Fri, 25 Oct 2013 09:45:05 +0100
+Message-ID: <526A2F91.1070408@wwwdotorg.org>
+References: <1382540779-6334-1-git-send-email-treding@nvidia.com> <1382544332.8522.40.camel@shinybook.infradead.org> <20131023185114.GA7863@ulmo.nvidia.com> <52699E8B.3000305@wwwdotorg.org> <20131025082229.GD19622@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131025082229.GD19622-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Oct 25, 2013, at 3:23 AM, Sebastian Reichel wrote:
-
-> On Thu, Oct 24, 2013 at 10:32:36PM -0500, Kumar Gala wrote:
->> On Oct 24, 2013, at 9:27 AM, Sebastian Reichel wrote:
->>> Add Device Tree support for the TSL2563 driver
->>> and document the binding.
+On 10/25/2013 09:22 AM, Thierry Reding wrote:
+> On Thu, Oct 24, 2013 at 11:26:19PM +0100, Stephen Warren wrote:
+>> On 10/23/2013 07:51 PM, Thierry Reding wrote:
+>>> On Wed, Oct 23, 2013 at 05:05:32PM +0100, David Woodhouse
+>>> wrote:
+>>>> On Wed, 2013-10-23 at 17:06 +0200, Thierry Reding wrote:
+>>>>> +       /* check if binding is experimental */ +       if
+>>>>> (dev != device || drv != driver) { +
+>>>>> pr_warn("of: device %s (%s) uses an experimental
+>>>>> binding\n", +                       np->name,
+>>>>> np->full_name); +
+>>>> 
+>>>> In the discussions earlier I think we decided that this
+>>>> should set a taint flag too.
 >>> 
->>> Signed-off-by: Sebastian Reichel <sre@debian.org>
->>> ---
->>> .../devicetree/bindings/iio/light/tsl2563.txt         | 19 +++++++++++++++++++
->>> Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
->>> drivers/iio/light/tsl2563.c                           |  4 ++++
+>>> A taint flag seems somewhat drastic. It's not like using an
+>>> experimental binding should have an influence on the stability
+>>> of the running kernel. I always thought that taint flags were
+>>> supposed to flag conditions where code of unknown origin or
+>>> code known to be broken was being executed because they may
+>>> destabilize the running kernel.
+>>> 
+>>> The worst that should happen if you run an experimental binding
+>>> is that some part of the system will just not come up.
 >> 
->> For the Binding, assuming another patch to add amstoas to the vendor list
+>> IIRC, the purpose of the taint flag was to make it clear that the
+>> kernel or DT was not expected to function in the future, so don't
+>> be surpised if you upgrade it, and it stops working, without you
+>> taking explicit action, such as revising your DT to match the new
+>> kernel or vice-versa.
 > 
-> I embedded the vendor list update into this patch.
-> Should I split this into its own patch?
-> 
-> -- Sebastian
+> I understand that, but I was arguing that it doesn't match existing
+> uses of taint flags. The various flags that are currently defined
+> all seem to be set whenever some event occurs that could cause
+> instability of the currently running system, such as loading a
+> proprietary or out-of-tree module, forcing a module to be loaded,
+> overriding firmware parameters...
 
-Its fine, but do update the commit comment about that.
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Executing a driver that supports an unstable binding does produce
+instability in the system; the kernel configuration might not continue
+to work if rebooted with an updated DT. Admittedly, this is a slightly
+different concept than other taint flags, but seems like a logical
+extension.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
