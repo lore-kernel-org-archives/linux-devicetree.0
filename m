@@ -1,36 +1,42 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] of: introduce of_get_available_child_count
-Date: Fri, 25 Oct 2013 01:02:25 +0100
-Message-ID: <20131025000225.6E449C403B6@trevor.secretlab.ca>
-References: <1380045009-21149-1-git-send-email-cooloney@gmail.com> <52420118.9050501@gmail.com> <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg@mail.gmail.com> <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw@mail.gmail.com>
+Date: Thu, 24 Oct 2013 17:04:23 -0700
+Message-ID: <CAK5ve-LzUR-rM6a_=ApTxWACDYvOjMM67Mkeu08PUZnJ523CgA@mail.gmail.com>
+References: <1380045009-21149-1-git-send-email-cooloney@gmail.com>
+ <52420118.9050501@gmail.com> <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg@mail.gmail.com>
+ <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw@mail.gmail.com> <20131025000225.6E449C403B6@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20131025000225.6E449C403B6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Oct 2013 11:09:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Sep 24, 2013 at 2:22 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Sep 24, 2013 at 2:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> On 09/24/2013 12:50 PM, Bryan Wu wrote:
-> >>> Some drivers keep counting available child by themselves. So
-> >>> introduce a new simple API like of_get_child_count() but for
-> >>> available childs.
-> >>>
-> >>> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >>> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >>
-> >> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >>
-> 
-> Will this patch be merged through you guys or need I take care of it?
+On Thu, Oct 24, 2013 at 5:02 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 24 Oct 2013 11:09:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, Sep 24, 2013 at 2:22 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Tue, Sep 24, 2013 at 2:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> On 09/24/2013 12:50 PM, Bryan Wu wrote:
+>> >>> Some drivers keep counting available child by themselves. So
+>> >>> introduce a new simple API like of_get_child_count() but for
+>> >>> available childs.
+>> >>>
+>> >>> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> >>> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>> ---
+>> >>
+>> >> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> >>
+>>
+>> Will this patch be merged through you guys or need I take care of it?
+>
+> Merge it with the patch that needs it.
+>
 
-Merge it with the patch that needs it.
-
-g.
-
+OK, I will do that.
+-Bryan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
