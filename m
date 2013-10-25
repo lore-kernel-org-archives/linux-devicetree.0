@@ -1,160 +1,303 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
-Date: Fri, 25 Oct 2013 21:07:54 +0100
-Message-ID: <20131025200754.D222AC4058E@trevor.secretlab.ca>
-References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, Laxman Dewangan <ldewangan@nvidia.com>, Florian Lobmaier <florian.lobmaier@ams.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv7][ 2/5] ASoC: eukrea-tlv320: Add DT
+	support.
+Date: Fri, 25 Oct 2013 20:15:13 +0100
+Message-ID: <20131025191513.5345BC4042C@trevor.secretlab.ca>
+References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
+ <1382616832-23593-2-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6954331968643199589=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1382616832-23593-2-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013 13:08:46 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> The ams AS3722 is a compact system PMU suitable for mobile phones,
-> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
-> controller, 11 LDOs, RTC, automatic battery, temperature and
-> over-current monitoring, 8 GPIOs, ADC and a watchdog.
+--===============6954331968643199589==
+Content-Type: text/plain
+
+On Thu, 24 Oct 2013 14:13:49 +0200, Denis Carikli <denis@eukrea.com> wrote:
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: alsa-devel@alsa-project.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Eric Bénard <eric@eukrea.com>
 > 
-> Add MFD core driver for the AS3722 to support core functionality.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
 > ---
-> Changes from V1:
-> - Remove compatible string from DT for subnode.
-> - Nit cleanups in driver and use module_i2c_driver
+> ChangeLog v6->v7:
+> - The cleanups went into another patch.
+> - The support for fsl_ssi doesn't depend on dt anymore.
+> - platform_name = "imx-ssi.0" is still set when in non-dt mode.
+> ---
+>  .../devicetree/bindings/sound/eukrea-tlv320.txt    |   23 +++++
+>  sound/soc/fsl/Kconfig                              |    5 +-
+>  sound/soc/fsl/eukrea-tlv320.c                      |   88 ++++++++++++++++++--
+>  3 files changed, 107 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
 > 
-> Changes from V2:
-> - Change DT file to reflect the changes in gpio/pincntrl driver.
->   Now there is no extra subnode.
-> 
-> Changes from V3:
-> - Combine DT of pincontrol and regulator to mfd.
-> - Nits cleanups.
-> - AMS to ams.
-> 
-> Changes from V4:
-> - Rephrased the dt binding documents.
-> - Added dt-binding header for DTS file.
-> - Fix some of indention issue in dt documents.
-> 
-> Reposting V5 as per Lee's.
-> 
->  Documentation/devicetree/bindings/mfd/as3722.txt |  194 ++++++++++
->  drivers/mfd/Kconfig                              |   12 +
->  drivers/mfd/Makefile                             |    1 +
->  drivers/mfd/as3722.c                             |  449 ++++++++++++++++++++++
->  include/dt-bindings/mfd/as3722.h                 |   52 +++
->  include/linux/mfd/as3722.h                       |  423 ++++++++++++++++++++
->  6 files changed, 1131 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/as3722.txt
->  create mode 100644 drivers/mfd/as3722.c
->  create mode 100644 include/dt-bindings/mfd/as3722.h
->  create mode 100644 include/linux/mfd/as3722.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Documentation/devicetree/bindings/mfd/as3722.txt
+> diff --git a/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
 > new file mode 100644
-> index 0000000..fc2191e
+> index 0000000..8791037
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-> @@ -0,0 +1,194 @@
-> +* ams AS3722 Power management IC.
+> +++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
+> @@ -0,0 +1,23 @@
+> +Audio complex for Eukrea boards with tlv320aic23 codec.
 > +
 > +Required properties:
-> +-------------------
-> +- compatible: Must be "ams,as3722".
-> +- reg: I2C device address.
-> +- interrupt-controller: AS3722 has internal interrupt controller which takes the
-> +  interrupt request from internal sub-blocks like RTC, regulators, GPIOs as well
-> +  as external input.
-> +- #interrupt-cells: Should be set to 2 for IRQ number and flags.
-> +  The first cell is the IRQ number. IRQ numbers for different interrupt source
-> +  of AS3722 are defined at dt-bindings/mfd/as3722.h
-> +  The second cell is the flags, encoded as the trigger masks from binding document
-> +	interrupts.txt, using dt-bindings/irq.
-> +
-> +Optional submodule and their properties:
-> +=======================================
-> +
-> +Pinmux and GPIO:
-> +===============
-> +Device has 8 GPIO pins which can be configured as GPIO as well as the special IO
-> +functions.
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
-> +
-> +Following are properties which is needed if GPIO and pinmux functionality
-> +is required:
-> +    Required properties:
-> +    -------------------
-> +	- gpio-controller: Marks the device node as a GPIO controller.
-> +	- #gpio-cells: Number of GPIO cells. Refer to binding document
-> +			gpio/gpio.txt
-> +
-> +    Optional properties:
-> +    --------------------
-> +	Following properties are require if pin control setting is required
-> +	at boot.
-> +	- pinctrl-names: A pinctrl state named "default" be defined, using the
-> +		bindings in pinctrl/pinctrl-binding.txt.
-> +	- pinctrl[0...n]: Properties to contain the phandle that refer to
-> +		different nodes of pin control settings. These nodes represents
-> +		the pin control setting of state 0 to state n. Each of these
-> +		nodes contains different subnodes to represents some desired
-> +		configuration for a list of pins. This configuration can
-> +		include the mux function to select on those pin(s), and
-> +		various pin configuration parameters, such as pull-up,
-> +		open drain.
-> +
-> +		Each subnode have following properties:
-> +		Required properties:
-> +		    - pins: List of pins. Valid values of pins properties are:
-> +				gpio0, gpio1, gpio2, gpio3, gpio4, gpio5,
-> +				gpio6, gpio7
-> +
-> +		Optional properties:
-> +			function, bias-disable, bias-pull-up, bias-pull-down,
-> +			bias-high-impedance, drive-open-drain.
-> +
-> +			Valid values for function properties are:
-> +				gpio, interrupt-out, gpio-in-interrupt,
-> +				vsup-vbat-low-undebounce-out,
-> +				vsup-vbat-low-debounce-out,
-> +				voltage-in-standby, oc-pg-sd0, oc-pg-sd6,
-> +				powergood-out, pwm-in, pwm-out, clk32k-out,
-> +				watchdog-in, soft-reset-in
-> +
-> +Regulators:
-> +===========
-> +Device has multiple DCDC and LDOs. The node "regulators" is require if regulator
-> +functionality is needed.
-> +
-> +Following are properties of regulator subnode.
-> +
-> +    Optional properties:
-> +    -------------------
-> +	The input supply of regulators are the optional properties on the
-> +	regulator node. The input supply of these regulators are provided
-> +	through following properties:
-> +		vsup-sd2-supply: Input supply for SD2.
-> +		vsup-sd3-supply: Input supply for SD3.
-> +		vsup-sd4-supply: Input supply for SD4.
-> +		vsup-sd5-supply: Input supply for SD5.
-> +		vin-ldo0-supply: Input supply for LDO0.
-> +		vin-ldo1-6-supply: Input supply for LDO1 and LDO6.
-> +		vin-ldo2-5-7-supply: Input supply for LDO2, LDO5 and LDO7.
-> +		vin-ldo3-4-supply: Input supply for LDO3 and LDO4.
-> +		vin-ldo9-10-supply: Input supply for LDO9 and LDO10.
-> +		vin-ldo11-supply: Input supply for LDO11.
+> +- compatible : "eukrea,eukrea-tlv320"
 
-What is the data in these properties? The documentation isn't clear.
+Nit: why the double "eukrea"? I have no problem if yo think that's the
+best string, it just looks odd.
 
-In principle, the binding looks okay to me.
+> +- model : The user-visible name of this sound complex.
+> +- ssi-controller : The phandle of the SSI controller.
+> +- audio-codec : The phandle of the tlv320aic23 audio codec.
+> +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
+> +- mux-ext-port : The external port of the i.MX audio muxer.
+> +
+> +Note: The AUDMUX port numbering should start at 1, which is consistent with
+> +hardware manual.
 
-g.
+Looks okay to me. I've not been following the sound bindings very
+closely. Are the described properties a common pattern for sound complex
+bindings?
 
+> +
+> +Example:
+> +
+> +	sound {
+> +		compatible = "eukrea,eukrea-tlv320";
+> +		model = "imx51-eukrea-tlv320aic23";
+> +		ssi-controller = <&ssi2>;
+> +		fsl,audio-codec = <&tlv320aic23>;
+> +		mux-int-port = <2>;
+> +		mux-ext-port = <3>;
+> +	};
+> diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+> index b7ab71f..9c3cd64 100644
+> --- a/sound/soc/fsl/Kconfig
+> +++ b/sound/soc/fsl/Kconfig
+> @@ -161,12 +161,15 @@ config SND_SOC_EUKREA_TLV320
+>  	depends on MACH_EUKREA_MBIMX27_BASEBOARD \
+>  		|| MACH_EUKREA_MBIMXSD25_BASEBOARD \
+>  		|| MACH_EUKREA_MBIMXSD35_BASEBOARD \
+> -		|| MACH_EUKREA_MBIMXSD51_BASEBOARD
+> +		|| MACH_EUKREA_MBIMXSD51_BASEBOARD \
+> +		|| OF
+>  	depends on I2C
+>  	select SND_SOC_TLV320AIC23
+>  	select SND_SOC_IMX_PCM_FIQ
+>  	select SND_SOC_IMX_AUDMUX
+>  	select SND_SOC_IMX_SSI
+> +	select SND_SOC_FSL_SSI
+> +	select SND_SOC_IMX_PCM_DMA
+>  	help
+>  	  Enable I2S based access to the TLV320AIC23B codec attached
+>  	  to the SSI interface
+> diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
+> index 5983740..ad1aac6 100644
+> --- a/sound/soc/fsl/eukrea-tlv320.c
+> +++ b/sound/soc/fsl/eukrea-tlv320.c
+> @@ -15,8 +15,11 @@
+>   *
+>   */
+>  
+> +#include <linux/errno.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/device.h>
+>  #include <linux/i2c.h>
+>  #include <sound/core.h>
+> @@ -26,6 +29,7 @@
+>  
+>  #include "../codecs/tlv320aic23.h"
+>  #include "imx-ssi.h"
+> +#include "fsl_ssi.h"
+>  #include "imx-audmux.h"
+>  
+>  #define CODEC_CLOCK 12000000
+> @@ -41,7 +45,8 @@ static int eukrea_tlv320_hw_params(struct snd_pcm_substream *substream,
+>  	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
+>  				  SND_SOC_DAIFMT_NB_NF |
+>  				  SND_SOC_DAIFMT_CBM_CFM);
+> -	if (ret) {
+> +	/* fsl_ssi lacks the set_fmt ops. */
+> +	if (ret && ret != -ENOTSUPP) {
+>  		dev_err(cpu_dai->dev,
+>  			"Failed to set the cpu dai format.\n");
+>  		return ret;
+> @@ -63,11 +68,13 @@ static int eukrea_tlv320_hw_params(struct snd_pcm_substream *substream,
+>  			"Failed to set the codec sysclk.\n");
+>  		return ret;
+>  	}
+> +
+>  	snd_soc_dai_set_tdm_slot(cpu_dai, 0xffffffc, 0xffffffc, 2, 0);
+>  
+>  	ret = snd_soc_dai_set_sysclk(cpu_dai, IMX_SSP_SYS_CLK, 0,
+>  				SND_SOC_CLOCK_IN);
+> -	if (ret) {
+> +	/* fsl_ssi lacks the set_sysclk ops */
+> +	if (ret && ret != -EINVAL) {
+>  		dev_err(cpu_dai->dev,
+>  			"Can't set the IMX_SSP_SYS_CLK CPU system clock.\n");
+>  		return ret;
+> @@ -84,7 +91,6 @@ static struct snd_soc_dai_link eukrea_tlv320_dai = {
+>  	.name		= "tlv320aic23",
+>  	.stream_name	= "TLV320AIC23",
+>  	.codec_dai_name	= "tlv320aic23-hifi",
+> -	.platform_name	= "imx-ssi.0",
+>  	.codec_name	= "tlv320aic23-codec.0-001a",
+>  	.cpu_dai_name	= "imx-ssi.0",
+>  	.ops		= &eukrea_tlv320_snd_ops,
+> @@ -101,8 +107,49 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+>  {
+>  	int ret;
+>  	int int_port = 0, ext_port;
+> +	struct platform_device *ssi_pdev;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *ssi_np;
+> +
+> +	if (np) {
+> +		ssi_np = of_parse_phandle(pdev->dev.of_node,
+> +					  "ssi-controller", 0);
+> +		ssi_pdev = of_find_device_by_node(ssi_np);
+> +		if (!ssi_pdev) {
+> +			dev_err(&pdev->dev,
+> +				"ssi-controller missing or invalid.\n");
+> +			ret = -ENODEV;
+> +			goto err;
+> +		}
+> +
+> +		ret = of_property_read_u32(np, "mux-int-port", &int_port);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"mux-int-port missing or invalid\n");
+> +			return ret;
+> +		}
+> +		ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"mux-ext-port missing or invalid\n");
+> +			return ret;
+> +		}
+> +
+> +		/*
+> +		 * The port numbering in the hardware manual starts at 1, while
+> +		 * the audmux API expects it starts at 0.
+> +		 */
+> +		int_port--;
+> +		ext_port--;
+> +
+> +		eukrea_tlv320_dai.cpu_dai_name = dev_name(&ssi_pdev->dev);
+> +		eukrea_tlv320_dai.platform_of_node = ssi_np;
+> +	} else {
+> +		eukrea_tlv320_dai.platform_name = "imx-ssi.0";
+> +	}
+>  
+> -	if (machine_is_eukrea_cpuimx27()) {
+> +	if (machine_is_eukrea_cpuimx27() ||
+> +	    of_find_compatible_node(NULL, NULL, "fsl,imx21-audmux")) {
+>  		imx_audmux_v1_configure_port(MX27_AUDMUX_HPCR1_SSI0,
+>  			IMX_AUDMUX_V1_PCR_SYN |
+>  			IMX_AUDMUX_V1_PCR_TFSDIR |
+> @@ -119,8 +166,12 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+>  		);
+>  	} else if (machine_is_eukrea_cpuimx25sd() ||
+>  		   machine_is_eukrea_cpuimx35sd() ||
+> -		   machine_is_eukrea_cpuimx51sd()) {
+> -		ext_port = machine_is_eukrea_cpuimx25sd() ? 4 : 3;
+> +		   machine_is_eukrea_cpuimx51sd() ||
+> +		   of_find_compatible_node(NULL, NULL, "fsl,imx31-audmux")) {
+> +		if (!np)
+> +			ext_port = machine_is_eukrea_cpuimx25sd() ?
+> +				4 : 3;
+> +
+>  		imx_audmux_v2_configure_port(int_port,
+>  			IMX_AUDMUX_V2_PTCR_SYN |
+>  			IMX_AUDMUX_V2_PTCR_TFSDIR |
+> @@ -134,14 +185,28 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+>  			IMX_AUDMUX_V2_PDCR_RXDSEL(int_port)
+>  		);
+>  	} else {
+> -		/* return happy. We might run on a totally different machine */
+> -		return 0;
+> +		if (np) {
+> +			/* The eukrea,eukrea-tlv320 driver was explicitely
+> +			 * requested (through the device tree).
+> +			 */
+> +			dev_err(&pdev->dev,
+> +				"Missing audmux DT node.\n");
+> +			return -ENODEV;
+> +		} else {
+> +			/* Return happy.
+> +			 * We might run on a totally different machine.
+> +			 */
+> +			return 0;
+> +		}
+>  	}
+>  
+>  	eukrea_tlv320.dev = &pdev->dev;
+>  	ret = snd_soc_register_card(&eukrea_tlv320);
+> +err:
+>  	if (ret)
+>  		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+> +	if (np)
+> +		of_node_put(ssi_np);
+>  
+>  	return ret;
+>  }
+> @@ -153,10 +218,17 @@ static int eukrea_tlv320_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id imx_tlv320_dt_ids[] = {
+> +	{ .compatible = "eukrea,eukrea-tlv320"},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_tlv320_dt_ids);
+> +
+>  static struct platform_driver eukrea_tlv320_driver = {
+>  	.driver = {
+>  		.name = "eukrea_tlv320",
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = imx_tlv320_dt_ids,
+>  	},
+>  	.probe = eukrea_tlv320_probe,
+>  	.remove = eukrea_tlv320_remove,
+> -- 
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+--===============6954331968643199589==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6954331968643199589==--
