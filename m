@@ -1,70 +1,98 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCHv5 4/4] Documentation: Add device tree bindings for Freescale FTM PWM.
-Date: Fri, 25 Oct 2013 21:12:11 +0100
-Message-ID: <20131025201211.7936EC405D3@trevor.secretlab.ca>
-References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com> <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, thierry.reding@gmail.com
-Cc: s.hauer@pengutronix.de, swarren@wwwdotorg.org, t.figa@samsung.com, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv7][ 1/4] Input: tsc2007: Add device tree support.
+Date: Fri, 25 Oct 2013 20:11:55 +0100
+Message-ID: <20131025191155.2D7D7C40429@trevor.secretlab.ca>
+References: <1382618536-25320-1-git-send-email-denis@eukrea.com>
+ <20131024164746.3CB36C403B6@trevor.secretlab.ca>
+ <20131025075639.75f45fb0@ipc1.ka-ro>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8611668151746118644=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131025075639.75f45fb0@ipc1.ka-ro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eric BXXnard <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Sep 2013 14:13:31 +0800, Xiubo Li <Li.Xiubo@freescale.com> wrote:
-> This adds the Document for Freescale FTM PWM driver under
-> Documentation/devicetree/bindings/pwm/.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> new file mode 100644
-> index 0000000..2c6969a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> @@ -0,0 +1,33 @@
-> +Freescale FTM PWM controller
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,vf610-ftm-pwm"
-> +- reg: Physical base address and length of the controller's registers
-> +- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-> +  the cells format.
-> +- clock-names : Includes the following module clock source entries:
-> +    "ftm0" (system clock),
-> +    "ftm0_fix_sel" (fixed frequency clock),
-> +    "ftm0_ext_sel" (external clock)
-> +- clocks : Must contain a clock specifier for each entry in clock-names.
-> +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
-> +  entries in clock-names.
-> +- pinctrl-names: must contain a "default" entry.
-> +- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
-> +  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
+--===============8611668151746118644==
+Content-Type: text/plain
 
-Looks okay to me.
+On Fri, 25 Oct 2013 07:56:39 +0200, Lothar Waßmann <LW@KARO-electronics.de> wrote:
+> Hi,
+> 
+> Grant Likely wrote:
+> > On Thu, 24 Oct 2013 14:42:13 +0200, Denis Carikli <denis@eukrea.com> wrote:
+> > > Cc: Rob Herring <rob.herring@calxeda.com>
+> > > Cc: Pawel Moll <pawel.moll@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Stephen Warren <swarren@wwwdotorg.org>
+> > > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > Cc: linux-input@vger.kernel.org
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: Lothar WaÃŸmann <LW@KARO-electronics.de>
+> > > Cc: Eric BÃ©nard <eric@eukrea.com>
+> > > Signed-off-by: Denis Carikli <denis@eukrea.com>
+> > > ---
+> > > ChangeLog v6->v7:
+> > > - One small whitespace cleanup.
+> > > - The properties specific to that driver are now prefixed with "ti,".
+> > > - The ti,fuzzy property has now better documentation.
+> > > ---
+> > >  .../bindings/input/touchscreen/tsc2007.txt         |   45 +++++
+> > >  drivers/input/touchscreen/tsc2007.c                |  194 +++++++++++++++-----
+> > >  2 files changed, 198 insertions(+), 41 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> > > new file mode 100644
+> > > index 0000000..516b63b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> > > @@ -0,0 +1,45 @@
+> > > +* Texas Instruments tsc2007 touchscreen controller
+> > > +
+> > > +Required properties:
+> > > +- compatible: must be "ti,tsc2007".
+> > > +- reg: I2C address of the chip.
+> > > +- ti,x-plate-ohms: X-plate resistance in ohms.
+> > > +
+> > > +Optional properties:
+> > > +- gpios: the interrupt gpio the chip is connected to (trough the penirq pin)
+> > > +  (see GPIO binding[2] for more details).
+> > 
+> > Hmmm, why is this needed? Is the line used for anything other than
+> > finding the irq number? If it is just an interrupt then an interrupts
+> > property is all that should be specified.
+> > 
+> It's also the pendown detect GPIO. It asserts an interrupt when first
+> activated and is then polled in the driver until it goes inactive again.
+
+That should definitely be in the document then. Otherwise the binding
+looks okay to me.
 
 g.
 
-> +
-> +
-> +Example:
-> +
-> +pwm0: pwm@40038000 {
-> +		compatible = "fsl,vf610-ftm-pwm";
-> +		reg = <0x40038000 0x1000>;
-> +		#pwm-cells = <3>;
-> +		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
-> +		clocks = <&clks VF610_CLK_FTM0>,
-> +			<&clks VF610_CLK_FTM0_FIX_SEL>,
-> +			<&clks VF610_CLK_FTM0_EXT_SEL>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pwm0_1>;
-> +		fsl,pwm-counter-clk = "ftm0_ext_sel";
-> +};
-> -- 
-> 1.8.0
-> 
-> 
+
+
+--===============8611668151746118644==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8611668151746118644==--
