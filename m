@@ -1,58 +1,51 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] Documentation: DTS: bq27xxx are trivial i2c devices
-Date: Fri, 25 Oct 2013 20:56:34 +0100
-Message-ID: <20131025195634.EEBECC40531@trevor.secretlab.ca>
-References: <1382446577-28270-1-git-send-email-sre@debian.org>
+From: Anton Vorontsov <anton@enomsg.org>
+Subject: Re: [Patch V5] drivers: power: Add support for bq24735 charger
+Date: Fri, 25 Oct 2013 15:55:48 -0700
+Message-ID: <20131025225548.GA6095@teo>
+References: <1381526143-20800-1-git-send-email-rklein@nvidia.com>
+ <525C361C.1020703@wwwdotorg.org>
+ <525C376A.3000009@nvidia.com>
+ <525C3A9A.5000207@wwwdotorg.org>
+ <20131025224841.GB1157@teo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382446577-28270-1-git-send-email-sre@debian.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@ring0.de>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@debian.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131025224841.GB1157@teo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Rhyland Klein <rklein@nvidia.com>, David Woodhouse <dwmw2@infradead.org>, Darbha Sriharsha <dsriharsha@nvidia.com>, Manish Badarkha <badarkhe.manish@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013 14:56:16 +0200, Sebastian Reichel <sre@debian.org> wrote:
-> Add all chips supported by the bq27xxx driver to the list
-> of trivial i2c devices.
+On Fri, Oct 25, 2013 at 03:48:41PM -0700, Anton Vorontsov wrote:
+> On Mon, Oct 14, 2013 at 12:40:26PM -0600, Stephen Warren wrote:
+> > >>> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+> > >>
+> > >>> +Optional properties :
+> > >>
+> > >>> + - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
+> > >>> +   presence.
+> > >>
+> > >> Is that actually a property of the BQ24735 chip itself (i.e. is it an
+> > >> output signal from the chip), or part of the board/system?
+> > > 
+> > > The gpio itself is actually what the IRQ line is tied to from the
+> > > bq24735 -> tegra (in this case). In other words this is a Host GPIO that
+> > > is configured as an input and connected to the bq24735.
+> > 
+> > Ok, so this is the ACOK output pin? In that case, it's fine. It might be
+> > worth mentioning that explicitly though.
 > 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
+> I added the comment to the documentation and applied the patch with a
+> "Thanks-to: Stephen Warren <swarren@wwwdotorg.org>" tag. :)
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+Oh, and as well as
 
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index ad6a738..d3a29ce 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -58,6 +58,9 @@ stm,m41t00		Serial Access TIMEKEEPER
->  stm,m41t62		Serial real-time clock (RTC) with alarm
->  stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
->  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
-> -ti,tsc2003		I2C Touch-Screen Controller
-> +ti,bq27200		Battery Monitor
-> +ti,bq27500		Battery Monitor
-> +ti,bq27425		Battery Monitor
->  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
->  ti,tmp275		Digital Temperature Sensor
-> +ti,tsc2003		I2C Touch-Screen Controller
-> -- 
-> 1.8.4.rc3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Thanks-to: Thierry Reding <thierry.reding@gmail.com>
+
+(People seem to review drivers, but do not give their Reviewed-by tags, so
+the thanks tag is the best thing I can legally do in such a case.)
+
+Thanks,
+
+Anton
