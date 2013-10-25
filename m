@@ -1,43 +1,63 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: introduce of_get_available_child_count
-Date: Thu, 24 Oct 2013 17:04:23 -0700
-Message-ID: <CAK5ve-LzUR-rM6a_=ApTxWACDYvOjMM67Mkeu08PUZnJ523CgA@mail.gmail.com>
-References: <1380045009-21149-1-git-send-email-cooloney@gmail.com>
- <52420118.9050501@gmail.com> <CAK5ve-LbgMrD1SFqpaW-L2cmEahaA9Ff+wjrrxwJiG=cVkQrrg@mail.gmail.com>
- <CAK5ve-+8ySa3gi8smSo88Sq2RCNFRMuB-hSYLs0CYBtkiaG-bw@mail.gmail.com> <20131025000225.6E449C403B6@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131025000225.6E449C403B6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 25 Oct 2013 01:10:38 +0100
+Message-ID: <20131025001038.77299C403B6@trevor.secretlab.ca>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com><1382092020-13170-2-git-send-email-hdoyu@nvidia.com><20131024085531.680A4C4039D@trevor.secretlab.ca> <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131024.122115.1035609747068925560.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 5:02 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 24 Oct 2013 11:09:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Sep 24, 2013 at 2:22 PM, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Tue, Sep 24, 2013 at 2:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >> On 09/24/2013 12:50 PM, Bryan Wu wrote:
->> >>> Some drivers keep counting available child by themselves. So
->> >>> introduce a new simple API like of_get_child_count() but for
->> >>> available childs.
->> >>>
->> >>> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> >>> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>> ---
->> >>
->> >> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> >>
->>
->> Will this patch be merged through you guys or need I take care of it?
->
-> Merge it with the patch that needs it.
->
+On Thu, 24 Oct 2013 11:21:15 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Grant,
+> 
+> Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Thu, 24 Oct 2013 10:55:31 +0200:
+> ....
+> > > diff --git a/include/linux/of.h b/include/linux/of.h
+> > > index f95aee3..638a88a 100644
+> > > --- a/include/linux/of.h
+> > > +++ b/include/linux/of.h
+> > > @@ -60,6 +60,7 @@ struct device_node {
+> > >  	struct	kref kref;
+> > >  	unsigned long _flags;
+> > >  	void	*data;
+> > > +	struct device *dev;		/* Set only after populated */
+> > 
+> > Is this being used merely to indicate that a device has been processed
+> > by of_platform_device_create()? Or do you intend to dereference this
+> > pointer? I've avoided putting the struct device in to the device_node
+> > structure up to this point simply becuase there aren't any good clues
+> > for what /kind/ of device it actually points to. I worry that bad
+> > assumptions will get made when other subsystems try to use the
+> > same pointer. ie. if one subsystem creates its own device and sets this
+> > pointer, and then of_platform_device_create() comes along behind, sees
+> > that it is already created, and then returns a platform_device pointer
+> > *for something that isn't a struct platform_device*. This is very bad.
+> > 
+> > Instead of using a pointer to the struct device, would a flag be
+> > sufficient for your purposes? Would it be fine to return NULL if the
+> > device has already been created?
+> 
+> Yes, a flag would be enough for this purpose.
+> 
+> This patch is a part of HACK to control device instanciation order. We
+> have an IOMMU device(platform) which needs to be instanciated earlier
+> than other (platform)devices so that IOMMU driver would configure them
+> as IOMMU'able device.
 
-OK, I will do that.
--Bryan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ideally the drivers depending on the IOMMU would return -EPROBE_DEFER if
+the IOMMU driver isn't set up so that you don't need to play games with
+probe order. Creating certain platform devices early is a really ugly
+and fragile solution.
+
+Besides, probe order of device drivers is far more about link order of
+the kernel than it is about when of_platform_device_create() is called.
+Fiddling with the initcall level on the IOMMU driver (while not
+recommended) may very well have the effect you desire.
+
+g.
+
+> 
+> Is there any better way to control device instanciation order from DT?
