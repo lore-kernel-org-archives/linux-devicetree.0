@@ -1,162 +1,198 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] charger-manager: Add device tree binding for charger-manager
-Date: Fri, 25 Oct 2013 21:03:44 +0100
-Message-ID: <20131025200344.85AA5C40566@trevor.secretlab.ca>
-References: <1382446317-32613-1-git-send-email-cw00.choi@samsung.com> <1382446317-32613-4-git-send-email-cw00.choi@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382446317-32613-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv5][ 1/3] DT: Add basic support for imx35-based devices.
+Date: Fri, 25 Oct 2013 20:52:13 +0100
+Message-ID: <20131025195213.8C67AC404E8@trevor.secretlab.ca>
+References: <1382518503-16437-1-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0185213373233477881=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1382518503-16437-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2013 21:51:56 +0900, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch add binding file for charger-manager that this framework enables to
-> control and multiple chargers and to monitor charging event.
+--===============0185213373233477881==
+Content-Type: text/plain
+
+On Wed, 23 Oct 2013 10:55:01 +0200, Denis Carikli <denis@eukrea.com> wrote:
+> From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Eric Bénard <eric@eukrea.com>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
 > ---
->  .../devicetree/bindings/power/charger-manager.txt  | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/charger-manager.txt
+> ChangeLog v3->v4:
+> - imx35.dtsi: removed display related nodes because their bindings have been
+>   reworked.
+> ---
+>  .../devicetree/bindings/clock/imx35-clock.txt      |  115 +++++
+>  arch/arm/boot/dts/imx35.dtsi                       |  450 ++++++++++++++++++++
+>  arch/arm/mach-imx/Kconfig                          |   11 +
+>  arch/arm/mach-imx/Makefile                         |    1 +
+>  arch/arm/mach-imx/clk-imx35.c                      |   21 +-
+>  arch/arm/mach-imx/common.h                         |    1 +
+>  arch/arm/mach-imx/imx35-dt.c                       |   48 +++
+>  7 files changed, 646 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx35-clock.txt
+>  create mode 100644 arch/arm/boot/dts/imx35.dtsi
+>  create mode 100644 arch/arm/mach-imx/imx35-dt.c
 > 
-> diff --git a/Documentation/devicetree/bindings/power/charger-manager.txt b/Documentation/devicetree/bindings/power/charger-manager.txt
+> diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt b/Documentation/devicetree/bindings/clock/imx35-clock.txt
 > new file mode 100644
-> index 0000000..b22c5526
+> index 0000000..9f9a60d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/charger-manager.txt
-> @@ -0,0 +1,106 @@
-> +Charger-manager framework
+> +++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
+> @@ -0,0 +1,115 @@
+> +* Clock bindings for Freescale i.MX35
 > +
-> +THe devicetree bindings are for the charger-manager to control charging feature.
+> +Required properties:
+> +- compatible: Should be "fsl,imx35-ccm"
+> +- reg: Address and length of the register set
+> +- interrupts: Should contain CCM interrupt
+> +- #clock-cells: Should be <1>
 > +
-> +This framework enables to control and multiple chargers and to monitor charging
-> +event in the context of suspend-to-RAM with an interface combining the chargers.
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell.  The following is a full list of i.MX35
+> +clocks and IDs.
 > +
-> +Required Properties:
-> +- compatible:		Must be "charger-manager".
-> +- psy-name:		The name of power-supply class for charger-manager.
-> +- polling-mode:		Determine which polling mode will be used.
-> +- polling-invertal-ms:	Interval in millisecond at which charger-manager will
-> +			monitor battery health.
-> +- fullbatt-vchkdrop-ms
-> +- fullbatt-vchkdrop-uV:	Check voltage drop afer the battery is fully charged.
-> +			If it has dropped more than fullbatt_vchkdrop_uV after
-> +			fullbatt_vchkdrop_ms, charger-manager will restart
-> +			charging.
-> +- fullbatt-uV:		The standard voltage in microvolt for checking
-> +			fully charged. If VBATT >= fullbatt_uV, it is assumed to
-> +			be full.
-> +- fullbatt-soc:		The standard SOC(State Of Charger) for checking
-> +			fully charged. If state of Charge >= fullbatt_soc, it is
-> +			assumed to be full.
-> +- fullbatt-full-capacity: The standard capacity for checking fully charged.
-> +			If full capacity of battery >= fullbatt_full_capacity,
-> +			it is assumed to be full.
-> +- battery-present:	Specify where information for existance of battery
-> +			can be obtained.
-> +- measure-battery-temp:	Whether to measure battery or not
+> +	Clock			ID
+> +	---------------------------
+> +	ckih			0
+> +	mpll			1
+> +	ppll			2
+> +	mpll_075		3
+> +	arm			4
+> +	hsp			5
+> +	hsp_div			6
+> +	hsp_sel			7
+> +	ahb			8
+> +	ipg			9
+> +	arm_per_div		10
+> +	ahb_per_div		11
+> +	ipg_per			12
+> +	uart_sel		13
+> +	uart_div		14
+> +	esdhc_sel		15
+> +	esdhc1_div		16
+> +	esdhc2_div		17
+> +	esdhc3_div		18
+> +	spdif_sel		19
+> +	spdif_div_pre		20
+> +	spdif_div_post		21
+> +	ssi_sel			22
+> +	ssi1_div_pre		23
+> +	ssi1_div_post		24
+> +	ssi2_div_pre		25
+> +	ssi2_div_post		26
+> +	usb_sel			27
+> +	usb_div			28
+> +	nfc_div			29
+> +	asrc_gate		30
+> +	pata_gate		31
+> +	audmux_gate		32
+> +	can1_gate		33
+> +	can2_gate		34
+> +	cspi1_gate		35
+> +	cspi2_gate		36
+> +	ect_gate		37
+> +	edio_gate		38
+> +	emi_gate		39
+> +	epit1_gate		40
+> +	epit2_gate		41
+> +	esai_gate		42
+> +	esdhc1_gate		43
+> +	esdhc2_gate		44
+> +	esdhc3_gate		45
+> +	fec_gate		46
+> +	gpio1_gate		47
+> +	gpio2_gate		48
+> +	gpio3_gate		49
+> +	gpt_gate		50
+> +	i2c1_gate		51
+> +	i2c2_gate		52
+> +	i2c3_gate		53
+> +	iomuxc_gate		54
+> +	ipu_gate		55
+> +	kpp_gate		56
+> +	mlb_gate		57
+> +	mshc_gate		58
+> +	owire_gate		59
+> +	pwm_gate		60
+> +	rngc_gate		61
+> +	rtc_gate		62
+> +	rtic_gate		63
+> +	scc_gate		64
+> +	sdma_gate		65
+> +	spba_gate		66
+> +	spdif_gate		67
+> +	ssi1_gate		68
+> +	ssi2_gate		69
+> +	uart1_gate		70
+> +	uart2_gate		71
+> +	uart3_gate		72
+> +	usbotg_gate		73
+> +	wdog_gate		74
+> +	max_gate		75
+> +	admux_gate		76
+> +	csi_gate		77
+> +	csi_div			78
+> +	csi_sel			79
+> +	iim_gate		80
+> +	gpu2d_gate		81
+> +	clk_max			82
 > +
-> +- charging-max-duration-minute:		Maximum possible duration for charging.
-> +			If whole charging duration exceed 'charging-max-duration
-> +			-ms', charger-manager stop charging.
-> +- discharging-max-duration-minute:	Maximum possible duration for
-> +			discharging with charger cable after full-batt. If
-> +			discharging duration exceed 'discharging-max-duration-
-> +			ms', charger-manager start charging.
-> +- psy-fuelgauge-name:	The name of power-supply for fuel gauge
-> +- io-channels:		The iio channel data for ADC
-> +- iio-adc-overheat:	The value of the highest ADC for temperature
-> +- iio-adc-cold:		The value of the lowest ADC for temperature
-> +- psy-chargers:		Arrary of power-supply name for chargers.
-> +- charger-regulators:	Array of charger regulators. It include charger cable
-> +			data which need cable-name/extcon-name/min-current-uA
-> +			max-current-uA. When cable is attached/detached,
-> +			charger-manager change current limit of regulator
-> +			according to min-current-uA/max-current-uA.
+> +Examples:
+> +
+> +clks: ccm@53f80000 {
+> +	compatible = "fsl,imx35-ccm";
+> +	reg = <0x53f80000 0x4000>;
+> +	interrupts = <31>;
+> +	#clock-cells = <1>;
+> +};
+> +
+> +esdhc1: esdhc@53fb4000 {
+> +	compatible = "fsl,imx35-esdhc";
+> +	reg = <0x53fb4000 0x4000>;
+> +	interrupts = <7>;
+> +	clocks = <&clks 9>, <&clks 8>, <&clks 43>;
+> +	clock-names = "ipg", "ahb", "per";
+> +	status = "disabled";
+> +};
 
-The documentation for the above properties needs to specify what the
-values actually mean. For example, "polling-mode" is documented as
-"Determine which polling mode will be used". Huh? What is the difference
-between a value of 0 or 1? What values are valid? What do they mean?
-
-As it stands I suspect that the binding is a direct translation from the
-existing pdata structure. That probably isn't really what you want. Some
-of the properties above do make sense and are documented correctly (ie.
-fullbatt-*), but others don't make sense and probably shouldn't be part
-of the generic binding (ie. io-channels sounds like something device
-specific).
-
-I'll defer to the regulators people on what does and does not make
-sense.
+Looks like an entirely reasonable binding to me.
 
 g.
 
-> +
-> +Examples: adding charger-desc data in dts file
-> +
-> +charger-manager@ {
-> +	compatible = "charger-manager";
-> +
-> +	psy-name = "battery";
-> +
-> +	polling-mode = <2>;		/* Polling external power */
-> +	polling-interval-ms = <30000>;	/* Polling period */
-> +
-> +	fullbatt-vchkdrop-ms = <30000>;
-> +	fullbatt-vchkdrop-uV = <150000>;
-> +	fullbatt-uV = <420000>;
-> +	fullbatt-soc = <100>;
-> +	fullbatt-full-capacity = <0>;
-> +
-> +	battery-present = <3>;		/* CM_CHARGER_STAT */
-> +
-> +	measure-battery-temp;
-> +
-> +	charging-max-duration-minute = <360>;
-> +	discharging-max-duration-minute = <90>;
-> +
-> +	psy-fuelgauge-name = "max17040";
-> +
-> +	io-channels = <&adc 2>;
-> +	iio-adc-overheat = <2500>;
-> +	iio-adc-cold = <0>;
-> +
-> +	psy-chargers {
-> +		psy-charger-max14577 {
-> +			psy-charger-name = "max14577-charger";
-> +		};
-> +	};
-> +
-> +	charger-regulators {
-> +		charger-vinchg1 {
-> +			regulator-name = "vinchg1";
-> +
-> +			charger-cables {
-> +				cable-USB {
-> +					cable-name = "USB";
-> +					extcon-name = "max14577-muic";
-> +					min-current-uA = <475000>;
-> +					max-current-uA = <500000>;
-> +				};
-> +
-> +				cable-TA {
-> +					cable-name = "TA";
-> +					extcon-name = "max14577-muic";
-> +					min-current-uA = <650000>;
-> +					max-current-uA = <675000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 1.8.0
-> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============0185213373233477881==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0185213373233477881==--
