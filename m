@@ -1,62 +1,65 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [RFC] of: Allow for experimental device
- tree bindings
-Date: Fri, 25 Oct 2013 09:45:05 +0100
-Message-ID: <526A2F91.1070408@wwwdotorg.org>
-References: <1382540779-6334-1-git-send-email-treding@nvidia.com> <1382544332.8522.40.camel@shinybook.infradead.org> <20131023185114.GA7863@ulmo.nvidia.com> <52699E8B.3000305@wwwdotorg.org> <20131025082229.GD19622@ulmo.nvidia.com>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
+ or is there something better?
+Date: Fri, 25 Oct 2013 09:52:53 +0100
+Message-ID: <526A3165.4020601@wwwdotorg.org>
+References: <20131020220839.GT2443@sirena.org.uk>	 <5264576F.6050307@wwwdotorg.org>	 <alpine.LFD.2.03.1310201911190.1951@syhkavp.arg>	 <52658EBC.8020800@wwwdotorg.org>	 <alpine.LFD.2.03.1310211632460.1951@syhkavp.arg>	 <20131022093923.GC15640@ulmo.nvidia.com> <20131022150426.GF29341@beef>	 <20131022171346.GE4061@obsidianresearch.com>	 <20131023080630.GA14413@netboy>	 <20131023172955.GA17145@obsidianresearch.com>	 <20131023174458.GC5208@netboy>	 <1382553982.31058.10.camel@sakura.staff.proxad.net>	 <20131024095232.27BBCC4039D@trevor.secretlab.ca> <1382614439.6040.16.camel@sakura.staff.proxad.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131025082229.GD19622-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <1382614439.6040.16.camel-MdnFuL0m/hCw+z8RR+d9WEZ2mhrpEnA6@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2013 09:22 AM, Thierry Reding wrote:
-> On Thu, Oct 24, 2013 at 11:26:19PM +0100, Stephen Warren wrote:
->> On 10/23/2013 07:51 PM, Thierry Reding wrote:
->>> On Wed, Oct 23, 2013 at 05:05:32PM +0100, David Woodhouse
->>> wrote:
->>>> On Wed, 2013-10-23 at 17:06 +0200, Thierry Reding wrote:
->>>>> +       /* check if binding is experimental */ +       if
->>>>> (dev != device || drv != driver) { +
->>>>> pr_warn("of: device %s (%s) uses an experimental
->>>>> binding\n", +                       np->name,
->>>>> np->full_name); +
->>>> 
->>>> In the discussions earlier I think we decided that this
->>>> should set a taint flag too.
->>> 
->>> A taint flag seems somewhat drastic. It's not like using an
->>> experimental binding should have an influence on the stability
->>> of the running kernel. I always thought that taint flags were
->>> supposed to flag conditions where code of unknown origin or
->>> code known to be broken was being executed because they may
->>> destabilize the running kernel.
->>> 
->>> The worst that should happen if you run an experimental binding
->>> is that some part of the system will just not come up.
->> 
->> IIRC, the purpose of the taint flag was to make it clear that the
->> kernel or DT was not expected to function in the future, so don't
->> be surpised if you upgrade it, and it stops working, without you
->> taking explicit action, such as revising your DT to match the new
->> kernel or vice-versa.
+On 10/24/2013 12:33 PM, Maxime Bizon wrote:
 > 
-> I understand that, but I was arguing that it doesn't match existing
-> uses of taint flags. The various flags that are currently defined
-> all seem to be set whenever some event occurs that could cause
-> instability of the currently running system, such as loading a
-> proprietary or out-of-tree module, forcing a module to be loaded,
-> overriding firmware parameters...
+> On Thu, 2013-10-24 at 10:52 +0100, Grant Likely wrote:
+> 
+>> At this point if the hardware exists then it should be described in DTB,
+>> even if it is merely compatible, reg, interrupts and maybe clocks
+> 
+> if your driver does not use them, chances are you'll get them wrong.
+> 
+>> properties. In many cases that is all that is required. It /is/ okay to
+>> amend a binding later and to use default values if the new properties
+>> aren't present.
+> 
+> how do you handle the case of a wrong property, because you only wrote
+> hardware description and not the driver ?
+> 
+>> hardware description when enabling previously unused peripherals, but it
+>> is absolutely not friendly to change a binding/driver in a what that fails on
+>> previously working DTB (with the caveat that if no one notices, it
+>> isn't breakage).
+> 
+> ok then how do we solve that case:
+> 
+>  - Marvell SOC 1 is mainlined
+>  - Marvell SOC 2 is mainlined
+>  - Marvell SOC 'x' is mainlined
+>  - "PIO" hw crypto driver is written, working for all SOCs
+>  - [1 year]
+>  - SOCs bindings are marked as stable
+>  - [1 year]
+>  - someone rewrite the driver of hw crypto to use DMA, existing binding
+> is not ok because clock 'foo' or interrupt 'bar', now required, are not
+> present.
+> 
+> what is the process merge that driver ?
+> 
+> if the answer is that you need to keep PIO mode in driver so that
+> existing DTBs still works with it, then this is just plain *wrong*.
 
-Executing a driver that supports an unstable binding does produce
-instability in the system; the kernel configuration might not continue
-to work if rebooted with an updated DT. Admittedly, this is a slightly
-different concept than other taint flags, but seems like a logical
-extension.
+That situation describes enabling a new feature. New features aren't
+necessarily expected to work without revising the DT, e.g. adding new
+properties/entries to describe the additional clocks/DMA-channels/...
+that are required. In many cases, those additions can even be made in a
+backwards-compatible way. Compatibility means that we shouldn't break
+old functionality, not that we shouldn't augment the existing bindings.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
