@@ -1,53 +1,74 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCHv6 2/4] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Fri, 25 Oct 2013 12:12:07 -0500
-Message-ID: <20131025171207.GD20207@joshc.qualcomm.com>
-References: <1382034310-31147-1-git-send-email-rvaswani@codeaurora.org>
+From: Rob Herring <rob.herring@calxeda.com>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Fri, 25 Oct 2013 12:38:15 -0500
+Message-ID: <526AAC87.5070400@calxeda.com>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <20131024234340.ADF70C403B6@trevor.secretlab.ca>
+ <526A83B9.30800@wwwdotorg.org> <E1VZjCU-0005RE-Vt@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382034310-31147-1-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1VZjCU-0005RE-Vt@jdl.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, Stephen Warren <swarren@nvidia.com>, s.nawrocki@samsung.com, pawel.moll@arm.com, a.hajda@samsung.com, Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, Benoit Cousson <bcousson@baylibre.com>, galak@codeaurora.org, olof@lixom.net, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org, david@gibson.dropbear.id.au
 List-Id: devicetree@vger.kernel.org
 
-Hey Rohit-
-
-On Thu, Oct 17, 2013 at 11:25:10AM -0700, Rohit Vaswani wrote:
-> This patch adds basic board support for APQ8074 Dragonboard
-> which belongs to the Snapdragon 800 family.
-> For now, just support a basic machine with device tree.
+On 10/25/2013 10:21 AM, Jon Loeliger wrote:
+>> On 10/25/2013 12:43 AM, Grant Likely wrote:
+>>> On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren@wwwdotorg.org> 
+>> wrote:
+>>>> From: Stephen Warren <swarren@nvidia.com>
+>>>>
+>>>> This is a very quick proof-of-concept re: how a DT schema checker might
+>>>> look if written in C, and integrated into dtc.
+>>>
+>>> Thanks for looking at this.
+>>>
+>>> Very interesting. Certainly an expedient way to start checking schemas,
+>>> and for certain bindings it may be the best approach. The downside is it
+>>> forces a recompilation of DTC to bring in new bindings and it isn't a
+>>> great meduim for mixing schema with documentation in the bindings.
+>>
+>> This approach would certainly require recompiling something. I threw the
+>> code into dtc simply because it was the easiest container for the
+>> demonstration. It could be a separate DT validation utility if we
+>> wanted, although we'd need to split the DT parser from dtc into a
+>> library to avoid code duplication. The resultant utility could be part
+>> of the repo containing the DTs, so it didn't end up as a separate
+>> package to manage.
+>>
+>> I think the additional documentation could be added as comments in the
+>> validation functions, just like IIRC it was to be represented as
+>> comments even in the .dts-based schema proposals.
 > 
-> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> ---
->  arch/arm/boot/dts/Makefile                     |  3 ++-
->  arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
->  arch/arm/boot/dts/qcom-msm8974.dtsi            | 33 ++++++++++++++++++++++++++
->  arch/arm/mach-msm/Kconfig                      | 11 ++++++++-
->  arch/arm/mach-msm/board-dt.c                   |  9 +++++++
->  5 files changed, 60 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
->  create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
+> DTers,
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 000cf76..e71a3ec 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
->  	kirkwood-openblocks_a6.dtb
->  dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
->  dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
-> -	msm8960-cdp.dtb
-> +	msm8960-cdp.dtb \
-> +	qcom-apq8074-dragonboard.dtb
+> I think the additional benefit of starting with a direct C
+> implementation is that it causes us to begin to actually
+> codify the schema requirements.  Sure, it may not be ideal
+> at first, but over time it may reveal consistent patterns
+> that can be extracted.  And it may reveal what a real schema
+> might look like and how it might be expressed better.  Which
+> is to say that perhaps we are letting "perfect" get in the
+> way of "good enough to start"?
+> 
+> In the meantime, someone has shown us the code and we can
+> get started.  It's a Small Matter of Refactoring later. :-)
 
-For what it's worth, this hunk conflicts with Kumar's qcom- prefix stuff
-that's already been sent up.  Perhaps it's time to refresh ontop?
+I have not really looked at whether this would make sense or be low
+effort, but what if Grant's run-time checker was converted to run at
+kernel compile time. That would fall into the get something working
+sooner rather than later, but doesn't solve the documentation problem
+either.
 
-   Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Rob
