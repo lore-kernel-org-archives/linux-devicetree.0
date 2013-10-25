@@ -1,25 +1,59 @@
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v3 0/2] Add support for Qualcomm's PRNG
-Date: Fri, 25 Oct 2013 15:57:53 +0100
-Message-ID: <526A86F1.6030907@zytor.com>
-References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Fri, 25 Oct 2013 10:21:22 -0500
+Message-ID: <E1VZjCU-0005RE-Vt@jdl.com>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <20131024234340.ADF70C403B6@trevor.secretlab.ca> <526A83B9.30800@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <526A83B9.30800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2013 03:11 PM, Stanimir Varbanov wrote:
-> This patch set adds hardware RNG driver wich is used to control the
-> Qualcomm's PRNG hardware block.
+> On 10/25/2013 12:43 AM, Grant Likely wrote:
+> > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> 
+> wrote:
+> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> This is a very quick proof-of-concept re: how a DT schema checker might
+> >> look if written in C, and integrated into dtc.
+> > 
+> > Thanks for looking at this.
+> > 
+> > Very interesting. Certainly an expedient way to start checking schemas,
+> > and for certain bindings it may be the best approach. The downside is it
+> > forces a recompilation of DTC to bring in new bindings and it isn't a
+> > great meduim for mixing schema with documentation in the bindings.
+> 
+> This approach would certainly require recompiling something. I threw the
+> code into dtc simply because it was the easiest container for the
+> demonstration. It could be a separate DT validation utility if we
+> wanted, although we'd need to split the DT parser from dtc into a
+> library to avoid code duplication. The resultant utility could be part
+> of the repo containing the DTs, so it didn't end up as a separate
+> package to manage.
+> 
+> I think the additional documentation could be added as comments in the
+> validation functions, just like IIRC it was to be represented as
+> comments even in the .dts-based schema proposals.
 
-I still haven't seen anyone address the "P" bit of the "PRNG"... what is
-the (guaranteed) entropic level of the output?
+DTers,
 
-	-hpa
+I think the additional benefit of starting with a direct C
+implementation is that it causes us to begin to actually
+codify the schema requirements.  Sure, it may not be ideal
+at first, but over time it may reveal consistent patterns
+that can be extracted.  And it may reveal what a real schema
+might look like and how it might be expressed better.  Which
+is to say that perhaps we are letting "perfect" get in the
+way of "good enough to start"?
 
+In the meantime, someone has shown us the code and we can
+get started.  It's a Small Matter of Refactoring later. :-)
 
+Just a notion,
+jdl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
