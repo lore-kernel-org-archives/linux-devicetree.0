@@ -1,97 +1,55 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add Temperature Monitor driver
-Date: Sat, 26 Oct 2013 08:45:46 -0400
-Message-ID: <20131026124546.GH29341@beef>
-References: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com>
- <1382745629-1123-2-git-send-email-wendy.ng@broadcom.com>
- <382461FD-5CB7-461C-A9A7-76D2EF99C769@codeaurora.org>
- <46DC9641-6D01-4D2F-B5C3-0942B480D6E0@codeaurora.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 30/43] ARM: dts: am33xx clock data
+Date: Sat, 26 Oct 2013 15:46:26 +0300
+Message-ID: <526BB9A2.2050108@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>	
+ <1382716658-6964-31-git-send-email-t-kristo@ti.com>
+ <1382747784.6200.4.camel@polaris.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <46DC9641-6D01-4D2F-B5C3-0942B480D6E0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1382747784.6200.4.camel@polaris.local>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?SmFuIEzDvGJiZQ==?= <jlu@pengutronix.de>
+Cc: nm@ti.com, devicetree@vger.kernel.org, paul@pwsan.com, mturquette@linaro.org, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2013 at 01:47:40AM -0500, Kumar Gala wrote:
-> 
-> On Oct 26, 2013, at 1:46 AM, Kumar Gala wrote:
-> 
-> > 
-> > On Oct 25, 2013, at 7:00 PM, Wendy Ng wrote:
-> > 
-> >> This adds the support for Temperature Monitor (TMON) driver for
-> >> Broadcom bcm281xx SoCs. This driver plugs into the Thermal Framework.
-> >> 
-> >> Note that this version of the TMON driver does support interrupt-driven
-> >> mode -- only polling-mode of the thermal framework can be used.
-> >> 
-> >> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >> .../bindings/thermal/bcm-kona-thermal.txt          |   24 +++
-> >> drivers/thermal/Kconfig                            |   11 ++
-> >> drivers/thermal/Makefile                           |    1 +
-> >> drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
-> >> 4 files changed, 209 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
-> >> create mode 100644 drivers/thermal/bcm_kona_tmon.c
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
-> >> new file mode 100644
-> >> index 0000000..225b898
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
-> >> @@ -0,0 +1,24 @@
-> >> +* Broadcom Kona TMON bindings
-> >> +
-> >> +This version is for the Kona family of SoCs.  The TMON (Temperature Monitor)
-> >> +block in a Kona SoC device is used to measure the chip temperature at constant
-> >> +intervals.
-> >> +The TMON block asserts an interrupt if temperature exceeds a user programmed
-> >> +threshold value.  The TMON block would reset the entire device once it
-> >> +reaches a critical temperature which is also a programmable setting.
-> >> +
-> >> +Required properties:
-> >> +- compatible : "brcm,bcm11351-tmon", "brcm,kona-tmon"
-> >> +- reg : Address range of the thermal register
-> >> +- clocks : the clock signal that drives the TMON block
-> >> +- interrupts: the interrupt signal associated with the TMON block
-> >> +
-> >> +
-> >> +Example:
-> >> +	tmon@34008000 {
-> >> +		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
-> >> +		reg = <0x34008000 0x0024>;
-> >> +		clocks = <&tmon_1m_clk>;
-> >> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-> >> +		status = "disabled";
-> > 
-> > I'd remove the 'status' line from an example.
-> > 
-> >> +	};
-> > 
-> > Ack on the binding (beyond my minor nit pick on the status prop).
-> > 
-> > Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > 
-> > - k
-> 
-> 
-> After looking at your .dts{i} I see you've got a #thermal-sensor-cells prop, where is that documented?
-
-It's in Eduardo's "device thermal limits represented in device tree
-nodes" series. Here's the direct link to the binding post/discussion
-https://lkml.org/lkml/2013/9/26/772
-
--Matt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTAvMjYvMjAxMyAwMzozNiBBTSwgSmFuIEzDvGJiZSB3cm90ZToKPiBPbiBGcmksIDIwMTMt
+MTAtMjUgYXQgMTg6NTcgKzAzMDAsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiArICAgICAgIG1jYXNw
+MF9mY2s6IG1jYXNwMF9mY2sgewo+PiArICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDA+
+Owo+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmaXhlZC1mYWN0b3ItY2xvY2siOwo+
+PiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZzeXNfY2xraW5fY2s+Owo+PiArICAgICAgICAg
+ICAgICAgY2xvY2stbXVsdCA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgIGNsb2NrLWRpdiA9IDwx
+PjsKPj4gKyAgICAgICB9Owo+PiArCj4+ICsgICAgICAgbWNhc3AxX2ZjazogbWNhc3AxX2ZjayB7
+Cj4+ICsgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4+ICsgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImZpeGVkLWZhY3Rvci1jbG9jayI7Cj4+ICsgICAgICAgICAgICAgICBj
+bG9ja3MgPSA8JnN5c19jbGtpbl9jaz47Cj4+ICsgICAgICAgICAgICAgICBjbG9jay1tdWx0ID0g
+PDE+Owo+PiArICAgICAgICAgICAgICAgY2xvY2stZGl2ID0gPDE+Owo+PiArICAgICAgIH07Cj4K
+PiBXaGF0IGlzIHlvdSB1c2UgY2FzZSBmb3IgdGhlc2UgY2xvY2tzIHdpdGggYSBmaXhlZCBmYWN0
+b3Igb2YgMT8gV291bGRuJ3QKPiBpdCBiZSBzaW1wbGVyIHRvIGp1c3QgdXNlIHN5c19jbGtpbl9j
+ayBmcm9tIHRoZSBkZXZpY2VzPwoKVGhpcyBpcyBqdXN0IGtpbmQgb2YgYSBkdW1teSBjbG9jayBu
+b2RlIGZvciB0aGUgZHJpdmVyIHVzZSwgc28gdGhhdCBpdCAKaXMgc2ltcGxlciBmb3IgdGhlbSB0
+byBmaW5kIHRoZWlyIGNsb2Nrcy4gSWYgdGhlc2UgYXJlIGRyb3BwZWQsIHRoZSAKZHJpdmVycyBu
+ZWVkIHRvIGtub3cgdGhhdCBpbnN0ZWFkIG9mIHRoZWlyIG9sZCBvd24gbWNhc3BYX2ZjaywgdGhl
+eSBub3cgCm5lZWQgdG8gZGlyZWN0bHkgY29ubmVjdCB0byBzeXNfY2xraW5fY2suIFRoaXMgYWxz
+byBhbGxvd3MgdG8gdHJhY2sgCnVzZWNvdW50cyBmb3IgdGhlIGNsb2NrcyBiZXR0ZXIsIGlmIHlv
+dSBkb24ndCBoYXZlIHRoZSBtY2FzcFhfZmNrOnMgZm9yIApleGFtcGxlLCB5b3Ugd2lsbCBqdXN0
+IGhhdmUgYSB1c2Vjb3VudCBvZiAyNSBmb3IgdGhlIHN5c19jbGtpbl9jaywgYnV0IApkb24ndCBy
+ZWFsbHkga25vdyB3aG8gaXMgdXNpbmcgaXQuIEFsc28sIG90aGVyIFNvQ3MgbW9zdCBsaWtlbHkg
+aGF2ZSB0aGUgCnNhbWUgbmFtZSBpbiB1c2UsIHNvIGp1c3QgdG8ga2VlcCB0aGUgY2xvY2sgZGF0
+YSBjb21wYXRpYmxlIGFjcm9zcyBTb0NzLgoKVGhlc2UgZmlsZXMgYXJlIGFsc28gY29tcGxldGVs
+eSBhdXRvZ2VuZXJhdGVkIGZyb20gdGhlIGV4aXN0aW5nIGNsb2NrIApkYXRhIHVuZGVyIG1hY2gt
+b21hcDIsIGFuZCB0aGVzZSBub2RlcyBleGlzdCB0aGVyZS4KCkJ1dCB5ZWEsIG5vIGhhcmQgcmVx
+dWlyZW1lbnQuCgotVGVybwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
