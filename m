@@ -1,92 +1,64 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [PATCHv5 4/4] Documentation: Add device tree bindings for
- Freescale FTM PWM.
-Date: Sat, 26 Oct 2013 09:02:25 -0400
-Message-ID: <20131026130225.GJ29341@beef>
-References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
- <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com>
- <20131025201211.7936EC405D3@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131025201211.7936EC405D3@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, rob@landley.net, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
+From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+Subject: [PATCH] ARM: dts: mxs: add additional can interface pinmuxes to imx28.dtsi
+Date: Sat, 26 Oct 2013 19:15:30 +0400
+Message-ID: <1382800530-3113-1-git-send-email-aida.mynzhasova@skitlab.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2013 at 09:12:11PM +0100, Grant Likely wrote:
-> On Mon, 30 Sep 2013 14:13:31 +0800, Xiubo Li <Li.Xiubo@freescale.com> wrote:
-> > This adds the Document for Freescale FTM PWM driver under
-> > Documentation/devicetree/bindings/pwm/.
-> > 
-> > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> > ---
-> >  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 33 ++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> > new file mode 100644
-> > index 0000000..2c6969a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> > @@ -0,0 +1,33 @@
-> > +Freescale FTM PWM controller
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,vf610-ftm-pwm"
-> > +- reg: Physical base address and length of the controller's registers
-> > +- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-> > +  the cells format.
-> > +- clock-names : Includes the following module clock source entries:
-> > +    "ftm0" (system clock),
-> > +    "ftm0_fix_sel" (fixed frequency clock),
-> > +    "ftm0_ext_sel" (external clock)
-> > +- clocks : Must contain a clock specifier for each entry in clock-names.
-> > +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
-> > +  entries in clock-names.
-> > +- pinctrl-names: must contain a "default" entry.
-> > +- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
-> > +  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
-> 
-> Looks okay to me.
+Add alternative pinmuxes for can interface.
 
-For consistency, shouldn't it also have:
+Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+---
+ arch/arm/boot/dts/imx28.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-"See ../clock/clock-bindings.txt for details of the property values"
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index cab4c22..dc49a5c 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -686,6 +686,17 @@
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
+ 
++				can0_pins_b: can0@1 {
++					reg = <1>;
++					fsl,pinmux-ids = <
++						MX28_PAD_AUART3_RX__CAN0_TX
++						MX28_PAD_AUART3_TX__CAN0_RX
++					>;
++					fsl,drive-strength = <0>;
++					fsl,voltage = <1>;
++					fsl,pull-up = <0>;
++				};
++
+ 				can1_pins_a: can1@0 {
+ 					reg = <0>;
+ 					fsl,pinmux-ids = <
+@@ -697,6 +708,17 @@
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
+ 
++				can1_pins_b: can1@1 {
++					reg = <1>;
++					fsl,pinmux-ids = <
++						MX28_PAD_AUART3_CTS__CAN1_TX
++						MX28_PAD_AUART3_RTS__CAN1_RX
++					>;
++					fsl,drive-strength = <0>;
++					fsl,voltage = <1>;
++					fsl,pull-up = <0>;
++				};
++
+ 				spi2_pins_a: spi2@0 {
+ 					reg = <0>;
+ 					fsl,pinmux-ids = <
+-- 
+1.8.1.2
 
-where appropriate like is done under the pwm/pinctrl uses?
-
-IMHO, referencing parent bindings all of the time should be a documented
-best practice / requirement.
-
--Matt
-
-> > +
-> > +
-> > +Example:
-> > +
-> > +pwm0: pwm@40038000 {
-> > +		compatible = "fsl,vf610-ftm-pwm";
-> > +		reg = <0x40038000 0x1000>;
-> > +		#pwm-cells = <3>;
-> > +		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
-> > +		clocks = <&clks VF610_CLK_FTM0>,
-> > +			<&clks VF610_CLK_FTM0_FIX_SEL>,
-> > +			<&clks VF610_CLK_FTM0_EXT_SEL>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_pwm0_1>;
-> > +		fsl,pwm-counter-clk = "ftm0_ext_sel";
-> > +};
-> > -- 
-> > 1.8.0
-> > 
-> > 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
