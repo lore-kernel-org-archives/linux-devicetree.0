@@ -1,36 +1,51 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Add TMON driver support to bcm281xx
-Date: Sat, 26 Oct 2013 01:48:32 -0500
-Message-ID: <282032D7-DE51-4313-BED7-4D2B2D2DE1C0@codeaurora.org>
-References: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com> <1382745629-1123-4-git-send-email-wendy.ng@broadcom.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v3 2/2] hwrng: msm: Add PRNG support for MSM SoC's
+Date: Sat, 26 Oct 2013 17:15:19 +0800
+Message-ID: <20131026091519.GA28935@gondor.apana.org.au>
+References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
+ <1381846278-9529-3-git-send-email-svarbanov@mm-sol.com>
+ <526799B6.1090904@mm-sol.com>
+ <20131023094530.GA21796@gondor.apana.org.au>
+ <526A78C3.9030002@mm-sol.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1382745629-1123-4-git-send-email-wendy.ng@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wendy Ng <wendy.ng@broadcom.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eduardo Valentin <eduardo.valentin@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <526A78C3.9030002@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Matt Mackall <mpm@selenic.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Oct 25, 2013, at 7:00 PM, Wendy Ng wrote:
-
+On Fri, Oct 25, 2013 at 04:57:23PM +0300, Stanimir Varbanov wrote:
+> Hi Herbert,
 > 
-> +	tmon: tmon@34008000 {
-> +		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
-> +		reg = <0x34008000 0x0024>;
-> +		clocks = <&tmon_1m_clk>;
-> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-> +		#thermal-sensor-cells = <0>;
+> On 10/23/2013 12:45 PM, Herbert Xu wrote:
+> > On Wed, Oct 23, 2013 at 12:41:10PM +0300, Stanimir Varbanov wrote:
+> >> On 10/15/2013 05:11 PM, Stanimir Varbanov wrote:
+> >>> This adds a driver for hardware random number generator present
+> >>> on Qualcomm MSM SoC's.
+> >>>
+> >>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >>
+> >> Hi Matt, Herbert,
+> >>
+> >> Sorry for the noise but this patch staying for a while in mailing list
+> >> and I'd like to get some attention to this driver. Do you think it needs
+> >> another re-spin or it has obvious issues / concerns?
+> >>
+> >> Thanks for your time.
+> > 
+> > Well if the ARM folks are OK with it I'm happy to take them.
+> 
+> Thanks!
+> 
+> Can I add your Acked-by for the driver part patch 2/2?
 
-Where is #thermal-sensor-cells documented?
+Sure.
 
-> +		status = "disabled";
-> +	};
-> +
-
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
