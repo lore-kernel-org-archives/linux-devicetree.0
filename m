@@ -1,39 +1,41 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [PATCHv9 30/43] ARM: dts: am33xx clock data
-Date: Sat, 26 Oct 2013 02:36:24 +0200
-Message-ID: <1382747784.6200.4.camel@polaris.local>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
-	 <1382716658-6964-31-git-send-email-t-kristo@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 4/5] usb: ehci-s5p: Change to use phy provided by the
+ generic phy framework
+Date: Sat, 26 Oct 2013 10:27:23 +0900
+Message-ID: <003101ced1ea$85f7e010$91e7a030$%han@samsung.com>
+References: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
+ <1382710529-12082-5-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1382716658-6964-31-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1382710529-12082-5-git-send-email-k.debski@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kamil Debski' <k.debski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Marek Szyprowski' <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-10-25 at 18:57 +0300, Tero Kristo wrote:
-> +       mcasp0_fck: mcasp0_fck {
-> +               #clock-cells = <0>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&sys_clkin_ck>;
-> +               clock-mult = <1>;
-> +               clock-div = <1>;
-> +       };
-> +
-> +       mcasp1_fck: mcasp1_fck {
-> +               #clock-cells = <0>;
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&sys_clkin_ck>;
-> +               clock-mult = <1>;
-> +               clock-div = <1>;
-> +       };
+On Friday, October 25, 2013 11:15 PM, Kamil Debski wrote:
+> 
+> Change the phy provider used from the old usb phy specific to a new one
+> using the generic phy framework.
+> 
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/usb/host/ehci-s5p.c |   21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 
-What is you use case for these clocks with a fixed factor of 1? Wouldn't
-it be simpler to just use sys_clkin_ck from the devices?
+Hi Kamil Debski,
+It looks good. :-)
 
-Regards,
-Jan
+However, could you re-basing against Greg's 'usb-next' branch?
+Now, the file name of 'ehci-s5p.c' is renamed to 'ehci-exynos.c'.
+Also, 'Generic PHY Framework' was already merged to Greg's
+'usb-next' branch.
 
+Thank you.
+
+Best regards,
+Jingoo Han
