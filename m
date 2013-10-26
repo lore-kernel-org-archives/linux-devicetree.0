@@ -1,64 +1,60 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: [PATCH] ARM: dts: mxs: add additional can interface pinmuxes to imx28.dtsi
-Date: Sat, 26 Oct 2013 19:15:30 +0400
-Message-ID: <1382800530-3113-1-git-send-email-aida.mynzhasova@skitlab.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
+Date: Sat, 26 Oct 2013 09:19:02 -0700
+Message-ID: <20131026161902.GA7698@lee--X1>
+References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
+ <20131025200754.D222AC4058E@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131025200754.D222AC4058E@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-Add alternative pinmuxes for can interface.
+Hi Grant,
 
-Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> > Acked-by: Stephen Warren <swarren@nvidia.com>
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index cab4c22..dc49a5c 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -686,6 +686,17 @@
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
-+				can0_pins_b: can0@1 {
-+					reg = <1>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART3_RX__CAN0_TX
-+						MX28_PAD_AUART3_TX__CAN0_RX
-+					>;
-+					fsl,drive-strength = <0>;
-+					fsl,voltage = <1>;
-+					fsl,pull-up = <0>;
-+				};
-+
- 				can1_pins_a: can1@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
-@@ -697,6 +708,17 @@
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
-+				can1_pins_b: can1@1 {
-+					reg = <1>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART3_CTS__CAN1_TX
-+						MX28_PAD_AUART3_RTS__CAN1_RX
-+					>;
-+					fsl,drive-strength = <0>;
-+					fsl,voltage = <1>;
-+					fsl,pull-up = <0>;
-+				};
-+
- 				spi2_pins_a: spi2@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
--- 
-1.8.1.2
+<snip>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +    Optional properties:
+> > +    -------------------
+> > +	The input supply of regulators are the optional properties on the
+> > +	regulator node. The input supply of these regulators are provided
+> > +	through following properties:
+> > +		vsup-sd2-supply: Input supply for SD2.
+> > +		vsup-sd3-supply: Input supply for SD3.
+> > +		vsup-sd4-supply: Input supply for SD4.
+> > +		vsup-sd5-supply: Input supply for SD5.
+> > +		vin-ldo0-supply: Input supply for LDO0.
+> > +		vin-ldo1-6-supply: Input supply for LDO1 and LDO6.
+> > +		vin-ldo2-5-7-supply: Input supply for LDO2, LDO5 and LDO7.
+> > +		vin-ldo3-4-supply: Input supply for LDO3 and LDO4.
+> > +		vin-ldo9-10-supply: Input supply for LDO9 and LDO10.
+> > +		vin-ldo11-supply: Input supply for LDO11.
+>=20
+> What is the data in these properties? The documentation isn't clear.
+>=20
+> In principle, the binding looks okay to me.
+
+The properties to which you refer are standard regulator supply
+bindings specified here [1]. Specifically:
+
+  "<name>-supply: phandle to the parent supply/regulator node"
+
+The DT portion has already been Acked by Stephen and applied by me.
+
+[1] Documentation/devicetree/bindings/regulator/regulator.txt
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
