@@ -1,169 +1,187 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/5] usb: ehci-s5p: Change to use phy provided by the
- generic phy framework
-Date: Sat, 26 Oct 2013 15:11:29 +0530
-Message-ID: <CAFp+6iExOPunF=ND7_17PZXA217K_4im4ZJvR=mW2Ym_gnA0GQ@mail.gmail.com>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
-	<1382710529-12082-5-git-send-email-k.debski@samsung.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 2/4] charger-manager: Use IIO subsystem to read battery
+ temperature instead of legacy method
+Date: Sat, 26 Oct 2013 13:20:24 +0200
+Message-ID: <526BA578.3080306@metafoo.de>
+References: <1382446317-32613-1-git-send-email-cw00.choi@samsung.com> <1382446317-32613-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382710529-12082-5-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1382446317-32613-3-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: anton@enomsg.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dwmw2@infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+On 10/22/2013 02:51 PM, Chanwoo Choi wrote:
+> This patch support charger-manager use IIO(Industrial I/O) subsystem to read
+> current battery temperature instead of legacy methor about callback function.
 
+How does this look in hardware? Do you have a general purpose ADC connected
+to a temperature sensor that has a temperature dependent voltage output? And
+at some point during the board design you measure the raw value of the ADC
+both for the lower and the upper threshold temperatures?
 
-On Fri, Oct 25, 2013 at 7:45 PM, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Change the phy provider used from the old usb phy specific to a new one
-> using the generic phy framework.
->
-> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Signed-off-by: Myungjoo Ham <myungjoo.ham@samsung.com>
 > ---
->  drivers/usb/host/ehci-s5p.c |   21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
-> index 7cc26e6..76606ff 100644
-> --- a/drivers/usb/host/ehci-s5p.c
-> +++ b/drivers/usb/host/ehci-s5p.c
-> @@ -19,6 +19,7 @@
->  #include <linux/module.h>
+>  drivers/power/Kconfig                 |  1 +
+>  drivers/power/charger-manager.c       | 88 +++++++++++++++++++++++++++++++++--
+>  include/linux/power/charger-manager.h | 13 ++++++
+>  3 files changed, 97 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+> index e6f92b4..6700191 100644
+> --- a/drivers/power/Kconfig
+> +++ b/drivers/power/Kconfig
+> @@ -309,6 +309,7 @@ config CHARGER_MANAGER
+>  	bool "Battery charger manager for multiple chargers"
+>  	depends on REGULATOR && RTC_CLASS
+>  	select EXTCON
+> +	select IIO
+
+Are you sure you want to force select the IIO framework? It looks like we do
+not stub out iio_channel_get() and friends yet if CONFIG_IIO is not
+selected. But I think that will the better solution here.
+
+>  	help
+>            Say Y to enable charger-manager support, which allows multiple
+>            chargers attached to a battery and multiple batteries attached to a
+> diff --git a/drivers/power/charger-manager.c b/drivers/power/charger-manager.c
+> index cc720f9..02a395c 100644
+> --- a/drivers/power/charger-manager.c
+> +++ b/drivers/power/charger-manager.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/sysfs.h>
 >  #include <linux/of.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/usb-ehci-s5p.h>
->  #include <linux/usb/phy.h>
-> @@ -45,7 +46,7 @@ static struct hc_driver __read_mostly s5p_ehci_hc_driver;
->
->  struct s5p_ehci_hcd {
->         struct clk *clk;
-> -       struct usb_phy *phy;
-> +       struct phy *phy;
->         struct usb_otg *otg;
->         struct s5p_ehci_platdata *pdata;
->  };
-> @@ -77,10 +78,11 @@ static int s5p_ehci_probe(struct platform_device *pdev)
+> +#include <linux/iio/consumer.h>
+>  
+>  static const char * const default_event_names[] = {
+>  	[CM_EVENT_UNKNOWN] = "Unknown",
+> @@ -542,6 +543,50 @@ static int check_charging_duration(struct charger_manager *cm)
+>  }
+>  
+>  /**
+> + * read_battery_temperature - Read current battery temperature
+> + * @cm: the Charger Manager representing the battery.
+> + * @last_temp_mC: store current battery temperature
+> + *
+> + * Returns current state of temperature by using IIO or legacy method
+> + * - CM_TEMP_NORMAL
+> + * - CM_TEMP_OVERHEAT
+> + * - CM_TEMP_COLD
+> + */
+> +static int read_battery_temperature(struct charger_manager *cm,
+> +				    int *last_temp_mC)
+> +{
+> +	struct charger_desc *desc = cm->desc;
+> +	int temp;
+> +
+> +	if (desc->channel) {
+> +		temp = iio_read_channel_raw(desc->channel, last_temp_mC);
+> +
+> +		/*
+> +		 * The charger-manager use IIO subsystem to read ADC raw data
+> +		 * from IIO ADC device drvier. The each device driver has
+> +		 * own non-standard ADC table. If user of charger-manager
+> +		 * would like to get correct temperature value, have to convert
+> +		 * 'last_temp_mC' variable according to proper calculation
+> +		 * method and own ADC table.
+> +		 */
+> +
+> +		if (*last_temp_mC >= desc->iio_adc_overheat)
+> +			temp = CM_TEMP_NORMAL;	/* Overheat */
+
+temp = CM_TEMP_OVERHEAT ?
+
+> +		else if (*last_temp_mC <= desc->iio_adc_cold)
+> +			temp = CM_TEMP_COLD;	/* Cold */
+> +		else
+> +			temp = CM_TEMP_NORMAL;	/* Normal */
+> +
+> +	} else if (desc->temperature_out_of_range) {
+> +		temp = desc->temperature_out_of_range(last_temp_mC);
+> +	} else {
+> +		temp = INT_MAX;
+> +	}
+> +
+> +	return temp;
+> +}
+> +
+> +/**
+>   * _cm_monitor - Monitor the temperature and return true for exceptions.
+>   * @cm: the Charger Manager representing the battery.
+>   *
+> @@ -551,7 +596,7 @@ static int check_charging_duration(struct charger_manager *cm)
+>  static bool _cm_monitor(struct charger_manager *cm)
 >  {
->         struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
->         struct s5p_ehci_hcd *s5p_ehci;
-> +       struct phy *phy;
+>  	struct charger_desc *desc = cm->desc;
+> -	int temp = desc->temperature_out_of_range(&cm->last_temp_mC);
+> +	int temp = read_battery_temperature(cm, &cm->last_temp_mC);
+>  
+>  	dev_dbg(cm->dev, "monitoring (%2.2d.%3.3dC)\n",
+>  		cm->last_temp_mC / 1000, cm->last_temp_mC % 1000);
+> @@ -805,7 +850,7 @@ static int charger_get_property(struct power_supply *psy,
+>  	case POWER_SUPPLY_PROP_TEMP:
+>  		/* in thenth of centigrade */
+>  		if (cm->last_temp_mC == INT_MIN)
+> -			desc->temperature_out_of_range(&cm->last_temp_mC);
+> +			read_battery_temperature(cm, &cm->last_temp_mC);
 
-just a nit here:
-Lets keep the pointer to 'phy' and 'phy_name' together ?
-and move this above phy_name ?
+So this will now return the raw ADC value to userspace on a property that is
+supposed to indicate milli-degree Celsius. That doesn't seem to be right.
 
->         struct usb_hcd *hcd;
->         struct ehci_hcd *ehci;
->         struct resource *res;
-> -       struct usb_phy *phy;
-> +       const char *phy_name;
->         int irq;
->         int err;
->
-> @@ -103,14 +105,14 @@ static int s5p_ehci_probe(struct platform_device *pdev)
->                 return -ENOMEM;
->         }
->         s5p_ehci = to_s5p_ehci(hcd);
-> -
-> +       phy_name = of_get_property(pdev->dev.of_node, "phy-names", NULL);
-> +       phy =  devm_phy_get(&pdev->dev, phy_name);
+>  		val->intval = cm->last_temp_mC / 100;
+>  		if (!desc->meaure_battery_temp)
+>  			ret = -ENODEV;
+> @@ -813,7 +858,7 @@ static int charger_get_property(struct power_supply *psy,
+>  	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+>  		/* in thenth of centigrade */
+>  		if (cm->last_temp_mC == INT_MIN)
+> -			desc->temperature_out_of_range(&cm->last_temp_mC);
+> +			read_battery_temperature(cm, &cm->last_temp_mC);
+>  		val->intval = cm->last_temp_mC / 100;
+>  		if (desc->measure_battery_temp)
+>  			ret = -ENODEV;
+> @@ -1586,6 +1631,32 @@ static int charger_manager_dt_parse_regulator(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static int charger_manager_dt_parse_iio(struct device *dev,
+> +					      struct charger_desc *desc)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +
+> +	if (of_property_read_u32(np, "iio-adc-overheat",
+> +				&desc->iio_adc_overheat)) {
+> +		dev_warn(dev, "cannot get standard value for hot temperature\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(np, "iio-adc-cold",
+> +				&desc->iio_adc_cold)) {
+> +		dev_warn(dev, "cannot get standard value for cold temperature\n");
+> +		return -EINVAL;
+> +	}
 
-Below check for exynos5440 was supposed to skip any request phy.
-So shouldn't we place above two assignments to the original place
-where devm_usb_get_phy()
-was called ?
-May be i am not getting you intention of changing the place.
+iio-adc-overheat and iio-adc-cold are definitely not good names for
+devicetree properties. The term IIO is really Linux specific and should not
+appear in the devicetree. 'temperature-lower-threshold' and
+'temperature-upper-threshold' might be better names.
 
->         if (of_device_is_compatible(pdev->dev.of_node,
->                                         "samsung,exynos5440-ehci")) {
->                 s5p_ehci->pdata = &empty_platdata;
->                 goto skip_phy;
->         }
->
-> -       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
->         if (IS_ERR(phy)) {
->                 /* Fallback to pdata */
->                 if (!pdata) {
-> @@ -122,7 +124,6 @@ static int s5p_ehci_probe(struct platform_device *pdev)
->                 }
->         } else {
->                 s5p_ehci->phy = phy;
-> -               s5p_ehci->otg = phy->otg;
->         }
->
->  skip_phy:
-> @@ -166,7 +167,7 @@ skip_phy:
->                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
+> +
+> +	desc->channel = iio_channel_get(dev, NULL);
 
-Lets remove this line and similar calls to 'set_host()' in the driver,
-since we don't have
-s5p_ehci->otg anymore after the same is removed above.
-Anyways this was helping the old phy-samsung-usb2 driver, and not needed now.
+You need to free the channel on the error paths in your probe function.
 
->
->         if (s5p_ehci->phy)
-> -               usb_phy_init(s5p_ehci->phy);
-> +               phy_power_on(s5p_ehci->phy);
->         else if (s5p_ehci->pdata->phy_init)
->                 s5p_ehci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
->
-> @@ -188,7 +189,7 @@ skip_phy:
->
->  fail_add_hcd:
->         if (s5p_ehci->phy)
-> -               usb_phy_shutdown(s5p_ehci->phy);
-> +               phy_power_off(s5p_ehci->phy);
->         else if (s5p_ehci->pdata->phy_exit)
->                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->  fail_io:
-> @@ -209,7 +210,7 @@ static int s5p_ehci_remove(struct platform_device *pdev)
->                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-
-ditto
-
->
->         if (s5p_ehci->phy)
-> -               usb_phy_shutdown(s5p_ehci->phy);
-> +               phy_power_off(s5p_ehci->phy);
->         else if (s5p_ehci->pdata->phy_exit)
->                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->
-> @@ -244,7 +245,7 @@ static int s5p_ehci_suspend(struct device *dev)
->                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-ditto
-
->
->         if (s5p_ehci->phy)
-> -               usb_phy_shutdown(s5p_ehci->phy);
-> +               phy_power_off(s5p_ehci->phy);
->         else if (s5p_ehci->pdata->phy_exit)
->                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->
-> @@ -265,7 +266,7 @@ static int s5p_ehci_resume(struct device *dev)
->                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-ditto
-
->
->         if (s5p_ehci->phy)
-> -               usb_phy_init(s5p_ehci->phy);
-> +               phy_power_on(s5p_ehci->phy);
->         else if (s5p_ehci->pdata->phy_init)
->                 s5p_ehci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
->
-[..] Rest looks good. :-)
-
-
-
--- 
-Best Regards
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (IS_ERR(desc->channel)) {
+> +		dev_err(dev, "cannot get iio channel\n");
+> +		return PTR_ERR(desc->channel);
+> +	}
+> +
+> +	return 0;
+> +}
