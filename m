@@ -1,83 +1,97 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv7][ 2/5] ASoC: eukrea-tlv320: Add DT
-	support.
-Date: Sat, 26 Oct 2013 12:48:40 +0100
-Message-ID: <20131026114840.GX2443@sirena.org.uk>
-References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
- <1382616832-23593-2-git-send-email-denis@eukrea.com>
- <20131025191513.5345BC4042C@trevor.secretlab.ca>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add Temperature Monitor driver
+Date: Sat, 26 Oct 2013 08:45:46 -0400
+Message-ID: <20131026124546.GH29341@beef>
+References: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com>
+ <1382745629-1123-2-git-send-email-wendy.ng@broadcom.com>
+ <382461FD-5CB7-461C-A9A7-76D2EF99C769@codeaurora.org>
+ <46DC9641-6D01-4D2F-B5C3-0942B480D6E0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3643141271045628572=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131025191513.5345BC4042C@trevor.secretlab.ca>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <46DC9641-6D01-4D2F-B5C3-0942B480D6E0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Oct 26, 2013 at 01:47:40AM -0500, Kumar Gala wrote:
+> 
+> On Oct 26, 2013, at 1:46 AM, Kumar Gala wrote:
+> 
+> > 
+> > On Oct 25, 2013, at 7:00 PM, Wendy Ng wrote:
+> > 
+> >> This adds the support for Temperature Monitor (TMON) driver for
+> >> Broadcom bcm281xx SoCs. This driver plugs into the Thermal Framework.
+> >> 
+> >> Note that this version of the TMON driver does support interrupt-driven
+> >> mode -- only polling-mode of the thermal framework can be used.
+> >> 
+> >> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> .../bindings/thermal/bcm-kona-thermal.txt          |   24 +++
+> >> drivers/thermal/Kconfig                            |   11 ++
+> >> drivers/thermal/Makefile                           |    1 +
+> >> drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
+> >> 4 files changed, 209 insertions(+)
+> >> create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> >> create mode 100644 drivers/thermal/bcm_kona_tmon.c
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> >> new file mode 100644
+> >> index 0000000..225b898
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> >> @@ -0,0 +1,24 @@
+> >> +* Broadcom Kona TMON bindings
+> >> +
+> >> +This version is for the Kona family of SoCs.  The TMON (Temperature Monitor)
+> >> +block in a Kona SoC device is used to measure the chip temperature at constant
+> >> +intervals.
+> >> +The TMON block asserts an interrupt if temperature exceeds a user programmed
+> >> +threshold value.  The TMON block would reset the entire device once it
+> >> +reaches a critical temperature which is also a programmable setting.
+> >> +
+> >> +Required properties:
+> >> +- compatible : "brcm,bcm11351-tmon", "brcm,kona-tmon"
+> >> +- reg : Address range of the thermal register
+> >> +- clocks : the clock signal that drives the TMON block
+> >> +- interrupts: the interrupt signal associated with the TMON block
+> >> +
+> >> +
+> >> +Example:
+> >> +	tmon@34008000 {
+> >> +		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
+> >> +		reg = <0x34008000 0x0024>;
+> >> +		clocks = <&tmon_1m_clk>;
+> >> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+> >> +		status = "disabled";
+> > 
+> > I'd remove the 'status' line from an example.
+> > 
+> >> +	};
+> > 
+> > Ack on the binding (beyond my minor nit pick on the status prop).
+> > 
+> > Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > 
+> > - k
+> 
+> 
+> After looking at your .dts{i} I see you've got a #thermal-sensor-cells prop, where is that documented?
 
---===============3643141271045628572==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wpclBcJ4x2yUw58h"
-Content-Disposition: inline
+It's in Eduardo's "device thermal limits represented in device tree
+nodes" series. Here's the direct link to the binding post/discussion
+https://lkml.org/lkml/2013/9/26/772
 
-
---wpclBcJ4x2yUw58h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Oct 25, 2013 at 08:15:13PM +0100, Grant Likely wrote:
-> On Thu, 24 Oct 2013 14:13:49 +0200, Denis Carikli <denis@eukrea.com> wrote:
-
-> > +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
-> > +- mux-ext-port : The external port of the i.MX audio muxer.
-
-> > +Note: The AUDMUX port numbering should start at 1, which is consistent with
-> > +hardware manual.
-
-> Looks okay to me. I've not been following the sound bindings very
-> closely. Are the described properties a common pattern for sound complex
-> bindings?
-
-They're standard for i.MX - it's a mux within the SoC.
-
---wpclBcJ4x2yUw58h
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSa6wVAAoJELSic+t+oim9muwP/0iD5Ket3S2v1hCYZka6CVfH
-Q4UIIwHE/jLq+EiwzkSE0X408MeGLufVsonB4sDeYKwjDNgn/e8+BxQGBri39h2Z
-InWUGvNuQqdgAfxZd0XbH4156UKWBf7jefd29L/wzLm94+QpPq2tliAVJtMx0qzF
-tvl6aLLAynHvWQJvKcGLYeJVCy/Yjex9uJtzJ8wLfWNxJ2ZVINxQHp1eBhpJsjF4
-0crAuCgthhRAAVl/dkCPVwkBYPbUIGPfFUAgSEY8ovBcuLuTY9RlOz4TmFhMO6I9
-sSOFBmEnJEHI4x7Spr/4JF8+5HdXRabZ/8ajMC8IC3UDlQlslJc4hYQai47g9Tig
-q3EoiD+K4qVDmGC39w5TjlkPW+iH3/ZnI4YVpkPxn8ec9iPxB32p7vkaMAKMevug
-Cqh6lW4jXSO090OEjb2sD6J0oKtVTViXISNTHFhY5L5umKEvB18PjvH3g2ukizO+
-V/TG78yfuqRu+we2X5RsbkynDpsYf5VSTSwvxH69fXRcWQx9l7eoAFXQhOSszw3Q
-J/XW22ZqbhoQdt9ljDNEdyknq9DN5M27lwla2/8V7IfyFoDHNUeNeOp9+eit07H8
-F62irQsTgdq+Ebl/q3YIkZcKqg/NNV8HovxcAroP/I2gL0GXR9nxL4Vk6bR2Rhyy
-vyjZsfMkYVzPAgfVqGo/
-=6OGO
------END PGP SIGNATURE-----
-
---wpclBcJ4x2yUw58h--
-
---===============3643141271045628572==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3643141271045628572==--
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
