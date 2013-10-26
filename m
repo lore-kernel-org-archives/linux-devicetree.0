@@ -1,92 +1,47 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Sat, 26 Oct 2013 01:40:31 +0200
-Message-ID: <20131025234031.GC8657@earth.universe>
-References: <1382626126-12565-1-git-send-email-sre@debian.org>
- <1382626126-12565-2-git-send-email-sre@debian.org>
- <20131025190904.3EE93C403B8@trevor.secretlab.ca>
+From: "Wendy Ng" <wendy.ng@broadcom.com>
+Subject: [PATCH 0/3] thermal: bcm281xx: Add Temperature Monitor driver
+Date: Fri, 25 Oct 2013 17:00:26 -0700
+Message-ID: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bKyqfOwhbdpXa4YI"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131025190904.3EE93C403B8@trevor.secretlab.ca>
-Sender: linux-input-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Wendy Ng <wendy.ng@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds the support of the Temperature Monitor driver
+for Broadcom bcm281xx SoCs. This TMON driver can be used with the
+Thermal Framework.
 
---bKyqfOwhbdpXa4YI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series incoporates the feedback from the old series:
+V1: https://lkml.org/lkml/2013/9/23/424
+V2: https://lkml.org/lkml/2013/9/27/555
 
-On Fri, Oct 25, 2013 at 08:09:04PM +0100, Grant Likely wrote:
-> On Thu, 24 Oct 2013 16:48:44 +0200, Sebastian Reichel <sre@debian.org> wr=
-ote:
-> > Add device tree support for twl4030 power button driver.
->=20
-> The above commit text is insufficient. There are changes in the patch
-> that aren't described here and have nothing to do with device tree
-> bindings.
+Note that this patch series is dependent on the following patches:
+https://lkml.org/lkml/2013/9/26/787
+http://www.spinics.net/lists/arm-kernel/msg274963.html
+https://lkml.org/lkml/2013/10/3/645
 
-I will update the description in PATCHv7.
+Wendy Ng (3):
+  thermal: bcm281xx: Add Temperature Monitor driver
+  ARM: configs:enable thermal framework for bcm281xx
+  ARM: dts: Add TMON driver support to bcm281xx
 
-> [...]
-> > +++ b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
->=20
-> Can all of the TWL or TWL4030 funciton bindings be collected into a
-> single file please? It is a single device after all. All of it should be
-> in bindings/mfd/twl-family.txt
+ .../bindings/thermal/bcm-kona-thermal.txt          |   24 +++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |    4 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |   29 ++++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+ arch/arm/configs/bcm_defconfig                     |    4 +-
+ drivers/thermal/Kconfig                            |   11 ++
+ drivers/thermal/Makefile                           |    1 +
+ drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
+ 8 files changed, 249 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+ create mode 100644 drivers/thermal/bcm_kona_tmon.c
 
-I guess this should be done in another patch? There's also a typo in
-twl-family.txt's filename. My suggestion is to leave the patchset in
-its current state. I will create another patch, which combines all
-the twl4030 bindings descriptions into one file.
+-- 
+1.7.9.5
 
-> [...]
-> > +- interrupt: should be one of the following
->=20
-> Spelling: s/interrupt/interrupts/
 
-fixed.
-
-> [...]
-> >  static struct platform_driver twl4030_pwrbutton_driver =3D {
-> > +	.probe		=3D twl4030_pwrbutton_probe,
-> >  	.remove		=3D __exit_p(twl4030_pwrbutton_remove),
->=20
-> Remove the __exit_p() wrapper. __exit is for module exit functions, not
-> remove hooks (I know, that's not actually this patch, but the code is
-> definitely wrong here).
-
-On of the following patches converts the driver to devm, which
-results in complete removal of the twl4030_pwrbutton_remove
-function.
-
--- Sebastian
-
---bKyqfOwhbdpXa4YI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSawFuAAoJENju1/PIO/qalKIQAJqIpjQwKt63Wy+xHOLtYPxq
-VM7gRkOb6DYUaF8vLQDYh9PU15Ggqtyf5mcmk0DthtlTWCkkPSfkylz52wadbc3M
-hpfD3KiNx777IkMnXR0dMt61cWg0mprO4MzR8K2CHasPGKUrK1dED0G+ndLSocsP
-RCVLn60JmF/ig0WU2oPBKfUKi6TyIQkkvq+PX6OQHYLvuGLoyYhW7V9UVGbFQTJR
-MNHsxLVhbMznJ8elYUFtWerU3Dp5iqwWXkXpCSAwrsUPa8UBghqJ33wA2baxzR/2
-lvQM+PZNEkVZcHjRO503zAJL6MonywZT/3GJFOmgkZa1kgvI7exUaa0TWW5f3WeM
-uQlWHWNcS+wZbNLqv0EkAz9pcrOeq7BDpqNU0q7DOpr//EMJdxWgID+bnLpKv1mq
-8KFKpqV4MID2iab3F4kUedns5lhuUhmF8OPPIyfz+VLLfw9xLEUIhczgrT+7Xz/K
-zzlvclqlm2WI4F96UUSPihl2PVjZEuc93Tc6fLq9T5Ii8iGsvwA3PVvBU/6js3nh
-DOtd87YZJQfoBnegqXKZHFQK9PlRtnLiE4cumj66Yg9O74/+uSlZVXe8eOvtT/lC
-mLc1AZRlwhquw33Y2dO9t1a4QAlt6Cw+AXIgrhYid56MglgzaNn+YyRBDoPBRZLv
-kt5fRUFQLiVDRr/IUixY
-=96+a
------END PGP SIGNATURE-----
-
---bKyqfOwhbdpXa4YI--
