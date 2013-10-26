@@ -1,55 +1,92 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 30/43] ARM: dts: am33xx clock data
-Date: Sat, 26 Oct 2013 15:46:26 +0300
-Message-ID: <526BB9A2.2050108@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>	
- <1382716658-6964-31-git-send-email-t-kristo@ti.com>
- <1382747784.6200.4.camel@polaris.local>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [PATCHv5 4/4] Documentation: Add device tree bindings for
+ Freescale FTM PWM.
+Date: Sat, 26 Oct 2013 09:02:25 -0400
+Message-ID: <20131026130225.GJ29341@beef>
+References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
+ <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com>
+ <20131025201211.7936EC405D3@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382747784.6200.4.camel@polaris.local>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?SmFuIEzDvGJiZQ==?= <jlu@pengutronix.de>
-Cc: nm@ti.com, devicetree@vger.kernel.org, paul@pwsan.com, mturquette@linaro.org, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131025201211.7936EC405D3@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, rob@landley.net, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjYvMjAxMyAwMzozNiBBTSwgSmFuIEzDvGJiZSB3cm90ZToKPiBPbiBGcmksIDIwMTMt
-MTAtMjUgYXQgMTg6NTcgKzAzMDAsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiArICAgICAgIG1jYXNw
-MF9mY2s6IG1jYXNwMF9mY2sgewo+PiArICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDA+
-Owo+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmaXhlZC1mYWN0b3ItY2xvY2siOwo+
-PiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZzeXNfY2xraW5fY2s+Owo+PiArICAgICAgICAg
-ICAgICAgY2xvY2stbXVsdCA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgIGNsb2NrLWRpdiA9IDwx
-PjsKPj4gKyAgICAgICB9Owo+PiArCj4+ICsgICAgICAgbWNhc3AxX2ZjazogbWNhc3AxX2ZjayB7
-Cj4+ICsgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4+ICsgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImZpeGVkLWZhY3Rvci1jbG9jayI7Cj4+ICsgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8JnN5c19jbGtpbl9jaz47Cj4+ICsgICAgICAgICAgICAgICBjbG9jay1tdWx0ID0g
-PDE+Owo+PiArICAgICAgICAgICAgICAgY2xvY2stZGl2ID0gPDE+Owo+PiArICAgICAgIH07Cj4K
-PiBXaGF0IGlzIHlvdSB1c2UgY2FzZSBmb3IgdGhlc2UgY2xvY2tzIHdpdGggYSBmaXhlZCBmYWN0
-b3Igb2YgMT8gV291bGRuJ3QKPiBpdCBiZSBzaW1wbGVyIHRvIGp1c3QgdXNlIHN5c19jbGtpbl9j
-ayBmcm9tIHRoZSBkZXZpY2VzPwoKVGhpcyBpcyBqdXN0IGtpbmQgb2YgYSBkdW1teSBjbG9jayBu
-b2RlIGZvciB0aGUgZHJpdmVyIHVzZSwgc28gdGhhdCBpdCAKaXMgc2ltcGxlciBmb3IgdGhlbSB0
-byBmaW5kIHRoZWlyIGNsb2Nrcy4gSWYgdGhlc2UgYXJlIGRyb3BwZWQsIHRoZSAKZHJpdmVycyBu
-ZWVkIHRvIGtub3cgdGhhdCBpbnN0ZWFkIG9mIHRoZWlyIG9sZCBvd24gbWNhc3BYX2ZjaywgdGhl
-eSBub3cgCm5lZWQgdG8gZGlyZWN0bHkgY29ubmVjdCB0byBzeXNfY2xraW5fY2suIFRoaXMgYWxz
-byBhbGxvd3MgdG8gdHJhY2sgCnVzZWNvdW50cyBmb3IgdGhlIGNsb2NrcyBiZXR0ZXIsIGlmIHlv
-dSBkb24ndCBoYXZlIHRoZSBtY2FzcFhfZmNrOnMgZm9yIApleGFtcGxlLCB5b3Ugd2lsbCBqdXN0
-IGhhdmUgYSB1c2Vjb3VudCBvZiAyNSBmb3IgdGhlIHN5c19jbGtpbl9jaywgYnV0IApkb24ndCBy
-ZWFsbHkga25vdyB3aG8gaXMgdXNpbmcgaXQuIEFsc28sIG90aGVyIFNvQ3MgbW9zdCBsaWtlbHkg
-aGF2ZSB0aGUgCnNhbWUgbmFtZSBpbiB1c2UsIHNvIGp1c3QgdG8ga2VlcCB0aGUgY2xvY2sgZGF0
-YSBjb21wYXRpYmxlIGFjcm9zcyBTb0NzLgoKVGhlc2UgZmlsZXMgYXJlIGFsc28gY29tcGxldGVs
-eSBhdXRvZ2VuZXJhdGVkIGZyb20gdGhlIGV4aXN0aW5nIGNsb2NrIApkYXRhIHVuZGVyIG1hY2gt
-b21hcDIsIGFuZCB0aGVzZSBub2RlcyBleGlzdCB0aGVyZS4KCkJ1dCB5ZWEsIG5vIGhhcmQgcmVx
-dWlyZW1lbnQuCgotVGVybwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Oct 25, 2013 at 09:12:11PM +0100, Grant Likely wrote:
+> On Mon, 30 Sep 2013 14:13:31 +0800, Xiubo Li <Li.Xiubo@freescale.com> wrote:
+> > This adds the Document for Freescale FTM PWM driver under
+> > Documentation/devicetree/bindings/pwm/.
+> > 
+> > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 33 ++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > new file mode 100644
+> > index 0000000..2c6969a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > @@ -0,0 +1,33 @@
+> > +Freescale FTM PWM controller
+> > +
+> > +Required properties:
+> > +- compatible: Should be "fsl,vf610-ftm-pwm"
+> > +- reg: Physical base address and length of the controller's registers
+> > +- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
+> > +  the cells format.
+> > +- clock-names : Includes the following module clock source entries:
+> > +    "ftm0" (system clock),
+> > +    "ftm0_fix_sel" (fixed frequency clock),
+> > +    "ftm0_ext_sel" (external clock)
+> > +- clocks : Must contain a clock specifier for each entry in clock-names.
+> > +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
+> > +  entries in clock-names.
+> > +- pinctrl-names: must contain a "default" entry.
+> > +- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
+> > +  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
+> 
+> Looks okay to me.
+
+For consistency, shouldn't it also have:
+
+"See ../clock/clock-bindings.txt for details of the property values"
+
+where appropriate like is done under the pwm/pinctrl uses?
+
+IMHO, referencing parent bindings all of the time should be a documented
+best practice / requirement.
+
+-Matt
+
+> > +
+> > +
+> > +Example:
+> > +
+> > +pwm0: pwm@40038000 {
+> > +		compatible = "fsl,vf610-ftm-pwm";
+> > +		reg = <0x40038000 0x1000>;
+> > +		#pwm-cells = <3>;
+> > +		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
+> > +		clocks = <&clks VF610_CLK_FTM0>,
+> > +			<&clks VF610_CLK_FTM0_FIX_SEL>,
+> > +			<&clks VF610_CLK_FTM0_EXT_SEL>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_pwm0_1>;
+> > +		fsl,pwm-counter-clk = "ftm0_ext_sel";
+> > +};
+> > -- 
+> > 1.8.0
+> > 
+> > 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
