@@ -1,90 +1,83 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Sat, 26 Oct 2013 13:31:39 +0200
-Message-ID: <20131026113138.GA22920@earth.universe>
-References: <1382626126-12565-1-git-send-email-sre@debian.org>
- <1382626126-12565-2-git-send-email-sre@debian.org>
- <FC6F0077-7E61-4F64-94E5-10E8FEF1F1E4@codeaurora.org>
- <20131025221850.GA8657@earth.universe>
- <085234CB-BD53-4120-AE77-B06FA9314E96@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv7][ 2/5] ASoC: eukrea-tlv320: Add DT
+	support.
+Date: Sat, 26 Oct 2013 12:48:40 +0100
+Message-ID: <20131026114840.GX2443@sirena.org.uk>
+References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
+ <1382616832-23593-2-git-send-email-denis@eukrea.com>
+ <20131025191513.5345BC4042C@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <085234CB-BD53-4120-AE77-B06FA9314E96@codeaurora.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3643141271045628572=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131025191513.5345BC4042C@trevor.secretlab.ca>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---r5Pyd7+fXNt84Ff3
+--===============3643141271045628572==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wpclBcJ4x2yUw58h"
+Content-Disposition: inline
+
+
+--wpclBcJ4x2yUw58h
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 26, 2013 at 01:37:57AM -0500, Kumar Gala wrote:
->=20
-> On Oct 25, 2013, at 5:18 PM, Sebastian Reichel wrote:
->=20
-> > On Fri, Oct 25, 2013 at 04:41:20PM -0500, Kumar Gala wrote:
-> >> On Oct 24, 2013, at 9:48 AM, Sebastian Reichel wrote:
-> >>> +- interrupt: should be one of the following
-> >>> +   - <8>: For controllers compatible with twl4030
-> >>=20
-> >> Just checking, but the interrupt is always 8 for this device?
-> >=20
-> > Yes. It's currently hardcoded in drivers/mfd/twl-core.c.
->=20
-> The fact that is hard coded in the driver does not imply that it
-> should be in the device tree binding.  Is there an interrupt
-> controller as part of the TWL4030?
+On Fri, Oct 25, 2013 at 08:15:13PM +0100, Grant Likely wrote:
+> On Thu, 24 Oct 2013 14:13:49 +0200, Denis Carikli <denis@eukrea.com> wrote:
 
-Hardware looks like this:
+> > +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
+> > +- mux-ext-port : The external port of the i.MX audio muxer.
 
-&twl4030 {
-    compatible =3D "ti,twl4030";
-	interrupt-controller;
-	#interrupt-cells =3D <1>;
+> > +Note: The AUDMUX port numbering should start at 1, which is consistent with
+> > +hardware manual.
 
-    twl_pwrbutton: pwrbutton {
-		compatible =3D "ti,twl4030-pwrbutton";
-		interrupts =3D <8>; /* 8th interrupt from the twl4030 */
-	};
-};
+> Looks okay to me. I've not been following the sound bindings very
+> closely. Are the described properties a common pattern for sound complex
+> bindings?
 
-Simplified the initialization of twl4030 stuff works
-like this for non DT boot:
+They're standard for i.MX - it's a mux within the SoC.
 
-twl4030_init(...) {
-    init_subdev(...);
-    init_subdev("twl4030-pwrbutton", ..., irq=3D8, ...);
-    init_subdev(...);
-};
-
--- Sebastian
-
---r5Pyd7+fXNt84Ff3
+--wpclBcJ4x2yUw58h
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBCAAGBQJSa6gaAAoJENju1/PIO/qaVtgP/AwHBjDQqJ+SbPRn/bUx2myo
-2+Xq5I8sbDqOZg5Ktx44AwIRsRH4h6YwnIe1WVmVlqezfnfEqtuPR1A9madv44Vh
-buCzrdjYC2mflH1CY9I7tFbk1z3BgyD4xugMIBe1x9kDoztzWDpY6lwlBfg9FoH1
-7DWY1LfM5f0cSYAXNVj52reV5lIpSzPEIYfu4FU6UVx+Uk6EL+lyRuIY1mPeCYo+
-Y556LSOKLLn5w5QjvkB58+xURHmx6t+MuDp/17tWaW0gpCXcTTBwtmevhYC+Id2T
-nt9lR3d88c25y+rXV+4AWccNIMZjZoQ+2asj+paCB8unPAYfPRuJ94PDdybxmMxa
-RGxq9T396B+lRRNB7Cy/GweGIrmLyElYLCeTc3YU+B/AMCka/CClm2lgF1UPZ0nj
-rnNGPJ/2+Ibf5ID8VTKWx91Q4xWAU4Dy/fE/pVpRij7VwhD1JJLbremRcWu1nTY4
-tS+uWcAQQ/Tjq0h/ucz8ZmL/H83vFtl0y/93zTakVpNSGXM506HFcQV3NZDAIV+W
-33QX+d29m8cU4/3EtJ+l2pf5dp7Mr20ByoqB8ScVvoWaRniexECmkEK/M2r/oFwS
-eONFUDXnYJz8STsd4MAZ8h+hdy8XQionjT/puoNuGBrjOaYoSqUHce2MljUyvu+p
-fSPWCf0R1maM3M9xQAhW
-=kLMb
+iQIcBAEBAgAGBQJSa6wVAAoJELSic+t+oim9muwP/0iD5Ket3S2v1hCYZka6CVfH
+Q4UIIwHE/jLq+EiwzkSE0X408MeGLufVsonB4sDeYKwjDNgn/e8+BxQGBri39h2Z
+InWUGvNuQqdgAfxZd0XbH4156UKWBf7jefd29L/wzLm94+QpPq2tliAVJtMx0qzF
+tvl6aLLAynHvWQJvKcGLYeJVCy/Yjex9uJtzJ8wLfWNxJ2ZVINxQHp1eBhpJsjF4
+0crAuCgthhRAAVl/dkCPVwkBYPbUIGPfFUAgSEY8ovBcuLuTY9RlOz4TmFhMO6I9
+sSOFBmEnJEHI4x7Spr/4JF8+5HdXRabZ/8ajMC8IC3UDlQlslJc4hYQai47g9Tig
+q3EoiD+K4qVDmGC39w5TjlkPW+iH3/ZnI4YVpkPxn8ec9iPxB32p7vkaMAKMevug
+Cqh6lW4jXSO090OEjb2sD6J0oKtVTViXISNTHFhY5L5umKEvB18PjvH3g2ukizO+
+V/TG78yfuqRu+we2X5RsbkynDpsYf5VSTSwvxH69fXRcWQx9l7eoAFXQhOSszw3Q
+J/XW22ZqbhoQdt9ljDNEdyknq9DN5M27lwla2/8V7IfyFoDHNUeNeOp9+eit07H8
+F62irQsTgdq+Ebl/q3YIkZcKqg/NNV8HovxcAroP/I2gL0GXR9nxL4Vk6bR2Rhyy
+vyjZsfMkYVzPAgfVqGo/
+=6OGO
 -----END PGP SIGNATURE-----
 
---r5Pyd7+fXNt84Ff3--
+--wpclBcJ4x2yUw58h--
+
+--===============3643141271045628572==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3643141271045628572==--
