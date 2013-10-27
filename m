@@ -1,55 +1,64 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
-Date: Sun, 27 Oct 2013 13:49:28 +0000
-Message-ID: <20131027134928.13BE4C4039D@trevor.secretlab.ca>
-References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com> <20131025200754.D222AC4058E@trevor.secretlab.ca> <20131026161902.GA7698@lee--X1>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131026161902.GA7698@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, Florian Lobmaier <florian.lobmaier@ams.com>
+Subject: Re: [PATCHv5 4/4] Documentation: Add device tree bindings for Freescale FTM PWM.
+Date: Sun, 27 Oct 2013 13:50:25 +0000
+Message-ID: <20131027135025.6C652C4039D@trevor.secretlab.ca>
+References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com> <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com> <20131025201211.7936EC405D3@trevor.secretlab.ca> <20131026130225.GJ29341@beef>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131026130225.GJ29341@beef>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <matt.porter@linaro.org>
+Cc: Xiubo Li <Li.Xiubo@freescale.com>, r65073@freescale.com, thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, rob@landley.net, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 26 Oct 2013 09:19:02 -0700, Lee Jones <lee.jones@linaro.org> wrote:
-> Hi Grant,
-> 
-> > > Acked-by: Stephen Warren <swarren@nvidia.com>
-> > > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > > Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> <snip>
-> 
-> > > +    Optional properties:
-> > > +    -------------------
-> > > +	The input supply of regulators are the optional properties on the
-> > > +	regulator node. The input supply of these regulators are provided
-> > > +	through following properties:
-> > > +		vsup-sd2-supply: Input supply for SD2.
-> > > +		vsup-sd3-supply: Input supply for SD3.
-> > > +		vsup-sd4-supply: Input supply for SD4.
-> > > +		vsup-sd5-supply: Input supply for SD5.
-> > > +		vin-ldo0-supply: Input supply for LDO0.
-> > > +		vin-ldo1-6-supply: Input supply for LDO1 and LDO6.
-> > > +		vin-ldo2-5-7-supply: Input supply for LDO2, LDO5 and LDO7.
-> > > +		vin-ldo3-4-supply: Input supply for LDO3 and LDO4.
-> > > +		vin-ldo9-10-supply: Input supply for LDO9 and LDO10.
-> > > +		vin-ldo11-supply: Input supply for LDO11.
+On Sat, 26 Oct 2013 09:02:25 -0400, Matt Porter <matt.porter@linaro.org> wrote:
+> On Fri, Oct 25, 2013 at 09:12:11PM +0100, Grant Likely wrote:
+> > On Mon, 30 Sep 2013 14:13:31 +0800, Xiubo Li <Li.Xiubo@freescale.com> wrote:
+> > > This adds the Document for Freescale FTM PWM driver under
+> > > Documentation/devicetree/bindings/pwm/.
+> > > 
+> > > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > > ---
+> > >  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 33 ++++++++++++++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > > new file mode 100644
+> > > index 0000000..2c6969a
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > > @@ -0,0 +1,33 @@
+> > > +Freescale FTM PWM controller
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should be "fsl,vf610-ftm-pwm"
+> > > +- reg: Physical base address and length of the controller's registers
+> > > +- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
+> > > +  the cells format.
+> > > +- clock-names : Includes the following module clock source entries:
+> > > +    "ftm0" (system clock),
+> > > +    "ftm0_fix_sel" (fixed frequency clock),
+> > > +    "ftm0_ext_sel" (external clock)
+> > > +- clocks : Must contain a clock specifier for each entry in clock-names.
+> > > +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
+> > > +  entries in clock-names.
+> > > +- pinctrl-names: must contain a "default" entry.
+> > > +- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
+> > > +  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
 > > 
-> > What is the data in these properties? The documentation isn't clear.
-> > 
-> > In principle, the binding looks okay to me.
+> > Looks okay to me.
 > 
-> The properties to which you refer are standard regulator supply
-> bindings specified here [1]. Specifically:
+> For consistency, shouldn't it also have:
 > 
->   "<name>-supply: phandle to the parent supply/regulator node"
+> "See ../clock/clock-bindings.txt for details of the property values"
 > 
-> The DT portion has already been Acked by Stephen and applied by me.
+> where appropriate like is done under the pwm/pinctrl uses?
 > 
-> [1] Documentation/devicetree/bindings/regulator/regulator.txt
+> IMHO, referencing parent bindings all of the time should be a documented
+> best practice / requirement.
 
-Okay, thanks. I was being too lazy to go digging.  :-)
+I agree. In fact, it should be part of the requirements on schema
+tooling that we discussed last week at ksummit (email summary will be
+provided)
 
 g.
-
