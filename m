@@ -1,42 +1,34 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [patch v2] sata, highbank: clear whole array in
- highbank_initialize_phys()
-Date: Sun, 27 Oct 2013 08:16:58 -0400
-Message-ID: <20131027121658.GI14934@mtj.dyndns.org>
-References: <20131018084409.GA14256@longonot.mountain>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 1/3] Input: twl4030-keypad - add device tree support
+Date: Sun, 27 Oct 2013 05:23:48 -0700
+Message-ID: <20131027122347.GE15154@atomide.com>
+References: <1382446042-27099-1-git-send-email-sre@debian.org>
+ <1382446042-27099-2-git-send-email-sre@debian.org>
+ <20131027111715.GA2437@xo-6d-61-c0.localdomain>
+ <20131027114026.GB14091@earth.universe>
+ <20131027114753.GB14901@amd.pavel.ucw.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131018084409.GA14256@longonot.mountain>
-Sender: linux-ide-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20131027114753.GB14901@amd.pavel.ucw.cz>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-input@vger.kernel.org, 'Beno?t Cousson' <bcousson@baylibre.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 11:44:09AM +0300, Dan Carpenter wrote:
-> The original code used the wrong parameter to clear tx_atten[].  It
-> passed the number of elements instead of sizeof() the array to memset.
+* Pavel Machek <pavel@ucw.cz> [131027 04:48]:
 > 
-> The other potential issue was that cphy_base[] wasn't cleared.  I'm not
-> sure if that was a real problem or not, but I have cleared it in my
-> patch.
+> > > > +#if IS_ENABLED(CONFIG_OF)
+> > > I'm probably missing something here, but why not #ifdef CONFIG_OF?
+> > 
+> > I have been told for other drivers, that IS_ENABLED() is
+> > the prefered way to check for configuration these days.
 > 
-> Instead of using memset(), this patch uses empty initializers as a
-> cleanup.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> CONFIG_OF can not be module, using IS_ENABLED() on it is just wrong.
 
-Applied to libata/for-3.13.  I didn't cc stable as it doesn't look
-like it caused actual problems.  Reading the code, I'm curious how
-port_data[] is supposed to work.  It's a static array used throughout
-the driver which is zeroed on each probe(), which doesn't make whole
-lot of sense - if I connect a second sata_highbank controller in, the
-struct used by the first one will be cleared.  Maybe the whole PHY
-thing is supposed to be completely static, but if so, it'd be great if
-the code is explicitly structured / explained that way.
+Good point. Looks like there's IS_BUILTIN that's for boolean options.
 
-Thanks.
+Regards,
 
--- 
-tejun
+Tony
