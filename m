@@ -1,58 +1,231 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [RFC 2/4] ARM: OMAP: rx51: Register audio device
-Date: Sun, 27 Oct 2013 22:24:44 +0100
-Message-ID: <1382909086-10493-3-git-send-email-sre@debian.org>
-References: <1382909086-10493-1-git-send-email-sre@debian.org>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] charger-manager: Use IIO subsystem to read battery
+ temperature instead of legacy method
+Date: Mon, 28 Oct 2013 08:41:12 +0900
+Message-ID: <526DA498.6000606@samsung.com>
+References: <1382446317-32613-1-git-send-email-cw00.choi@samsung.com>
+ <1382446317-32613-3-git-send-email-cw00.choi@samsung.com>
+ <526BA578.3080306@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382909086-10493-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@debian.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <526BA578.3080306-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+On 10/26/2013 08:20 PM, Lars-Peter Clausen wrote:
+> On 10/22/2013 02:51 PM, Chanwoo Choi wrote:
+>> This patch support charger-manager use IIO(Industrial I/O) subsystem to read
+>> current battery temperature instead of legacy methor about callback function.
+> 
+> How does this look in hardware? Do you have a general purpose ADC connected
+> to a temperature sensor that has a temperature dependent voltage output? And
+> at some point during the board design you measure the raw value of the ADC
+> both for the lower and the upper threshold temperatures?
 
-This patch adds support for the audio chip to the legacy
-boardcode of the Nokia N900.
+As you comment, I have to convert ADC value with h/w constraint(voltage ouput, resistance).
+Previously, I used exynos-adc driver(drivers/iio/adc/exynos_adc.c) to get ADC value
+about temperature and then use ntc_thermistor(drivers/hwmon/ntc_thermistor.c)
+for converting temperature. But, I didn't find same driver of ntc_thermistor
+in drivers/iio for converting. So, this patchset only connected with iio drvier
+to get ADC value. In next, I'm cosidering how to get the correct temperature from iio driver.
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- arch/arm/mach-omap2/board-rx51-peripherals.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+If you possible, could you give me advices about this issue?
 
-diff --git a/arch/arm/mach-omap2/board-rx51-peripherals.c b/arch/arm/ma=
-ch-omap2/board-rx51-peripherals.c
-index 68dc998..65e3627 100644
---- a/arch/arm/mach-omap2/board-rx51-peripherals.c
-+++ b/arch/arm/mach-omap2/board-rx51-peripherals.c
-@@ -1205,6 +1205,16 @@ error:
- 	 */
- }
-=20
-+static struct platform_device rx51_audio_device =3D {
-+	.name	=3D "rx51-audio",
-+	.id	=3D -1,
-+};
-+
-+static void __init rx51_init_audio(void)
-+{
-+	platform_device_register(&rx51_audio_device);
-+}
-+
- static struct tsc2005_platform_data tsc2005_pdata =3D {
- 	.ts_pressure_max	=3D 2048,
- 	.ts_pressure_fudge	=3D 2,
-@@ -1287,6 +1297,7 @@ void __init rx51_peripherals_init(void)
- 	gpmc_onenand_init(board_onenand_data);
- 	board_smc91x_init();
- 	rx51_add_gpio_keys();
-+	rx51_init_audio();
- 	rx51_init_wl1251();
- 	rx51_init_tsc2005();
- 	rx51_init_si4713();
---=20
-1.8.4.rc3
+Also, I will support POWER_SUPPLY_PROP_TEMP* property of power_supply class
+to get temperature from fuel-gauge or charger device.
+
+
+> 
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  drivers/power/Kconfig                 |  1 +
+>>  drivers/power/charger-manager.c       | 88 +++++++++++++++++++++++++++++++++--
+>>  include/linux/power/charger-manager.h | 13 ++++++
+>>  3 files changed, 97 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+>> index e6f92b4..6700191 100644
+>> --- a/drivers/power/Kconfig
+>> +++ b/drivers/power/Kconfig
+>> @@ -309,6 +309,7 @@ config CHARGER_MANAGER
+>>  	bool "Battery charger manager for multiple chargers"
+>>  	depends on REGULATOR && RTC_CLASS
+>>  	select EXTCON
+>> +	select IIO
+> 
+> Are you sure you want to force select the IIO framework? It looks like we do
+> not stub out iio_channel_get() and friends yet if CONFIG_IIO is not
+> selected. But I think that will the better solution here.
+> 
+>>  	help
+>>            Say Y to enable charger-manager support, which allows multiple
+>>            chargers attached to a battery and multiple batteries attached to a
+>> diff --git a/drivers/power/charger-manager.c b/drivers/power/charger-manager.c
+>> index cc720f9..02a395c 100644
+>> --- a/drivers/power/charger-manager.c
+>> +++ b/drivers/power/charger-manager.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/sysfs.h>
+>>  #include <linux/of.h>
+>> +#include <linux/iio/consumer.h>
+>>  
+>>  static const char * const default_event_names[] = {
+>>  	[CM_EVENT_UNKNOWN] = "Unknown",
+>> @@ -542,6 +543,50 @@ static int check_charging_duration(struct charger_manager *cm)
+>>  }
+>>  
+>>  /**
+>> + * read_battery_temperature - Read current battery temperature
+>> + * @cm: the Charger Manager representing the battery.
+>> + * @last_temp_mC: store current battery temperature
+>> + *
+>> + * Returns current state of temperature by using IIO or legacy method
+>> + * - CM_TEMP_NORMAL
+>> + * - CM_TEMP_OVERHEAT
+>> + * - CM_TEMP_COLD
+>> + */
+>> +static int read_battery_temperature(struct charger_manager *cm,
+>> +				    int *last_temp_mC)
+>> +{
+>> +	struct charger_desc *desc = cm->desc;
+>> +	int temp;
+>> +
+>> +	if (desc->channel) {
+>> +		temp = iio_read_channel_raw(desc->channel, last_temp_mC);
+>> +
+>> +		/*
+>> +		 * The charger-manager use IIO subsystem to read ADC raw data
+>> +		 * from IIO ADC device drvier. The each device driver has
+>> +		 * own non-standard ADC table. If user of charger-manager
+>> +		 * would like to get correct temperature value, have to convert
+>> +		 * 'last_temp_mC' variable according to proper calculation
+>> +		 * method and own ADC table.
+>> +		 */
+>> +
+>> +		if (*last_temp_mC >= desc->iio_adc_overheat)
+>> +			temp = CM_TEMP_NORMAL;	/* Overheat */
+> 
+> temp = CM_TEMP_OVERHEAT ?
+
+I found this problem after send patchset. I'll fix it.
+
+> 
+>> +		else if (*last_temp_mC <= desc->iio_adc_cold)
+>> +			temp = CM_TEMP_COLD;	/* Cold */
+>> +		else
+>> +			temp = CM_TEMP_NORMAL;	/* Normal */
+>> +
+>> +	} else if (desc->temperature_out_of_range) {
+>> +		temp = desc->temperature_out_of_range(last_temp_mC);
+>> +	} else {
+>> +		temp = INT_MAX;
+>> +	}
+>> +
+>> +	return temp;
+>> +}
+>> +
+>> +/**
+>>   * _cm_monitor - Monitor the temperature and return true for exceptions.
+>>   * @cm: the Charger Manager representing the battery.
+>>   *
+>> @@ -551,7 +596,7 @@ static int check_charging_duration(struct charger_manager *cm)
+>>  static bool _cm_monitor(struct charger_manager *cm)
+>>  {
+>>  	struct charger_desc *desc = cm->desc;
+>> -	int temp = desc->temperature_out_of_range(&cm->last_temp_mC);
+>> +	int temp = read_battery_temperature(cm, &cm->last_temp_mC);
+>>  
+>>  	dev_dbg(cm->dev, "monitoring (%2.2d.%3.3dC)\n",
+>>  		cm->last_temp_mC / 1000, cm->last_temp_mC % 1000);
+>> @@ -805,7 +850,7 @@ static int charger_get_property(struct power_supply *psy,
+>>  	case POWER_SUPPLY_PROP_TEMP:
+>>  		/* in thenth of centigrade */
+>>  		if (cm->last_temp_mC == INT_MIN)
+>> -			desc->temperature_out_of_range(&cm->last_temp_mC);
+>> +			read_battery_temperature(cm, &cm->last_temp_mC);
+> 
+> So this will now return the raw ADC value to userspace on a property that is
+> supposed to indicate milli-degree Celsius. That doesn't seem to be right.
+
+You're right. It isn't correct temperature as below my comment:
+I have to fix this issue.
+
+		/*
+		 * The charger-manager use IIO subsystem to read ADC raw data
+		 * from IIO ADC device drvier. The each device driver has
+		 * own non-standard ADC table. If user of charger-manager
+		 * would like to get correct temperature value, have to convert
+		 * 'last_temp_mC' variable according to proper calculation
+		 * method and own ADC table.
+		 */
+
+> 
+>>  		val->intval = cm->last_temp_mC / 100;
+>>  		if (!desc->meaure_battery_temp)
+>>  			ret = -ENODEV;
+>> @@ -813,7 +858,7 @@ static int charger_get_property(struct power_supply *psy,
+>>  	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+>>  		/* in thenth of centigrade */
+>>  		if (cm->last_temp_mC == INT_MIN)
+>> -			desc->temperature_out_of_range(&cm->last_temp_mC);
+>> +			read_battery_temperature(cm, &cm->last_temp_mC);
+>>  		val->intval = cm->last_temp_mC / 100;
+>>  		if (desc->measure_battery_temp)
+>>  			ret = -ENODEV;
+>> @@ -1586,6 +1631,32 @@ static int charger_manager_dt_parse_regulator(struct device *dev,
+>>  	return 0;
+>>  }
+>>  
+>> +static int charger_manager_dt_parse_iio(struct device *dev,
+>> +					      struct charger_desc *desc)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +
+>> +	if (of_property_read_u32(np, "iio-adc-overheat",
+>> +				&desc->iio_adc_overheat)) {
+>> +		dev_warn(dev, "cannot get standard value for hot temperature\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_u32(np, "iio-adc-cold",
+>> +				&desc->iio_adc_cold)) {
+>> +		dev_warn(dev, "cannot get standard value for cold temperature\n");
+>> +		return -EINVAL;
+>> +	}
+> 
+> iio-adc-overheat and iio-adc-cold are definitely not good names for
+> devicetree properties. The term IIO is really Linux specific and should not
+> appear in the devicetree. 'temperature-lower-threshold' and
+> 'temperature-upper-threshold' might be better names.
+
+OK. I'll fix it in accordance with your comment.
+
+> 
+>> +
+>> +	desc->channel = iio_channel_get(dev, NULL);
+> 
+> You need to free the channel on the error paths in your probe function.
+
+OK. I'll fix it.
+> 
+>> +	if (IS_ERR(desc->channel)) {
+>> +		dev_err(dev, "cannot get iio channel\n");
+>> +		return PTR_ERR(desc->channel);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+
+Thanks for your comment.
+
+Best Regards,
+Chanwoo Choi
