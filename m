@@ -1,127 +1,126 @@
-From: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add initial support for cm-fx6
-Date: Sun, 27 Oct 2013 16:24:08 +0200
-Message-ID: <526D2208.9020404@compulab.co.il>
-References: <1381848564-29839-1-git-send-email-valentin@compulab.co.il> <20131021050610.GA9716@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131021050610.GA9716-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH 4/4] wl1251: spi: add device tree support
+Date: Sun, 27 Oct 2013 17:14:29 +0100
+Message-ID: <1382890469-25286-5-git-send-email-sre@debian.org>
+References: <1382890469-25286-1-git-send-email-sre@debian.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1382890469-25286-1-git-send-email-sre@debian.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Luciano Coelho <luca@coelho.fi>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "John W. Linville" <linville@tuxdriver.com>, Felipe Balbi <balbi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2013 08:06 AM, Shawn Guo wrote:
-> On Tue, Oct 15, 2013 at 05:49:24PM +0300, Valentin Raevsky wrote:
->> Add initial support for cm-fx6 module.
->>
->> cm-fx6 is a module based on mx6q SoC with the following features:
->> - Up to 4GB of DDR3
->> - 1 LCD/DVI output port
->> - 1 HDMI output port
->> - 2 LVDS LCD ports
->> - Gigabit Ethernet
->> - Analog Audio
->> - CAN
->> - SATA
->> - NAND
->> - PCIE
->>
->> This patch allows to boot up the module, configures the serial console,
->> the Ethernet adapter and the hearbeat led.
->>
->> Signed-off-by: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/cm-fx6.dts |   51 ++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/cm-fx6.dts
->
-> Please name the file with 'imx6q-' prefix, and add dtb target into
-> arch/arm/boot/dts/Makefile.
+Add device tree support for the spi variant of wl1251
+and document the binding.
 
-thatnks, got it. will be in v2.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ .../devicetree/bindings/net/wireless/ti,wl1251.txt | 36 ++++++++++++++++++++++
+ drivers/net/wireless/ti/wl1251/spi.c               | 23 ++++++++++----
+ 2 files changed, 53 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
 
->
->>
->> diff --git a/arch/arm/boot/dts/cm-fx6.dts b/arch/arm/boot/dts/cm-fx6.dts
->> new file mode 100644
->> index 0000000..1080215
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/cm-fx6.dts
->> @@ -0,0 +1,51 @@
->> +/*
->> + * Copyright 2013 CompuLab Ltd.
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +/dts-v1/;
->> +#include "imx6q.dtsi"
->> +
->> +/ {
->> +	model = "CompuLab CM-FX6";
->> +	compatible = "compulab,cm-fx6", "fsl,imx6q";
->> +
->> +	memory {
->> +		reg = <0x10000000 0x80000000>;
->> +	};
->> +
->> +	leds {
->> +		compatible = "gpio-leds";
->> +
->> +		debug-led {
->> +			label = "Heartbeat";
->> +			gpios = <&gpio2 31 0>;
->> +			linux,default-trigger = "heartbeat";
->> +		};
->> +	};
->> +};
->> +
->> +&gpmi {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
->> +	status = "okay";
->> +};
->> +
->> +&fec {
->
-> Please sort the nodes alphabetically in label names.
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+new file mode 100644
+index 0000000..5f8a154
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+@@ -0,0 +1,36 @@
++* Texas Instruments wl1251 controller
++
++The wl1251 chip can be connected via SPI or via SDIO. The linux
++kernel currently only supports device tree for the SPI variant.
++
++Required properties:
++- compatible : Should be "ti,wl1251"
++- interrupts : Should contain interrupt line
++- interrupt-parent : Should be the phandle for the interrupt
++  controller that services interrupts for this device
++- vio-supply : phandle to regulator providing VIO
++- power-gpio : GPIO connected to chip's PMEN pin
++- For additional required properties on SPI, please consult
++  Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Optional properties:
++- ti,use-eeprom : If found, configuration will be loaded from eeprom.
++
++Examples:
++
++&spi1 {
++	wl1251_spi@0 {
++		compatible = "ti,wl1251";
++
++		reg = <0>;
++		spi-max-frequency = <48000000>;
++		spi-cpol;
++		spi-cpha;
++
++		interrupt-parent = <&gpio2>;
++		interrupts = <10 IRQ_TYPE_NONE>; /* gpio line 42 */
++
++		vio-supply = <&vio>;
++		power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
++	};
++};
+diff --git a/drivers/net/wireless/ti/wl1251/spi.c b/drivers/net/wireless/ti/wl1251/spi.c
+index efea57a..ee6ce4c 100644
+--- a/drivers/net/wireless/ti/wl1251/spi.c
++++ b/drivers/net/wireless/ti/wl1251/spi.c
+@@ -27,6 +27,8 @@
+ #include <linux/spi/spi.h>
+ #include <linux/wl12xx.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/regulator/consumer.h>
+ 
+ #include "wl1251.h"
+@@ -240,13 +242,13 @@ static const struct wl1251_if_operations wl1251_spi_ops = {
+ 
+ static int wl1251_spi_probe(struct spi_device *spi)
+ {
+-	struct wl1251_platform_data *pdata;
++	struct wl1251_platform_data *pdata = spi->dev.platform_data;
++	struct device_node *np = spi->dev.of_node;
+ 	struct ieee80211_hw *hw;
+ 	struct wl1251 *wl;
+ 	int ret;
+ 
+-	pdata = spi->dev.platform_data;
+-	if (!pdata) {
++	if (!np && !pdata) {
+ 		wl1251_error("no platform data");
+ 		return -ENODEV;
+ 	}
+@@ -273,7 +275,18 @@ static int wl1251_spi_probe(struct spi_device *spi)
+ 		goto out_free;
+ 	}
+ 
+-	wl->power_gpio = pdata->power_gpio;
++	if (np) {
++		wl->use_eeprom = of_property_read_bool(np, "ti,use-eeprom");
++		wl->power_gpio = of_get_named_gpio(np, "power-gpio", 0);
++	} else if (pdata) {
++		wl->power_gpio = pdata->power_gpio;
++		wl->use_eeprom = pdata->use_eeprom;
++	}
++
++	if (wl->power_gpio == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto out_free;
++	}
+ 
+ 	if (gpio_is_valid(wl->power_gpio)) {
+ 		ret = devm_gpio_request_one(&spi->dev, wl->power_gpio,
+@@ -295,8 +308,6 @@ static int wl1251_spi_probe(struct spi_device *spi)
+ 		goto out_free;
+ 	}
+ 
+-	wl->use_eeprom = pdata->use_eeprom;
+-
+ 	irq_set_status_flags(wl->irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(&spi->dev, wl->irq, wl1251_irq, 0,
+ 							DRIVER_NAME, wl);
+-- 
+1.8.4.rc3
 
-got it. will be in v2.
-
->
-> Shawn
->
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_enet_1>;
->> +	phy-mode = "rgmii";
->> +	status = "okay";
->> +};
->> +
->> +&uart4 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_uart4_1>;
->> +	status = "okay";
->> +};
->> --
->> 1.7.9.5
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
