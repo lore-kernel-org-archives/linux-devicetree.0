@@ -1,274 +1,296 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Sun, 27 Oct 2013 13:46:07 +0000
-Message-ID: <20131027134607.E1782C4039D@trevor.secretlab.ca>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add Temperature Monitor driver
+Date: Sun, 27 Oct 2013 13:48:29 +0000
+Message-ID: <20131027134829.3F1C7C4039D@trevor.secretlab.ca>
+References: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com> <1382745629-1123-2-git-send-email-wendy.ng@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382745629-1123-2-git-send-email-wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> The standard interrupts property in device tree can only handle
-> interrupts coming from a single interrupt parent. If a device is wired
-> to multiple interrupt controllers, then it needs to be attached to a
-> node with an interrupt-map property to demux the interrupt specifiers
-> which is confusing. It would be a lot easier if there was a form of the
-> interrupts property that allows for a separate interrupt phandle for
-> each interrupt specifier.
+On Fri, 25 Oct 2013 17:00:27 -0700, "Wendy Ng" <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> This adds the support for Temperature Monitor (TMON) driver for
+> Broadcom bcm281xx SoCs. This driver plugs into the Thermal Framework.
 > 
-> This patch does exactly that by creating a new interrupts-extended
-> property which reuses the phandle+arguments pattern used by GPIOs and
-> other core bindings.
+> Note that this version of the TMON driver does support interrupt-driven
+> mode -- only polling-mode of the thermal framework can be used.
 > 
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/thermal/bcm-kona-thermal.txt          |   24 +++
+>  drivers/thermal/Kconfig                            |   11 ++
+>  drivers/thermal/Makefile                           |    1 +
+>  drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
+>  4 files changed, 209 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>  create mode 100644 drivers/thermal/bcm_kona_tmon.c
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> new file mode 100644
+> index 0000000..225b898
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> @@ -0,0 +1,24 @@
+> +* Broadcom Kona TMON bindings
+> +
+> +This version is for the Kona family of SoCs.  The TMON (Temperature Monitor)
+> +block in a Kona SoC device is used to measure the chip temperature at constant
+> +intervals.
+> +The TMON block asserts an interrupt if temperature exceeds a user programmed
+> +threshold value.  The TMON block would reset the entire device once it
+> +reaches a critical temperature which is also a programmable setting.
+> +
+> +Required properties:
+> +- compatible : "brcm,bcm11351-tmon", "brcm,kona-tmon"
+> +- reg : Address range of the thermal register
+> +- clocks : the clock signal that drives the TMON block
+> +- interrupts: the interrupt signal associated with the TMON block
+> +
+> +
+> +Example:
+> +	tmon@34008000 {
+> +		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
+> +		reg = <0x34008000 0x0024>;
+> +		clocks = <&tmon_1m_clk>;
+> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+> +		status = "disabled";
 
-Alright, I want to merge this one. I've got an Ack from Tony, general
-agreement from an in person converstaion from Ben (aside from wishing he
-could think of a better property name), and various rumblings of
-approval from anyone I talked to about it at ksummit. I'd like to have
-something more that that to put into the commit text. Please take a look
-and let me know if you agree/disagree with this binding.
+I would drop the status="disabled" from the example, but otherwise the
+binding looks fine.
 
 g.
 
-> ---
->  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
->  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
->  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
->  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
->  drivers/of/irq.c                                   | 16 +++--
->  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
->  6 files changed, 122 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> index 72a06c0..1486497 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -4,16 +4,33 @@ Specifying interrupt information for devices
->  1) Interrupt client nodes
->  -------------------------
+> +	};
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 9e7cc3f..02200ad 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -166,6 +166,17 @@ config DB8500_THERMAL
+>  	  created. Cooling devices can be bound to the trip points to cool this
+>  	  thermal zone if trip points reached.
 >  
-> -Nodes that describe devices which generate interrupts must contain an
-> -"interrupts" property. This property must contain a list of interrupt
-> -specifiers, one per output interrupt. The format of the interrupt specifier is
-> -determined by the interrupt controller to which the interrupts are routed; see
-> -section 2 below for details.
-> +Nodes that describe devices which generate interrupts must contain an either an
-> +"interrupts" property or an "interrupts-extended" property. These properties
-> +contain a list of interrupt specifiers, one per output interrupt. The format of
-> +the interrupt specifier is determined by the interrupt controller to which the
-> +interrupts are routed; see section 2 below for details.
+> +config BCM_KONA_TMON_THERMAL
+> +	tristate "Temperature Monitor driver on Broadcom Kona family of SoCs"
+> +	depends on ARCH_BCM_MOBILE
+> +	depends on THERMAL_OF
+> +	default y
+> +	help
+> +	  If you say yes here you get support for the TMON
+> +	  (Temperature Monitor) in Broadcom Kona family of SoCs.
+> +	  This also provides the generic support of the Thermal Framework
+> +	  for Broadcom Kona family of SoCs.
 > +
-> +  Example:
-> +	interrupt-parent = <&intc1>;
-> +	interrupts = <5 0>, <6 0>;
->  
->  The "interrupt-parent" property is used to specify the controller to which
->  interrupts are routed and contains a single phandle referring to the interrupt
->  controller node. This property is inherited, so it may be specified in an
-> -interrupt client node or in any of its parent nodes.
-> +interrupt client node or in any of its parent nodes. Interrupts listed in the
-> +"interrupts" property are always in reference to the node's interrupt parent.
+>  config ARMADA_THERMAL
+>  	tristate "Armada 370/XP thermal management"
+>  	depends on ARCH_MVEBU
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 4b03956..5e85354 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
+>  obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
+>  obj-$(CONFIG_KIRKWOOD_THERMAL)  += kirkwood_thermal.o
+>  obj-y				+= samsung/
+> +obj-$(CONFIG_BCM_KONA_TMON_THERMAL)	+= bcm_kona_tmon.o
+>  obj-$(CONFIG_DOVE_THERMAL)  	+= dove_thermal.o
+>  obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
+>  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+> diff --git a/drivers/thermal/bcm_kona_tmon.c b/drivers/thermal/bcm_kona_tmon.c
+> new file mode 100644
+> index 0000000..69ae0b2
+> --- /dev/null
+> +++ b/drivers/thermal/bcm_kona_tmon.c
+> @@ -0,0 +1,173 @@
+> +/*
+> + * Copyright 2013 Broadcom Corporation.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License, version 2,
+> + * as published by the Free Software Foundation (the "GPL").
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * A copy of the GPL is available at http://www.broadcom.com/licenses/GPLv2.php,
+> + * or by writing to the Free Software Foundation, Inc.,
+> + * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+> + */
 > +
-> +The "interrupts-extended" property is a special form for use when a node needs
-> +to reference multiple interrupt parents. Each entry in this property contains
-> +both the parent phandle and the interrupt specifier. "interrupts-extended"
-> +should only be used when a device has multiple interrupt parents.
+> +/**
+> +*  Broadcom Kona Temperature Monitor (TMON) driver
+> +*
+> +*  Note: The TMON hardware monitors a single sensor.
+> +*/
 > +
-> +  Example:
-> +	interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/thermal.h>
 > +
-> +A device node may contain either "interrupts" or "interrupts-extended", but not
-> +both. If both properties are present, then the operating system should log an
-> +error and use only the data in "interrupts".
->  
->  2) Interrupt controller nodes
->  -----------------------------
-> diff --git a/arch/arm/boot/dts/testcases/tests-interrupts.dtsi b/arch/arm/boot/dts/testcases/tests-interrupts.dtsi
-> index 6ecda71..560d6bf 100644
-> --- a/arch/arm/boot/dts/testcases/tests-interrupts.dtsi
-> +++ b/arch/arm/boot/dts/testcases/tests-interrupts.dtsi
-> @@ -27,6 +27,12 @@
->  						<4 &test_intc2 15 16>;
->  			};
->  
-> +			test_intmap1: intmap1 {
-> +				#interrupt-cells = <2>;
-> +				#address-cells = <0>;
-> +				interrupt-map = <1 2 &test_intc0 15>;
-> +			};
 > +
->  			interrupts0 {
->  				interrupt-parent = <&test_intc0>;
->  				interrupts = <1>, <2>, <3>, <4>;
-> @@ -36,6 +42,16 @@
->  				interrupt-parent = <&test_intmap0>;
->  				interrupts = <1>, <2>, <3>, <4>;
->  			};
+> +/* From TMON Register Database */
+> +#define TMON_TEMP_VAL_OFFSET			0x0000001c
+> +#define TMON_TEMP_VAL_TEMP_VAL_SHIFT		0
+> +#define TMON_TEMP_VAL_TEMP_VAL_MASK		0x000003ff
 > +
-> +			interrupts-extended0 {
-> +				interrupts-extended = <&test_intc0 1>,
-> +						      <&test_intc1 2 3 4>,
-> +						      <&test_intc2 5 6>,
-> +						      <&test_intmap0 1>,
-> +						      <&test_intmap0 2>,
-> +						      <&test_intmap0 3>,
-> +						      <&test_intmap1 1 2>;
-> +			};
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-> index dde75ae..e01e5a0 100644
-> --- a/arch/arm/boot/dts/versatile-ab.dts
-> +++ b/arch/arm/boot/dts/versatile-ab.dts
-> @@ -185,7 +185,7 @@
->  			mmc@5000 {
->  				compatible = "arm,primecell";
->  				reg = < 0x5000 0x1000>;
-> -				interrupts = <22 34>;
-> +				interrupts-extended = <&vic 22 &sic 2>;
->  			};
->  			kmi@6000 {
->  				compatible = "arm,pl050", "arm,primecell";
-> diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-> index 7e81752..f43907c 100644
-> --- a/arch/arm/boot/dts/versatile-pb.dts
-> +++ b/arch/arm/boot/dts/versatile-pb.dts
-> @@ -41,7 +41,7 @@
->  			mmc@b000 {
->  				compatible = "arm,primecell";
->  				reg = <0xb000 0x1000>;
-> -				interrupts = <23 34>;
-> +				interrupts-extended = <&vic 23 &sic 2>;
->  			};
->  		};
->  	};
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index ddea945..c01f60e 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -292,17 +292,23 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
->  	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
->  		return of_irq_parse_oldworld(device, index, out_irq);
->  
-> +	/* Get the reg property (if any) */
-> +	addr = of_get_property(device, "reg", NULL);
+> +/* Broadcom TMON Private Data Structure */
+> +struct bcm_tmon_data_priv {
+> +	void __iomem *base;
+> +	struct clk *external_clk;
+> +	struct thermal_zone_device *therm_dev;
+> +};
 > +
->  	/* Get the interrupts property */
->  	intspec = of_get_property(device, "interrupts", &intlen);
-> -	if (intspec == NULL)
-> -		return -EINVAL;
-> +	if (intspec == NULL) {
-> +		/* Try the new-style interrupts-extended */
-> +		res = of_parse_phandle_with_args(device, "interrupts-extended",
-> +						"#interrupt-cells", index, out_irq);
-> +		if (res)
-> +			return -EINVAL;
-> +		return of_irq_parse_raw(addr, out_irq);
-> +	}
->  	intlen /= sizeof(*intspec);
->  
->  	pr_debug(" intspec=%d intlen=%d\n", be32_to_cpup(intspec), intlen);
->  
-> -	/* Get the reg property (if any) */
-> -	addr = of_get_property(device, "reg", NULL);
-> -
->  	/* Look for the interrupt parent. */
->  	p = of_irq_find_parent(device);
->  	if (p == NULL)
-> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-> index 9c80f0b..e21012b 100644
-> --- a/drivers/of/selftest.c
-> +++ b/drivers/of/selftest.c
-> @@ -231,6 +231,75 @@ static void __init of_selftest_parse_interrupts(void)
->  	of_node_put(np);
->  }
->  
-> +static void __init of_selftest_parse_interrupts_extended(void)
+> +/* Temperature conversion function for TMON block */
+> +static long raw_to_mcelsius(u32 raw)
 > +{
-> +	struct device_node *np;
-> +	struct of_phandle_args args;
-> +	int i, rc;
-> +
-> +	np = of_find_node_by_path("/testcase-data/interrupts/interrupts-extended0");
-> +	if (!np) {
-> +		pr_err("missing testcase data\n");
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < 7; i++) {
-> +		bool passed = true;
-> +		rc = of_irq_parse_one(np, i, &args);
-> +
-> +		/* Test the values from tests-phandle.dtsi */
-> +		switch (i) {
-> +		case 0:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 1);
-> +			passed &= (args.args[0] == 1);
-> +			break;
-> +		case 1:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 3);
-> +			passed &= (args.args[0] == 2);
-> +			passed &= (args.args[1] == 3);
-> +			passed &= (args.args[2] == 4);
-> +			break;
-> +		case 2:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 2);
-> +			passed &= (args.args[0] == 5);
-> +			passed &= (args.args[1] == 6);
-> +			break;
-> +		case 3:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 1);
-> +			passed &= (args.args[0] == 9);
-> +			break;
-> +		case 4:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 3);
-> +			passed &= (args.args[0] == 10);
-> +			passed &= (args.args[1] == 11);
-> +			passed &= (args.args[2] == 12);
-> +			break;
-> +		case 5:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 2);
-> +			passed &= (args.args[0] == 13);
-> +			passed &= (args.args[1] == 14);
-> +			break;
-> +		case 6:
-> +			passed &= !rc;
-> +			passed &= (args.args_count == 1);
-> +			passed &= (args.args[0] == 15);
-> +			break;
-> +		default:
-> +			passed = false;
-> +		}
-> +
-> +		selftest(passed, "index %i - data error on node %s rc=%i\n",
-> +			 i, args.np->full_name, rc);
-> +	}
-> +	of_node_put(np);
+> +	/*
+> +	 * According to Broadcom internal Analog Module Specification
+> +	 * the formula for converting TMON block output to temperature in
+> +	 * degree Celsius is:
+> +	 *	T = 428 - (0.561 * raw)
+> +	 * Note: the valid operating range for the TMON block is -40C to 125C
+> +	 */
+> +	return 428000 - (561 * (long)raw);
 > +}
 > +
->  static int __init of_selftest(void)
->  {
->  	struct device_node *np;
-> @@ -246,6 +315,7 @@ static int __init of_selftest(void)
->  	of_selftest_parse_phandle_with_args();
->  	of_selftest_property_match_string();
->  	of_selftest_parse_interrupts();
-> +	of_selftest_parse_interrupts_extended();
->  	pr_info("end of selftest - %i passed, %i failed\n",
->  		selftest_results.passed, selftest_results.failed);
->  	return 0;
+> +/* Get temperature callback function for thermal zone */
+> +static int bcm_get_temp(void *sensor_data, long *temp)
+> +{
+> +	u32 raw;
+> +	long mcelsius;
+> +	struct bcm_tmon_data_priv *priv = sensor_data;
+> +
+> +	if (!priv) {
+> +		pr_err("%s: input sensor_data not initialized.\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	raw = (readl(priv->base + TMON_TEMP_VAL_OFFSET)
+> +		& TMON_TEMP_VAL_TEMP_VAL_MASK) >> TMON_TEMP_VAL_TEMP_VAL_SHIFT;
+> +
+> +	pr_debug("%s: raw temp 0x%x\n", __func__, raw);
+> +
+> +	mcelsius = raw_to_mcelsius(raw);
+> +
+> +	/*
+> +	 * Since 'mcelsius' might be negative, we need to limit it to smallest
+> +	 * unsigned value before returning it to thermal framework.
+> +	 */
+> +	if (mcelsius < 0)
+> +		*temp = 0;
+> +	else
+> +		*temp = mcelsius;
+> +
+> +	pr_debug("%s: final temp %d\n", __func__, (int) *temp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm_kona_tmon_match_table[] = {
+> +	{ .compatible = "brcm,kona-tmon" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm_kona_tmon_match_table);
+> +
+> +static int bcm_kona_tmon_probe(struct platform_device *pdev)
+> +{
+> +	struct thermal_zone_device *thermal = NULL;
+> +	struct bcm_tmon_data_priv *priv;
+> +	struct resource *res;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		dev_err(&pdev->dev, "Failed to malloc priv.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->external_clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->external_clk))
+> +		return -ENODEV;
+> +
+> +	if (clk_prepare_enable(priv->external_clk) != 0)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Note that get_trend() function is NULL.  This is OK for now as
+> +	 * we can rely on the get_tz_trend() from the Thermal Framework until
+> +	 * we come up with a better way to determine the trend.
+> +	 */
+> +	thermal = thermal_zone_of_sensor_register(&pdev->dev, 0, priv,
+> +						bcm_get_temp, NULL);
+> +
+> +	if (IS_ERR(thermal)) {
+> +		dev_err(&pdev->dev, "Failed to register BCM Kona TMON.\n");
+> +		clk_disable_unprepare(priv->external_clk);
+> +		return PTR_ERR(thermal);
+> +	}
+> +
+> +	priv->therm_dev = thermal;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	dev_info(&pdev->dev, "BCM Kona TMON Initialized.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm_kona_tmon_remove(struct platform_device *pdev)
+> +{
+> +	struct bcm_tmon_data_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	thermal_zone_of_sensor_unregister(&pdev->dev, priv->therm_dev);
+> +
+> +	clk_disable_unprepare(priv->external_clk);
+> +
+> +	dev_info(&pdev->dev, "BCM Kona TMON Uninitialized.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver bcm_kona_tmon_driver = {
+> +	.driver = {
+> +		.name = "bcm-kona-tmon",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = bcm_kona_tmon_match_table,
+> +	},
+> +	.probe = bcm_kona_tmon_probe,
+> +	.remove = bcm_kona_tmon_remove,
+> +};
+> +
+> +module_platform_driver(bcm_kona_tmon_driver);
+> +
+> +MODULE_DESCRIPTION("Broadcom Kona Temperature Monitor Driver");
+> +MODULE_AUTHOR("Broadcom Corporation");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:bcm-kona-tmon");
 > -- 
-> 1.8.1.2
+> 1.7.9.5
 > 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
