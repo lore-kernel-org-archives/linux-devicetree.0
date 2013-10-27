@@ -1,45 +1,107 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Sat, 26 Oct 2013 22:28:19 -0400
-Message-ID: <87a9hvla64.fsf@octavius.laptop.org>
-References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
-	<1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
-	(Zhangfei Gao's message of "Wed, 23 Oct 2013 21:03:16 +0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add Temperature Monitor driver
+Date: Sun, 27 Oct 2013 02:05:10 -0500
+Message-ID: <E1F46C45-5C77-4101-9359-1C92D6508E8B@codeaurora.org>
+References: <1382745629-1123-1-git-send-email-wendy.ng@broadcom.com> <1382745629-1123-2-git-send-email-wendy.ng@broadcom.com> <382461FD-5CB7-461C-A9A7-76D2EF99C769@codeaurora.org> <46DC9641-6D01-4D2F-B5C3-0942B480D6E0@codeaurora.org> <20131026124546.GH29341@beef>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131026124546.GH29341@beef>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhangfei, just small changes,
 
-On Wed, Oct 23 2013, Zhangfei Gao wrote:
-> +* tune-table: should be array of clock tune mmc controller
+On Oct 26, 2013, at 7:45 AM, Matt Porter wrote:
 
-This sounds like it should be "tuning-table", and shouldn't it also
-have a prefix?
+> On Sat, Oct 26, 2013 at 01:47:40AM -0500, Kumar Gala wrote:
+>> 
+>> On Oct 26, 2013, at 1:46 AM, Kumar Gala wrote:
+>> 
+>>> 
+>>> On Oct 25, 2013, at 7:00 PM, Wendy Ng wrote:
+>>> 
+>>>> This adds the support for Temperature Monitor (TMON) driver for
+>>>> Broadcom bcm281xx SoCs. This driver plugs into the Thermal Framework.
+>>>> 
+>>>> Note that this version of the TMON driver does support interrupt-driven
+>>>> mode -- only polling-mode of the thermal framework can be used.
+>>>> 
+>>>> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>> .../bindings/thermal/bcm-kona-thermal.txt          |   24 +++
+>>>> drivers/thermal/Kconfig                            |   11 ++
+>>>> drivers/thermal/Makefile                           |    1 +
+>>>> drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
+>>>> 4 files changed, 209 insertions(+)
+>>>> create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>>>> create mode 100644 drivers/thermal/bcm_kona_tmon.c
+>>>> 
+>>>> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>>>> new file mode 100644
+>>>> index 0000000..225b898
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>>>> @@ -0,0 +1,24 @@
+>>>> +* Broadcom Kona TMON bindings
+>>>> +
+>>>> +This version is for the Kona family of SoCs.  The TMON (Temperature Monitor)
+>>>> +block in a Kona SoC device is used to measure the chip temperature at constant
+>>>> +intervals.
+>>>> +The TMON block asserts an interrupt if temperature exceeds a user programmed
+>>>> +threshold value.  The TMON block would reset the entire device once it
+>>>> +reaches a critical temperature which is also a programmable setting.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "brcm,bcm11351-tmon", "brcm,kona-tmon"
+>>>> +- reg : Address range of the thermal register
+>>>> +- clocks : the clock signal that drives the TMON block
+>>>> +- interrupts: the interrupt signal associated with the TMON block
+>>>> +
+>>>> +
+>>>> +Example:
+>>>> +	tmon@34008000 {
+>>>> +		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
+>>>> +		reg = <0x34008000 0x0024>;
+>>>> +		clocks = <&tmon_1m_clk>;
+>>>> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +		status = "disabled";
+>>> 
+>>> I'd remove the 'status' line from an example.
+>>> 
+>>>> +	};
+>>> 
+>>> Ack on the binding (beyond my minor nit pick on the status prop).
+>>> 
+>>> Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> 
+>>> - k
+>> 
+>> 
+>> After looking at your .dts{i} I see you've got a #thermal-sensor-cells prop, where is that documented?
+> 
+> It's in Eduardo's "device thermal limits represented in device tree
+> nodes" series. Here's the direct link to the binding post/discussion
+> https://lkml.org/lkml/2013/9/26/772
+> 
+> -Matt
 
-> +			node = of_find_compatible_node(NULL, NULL,
-> +						"hisilicon,pctrl");
+Than as you mentioned in another thread, we should have a reference to that binding in this one.
 
-No need to use two lines here.
+- k
 
-> +		ret = of_property_read_u32_array(np,
-> +				"clken-reg", data, 2);
 
-Or here, same with the other of_property_read_u32_array() calls.
-
-> +MODULE_DESCRIPTION("K3 Specific DW-MSHC Driver Extension");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:dwmmc-k3");
-
-Can you add a MODULE_AUTHOR too?
-
-Thanks,
-
-- Chris.
 -- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
