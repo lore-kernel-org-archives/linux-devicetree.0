@@ -1,145 +1,61 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv3][ 3/5] video: mx3fb: Add device tree suport.
-Date: Sun, 27 Oct 2013 13:56:03 +0000
-Message-ID: <20131027135603.1589FC4039D@trevor.secretlab.ca>
-References: <1382532229-32755-1-git-send-email-denis@eukrea.com>
- <1382532229-32755-3-git-send-email-denis@eukrea.com>
- <20131025195040.0CCC3C404DA@trevor.secretlab.ca>
- <20131026001854.GE17135@pengutronix.de>
- <93D2899F-E285-4794-8F32-AD55360A4A80@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7308289995688183240=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <93D2899F-E285-4794-8F32-AD55360A4A80@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
+Date: Sun, 27 Oct 2013 13:57:25 +0000
+Message-ID: <20131027135725.BF367C4039D@trevor.secretlab.ca>
+References: <1382626126-12565-1-git-send-email-sre@debian.org> <1382626126-12565-2-git-send-email-sre@debian.org> <20131025190904.3EE93C403B8@trevor.secretlab.ca> <20131025234031.GC8657@earth.universe>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131025234031.GC8657@earth.universe>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============7308289995688183240==
-Content-Type: text/plain
-
-On Sat, 26 Oct 2013 01:43:23 -0500, Kumar Gala <galak@codeaurora.org> wrote:
-> 
-> On Oct 25, 2013, at 7:18 PM, Sascha Hauer wrote:
-> 
-> > On Fri, Oct 25, 2013 at 08:50:40PM +0100, Grant Likely wrote:
-> >> On Wed, 23 Oct 2013 14:43:47 +0200, Denis Carikli <denis@eukrea.com> wrote:
-> >>> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> >>> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> >>> Cc: linux-fbdev@vger.kernel.org
-> >>> Cc: Rob Herring <rob.herring@calxeda.com>
-> >>> Cc: Pawel Moll <pawel.moll@arm.com>
-> >>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> >>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> >>> Cc: devicetree@vger.kernel.org
-> >>> Cc: Sascha Hauer <kernel@pengutronix.de>
-> >>> Cc: linux-arm-kernel@lists.infradead.org
-> >>> Cc: Eric Bénard <eric@eukrea.com>
-> >>> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> >>> ---
-> >>> ChangeLog v2->v3:
-> >>> - The device tree bindings were reworked in order to make it look more like the
-> >>>  IPUv3 bindings.
-> >>> - The interface_pix_fmt property now looks like the IPUv3 one.
-> >>> ---
-> >>> .../devicetree/bindings/video/fsl,mx3-fb.txt       |   35 ++++++
-> >>> drivers/video/Kconfig                              |    2 +
-> >>> drivers/video/mx3fb.c                              |  125 +++++++++++++++++---
-> >>> 3 files changed, 147 insertions(+), 15 deletions(-)
-> >>> create mode 100644 Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
-> >>> 
-> >>> diff --git a/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt b/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
-> >>> new file mode 100644
-> >>> index 0000000..0b31374
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/video/fsl,mx3-fb.txt
-> >>> @@ -0,0 +1,35 @@
-> >>> +Freescale MX3 fb
-> >>> +================
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: Should be "fsl,mx3fb". compatible chips include the imx31 and the
-> >>> +  imx35.
-> >>> +- reg: should be register base and length as documented in the datasheet.
-> >>> +- clocks: Handle to the ipu_gate clock.
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +lcdc: mx3fb@53fc00b4 {
-> >>> +	compatible = "fsl,mx3-fb";
-> >>> +	reg = <0x53fc00b4 0x0b>;
-> >>> +	clocks = <&clks 55>;
-> >>> +};
-> >> 
-> >> This (and some of the other bindings) are trivial, and they are all
-> >> associated with a single SoC. I think it would be better to collect all
-> >> the mx3 bindings into a single file rather than distributing them all
-> >> over the bindings tree.
-> >> 
-> >> I started thinking about this after some of the DT conversations in
-> >> Edinburgh this week. Unless there is a high likelyhood of components
-> >> being used separately, I think it is far more useful to collect all the
-> >> bindings for an SoC into a single file. It will certainly reduce a lot
-> >> of the boilerplate that we've been collecting in bindings documentation
-> >> files.
-> >> 
-> >> A long time ago I took that approach for the mpc5200 documentation[1].
-> >> Take a look at that organization and let me know what you think.
+On Sat, 26 Oct 2013 01:40:31 +0200, Sebastian Reichel <sre@debian.org> wrote:
+> On Fri, Oct 25, 2013 at 08:09:04PM +0100, Grant Likely wrote:
+> > On Thu, 24 Oct 2013 16:48:44 +0200, Sebastian Reichel <sre@debian.org> wrote:
+> > > Add device tree support for twl4030 power button driver.
 > > 
-> > I don't think this is a good idea. When a new SoC comes out we don't
-> > know which components will be reused on the next SoC. This will cause a
-> > lot of bikeshedding when it actually is reused and then has to be moved.
-> > 
-> > Also I would find it quite inconsistent if I had to lookup some devices
-> > in a SoC file and most bindings in subsystem specific files. So when
-> > searching for a binding I would first have to know if the hardware is
-> > unique to the SoC or not.
+> > The above commit text is insufficient. There are changes in the patch
+> > that aren't described here and have nothing to do with device tree
+> > bindings.
 > 
-> I agree that as new SoC come out its better to have these things split
-> out.  Also for IP that is sold by vendors like Synopsys/Designware
-> that get used on a lot of SoCs its makes it easier to ensure
-> consistency by having the binding split out for the IP and not the
-> SoC.
+> I will update the description in PATCHv7.
+> 
+> > [...]
+> > > +++ b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
+> > 
+> > Can all of the TWL or TWL4030 funciton bindings be collected into a
+> > single file please? It is a single device after all. All of it should be
+> > in bindings/mfd/twl-family.txt
+> 
+> I guess this should be done in another patch? There's also a typo in
+> twl-family.txt's filename. My suggestion is to leave the patchset in
+> its current state. I will create another patch, which combines all
+> the twl4030 bindings descriptions into one file.
 
-After looking at how many files we're now creating under
-Documentation/devicetree/bindings, I'm starting to think we need to go
-entirely the other way and put whole the whole family of an SoC into a
-single binding file, particularly for the SoC integration level stuff
-that isn't likely to be shared with SoCs from other vendors.
+Yes, that is fine.
 
-A decision on this can be deferred as we're working on schema tools.
-Some of that may fall out when we figure out what the structure of the
-schema files should be.
+> 
+> > [...]
+> > > +- interrupt: should be one of the following
+> > 
+> > Spelling: s/interrupt/interrupts/
+> 
+> fixed.
+> 
+> > [...]
+> > >  static struct platform_driver twl4030_pwrbutton_driver = {
+> > > +	.probe		= twl4030_pwrbutton_probe,
+> > >  	.remove		= __exit_p(twl4030_pwrbutton_remove),
+> > 
+> > Remove the __exit_p() wrapper. __exit is for module exit functions, not
+> > remove hooks (I know, that's not actually this patch, but the code is
+> > definitely wrong here).
+> 
+> On of the following patches converts the driver to devm, which
+> results in complete removal of the twl4030_pwrbutton_remove
+> function.
 
-> Also, by having bindings for similar devices for different SoCs kept together it becomes easier for us to see patterns across SoCs as we might come up with a more generic binding in the future.  Far more difficult if things are SoC oriented.
-
-The downside is bindings for a single SoC get distributed among a lot of
-files which makes it more difficult to follow how the SoC is put
-together and configured.
+Okay.
 
 g.
-
-
-
---===============7308289995688183240==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7308289995688183240==--
