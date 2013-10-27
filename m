@@ -1,60 +1,45 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
-Date: Sat, 26 Oct 2013 09:19:02 -0700
-Message-ID: <20131026161902.GA7698@lee--X1>
-References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
- <20131025200754.D222AC4058E@trevor.secretlab.ca>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Sat, 26 Oct 2013 22:28:19 -0400
+Message-ID: <87a9hvla64.fsf@octavius.laptop.org>
+References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
+	<1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131025200754.D222AC4058E@trevor.secretlab.ca>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
+	(Zhangfei Gao's message of "Wed, 23 Oct 2013 21:03:16 +0800")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi Zhangfei, just small changes,
 
-> > Acked-by: Stephen Warren <swarren@nvidia.com>
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Wed, Oct 23 2013, Zhangfei Gao wrote:
+> +* tune-table: should be array of clock tune mmc controller
 
-<snip>
+This sounds like it should be "tuning-table", and shouldn't it also
+have a prefix?
 
-> > +    Optional properties:
-> > +    -------------------
-> > +	The input supply of regulators are the optional properties on the
-> > +	regulator node. The input supply of these regulators are provided
-> > +	through following properties:
-> > +		vsup-sd2-supply: Input supply for SD2.
-> > +		vsup-sd3-supply: Input supply for SD3.
-> > +		vsup-sd4-supply: Input supply for SD4.
-> > +		vsup-sd5-supply: Input supply for SD5.
-> > +		vin-ldo0-supply: Input supply for LDO0.
-> > +		vin-ldo1-6-supply: Input supply for LDO1 and LDO6.
-> > +		vin-ldo2-5-7-supply: Input supply for LDO2, LDO5 and LDO7.
-> > +		vin-ldo3-4-supply: Input supply for LDO3 and LDO4.
-> > +		vin-ldo9-10-supply: Input supply for LDO9 and LDO10.
-> > +		vin-ldo11-supply: Input supply for LDO11.
->=20
-> What is the data in these properties? The documentation isn't clear.
->=20
-> In principle, the binding looks okay to me.
+> +			node = of_find_compatible_node(NULL, NULL,
+> +						"hisilicon,pctrl");
 
-The properties to which you refer are standard regulator supply
-bindings specified here [1]. Specifically:
+No need to use two lines here.
 
-  "<name>-supply: phandle to the parent supply/regulator node"
+> +		ret = of_property_read_u32_array(np,
+> +				"clken-reg", data, 2);
 
-The DT portion has already been Acked by Stephen and applied by me.
+Or here, same with the other of_property_read_u32_array() calls.
 
-[1] Documentation/devicetree/bindings/regulator/regulator.txt
+> +MODULE_DESCRIPTION("K3 Specific DW-MSHC Driver Extension");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:dwmmc-k3");
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Can you add a MODULE_AUTHOR too?
+
+Thanks,
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
