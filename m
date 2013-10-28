@@ -1,105 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Mon, 28 Oct 2013 03:16:42 +0000
-Message-ID: <20131028031641.GA2782@kartoffel>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
- <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
- <20131027134607.E1782C4039D@trevor.secretlab.ca>
- <CAL_JsqLN9eOWTo5pZV1m0i2GmxEMJWOcJvci_w=rCO7_h+X1Nw@mail.gmail.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's minimum required ECC
+Date: Mon, 28 Oct 2013 11:05:17 +0800
+Message-ID: <1382929517-22606-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLN9eOWTo5pZV1m0i2GmxEMJWOcJvci_w=rCO7_h+X1Nw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 27, 2013 at 08:24:08PM +0000, Rob Herring wrote:
-> On Sun, Oct 27, 2013 at 8:46 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> > On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> >> The standard interrupts property in device tree can only handle
-> >> interrupts coming from a single interrupt parent. If a device is wired
-> >> to multiple interrupt controllers, then it needs to be attached to a
-> >> node with an interrupt-map property to demux the interrupt specifiers
-> >> which is confusing. It would be a lot easier if there was a form of the
-> >> interrupts property that allows for a separate interrupt phandle for
-> >> each interrupt specifier.
-> >>
-> >> This patch does exactly that by creating a new interrupts-extended
-> >> property which reuses the phandle+arguments pattern used by GPIOs and
-> >> other core bindings.
-> >>
-> >> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> >> Cc: Rob Herring <rob.herring@calxeda.com>
-> >
-> > Alright, I want to merge this one. I've got an Ack from Tony, general
-> > agreement from an in person converstaion from Ben (aside from wishing he
-> > could think of a better property name), and various rumblings of
-> > approval from anyone I talked to about it at ksummit. I'd like to have
-> > something more that that to put into the commit text. Please take a look
-> > and let me know if you agree/disagree with this binding.
+In default way, we use the ecc_strength/ecc_step size calculated by ourselves
+and use all the OOB area.
 
-The only comment I have is that I'm not keen on the name (it's a bit generic
-and we might want to extend the interrupts binding in future), but I'm happy to
-leave that as a matter of personal taste.
+This patch adds a new property : "fsl,use-minimum-ecc"
 
-The best alternative I could come up with was parented-interrupts, but that
-could be misinterpreted as describing the relationship backwards (i.e. this
-device is the parent for those interrupts).
+If we enable it, we will firstly try to use the datasheet's minimum required
+ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+in the nand_chip{}). So we may have free space in the OOB area by using the
+minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
+SLC NAND.
 
-> 
-> I think it looks fine, but I'll throw out an alternative proposal.
-> Simply allow for interrupt-parent to be an array in equal size to
-> interrupts property. Then it is a minimal change to the existing
-> binding:
-> 
-> interrupt-parent = <&intc1>, <&intc2>;
-> interrupts = <5 0>, <6 0>;
+If we fail to use the minimum ECC, we will use the legacy method to calculate
+the ecc_strength and ecc_step size.
 
-I'd prefer the interrupts-extended approach.
+Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+v1 --> v2:
+	based on David's patch to fix the regression.
+---
+ .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
 
-This might not matter, but if you have an existing driver with two interrupts,
-and you attempt to describe the situation this way, e.g.
+diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+index 551b2a1..4297795 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+@@ -17,6 +17,12 @@ Required properties:
+ Optional properties:
+   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
+                        present false
++  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
++                       to use the datasheet's minimum required ECC provided by
++                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
++                       in the nand_chip{}). So we may have free space in the OOB
++                       area by using the minimum ECC, and we may support JFFS2
++                       with some SLC NANDs, such as Micron's SLC NAND.
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+ address space. See partition.txt for more detail.
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index 7ac2280..3ec55d0 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -352,6 +352,9 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
+ 
+ int common_nfc_set_geometry(struct gpmi_nand_data *this)
+ {
++	if (of_property_read_bool(this->dev->of_node, "fsl,use-minimum-ecc")
++		&& set_geometry_by_ecc_info(this))
++		return 0;
+ 	return legacy_set_geometry(this);
+ }
+ 
+-- 
+1.7.2.rc3
 
-  intc1: interrupt_controller1 {
-      compatible = "vendor,interrupt-controller";
-      #interrupt-cells = <1>;
-  };
 
-  intc2: interrupt_controller2 {
-      compatible = "vendor,another-interrupt-controller";
-      #interrupt-cells = <2>;
-  };
-
-  dev {
-      compatible = "vendor,some-device";
-      interrupt-parent = <&intc1>, <&intc2>;
-      interrupts = <5>, <65 73>;
-  };
-
-The existing driver may read interrupts as two interrupts for intc1, and
-believe it's been successful when it has not, and one of those interrupts might
-never fire. That would be very bad for a timer for example.
-
-Additionally it makes the interrupts list difficult for a human to read, as you
-need to match it with an entry in another list (this problem exists with other
-parallel properties like interrupt-names too, but we can't do much better
-there).
-
-It's also easy to make a typo (e.g. an extra cell in an interrupt) that will
-parse as valid when you don't expect it to. At least with the phandle in the
-list it's less likely to happen.
-
-> 
-> Of course interrupts-extended is more inline with standard patterns
-> for bindings.
-
-I think for this reason alone it should be preferable. Unless I'm mistaken it
-would be identical to the clock bindings pattern with a uniformly named
-phandle+args property and a parallel -names property. I don't think the gpio
-style ${NAME}-interrupts would easily fit here.
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
