@@ -1,42 +1,50 @@
-From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/3] Add dt support for exynos hdmiphy settings
-Date: Mon, 28 Oct 2013 11:54:19 +0530
-Message-ID: <1382941462-6691-1-git-send-email-s.shirish@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: Re: [PATCHv1 5/8] ASoC: sgtl5000: Revise the bugs
+ about the sgt15000 codec.
+Date: Mon, 28 Oct 2013 06:07:41 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8286A3DC@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131018172814.GT2443@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131018172814.GT2443@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.>
 List-Id: devicetree@vger.kernel.org
 
-For various revisions of a chipset if the signal pattern is changed for every
-revision, then the phy setting need to be updated correspondingly by measuring
-the signal.
-For getting correct signals the clock level and data de-emphasis 
-levels needs to be adjusted.
-Since only these 2 values matter,we can move the same to dt, 
-wherein we can have different dt files for every revision. 
+> > @@ -883,14 +883,19 @@ static int ldo_regulator_register(struct
+> snd_soc_codec *codec,
+> >  				struct regulator_init_data *init_data,
+> >  				int voltage)
+> >  {
+> > +#ifdef CONFIG_SND_SOC_FSL_SGTL5000
+> > +	return 0;
+> > +#else
+> >  	dev_err(codec->dev, "this setup needs regulator support in the
+> kernel\n");
+> >  	return -EINVAL;
+> > +#endif
+> >  }
+> 
+> If these systems don't actually need the internal regulator then should
+> they not be trying to enable it?  
+>
+Yes, I think do not trying to enable the regulator is much better.
 
-This is an initial patchset towards achieving the same 
-for exynos 5250 and can be later extended to future chipsets.
-
-V2: replaced moving of entire phy config structure with only
-required and justifiable conf registers.
-
-Shirish S (3):
-  ARM: dts: smdk5250: Add hdmi phy settings
-  ARM: dts: arndale: Add hdmi phy settings
-  drm: exynos: hdmi: Add dt support for hdmiphy settings
-
- .../devicetree/bindings/video/exynos_hdmi.txt      |   29 ++++++++
- arch/arm/boot/dts/exynos5250-arndale.dts           |   68 +++++++++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   68 +++++++++++++++++++
- drivers/gpu/drm/exynos/exynos_hdmi.c               |   70 ++++++++++++++++++--
- 4 files changed, 231 insertions(+), 4 deletions(-)
-
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>Alternatively if it's OK to ignore this then why is this conditional in the board?
+> 
+The CONFIG_SND_SOC_FSL_SGTL5000 micro maybe confuse you and others.
+And it should be CONFIG_SND_SOC_FSL_SGTL5000_VF610....
