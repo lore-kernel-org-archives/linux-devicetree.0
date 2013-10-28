@@ -1,50 +1,62 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: Re: [PATCHv1 5/8] ASoC: sgtl5000: Revise the bugs
- about the sgt15000 codec.
-Date: Mon, 28 Oct 2013 06:07:41 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8286A3DC@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-6-git-send-email-Li.Xiubo@freescale.com>
- <20131018172814.GT2443@sirena.org.uk>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/1] ARM: dts: imx6q-arm2: enable USB OTG
+Date: Mon, 28 Oct 2013 14:05:02 +0800
+Message-ID: <1382940302-12931-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131018172814.GT2443@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > @@ -883,14 +883,19 @@ static int ldo_regulator_register(struct
-> snd_soc_codec *codec,
-> >  				struct regulator_init_data *init_data,
-> >  				int voltage)
-> >  {
-> > +#ifdef CONFIG_SND_SOC_FSL_SGTL5000
-> > +	return 0;
-> > +#else
-> >  	dev_err(codec->dev, "this setup needs regulator support in the
-> kernel\n");
-> >  	return -EINVAL;
-> > +#endif
-> >  }
-> 
-> If these systems don't actually need the internal regulator then should
-> they not be trying to enable it?  
->
-Yes, I think do not trying to enable the regulator is much better.
+Enable USB OTG controller at imx6q-arm2 board
 
->Alternatively if it's OK to ignore this then why is this conditional in the board?
-> 
-The CONFIG_SND_SOC_FSL_SGTL5000 micro maybe confuse you and others.
-And it should be CONFIG_SND_SOC_FSL_SGTL5000_VF610....
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-arm2.dts |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+index edf1bd9..8f125b1 100644
+--- a/arch/arm/boot/dts/imx6q-arm2.dts
++++ b/arch/arm/boot/dts/imx6q-arm2.dts
+@@ -31,6 +31,15 @@
+ 			regulator-max-microvolt = <3300000>;
+ 			regulator-always-on;
+ 		};
++
++		reg_usb_otg_vbus: usb_otg_vbus {
++			compatible = "regulator-fixed";
++			regulator-name = "usb_otg_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio3 22 0>;
++			enable-active-high;
++		};
+ 	};
+ 
+ 	leds {
+@@ -79,6 +88,14 @@
+ 	status = "okay";
+ };
+ 
++&usbotg { /* USB OTG */
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg_1>;
++	disable-over-current;
++	status = "okay";
++};
++
+ &usdhc3 {
+ 	cd-gpios = <&gpio6 11 0>;
+ 	wp-gpios = <&gpio6 14 0>;
+-- 
+1.7.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
