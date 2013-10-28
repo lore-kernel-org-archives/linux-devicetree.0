@@ -1,71 +1,90 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v9 4/5] ARM: tegra: set CPU reset handler with firmware op
-Date: Mon, 28 Oct 2013 19:28:37 +0900
-Message-ID: <1382956118-12495-5-git-send-email-acourbot@nvidia.com>
-References: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Mon, 28 Oct 2013 21:17:37 +1100
+Message-ID: <20131028101737.GC15114@voom.fritz.box>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <20131024234340.ADF70C403B6@trevor.secretlab.ca>
+ <526A83B9.30800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <t.figa@samsung.com>
-Cc: Olof Johansson <olof@lixom.net>, Dave Martin <Dave.Martin@arm.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <526A83B9.30800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use a firmware operation to set the CPU reset handler and only resort to
-doing it ourselves if there is none defined.
 
-This supports the booting of secondary CPUs on devices using a TrustZone
-secure monitor.
+--NU0Ex4SbNnrxsi6C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
----
- arch/arm/mach-tegra/reset.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+On Fri, Oct 25, 2013 at 03:44:09PM +0100, Stephen Warren wrote:
+> On 10/25/2013 12:43 AM, Grant Likely wrote:
+> > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren <swarren@wwwdotorg.o=
+rg> wrote:
+> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> This is a very quick proof-of-concept re: how a DT schema checker might
+> >> look if written in C, and integrated into dtc.
+> >=20
+> > Thanks for looking at this.
+> >=20
+> > Very interesting. Certainly an expedient way to start checking schemas,
+> > and for certain bindings it may be the best approach. The downside is it
+> > forces a recompilation of DTC to bring in new bindings and it isn't a
+> > great meduim for mixing schema with documentation in the bindings.
+>=20
+> This approach would certainly require recompiling something. I threw the
+> code into dtc simply because it was the easiest container for the
+> demonstration. It could be a separate DT validation utility if we
+> wanted, although we'd need to split the DT parser from dtc into a
+> library to avoid code duplication. The resultant utility could be part
+> of the repo containing the DTs, so it didn't end up as a separate
+> package to manage.
+>=20
+> I think the additional documentation could be added as comments in the
+> validation functions, just like IIRC it was to be represented as
+> comments even in the .dts-based schema proposals.
 
-diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
-index e282395..368af0a 100644
---- a/arch/arm/mach-tegra/reset.c
-+++ b/arch/arm/mach-tegra/reset.c
-@@ -21,6 +21,7 @@
- 
- #include <asm/cacheflush.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include <asm/firmware.h>
- 
- #include "iomap.h"
- #include "irammap.h"
-@@ -65,6 +66,7 @@ static void __init tegra_cpu_reset_handler_enable(void)
- 	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
- 	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
- 						tegra_cpu_reset_handler_offset;
-+	int err;
- 
- 	BUG_ON(is_enabled);
- 	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
-@@ -72,9 +74,18 @@ static void __init tegra_cpu_reset_handler_enable(void)
- 	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
- 			tegra_cpu_reset_handler_size);
- 
--	tegra_cpu_reset_handler_set(reset_address);
--
--	is_enabled = true;
-+	err = call_firmware_op(set_cpu_boot_addr, 0, reset_address);
-+	switch (err) {
-+	case -ENOSYS:
-+		tegra_cpu_reset_handler_set(reset_address);
-+		/* pass-through */
-+	case 0:
-+		is_enabled = true;
-+		break;
-+	default:
-+		pr_crit("Cannot set CPU reset handler: %d\n", err);
-+		BUG();
-+	}
- }
- 
- void __init tegra_cpu_reset_handler_init(void)
--- 
-1.8.4.1
+Fwiw, I've been starting to do some hacking on the checks code, with a
+view to making it accomodate the schema stuff better.  Branch
+'checking' on the kernel.org tree.  In a state of flux, so expect
+rebases.
+
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--NU0Ex4SbNnrxsi6C
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSbjnBAAoJEGw4ysog2bOSUyAQANEzXZKTZ5WQeg6sQ1g8cdEc
+LxhoDCBlb7jcVK+TLVN5K5go30AtFzvHMi95uDgBsLlNSlhApZKuLBhQdUWvbJPY
+GltTGYffBEbG1sWnP5ydYbjMB4lGZQrroFSvFUBFTV9sbdJkb2oFyVVFYLFvSvcM
+7sGr7G5p2EkPkV25XsI0a1naj+vhL+fASSMKkgEUcu5Ypa0r7VfHhic3XVXaBtut
+j4Pwcrtt9MNt8rjUJ8gqqX1z6ZsSbUTnQdB8118qMV0behJItbjGQTxiKrzd7UX2
+7nodB+iDDDoEUc7DRvNNmJiV9NGpFnqFP/Kuxnuy699JIlEYZSA9f4qq+z6b7xl5
+xzyN8rAOt9Ugo4TpR+4ytkKyj+1SvoRDG6WRB3KenRpVVBvYWkD5ywPPJtDxyUOn
+UGpc9L5pjaY2ekOFgjUtkDrAt3Z28mUnGHcFUER6DYwdPBzZEry08NnQ5UYCCHk6
+VGbIwWGfjMxvziMWZkFmvYB5Q+tUqQWgrOAPJbmf4xJgpMPmxC704eOq/cv8OGhF
+ippEs9G1HJ85UoOAM3cQRP60XUX0TV95+HxREioCQUnFi+1RxkbtUVuXBiT08yuG
+Ds+thMzNZ8smaa/5hxXAoyfD0Rj1p9iBkuCDN7jFrCc/PiBZYlelY+zsTaLefjc1
+/xwaj11YojRwzjY3r7dr
+=zIlb
+-----END PGP SIGNATURE-----
+
+--NU0Ex4SbNnrxsi6C--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
