@@ -1,103 +1,38 @@
 From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: smdk5250: Add hdmi phy settings
-Date: Mon, 28 Oct 2013 11:54:20 +0530
-Message-ID: <1382941462-6691-2-git-send-email-s.shirish@samsung.com>
-References: <1382941462-6691-1-git-send-email-s.shirish@samsung.com>
+Subject: [PATCH 0/3] Add dt support for exynos hdmiphy settings
+Date: Mon, 28 Oct 2013 11:54:19 +0530
+Message-ID: <1382941462-6691-1-git-send-email-s.shirish@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1382941462-6691-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to smdk5250
-dts,as its more of a per board configuration and
-also shall be easier for supporting future chipsets.
+For various revisions of a chipset if the signal pattern is changed for every
+revision, then the phy setting need to be updated correspondingly by measuring
+the signal.
+For getting correct signals the clock level and data de-emphasis 
+levels needs to be adjusted.
+Since only these 2 values matter,we can move the same to dt, 
+wherein we can have different dt files for every revision. 
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   68 +++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+This is an initial patchset towards achieving the same 
+for exynos 5250 and can be later extended to future chipsets.
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 49f18c2..d6d0801 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -220,6 +220,74 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
-+		hdmiphy-confs {
-+			nr-confs = <13>;
-+			conf0: conf0 {
-+				clock-frequency = <25200000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf1: conf1 {
-+				clock-frequency = <27000000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf2: conf2 {
-+				clock-frequency = <27027000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf3: conf3 {
-+				clock-frequency = <36000000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf4: conf4 {
-+				clock-frequency = <40000000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf5: conf5 {
-+				clock-frequency = <65000000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf6: conf6 {
-+				clock-frequency = <74176000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf7: conf7 {
-+				clock-frequency = <74250000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf8: conf8 {
-+				clock-frequency = <83500000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf9: conf9 {
-+				clock-frequency = <106500000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf10: conf10 {
-+				clock-frequency = <108000000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf11: conf11 {
-+				clock-frequency = <146250000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			conf12: conf12 {
-+				clock-frequency = <148500000>;
-+				conf-de-emphasis-level =  /bits/ 8 <0x26>;
-+				conf-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		};
- 	};
- 
- 	codec@11000000 {
+V2: replaced moving of entire phy config structure with only
+required and justifiable conf registers.
+
+Shirish S (3):
+  ARM: dts: smdk5250: Add hdmi phy settings
+  ARM: dts: arndale: Add hdmi phy settings
+  drm: exynos: hdmi: Add dt support for hdmiphy settings
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   29 ++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   68 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   68 +++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   70 ++++++++++++++++++--
+ 4 files changed, 231 insertions(+), 4 deletions(-)
+
 -- 
 1.7.9.5
 
