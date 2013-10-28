@@ -1,78 +1,153 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] ARM: add basic support for Trusted Foundations
-Date: Mon, 28 Oct 2013 14:56:49 -0700
-Message-ID: <20131028215649.GB10833@quad.lixom.net>
-References: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
- <1382956118-12495-2-git-send-email-acourbot@nvidia.com>
- <D49A3E92-54FD-4275-82F5-DBB476086B03@codeaurora.org>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
+Date: Mon, 28 Oct 2013 20:11:36 -0200
+Message-ID: <20131028201136.6f66d3f7@samsung.com>
+References: <5261967E.6010001@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <D49A3E92-54FD-4275-82F5-DBB476086B03-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <5261967E.6010001@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 05:57:04AM -0500, Kumar Gala wrote:
-> 
-> On Oct 28, 2013, at 5:28 AM, Alexandre Courbot wrote:
-> 
-> > Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> > can be invoked using the same SMC-based API on all supported
-> > platforms. This patch adds initial basic support for Trusted
-> > Foundations using the ARM firmware API. Current features are limited
-> > to the ability to boot secondary processors.
-> > 
-> > Note: The API followed by Trusted Foundations does *not* follow the SMC
-> > calling conventions. It has nothing to do with PSCI neither and is only
-> > relevant to devices that use Trusted Foundations (like most Tegra-based
-> > retail devices).
-> > 
-> > Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
-> > .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> > arch/arm/Kconfig                                   |  2 +
-> > arch/arm/Makefile                                  |  1 +
-> > arch/arm/firmware/Kconfig                          | 28 ++++++++
-> > arch/arm/firmware/Makefile                         |  1 +
-> > arch/arm/firmware/trusted_foundations.c            | 79 ++++++++++++++++++++++
-> > arch/arm/include/asm/trusted_foundations.h         | 67 ++++++++++++++++++
-> > 8 files changed, 199 insertions(+)
-> > create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
-> > create mode 100644 arch/arm/firmware/Kconfig
-> > create mode 100644 arch/arm/firmware/Makefile
-> > create mode 100644 arch/arm/firmware/trusted_foundations.c
-> > create mode 100644 arch/arm/include/asm/trusted_foundations.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
-> > new file mode 100644
-> > index 0000000..2ec75c9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
-> > @@ -0,0 +1,20 @@
-> > +Trusted Foundations
-> > +-------------------
-> > +
-> > +Boards that use the Trusted Foundations secure monitor can signal its
-> > +presence by declaring a node compatible with "tl,trusted-foundations"
-> > +under the /firmware/ node
-> > +
-> > +Required properties:
-> > +- compatible : "tl,trusted-foundations"
-> > +- version-major : major version number of Trusted Foundations firmware
-> > +- version-minor: minor version number of Trusted Foundations firmware
-> 
-> vendor prefix version.
+Hi Sylwester,
 
-Are you saying he should use tl,version-major tl,version-minor? For bindings
-that are already vendor-specific we haven't (on ARM) asked for vendor prefix on
-properties. It doesn't mean that we should keep going down that route though,
-so I'm just asking for clarification for my own edification. :)
+Em Fri, 18 Oct 2013 22:13:50 +0200
+Sylwester Nawrocki <s.nawrocki@samsung.com> escreveu:
 
+> Hi Mauro,
+> 
+> This change set is V4L2 driver for the Exynos5 series camera subsystem.
+> There is also included a minimal driver for the s5k4e5 image sensor.
+> 
+> The FIMC-IS driver is pretty huge, even though there are some hardware 
+> similarities between FIMC-IS found on Exynos5 and Exynos4 SoCs, the firmwares
+> are significantly different, which makes writing a common driver not quite
+> sensible.
+> Anyway some of the exynos4 subdevs are already reused and some further code 
+> consolidation will likely be possible.
+> 
+> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
+> 
+>   [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
+> 
+> are available in the git repository at:
+> 
+>   git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
+> 
+> for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
+> 
+>   V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
+> 
+> ----------------------------------------------------------------
+> Arun Kumar K (12):
+>       exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
 
--Olof
+As agreed during KS, the subsystem maintainers should wait for a documentation
+review on DT by the DT maintainers, at least for a while.
+
+So, I'd like to see either their reviews on this patch:
+	https://patchwork.linuxtv.org/patch/20439/
+
+Or their ack for us to apply it.
+
+>       exynos5-fimc-is: Add driver core files
+>       exynos5-fimc-is: Add common driver header files
+>       exynos5-fimc-is: Add register definition and context header
+>       exynos5-fimc-is: Add isp subdev
+>       exynos5-fimc-is: Add scaler subdev
+>       exynos5-fimc-is: Add sensor interface
+>       exynos5-fimc-is: Add the hardware pipeline control
+>       exynos5-fimc-is: Add the hardware interface module
+>       exynos5-is: Add Kconfig and Makefile
+>       V4L: Add DT binding doc for s5k4e5 image sensor
+
+Same applies to this patch:
+	https://patchwork.linuxtv.org/patch/20448/
+
+Grant,
+
+I'd appreciate if you could fast track those, as there are lots of code
+depending on them.
+
+Regards,
+Mauro
+
+>       V4L: Add s5k4e5 sensor driver
+> 
+> Shaik Ameer Basha (1):
+>       exynos5-is: Add media device driver for exynos5 SoCs camera subsystem
+> 
+>  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 +
+>  .../bindings/media/exynos5250-camera.txt           |  126 ++
+>  .../devicetree/bindings/media/samsung-s5k4e5.txt   |   45 +
+>  drivers/media/i2c/Kconfig                          |    8 +
+>  drivers/media/i2c/Makefile                         |    1 +
+>  drivers/media/i2c/s5k4e5.c                         |  344 ++++
+>  drivers/media/platform/Kconfig                     |    1 +
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/exynos5-is/Kconfig          |   20 +
+>  drivers/media/platform/exynos5-is/Makefile         |    7 +
+>  drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1210 ++++++++++++++
+>  drivers/media/platform/exynos5-is/exynos5-mdev.h   |  126 ++
+>  drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
+>  drivers/media/platform/exynos5-is/fimc-is-core.c   |  410 +++++
+>  drivers/media/platform/exynos5-is/fimc-is-core.h   |  132 ++
+>  drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
+>  .../media/platform/exynos5-is/fimc-is-interface.c  |  810 ++++++++++
+>  .../media/platform/exynos5-is/fimc-is-interface.h  |  124 ++
+>  drivers/media/platform/exynos5-is/fimc-is-isp.c    |  534 ++++++
+>  drivers/media/platform/exynos5-is/fimc-is-isp.h    |   90 ++
+>  .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++
+>  drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 +++++++++++++
+>  .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1699 ++++++++++++++++++++
+>  .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+>  drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
+>  drivers/media/platform/exynos5-is/fimc-is-scaler.c |  476 ++++++
+>  drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 ++
+>  drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +
+>  drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 +
+>  drivers/media/platform/exynos5-is/fimc-is.h        |  160 ++
+>  30 files changed, 9228 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
+>  create mode 100644 drivers/media/i2c/s5k4e5.c
+>  create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+>  create mode 100644 drivers/media/platform/exynos5-is/Makefile
+>  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
+>  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
+> 
+> --
+> Thanks,
+> Sylwester
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+
+Cheers,
+Mauro
