@@ -1,167 +1,105 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v6 2/8] pinctrl: imx27: imx27 pincontrol driver
-Date: Mon, 28 Oct 2013 06:17:41 -0500
-Message-ID: <B923ADBC-0C66-45D0-B9FE-F1038F93B176@codeaurora.org>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
- <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset="us-ascii"
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH] usb: gadget: Add UDC driver for Aeroflex Gaisler GRUSBDC
+Date: Mon, 28 Oct 2013 13:59:02 +0100
+Message-ID: <526E5F96.9090904@gaisler.com>
+References: <1376316310-27989-1-git-send-email-andreas@gaisler.com> <20130918171506.GQ21559@radagast> <524A8927.6090500@gaisler.com> <20131001141958.GQ1476@radagast>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131001141958.GQ1476@radagast>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
+On 2013-10-01 16:19, Felipe Balbi wrote:
+>>>> +static void gr_finish_request(struct gr_ep *ep, struct gr_request *req,
+>>>> +			      int status)
+>>>> +{
+>>>> +	struct gr_udc *dev;
+>>>> +
+>>>> +	list_del_init(&req->queue);
+>>>> +
+>>>> +	if (likely(req->req.status == -EINPROGRESS))
+>>>> +		req->req.status = status;
+>>>> +	else
+>>>> +		status = req->req.status;
+>>>> +
+>>>> +	dev = ep->dev;
+>>>> +	usb_gadget_unmap_request(&dev->gadget, &req->req, ep->is_in);
+>>>> +	gr_free_dma_desc_chain(dev, req);
+>>>> +
+>>>> +	if (ep->is_in) /* For OUT, actual gets updated by the work handler */
+>>>> +		req->req.actual = req->req.length;
+>>>> +
+>>>> +	if (!status) {
+>>>> +		if (ep->is_in)
+>>>> +			gr_dbgprint_request("SENT", ep, req);
+>>>> +		else
+>>>> +			gr_dbgprint_request("RECV", ep, req);
+>>>> +	}
+>>>> +
+>>>> +	/* Prevent changes to ep->queue during callback */
+>>>> +	ep->callback = 1;
+>>>> +	if (req == dev->ep0reqo && !status) {
+>>>> +		if (req->setup)
+>>>> +			gr_ep0_setup(dev, req);
+>>>> +		else
+>>>> +			dev_err(dev->dev,
+>>>> +				"Unexpected non setup packet on ep0in\n");
+>>>> +	} else if (req->req.complete) {
+>>>> +		unsigned long flags;
+>>>> +
+>>>> +		/* Complete should be called with irqs disabled */
+>>>> +		local_irq_save(flags);
+>>>
+>>> I guess it'd be better if you called this with spin_lock_irqsave()
+>>> called before, then you can remove local_irq_save from here.
+>>
+>> That would increase the amount of time interrupts are disabled quite a
+>> lot, so I would prefer not to.
+>
+> that's what every other UDC driver is doing. I don't think you need to
+> worry about that. Can you run some benchmarks with both constructs just
+> so I can have peace of mind ?
 
-On Oct 28, 2013, at 4:00 AM, Markus Pargmann wrote:
+Hi!
 
-> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
-> similar to other imx pincontrol drivers.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Acked-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
-> .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  89 ++++
-> drivers/pinctrl/Kconfig                            |   8 +
-> drivers/pinctrl/Makefile                           |   1 +
-> drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++++++++
-> 4 files changed, 575 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> create mode 100644 drivers/pinctrl/pinctrl-imx27.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> new file mode 100644
-> index 0000000..32c81c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> @@ -0,0 +1,89 @@
-> +* Freescale IMX27 IOMUX Controller
-> +
-> +Required properties:
-> +- compatible: "fsl,imx27-iomuxc"
-> +
-> +The iomuxc driver node should define subnodes containing of pinctrl configuration subnodes.
+My benchmark shows 20%+ performance loss both for mass storage running
+on this driver and for concurrent ethernet traffic and cpu bound tasks
+running with this change. In addition the code becomes messier as some
+spin locks disables interrupts and some do not depending on wich paths
+might lead to a call to complete. So I'll stick to not disabling
+interrupts until disabled interrupts are actually needed.
 
-Here would probably be a good point to reference "pinctrl/pinctrl-bindings.txt"
+>>>> +static irqreturn_t gr_irq(int irq, void *_dev)
+>>>> +{
+>>>> +	struct gr_udc *dev = _dev;
+>>>> +
+>>>> +	if (!dev->irq_enabled)
+>>>> +		return IRQ_NONE;
+>>>> +
+>>>> +	schedule_work(&dev->work);
+>>>
+>>> why do you need this ? We have threaded IRQ handlers. Why a workqueue ?
+>>
+>> As mentioned above, to to be able to schedule work after pausing
+>> endpoint handling during a completion callback call or during an
+>> endpoint halt.
+>
+> doesn't look like you need that work_struct at all. Handle your IRQ
+> directly and for the pieces you need to do after ClearHalt, re-factor
+> that to a separate function which you call conditionally on
+> ->set_halt().
 
-> +
-> +Required properties for pin configuration node:
-> +- fsl,pins: three integers array, represents a group of pins mux and config
-> +  setting. The format is fsl,pins = <PIN MUX_ID CONFIG>.
-> +
-> +  PIN is an integer between 0 and 0xbf. imx27 has 6 ports with 32 configurable
-> +  configurable pins each. PIN is PORT * 32 + PORT_PIN, PORT_PIN is the pin
-> +  number on the specific port (between 0 and 31).
+For some reason, the performance suffers massively when switching to
+using threaded interrupts instead of the current solution using the work
+queue. The times to complete large file transfers to the mass_storage
+gadget running on top of the udc are regularly around seven times longer
+using threaded interrupts complared to using the work queue
+solution. Unless you have any ideas here, I hope you can let the driver
+keep the work queue solution.
 
-I might be coming late to this, so feel free to ignore if this has already been discussed.
-
-Why not encode PORT in fsl,pins so it would be <PORT PORT_PIN MUX_ID CONFIG> ?
-
-> +
-> +  MUX_ID is
-> +    function + (direction << 2) + (gpio_oconf << 4) + (gpio_iconfa << 8) + (gpio_iconfb << 10)
-> +
-> +    function:      0 - Primary function
-> +                   1 - Alternate function
-> +                   2 - GPIO
-> +      Registers GIUS (GPIO In Use) and GPR (General Purpose Register)
-> +
-> +    direction:     0 - Input
-> +                   1 - Output
-> +      Register DDIR
-> +
-> +    gpio_oconf:    0 - A_IN
-> +                   1 - B_IN
-> +                   2 - C_IN
-> +                   3 - Data Register
-
-what does this mean?
-
-> +      Registers OCR1 and OCR2
-> +
-> +    gpio_iconfa/b: 0 - GPIO_IN
-> +                   1 - Interrupt Status Register
-> +                   2 - 0
-> +                   3 - 1
-
-What does any of these option mean (especially 2 & 3)?
-
-> +      Registers ICONFA1, ICONFA2, ICONFB1 and ICONFB2
-> +
-> +
-
-Someone should be able to reasonable read this and determine how to set MUX_ID w/o having to reference the HW manual.
-
-> +  CONFIG can be 0 or 1, meaning Pullup disable/enable.
-
-just for clarity do:
-    CONFIG: 0 - Pullup disabled
-            1 - Pullup enabled
-
-> +
-> +
-> +
-> +
-> +Example:
-> +
-> +iomuxc: iomuxc@10015000 {
-> +	compatible = "fsl,imx27-iomuxc";
-> +	reg = <0x10015000 0x600>;
-> +
-> +	uart {
-> +		pinctrl_uart1: uart-1 {
-> +			fsl,pins = <
-> +				0x8c 0x004 0x0 /* UART1_TXD__UART1_TXD */
-> +				0x8d 0x000 0x0 /* UART1_RXD__UART1_RXD */
-> +				0x8e 0x004 0x0 /* UART1_CTS__UART1_CTS */
-> +				0x8f 0x000 0x0 /* UART1_RTS__UART1_RTS */
-> +			>;
-> +		};
-> +
-> +		...
-> +	};
-> +};
-> +
-> +
-> +For convenience there are macros defined in imx27-pinfunc.h which provide PIN
-> +and MUX_ID. They are structured as MX27_PAD_<Pad name>__<Signal name>. The names
-> +are defined in the i.MX27 reference manual.
-
-
-> +
-> +The above example using macros:
-> +
-> +iomuxc: iomuxc@10015000 {
-> +	compatible = "fsl,imx27-iomuxc";
-> +	reg = <0x10015000 0x600>;
-> +
-> +	uart {
-> +		pinctrl_uart1: uart-1 {
-> +			fsl,pins = <
-> +				MX27_PAD_UART1_TXD__UART1_TXD 0x0
-> +				MX27_PAD_UART1_RXD__UART1_RXD 0x0
-> +				MX27_PAD_UART1_CTS__UART1_CTS 0x0
-> +				MX27_PAD_UART1_RTS__UART1_RTS 0x0
-> +			>;
-> +		};
-> +
-> +		...
-> +	};
-> +};
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Best regards,
+Andreas Larsson
