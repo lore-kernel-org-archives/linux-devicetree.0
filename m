@@ -1,222 +1,111 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] pinctrl: imx27: imx27 pincontrol driver
-Date: Mon, 28 Oct 2013 14:28:43 -0500
-Message-ID: <8BADA94D-064E-4E7D-B698-BEB029412650@codeaurora.org>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de> <1382950843-26066-3-git-send-email-mpa@pengutronix.de> <B923ADBC-0C66-45D0-B9FE-F1038F93B176@codeaurora.org> <20131028164338.GA20839@pengutronix.de>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 4/4] wl1251: spi: add device tree support
+Date: Mon, 28 Oct 2013 14:30:45 -0500
+Message-ID: <3381D0FB-2AAD-446D-8650-E4BE5F22A2E3@codeaurora.org>
+References: <1382890469-25286-1-git-send-email-sre@debian.org> <1382890469-25286-5-git-send-email-sre@debian.org> <FF34C626-4A49-43B1-B0AD-DC6146ABBB11@codeaurora.org> <CANOLnOP=antQDwQLxWhuB8+-kZh9x-JJXrXmOz3FH67fM2Lang@mail.gmail.com>
 Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131028164338.GA20839-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CANOLnOP=antQDwQLxWhuB8+-kZh9x-JJXrXmOz3FH67fM2Lang@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grazvydas Ignotas <notasas@gmail.com>
+Cc: Sebastian Reichel <sre@debian.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@ring0.de>, Luciano Coelho <luca@coelho.fi>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "John W. Linville" <linville@tuxdriver.com>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 28, 2013, at 11:43 AM, Markus Pargmann wrote:
+On Oct 28, 2013, at 12:15 PM, Grazvydas Ignotas wrote:
 
-> On Mon, Oct 28, 2013 at 06:17:41AM -0500, Kumar Gala wrote:
->> 
->> On Oct 28, 2013, at 4:00 AM, Markus Pargmann wrote:
->> 
->>> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
->>> similar to other imx pincontrol drivers.
->>> 
->>> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>> .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  89 ++++
->>> drivers/pinctrl/Kconfig                            |   8 +
->>> drivers/pinctrl/Makefile                           |   1 +
->>> drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++++++++
->>> 4 files changed, 575 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
->>> create mode 100644 drivers/pinctrl/pinctrl-imx27.c
->>> 
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
->>> new file mode 100644
->>> index 0000000..32c81c8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
->>> @@ -0,0 +1,89 @@
->>> +* Freescale IMX27 IOMUX Controller
+> On Mon, Oct 28, 2013 at 8:37 AM, Kumar Gala <galak@codeaurora.org> wr=
+ote:
+>> On Oct 27, 2013, at 11:14 AM, Sebastian Reichel wrote:
+>>> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+>>> @@ -0,0 +1,36 @@
+>>> +* Texas Instruments wl1251 controller
 >>> +
+>>> +The wl1251 chip can be connected via SPI or via SDIO. The linux
+>>> +kernel currently only supports device tree for the SPI variant.
+>>> +
+>>=20
+>> From the binding I have no idea what this chip actually does, also w=
+e don't normally reference linux kernel support in bindings specs (so p=
+lease remove it).
+>>=20
+>> However, what would expect the SDIO binding to look like?  Or more s=
+pecifically, how would you distinguish the SPI vs SDIO binding/connecti=
+on?  I'm wondering if the compatible should be something like "ti,wl125=
+1-spi" and than the sdio can be "ti,wl1251-sdio"
+>=20
+> When connected to SDIO, it doesn't act as standard SDIO device and
+> can't be probed (standard SDIO registers missing), so information has
+> to come some other way. That used to partially come through
+> platform_data and partially through a callback from mmc subsystem (se=
+e
+> pandora_wl1251_init_card() in
+> arch/arm/mach-omap2/board-omap3pandora.c). I don't know much about DT=
+,
+> but maybe the information that comes from SDIO registers on "normal"
+> SDIO devices should come through DT in this case too? I don't really
+> know how that should be integrated with mmc subsystem though..
+
+Ok, my point is still valid that we can use a different compatible for =
+the SDIO case even if its no standard SDIO vs the SPI case.
+
+>=20
 >>> +Required properties:
->>> +- compatible: "fsl,imx27-iomuxc"
+>>> +- compatible : Should be "ti,wl1251"
+>>=20
+>> reg is not listed as a required prop.
+>>=20
+>>> +- interrupts : Should contain interrupt line
+>>> +- interrupt-parent : Should be the phandle for the interrupt
+>>> +  controller that services interrupts for this device
+>>> +- vio-supply : phandle to regulator providing VIO
+>>> +- power-gpio : GPIO connected to chip's PMEN pin
+>>=20
+>> should be vendor prefixed: ti,power-gpio
+>>=20
+>>> +- For additional required properties on SPI, please consult
+>>> +  Documentation/devicetree/bindings/spi/spi-bus.txt
 >>> +
->>> +The iomuxc driver node should define subnodes containing of pinctrl configuration subnodes.
->> 
->> Here would probably be a good point to reference "pinctrl/pinctrl-bindings.txt"
-> 
-> Okay.
-> 
->> 
->>> +
->>> +Required properties for pin configuration node:
->>> +- fsl,pins: three integers array, represents a group of pins mux and config
->>> +  setting. The format is fsl,pins = <PIN MUX_ID CONFIG>.
->>> +
->>> +  PIN is an integer between 0 and 0xbf. imx27 has 6 ports with 32 configurable
->>> +  configurable pins each. PIN is PORT * 32 + PORT_PIN, PORT_PIN is the pin
->>> +  number on the specific port (between 0 and 31).
->> 
->> I might be coming late to this, so feel free to ignore if this has already been discussed.
->> 
->> Why not encode PORT in fsl,pins so it would be <PORT PORT_PIN MUX_ID CONFIG> ?
-> 
-> The port is still visible in the pin id as each port has 32 pins = 0x20.
-> So the ports start at 0x00, 0x20, 0x40, 0x60, 0x80 and 0xa0. So I am not
-> sure if it is necessary to seperate PORT and PORT_PIN, I personally
-> prefer only one PIN_ID field.
+>>> +Optional properties:
+>>> +- ti,use-eeprom : If found, configuration will be loaded from eepr=
+om.
+>>=20
+>> can you be a bit more specific on what cfg will be loaded.  Also, is=
+ this property a boolean, if so how do I know which eeprom the cfg is l=
+oaded from (is it one that is directly connected to the wl1251?
+>=20
+> wl1251 is a wifi chip that can have an optional eeprom connected to i=
+t
+> to store things like calibration stuff and MAC address, and that
+> eeprom is usually inside a single module with some additional radio
+> related chips. If the eeprom is connected (like the module on pandora
+> board has), the driver can issue command to the firmware running on
+> chip to load that data on it's startup, alternatively the driver can
+> load calibration from other storage (like it happens on N900).
 
-It goes to readability, but I guess its hidden by the #defines in imx27-pinfunc.h
+So sounds like a boolean.  I think just adding that its a boolean and m=
+aybe something like "configuration (calibration data, MAC addr, etc..)"
 
-> 
->> 
->>> +
->>> +  MUX_ID is
->>> +    function + (direction << 2) + (gpio_oconf << 4) + (gpio_iconfa << 8) + (gpio_iconfb << 10)
->>> +
->>> +    function:      0 - Primary function
->>> +                   1 - Alternate function
->>> +                   2 - GPIO
->>> +      Registers GIUS (GPIO In Use) and GPR (General Purpose Register)
->>> +
->>> +    direction:     0 - Input
->>> +                   1 - Output
->>> +      Register DDIR
->>> +
->>> +    gpio_oconf:    0 - A_IN
->>> +                   1 - B_IN
->>> +                   2 - C_IN
->>> +                   3 - Data Register
->> 
->> what does this mean?
-> 
-> These are additional output configurations for GPIO. 3 is normal GPIO,
-> 0-2 are other pinfunctions that are mapped as output to this pin. It is
-> described in the i.MX27 reference manual in detail.
+- k
 
-
-
-> 
->> 
->>> +      Registers OCR1 and OCR2
->>> +
->>> +    gpio_iconfa/b: 0 - GPIO_IN
->>> +                   1 - Interrupt Status Register
->>> +                   2 - 0
->>> +                   3 - 1
->> 
->> What does any of these option mean (especially 2 & 3)?
-> 
-> This is the input configuration for a pin in GPIO mode. 0 will connect
-> it to GPIO input of the pad, 1 to the interrupt status register, 2 and 3
-> to constant low or high.
-> 
->> 
->>> +      Registers ICONFA1, ICONFA2, ICONFB1 and ICONFB2
->>> +
->>> +
->> 
->> Someone should be able to reasonable read this and determine how to set MUX_ID w/o having to reference the HW manual.
-> 
-> I will add a little bit more documentation here. But in general the
-> corresponding reference manual chapters should be used to create a
-> correct MUX_ID. I don't think DT binding documentation is the right
-> place to describe the hardware.
-
-I'm not asking for full detail of the ref manual, but enough that I'm not scratching my head and have to actual pull up the manual to review the binding.
-
->>> +  CONFIG can be 0 or 1, meaning Pullup disable/enable.
->> 
->> just for clarity do:
->>    CONFIG: 0 - Pullup disabled
->>            1 - Pullup enabled
-> 
-> Okay, will change.
-> 
-> Thanks,
-> 
-> Markus Pargmann
-> 
->> 
->>> +
->>> +
->>> +
->>> +
->>> +Example:
->>> +
->>> +iomuxc: iomuxc@10015000 {
->>> +	compatible = "fsl,imx27-iomuxc";
->>> +	reg = <0x10015000 0x600>;
->>> +
->>> +	uart {
->>> +		pinctrl_uart1: uart-1 {
->>> +			fsl,pins = <
->>> +				0x8c 0x004 0x0 /* UART1_TXD__UART1_TXD */
->>> +				0x8d 0x000 0x0 /* UART1_RXD__UART1_RXD */
->>> +				0x8e 0x004 0x0 /* UART1_CTS__UART1_CTS */
->>> +				0x8f 0x000 0x0 /* UART1_RTS__UART1_RTS */
->>> +			>;
->>> +		};
->>> +
->>> +		...
->>> +	};
->>> +};
->>> +
->>> +
->>> +For convenience there are macros defined in imx27-pinfunc.h which provide PIN
->>> +and MUX_ID. They are structured as MX27_PAD_<Pad name>__<Signal name>. The names
->>> +are defined in the i.MX27 reference manual.
->> 
->> 
->>> +
->>> +The above example using macros:
->>> +
->>> +iomuxc: iomuxc@10015000 {
->>> +	compatible = "fsl,imx27-iomuxc";
->>> +	reg = <0x10015000 0x600>;
->>> +
->>> +	uart {
->>> +		pinctrl_uart1: uart-1 {
->>> +			fsl,pins = <
->>> +				MX27_PAD_UART1_TXD__UART1_TXD 0x0
->>> +				MX27_PAD_UART1_RXD__UART1_RXD 0x0
->>> +				MX27_PAD_UART1_CTS__UART1_CTS 0x0
->>> +				MX27_PAD_UART1_RTS__UART1_RTS 0x0
->>> +			>;
->>> +		};
->>> +
->>> +		...
->>> +	};
->>> +};
->> 
->> - k
->> 
->> -- 
->> Employee of Qualcomm Innovation Center, Inc.
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->> 
->> 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>=20
+>=20
+> Gra=9Evydas
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
--- 
+--=20
 Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
