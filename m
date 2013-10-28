@@ -1,93 +1,50 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
-Date: Tue, 29 Oct 2013 01:06:30 +0100
-Message-ID: <526EFC06.70101@gmail.com>
-References: <5261967E.6010001@samsung.com> <20131028201136.6f66d3f7@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20131028201136.6f66d3f7@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Arun Kumar K <arun.kk@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Mon, 28 Oct 2013 16:41:03 -0700
+Message-ID: <20131028234103.F2CB1C40283@trevor.secretlab.ca>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org> <31D756E7-A7CD-42ED-8D1D-D1B38B85E3A0@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <31D756E7-A7CD-42ED-8D1D-D1B38B85E3A0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+On Mon, 28 Oct 2013 01:54:38 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> 
+> On Oct 15, 2013, at 3:39 PM, Grant Likely wrote:
+> 
+> > The standard interrupts property in device tree can only handle
+> > interrupts coming from a single interrupt parent. If a device is wired
+> > to multiple interrupt controllers, then it needs to be attached to a
+> > node with an interrupt-map property to demux the interrupt specifiers
+> > which is confusing. It would be a lot easier if there was a form of the
+> > interrupts property that allows for a separate interrupt phandle for
+> > each interrupt specifier.
+> > 
+> > This patch does exactly that by creating a new interrupts-extended
+> > property which reuses the phandle+arguments pattern used by GPIOs and
+> > other core bindings.
+> > 
+> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
+> > arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
+> > arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
+> > arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
+> > drivers/of/irq.c                                   | 16 +++--
+> > drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
+> > 6 files changed, 122 insertions(+), 13 deletions(-)
+> 
+> Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> [ I think the patch should be split up so we aren't touching versatile dts as part of it ]
 
-On 10/28/2013 11:11 PM, Mauro Carvalho Chehab wrote:
->> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
->> >
->> >     [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
->> >
->> >  are available in the git repository at:
->> >
->> >     git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
->> >
->> >  for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
->> >
->> >     V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
->> >
->> >  ----------------------------------------------------------------
->> >  Arun Kumar K (12):
->> >         exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
->
-> As agreed during KS, the subsystem maintainers should wait for a documentation
-> review on DT by the DT maintainers, at least for a while.
->
-> So, I'd like to see either their reviews on this patch:
-> 	https://patchwork.linuxtv.org/patch/20439/
->
-> Or their ack for us to apply it.
+No problem, I'll do that.
 
-I agree with you on that. Just please note the first version of this patch
-has been posted *5 months* ago https://patchwork.linuxtv.org/patch/18684
-
-Stephen has reviewed subsequent version about 3 months ago:
-https://patchwork.linuxtv.org/patch/19521
-
-Then we got no more comments from DT maintainers, I have reviewed this patch
-multiple times on the mailing lists:
-https://patchwork.linuxtv.org/patch/19715
-https://patchwork.linuxtv.org/patch/19749
-
-And explicitly asked for an Ack:
-https://patchwork.linuxtv.org/patch/19832
-
-Then those 2 versions passed silently:
-https://patchwork.linuxtv.org/patch/20055
-https://patchwork.linuxtv.org/patch/20225
-
-And...huh...we got another review, I didn't notice it until now:
-https://patchwork.linuxtv.org/patch/20439 Thanks Mark.
-
-Arun, care to address those review comments and send us an updated
-binding documentation patch ?
-
-Hence I think we have waited for a while. ;)
-
->> >         exynos5-fimc-is: Add driver core files
->> >         exynos5-fimc-is: Add common driver header files
->> >         exynos5-fimc-is: Add register definition and context header
->> >         exynos5-fimc-is: Add isp subdev
->> >         exynos5-fimc-is: Add scaler subdev
->> >         exynos5-fimc-is: Add sensor interface
->> >         exynos5-fimc-is: Add the hardware pipeline control
->> >         exynos5-fimc-is: Add the hardware interface module
->> >         exynos5-is: Add Kconfig and Makefile
->> >         V4L: Add DT binding doc for s5k4e5 image sensor
->
-> Same applies to this patch:
-> 	https://patchwork.linuxtv.org/patch/20448/
-
-This one also have been on the mailing list for quite some time and it
-uses already standard bindings, so I assumed it is OK to merge it.
-
-https://patchwork.linuxtv.org/project/linux-media/list/?state=*&q=s5k4e5
-
-But if there must be an Ack then we shall wait, it will probably won't
-make a big difference now, if this patch is postponed by 3 more months.
-
+g.
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
