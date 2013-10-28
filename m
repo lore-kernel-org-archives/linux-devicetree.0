@@ -1,81 +1,42 @@
-From: Grazvydas Ignotas <notasas@gmail.com>
-Subject: Re: [PATCH 4/4] wl1251: spi: add device tree support
-Date: Mon, 28 Oct 2013 19:15:32 +0200
-Message-ID: <CANOLnOP=antQDwQLxWhuB8+-kZh9x-JJXrXmOz3FH67fM2Lang@mail.gmail.com>
-References: <1382890469-25286-1-git-send-email-sre@debian.org>
-	<1382890469-25286-5-git-send-email-sre@debian.org>
-	<FF34C626-4A49-43B1-B0AD-DC6146ABBB11@codeaurora.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [RFC 00/12] Add DRM Exynos HDMI on SoCs from Exynos4 family
+Date: Tue, 29 Oct 2013 02:19:30 +0900
+Message-ID: <CAAQKjZP4WBUsKnFMo1twHLWJWzgNoE-n1MnF5ky68ekN1vommQ@mail.gmail.com>
+References: <1382365111-6533-1-git-send-email-t.stanislaws@samsung.com>
+	<CAAQKjZNmmn0rs10456GQ20zZJLp0Qh3Q4i2_eRqERmxyhLZWSQ@mail.gmail.com>
+	<526E8A09.7090709@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <FF34C626-4A49-43B1-B0AD-DC6146ABBB11@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Sebastian Reichel <sre@debian.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@ring0.de>, Luciano Coelho <luca@coelho.fi>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "John W. Linville" <linville@tuxdriver.com>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <526E8A09.7090709@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mturquette@linaro.org, Seung-Woo Kim <sw0312.kim@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 8:37 AM, Kumar Gala <galak@codeaurora.org> wrot=
-e:
-> On Oct 27, 2013, at 11:14 AM, Sebastian Reichel wrote:
-> > +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-> > @@ -0,0 +1,36 @@
-> > +* Texas Instruments wl1251 controller
-> > +
-> > +The wl1251 chip can be connected via SPI or via SDIO. The linux
-> > +kernel currently only supports device tree for the SPI variant.
-> > +
+2013/10/29 Kukjin Kim <kgene.kim@samsung.com>:
+> On 10/28/13 06:42, Inki Dae wrote:
+>>
+>> Hi Tomasz,
+>>
+>> I have merged the re-factoring patch set from Sean Paul. Can you
+>> re-base your patch set at top of exynos-drm-next?
+>>
+> Basically, RFC is not patch for merge. So Tomasz needs to re-submit after
+> addressing comments from RFC.
 >
-> From the binding I have no idea what this chip actually does, also we=
- don't normally reference linux kernel support in bindings specs (so pl=
-ease remove it).
->
-> However, what would expect the SDIO binding to look like?  Or more sp=
-ecifically, how would you distinguish the SPI vs SDIO binding/connectio=
-n?  I'm wondering if the compatible should be something like "ti,wl1251=
--spi" and than the sdio can be "ti,wl1251-sdio"
 
-When connected to SDIO, it doesn't act as standard SDIO device and
-can't be probed (standard SDIO registers missing), so information has
-to come some other way. That used to partially come through
-platform_data and partially through a callback from mmc subsystem (see
-pandora_wl1251_init_card() in
-arch/arm/mach-omap2/board-omap3pandora.c). I don't know much about DT,
-but maybe the information that comes from SDIO registers on "normal"
-SDIO devices should come through DT in this case too? I don't really
-know how that should be integrated with mmc subsystem though..
+There must definitely be your misunderstanding. I have never merged
+this RFC patch set. For review, shouldn't this RFC patch set be
+rebased at top of latest exynos-drm-next? :)
 
-> > +Required properties:
-> > +- compatible : Should be "ti,wl1251"
->
-> reg is not listed as a required prop.
->
-> > +- interrupts : Should contain interrupt line
-> > +- interrupt-parent : Should be the phandle for the interrupt
-> > +  controller that services interrupts for this device
-> > +- vio-supply : phandle to regulator providing VIO
-> > +- power-gpio : GPIO connected to chip's PMEN pin
->
-> should be vendor prefixed: ti,power-gpio
->
-> > +- For additional required properties on SPI, please consult
-> > +  Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +
-> > +Optional properties:
-> > +- ti,use-eeprom : If found, configuration will be loaded from eepr=
-om.
->
-> can you be a bit more specific on what cfg will be loaded.  Also, is =
-this property a boolean, if so how do I know which eeprom the cfg is lo=
-aded from (is it one that is directly connected to the wl1251?
+Thanks,
+Inki Dae
 
-wl1251 is a wifi chip that can have an optional eeprom connected to it
-to store things like calibration stuff and MAC address, and that
-eeprom is usually inside a single module with some additional radio
-related chips. If the eeprom is connected (like the module on pandora
-board has), the driver can issue command to the firmware running on
-chip to load that data on it's startup, alternatively the driver can
-load calibration from other storage (like it happens on N900).
-
-
-Gra=C5=BEvydas
+> Thanks,
+> Kukjin
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
