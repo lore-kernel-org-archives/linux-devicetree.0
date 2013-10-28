@@ -1,153 +1,121 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
-Date: Mon, 28 Oct 2013 20:11:36 -0200
-Message-ID: <20131028201136.6f66d3f7@samsung.com>
-References: <5261967E.6010001@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Mon, 28 Oct 2013 23:17:42 +0100
+Message-ID: <2028580.HhySWWnU2A@flatron>
+References: <1381425018-5653-1-git-send-email-soren.brinkmann@xilinx.com> <1592656.1ojHcSlzVh@flatron> <b7840a0d-ac49-4c2d-beaa-9f79748c70d0@CH1EHSMHS006.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <5261967E.6010001@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <b7840a0d-ac49-4c2d-beaa-9f79748c70d0@CH1EHSMHS006.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Monday 28 of October 2013 14:43:35 S=F6ren Brinkmann wrote:
+> On Mon, Oct 28, 2013 at 10:13:28PM +0100, Tomasz Figa wrote:
+> > Hi Soren,
+> >=20
+> > On Thursday 10 of October 2013 10:10:17 Soren Brinkmann wrote:
+> > > In some use cases Zynq's FPGA clocks are used as static clock
+> > > generators for IP in the FPGA part of the SOC for which no Linux
+> > > driver
+> > > exists and would control those clocks. To avoid automatic
+> > > gating of these clocks in such cases a new property - fclk-enable=
+ -
+> > > is
+> > > added to the clock controller's DT description to accomodate such
+> > > use
+> > > cases. It's value is a bitmask, where a set bit results in enabli=
+ng
+> > > the corresponding FCLK through the clkc.
+> > >=20
+> > > FPGA clocks are handled following the rules below:
+> > >=20
+> > > If an FCLK is not enabled by bootloaders, that FCLK will be disab=
+led
+> > > in
+> > > Linux. Drivers can enable and control it through the CCF as usual=
+=2E
+> > >=20
+> > > If an FCLK is enabled by bootloaders AND the corresponding bit in
+> > > the
+> > > 'fclk-enable' DT property is set, that FCLK will be enabled by th=
+e
+> > > clkc, resulting in an off by one reference count for that clock.
+> > > Ensuring it will always be running.
+> > >=20
+> > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > > ---
+> > >=20
+> > > v2:
+> > >  - change default value for fclk-enable to '0'
+> > >=20
+> > > ---
+> > >=20
+> > >  Documentation/devicetree/bindings/clock/zynq-7000.txt |  4 ++++
+> > >  drivers/clk/zynq/clkc.c                               | 18
+> > >=20
+> > > +++++++++++++++--- 2 files changed, 19 insertions(+), 3 deletions=
+(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.tx=
+t
+> > > b/Documentation/devicetree/bindings/clock/zynq-7000.txt index
+> > > d99af878f5d7..11fdd146ec83 100644
+> > > --- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+> > >=20
+> > > @@ -22,6 +22,10 @@ Required properties:
+> > >  Optional properties:
+> > >   - clocks : as described in the clock bindings
+> > >   - clock-names : as described in the clock bindings
+> > >=20
+> > > + - fclk-enable : Bit mask to enable FCLKs in cases no proper CCF
+> >=20
+> > Since it's a vendor specific property, it should include vendor
+> > prefix.
+>=20
+> The whole driver is vendor specific. Should there really be another
+> prefix for that property?
 
-Em Fri, 18 Oct 2013 22:13:50 +0200
-Sylwester Nawrocki <s.nawrocki@samsung.com> escreveu:
+Yes. If a property is introduced just for use by this particular driver=
+=20
+then it must be prepended by a vendor prefix. That's a general rule.
 
-> Hi Mauro,
-> 
-> This change set is V4L2 driver for the Exynos5 series camera subsystem.
-> There is also included a minimal driver for the s5k4e5 image sensor.
-> 
-> The FIMC-IS driver is pretty huge, even though there are some hardware 
-> similarities between FIMC-IS found on Exynos5 and Exynos4 SoCs, the firmwares
-> are significantly different, which makes writing a common driver not quite
-> sensible.
-> Anyway some of the exynos4 subdevs are already reused and some further code 
-> consolidation will likely be possible.
-> 
-> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
-> 
->   [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
-> 
-> are available in the git repository at:
-> 
->   git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
-> 
-> for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
-> 
->   V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
-> 
-> ----------------------------------------------------------------
-> Arun Kumar K (12):
->       exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
+> > Also CCF is a Linux-specific implementation detail, which DT bindin=
+gs
+> > should not be involved into. If you really need to implement this
+> > using
+> > this way, then at least property description should say something l=
+ike
+> > this:
+> >=20
+> > xlnx,fclk-enable : Bit mask of bits of fclk enable register that mu=
+st
+> > be statically enabled at boot-up time.
+>=20
+> Fair enough. I'll change the description
+>=20
+> > However, I wonder why you can't simply define an FPGA block using a
+> > single node, which would be a consumer to all the fclk clocks you
+> > need to enable and then make a driver for it that would simply enab=
+le
+> > all clocks specified in clocks property.
+>=20
+> Well, then we'd have a dummy driver that wouldn't fit into any subsys=
+tem
+> and wouldn't do anything but enabling clocks. Seems much easier to
+> handle it in this driver. Especially, since I hope that this is just =
+a
+> workaround and that the majority of use cases involves drivers for
+> their soft-IP that simply uses the CCF.
 
-As agreed during KS, the subsystem maintainers should wait for a documentation
-review on DT by the DT maintainers, at least for a while.
+Hmm, I'm not really convinced, but well, let's say that I'm fine with y=
+our=20
+proposed solution, unless someone else complains.
 
-So, I'd like to see either their reviews on this patch:
-	https://patchwork.linuxtv.org/patch/20439/
+Best regards,
+Tomasz
 
-Or their ack for us to apply it.
-
->       exynos5-fimc-is: Add driver core files
->       exynos5-fimc-is: Add common driver header files
->       exynos5-fimc-is: Add register definition and context header
->       exynos5-fimc-is: Add isp subdev
->       exynos5-fimc-is: Add scaler subdev
->       exynos5-fimc-is: Add sensor interface
->       exynos5-fimc-is: Add the hardware pipeline control
->       exynos5-fimc-is: Add the hardware interface module
->       exynos5-is: Add Kconfig and Makefile
->       V4L: Add DT binding doc for s5k4e5 image sensor
-
-Same applies to this patch:
-	https://patchwork.linuxtv.org/patch/20448/
-
-Grant,
-
-I'd appreciate if you could fast track those, as there are lots of code
-depending on them.
-
-Regards,
-Mauro
-
->       V4L: Add s5k4e5 sensor driver
-> 
-> Shaik Ameer Basha (1):
->       exynos5-is: Add media device driver for exynos5 SoCs camera subsystem
-> 
->  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 +
->  .../bindings/media/exynos5250-camera.txt           |  126 ++
->  .../devicetree/bindings/media/samsung-s5k4e5.txt   |   45 +
->  drivers/media/i2c/Kconfig                          |    8 +
->  drivers/media/i2c/Makefile                         |    1 +
->  drivers/media/i2c/s5k4e5.c                         |  344 ++++
->  drivers/media/platform/Kconfig                     |    1 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/exynos5-is/Kconfig          |   20 +
->  drivers/media/platform/exynos5-is/Makefile         |    7 +
->  drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1210 ++++++++++++++
->  drivers/media/platform/exynos5-is/exynos5-mdev.h   |  126 ++
->  drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
->  drivers/media/platform/exynos5-is/fimc-is-core.c   |  410 +++++
->  drivers/media/platform/exynos5-is/fimc-is-core.h   |  132 ++
->  drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
->  .../media/platform/exynos5-is/fimc-is-interface.c  |  810 ++++++++++
->  .../media/platform/exynos5-is/fimc-is-interface.h  |  124 ++
->  drivers/media/platform/exynos5-is/fimc-is-isp.c    |  534 ++++++
->  drivers/media/platform/exynos5-is/fimc-is-isp.h    |   90 ++
->  .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++
->  drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 +++++++++++++
->  .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1699 ++++++++++++++++++++
->  .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
->  drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
->  drivers/media/platform/exynos5-is/fimc-is-scaler.c |  476 ++++++
->  drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 ++
->  drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +
->  drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 +
->  drivers/media/platform/exynos5-is/fimc-is.h        |  160 ++
->  30 files changed, 9228 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
->  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
->  create mode 100644 drivers/media/i2c/s5k4e5.c
->  create mode 100644 drivers/media/platform/exynos5-is/Kconfig
->  create mode 100644 drivers/media/platform/exynos5-is/Makefile
->  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
->  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
->  create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
-> 
-> --
-> Thanks,
-> Sylwester
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-
-Cheers,
-Mauro
