@@ -1,62 +1,33 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/1] ARM: dts: imx6q-arm2: enable USB OTG
-Date: Mon, 28 Oct 2013 14:05:02 +0800
-Message-ID: <1382940302-12931-1-git-send-email-peter.chen@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH] Documentation/watchdog: Update node name in samsung-wdt example
+Date: Mon, 28 Oct 2013 11:54:17 +0530
+Message-ID: <1382941457-2826-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-doc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, wim@iguana.be, rob@landley.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Enable USB OTG controller at imx6q-arm2 board
+Update the name as per DT naming convention.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
- arch/arm/boot/dts/imx6q-arm2.dts |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
-index edf1bd9..8f125b1 100644
---- a/arch/arm/boot/dts/imx6q-arm2.dts
-+++ b/arch/arm/boot/dts/imx6q-arm2.dts
-@@ -31,6 +31,15 @@
- 			regulator-max-microvolt = <3300000>;
- 			regulator-always-on;
- 		};
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 22 0>;
-+			enable-active-high;
-+		};
- 	};
+diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+index 4c798e3..0642fb8 100644
+--- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+@@ -17,7 +17,7 @@ Optional properties:
  
- 	leds {
-@@ -79,6 +88,14 @@
- 	status = "okay";
- };
+ Example:
  
-+&usbotg { /* USB OTG */
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg_1>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
- &usdhc3 {
- 	cd-gpios = <&gpio6 11 0>;
- 	wp-gpios = <&gpio6 14 0>;
+-watchdog {
++watchdog@101D0000 {
+ 	compatible = "samsung,s3c2410-wdt";
+ 	reg = <0x101D0000 0x100>, <0x10040408 0x4>, <0x1004040c 0x4>;
+ 	interrupts = <0 42 0>;
 -- 
-1.7.1
+1.7.9.5
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
