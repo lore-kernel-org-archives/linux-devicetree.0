@@ -1,122 +1,142 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Mon, 28 Oct 2013 01:54:34 -0500
-Message-ID: <36A77FB1-5EB3-4B2F-8E2B-5EDA4E097B7A@kernel.crashing.org>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org> <20131027134607.E1782C4039D@trevor.secretlab.ca> <CAL_JsqLN9eOWTo5pZV1m0i2GmxEMJWOcJvci_w=rCO7_h+X1Nw@mail.gmail.com> <20131028031641.GA2782@kartoffel>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131028031641.GA2782@kartoffel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
+	Interface driver.
+Date: Mon, 28 Oct 2013 07:15:14 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8286A4FA@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131024110543.GA18506@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131024110543.GA18506@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 27, 2013, at 10:16 PM, Mark Rutland wrote:
+> > +static struct snd_pcm_hardware snd_fsl_hardware = {
+> > +	.info = SNDRV_PCM_INFO_INTERLEAVED |
+> > +		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+> > +		SNDRV_PCM_INFO_MMAP |
+> > +		SNDRV_PCM_INFO_MMAP_VALID |
+> > +		SNDRV_PCM_INFO_PAUSE |
+> > +		SNDRV_PCM_INFO_RESUME,
+> > +	.formats = SNDRV_PCM_FMTBIT_S16_LE,
+> > +	.rate_min = 8000,
+> > +	.channels_min = 2,
+> > +	.channels_max = 2,
+> > +	.buffer_bytes_max = FSL_SAI_DMABUF_SIZE,
+> > +	.period_bytes_min = 4096,
+> > +	.period_bytes_max = FSL_SAI_DMABUF_SIZE / TCD_NUMBER,
+> > +	.periods_min = TCD_NUMBER,
+> > +	.periods_max = TCD_NUMBER,
+> > +	.fifo_size = 0,
+> > +};
+> 
+> There's a patch in -next that lets the generic dmaengine code figure out
+> some settings from the dmacontroller rather than requiring the driver to
+> explicitly provide configuration - it's "ASoC: dmaengine-pcm: Provide
+> default config".  Please update your driver to use this, or let's work
+> out what it doesn't do any try to fix it.
+>
 
-> On Sun, Oct 27, 2013 at 08:24:08PM +0000, Rob Herring wrote:
->> On Sun, Oct 27, 2013 at 8:46 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> The standard interrupts property in device tree can only handle
->>>> interrupts coming from a single interrupt parent. If a device is wired
->>>> to multiple interrupt controllers, then it needs to be attached to a
->>>> node with an interrupt-map property to demux the interrupt specifiers
->>>> which is confusing. It would be a lot easier if there was a form of the
->>>> interrupts property that allows for a separate interrupt phandle for
->>>> each interrupt specifier.
->>>> 
->>>> This patch does exactly that by creating a new interrupts-extended
->>>> property which reuses the phandle+arguments pattern used by GPIOs and
->>>> other core bindings.
->>>> 
->>>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>> 
->>> Alright, I want to merge this one. I've got an Ack from Tony, general
->>> agreement from an in person converstaion from Ben (aside from wishing he
->>> could think of a better property name), and various rumblings of
->>> approval from anyone I talked to about it at ksummit. I'd like to have
->>> something more that that to put into the commit text. Please take a look
->>> and let me know if you agree/disagree with this binding.
+I will do a research.
+ 
+> > +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
+> > +					FSL_FMT_TRANSMITTER);
+> > +	if (ret) {
+> > +		dev_err(cpu_dai->dev,
+> > +				"Cannot set sai's transmitter sysclk: %d\n",
+> > +				ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = fsl_sai_set_dai_sysclk_tr(cpu_dai, clk_id, freq,
+> > +					FSL_FMT_RECEIVER);
 > 
-> The only comment I have is that I'm not keen on the name (it's a bit generic
-> and we might want to extend the interrupts binding in future), but I'm happy to
-> leave that as a matter of personal taste.
+> As other people have commented these should be exposed as separate clocks
+> rather than set in sync, unless there's some hardware reason they need to
+> be identical.  If that is the case then a comment explaining the
+> limitation would be good.
 > 
-> The best alternative I could come up with was parented-interrupts, but that
-> could be misinterpreted as describing the relationship backwards (i.e. this
-> device is the parent for those interrupts).
+> Similarly with several of the other functions.
+> 
 
-I think we seem to all agree the name sucks, but can't come up with anything better.
+As I have replied before, there is one function couldn't be separated for the hardware limitation.
 
->> I think it looks fine, but I'll throw out an alternative proposal.
->> Simply allow for interrupt-parent to be an array in equal size to
->> interrupts property. Then it is a minimal change to the existing
->> binding:
->> 
->> interrupt-parent = <&intc1>, <&intc2>;
->> interrupts = <5 0>, <6 0>;
+> > +int fsl_sai_dai_remove(struct snd_soc_dai *dai) {
+> > +	struct fsl_sai *sai = dev_get_drvdata(dai->dev);
+> > +
+> > +	clk_disable_unprepare(sai->clk);
 > 
-> I'd prefer the interrupts-extended approach.
+> It'd be a bit nicer to only enable the clock while the driver is actively
+> being used rather than all the time the system is powered up but it's not
+> a blocker for merge.
 > 
-> This might not matter, but if you have an existing driver with two interrupts,
-> and you attempt to describe the situation this way, e.g.
-> 
->  intc1: interrupt_controller1 {
->      compatible = "vendor,interrupt-controller";
->      #interrupt-cells = <1>;
->  };
-> 
->  intc2: interrupt_controller2 {
->      compatible = "vendor,another-interrupt-controller";
->      #interrupt-cells = <2>;
->  };
-> 
->  dev {
->      compatible = "vendor,some-device";
->      interrupt-parent = <&intc1>, <&intc2>;
->      interrupts = <5>, <65 73>;
->  };
-> 
-> The existing driver may read interrupts as two interrupts for intc1, and
-> believe it's been successful when it has not, and one of those interrupts might
-> never fire. That would be very bad for a timer for example.
-> 
-> Additionally it makes the interrupts list difficult for a human to read, as you
-> need to match it with an entry in another list (this problem exists with other
-> parallel properties like interrupt-names too, but we can't do much better
-> there).
-> 
-> It's also easy to make a typo (e.g. an extra cell in an interrupt) that will
-> parse as valid when you don't expect it to. At least with the phandle in the
-> list it's less likely to happen.
+Actully there are to "XXX_probe" functions and two "XXX_remove" functions:
 
-I agreed, I'd assume that in Rob's suggestion the length of interrupt-parent & interrupts would have to match so you'd have:
+fsl_sai_dai_probe() and fsl_sai_dai_remove() are callbacks of the ASoC subsystem.
+And in fsl_sai_dai_probe() needs to read/write the SAI controller's registers, so
+the clk_enable_prepare() must be here and clk_disable_unprepare() in fsl_sai_dai_remove().
 
- dev {
-     compatible = "vendor,some-device";
-     interrupt-parent = <&intc1>, <&intc2>, <&intc2>;
-     interrupts = <5>, <65 73>;
- };
+fsl_sai_probe() and fsl_sai_remove() are the driver's probe and remove interfaces.
 
+So the "+	clk_disable_unprepare(sai->clk);" sentence in fsl_sai_remove() will be removed later.
+
+
+> > +	ret = snd_soc_register_component(&pdev->dev, &fsl_component,
+> > +			&fsl_sai_dai, 1);
+> > +	if (ret)
+> > +		return ret;
 > 
->> 
->> Of course interrupts-extended is more inline with standard patterns
->> for bindings.
+> There's a devm_snd_soc_register_component() in -next, please use that.
 > 
-> I think for this reason alone it should be preferable. Unless I'm mistaken it
-> would be identical to the clock bindings pattern with a uniformly named
-> phandle+args property and a parallel -names property. I don't think the gpio
-> style ${NAME}-interrupts would easily fit here.
+See the next version.
+
+> > +
+> > +	ret = fsl_pcm_dma_init(pdev);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	platform_set_drvdata(pdev, sai);
 > 
-> Thanks,
-> Mark.
+> These should go before the driver is registered with the subsystem
+> otherwise you've got a race where something might try to use the driver
+> before init is finished.
+> 
+> > +static int fsl_sai_remove(struct platform_device *pdev) {
+> > +	struct fsl_sai *sai = platform_get_drvdata(pdev);
+> > +
+> > +	fsl_pcm_dma_exit(pdev);
+> > +
+> > +	snd_soc_unregister_component(&pdev->dev);
+> 
+> Similarly here, unregister from the subsystem then clean up after.
+> 
 
-- k
+See the next version.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +#define SAI_CR5_FBT(x)		((x) << 8)
+> > +#define SAI_CR5_FBT_MASK	(0x1f << 8)
+> > +
+> > +/* SAI audio dividers */
+> > +#define FSL_SAI_TX_DIV		0
+> > +#define FSL_SAI_RX_DIV		1
+> 
+> Make the namespacing consistent please - for preference use FSL_SAI
+> always.
+>
+
+See the next version.
