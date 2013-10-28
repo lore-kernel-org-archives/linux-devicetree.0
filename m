@@ -1,69 +1,92 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4] wl1251: move power GPIO handling into the driver
-Date: Mon, 28 Oct 2013 12:23:54 -0700
-Message-ID: <20131028192354.GA18208@sirena.org.uk>
-References: <1382890469-25286-1-git-send-email-sre@debian.org>
- <1382890469-25286-3-git-send-email-sre@debian.org>
- <1382891056.102746625@f315.i.mail.ru>
- <20131027201218.GA4414@earth.universe>
- <CANOLnONKcC1i19ypb4rh2Rff3WsVhhuUhNvZvYwDV2-ZNtjVxQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANOLnONKcC1i19ypb4rh2Rff3WsVhhuUhNvZvYwDV2-ZNtjVxQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grazvydas Ignotas <notasas@gmail.com>
-Cc: Alexander Shiyan <shc_work@mail.ru>, Luciano Coelho <luca@coelho.fi>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, "John W. Linville" <linville@tuxdriver.com>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sachin Kamat <sachin.kamat@linaro.org>, Bill Pemberton <wfp5p@virginia.edu>, Felipe Balbi <balbi@ti.com>, Rob Landley <rob@landley.net>, netdev@vger.kernel.org, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Mon, 28 Oct 2013 14:25:04 -0500
+Message-ID: <40E3A029-C7E8-41DA-9218-3FB7ED97B707@codeaurora.org>
+References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com> <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, srinivas.kandagatla@st.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, stephen.gallimore@st.com, stuart.menefy@st.com, Lee Jones <lee.jones@linaro.org>, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Oct 14, 2013, at 7:46 AM, Maxime COQUELIN wrote:
 
-On Mon, Oct 28, 2013 at 07:29:52PM +0200, Grazvydas Ignotas wrote:
+> This patch adds support to SSC (Synchronous Serial Controller)
+> I2C driver. This IP also supports SPI protocol, but this is not
+> the aim of this driver.
+> 
+> This IP is embedded in all ST SoCs for Set-top box platorms, and
+> supports I2C Standard and Fast modes.
+> 
+> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+> ---
+> Documentation/devicetree/bindings/i2c/i2c-st.txt |   38 +
+> drivers/i2c/busses/Kconfig                       |   10 +
+> drivers/i2c/busses/Makefile                      |    1 +
+> drivers/i2c/busses/i2c-st.c                      |  867 ++++++++++++++++++++++
+> 4 files changed, 916 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/i2c/i2c-st.txt
+> create mode 100644 drivers/i2c/busses/i2c-st.c
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> new file mode 100644
+> index 0000000..8b2fd0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> @@ -0,0 +1,38 @@
+> +ST SSC binding, for I2C mode operation
+> +
+> +Required properties :
+> +- compatible : Must be "st,comms-i2c"
+> +- reg : Offset and length of the register set for the device
+> +- interrupts : the interrupt specifier
+> +- clock-names: Must contain "ssc".
+> +- clocks: Must contain an entry for each name in clock-names. See the common
+> +  clock bindings.
+> +- A pinctrl state named "default" must be defined, using the bindings in
+> +  ../pinctrl/pinctrl-binding.txt
+> +
+> +Optional properties :
+> +- clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
+> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
+> +  are supported, possible values are 100000 and 400000.
+> +- i2c-min-scl-pulse-width-us : The minimum valid SCL pulse width that is
+> +  allowed through the deglitch circuit. In units of us.
+> +- i2c-min-sda-pulse-width-us : The minimum valid SDA pulse width that is
+> +  allowed through the deglitch circuit. In units of us.
 
-> When wl12xx family of chips is connected through SDIO, we already have
-> that pin set up as a regulator controlled with the help of mmc
-> subsystem. When time comes to communicate with the chip, mmc subsystem
-> sees this as yet another SD card and looks for associated regulator
-> for it, and the board file has that set up as a fixed regulator
-> controlling that pin (see pandora_vmmc3 in
-> arch/arm/mach-omap2/board-omap3pandora.c). To prevent poweroff after
-> first SDIO communications are over, pm_runtime calls are used in
-> drivers/net/wireless/ti/wl1251/sdio.c .
+i2c-min... should be vendor prefixed, st,i2c-min...
 
-Is this actually controlling VMMC though, or is it some other control?
-If it's not controlling VMMC then it shouldn't say that it is.
+> +- A pinctrl state named "sleep" could be defined, using the bindings in
+> +  ../pinctrl/pinctrl-binding.txt
 
-> I don't know if something similar can be done done in SPI case, but
-> I'm sure this is not the first your-so-called regulator misuse.
+I don't see any reference to "sleep" in pinctrl-binding.txt
 
-It's not the first but that doesn't make controlling something other
-than a regulator through the regulator API any less broken.
+> +
+> +
+> +Example :
+> +
+> +i2c0: i2c@fed40000 {
+> +	compatible	= "st,comms-ssc-i2c";
+> +	reg		= <0xfed40000 0x110>;
+> +	interrupts	=  <GIC_SPI 187 IRQ_TYPE_EDGE_RISING>;
+> +	clocks		= <&CLK_S_ICN_REG_0>;
+> +	clock-names	= "ssc";
+> +	clock-frequency = <400000>;
+> +	pinctrl-names	= "default";
+> +	pinctrl-0	= <&pinctrl_i2c0_default>;
+> +	i2c-min-scl-pulse-width-us = <0>;
+> +	i2c-min-sda-pulse-width-us = <5>;
+> +};
 
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+- k
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-iQIcBAEBAgAGBQJSbrnBAAoJELSic+t+oim9zIwQAIvaD4m/WxkD0sxXd8pb5lKQ
-Y88rGx5PwOI7AnVd1e+dHdv/EUrdhYQd7GpUC3YQ5aARR5BqKJhkw4woTuhKAdTl
-vOMq2FFzXIEeLpwt7zoSu4naXGz+X2WYlSPOs8itze448Y5m5abFWI1433IEAD2C
-MdMkaL6C+rLpzFYk5dGRsgK0efCc0jWgoJUmLnhCQH2UDOvCAVqL0HMzbe3TvnOE
-BDrnyvti2XH/B708MVxRWjsNdxwcwD6PvjSSviSL/x57fjgs97NG3qDfuICSy4Vl
-zcimUlnIaJXkLvA7tS+c5CcNS2MsJAoi3FiufQVmRAtK42CKLMrDEudKkeacSvmn
-wd6yAZUh9MqHsLJj48OeWPzD4EMq3MVhlDUsHeCiI6OcEdoPTgEu2rQiPYN4Ihd2
-UawXig1687VV6SgCkERjrW4oPA8GIu0lR/y4T/Po34UhhthVBGBE1xkc4ER8JDrt
-WxxVQXKwFLke2J7qbMd1ngGyHCShLaw2aKhwuxJyOl+J09LgXtY4WH8vpp/ruY8m
-0Ncsy88BKliO6AXnYqW648oP2axHnt/2uiw10wLjmk33RT0a4qrxeQsGF4YK0I4e
-yrytIfz+kzLO1i/fdtvonRJvbLMLFG4514s6NTwa6l5olSzDc719BZsY4Q33u6kk
-V+RxybJIeUSgZ5Zfb8Pa
-=YWan
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
