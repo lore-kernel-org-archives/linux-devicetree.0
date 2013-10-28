@@ -1,97 +1,64 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Mon, 28 Oct 2013 16:02:36 +0100
-Message-ID: <526E7C8C.8080603@st.com>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
- <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
- <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
- <525FAEED.7030207@st.com> <20131017141957.GE14104@ns203013.ovh.net>
- <525FF498.3060202@st.com> <1382021369.4093.44.camel@weser.hi.pengutronix.de>
- <5260EFDC.804@st.com>
+From: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: dts: remove unneeded linux,default-state
+ from led nodes
+Date: Mon, 28 Oct 2013 16:17:30 +0100
+Message-ID: <20131028151729.GA6972@schnuecks.de>
+References: <1381774047-23354-1-git-send-email-jason@lakedaemon.net>
+ <20131014182821.GD25095@lunn.ch>
+ <20131014183633.GK5402@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5260EFDC.804@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131014183633.GK5402-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDEwLzE4LzIwMTMgMTA6MjIgQU0sIFNyaW5pdmFzIEtBTkRBR0FUTEEgd3JvdGU6Cj4gT24g
-MTcvMTAvMTMgMTU6NDksIEx1Y2FzIFN0YWNoIHdyb3RlOgo+PiBBbSBEb25uZXJzdGFnLCBkZW4g
-MTcuMTAuMjAxMywgMTU6MzAgKzAxMDAgc2NocmllYiBzcmluaXZhcyBrYW5kYWdhdGxhOgo+PiBb
-Li4uXQo+Pj4gU29ycnkgdG8gYXNrIHRoaXMgYnV0LCBXaGVyZSBpcyB0aGlzIHJlcXVpcmVtZW50
-IGNvbWluZyBmcm9tPwo+Pj4gSSBoYXZlIG5vdCBzcG90dGVkIGFueSB0aGluZyBhcyBzdWNoIGlu
-IGVQQVBSIHNwZWNzLgo+Pj4KPj4+Cj4+PiBBbGwgdGhlIHNwZWMgc2F5cyBpcy4KPj4+ID09PQo+
-Pj4gVGhlIGNvbXBhdGlibGUgcHJvcGVydHkgdmFsdWUgY29uc2lzdHMgb2Ygb25lIG9yIG1vcmUg
-c3RyaW5ncyB0aGF0Cj4+PiBkZWZpbmUgdGhlIHNwZWNpZmljIHByb2dyYW1taW5nIG1vZGVsIGZv
-ciB0aGUgZGV2aWNlLiBUaGlzIGxpc3Qgb2YKPj4+IHN0cmluZ3Mgc2hvdWxkIGJlIHVzZWQgYnkg
-YSBjbGllbnQgcHJvZ3JhbSBmb3IgZGV2aWNlIGRyaXZlciBzZWxlY3Rpb24uCj4+PiBUaGUgcHJv
-cGVydHkgdmFsdWUgY29uc2lzdHMgb2YgYSBjb25jYXRlbmF0ZWQgbGlzdCBvZiBudWxsIHRlcm1p
-bmF0ZWQKPj4+IHN0cmluZ3MsICpmcm9tIG1vc3Qgc3BlY2lmaWMgdG8gbW9zdCBnZW5lcmFsLiog
-VGhleSBhbGxvdyBhIGRldmljZSB0bwo+Pj4gZXhwcmVzcyBpdHMgY29tcGF0aWJpbGl0eSB3aXRo
-IGEgZmFtaWx5IG9mIHNpbWlsYXIgZGV2aWNlcywgcG90ZW50aWFsbHkKPj4+IGFsbG93aW5nIGEg
-c2luZ2xlIGRldmljZSBkcml2ZXIgdG8gbWF0Y2ggYWdhaW5zdCBzZXZlcmFsIGRldmljZXMuCj4+
-PiBUaGUgcmVjb21tZW5kZWQgZm9ybWF0IGlzIOKAnG1hbnVmYWN0dXJlcixtb2RlbOKAnSwgd2hl
-cmUgbWFudWZhY3R1cmVyIGlzIGEKPj4+IHN0cmluZyBkZXNjcmliaW5nIHRoZSBuYW1lIG9mIHRo
-ZSBtYW51ZmFjdHVyZXIgKHN1Y2ggYXMgYW4gT1VJKSwgYW5kCj4+PiBtb2RlbCBzcGVjaWZpZXMg
-dGhlIG1vZGVsIG51bWJlci4KPj4+Cj4+PiBFeGFtcGxlOgo+Pj4gY29tcGF0aWJsZSA9IOKAnGZz
-bCxtcGM4NjQxLXVhcnTigJ0sIOKAnG5zMTY1NTAiOwo+Pj4gSW4gdGhpcyBleGFtcGxlLCBhbiBv
-cGVyYXRpbmcgc3lzdGVtIHdvdWxkIGZpcnN0IHRyeSB0byBsb2NhdGUgYSBkZXZpY2UKPj4+IGRy
-aXZlciB0aGF0IHN1cHBvcnRlZCBmc2wsbXBjODY0MS11YXJ0LiBJZiBhIGRyaXZlciB3YXMgbm90
-IGZvdW5kLCBpdAo+Pj4gd291bGQgdGhlbiB0cnkgdG8gbG9jYXRlIGEgZHJpdmVyIHRoYXQgc3Vw
-cG9ydGVkIHRoZSBtb3JlIGdlbmVyYWwKPj4+IG5zMTY1NTAgZGV2aWNlIHR5cGUuCj4+PiA9PT0K
-Pj4+Cj4+PiBUaGUgbW9yZSBnZW5lcmFsIGNvbXBhdGlibGUgc3RyaW5nIGluIHRoaXMgY2FzZSBp
-cyAic3QsY29tbXMtc3NjLWkyYyIsCj4+PiByYXRoZXIgdGhhbiB0aGUgZmlyc3Qgc29jIG5hbWUu
-Cj4+PiBIb3cgY2FuIGEgZmlyc3QgU09DIG5hbWUgYmUgbW9yZSBnZW5lcmFsPwo+Pj4KPj4+IEFz
-IHRoaXMgZHJpdmVyIGlzIG5vdCB2ZXJ5IHNwZWNpZmljIHRvIFN0aUg0MTUsIGl0IGlzIGdlbmVy
-aWMgZHJpdmVyIGZvcgo+Pj4gU1QgY29tbXMtc3NjLWkyYyBibG9jay4KPj4+Cj4+IFlvdSBqdXN0
-IGNhbid0IGtub3cgaWYgc29tZW9uZSBpbiB0aGUgZnV0dXJlIGRlY2lkZXMgdG8gc3VidGx5IGNo
-YW5nZQo+PiB0aGUgcmVnaXN0ZXIgbGF5b3V0IG9yIG1ha2Ugc29tZSBvdGhlciBpbmNvbXBhdGli
-bGUgY2hhbmdlIHRvIHRoZQo+PiBjb21tcy1zc2MtaTJjIGJsb2NrLgo+Pgo+IFRoaXMgaXMgbm90
-IHRoZSBjYXNlIGZvciBjb21tcy1zc2MtaTJjIGJsb2NrLCBUaGlzIElQIGlzIGtpbmQgb2YgcmV1
-c2VkCj4gZnJvbSBwYXN0IDEwKyB5ZWFycyhJIHRoaW5rISEpLiBBbSBub3QgcHJlZGljdGluZyB0
-aGUgZnV0dXJlIGhlcmUsIGJ1dCBJCj4gYW0gbWFraW5nIGEgaW5mb3JtZWQgZ3Vlc3MgZnJvbSBw
-YXN0IGV4cGVyaWVuY2UgdGhhdCB0aGlzIElQIHdvdWxkIG5vdAo+IGNoYW5nZSBpbiBmdXR1cmUu
-CkhhdmluZyBkaXNjdXNzZWQgd2l0aCBIVyBkZXNpZ24gdGVhbSBpbiBjaGFyZ2Ugb2YgdGhpcyBJ
-UCwKSSBhbHNvIGJldCB0aGF0IHRoaXMgSVAgd29uJ3QgY2hhbmdlIGluIHRoZSBmdXR1cmUuCgo+
-Cj4gQW0gc3RpbGwgbm90IGhhcHB5IHdpdGggdGhlIGlkZWEgb2YgdXNpbmcgZmlyc3QgU29DIGZv
-ciB0aGUgY29tcGF0aWJsZQo+IGZvciBmb2xsb3dpbmcgcmVhc29uczoKPgo+IDE+IEdlbmVyaWMg
-SVBzIGNhbiBiZSBpbnRlZ3JhdGVkIGludG8gdmFyaW91cyB2ZW5kb3IgU29Dcy4gRm9yIGV4YW1w
-bGUKPiBzeW5vcHNpcyBJUCBjYW4gYmUgaW50ZWdyYXRlZCBieSBTVCBwYXJ0cyBhbmQgb3RoZXIg
-bm9uLVNUIHBhcnRzLiBXaGF0Cj4gd291bGQgYmUgdGhlIGZpcnN0IFNvQyBuYW1lIGluIHRoaXMg
-Y2FzZT8KPgo+IDI+IExvb2tpbmcgYXQgZXhhbXBsZSBsaWtlICJhcm0scGwzMTAtY2FjaGUiLCAi
-YXJtLGwyMjAtY2FjaGUiLi4uIG9yIGFueQo+IG90aGVyIGdlbmVyaWMgaXBzLCB3aHkgYXJlIHRo
-ZXNlIElQcyBub3QgZW5jb2RpbmcgdGhlIGZpcnN0IFNvQyBuYW1lIGluCj4gdGhlcmUgY29tcGF0
-aWJsZSBzdHJpbmc/IEkgdGhpbmsgdGhlIGFuc3dlciBpcyBnZW5lcmljIElQLgo+Cj4gMz4gSU1I
-TywgdGhlIGlkZWEgb2YgZmlyc3QgU29DIG1pZ2h0IHNvbHZlIHRoZSBwcm9ibGVtIHlvdSBkZXNj
-cmliZWQsCj4gYnV0IHdoeSB3b3VsZCBzb21lIG9uZSBrbm93IGFib3V0IHRoZSBmaXJzdCBTb0Mg
-d2hlbiB0aGlzIHdhcyBhdmFpbGFibGUuCj4gSW4gdGhpcyBjYXNlIHRoaXMgSVAgd2FzIGF2YWls
-YWJsZSBtYXkgYmUgMTArIHllYXJzIGJhY2sgb24gYW4gU1Q0MAo+IHBsYXRmb3JtLiBIYXZpbmcg
-c3VjaCBvbGQgU29DIG5hbWVzIGluIGNvbXBhdGlibGUgc3RyaW5ncyBpbiB0aGUgZGV2aWNlCj4g
-dHJlZXMgZm9yIGEgbW9kZXJuIGNoaXAgbG9va3MgYml0IGNvbmZ1c2luZy4KPgo+IDQ+IFNUIGdl
-bmVyaWMgZHJpdmVycyB3aGljaCBhcmUgaW4ga2VybmVsIHN0aWxsIHVzZSBzdCw8SVA+IG5hbWUs
-IHNvIEkKPiB3b3VsZCBsaWtlIHRoaXMgY29uc2lzdGVuY3kgYWNyb3NzIGFsbCB0aGUgc3QgZHJp
-dmVycyAoYXQgbGVhc3QgdGhlIG9uZXMKPiB3aGljaCBhcmUgZ29pbmcgdG8gYmUgdXNlZCBieSBt
-YWNoLXN0aSBwbGF0Zm9ybXMpLgo+Cj4gNT4gZVBBUFIgc3BlYyBjbGVhcmx5IHNheXMgdGhhdCBj
-b21wYXRpYmxlIHN0cmluZyBzaG91bGQgY29udGFpbiAibW9zdAo+IHNwZWNpZmljIHRvIG1vc3Qg
-Z2VuZXJhbCIgbmFtZXMuIEluIHRoaXMgY2FzZSB1c2luZyBtb3JlIGdlbmVyaWMgbmFtZQo+IG1h
-a2VzIG1vcmUgc2Vuc2UgdGhhbiBoYXZpbmcgYSBzcGVjaWZpYyBuYW1lIGJlY2F1c2UgaXRzIGdl
-bmVyaWMgSVAuCj4gQWxsb3dpbmcgYSBzaW5nbGUgZGV2aWNlIGRyaXZlciB0byBtYXRjaCBhZ2Fp
-bnN0IHNldmVyYWwgZGV2aWNlcy4KPgo+IDY+IElNSE8sIHRoZSBjb21wYXRpYmxlIHN0cmluZyBz
-aG91bGQgYmUgInZlbmRvciw8SVAtbmFtZT4tPElQLXZlcnNpb24+Igo+IHJhdGhlciB0aGFuIGZp
-cnN0IFNvQy4KSSBhZ3JlZS4KSW4gdGhpcyBjYXNlLCB3ZSBhZGQgc3VwcG9ydCB0byByZXZpc2lv
-biA0IG9mIFNTQyBJUC4KCklzICJzdCxjb21tcy1zc2MtdjQiIG9rYXk/CgoKVGhhbmtzLApNYXhp
-bWUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi Jason, Andrew
+
+On Mon, Oct 14, 2013 at 02:36:33PM -0400, Jason Cooper wrote:
+> On Mon, Oct 14, 2013 at 08:28:21PM +0200, Andrew Lunn wrote:
+> > On Mon, Oct 14, 2013 at 06:07:27PM +0000, Jason Cooper wrote:
+> > > Generally, power LEDs should indicate when power is applied, and go out
+> > > once power is removed.  _Not_ annoy the developer with migraine-inducing
+> > > blinking reminicent of some badly animated television series designed to
+> > > sell sugar to children.
+> > > 
+> > > On a more serious note, most of these OS-specific properties aren't
+> > > necessary and should be removed.  I left two that are legitimately tying
+> > > disk LEDs to disk activity.  Other than that, we keep the state the
+> > > bootloader left them in until userspace changes the state via sysfs.
+> > 
+> > Hi Jason
+> > 
+> > Do you know what happens with "keep" and the bootloader setting the
+> > LED to hardware blink? I'm just wondering if some of these default-on,
+> > are actually disabling hardware blinking and making it constant on?
+
+This is the reason why I used the default-on in kirkwood-ib62x0.dts
+at the time.  The original bootloader did enable hardware blinking. 
+(Can't check whether "keep" would at least disable the blinking,
+since I don't have the original bootloader on the box anymore)
+
+For obvious reasons, the uboot support for the IB NAS 62x0 does not
+copy this behavior from the original uboot. So, it is not
+an issue anymore once you upgrade the bootloader.  
+ 
+> hmmm, good question.  I'll let this patch sit for some time since it is
+> trivial and doesn't conflict with anything in mvebu/dt.  We'll see if
+> anyone says anything.
+
+We can see it as a nice incentive to upgrade the boot loader...
+
+> Regardless of the outcome, 'default-state = "on";' can be used instead
+> for that scenario.
+
+Sure.
+
+- Simon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
