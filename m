@@ -1,73 +1,54 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Tue, 29 Oct 2013 10:16:14 +1100
-Message-ID: <1383002174.5117.19.camel@pasglop>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-	 <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
-	 <20131027134607.E1782C4039D@trevor.secretlab.ca>
-	 <526EDB80.7080406@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] mmc: arasan: Add driver for Arasan SDHCI
+Date: Mon, 28 Oct 2013 18:20:41 -0500
+Message-ID: <526EF149.8060304@gmail.com>
+References: <1381864085-8806-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <526EDB80.7080406@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381864085-8806-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-10-28 at 15:47 -0600, Stephen Warren wrote:
-
-> "interrupts-ex" would be shorter, although I guess slightly harder to
-> guess its purpose, unless you're familiar with "ex" in symbol names.
+On 10/15/2013 02:08 PM, Soren Brinkmann wrote:
+> Add a driver for Arasan's SDHCI controller core.
 > 
-> ...
-> >> +A device node may contain either "interrupts" or "interrupts-extended", but not
-> >> +both. If both properties are present, then the operating system should log an
-> >> +error
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  23 +++
+>  MAINTAINERS                                        |   1 +
+>  drivers/mmc/host/Kconfig                           |  12 ++
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/sdhci-of-arasan.c                 | 224 +++++++++++++++++++++
+>  5 files changed, 261 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>  create mode 100644 drivers/mmc/host/sdhci-of-arasan.c
 > 
-> That sounds rather like prescribing SW behaviour, which I thought DT
-> bindings shouldn't do?
-> 
-> >> and use only the data in "interrupts".
-> 
-> ... so perhaps that's better phrased as:
-> 
-> A device node may contain either "interrupts" or "interrupts-extended",
-> but not both. If both properties are present, the data in "interrupts"
-> takes precedence.
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> new file mode 100644
+> index 000000000000..20f0fc25e270
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -0,0 +1,23 @@
+> +Device Tree Bindings for the Arasan SDCHI Controller
+> +
+> +  The bindings follow the mmc[1] and the clock bindings[2]. Only deviations are
+> +  documented here.
+> +
+> +  [1] Documentation/devicetree/bindings/mmc/mmc.txt
+> +  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required Properties:
+> +  - compatible: Compatibility string. Must be 'arasan,sdhci'
 
-So let's add a coat of paint to this shed :-)
+This string is a bit non-specific. Vendor IP typically has configurable
+options, different revs of IP with fixes/differences, and the
+possibility of integration wierdness or bugs. So it is better to be as
+specific as possible in case the kernel needs to know exactly what
+version of h/w this is.
 
-Either it's an error, or we have a precedence rule. If it's an error
-then there is no point having a precedence rule, the DT is broken and
-might be in all sort of other ways, the precedence is pointless, there's
-no telling what property is correct.
+Rob
 
-However, if we have a precedence rule, then it should be the other way
-around, interrupts-extended takes precedence.
-
-A concrete example:
-
-A device has two interrupts "INT0" and "INT1". One goes to PICA, the
-other one to PICB,
-the first one is necessary for basic use, the second one is only
-necessary for some advanced/new functionality.
-
-It makes sense in this case to have the device-tree do:
-
-   interrupts = < INT0 >;
-   interrupt-parent = <&PICA>;
-   interrupts-extended = <&PICA, INT0, &PICB, INT1>;
-
-Because that way:
-
- - An old kernel which doesn't understand interrupts-extended but *also*
-only uses the first interrupt (doesn't exploit the advanced/new
-functionalities) will work by picking up interrupts+interrupt-parent,
-
- - A newer kernel which does understand interrupts-extended can then
-make use of it to support the advanced/new functionalities.
-
-Cheers,
-Ben.
