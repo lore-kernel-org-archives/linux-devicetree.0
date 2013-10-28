@@ -1,545 +1,97 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [RFC PATCH 2/5] phy: Add WIP Exynos 5250 support to the Exynos
- USB PHY driver
-Date: Mon, 28 Oct 2013 20:11:20 +0530
-Message-ID: <CAFp+6iF2agMNaNhg=6Xx79erV45V=TobH=+GdziFx8j70g8MDw@mail.gmail.com>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
-	<1382710529-12082-3-git-send-email-k.debski@samsung.com>
-	<526A91B9.1060901@ti.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Mon, 28 Oct 2013 16:02:36 +0100
+Message-ID: <526E7C8C.8080603@st.com>
+References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com>
+ <1381754813-4679-2-git-send-email-maxime.coquelin@st.com>
+ <20131016151419.GA14104@ns203013.ovh.net> <525F915D.9020501@st.com>
+ <525FAEED.7030207@st.com> <20131017141957.GE14104@ns203013.ovh.net>
+ <525FF498.3060202@st.com> <1382021369.4093.44.camel@weser.hi.pengutronix.de>
+ <5260EFDC.804@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <526A91B9.1060901@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Kamil Debski <k.debski@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Mateusz Krawczuk <mat.krawczuk@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5260EFDC.804@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-
-On Fri, Oct 25, 2013 at 9:13 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
->
-> On Friday 25 October 2013 07:45 PM, Kamil Debski wrote:
->> Add support for Exynos 5250. This is work-in-progress commit. Not
->> for merging.
->>
->> Signed-off-by: Kamil Debski <k.debski@samsung.com>
->> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>  drivers/phy/Kconfig              |    7 +
->>  drivers/phy/Makefile             |    1 +
->>  drivers/phy/phy-exynos-usb.c     |   10 +
->>  drivers/phy/phy-exynos-usb.h     |    1 +
->>  drivers/phy/phy-exynos5250-usb.c |  411 ++++++++++++++++++++++++++++++++++++++
->>  5 files changed, 430 insertions(+)
->>  create mode 100644 drivers/phy/phy-exynos5250-usb.c
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 2f7ac0a..0f598d0 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -36,4 +36,11 @@ config PHY_EXYNOS4212_USB
->>       help
->>         Enable USB PHY support for Exynos 4212
->>
->> +config PHY_EXYNOS5250_USB
->> +     bool "Support for Exynos 5250"
->> +     depends on PHY_EXYNOS_USB
->
-> This should be a separate driver. Not necessary to use PHY_EXYNOS_USB.
->> +     depends on SOC_EXYNOS5250
->> +     help
->> +       Enable USB PHY support for Exynos 5250
->> +
->>  endmenu
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index ca3dc82..0dff0dd 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -6,3 +6,4 @@ obj-$(CONFIG_GENERIC_PHY)     += phy-core.o
->>  obj-$(CONFIG_PHY_EXYNOS_USB)         += phy-exynos-usb.o
->>  obj-$(CONFIG_PHY_EXYNOS4210_USB)     += phy-exynos4210-usb.o
->>  obj-$(CONFIG_PHY_EXYNOS4212_USB)     += phy-exynos4212-usb.o
->> +obj-$(CONFIG_PHY_EXYNOS5250_USB)     += phy-exynos5250-usb.o
->> diff --git a/drivers/phy/phy-exynos-usb.c b/drivers/phy/phy-exynos-usb.c
->> index d4a26df..172b774 100644
->> --- a/drivers/phy/phy-exynos-usb.c
->> +++ b/drivers/phy/phy-exynos-usb.c
->> @@ -212,6 +212,10 @@ extern const struct uphy_config exynos4210_uphy_config;
->>  extern const struct uphy_config exynos4212_uphy_config;
->>  #endif
->>
->> +#ifdef CONFIG_PHY_EXYNOS5250_USB
->> +extern const struct uphy_config exynos5250_uphy_config;
->> +#endif
->> +
->>  static const struct of_device_id exynos_uphy_of_match[] = {
->>  #ifdef CONFIG_PHY_EXYNOS4210_USB
->>       {
->> @@ -225,6 +229,12 @@ static const struct of_device_id exynos_uphy_of_match[] = {
->>               .data = &exynos4212_uphy_config,
->>       },
->>  #endif
->> +#ifdef CONFIG_PHY_EXYNOS5250_USB
->> +     {
->> +             .compatible = "samsung,exynos5250-usbphy",
->> +             .data = &exynos5250_uphy_config,
->> +     },
->> +#endif
->>       { },
->>  };
->>
->> diff --git a/drivers/phy/phy-exynos-usb.h b/drivers/phy/phy-exynos-usb.h
->> index f45cb3c..a9febfa 100644
->> --- a/drivers/phy/phy-exynos-usb.h
->> +++ b/drivers/phy/phy-exynos-usb.h
->> @@ -42,6 +42,7 @@ enum samsung_cpu_type {
->>       TYPE_S3C64XX,
->>       TYPE_EXYNOS4210,
->>       TYPE_EXYNOS4212,
->> +     TYPE_EXYNOS5250,
->
-> No cpu types here.
-
-One question here.
-In case we move to single driver for Exynos4 SoCs (4210, 4212 and 4412
-later) as well as S5PV210,
-there will be certain things changing from one SoC to another, how
-should we target that in case we
-don't have CPU types ?
-May be i am misinterpreting your suggestion ?
-
->>  };
->>
->>  enum uphy_state {
->> diff --git a/drivers/phy/phy-exynos5250-usb.c b/drivers/phy/phy-exynos5250-usb.c
->> new file mode 100644
->> index 0000000..156093b
->> --- /dev/null
->> +++ b/drivers/phy/phy-exynos5250-usb.c
->> @@ -0,0 +1,411 @@
->> +/*
->> + * Samsung S5P/EXYNOS SoC series USB PHY driver
->> + *
->> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
->> + * Author: Kamil Debski <k.debski@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/spinlock.h>
->> +#include "phy-exynos-usb.h"
->> +
->> +/* Exynos USB PHY registers */
->> +#define EXYNOS_5250_REFCLKSEL_CRYSTAL        0x0
->> +#define EXYNOS_5250_REFCLKSEL_XO     0x1
->> +#define EXYNOS_5250_REFCLKSEL_CLKCORE        0x2
->> +
->> +#define EXYNOS_5250_FSEL_9MHZ6               0x0
->> +#define EXYNOS_5250_FSEL_10MHZ               0x1
->> +#define EXYNOS_5250_FSEL_12MHZ               0x2
->> +#define EXYNOS_5250_FSEL_19MHZ2              0x3
->> +#define EXYNOS_5250_FSEL_20MHZ               0x4
->> +#define EXYNOS_5250_FSEL_24MHZ               0x5
->> +#define EXYNOS_5250_FSEL_50MHZ               0x7
->> +
->> +/* Normal host */
->> +#define EXYNOS_5250_HOSTPHYCTRL0                     0x0
->> +
->> +#define EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL         (0x1 << 31)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_SHIFT     19
->> +#define EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_MASK      \
->> +             (0x3 << EXYNOS_5250_HOSTPHYCTRL0_REFCLKSEL_SHIFT)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT          16
->> +#define EXYNOS_5250_HOSTPHYCTRL0_FSEL_MASK \
->> +             (0x7 << EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_TESTBURNIN          (0x1 << 11)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_RETENABLE           (0x1 << 10)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_COMMON_ON_N         (0x1 << 9)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_MASK              (0x3 << 7)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_DUAL              (0x0 << 7)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_ID0               (0x1 << 7)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_VATESTENB_ANALOGTEST        (0x2 << 7)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_SIDDQ                       (0x1 << 6)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP          (0x1 << 5)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND                (0x1 << 4)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_WORDINTERFACE               (0x1 << 3)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST           (0x1 << 2)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST           (0x1 << 1)
->> +#define EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST            (0x1 << 0)
->> +
->> +/* HSIC0 & HSCI1 */
->> +#define EXYNOS_5250_HOSTPHYCTRL1                     0x10
->> +#define EXYNOS_5250_HOSTPHYCTRL2                     0x20
->> +
->> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_MASK              (0x3 << 23)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_MASK              (0x7f << 16)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_SIDDQ                       (0x1 << 6)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP          (0x1 << 5)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND                (0x1 << 4)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_WORDINTERFACE               (0x1 << 3)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_UTMISWRST           (0x1 << 2)
->> +#define EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST            (0x1 << 0)
->> +
->> +/* EHCI control */
->> +#define EXYNOS_5250_HOSTEHCICTRL                     0x30
->> +#define EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN               (0x1 << 29)
->> +#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR4            (0x1 << 28)
->> +#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR8            (0x1 << 27)
->> +#define EXYNOS_5250_HOSTEHCICTRL_ENAINCR16           (0x1 << 26)
->> +#define EXYNOS_5250_HOSTEHCICTRL_AUTOPPDONOVRCUREN   (0x1 << 25)
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT     19
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_MASK      \
->> +             (0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT)
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_SHIFT     13
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_MASK      \
->> +             (0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL1_SHIFT)
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL2_SHIFT     7
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_MASK      \
->> +             (0x3f << EXYNOS_5250_HOSTEHCICTRL_FLADJVAL0_SHIFT)
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_SHIFT  1
->> +#define EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_MASK \
->> +             (0x1 << EXYNOS_5250_HOSTEHCICTRL_FLADJVALHOST_SHIFT)
->> +#define EXYNOS_5250_HOSTEHCICTRL_SIMULATIONMODE              (0x1 << 0)
->> +
->> +/* OHCI control */
->> +#define EXYNOS_5250_HOSTOHCICTRL                        0x34
->> +#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_SHIFT   1
->> +#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_MASK \
->> +             (0x3ff << EXYNOS_5250_HOSTOHCICTRL_FRAMELENVAL_SHIFT)
->> +#define EXYNOS_5250_HOSTOHCICTRL_FRAMELENVALEN               (0x1 << 0)
->> +
->> +/* USBOTG */
->> +#define EXYNOS_5250_USBOTGSYS                                0x38
->> +#define EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET               (0x1 << 14)
->> +#define EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG               (0x1 << 13)
->> +#define EXYNOS_5250_USBOTGSYS_PHY_SW_RST             (0x1 << 12)
->> +#define EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT                9
->> +#define EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK \
->> +             (0x3 << EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT)
->> +#define EXYNOS_5250_USBOTGSYS_ID_PULLUP                      (0x1 << 8)
->> +#define EXYNOS_5250_USBOTGSYS_COMMON_ON                      (0x1 << 7)
->> +#define EXYNOS_5250_USBOTGSYS_FSEL_SHIFT             4
->> +#define EXYNOS_5250_USBOTGSYS_FSEL_MASK \
->> +             (0x3 << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT)
->> +#define EXYNOS_5250_USBOTGSYS_FORCE_SLEEP            (0x1 << 3)
->> +#define EXYNOS_5250_USBOTGSYS_OTGDISABLE             (0x1 << 2)
->> +#define EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG             (0x1 << 1)
->> +#define EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND          (0x1 << 0)
->> +
->> +/* Isolation, configured in the power management unit */
->> +#define EXYNOS_5250_USB_ISOL_OTG_OFFSET              0x0
->> +#define EXYNOS_5250_USB_ISOL_OTG             (1 << 0)
->> +#define EXYNOS_5250_USB_ISOL_HOST_OFFSET     0x4
->> +#define EXYNOS_5250_USB_ISOL_HOST            (1 << 0)
->> +
->> +enum exynos4x12_phy_id {
->> +     EXYNOS5250_DEVICE,
->> +     EXYNOS5250_HOST,
->> +     EXYNOS5250_HSIC0,
->> +     EXYNOS5250_HSIC1,
->> +     EXYNOS5250_NUM_PHYS,
->> +};
->> +
->> +/* exynos5250_rate_to_clk() converts the supplied clock rate to the value that
->> + * can be written to the phy register. */
->
-> Follow coding guidelines ;-)
->> +static u32 exynos5250_rate_to_clk(unsigned long rate)
->> +{
->> +     unsigned int clksel;
->> +
->> +     /* EXYNOS_5250_FSEL_MASK */
->> +
->> +     switch (rate) {
->> +     case 9600 * KHZ:
->> +             clksel = EXYNOS_5250_FSEL_9MHZ6;
->> +             break;
->> +     case 10 * MHZ:
->> +             clksel = EXYNOS_5250_FSEL_10MHZ;
->> +             break;
->> +     case 12 * MHZ:
->> +             clksel = EXYNOS_5250_FSEL_12MHZ;
->> +             break;
->> +     case 19200 * KHZ:
->> +             clksel = EXYNOS_5250_FSEL_19MHZ2;
->> +             break;
->> +     case 20 * MHZ:
->> +             clksel = EXYNOS_5250_FSEL_20MHZ;
->> +             break;
->> +     case 24 * MHZ:
->> +             clksel = EXYNOS_5250_FSEL_24MHZ;
->> +             break;
->> +     case 50 * MHZ:
->> +             clksel = EXYNOS_5250_FSEL_50MHZ;
->> +             break;
->> +     default:
->> +             clksel = CLKSEL_ERROR;
->> +     }
->> +
->> +     return clksel;
->> +}
->> +
->> +static void exynos5250_isol(struct uphy_instance *inst, bool on)
->> +{
->> +     struct uphy_driver *drv = inst->drv;
->> +     u32 offset;
->> +     u32 mask;
->> +     u32 tmp;
->> +
->> +     if (!drv->reg_isol)
->> +             return;
->> +
->> +     switch (inst->cfg->id) {
->> +     case EXYNOS5250_DEVICE:
->> +             offset = EXYNOS_5250_USB_ISOL_OTG_OFFSET;
->> +             mask = EXYNOS_5250_USB_ISOL_OTG;
->> +             break;
->> +     case EXYNOS5250_HOST:
->> +             offset = EXYNOS_5250_USB_ISOL_HOST_OFFSET;
->> +             mask = EXYNOS_5250_USB_ISOL_HOST;
->> +             break;
->> +     default:
->> +             return;
->> +     };
->> +
->> +     tmp = readl(drv->reg_isol + offset);
->> +     if (on)
->> +             tmp &= ~mask;
->> +     else
->> +             tmp |= mask;
->> +     writel(tmp, drv->reg_isol + offset);
->> +}
->> +
->> +static void exynos5250_phy_pwr(struct uphy_instance *inst, bool on)
->> +{
->> +     struct uphy_driver *drv = inst->drv;
->> +     u32 ctrl0;
->> +     u32 otg;
->> +     u32 ehci;
->> +     u32 ohci;
->> +
->> +     switch (inst->cfg->id) {
->> +     case EXYNOS5250_DEVICE:
->> +             writel(0, drv->reg_mode);
->> +
->> +             /* OTG configuration */
->> +             otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
->> +             /* The clock */
->> +             otg &= ~EXYNOS_5250_USBOTGSYS_FSEL_MASK;
->> +             otg |= inst->clk << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT;
->> +             /* Reset */
->> +             otg &= ~(EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
->> +                     EXYNOS_5250_USBOTGSYS_FORCE_SLEEP |
->> +                     EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG);
->> +             /* TODO: Clear 4 bits as the old driver does. */
->> +             otg |=  EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
->> +                     EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET |
->> +                     EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
->> +                     EXYNOS_5250_USBOTGSYS_OTGDISABLE;
->> +             /* Ref clock */
->> +             otg &=  EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK;
->> +             otg |=  EXYNOS_5250_REFCLKSEL_CLKCORE <<
->> +                                     EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT;
->> +             writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
->> +             udelay(10);
->> +             otg &= ~(EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
->> +                     EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
->> +                     EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
->> +
->> +
->> +             break;
->> +     case EXYNOS5250_HOST:
->> +             /* Host registers configuration */
->> +             ctrl0 = readl(drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
->> +             /* The clock */
->> +             ctrl0 &= ~EXYNOS_5250_HOSTPHYCTRL0_FSEL_MASK;
->> +             ctrl0 |= inst->clk << EXYNOS_5250_HOSTPHYCTRL0_FSEL_SHIFT;
->> +
->> +             /* Reset */
->> +             ctrl0 &= ~(     EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_SIDDQ |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP);
->> +             ctrl0 |=        EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_COMMON_ON_N;
->> +             writel(ctrl0, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
->> +             udelay(10);
->> +             ctrl0 &= ~(     EXYNOS_5250_HOSTPHYCTRL0_LINKSWRST |
->> +                             EXYNOS_5250_HOSTPHYCTRL0_UTMISWRST);
->> +             writel(ctrl0, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
->> +
->> +             /* OTG configuration */
->> +             otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
->> +             /* The clock */
->> +             otg &= ~EXYNOS_5250_USBOTGSYS_FSEL_MASK;
->> +             otg |= inst->clk << EXYNOS_5250_USBOTGSYS_FSEL_SHIFT;
->> +             /* Reset */
->> +             otg &= ~(EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
->> +                     EXYNOS_5250_USBOTGSYS_FORCE_SLEEP |
->> +                     EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG);
->> +             /* TODO: Clear 4 bits as the old driver does. */
->> +             otg |=  EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
->> +                     EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET |
->> +                     EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
->> +                     EXYNOS_5250_USBOTGSYS_OTGDISABLE;
->> +             /* Ref clock */
->> +             otg &=  EXYNOS_5250_USBOTGSYS_REFCLKSEL_MASK;
->> +             otg |=  EXYNOS_5250_REFCLKSEL_CLKCORE <<
->> +                                     EXYNOS_5250_USBOTGSYS_REFCLKSEL_SHIFT;
->> +             writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
->> +             udelay(10);
->> +             otg &= ~(EXYNOS_5250_USBOTGSYS_PHY_SW_RST |
->> +                     EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
->> +                     EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
->> +
->> +             /* Enable EHCI DMA burst */
->> +             ehci = readl(drv->reg_phy + EXYNOS_5250_HOSTEHCICTRL);
->> +             ehci |= EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN |
->> +                     EXYNOS_5250_HOSTEHCICTRL_ENAINCR4 |
->> +                     EXYNOS_5250_HOSTEHCICTRL_ENAINCR8 |
->> +                     EXYNOS_5250_HOSTEHCICTRL_ENAINCR16;
->> +             writel(ehci, drv->reg_phy + EXYNOS_5250_HOSTEHCICTRL);
->> +
->> +             /* OHCI settings */
->> +             ohci = readl(drv->reg_phy + EXYNOS_5250_HOSTOHCICTRL);
->> +             /* Let's do some undocumented magic (based on the old driver) */
->> +             ohci |= 0x1 << 3;
->> +             writel(ohci, drv->reg_phy + EXYNOS_5250_HOSTOHCICTRL);
->> +
->> +             break;
->> +     }
->> +}
->> +
->> +static int exynos5250_power_on(struct uphy_instance *inst)
->> +{
->> +     struct uphy_driver *drv = inst->drv;
->> +
->> +     if (inst->state == STATE_ON) {
->> +             dev_err(drv->dev, "usb phy \"%s\" already on",
->> +                                                     inst->cfg->label);
->> +             return -ENODEV;
->> +     }
->> +
->> +     inst->state = STATE_ON;
->> +     inst->ref_cnt++;
->> +     if (inst->ref_cnt > 1)
->> +             return 0;
->> +
->> +     exynos5250_phy_pwr(inst, 1);
->> +     exynos5250_isol(inst, 0);
->> +
->> +     /* Power on the device, as it is necessary for HSIC to work */
->> +     if (inst->cfg->id == EXYNOS5250_HSIC0) {
->> +             struct uphy_instance *device =
->> +                                     &drv->uphy_instances[EXYNOS5250_DEVICE];
->> +             device->ref_cnt++;
->> +             if (device->ref_cnt > 1)
->> +                     return 0;
->> +             exynos5250_phy_pwr(device, 1);
->> +             exynos5250_isol(device, 0);
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int exynos5250_power_off(struct uphy_instance *inst)
->> +{
->> +     struct uphy_driver *drv = inst->drv;
->> +
->> +     if (inst->state == STATE_OFF) {
->> +             dev_err(drv->dev, "usb phy \"%s\" already off",
->> +                                                     inst->cfg->label);
->> +             return -EINVAL;
->> +     }
->> +
->> +     inst->state = STATE_OFF;
->> +     inst->ref_cnt--;
->> +
->> +     if (inst->ref_cnt > 0)
->> +             return 0;
->> +
->> +     exynos5250_isol(inst, 1);
->> +     exynos5250_phy_pwr(inst, 0);
->> +
->> +     if (inst->cfg->id == EXYNOS5250_HSIC0) {
->> +             struct uphy_instance *device =
->> +                                     &drv->uphy_instances[EXYNOS5250_DEVICE];
->> +             device->ref_cnt--;
->> +             if (device->ref_cnt > 0)
->> +                     return 0;
->> +             exynos5250_isol(device, 1);
->> +             exynos5250_phy_pwr(device, 0);
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +
->> +static const struct common_phy exynos5250_phys[] = {
->> +     {
->> +             .label          = "device",
->> +             .type           = PHY_DEVICE,
->> +             .id             = EXYNOS5250_DEVICE,
->> +             .rate_to_clk    = exynos5250_rate_to_clk,
->> +             .power_on       = exynos5250_power_on,
->> +             .power_off      = exynos5250_power_off,
->> +     },
->> +     {
->> +             .label          = "host",
->> +             .type           = PHY_HOST,
->> +             .id             = EXYNOS5250_HOST,
->> +             .rate_to_clk    = exynos5250_rate_to_clk,
->> +             .power_on       = exynos5250_power_on,
->> +             .power_off      = exynos5250_power_off,
->> +     },
->> +     {
->> +             .label          = "hsic0",
->> +             .type           = PHY_HOST,
->> +             .id             = EXYNOS5250_HSIC0,
->> +             .rate_to_clk    = exynos5250_rate_to_clk,
->> +             .power_on       = exynos5250_power_on,
->> +             .power_off      = exynos5250_power_off,
->> +     },
->> +     {
->> +             .label          = "hsic1",
->> +             .type           = PHY_HOST,
->> +             .id             = EXYNOS5250_HSIC1,
->> +             .rate_to_clk    = exynos5250_rate_to_clk,
->> +             .power_on       = exynos5250_power_on,
->> +             .power_off      = exynos5250_power_off,
->> +     },
->> +     {},
->> +};
->
-> All this can be removed if you don't use exynos common PHY.
->
-> Thanks
-> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+Ck9uIDEwLzE4LzIwMTMgMTA6MjIgQU0sIFNyaW5pdmFzIEtBTkRBR0FUTEEgd3JvdGU6Cj4gT24g
+MTcvMTAvMTMgMTU6NDksIEx1Y2FzIFN0YWNoIHdyb3RlOgo+PiBBbSBEb25uZXJzdGFnLCBkZW4g
+MTcuMTAuMjAxMywgMTU6MzAgKzAxMDAgc2NocmllYiBzcmluaXZhcyBrYW5kYWdhdGxhOgo+PiBb
+Li4uXQo+Pj4gU29ycnkgdG8gYXNrIHRoaXMgYnV0LCBXaGVyZSBpcyB0aGlzIHJlcXVpcmVtZW50
+IGNvbWluZyBmcm9tPwo+Pj4gSSBoYXZlIG5vdCBzcG90dGVkIGFueSB0aGluZyBhcyBzdWNoIGlu
+IGVQQVBSIHNwZWNzLgo+Pj4KPj4+Cj4+PiBBbGwgdGhlIHNwZWMgc2F5cyBpcy4KPj4+ID09PQo+
+Pj4gVGhlIGNvbXBhdGlibGUgcHJvcGVydHkgdmFsdWUgY29uc2lzdHMgb2Ygb25lIG9yIG1vcmUg
+c3RyaW5ncyB0aGF0Cj4+PiBkZWZpbmUgdGhlIHNwZWNpZmljIHByb2dyYW1taW5nIG1vZGVsIGZv
+ciB0aGUgZGV2aWNlLiBUaGlzIGxpc3Qgb2YKPj4+IHN0cmluZ3Mgc2hvdWxkIGJlIHVzZWQgYnkg
+YSBjbGllbnQgcHJvZ3JhbSBmb3IgZGV2aWNlIGRyaXZlciBzZWxlY3Rpb24uCj4+PiBUaGUgcHJv
+cGVydHkgdmFsdWUgY29uc2lzdHMgb2YgYSBjb25jYXRlbmF0ZWQgbGlzdCBvZiBudWxsIHRlcm1p
+bmF0ZWQKPj4+IHN0cmluZ3MsICpmcm9tIG1vc3Qgc3BlY2lmaWMgdG8gbW9zdCBnZW5lcmFsLiog
+VGhleSBhbGxvdyBhIGRldmljZSB0bwo+Pj4gZXhwcmVzcyBpdHMgY29tcGF0aWJpbGl0eSB3aXRo
+IGEgZmFtaWx5IG9mIHNpbWlsYXIgZGV2aWNlcywgcG90ZW50aWFsbHkKPj4+IGFsbG93aW5nIGEg
+c2luZ2xlIGRldmljZSBkcml2ZXIgdG8gbWF0Y2ggYWdhaW5zdCBzZXZlcmFsIGRldmljZXMuCj4+
+PiBUaGUgcmVjb21tZW5kZWQgZm9ybWF0IGlzIOKAnG1hbnVmYWN0dXJlcixtb2RlbOKAnSwgd2hl
+cmUgbWFudWZhY3R1cmVyIGlzIGEKPj4+IHN0cmluZyBkZXNjcmliaW5nIHRoZSBuYW1lIG9mIHRo
+ZSBtYW51ZmFjdHVyZXIgKHN1Y2ggYXMgYW4gT1VJKSwgYW5kCj4+PiBtb2RlbCBzcGVjaWZpZXMg
+dGhlIG1vZGVsIG51bWJlci4KPj4+Cj4+PiBFeGFtcGxlOgo+Pj4gY29tcGF0aWJsZSA9IOKAnGZz
+bCxtcGM4NjQxLXVhcnTigJ0sIOKAnG5zMTY1NTAiOwo+Pj4gSW4gdGhpcyBleGFtcGxlLCBhbiBv
+cGVyYXRpbmcgc3lzdGVtIHdvdWxkIGZpcnN0IHRyeSB0byBsb2NhdGUgYSBkZXZpY2UKPj4+IGRy
+aXZlciB0aGF0IHN1cHBvcnRlZCBmc2wsbXBjODY0MS11YXJ0LiBJZiBhIGRyaXZlciB3YXMgbm90
+IGZvdW5kLCBpdAo+Pj4gd291bGQgdGhlbiB0cnkgdG8gbG9jYXRlIGEgZHJpdmVyIHRoYXQgc3Vw
+cG9ydGVkIHRoZSBtb3JlIGdlbmVyYWwKPj4+IG5zMTY1NTAgZGV2aWNlIHR5cGUuCj4+PiA9PT0K
+Pj4+Cj4+PiBUaGUgbW9yZSBnZW5lcmFsIGNvbXBhdGlibGUgc3RyaW5nIGluIHRoaXMgY2FzZSBp
+cyAic3QsY29tbXMtc3NjLWkyYyIsCj4+PiByYXRoZXIgdGhhbiB0aGUgZmlyc3Qgc29jIG5hbWUu
+Cj4+PiBIb3cgY2FuIGEgZmlyc3QgU09DIG5hbWUgYmUgbW9yZSBnZW5lcmFsPwo+Pj4KPj4+IEFz
+IHRoaXMgZHJpdmVyIGlzIG5vdCB2ZXJ5IHNwZWNpZmljIHRvIFN0aUg0MTUsIGl0IGlzIGdlbmVy
+aWMgZHJpdmVyIGZvcgo+Pj4gU1QgY29tbXMtc3NjLWkyYyBibG9jay4KPj4+Cj4+IFlvdSBqdXN0
+IGNhbid0IGtub3cgaWYgc29tZW9uZSBpbiB0aGUgZnV0dXJlIGRlY2lkZXMgdG8gc3VidGx5IGNo
+YW5nZQo+PiB0aGUgcmVnaXN0ZXIgbGF5b3V0IG9yIG1ha2Ugc29tZSBvdGhlciBpbmNvbXBhdGli
+bGUgY2hhbmdlIHRvIHRoZQo+PiBjb21tcy1zc2MtaTJjIGJsb2NrLgo+Pgo+IFRoaXMgaXMgbm90
+IHRoZSBjYXNlIGZvciBjb21tcy1zc2MtaTJjIGJsb2NrLCBUaGlzIElQIGlzIGtpbmQgb2YgcmV1
+c2VkCj4gZnJvbSBwYXN0IDEwKyB5ZWFycyhJIHRoaW5rISEpLiBBbSBub3QgcHJlZGljdGluZyB0
+aGUgZnV0dXJlIGhlcmUsIGJ1dCBJCj4gYW0gbWFraW5nIGEgaW5mb3JtZWQgZ3Vlc3MgZnJvbSBw
+YXN0IGV4cGVyaWVuY2UgdGhhdCB0aGlzIElQIHdvdWxkIG5vdAo+IGNoYW5nZSBpbiBmdXR1cmUu
+CkhhdmluZyBkaXNjdXNzZWQgd2l0aCBIVyBkZXNpZ24gdGVhbSBpbiBjaGFyZ2Ugb2YgdGhpcyBJ
+UCwKSSBhbHNvIGJldCB0aGF0IHRoaXMgSVAgd29uJ3QgY2hhbmdlIGluIHRoZSBmdXR1cmUuCgo+
+Cj4gQW0gc3RpbGwgbm90IGhhcHB5IHdpdGggdGhlIGlkZWEgb2YgdXNpbmcgZmlyc3QgU29DIGZv
+ciB0aGUgY29tcGF0aWJsZQo+IGZvciBmb2xsb3dpbmcgcmVhc29uczoKPgo+IDE+IEdlbmVyaWMg
+SVBzIGNhbiBiZSBpbnRlZ3JhdGVkIGludG8gdmFyaW91cyB2ZW5kb3IgU29Dcy4gRm9yIGV4YW1w
+bGUKPiBzeW5vcHNpcyBJUCBjYW4gYmUgaW50ZWdyYXRlZCBieSBTVCBwYXJ0cyBhbmQgb3RoZXIg
+bm9uLVNUIHBhcnRzLiBXaGF0Cj4gd291bGQgYmUgdGhlIGZpcnN0IFNvQyBuYW1lIGluIHRoaXMg
+Y2FzZT8KPgo+IDI+IExvb2tpbmcgYXQgZXhhbXBsZSBsaWtlICJhcm0scGwzMTAtY2FjaGUiLCAi
+YXJtLGwyMjAtY2FjaGUiLi4uIG9yIGFueQo+IG90aGVyIGdlbmVyaWMgaXBzLCB3aHkgYXJlIHRo
+ZXNlIElQcyBub3QgZW5jb2RpbmcgdGhlIGZpcnN0IFNvQyBuYW1lIGluCj4gdGhlcmUgY29tcGF0
+aWJsZSBzdHJpbmc/IEkgdGhpbmsgdGhlIGFuc3dlciBpcyBnZW5lcmljIElQLgo+Cj4gMz4gSU1I
+TywgdGhlIGlkZWEgb2YgZmlyc3QgU29DIG1pZ2h0IHNvbHZlIHRoZSBwcm9ibGVtIHlvdSBkZXNj
+cmliZWQsCj4gYnV0IHdoeSB3b3VsZCBzb21lIG9uZSBrbm93IGFib3V0IHRoZSBmaXJzdCBTb0Mg
+d2hlbiB0aGlzIHdhcyBhdmFpbGFibGUuCj4gSW4gdGhpcyBjYXNlIHRoaXMgSVAgd2FzIGF2YWls
+YWJsZSBtYXkgYmUgMTArIHllYXJzIGJhY2sgb24gYW4gU1Q0MAo+IHBsYXRmb3JtLiBIYXZpbmcg
+c3VjaCBvbGQgU29DIG5hbWVzIGluIGNvbXBhdGlibGUgc3RyaW5ncyBpbiB0aGUgZGV2aWNlCj4g
+dHJlZXMgZm9yIGEgbW9kZXJuIGNoaXAgbG9va3MgYml0IGNvbmZ1c2luZy4KPgo+IDQ+IFNUIGdl
+bmVyaWMgZHJpdmVycyB3aGljaCBhcmUgaW4ga2VybmVsIHN0aWxsIHVzZSBzdCw8SVA+IG5hbWUs
+IHNvIEkKPiB3b3VsZCBsaWtlIHRoaXMgY29uc2lzdGVuY3kgYWNyb3NzIGFsbCB0aGUgc3QgZHJp
+dmVycyAoYXQgbGVhc3QgdGhlIG9uZXMKPiB3aGljaCBhcmUgZ29pbmcgdG8gYmUgdXNlZCBieSBt
+YWNoLXN0aSBwbGF0Zm9ybXMpLgo+Cj4gNT4gZVBBUFIgc3BlYyBjbGVhcmx5IHNheXMgdGhhdCBj
+b21wYXRpYmxlIHN0cmluZyBzaG91bGQgY29udGFpbiAibW9zdAo+IHNwZWNpZmljIHRvIG1vc3Qg
+Z2VuZXJhbCIgbmFtZXMuIEluIHRoaXMgY2FzZSB1c2luZyBtb3JlIGdlbmVyaWMgbmFtZQo+IG1h
+a2VzIG1vcmUgc2Vuc2UgdGhhbiBoYXZpbmcgYSBzcGVjaWZpYyBuYW1lIGJlY2F1c2UgaXRzIGdl
+bmVyaWMgSVAuCj4gQWxsb3dpbmcgYSBzaW5nbGUgZGV2aWNlIGRyaXZlciB0byBtYXRjaCBhZ2Fp
+bnN0IHNldmVyYWwgZGV2aWNlcy4KPgo+IDY+IElNSE8sIHRoZSBjb21wYXRpYmxlIHN0cmluZyBz
+aG91bGQgYmUgInZlbmRvciw8SVAtbmFtZT4tPElQLXZlcnNpb24+Igo+IHJhdGhlciB0aGFuIGZp
+cnN0IFNvQy4KSSBhZ3JlZS4KSW4gdGhpcyBjYXNlLCB3ZSBhZGQgc3VwcG9ydCB0byByZXZpc2lv
+biA0IG9mIFNTQyBJUC4KCklzICJzdCxjb21tcy1zc2MtdjQiIG9rYXk/CgoKVGhhbmtzLApNYXhp
+bWUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
