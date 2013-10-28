@@ -1,7 +1,7 @@
 From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: smdk5250: Add hdmi phy settings
-Date: Mon, 28 Oct 2013 16:09:13 +0530
-Message-ID: <1382956755-1318-2-git-send-email-s.shirish@samsung.com>
+Subject: [PATCH 2/3] ARM: dts: arndale: Add hdmi phy settings
+Date: Mon, 28 Oct 2013 16:09:14 +0530
+Message-ID: <1382956755-1318-3-git-send-email-s.shirish@samsung.com>
 References: <1382956755-1318-1-git-send-email-s.shirish@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1382956755-1318-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,23 +10,23 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3
 Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to smdk5250
-dts,as its more of a per board configuration and
-also shall be easier for supporting future chipsets.
+This patch moves the hdmi phy setting to arndale dts,
+as its more of a per board configuration and also
+shall be easier for supporting future chipsets.
 
 Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   68 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts |   68 ++++++++++++++++++++++++++++++
  1 file changed, 68 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 49f18c2..0795e23 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -220,6 +220,74 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index abc7272..3b33704 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -427,6 +427,74 @@
+ 		vdd_osc-supply = <&ldo10_reg>;
+ 		vdd_pll-supply = <&ldo8_reg>;
+ 		vdd-supply = <&ldo8_reg>;
 +		hdmiphy-configs {
 +			nr-configs = <13>;
 +			config0: config0 {
@@ -97,7 +97,7 @@ index 49f18c2..0795e23 100644
 +		};
  	};
  
- 	codec@11000000 {
+ 	mmc_reg: voltage-regulator {
 -- 
 1.7.9.5
 
