@@ -1,86 +1,86 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Mon, 28 Oct 2013 22:49:00 +0000
-Message-ID: <20131028224900.GB4763@kartoffel>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
- <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
- <20131027134607.E1782C4039D@trevor.secretlab.ca>
- <526EDB80.7080406@wwwdotorg.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] mmc: arasan: Add driver for Arasan SDHCI
+Date: Mon, 28 Oct 2013 15:50:36 -0700
+Message-ID: <9bba3f23-e6b8-4a9a-93ab-4f89f525a4a2@CO1EHSMHS030.ehs.local>
+References: <1381864085-8806-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1587218.cW45zK0ty2@flatron>
+ <b6ced7bb-e8df-4cc1-95a1-df575e37dea7@CO1EHSMHS001.ehs.local>
+ <1873048.2t2L2zW4W9@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <526EDB80.7080406@wwwdotorg.org>
+In-Reply-To: <1873048.2t2L2zW4W9@flatron>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 09:47:44PM +0000, Stephen Warren wrote:
-> On 10/27/2013 07:46 AM, Grant Likely wrote:
-> > On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> >> The standard interrupts property in device tree can only handle
-> >> interrupts coming from a single interrupt parent. If a device is wired
-> >> to multiple interrupt controllers, then it needs to be attached to a
-> >> node with an interrupt-map property to demux the interrupt specifiers
-> >> which is confusing. It would be a lot easier if there was a form of the
-> >> interrupts property that allows for a separate interrupt phandle for
-> >> each interrupt specifier.
-> >>
-> >> This patch does exactly that by creating a new interrupts-extended
-> >> property which reuses the phandle+arguments pattern used by GPIOs and
-> >> other core bindings.
-> >>
-> >> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> >> Cc: Rob Herring <rob.herring@calxeda.com>
-> > 
-> > Alright, I want to merge this one. I've got an Ack from Tony, general
-> > agreement from an in person converstaion from Ben (aside from wishing he
-> > could think of a better property name), and various rumblings of
-> > approval from anyone I talked to about it at ksummit. I'd like to have
-> > something more that that to put into the commit text. Please take a look
-> > and let me know if you agree/disagree with this binding.
-> 
-> The new binding makes sense to me. So, the binding,
-> Acked-by: Stephen Warren <swarren@nvidia.com>
-> 
-> A couple of minor perhaps bikesheddy comments below.
-> 
-> >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> 
-> >> +Nodes that describe devices which generate interrupts must contain an either an
-> >> +"interrupts" property or an "interrupts-extended" property. These properties
-> 
-> "interrupts-ex" would be shorter, although I guess slightly harder to
-> guess its purpose, unless you're familiar with "ex" in symbol names.
+On Mon, Oct 28, 2013 at 11:19:13PM +0100, Tomasz Figa wrote:
+> On Monday 28 of October 2013 14:47:38 S=C3=B6ren Brinkmann wrote:
+> > On Mon, Oct 28, 2013 at 10:16:49PM +0100, Tomasz Figa wrote:
+> > > Hi Soren,
+> > >=20
+> > > On Tuesday 15 of October 2013 12:08:04 Soren Brinkmann wrote:
+> > > > Add a driver for Arasan's SDHCI controller core.
+> > > >=20
+> > > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > > > ---
+> > > >=20
+> > > >  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  23 +++
+> > > >  MAINTAINERS                                        |   1 +
+> > > >  drivers/mmc/host/Kconfig                           |  12 ++
+> > > >  drivers/mmc/host/Makefile                          |   1 +
+> > > >  drivers/mmc/host/sdhci-of-arasan.c                 | 224
+> > > >=20
+> > > > +++++++++++++++++++++ 5 files changed, 261 insertions(+)
+> > > >=20
+> > > >  create mode 100644
+> > > >=20
+> > > > Documentation/devicetree/bindings/mmc/arasan,sdhci.txt create m=
+ode
+> > > > 100644 drivers/mmc/host/sdhci-of-arasan.c
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci=
+=2Etxt
+> > > > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt new fi=
+le
+> > > > mode
+> > > > 100644
+> > > > index 000000000000..20f0fc25e270
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > > @@ -0,0 +1,23 @@
+> > > > +Device Tree Bindings for the Arasan SDCHI Controller
+> > > > +
+> > > > +  The bindings follow the mmc[1] and the clock bindings[2]. On=
+ly
+> > > > deviations are +  documented here.
+> > > > +
+> > > > +  [1] Documentation/devicetree/bindings/mmc/mmc.txt
+> > > > +  [2] Documentation/devicetree/bindings/clock/clock-bindings.t=
+xt
+> > > > +
+> > >=20
+> > > > +Required Properties:
+> > > According to the example below, the list of required properties l=
+acks
+> > > interrupt-related properties.
+> >=20
+> > Well, the interrupt bindings seem to differ between platforms and
+> > architecture and looking at documentation for other sdhci bindings =
+it
+> > seemed to be okay to avoid documenting them in this place.
+>=20
+> Sure, but I believe that this controller always has an interrupt sign=
+al,=20
+> so at least it should be marked that interrupts need to be specified.
+Okay, I'll add these lines:
+  - interrupts: Interrupt specifier                                    =
+         =20
+  - interrupt-parent: Phandle for the interrupt controller that service=
+s                                =20
+                      interrupts for this device.
 
-I'd prefer a more precise name. IMO "-extended" is preferable to "-ex".
-
-> 
-> ...
-> >> +A device node may contain either "interrupts" or "interrupts-extended", but not
-> >> +both. If both properties are present, then the operating system should log an
-> >> +error
-> 
-> That sounds rather like prescribing SW behaviour, which I thought DT
-> bindings shouldn't do?
-
-I think recommending a behaviour relating to parsing is valid. Parsing notes in
-bindings make it very easy to write an extensible binding. I think if we'd just
-stated that having both properties was invalid you would not have a problem?
-
-> 
-> >> and use only the data in "interrupts".
-> 
-> ... so perhaps that's better phrased as:
-> 
-> A device node may contain either "interrupts" or "interrupts-extended",
-> but not both. If both properties are present, the data in "interrupts"
-> takes precedence.
-> 
-
-This sounds reasonable to me, but I'd definitely want the kernel to scream
-(though I appreciate that's separate from the binding details).
-
-Thanks,
-Mark.
+	S=C3=B6ren
