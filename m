@@ -1,69 +1,113 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: Add new Exynos USB PHY driver
-Date: Mon, 28 Oct 2013 21:00:01 +0100
-Message-ID: <1548448.GBuE52miBt@flatron>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com> <526A90B9.3040501@ti.com> <025b01ced3e4$ec685db0$c5391910$%debski@samsung.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 1/4] rename ARCH_BCM to ARCH_BCM_MOBILE (mach-bcm)
+Date: Mon, 28 Oct 2013 13:38:09 -0700
+Message-ID: <CAOesGMi59voTKvu1zA5zpv4xDiF_2OQFMOjtx2wg4S7W=MhY3g@mail.gmail.com>
+References: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
+	<1379956836-5866-2-git-send-email-bcm@fixthebug.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <025b01ced3e4$ec685db0$c5391910$%debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1379956836-5866-2-git-send-email-bcm@fixthebug.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Domenico Andreoli <cavokz@gmail.com>, Christian Daudt <csd@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Matt Porter <matt.porter@linaro.org>, Alex Elder <alex.elder@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+Hi,
 
-On Monday 28 of October 2013 14:52:19 Kamil Debski wrote:
-> Hi Kishon,
-> 
-> Thank you for your review! I will answer your comments below.
-[snip]
-> > > +
-> > > +	switch (drv->cfg->cpu) {
-> > > +	case TYPE_EXYNOS4210:
-> > 
-> > > +	case TYPE_EXYNOS4212:
-> > Lets not add such cpu checks inside driver.
-> 
-> Some SoC have a special register, which switches the OTG lines between
-> device and host modes. I understand that it might not be the prettiest
-> code. I see this as a good compromise between having a single huge
-> driver for all Exynos SoCs and having a multiple drivers for each SoC
-> version. PHY IPs in these chips very are similar but have to be handled
-> differently. Any other ideas to solve this issue?
+Replying here but since this is a part of your pull request. There's
+still time to get this in since it's a fairly small self-contained
+change, so let's try to get it right from the get-go. See comments
+below.
 
-Maybe adding a flag in drv->cfg called, for example, .has_mode_switch 
-could solve this problem without having to check the SoC type explicitly?
+On Mon, Sep 23, 2013 at 10:20 AM, Christian Daudt <bcm@fixthebug.org> wrote:
+> Currently ARCH_BCM has been used for Broadcom
+> Mobile V7 based SoCs. In order to allow other Broadcom
+> SoCs to also use mach-bcm directory and files, this patch
+> renames the original ARCH_BCM to ARCH_BCM_MOBILE, and
+> uses ARCH_BCM to define any Broadcom chip residing
+> in mach-bcm directory.
+>
+> Signed-off-by: Christian Daudt <bcm@fixthebug.org>
+> Acked-by: Olof Johansson <olof@lixom.net>
+>
+> Changes from v1:
+>  - fix alpha ordering in dts/Makefile
+>  - break into 4 patches for separate subsys
+>
+> diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+> index 6e49310..efb0132 100644
+> --- a/arch/arm/configs/bcm_defconfig
+> +++ b/arch/arm/configs/bcm_defconfig
+> @@ -27,6 +27,7 @@ CONFIG_MODULE_UNLOAD=y
+>  CONFIG_PARTITION_ADVANCED=y
+>  CONFIG_EFI_PARTITION=y
+>  CONFIG_ARCH_BCM=y
+> +CONFIG_ARCH_BCM_MOBILE=y
+>  CONFIG_ARM_THUMBEE=y
+>  CONFIG_ARM_ERRATA_743622=y
+>  CONFIG_PREEMPT=y
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index 6e572c6..89a5064 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -6,6 +6,7 @@ CONFIG_ARCH_MVEBU=y
+>  CONFIG_MACH_ARMADA_370=y
+>  CONFIG_MACH_ARMADA_XP=y
+>  CONFIG_ARCH_BCM=y
+> +CONFIG_ARCH_BCM_MOBILE=y
+>  CONFIG_GPIO_PCA953X=y
+>  CONFIG_ARCH_HIGHBANK=y
+>  CONFIG_ARCH_KEYSTONE=y
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 69d67f7..af86cda 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -1,5 +1,17 @@
+>  config ARCH_BCM
+> -       bool "Broadcom SoC" if ARCH_MULTI_V7
+> +       bool "Broadcom SoC Support"
+> +       select ARCH_MULTIPLATFORM
 
-[snip]
-> > > +#ifdef CONFIG_PHY_EXYNOS4210_USB
-> > 
-> > Do we really need this?
-> 
-> No we don't. The driver can always support all Exynos SoC versions.
-> These config options were added for flexibility.
-> 
-> > > +extern const struct uphy_config exynos4210_uphy_config; #endif
-> > > +
-> > > +#ifdef CONFIG_PHY_EXYNOS4212_USB
-> > 
-> > Same here.
-> > 
-> > > +extern const struct uphy_config exynos4212_uphy_config; #endif
-> > > +
-> > > +static const struct of_device_id exynos_uphy_of_match[] = { #ifdef
-> > > +CONFIG_PHY_EXYNOS4210_USB
-> > 
-> > #if not needed here.
-> 
-> If the #ifdef CONFIG_PHY_EXYNOS4210_USB is removed then yes. Otherwise
-> it is necessary - exynos4210_uphy_config may be undefined.
+This should be the other way around -- all other platforms seem to
+depend on ARCH_MULTIPLATFORM instead of selecting it.
 
-I believe this and other ifdefs below are needed, otherwise, with support
-for one of the SoCs disabled, the driver could still bind to its 
-compatible value.
+> +       help
+> +         This enables support for Broadcom ARM based SoC
+> +          chips
+> +
+> +if ARCH_BCM
+> +
+> +menu "Broadcom SoC Selection"
+> +
+> +config ARCH_BCM_MOBILE
+> +       bool "Broadcom Mobile SoC" if ARCH_MULTI_V7
+> +       default y
 
-Best regards,
-Tomasz
+This shouldn't be default y, since it makes it less obvious in configs
+such as multi_v7_defconfig that the platform is enabled.
+
+Also, since you have default y here, the addition of
+CONFIG_ARCH_BCM_MOBILE=y in the defconfigs doesn't actually look
+accurate, they would fall out. As a matter of fact, the patch after
+this in your branch you requested us to merge removes them again. :)
+
+>         depends on MMU
+>         select ARCH_REQUIRE_GPIOLIB
+>         select ARM_ERRATA_754322
+> @@ -14,7 +26,11 @@ config ARCH_BCM
+>         select TICK_ONESHOT
+>         select CACHE_L2X0
+>         help
+> -         This enables support for system based on Broadcom SoCs.
+> +         This enables support for systems based on Broadcom mobile SoCs.
+>           It currently supports the 'BCM281XX' family, which includes
+>           BCM11130, BCM11140, BCM11351, BCM28145 and
+>           BCM28155 variants.
+> +
+> +endmenu
+> +
+> +endif
+
+
+-Olof
