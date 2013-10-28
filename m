@@ -1,189 +1,71 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/8] pinctrl: imx27: imx27 pincontrol driver
-Date: Mon, 28 Oct 2013 08:57:12 +0100
-Message-ID: <20131028075712.GA10829@pengutronix.de>
-References: <1382629114-8628-1-git-send-email-mpa@pengutronix.de>
- <1382629114-8628-3-git-send-email-mpa@pengutronix.de>
- <CAHCPf3t0A2_9Etz7ojRSYxaedg+fuAJky+HosuxEeAsJOJccWA@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6q-arm2: enable USB OTG
+Date: Mon, 28 Oct 2013 16:20:07 +0800
+Message-ID: <20131028082005.GG2839@S2101-09.ap.freescale.net>
+References: <1382940302-12931-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHCPf3t0A2_9Etz7ojRSYxaedg+fuAJky+HosuxEeAsJOJccWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1382940302-12931-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 28, 2013 at 02:05:02PM +0800, Peter Chen wrote:
+> Enable USB OTG controller at imx6q-arm2 board
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q-arm2.dts |   17 +++++++++++++++++
+>  1 files changed, 17 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+> index edf1bd9..8f125b1 100644
+> --- a/arch/arm/boot/dts/imx6q-arm2.dts
+> +++ b/arch/arm/boot/dts/imx6q-arm2.dts
+> @@ -31,6 +31,15 @@
+>  			regulator-max-microvolt = <3300000>;
+>  			regulator-always-on;
+>  		};
+> +
+> +		reg_usb_otg_vbus: usb_otg_vbus {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "usb_otg_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio3 22 0>;
+> +			enable-active-high;
+> +		};
+>  	};
+>  
+>  	leds {
+> @@ -79,6 +88,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&usbotg { /* USB OTG */
 
-On Thu, Oct 24, 2013 at 02:46:58PM -0500, Matt Sealey wrote:
-> On Thu, Oct 24, 2013 at 10:38 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > imx27 pincontrol driver using the imx1 core driver. The DT bindings are
-> > similar to other imx pincontrol drivers.
-> >
-> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  50 +++
-> >  drivers/pinctrl/Kconfig                            |   8 +
-> >  drivers/pinctrl/Makefile                           |   1 +
-> >  drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++++++++
-> >  4 files changed, 536 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> >  create mode 100644 drivers/pinctrl/pinctrl-imx27.c
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> > new file mode 100644
-> > index 0000000..6619968
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
-> > @@ -0,0 +1,50 @@
-> > +* Freescale IMX27 IOMUX Controller
-> > +
-> > +Required properties:
-> > +- compatible: "fsl,imx27-iomuxc"
-> > +
-> > +The iomuxc driver node should define subnodes containing of pinctrl configuration subnodes.
-> > +
-> > +Required properties for pin configuration node:
-> > +- fsl,pins: three integers array, represents a group of pins mux and config
-> > +  setting. The format is fsl,pins = <PIN MUX_ID CONFIG>. PIN and MUX_ID are
-> > +  defined as macros in arch/arm/boot/dts/imx27-pinfunc.h. CONFIG can be 0 or
-> 
-> Can we get away from this concept that a binding is predicated on the
-> fact that they're preprocessed? You're getting it half right.. as
-> below.
-> 
-> Binding descriptions must NOT rely on preprocessing helpers, for the
-> following reasons
-> 
-> * Device trees could be generated by methods other than preprocessed source
-> * Device trees could be generated by Linux builds and passed to other
-> operating systems (therefore they need to know the definition in
-> reality).
-> 
-> Please provide and describe the RAW data format of the property and
-> then somewhere afterwards mention that as a convenience there are
-> preprocessor macros which make life easier. You can also mention the
-> include name, but the path (arch/arm/boot/dts) may not be fixed. This
-> may not even be Linux. They may be split elsewhere in a separate tree
-> that has no OS and therefore a different layout. Bindings should be OS
-> agnostic - certainly source code location agnostic - where possible.
-> 
-> > +  PIN is a integer between 0 and 0xbf
-> 
-> Correct.
-> 
-> >                                                                imx27 has 6 ports with 32 configurable
-> > +  configurable pins each. PIN is PORT * 32 + PORT_PIN, PORT_PIN is the pin
-> > +  number on the specific port (between 0 and 31).
-> 
-> Correct.
-> 
-> > +  MUX_ID is
-> > +  function + (direction << 2) + (gpio_oconf << 4) + (gpio_iconfa << 8) + (gpio_iconfb << 10)
-> > +  function:      0 - Primary function
-> > +                 1 - Alternate function
-> > +                 2 - GPIO
-> > +  direction:     0 - Input
-> > +                 1 - Output
-> > +  gpio_oconf:    0 - A_IN
-> > +                 1 - B_IN
-> > +                 2 - C_IN
-> > +                 3 - Data Register
-> > +  gpio_iconfa/b: 0 - GPIO_IN
-> > +                 1 - Interrupt Status Register
-> > +                 2 - 0
-> > +                 3 - 1
-> 
-> Correct, but I don't like mixing register values for multiple
-> registers in a single field. I guess you'd waste a ton of space any
-> other way, so acceptable.
-> 
-> If they're the bits for a single register (could be, but I don't have
-> access to an i.MX27 manual right now) then just describe it as the
-> content of the register as defined in a location in the manual, you
-> won't need to re-describe what is already in the manual.
+The comment is not useful.  I just dropped it and applied the patch.
 
-Unfortunately it is not the content of a single register. It is spreaded
-across multiple registers each one containing the configuration of all
-pins of one port.
+Shawn
 
-The above described parts are nearly identical to the real registers.
-"direction", "gpio_oconf" and "gpio_iconfa/b" exist as registers.
-"function" is describing two registers, "GIUS" (GPIO in use) and "GPR"
-(General Purpose Register). function is (GIUS << 1) + GPR.
-
-I will add the registernames to the documentation.
-
+> +	vbus-supply = <&reg_usb_otg_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg_1>;
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+>  &usdhc3 {
+>  	cd-gpios = <&gpio6 11 0>;
+>  	wp-gpios = <&gpio6 14 0>;
+> -- 
+> 1.7.1
 > 
-> > +Example:
-> > +
-> > +iomuxc: iomuxc@10015000 {
-> > +       compatible = "fsl,imx27-iomuxc";
-> > +       reg = <0x10015000 0x600>;
-> > +
-> > +       uart {
-> > +               pinctrl_uart1: uart-1 {
-> > +                       fsl,pins = <
-> > +                               MX27_PAD_UART1_TXD__UART1_TXD 0x0
-> 
-> Incorrect.
-> 
-> Your example should show the raw output. Try compiling this and then
-> performing the following:
-> 
-> scripts/dtc/dtc -I dtb -O dts imx27-my-platform.dtb
-> 
-> The place where pinctrl_uart1 is in that output is your example. Lots
-> of awful, unreadable numbers.
-> 
-> However you may provide a second example explaining the convenience of
-> using the preprocessor macros exactly as above, perhaps with the
-> location of the preprocessor macros include.
-
-Okay, I will change the example and add some documentation about the
-macros at the end of the document.
-
-> 
-> > +                               MX27_PAD_UART1_RXD__UART1_RXD 0x0
-> 
-> One question; are these definitions the one in the manual (for the
-> names etc, in the huge enums later, especially?) or stripped from
-> existing source code?
-
-The definitions are from the manual
-
-MX27_PAD_<Pad name>__<Signal name>
-
-Thanks,
-
-Markus Pargmann
-
-> 
-> Bindings - and their preprocessor helper macros - should follow the
-> latest manual if they can. There are many odd differences in i.MX6
-> pinctrl, but for instance if the manual describes it as SD_DAT3 with
-> function SD_DATA3 then it should be SD_DAT3__SD_DATA3 rather than
-> SD_DAT3__SD_DAT3 (even if the SD Association spec says DAT3, since you
-> are describing an i.MX27 mux, not the SD physical layer :). That way
-> the preprocessor definitions can be searched for in the manual with
-> some mangling, and searched for in the headers by pasting out the
-> function name or the original pin name. If they differ, then someone
-> has to resolve the differences with their brain which is more work for
-> the reader.
-> 
-> Thanks,
-> Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
