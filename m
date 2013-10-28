@@ -1,67 +1,44 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 30/43] ARM: dts: am33xx clock data
-Date: Mon, 28 Oct 2013 12:12:11 +0200
-Message-ID: <526E387B.7010306@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>		
- <1382716658-6964-31-git-send-email-t-kristo@ti.com>	
- <1382747784.6200.4.camel@polaris.local> <526BB9A2.2050108@ti.com>
- <1382954349.11504.213.camel@coredoba.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1382954349.11504.213.camel@coredoba.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?SmFuIEzDvGJiZQ==?= <jlu@pengutronix.de>
-Cc: nm@ti.com, devicetree@vger.kernel.org, paul@pwsan.com, mturquette@linaro.org, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] Add dt support for exynos hdmiphy settings
+Date: Mon, 28 Oct 2013 16:09:12 +0530
+Message-ID: <1382956755-1318-1-git-send-email-s.shirish@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjgvMjAxMyAxMTo1OSBBTSwgSmFuIEzDvGJiZSB3cm90ZToKPiBPbiBTYXQsIDIwMTMt
-MTAtMjYgYXQgMTU6NDYgKzAzMDAsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiBPbiAxMC8yNi8yMDEz
-IDAzOjM2IEFNLCBKYW4gTMO8YmJlIHdyb3RlOgo+Pj4gT24gRnJpLCAyMDEzLTEwLTI1IGF0IDE4
-OjU3ICswMzAwLCBUZXJvIEtyaXN0byB3cm90ZToKPj4+PiArICAgICAgIG1jYXNwMF9mY2s6IG1j
-YXNwMF9mY2sgewo+Pj4+ICsgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4+Pj4g
-KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZml4ZWQtZmFjdG9yLWNsb2NrIjsKPj4+PiAr
-ICAgICAgICAgICAgICAgY2xvY2tzID0gPCZzeXNfY2xraW5fY2s+Owo+Pj4+ICsgICAgICAgICAg
-ICAgICBjbG9jay1tdWx0ID0gPDE+Owo+Pj4+ICsgICAgICAgICAgICAgICBjbG9jay1kaXYgPSA8
-MT47Cj4+Pj4gKyAgICAgICB9Owo+Pj4+ICsKPj4+PiArICAgICAgIG1jYXNwMV9mY2s6IG1jYXNw
-MV9mY2sgewo+Pj4+ICsgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4+Pj4gKyAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZml4ZWQtZmFjdG9yLWNsb2NrIjsKPj4+PiArICAg
-ICAgICAgICAgICAgY2xvY2tzID0gPCZzeXNfY2xraW5fY2s+Owo+Pj4+ICsgICAgICAgICAgICAg
-ICBjbG9jay1tdWx0ID0gPDE+Owo+Pj4+ICsgICAgICAgICAgICAgICBjbG9jay1kaXYgPSA8MT47
-Cj4+Pj4gKyAgICAgICB9Owo+Pj4KPj4+IFdoYXQgaXMgeW91IHVzZSBjYXNlIGZvciB0aGVzZSBj
-bG9ja3Mgd2l0aCBhIGZpeGVkIGZhY3RvciBvZiAxPyBXb3VsZG4ndAo+Pj4gaXQgYmUgc2ltcGxl
-ciB0byBqdXN0IHVzZSBzeXNfY2xraW5fY2sgZnJvbSB0aGUgZGV2aWNlcz8KPj4KPj4gVGhpcyBp
-cyBqdXN0IGtpbmQgb2YgYSBkdW1teSBjbG9jayBub2RlIGZvciB0aGUgZHJpdmVyIHVzZSwgc28g
-dGhhdCBpdAo+PiBpcyBzaW1wbGVyIGZvciB0aGVtIHRvIGZpbmQgdGhlaXIgY2xvY2tzLiBJZiB0
-aGVzZSBhcmUgZHJvcHBlZCwgdGhlCj4+IGRyaXZlcnMgbmVlZCB0byBrbm93IHRoYXQgaW5zdGVh
-ZCBvZiB0aGVpciBvbGQgb3duIG1jYXNwWF9mY2ssIHRoZXkgbm93Cj4+IG5lZWQgdG8gZGlyZWN0
-bHkgY29ubmVjdCB0byBzeXNfY2xraW5fY2suIFRoaXMgYWxzbyBhbGxvd3MgdG8gdHJhY2sKPj4g
-dXNlY291bnRzIGZvciB0aGUgY2xvY2tzIGJldHRlciwgaWYgeW91IGRvbid0IGhhdmUgdGhlIG1j
-YXNwWF9mY2s6cyBmb3IKPj4gZXhhbXBsZSwgeW91IHdpbGwganVzdCBoYXZlIGEgdXNlY291bnQg
-b2YgMjUgZm9yIHRoZSBzeXNfY2xraW5fY2ssIGJ1dAo+PiBkb24ndCByZWFsbHkga25vdyB3aG8g
-aXMgdXNpbmcgaXQuIEFsc28sIG90aGVyIFNvQ3MgbW9zdCBsaWtlbHkgaGF2ZSB0aGUKPj4gc2Ft
-ZSBuYW1lIGluIHVzZSwgc28ganVzdCB0byBrZWVwIHRoZSBjbG9jayBkYXRhIGNvbXBhdGlibGUg
-YWNyb3NzIFNvQ3MuCj4+Cj4+IFRoZXNlIGZpbGVzIGFyZSBhbHNvIGNvbXBsZXRlbHkgYXV0b2dl
-bmVyYXRlZCBmcm9tIHRoZSBleGlzdGluZyBjbG9jawo+PiBkYXRhIHVuZGVyIG1hY2gtb21hcDIs
-IGFuZCB0aGVzZSBub2RlcyBleGlzdCB0aGVyZS4KPj4KPj4gQnV0IHllYSwgbm8gaGFyZCByZXF1
-aXJlbWVudC4KPgo+IFdlIHNob3VsZG4ndCBhZGQgZHVtbXkgY2xvY2tzIHRvIHNpbXBsaWZ5IGRl
-YnVnZ2luZywgbWF5YmUgd2UgbmVlZCBzb21lCj4gdXNlciB0cmFja2luZyBpbiB0aGUgY29yZSBj
-bGsgY29kZT8KClllYSBtaWdodCBiZSBnb29kIHRvIGhhdmUgc29tZXRoaW5nIGxpa2UgdGhpcyBh
-cyBjb25maWd1cmFibGUgb3B0aW9uIGluIAp0aGUgZnV0dXJlLCBzbyB5b3Ugd291bGQga25vdyB3
-aG8gaGFzIGVuYWJsZWQgYSBjZXJ0YWluIGNsb2NrLiBDdXJyZW50bHkgCmNsb2NrIEFQSXMgZG9u
-J3QgcmVhbGx5IHByb3ZpZGUgd2F5IHRvIHRlbGwgdXNlcnMgYXBhcnQgZnJvbSBlYWNoIG90aGVy
-LiAKTWlrZSwgYW55IHRob3VnaHRzIG9uIHRoaXM/Cgo+Cj4gQXMgdGhlcmUgYXJlIG9ubHkgZmV3
-IG9mIHRoZXNlIGZhY3RvciAxIGNsb2NrcywgSSdtIGZpbmUgd2l0aCBrZWVwaW5nCj4gdGhlbSBm
-b3IgY29uc2lzdGVuY3kgaGVyZS4KClRoYW5rcy4gOikKCi1UZXJvCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+For various revisions of a chipset if the signal pattern is changed for every
+revision, then the phy setting need to be updated correspondingly by measuring
+the signal.
+For getting correct signals the clock level and data de-emphasis 
+levels needs to be adjusted.
+Since only these 2 values matter,we can move the same to dt, 
+wherein we can have different dt files for every revision. 
+
+This is an initial patchset towards achieving the same 
+for exynos 5250 and can be later extended to future chipsets.
+
+V2: replaced moving of entire phy config structure with only
+required and justifiable conf registers.
+
+V3: Incorporated Mark Rutland's comments.
+
+Shirish S (3):
+  ARM: dts: smdk5250: Add hdmi phy settings
+  ARM: dts: arndale: Add hdmi phy settings
+  drm: exynos: hdmi: Add dt support for hdmiphy settings
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   32 +++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   68 ++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   68 ++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   76 ++++++++++++++++++--
+ 4 files changed, 240 insertions(+), 4 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
