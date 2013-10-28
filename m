@@ -1,80 +1,151 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [Patch v2 00/14] Add power management support for MXS PHY
-Date: Mon, 28 Oct 2013 16:20:08 +0800
-Message-ID: <20131028082008.GE31499@shlinux1.ap.freescale.net>
-References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v6 4/8] ARM: dts: imx27 pinctrl
+Date: Mon, 28 Oct 2013 10:00:39 +0100
+Message-ID: <1382950843-26066-5-git-send-email-mpa@pengutronix.de>
+References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382950843-26066-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 01:58:34PM +0800, Peter Chen wrote:
-> Hi Felipe,
+Pinctrl driver node and pin group definitions for other driver nodes.
 
-Hi Felipe, would you please give any comments for this patchset?
-My another patchset chipidea's PM support also depends on this.
-Thanks.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27.dtsi | 102 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-Peter
-
-> 
->    The serial adds power management support for MXS PHY, it includes:
-> 
->    - Add three common PHY API, .set_wakeup, .notify_suspend, notify_resume.
->    - Related above API implementation at mxs phy driver
->    - misc changes for mxs phy to support low power mode and wakeup.
-> 
-> Changes for v2:
-> 
-> - Add missing patches which introduce platform judgement code [1/14,2/14]
-> - re-order the patch sequence, like doc->dts->source file, 
-> the reviewers can know the meaning of dt properties before review source
-> - Add description of two IC problems exsiting at mxs PHY; change
-> "high speed" to "HS" and "non-high speed" to "FS/LS" [5/14]
-> - Change the dt property disconnect-line-without-vbus
-> that the separator should be "-" not the "_", meanwhile, related source
-> code has changed.
-> - Using one local variable to get the function return val to avoid long
-> condition statement. [13/14]
-> 
-> Peter Chen (14):
->   usb: doc: phy-mxs: Add more compatible strings
->   usb: phy-mxs: Add platform judgement code
->   usb: phy-mxs: Add auto clock and power setting
->   usb: doc: phy-mxs: update binding for adding anatop phandle
->   ARM: dts: imx6: add anatop phandle for usbphy
->   usb: phy-mxs: Add anatop regmap
->   usb: phy: add notify suspend and resume callback
->   usb: phy-mxs: Add implementation of nofity_suspend and notify_resume
->   usb: phy-mxs: Enable IC fixes for mx6 SoC serial
->   usb: doc: phy-mxs: update binding for adding disconnect line property
->   ARM: dts: imx6: Add disconnect-line-without-vbus property for usbphy
->   usb: phy: Add set_wakeup API
->   usb: phy-mxs: Add implementation of set_wakeup
->   usb: phy-mxs: Add system suspend/resume API
-> 
->  Documentation/devicetree/bindings/usb/mxs-phy.txt |   12 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                    |    3 +
->  drivers/usb/phy/phy-mxs-usb.c                     |  328 ++++++++++++++++++++-
->  include/linux/usb/phy.h                           |   39 +++
->  4 files changed, 367 insertions(+), 15 deletions(-)
-> 
-
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index b7a1c6d..641a63d 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include "skeleton.dtsi"
++#include "imx27-pinfunc.h"
+ 
+ / {
+ 	aliases {
+@@ -235,6 +236,12 @@
+ 				status = "disabled";
+ 			};
+ 
++			iomuxc: iomuxc@10015000 {
++				compatible = "fsl,imx27-iomuxc";
++				reg = <0x10015000 0x600>;
++
++			};
++
+ 			gpio1: gpio@10015000 {
+ 				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+ 				reg = <0x10015000 0x100>;
+@@ -467,3 +474,98 @@
+ 		};
+ 	};
+ };
++
++&iomuxc {
++	fec {
++		pinctrl_fec1_1: fec1-1 {
++			fsl,pins = <
++				MX27_PAD_SD3_CMD__FEC_TXD0 0x0
++				MX27_PAD_SD3_CLK__FEC_TXD1 0x0
++				MX27_PAD_ATA_DATA0__FEC_TXD2 0x0
++				MX27_PAD_ATA_DATA1__FEC_TXD3 0x0
++				MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0
++				MX27_PAD_ATA_DATA3__FEC_RXD1 0x0
++				MX27_PAD_ATA_DATA4__FEC_RXD2 0x0
++				MX27_PAD_ATA_DATA5__FEC_RXD3 0x0
++				MX27_PAD_ATA_DATA6__FEC_MDIO 0x0
++				MX27_PAD_ATA_DATA7__FEC_MDC 0x0
++				MX27_PAD_ATA_DATA8__FEC_CRS 0x0
++				MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0
++				MX27_PAD_ATA_DATA10__FEC_RXD0 0x0
++				MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0
++				MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0
++				MX27_PAD_ATA_DATA13__FEC_COL 0x0
++				MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0
++				MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
++			>;
++		};
++	};
++
++	i2c {
++		pinctrl_i2c1_1: i2c1-1 {
++			fsl,pins = <
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
++			>;
++		};
++
++		pinctrl_i2c2_1: i2c2-1 {
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
++		};
++	};
++
++	owire {
++		pinctrl_owire1_1: owire1-1 {
++			fsl,pins = <
++				MX27_PAD_RTCK__OWIRE 0x0
++			>;
++		};
++	};
++
++	uart {
++		pinctrl_uart1_1: uart1-1 {
++			fsl,pins = <
++				MX27_PAD_UART1_TXD__UART1_TXD 0x0
++				MX27_PAD_UART1_RXD__UART1_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart1_rtscts_1: uart1-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART1_CTS__UART1_CTS 0x0
++				MX27_PAD_UART1_RTS__UART1_RTS 0x0
++			>;
++		};
++
++		pinctrl_uart2_1: uart2-1 {
++			fsl,pins = <
++				MX27_PAD_UART2_TXD__UART2_TXD 0x0
++				MX27_PAD_UART2_RXD__UART2_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart2_rtscts_1: uart2-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART2_CTS__UART2_CTS 0x0
++				MX27_PAD_UART2_RTS__UART2_RTS 0x0
++			>;
++		};
++
++		pinctrl_uart3_1: uart3-1 {
++			fsl,pins = <
++				MX27_PAD_UART3_TXD__UART3_TXD 0x0
++				MX27_PAD_UART3_RXD__UART3_RXD 0x0
++			>;
++		};
++
++		pinctrl_uart3_rtscts_1: uart3-rtscts-1 {
++			fsl,pins = <
++				MX27_PAD_UART3_CTS__UART3_CTS 0x0
++				MX27_PAD_UART3_RTS__UART3_RTS 0x0
++			>;
++		};
++	};
++};
 -- 
+1.8.4.rc3
 
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
