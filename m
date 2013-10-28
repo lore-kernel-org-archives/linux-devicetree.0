@@ -1,73 +1,75 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 0/3] Add dt support for exynos hdmiphy settings
-Date: Mon, 28 Oct 2013 23:02:13 +0900
-Message-ID: <03a501ced3e6$4d5ad3e0$e8107ba0$%dae@samsung.com>
-References: <1382956755-1318-1-git-send-email-s.shirish@samsung.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 00/12] clk/exynos convert clock IDs to macros
+Date: Mon, 28 Oct 2013 15:31:47 +0100
+Message-ID: <526E7553.8030607@samsung.com>
+References: <1378462361-13680-1-git-send-email-a.hajda@samsung.com>
+ <8412301.YP2zzplWoe@amdc1227>
+ <070001ceafa5$d4d81a40$7e884ec0$%kim@samsung.com>
+ <523716C9.3000204@samsung.com> <20130916193709.27384.86101@quantum>
+ <06c101cebdc5$75a83d10$60f8b730$%kim@samsung.com>
+ <20131002010953.9338.23436@quantum>
+ <0d8901cec170$f7230b50$e56921f0$%kim@samsung.com>
+ <20131006202709.32214.75572@quantum> <525274FA.5020701@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1382956755-1318-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: ko
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Shirish S' <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <525274FA.5020701@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Mike Turquette <mturquette@linaro.org>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'devicetree' <devicetree@vger.kernel.org>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shirish,
+Ping
 
-I have merged the re-factoring patch set from Sean Paul to exynos-drm-next.
-Can you re-base your patch set at top of exynos-drm-next?
+Regards
+Andrzej
 
-Thanks,
-Inki Dae
-
-> -----Original Message-----
-> From: Shirish S [mailto:s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org]
-> Sent: Monday, October 28, 2013 7:39 PM
-> To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org; sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org; Shirish S
-> Subject: [PATCH 0/3] Add dt support for exynos hdmiphy settings
+On 10/07/2013 10:46 AM, Andrzej Hajda wrote:
+> On 10/06/2013 10:27 PM, Mike Turquette wrote:
+>> Quoting Kukjin Kim (2013-10-04 19:16:56)
+>>> Mike Turquette wrote:
+>>>> Quoting Kukjin Kim (2013-09-30 03:11:41)
+>>>>> Mike Turquette wrote:
+>>>>>> Quoting Sylwester Nawrocki (2013-09-16 07:33:45)
+>>>>>>> On 09/12/2013 12:50 PM, Kukjin Kim wrote:
+>>>>>>>> Well...I'm not sure changing to use macro is better or not at this
+>>>>>> moment...
+>>>>>>> I think it is. ;) It's really less error prone to have symbolic
+>>>> names
+>>>>>> instead
+>>>>>>> of the plain numbers. The clock ids are defined in one place and it
+>>>> is
+>>>>>> more
+>>>>>>> clear what a clock is by looking at symbolic name. It's especially
+>>>>>> annoying
+>>>>>>> to use plain numbers where are are many clock in a single node, like
+>>>> 10
+>>>>>> or
+>>>>>>> more. What are you main concerns with this ?
+>>>>>> I think having the symbolic names is a win for readability.
+>>>>>>
+>>>>> Hmm...since Mike who is a maintainer for ccf agrees with Sylwester's
+>>>> opinion, so I agree. Actually, I had no strong objection on this but still
+>>>> I'm not sure using macro is really better because sometimes the name
+>>>> doesn't give readability really I think though.
+>>>>> Mike, can you give me your ack on clk stuff?
+>>>> Yes, but I was thinking to take this change through the clk tree. The
+>>>> new branch based on -rc3 will be published tonight.
+>>>>
+>>>> Let me know if it causes problems for you for me to take it.
+>>>>
+>>> Uhm, I think dt changes can make ugly conflicts because of spread dt changing?
+>> Sure, go ahead and take the patches then.
+>>
+>> Acked-by: Mike Turquette <mturquette@linaro.org>
+>>
+>> Regards,
+>> Mike
 > 
-> For various revisions of a chipset if the signal pattern is changed for
-> every
-> revision, then the phy setting need to be updated correspondingly by
-> measuring
-> the signal.
-> For getting correct signals the clock level and data de-emphasis
-> levels needs to be adjusted.
-> Since only these 2 values matter,we can move the same to dt,
-> wherein we can have different dt files for every revision.
+> I can create patchset based on different git branch if neccessary.
 > 
-> This is an initial patchset towards achieving the same
-> for exynos 5250 and can be later extended to future chipsets.
+> Regards
+> Andrzej
+>>> - Kukjin
 > 
-> V2: replaced moving of entire phy config structure with only
-> required and justifiable conf registers.
-> 
-> V3: Incorporated Mark Rutland's comments.
-> 
-> Shirish S (3):
->   ARM: dts: smdk5250: Add hdmi phy settings
->   ARM: dts: arndale: Add hdmi phy settings
->   drm: exynos: hdmi: Add dt support for hdmiphy settings
-> 
->  .../devicetree/bindings/video/exynos_hdmi.txt      |   32 +++++++++
->  arch/arm/boot/dts/exynos5250-arndale.dts           |   68
-++++++++++++++++++
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   68
-++++++++++++++++++
->  drivers/gpu/drm/exynos/exynos_hdmi.c               |   76
-++++++++++++++++++-
-> -
->  4 files changed, 240 insertions(+), 4 deletions(-)
-> 
-> --
-> 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
