@@ -1,48 +1,55 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Documentation/watchdog: Update node name in samsung-wdt
- example
-Date: Mon, 28 Oct 2013 06:52:01 +0000
-Message-ID: <20131028065201.GB3065@kartoffel>
-References: <1382941457-2826-1-git-send-email-sachin.kamat@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382941457-2826-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "wim@iguana.be" <wim@iguana.be>, "rob@landley.net" <rob@landley.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Mon, 28 Oct 2013 01:54:38 -0500
+Message-ID: <31D756E7-A7CD-42ED-8D1D-D1B38B85E3A0@codeaurora.org>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381869563-16083-10-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 06:24:17AM +0000, Sachin Kamat wrote:
-> Update the name as per DT naming convention.
+
+On Oct 15, 2013, at 3:39 PM, Grant Likely wrote:
+
+> The standard interrupts property in device tree can only handle
+> interrupts coming from a single interrupt parent. If a device is wired
+> to multiple interrupt controllers, then it needs to be attached to a
+> node with an interrupt-map property to demux the interrupt specifiers
+> which is confusing. It would be a lot easier if there was a form of the
+> interrupts property that allows for a separate interrupt phandle for
+> each interrupt specifier.
 > 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
+> This patch does exactly that by creating a new interrupts-extended
+> property which reuses the phandle+arguments pattern used by GPIOs and
+> other core bindings.
+> 
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/watchdog/samsung-wdt.txt   |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> index 4c798e3..0642fb8 100644
-> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> @@ -17,7 +17,7 @@ Optional properties:
->  
->  Example:
->  
-> -watchdog {
-> +watchdog@101D0000 {
->  	compatible = "samsung,s3c2410-wdt";
->  	reg = <0x101D0000 0x100>, <0x10040408 0x4>, <0x1004040c 0x4>;
->  	interrupts = <0 42 0>;
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
+> arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
+> arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
+> arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
+> drivers/of/irq.c                                   | 16 +++--
+> drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
+> 6 files changed, 122 insertions(+), 13 deletions(-)
+
+Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+[ I think the patch should be split up so we aren't touching versatile dts as part of it ]
+
+- k 
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
