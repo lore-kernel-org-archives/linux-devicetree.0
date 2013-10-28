@@ -1,74 +1,70 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's minimum required ECC
-Date: Mon, 28 Oct 2013 11:05:17 +0800
-Message-ID: <1382929517-22606-1-git-send-email-b32955@freescale.com>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
+ Interface driver.
+Date: Mon, 28 Oct 2013 05:58:42 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8286A385@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+ <526021B0.6050206@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <526021B0.6050206@metafoo.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "djbw@fb.com" <djbw@fb.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, Lars-Peter Clausen <lars@metafoo.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, rob.herring@calxeda.co
 List-Id: devicetree@vger.kernel.org
 
-In default way, we use the ecc_strength/ecc_step size calculated by ourselves
-and use all the OOB area.
-
-This patch adds a new property : "fsl,use-minimum-ecc"
-
-If we enable it, we will firstly try to use the datasheet's minimum required
-ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-in the nand_chip{}). So we may have free space in the OOB area by using the
-minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
-SLC NAND.
-
-If we fail to use the minimum ECC, we will use the legacy method to calculate
-the ecc_strength and ecc_step size.
-
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-v1 --> v2:
-	based on David's patch to fix the regression.
----
- .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
- drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
- 2 files changed, 9 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-index 551b2a1..4297795 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -17,6 +17,12 @@ Required properties:
- Optional properties:
-   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
-                        present false
-+  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
-+                       to use the datasheet's minimum required ECC provided by
-+                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-+                       in the nand_chip{}). So we may have free space in the OOB
-+                       area by using the minimum ECC, and we may support JFFS2
-+                       with some SLC NANDs, such as Micron's SLC NAND.
- 
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-index 7ac2280..3ec55d0 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -352,6 +352,9 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
- 
- int common_nfc_set_geometry(struct gpmi_nand_data *this)
- {
-+	if (of_property_read_bool(this->dev->of_node, "fsl,use-minimum-ecc")
-+		&& set_geometry_by_ecc_info(this))
-+		return 0;
- 	return legacy_set_geometry(this);
- }
- 
--- 
-1.7.2.rc3
+Hi Dan, Vinod,
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +static int fsl_sai_probe(struct platform_device *pdev) {
+> [...]
+> > +
+> > +	sai->dma_params_rx.addr = res->start + SAI_RDR;
+> > +	sai->dma_params_rx.maxburst = 6;
+> > +	index = of_property_match_string(np, "dma-names", "rx");
+> > +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
+> > +				&dma_args);
+> > +	if (ret)
+> > +		return ret;
+> > +	sai->dma_params_rx.slave_id = dma_args.args[1];
+> > +
+> > +	sai->dma_params_tx.addr = res->start + SAI_TDR;
+> > +	sai->dma_params_tx.maxburst = 6;
+> > +	index = of_property_match_string(np, "dma-names", "tx");
+> > +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
+> > +				&dma_args);
+> > +	if (ret)
+> > +		return ret;
+> > +	sai->dma_params_tx.slave_id = dma_args.args[1];
+> 
+> The driver should not have to manually parse the dma devicetree
+> properties, this is something that should be handled by the dma engine
+> driver.
+> 
+
+What do you think about the DMA slave_id ?
+I have been noticed by one colleague that this should be parsed here, which
+is from your opinions ?
+
+
+> > +
+> > +	ret = snd_soc_register_component(&pdev->dev, &fsl_component,
+> > +			&fsl_sai_dai, 1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = fsl_pcm_dma_init(pdev);
+> > +	if (ret)
+> > +		goto out;
