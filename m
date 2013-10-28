@@ -1,71 +1,91 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Mon, 28 Oct 2013 15:47:44 -0600
-Message-ID: <526EDB80.7080406@wwwdotorg.org>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org> <20131027134607.E1782C4039D@trevor.secretlab.ca>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v8 1/5] ARM: add basic support for Trusted Foundations
+Date: Mon, 28 Oct 2013 14:55:16 -0700
+Message-ID: <20131028215516.GA10833@quad.lixom.net>
+References: <1381527938-22840-1-git-send-email-acourbot@nvidia.com>
+ <1381527938-22840-2-git-send-email-acourbot@nvidia.com>
+ <20131015110725.GZ25034@n2100.arm.linux.org.uk>
+ <525D7969.5060908@nvidia.com>
+ <CA+Ln22FdkcxOfq-yxVVQ7vTLWC3TYRBbAOZ=e3WmpSKkgk_DRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131027134607.E1782C4039D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CA+Ln22FdkcxOfq-yxVVQ7vTLWC3TYRBbAOZ=e3WmpSKkgk_DRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2013 07:46 AM, Grant Likely wrote:
-> On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> The standard interrupts property in device tree can only handle
->> interrupts coming from a single interrupt parent. If a device is wired
->> to multiple interrupt controllers, then it needs to be attached to a
->> node with an interrupt-map property to demux the interrupt specifiers
->> which is confusing. It would be a lot easier if there was a form of the
->> interrupts property that allows for a separate interrupt phandle for
->> each interrupt specifier.
->>
->> This patch does exactly that by creating a new interrupts-extended
->> property which reuses the phandle+arguments pattern used by GPIOs and
->> other core bindings.
->>
->> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Mon, Oct 28, 2013 at 12:04:43PM +0100, Tomasz Figa wrote:
+> Hi,
 > 
-> Alright, I want to merge this one. I've got an Ack from Tony, general
-> agreement from an in person converstaion from Ben (aside from wishing he
-> could think of a better property name), and various rumblings of
-> approval from anyone I talked to about it at ksummit. I'd like to have
-> something more that that to put into the commit text. Please take a look
-> and let me know if you agree/disagree with this binding.
+> 2013/10/15 Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+> > On 10/15/2013 04:07 AM, Russell King - ARM Linux wrote:
+> >>
+> >> On Fri, Oct 11, 2013 at 02:45:34PM -0700, Alexandre Courbot wrote:
+> >>>
+> >>> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+> >>> can be invoked using the same SMC-based API on all supported
+> >>> platforms. This patch adds initial basic support for Trusted
+> >>> Foundations using the ARM firmware API. Current features are limited
+> >>> to the ability to boot secondary processors.
+> >>>
+> >>> Note: The API followed by Trusted Foundations does *not* follow the SMC
+> >>> calling conventions. It has nothing to do with PSCI neither and is only
+> >>> relevant to devices that use Trusted Foundations (like most Tegra-based
+> >>> retail devices).
+> >>>
+> >>> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>> ---
+> >>>   .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
+> >>>   .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+> >>>   arch/arm/Kconfig                                   |  2 +
+> >>>   arch/arm/Makefile                                  |  1 +
+> >>>   arch/arm/firmware/Kconfig                          | 28 ++++++++
+> >>>   arch/arm/firmware/Makefile                         |  1 +
+> >>>   arch/arm/firmware/trusted_foundations.c            | 79
+> >>> ++++++++++++++++++++++
+> >>>   arch/arm/include/asm/trusted_foundations.h         | 68
+> >>> +++++++++++++++++++
+> >>>   8 files changed, 200 insertions(+)
+> >>>   create mode 100644
+> >>> Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+> >>>   create mode 100644 arch/arm/firmware/Kconfig
+> >>>   create mode 100644 arch/arm/firmware/Makefile
+> >>>   create mode 100644 arch/arm/firmware/trusted_foundations.c
+> >>>   create mode 100644 arch/arm/include/asm/trusted_foundations.h
+> >>
+> >>
+> >> Is having this under arch/arm appropriate?  What happens if the API
+> >> gets re-used on ARM64 for example?  Would drivers/firmware be a better
+> >> cross-arch location for this?
+> >
+> >
+> > The reason why this has been put into arch/arm is that the firmware_ops
+> > feature this patch depends also resides there
+> > (arch/arm/include/asm/firmware.h).
+> >
+> > On the other hand it might also make sense to move firmware_ops out of ARM
+> > since I don't see anything ARM-specific with it. Tomasz, could we have your
+> > thoughts on this?
+> 
+> I don't see anything wrong in moving this out of arch/arm, feel free
+> to do so.
+> 
+> However I guess that some (or all) of the names will have to
+> be put into a more separate namespace, as the term "firmware" is a bit
+> too generic IMHO. Possibly something like platform_firmware could be
+> better.
+> 
+> What do you think?
 
-The new binding makes sense to me. So, the binding,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+I think we can probably merge this under arch/arm now, and when we figure out
+what needs to be common with ARM64 we can move it out to a good location. It
+might be that mostly just a header file with ABI conventions needs to be
+shared, not actual implementation, for example.
 
-A couple of minor perhaps bikesheddy comments below.
 
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-
->> +Nodes that describe devices which generate interrupts must contain an either an
->> +"interrupts" property or an "interrupts-extended" property. These properties
-
-"interrupts-ex" would be shorter, although I guess slightly harder to
-guess its purpose, unless you're familiar with "ex" in symbol names.
-
-...
->> +A device node may contain either "interrupts" or "interrupts-extended", but not
->> +both. If both properties are present, then the operating system should log an
->> +error
-
-That sounds rather like prescribing SW behaviour, which I thought DT
-bindings shouldn't do?
-
->> and use only the data in "interrupts".
-
-... so perhaps that's better phrased as:
-
-A device node may contain either "interrupts" or "interrupts-extended",
-but not both. If both properties are present, the data in "interrupts"
-takes precedence.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Olof
