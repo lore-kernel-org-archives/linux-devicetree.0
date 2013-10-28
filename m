@@ -1,175 +1,190 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Mon, 28 Oct 2013 08:31:34 +0100
-Message-ID: <20131028073133.GA6629@ulmo.nvidia.com>
-References: <20131025075652.GB19622@ulmo.nvidia.com>
- <20131025.112549.2040849946958069337.hdoyu@nvidia.com>
- <20131025091104.GG19622@ulmo.nvidia.com>
- <20131025.124905.1154427805530939055.hdoyu@nvidia.com>
- <20131025104937.GA25080@ulmo.nvidia.com>
- <20131025190136.D55F5C403A7@trevor.secretlab.ca>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/8] pinctrl: imx27: imx27 pincontrol driver
+Date: Mon, 28 Oct 2013 08:57:12 +0100
+Message-ID: <20131028075712.GA10829@pengutronix.de>
+References: <1382629114-8628-1-git-send-email-mpa@pengutronix.de>
+ <1382629114-8628-3-git-send-email-mpa@pengutronix.de>
+ <CAHCPf3t0A2_9Etz7ojRSYxaedg+fuAJky+HosuxEeAsJOJccWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131025190136.D55F5C403A7-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHCPf3t0A2_9Etz7ojRSYxaedg+fuAJky+HosuxEeAsJOJccWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 24, 2013 at 02:46:58PM -0500, Matt Sealey wrote:
+> On Thu, Oct 24, 2013 at 10:38 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > imx27 pincontrol driver using the imx1 core driver. The DT bindings are
+> > similar to other imx pincontrol drivers.
+> >
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  50 +++
+> >  drivers/pinctrl/Kconfig                            |   8 +
+> >  drivers/pinctrl/Makefile                           |   1 +
+> >  drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++++++++
+> >  4 files changed, 536 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
+> >  create mode 100644 drivers/pinctrl/pinctrl-imx27.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
+> > new file mode 100644
+> > index 0000000..6619968
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
+> > @@ -0,0 +1,50 @@
+> > +* Freescale IMX27 IOMUX Controller
+> > +
+> > +Required properties:
+> > +- compatible: "fsl,imx27-iomuxc"
+> > +
+> > +The iomuxc driver node should define subnodes containing of pinctrl configuration subnodes.
+> > +
+> > +Required properties for pin configuration node:
+> > +- fsl,pins: three integers array, represents a group of pins mux and config
+> > +  setting. The format is fsl,pins = <PIN MUX_ID CONFIG>. PIN and MUX_ID are
+> > +  defined as macros in arch/arm/boot/dts/imx27-pinfunc.h. CONFIG can be 0 or
+> 
+> Can we get away from this concept that a binding is predicated on the
+> fact that they're preprocessed? You're getting it half right.. as
+> below.
+> 
+> Binding descriptions must NOT rely on preprocessing helpers, for the
+> following reasons
+> 
+> * Device trees could be generated by methods other than preprocessed source
+> * Device trees could be generated by Linux builds and passed to other
+> operating systems (therefore they need to know the definition in
+> reality).
+> 
+> Please provide and describe the RAW data format of the property and
+> then somewhere afterwards mention that as a convenience there are
+> preprocessor macros which make life easier. You can also mention the
+> include name, but the path (arch/arm/boot/dts) may not be fixed. This
+> may not even be Linux. They may be split elsewhere in a separate tree
+> that has no OS and therefore a different layout. Bindings should be OS
+> agnostic - certainly source code location agnostic - where possible.
+> 
+> > +  PIN is a integer between 0 and 0xbf
+> 
+> Correct.
+> 
+> >                                                                imx27 has 6 ports with 32 configurable
+> > +  configurable pins each. PIN is PORT * 32 + PORT_PIN, PORT_PIN is the pin
+> > +  number on the specific port (between 0 and 31).
+> 
+> Correct.
+> 
+> > +  MUX_ID is
+> > +  function + (direction << 2) + (gpio_oconf << 4) + (gpio_iconfa << 8) + (gpio_iconfb << 10)
+> > +  function:      0 - Primary function
+> > +                 1 - Alternate function
+> > +                 2 - GPIO
+> > +  direction:     0 - Input
+> > +                 1 - Output
+> > +  gpio_oconf:    0 - A_IN
+> > +                 1 - B_IN
+> > +                 2 - C_IN
+> > +                 3 - Data Register
+> > +  gpio_iconfa/b: 0 - GPIO_IN
+> > +                 1 - Interrupt Status Register
+> > +                 2 - 0
+> > +                 3 - 1
+> 
+> Correct, but I don't like mixing register values for multiple
+> registers in a single field. I guess you'd waste a ton of space any
+> other way, so acceptable.
+> 
+> If they're the bits for a single register (could be, but I don't have
+> access to an i.MX27 manual right now) then just describe it as the
+> content of the register as defined in a location in the manual, you
+> won't need to re-describe what is already in the manual.
 
-On Fri, Oct 25, 2013 at 08:01:36PM +0100, Grant Likely wrote:
-> On Fri, 25 Oct 2013 12:49:38 +0200, Thierry Reding <thierry.reding@gmail.=
-com> wrote:
-> > On Fri, Oct 25, 2013 at 11:49:05AM +0200, Hiroshi Doyu wrote:
-> > > Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 11=
-:11:05 +0200:
-> > >=20
-> > > > > > This is actually "the other problem that I'm aware of that coul=
-d benefit
-> > > > > > from [interrupt resolution at probe time]". My idea was that on=
-ce we had
-> > > > > > a way within the driver core to resolve interrupt references at=
- probe
-> > > > > > time it could be used for potentially many other resources as w=
-ell. Some
-> > > > > > of the resources like GPIOs and regulators are obviously not so=
-mething
-> > > > > > that the core can or should be requesting, but mostly resources=
- that you
-> > > > > > don't actually need to control after probing (such as interrupt=
-s) would
-> > > > > > be a good fit because otherwise people would write the same boi=
-lerplate
-> > > > > > over and over again.
-> > > > > >=20
-> > > > > > IOMMUs seem to me to be in that same category. As far as I can =
-tell, an
-> > > > > > IOMMU driver registers the IOMMU for a given bus, upon which ev=
-ery
-> > > > > > device can simply be used (mostly transparently) with that IOMM=
-U. While
-> > > > > > I haven't figured out how exactly, I'm pretty sure we can take =
-advantage
-> > > > > > of the resolution of resources at probe time within the core to=
- both
-> > > > > > keep drivers from having to do anything in particular and at th=
-e same
-> > > > > > time have code to determine if the IOMMU driver hasn't been pro=
-bed yet
-> > > > > > and return -EPROBE_DEFER appropriately.
-> > > > >=20
-> > > > > Can you explain the above a bit more?
-> > > > >=20
-> > > > > Originally I thought that what Grant suggested would work ok with=
- this
-> > > > > patch.
-> > > >=20
-> > > > I think the objection to these patches is that they special case the
-> > > > instantiation of some devices. It's not a proper solution because it
-> > > > implies various things. For example merely instantiating the IOMMU
-> > > > device earlier than others is only going to work *if* the driver is
-> > > > actually probed before the drivers of other devices. If you want to
-> > > > build the driver as a module for example, probe order becomes entir=
-ely
-> > > > non-deterministic.
-> > >=20
-> > > I understand the above limitation. What I thought for the solution is
-> > > that I can make use of iommu_bus even before IOMMU is
-> > > instanciated. iommu_bus has its notifier which calls
-> > > iommu_ops()->add_device(). This could return -EPROBE_DEFER when IOMMU
-> > > isn't ready. Only the problem is the current "bus_notifier" doesn't
-> > > have the ability to return error. I'll see if it can be modified. Even
-> > > with this, at least IOMMU *driver* needs to be init'ed enough earlier
-> > > to prevent devices from being registered without IOMMU.
-> >=20
-> > The way notifiers work is that they run completely hidden from whatever
-> > triggers them. For instance you register the IOMMU bus notifier from the
-> > IOMMU driver (by calling bus_set_iommu()). That registers a function to
-> > be called when some event happens on that bus. When a device's driver is
-> > probed successfully, the driver core will notify the bus, which causes
-> > the IOMMU callback to be run.
-> >=20
-> > Some of this code runs before the driver has successfully been probed,
-> > so I imagine it would be possible to use it to abort probing. But that's
-> > not possible at least with the current code.
-> >=20
-> > > > Instead of handling such dependencies implicitly by making sure all
-> > > > resource providers are probed earlier than any of their consumers, =
-the
-> > > > dependencies are handled more explicitly, which turns out to simpli=
-fy
-> > > > things a lot. There's some additional work required in the core, bu=
-t if
-> > > > done consistently no driver needs to care about the dependencies an=
-d it
-> > > > no longer matters where the resources come from. The problem is red=
-uced
-> > > > to essentially this:
-> > > >=20
-> > > > 	while (!resource_available())
-> > > > 		load_more_drivers();
-> > > >=20
-> > > > So my proposed solution for the IOMMU case is to treat it the same =
-as
-> > > > any other resources. Perhaps resource isn't the right word, but at =
-the
-> > > > core the issue is the same. A device requires the services of an IO=
-MMU
-> > > > so that it can be put into the correct address space. If the IOMMU =
-is
-> > > > not available yet it cannot do that, so we simply return -EPROBE_DE=
-FER
-> > > > and cause the probe to be retried later.
-> > >=20
-> > > This looks somewhat similar to the above iommu_bus notifier.
-> > >=20
-> > > Is there any way to implement the same mechanism rather than using
-> > > bus?
-> >=20
-> > Yes, I think it should be possible to get this to work without using the
-> > bus notifier at all. I can try to code something up but wanted to wait
-> > for feedback from Grant first.
->=20
-> I've lost track. What feedback are you waiting for from me? I've not dug
-> into this entire series so I may not provide clueful feedback.
+Unfortunately it is not the content of a single register. It is spreaded
+across multiple registers each one containing the configuration of all
+pins of one port.
 
-I think the context was lost. Here's a link to the relevant message:
+The above described parts are nearly identical to the real registers.
+"direction", "gpio_oconf" and "gpio_iconfa/b" exist as registers.
+"function" is describing two registers, "GIUS" (GPIO in use) and "GPR"
+(General Purpose Register). function is (GIUS << 1) + GPR.
 
-	http://www.spinics.net/lists/devicetree/msg09709.html
+I will add the registernames to the documentation.
 
-The message ID is:
+> 
+> > +Example:
+> > +
+> > +iomuxc: iomuxc@10015000 {
+> > +       compatible = "fsl,imx27-iomuxc";
+> > +       reg = <0x10015000 0x600>;
+> > +
+> > +       uart {
+> > +               pinctrl_uart1: uart-1 {
+> > +                       fsl,pins = <
+> > +                               MX27_PAD_UART1_TXD__UART1_TXD 0x0
+> 
+> Incorrect.
+> 
+> Your example should show the raw output. Try compiling this and then
+> performing the following:
+> 
+> scripts/dtc/dtc -I dtb -O dts imx27-my-platform.dtb
+> 
+> The place where pinctrl_uart1 is in that output is your example. Lots
+> of awful, unreadable numbers.
+> 
+> However you may provide a second example explaining the convenience of
+> using the preprocessor macros exactly as above, perhaps with the
+> location of the preprocessor macros include.
 
-	20131025075652.GB19622-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org
+Okay, I will change the example and add some documentation about the
+macros at the end of the document.
 
-Thierry
+> 
+> > +                               MX27_PAD_UART1_RXD__UART1_RXD 0x0
+> 
+> One question; are these definitions the one in the manual (for the
+> names etc, in the huge enums later, especially?) or stripped from
+> existing source code?
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: application/pgp-signature
+The definitions are from the manual
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+MX27_PAD_<Pad name>__<Signal name>
 
-iQIcBAEBAgAGBQJSbhLVAAoJEN0jrNd/PrOhjkkQALqr4FNWygHh/Kbdv9v/sRqD
-jN4OX0RQwJ55+XQXidoeM6Pdsyhc1gTXP+5J0laCTnT4F9H5oK7S1fflKXf4zZuj
-/+fqZUa4sk4Kxkgbz56ZWojuQ0hc6Jq3Est/oKUsmLsC8RxX+iY+/kBLZ3DHvudG
-TDe0mW0Ry2Yi0Jrb5LQAyUKLEZku2tl33ucI9fAozfeANtOayynwskjyUtocNQ7F
-USUePGBt24Bt5zHUxPyCprqLTwyGttEVH/QX0cVm5YmugRMwtj8NrpX85ojbRooe
-YxQix3ceidgW/RuLA5f/FA94aS+GktNvoX2vNF7RdfVHhbcQTU6/cmj33P4NokBM
-myy8KREvK1yjtpMNLmqDLVQRsQ+q69he8lXRjAXuyjAZt/0yMj+bWQKx/tDKRptp
-BNCA/MpcV7GUHxE01rs5i/4W2LeGDr/sY3KsSbIPIv34/2DoSrr48BMRURwD95SQ
-CkPmv0iv00b5TtmUJWM5/huMpm7JHQbQseNFYRFvQRqFVhd2Th5kNup4Apab0Uks
-+nRVabFmIPb4CZpRjmfSrfK33+MpT/EzslfLNvKluyEQvN1vSKPFm3ADlurPt/lk
-380hgui3pJfEa8eLvxc7t8WO2M3hFwxRf3yQ/Nf+Z1L2d92iWMXmJnn1SlnJ/bI4
-zOA/di/AyGtUvY2PH5IY
-=RCF9
------END PGP SIGNATURE-----
+Thanks,
 
---X1bOJ3K7DJ5YkBrT--
+Markus Pargmann
+
+> 
+> Bindings - and their preprocessor helper macros - should follow the
+> latest manual if they can. There are many odd differences in i.MX6
+> pinctrl, but for instance if the manual describes it as SD_DAT3 with
+> function SD_DATA3 then it should be SD_DAT3__SD_DATA3 rather than
+> SD_DAT3__SD_DAT3 (even if the SD Association spec says DAT3, since you
+> are describing an i.MX27 mux, not the SD physical layer :). That way
+> the preprocessor definitions can be searched for in the manual with
+> some mangling, and searched for in the headers by pasting out the
+> function name or the original pin name. If they differ, then someone
+> has to resolve the differences with their brain which is more work for
+> the reader.
+> 
+> Thanks,
+> Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
