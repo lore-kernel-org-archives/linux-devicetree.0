@@ -1,69 +1,42 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [RFC 3/4] ASoC: Allow Aux Codecs to be specified using DT
-Date: Mon, 28 Oct 2013 18:53:42 +0100
-Message-ID: <20131028175341.GA28136@earth.universe>
-References: <1382909086-10493-1-git-send-email-sre@debian.org>
- <1382909086-10493-4-git-send-email-sre@debian.org>
- <20131028163721.GJ13643@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131028163721.GJ13643@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH v3 01/10] of: Add empty for_each_available_child_of_node()
+ macro definition
+Date: Mon, 28 Oct 2013 13:12:35 -0500
+Message-ID: <3518ab21e436f5c1a7bdd900a796bb05f9162bbf.1382985169.git.joshc@codeaurora.org>
+References: <cover.1382985169.git.joshc@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <cover.1382985169.git.joshc@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add this empty macro definition so users can be compiled without
+excluding this macro call with preprocessor directives when CONFIG_OF
+is disabled.
 
-On Mon, Oct 28, 2013 at 09:37:21AM -0700, Mark Brown wrote:
-> On Sun, Oct 27, 2013 at 10:24:45PM +0100, Sebastian Reichel wrote:
-> > This patch adds support for specifying auxiliary codecs and
-> > codec configuration via device tree phandles.
->=20
-> This doesn't apply against current git, please check and resend.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Can you give me a git url to rebase against? I used current git
-master from torvalds.
-
-> Please also consider your CC list more carefully, there's an awful lot
-> of people on this...
-
-I added exactly those recipients, that were returned by
-=2E/scripts/get_maintainer.pl for the patchset.
-
-The list of involved people is quite long, because the patchset
-touches devicetree, documentation, boardcode, asoc and the specific
-driver.
-
--- Sebastian
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSbqSlAAoJENju1/PIO/qaluYQAJv4mQoI/HEx6KKDzuESNbNk
-30kLQO8ZSUOJlyxTTqGqX47V/xqS8WSnDX9VpZuPUeKh2QUAxjCCokcGIAkq1hng
-Ff913f5hbATBPcXhzyjXDkPGBlu/GS/eI5b2d76BwEAAQYfwND7Kz4FHVSDS3Kt4
-36RsKMYCd3O+9Vb6WMW/0AjsNO7vXBLSRjCuXj3+1KyhcCoRzckEjtPyadh5kE4o
-m7rgrHfYN1ZX1zzzsVDKG2cyI0kKaEHXku5e+UL49dJOd/Yu458y8FAsAwWztmSL
-yLr8Dg5mHL7FxCAl677c83nbdCQHVuUcw+0xjxOatlDcCJo/R51vnD7NRpKFHFW0
-TT0EDPw/2hYR4GsDsmipALRTRSvho38nLmJYH7wLbLx/FXWQ1Nz6pvtajNMxr658
-98f68/L2Uq3hVl0ZCird6bbkwoeQ30ByGsdsiSxAs+WUc30eRN7K6C20ALucon7i
-iQileFKS0lPenfKyEIiR7v1me1Zdb0eo6K/wGWFKGPPy6hSIgCsCvlJ0KIHyUsbm
-k96g4Up6hgmmu03jLqjjAXqllOq8kGPSizAQqtm8svuWMDXVRxr3c8la1ukeq0/k
-aihPi+OCtLTSjcVtEaVvMHNpxzDvsIF4Bu8+fxuO//uhitFPFHHs/Si4TOlP9Ziq
-wKGwo4V/abcb3iSp5TpD
-=L4OE
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f95aee3..908584e 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -364,6 +364,9 @@ static inline bool of_have_populated_dt(void)
+ #define for_each_child_of_node(parent, child) \
+ 	while (0)
+ 
++#define for_each_available_child_of_node(parent, child) \
++	while (0)
++
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+ 					const char *name)
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
