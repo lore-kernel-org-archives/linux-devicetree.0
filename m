@@ -1,50 +1,56 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 6/8] ARM: dts: imx27 phycore move uart1 to rdk
-Date: Mon, 28 Oct 2013 10:00:41 +0100
-Message-ID: <1382950843-26066-7-git-send-email-mpa@pengutronix.de>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH v6 0/8] ARM: imx27 pinctrl
+Date: Mon, 28 Oct 2013 10:00:35 +0100
+Message-ID: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382950843-26066-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-uart1 is not used on SOM. It is passed directly to the rdk board.
+Hi,
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts | 1 +
- arch/arm/boot/dts/imx27-phytec-phycore-som.dts | 4 ----
- 2 files changed, 1 insertion(+), 4 deletions(-)
+v6 updates the binding documentation.
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-index 0fc6551..ad76d88 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-@@ -29,6 +29,7 @@
- 
- &uart1 {
- 	fsl,uart-has-rtscts;
-+	status = "okay";
- };
- 
- &uart2 {
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-index 4ec402c..648541a 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-@@ -165,10 +165,6 @@
- 	status = "okay";
- };
- 
--&uart1 {
--	status = "okay";
--};
--
- &weim {
- 	status = "okay";
- 
+this series implements a imx27 pinctrl driver. imx1/21/27 have a register
+format that is not compatible with the rest of imx series processors. The
+series adds a imx1 core driver for the different register layout.
+
+Regards,
+
+Markus
+
+
+Markus Pargmann (8):
+  pinctrl: imx1 core driver
+  pinctrl: imx27: imx27 pincontrol driver
+  ARM: dts: imx27 pin functions
+  ARM: dts: imx27 pinctrl
+  ARM: dts: imx27 phyCARD-S pinctrl
+  ARM: dts: imx27 phycore move uart1 to rdk
+  ARM: dts: imx27 phycore pinctrl
+  ARM: imx27: enable pinctrl
+
+ .../bindings/pinctrl/fsl,imx27-pinctrl.txt         |  89 +++
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts   |  10 +
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts   |   4 +
+ arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts     |   5 +
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dts     |   8 +-
+ arch/arm/boot/dts/imx27-pinfunc.h                  | 524 +++++++++++++++++
+ arch/arm/boot/dts/imx27.dtsi                       | 102 ++++
+ arch/arm/mach-imx/Kconfig                          |   2 +
+ drivers/pinctrl/Kconfig                            |  13 +
+ drivers/pinctrl/Makefile                           |   2 +
+ drivers/pinctrl/pinctrl-imx1-core.c                | 653 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-imx1.h                     |  73 +++
+ drivers/pinctrl/pinctrl-imx27.c                    | 477 +++++++++++++++
+ 13 files changed, 1958 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx27-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/imx27-pinfunc.h
+ create mode 100644 drivers/pinctrl/pinctrl-imx1-core.c
+ create mode 100644 drivers/pinctrl/pinctrl-imx1.h
+ create mode 100644 drivers/pinctrl/pinctrl-imx27.c
+
 -- 
 1.8.4.rc3
 
