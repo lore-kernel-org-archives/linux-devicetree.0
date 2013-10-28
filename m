@@ -1,81 +1,80 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6q-arm2: enable USB OTG
-Date: Mon, 28 Oct 2013 16:04:16 +0800
-Message-ID: <20131028080415.GD31499@shlinux1.ap.freescale.net>
-References: <1382940302-12931-1-git-send-email-peter.chen@freescale.com>
- <20131028082005.GG2839@S2101-09.ap.freescale.net>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [Patch v2 00/14] Add power management support for MXS PHY
+Date: Mon, 28 Oct 2013 16:20:08 +0800
+Message-ID: <20131028082008.GE31499@shlinux1.ap.freescale.net>
+References: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20131028082005.GG2839-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1382421528-17897-1-git-send-email-peter.chen@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 04:20:07PM +0800, Shawn Guo wrote:
-> On Mon, Oct 28, 2013 at 02:05:02PM +0800, Peter Chen wrote:
-> > Enable USB OTG controller at imx6q-arm2 board
-> > 
-> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx6q-arm2.dts |   17 +++++++++++++++++
-> >  1 files changed, 17 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
-> > index edf1bd9..8f125b1 100644
-> > --- a/arch/arm/boot/dts/imx6q-arm2.dts
-> > +++ b/arch/arm/boot/dts/imx6q-arm2.dts
-> > @@ -31,6 +31,15 @@
-> >  			regulator-max-microvolt = <3300000>;
-> >  			regulator-always-on;
-> >  		};
-> > +
-> > +		reg_usb_otg_vbus: usb_otg_vbus {
-> > +			compatible = "regulator-fixed";
-> > +			regulator-name = "usb_otg_vbus";
-> > +			regulator-min-microvolt = <5000000>;
-> > +			regulator-max-microvolt = <5000000>;
-> > +			gpio = <&gpio3 22 0>;
-> > +			enable-active-high;
-> > +		};
-> >  	};
-> >  
-> >  	leds {
-> > @@ -79,6 +88,14 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&usbotg { /* USB OTG */
-> 
-> The comment is not useful.  I just dropped it and applied the patch.
+On Tue, Oct 22, 2013 at 01:58:34PM +0800, Peter Chen wrote:
+> Hi Felipe,
 
-Oh, my careless, thanks.
+Hi Felipe, would you please give any comments for this patchset?
+My another patchset chipidea's PM support also depends on this.
+Thanks.
+
+Peter
+
 > 
-> Shawn
+>    The serial adds power management support for MXS PHY, it includes:
 > 
-> > +	vbus-supply = <&reg_usb_otg_vbus>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_usbotg_1>;
-> > +	disable-over-current;
-> > +	status = "okay";
-> > +};
-> > +
-> >  &usdhc3 {
-> >  	cd-gpios = <&gpio6 11 0>;
-> >  	wp-gpios = <&gpio6 14 0>;
-> > -- 
-> > 1.7.1
-> > 
-> > 
+>    - Add three common PHY API, .set_wakeup, .notify_suspend, notify_resume.
+>    - Related above API implementation at mxs phy driver
+>    - misc changes for mxs phy to support low power mode and wakeup.
+> 
+> Changes for v2:
+> 
+> - Add missing patches which introduce platform judgement code [1/14,2/14]
+> - re-order the patch sequence, like doc->dts->source file, 
+> the reviewers can know the meaning of dt properties before review source
+> - Add description of two IC problems exsiting at mxs PHY; change
+> "high speed" to "HS" and "non-high speed" to "FS/LS" [5/14]
+> - Change the dt property disconnect-line-without-vbus
+> that the separator should be "-" not the "_", meanwhile, related source
+> code has changed.
+> - Using one local variable to get the function return val to avoid long
+> condition statement. [13/14]
+> 
+> Peter Chen (14):
+>   usb: doc: phy-mxs: Add more compatible strings
+>   usb: phy-mxs: Add platform judgement code
+>   usb: phy-mxs: Add auto clock and power setting
+>   usb: doc: phy-mxs: update binding for adding anatop phandle
+>   ARM: dts: imx6: add anatop phandle for usbphy
+>   usb: phy-mxs: Add anatop regmap
+>   usb: phy: add notify suspend and resume callback
+>   usb: phy-mxs: Add implementation of nofity_suspend and notify_resume
+>   usb: phy-mxs: Enable IC fixes for mx6 SoC serial
+>   usb: doc: phy-mxs: update binding for adding disconnect line property
+>   ARM: dts: imx6: Add disconnect-line-without-vbus property for usbphy
+>   usb: phy: Add set_wakeup API
+>   usb: phy-mxs: Add implementation of set_wakeup
+>   usb: phy-mxs: Add system suspend/resume API
+> 
+>  Documentation/devicetree/bindings/usb/mxs-phy.txt |   12 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                    |    3 +
+>  drivers/usb/phy/phy-mxs-usb.c                     |  328 ++++++++++++++++++++-
+>  include/linux/usb/phy.h                           |   39 +++
+>  4 files changed, 367 insertions(+), 15 deletions(-)
+> 
 
 -- 
 
 Best Regards,
 Peter Chen
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
