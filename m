@@ -1,63 +1,71 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] mmc: arasan: Add driver for Arasan SDHCI
-Date: Mon, 28 Oct 2013 14:47:38 -0700
-Message-ID: <b6ced7bb-e8df-4cc1-95a1-df575e37dea7@CO1EHSMHS001.ehs.local>
-References: <1381864085-8806-1-git-send-email-soren.brinkmann@xilinx.com>
- <1587218.cW45zK0ty2@flatron>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Mon, 28 Oct 2013 15:47:44 -0600
+Message-ID: <526EDB80.7080406@wwwdotorg.org>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org> <20131027134607.E1782C4039D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1587218.cW45zK0ty2@flatron>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131027134607.E1782C4039D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 10:16:49PM +0100, Tomasz Figa wrote:
-> Hi Soren,
->=20
-> On Tuesday 15 of October 2013 12:08:04 Soren Brinkmann wrote:
-> > Add a driver for Arasan's SDHCI controller core.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  23 +++
-> >  MAINTAINERS                                        |   1 +
-> >  drivers/mmc/host/Kconfig                           |  12 ++
-> >  drivers/mmc/host/Makefile                          |   1 +
-> >  drivers/mmc/host/sdhci-of-arasan.c                 | 224
-> > +++++++++++++++++++++ 5 files changed, 261 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/mmc/arasan,sdhci.txt create mode
-> > 100644 drivers/mmc/host/sdhci-of-arasan.c
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt new file m=
-ode
-> > 100644
-> > index 000000000000..20f0fc25e270
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > @@ -0,0 +1,23 @@
-> > +Device Tree Bindings for the Arasan SDCHI Controller
-> > +
-> > +  The bindings follow the mmc[1] and the clock bindings[2]. Only
-> > deviations are +  documented here.
-> > +
-> > +  [1] Documentation/devicetree/bindings/mmc/mmc.txt
-> > +  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +
-> > +Required Properties:
->=20
-> According to the example below, the list of required properties lacks=
-=20
-> interrupt-related properties.
-Well, the interrupt bindings seem to differ between platforms and
-architecture and looking at documentation for other sdhci bindings it
-seemed to be okay to avoid documenting them in this place.
+On 10/27/2013 07:46 AM, Grant Likely wrote:
+> On Tue, 15 Oct 2013 21:39:23 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> The standard interrupts property in device tree can only handle
+>> interrupts coming from a single interrupt parent. If a device is wired
+>> to multiple interrupt controllers, then it needs to be attached to a
+>> node with an interrupt-map property to demux the interrupt specifiers
+>> which is confusing. It would be a lot easier if there was a form of the
+>> interrupts property that allows for a separate interrupt phandle for
+>> each interrupt specifier.
+>>
+>> This patch does exactly that by creating a new interrupts-extended
+>> property which reuses the phandle+arguments pattern used by GPIOs and
+>> other core bindings.
+>>
+>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Alright, I want to merge this one. I've got an Ack from Tony, general
+> agreement from an in person converstaion from Ben (aside from wishing he
+> could think of a better property name), and various rumblings of
+> approval from anyone I talked to about it at ksummit. I'd like to have
+> something more that that to put into the commit text. Please take a look
+> and let me know if you agree/disagree with this binding.
 
-	S=C3=B6ren
+The new binding makes sense to me. So, the binding,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
+A couple of minor perhaps bikesheddy comments below.
 
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+
+>> +Nodes that describe devices which generate interrupts must contain an either an
+>> +"interrupts" property or an "interrupts-extended" property. These properties
+
+"interrupts-ex" would be shorter, although I guess slightly harder to
+guess its purpose, unless you're familiar with "ex" in symbol names.
+
+...
+>> +A device node may contain either "interrupts" or "interrupts-extended", but not
+>> +both. If both properties are present, then the operating system should log an
+>> +error
+
+That sounds rather like prescribing SW behaviour, which I thought DT
+bindings shouldn't do?
+
+>> and use only the data in "interrupts".
+
+... so perhaps that's better phrased as:
+
+A device node may contain either "interrupts" or "interrupts-extended",
+but not both. If both properties are present, the data in "interrupts"
+takes precedence.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
