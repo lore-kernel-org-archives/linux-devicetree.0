@@ -1,67 +1,88 @@
 From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv6 1/3] Input: twl4030-pwrbutton - add device tree support
-Date: Mon, 28 Oct 2013 01:31:28 -0500
-Message-ID: <FAB6821F-08A8-40F9-B6A9-A1AFBD928043@codeaurora.org>
-References: <1382626126-12565-1-git-send-email-sre@debian.org> <1382626126-12565-2-git-send-email-sre@debian.org> <FC6F0077-7E61-4F64-94E5-10E8FEF1F1E4@codeaurora.org> <20131025221850.GA8657@earth.universe> <085234CB-BD53-4120-AE77-B06FA9314E96@codeaurora.org> <20131026113138.GA22920@earth.universe>
+Subject: Re: [PATCH 4/4] wl1251: spi: add device tree support
+Date: Mon, 28 Oct 2013 01:37:34 -0500
+Message-ID: <FF34C626-4A49-43B1-B0AD-DC6146ABBB11@codeaurora.org>
+References: <1382890469-25286-1-git-send-email-sre@debian.org> <1382890469-25286-5-git-send-email-sre@debian.org>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20131026113138.GA22920@earth.universe>
-Sender: linux-input-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1382890469-25286-5-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Reichel <sre@debian.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sebastian Reichel <sre@ring0.de>, Luciano Coelho <luca@coelho.fi>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "John W. Linville" <linville@tuxdriver.com>, Felipe Balbi <balbi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 26, 2013, at 6:31 AM, Sebastian Reichel wrote:
+On Oct 27, 2013, at 11:14 AM, Sebastian Reichel wrote:
 
-> On Sat, Oct 26, 2013 at 01:37:57AM -0500, Kumar Gala wrote:
->> 
->> On Oct 25, 2013, at 5:18 PM, Sebastian Reichel wrote:
->> 
->>> On Fri, Oct 25, 2013 at 04:41:20PM -0500, Kumar Gala wrote:
->>>> On Oct 24, 2013, at 9:48 AM, Sebastian Reichel wrote:
->>>>> +- interrupt: should be one of the following
->>>>> +   - <8>: For controllers compatible with twl4030
->>>> 
->>>> Just checking, but the interrupt is always 8 for this device?
->>> 
->>> Yes. It's currently hardcoded in drivers/mfd/twl-core.c.
->> 
->> The fact that is hard coded in the driver does not imply that it
->> should be in the device tree binding.  Is there an interrupt
->> controller as part of the TWL4030?
+> Add device tree support for the spi variant of wl1251
+> and document the binding.
 > 
-> Hardware looks like this:
+> Signed-off-by: Sebastian Reichel <sre@debian.org>
+> ---
+> .../devicetree/bindings/net/wireless/ti,wl1251.txt | 36 ++++++++++++++++++++++
+> drivers/net/wireless/ti/wl1251/spi.c               | 23 ++++++++++----
+> 2 files changed, 53 insertions(+), 6 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
 > 
-> &twl4030 {
->    compatible = "ti,twl4030";
-> 	interrupt-controller;
-> 	#interrupt-cells = <1>;
-> 
->    twl_pwrbutton: pwrbutton {
-> 		compatible = "ti,twl4030-pwrbutton";
-> 		interrupts = <8>; /* 8th interrupt from the twl4030 */
-> 	};
-> };
-> 
-> Simplified the initialization of twl4030 stuff works
-> like this for non DT boot:
-> 
-> twl4030_init(...) {
->    init_subdev(...);
->    init_subdev("twl4030-pwrbutton", ..., irq=8, ...);
->    init_subdev(...);
-> };
-> 
-> -- Sebastian
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> new file mode 100644
+> index 0000000..5f8a154
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> @@ -0,0 +1,36 @@
+> +* Texas Instruments wl1251 controller
+> +
+> +The wl1251 chip can be connected via SPI or via SDIO. The linux
+> +kernel currently only supports device tree for the SPI variant.
+> +
 
-ok, than other than Grant's comment about merging some of this together with the other twl4030 bindings, ack.
+>From the binding I have no idea what this chip actually does, also we don't normally reference linux kernel support in bindings specs (so please remove it).
 
-- k
+However, what would expect the SDIO binding to look like?  Or more specifically, how would you distinguish the SPI vs SDIO binding/connection?  I'm wondering if the compatible should be something like "ti,wl1251-spi" and than the sdio can be "ti,wl1251-sdio"
+
+> +Required properties:
+> +- compatible : Should be "ti,wl1251"
+
+reg is not listed as a required prop.
+
+> +- interrupts : Should contain interrupt line
+> +- interrupt-parent : Should be the phandle for the interrupt
+> +  controller that services interrupts for this device
+> +- vio-supply : phandle to regulator providing VIO
+> +- power-gpio : GPIO connected to chip's PMEN pin
+
+should be vendor prefixed: ti,power-gpio
+
+> +- For additional required properties on SPI, please consult
+> +  Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Optional properties:
+> +- ti,use-eeprom : If found, configuration will be loaded from eeprom.
+
+can you be a bit more specific on what cfg will be loaded.  Also, is this property a boolean, if so how do I know which eeprom the cfg is loaded from (is it one that is directly connected to the wl1251?
+
+> +
+> +Examples:
+> +
+> +&spi1 {
+> +	wl1251_spi@0 {
+> +		compatible = "ti,wl1251";
+> +
+> +		reg = <0>;
+> +		spi-max-frequency = <48000000>;
+> +		spi-cpol;
+> +		spi-cpha;
+> +
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <10 IRQ_TYPE_NONE>; /* gpio line 42 */
+> +
+> +		vio-supply = <&vio>;
+> +		power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
+> +	};
+> +};
 
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
