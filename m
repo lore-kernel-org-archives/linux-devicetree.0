@@ -1,192 +1,73 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: RE: [PATCH 4/5] usb: ehci-s5p: Change to use phy provided by the
- generic phy framework
-Date: Mon, 28 Oct 2013 14:53:03 +0100
-Message-ID: <025f01ced3e5$0660ecf0$1322c6d0$%debski@samsung.com>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com>
- <1382710529-12082-5-git-send-email-k.debski@samsung.com>
- <CAFp+6iExOPunF=ND7_17PZXA217K_4im4ZJvR=mW2Ym_gnA0GQ@mail.gmail.com>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 0/3] Add dt support for exynos hdmiphy settings
+Date: Mon, 28 Oct 2013 23:02:13 +0900
+Message-ID: <03a501ced3e6$4d5ad3e0$e8107ba0$%dae@samsung.com>
+References: <1382956755-1318-1-git-send-email-s.shirish@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iExOPunF=ND7_17PZXA217K_4im4ZJvR=mW2Ym_gnA0GQ@mail.gmail.com>
-Content-language: pl
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautamvivek1987@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'kishon' <kishon@ti.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, mat.krawczuk@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1382956755-1318-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Shirish S' <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+Hi Shirish,
 
-> From: Vivek Gautam [mailto:gautamvivek1987@gmail.com]
-> Sent: Saturday, October 26, 2013 11:41 AM
-> 
-> Hi Kamil,
-> 
-> 
-> On Fri, Oct 25, 2013 at 7:45 PM, Kamil Debski <k.debski@samsung.com>
-> wrote:
-> > Change the phy provider used from the old usb phy specific to a new
-> > one using the generic phy framework.
-> >
-> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > ---
-> >  drivers/usb/host/ehci-s5p.c |   21 +++++++++++----------
-> >  1 file changed, 11 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-
-> s5p.c
-> > index 7cc26e6..76606ff 100644
-> > --- a/drivers/usb/host/ehci-s5p.c
-> > +++ b/drivers/usb/host/ehci-s5p.c
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_gpio.h>
-> > +#include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/platform_data/usb-ehci-s5p.h>
-> >  #include <linux/usb/phy.h>
-> > @@ -45,7 +46,7 @@ static struct hc_driver __read_mostly
-> > s5p_ehci_hc_driver;
-> >
-> >  struct s5p_ehci_hcd {
-> >         struct clk *clk;
-> > -       struct usb_phy *phy;
-> > +       struct phy *phy;
-> >         struct usb_otg *otg;
-> >         struct s5p_ehci_platdata *pdata;  }; @@ -77,10 +78,11 @@
-> > static int s5p_ehci_probe(struct platform_device *pdev)  {
-> >         struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
-> >         struct s5p_ehci_hcd *s5p_ehci;
-> > +       struct phy *phy;
-> 
-> just a nit here:
-> Lets keep the pointer to 'phy' and 'phy_name' together ?
-> and move this above phy_name ?
+I have merged the re-factoring patch set from Sean Paul to exynos-drm-next.
+Can you re-base your patch set at top of exynos-drm-next?
 
-Thanks for pointing this out.
- 
-> >         struct usb_hcd *hcd;
-> >         struct ehci_hcd *ehci;
-> >         struct resource *res;
-> > -       struct usb_phy *phy;
-> > +       const char *phy_name;
-> >         int irq;
-> >         int err;
-> >
-> > @@ -103,14 +105,14 @@ static int s5p_ehci_probe(struct
-> platform_device *pdev)
-> >                 return -ENOMEM;
-> >         }
-> >         s5p_ehci = to_s5p_ehci(hcd);
-> > -
-> > +       phy_name = of_get_property(pdev->dev.of_node, "phy-names",
-> NULL);
-> > +       phy =  devm_phy_get(&pdev->dev, phy_name);
-> 
-> Below check for exynos5440 was supposed to skip any request phy.
-> So shouldn't we place above two assignments to the original place where
-> devm_usb_get_phy() was called ?
-> May be i am not getting you intention of changing the place.
+Thanks,
+Inki Dae
 
-Hm... You are right - if we want to leave this check and skip phy request
-for
-5450 then I should leave the order as it was. And if we want to use the new
-phy driver for 5450 then the check to skip phy requesting should be simply
-removed.
+> -----Original Message-----
+> From: Shirish S [mailto:s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org]
+> Sent: Monday, October 28, 2013 7:39 PM
+> To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org; sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org; Shirish S
+> Subject: [PATCH 0/3] Add dt support for exynos hdmiphy settings
+> 
+> For various revisions of a chipset if the signal pattern is changed for
+> every
+> revision, then the phy setting need to be updated correspondingly by
+> measuring
+> the signal.
+> For getting correct signals the clock level and data de-emphasis
+> levels needs to be adjusted.
+> Since only these 2 values matter,we can move the same to dt,
+> wherein we can have different dt files for every revision.
+> 
+> This is an initial patchset towards achieving the same
+> for exynos 5250 and can be later extended to future chipsets.
+> 
+> V2: replaced moving of entire phy config structure with only
+> required and justifiable conf registers.
+> 
+> V3: Incorporated Mark Rutland's comments.
+> 
+> Shirish S (3):
+>   ARM: dts: smdk5250: Add hdmi phy settings
+>   ARM: dts: arndale: Add hdmi phy settings
+>   drm: exynos: hdmi: Add dt support for hdmiphy settings
+> 
+>  .../devicetree/bindings/video/exynos_hdmi.txt      |   32 +++++++++
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |   68
+++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   68
+++++++++++++++++++
+>  drivers/gpu/drm/exynos/exynos_hdmi.c               |   76
+++++++++++++++++++-
+> -
+>  4 files changed, 240 insertions(+), 4 deletions(-)
+> 
+> --
+> 1.7.9.5
 
-> 
-> >         if (of_device_is_compatible(pdev->dev.of_node,
-> >                                         "samsung,exynos5440-ehci")) {
-> >                 s5p_ehci->pdata = &empty_platdata;
-> >                 goto skip_phy;
-> >         }
-> >
-> > -       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-> >         if (IS_ERR(phy)) {
-> >                 /* Fallback to pdata */
-> >                 if (!pdata) {
-> > @@ -122,7 +124,6 @@ static int s5p_ehci_probe(struct platform_device
-> *pdev)
-> >                 }
-> >         } else {
-> >                 s5p_ehci->phy = phy;
-> > -               s5p_ehci->otg = phy->otg;
-> >         }
-> >
-> >  skip_phy:
-> > @@ -166,7 +167,7 @@ skip_phy:
-> >                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-> 
-> Lets remove this line and similar calls to 'set_host()' in the driver,
-> since we don't have s5p_ehci->otg anymore after the same is removed
-> above.
-> Anyways this was helping the old phy-samsung-usb2 driver, and not
-> needed now.
-
-Ok, I will.
-
-> 
-> >
-> >         if (s5p_ehci->phy)
-> > -               usb_phy_init(s5p_ehci->phy);
-> > +               phy_power_on(s5p_ehci->phy);
-> >         else if (s5p_ehci->pdata->phy_init)
-> >                 s5p_ehci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
-> >
-> > @@ -188,7 +189,7 @@ skip_phy:
-> >
-> >  fail_add_hcd:
-> >         if (s5p_ehci->phy)
-> > -               usb_phy_shutdown(s5p_ehci->phy);
-> > +               phy_power_off(s5p_ehci->phy);
-> >         else if (s5p_ehci->pdata->phy_exit)
-> >                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-> >  fail_io:
-> > @@ -209,7 +210,7 @@ static int s5p_ehci_remove(struct platform_device
-> *pdev)
-> >                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-> 
-> ditto
-> 
-> >
-> >         if (s5p_ehci->phy)
-> > -               usb_phy_shutdown(s5p_ehci->phy);
-> > +               phy_power_off(s5p_ehci->phy);
-> >         else if (s5p_ehci->pdata->phy_exit)
-> >                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-> >
-> > @@ -244,7 +245,7 @@ static int s5p_ehci_suspend(struct device *dev)
-> >                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-> ditto
-> 
-> >
-> >         if (s5p_ehci->phy)
-> > -               usb_phy_shutdown(s5p_ehci->phy);
-> > +               phy_power_off(s5p_ehci->phy);
-> >         else if (s5p_ehci->pdata->phy_exit)
-> >                 s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-> >
-> > @@ -265,7 +266,7 @@ static int s5p_ehci_resume(struct device *dev)
-> >                 s5p_ehci->otg->set_host(s5p_ehci->otg, &hcd->self);
-> ditto
-> 
-> >
-> >         if (s5p_ehci->phy)
-> > -               usb_phy_init(s5p_ehci->phy);
-> > +               phy_power_on(s5p_ehci->phy);
-> >         else if (s5p_ehci->pdata->phy_init)
-> >                 s5p_ehci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
-> >
-> [..] Rest looks good. :-)
-> 
-
-Thank you!
-
-Best wishes,
--- 
-Kamil Debski
-Samsung R&D Institute Poland
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
