@@ -1,58 +1,93 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v10 11/12] V4L: Add DT binding doc for s5k4e5 image sensor
-Date: Mon, 28 Oct 2013 23:54:23 +0000
-Message-ID: <20131028235423.GD4763@kartoffel>
-References: <1382074659-31130-1-git-send-email-arun.kk@samsung.com>
- <1382074659-31130-12-git-send-email-arun.kk@samsung.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
+Date: Tue, 29 Oct 2013 01:06:30 +0100
+Message-ID: <526EFC06.70101@gmail.com>
+References: <5261967E.6010001@samsung.com> <20131028201136.6f66d3f7@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382074659-31130-12-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "shaik.ameer@samsung.com" <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>, "arunkk.samsung@gmail.com" <arunkk.samsung@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20131028201136.6f66d3f7@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Arun Kumar K <arun.kk@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 06:37:38AM +0100, Arun Kumar K wrote:
-> S5K4E5 is a Samsung raw image sensor controlled via I2C.
-> This patch adds the DT binding documentation for the same.
-> 
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  .../devicetree/bindings/media/samsung-s5k4e5.txt   |   45 ++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/samsung-s5k4e5.txt b/Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
-> new file mode 100644
-> index 0000000..0fca087
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
-> @@ -0,0 +1,45 @@
-> +* Samsung S5K4E5 Raw Image Sensor
-> +
-> +S5K4E5 is a raw image sensor with maximum resolution of 2560x1920
-> +pixels. Data transfer is carried out via MIPI CSI-2 port and controls
-> +via I2C bus.
-> +
-> +Required Properties:
-> +- compatible	: must be "samsung,s5k4e5"
+Hi Mauro,
 
-s/must be/should contain/
+On 10/28/2013 11:11 PM, Mauro Carvalho Chehab wrote:
+>> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
+>> >
+>> >     [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
+>> >
+>> >  are available in the git repository at:
+>> >
+>> >     git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
+>> >
+>> >  for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
+>> >
+>> >     V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
+>> >
+>> >  ----------------------------------------------------------------
+>> >  Arun Kumar K (12):
+>> >         exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
+>
+> As agreed during KS, the subsystem maintainers should wait for a documentation
+> review on DT by the DT maintainers, at least for a while.
+>
+> So, I'd like to see either their reviews on this patch:
+> 	https://patchwork.linuxtv.org/patch/20439/
+>
+> Or their ack for us to apply it.
 
-> +- reg		: I2C device address
-> +- reset-gpios	: specifier of a GPIO connected to the RESET pin
-> +- clocks	: should contain the sensor's EXTCLK clock specifier, from
-> +		  the common clock bindings
+I agree with you on that. Just please note the first version of this patch
+has been posted *5 months* ago https://patchwork.linuxtv.org/patch/18684
 
-I would reword this to reference clock-names so as to make the ordering
-relationship explicit.
+Stephen has reviewed subsequent version about 3 months ago:
+https://patchwork.linuxtv.org/patch/19521
 
-With that, as everything else looks sane:
+Then we got no more comments from DT maintainers, I have reviewed this patch
+multiple times on the mailing lists:
+https://patchwork.linuxtv.org/patch/19715
+https://patchwork.linuxtv.org/patch/19749
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+And explicitly asked for an Ack:
+https://patchwork.linuxtv.org/patch/19832
 
-Thanks
-Mark.
+Then those 2 versions passed silently:
+https://patchwork.linuxtv.org/patch/20055
+https://patchwork.linuxtv.org/patch/20225
+
+And...huh...we got another review, I didn't notice it until now:
+https://patchwork.linuxtv.org/patch/20439 Thanks Mark.
+
+Arun, care to address those review comments and send us an updated
+binding documentation patch ?
+
+Hence I think we have waited for a while. ;)
+
+>> >         exynos5-fimc-is: Add driver core files
+>> >         exynos5-fimc-is: Add common driver header files
+>> >         exynos5-fimc-is: Add register definition and context header
+>> >         exynos5-fimc-is: Add isp subdev
+>> >         exynos5-fimc-is: Add scaler subdev
+>> >         exynos5-fimc-is: Add sensor interface
+>> >         exynos5-fimc-is: Add the hardware pipeline control
+>> >         exynos5-fimc-is: Add the hardware interface module
+>> >         exynos5-is: Add Kconfig and Makefile
+>> >         V4L: Add DT binding doc for s5k4e5 image sensor
+>
+> Same applies to this patch:
+> 	https://patchwork.linuxtv.org/patch/20448/
+
+This one also have been on the mailing list for quite some time and it
+uses already standard bindings, so I assumed it is OK to merge it.
+
+https://patchwork.linuxtv.org/project/linux-media/list/?state=*&q=s5k4e5
+
+But if there must be an Ack then we shall wait, it will probably won't
+make a big difference now, if this patch is postponed by 3 more months.
+
+--
+Thanks,
+Sylwester
