@@ -1,55 +1,81 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 0/5] Add OF support to the sh-sci serial port driver
-Date: Tue, 29 Oct 2013 11:29:54 +0100
-Message-ID: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 5/5] serial: sh-sci: Add device tree bindings documentation
+Date: Tue, 29 Oct 2013 11:29:59 +0100
+Message-ID: <1383042599-25151-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-serial-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
 Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This patch set adds device tree bindings for the sh sci serial port devices
-and adds OF parsing to the sh-sci driver.
-
-The bindings are based on Bastian Hecht's proposal (see
-http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach taken
-here is more minimalistic: instead of describing all hardware characteristics
-that vary between the SCI device revisions in DT (such as registers layout),
-that information is stored in the driver and selected based on the compatible
-property value. Only SCI revisions used on ARM devices are supported through
-DT, as DT support for SuperH is nowhere down the line.
-
-The first three patches clean up the sh-sci driver. They're not strictly
-required for OF support but make sense nonetheless. The last two patches add
-OF parsing to the sh-sci driver and create DT bindings documentation.
-
-The patches have been test on a Lager board (r8a7790-based). Support for other
-SoCs will be added as needed. Note that all current Renesas ARM SoCs seem to
-be compatible with the generic (H)SCI(F)(AB) devices, but the plan is for
-their DT bindings to list the SoC-specific version in case incompatibilities
-are found later.
+Document the device tree bindings for the sci serial port devices.
 
 Cc: devicetree@vger.kernel.org
-
-Bastian Hecht (1):
-  serial: sh-sci: Add OF support
-
-Laurent Pinchart (4):
-  serial: sh-sci: Sort headers alphabetically
-  serial: sh-sci: Remove baud rate calculation algorithm 5
-  serial: sh-sci: Simplify baud rate calculation algorithms
-  serial: sh-sci: Add device tree bindings documentation
-
- .../bindings/serial/renesas,sci-serial.txt         |  51 ++++++
- drivers/tty/serial/sh-sci.c                        | 192 +++++++++++++++++----
- include/linux/serial_sci.h                         |   9 +-
- 3 files changed, 217 insertions(+), 35 deletions(-)
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../bindings/serial/renesas,sci-serial.txt         | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
 
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+new file mode 100644
+index 0000000..5658b4f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -0,0 +1,51 @@
++* Renesas SH-Mobile Serial Communication Interface
++
++Required properties:
++
++  - compatible: should be one of the following.
++
++    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
++    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
++    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
++    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
++    - "renesas,scif-generic" for generic SCIF compatible UART.
++    - "renesas,scifa-generic" for generic SCIFA compatible UART.
++    - "renesas,scifb-generic" for generic SCIFB compatible UART.
++    - "renesas,hscif-generic" for generic HSCIF compatible UART.
++
++    When compatible with the generic version, nodes must also list the
++    SoC-specific version corresponding to the platform.
++
++  - reg: Base address and length of the memory resource used by the UART.
++
++  - interrupt-parent: Reference to the parent interrupt controller.
++  - interrupts: Interrupt number(s). Depending on the SoC SCIx UARTs are tied
++    to one or multiple interrupt lines. When using multiple interrupt lines,
++    specify the interrupt names as described below.
++
++  - clocks: Reference to the SCIx UART interface clock.
++  - clock-names: Should be "sci_ick".
++
++Optional properties:
++
++  - interrupt-names: When using multiple interrupts, report the interrupt
++    names as "eri" (receive error), "rxi" (receive), "txi" (transmit) and
++    "bri" (break). When using a single interrupt this property should not be
++    present.
++
++Note: Each enabled SCIx UART should have an alias correctly numbered in the
++"aliases" node.
++
++Example:
++	aliases {
++		serial0 = &scifa0;
++	};
++
++	scifa0: serial@e6c40000 {
++		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
++		reg = <0 0xe6c40000 0 64>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 144 4>;
++		clocks = <&mstp2_clks 4>;
++		clock-names = "sci_ick";
++	};
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.1.5
 
