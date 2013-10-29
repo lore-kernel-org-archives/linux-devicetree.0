@@ -1,111 +1,71 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: [PATCHv7][ 2/5] ASoC: eukrea-tlv320: Add DT support.
-Date: Tue, 29 Oct 2013 11:56:54 -0500
-Message-ID: <CAHCPf3vHWt5XJCwvGDMfX9rTPKqHU43SHORqpxLtLaDL6RGb8A@mail.gmail.com>
-References: <1382616832-23593-1-git-send-email-denis@eukrea.com>
-	<1382616832-23593-2-git-send-email-denis@eukrea.com>
-	<20131025191513.5345BC4042C@trevor.secretlab.ca>
-	<20131026114840.GX2443@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131026114840.GX2443-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, =?ISO-8859-1?Q?Eric_B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v3 2/4] mmc: omap_hsmmc: Enable SDIO IRQ.
+Date: Tue, 29 Oct 2013 12:16:44 -0500
+Message-ID: <EA1946E5-E119-4D4D-B99F-E96878DEC049@codeaurora.org>
+References: <1380971830-21492-1-git-send-email-afenkart@gmail.com> <1380971830-21492-3-git-send-email-afenkart@gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380971830-21492-3-git-send-email-afenkart@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andreas Fenkart <afenkart@gmail.com>
+Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Venkatraman S <svenkatr@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2013 at 6:48 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Oct 25, 2013 at 08:15:13PM +0100, Grant Likely wrote:
->> On Thu, 24 Oct 2013 14:13:49 +0200, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org> wrote:
->
->> > +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX).
->> > +- mux-ext-port : The external port of the i.MX audio muxer.
->
->> > +Note: The AUDMUX port numbering should start at 1, which is consistent with
->> > +hardware manual.
->
->> Looks okay to me. I've not been following the sound bindings very
->> closely. Are the described properties a common pattern for sound complex
->> bindings?
->
-> They're standard for i.MX - it's a mux within the SoC.
 
-And these bindings all suck, which is not a fault of Eukrea. There
-shouldn't be yet another duplication of the sound{} node though.
+On Oct 5, 2013, at 6:17 AM, Andreas Fenkart wrote:
 
-There is nothing specific to Eukrea in any of this. This is a TI audio
-codec connected via i.MX SSI and routed through the SoC fabric by one
-or another i.MX AUDMUX port.
+> For now, only support SDIO interrupt if we are booted with
+> DT. This is because some platforms need special quirks. And
+> we don't want to add new legacy mux platform init code
+> callbacks any longer as we are moving to DT based booting
+> anyways.
+> 
+> Broken hardware, missing the swakueup line, should fallback
+> to polling, by setting 'ti,quirk-swakup-missing' in the
+> device tree. Otherwise pending SDIO IRQ are not detected
+> while in suspend. This affects am33xx processors.
+> 
+> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index ed271fc..1136e6b 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -20,6 +20,24 @@ ti,dual-volt: boolean, supports dual voltage cards
+> ti,non-removable: non-removable slot (like eMMC)
+> ti,needs-special-reset: Requires a special softreset sequence
+> ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+> +ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
+> +SDIO irq while in suspend. Fallback to polling. Affected chips are
+> +am335x,
+> +
+> +                            ------
+> +                            | PRCM |
+> +                             ------
+> +                              ^ |
+> +                      swakeup | | fclk
+> +                              | v
+> +      ------                -------               -----
+> +     | card | -- CIRQ -->  | hsmmc | -- IRQ -->  | CPU |
+> +      ------                -------               -----
+> +
+> +In suspend the fclk is off and the module is disfunctional. Even
+> +register reads will fail. A small logic in the host will request fclk
+> +restore, when an external event is detected. Once the clock is
+> +restored, the host detects the event normally.
+> 
+> Example:
+> 	mmc1: mmc@0x4809c000 {
 
-Maybe this is a reasonable place to ask since I am holding off on
-doing any audio support for the i.MX platform I want to push a DT for,
-and I am still bashing my head over the logic in this. Why is this so
-much more complicated than it needs to be? I can see codec specific
-and Linux-specific things floating in trees. I can see redundancy in
-property naming and misplacement of properties.. this whole thing
-needs to be cleaned up because it's been done as "binding a Linux
-driver into the device tree" and this is another example of the same
-thing - taking the way ASoC is working right now and dumping platform
-data externally.
+For the DT-Binding portion:
 
-The existing MXS and IMX SGTL5000 bindings are not SGTL5000 specific.
-The sound node references a phandle for a codec - those properties
-should be present in the codec node. In this vein, Eukrea's bindings
-should not be codec or platform specific at all. This is a TI audio
-codec being referenced in an SoC-specific audio fabric definition.
+Acked-by: Kumar Gala <galak@codeaurora.org>
 
-The better way of thinking here is to stop being so insular with
-bindings. One binding for all these SoCs would suffice; codecs are
-codec-specific and codec properties like audio routing from mixers to
-pins should not be in the audio fabric definition. You can find the
-codec from the existing binding; you can find the controller. One
-thing it NEVER refers to is the audmux controller.. but it does
-magically specify the internal and external ports required.. and all
-the drivers (so far, sgtl5000 and wm8962) magically know what they're
-doing here.
-
-It is NOT some kind of undefined, unholy evil to reach outside of the
-node you found the compatible property of to look elsewhere - the
-fabric driver in this case has all the capability to dereference the
-codec, controller, audiomux etc. nodes it's got phandles to, and find
-the properties it needs to stuff into the handoff data for dai and
-dapm. Sure, you can have a generic driver have some codec-specific
-stuff in there where it has to be handled externally to a codec
-driver.. This just shows there should be another level in the driver
-subsystem (actually there sort of is already, isn't there?).
-
-As it stands; Neither imx-sgtl5000.c or imx-wm8962.c do anything with
-the controller or codec nodes except to stuff it into a handoff data
-structure for the rest of the subsystem to glue ASoC together.
-eukrea-tlv320.c is the same way even in this patch and imx-mc13783 is
-languishing..
-
-They are essentially line-for-line identical except a couple hacks
-here and there - things that are understandably outside of the control
-of the codec driver itself.  Some of it could even be driven down to
-lower levels of the subsystem.
-
-What we should have is something simpler and more "realistic" vs.
-hardware design, and imx-sgtl5000, imx-wm8962, imx-mc13783, and
-eukrea-tlv320 should be merged into a single fabric driver with a
-single all-encompassing and altogether simpler binding.Please don't
-continue to layer crappier parts of the Linux abstractions into the
-device tree. The device tree should present the structure and layout
-of the devices - not of the OS subsystems involved. Parsing the device
-tree at various points in the subsystems - even if you end up doing it
-3 times over - is the correct way. Not to try and consolidate and
-optimize your tree to make your drivers smaller.
-
-As it stands this could be easily changed right now with a couple
-tweaks; compatibility can be maintained with the older bindings, too.
-I'll write it up (binding def at least, I can't fix the drivers in a
-reasonable time, unfortunately) and throw it out tonight if we're all
-agreeable..
+- k
 
 -- 
-Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
