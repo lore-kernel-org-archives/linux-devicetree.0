@@ -1,56 +1,87 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Tue, 29 Oct 2013 03:21:10 -0500
-Message-ID: <90D2FDE5-C43F-4ACF-B287-4E0AD8617892@codeaurora.org>
-References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org> <1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Tue, 29 Oct 2013 03:24:16 -0500
+Message-ID: <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org>
+References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com> <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com> <20131029045943.GE20432@verge.net.au>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383006690-6754-5-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131029045943.GE20432@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 28, 2013, at 7:31 PM, Stephen Boyd wrote:
+On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
 
-> The Krait L1/L2 error reporting device is made up of two
-> interrupts, one per-CPU interrupt for the L1 caches and one
-> interrupt for the L2 cache.
+> On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
+>> R-Car Gen2 SoCs have a different PHY which is not compatible
+>> with the older R-Car H1 (R8A7779) version.
+>> This adds OF/platform device id tables and PHY initialization
+>> callbacks for the following Gen2 SoCs:
+>>  * R-Car H2: R8A7790;
+>>  * R-Car M2: R8A7791.
+>> 
+>> PHY initialization method is chosen based on the device id.
+>> Default PHY settings are applied for Gen2 SoCs, which should
+>> suit the Gen2 boards available.
+>> 
+>> The R8A7779 platform code is modified to use "sata-r8a7779"
+>> device name.
+>> 
+>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>> ---
+>> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+>> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+>> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+>> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
 > 
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-> .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
-> 1 file changed, 16 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+> Hi Mark, Hi Device-Tree Folks,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> new file mode 100644
-> index 0000000..01fe8a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> @@ -0,0 +1,16 @@
-> +* Qualcomm Krait L1 / L2 cache error reporting
-> +
-> +Required properties:
-> +- compatible: Should be "qcom,krait-cache-erp"
-> +- interrupts: Should contain the L1/CPU error interrupt number and
-> +  then the L2 cache error interrupt number
-> +
-> +Optional properties:
-> +- interrupt-names: Should contain the interrupt names "l1_irq" and
-> +  "l2_irq"
-> +
-> +Example:
-> +	edac {
-> +		compatible = "qcom,krait-cache-erp";
-> +		interrupts = <1 9 0xf04>, <0 2 0x4>;
-> +	};
+> I'm wondering if you have had a chance to look over the bindings
+> aspect of this and the other patch in the series. I believe that
+> this series addresses all previous review in that regards.
 
-Why wouldn't we have these as part of cache nodes in the dts?  (which begs the question why we don't have cache nodes?)
+What tree is this binding in?
+
+> 
+> Hi Valentine,
+> 
+> I would like to request that the arch/arm/mach-shmobile/ portion
+> of this patch be split out into a separate patch. The reason is
+> that in general it is nicer to apply driver changes separately
+> to platform changes: for starters they have different maintainers.
+> And in this case there seems to be no reason not to split the change.
+> 
+> Also, I would like to this chance to pass on part of a discussion
+> at the ARM Linux Kernel summit which is that when posting a series of
+> patches please only CC devicetree@vger.kernel.org on the patches in
+> the series that relate to device tree. This would not include
+> to the new patch with only the arch/arm/mach-shmobile/ portions
+> of this patch. Feel free to post that patch as a separate series
+> noting its dependencies below '---' accordingly.
+> 
+>> 4 files changed, 107 insertions(+), 20 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> index 0719115..d6b20a6 100644
+>> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> @@ -1,7 +1,10 @@
+>> * Renesas R-Car SATA
+>> 
+>> Required properties:
+>> -- compatible		: should contain "renesas,sata-r8a7779";
+>> +- compatible		: should contain one of the following:
+>> +			  - "renesas,sata-r8a7779" for R-Car H1
+>> +			  - "renesas,sata-r8a7790" for R-Car H2
+>> +			  - "renesas,sata-r8a7791" for R-Car M2
+>> - reg			: offset and length of the SATA registers;
+>> - interrupts		: must consist of one interrupt specifier.
+
+We normally have an example (not sure if there is one, and just not seeing it because of diff or not).
 
 - k
 
@@ -58,7 +89,3 @@ Why wouldn't we have these as part of cache nodes in the dts?  (which begs the q
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
