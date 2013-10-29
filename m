@@ -1,40 +1,45 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
-Date: Tue, 29 Oct 2013 09:00:50 -0700
-Message-ID: <CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
-References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
-	<1383057139-25304-1-git-send-email-mpa@pengutronix.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
+Date: Tue, 29 Oct 2013 11:19:00 -0500
+Message-ID: <526FDFF4.9030806@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383057139-25304-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 7:32 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+On 10/25/2013 10:56 AM, Tero Kristo wrote:
+<snip>
+> Testing done:
+> - omap3-beagle: boot + suspend/resume (ret + off)
+> - omap4-panda-es: boot + suspend/resume
+> - omap5-uevm: boot
+> - dra7-evm: boot
+> - am335x-bone: boot
+> 
+> Test branches available:
+> 
+> tree: https://github.com/t-kristo/linux-pm.git
 
-> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
-> similar to other imx pincontrol drivers.
->
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Hi,
->
-> another binding documentation update. The MUX_ID components are described more
-> detailed now.
+<snip>
+> Fully functioning test branch: 3.12-rc6-dt-clks-v9
+> 
+^^ I tested this branch (boot testing):
+Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
+failed to transition)
+Panda-ES: http://pastebin.com/dWMp7D1z (bandgap_fclk not found)
+OMAP5-UEVM: http://pastebin.com/pHEx6Yzg (omap-gpmc 50000000.gpmc:
+error: clk_get)
+DRA7-EVM: http://pastebin.com/uYNQ6Sss
+BeagleBone-Black: http://pastebin.com/biGXS2vi
+AM335x-evm: http://pastebin.com/K7qwJpCb
 
-Patch tentatively applied unless someone has very fundamental
-issues with it, it stays in. I really want a full transfer of i.MX
-pin controllers to the subsystem, using device tree so we can
-get rid of the old i.MX cruft in arch/arm.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
