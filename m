@@ -1,48 +1,99 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
-	Interface driver.
-Date: Tue, 29 Oct 2013 12:02:10 +0800
-Message-ID: <20131029040209.GC8812@MrMyself>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
- <20131024110543.GA18506@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F8286BDB5@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
+Date: Tue, 29 Oct 2013 13:42:41 +0900
+Message-ID: <20131029044239.GC20432@verge.net.au>
+References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+ <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
+ <20131009034057.GO15065@verge.net.au>
+ <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
+ <20131009065438.GA7220@verge.net.au>
+ <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
+ <20131009103915.GB17869@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F8286BDB5@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Xiubo Li-B47053 <B47053@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, "oskar@scara.com" <oskar@scara.com>, Estev
+In-Reply-To: <20131009103915.GB17869@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 12:00:57PM +0800, Xiubo Li-B47053 wrote:
-> > There's a patch in -next that lets the generic dmaengine code figure out
-> > some settings from the dmacontroller rather than requiring the driver to
-> > explicitly provide configuration - it's "ASoC: dmaengine-pcm: Provide
-> > default config".  Please update your driver to use this, or let's work
-> > out what it doesn't do any try to fix it.
+On Wed, Oct 09, 2013 at 07:39:18PM +0900, Simon Horman wrote:
+> On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
+> > Hi Simon,
 > > 
+> > On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms@verge.net.au> wrote:
+> > > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
+> > >> Hi Simon,
+> > >>
+> > >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms@verge.net.au> wrote:
+> > >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y@ops.dti.ne.jp wrote:
+> > >> >> Use common clock framework version of clock
+> > >> >>  drivers/clk/shmobile/clk-emev2.c
+> > >> >> instead of sh-clkfwk version
+> > >> >>  arch/arm/mach-shmobile/clock-emev2.c
+> > >> >> when it is configured as a part of multi-platform.
+> > >> >>
+> > >> >> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+> > >> >
+> > >> > Thanks.
+> > >> >
+> > >> > I plan to add this patch to a new topic branch,
+> > >> > topic/emev2-common-clock, in the renesas tree and
+> > >> > queue it up from there for inclusion in mainline
+> > >> > if/when the first patch of this series is accepted
+> > >> > by Mike Turquette.
+> > >>
+> > >> Thanks for picking up patches, Simon.
+> > >>
+> > >> I think you can simply merge this patch after the following series:
+> > >>
+> > >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
+> > >
+> > > This is already queued up.
+> > 
+> > Yes, I know, thanks for that. I tried to explain the dependency in the
+> > 00/00 cover letter but I will try to be more clear next time!
+> > 
+> > >> There are no build time dependencies on patch 1 and 2 so this patch
+> > >> can be merged independently. Regarding run-time operation, the
+> > >> multiplatform series above makes KZM9D DT reference only build for
+> > >> multiplatform, and in such case CCF is required.
+> > >>
+> > >> So if you want to keep KZM9D DT reference working until Mike Turquette
+> > >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
+> > >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
+> > >> have been merged.
+> > >>
+> > >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
+> > >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
+> > >> well merge this patch as well IMO. This
+> > >> multiplatform-update-series-merge-before-CCF plan will result in
+> > >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
+> > >> fine with me.
+> > >
+> > > I am mainly concerned that the bindings may change before
+> > > they are finally merged. And I thought it would be nice to avoid
+> > > having to fix up the usage of the bindings if they change.
+> > 
+> > Sure, but the code in this patch looks like it simply starts DT CCF
+> > probing regardless of what the bindings look like. So I don't think
+> > you will have to worry about actual bindings detail.
+> > 
+> > > But I'm happy to just queue-up patches 2 and 3 of this series
+> > > now if you prefer.
+> > 
+> > Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
 > 
-> I couldn't find the patch in the next and other trees.
-> Does this patch has been submitted to the -next tree ?
-> Or could you tell me how to find the patch please?
->
+> Thanks, I understand now.
+> 
+> I'll queue-up 3/3.
 
-Are you using broonie's repository?
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
+Which I did.
 
-If you searched the title in for-next branch, you should have found it.
+Then some time passed...
 
-Best regards,
-Nicolin Chen
+Mike has accepted my pull-request for patch 1 of this series
+and accordingly I have queued-up this patch for v3.14.
+It should appear in the devel branch the next time that I push it.
