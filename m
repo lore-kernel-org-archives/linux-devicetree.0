@@ -1,82 +1,88 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
- tree
-Date: Mon, 28 Oct 2013 22:26:03 -0500
-Message-ID: <1383017163.3410.61.camel@snotra.buserror.net>
-References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
-	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
-	 <1381518433.7979.536.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381788786.7979.643.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381858855.7979.693.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1381942009.7979.727.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1382027085.7979.774.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1382113880.7979.836.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150C62BA@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v2 0/7] drm/exynos: move hdmiphy related code to hdmiphy driver
+Date: Tue, 29 Oct 2013 09:06:20 +0530
+Message-ID: <CAPdUM4MhTvdz8nH20j6DxqwN_yYac3pvfwgDn21gjrxR+sCZHg@mail.gmail.com>
+References: <1382436668-15813-1-git-send-email-rahul.sharma@samsung.com>
+	<CAAQKjZOnZi_=V6ZL_SmamiG_Gbo7TxsRUv5VtSvJGpqkyvH_ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150C62BA-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAQKjZOnZi_=V6ZL_SmamiG_Gbo7TxsRUv5VtSvJGpqkyvH_ug@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2013-10-20 at 21:55 -0500, Tang Yuantian-B29983 wrote:
-> I didn't see how your suggestion is a better matching.
-> 
->  OSC ----> PLL1 ----> mux ----> CPU
->       |           |
->       |--> PLL2 --| 
->         ........
-> As your suggestion, the clock tree looks like the above.
-> In this case, the MUX driver will not know the divider
-> details(/2, /4, or /3).
+On 28 October 2013 19:10, Inki Dae <inki.dae@samsung.com> wrote:
+> Hi Rahul,
+>
+> I have merged the re-factoring patch set from Sean Paul to
+> exynos-drm-next except eDP related patch set that these need more
+> reviews. Can you re-base at top of exynos-drm-next?
+>
 
-When is there ever a /3?
+Ok. I will rebase and post it again.
 
-> I think the MUX should act like "switch" which choose one
-> of the input clock as a output clock. It should not CREATE
-> clock(like PLL1/2, PLL1/4).
-> The purpose of clock driver is to establish the clock tree.
-> The clock tree will not be established in your suggestion
-> because the divider is missing, we don't know where PLL/2 comes from.
-> 
-> If you really like your proposal, it should be changed to this:
-> 
-> OSC ------> PLL1 -----> PLL1 /1 ---------> MUX ------->CPU
->      |            |___> PLL1 /2 _______|
->      |                                 |
->      |____> PLL2 -----> PLL2 /2 -------|
->                   |___> PLL2/ 4 _______|
-> 
-> (it is possible that PLLs have different divider).
+regards,
+Rahul Sharma.
 
-Do we actually have (or expect) a situation where the PLLs have
-different dividers, or even where the same bit setting in the MUX
-register means a different divider from one chip to another (within the
-same MUX compatible string)?  If so, then I agree that we should go with
-your approach.
-
-The way Freescale documents things in chip manuals rather than in block
-manuals, with little bits of information different in each chip manual,
-makes it hard to figure out this sort of thing.  From the examples I
-looked at, it seemed pretty consistent that the low 2 bits of CLKSEL in
-the MUX were the log2 of the divider.  Are there any chips that don't
-adhere to this?
-
--Scott
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+> Inki Dae
+>
+> 2013/10/22 Rahul Sharma <rahul.sharma@samsung.com>:
+>> Currently, exynos hdmiphy operations and configs are kept
+>> inside the hdmi driver. Hdmiphy related code is very tightly
+>> coupled with hdmi IP driver. With these patches, hdmiphy
+>> related stuff is moved to hdmiphy i2c driver for exynos4 and
+>> exynos5250 socs. hdmi driver, being the phy controller, calls
+>> exynos hdmiphy interfaces.
+>>
+>> This series also removes hdmiphy dummy clock for hdmiphy
+>> and replace it with Phy PMU Control from the hdmiphy driver.
+>>
+>> At the end, support for exynos5420 hdmiphy is added to the
+>> hdmiphy platform driver.
+>>
+>> Drm related paches are based on exynos-drm-next branch at
+>> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+>>
+>> Arch related paches are based on for-next branch at
+>> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git
+>>
+>> Rahul Sharma (7):
+>>   drm/exynos: move hdmiphy code to hdmiphy i2c driver
+>>   drm/exynos: remove dummy hdmiphy clock
+>>   drm/exynos: add hdmiphy platform driver for exynos5420
+>>   drm/exynos: add hdmiphy pmu bit control in hdmiphy drivers
+>>   exynos/drm: fix ddc i2c device probe failure
+>>   ARM: dts: update hdmiphy dt node for exynos5250
+>>   ARM: dts: update hdmiphy dt node for exynos5420
+>>
+>>  .../devicetree/bindings/video/exynos_hdmi.txt      |    2 +
+>>  .../devicetree/bindings/video/exynos_hdmiphy.txt   |    8 +-
+>>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    9 +-
+>>  arch/arm/boot/dts/exynos5420.dtsi                  |   14 +-
+>>  drivers/gpu/drm/exynos/Makefile                    |    3 +-
+>>  drivers/gpu/drm/exynos/exynos_ddc.c                |    5 +
+>>  drivers/gpu/drm/exynos/exynos_hdmi.c               |  407 +++++-----------
+>>  drivers/gpu/drm/exynos/exynos_hdmiphy.c            |   65 ---
+>>  drivers/gpu/drm/exynos/exynos_hdmiphy.h            |   46 ++
+>>  drivers/gpu/drm/exynos/exynos_hdmiphy_i2c.c        |  484 ++++++++++++++++++++
+>>  drivers/gpu/drm/exynos/exynos_hdmiphy_platform.c   |  418 +++++++++++++++++
+>>  drivers/gpu/drm/exynos/exynos_hdmiphy_priv.h       |   36 ++
+>>  drivers/gpu/drm/exynos/regs-hdmiphy.h              |   37 ++
+>>  13 files changed, 1174 insertions(+), 360 deletions(-)
+>>  delete mode 100644 drivers/gpu/drm/exynos/exynos_hdmiphy.c
+>>  create mode 100644 drivers/gpu/drm/exynos/exynos_hdmiphy.h
+>>  create mode 100644 drivers/gpu/drm/exynos/exynos_hdmiphy_i2c.c
+>>  create mode 100644 drivers/gpu/drm/exynos/exynos_hdmiphy_platform.c
+>>  create mode 100644 drivers/gpu/drm/exynos/exynos_hdmiphy_priv.h
+>>  create mode 100644 drivers/gpu/drm/exynos/regs-hdmiphy.h
+>>
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
