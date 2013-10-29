@@ -1,69 +1,91 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] mmc: arasan: Add driver for Arasan SDHCI
-Date: Mon, 28 Oct 2013 17:15:52 -0700
-Message-ID: <ff1f2d38-4185-49f0-8b63-b3bd2b4f9a27@CO9EHSMHS024.ehs.local>
-References: <1381864085-8806-1-git-send-email-soren.brinkmann@xilinx.com>
- <526EF149.8060304@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 3/5] ARM: tegra: split setting of CPU reset handler
+Date: Tue, 29 Oct 2013 00:18:59 +0000
+Message-ID: <20131029001858.GE4763@kartoffel>
+References: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
+ <1382956118-12495-4-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <526EF149.8060304@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+In-Reply-To: <1382956118-12495-4-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 06:20:41PM -0500, Rob Herring wrote:
-> On 10/15/2013 02:08 PM, Soren Brinkmann wrote:
-> > Add a driver for Arasan's SDHCI controller core.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  23 +++
-> >  MAINTAINERS                                        |   1 +
-> >  drivers/mmc/host/Kconfig                           |  12 ++
-> >  drivers/mmc/host/Makefile                          |   1 +
-> >  drivers/mmc/host/sdhci-of-arasan.c                 | 224 +++++++++=
-++++++++++++
-> >  5 files changed, 261 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sd=
-hci.txt
-> >  create mode 100644 drivers/mmc/host/sdhci-of-arasan.c
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt=
- b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > new file mode 100644
-> > index 000000000000..20f0fc25e270
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > @@ -0,0 +1,23 @@
-> > +Device Tree Bindings for the Arasan SDCHI Controller
-> > +
-> > +  The bindings follow the mmc[1] and the clock bindings[2]. Only d=
-eviations are
-> > +  documented here.
-> > +
-> > +  [1] Documentation/devicetree/bindings/mmc/mmc.txt
-> > +  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +
-> > +Required Properties:
-> > +  - compatible: Compatibility string. Must be 'arasan,sdhci'
->=20
-> This string is a bit non-specific. Vendor IP typically has configurab=
-le
-> options, different revs of IP with fixes/differences, and the
-> possibility of integration wierdness or bugs. So it is better to be a=
-s
-> specific as possible in case the kernel needs to know exactly what
-> version of h/w this is.
-Okay. The Zynq TRM specifies the version as '8.9A_apr02nd_2010', which =
-seems
-a little overly specific to me. How does 'arasan,sdhci-8.9a' sound to
-you?
+On Mon, Oct 28, 2013 at 10:28:36AM +0000, Alexandre Courbot wrote:
+> Not all Tegra devices can set the CPU reset handler in the same way.
+> In particular, devices using a TrustZone secure monitor cannot set the
+> reset handler directly and need to do it through a firmware operation.
+> 
+> This patch separates the act of setting the reset handler from its
+> preparation, so the former can be implemented in a different way.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/mach-tegra/reset.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+> index fd0bbf8..e282395 100644
+> --- a/arch/arm/mach-tegra/reset.c
+> +++ b/arch/arm/mach-tegra/reset.c
+> @@ -33,26 +33,18 @@
+>  
+>  static bool is_enabled;
+>  
+> -static void __init tegra_cpu_reset_handler_enable(void)
+> +static void __init tegra_cpu_reset_handler_set(const u32 reset_address)
+>  {
+> -	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
+>  	void __iomem *evp_cpu_reset =
+>  		IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE + 0x100);
+>  	void __iomem *sb_ctrl = IO_ADDRESS(TEGRA_SB_BASE);
+>  	u32 reg;
+>  
+> -	BUG_ON(is_enabled);
+> -	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
+> -
+> -	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+> -			tegra_cpu_reset_handler_size);
+> -
+>  	/*
+>  	 * NOTE: This must be the one and only write to the EVP CPU reset
+>  	 *       vector in the entire system.
+>  	 */
+> -	writel(TEGRA_IRAM_RESET_BASE + tegra_cpu_reset_handler_offset,
+> -			evp_cpu_reset);
+> +	writel(reset_address, evp_cpu_reset);
+>  	wmb();
+>  	reg = readl(evp_cpu_reset);
+>  
+> @@ -66,6 +58,21 @@ static void __init tegra_cpu_reset_handler_enable(void)
+>  		writel(reg, sb_ctrl);
+>  		wmb();
+>  	}
+> +}
+> +
+> +static void __init tegra_cpu_reset_handler_enable(void)
+> +{
+> +	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
+> +	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
+> +						tegra_cpu_reset_handler_offset;
+> +
+> +	BUG_ON(is_enabled);
+> +	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
+> +
+> +	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+> +			tegra_cpu_reset_handler_size);
 
-	Thanks,
-	S=C3=B6ren
+A memcpy to iomem seems suspect. Should this be memcpy_toio, or is the __iomem
+annotation misleading?
 
-
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
