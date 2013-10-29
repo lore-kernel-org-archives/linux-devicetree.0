@@ -1,121 +1,132 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v5 0/4] watchdog: at91sam9_wdt: handle already configured
- wdt
-Date: Tue, 29 Oct 2013 11:31:37 +0100
-Message-ID: <526F8E89.30005@overkiz.com>
-References: <1380871455-7324-1-git-send-email-b.brezillon@overkiz.com> <20131029075028.GF19704@spo001.leaseweb.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv3][ 1/5] fbdev: Add the lacking FB_SYNC_* for matching
+ the DISPLAY_FLAGS_*
+Date: Tue, 29 Oct 2013 12:35:11 +0200
+Message-ID: <526F8F5F.6050905@ti.com>
+References: <1382532229-32755-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131029075028.GF19704@spo001.leaseweb.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1342703451068469403=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1382532229-32755-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wim,
+--===============1342703451068469403==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="M3RuJJDxIdkQLEu14hjOVaGFbiHXvFtdf"
 
-I'm sorry for the inconvenience, but I found some bugs in my patch series:
+--M3RuJJDxIdkQLEu14hjOVaGFbiHXvFtdf
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-1) the secs_to_ticks returns an erronous value when 0 is passed as an 
-argument
-2) the calculated heartbeat is too small for some use cases
-     (i.e. kexecing a new kernel might trigger a watchdog reset before 
-the new kernel
-      is able to load the watchdog driver)
-3) when initializing the watchdog driver, the timer should be configured 
-with the min_heartbeat value
-     instead of the standard heartbeat value, because we don't for how 
-long the timer has been running.
+On 23/10/13 15:43, Denis Carikli wrote:
+> Without that fix, drivers using the fb_videomode_from_videomode
+>   function will not be able to get certain information because
+>   some DISPLAY_FLAGS_* have no corresponding FB_SYNC_*.
+>=20
+> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Eric B=C3=A9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> ---
+> ChangeLog v2->v3:
+> - Added Jean-Christophe PLAGNIOL-VILLARD's ACK.
+> ---
+>  drivers/video/fbmon.c   |    4 ++++
+>  include/uapi/linux/fb.h |    2 ++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> index 6103fa6..29a9ed0 100644
+> --- a/drivers/video/fbmon.c
+> +++ b/drivers/video/fbmon.c
+> @@ -1402,6 +1402,10 @@ int fb_videomode_from_videomode(const struct vid=
+eomode *vm,
+>  		fbmode->sync |=3D FB_SYNC_HOR_HIGH_ACT;
+>  	if (vm->flags & DISPLAY_FLAGS_VSYNC_HIGH)
+>  		fbmode->sync |=3D FB_SYNC_VERT_HIGH_ACT;
+> +	if (vm->flags & DISPLAY_FLAGS_DE_HIGH)
+> +		fbmode->sync |=3D FB_SYNC_DE_HIGH_ACT;
+> +	if (vm->flags & DISPLAY_FLAGS_PIXDATA_POSEDGE)
+> +		fbmode->sync |=3D FB_SYNC_PIXDAT_HIGH_ACT;
+>  	if (vm->flags & DISPLAY_FLAGS_INTERLACED)
+>  		fbmode->vmode |=3D FB_VMODE_INTERLACED;
+>  	if (vm->flags & DISPLAY_FLAGS_DOUBLESCAN)
+> diff --git a/include/uapi/linux/fb.h b/include/uapi/linux/fb.h
+> index fb795c3..30487df 100644
+> --- a/include/uapi/linux/fb.h
+> +++ b/include/uapi/linux/fb.h
+> @@ -215,6 +215,8 @@ struct fb_bitfield {
+>  					/* vtotal =3D 144d/288n/576i =3D> PAL  */
+>  					/* vtotal =3D 121d/242n/484i =3D> NTSC */
+>  #define FB_SYNC_ON_GREEN	32	/* sync on green */
+> +#define FB_SYNC_DE_HIGH_ACT	64	/* data enable high active */
+> +#define FB_SYNC_PIXDAT_HIGH_ACT	64	/* data enable high active */
 
-I'll send a new patch fixing those issues.
-I hope it won't bother you :-(.
+This can't be right. You map both flags to value 64. And the comment is
+the same for both.
 
-Best Regards,
+ Tomi
 
-Boris
 
-On 29/10/2013 08:50, Wim Van Sebroeck wrote:
-> Hi Boris,
->
->> Hello,
->>
->> This patch series is a porposal to enhance the sam9 watchdog timer support.
->>
->> The at91sam9 watchdog timer can only be configured once, and the current
->> implementation tries to configure it in a static way:
->> - 2 seconds timeout
->> - wdt restart every 500ms
->>
->> If the timer has already been configured with different values, it returns an
->> error and do not create any watchdog device.
->>
->> This is not critical if the watchdog is disabled, but if it has been enabled
->> with different timeout values it will lead to a SoC reset.
->>
->> This patch series tries to address this issue by adapting the heartbeat value
->> according the WDT timer config:
->> - it first tries to configure the timer as requested.
->> - if it fails it fallbacks to the current config, adapting its heartbeat timer
->> to the needs
->>
->> This patch series also move to a dynamically allocated at91wdt device instead
->> of the static instance. I'm not sure this is the best solution, so please tell
->> me if you prefer to keep static instance of watchdog.
->>
->> It adds a new at91 wdt type: software. This new type make use of the at91 wdt
->> interrupt to trigger a software reboot.
->>
->> Finally it adds several properties to the device tree bindings.
->>
->> Best Regards,
->> Boris
->>
->> Changes since v4:
->>   - fix coding style issues
->>   - remove unneeded watchdog_active test
->>
->> Changes since v3:
->>   - fix a bug in heartbeat time computation
->>   - fix a bug in at91_wdt_set_timeout when new timeout is bigger than the old
->>     one
->>   - rename at91_wdt_ping into at91_wdt_start
->>   - remove unneeded ping callback assignment
->>
->> Changes since v2:
->>   - fix documentation
->>   - rework the heartbeat computation to get a more flexible behaviour
->>   - fix xx_to_yy macros
->>   - modify warning and error messages
->>   - remove unneeded parenthesis in arithmetic operations
->>   - use devm functions to map io memory
->>   - remove unneeded devm_kfree calls
->>
->> Change since v1:
->>   - fix typo in documentaion
->>   - fix irq dt definition for sama5d3 SoC
->>
->>
->> Boris BREZILLON (4):
->>    watchdog: at91sam9_wdt: better watchdog support
->>    watchdog: at91sam9_wdt: update device tree doc
->>    ARM: at91/dt: add sam9 watchdog default options to SoCs
->>    ARM: at91/dt: add watchdog properties to kizbox board
->>
->>   .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 +-
->>   arch/arm/boot/dts/at91sam9260.dtsi                 |    5 +
->>   arch/arm/boot/dts/at91sam9263.dtsi                 |    5 +
->>   arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +
->>   arch/arm/boot/dts/at91sam9n12.dtsi                 |    5 +
->>   arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +
->>   arch/arm/boot/dts/kizbox.dts                       |    6 +
->>   arch/arm/boot/dts/sama5d3.dtsi                     |    5 +
->>   drivers/watchdog/at91sam9_wdt.c                    |  309 ++++++++++++++------
->>   9 files changed, 287 insertions(+), 88 deletions(-)
-> These 4 patches have been added to linux-watchdog-next.
->
-> Kind regards,
-> Wim.
->
 
+--M3RuJJDxIdkQLEu14hjOVaGFbiHXvFtdf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSb49fAAoJEPo9qoy8lh71VC4P/0ETdY/WE415nLejHuDs1uaO
+za4wJvKfmlVdHr4k6ySvM6/WDROGoHs9D2WYUjrYPSJ15LHJMwv3whwti50voNoK
+g/MSz4npsI6XhisWtwl201L1thAEW8S0i8lCaKulcDRMLvPkCRFIvJhtB+ImFv+V
+1uVJARnkfo8I4VE9dGMHvuPl5bJFykZox0ZgJthNlL32Hsf8OHvIGrT3I6oCKXaS
+26p75ZYgGWiDWWCeirJzGAEp/NPZ+xfdeKdamdoXw4lwAIPQinb5uASv1DMBrO23
+45Zr2Zchv8AC18pIucYKRj4kaZvOyCvduFzJRUNdKtD6+rio2VJpnqt0XHIeHsLb
+CBtuwtr3M8ujVHkmyWQYqDJKRRxZ86gVFIAhbynFlGUaIgi4Mp7aNfuzeBMRimJF
+7K5ZIFPLDTuG9DA0uaxoTic7CUJz5E7TPokeAJNRI/pvxTJQ1DiPlXqzl5ey35Uy
+6bNd/2flo3kFHI3jZvLTHo66fjW130HgHK0RD3ztMs1tDXv3IPUnktnFzzsq9LNq
+Va+hfCy7K7QRDZzXwJGk8ErKfnjn3ywMS/FEkgtsEZog1foJGcgQRd4fKs8sGnfr
+0BDcEz9Dcc3AODjRoUgFSZyTRM9aVT0AGnP37zcapZhkFGcFtNxsOnCPIbSEeP4t
+IYw4j2YFwFLH1wsmqF/A
+=gBk9
+-----END PGP SIGNATURE-----
+
+--M3RuJJDxIdkQLEu14hjOVaGFbiHXvFtdf--
+
+
+--===============1342703451068469403==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1342703451068469403==--
