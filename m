@@ -1,7 +1,7 @@
 From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv8][ 5/6] ARM: dts: imx25.dtsi: Add some pinmux pins.
-Date: Tue, 29 Oct 2013 16:50:58 +0100
-Message-ID: <1383061860-25035-5-git-send-email-denis@eukrea.com>
+Subject: [PATCHv8][ 6/6] ARM: dts: Add support for the cpuimx25 board from Eukrea and its baseboard.
+Date: Tue, 29 Oct 2013 16:50:59 +0100
+Message-ID: <1383061860-25035-6-git-send-email-denis@eukrea.com>
 References: <1383061860-25035-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,10 +13,16 @@ To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Uart1, fec, i2c1,esdhc1 and audmux were added.
-
-I also added a label to the iomuxc device node like in:
-  7b7d672 ARM i.MX dts: Consistently add labels to devicenodes
+The following devices/functionalities were added:
+ * Main and secondary UARTs.
+ * i2c and the pcf8563 device.
+ * CMO-QVGA(With backlight), DVI-VGA and DVI-SVGA displays
+ * Ethernet.
+ * NAND.
+ * The BP1 button.
+ * The LED.
+ * Watchdog
+ * SD.
 
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
@@ -29,128 +35,394 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx25.dtsi |  104 ++++++++++++++++++++++++++++++++++=
-+++++++-
- 1 file changed, 103 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   53 +++++++++
+ .../imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts  |   63 +++++++++++
+ .../imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts  |   50 +++++++++
+ .../imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts   |   50 +++++++++
+ .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  116 ++++++++++++=
+++++++++
+ 5 files changed, 332 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+ create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
+cmo-qvga.dts
+ create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
+dvi-svga.dts
+ create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
+dvi-vga.dts
+ create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.=
+dts
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
-i
-index 1c19ad3..800fe7f 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -174,9 +174,111 @@
- 				status =3D "disabled";
- 			};
-=20
--			iomuxc@43fac000{
-+			iomuxc: iomuxc@43fac000 {
- 				compatible =3D "fsl,imx25-iomuxc";
- 				reg =3D <0x43fac000 0x4000>;
+diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/bo=
+ot/dts/imx25-eukrea-cpuimx25.dtsi
+new file mode 100644
+index 0000000..0cc7864
+--- /dev/null
++++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+@@ -0,0 +1,53 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
 +
-+				audmux {
-+					pinctrl_audmux_1: audmuxgrp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_KPP_COL3__AUD5_TXFS 0xe0
-+							MX25_PAD_KPP_COL2__AUD5_TXC  0xe0
-+							MX25_PAD_KPP_COL1__AUD5_RXD  0xe0
-+							MX25_PAD_KPP_COL0__AUD5_TXD  0xe0
-+						>;
-+					};
-+				};
++#include "imx25.dtsi"
 +
-+				esdhc1 {
-+					pinctrl_esdhc1_1: esdhc1grp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_SD1_CMD__SD1_CMD      0x400000c0
-+							MX25_PAD_SD1_CLK__SD1_CLK      0x400000c0
-+							MX25_PAD_SD1_DATA0__SD1_DATA0  0x400000c0
-+							MX25_PAD_SD1_DATA1__SD1_DATA1  0x400000c0
-+							MX25_PAD_SD1_DATA2__SD1_DATA2  0x400000c0
-+							MX25_PAD_SD1_DATA3__SD1_DATA3  0x400000c0
-+						>;
-+					};
-+				};
++/ {
++	model =3D "Eukrea CPUIMX25";
++	compatible =3D "eukrea,cpuimx25", "fsl,imx25";
 +
-+				fec {
-+					pinctrl_fec_1: fecgrp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_FEC_MDC__FEC_MDC       0x80000000
-+							MX25_PAD_FEC_MDIO__FEC_MDIO     0x400001e0
-+							MX25_PAD_FEC_TDATA0__FEC_TDATA0 0x80000000
-+							MX25_PAD_FEC_TDATA1__FEC_TDATA1 0x80000000
-+							MX25_PAD_FEC_TX_EN__FEC_TX_EN   0x80000000
-+							MX25_PAD_FEC_RDATA0__FEC_RDATA0 0x80000000
-+							MX25_PAD_FEC_RDATA1__FEC_RDATA1 0x80000000
-+							MX25_PAD_FEC_RX_DV__FEC_RX_DV   0x80000000
-+							MX25_PAD_FEC_TX_CLK__FEC_TX_CLK 0x1c0
-+						>;
-+					};
-+				};
++	memory {
++		reg =3D <0x80000000 0x4000000>; /* 64M */
++	};
++};
 +
-+				i2c1 {
-+					pinctrl_i2c1_1: i2c1grp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_I2C1_CLK__I2C1_CLK 0x80000000
-+							MX25_PAD_I2C1_DAT__I2C1_DAT 0x80000000
-+						>;
-+					};
-+				};
++&fec {
++	phy-mode =3D "rmii";
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_fec_1>;
++	status =3D "okay";
++};
 +
-+				lcdc {
-+					pinctrl_lcdc_1: lcdcgrp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_LD0__LD0           0x1
-+							MX25_PAD_LD1__LD1           0x1
-+							MX25_PAD_LD2__LD2           0x1
-+							MX25_PAD_LD3__LD3           0x1
-+							MX25_PAD_LD4__LD4           0x1
-+							MX25_PAD_LD5__LD5           0x1
-+							MX25_PAD_LD6__LD6           0x1
-+							MX25_PAD_LD7__LD7           0x1
-+							MX25_PAD_LD8__LD8           0x1
-+							MX25_PAD_LD9__LD9           0x1
-+							MX25_PAD_LD10__LD10         0x1
-+							MX25_PAD_LD11__LD11         0x1
-+							MX25_PAD_LD12__LD12         0x1
-+							MX25_PAD_LD13__LD13         0x1
-+							MX25_PAD_LD14__LD14         0x1
-+							MX25_PAD_LD15__LD15         0x1
-+							MX25_PAD_GPIO_E__LD16       0x1
-+							MX25_PAD_GPIO_F__LD17       0x1
++&i2c1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_i2c1_1>;
++	status =3D "okay";
 +
-+							MX25_PAD_HSYNC__HSYNC       0x80000000
-+							MX25_PAD_VSYNC__VSYNC       0x80000000
-+							MX25_PAD_LSCLK__LSCLK       0x80000000
-+							MX25_PAD_OE_ACD__OE_ACD     0x80000000
-+							MX25_PAD_CONTRAST__CONTRAST 0x80000000
-+						>;
-+					};
-+				};
++	pcf8563@51 {
++		compatible =3D "nxp,pcf8563";
++		reg =3D <0x51>;
++	};
++};
 +
-+				uart1 {
-+					pinctrl_uart1_1: uart1grp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_UART1_RTS__UART1_RTS 0xe0
-+							MX25_PAD_UART1_CTS__UART1_CTS 0xe0
-+							MX25_PAD_UART1_TXD__UART1_TXD 0x80000000
-+							MX25_PAD_UART1_RXD__UART1_RXD 0xc0
-+						>;
-+					};
-+				};
++&nfc {
++	nand-bus-width =3D <8>;
++	nand-ecc-mode =3D "hw";
++	nand-on-flash-bbt;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvg=
+a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
+new file mode 100644
+index 0000000..cabd6f6
+--- /dev/null
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
+@@ -0,0 +1,63 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
 +
-+				uart2 {
-+					pinctrl_uart2_1: uart2grp-1 {
-+						fsl,pins =3D <
-+							MX25_PAD_UART2_RXD__UART2_RXD 0x80000000
-+							MX25_PAD_UART2_TXD__UART2_TXD 0x80000000
-+							MX25_PAD_UART2_RTS__UART2_RTS 0x80000000
-+							MX25_PAD_UART2_CTS__UART2_CTS 0x80000000
-+						>;
-+					};
-+				};
- 			};
-=20
- 			audmux: audmux@43fb0000 {
++#include "imx25-eukrea-mbimxsd25-baseboard.dts"
++
++/ {
++	model =3D "Eukrea MBIMXSD25 with the CMO-QVGA Display";
++	compatible =3D "eukrea,mbimxsd25-baseboard-cmo-qvga", "eukrea,mbimxsd=
+25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
++
++	cmo_qvga: display {
++		model =3D "CMO-QVGA";
++		bits-per-pixel =3D <16>;
++		fsl,pcr =3D <0xcad08b80>;
++		bus-width =3D <18>;
++		native-mode =3D <&qvga_timings>;
++		display-timings {
++			qvga_timings: 320x240 {
++				clock-frequency =3D <6500000>;
++				hactive =3D <320>;
++				vactive =3D <240>;
++				hback-porch =3D <30>;
++				hfront-porch =3D <38>;
++				vback-porch =3D <20>;
++				vfront-porch =3D <3>;
++				hsync-len =3D <15>;
++				vsync-len =3D <4>;
++			};
++		};
++	};
++
++	reg_lcd_3v3: lcd-en {
++		compatible =3D "regulator-fixed";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_reg_lcd_3v3>;
++		regulator-name =3D "lcd-3v3";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		gpio =3D <&gpio1 26 0>;
++		enable-active-high;
++	};
++};
++
++&lcdc {
++	display =3D <&cmo_qvga>;
++	fsl,pwmr =3D <0x00a903ff>;
++	lcd-supply =3D <&reg_lcd_3v3>;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svg=
+a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
+new file mode 100644
+index 0000000..1089ac2
+--- /dev/null
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
+@@ -0,0 +1,50 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++#include "imx25-eukrea-mbimxsd25-baseboard.dts"
++
++/ {
++	model =3D "Eukrea MBIMXSD25 with the DVI-SVGA Display";
++	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-svga", "eukrea,mbimxsd=
+25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
++
++	dvi_svga: display {
++		model =3D "DVI-SVGA";
++		bits-per-pixel =3D <16>;
++		fsl,pcr =3D <0xfa208b80>;
++		bus-width =3D <18>;
++		native-mode =3D <&dvi_svga_timings>;
++		display-timings {
++			dvi_svga_timings: 800x600 {
++				clock-frequency =3D <40000000>;
++				hactive =3D <800>;
++				vactive =3D <600>;
++				hback-porch =3D <75>;
++				hfront-porch =3D <75>;
++				vback-porch =3D <7>;
++				vfront-porch =3D <75>;
++				hsync-len =3D <7>;
++				vsync-len =3D <7>;
++			};
++		};
++	};
++};
++
++&lcdc {
++	display =3D <&dvi_svga>;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga=
+=2Edts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
+new file mode 100644
+index 0000000..2edbbab
+--- /dev/null
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
+@@ -0,0 +1,50 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++#include "imx25-eukrea-mbimxsd25-baseboard.dts"
++
++/ {
++	model =3D "Eukrea MBIMXSD25 with the DVI-VGA Display";
++	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-vga", "eukrea,mbimxsd2=
+5-baseboard", "eukrea,cpuimx25", "fsl,imx25";
++
++	dvi_vga: display {
++		model =3D "DVI-VGA";
++		bits-per-pixel =3D <16>;
++		fsl,pcr =3D <0xfa208b80>;
++		bus-width =3D <18>;
++		native-mode =3D <&dvi_vga_timings>;
++		display-timings {
++			dvi_vga_timings: 640x480 {
++				clock-frequency =3D <31250000>;
++				hactive =3D <640>;
++				vactive =3D <480>;
++				hback-porch =3D <100>;
++				hfront-porch =3D <100>;
++				vback-porch =3D <7>;
++				vfront-porch =3D <100>;
++				hsync-len =3D <7>;
++				vsync-len =3D <7>;
++			};
++		};
++	};
++};
++
++&lcdc {
++	display =3D <&dvi_vga>;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/a=
+rch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+new file mode 100644
+index 0000000..be24a85
+--- /dev/null
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+@@ -0,0 +1,116 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++/dts-v1/;
++#include "imx25-eukrea-cpuimx25.dtsi"
++
++/ {
++	model =3D "Eukrea MBIMXSD25";
++	compatible =3D "eukrea,mbimxsd25-baseboard", "eukrea,cpuimx25", "fsl,=
+imx25";
++
++	gpio_keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
++
++		bp1 {
++			label =3D "BP1";
++			gpios =3D <&gpio3 18 1>;
++			linux,code =3D <256>;
++			gpio-key,wakeup;
++			linux,input-type =3D <1>;
++		};
++	};
++
++	leds {
++		compatible =3D "gpio-leds";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpioled>;
++
++		led1 {
++			label =3D "led1";
++			gpios =3D <&gpio3 19 1>;
++			linux,default-trigger =3D "heartbeat";
++		};
++	};
++};
++
++&audmux {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_audmux_1>;
++	status =3D "okay";
++};
++
++&esdhc1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_esdhc1_1>;
++	cd-gpios =3D <&gpio1 20>;
++	status =3D "okay";
++};
++
++&i2c1 {
++	tlv320aic23: codec@1a {
++		compatible =3D "ti,tlv320aic23";
++		reg =3D <0x1a>;
++	};
++};
++
++&iomuxc {
++	gpio_keys {
++		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
++			fsl,pins =3D <
++				MX25_PAD_VSTBY_ACK__GPIO_3_18 0x80000000
++			>;
++		};
++	};
++
++	leds {
++		pinctrl_gpioled: gpioledgrp-1 {
++			fsl,pins =3D <
++				MX25_PAD_POWER_FAIL__GPIO_3_19 0x80000000
++			>;
++		};
++	};
++
++	reg_lcd_3v3 {
++		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
++			fsl,pins =3D <
++				MX25_PAD_PWM__GPIO_1_26  0x80000000
++			>;
++		};
++	};
++};
++
++&ssi1 {
++	fsl,mode =3D "i2s-slave";
++	status =3D "okay";
++};
++
++&uart1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart1_1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
++
++&uart2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart2_1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
 --=20
 1.7.9.5
 
