@@ -1,112 +1,45 @@
-From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4] ARM: exynos: dts: cros5250: Add hdmi phy settings
-Date: Tue, 29 Oct 2013 13:42:31 +0530
-Message-ID: <1383034352-15494-4-git-send-email-s.shirish@samsung.com>
-References: <1383034352-15494-1-git-send-email-s.shirish@samsung.com>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCHv6] watchdog: dw: Enable OF support for DW watchdog timer
+Date: Tue, 29 Oct 2013 08:58:08 +0100
+Message-ID: <20131029075808.GI19704@spo001.leaseweb.com>
+References: <1382461152-22891-1-git-send-email-dinguyen@altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1383034352-15494-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382461152-22891-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to arndale dts,
-as its more of a per board configuration and also
-shall be easier for supporting future chipsets.
+Hi Dinh,
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/cros5250-common.dtsi |   75 ++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
+> Add device tree support to the DW watchdog timer.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index dc259e8b..3cd1779 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -301,6 +301,81 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
-+		hdmiphy-configs {
-+			/*
-+			* Eye diagram test passed for:
-+			* Data de-emphasis: -0.7dB & Data Level: 880mV
-+			* i.e., 0010 0110 = 0x26
-+			* and Clock level of 515mV and diff 1030mV
-+			* i.e., 0x66
-+			*/
-+			nr-configs = <13>;
-+			config0: config0 {
-+				pixel-clock = <25200000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config1: config1 {
-+				pixel-clock = <27000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config2: config2 {
-+				pixel-clock = <27027000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config3: config3 {
-+				pixel-clock = <36000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config4: config4 {
-+				pixel-clock = <40000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config5: config5 {
-+				pixel-clock = <65000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config6: config6 {
-+				pixel-clock = <74176000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config7: config7 {
-+				pixel-clock = <74250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config8: config8 {
-+				pixel-clock = <83500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config9: config9 {
-+				pixel-clock = <106500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config10: config10 {
-+				pixel-clock = <108000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config11: config11 {
-+				pixel-clock = <146250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config12: config12 {
-+				pixel-clock = <148500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		};
- 	};
- 
- 	gpio-keys {
--- 
-1.7.9.5
+Patch has been added to linux-watchdog-next.
+I also added a #ifdef CONFIG_OF to the patch.
+Reason: either we us the ifdef around the MODULE_DEVICE_TABLE together with the of_match_ptr
+or we us no ifdef but then also no of_match_ptr. See also Sachin Kamat's patch (watchdog: Remove redundant of_match_ptr).
+
+Kind regards,
+Wim.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
