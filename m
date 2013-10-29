@@ -1,37 +1,109 @@
-From: Chen Guangyu-B42378 <B42378@freescale.com>
-Subject: Re: [PATCH 2/3] ASoC: fsl_ssi: Add dual fifo mode support
-Date: Tue, 29 Oct 2013 12:53:35 +0000
-Message-ID: <flq2m8se8fxm4icha4yrpcbn.1383051217235@email.android.com>
-References: <cover.1383047327.git.b42378@freescale.com>
- <02f8867363ed3038a0a70703856e4b642fef4339.1383047327.git.b42378@freescale.com>,<526FAD41.2000805@tabi.org>
+From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
+Date: Tue, 29 Oct 2013 10:54:26 -0200
+Message-ID: <20131029105426.0969741c.m.chehab@samsung.com>
+References: <5261967E.6010001@samsung.com>
+ <20131028201136.6f66d3f7@samsung.com> <526EFC06.70101@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <526FAD41.2000805@tabi.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@tabi.org>
-Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Huang Shijie-B32955 <B32955@freescale.co>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <526EFC06.70101-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Without dual fifo support,  handware underrun would occasionally occur and then two audio channels would physically swap. This could be easily reproduced in low bus frequency situation, while it would be better if we enable dual fifo.
+Em Tue, 29 Oct 2013 01:06:30 +0100
+Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
 
-Sent by Android device.
+> Hi Mauro,
+> 
+> On 10/28/2013 11:11 PM, Mauro Carvalho Chehab wrote:
+> >> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
+> >> >
+> >> >     [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
+> >> >
+> >> >  are available in the git repository at:
+> >> >
+> >> >     git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
+> >> >
+> >> >  for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
+> >> >
+> >> >     V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
+> >> >
+> >> >  ----------------------------------------------------------------
+> >> >  Arun Kumar K (12):
+> >> >         exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
+> >
+> > As agreed during KS, the subsystem maintainers should wait for a documentation
+> > review on DT by the DT maintainers, at least for a while.
+> >
+> > So, I'd like to see either their reviews on this patch:
+> > 	https://patchwork.linuxtv.org/patch/20439/
+> >
+> > Or their ack for us to apply it.
+> 
+> I agree with you on that. Just please note the first version of this patch
+> has been posted *5 months* ago https://patchwork.linuxtv.org/patch/18684
+> 
+> Stephen has reviewed subsequent version about 3 months ago:
+> https://patchwork.linuxtv.org/patch/19521
+> 
+> Then we got no more comments from DT maintainers, I have reviewed this patch
+> multiple times on the mailing lists:
+> https://patchwork.linuxtv.org/patch/19715
+> https://patchwork.linuxtv.org/patch/19749
+> 
+> And explicitly asked for an Ack:
+> https://patchwork.linuxtv.org/patch/19832
+> 
+> Then those 2 versions passed silently:
+> https://patchwork.linuxtv.org/patch/20055
+> https://patchwork.linuxtv.org/patch/20225
+> 
+> And...huh...we got another review, I didn't notice it until now:
+> https://patchwork.linuxtv.org/patch/20439 Thanks Mark.
+> 
+> Arun, care to address those review comments and send us an updated
+> binding documentation patch ?
+> 
+> Hence I think we have waited for a while. ;)
+> 
+> >> >         exynos5-fimc-is: Add driver core files
+> >> >         exynos5-fimc-is: Add common driver header files
+> >> >         exynos5-fimc-is: Add register definition and context header
+> >> >         exynos5-fimc-is: Add isp subdev
+> >> >         exynos5-fimc-is: Add scaler subdev
+> >> >         exynos5-fimc-is: Add sensor interface
+> >> >         exynos5-fimc-is: Add the hardware pipeline control
+> >> >         exynos5-fimc-is: Add the hardware interface module
+> >> >         exynos5-is: Add Kconfig and Makefile
+> >> >         V4L: Add DT binding doc for s5k4e5 image sensor
+> >
+> > Same applies to this patch:
+> > 	https://patchwork.linuxtv.org/patch/20448/
+> 
+> This one also have been on the mailing list for quite some time and it
+> uses already standard bindings, so I assumed it is OK to merge it.
+> 
+> https://patchwork.linuxtv.org/project/linux-media/list/?state=*&q=s5k4e5
+> 
+> But if there must be an Ack then we shall wait, it will probably won't
+> make a big difference now, if this patch is postponed by 3 more months.
 
-Timur Tabi <timur@tabi.org> wrote:
+Yeah, it seems that we've waited for a long time to get an ack there.
 
+So, let's do this:
 
-Nicolin Chen wrote:
-> By enabling dual fifo mode, it would allow SSI enter a better performance
-> to transimit/receive data without occasional hardware underrun/overrun.
+Please send a new version with Mark's comments. Also, please split Doc 
+changes from the code changes on the new series. I'll wait for a couple
+days for DT people to review it. If we don't have any reply, I'll review
+and apply it for Kernel 3.13, if I don't see anything really weird on it.
 
-Have you measured any real performance gain with this patch?  I
-considered adding dual-FIFO support when I originally wrote this driver,
-but it didn't appear to have any real benefit, but it used twice as many
-DMA channels.
-
-I'm concerned that this is another patch that just enables a useless
-feature.
-
-
+Regards,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
