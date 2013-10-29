@@ -1,111 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] ARM: add basic support for Trusted Foundations
-Date: Tue, 29 Oct 2013 00:25:44 +0000
-Message-ID: <20131029002543.GF4763@kartoffel>
-References: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
- <D49A3E92-54FD-4275-82F5-DBB476086B03@codeaurora.org>
- <20131028215649.GB10833@quad.lixom.net>
- <2702565.PHk13m6fVo@flatron>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2702565.PHk13m6fVo@flatron>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 0/6] Krait L1/L2 EDAC driver
+Date: Mon, 28 Oct 2013 17:31:24 -0700
+Message-ID: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Doug Thompson <dougthompson@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Stepan Moskovchenko <stepanm@codeaurora.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 11:31:36PM +0000, Tomasz Figa wrote:
-> On Monday 28 of October 2013 14:56:49 Olof Johansson wrote:
-> > On Mon, Oct 28, 2013 at 05:57:04AM -0500, Kumar Gala wrote:
-> > > On Oct 28, 2013, at 5:28 AM, Alexandre Courbot wrote:
-> > > > Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> > > > can be invoked using the same SMC-based API on all supported
-> > > > platforms. This patch adds initial basic support for Trusted
-> > > > Foundations using the ARM firmware API. Current features are limited
-> > > > to the ability to boot secondary processors.
-> > > > 
-> > > > Note: The API followed by Trusted Foundations does *not* follow the
-> > > > SMC
-> > > > calling conventions. It has nothing to do with PSCI neither and is
-> > > > only
-> > > > relevant to devices that use Trusted Foundations (like most
-> > > > Tegra-based
-> > > > retail devices).
-> > > > 
-> > > > Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > ---
-> > > > .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
-> > > > .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> > > > arch/arm/Kconfig                                   |  2 +
-> > > > arch/arm/Makefile                                  |  1 +
-> > > > arch/arm/firmware/Kconfig                          | 28 ++++++++
-> > > > arch/arm/firmware/Makefile                         |  1 +
-> > > > arch/arm/firmware/trusted_foundations.c            | 79
-> > > > ++++++++++++++++++++++ arch/arm/include/asm/trusted_foundations.h  
-> > > >       | 67 ++++++++++++++++++ 8 files changed, 199 insertions(+)
-> > > > create mode 100644
-> > > > Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundatio
-> > > > ns.txt create mode 100644 arch/arm/firmware/Kconfig
-> > > > create mode 100644 arch/arm/firmware/Makefile
-> > > > create mode 100644 arch/arm/firmware/trusted_foundations.c
-> > > > create mode 100644 arch/arm/include/asm/trusted_foundations.h
-> > > > 
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> > > > ions.txt
-> > > > b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> > > > ions.txt new file mode 100644
-> > > > index 0000000..2ec75c9
-> > > > --- /dev/null
-> > > > +++
-> > > > b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> > > > ions.txt @@ -0,0 +1,20 @@
-> > > > +Trusted Foundations
-> > > > +-------------------
-> > > > +
-> > > > +Boards that use the Trusted Foundations secure monitor can signal
-> > > > its
-> > > > +presence by declaring a node compatible with
-> > > > "tl,trusted-foundations"
-> > > > +under the /firmware/ node
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible : "tl,trusted-foundations"
-> > > > +- version-major : major version number of Trusted Foundations
-> > > > firmware
-> > > > +- version-minor: minor version number of Trusted Foundations
-> > > > firmware
-> > > 
-> > > vendor prefix version.
-> > 
-> > Are you saying he should use tl,version-major tl,version-minor? For
-> > bindings that are already vendor-specific we haven't (on ARM) asked for
-> > vendor prefix on properties. It doesn't mean that we should keep going
-> > down that route though, so I'm just asking for clarification for my own
-> > edification. :)
-> 
-> This is a good question. We should decide what the right thing (TM) is and 
-> write it down. I, on the contrary, was convinced that it's the way Kumar 
-> says.
+This patchset adds support for the Krait L1/L2 cache error detection
+hardware. The first patch fixes a generic framework bug. The next
+two patches lay the groundwork for this driver to be added by 
+exporting percpu irq functions as well as adding the Krait l2 indirection
+register code. The next two patches add the driver and the binding and 
+the final patch hooks it all up by adding the device tree node.
 
-The impression I got was that properties should be prefixed when they're
-extremely vendor-specific and could clash with a more generic property. I'm not
-sure that firmware will ever have a generic binding given the variation even in
-the set of implemented functionality.
+I'm not sure which tree this is supposed to go through. Ideally we could
+send the first 3 plus the 5th one through an edac tree. The final dts changes
+could go through arm-soc via davidb's tree and the Documentation patch could
+go through the devicetree tree.
 
-I would imagine that there are many ways different firmwares might be
-versioned, and I can't see version-major or version-minor clashing with a
-generic property we might add later. However prefixing would not be harmful, so
-I'm not opposed to it if others want that.
+Stephen Boyd (6):
+  edac: Don't try to cancel workqueue when it's never setup
+  genirq: export percpu irq functions for module usage
+  ARM: Add Krait L2 accessor functions
+  edac: Document Krait L1/L2 EDAC driver binding
+  edac: Add support for Krait CPU cache error detection
+  ARM: dts: msm: Add Krait edac node
 
-Another option would be to support a fallback compatible list (e.g.
-"tl,trusted-foundations-${MAJOR}-${MINOR}", "tl,trusted-foundations"), and get
-versioning information from there. Given that could be painful to handle I
-don't want to force it if not required.
+ .../bindings/arm/qcom,krait-cache-erp.txt          |  16 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   5 +
+ arch/arm/common/Kconfig                            |   3 +
+ arch/arm/common/Makefile                           |   1 +
+ arch/arm/common/krait-l2-accessors.c               |  52 ++++
+ arch/arm/include/asm/krait-l2-accessors.h          |  20 ++
+ drivers/edac/Kconfig                               |   8 +
+ drivers/edac/Makefile                              |   2 +
+ drivers/edac/edac_device.c                         |   3 +
+ drivers/edac/krait_edac.c                          | 335 +++++++++++++++++++++
+ kernel/irq/manage.c                                |   2 +
+ 11 files changed, 447 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+ create mode 100644 arch/arm/common/krait-l2-accessors.c
+ create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+ create mode 100644 drivers/edac/krait_edac.c
 
-Thanks,
-Mark.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
