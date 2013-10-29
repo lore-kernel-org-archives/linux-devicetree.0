@@ -1,60 +1,111 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv2 1/3] Input: twl4030-keypad - add device tree support
-Date: Tue, 29 Oct 2013 03:33:31 -0500
-Message-ID: <14DEC9DA-8C77-4F73-AF3A-6C0D20C6C1AB@codeaurora.org>
-References: <1382446042-27099-1-git-send-email-sre@debian.org> <1382446042-27099-2-git-send-email-sre@debian.org> <5137C017-2515-427C-865F-B938CC24B210@codeaurora.org> <20131029010608.GA5353@earth.universe>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Tue, 29 Oct 2013 17:44:48 +0900
+Message-ID: <20131029084444.GC15731@verge.net.au>
+References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131029045943.GE20432@verge.net.au>
+ <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131029010608.GA5353@earth.universe>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: linux-input@vger.kernel.org, =?iso-8859-1?Q?=22=27Beno=EEt_Cousson=27=22?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On Oct 28, 2013, at 8:06 PM, Sebastian Reichel wrote:
-
-> On Mon, Oct 28, 2013 at 01:42:47AM -0500, Kumar Gala wrote:
->>> +This binding is based on the matrix-keymap binding with the following
->>> +changes:
->> 
->> Maybe be a bit more specific and say 'based on the input/matrix-keymap.txt binding'..
+On Tue, Oct 29, 2013 at 03:24:16AM -0500, Kumar Gala wrote:
 > 
-> OK.
+> On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
 > 
->>> + * keypad,num-rows and keypad,num-columns are required.
->> 
->> Is linux,keymap required from matrix-keymap.txt?
+> > On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
+> >> R-Car Gen2 SoCs have a different PHY which is not compatible
+> >> with the older R-Car H1 (R8A7779) version.
+> >> This adds OF/platform device id tables and PHY initialization
+> >> callbacks for the following Gen2 SoCs:
+> >>  * R-Car H2: R8A7790;
+> >>  * R-Car M2: R8A7791.
+> >> 
+> >> PHY initialization method is chosen based on the device id.
+> >> Default PHY settings are applied for Gen2 SoCs, which should
+> >> suit the Gen2 boards available.
+> >> 
+> >> The R8A7779 platform code is modified to use "sata-r8a7779"
+> >> device name.
+> >> 
+> >> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> >> ---
+> >> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+> >> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+> >> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+> >> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
+> > 
+> > Hi Mark, Hi Device-Tree Folks,
+> > 
+> > I'm wondering if you have had a chance to look over the bindings
+> > aspect of this and the other patch in the series. I believe that
+> > this series addresses all previous review in that regards.
 > 
-> Yes, matrix-keymap.txt contains descriptions for the following:
+> What tree is this binding in?
+
+sata_car.txt is added by the previous patch in this series
+"[PATCH 1/2] sata_rcar: Adjust and document device tree bindings"
+
+> > Hi Valentine,
+> > 
+> > I would like to request that the arch/arm/mach-shmobile/ portion
+> > of this patch be split out into a separate patch. The reason is
+> > that in general it is nicer to apply driver changes separately
+> > to platform changes: for starters they have different maintainers.
+> > And in this case there seems to be no reason not to split the change.
+> > 
+> > Also, I would like to this chance to pass on part of a discussion
+> > at the ARM Linux Kernel summit which is that when posting a series of
+> > patches please only CC devicetree@vger.kernel.org on the patches in
+> > the series that relate to device tree. This would not include
+> > to the new patch with only the arch/arm/mach-shmobile/ portions
+> > of this patch. Feel free to post that patch as a separate series
+> > noting its dependencies below '---' accordingly.
+> > 
+> >> 4 files changed, 107 insertions(+), 20 deletions(-)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> index 0719115..d6b20a6 100644
+> >> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> @@ -1,7 +1,10 @@
+> >> * Renesas R-Car SATA
+> >> 
+> >> Required properties:
+> >> -- compatible		: should contain "renesas,sata-r8a7779";
+> >> +- compatible		: should contain one of the following:
+> >> +			  - "renesas,sata-r8a7779" for R-Car H1
+> >> +			  - "renesas,sata-r8a7790" for R-Car H2
+> >> +			  - "renesas,sata-r8a7791" for R-Car M2
+> >> - reg			: offset and length of the SATA registers;
+> >> - interrupts		: must consist of one interrupt specifier.
 > 
-> required:
-> - linux,keymap
+> We normally have an example (not sure if there is one, and just not seeing it because of diff or not).
 
-So you don't say that linux,keymap is required for twl4030-keypad (wasn't clear if you assumed that or not).
+An example is present.
 
-> optional:
-> - keypad,num-rows
-> - keypad,num-columns
-> 
->>> +Optional Properties specific to linux:
->>> +- linux,keypad-no-autorepeat: do no enable autorepeat feature.
->> 
->> Does it make sense to update the matrix-keymap.txt binding to add
->> 'linux,keypad-no-autorepeat' there?
-> 
-> At least according to devicetree documentation there are
-> keymap-matrix.txt based drivers, which do not support
-> "linux,keypad-no-autorepeat".
+I have included the text of sata_rcar.txt below to aid review:
 
-Which is why it could be optional in keymap-matrix.txt.  I dont know anything about keymap/keypad's just asking the question?
+---- begin sata_rcar.txt ----
+* Renesas R-Car SATA
 
-It seems as if linux,keypad-no-autorepeat is intended to mean the same thing (if relevant to the device) across all drivers.  Is that correct?  If so it seems like moving it to be specified in a generic input binding makes sense, just not sure if keymap-matrix.txt is that place or not.
+Required properties:
+- compatible           : should contain "renesas,sata-r8a7779";
+- reg                  : offset and length of the SATA registers;
+- interrupts           : must consist of one interrupt specifier.
 
-- k
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Example:
 
+sata: sata@fc600000 {
+	compatible = "renesas,sata-r8a7779";
+	reg = <0xfc600000 0x2000>;
+	interrupt-parent = <&gic>;
+	interrupts = <0 100 0x4>;
+};
