@@ -1,154 +1,85 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 2/5] phy: Add WIP Exynos 5250 support to the Exynos
- USB PHY driver
-Date: Tue, 29 Oct 2013 16:21:21 +0530
-Message-ID: <526F9329.7090901@ti.com>
-References: <1382710529-12082-1-git-send-email-k.debski@samsung.com> <1382710529-12082-3-git-send-email-k.debski@samsung.com> <526A91B9.1060901@ti.com> <CAFp+6iF2agMNaNhg=6Xx79erV45V=TobH=+GdziFx8j70g8MDw@mail.gmail.com> <526F8609.5010106@ti.com> <030b01ced48f$b1e17e00$15a47a00$%debski@samsung.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
+Date: Tue, 29 Oct 2013 12:42:02 +0100
+Message-ID: <1823897.8rOixkM4PW@amdc1227>
+References: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
+ <5264425E.4040301@samsung.com> <20131021121605.11944.74007@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <030b01ced48f$b1e17e00$15a47a00$%debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>
-Cc: 'Vivek Gautam' <gautamvivek1987@gmail.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-reply-to: <20131021121605.11944.74007@quantum>
+Sender: cpufreq-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, rjw@sisk.pl, mark.rutland@arm.com, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, viresh.kumar@linaro.org, s.nawrocki@samsung.com, m.szyprowski@samsung.com, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, linux-pm@vger.kernel.org, cpufreq@vger.kernel.org, thomas.abraham@linaro.org, b.zolnierkie@samsung.com, t.stanislaws@samsung.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rob.herring@calxeda.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Kukjin, Mike,
 
-On Tuesday 29 October 2013 03:44 PM, Kamil Debski wrote:
-> Hi,
+On Monday 21 of October 2013 05:16:05 Mike Turquette wrote:
+> Quoting Kukjin Kim (2013-10-20 13:51:42)
+> > On 10/20/13 01:03, Tomasz Figa wrote:
+> > > Hi Mike, Kukjin, Rafael,
+> > >
+> > > On Tuesday 24 of September 2013 14:50:06 Mateusz Krawczuk wrote:
+> > >> This patch series is the new s5pv210 clock implementation
+> > >> (using common clk framework).
+> > >>
+> > >> This implementation is compatible with device tree definition and board
+> > >> files.
+> > >>
+> > >> This patch series is based on linux-next and has been tested on goni and
+> > >> aquila
+> > >> boards using board file.
+> > >>
+> > >> Since v4:
+> > >> Corrected mux flags for finpll.
+> > >>
+> > >> Since v3:
+> > >>
+> > >> Replace s5pv210_clk_register_finpll, by creating mux finpll
+> > >> with xusbxti and xxti as parrents.
+> > >>
+> > >>
+> > >> Mateusz Krawczuk (3):
+> > >>    clk: samsung: Add clock driver for s5pc110/s5pv210
+> > >>    Cpufreq: s5pv210 cpufreq fixes for CCF
+> > >>    ARM: s5pv210: Migrate clock handling to Common Clock Framework
+> > >>
+> > >>   .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
+> > >>   arch/arm/mach-s5pv210/Kconfig                      |   9 +
+> > >>   arch/arm/mach-s5pv210/Makefile                     |   4 +-
+> > >>   arch/arm/mach-s5pv210/common.c                     |  17 +
+> > >>   arch/arm/mach-s5pv210/common.h                     |  10 +
+> > >>   arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
+> > >>   arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
+> > >>   arch/arm/plat-samsung/Kconfig                      |   2 +-
+> > >>   drivers/clk/samsung/Makefile                       |   3 +
+> > >>   drivers/clk/samsung/clk-s5pv210.c                  | 673
+> > >> +++++++++++++++++++++ drivers/cpufreq/s5pv210-cpufreq.c
+> > >>   |   6 +-
+> > >>   include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
+> > >>   12 files changed, 1019 insertions(+), 8 deletions(-)
+> > >>   create mode 100644
+> > >> Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
+> > >> create mode 100644 drivers/clk/samsung/clk-s5pv210.c
+> > >>   create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
+> > >
+> > > I believe this series is reasonable to be applied. Could we agree on
+> > > the tree it would go through and get all tne required acks?
+> > >
+> > > Best regards,
+> > > Tomasz
+> > 
+> > I agree.
+> > 
+> > Mike, how do you think the common clk stuff for s5pv210?
 > 
->> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
->> Sent: Tuesday, October 29, 2013 10:55 AM
->>
->> Hi,
->>
->> On Monday 28 October 2013 08:11 PM, Vivek Gautam wrote:
->>> Hi Kishon,
->>>
->>>
->>> On Fri, Oct 25, 2013 at 9:13 PM, Kishon Vijay Abraham I
->> <kishon@ti.com> wrote:
->>>> Hi,
->>>>
->>>> On Friday 25 October 2013 07:45 PM, Kamil Debski wrote:
->>>>> Add support for Exynos 5250. This is work-in-progress commit. Not
->>>>> for merging.
->>>>>
->>>>> Signed-off-by: Kamil Debski <k.debski@samsung.com>
->>>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>> ---
->>>>>  drivers/phy/Kconfig              |    7 +
->>>>>  drivers/phy/Makefile             |    1 +
->>>>>  drivers/phy/phy-exynos-usb.c     |   10 +
->>>>>  drivers/phy/phy-exynos-usb.h     |    1 +
->>>>>  drivers/phy/phy-exynos5250-usb.c |  411
->>>>> ++++++++++++++++++++++++++++++++++++++
->>>>>  5 files changed, 430 insertions(+)
->>>>>  create mode 100644 drivers/phy/phy-exynos5250-usb.c
->>>>>
->>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig index
->>>>> 2f7ac0a..0f598d0 100644
->>>>> --- a/drivers/phy/Kconfig
->>>>> +++ b/drivers/phy/Kconfig
->>>>> @@ -36,4 +36,11 @@ config PHY_EXYNOS4212_USB
->>>>>       help
->>>>>         Enable USB PHY support for Exynos 4212
->>>>>
->>>>> +config PHY_EXYNOS5250_USB
->>>>> +     bool "Support for Exynos 5250"
->>>>> +     depends on PHY_EXYNOS_USB
->>>>
->>>> This should be a separate driver. Not necessary to use
->> PHY_EXYNOS_USB.
->>>>> +     depends on SOC_EXYNOS5250
->>>>> +     help
->>>>> +       Enable USB PHY support for Exynos 5250
->>>>> +
->>>>>  endmenu
->>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile index
->>>>> ca3dc82..0dff0dd 100644
->>>>> --- a/drivers/phy/Makefile
->>>>> +++ b/drivers/phy/Makefile
->>>>> @@ -6,3 +6,4 @@ obj-$(CONFIG_GENERIC_PHY)     += phy-core.o
->>>>>  obj-$(CONFIG_PHY_EXYNOS_USB)         += phy-exynos-usb.o
->>>>>  obj-$(CONFIG_PHY_EXYNOS4210_USB)     += phy-exynos4210-usb.o
->>>>>  obj-$(CONFIG_PHY_EXYNOS4212_USB)     += phy-exynos4212-usb.o
->>>>> +obj-$(CONFIG_PHY_EXYNOS5250_USB)     += phy-exynos5250-usb.o
->>>>> diff --git a/drivers/phy/phy-exynos-usb.c
->>>>> b/drivers/phy/phy-exynos-usb.c index d4a26df..172b774 100644
->>>>> --- a/drivers/phy/phy-exynos-usb.c
->>>>> +++ b/drivers/phy/phy-exynos-usb.c
->>>>> @@ -212,6 +212,10 @@ extern const struct uphy_config
->>>>> exynos4210_uphy_config;  extern const struct uphy_config
->>>>> exynos4212_uphy_config;  #endif
->>>>>
->>>>> +#ifdef CONFIG_PHY_EXYNOS5250_USB
->>>>> +extern const struct uphy_config exynos5250_uphy_config; #endif
->>>>> +
->>>>>  static const struct of_device_id exynos_uphy_of_match[] =
->> {  #ifdef
->>>>> CONFIG_PHY_EXYNOS4210_USB
->>>>>       {
->>>>> @@ -225,6 +229,12 @@ static const struct of_device_id
->> exynos_uphy_of_match[] = {
->>>>>               .data = &exynos4212_uphy_config,
->>>>>       },
->>>>>  #endif
->>>>> +#ifdef CONFIG_PHY_EXYNOS5250_USB
->>>>> +     {
->>>>> +             .compatible = "samsung,exynos5250-usbphy",
->>>>> +             .data = &exynos5250_uphy_config,
->>>>> +     },
->>>>> +#endif
->>>>>       { },
->>>>>  };
->>>>>
->>>>> diff --git a/drivers/phy/phy-exynos-usb.h
->>>>> b/drivers/phy/phy-exynos-usb.h index f45cb3c..a9febfa 100644
->>>>> --- a/drivers/phy/phy-exynos-usb.h
->>>>> +++ b/drivers/phy/phy-exynos-usb.h
->>>>> @@ -42,6 +42,7 @@ enum samsung_cpu_type {
->>>>>       TYPE_S3C64XX,
->>>>>       TYPE_EXYNOS4210,
->>>>>       TYPE_EXYNOS4212,
->>>>> +     TYPE_EXYNOS5250,
->>>>
->>>> No cpu types here.
->>>
->>> One question here.
->>> In case we move to single driver for Exynos4 SoCs (4210, 4212 and
->> 4412
->>> later) as well as S5PV210,
->>> there will be certain things changing from one SoC to another, how
->>> should we target that in case we don't have CPU types ?
->>> May be i am misinterpreting your suggestion ?
->>
->> We should be using the IP revision register or check for compatible
->> values.
->>
-> 
-> In case of this driver the compatible is checked. Maybe it is not as
-> straight forward, but the choice is based on compatible value.
-> Compatible is matched to an appropriate data entry in the of_device_id
-> table. The data entry contains a cpu field which contains the information
-> which PHY version we have. Maybe the "cpu" name is confusing and should be
-> changed to something like "version" or "revision".
+> Clock code looks good to me. Which tree do you want to take it through?
 
-you don't have a revision register in the PHY IP which can be used?
-> 
-> For example:
-> "samsung,exynos4212-usbphy" compatible is matched to exynos4212_uphy_config
-> via data field of of_device_id, and the cpu field of exynos4212_uphy_config
-> is equal to TYPE_EXYNOS4212.
-> This way in the code all what is needed is to check the value of cpu field.
-> It already got matched through the compatible.
-> 
-> Still, Tomasz Figa's idea sound good - using a boolean flag
-> "has_mode_switch".
+Seems like we just missed another kernel release. It's a bit sad that it's
+happening so often for Samsung patches...
 
-hmm, could be.
+Best regards,
+Tomasz
 
-Thanks
-Kishon
