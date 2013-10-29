@@ -1,124 +1,74 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] ARM: add basic support for Trusted Foundations
-Date: Tue, 29 Oct 2013 14:39:37 -0400
-Message-ID: <20131029183937.GC17573@beef>
-References: <1382956118-12495-1-git-send-email-acourbot@nvidia.com>
- <D49A3E92-54FD-4275-82F5-DBB476086B03@codeaurora.org>
- <20131028215649.GB10833@quad.lixom.net>
- <2702565.PHk13m6fVo@flatron>
- <20131029002543.GF4763@kartoffel>
- <0232E02C-5F41-4EC6-9011-86D67005433D@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
+Date: Tue, 29 Oct 2013 13:22:55 -0700
+Message-ID: <CAOesGMgG2gq9GDvEm3Dj0EZz_K=2VxgR1HhqQA5OEemKubJxVA@mail.gmail.com>
+References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
+	<1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
+	<90D2FDE5-C43F-4ACF-B287-4E0AD8617892@codeaurora.org>
+	<526FF7DB.5040805@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0232E02C-5F41-4EC6-9011-86D67005433D-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <526FF7DB.5040805@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, linux-edac@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 03:12:05AM -0500, Kumar Gala wrote:
-> 
-> On Oct 28, 2013, at 7:25 PM, Mark Rutland wrote:
-> 
-> > On Mon, Oct 28, 2013 at 11:31:36PM +0000, Tomasz Figa wrote:
-> >> On Monday 28 of October 2013 14:56:49 Olof Johansson wrote:
-> >>> On Mon, Oct 28, 2013 at 05:57:04AM -0500, Kumar Gala wrote:
-> >>>> On Oct 28, 2013, at 5:28 AM, Alexandre Courbot wrote:
-> >>>>> Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> >>>>> can be invoked using the same SMC-based API on all supported
-> >>>>> platforms. This patch adds initial basic support for Trusted
-> >>>>> Foundations using the ARM firmware API. Current features are limited
-> >>>>> to the ability to boot secondary processors.
-> >>>>> 
-> >>>>> Note: The API followed by Trusted Foundations does *not* follow the
-> >>>>> SMC
-> >>>>> calling conventions. It has nothing to do with PSCI neither and is
-> >>>>> only
-> >>>>> relevant to devices that use Trusted Foundations (like most
-> >>>>> Tegra-based
-> >>>>> retail devices).
-> >>>>> 
-> >>>>> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>>> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>>>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>>> ---
-> >>>>> .../arm/firmware/tl,trusted-foundations.txt        | 20 ++++++
-> >>>>> .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> >>>>> arch/arm/Kconfig                                   |  2 +
-> >>>>> arch/arm/Makefile                                  |  1 +
-> >>>>> arch/arm/firmware/Kconfig                          | 28 ++++++++
-> >>>>> arch/arm/firmware/Makefile                         |  1 +
-> >>>>> arch/arm/firmware/trusted_foundations.c            | 79
-> >>>>> ++++++++++++++++++++++ arch/arm/include/asm/trusted_foundations.h  
-> >>>>>      | 67 ++++++++++++++++++ 8 files changed, 199 insertions(+)
-> >>>>> create mode 100644
-> >>>>> Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundatio
-> >>>>> ns.txt create mode 100644 arch/arm/firmware/Kconfig
-> >>>>> create mode 100644 arch/arm/firmware/Makefile
-> >>>>> create mode 100644 arch/arm/firmware/trusted_foundations.c
-> >>>>> create mode 100644 arch/arm/include/asm/trusted_foundations.h
-> >>>>> 
-> >>>>> diff --git
-> >>>>> a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> >>>>> ions.txt
-> >>>>> b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> >>>>> ions.txt new file mode 100644
-> >>>>> index 0000000..2ec75c9
-> >>>>> --- /dev/null
-> >>>>> +++
-> >>>>> b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat
-> >>>>> ions.txt @@ -0,0 +1,20 @@
-> >>>>> +Trusted Foundations
-> >>>>> +-------------------
-> >>>>> +
-> >>>>> +Boards that use the Trusted Foundations secure monitor can signal
-> >>>>> its
-> >>>>> +presence by declaring a node compatible with
-> >>>>> "tl,trusted-foundations"
-> >>>>> +under the /firmware/ node
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +- compatible : "tl,trusted-foundations"
-> >>>>> +- version-major : major version number of Trusted Foundations
-> >>>>> firmware
-> >>>>> +- version-minor: minor version number of Trusted Foundations
-> >>>>> firmware
-> >>>> 
-> >>>> vendor prefix version.
-> >>> 
-> >>> Are you saying he should use tl,version-major tl,version-minor? For
-> >>> bindings that are already vendor-specific we haven't (on ARM) asked for
-> >>> vendor prefix on properties. It doesn't mean that we should keep going
-> >>> down that route though, so I'm just asking for clarification for my own
-> >>> edification. :)
-> >> 
-> >> This is a good question. We should decide what the right thing (TM) is and 
-> >> write it down. I, on the contrary, was convinced that it's the way Kumar 
-> >> says.
-> > 
-> > The impression I got was that properties should be prefixed when they're
-> > extremely vendor-specific and could clash with a more generic property. I'm not
-> > sure that firmware will ever have a generic binding given the variation even in
-> > the set of implemented functionality.
-> > 
-> > I would imagine that there are many ways different firmwares might be
-> > versioned, and I can't see version-major or version-minor clashing with a
-> > generic property we might add later. However prefixing would not be harmful, so
-> > I'm not opposed to it if others want that.
-> > 
-> > Another option would be to support a fallback compatible list (e.g.
-> > "tl,trusted-foundations-${MAJOR}-${MINOR}", "tl,trusted-foundations"), and get
-> > versioning information from there. Given that could be painful to handle I
-> > don't want to force it if not required.
-> > 
-> > Thanks,
-> > Mark.
-> 
-> I'm of the opinion that making all vendor specific properties vendor prefixed is the easiest rule of thumb and leaves no gray area to have to argue about.
+On Tue, Oct 29, 2013 at 11:00 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 10/29/13 01:21, Kumar Gala wrote:
+>> On Oct 28, 2013, at 7:31 PM, Stephen Boyd wrote:
+>>
+>>> The Krait L1/L2 error reporting device is made up of two
+>>> interrupts, one per-CPU interrupt for the L1 caches and one
+>>> interrupt for the L2 cache.
+>>>
+>>> Cc: <devicetree@vger.kernel.org>
+>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>>> ---
+>>> .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
+>>> 1 file changed, 16 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+>>> new file mode 100644
+>>> index 0000000..01fe8a8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+>>> @@ -0,0 +1,16 @@
+>>> +* Qualcomm Krait L1 / L2 cache error reporting
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "qcom,krait-cache-erp"
+>>> +- interrupts: Should contain the L1/CPU error interrupt number and
+>>> +  then the L2 cache error interrupt number
+>>> +
+>>> +Optional properties:
+>>> +- interrupt-names: Should contain the interrupt names "l1_irq" and
+>>> +  "l2_irq"
+>>> +
+>>> +Example:
+>>> +    edac {
+>>> +            compatible = "qcom,krait-cache-erp";
+>>> +            interrupts = <1 9 0xf04>, <0 2 0x4>;
+>>> +    };
+>> Why wouldn't we have these as part of cache nodes in the dts?  (which begs the question why we don't have cache nodes?)
 
-That would really help all of us to self-police our submissions and
-reduce the burden on the DT maintainer team.
+In particular, naming the node edac seems like a suboptimal choice,
+since that's a very linux-specific name for the error reporting
+framework.
 
--Matt
+> I can certainly add cache nodes and cpu nodes and then put the
+> interrupts in those nodes. I was thinking along those same lines when I
+> ported this driver but figured it would be good to get something out
+> there. The only question I have is how am I supposed to hook that up
+> into the linux device model? Will the edac driver bind to the device
+> created for the cpus node and the cache node? I guess it will have to be
+> a driver that binds to two devices.
+
+Or it could bind to one device and look up the info for the other from
+the devicetree without relying on the driver core to instantiate
+devices.
+
+
+-Olof
