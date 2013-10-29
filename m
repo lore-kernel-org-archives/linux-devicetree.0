@@ -1,73 +1,100 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/2] dmaengine: msm_bam_dma: Add device tree binding
-Date: Mon, 28 Oct 2013 23:18:35 -0700
-Message-ID: <20131029061835.GE21983@codeaurora.org>
-References: <1382732643-8184-1-git-send-email-agross@codeaurora.org>
- <1382732643-8184-3-git-send-email-agross@codeaurora.org>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device tree
+Date: Tue, 29 Oct 2013 06:50:56 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150C7CFD@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+ <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+ <1381518433.7979.536.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381788786.7979.643.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381858855.7979.693.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1381942009.7979.727.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1382027085.7979.774.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1382113880.7979.836.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150C62BA@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1383017163.3410.61.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382732643-8184-3-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1383017163.3410.61.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25, Andy Gross wrote:
-> diff --git a/Documentation/devicetree/bindings/dma/msm_bam_dma.txt b/Documentation/devicetree/bindings/dma/msm_bam_dma.txt
-> new file mode 100644
-> index 0000000..fe3ed8f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/msm_bam_dma.txt
-> @@ -0,0 +1,49 @@
-> +MSM BAM DMA controller
-> +
-> +Required properties:
-> +- compatible: Should be "qcom,bam"
-> +- reg: Address range for DMA registers
-> +- interrupts: single interrupt for this controller
-> +- #dma-cells: must be <3>
-> +- clocks: required clock
-> +- clock-names: name of clock
-> +
-> +Example:
-> +
-> +	dma0: dma@f9984000 = {
-
-I imagine it's fine to say 'bam0: dma@f9984000' here. The node
-name should stay dma though. This way we know that we're talking
-about the first bam. Or if there is a more specific name for the
-bam we could use that, like system-bam or sdhci-bam.
-
-> +		compatible = "qcom,bam";
-> +		reg = <0xf9984000 0x15000>;
-> +		interrupts = <0 94 0>;
-> +		clocks = <&bam_dma_ahb_cxc>;
-> +		clock-names = "bam_clk";
-> +		#dma-cells = <3>;
-> +	};
-> +
-> +Client:
-> +Required properties:
-> +- dmas: List of dma channel requests
-> +- dma-names: Names of aforementioned requested channels
-> +
-> +Clients must use the format described in the dma.txt file, using a four cell
-> +specifier for each channel.
-> +
-> +The four cells in order are:
-> +  1. A phandle pointing to the DMA controller
-> +  2. The channel number
-> +  3. The execution environment value for this channel.
-> +  4. Direction of the fixed unidirectional channel
-> +     0 - Memory to Device
-> +     1 - Device to Memory
-
-Should we add "2 - Device to Device" here? Is there anything more
-that needs to be done in the binding for device to device
-transfers.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+VGhhbmtzIGZvciB5b3VyIHJldmlldy4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+PiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiAyMDEz5bm0MTDmnIgyOeaXpSDmmJ/m
+nJ/kuowgMTE6MjYNCj4gVG86IFRhbmcgWXVhbnRpYW4tQjI5OTgzDQo+IENjOiBXb29kIFNjb3R0
+LUIwNzQyMTsgTWFyayBSdXRsYW5kOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHY1XSBwb3dlcnBjL21wYzg1eHg6IFVwZGF0ZSB0aGUgY2xvY2sgbm9kZXMg
+aW4gZGV2aWNlDQo+IHRyZWUNCj4gDQo+IE9uIFN1biwgMjAxMy0xMC0yMCBhdCAyMTo1NSAtMDUw
+MCwgVGFuZyBZdWFudGlhbi1CMjk5ODMgd3JvdGU6DQo+ID4gSSBkaWRuJ3Qgc2VlIGhvdyB5b3Vy
+IHN1Z2dlc3Rpb24gaXMgYSBiZXR0ZXIgbWF0Y2hpbmcuDQo+ID4NCj4gPiAgT1NDIC0tLS0+IFBM
+TDEgLS0tLT4gbXV4IC0tLS0+IENQVQ0KPiA+ICAgICAgIHwgICAgICAgICAgIHwNCj4gPiAgICAg
+ICB8LS0+IFBMTDIgLS18DQo+ID4gICAgICAgICAuLi4uLi4uLg0KPiA+IEFzIHlvdXIgc3VnZ2Vz
+dGlvbiwgdGhlIGNsb2NrIHRyZWUgbG9va3MgbGlrZSB0aGUgYWJvdmUuDQo+ID4gSW4gdGhpcyBj
+YXNlLCB0aGUgTVVYIGRyaXZlciB3aWxsIG5vdCBrbm93IHRoZSBkaXZpZGVyIGRldGFpbHMoLzIs
+IC80LA0KPiA+IG9yIC8zKS4NCj4gDQo+IFdoZW4gaXMgdGhlcmUgZXZlciBhIC8zPw0KPiANCkZv
+ciBUNCwgdGhlcmUgaXMgYSAvMywgYnV0IGl0IGlzIHVzZWQgYnkgUE1FIG5vdCBDUFUuDQoNCg0K
+PiA+IEkgdGhpbmsgdGhlIE1VWCBzaG91bGQgYWN0IGxpa2UgInN3aXRjaCIgd2hpY2ggY2hvb3Nl
+IG9uZSBvZiB0aGUgaW5wdXQNCj4gPiBjbG9jayBhcyBhIG91dHB1dCBjbG9jay4gSXQgc2hvdWxk
+IG5vdCBDUkVBVEUgY2xvY2sobGlrZSBQTEwxLzIsDQo+ID4gUExMMS80KS4NCj4gPiBUaGUgcHVy
+cG9zZSBvZiBjbG9jayBkcml2ZXIgaXMgdG8gZXN0YWJsaXNoIHRoZSBjbG9jayB0cmVlLg0KPiA+
+IFRoZSBjbG9jayB0cmVlIHdpbGwgbm90IGJlIGVzdGFibGlzaGVkIGluIHlvdXIgc3VnZ2VzdGlv
+biBiZWNhdXNlIHRoZQ0KPiA+IGRpdmlkZXIgaXMgbWlzc2luZywgd2UgZG9uJ3Qga25vdyB3aGVy
+ZSBQTEwvMiBjb21lcyBmcm9tLg0KPiA+DQo+ID4gSWYgeW91IHJlYWxseSBsaWtlIHlvdXIgcHJv
+cG9zYWwsIGl0IHNob3VsZCBiZSBjaGFuZ2VkIHRvIHRoaXM6DQo+ID4NCj4gPiBPU0MgLS0tLS0t
+PiBQTEwxIC0tLS0tPiBQTEwxIC8xIC0tLS0tLS0tLT4gTVVYIC0tLS0tLS0+Q1BVDQo+ID4gICAg
+ICB8ICAgICAgICAgICAgfF9fXz4gUExMMSAvMiBfX19fX19ffA0KPiA+ICAgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiAgICAgIHxfX19fPiBQTEwyIC0tLS0tPiBQ
+TEwyIC8yIC0tLS0tLS18DQo+ID4gICAgICAgICAgICAgICAgICAgfF9fXz4gUExMMi8gNCBfX19f
+X19ffA0KPiA+DQo+ID4gKGl0IGlzIHBvc3NpYmxlIHRoYXQgUExMcyBoYXZlIGRpZmZlcmVudCBk
+aXZpZGVyKS4NCj4gDQo+IERvIHdlIGFjdHVhbGx5IGhhdmUgKG9yIGV4cGVjdCkgYSBzaXR1YXRp
+b24gd2hlcmUgdGhlIFBMTHMgaGF2ZSBkaWZmZXJlbnQNCj4gZGl2aWRlcnMsIG9yIGV2ZW4gd2hl
+cmUgdGhlIHNhbWUgYml0IHNldHRpbmcgaW4gdGhlIE1VWCByZWdpc3RlciBtZWFucyBhDQo+IGRp
+ZmZlcmVudCBkaXZpZGVyIGZyb20gb25lIGNoaXAgdG8gYW5vdGhlciAod2l0aGluIHRoZSBzYW1l
+IE1VWA0KPiBjb21wYXRpYmxlIHN0cmluZyk/ICBJZiBzbywgdGhlbiBJIGFncmVlIHRoYXQgd2Ug
+c2hvdWxkIGdvIHdpdGggeW91cg0KPiBhcHByb2FjaC4NCj4gDQpGb3IgYSBzcGVjaWZpYyBjaGlw
+LCB0aGUgZGl2aWRlcnMgYXJlIHNhbWUgZm9yIGVhY2ggUExMLg0KQnV0IENQVSBtYXkgdXNlIE9O
+TFkgb25lIG9mIHRoZSBkaXZpZGVycyBvZiBhIFBMTC4NCkZvciBleGFtcGxlLCBvbiBwNDA4MCwg
+Y29yZTAtMyBtYXkgdXNlIFBMTDMvMSwgYnV0IGRvIG5vdCB1c2UgUExMMy8yLg0KKEkgZGlkbid0
+IGRlYWwgd2l0aCB0aGlzIHNpdHVhdGlvbiBpbiBkcml2ZXIgZWl0aGVyIGJlY2F1c2UgdGhlcmUg
+YXJlIGxpbWl0YXRpb25zIHRvIHVzZSBpdCkuDQoNCj4gVGhlIHdheSBGcmVlc2NhbGUgZG9jdW1l
+bnRzIHRoaW5ncyBpbiBjaGlwIG1hbnVhbHMgcmF0aGVyIHRoYW4gaW4gYmxvY2sNCj4gbWFudWFs
+cywgd2l0aCBsaXR0bGUgYml0cyBvZiBpbmZvcm1hdGlvbiBkaWZmZXJlbnQgaW4gZWFjaCBjaGlw
+IG1hbnVhbCwNCj4gbWFrZXMgaXQgaGFyZCB0byBmaWd1cmUgb3V0IHRoaXMgc29ydCBvZiB0aGlu
+Zy4gIEZyb20gdGhlIGV4YW1wbGVzIEkNCj4gbG9va2VkIGF0LCBpdCBzZWVtZWQgcHJldHR5IGNv
+bnNpc3RlbnQgdGhhdCB0aGUgbG93IDIgYml0cyBvZiBDTEtTRUwgaW4NCj4gdGhlIE1VWCB3ZXJl
+IHRoZSBsb2cyIG9mIHRoZSBkaXZpZGVyLiAgQXJlIHRoZXJlIGFueSBjaGlwcyB0aGF0IGRvbid0
+DQo+IGFkaGVyZSB0byB0aGlzPw0KPiANCllvdXIgb2JzZXJ2YXRpb24gaXMgY29ycmVjdCB1bnRp
+bCB0aGVuLiBCdXQgdGhlcmUgaXMgbm8gcnVsZSBvbiB0aGlzIG9mZmljaWFsbHkuDQoNCk5vdyBJ
+IHdhbnQgdG8gc3VtbWFyeSB0aGUgcHJvcyBhbmQgY29ucyBvZiB5b3VyIHN1Z2dlc3Rpb246DQpU
+aGUgcHJvczoNCjEuIHRoZSBkZXZpY2UgdHJlZSB3b3VsZCBiZSBzaW1wbGVyLg0KDQpUaGUgY29u
+czoNCjEuIGNhbm5vdCBnZXQgdGhlIHdob2xlIGNsb2NrIHRyZWUgcGljdHVyZSBiZWNhdXNlIGRp
+dmlkZXJzIGFyZSBoaWRkZW4gaW4gZHJpdmVyLg0KMi4gbm8gd2F5IHRvIGRlYWwgd2l0aCB0aGUg
+dXNlIGNhc2Ugb24gcDQwODANCjMuIG5lZWQgdG8gZGVhbCB3aXRoIGVhY2ggPGNoaXA+LWNsb2Nr
+Z2VuIGNvbXBhdGlibGUgc3RyaW5nIGFuZCBwYXNzIGEgcGFyYW1ldGVyDQogICB0byB0ZWxsIGl0
+IHdoYXQgdGhlIGRpdmlkZXIgaXMuIA0KNC4gdGhlICJsb2cyIHJ1bGUiIGNvdWxkIGJlIGluY29y
+cmVjdCBpbiBmdXR1cmUsIHNheSwgd2UgaGF2ZSBhIGRpdmlkZXIgb2YgLzUuDQoNCkFueSB0aG91
+Z2h0cyBvbiB0aGlzPw0KDQpSZWdhcmRzLA0KWXVhbnRpYW4NCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
+bmZvL2xpbnV4cHBjLWRldg==
