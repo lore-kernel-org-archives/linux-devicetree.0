@@ -1,68 +1,82 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Mon, 28 Oct 2013 18:34:55 -0700
-Message-ID: <20131029013454.GJ4763@kartoffel>
-References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
- <1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/mpc85xx: Update the clock nodes in device
+ tree
+Date: Mon, 28 Oct 2013 22:26:03 -0500
+Message-ID: <1383017163.3410.61.camel@snotra.buserror.net>
+References: <1381300704-4238-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <20131010100331.GE26954@e106331-lin.cambridge.arm.com>
+	 <D07C73A334FF604B95B3CBD2A545D07B150BD137@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <20131011092526.GE3910@e106331-lin.cambridge.arm.com>
+	 <1381518433.7979.536.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C24BD@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381788786.7979.643.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C2B08@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381858855.7979.693.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C312F@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1381942009.7979.727.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C4600@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1382027085.7979.774.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C5CAB@039-SN2MPN1-013.039d.mgd.msft.net>
+	 <1382113880.7979.836.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150C62BA@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150C62BA-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 12:31:28AM +0000, Stephen Boyd wrote:
-> The Krait L1/L2 error reporting device is made up of two
-> interrupts, one per-CPU interrupt for the L1 caches and one
-> interrupt for the L2 cache.
+On Sun, 2013-10-20 at 21:55 -0500, Tang Yuantian-B29983 wrote:
+> I didn't see how your suggestion is a better matching.
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+>  OSC ----> PLL1 ----> mux ----> CPU
+>       |           |
+>       |--> PLL2 --| 
+>         ........
+> As your suggestion, the clock tree looks like the above.
+> In this case, the MUX driver will not know the divider
+> details(/2, /4, or /3).
+
+When is there ever a /3?
+
+> I think the MUX should act like "switch" which choose one
+> of the input clock as a output clock. It should not CREATE
+> clock(like PLL1/2, PLL1/4).
+> The purpose of clock driver is to establish the clock tree.
+> The clock tree will not be established in your suggestion
+> because the divider is missing, we don't know where PLL/2 comes from.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> new file mode 100644
-> index 0000000..01fe8a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> @@ -0,0 +1,16 @@
-> +* Qualcomm Krait L1 / L2 cache error reporting
-> +
-> +Required properties:
-> +- compatible: Should be "qcom,krait-cache-erp"
-> +- interrupts: Should contain the L1/CPU error interrupt number and
-> +  then the L2 cache error interrupt number
-> +
-> +Optional properties:
-> +- interrupt-names: Should contain the interrupt names "l1_irq" and
-> +  "l2_irq"
-
-As with my comment on the parsing code, I'd prefer that if interrupt-names was
-present it defined the order of interrupts. Otherwise it's redundant and of no
-value.
-
-Otherwise, the binding looks fine to me:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-> +
-> +Example:
-> +	edac {
-> +		compatible = "qcom,krait-cache-erp";
-> +		interrupts = <1 9 0xf04>, <0 2 0x4>;
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
+> If you really like your proposal, it should be changed to this:
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> OSC ------> PLL1 -----> PLL1 /1 ---------> MUX ------->CPU
+>      |            |___> PLL1 /2 _______|
+>      |                                 |
+>      |____> PLL2 -----> PLL2 /2 -------|
+>                   |___> PLL2/ 4 _______|
 > 
+> (it is possible that PLLs have different divider).
+
+Do we actually have (or expect) a situation where the PLLs have
+different dividers, or even where the same bit setting in the MUX
+register means a different divider from one chip to another (within the
+same MUX compatible string)?  If so, then I agree that we should go with
+your approach.
+
+The way Freescale documents things in chip manuals rather than in block
+manuals, with little bits of information different in each chip manual,
+makes it hard to figure out this sort of thing.  From the examples I
+looked at, it seemed pretty consistent that the low 2 bits of CLKSEL in
+the MUX were the log2 of the divider.  Are there any chips that don't
+adhere to this?
+
+-Scott
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
