@@ -1,67 +1,59 @@
 From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v3 2/4] mmc: omap_hsmmc: Enable SDIO IRQ.
-Date: Tue, 29 Oct 2013 12:16:44 -0500
-Message-ID: <EA1946E5-E119-4D4D-B99F-E96878DEC049@codeaurora.org>
-References: <1380971830-21492-1-git-send-email-afenkart@gmail.com> <1380971830-21492-3-git-send-email-afenkart@gmail.com>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Tue, 29 Oct 2013 12:19:08 -0500
+Message-ID: <82E941A8-D062-4E90-B661-511881F51F9B@codeaurora.org>
+References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com> <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com> <20131029045943.GE20432@verge.net.au> <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org> <20131029084444.GC15731@verge.net.au>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380971830-21492-3-git-send-email-afenkart@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Venkatraman S <svenkatr@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131029084444.GC15731@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 5, 2013, at 6:17 AM, Andreas Fenkart wrote:
+On Oct 29, 2013, at 3:44 AM, Simon Horman wrote:
 
-> For now, only support SDIO interrupt if we are booted with
-> DT. This is because some platforms need special quirks. And
-> we don't want to add new legacy mux platform init code
-> callbacks any longer as we are moving to DT based booting
-> anyways.
+> On Tue, Oct 29, 2013 at 03:24:16AM -0500, Kumar Gala wrote:
+>> 
+>> On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
+>> 
+>>> On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
+>>>> R-Car Gen2 SoCs have a different PHY which is not compatible
+>>>> with the older R-Car H1 (R8A7779) version.
+>>>> This adds OF/platform device id tables and PHY initialization
+>>>> callbacks for the following Gen2 SoCs:
+>>>> * R-Car H2: R8A7790;
+>>>> * R-Car M2: R8A7791.
+>>>> 
+>>>> PHY initialization method is chosen based on the device id.
+>>>> Default PHY settings are applied for Gen2 SoCs, which should
+>>>> suit the Gen2 boards available.
+>>>> 
+>>>> The R8A7779 platform code is modified to use "sata-r8a7779"
+>>>> device name.
+>>>> 
+>>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>>>> ---
+>>>> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+>>>> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+>>>> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+>>>> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
+>>> 
+>>> Hi Mark, Hi Device-Tree Folks,
+>>> 
+>>> I'm wondering if you have had a chance to look over the bindings
+>>> aspect of this and the other patch in the series. I believe that
+>>> this series addresses all previous review in that regards.
+>> 
+>> What tree is this binding in?
 > 
-> Broken hardware, missing the swakueup line, should fallback
-> to polling, by setting 'ti,quirk-swakup-missing' in the
-> device tree. Otherwise pending SDIO IRQ are not detected
-> while in suspend. This affects am33xx processors.
-> 
-> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index ed271fc..1136e6b 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -20,6 +20,24 @@ ti,dual-volt: boolean, supports dual voltage cards
-> ti,non-removable: non-removable slot (like eMMC)
-> ti,needs-special-reset: Requires a special softreset sequence
-> ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
-> +ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
-> +SDIO irq while in suspend. Fallback to polling. Affected chips are
-> +am335x,
-> +
-> +                            ------
-> +                            | PRCM |
-> +                             ------
-> +                              ^ |
-> +                      swakeup | | fclk
-> +                              | v
-> +      ------                -------               -----
-> +     | card | -- CIRQ -->  | hsmmc | -- IRQ -->  | CPU |
-> +      ------                -------               -----
-> +
-> +In suspend the fclk is off and the module is disfunctional. Even
-> +register reads will fail. A small logic in the host will request fclk
-> +restore, when an external event is detected. Once the clock is
-> +restored, the host detects the event normally.
-> 
-> Example:
-> 	mmc1: mmc@0x4809c000 {
+> sata_car.txt is added by the previous patch in this series
+> "[PATCH 1/2] sata_rcar: Adjust and document device tree bindings"
 
-For the DT-Binding portion:
-
-Acked-by: Kumar Gala <galak@codeaurora.org>
+Why not just have all the binding in one patch.  There isn't a reason this should be split.
 
 - k
 
