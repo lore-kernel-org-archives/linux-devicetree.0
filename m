@@ -1,59 +1,50 @@
 From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Tue, 29 Oct 2013 12:19:08 -0500
-Message-ID: <82E941A8-D062-4E90-B661-511881F51F9B@codeaurora.org>
-References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com> <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com> <20131029045943.GE20432@verge.net.au> <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org> <20131029084444.GC15731@verge.net.au>
+Subject: Re: [PATCH 1/3] dma: imx-sdma: Add ssi dual fifo script support
+Date: Tue, 29 Oct 2013 12:21:52 -0500
+Message-ID: <4648FA57-F1B4-4341-A536-BAA43364165D@codeaurora.org>
+References: <cover.1383047327.git.b42378@freescale.com> <9ed025d4e98f716ba80b27acaaa98f43ad3bd75a.1383047327.git.b42378@freescale.com>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131029084444.GC15731@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <9ed025d4e98f716ba80b27acaaa98f43ad3bd75a.1383047327.git.b42378@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, s.hauer@pengutronix.de, b32955@freescale.com
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 29, 2013, at 3:44 AM, Simon Horman wrote:
+On Oct 29, 2013, at 7:33 AM, Nicolin Chen wrote:
 
-> On Tue, Oct 29, 2013 at 03:24:16AM -0500, Kumar Gala wrote:
->> 
->> On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
->> 
->>> On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
->>>> R-Car Gen2 SoCs have a different PHY which is not compatible
->>>> with the older R-Car H1 (R8A7779) version.
->>>> This adds OF/platform device id tables and PHY initialization
->>>> callbacks for the following Gen2 SoCs:
->>>> * R-Car H2: R8A7790;
->>>> * R-Car M2: R8A7791.
->>>> 
->>>> PHY initialization method is chosen based on the device id.
->>>> Default PHY settings are applied for Gen2 SoCs, which should
->>>> suit the Gen2 boards available.
->>>> 
->>>> The R8A7779 platform code is modified to use "sata-r8a7779"
->>>> device name.
->>>> 
->>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->>>> ---
->>>> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
->>>> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
->>>> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
->>>> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
->>> 
->>> Hi Mark, Hi Device-Tree Folks,
->>> 
->>> I'm wondering if you have had a chance to look over the bindings
->>> aspect of this and the other patch in the series. I believe that
->>> this series addresses all previous review in that regards.
->> 
->> What tree is this binding in?
+> There's a script for SSI missing in current sdma script list. Thus add it.
+> This script would allow SSI use its dual fifo mode to transimit/receive
+> data without occasional hardware underrun/overrun.
 > 
-> sata_car.txt is added by the previous patch in this series
-> "[PATCH 1/2] sata_rcar: Adjust and document device tree bindings"
+> This patch also fixed a counting error for total number of scripts.
+> 
+> Signed-off-by: Nicolin Chen <b42378@freescale.com>
+> ---
+> Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
+> drivers/dma/imx-sdma.c                                 | 6 +++++-
+> include/linux/platform_data/dma-imx-sdma.h             | 2 ++
+> include/linux/platform_data/dma-imx.h                  | 1 +
+> 4 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> index 4fa814d..3b933c5 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> @@ -42,6 +42,7 @@ The full ID of peripheral types can be found below.
+> 	19	IPU Memory
+> 	20	ASRC
+> 	21	ESAI
+> +	22	SSI Dual FIFO
+> 
+> The third cell specifies the transfer priority as below.
 
-Why not just have all the binding in one patch.  There isn't a reason this should be split.
+For the DT-Binding portion:
+
+Acked-by: Kumar Gala <galak@codeaurora.org>
 
 - k
 
