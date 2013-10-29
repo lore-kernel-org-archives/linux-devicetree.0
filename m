@@ -1,59 +1,80 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Mon, 28 Oct 2013 17:31:28 -0700
-Message-ID: <1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
-References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCHv2 1/3] Input: twl4030-keypad - add device tree support
+Date: Tue, 29 Oct 2013 02:06:08 +0100
+Message-ID: <20131029010608.GA5353@earth.universe>
+References: <1382446042-27099-1-git-send-email-sre@debian.org>
+ <1382446042-27099-2-git-send-email-sre@debian.org>
+ <5137C017-2515-427C-865F-B938CC24B210@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-edac@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5137C017-2515-427C-865F-B938CC24B210@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-input@vger.kernel.org, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Krait L1/L2 error reporting device is made up of two
-interrupts, one per-CPU interrupt for the L1 caches and one
-interrupt for the L2 cache.
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-new file mode 100644
-index 0000000..01fe8a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-@@ -0,0 +1,16 @@
-+* Qualcomm Krait L1 / L2 cache error reporting
-+
-+Required properties:
-+- compatible: Should be "qcom,krait-cache-erp"
-+- interrupts: Should contain the L1/CPU error interrupt number and
-+  then the L2 cache error interrupt number
-+
-+Optional properties:
-+- interrupt-names: Should contain the interrupt names "l1_irq" and
-+  "l2_irq"
-+
-+Example:
-+	edac {
-+		compatible = "qcom,krait-cache-erp";
-+		interrupts = <1 9 0xf04>, <0 2 0x4>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+On Mon, Oct 28, 2013 at 01:42:47AM -0500, Kumar Gala wrote:
+> > +This binding is based on the matrix-keymap binding with the following
+> > +changes:
+>=20
+> Maybe be a bit more specific and say 'based on the input/matrix-keymap.tx=
+t binding'..
+
+OK.
+
+> > + * keypad,num-rows and keypad,num-columns are required.
+>=20
+> Is linux,keymap required from matrix-keymap.txt?
+
+Yes, matrix-keymap.txt contains descriptions for the following:
+
+required:
+ - linux,keymap
+optional:
+ - keypad,num-rows
+ - keypad,num-columns
+
+> > +Optional Properties specific to linux:
+> > +- linux,keypad-no-autorepeat: do no enable autorepeat feature.
+>=20
+> Does it make sense to update the matrix-keymap.txt binding to add
+> 'linux,keypad-no-autorepeat' there?
+
+At least according to devicetree documentation there are
+keymap-matrix.txt based drivers, which do not support
+"linux,keypad-no-autorepeat".
+
+-- Sebastian
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSbwn/AAoJENju1/PIO/qakfIP/RzLbeDgdIolOTlkwGfucBEa
+lPxJn/QuxpFeSMN/rC/2ui+palmqwwCgMYl2t9KeyERdRuna6Tm7aDT784fANRA1
+bZE19QY17Nl4usNyyfNDfnPpGaLg6shyopNYtxnEfTW/5437VzBcUEqHzebrCeCB
+myFB4kxtq5OViNHQSjdHE68+knzbmUmXRp8b8VoM/XzWaVUH/hN23JA7rataRqKd
+UMtW8/K6nchvC/YB7cASpYjmDQEclUdhPro9bYXw5HUNQiC4wAWFPBoeOrJ7GyYJ
+Aj6g00EEp7iQmz2VtqhMOagUIbV1+LG5YQP7IHYSmh0wgVgwLiPAD2ZUCHEYLAB0
+Qxq4lcLvoD6ug+d1eWfek17MClIbn+AORKxZwJcCECxPxEvBdNet2dA1JpzEWKTA
+2NaQ1zKYnqvhL0dH47zc4gzz0uhW31ADdNDNgjHmVTK31XM3RV0mhh14cTzUF5Y4
+uKXhaE6r6X9kUM1j+CK2l0KU2Yo6avxqCdS+s4nzLQlBJK4IRP8OiVFjnZoULA1R
+yMOnglxW+sIvPqfYUXzXmeq9oyoJKs7a9j2/QvcddoU6A6iunPIOqxS85lmFhpxh
+sMO1OI6dtNYTxfAfnlebFhK7vIf7r1wmgi/cuA8oifmUKRdRjOfZyu+jmWo3e5ri
+GyJZmbajGhCSTswzhhn0
+=ixKm
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
