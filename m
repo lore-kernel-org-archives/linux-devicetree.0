@@ -1,109 +1,38 @@
-From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
-Date: Tue, 29 Oct 2013 10:54:26 -0200
-Message-ID: <20131029105426.0969741c.m.chehab@samsung.com>
-References: <5261967E.6010001@samsung.com>
- <20131028201136.6f66d3f7@samsung.com> <526EFC06.70101@gmail.com>
+From: Wim Van Sebroeck <wim@iguana.be>
+Subject: Re: [PATCH v5 0/4] watchdog: at91sam9_wdt: handle already configured wdt
+Date: Tue, 29 Oct 2013 13:58:48 +0100
+Message-ID: <20131029125848.GB5261@spo001.leaseweb.com>
+References: <1380871455-7324-1-git-send-email-b.brezillon@overkiz.com> <20131029075028.GF19704@spo001.leaseweb.com> <526F8E89.30005@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <526EFC06.70101-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <526F8E89.30005@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Em Tue, 29 Oct 2013 01:06:30 +0100
-Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
+Hi Boris,
 
-> Hi Mauro,
+> I'm sorry for the inconvenience, but I found some bugs in my patch series:
 > 
-> On 10/28/2013 11:11 PM, Mauro Carvalho Chehab wrote:
-> >> The following changes since commit 8ca5d2d8e58df7235b77ed435e63c484e123fede:
-> >> >
-> >> >     [media] uvcvideo: Fix data type for pan/tilt control (2013-10-17 06:55:29 -0300)
-> >> >
-> >> >  are available in the git repository at:
-> >> >
-> >> >     git://linuxtv.org/snawrocki/samsung.git for-v3.13-2
-> >> >
-> >> >  for you to fetch changes up to 6eb89d71b27e6731755ab5722f3cdc0f6e8273f2:
-> >> >
-> >> >     V4L: Add s5k4e5 sensor driver (2013-10-18 21:36:42 +0200)
-> >> >
-> >> >  ----------------------------------------------------------------
-> >> >  Arun Kumar K (12):
-> >> >         exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
-> >
-> > As agreed during KS, the subsystem maintainers should wait for a documentation
-> > review on DT by the DT maintainers, at least for a while.
-> >
-> > So, I'd like to see either their reviews on this patch:
-> > 	https://patchwork.linuxtv.org/patch/20439/
-> >
-> > Or their ack for us to apply it.
+> 1) the secs_to_ticks returns an erronous value when 0 is passed as an 
+> argument
+> 2) the calculated heartbeat is too small for some use cases
+>     (i.e. kexecing a new kernel might trigger a watchdog reset before 
+> the new kernel
+>      is able to load the watchdog driver)
+> 3) when initializing the watchdog driver, the timer should be configured 
+> with the min_heartbeat value
+>     instead of the standard heartbeat value, because we don't for how 
+> long the timer has been running.
 > 
-> I agree with you on that. Just please note the first version of this patch
-> has been posted *5 months* ago https://patchwork.linuxtv.org/patch/18684
-> 
-> Stephen has reviewed subsequent version about 3 months ago:
-> https://patchwork.linuxtv.org/patch/19521
-> 
-> Then we got no more comments from DT maintainers, I have reviewed this patch
-> multiple times on the mailing lists:
-> https://patchwork.linuxtv.org/patch/19715
-> https://patchwork.linuxtv.org/patch/19749
-> 
-> And explicitly asked for an Ack:
-> https://patchwork.linuxtv.org/patch/19832
-> 
-> Then those 2 versions passed silently:
-> https://patchwork.linuxtv.org/patch/20055
-> https://patchwork.linuxtv.org/patch/20225
-> 
-> And...huh...we got another review, I didn't notice it until now:
-> https://patchwork.linuxtv.org/patch/20439 Thanks Mark.
-> 
-> Arun, care to address those review comments and send us an updated
-> binding documentation patch ?
-> 
-> Hence I think we have waited for a while. ;)
-> 
-> >> >         exynos5-fimc-is: Add driver core files
-> >> >         exynos5-fimc-is: Add common driver header files
-> >> >         exynos5-fimc-is: Add register definition and context header
-> >> >         exynos5-fimc-is: Add isp subdev
-> >> >         exynos5-fimc-is: Add scaler subdev
-> >> >         exynos5-fimc-is: Add sensor interface
-> >> >         exynos5-fimc-is: Add the hardware pipeline control
-> >> >         exynos5-fimc-is: Add the hardware interface module
-> >> >         exynos5-is: Add Kconfig and Makefile
-> >> >         V4L: Add DT binding doc for s5k4e5 image sensor
-> >
-> > Same applies to this patch:
-> > 	https://patchwork.linuxtv.org/patch/20448/
-> 
-> This one also have been on the mailing list for quite some time and it
-> uses already standard bindings, so I assumed it is OK to merge it.
-> 
-> https://patchwork.linuxtv.org/project/linux-media/list/?state=*&q=s5k4e5
-> 
-> But if there must be an Ack then we shall wait, it will probably won't
-> make a big difference now, if this patch is postponed by 3 more months.
+> I'll send a new patch fixing those issues.
+> I hope it won't bother you :-(.
 
-Yeah, it seems that we've waited for a long time to get an ack there.
+No problem :-). Just sent me the fixes when they are ready.
 
-So, let's do this:
+Kind regards,
+Wim.
 
-Please send a new version with Mark's comments. Also, please split Doc 
-changes from the code changes on the new series. I'll wait for a couple
-days for DT people to review it. If we don't have any reply, I'll review
-and apply it for Kernel 3.13, if I don't see anything really weird on it.
-
-Regards,
-Mauro
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
