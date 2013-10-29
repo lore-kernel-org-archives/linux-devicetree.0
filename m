@@ -1,122 +1,75 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
-Date: Tue, 29 Oct 2013 10:46:55 -0700
-Message-ID: <CAPtuhTgQ1M7Z3PCFCPVTKT-uY+JE6cGSdbEfJrLMmbRr+C9MZA@mail.gmail.com>
-References: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
- <5264425E.4040301@samsung.com> <20131021121605.11944.74007@quantum>
- <1823897.8rOixkM4PW@amdc1227> <526FD849.9050000@samsung.com>
+From: Matt Sealey <neko@bakuhatsu.net>
+Subject: Re: [PATCHv9 05/43] CLK: TI: add DT alias clock registration mechanism
+Date: Tue, 29 Oct 2013 12:50:43 -0500
+Message-ID: <CAHCPf3uPhkVhdn3Db06YZfrwQuA7khdZEXiZ+pqJ06J9YdBoLg@mail.gmail.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
+	<1382716658-6964-6-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <526FD849.9050000@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, cpufreq@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, b.zolnierkie@samsung.com, t.stanislaws@samsung.com, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Ben Dooks <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382716658-6964-6-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, Tony Lindgren <tony@atomide.com>, nm@ti.com, bcousson@baylibre.com, rnayak@ti.com, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 8:46 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> On 10/29/13 04:42, Tomasz Figa wrote:
->>
->> Hi Kukjin, Mike,
->>
->> On Monday 21 of October 2013 05:16:05 Mike Turquette wrote:
->>>
->>> Quoting Kukjin Kim (2013-10-20 13:51:42)
->>>>
->>>> On 10/20/13 01:03, Tomasz Figa wrote:
->>>>>
->>>>> Hi Mike, Kukjin, Rafael,
->>>>>
->>>>> On Tuesday 24 of September 2013 14:50:06 Mateusz Krawczuk wrote:
->>>>>>
->>>>>> This patch series is the new s5pv210 clock implementation
->>>>>> (using common clk framework).
->>>>>>
->>>>>> This implementation is compatible with device tree definition and
->>>>>> board
->>>>>> files.
->>>>>>
->>>>>> This patch series is based on linux-next and has been tested on goni
->>>>>> and
->>>>>> aquila
->>>>>> boards using board file.
->>>>>>
->>>>>> Since v4:
->>>>>> Corrected mux flags for finpll.
->>>>>>
->>>>>> Since v3:
->>>>>>
->>>>>> Replace s5pv210_clk_register_finpll, by creating mux finpll
->>>>>> with xusbxti and xxti as parrents.
->>>>>>
->>>>>>
->>>>>> Mateusz Krawczuk (3):
->>>>>>     clk: samsung: Add clock driver for s5pc110/s5pv210
->>>>>>     Cpufreq: s5pv210 cpufreq fixes for CCF
->>>>>>     ARM: s5pv210: Migrate clock handling to Common Clock Framework
->>>>>>
->>>>>>    .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
->>>>>>    arch/arm/mach-s5pv210/Kconfig                      |   9 +
->>>>>>    arch/arm/mach-s5pv210/Makefile                     |   4 +-
->>>>>>    arch/arm/mach-s5pv210/common.c                     |  17 +
->>>>>>    arch/arm/mach-s5pv210/common.h                     |  10 +
->>>>>>    arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
->>>>>>    arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
->>>>>>    arch/arm/plat-samsung/Kconfig                      |   2 +-
->>>>>>    drivers/clk/samsung/Makefile                       |   3 +
->>>>>>    drivers/clk/samsung/clk-s5pv210.c                  | 673
->>>>>> +++++++++++++++++++++ drivers/cpufreq/s5pv210-cpufreq.c
->>>>>>    |   6 +-
->>>>>>    include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
->>>>>>    12 files changed, 1019 insertions(+), 8 deletions(-)
->>>>>>    create mode 100644
->>>>>> Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
->>>>>> create mode 100644 drivers/clk/samsung/clk-s5pv210.c
->>>>>>    create mode 100644
->>>>>> include/dt-bindings/clock/samsung,s5pv210-clock.h
->>>>>
->>>>>
->>>>> I believe this series is reasonable to be applied. Could we agree on
->>>>> the tree it would go through and get all tne required acks?
->>>>>
->>>>> Best regards,
->>>>> Tomasz
->>>>
->>>>
->>>> I agree.
->>>>
->>>> Mike, how do you think the common clk stuff for s5pv210?
->>>
->>>
->>> Clock code looks good to me. Which tree do you want to take it through?
->>
->>
->> Seems like we just missed another kernel release. It's a bit sad that it's
->> happening so often for Samsung patches...
->>
+On Fri, Oct 25, 2013 at 10:56 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> Some devices require their clocks to be available with a specific
+> dev-id con-id mapping. With DT, the clocks can be found by default
+> only with their name, or alternatively through the device node of
+> the consumer. With drivers, that don't support DT fully yet, add
+> mechanism to register specific clock names.
 >
-> Tomasz, sorry about that, I couldn't end up the stuff before attending ARM
-> Kernel Summit, but in my opinion, this series would be merged for upcoming
-> merge window via clk tree if Mike is fine because there is no conflicts with
-> Samsung tree.
->
-> Mike, how do you think? If you're OK, please pick this into your tree with
-> my ack.
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Tested-by: Nishanth Menon <nm@ti.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-I'll pull this in later today with your Ack.
+You guys are wonderful, by the way ;)
 
-Regards,
-Mike
+> +void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+> +{
+> +       struct ti_dt_clk *c;
+> +       struct device_node *node;
+> +       struct clk *clk;
+> +       struct of_phandle_args clkspec;
+> +
+> +       for (c = oclks; c->node_name != NULL; c++) {
+> +               node = of_find_node_by_name(NULL, c->node_name);
+> +               clkspec.np = node;
+> +               clk = of_clk_get_from_provider(&clkspec);
+> +
+> +               if (!IS_ERR(clk)) {
+> +                       c->lk.clk = clk;
+> +                       clkdev_add(&c->lk);
+> +               } else {
+> +                       pr_warn("%s: failed to lookup clock node %s\n",
+> +                               __func__, c->node_name);
+> +               }
+> +       }
+> +}
 
->
-> Thanks,
-> Kukjin
+I have one question here, what makes this part of the patch
+TI-specific at all except the definition of the structure ti_dt_clk?
+Mapping DT clocks to generic clkdev legacy namings seems like it would
+be a necessary evil across *all* SoC platforms.
+
+I would say there is a good case for this being generic and used by
+all platforms waiting for con->id/dev->id to be moved to DT-awareness,
+the structure itself is very generic within clkdev as long as the
+drivers conformed anyway (and if they didn't, none of this helps) and
+I don't think it really needs to be a TI-only thing. The next thing
+that's going to happen when another platform arrives that wants to do
+the same thing is duplication or consolidation - so it would probably
+be a good idea to make this generic to start.
+
+While there the names could be a bit more descriptive -
+dt_clk_name_lookup_map_register(), struct dt_clk_name_lookup_map,
+DT_CLK_LOOKUP_MAP() ..? The current namespace makes it look like this
+is the absolute correct thing to do under all circumstances, but in
+fact this is purely for mapping the old way to the new, better way..
+in the event a brand new platform arrives, with all new drivers (or
+only compliant drivers), none of this code should be implemented for
+it and it should be presented this way.
+
+Thanks,
+Matt Sealey <neko@bakuhatsu.net>
