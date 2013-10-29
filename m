@@ -1,89 +1,81 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Tue, 29 Oct 2013 10:49:35 -0500
-Message-ID: <BA9BDFB3-122B-4BE4-BD89-2B30D5450FF6@codeaurora.org>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com> <1381754813-4679-2-git-send-email-maxime.coquelin@st.com> <40E3A029-C7E8-41DA-9218-3FB7ED97B707@codeaurora.org> <526FB5FF.2060908@st.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <526FB5FF.2060908-qxv4g6HH51o@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv8][ 2/6] video: imxfb: Also add pwmr for the device tree.
+Date: Tue, 29 Oct 2013 16:50:55 +0100
+Message-ID: <1383061860-25035-2-git-send-email-denis@eukrea.com>
+References: <1383061860-25035-1-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383061860-25035-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+pwmr has to be set to get the imxfb backlight work,
+though pwmr was only configurable trough the platform data.
 
-On Oct 29, 2013, at 8:19 AM, Maxime Coquelin wrote:
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v7->v8:
+- Added ACKs.
+---
+ .../devicetree/bindings/video/fsl,imx-fb.txt       |    3 +++
+ drivers/video/imxfb.c                              |    2 ++
+ 2 files changed, 5 insertions(+)
 
-> 
-> On 10/28/2013 08:25 PM, Kumar Gala wrote:
->> On Oct 14, 2013, at 7:46 AM, Maxime COQUELIN wrote:
->> 
->>> This patch adds support to SSC (Synchronous Serial Controller)
->>> I2C driver. This IP also supports SPI protocol, but this is not
->>> the aim of this driver.
->>> 
->>> This IP is embedded in all ST SoCs for Set-top box platorms, and
->>> supports I2C Standard and Fast modes.
->>> 
->>> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
->>> ---
->>> Documentation/devicetree/bindings/i2c/i2c-st.txt |   38 +
->>> drivers/i2c/busses/Kconfig                       |   10 +
->>> drivers/i2c/busses/Makefile                      |    1 +
->>> drivers/i2c/busses/i2c-st.c                      |  867 ++++++++++++++++++++++
->>> 4 files changed, 916 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/i2c/i2c-st.txt
->>> create mode 100644 drivers/i2c/busses/i2c-st.c
->>> 
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
->>> new file mode 100644
->>> index 0000000..8b2fd0b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
->>> @@ -0,0 +1,38 @@
->>> +ST SSC binding, for I2C mode operation
->>> +
->>> +Required properties :
->>> +- compatible : Must be "st,comms-i2c"
->>> +- reg : Offset and length of the register set for the device
->>> +- interrupts : the interrupt specifier
->>> +- clock-names: Must contain "ssc".
->>> +- clocks: Must contain an entry for each name in clock-names. See the common
->>> +  clock bindings.
->>> +- A pinctrl state named "default" must be defined, using the bindings in
->>> +  ../pinctrl/pinctrl-binding.txt
->>> +
->>> +Optional properties :
->>> +- clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
->>> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
->>> +  are supported, possible values are 100000 and 400000.
->>> +- i2c-min-scl-pulse-width-us : The minimum valid SCL pulse width that is
->>> +  allowed through the deglitch circuit. In units of us.
->>> +- i2c-min-sda-pulse-width-us : The minimum valid SDA pulse width that is
->>> +  allowed through the deglitch circuit. In units of us.
->> i2c-min... should be vendor prefixed, st,i2c-min...
-> This was already discussed in earlier revisions of the patches.
-> Initially this was prefixed with "st,", but Wolfram asked to put these properties as generic.
-> As explained in the cover letter, there are no I2C DT binding documentation for now, but it is in Wolfram's ToDo list.
-> As soon as Wolfram has created the documentation, I will create a patch to document
-> 
-> i2c-min-scl-pulse-width-us and i2c-min-sda-pulse-width-us there.
+diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/D=
+ocumentation/devicetree/bindings/video/fsl,imx-fb.txt
+index 46da08d..ac457ae 100644
+--- a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+@@ -17,6 +17,9 @@ Required nodes:
+ Optional properties:
+ - fsl,dmacr: DMA Control Register value. This is optional. By default,=
+ the
+ 	register is not modified as recommended by the datasheet.
++- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property i=
+s
++	optional, but defining it is necessary to get the backlight working. =
+If that
++	property is ommited, the register is zeroed.
+ - fsl,lscr1: LCDC Sharp Configuration Register value.
+=20
+ Example:
+diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+index 4bf3837..f09372d 100644
+--- a/drivers/video/imxfb.c
++++ b/drivers/video/imxfb.c
+@@ -833,6 +833,8 @@ static int imxfb_init_fbinfo(struct platform_device=
+ *pdev)
+=20
+ 		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
+=20
++		of_property_read_u32(np, "fsl,pwmr", &fbi->pwmr);
++
+ 		/* These two function pointers could be used by some specific
+ 		 * platforms. */
+ 		fbi->lcd_power =3D NULL;
+--=20
+1.7.9.5
 
-Missed that, would be good to maybe comment about that in the commit message.. Or is there some reason to not just put them into a i2c/i2c-bus.txt right now?
-
->>> 
->>> +- A pinctrl state named "sleep" could be defined, using the bindings in
->>> +  ../pinctrl/pinctrl-binding.txt
->> I don't see any reference to "sleep" in pinctrl-binding.txt
-> Right, I will correct that.
-> 
-> Thanks for the review,
-> Maxime
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
