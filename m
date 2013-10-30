@@ -1,85 +1,193 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Wed, 30 Oct 2013 02:19:00 -0500
-Message-ID: <302FC9DF-1149-4B71-AFC6-7DE05885F2CE@codeaurora.org>
-References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org> <1383006690-6754-5-git-send-email-sboyd@codeaurora.org> <90D2FDE5-C43F-4ACF-B287-4E0AD8617892@codeaurora.org> <526FF7DB.5040805@codeaurora.org> <20131030003805.GC3268@kartoffel>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131030003805.GC3268@kartoffel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH 2/2] watchdog: s3c2410_wdt: use syscon regmap interface to
+ configure pmu register
+Date: Wed, 30 Oct 2013 13:39:25 +0530
+Message-ID: <CAL1wa8dZdCgNJ-5X0kZ1GdQawdHE2hC94zo__pGS2hyGORDxHw@mail.gmail.com>
+References: <1383116025-5638-1-git-send-email-l.krishna@samsung.com>
+ <1383116025-5638-3-git-send-email-l.krishna@samsung.com> <CAK9yfHyRVsRXo2K6YHeOXCtOiCXrojiqz1AJ5hOotEZ-Yk+xXw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHyRVsRXo2K6YHeOXCtOiCXrojiqz1AJ5hOotEZ-Yk+xXw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Sachin,
 
-On Oct 29, 2013, at 7:38 PM, Mark Rutland wrote:
+Thanks for reviewing the patch
 
-> On Tue, Oct 29, 2013 at 06:00:59PM +0000, Stephen Boyd wrote:
->> On 10/29/13 01:21, Kumar Gala wrote:
->>> On Oct 28, 2013, at 7:31 PM, Stephen Boyd wrote:
->>> 
->>>> The Krait L1/L2 error reporting device is made up of two
->>>> interrupts, one per-CPU interrupt for the L1 caches and one
->>>> interrupt for the L2 cache.
->>>> 
->>>> Cc: <devicetree@vger.kernel.org>
->>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->>>> ---
->>>> .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
->>>> 1 file changed, 16 insertions(+)
->>>> create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
->>>> 
->>>> diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
->>>> new file mode 100644
->>>> index 0000000..01fe8a8
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
->>>> @@ -0,0 +1,16 @@
->>>> +* Qualcomm Krait L1 / L2 cache error reporting
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should be "qcom,krait-cache-erp"
->>>> +- interrupts: Should contain the L1/CPU error interrupt number and
->>>> +  then the L2 cache error interrupt number
->>>> +
->>>> +Optional properties:
->>>> +- interrupt-names: Should contain the interrupt names "l1_irq" and
->>>> +  "l2_irq"
->>>> +
->>>> +Example:
->>>> +	edac {
->>>> +		compatible = "qcom,krait-cache-erp";
->>>> +		interrupts = <1 9 0xf04>, <0 2 0x4>;
->>>> +	};
->>> Why wouldn't we have these as part of cache nodes in the dts?  (which begs the question why we don't have cache nodes?)
->>> 
->> 
->> I can certainly add cache nodes and cpu nodes and then put the
->> interrupts in those nodes. I was thinking along those same lines when I
->> ported this driver but figured it would be good to get something out
->> there. The only question I have is how am I supposed to hook that up
->> into the linux device model? Will the edac driver bind to the device
->> created for the cpus node and the cache node? I guess it will have to be
->> a driver that binds to two devices.
->> 
->> One could argue that we should put the cp15 based architected timers in
->> the cpus node also but so far nobody has done that and I think there was
->> some reasoning behind that, Mark?
-> 
-> The architected timer binding was created at a time I wasn't involved in kernel
-> development, and I'm not aware of any particular reasoning. I've heard that
-> there was a decision to not duplicate banked resources, which would explain not
-> having the timer under /cpus/cpu@N, but doesn't imply that having it under
-> /cpus is bad.
-> 
-> Do we have precedent for putting any devices other than CPUs in /cpus?
+On Wed, Oct 30, 2013 at 12:33 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> On 30 October 2013 12:23, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
+>> The syscon regmap interface is used to configure AUTOMATIC_WDT_RESET_DISABLE
+>> and MASK_WDT_RESET_REQUEST registers of PMU to mask/unmask enable/disable of
+>> watchdog in probe and s2r scenarios.
+>>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   13 ++-
+>>  drivers/watchdog/s3c2410_wdt.c                     |  114 ++++++++++++++++++--
+>>  2 files changed, 118 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> index 2aa486c..c46c7ce 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> @@ -5,10 +5,21 @@ after a preset amount of time during which the WDT reset event has not
+>>  occurred.
+>>
+>>  Required properties:
+>> -- compatible : should be "samsung,s3c2410-wdt"
+>> +- compatible : should be "samsung,s3c2410-wdt" or "samsung,s3c5250-wdt" or "samsung,s3c5420-wdt"
+>
+> This should be written as "should be one among the following:
+>                 (a) "samsung,s3c2410-wdt" for xyz SoC
+>                 (b) ....
+>                 (c) ...
+>
 
-On PPC we had core cache's (depending on topology) that would be there, and thus why I raised the suggestion.
+Okay, will change it.
 
-- k
+>>  - reg : base physical address of the controller and length of memory mapped
+>>         region.
+>>  - interrupts : interrupt number to the cpu.
+>> +- samsung,pmusysreg : reference node to pmu sysreg (required only in case of Exynos5250 and 5420)
+>
+> This property is samsung,sysreg.
+>
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Okay, will keep this as it is and take care in driver
+
+>>
+>>  Optional properties:
+>>  - timeout-sec : contains the watchdog timeout in seconds.
+>> +
+>> +watchdog@101D0000 {
+>> +       compatible = "samsung,s3c5250-wdt";
+>> +       reg = <0x101D0000 0x100>;
+>> +       interrupts = <0 42 0>;
+>> +       clocks = <&clock 336>;
+>> +       clock-names = "watchdog";
+>> +       samsung,sysreg = <&pmu_sys_reg>;
+>> +       status = "okay";
+>> +};
+>> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
+>> index 23aad7c..2a3429c 100644
+>> --- a/drivers/watchdog/s3c2410_wdt.c
+>> +++ b/drivers/watchdog/s3c2410_wdt.c
+>> @@ -41,6 +41,8 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/err.h>
+>>  #include <linux/of.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/regmap.h>
+>>
+>>  #define S3C2410_WTCON          0x00
+>>  #define S3C2410_WTDAT          0x04
+>> @@ -61,6 +63,10 @@
+>>  #define CONFIG_S3C2410_WATCHDOG_ATBOOT         (0)
+>>  #define CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME   (15)
+>>
+>> +#define WDT_DISABLE_REG_OFFSET         0x0408
+>> +#define WDT_MASK_RESET_REG_OFFSET      0x040c
+>> +#define QUIRK_NEEDS_PMU_CONFIG         (1 << 0)
+>> +
+>>  static bool nowayout   = WATCHDOG_NOWAYOUT;
+>>  static int tmr_margin;
+>>  static int tmr_atboot  = CONFIG_S3C2410_WATCHDOG_ATBOOT;
+>> @@ -84,6 +90,12 @@ MODULE_PARM_DESC(soft_noboot, "Watchdog action, set to 1 to ignore reboots, "
+>>                         "0 to reboot (default 0)");
+>>  MODULE_PARM_DESC(debug, "Watchdog debug, set to >1 for debug (default 0)");
+>>
+>> +struct pmu_config {
+>> +       int     disable_reg;
+>> +       int     mask_reset_reg;
+>> +       int     mask_bit;
+>> +};
+>> +
+>>  struct s3c2410_wdt {
+>>         struct device           *dev;
+>>         struct clk              *clock;
+>> @@ -94,7 +106,34 @@ struct s3c2410_wdt {
+>>         unsigned long           wtdat_save;
+>>         struct watchdog_device  wdt_device;
+>>         struct notifier_block   freq_transition;
+>> +       struct pmu_config       *wdt_pmu_config;
+>> +       struct regmap           *pmureg;
+>> +       unsigned int            quirks;
+>> +};
+>> +
+>> +static struct pmu_config pmu_config_5250  = {
+>> +       .disable_reg = WDT_DISABLE_REG_OFFSET,
+>> +       .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
+>> +       .mask_bit = 20
+>> +};
+>> +
+>> +static struct pmu_config pmu_config_5420 = {
+>> +       .disable_reg = WDT_DISABLE_REG_OFFSET,
+>> +       .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
+>> +       .mask_bit = 0
+>> +};
+>> +
+>
+> The above 2 structures could also be under ifdef CONFIG_OF
+>
+
+Okay, will move it
+
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id s3c2410_wdt_match[] = {
+>> +       { .compatible = "samsung,s3c2410-wdt" },
+>> +       { .compatible = "samsung,s3c5250-wdt",
+>> +         .data = (struct pmu_config *) &pmu_config_5250 },
+>> +       { .compatible = "samsung,s3c5420-wdt",
+>> +         .data = (struct pmu_config *) &pmu_config_5420 },
+>> +       {},
+>>  };
+>> +MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
+>> +#endif
+>>
+>>  /* watchdog control routines */
+>>
+>> @@ -111,6 +150,40 @@ static inline struct s3c2410_wdt *freq_to_wdt(struct notifier_block *nb)
+>>         return container_of(nb, struct s3c2410_wdt, freq_transition);
+>>  }
+>>
+>> +static void s3c2410wdt_mask_and_disable_reset(int mask, struct s3c2410_wdt *wdt)
+>> +{
+>> +       unsigned int disable, mask_reset;
+>> +       int ret;
+>> +
+>> +       ret = regmap_read(wdt->pmureg, wdt->wdt_pmu_config->disable_reg,
+>> +                                                               &disable);
+>> +       if (ret < 0) {
+>> +               dev_err(wdt->dev, "%s:%d fail to read disable reg(%d)\n",
+>> +                               __func__, __LINE__, ret);
+>
+> func and LINE does not add much value. Could be dropped.
+>
+
+Okay, will drop it
+
+Best Wishes,
+Leela Krishna
+
+>> +               return;
+>> +       }
+>> +
+>> +       ret = regmap_read(wdt->pmureg, wdt->wdt_pmu_config->mask_reset_reg,
+>> +                                                               &mask_reset);
+>> +       if (ret < 0) {
+>> +               dev_err(wdt->dev, "%s:%d fail to read mask reset reg(%d)\n",
+>> +                               __func__, __LINE__, ret);
+>
+> ditto
+>
+> --
+> With warm regards,
+> Sachin
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
