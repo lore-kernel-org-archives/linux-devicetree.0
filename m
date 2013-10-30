@@ -1,139 +1,62 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: add watchdog device nodes for Exynos5250
- and Exynos5420
-Date: Wed, 30 Oct 2013 13:44:32 +0530
-Message-ID: <CAL1wa8fpiJ5QYefLzUUDsoyLm9vDMOQ4tkJMJPfOvbkGT0Jcww@mail.gmail.com>
-References: <1383116025-5638-1-git-send-email-l.krishna@samsung.com>
- <1383116025-5638-2-git-send-email-l.krishna@samsung.com> <CAK9yfHzcDcL7EUVd2_EWoG1Qd=aqXXOh+Zb8MAB0kN1b1_cArA@mail.gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
+Date: Wed, 30 Oct 2013 10:23:15 +0200
+Message-ID: <5270C1F3.6000409@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <526FDFF4.9030806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHzcDcL7EUVd2_EWoG1Qd=aqXXOh+Zb8MAB0kN1b1_cArA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <526FDFF4.9030806@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Oct 30, 2013 at 12:20 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Leela,
->
-> On 30 October 2013 12:23, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
->> Adds watchdog device nodes to the DT device list for Exynos5250 and Exynos5420
+On 10/29/2013 06:19 PM, Nishanth Menon wrote:
+> On 10/25/2013 10:56 AM, Tero Kristo wrote:
+> <snip>
+>> Testing done:
+>> - omap3-beagle: boot + suspend/resume (ret + off)
+>> - omap4-panda-es: boot + suspend/resume
+>> - omap5-uevm: boot
+>> - dra7-evm: boot
+>> - am335x-bone: boot
 >>
->> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5.dtsi    |   12 +++++-------
->>  arch/arm/boot/dts/exynos5250.dtsi |    7 ++++++-
->>  arch/arm/boot/dts/exynos5420.dtsi |   10 ++++++++++
->>  3 files changed, 21 insertions(+), 8 deletions(-)
+>> Test branches available:
 >>
->> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
->> index e52b038..e7b6dbd 100644
->> --- a/arch/arm/boot/dts/exynos5.dtsi
->> +++ b/arch/arm/boot/dts/exynos5.dtsi
->> @@ -81,13 +81,6 @@
->>                 status = "disabled";
->>         };
+>> tree: https://github.com/t-kristo/linux-pm.git
+>
+> <snip>
+>> Fully functioning test branch: 3.12-rc6-dt-clks-v9
 >>
->> -       watchdog {
->> -               compatible = "samsung,s3c2410-wdt";
->> -               reg = <0x101D0000 0x100>;
->> -               interrupts = <0 42 0>;
->> -               status = "disabled";
->> -       };
->> -
->>         fimd@14400000 {
->>                 compatible = "samsung,exynos5250-fimd";
->>                 interrupt-parent = <&combiner>;
->> @@ -106,4 +99,9 @@
->>                 #size-cells = <0>;
->>                 status = "disabled";
->>         };
->> +
->> +       pmu_sys_reg: pmusysreg {
+> ^^ I tested this branch (boot testing):
+> Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
+> failed to transition)
+
+I just sent you a private email with a patch to try out, should fix the 
+boot crash at least hopefully. Basically I forgot to convert one part of 
+the kernel to the new regmap stuff for omap36xx.
+
+clkdm issues are caused by wrong data in omap_hwmod_3xxx_data.c, USB 
+nodes are listing l3_init_clkdm for them, but this only exists on 
+omap4+. Seems like some copy paste bug introduced by someone.
+
+dpll5 part I am not too sure, can you check if the same happens with 
+non-dt boot?
+
+> Panda-ES: http://pastebin.com/dWMp7D1z (bandgap_fclk not found)
+> OMAP5-UEVM: http://pastebin.com/pHEx6Yzg (omap-gpmc 50000000.gpmc:
+> error: clk_get)
+
+Again, I don't think this is related to this series, but rather to 
+missing/wrong hwmod data.
+
+-Tero
+
+> DRA7-EVM: http://pastebin.com/uYNQ6Sss
+> BeagleBone-Black: http://pastebin.com/biGXS2vi
+> AM335x-evm: http://pastebin.com/K7qwJpCb
 >
-> Make this pmusysreg@10040000.
 >
 
-Okay, will do it
-
->> +               compatible = "samsung,exynos5-pmureg", "syscon";
->
-> I do not see any reference to "samsung,exynos5-pmureg" in the tree.
->
-
-Okay, will take care of it
-
->> +               reg = <0x10040000 0x5000>;
->> +       };
->
-> Since this is a separate node, IMO it could be added in a separate patch.
->
-
-Okay, will do it
-
->>  };
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index c4a8662..3ccd150 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -158,9 +158,14 @@
->>                 interrupts = <0 47 0>;
->>         };
->>
->> -       watchdog {
->> +       watchdog@101D0000 {
->> +               compatible = "samsung,s3c5250-wdt";
->
-> Exynos5 does not belong to S3C series. Please change this to
-> exynos5250-wdt instead.
->
-
-My mistake, will change it
-
->> +               reg = <0x101D0000 0x100>;
->> +               interrupts = <0 42 0>;
->>                 clocks = <&clock 336>;
->>                 clock-names = "watchdog";
->> +               samsung,sysreg = <&pmu_sys_reg>;
->> +               status = "okay";
->>         };
->>
->>         g2d@10850000 {
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 6ffefd1..5fb7ae2 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -369,4 +369,14 @@
->>                 clock-names = "gscl";
->>                 samsung,power-domain = <&gsc_pd>;
->>         };
->> +
->> +        watchdog@101D0000 {
->> +               compatible = "samsung,s3c5420-wdt";
->
-> ditto
->
->> +               reg = <0x101D0000 0x100>;
->> +               interrupts = <0 42 0>;
->> +               clocks = <&clock 316>;
->> +               clock-names = "watchdog";
->> +               samsung,sysreg = <&pmu_sys_reg>;
->> +               status = "okay";
->> +        };
->>  };
->> --
->> 1.7.10.4
->>
->
->
->
-> --
-> With warm regards,
-> Sachin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
