@@ -1,91 +1,65 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Wed, 30 Oct 2013 13:25:34 -0700
-Message-ID: <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 0/6] Krait L1/L2 EDAC driver
+Date: Wed, 30 Oct 2013 13:25:30 -0700
+Message-ID: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>, Doug Thompson <dougthompson@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, David Brown <davidb@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Krait L1/L2 error reporting device is made up of two
-interrupts, one per-CPU interrupt for the L1 caches and one
-interrupt for the L2 cache.
+This patchset adds support for the Krait L1/L2 cache error detection
+hardware. The first patch fixes a generic framework bug. The next
+two patches lay the groundwork for this driver to be added by 
+exporting percpu irq functions as well as adding the Krait l2 indirection
+register code. The next two patches add the driver and the binding and 
+the final patch hooks it all up by adding the device tree node.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 49 ++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+I'm not sure which tree this is supposed to go through. Ideally we could
+send the first 3 plus the 5th one through an edac tree. The final dts changes
+could go through arm-soc via davidb's tree and the Documentation patch could
+go through the devicetree tree.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index f32494d..0f7b27f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
- 		"marvell,mohawk"
- 		"marvell,xsc3"
- 		"marvell,xscale"
-+		"qcom,scorpion"
-+		"qcom,krait"
- 
- Example:
- 
-@@ -75,3 +77,50 @@ Example:
- 			reg = <0x101>;
- 		};
- 	};
-+
-+If the compatible string contains "qcom,krait" there shall be an interrupts
-+property containing the L1/CPU error interrupt number. There shall also be an
-+l2-cache node containing the following properties:
-+
-+ - compatible: Shall contain at least "cache"
-+ - cache-level: Must be 2
-+ - interrupts: Shall contain the L2 error interrupt
-+
-+Example:
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <1 9 0xf04>;
-+		compatible = "qcom,krait";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			reg = <2>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			reg = <3>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			interrupts = <0 2 0x4>;
-+		};
-+	};
+Changes since v1:
+ * Moved binding into cpus node
+ * Picked up acks on first two patches
+ * Commented krait l2 accessor functions
+
+Stephen Boyd (6):
+  edac: Don't try to cancel workqueue when it's never setup
+  genirq: export percpu irq functions for module usage
+  ARM: Add Krait L2 accessor functions
+  edac: Document Krait L1/L2 EDAC driver binding
+  edac: Add support for Krait CPU cache error detection
+  ARM: dts: msm: Add Krait CPU/L2 nodes
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  49 ++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi            |  37 +++
+ arch/arm/common/Kconfig                        |   3 +
+ arch/arm/common/Makefile                       |   1 +
+ arch/arm/common/krait-l2-accessors.c           |  58 +++++
+ arch/arm/include/asm/krait-l2-accessors.h      |  20 ++
+ drivers/edac/Kconfig                           |   8 +
+ drivers/edac/Makefile                          |   2 +
+ drivers/edac/edac_device.c                     |   3 +
+ drivers/edac/krait_edac.c                      | 346 +++++++++++++++++++++++++
+ kernel/irq/manage.c                            |   2 +
+ 11 files changed, 529 insertions(+)
+ create mode 100644 arch/arm/common/krait-l2-accessors.c
+ create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+ create mode 100644 drivers/edac/krait_edac.c
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
