@@ -1,62 +1,38 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [RESEND] [PATCH V3 2/2] watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu register
-Date: Wed, 30 Oct 2013 09:15:35 -0500
-Message-ID: <B9207640-E74A-441D-B79F-5E5B60A8A5B1@codeaurora.org>
-References: <1383116464-5951-1-git-send-email-l.krishna@samsung.com> <1383116464-5951-3-git-send-email-l.krishna@samsung.com>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFCv2][PATCHv5 4/4] Documentation: Add device tree bindings for Freescale FTM PWM.
+Date: Wed, 30 Oct 2013 09:16:44 -0500
+Message-ID: <8CCC6291-F767-463E-8539-216AAF6542E8@codeaurora.org>
+References: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com> <1383114204-17264-5-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1383116464-5951-3-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be, t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383114204-17264-5-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Oct 30, 2013, at 2:01 AM, Leela Krishna Amudala wrote:
+On Oct 30, 2013, at 1:23 AM, Xiubo Li wrote:
 
-> The syscon regmap interface is used to configure AUTOMATIC_WDT_RESET_DISABLE
-> and MASK_WDT_RESET_REQUEST registers of PMU to mask/unmask enable/disable of
-> watchdog in probe and s2r scenarios.
+> This adds the Document for Freescale FTM PWM driver under
+> Documentation/devicetree/bindings/pwm/.
 > 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> .../devicetree/bindings/watchdog/samsung-wdt.txt   |   13 ++-
-> drivers/watchdog/s3c2410_wdt.c                     |  114 ++++++++++++++++++--
-> 2 files changed, 118 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> index 2aa486c..c46c7ce 100644
-> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> @@ -5,10 +5,21 @@ after a preset amount of time during which the WDT reset event has not
-> occurred.
-> 
-> Required properties:
-> -- compatible : should be "samsung,s3c2410-wdt"
-> +- compatible : should be "samsung,s3c2410-wdt" or "samsung,s3c5250-wdt" or "samsung,s3c5420-wdt"
-> - reg : base physical address of the controller and length of memory mapped
-> 	region.
-> - interrupts : interrupt number to the cpu.
-> +- samsung,pmusysreg : reference node to pmu sysreg (required only in case of Exynos5250 and 5420)
+> .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 29 ++++++++++++++++++++++
+> 1 file changed, 29 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
 
-Rather than saying required only on Exynos5250 and 5420, how about saying required only in case of compatible being "samsung,s3c5250-wdt" or "samsung,s3c5420-wdt"
+Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-> 
-> Optional properties:
-> - timeout-sec : contains the watchdog timeout in seconds.
-> +
-> +watchdog@101D0000 {
-> +	compatible = "samsung,s3c5250-wdt";
-> +	reg = <0x101D0000 0x100>;
-> +	interrupts = <0 42 0>;
-> +	clocks = <&clock 336>;
-> +	clock-names = "watchdog";
-> +	samsung,sysreg = <&pmu_sys_reg>;
-> +	status = "okay";
-> +};
-
+- k
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
