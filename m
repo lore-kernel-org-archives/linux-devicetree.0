@@ -1,48 +1,36 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V2 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for
- Crossbar IP
-Date: Wed, 30 Oct 2013 16:30:31 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1310301615430.24686@ionos.tec.linutronix.de>
-References: <1383145040-15852-1-git-send-email-r.sricharan@ti.com> <1383145040-15852-3-git-send-email-r.sricharan@ti.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 00/19] Unifying SMMU driver among Tegra SoCs
+Date: Wed, 30 Oct 2013 17:34:54 +0100
+Message-ID: <20131030.183454.2089418674186724494.hdoyu@nvidia.com>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383145040-15852-3-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, santosh.shilimkar@ti.com, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382092020-13170-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Oct 2013, Sricharan R wrote:
-> +static inline const u32 allocate_free_irq(int cb_no)
+Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Fri, 18 Oct 2013 12:26:41 +0200:
 
-I understand the "static inline" part, but "const u32" is more than
-fishy. What's wrong with "static inline int" ?
+> Hi,
+> 
+> This series provides:
+> 
+> (1) Unified SMMU driver among Tegra SoCs
+> (2) Multiple Address Space support(MASID) in IOMMU(SMMMU)
+> (3) Tegra IOMMU'able devices, most of platform devices are IOMMU'able.
+> 
+> There's some discussion[1] about device population order, which could
+> solve the following patches.
+> 
+>   patch 1: [HACK] of: dev_node has struct device pointer
+>   patch 2: [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+>   patch 3: [HACK] amba: Move AHB to core_initcall
+>   patch 4: [HACK] iommu/tegra: smmu: Move IOMMU to core_initcall
 
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < cb->int_max; i++) {
-> +		if (cb->irq_map[i] == IRQ_FREE) {
-> +			cb->irq_map[i] = cb_no;
-> +			return i;
-> +		}
-> +	}
-> +
-> +	return -ENODEV;
-> +}
+Joerg, Stephen,
 
-> +static int crossbar_domain_xlate(struct irq_domain *d,
-> +				 struct device_node *controller,
-> +				 const u32 *intspec, unsigned int intsize,
-> +				 unsigned long *out_hwirq,
-> +				 unsigned int *out_type)
-> +{
-> +	unsigned long ret = 0;
-
-Why do you need to initialize ret when you assign a value to it in the
-next line?
-
-Thanks,
-
-	tglx
+Would it be possible to merge this series without the above ordering patches?
