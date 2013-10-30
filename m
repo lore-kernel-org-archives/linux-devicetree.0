@@ -1,63 +1,108 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/2] DT match helpers for initcalls and platform devices
-Date: Wed, 30 Oct 2013 16:40:38 -0500
-Message-ID: <CAL_JsqKna00oyhSd0qTYfLVFeE6d-gbekmV9tg7raPxmCTsYHQ@mail.gmail.com>
-References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
-	<20131030082621.GA22787@ulmo.nvidia.com>
-	<CAL_JsqJ3GANeMNi3iXQY_rB-NoovmwZx7EXfbG=rS6MxS=NLvQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ3GANeMNi3iXQY_rB-NoovmwZx7EXfbG=rS6MxS=NLvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
+Date: Wed, 30 Oct 2013 16:45:39 -0500
+Message-ID: <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org>
+References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2013 at 3:02 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Oct 30, 2013 at 3:26 AM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Oct 30, 2013 at 01:12:49AM -0500, Rob Herring wrote:
->>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>
->>> This series adds a couple of boilerplate helpers to match with DT for
->>> initcalls and platform device creation and probe. The goal here is to
->>> remove more platform code out of arch/arm and eventually the machine
->>> descriptors.
->>
->> I fear that this is a step backwards because it makes it easier for
->> people to do the wrong thing. We've been doing the same with interrupt
->> controllers and clocks. With those there's at least the argument that
->> they need to be available really early and therefore cannot use the
->> regular driver model. But for everything else, shouldn't we enforce
->> proper drivers to be written?
->
-> You think both are a step backwards or just the initcall one? For
-> initcalls, there are things which are not drivers, but just one time
-> init.  The example on highbank is highbank_pm_init. In some cases like
-> cpuidle, they have been converted to platform drivers, but then we
-> have platform code to create devices if we are on the relevant
-> platform. There is not really a real device node that exists for some
-> of these drivers and we need to create the device rather than the
-> device getting created by scanning the buses in the DT.
->
-> I think this is less error prone because we've had cases of
-> unconditional initcalls which break multi-platform kernels.
->
->> Perhaps if you can point me to some examples I could get more context
->> why and where this would be useful.
->
-> I'll push out a WIP branch later which has the above examples and
-> removes the machine_desc struct for highbank. This all is more for
-> arm64 which doesn't have or want to have a machine_desc.
 
-Here is a branch with example users:
+On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-highbank-rm-mach-desc
+> The Krait L1/L2 error reporting device is made up of two
+> interrupts, one per-CPU interrupt for the L1 caches and one
+> interrupt for the L2 cache.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+> Documentation/devicetree/bindings/arm/cpus.txt | 49 ++++++++++++++++++++++++++
+> 1 file changed, 49 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index f32494d..0f7b27f 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
+> 		"marvell,mohawk"
+> 		"marvell,xsc3"
+> 		"marvell,xscale"
+> +		"qcom,scorpion"
+> +		"qcom,krait"
+> 
+> Example:
+> 
+> @@ -75,3 +77,50 @@ Example:
+> 			reg = <0x101>;
+> 		};
+> 	};
+> +
+> +If the compatible string contains "qcom,krait" there shall be an interrupts
+> +property containing the L1/CPU error interrupt number. There shall also be an
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+'also be a'
+
+> +l2-cache node containing the following properties:
+
+Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
+
+> +
+> + - compatible: Shall contain at least "cache"
+> + - cache-level: Must be 2
+> + - interrupts: Shall contain the L2 error interrupt
+> +
+> +Example:
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interrupts = <1 9 0xf04>;
+> +		compatible = "qcom,krait";
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			next-level-cache = <&L2>;
+> +		};
+> +
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			reg = <1>;
+> +			next-level-cache = <&L2>;
+> +		};
+> +
+> +		cpu@2 {
+> +			device_type = "cpu";
+> +			reg = <2>;
+> +			next-level-cache = <&L2>;
+> +		};
+> +
+> +		cpu@3 {
+> +			device_type = "cpu";
+> +			reg = <3>;
+> +			next-level-cache = <&L2>;
+> +		};
+> +
+> +		L2: l2-cache {
+> +			compatible = "cache";
+> +			cache-level = <2>;
+> +			interrupts = <0 2 0x4>;
+> +		};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
