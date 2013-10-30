@@ -1,39 +1,48 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v11 00/10] [PATCH v10 00/10] mtd:nand:omap2: clean-up of
- supported ECC schemes
-Date: Wed, 30 Oct 2013 06:16:16 -0300
-Message-ID: <20131030091615.GA2453@localhost>
-References: <1382619026-4182-1-git-send-email-pekon@ti.com>
- <20131024135258.GC9958@localhost>
- <CAN8TOE_KQxW4-6KgjQDczyB31wmYB_y9Tirxa34GWQGgY39sNQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAN8TOE_KQxW4-6KgjQDczyB31wmYB_y9Tirxa34GWQGgY39sNQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Pekon Gupta <pekon@ti.com>, Mark Rutland <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, Artem Bityutskiy <dedekind1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Avinash Philip <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, Rob Herring <robherring2@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Ivan Djelic <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH V4 0/3] Add watchdog DT nodes and use syscon regmap interfac to
+ configure pmu registers
+Date: Wed, 30 Oct 2013 15:21:10 +0530
+Message-ID: <1383126673-29033-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be
+Cc: t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 11:59:57PM -0400, Brian Norris wrote:
->=20
-> Pekon/Ezequiel/others: please feel free to send any follow up cleanup=
-s
-> for this driver. I'll take a look at what Ezequiel has already sent
-> out and see if it's still applicable on top.
->=20
+This patchset does the following things
+	- Adds pmusysreg device node to exynos5.dtsi file
+	- Adds watchdog DT nodes to Exynos5250 and 5420
+	- Uses syscon regmap interface to configure pmu registers
+	  to mask/unmask enable/disable of watchdog.
+	
+This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
 
-They won't. I'll prepare a new patch in top of latest l2-mtd.
+Changes since V3:
+	- changed the compatible strings for watchdog node
+	- splitted up adding pmusysreg node and made it separate patch
+	- Addressed comments given by Sachin Kamat <sachin.kamat@linaro.org>
 
-It's good to see this DT discussion finally coming to an end! Good job!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since V2:
+	- used syscon regmap interface to configure pmu registers in WDT driver
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
+
+Changes since V1:
+        - Added new compatible string for Exynos5 SoCs
+        - Introduced quirk mechanism to program PMU registers
+        - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
+
+Leela Krishna Amudala (3):
+  ARM: dts: Add pmu sysreg node to Exynos5 dtsi file
+  ARM: dts: add watchdog device nodes for Exynos5250 and Exynos5420
+  watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu
+    register
+
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |   19 +++-
+ arch/arm/boot/dts/exynos5.dtsi                     |   12 +--
+ arch/arm/boot/dts/exynos5250.dtsi                  |    7 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   10 ++
+ drivers/watchdog/s3c2410_wdt.c                     |  112 ++++++++++++++++++--
+ 5 files changed, 143 insertions(+), 17 deletions(-)
+
+-- 
+1.7.10.4
