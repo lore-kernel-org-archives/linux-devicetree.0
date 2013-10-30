@@ -1,54 +1,69 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: gpio-rcar: DT and IRQ_TYPE_EDGE_BOTH
-Date: Wed, 30 Oct 2013 17:26:10 +0900
-Message-ID: <20131030082608.GB1603@verge.net.au>
-References: <20131029085258.GE15731@verge.net.au>
- <CANqRtoR+_HvbemVcWBszrCXRJ21wMrPHM4vKhBnq11VgfGBamw@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/2] DT match helpers for initcalls and platform
+ devices
+Date: Wed, 30 Oct 2013 09:26:22 +0100
+Message-ID: <20131030082621.GA22787@ulmo.nvidia.com>
+References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CANqRtoR+_HvbemVcWBszrCXRJ21wMrPHM4vKhBnq11VgfGBamw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, SH-Linux <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <1383113571-13029-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
 
-On Wed, Oct 30, 2013 at 07:04:46AM +0000, Magnus Damm wrote:
-> Hi Simon,
-> 
-> On Tue, Oct 29, 2013 at 8:52 AM, Simon Horman <horms@verge.net.au> wrote:
-> > Hi Laurent,
-> >
-> > In 7e1092b5a264c4 ("gpio-rcar: Add support for IRQ_TYPE_EDGE_BOTH")
-> > I added a 'has_both_edge_trigger' field to struct gpio_rcar_config.
-> > Setting this adds support IRQ_TYPE_EDGE_BOTH. The motivation for
-> > this was to allow use of the gpio-keys driver on the lager board.
-> >
-> > I am now looking at enabling gpio-keys via DT for koelsch and lager
-> > and find myself needing to set has_both_edge_trigger somehow.
-> > I am wondering if you have any ideas on how best to do this.
-> >
-> > So far I have two ideas:
-> >
-> > 1. Expose has_both_edge_trigger as a binding.
-> >
-> > 2. Set has_both_edge_trigger in the driver if the
-> >    compat string is renesas,gpio-r8a7791 or renesas,gpio-r8a7790
-> >    but not for other supported compat strings (as is currently the case).
-> 
-> I think which to pick depends on the type of feature. In the case of
-> enabling both edge support for this GPIO driver, I believe going with
-> 2) is the best way forward. The reason for this is that all GPIO
-> instances within a particular SoC seem to either have or not have
-> support for dual edges. At least that is the case on r8a7790 and
-> r8a7791.
-> 
-> There may be other properties in the future like per-GPIO hardware
-> debounce, and I suspect that those may be more suitable for 1) since
-> they are only supported on a certain set of GPIO pins. So from my POV
-> this is a case by case thing.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, that sounds reasonable from my POV.
+On Wed, Oct 30, 2013 at 01:12:49AM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>=20
+> This series adds a couple of boilerplate helpers to match with DT for
+> initcalls and platform device creation and probe. The goal here is to=20
+> remove more platform code out of arch/arm and eventually the machine
+> descriptors.
+
+I fear that this is a step backwards because it makes it easier for
+people to do the wrong thing. We've been doing the same with interrupt
+controllers and clocks. With those there's at least the argument that
+they need to be available really early and therefore cannot use the
+regular driver model. But for everything else, shouldn't we enforce
+proper drivers to be written?
+
+Perhaps if you can point me to some examples I could get more context
+why and where this would be useful.
+
+Thierry
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJScMKtAAoJEN0jrNd/PrOhC2AP/jIkBR1yucY/zoJYPpC2TMKx
+rb9uy+zqVjI5j4BRIxQNLLyDMZBfaGGNsy9AOkNYCiLE9Zs+mb7o27A8FkbmPSrn
+aW1j8x0Xz8TWHDVRTHVT+08b4Q3vPQG9nRZwe6/Xx4T7wJvbnVH0B+kp6I69IsPf
+g3yU4oufbMrWI4usbvljacSPFVvEYERrkLcxYdpKDPIX9CQIaptr2w+ZFXS9mwPW
+vRt2epO8+0ZqhkkcjxXL65u9G9kyyVS2VwmyNFnpVwVBCrlK9GlLCGMiuqtbGL8p
+tS0hlF93Cy2DIAqo7NKUYwQyDZlibUTK3YQnpzGtwBu1rWihQAcCxdReQO7UFiUW
+hUhmdXRATmyZpvkik3hAYumql7mlKv5Ar8bTpdideRdYnux+Gi+Mq4WKEbvL0dPq
+WGuMkBqJYFcxufrMqvgPCsheUiHbYUhF9nEbD3elK0+TTDKgjxMMkch1E0b1Lxr1
+QzzhTTuOOJCPVTa5lu7D3HwGDmVECjxvRFi8yVn8AudloZx6kfVcQj1j4Zv49OVC
+xszJyiXKa+42BI+drdf+7PxF8TXa6NYkrb3yX5yd+8rKKYY3+zFdZvMLhZNXhFyw
+NkEBlReiw0fcWsBWC5RUD1AdHUX3Tsux9ml3L3RJGA5H5fTd5xOc2Os7WXTUvyI5
+pRKGEUHHRsBuH3+SOhxi
+=I2Tz
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
