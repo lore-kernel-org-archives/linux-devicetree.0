@@ -1,108 +1,88 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Wed, 30 Oct 2013 16:45:39 -0500
-Message-ID: <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Wed, 30 Oct 2013 15:47:43 -0600
+Message-ID: <52717E7F.1060807@wwwdotorg.org>
+References: <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+	<20131025001038.77299C403B6@trevor.secretlab.ca>
+	<20131025075652.GB19622@ulmo.nvidia.com>
+	<20131025.112202.47792301040951621.hdoyu@nvidia.com>
+	<20131025132051.GD9999@mudshark.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131025132051.GD9999-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
-
-> The Krait L1/L2 error reporting device is made up of two
-> interrupts, one per-CPU interrupt for the L1 caches and one
-> interrupt for the L2 cache.
+On 10/25/2013 07:20 AM, Will Deacon wrote:
+> On Fri, Oct 25, 2013 at 09:22:02AM +0100, Hiroshi Doyu wrote:
+>> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 09:56:55 +0200:
+>>
+>>> I suspect that there will be enough differences between the various
+>>> IOMMU implementations that we won't be able to have a unified binding
+>>> (especially for how to associate devices with a particular virtual
+>>> address space), but perhaps that could be solved with something like an
+>>> .of_xlate() that IOMMU drivers implement, much like we've done with most
+>>> other subsystems too.
+>>>
+>>> The binding for Tegra's IOMMU currently only uses the HW IDs (or a mask)
+>>> to put a device into a given address space, but I think that could be
+>>> easily extended to something like:
+>>>
+>>> 	memory-clients = <&iommu MASK>;
+>>>
+>>> Or similar. If other information is required, we could encode that into
+>>> a multi-cell specifier. Perhaps we could even leave away the phandle
+>>> since typically there will only be a single IOMMU in the system?
+>>>
+>>> Does that sound reasonable? Hiroshi is much more familiar with IOMMUs,
+>>> so I'd like to get his opinion on the above as well.
+>>
+>> I think that the above may be possible, but I'd like to listen from
+>> other IOMMU SOC maintainers.
+>>
+>> A brief explanation for "memory-clients":
+>>
+>> In tegra, every H/W has its own memory-client ID, and it can be
+>> associated to any address spaces. The above "memory-cilents" is used
+>> to indicate which ID a device has in DT. If the other SOC IOMMUs need
+>> this kind of "memory-clients", this would be standarized. Any comment?
+>>
+>> At least arm-smmu seems to have the following. multiple IOMMUs can be
+>> handled with this.
+>>
+>>
+>> - smmu-parent   : When multiple SMMUs are chained together, this
+>>                   property can be used to provide a phandle to the
+>>                   parent SMMU (that is the next SMMU on the path going
+>>                   from the mmu-masters towards memory) node for this
+>>                   SMMU.
 > 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
-> Documentation/devicetree/bindings/arm/cpus.txt | 49 ++++++++++++++++++++++++++
-> 1 file changed, 49 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index f32494d..0f7b27f 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
-> 		"marvell,mohawk"
-> 		"marvell,xsc3"
-> 		"marvell,xscale"
-> +		"qcom,scorpion"
-> +		"qcom,krait"
-> 
-> Example:
-> 
-> @@ -75,3 +77,50 @@ Example:
-> 			reg = <0x101>;
-> 		};
-> 	};
-> +
-> +If the compatible string contains "qcom,krait" there shall be an interrupts
-> +property containing the L1/CPU error interrupt number. There shall also be an
+> This property is for the case when IOMMUs are connected in series, which is
+> fairly horrendous. However, it is extremely common to have multiple IOMMU
+> instances within an Soc (Exynos SoCs have one IOMMU per device iirc), so
+> that certainly needs to be handled.
 
-'also be a'
+That property sounds a bit scary; is the value a single parent IOMMU?
+What if an IOMMU splits its requests between two different parent IOMMUs
+based on some property of the request. I hope smmu-parent isn't going to
+get us into another interrupts -vs- interrupts-extended situation.
 
-> +l2-cache node containing the following properties:
+(/me checks the documentation of that property)
 
-Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
-
-> +
-> + - compatible: Shall contain at least "cache"
-> + - cache-level: Must be 2
-> + - interrupts: Shall contain the L2 error interrupt
-> +
-> +Example:
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		interrupts = <1 9 0xf04>;
-> +		compatible = "qcom,krait";
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			reg = <1>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			reg = <2>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			reg = <3>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +
-> +		L2: l2-cache {
-> +			compatible = "cache";
-> +			cache-level = <2>;
-> +			interrupts = <0 2 0x4>;
-> +		};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+I suppose smmu-parent is documented in a device-specific binding rather
+than as a generic property, although there's no vendor-prefix on the
+property name:-(, so we havne't cornered ourselves too much here; any
+IOMMU device which actually has multiple parents can always define its
+own custom property to represent that.
