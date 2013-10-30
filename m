@@ -1,73 +1,64 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Wed, 30 Oct 2013 02:05:05 -0500
-Message-ID: <C014C8E4-6305-42D0-8D12-7B2532896433@codeaurora.org>
-References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com> <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com> <20131029045943.GE20432@verge.net.au> <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org> <20131029084444.GC15731@verge.net.au> <82E941A8-D062-4E90-B661-511881F51F9B@codeaurora.org> <20131030002847.GL21262@verge.net.au>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131030002847.GL21262@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
+Date: Wed, 30 Oct 2013 14:23:20 +0800
+Message-ID: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: r65073@freescale.com, thierry.reding@gmail.com
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, rob@landley.net, grant.likely@linaro.org, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-On Oct 29, 2013, at 7:28 PM, Simon Horman wrote:
+This patch series is the Freescale FTM PWM implementation. And there are 8 channels most supported by the FTM PWM. This implementation is only compatible with device tree definition.
 
-> On Tue, Oct 29, 2013 at 12:19:08PM -0500, Kumar Gala wrote:
->> 
->> On Oct 29, 2013, at 3:44 AM, Simon Horman wrote:
->> 
->>> On Tue, Oct 29, 2013 at 03:24:16AM -0500, Kumar Gala wrote:
->>>> 
->>>> On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
->>>> 
->>>>> On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
->>>>>> R-Car Gen2 SoCs have a different PHY which is not compatible
->>>>>> with the older R-Car H1 (R8A7779) version.
->>>>>> This adds OF/platform device id tables and PHY initialization
->>>>>> callbacks for the following Gen2 SoCs:
->>>>>> * R-Car H2: R8A7790;
->>>>>> * R-Car M2: R8A7791.
->>>>>> 
->>>>>> PHY initialization method is chosen based on the device id.
->>>>>> Default PHY settings are applied for Gen2 SoCs, which should
->>>>>> suit the Gen2 boards available.
->>>>>> 
->>>>>> The R8A7779 platform code is modified to use "sata-r8a7779"
->>>>>> device name.
->>>>>> 
->>>>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->>>>>> ---
->>>>>> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
->>>>>> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
->>>>>> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
->>>>>> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
->>>>> 
->>>>> Hi Mark, Hi Device-Tree Folks,
->>>>> 
->>>>> I'm wondering if you have had a chance to look over the bindings
->>>>> aspect of this and the other patch in the series. I believe that
->>>>> this series addresses all previous review in that regards.
->>>> 
->>>> What tree is this binding in?
->>> 
->>> sata_car.txt is added by the previous patch in this series
->>> "[PATCH 1/2] sata_rcar: Adjust and document device tree bindings"
->> 
->> Why not just have all the binding in one patch.  There isn't a reason this should be split.
-> 
-> I think that the motivation was that the first patch documents the
-> existing implementation while the second documents a change to it.
-> With that in mind would you still like a single patch for the binding?
+This patch series is based on linux-next and has been tested on Vybrid VF610 Tower board using device tree.
 
-Yes, I see no reason to split this up as you know both right now.
 
-- k
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Changes in RFCv2 of PATVHv5:
+- Remove "fsl,pwm-counter-clk"(all the four patches are modified).
 
+Changes in v5:
+- Remove active/idle pinctrl stuff.
+
+Changes in v4:
+- Check for the result and return an error for devm_kzalloc().
+- Move pinmux setting from the SoC file to the board specific file.
+- Revise the written mistake of 'ret |= FTMSC_CLKEXT;' --> 'reg |= FTMSC_CLKEXT;'.
+
+
+Changes in v3:
+- Remove "availabe" field.
+- Remove "fsl,pwm-avaliable-chs" property.
+- ...
+
+Changes in v2:
+- Remove PWM CPWM/EPWM feature and sysfs.
+- Remove some redundant code.
+- Revise some code for more readable.
+- Remove "fsl,pwm-clk-ps", "fsl,pwm-number", "fsl,pwm-channels",etc.
+- Add "fsl,pwm-avaliable-chs", "fsl,pwm-counter-clk", etc.
+- Support 8 channels default in dtsi file.
+- Add counter clock source selection.
+- Rename some function name, macro name, etc.
+- Use PWM's and OF's existing function interfaces.
+- Split clk_unprepare_enable to clk_unprepare and clk_enable,etc.
+- ...
+
+Added in v1:
+- Add Freescale FTM PWM driver support.
+- Add Freescale FTM PWM node for VF610.
+- Enable Enables FTM PWM device for Vybrid VF610 TOWER.
+- Add device tree bindings for Freescale.
