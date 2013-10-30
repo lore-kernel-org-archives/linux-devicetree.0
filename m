@@ -1,104 +1,53 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 2/2] arm: dt: zynq: Add SDHCI nodes
-Date: Wed, 30 Oct 2013 09:38:10 -0700
-Message-ID: <1383151090-13885-2-git-send-email-soren.brinkmann@xilinx.com>
-References: <1383151090-13885-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383151090-13885-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv3 00/19] Unifying SMMU driver among Tegra SoCs
+Date: Wed, 30 Oct 2013 10:44:57 -0600
+Message-ID: <52713789.70308@wwwdotorg.org>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<20131030.183454.2089418674186724494.hdoyu@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131030.183454.2089418674186724494.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for the Arasan SDHCI controller to Zynq dts files.
+On 10/30/2013 10:34 AM, Hiroshi Doyu wrote:
+> Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Fri, 18 Oct 2013 12:26:41 +0200:
+> 
+>> Hi,
+>>
+>> This series provides:
+>>
+>> (1) Unified SMMU driver among Tegra SoCs
+>> (2) Multiple Address Space support(MASID) in IOMMU(SMMMU)
+>> (3) Tegra IOMMU'able devices, most of platform devices are IOMMU'able.
+>>
+>> There's some discussion[1] about device population order, which could
+>> solve the following patches.
+>>
+>>   patch 1: [HACK] of: dev_node has struct device pointer
+>>   patch 2: [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+>>   patch 3: [HACK] amba: Move AHB to core_initcall
+>>   patch 4: [HACK] iommu/tegra: smmu: Move IOMMU to core_initcall
+> 
+> Joerg, Stephen,
+> 
+> Would it be possible to merge this series without the above ordering patches?
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
-v2:
- - update compatibilty string according to changes in 1/2 (append
-   '-8.9a' IP version string)
----
- arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
- arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
- arch/arm/boot/dts/zynq-zc706.dts |  4 ++++
- arch/arm/boot/dts/zynq-zed.dts   |  4 ++++
- 4 files changed, 32 insertions(+)
+What are the dependencies between the patches? Surely if those patches
+were at the start of the series, the rest relies on them. Otherwise, why
+was this all once series?
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index e32b92b949d2..931f230306cb 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -65,6 +65,26 @@
- 			interrupts = <0 50 4>;
- 		};
- 
-+		sdhci0: ps7-sdhci@e0100000 {
-+			compatible = "arasan,sdhci-8.9a";
-+			status = "disabled";
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&clkc 21>, <&clkc 32>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 24 4>;
-+			reg = <0xe0100000 0x1000>;
-+		} ;
-+
-+		sdhci1: ps7-sdhci@e0101000 {
-+			compatible = "arasan,sdhci-8.9a";
-+			status = "disabled";
-+			clock-names = "clk_xin", "clk_ahb";
-+			clocks = <&clkc 22>, <&clkc 33>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 47 4>;
-+			reg = <0xe0101000 0x1000>;
-+		} ;
-+
- 		slcr: slcr@f8000000 {
- 			compatible = "xlnx,zynq-slcr";
- 			reg = <0xF8000000 0x1000>;
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 21aea99a067b..454394453e9c 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -29,6 +29,10 @@
- 
- };
- 
-+&sdhci0 {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index 79009e0b74b9..d734d5411760 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -30,6 +30,10 @@
- 
- };
- 
-+&sdhci0 {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-index d6acf2b1cdf4..cd259dd13cdc 100644
---- a/arch/arm/boot/dts/zynq-zed.dts
-+++ b/arch/arm/boot/dts/zynq-zed.dts
-@@ -30,6 +30,10 @@
- 
- };
- 
-+&sdhci0 {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	status = "okay";
- };
--- 
-1.8.4.1
+Anyway, I haven't had a chance to look at this yet, and it was sent too
+late for 3.13. Hopefully we can work this out and apply it early for 3.14.
