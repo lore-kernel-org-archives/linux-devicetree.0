@@ -1,113 +1,39 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Tue, 29 Oct 2013 17:07:25 -0700
-Message-ID: <20131030000725.GH21983@codeaurora.org>
-References: <1383006690-6754-1-git-send-email-sboyd@codeaurora.org>
- <1383006690-6754-5-git-send-email-sboyd@codeaurora.org>
- <90D2FDE5-C43F-4ACF-B287-4E0AD8617892@codeaurora.org>
- <526FF7DB.5040805@codeaurora.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
+Date: Wed, 30 Oct 2013 01:18:04 +0100
+Message-ID: <5270503C.8070200@gmail.com>
+References: <5261967E.6010001@samsung.com> <20131028201136.6f66d3f7@samsung.com> <526EFC06.70101@gmail.com> <20131029105426.0969741c.m.chehab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <526FF7DB.5040805@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20131029105426.0969741c.m.chehab@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Arun Kumar K <arun.kk@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/29, Stephen Boyd wrote:
-> On 10/29/13 01:21, Kumar Gala wrote:
-> > On Oct 28, 2013, at 7:31 PM, Stephen Boyd wrote:
-> >
-> >> The Krait L1/L2 error reporting device is made up of two
-> >> interrupts, one per-CPU interrupt for the L1 caches and one
-> >> interrupt for the L2 cache.
-> >>
-> >> Cc: <devicetree@vger.kernel.org>
-> >> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> >> ---
-> >> .../devicetree/bindings/arm/qcom,krait-cache-erp.txt     | 16 ++++++++++++++++
-> >> 1 file changed, 16 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> >> new file mode 100644
-> >> index 0000000..01fe8a8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/qcom,krait-cache-erp.txt
-> >> @@ -0,0 +1,16 @@
-> >> +* Qualcomm Krait L1 / L2 cache error reporting
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "qcom,krait-cache-erp"
-> >> +- interrupts: Should contain the L1/CPU error interrupt number and
-> >> +  then the L2 cache error interrupt number
-> >> +
-> >> +Optional properties:
-> >> +- interrupt-names: Should contain the interrupt names "l1_irq" and
-> >> +  "l2_irq"
-> >> +
-> >> +Example:
-> >> +	edac {
-> >> +		compatible = "qcom,krait-cache-erp";
-> >> +		interrupts = <1 9 0xf04>, <0 2 0x4>;
-> >> +	};
-> > Why wouldn't we have these as part of cache nodes in the dts?  (which begs the question why we don't have cache nodes?)
-> >
-> 
-> I can certainly add cache nodes and cpu nodes and then put the
-> interrupts in those nodes. I was thinking along those same lines when I
-> ported this driver but figured it would be good to get something out
-> there. The only question I have is how am I supposed to hook that up
-> into the linux device model? Will the edac driver bind to the device
-> created for the cpus node and the cache node? I guess it will have to be
-> a driver that binds to two devices.
-> 
-> One could argue that we should put the cp15 based architected timers in
-> the cpus node also but so far nobody has done that and I think there was
-> some reasoning behind that, Mark?
-> 
+On 10/29/2013 01:54 PM, Mauro Carvalho Chehab wrote:
+[...]
+> Yeah, it seems that we've waited for a long time to get an ack there.
+>
+> So, let's do this:
+>
+> Please send a new version with Mark's comments. Also, please split Doc
+> changes from the code changes on the new series. I'll wait for a couple
+> days for DT people to review it. If we don't have any reply, I'll review
+> and apply it for Kernel 3.13, if I don't see anything really weird on it.
 
-Ok I've come up with this:
+Ok, I will make sure all DT binding documentation is in separate patches,
+actually only one patch needs to be reworked.
 
-	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		compatible = "qcom,krait";
-		interrupts = <1 9 0xf04>;
+Since Mark already reviewed the FIMC-IS and the S5K4E5 image sensor DT
+binding patches the only one which may need further review is this one:
+https://patchwork.linuxtv.org/patch/20237
 
-		cpu@0 {
-			reg = <0>;
-			next-level-cache = <&L2>;
-		};
+Arun, could you send us the updated series ? Unfortunately I might not be
+able to find time to address those comments myself until Friday.
 
-		cpu@1 {
-			reg = <1>;
-			next-level-cache = <&L2>;
-		};
-
-		cpu@2 {
-			reg = <2>;
-			next-level-cache = <&L2>;
-		};
-
-		cpu@3 {
-			reg = <3>;
-			next-level-cache = <&L2>;
-		};
-
-		L2: l2-cache {
-			compatible = "qcom,krait-l2", "cache";
-			cache-level = <2>;
-			interrupts = <0 2 0x4>;
-		};
-	};
-
-But now I don't know where to document this. Should I make a
-krait-edac.txt file and document it there? The problem is now
-we're documenting more than the error interrupts.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+--
+Thanks,
+Sylwester
