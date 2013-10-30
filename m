@@ -1,34 +1,58 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Wed, 30 Oct 2013 14:58:48 -0700
-Message-ID: <52718118.1020009@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org> <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org> <52717EA5.6030208@codeaurora.org> <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Wed, 30 Oct 2013 15:58:58 -0600
+Message-ID: <52718122.9000206@wwwdotorg.org>
+References: <20131024.122115.1035609747068925560.hdoyu@nvidia.com>
+	<20131025001038.77299C403B6@trevor.secretlab.ca>
+	<20131025075652.GB19622@ulmo.nvidia.com>
+	<20131025.112549.2040849946958069337.hdoyu@nvidia.com>
+	<20131025091104.GG19622@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131025091104.GG19622-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/13 14:56, Kumar Gala wrote:
-> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
->
->> On 10/30/13 14:45, Kumar Gala wrote:
->>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
->>>> +l2-cache node containing the following properties:
->>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
->> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
->> property is showing.
-> Than why not have it in each cpu node?
+On 10/25/2013 03:11 AM, Thierry Reding wrote:
+...
+> So my proposed solution for the IOMMU case is to treat it the same
+> as any other resources. Perhaps resource isn't the right word, but
+> at the core the issue is the same. A device requires the services
+> of an IOMMU so that it can be put into the correct address space.
+> If the IOMMU is not available yet it cannot do that, so we simply
+> return -EPROBE_DEFER and cause the probe to be retried later.
 
-Because that duplicates things unnecessarily? The cpus node can hold
-things that are common to all CPUs to avoid duplication. If it was a
-different PPI for each CPU then I would agree that we need to put it in
-each cpu node.
+Personally, I view deferred probe as being used when one device
+requires either a resource /or/ a service provided by another, not
+/just/ when there's a resource dependency. Hence, I think it fits
+perfectly here.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+So I agree with Thierry: In other words, I think the solution is for
+all devices that are affected by an IOMMU to have a property such as:
+
+iommu = <&iommu_phandle iommu_specifier>;
+
+(and the DT node for the IOMMU will contain e.g. an #iommu-cells property)
+
+... and for the driver to explicitly parse that property, and wait
+until the driver for iommu_phandle is ready. Exactly the same as any
+other resource/service dependency.
+
+That will solve all the problems.
+
+The only downside is that every driver needs to contain code to parse
+that property. However, I think that's just one function call; the
+actual implementation of that function can be unified somewhere inside
+core code in drivers/iommu/.
