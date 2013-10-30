@@ -1,33 +1,103 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] Documentation/pwm: Update supported SoC name for pwm-samsung
-Date: Wed, 30 Oct 2013 10:09:41 +0530
-Message-ID: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-pwm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH 1/3] dma: imx-sdma: Add ssi dual fifo
+	script support
+Date: Wed, 30 Oct 2013 12:48:48 +0800
+Message-ID: <20131030044848.GE9605@MrMyself>
+References: <cover.1383047327.git.b42378@freescale.com>
+ <9ed025d4e98f716ba80b27acaaa98f43ad3bd75a.1383047327.git.b42378@freescale.com>
+ <20131029135142.GT30088@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20131029135142.GT30088@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, b32955@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Updated supported SoC name for pwm-samsung.
+Hi Sascha,
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../devicetree/bindings/pwm/pwm-samsung.txt        |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Oct 29, 2013 at 02:51:43PM +0100, Sascha Hauer wrote:
+> Look at drivers/dma/imx-sdma.c:
+> 
+> > /**
+> >  * struct sdma_firmware_header - Layout of the firmware image
+> >  *
+> >  * @magic		"SDMA"
+> >  * @version_major	increased whenever layout of struct
+> >  * sdma_script_start_addrs
+> >  *			changes.
+> 
+> Can you image why this firmware has a version field? Right, it's because
+> it encodes the layout of struct sdma_script_start_addrs.
+> 
+> As the comment clearly states you have to *increase this field* when you
+> add scripts.
+> 
+> Obviously you missed that, as the firmware on lkml posted recently
+> shows:
+> 
+> > 00000000: 414d4453 00000001 00000001 0000001c SDMA............
+>                      ^^^^^^^^
+>                      Still '1'
+> 
+> > 00000010: 00000026 000000b4 0000067a 00000282 &.......z.......
+> > 00000020: ffffffff 00000000 ffffffff ffffffff ................
+> > 00000030: ffffffff ffffffff ffffffff ffffffff ................
+> > 00000040: ffffffff ffffffff 00001a6a ffffffff ........j.......
+> > 00000050: 000002eb 000018bb ffffffff 00000408 ................
+> > 00000060: ffffffff 000003c0 ffffffff ffffffff ................
+> > 00000070: ffffffff 000002ab ffffffff 0000037b ............{...
+> > 00000080: ffffffff ffffffff 0000044c 0000046e ........L...n...
+> > 00000090: ffffffff 00001800 ffffffff ffffffff ................
+> > 000000a0: 00000000 00001800 00001862 00001a16 ........b.......
+>                               ^^^^^^^^^^^^^^^^^
+>                               new script addresses introduced
+> 
+> 
+> > -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+> > +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	37
+> 
+> And no, this is not a bug. It's your firmware header that is buggy.
+> 
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-index d61fccd..5538de9 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-@@ -15,7 +15,7 @@ Required properties:
-     samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
- 			  Exynos4210 rev0 SoCs
-     samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
--                          Exynos4x12 and Exynos5250 SoCs
-+                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
- - reg: base address and size of register area
- - interrupts: list of timer interrupts (one interrupt per timer, starting at
-   timer 0)
--- 
-1.7.9.5
+I wasn't aware that the problem is far more complicated than I thought.
+And thank you for telling me all this.
 
+> What you need is:
+> 
+> #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2      37
+> 
+> You (you as a company, not you as a person) knew that it was me who
+> created this firmware format. So it was absolutely unnecessary to create
+> an incompatible firmware instead of dropping me a short note.
+> 
+> Please add a version check to the driver as necessary and provide a proper
+> firmware.
+> 
+
+Just currently it's not easy for me to create a new proper firmware,
+and I's been told that besides this version number, it also lacks a
+decent license info. So may I just refine this patch as you suggested
+to add a version check and add those new scripts first?
+
+Thank you,
+Nicolin Chen
+
+> Sascha
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
