@@ -1,53 +1,41 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [PATCH v2 1/4] rename ARCH_BCM to ARCH_BCM_MOBILE (mach-bcm)
-Date: Tue, 29 Oct 2013 23:22:26 -0700
-Message-ID: <CAEPRUYoMqTTBxtxMSTk6cgyyKBqpWLK0EHaA4XoraNYhwzUL5A@mail.gmail.com>
-References: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
-	<1379956836-5866-2-git-send-email-bcm@fixthebug.org>
-	<CAOesGMi59voTKvu1zA5zpv4xDiF_2OQFMOjtx2wg4S7W=MhY3g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMi59voTKvu1zA5zpv4xDiF_2OQFMOjtx2wg4S7W=MhY3g@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Domenico Andreoli <cavokz@gmail.com>, Christian Daudt <csd@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Matt Porter <matt.porter@linaro.org>, Alex Elder <alex.elder@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH 0/2] Add watchdog DT nodes and use syscon regmap interface to
+ configure pmu registers
+Date: Wed, 30 Oct 2013 12:23:43 +0530
+Message-ID: <1383116025-5638-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be
+Cc: t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 1:38 PM, Olof Johansson <olof@lixom.net> wrote:
-> On Mon, Sep 23, 2013 at 10:20 AM, Christian Daudt <bcm@fixthebug.org> wrote:
->> --- a/arch/arm/mach-bcm/Kconfig
->> +++ b/arch/arm/mach-bcm/Kconfig
->> @@ -1,5 +1,17 @@
->>  config ARCH_BCM
->> -       bool "Broadcom SoC" if ARCH_MULTI_V7
->> +       bool "Broadcom SoC Support"
->> +       select ARCH_MULTIPLATFORM
->
-> This should be the other way around -- all other platforms seem to
-> depend on ARCH_MULTIPLATFORM instead of selecting it.
->
-Done
->> +       help
->> +         This enables support for Broadcom ARM based SoC
->> +          chips
->> +
->> +if ARCH_BCM
->> +
->> +menu "Broadcom SoC Selection"
->> +
->> +config ARCH_BCM_MOBILE
->> +       bool "Broadcom Mobile SoC" if ARCH_MULTI_V7
->> +       default y
->
-> This shouldn't be default y, since it makes it less obvious in configs
-> such as multi_v7_defconfig that the platform is enabled.
->
-done.
+This patchset does the following things
+	- Adds watchdog DT nodes to Exynos5250 and 5420
+	- Uses syscon regmap interface to configure pmu registers
+	  to mask/unmask enable/disable of watchdog.
+	
+This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
 
- I've amended the existing patch with the mods above, and since they
-were pretty minor, I've already folded it into a subsequent pull
-request that I just sent out.
+Changes since V2:
+	- used syscon regmap interface to configure pmu registers in WDT driver
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
 
- Thanks,
-   csd
+Changes since V1:
+        - Added new compatible string for Exynos5 SoCs
+        - Introduced quirk mechanism to program PMU registers
+        - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
+
+Leela Krishna Amudala (2):
+  ARM: dts: add watchdog device nodes for Exynos5250 and Exynos5420
+  watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu
+    register
+
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |   13 ++-
+ arch/arm/boot/dts/exynos5.dtsi                     |   12 +--
+ arch/arm/boot/dts/exynos5250.dtsi                  |    7 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   10 ++
+ drivers/watchdog/s3c2410_wdt.c                     |  114 ++++++++++++++++++--
+ 5 files changed, 139 insertions(+), 17 deletions(-)
+
+-- 
+1.7.10.4
