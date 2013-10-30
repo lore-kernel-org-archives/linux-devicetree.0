@@ -1,30 +1,39 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: imx27 bindings/pinctrl
-Date: Wed, 30 Oct 2013 16:59:06 +0800
-Message-ID: <5270CA5A.2040105@gtsys.com.hk>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v11 00/10] [PATCH v10 00/10] mtd:nand:omap2: clean-up of
+ supported ECC schemes
+Date: Wed, 30 Oct 2013 06:16:16 -0300
+Message-ID: <20131030091615.GA2453@localhost>
+References: <1382619026-4182-1-git-send-email-pekon@ti.com>
+ <20131024135258.GC9958@localhost>
+ <CAN8TOE_KQxW4-6KgjQDczyB31wmYB_y9Tirxa34GWQGgY39sNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAN8TOE_KQxW4-6KgjQDczyB31wmYB_y9Tirxa34GWQGgY39sNQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Pekon Gupta <pekon@ti.com>, Mark Rutland <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, Artem Bityutskiy <dedekind1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "jp.francois@cynove.com" <jp.francois@cynove.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Avinash Philip <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, Rob Herring <robherring2@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Ivan Djelic <ivan.djelic@parrot.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Tue, Oct 29, 2013 at 11:59:57PM -0400, Brian Norris wrote:
+>=20
+> Pekon/Ezequiel/others: please feel free to send any follow up cleanup=
+s
+> for this driver. I'll take a look at what Ezequiel has already sent
+> out and see if it's still applicable on top.
+>=20
 
-I workout a port of our imx27 board to fdt, the current kernel I work with
-3.12-rc7 didn't have yet the fsl,imx27-pinctrl.txt and other files 
-needed to make
-the pinctrl work for me.
+They won't. I'll prepare a new patch in top of latest l2-mtd.
 
-Can someone be so kind to give me a git:// repository to work with or 
-the patch that i can use
-to patch my source to work it out?
-
-Thanks
-Chris
-
+It's good to see this DT discussion finally coming to an end! Good job!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
