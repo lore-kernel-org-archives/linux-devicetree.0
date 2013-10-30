@@ -1,220 +1,127 @@
-From: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Subject: [PATCH V4] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Wed, 30 Oct 2013 21:14:21 +0400
-Message-ID: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in
+ device tree
+Date: Wed, 30 Oct 2013 12:30:50 -0500
+Message-ID: <CAHCPf3u1mQqNQLdWF0ihw9f98k1nuEyw=TNzJRNQdCx1aW5QCw@mail.gmail.com>
+References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
+	<20131030134702.19B57C402A0@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131030134702.19B57C402A0-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 SoCs have a different PHY which is not compatible
-with the older R-Car H1 (R8A7779) version.
-This adds OF/platform device id tables and PHY initialization
-callbacks for the following Gen2 SoCs:
-  * R-Car H2: R8A7790;
-  * R-Car M2: R8A7791.
+On Wed, Oct 30, 2013 at 8:47 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>
+> Hi Marek,
+>
+> Properties:
+> Requires either a) or b) below.
+> a) static allocation
+>    reg (required) - standard definition
+> b) dynamic allocation
+>    size (required) - length based on parent's #size-cells
+>                    - Size in bytes of memory to reserve.
+>
+>    alignment (optional) - length based on parent's #size-cells
+>                         - Address boundary for alignment of allocation.
+>    alloc-ranges (optional) - prop-encoded-array (address, length pairs).
+>                            - Specifies regions of memory that are
+>                              acceptable to allocate from.
 
-PHY initialization method is chosen based on the device id.
-Default PHY settings are applied for Gen2 SoCs, which should
-suit the Gen2 boards available.
+"available"?
 
-While at it, this also adds "sata-r8a7779" compatibility string
-for R-Car H1 SATA, while keeping the old one for compatibility.
+Let's not reinvent the wheel, if at all possible. "available" has a
+well defined nature (exactly as you described).
 
-Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
----
- drivers/ata/sata_rcar.c | 118 +++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 102 insertions(+), 16 deletions(-)
+I still say device_type = "reserved" fits the bill here very well.
+Sure it had another intended purpose, but it does everything described
+and they're easily collectible with device_type annotation than 100
+different compatible properties, per-device, per-SoC, per-board..
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index c2d95e9..c9ea1bd 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/ata.h>
- #include <linux/libata.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-@@ -123,12 +124,37 @@
- 
- #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
- 
-+/* Gen2 Physical Layer Control Registers */
-+#define RCAR_GEN2_PHY_CTL1_REG		0x1704
-+#define RCAR_GEN2_PHY_CTL1		0x34180002
-+#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
-+
-+#define RCAR_GEN2_PHY_CTL2_REG		0x170C
-+#define RCAR_GEN2_PHY_CTL2		0x00002303
-+
-+#define RCAR_GEN2_PHY_CTL3_REG		0x171C
-+#define RCAR_GEN2_PHY_CTL3		0x000B0194
-+
-+#define RCAR_GEN2_PHY_CTL4_REG		0x1724
-+#define RCAR_GEN2_PHY_CTL4		0x00030994
-+
-+#define RCAR_GEN2_PHY_CTL5_REG		0x1740
-+#define RCAR_GEN2_PHY_CTL5		0x03004001
-+#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
-+#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
-+
-+enum sata_rcar_type {
-+	RCAR_GEN1_SATA,
-+	RCAR_GEN2_SATA,
-+};
-+
- struct sata_rcar_priv {
- 	void __iomem *base;
- 	struct clk *clk;
-+	enum sata_rcar_type type;
- };
- 
--static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
-+static void sata_rcar_gen1_phy_preinit(struct sata_rcar_priv *priv)
- {
- 	void __iomem *base = priv->base;
- 
-@@ -141,8 +167,8 @@ static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
- 	iowrite32(0, base + SATAPHYRESET_REG);
- }
- 
--static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
--				int group)
-+static void sata_rcar_gen1_phy_write(struct sata_rcar_priv *priv, u16 reg,
-+				     u32 val, int group)
- {
- 	void __iomem *base = priv->base;
- 	int timeout;
-@@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
- 	iowrite32(0, base + SATAPHYADDR_REG);
- }
- 
-+static void sata_rcar_gen1_phy_init(struct sata_rcar_priv *priv)
-+{
-+	sata_rcar_gen1_phy_preinit(priv);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
-+	sata_rcar_gen1_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-+}
-+
-+static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
-+{
-+	void __iomem *base = priv->base;
-+
-+	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
-+	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
-+		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
-+}
-+
- static void sata_rcar_freeze(struct ata_port *ap)
- {
- 	struct sata_rcar_priv *priv = ap->host->private_data;
-@@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
- 	u32 val;
- 
- 	/* reset and setup phy */
--	sata_rcar_phy_initialize(priv);
--	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
--	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
--	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
--	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-+	switch (priv->type) {
-+	case RCAR_GEN1_SATA:
-+		sata_rcar_gen1_phy_init(priv);
-+		break;
-+	case RCAR_GEN2_SATA:
-+		sata_rcar_gen2_phy_init(priv);
-+		break;
-+	default:
-+		dev_warn(host->dev, "SATA phy is not initialized\n");
-+		break;
-+	}
- 
- 	/* SATA-IP reset state */
- 	val = ioread32(base + ATAPI_CONTROL1_REG);
-@@ -770,8 +823,40 @@ static void sata_rcar_init_controller(struct ata_host *host)
- 	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
- }
- 
-+static struct of_device_id sata_rcar_match[] = {
-+	{
-+		/* Deprecated by "renesas,sata-r8a7779" */
-+		.compatible = "renesas,rcar-sata",
-+		.data = (void *)RCAR_GEN1_SATA,
-+	},
-+	{
-+		.compatible = "renesas,sata-r8a7779",
-+		.data = (void *)RCAR_GEN1_SATA,
-+	},
-+	{
-+		.compatible = "renesas,sata-r8a7790",
-+		.data = (void *)RCAR_GEN2_SATA
-+	},
-+	{
-+		.compatible = "renesas,sata-r8a7791",
-+		.data = (void *)RCAR_GEN2_SATA
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sata_rcar_match);
-+
-+static const struct platform_device_id sata_rcar_id_table[] = {
-+	{ "sata_rcar", RCAR_GEN1_SATA }, /* Deprecated by "sata-r8a7779" */
-+	{ "sata-r8a7779", RCAR_GEN1_SATA },
-+	{ "sata-r8a7790", RCAR_GEN2_SATA },
-+	{ "sata-r8a7791", RCAR_GEN2_SATA },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, sata_rcar_id_table);
-+
- static int sata_rcar_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id;
- 	struct ata_host *host;
- 	struct sata_rcar_priv *priv;
- 	struct resource *mem;
-@@ -787,6 +872,12 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	of_id = of_match_device(sata_rcar_match, &pdev->dev);
-+	if (of_id)
-+		priv->type = (enum sata_rcar_type)of_id->data;
-+	else
-+		priv->type = platform_get_device_id(pdev)->driver_data;
-+
- 	priv->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(priv->clk)) {
- 		dev_err(&pdev->dev, "failed to get access to sata clock\n");
-@@ -892,15 +983,10 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
- };
- #endif
- 
--static struct of_device_id sata_rcar_match[] = {
--	{ .compatible = "renesas,rcar-sata", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, sata_rcar_match);
--
- static struct platform_driver sata_rcar_driver = {
- 	.probe		= sata_rcar_probe,
- 	.remove		= sata_rcar_remove,
-+	.id_table	= sata_rcar_id_table,
- 	.driver = {
- 		.name		= DRV_NAME,
- 		.owner		= THIS_MODULE,
+> If both reg and size are present, then the reg property takes precedence
+> and size is ignored.
+
+What about the case where the address and size are larger than 32-bit
+cells can hold, and reg cannot hold it (reg is not appropriate for any
+case where #size-cells is not 1)?
+
+In those cases (where #size-cells would be anything other than 1) reg
+is not the right property to use, and another way needs to be used. If
+'reg' and 'size' is present, and 'size' is bigger than the size in the
+reg property, size should just override it. What would be an "error"
+is if the size in the reg property was anything other than 0 if the
+size property would override it (this would reduce mis-parsing).
+Otherwise how would you carve out 8GiB on a system with 64GiB (which
+is eminently possible with LPAE)? reg handles the "phys.hi phys.lo
+size" case and that's about it for >32-bit addressing.
+
+> Additional properties:
+> compatible (optional) - standard definition
+>     - may contain the following strings:
+>         - shared-dma-pool: This indicates a region of memory meant to be
+>           used as a shared pool of DMA buffers for a set of devices. It can
+>           be used by an operating system to instanciate the necessary pool
+>           management subsystem if necessary.
+>         - vendor specific string in the form <vendor>,[<device>-]<usage>
+
+So, the only way the memory parsers you're suggesting can pull these
+out is based on the idea that they're children of whatever node had
+"reserved-memory" as it's "name" property?
+
+Don't we, and haven't we always, said matching against the "name"
+property is evil, evil, don't do it?
+
+> no-map (optional) - empty property
+>     - Indicates the operating system must not create a virtual mapping
+>       of the region as part of its standard mapping of system memory,
+>       nor permit speculative access to it under any circumstances other
+>       than under the control of the device driver using the region.
+> reusable (optional) - empty property
+>     - The operating system can use the memory in this region with the
+>       limitation that the device driver(s) owning the region need to be
+>       able to reclaim it back. Typically that means that the operating
+>       system can use that region to store volatile or cached data that
+>       can be otherwise regenerated or migrated elsewhere.
+>
+> Linux implementation note:
+> - If a "linux,cma-default" property is present, then Linux will use the
+>   region for the default pool of the contiguous memory allocator.
+
+CMA should just pick up shared-dma-pool, reusable, and take that as a
+given, rather than having a magic property to go look for. In this
+case, why not ditch "shared-dma-pool" as a compatible and just have a
+"shared" property? "shared", "reusable" fits CMA nicely - any memory
+CMA has "carved out" will get used for buffer caches etc. under memory
+pressure anyway if it's transient data.
+
+>         reserved-memory {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 ranges;
+>
+>                 display_reserved: framebuffer@78000000 {
+>                         reg = <0x78000000 0x800000>;
+>                 };
+>
+>         };
+>
+>         /* ... */
+>
+>         fb0: video@12300000 {
+>                 memory-region = <&display_reserved>;
+>                 /* ... */
+>         };
+
+In this case, it makes absolutely no sense for the reserved node to
+even HAVE a compatible property, does it?
+
 -- 
-1.8.3.1
-
+Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
