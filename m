@@ -1,62 +1,54 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
-Date: Wed, 30 Oct 2013 10:23:15 +0200
-Message-ID: <5270C1F3.6000409@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <526FDFF4.9030806@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: gpio-rcar: DT and IRQ_TYPE_EDGE_BOTH
+Date: Wed, 30 Oct 2013 17:26:10 +0900
+Message-ID: <20131030082608.GB1603@verge.net.au>
+References: <20131029085258.GE15731@verge.net.au>
+ <CANqRtoR+_HvbemVcWBszrCXRJ21wMrPHM4vKhBnq11VgfGBamw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <526FDFF4.9030806@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoR+_HvbemVcWBszrCXRJ21wMrPHM4vKhBnq11VgfGBamw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, SH-Linux <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/2013 06:19 PM, Nishanth Menon wrote:
-> On 10/25/2013 10:56 AM, Tero Kristo wrote:
-> <snip>
->> Testing done:
->> - omap3-beagle: boot + suspend/resume (ret + off)
->> - omap4-panda-es: boot + suspend/resume
->> - omap5-uevm: boot
->> - dra7-evm: boot
->> - am335x-bone: boot
->>
->> Test branches available:
->>
->> tree: https://github.com/t-kristo/linux-pm.git
->
-> <snip>
->> Fully functioning test branch: 3.12-rc6-dt-clks-v9
->>
-> ^^ I tested this branch (boot testing):
-> Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
-> failed to transition)
+Hi Magnus,
 
-I just sent you a private email with a patch to try out, should fix the 
-boot crash at least hopefully. Basically I forgot to convert one part of 
-the kernel to the new regmap stuff for omap36xx.
+On Wed, Oct 30, 2013 at 07:04:46AM +0000, Magnus Damm wrote:
+> Hi Simon,
+> 
+> On Tue, Oct 29, 2013 at 8:52 AM, Simon Horman <horms@verge.net.au> wrote:
+> > Hi Laurent,
+> >
+> > In 7e1092b5a264c4 ("gpio-rcar: Add support for IRQ_TYPE_EDGE_BOTH")
+> > I added a 'has_both_edge_trigger' field to struct gpio_rcar_config.
+> > Setting this adds support IRQ_TYPE_EDGE_BOTH. The motivation for
+> > this was to allow use of the gpio-keys driver on the lager board.
+> >
+> > I am now looking at enabling gpio-keys via DT for koelsch and lager
+> > and find myself needing to set has_both_edge_trigger somehow.
+> > I am wondering if you have any ideas on how best to do this.
+> >
+> > So far I have two ideas:
+> >
+> > 1. Expose has_both_edge_trigger as a binding.
+> >
+> > 2. Set has_both_edge_trigger in the driver if the
+> >    compat string is renesas,gpio-r8a7791 or renesas,gpio-r8a7790
+> >    but not for other supported compat strings (as is currently the case).
+> 
+> I think which to pick depends on the type of feature. In the case of
+> enabling both edge support for this GPIO driver, I believe going with
+> 2) is the best way forward. The reason for this is that all GPIO
+> instances within a particular SoC seem to either have or not have
+> support for dual edges. At least that is the case on r8a7790 and
+> r8a7791.
+> 
+> There may be other properties in the future like per-GPIO hardware
+> debounce, and I suspect that those may be more suitable for 1) since
+> they are only supported on a certain set of GPIO pins. So from my POV
+> this is a case by case thing.
 
-clkdm issues are caused by wrong data in omap_hwmod_3xxx_data.c, USB 
-nodes are listing l3_init_clkdm for them, but this only exists on 
-omap4+. Seems like some copy paste bug introduced by someone.
-
-dpll5 part I am not too sure, can you check if the same happens with 
-non-dt boot?
-
-> Panda-ES: http://pastebin.com/dWMp7D1z (bandgap_fclk not found)
-> OMAP5-UEVM: http://pastebin.com/pHEx6Yzg (omap-gpmc 50000000.gpmc:
-> error: clk_get)
-
-Again, I don't think this is related to this series, but rather to 
-missing/wrong hwmod data.
-
--Tero
-
-> DRA7-EVM: http://pastebin.com/uYNQ6Sss
-> BeagleBone-Black: http://pastebin.com/biGXS2vi
-> AM335x-evm: http://pastebin.com/K7qwJpCb
->
->
-
+Thanks, that sounds reasonable from my POV.
