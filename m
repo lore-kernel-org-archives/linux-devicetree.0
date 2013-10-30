@@ -1,61 +1,62 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv2 1/3] Input: twl4030-keypad - add device tree support
-Date: Wed, 30 Oct 2013 14:59:02 +0100
-Message-ID: <20131030135902.GA2656@amd.pavel.ucw.cz>
-References: <1382446042-27099-1-git-send-email-sre@debian.org>
- <1382446042-27099-2-git-send-email-sre@debian.org>
- <20131027111715.GA2437@xo-6d-61-c0.localdomain>
- <20131027114026.GB14091@earth.universe>
- <20131027114753.GB14901@amd.pavel.ucw.cz>
- <20131030135307.D8CE1C402A0@trevor.secretlab.ca>
-Mime-Version: 1.0
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [RESEND] [PATCH V3 2/2] watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu register
+Date: Wed, 30 Oct 2013 09:15:35 -0500
+Message-ID: <B9207640-E74A-441D-B79F-5E5B60A8A5B1@codeaurora.org>
+References: <1383116464-5951-1-git-send-email-l.krishna@samsung.com> <1383116464-5951-3-git-send-email-l.krishna@samsung.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131030135307.D8CE1C402A0@trevor.secretlab.ca>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: linux-input@vger.kernel.org, 'Beno?t Cousson' <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1383116464-5951-3-git-send-email-l.krishna@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be, t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2013-10-30 06:53:07, Grant Likely wrote:
-> On Sun, 27 Oct 2013 12:47:53 +0100, Pavel Machek <pavel@ucw.cz> wrote:
-> > > > > +#if IS_ENABLED(CONFIG_OF)
-> > > > I'm probably missing something here, but why not #ifdef CONFIG_OF?
-> > > 
-> > > I have been told for other drivers, that IS_ENABLED() is
-> > > the prefered way to check for configuration these days.
-> > 
-> > CONFIG_OF can not be module, using IS_ENABLED() on it is just wrong.
+
+On Oct 30, 2013, at 2:01 AM, Leela Krishna Amudala wrote:
+
+> The syscon regmap interface is used to configure AUTOMATIC_WDT_RESET_DISABLE
+> and MASK_WDT_RESET_REQUEST registers of PMU to mask/unmask enable/disable of
+> watchdog in probe and s2r scenarios.
 > 
-> That makes no sense. There is absolutely nothing wrong with using
-> IS_ENABLED() for CONFIG_OF.
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> ---
+> .../devicetree/bindings/watchdog/samsung-wdt.txt   |   13 ++-
+> drivers/watchdog/s3c2410_wdt.c                     |  114 ++++++++++++++++++--
+> 2 files changed, 118 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> index 2aa486c..c46c7ce 100644
+> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> @@ -5,10 +5,21 @@ after a preset amount of time during which the WDT reset event has not
+> occurred.
+> 
+> Required properties:
+> -- compatible : should be "samsung,s3c2410-wdt"
+> +- compatible : should be "samsung,s3c2410-wdt" or "samsung,s3c5250-wdt" or "samsung,s3c5420-wdt"
+> - reg : base physical address of the controller and length of memory mapped
+> 	region.
+> - interrupts : interrupt number to the cpu.
+> +- samsung,pmusysreg : reference node to pmu sysreg (required only in case of Exynos5250 and 5420)
 
-Besides being too long, confusing for a reader, and testing for an
-option that can't exist?
+Rather than saying required only on Exynos5250 and 5420, how about saying required only in case of compatible being "samsung,s3c5250-wdt" or "samsung,s3c5420-wdt"
 
-include/linux/kconfig.h-/*
-include/linux/kconfig.h: * IS_ENABLED(CONFIG_FOO) evaluates to 1 if CONFIG_FOO is set to 'y' or 'm',
-include/linux/kconfig.h- * 0 otherwise.
-include/linux/kconfig.h- *
-include/linux/kconfig.h- */
-include/linux/kconfig.h:#define IS_ENABLED(option) \
-include/linux/kconfig.h-	(config_enabled(option) || config_enabled(option##_MODULE))
-include/linux/kconfig.h-
-include/linux/kconfig.h-/*
-include/linux/kconfig.h- * IS_BUILTIN(CONFIG_FOO) evaluates to 1 if CONFIG_FOO is set to 'y', 0
-include/linux/kconfig.h- * otherwise. For boolean options, this is
-equivalent to
-include/linux/kconfig.h: * IS_ENABLED(CONFIG_FOO).
-include/linux/kconfig.h- */
-include/linux/kconfig.h-#define IS_BUILTIN(option) config_enabled(option)
-include/linux/kconfig.h-
+> 
+> Optional properties:
+> - timeout-sec : contains the watchdog timeout in seconds.
+> +
+> +watchdog@101D0000 {
+> +	compatible = "samsung,s3c5250-wdt";
+> +	reg = <0x101D0000 0x100>;
+> +	interrupts = <0 42 0>;
+> +	clocks = <&clock 336>;
+> +	clock-names = "watchdog";
+> +	samsung,sysreg = <&pmu_sys_reg>;
+> +	status = "okay";
+> +};
 
-Oops. And I made a mistake of looking up config_enabled(). Obfuscated
-C code contest.
-
-Just use #ifdef CONFIG_foo.
-									Pavel
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
