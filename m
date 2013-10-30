@@ -1,151 +1,66 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/3] clk: shmobile: Add MSTP clock support
-Date: Tue, 29 Oct 2013 19:19:35 -0500
-Message-ID: <5E542DCC-EA79-4A9E-BC60-B8E1B964F16D@codeaurora.org>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383058511-26046-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <F8268ACF-E4E8-4411-84F1-D967450BE440@codeaurora.org> <1481817.doGcO1nQB0@avalon>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Wed, 30 Oct 2013 09:28:47 +0900
+Message-ID: <20131030002847.GL21262@verge.net.au>
+References: <1381925161-16729-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <1381925161-16729-3-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131029045943.GE20432@verge.net.au>
+ <B6798662-4DEC-499A-A96E-EB995A482C1B@codeaurora.org>
+ <20131029084444.GC15731@verge.net.au>
+ <82E941A8-D062-4E90-B661-511881F51F9B@codeaurora.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1481817.doGcO1nQB0@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <82E941A8-D062-4E90-B661-511881F51F9B@codeaurora.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 29, 2013 at 12:19:08PM -0500, Kumar Gala wrote:
+> 
+> On Oct 29, 2013, at 3:44 AM, Simon Horman wrote:
+> 
+> > On Tue, Oct 29, 2013 at 03:24:16AM -0500, Kumar Gala wrote:
+> >> 
+> >> On Oct 28, 2013, at 11:59 PM, Simon Horman wrote:
+> >> 
+> >>> On Wed, Oct 16, 2013 at 04:06:01PM +0400, Valentine Barshak wrote:
+> >>>> R-Car Gen2 SoCs have a different PHY which is not compatible
+> >>>> with the older R-Car H1 (R8A7779) version.
+> >>>> This adds OF/platform device id tables and PHY initialization
+> >>>> callbacks for the following Gen2 SoCs:
+> >>>> * R-Car H2: R8A7790;
+> >>>> * R-Car M2: R8A7791.
+> >>>> 
+> >>>> PHY initialization method is chosen based on the device id.
+> >>>> Default PHY settings are applied for Gen2 SoCs, which should
+> >>>> suit the Gen2 boards available.
+> >>>> 
+> >>>> The R8A7779 platform code is modified to use "sata-r8a7779"
+> >>>> device name.
+> >>>> 
+> >>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> >>>> ---
+> >>>> .../devicetree/bindings/ata/sata_rcar.txt          |   5 +-
+> >>>> arch/arm/mach-shmobile/clock-r8a7779.c             |   2 +-
+> >>>> arch/arm/mach-shmobile/setup-r8a7779.c             |   2 +-
+> >>>> drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
+> >>> 
+> >>> Hi Mark, Hi Device-Tree Folks,
+> >>> 
+> >>> I'm wondering if you have had a chance to look over the bindings
+> >>> aspect of this and the other patch in the series. I believe that
+> >>> this series addresses all previous review in that regards.
+> >> 
+> >> What tree is this binding in?
+> > 
+> > sata_car.txt is added by the previous patch in this series
+> > "[PATCH 1/2] sata_rcar: Adjust and document device tree bindings"
+> 
+> Why not just have all the binding in one patch.  There isn't a reason this should be split.
 
-On Oct 29, 2013, at 7:06 PM, Laurent Pinchart wrote:
-
-> Hi Kumar,
-> 
-> Thank you for the review.
-> 
-> On Tuesday 29 October 2013 18:36:06 Kumar Gala wrote:
->> On Oct 29, 2013, at 9:55 AM, Laurent Pinchart wrote:
->>> MSTP clocks are gate clocks controlled through a register that handles
->>> up to 32 clocks. The register is often sparsely populated.
->>> 
->>> Those clocks are found on Renesas ARM SoCs.
->>> 
->>> Signed-off-by: Laurent Pinchart
->>> <laurent.pinchart+renesas@ideasonboard.com>
->>> ---
->>> .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
->>> drivers/clk/shmobile/Makefile                      |   1 +
->>> drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++++
->>> include/dt-bindings/clock/r8a7790-clock.h          |  56 +++++
->>> 4 files changed, 333 insertions(+)
->>> create mode 100644
->>> Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
->>> create mode 100644 drivers/clk/shmobile/clk-mstp.c
->>> create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
->>> 
->>> diff --git
->>> a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
->>> b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt new
->>> file mode 100644
->>> index 0000000..b3a1ce0
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
->>> @@ -0,0 +1,47 @@
->>> +* Renesas R8A7790 MSTP Clocks
->> 
->> can we spell out MSTP once in the heading?
-> 
-> Sure thing. It stands for Module Stop.
-> 
->>> +
->>> +The CPG can gate SoC device clocks. The gates are organized in groups of
->>> up to
->>> +32 gates.
->>> +
->>> +This device tree binding describes a single 32 gate clocks group per
->>> node.
->>> +Clocks are referenced by user nodes by the MSTP node phandle and the
->>> clock
->>> +index in the group, from 0 to 31.
->>> +
->>> +Required Properties:
->>> +
->>> +  - compatible: Must be one of the following
->>> +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate
->>> clocks
->>> +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
->>> +  - reg: Base address and length of the memory resource used by the MSTP
->>> +    clocks
->>> +  - clocks: Reference to the parent clocks
->>> +  - #clock-cells: Must be 1
->>> +  - clock-output-names: The name of the clocks as free-form strings
->>> +  - renesas,indices: Index of the gate clocks (0 to 31)
->> 
->> Index of the gate clock into what?
-> 
-> Into the 32 gates clock group. Groups have 32 entries with a 32-bit register 
-> that controls 32 gate clocks. The groups (and thus registers) are sparsly 
-> populated, this property lists the indices for the register bits corresponding 
-> to the clocks.
-> 
-> Would
-> 
->  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
-> 
-> be explicit enough ?
-
-I'm still confused.  As I look at the code, I'm not quite clear how renesas,indices relates to a register or register bits.
-
-> 
->>> +
->>> +The clocks, clock-output-names and renesas,indices properties contain one
->>> +entry per gate. The MSTP groups are sparsely populated. Unimplemented
->>> gates
->> per gate clock. (?)
-> 
-> I'll change that.
-> 
->>> +must not be declared.
->>> +
->>> +
->>> +Example
->>> +-------
->>> +
->>> +	#include <dt-bindings/clock/r8a7790-clock.h>
->>> +
->>> +	mstp3_clks: mstp3_clks {
-> 
-> mstp3_clks@e615013c I suppose.
-
-yes, missed that
-`
-> 
->>> +		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
-> clocks";
->>> +		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
->>> +		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
->>> +			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks 
-> R8A7790_CLK_SD0>,
->>> +			 <&mmc0_clk>;
->>> +		#clock-cells = <1>;
->>> +		clock-output-names =
->>> +			"tpu0", "mmcif1", "sdhi3", "sdhi2",
->>> +			 "sdhi1", "sdhi0", "mmcif0";
->>> +		renesas,clock-indices = <
->>> +			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
->>> +			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
->>> +			R8A7790_CLK_MMCIF0
->>> +		>;
->>> +	};
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+I think that the motivation was that the first patch documents the
+existing implementation while the second documents a change to it.
+With that in mind would you still like a single patch for the binding?
