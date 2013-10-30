@@ -1,103 +1,46 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH 1/3] dma: imx-sdma: Add ssi dual fifo
-	script support
-Date: Wed, 30 Oct 2013 12:48:48 +0800
-Message-ID: <20131030044848.GE9605@MrMyself>
-References: <cover.1383047327.git.b42378@freescale.com>
- <9ed025d4e98f716ba80b27acaaa98f43ad3bd75a.1383047327.git.b42378@freescale.com>
- <20131029135142.GT30088@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20131029135142.GT30088@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, b32955@freescale.com
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH] of: set dma_mask to point to coherent_dma_mask
+Date: Wed, 30 Oct 2013 00:05:22 -0500
+Message-ID: <1383109522-6879-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: stefano.stabellini@eu.citrix.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+From: Rob Herring <rob.herring@calxeda.com>
 
-On Tue, Oct 29, 2013 at 02:51:43PM +0100, Sascha Hauer wrote:
-> Look at drivers/dma/imx-sdma.c:
-> 
-> > /**
-> >  * struct sdma_firmware_header - Layout of the firmware image
-> >  *
-> >  * @magic		"SDMA"
-> >  * @version_major	increased whenever layout of struct
-> >  * sdma_script_start_addrs
-> >  *			changes.
-> 
-> Can you image why this firmware has a version field? Right, it's because
-> it encodes the layout of struct sdma_script_start_addrs.
-> 
-> As the comment clearly states you have to *increase this field* when you
-> add scripts.
-> 
-> Obviously you missed that, as the firmware on lkml posted recently
-> shows:
-> 
-> > 00000000: 414d4453 00000001 00000001 0000001c SDMA............
->                      ^^^^^^^^
->                      Still '1'
-> 
-> > 00000010: 00000026 000000b4 0000067a 00000282 &.......z.......
-> > 00000020: ffffffff 00000000 ffffffff ffffffff ................
-> > 00000030: ffffffff ffffffff ffffffff ffffffff ................
-> > 00000040: ffffffff ffffffff 00001a6a ffffffff ........j.......
-> > 00000050: 000002eb 000018bb ffffffff 00000408 ................
-> > 00000060: ffffffff 000003c0 ffffffff ffffffff ................
-> > 00000070: ffffffff 000002ab ffffffff 0000037b ............{...
-> > 00000080: ffffffff ffffffff 0000044c 0000046e ........L...n...
-> > 00000090: ffffffff 00001800 ffffffff ffffffff ................
-> > 000000a0: 00000000 00001800 00001862 00001a16 ........b.......
->                               ^^^^^^^^^^^^^^^^^
->                               new script addresses introduced
-> 
-> 
-> > -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
-> > +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	37
-> 
-> And no, this is not a bug. It's your firmware header that is buggy.
-> 
+Platform devices created by DT code don't initialize dma_mask pointer to
+anything. Set it to coherent_dma_mask by default if the architecture
+code has not set it.
 
-I wasn't aware that the problem is far more complicated than I thought.
-And thank you for telling me all this.
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+---
+I think this is at least part of what is needed to fix dma_mask issue
+raised by Stefano [1]. Things should work AFAICT with just this, but
+I suppose the xgmac driver needs to set the mask as well (not relying
+on the default), but some pointing the dma_mask to a valid value is
+needed first.
 
-> What you need is:
-> 
-> #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2      37
-> 
-> You (you as a company, not you as a person) knew that it was me who
-> created this firmware format. So it was absolutely unnecessary to create
-> an incompatible firmware instead of dropping me a short note.
-> 
-> Please add a version check to the driver as necessary and provide a proper
-> firmware.
-> 
+Rob
 
-Just currently it's not easy for me to create a new proper firmware,
-and I's been told that besides this version number, it also lacks a
-decent license info. So may I just refine this patch as you suggested
-to add a version check and add those new scripts first?
+[1] http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg528236.html
 
-Thank you,
-Nicolin Chen
+ drivers/of/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index f6dcde2..fce088e 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+ #endif
+ 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++	if (!dev->dev.dma_mask)
++		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 
+-- 
+1.8.1.2
