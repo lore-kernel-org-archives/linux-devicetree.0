@@ -1,32 +1,33 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Wed, 30 Oct 2013 12:10:34 +0800
-Message-ID: <20131030041034.GA2957@gondor.apana.org.au>
-References: <1381846278-9529-1-git-send-email-svarbanov@mm-sol.com>
- <1381846278-9529-3-git-send-email-svarbanov@mm-sol.com>
- <52618060.1060804@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52618060.1060804@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] Documentation/pwm: Update supported SoC name for pwm-samsung
+Date: Wed, 30 Oct 2013 10:09:41 +0530
+Message-ID: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-pwm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 11:39:28AM -0700, Stephen Boyd wrote:
-> On 10/15/13 07:11, Stanimir Varbanov wrote:
-> > This adds a driver for hardware random number generator present
-> > on Qualcomm MSM SoC's.
-> >
-> > Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > ---
-> 
-> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+Updated supported SoC name for pwm-samsung.
 
-Both patches applied.  Thanks!
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ .../devicetree/bindings/pwm/pwm-samsung.txt        |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+index d61fccd..5538de9 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+@@ -15,7 +15,7 @@ Required properties:
+     samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
+ 			  Exynos4210 rev0 SoCs
+     samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
+-                          Exynos4x12 and Exynos5250 SoCs
++                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
+ - reg: base address and size of register area
+ - interrupts: list of timer interrupts (one interrupt per timer, starting at
+   timer 0)
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.7.9.5
+
