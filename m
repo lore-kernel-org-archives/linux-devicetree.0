@@ -1,133 +1,55 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 1/7] clk: hi3xxx: add clock support
-Date: Wed, 30 Oct 2013 12:44:00 -0700
-Message-ID: <20131030194400.11662.9100@quantum>
-References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org>
- <1381828577-27998-2-git-send-email-haojian.zhuang@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/2] DT match helpers for initcalls and platform devices
+Date: Wed, 30 Oct 2013 15:02:40 -0500
+Message-ID: <CAL_JsqJ3GANeMNi3iXQY_rB-NoovmwZx7EXfbG=rS6MxS=NLvQ@mail.gmail.com>
+References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
+	<20131030082621.GA22787@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381828577-27998-2-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20131030082621.GA22787-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Haojian Zhuang (2013-10-15 02:16:11)
-> Add clock support with device tree on Hisilicon SoC.
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Oct 30, 2013 at 3:26 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Oct 30, 2013 at 01:12:49AM -0500, Rob Herring wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> This series adds a couple of boilerplate helpers to match with DT for
+>> initcalls and platform device creation and probe. The goal here is to
+>> remove more platform code out of arch/arm and eventually the machine
+>> descriptors.
+>
+> I fear that this is a step backwards because it makes it easier for
+> people to do the wrong thing. We've been doing the same with interrupt
+> controllers and clocks. With those there's at least the argument that
+> they need to be available really early and therefore cannot use the
+> regular driver model. But for everything else, shouldn't we enforce
+> proper drivers to be written?
 
-Hello Haojian,
+You think both are a step backwards or just the initcall one? For
+initcalls, there are things which are not drivers, but just one time
+init.  The example on highbank is highbank_pm_init. In some cases like
+cpuidle, they have been converted to platform drivers, but then we
+have platform code to create devices if we are on the relevant
+platform. There is not really a real device node that exists for some
+of these drivers and we need to create the device rather than the
+device getting created by scanning the buses in the DT.
 
-This patch looks mostly good to me but I have a few comments on the
-binding below.
+I think this is less error prone because we've had cases of
+unconditional initcalls which break multi-platform kernels.
 
-> ---
->  .../devicetree/bindings/clock/hisilicon.txt        |  99 +++++++++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/hisilicon/Makefile                     |   2 +
->  drivers/clk/hisilicon/clk-hi3xxx.c                 | 221 +++++++++++++++++++++
->  drivers/clk/hisilicon/clk-hi3xxx.h                 |  34 ++++
->  drivers/clk/hisilicon/clkgate-seperated.c          | 129 ++++++++++++
->  6 files changed, 486 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hisilicon.txt
->  create mode 100644 drivers/clk/hisilicon/Makefile
->  create mode 100644 drivers/clk/hisilicon/clk-hi3xxx.c
->  create mode 100644 drivers/clk/hisilicon/clk-hi3xxx.h
->  create mode 100644 drivers/clk/hisilicon/clkgate-seperated.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/hisilicon.txt b/Documentation/devicetree/bindings/clock/hisilicon.txt
-> new file mode 100644
-> index 0000000..c29b9ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/hisilicon.txt
-> @@ -0,0 +1,99 @@
-> +Device Tree Clock bindings for arch-hi3xxx
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties for mux clocks:
-> + - compatible : shall be "hisilicon,clk-mux".
-> + - clocks : shall be the input parent clock phandle for the clock. This should
-> +       be the reference clock.
-> + - clock-output-names : shall be reference name.
-> + - #clock-cells : from common clock binding; shall be set to 0.
-> + - reg : the mux register address. It should be the offset of the container.
-> + - clkmux-mask : mask bits of the mux register.
-> + - clkmux-table : array of mux select bits.
-> +
-> +Optional properties for mux clocks:
-> + - clkmux-hiword-mask : indicates that the bit[31:16] are the hiword mask
-> +       of mux selected bits (bit[15:0]). The bit[15:0] is valid only when
-> +       bit[31:16] is set.
+> Perhaps if you can point me to some examples I could get more context
+> why and where this would be useful.
 
-The masks are enumerated in clkmux-table. Can these masks include the
-hiword-mask bits as well? This will mean that you can eliminate the
-clkmux-hiword-mask property entirely. As an example:
+I'll push out a WIP branch later which has the above examples and
+removes the machine_desc struct for highbank. This all is more for
+arm64 which doesn't have or want to have a machine_desc.
 
-
-	reg = <0xfc802000 0x4>;
-	clkmux-table = <0x80000000 0x80008000>;
-
-> +
-> +
-> +
-> +Required properties for gate clocks:
-> + - compatible : shall be "hisilicon,clk-gate".
-> + - clocks : shall be the input parent clock phandle for the clock. This should
-> +       be the reference clock.
-> + - clock-output-names : shall be reference name.
-> + - #clock-cells : from common clock binding; shall be set to 0.
-> + - reg : the mux register address. It should be the offset of the container.
-> + - clkgate : bit index to control the clock gate in the gate register.
-> +
-> +Optional properties for gate clocks:
-> + - clkgate-inverted : it indicates that setting 0 could enable the clock gate
-> +       and setting 1 could disable the clock gate.
-> + - clkgate-seperated-reg : it indicates that there're three continuous
-> +       registers (enable, disable & status) for the same clock gate.
-> +
-> +
-> +
-> +Required properties for divider clocks:
-> + - compatible : shall be "hisilicon,clk-div".
-> + - clocks : shall be the input parent clock phandle for the clock. This should
-> +       be the reference clock.
-> + - clock-output-names : shall be reference name.
-> + - reg : the divider register address. It should be the offset of the
-> +       container.
-> + - clkdiv-mask : mask bits of the divider register.
-> + - clkdiv-min : the minimum divider of the clock divider.
-> + - clkdiv-max : the maximum divider of the clock divider.
-> +
-> +Optional properties for divider clocks:
-> + - clkdiv-hiword-mask : indicates that the bit[31:16] are the hiword mask
-> +       of divider selected bits (bit[15:0]). The bit[15:0] is valid only when
-> +       bit[31:16] is set.
-> +
-> +
-> +
-> +For example:
-> +               timer0_mux: timer0_mux@fc802000 {
-> +                       compatible = "hisilicon,clk-mux";
-> +                       #clock-cells = <0>;
-> +                       clocks = <&osc32k &timerclk01>;
-> +                       clock-output-names = "timer0_mux";
-> +                       reg = <0xfc802000 0x4>;
-> +                       clkmux-mask = <0x8000>;
-> +                       clkmux-table = <0 0x8000>;
-
-Can you eliminate the clkmux-mask property as well? Since you enumerate
-the clkmux-table property you should be able to derive the mask from the
-entries in that table.
-
-Regards,
-Mike
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
