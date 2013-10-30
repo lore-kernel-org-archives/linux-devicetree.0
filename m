@@ -1,61 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: gpio-rcar: DT and IRQ_TYPE_EDGE_BOTH
-Date: Wed, 30 Oct 2013 11:20:54 +0100
-Message-ID: <13973433.boY4bClOZK@avalon>
-References: <20131029085258.GE15731@verge.net.au> <CANqRtoR+_HvbemVcWBszrCXRJ21wMrPHM4vKhBnq11VgfGBamw@mail.gmail.com> <20131030082608.GB1603@verge.net.au>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V4 1/3] ARM: dts: Add pmu sysreg node to Exynos5 dtsi file
+Date: Wed, 30 Oct 2013 12:22:09 +0100
+Message-ID: <1416559.T8R3YI7yDK@amdc1227>
+References: <1383126673-29033-1-git-send-email-l.krishna@samsung.com>
+ <CAL1wa8dwa3roUwC-KUy2N4fdFEj3tY9V4m_9O+vQWq4T59zxcA@mail.gmail.com>
+ <CAK9yfHwXMRXM6m9LhOi7tcL+y9iQ3yF5K8DE6PyGyi16RYK3+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131030082608.GB1603@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHwXMRXM6m9LhOi7tcL+y9iQ3yF5K8DE6PyGyi16RYK3+A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus and Simon,
-
-On Wednesday 30 October 2013 17:26:10 Simon Horman wrote:
-> On Wed, Oct 30, 2013 at 07:04:46AM +0000, Magnus Damm wrote:
-> > On Tue, Oct 29, 2013 at 8:52 AM, Simon Horman <horms@verge.net.au> wrote:
-> > > Hi Laurent,
-> > > 
-> > > In 7e1092b5a264c4 ("gpio-rcar: Add support for IRQ_TYPE_EDGE_BOTH")
-> > > I added a 'has_both_edge_trigger' field to struct gpio_rcar_config.
-> > > Setting this adds support IRQ_TYPE_EDGE_BOTH. The motivation for
-> > > this was to allow use of the gpio-keys driver on the lager board.
-> > > 
-> > > I am now looking at enabling gpio-keys via DT for koelsch and lager
-> > > and find myself needing to set has_both_edge_trigger somehow.
-> > > I am wondering if you have any ideas on how best to do this.
-> > > 
-> > > So far I have two ideas:
-> > > 
-> > > 1. Expose has_both_edge_trigger as a binding.
-> > > 
-> > > 2. Set has_both_edge_trigger in the driver if the
-> > >    compat string is renesas,gpio-r8a7791 or renesas,gpio-r8a7790
-> > >    but not for other supported compat strings (as is currently the
-> > >    case).
-> > 
-> > I think which to pick depends on the type of feature. In the case of
-> > enabling both edge support for this GPIO driver, I believe going with
-> > 2) is the best way forward. The reason for this is that all GPIO
-> > instances within a particular SoC seem to either have or not have
-> > support for dual edges. At least that is the case on r8a7790 and
-> > r8a7791.
-> > 
-> > There may be other properties in the future like per-GPIO hardware
-> > debounce, and I suspect that those may be more suitable for 1) since
-> > they are only supported on a certain set of GPIO pins. So from my POV
-> > this is a case by case thing.
+On Wednesday 30 of October 2013 15:43:19 Sachin Kamat wrote:
+> On 30 October 2013 15:39, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
+> > Hi,
+> >
+> > On Wed, Oct 30, 2013 at 3:22 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> >> Hi Leela,
+> >>
+> >> On 30 October 2013 15:21, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
+> >>> This patch adds pmusysreg node to Exynos5 dtsi file to handle PMU
+> >>> register accesses in a centralized way using syscon driver
+> >>>
+> >>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> >>> ---
+> >>>  arch/arm/boot/dts/exynos5.dtsi |    5 +++++
+> >>>  1 file changed, 5 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> >>> index e52b038..918e732 100644
+> >>> --- a/arch/arm/boot/dts/exynos5.dtsi
+> >>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> >>> @@ -106,4 +106,9 @@
+> >>>                 #size-cells = <0>;
+> >>>                 status = "disabled";
+> >>>         };
+> >>> +
+> >>> +       pmu_sys_reg: pmusysreg@1004000 {
+> >>> +               compatible = "syscon";
+> >>> +               reg = <0x10040000 0x5000>;
+> >>> +       };
+> >>>  };
+> >>
+> >> Had a look at this in a bit detail and found the following.
+> >> The register base address for this block on 5250 and 5420 as per the
+> >> TRM is 0x10050000.
+> >>
+> >> Also, the binding document specifies the naming convention. According
+> >> to it this node
+> >> should like:
+> >>
+> >> sys_reg: sysreg@10050000 {
+> >>            compatible = "samsung,exynos5-sysreg", "syscon";
+> >>            reg = <0x10050000 0x500>;
+> >> };
+> >>
+> >
+> > I know, but here my intention is not to regmap system register (0x10050000),
+> > but instead PMU register (0x10040000), Hence created this node.
 > 
-> Thanks, that sounds reasonable from my POV.
+> This clashes with the existing binding for this type of node. Probably
+> you will need to
+> define it differently?
 
-I agree, let's put have property in the driver.
+PMU and System Registers are two completely separate entities. However
+a generic syscon binding can be used to represent both, because they are
+just collections of registers shared by multiple IPs.
 
--- 
-Regards,
-
-Laurent Pinchart
-
+Best regards,
+Tomasz
