@@ -1,90 +1,133 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Tue, 29 Oct 2013 18:56:42 -0500
-Message-ID: <A519A094-2E76-43C7-99D8-763122413ECD@codeaurora.org>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] clk: shmobile: Add MSTP clock support
+Date: Wed, 30 Oct 2013 01:06:04 +0100
+Message-ID: <1481817.doGcO1nQB0@avalon>
+References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383058511-26046-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <F8268ACF-E4E8-4411-84F1-D967450BE440@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <F8268ACF-E4E8-4411-84F1-D967450BE440@codeaurora.org>
 Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kumar,
 
-On Oct 29, 2013, at 9:55 AM, Laurent Pinchart wrote:
+Thank you for the review.
 
-> The R8A7790 has several clocks that are too custom to be supported in a
-> generic driver. Those clocks can be divided in two categories:
+On Tuesday 29 October 2013 18:36:06 Kumar Gala wrote:
+> On Oct 29, 2013, at 9:55 AM, Laurent Pinchart wrote:
+> > MSTP clocks are gate clocks controlled through a register that handles
+> > up to 32 clocks. The register is often sparsely populated.
+> > 
+> > Those clocks are found on Renesas ARM SoCs.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
+> > drivers/clk/shmobile/Makefile                      |   1 +
+> > drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++++
+> > include/dt-bindings/clock/r8a7790-clock.h          |  56 +++++
+> > 4 files changed, 333 insertions(+)
+> > create mode 100644
+> > Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > create mode 100644 drivers/clk/shmobile/clk-mstp.c
+> > create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt new
+> > file mode 100644
+> > index 0000000..b3a1ce0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > @@ -0,0 +1,47 @@
+> > +* Renesas R8A7790 MSTP Clocks
 > 
-> - Fixed rate clocks with multiplier and divisor set according to boot
->  mode configuration
+> can we spell out MSTP once in the heading?
+
+Sure thing. It stands for Module Stop.
+
+> > +
+> > +The CPG can gate SoC device clocks. The gates are organized in groups of
+> > up to
+> > +32 gates.
+> > +
+> > +This device tree binding describes a single 32 gate clocks group per
+> > node.
+> > +Clocks are referenced by user nodes by the MSTP node phandle and the
+> > clock
+> > +index in the group, from 0 to 31.
+> > +
+> > +Required Properties:
+> > +
+> > +  - compatible: Must be one of the following
+> > +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate
+> > clocks
+> > +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> > +  - reg: Base address and length of the memory resource used by the MSTP
+> > +    clocks
+> > +  - clocks: Reference to the parent clocks
+> > +  - #clock-cells: Must be 1
+> > +  - clock-output-names: The name of the clocks as free-form strings
+> > +  - renesas,indices: Index of the gate clocks (0 to 31)
 > 
-> - Custom divider clocks with SoC-specific divider values
-> 
-> This driver supports both.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
-> .../bindings/clock/renesas,r8a7790-cpg-clocks.txt  |  26 +++
-> drivers/clk/shmobile/Makefile                      |   1 +
-> drivers/clk/shmobile/clk-r8a7790.c                 | 176 +++++++++++++++++++++
-> include/dt-bindings/clock/r8a7790-clock.h          |  10 ++
-> include/linux/clk/shmobile.h                       |  19 +++
-> 5 files changed, 232 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
-> create mode 100644 drivers/clk/shmobile/clk-r8a7790.c
-> create mode 100644 include/linux/clk/shmobile.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
-> new file mode 100644
-> index 0000000..d889917
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
-> @@ -0,0 +1,26 @@
-> +* Renesas R8A7790 Clock Pulse Generator (CPG)
-> +
-> +The CPG generates core clocks for the R8A7790. It includes three PLLs and
-> +several fixed ratio dividers.
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "renesas,r8a7790-cpg-clocks"
-> +  - reg: Base address and length of the memory resource used by the CPG
-> +  - clocks: Reference to the parent clock
-> +  - #clock-cells: Must be 1
-> +  - clock-output-names: The name of the clocks, must be "main", "pll1",
-> +    "pll3", "lb", "qspi", "sdh", "sd0", "sd1".
-> +
-> +
-> +Example
-> +-------
-> +
-> +	cpg_clocks: cpg_clocks {
+> Index of the gate clock into what?
 
-cpg_clocks@e6150000
+Into the 32 gates clock group. Groups have 32 entries with a 32-bit register 
+that controls 32 gate clocks. The groups (and thus registers) are sparsly 
+populated, this property lists the indices for the register bits corresponding 
+to the clocks.
 
-> +		compatible = "renesas,r8a7790-cpg-clocks";
-> +		reg = <0 0xe6150000 0 0x1000>;
-> +		clocks = <&extal_clk>;
-> +		#clock-cells = <1>;
-> +		clock-output-names = "main", "pll1", "pll3", "lb",
-> +				     "qspi", "sdh", "sd0", "sd1";
-> +	};
+Would
 
-Other than minor nit, ack.
+  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
 
-For the DT-Binding portion:
+be explicit enough ?
 
-Acked-by: Kumar Gala <galak@codeaurora.org>
+> > +
+> > +The clocks, clock-output-names and renesas,indices properties contain one
+> > +entry per gate. The MSTP groups are sparsely populated. Unimplemented
+> > gates
+> per gate clock. (?)
 
-- k
+I'll change that.
 
+> > +must not be declared.
+> > +
+> > +
+> > +Example
+> > +-------
+> > +
+> > +	#include <dt-bindings/clock/r8a7790-clock.h>
+> > +
+> > +	mstp3_clks: mstp3_clks {
 
+mstp3_clks@e615013c I suppose.
+
+> > +		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
+clocks";
+> > +		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+> > +		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
+> > +			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks 
+R8A7790_CLK_SD0>,
+> > +			 <&mmc0_clk>;
+> > +		#clock-cells = <1>;
+> > +		clock-output-names =
+> > +			"tpu0", "mmcif1", "sdhi3", "sdhi2",
+> > +			 "sdhi1", "sdhi0", "mmcif0";
+> > +		renesas,clock-indices = <
+> > +			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
+> > +			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
+> > +			R8A7790_CLK_MMCIF0
+> > +		>;
+> > +	};
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+
+Laurent Pinchart
 
