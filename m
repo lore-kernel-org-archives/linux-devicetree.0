@@ -1,52 +1,83 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V2 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
- irqs
-Date: Wed, 30 Oct 2013 16:15:28 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1310301608380.24686@ionos.tec.linutronix.de>
-References: <1383145040-15852-1-git-send-email-r.sricharan@ti.com> <1383145040-15852-2-git-send-email-r.sricharan@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V4 1/3] ARM: dts: Add pmu sysreg node to Exynos5 dtsi file
+Date: Wed, 30 Oct 2013 08:26:39 -0700
+Message-ID: <20131030152639.GA3950@roeck-us.net>
+References: <1383126673-29033-1-git-send-email-l.krishna@samsung.com>
+ <CAL1wa8dwa3roUwC-KUy2N4fdFEj3tY9V4m_9O+vQWq4T59zxcA@mail.gmail.com>
+ <CAK9yfHwXMRXM6m9LhOi7tcL+y9iQ3yF5K8DE6PyGyi16RYK3+A@mail.gmail.com>
+ <1416559.T8R3YI7yDK@amdc1227>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383145040-15852-2-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, santosh.shilimkar@ti.com, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416559.T8R3YI7yDK@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Oct 2013, Sricharan R wrote:
-> @@ -700,11 +709,22 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
->  	*out_hwirq = intspec[1] + 16;
->  
->  	/* For SPIs, we need to add 16 more to get the GIC irq ID number */
-> -	if (!intspec[0])
-> +	if (!intspec[0]) {
->  		*out_hwirq += 16;
+On Wed, Oct 30, 2013 at 12:22:09PM +0100, Tomasz Figa wrote:
+> On Wednesday 30 of October 2013 15:43:19 Sachin Kamat wrote:
+> > On 30 October 2013 15:39, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
+> > > Hi,
+> > >
+> > > On Wed, Oct 30, 2013 at 3:22 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> > >> Hi Leela,
+> > >>
+> > >> On 30 October 2013 15:21, Leela Krishna Amudala <l.krishna@samsung.com> wrote:
+> > >>> This patch adds pmusysreg node to Exynos5 dtsi file to handle PMU
+> > >>> register accesses in a centralized way using syscon driver
+> > >>>
+> > >>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> > >>> ---
+> > >>>  arch/arm/boot/dts/exynos5.dtsi |    5 +++++
+> > >>>  1 file changed, 5 insertions(+)
+> > >>>
+> > >>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> > >>> index e52b038..918e732 100644
+> > >>> --- a/arch/arm/boot/dts/exynos5.dtsi
+> > >>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> > >>> @@ -106,4 +106,9 @@
+> > >>>                 #size-cells = <0>;
+> > >>>                 status = "disabled";
+> > >>>         };
+> > >>> +
+> > >>> +       pmu_sys_reg: pmusysreg@1004000 {
+> > >>> +               compatible = "syscon";
+> > >>> +               reg = <0x10040000 0x5000>;
+> > >>> +       };
+> > >>>  };
+> > >>
+> > >> Had a look at this in a bit detail and found the following.
+> > >> The register base address for this block on 5250 and 5420 as per the
+> > >> TRM is 0x10050000.
+> > >>
+> > >> Also, the binding document specifies the naming convention. According
+> > >> to it this node
+> > >> should like:
+> > >>
+> > >> sys_reg: sysreg@10050000 {
+> > >>            compatible = "samsung,exynos5-sysreg", "syscon";
+> > >>            reg = <0x10050000 0x500>;
+> > >> };
+> > >>
+> > >
+> > > I know, but here my intention is not to regmap system register (0x10050000),
+> > > but instead PMU register (0x10040000), Hence created this node.
+> > 
+> > This clashes with the existing binding for this type of node. Probably
+> > you will need to
+> > define it differently?
+> 
+> PMU and System Registers are two completely separate entities. However
+> a generic syscon binding can be used to represent both, because they are
+> just collections of registers shared by multiple IPs.
+> 
 
-Minor nit. This should be in the default implementation. The crossbar
-implementation will fill out_hwirq in its own way and is not
-interested in the +16 operation at all.
-
-> +		ret = gic_routable_irq_domain_ops->xlate(d, controller,
-> +							 intspec,
-> +							 intsize,
-> +							 out_hwirq,
-> +							 out_type);
-> +
-
-> +		gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
-> +					hwirq_base, &gic_irq_domain_ops, gic);
-> +	} else {
-> +		if (WARN_ON(!gic_routable_irq_domain_ops))
-> +			return;
-
-This warning is pointless, because you have default ops now.
-
-> +
-> +		gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
-> +						    &gic_irq_domain_ops,
-> +						    gic);
->  	}
+I would suggest for the participants in this discussion to send Reviewed-by:
+or Acked-by: feedback once you are happy with the patches. I am sure this
+would help Wim tremendously when deciding if the series is ready for
+integration.
 
 Thanks,
-
-	tglx
+Guenter
