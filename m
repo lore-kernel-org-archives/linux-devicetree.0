@@ -1,73 +1,134 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv8][ 3/6] video: Kconfig: Allow more broad selection of
- the imxfb framebuffer driver.
-Date: Wed, 30 Oct 2013 20:35:42 +0100
-Message-ID: <20131030193542.GY18477@ns203013.ovh.net>
-References: <1383061860-25035-1-git-send-email-denis@eukrea.com>
- <1383061860-25035-3-git-send-email-denis@eukrea.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 1/7] clk: hi3xxx: add clock support
+Date: Wed, 30 Oct 2013 12:44:00 -0700
+Message-ID: <20131030194400.11662.9100@quantum>
+References: <1381828577-27998-1-git-send-email-haojian.zhuang@linaro.org>
+ <1381828577-27998-2-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383061860-25035-3-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1381828577-27998-2-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric B??nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16:50 Tue 29 Oct     , Denis Carikli wrote:
-> Without that patch, a user can't select the imxfb driver when the i.M=
-X25 and/or
->   the i.MX27 device tree board are selected and that no boards that s=
-elects
->   IMX_HAVE_PLATFORM_IMX_FB are compiled in.
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Quoting Haojian Zhuang (2013-10-15 02:16:11)
+> Add clock support with device tree on Hisilicon SoC.
+> 
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->=20
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
->=20
-> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Hello Haojian,
+
+This patch looks mostly good to me but I have a few comments on the
+binding below.
+
 > ---
-> ChangeLog v7->v8:
-> - Added ACKs.
-> - Add some CC(Framebuffer maintainers and mailing lists).
-> - Improved commit message summary.
-> ---
->  drivers/video/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 4f2e1b3..22adaee 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -363,7 +363,7 @@ config FB_SA1100
-> =20
->  config FB_IMX
->  	tristate "Freescale i.MX1/21/25/27 LCD support"
-> -	depends on FB && IMX_HAVE_PLATFORM_IMX_FB
-> +	depends on FB && ARCH_MXC
->  	select FB_CFB_FILLRECT
->  	select FB_CFB_COPYAREA
->  	select FB_CFB_IMAGEBLIT
-> --=20
-> 1.7.9.5
->=20
+>  .../devicetree/bindings/clock/hisilicon.txt        |  99 +++++++++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/hisilicon/Makefile                     |   2 +
+>  drivers/clk/hisilicon/clk-hi3xxx.c                 | 221 +++++++++++++++++++++
+>  drivers/clk/hisilicon/clk-hi3xxx.h                 |  34 ++++
+>  drivers/clk/hisilicon/clkgate-seperated.c          | 129 ++++++++++++
+>  6 files changed, 486 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hisilicon.txt
+>  create mode 100644 drivers/clk/hisilicon/Makefile
+>  create mode 100644 drivers/clk/hisilicon/clk-hi3xxx.c
+>  create mode 100644 drivers/clk/hisilicon/clk-hi3xxx.h
+>  create mode 100644 drivers/clk/hisilicon/clkgate-seperated.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/hisilicon.txt b/Documentation/devicetree/bindings/clock/hisilicon.txt
+> new file mode 100644
+> index 0000000..c29b9ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hisilicon.txt
+> @@ -0,0 +1,99 @@
+> +Device Tree Clock bindings for arch-hi3xxx
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties for mux clocks:
+> + - compatible : shall be "hisilicon,clk-mux".
+> + - clocks : shall be the input parent clock phandle for the clock. This should
+> +       be the reference clock.
+> + - clock-output-names : shall be reference name.
+> + - #clock-cells : from common clock binding; shall be set to 0.
+> + - reg : the mux register address. It should be the offset of the container.
+> + - clkmux-mask : mask bits of the mux register.
+> + - clkmux-table : array of mux select bits.
+> +
+> +Optional properties for mux clocks:
+> + - clkmux-hiword-mask : indicates that the bit[31:16] are the hiword mask
+> +       of mux selected bits (bit[15:0]). The bit[15:0] is valid only when
+> +       bit[31:16] is set.
+
+The masks are enumerated in clkmux-table. Can these masks include the
+hiword-mask bits as well? This will mean that you can eliminate the
+clkmux-hiword-mask property entirely. As an example:
+
+
+	reg = <0xfc802000 0x4>;
+	clkmux-table = <0x80000000 0x80008000>;
+
+> +
+> +
+> +
+> +Required properties for gate clocks:
+> + - compatible : shall be "hisilicon,clk-gate".
+> + - clocks : shall be the input parent clock phandle for the clock. This should
+> +       be the reference clock.
+> + - clock-output-names : shall be reference name.
+> + - #clock-cells : from common clock binding; shall be set to 0.
+> + - reg : the mux register address. It should be the offset of the container.
+> + - clkgate : bit index to control the clock gate in the gate register.
+> +
+> +Optional properties for gate clocks:
+> + - clkgate-inverted : it indicates that setting 0 could enable the clock gate
+> +       and setting 1 could disable the clock gate.
+> + - clkgate-seperated-reg : it indicates that there're three continuous
+> +       registers (enable, disable & status) for the same clock gate.
+> +
+> +
+> +
+> +Required properties for divider clocks:
+> + - compatible : shall be "hisilicon,clk-div".
+> + - clocks : shall be the input parent clock phandle for the clock. This should
+> +       be the reference clock.
+> + - clock-output-names : shall be reference name.
+> + - reg : the divider register address. It should be the offset of the
+> +       container.
+> + - clkdiv-mask : mask bits of the divider register.
+> + - clkdiv-min : the minimum divider of the clock divider.
+> + - clkdiv-max : the maximum divider of the clock divider.
+> +
+> +Optional properties for divider clocks:
+> + - clkdiv-hiword-mask : indicates that the bit[31:16] are the hiword mask
+> +       of divider selected bits (bit[15:0]). The bit[15:0] is valid only when
+> +       bit[31:16] is set.
+> +
+> +
+> +
+> +For example:
+> +               timer0_mux: timer0_mux@fc802000 {
+> +                       compatible = "hisilicon,clk-mux";
+> +                       #clock-cells = <0>;
+> +                       clocks = <&osc32k &timerclk01>;
+> +                       clock-output-names = "timer0_mux";
+> +                       reg = <0xfc802000 0x4>;
+> +                       clkmux-mask = <0x8000>;
+> +                       clkmux-table = <0 0x8000>;
+
+Can you eliminate the clkmux-mask property as well? Since you enumerate
+the clkmux-table property you should be able to derive the mask from the
+entries in that table.
+
+Regards,
+Mike
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
