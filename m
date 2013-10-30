@@ -1,73 +1,55 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
-Date: Wed, 30 Oct 2013 11:44:03 -0700
-Message-ID: <229e9b6b-1229-4bc6-bbec-a4395a5b1885@CO9EHSMHS022.ehs.local>
-References: <1381425018-5653-1-git-send-email-soren.brinkmann@xilinx.com>
- <1592656.1ojHcSlzVh@flatron>
- <b7840a0d-ac49-4c2d-beaa-9f79748c70d0@CH1EHSMHS006.ehs.local>
- <2028580.HhySWWnU2A@flatron>
- <8864256B-F8F9-4474-9B5F-416C3BB96523@codeaurora.org>
- <ceac2f8e-30b4-415e-b8f3-f2af1270be88@DB9EHSMHS020.ehs.local>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 29/51] DMA-API: ata: pata_octeon_cf: convert to use
+	dma_coerce_mask_and_coherent()
+Date: Wed, 30 Oct 2013 20:08:54 +0100
+Message-ID: <CAMuHMdWqAL6MN5VJrpAPC1fq3QtRWZ3UUMG3+6W5vEKSEm5N9g@mail.gmail.com>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+	<E1VMmAk-0007iq-IU@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ceac2f8e-30b4-415e-b8f3-f2af1270be88@DB9EHSMHS020.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <E1VMmAk-0007iq-IU@rmk-PC.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, linux-nvme@lists.infradead.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, driverdevel <devel@driverdev.osuosl.org>, linux-samsung-soc@vger.kernel.org, scsi <linux-scsi@vger.kernel.org>, e1000-devel@lists.sourceforge.net, Linux-Next <linux-next@vger.kernel.org>, b43-dev@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, DRI Development <dri-devel@lists.freedesktop.org>, linux-tegra@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.o>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 02:04:06PM +0100, Michal Simek wrote:
-> On 10/29/2013 09:26 AM, Kumar Gala wrote:
-> >=20
-> > On Oct 28, 2013, at 5:17 PM, Tomasz Figa wrote:
-> >=20
-> >>>>> diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.=
-txt
-> >>>>> b/Documentation/devicetree/bindings/clock/zynq-7000.txt index
-> >>>>> d99af878f5d7..11fdd146ec83 100644
-> >>>>> --- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
-> >>>>>
-> >>>>> @@ -22,6 +22,10 @@ Required properties:
-> >>>>> Optional properties:
-> >>>>>  - clocks : as described in the clock bindings
-> >>>>>  - clock-names : as described in the clock bindings
-> >>>>>
-> >>>>> + - fclk-enable : Bit mask to enable FCLKs in cases no proper C=
-CF
-> >>>>
-> >>>> Since it's a vendor specific property, it should include vendor
-> >>>> prefix.
-> >>>
-> >>> The whole driver is vendor specific. Should there really be anoth=
-er
-> >>> prefix for that property?
-> >>
-> >> Yes. If a property is introduced just for use by this particular d=
-river=20
-> >> then it must be prepended by a vendor prefix. That's a general rul=
-e.
-> >=20
-> > Most all nodes are vendor specific by definition ;).
->=20
-> Is this really generic rule? I haven't seen/heard any point regarding=
- this on KS.
->=20
-> I don't think we should use prefix here. It is xilinx specific option
-> but there shouldn't be any problem to use fclk-enable without any pre=
-fix.
-> Because it means we have to also rename ps-clk-frequency.
->=20
-> We are using xlnx prefix for properties which are autogenerated from =
-design tools
-> which is not even this case.
+On Thu, Sep 19, 2013 at 11:54 PM, Russell King
+<rmk+kernel@arm.linux.org.uk> wrote:
+> diff --git a/drivers/ata/pata_octeon_cf.c b/drivers/ata/pata_octeon_cf.c
+> index c51bbb9..6231d43 100644
+> --- a/drivers/ata/pata_octeon_cf.c
+> +++ b/drivers/ata/pata_octeon_cf.c
+> @@ -1014,8 +1014,9 @@ static int octeon_cf_probe(struct platform_device *pdev)
+>         }
+>         cf_port->c0 = ap->ioaddr.ctl_addr;
+>
+> -       pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+> -       pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> +       rv = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> +       if (rv)
+> +               return ret;
 
-So, what is the final call on this? Respin this and changing the prop n=
-ame,
-or leaving it as is?
+return rv;
 
-	Thanks,
-	S=C3=B6ren
+http://kisskb.ellerman.id.au/kisskb/buildresult/9959184/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
