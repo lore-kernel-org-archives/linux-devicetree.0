@@ -1,56 +1,81 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/2] DT match helpers for initcalls and platform devices
-Date: Wed, 30 Oct 2013 15:02:40 -0500
-Message-ID: <CAL_JsqJ3GANeMNi3iXQY_rB-NoovmwZx7EXfbG=rS6MxS=NLvQ@mail.gmail.com>
-References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
-	<20131030082621.GA22787@ulmo.nvidia.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
+Date: Wed, 30 Oct 2013 15:10:01 -0500
+Message-ID: <52716799.6040002@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <526FDFF4.9030806@ti.com> <5270C1F3.6000409@ti.com> <52711F12.1090008@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131030082621.GA22787-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52711F12.1090008@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2013 at 3:26 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Oct 30, 2013 at 01:12:49AM -0500, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On 10/30/2013 10:00 AM, Nishanth Menon wrote:
+> On 10/30/2013 03:23 AM, Tero Kristo wrote:
+>> On 10/29/2013 06:19 PM, Nishanth Menon wrote:
+>>> On 10/25/2013 10:56 AM, Tero Kristo wrote:
+>>> <snip>
+>>>> Testing done:
+>>>> - omap3-beagle: boot + suspend/resume (ret + off)
+>>>> - omap4-panda-es: boot + suspend/resume
+>>>> - omap5-uevm: boot
+>>>> - dra7-evm: boot
+>>>> - am335x-bone: boot
+>>>>
+>>>> Test branches available:
+>>>>
+>>>> tree: https://github.com/t-kristo/linux-pm.git
+>>>
+>>> <snip>
+>>>> Fully functioning test branch: 3.12-rc6-dt-clks-v9
+>>>>
+>>> ^^ I tested this branch (boot testing):
+>>> Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
+>>> failed to transition)
 >>
->> This series adds a couple of boilerplate helpers to match with DT for
->> initcalls and platform device creation and probe. The goal here is to
->> remove more platform code out of arch/arm and eventually the machine
->> descriptors.
->
-> I fear that this is a step backwards because it makes it easier for
-> people to do the wrong thing. We've been doing the same with interrupt
-> controllers and clocks. With those there's at least the argument that
-> they need to be available really early and therefore cannot use the
-> regular driver model. But for everything else, shouldn't we enforce
-> proper drivers to be written?
+>> I just sent you a private email with a patch to try out, should fix the 
+>> boot crash at least hopefully. Basically I forgot to convert one part of 
+>> the kernel to the new regmap stuff for omap36xx.
+> 
+> it does bootup yes.
+>>
+>> clkdm issues are caused by wrong data in omap_hwmod_3xxx_data.c, USB 
+>> nodes are listing l3_init_clkdm for them, but this only exists on 
+>> omap4+. Seems like some copy paste bug introduced by someone.
+>>
+>> dpll5 part I am not too sure, can you check if the same happens with 
+>> non-dt boot?
+> 
+> no-dt: http://pastebin.com/bYP9fTzH
+> dt: http://pastebin.com/xHup4L9Y
+> 
+> dpll5 warning seems to be only in dt-boot?
+> 
 
-You think both are a step backwards or just the initcall one? For
-initcalls, there are things which are not drivers, but just one time
-init.  The example on highbank is highbank_pm_init. In some cases like
-cpuidle, they have been converted to platform drivers, but then we
-have platform code to create devices if we are on the relevant
-platform. There is not really a real device node that exists for some
-of these drivers and we need to create the device rather than the
-device getting created by scanning the buses in the DT.
+Tracked this down: you were missing the following - looks like the
+conversion script might be missing converting the flags clock data
+over to dts?
 
-I think this is less error prone because we've had cases of
-unconditional initcalls which break multi-platform kernels.
+diff --git
+a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+index 7e37e3e..c9b77c8 100644
+--- a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
++++ b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+@@ -30,6 +30,7 @@
+                compatible = "ti,omap3-dpll-clock";
+                clocks = <&sys_ck>, <&sys_ck>;
+                reg = <0x0d04>, <0x0d24>, <0x0d34>, <0x0d4c>;
++               ti,low-power-stop;
+        };
 
-> Perhaps if you can point me to some examples I could get more context
-> why and where this would be useful.
+        dpll5_m2_ck: dpll5_m2_ck {
 
-I'll push out a WIP branch later which has the above examples and
-removes the machine_desc struct for highbank. This all is more for
-arm64 which doesn't have or want to have a machine_desc.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Regards,
+Nishanth Menon
