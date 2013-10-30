@@ -1,46 +1,36 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH] of: set dma_mask to point to coherent_dma_mask
-Date: Wed, 30 Oct 2013 00:05:22 -0500
-Message-ID: <1383109522-6879-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: stefano.stabellini@eu.citrix.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] Documentation/watchdog: Add binding example in samsung-wdt
+Date: Wed, 30 Oct 2013 10:41:10 +0530
+Message-ID: <1383109870-30297-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-watchdog@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, wim@iguana.be, linux@roeck-us.net, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+Added an example for reference.
 
-Platform devices created by DT code don't initialize dma_mask pointer to
-anything. Set it to coherent_dma_mask by default if the architecture
-code has not set it.
-
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
-I think this is at least part of what is needed to fix dma_mask issue
-raised by Stefano [1]. Things should work AFAICT with just this, but
-I suppose the xgmac driver needs to set the mask as well (not relying
-on the default), but some pointing the dma_mask to a valid value is
-needed first.
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Rob
-
-[1] http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg528236.html
-
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index f6dcde2..fce088e 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->archdata.dma_mask = 0xffffffffUL;
- #endif
- 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-+	if (!dev->dev.dma_mask)
-+		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
+diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+index 2aa486c..7ddf461 100644
+--- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+@@ -12,3 +12,12 @@ Required properties:
  
+ Optional properties:
+ - timeout-sec : contains the watchdog timeout in seconds.
++
++Example:
++
++watchdog@101D0000 {
++ 	compatible = "samsung,s3c2410-wdt";
++ 	reg = <0x101D0000 0x100>;
++ 	interrupts = <0 42 0>;
++ 	status = "disabled";
++ };
 -- 
-1.8.1.2
+1.7.9.5
