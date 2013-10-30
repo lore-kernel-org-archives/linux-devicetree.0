@@ -1,41 +1,24 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Wed, 30 Oct 2013 17:02:35 -0500
-Message-ID: <D081E03B-01D6-497F-B8D0-E994219C8282@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org> <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org> <52717EA5.6030208@codeaurora.org> <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org> <52718118.1020009@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <52718118.1020009@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv3 05/19] ARM: dt: tegra114: iommu: Fix IOMMU register
+ address
+Date: Wed, 30 Oct 2013 16:07:17 -0600
+Message-ID: <52718315.1040307@wwwdotorg.org>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com> <1382092020-13170-6-git-send-email-hdoyu@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382092020-13170-6-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/18/2013 04:26 AM, Hiroshi Doyu wrote:
+> Fix IOMMU register address.
 
-On Oct 30, 2013, at 4:58 PM, Stephen Boyd wrote:
+That's quite unfortunate. Why do we always have trouble getting the
+IOMMU register address correct in DT; I think we had a similar issue
+with the Tegra30 DT.
 
-> On 10/30/13 14:56, Kumar Gala wrote:
->> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
->> 
->>> On 10/30/13 14:45, Kumar Gala wrote:
->>>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
->>>>> +l2-cache node containing the following properties:
->>>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
->>> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
->>> property is showing.
->> Than why not have it in each cpu node?
-> 
-> Because that duplicates things unnecessarily? The cpus node can hold
-> things that are common to all CPUs to avoid duplication. If it was a
-> different PPI for each CPU then I would agree that we need to put it in
-> each cpu node.
-
-Ok, I'll accept that as the binding is specific to Krait (and I assume all SoCs w/Krait wire this up to a common interrupt)
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Anyway, I guess I should take this for 3.13 and stable since it's a bugfix.
