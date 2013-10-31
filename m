@@ -1,126 +1,67 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v2 0/4] Exynos 5410 Dual cluster support
-Date: Wed, 30 Oct 2013 16:57:31 -0700
-Message-ID: <87fvrinwgk.fsf@linaro.org>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com>
-	<87k3hc3lso.fsf@linaro.org> <20131017130435.GG3061@cat.local>
-	<87zjq71xcq.fsf@linaro.org>
-	<CAGc3s_cbCgdPdbCPF2XN+p-O5RfM-4pNZT49=_4MOVy=Lz8d=Q@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3] ASoC: simple-card: add Device Tree
+ support
+Date: Wed, 30 Oct 2013 17:31:56 -0700
+Message-ID: <20131031003156.GY2493@sirena.org.uk>
+References: <87eh97sqw7.wl%kuninori.morimoto.gx@renesas.com>
+ <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
+ <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
+ <20131003104248.GI27287@sirena.org.uk>
+ <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
+ <20131024171758.GA2461@kartoffel>
+ <20131025131357.GB12932@sirena.org.uk>
+ <87sivjk2xj.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAGc3s_cbCgdPdbCPF2XN+p-O5RfM-4pNZT49=_4MOVy=Lz8d=Q@mail.gmail.com>
-	(Mauro Ribeiro's message of "Tue, 29 Oct 2013 07:23:33 -0200")
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Ribeiro <mdrjr0@gmail.com>
-Cc: Aliaksei Katovich <aliaksei.katovich@gmail.com>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Tarek Dakhran <t.dakhran@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-samsung-soc@vger.kernel.org, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iIOavGAISvUeFFLW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87sivjk2xj.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
 
-Mauro Ribeiro <mdrjr0@gmail.com> writes:
+--iIOavGAISvUeFFLW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Kevin,
->
-> https://github.com/hardkernel/u-boot/tree/odroid-v2012.07
+On Tue, Oct 29, 2013 at 05:39:17PM -0700, Kuninori Morimoto wrote:
 
-Yes, this is the one I'm using, but USB networking doesn't seem to work
-with that.  Do you have USB networking working with that u-boot?  If so,
-what changes to the config did you make?
+> I had sent v4 patch, but I removed simple-card,card-name on it.
+> But, as Mark (Brown) explained, I think simple-card,card-name
+> is very helpful for users.
+> I can send v5 patch (with it), or incremental patch if we can have it.
+> So, I need your comment
 
-Kevin
+Let's review the existing bindings as-is unless there's a need to revise
+for some other reason, it's easy enough to add the property back later.
 
->
-> On Thu, Oct 17, 2013 at 5:00 PM, Kevin Hilman <khilman@linaro.org> wrote:
->
->> Aliaksei Katovich <aliaksei.katovich@gmail.com> writes:
->>
->> > hi Kevin;
->> >
->> >> Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
->> >>
->> >> > The series of patches represent support of Exynos 5410 SoC
->> >> >
->> >> > The Exynos 5410 is the first Samsung SoC based on bigLITTLE
->> architecture.
->> >> > Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same
->> time
->> >> >
->> >> > Patches add new platform description, support of clock controller,
->> >> > dual cluster support and device tree for Exynos 5410
->> >> >
->> >> > Has been build on v3.12-rc5.
->> >> > Has been tested on Exynos 5410 reference board (exynos_defconfig).
->> >>
->> >> Has anyone tried this on the exynos5410 based odroid-xu yet?
->> >>
->> >> I tried booting this on my recently arrived odroid-xu, but am not
->> >> getting it to boot.
->> >
->> >       I am able to boot my odroid-xu+e to busybox with these patches
->> applied
->> >       against 3.12-rc5: exynos_defconfig and exynos5410-smdk5410.dtb were
->> >       used.
->> >
->> >       However there seem to be some issues with virq allocations, like
->> this:
->>
->> Ah, I've seen the same thing, but for me it doesn't boot reliably.
->> Sometimes there's an immediate fault like this[1], and once in a rare
->> while, it starts to boot and I see the same virq errors.
->>
->> Curious what you guys are using for boot loaders.  I found some
->> pre-build u-boot binaries along with the necessary BL1/2 binary blobs in
->> the hardkernel kernel repo: https://github.com/hardkernel/linux.git
->> branch: origin/odroidxu-3.4.y
->> path: tools/hardkernel/u-boot-pre-built
->>
->> Unfortunatly, that u-boot doesn't have usb networking support built in
->> so I couln't use u-boot to tftp the kernel, so I was able to use fasboot
->> to load the kernel/ramdisk, but it's very flaky.
->>
->> Do you have an pointers of where to get a known working bootloader.
->> Ideally, a u-boot with networking/tftp support would be ideal.
->>
->> Thanks,
->>
->> Kevin
->>
->> [1]
->> USB cable Connected![0x4]
->> Starting download of 10008576 bytes
->> .........
->> downloading of 10008576 bytes finished
->> Kernel size: 00296bc5
->> Ramdisk size: 006f3c00
->> Booting kernel..
->> ## Booting kernel from Legacy Image at 40008000 ...
->>    Image Name:   Linux
->>    Image Type:   ARM Linux Kernel Image (uncompressed)
->>    Data Size:    2714501 Bytes = 2.6 MiB
->>    Load Address: 40008000
->>    Entry Point:  40008000
->>    Verifying Checksum ... OK
->>    XIP Kernel Image ... OK
->> OK
->>
->> Starting kernel ...
->>
->> undefined instruction
->> pc : [<4000800c>]          lr : [<bfc65df4>]
->> sp : bfb5bbc8  ip : 00000000     fp : 00001251
->> r10: 00000000  r9 : 00000000     r8 : bfb5bf30
->> r7 : 00000000  r6 : 00000000     r5 : 40008000  r4 : bfcabac0
->> r3 : bfb5bfa8  r2 : 40000100     r1 : 00001251  r0 : 00000000
->> Flags: nZCv  IRQs off  FIQs off  Mode SVC_32
->> Resetting CPU ...
->>
->> emmc resetting ...
->> resetting ...
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe
->> linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
+--iIOavGAISvUeFFLW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJScaT4AAoJELSic+t+oim9TAoP/RMjpRpde/iFCYyhdzUpxiyv
+H/bMmFHrHPuuiYttEmUiJxwe+90LiMVLJRcbQcVnJRHb6g3RbVNaNoQ5H786+zqQ
+KlcLgIyF5IUvlfvCSuzUvBVTJffMzmdsc07qe11iDHG5DgwvfSHq9CfvJNIL1DEy
+6p4HK7rY2EdRMZrnjF3byQ3b5f+9HcSiu0XEwyk2b8VZ49TV0Nv8iH1xuSxr/iQv
+ie22+qhsZIREbzkYCqE0ZkiT9KOE/jXn+xz2OriYilJEIkdQmETSGmDBcQdiBlaI
+dCm7jR9IO2Z6zTRNssIJP6FqG9DxFEY2B/EPq5nZsCksmYSTQxiUQyAOvlnWk3zJ
+NnwHIO6ODK8mUxx/3n9rW7w+gIaIN7zRjrb1YT0a8zTzVfEe4ktH3DHT98EcSsk+
+yM7vbUZEdxsM9vFTNy2SHsGpJ3CGMPQ4OGBYu73OxlgIZatzo3HxUqyamNTCLGHk
+zYdSyL6vKz5JZb0fSudlujcr1OnXk1L6IvooxWI1swuPD9/3D39tQCJ31PNGqOBV
+TB31xAIJRscSVgtPYTh+Ye+an4ttAispe2ATvZgP7jQufFaf3OzekLhV1RLgDWd1
+3lm4j19ZMI4+lCc7KP67HTwHirVdmOns7kJ5hPnm00VF6BYjTHqrSNRj2ueuDO+X
+Y7YISX+I4i/xtbMufVCk
+=YbBh
+-----END PGP SIGNATURE-----
+
+--iIOavGAISvUeFFLW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
