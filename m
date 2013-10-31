@@ -1,51 +1,57 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Thu, 31 Oct 2013 12:44:39 -0500
-Message-ID: <C796381F-AE3B-4577-BC97-DA041E5F40E8@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org> <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org> <52717EA5.6030208@codeaurora.org> <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org> <52718118.1020009@codeaurora.org> <D081E03B-01D6-497F-B8D0-E994219C8282@codeaurora.org> <20131031173047.GK21983@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131031173047.GK21983@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 15/19] ARM: tegra: Create a DT header defining SWGROUP ID
+Date: Thu, 31 Oct 2013 10:46:06 -0700
+Message-ID: <20131031174606.GG3037@kartoffel>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-16-git-send-email-hdoyu@nvidia.com>
+	<52718CC6.5@wwwdotorg.org>
+	<20131031.101942.530833331841957251.hdoyu@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131031.101942.530833331841957251.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Oct 31, 2013, at 12:30 PM, Stephen Boyd wrote:
-
-> On 10/30, Kumar Gala wrote:
->> 
->> On Oct 30, 2013, at 4:58 PM, Stephen Boyd wrote:
->> 
->>> On 10/30/13 14:56, Kumar Gala wrote:
->>>> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
->>>> 
->>>>> On 10/30/13 14:45, Kumar Gala wrote:
->>>>>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
->>>>>>> +l2-cache node containing the following properties:
->>>>>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
->>>>> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
->>>>> property is showing.
->>>> Than why not have it in each cpu node?
->>> 
->>> Because that duplicates things unnecessarily? The cpus node can hold
->>> things that are common to all CPUs to avoid duplication. If it was a
->>> different PPI for each CPU then I would agree that we need to put it in
->>> each cpu node.
->> 
->> Ok, I'll accept that as the binding is specific to Krait (and I assume all SoCs w/Krait wire this up to a common interrupt)
->> 
+On Thu, Oct 31, 2013 at 08:19:42AM +0000, Hiroshi Doyu wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 30 Oct 2013 23:48:38 +0100:
 > 
-> Can I take that as an ack? I'll resend with the s/an/a/ fix
-> today.
+> > On 10/18/2013 04:26 AM, Hiroshi Doyu wrote:
+> > > Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
+> > > binding. "swgroups" is a group of H/W clients which Tegra SoCs
+> > > support. This unique ID can be used to calculate MC_SMMU_<swgroup
+> > > name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
+> > > register bit. This will allow the same header to be used by both
+> > > device tree files, and drivers implementing this binding, which
+> > > guarantees that the two stay in sync. This also makes device trees
+> > > more readable by using names instead of magic numbers.
+> > 
+> > > diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+> > 
+> > > +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+> > > +
+> > > +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+> > 
+> > Isn't the DT match all 32-bit, such that the ULL suffix does nothing,
+> 
+> For the future Tegra SoC, the number of HWA grows a bit more, and it's
+> supposed that "64" would be enough.
 
-Yes, you can take that as an ack.
+Does DTC accept 64-bit values as-is? I recall DTC shouting at me in the past,
+and having to split values across two u32 cells (i.e. <0xffffffff 0xffffffff>
+rather than <0xffffffffffffffff>).
 
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+Mark.
