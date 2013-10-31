@@ -1,226 +1,144 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] clk: shmobile: Add MSTP clock support
-Date: Thu, 31 Oct 2013 16:15:31 +0100
-Message-ID: <1412461.M3SMDGpi7Z@avalon>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1481817.doGcO1nQB0@avalon> <5E542DCC-EA79-4A9E-BC60-B8E1B964F16D@codeaurora.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv9 04/43] CLK: TI: Add DPLL clock support
+Date: Thu, 31 Oct 2013 10:25:02 -0500
+Message-ID: <5272764E.6070707@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-5-git-send-email-t-kristo@ti.com> <52726704.5070300@ti.com> <52726F89.4000409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5E542DCC-EA79-4A9E-BC60-B8E1B964F16D@codeaurora.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52726F89.4000409@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+On 10/31/2013 09:56 AM, Tero Kristo wrote:
+> On 10/31/2013 04:19 PM, Nishanth Menon wrote:
+>> On 10/25/2013 10:56 AM, Tero Kristo wrote:
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/ti/dpll.txt b/Documentation/devicetree/bindings/clock/ti/dpll.txt
+>>> new file mode 100644
+>>> index 0000000..7b87721
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/ti/dpll.txt
+[...]
 
-On Tuesday 29 October 2013 19:19:35 Kumar Gala wrote:
-> On Oct 29, 2013, at 7:06 PM, Laurent Pinchart wrote:
-> > On Tuesday 29 October 2013 18:36:06 Kumar Gala wrote:
-> >> On Oct 29, 2013, at 9:55 AM, Laurent Pinchart wrote:
-> >>> MSTP clocks are gate clocks controlled through a register that handles
-> >>> up to 32 clocks. The register is often sparsely populated.
-> >>> 
-> >>> Those clocks are found on Renesas ARM SoCs.
-> >>> 
-> >>> Signed-off-by: Laurent Pinchart
-> >>> <laurent.pinchart+renesas@ideasonboard.com>
-> >>> ---
-> >>> .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
-> >>> drivers/clk/shmobile/Makefile                      |   1 +
-> >>> drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++
-> >>> include/dt-bindings/clock/r8a7790-clock.h          |  56 +++++
-> >>> 4 files changed, 333 insertions(+)
-> >>> create mode 100644
-> >>> Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> >>> create mode 100644 drivers/clk/shmobile/clk-mstp.c
-> >>> create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
-> >>> 
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> >>> b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> >>> new
-> >>> file mode 100644
-> >>> index 0000000..b3a1ce0
-> >>> --- /dev/null
-> >>> +++
-> >>> b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> >>> @@ -0,0 +1,47 @@
-> >>> +* Renesas R8A7790 MSTP Clocks
-> >> 
-> >> can we spell out MSTP once in the heading?
-> > 
-> > Sure thing. It stands for Module Stop.
-> > 
-> >>> +
-> >>> +The CPG can gate SoC device clocks. The gates are organized in groups
-> >>> of> up to
-> >>> +32 gates.
-> >>> +
-> >>> +This device tree binding describes a single 32 gate clocks group per
-> >>> node.
-> >>> +Clocks are referenced by user nodes by the MSTP node phandle and the
-> >>> clock
-> >>> +index in the group, from 0 to 31.
-> >>> +
-> >>> +Required Properties:
-> >>> +
-> >>> +  - compatible: Must be one of the following
-> >>> +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate
-> >>> clocks
-> >>> +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
-> >>> +  - reg: Base address and length of the memory resource used by the
-> >>> MSTP
-> >>> +    clocks
-> >>> +  - clocks: Reference to the parent clocks
-> >>> +  - #clock-cells: Must be 1
-> >>> +  - clock-output-names: The name of the clocks as free-form strings
-> >>> +  - renesas,indices: Index of the gate clocks (0 to 31)
-> >> 
-> >> Index of the gate clock into what?
-> > 
-> > Into the 32 gates clock group. Groups have 32 entries with a 32-bit
-> > register that controls 32 gate clocks. The groups (and thus registers)
-> > are sparsly populated, this property lists the indices for the register
-> > bits corresponding to the clocks.
-> > 
-> > Would
-> > 
-> >  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
-> > 
-> > be explicit enough ?
+>>
+>>> +  ti,am3-* dpll types list the registers in the same order, except "autoidle"
+>>> +  register is left out as this hardware does not have it, e.g.:
+>>> +	reg = <0x40>, <0x50>, <0x60>;
+>>> +  results in following register map:
+>>> +	base + 0x40 - control
+>>> +	base + 0x50 - idlest
+>>> +	base + 0x60 - mult-div1
+>>> +
+>>> +Optional properties:
+>>> +- DPLL mode setting - defining any one or more of the following overrides
+>>> +  default setting.
+>>> +	- ti,low-power-stop : DPLL supports low power stop mode, gating output
+>>> +	- ti,low-power-bypass : DPLL output matches rate of parent bypass clock
+>>> +	- ti,lock : DPLL locks in programmed rate
+>>
+>>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_BYPASS) | (1 << DPLL_LOCKED),
+>>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = ((1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED) |
+>>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>>> arch/arm/mach-omap2/dpll3xxx.c: _omap3_dpll_write_clken(clk, DPLL_LOCKED);
+>>
+>> There is no if checks for DPLL_LOCKED which is set with ti,lock,
+>> should we just drop it?
 > 
-> I'm still confused.  As I look at the code, I'm not quite clear how
-> renesas,indices relates to a register or register bits.
+> Probably better to keep it in, as there might be some code in future 
+> which needs this. Kind of better for readability also, as the field is 
+> specified to list the valid modes for the DPLL. One could argue that 
+> current kernel code is wrong for _omap3_dpll_write_clken(clk, 
+> DPLL_LOCKED) as it does not check if the mode is valid for the DPLL or not.
 
-OK, this probably means that the documentation isn't clear enough. Let me try 
-to explain the situation, I'll then rephrase the bindings documentation.
+yep, the thought did cross my mind.
 
-Renesas SoCs have a large number of gate clocks, referred to as the MSTP 
-clocks. Those gate clocks are controlled by a single bit each. From a control 
-point of view, those bits are located in 32-bit registers referred to as the 
-MSTP registers. Each MSTP register can thus control up to 32 gate clocks. As 
-they are sparsely populated they usually control less than 32 gate clocks and 
-have reserved bits for the clocks that are not present in the hardware. The 
-reserved bits are randomly placed in the registers.
-
-On the DT side, each MSTP register gets a DT node. The clocks handled by that 
-register are listed in DT. The driver needs to map each clock to its bit index 
-in the MSTP register. There are two main ways to do so:
-
-- Specifying all 32 bits in the DT node, with 32 parent clocks and 32 clock 
-output names. Reserved bits would get a dummy parent and an empty clock output 
-name. The bit index would in that case be the clock index in the clock output 
-names list with a one-to-one mapping between the clock cell and the clock 
-index in the clock output names list.
-
-- Specifying the available clocks only. No dummy parent clock and empty clock 
-output name would be used. In that case there would be no one-to-one mapping 
-between the clock cell and the corresponding clock index in the clock output 
-names list. The mapping is then specified through the renesas,clock-indices 
-property. Each entry in the property stores the bit number of the 
-corresponding clock in the MSTP register.
-
-Let's take MSTP3 of the R8A7790 as an example. The register controls the 
-following clocks:
-
-0		IIC2
-1-3		Reserved
-4		TPU0
-5		MMC1
-6-9		Reserved
-10		IrDA
-11		SDHI3
-12		SDHI2
-13		SDHI1
-14		SDHI0
-15		MMC0
-16-17	Reserved
-18		IIC0
-19		PCIEC
-20-22	Reserved
-23		IIC1
-24-27	Reserved
-28		SSUSB
-29		CMT1
-30		USBDMAC0
-31		USBDMAC1
-
-The corresponding DT node would thus have the following properties
-
-		clock-output-names =
-			"iic2", "tpu0", "mmcif1", "irda", "sdhi3", "sdhi2", "sdhi1",
-			"sdhi0", "mmcif0", "iic0", "pciec", "iic1", "ssusb", "cmt1",
-			"usbdmac0", "usbcma1";
-		renesas,clock-indices = <
-				0 4 5 10 11 12 13 14 15 18 19 23 28 29 30 31
-		>
-
-The clock cell in clock users corresponds to the hardware bit index, not the 
-index of the clock in the clock output names list. To make referencing clocks 
-less error-prone, macros are defined for all bit indices in <dt-
-bindings/clock/r8a7790-clock.h>. Using this macros in the provider, we get
-
-		renesas,clock-indices = <
-				R8A7790_CLK_IIC0 R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1
-				R8A7790_CLK_IRDA R8A7790_CLK_SDHI3 R8A7790_CLK_SDHI2
-				R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0 R8A7790_CLK_MMCIF0
-				R8A7790_CLK_IIC0 R8A7790_CLK_PCIEC R8A7790_CLK_IIC1
-				R8A7790_CLK_SSUSB R8A7790_CLK_CMT1 R8A7790_CLK_USBDMAC0
-				R8A7790_CLK_USBDMAC1
-		>;
-
-Is the explanation clear enough ?
-
-> >>> +
-> >>> +The clocks, clock-output-names and renesas,indices properties contain
-> >>> one
-> >>> +entry per gate. The MSTP groups are sparsely populated. Unimplemented
-> >>> gates
-> >> 
-> >> per gate clock. (?)
-> > 
-> > I'll change that.
-> > 
-> >>> +must not be declared.
-> >>> +
-> >>> +
-> >>> +Example
-> >>> +-------
-> >>> +
-> >>> +	#include <dt-bindings/clock/r8a7790-clock.h>
-> >>> +
-> >>> +	mstp3_clks: mstp3_clks {
-> > 
-> > mstp3_clks@e615013c I suppose.
 > 
-> yes, missed that
-> `
+>>
+>> [...]
+>>> diff --git a/drivers/clk/ti/dpll.c b/drivers/clk/ti/dpll.c
+>>> new file mode 100644
+>>> index 0000000..89733c9
+>>> --- /dev/null
+>>> +++ b/drivers/clk/ti/dpll.c
+>>
+>> [...]
+>>
+>>> +/**
+>>> + * ti_clk_register_dpll() - Registers the DPLL clock
+>>> + * @name:	Name of the clock node
+>>> + * @parent_names: list of parent names
+>>> + * @num_parents: num of parents in parent_names
+>>> + * @flags:	init flags
+>>> + * @dpll_data:	DPLL data
+>>> + * @ops:	ops for DPLL
+>>> + */
+>>> +static struct clk *ti_clk_register_dpll(const char *name,
+>>> +					const char **parent_names,
+>>> +					int num_parents, unsigned long flags,
+>>> +					struct dpll_data *dpll_data,
+>>> +					const struct clk_ops *ops,
+>>> +					struct regmap *regmap)
+>>> +{
+>>> +	struct clk *clk;
+>>> +	struct clk_init_data init = { NULL };
+>>> +	struct clk_hw_omap *clk_hw;
+>>> +
+>>> +	/* allocate the divider */
+>>> +	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+>>> +	if (!clk_hw) {
+>>> +		pr_err("%s: could not allocate clk_hw_omap\n", __func__);
+>>
+>> here and in every other driver - please dont add pr_err for kzalloc
+>> not able to allocate, kzalloc will provide the warning anyways.
 > 
-> >>> +		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
-> > 
-> > clocks";
-> > 
-> >>> +		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
-> >>> +		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
-> >>> +			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks
-> > 
-> > R8A7790_CLK_SD0>,
-> > 
-> >>> +			 <&mmc0_clk>;
-> >>> +		#clock-cells = <1>;
-> >>> +		clock-output-names =
-> >>> +			"tpu0", "mmcif1", "sdhi3", "sdhi2",
-> >>> +			 "sdhi1", "sdhi0", "mmcif0";
-> >>> +		renesas,clock-indices = <
-> >>> +			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
-> >>> +			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
-> >>> +			R8A7790_CLK_MMCIF0
-> >>> +		>;
-> >>> +	};
+> Oh it does? Never seen that happen as kzalloc never failed for me. :) 
+> However, I can remove these as I don't think they will ever happen anyway.
+
+There have been cleanups such as commit
+38bb5253a95f2eb8cb765b7ab88aac686de6cb12 etc.. we dont want to
+introduce new ones now.
+
+>>> +	clk_hw->ops = hw_ops;
+>>> +	of_property_read_u32(node, "reg", (u32 *)&clk_hw->clksel_reg);
+>>> +	clk_hw->regmap = regmap;
+>>> +	clk_hw->hw.init = &init;
+>>> +
+>>> +	init.name = name;
+>>> +	init.ops = ops;
+>>> +	init.parent_names = &parent_name;
+>>> +	init.num_parents = 1;
+>>> +
+>>> +	/* register the clock */
+>>> +	clk = clk_register(NULL, &clk_hw->hw);
+>>> +
+>>> +	if (IS_ERR(clk))
+>>> +		kfree(clk_hw);
+>>> +	else
+>>> +		omap2_init_clk_hw_omap_clocks(clk);
+>>> +
+>>> +	return clk;
+>>> +}
+>>> +#endif
+>> [...]
+>>> +
+>>> +#ifdef CONFIG_ARCH_OMAP3
+>>
+>> just a mention - I understand we are still in transition and we need
+>> these #ifdefs, but eventually, we should be able to make the dpll.c
+>> independent of SoC variant #ifdefs.
+> 
+> Eventually yes. Currently it fails to compile if you do OMAP4 / OMAP5 
+> only build, as you don't have the OMAP3 support routines in.
+fair enough.
+
+
 -- 
 Regards,
-
-Laurent Pinchart
-
+Nishanth Menon
