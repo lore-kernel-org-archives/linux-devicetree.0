@@ -1,45 +1,71 @@
-From: Chen Guangyu-B42378 <B42378@freescale.com>
-Subject: Re: [PATCH v3 3/4] ASoC: fsl_ssi: Add dual fifo mode support
-Date: Thu, 31 Oct 2013 12:28:49 +0000
-Message-ID: <oxq6yw1a1g6ccnd85o4ral9y.1383222536476@email.android.com>
-References: <cover.1383207153.git.b42378@freescale.com>
- <da997ce67d9817364248ca1eba716bb6c7814a24.1383207153.git.b42378@freescale.com>,<5272474D.5000207@tabi.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 0/5] Add OF support to the sh-sci serial port driver
+Date: Thu, 31 Oct 2013 13:30:12 +0100
+Message-ID: <2472479.KWXlO4kKsi@avalon>
+References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131031052116.GJ1603@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5272474D.5000207@tabi.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@tabi.org>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131031052116.GJ1603@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Thank you for the comments.
-I'll refine this part.
+Hi Simon,
 
-Sent by Android device.
+On Thursday 31 October 2013 14:21:16 Simon Horman wrote:
+> [ CCed Greg KH. It is my assumption that he will take this series
+>   once it is ready ]
+> 
+> On Tue, Oct 29, 2013 at 11:29:54AM +0100, Laurent Pinchart wrote:
+> > Hello,
+> > 
+> > This patch set adds device tree bindings for the sh sci serial port
+> > devices and adds OF parsing to the sh-sci driver.
+> > 
+> > The bindings are based on Bastian Hecht's proposal (see
+> > http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach
+> > taken here is more minimalistic: instead of describing all hardware
+> > characteristics that vary between the SCI device revisions in DT (such as
+> > registers layout), that information is stored in the driver and selected
+> > based on the compatible property value. Only SCI revisions used on ARM
+> > devices are supported through DT, as DT support for SuperH is nowhere
+> > down the line.
+> > 
+> > The first three patches clean up the sh-sci driver. They're not strictly
+> > required for OF support but make sense nonetheless. The last two patches
+> > add OF parsing to the sh-sci driver and create DT bindings documentation.
+> > 
+> > The patches have been test on a Lager board (r8a7790-based). Support for
+> > other SoCs will be added as needed. Note that all current Renesas ARM
+> > SoCs seem to be compatible with the generic (H)SCI(F)(AB) devices, but
+> > the plan is for their DT bindings to list the SoC-specific version in
+> > case incompatibilities are found later.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > Bastian Hecht (1):
+> >   serial: sh-sci: Add OF support
+> > 
+> > Laurent Pinchart (4):
+> >   serial: sh-sci: Sort headers alphabetically
+> >   serial: sh-sci: Remove baud rate calculation algorithm 5
+> >   serial: sh-sci: Simplify baud rate calculation algorithms
+> >   serial: sh-sci: Add device tree bindings documentation
+> 
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Laurent, is this series waiting on anything other than a review of the
+> bindings from the Device-Tree people?
 
-Timur Tabi <timur@tabi.org> wrote:
+It's only waiting for review of the DT bindings and their implementation 
+(patches 4/5 and 5/5). As I've modified Bastian's patch in 4/5 I'd like to 
+give him an opportunity to review it as well.
 
+-- 
+Regards,
 
-Nicolin Chen wrote:
-> +     if (ssi_private->use_dual_fifo) {
-> +             write_ssi_mask(&ssi->srcr, 0, CCSR_SSI_SRCR_RFEN1);
-> +             write_ssi_mask(&ssi->stcr, 0, CCSR_SSI_STCR_TFEN1);
-> +             write_ssi_mask(&ssi->scr, 0, CCSR_SSI_SCR_TCH_EN);
-> +     } else {
-> +             write_ssi_mask(&ssi->srcr, CCSR_SSI_SRCR_RFEN1, 0);
-> +             write_ssi_mask(&ssi->stcr, CCSR_SSI_STCR_TFEN1, 0);
-> +             write_ssi_mask(&ssi->scr, CCSR_SSI_SCR_TCH_EN, 0);
-> +     }
-
-Why do you need the "else" part?  Why can't you just do this:
-
-if (ssi_private->use_dual_fifo) {
-        write_ssi_mask(&ssi->srcr, 0, CCSR_SSI_SRCR_RFEN1);
-        write_ssi_mask(&ssi->stcr, 0, CCSR_SSI_STCR_TFEN1);
-        write_ssi_mask(&ssi->scr, 0, CCSR_SSI_SCR_TCH_EN);
-}
-
+Laurent Pinchart
 
