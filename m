@@ -1,57 +1,90 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: gpio: dwapb: Synopsys Designware GPIO
-Date: Thu, 31 Oct 2013 16:55:24 +0000
-Message-ID: <20131031165524.GB4572@page>
-References: <52718C28.5030803@gmail.com>
- <20131031082226.GZ28790@pengutronix.de>
- <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
- <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
- <20131031155803.GB28790@pengutronix.de>
- <20131031160723.GA4572@page>
- <20131031161739.GC28790@pengutronix.de>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 05/19] ARM: dt: tegra114: iommu: Fix IOMMU register
+ address
+Date: Thu, 31 Oct 2013 18:05:24 +0100
+Message-ID: <20131031.190524.343708041257755667.hdoyu@nvidia.com>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com><1382092020-13170-6-git-send-email-hdoyu@nvidia.com><20131031165127.GB3037@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131031161739.GC28790-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/mixed;
+	boundary="_002_20131031190524343708041257755667hdoyunvidiacom_"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131031165127.GB3037@kartoffel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 05:17:39PM +0100, Steffen Trumtrar wrote:
-> On Thu, Oct 31, 2013 at 04:07:23PM +0000, Jamie Iles wrote:
-> > The reason for having it split into banks is that for hardware that 
-> > has a mixture of bank sizes (odd hardware admittedly, but that 
-> > includes hardware that I was writing the driver for), we had a setup 
-> > like 16 pins on bank A, 16 on B, 1 on C and 16 on D where each bank 
-> > could have a maximum of 32, so converting from a data sheet to GPIO 
-> > number is not obvious.  Grant Likely suggested representing the 
-> > banks as different devices, so that's how I created the binding.
-> > 
-> 
-> I have no problem with the binding, if it is worth it. Do you mean you had
-> hardware where the gpio lines where not connected? Or maybe you had an older
-> version of the IP core?
+--_002_20131031190524343708041257755667hdoyunvidiacom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Not even unconnected, the IP was configured to have banks of varying 
-width!  Perhaps it was something to do with the physical pads that they 
-were connected to having different I/O standards or something.
+Hi Mark,
 
-> In the Socfpga case there is gpio_config_reg2, which specifies the width
-> for every of the 4 ports. So I thought I use those values to describe my
-> hardware. The Socfpga however only uses the first bank of its three GPIO cores,
-> so I wouldn't be able to test if the code works for more than just that.
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote @ Thu, 31 Oct 2013 17:51:27 +0100=
+:
 
-I think that if there was a guarantee that all banks apart from the last 
-were configured to equal width then representing the controller as a 
-single device would be right, but given that it isn't always the case 
-then seperate devices for each bank is probably the most sensible.
+> On Fri, Oct 18, 2013 at 11:26:46AM +0100, Hiroshi Doyu wrote:
+> > Fix IOMMU register address.
+> >=20
+> > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/tegra114.dtsi | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra1=
+14.dtsi
+> > index 2905145..8d42787 100644
+> > --- a/arch/arm/boot/dts/tegra114.dtsi
+> > +++ b/arch/arm/boot/dts/tegra114.dtsi
+> > @@ -318,9 +318,9 @@
+> > =20
+> >  	iommu {
+> >  		compatible =3D "nvidia,tegra114-smmu", "nvidia,tegra30-smmu";
+> > -		reg =3D <0x7000f010 0x02c
+> > -		       0x7000f1f0 0x010
+> > -		       0x7000f228 0x074>;
+> > +		reg =3D <0x70019010 0x02c
+> > +		       0x700191f0 0x010
+> > +		       0x70019228 0x074>;
+>=20
+> Minor cleanup/consistency request: as all these lines are changing anyway=
+,
+> would you mind bracketing each entry individually:
+>=20
+> 		reg =3D <0x70019010 0x02c>,
+> 		      <0x700191f0 0x010>,
+> 		      <0x70019228 0x074>;
 
-That said I'd personally be happy either way to see the patches merged!
+No, at all. Attached the updated "[PATCHv3' 05/19]".
 
-Jamie
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--_002_20131031190524343708041257755667hdoyunvidiacom_
+Content-Type: text/x-patch;
+	name="0001-ARM-dt-tegra114-iommu-Fix-IOMMU-register-address.patch"
+Content-Description: 0001-ARM-dt-tegra114-iommu-Fix-IOMMU-register-address.patch
+Content-Disposition: attachment;
+	filename="0001-ARM-dt-tegra114-iommu-Fix-IOMMU-register-address.patch";
+	size=1042; creation-date="Thu, 31 Oct 2013 17:05:32 GMT";
+	modification-date="Thu, 31 Oct 2013 17:05:32 GMT"
+Content-Transfer-Encoding: base64
+
+RnJvbSBkNTQ1YzI3OWQxYWY5ZTgxNzQzZTY2OGM1ZDk5YjE0NzFjMWU1MzViIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQ0KRnJvbTogSGlyb3NoaSBEb3l1IDxoZG95dUBudmlkaWEuY29tPg0KRGF0
+ZTogTW9uLCAxNyBKdW4gMjAxMyAxNTozNzozNSArMDMwMA0KU3ViamVjdDogW1BBVENIdjMnIDA1
+LzE5XSBBUk06IGR0OiB0ZWdyYTExNDogaW9tbXU6IEZpeCBJT01NVSByZWdpc3RlciBhZGRyZXNz
+DQoNCkZpeCBJT01NVSByZWdpc3RlciBhZGRyZXNzLg0KDQpTaWduZWQtb2ZmLWJ5OiBIaXJvc2hp
+IERveXUgPGhkb3l1QG52aWRpYS5jb20+DQotLS0NCnYzJzogVXBkYXRlIHRoZSBmb3JtYXQgc3Vn
+Z2VzdGVkIGJ5IE1hcmsgUnV0bGFuZC4NCi0tLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTE0
+LmR0c2kgfCA2ICsrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTExNC5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMTQuZHRzaQ0KaW5kZXggMjkwNTE0NS4uYmIxOGFl
+NSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTE0LmR0c2kNCisrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTE0LmR0c2kNCkBAIC0zMTgsOSArMzE4LDkgQEANCiANCiAJ
+aW9tbXUgew0KIAkJY29tcGF0aWJsZSA9ICJudmlkaWEsdGVncmExMTQtc21tdSIsICJudmlkaWEs
+dGVncmEzMC1zbW11IjsNCi0JCXJlZyA9IDwweDcwMDBmMDEwIDB4MDJjDQotCQkgICAgICAgMHg3
+MDAwZjFmMCAweDAxMA0KLQkJICAgICAgIDB4NzAwMGYyMjggMHgwNzQ+Ow0KKwkJcmVnID0gPDB4
+NzAwMTkwMTAgMHgwMmM+LA0KKwkJICAgICAgIDB4NzAwMTkxZjAgMHgwMTA+LA0KKwkJICAgICAg
+IDB4NzAwMTkyMjggMHgwNzQ+Ow0KIAkJbnZpZGlhLCNhc2lkcyA9IDw0PjsNCiAJCWRtYS13aW5k
+b3cgPSA8MCAweDQwMDAwMDAwPjsNCiAJCW52aWRpYSxzd2dyb3VwcyA9IDwweDE4NjU5ZmU+Ow0K
+LS0gDQoxLjguMS41DQoNCg==
+
+--_002_20131031190524343708041257755667hdoyunvidiacom_--
