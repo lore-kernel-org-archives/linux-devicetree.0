@@ -1,85 +1,78 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: gpio: dwapb: Synopsys Designware GPIO
-Date: Thu, 31 Oct 2013 18:37:18 +0100
-Message-ID: <20131031173718.GD28790@pengutronix.de>
-References: <52718C28.5030803@gmail.com>
- <20131031082226.GZ28790@pengutronix.de>
- <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
- <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
- <20131031155803.GB28790@pengutronix.de>
- <20131031160723.GA4572@page>
- <20131031161739.GC28790@pengutronix.de>
- <527291AA.1030305@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
+	from DT
+Date: Thu, 31 Oct 2013 10:40:29 -0700
+Message-ID: <20131031174028.GF3037@kartoffel>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
+	<52718BB4.4090007@wwwdotorg.org>
+	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <527291AA.1030305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20131031.101808.1830527808656695540.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 06:21:46PM +0100, Sebastian Hesselbarth wrote:
-> On 10/31/2013 05:17 PM, Steffen Trumtrar wrote:
-> >On Thu, Oct 31, 2013 at 04:07:23PM +0000, Jamie Iles wrote:
-> >>On Thu, Oct 31, 2013 at 04:58:03PM +0100, Steffen Trumtrar wrote:
-> >>>I wonder if we want to really keep the binding as it is proposed by
-> >>>Jamie. Do we really win anything by having to specify the banks in the
-> >>>DT? In my version I get the number of ports, width etc. from the config registers
-> >>>of the device. I think everything that the device knows itself and can be read
-> >>>out at runtime shouldn't be specified in the DT.
-> >>>And it seems that the binding was never merged, so I guess we can change it.
-> >>
-> >>The reason for having it split into banks is that for hardware that has
-> >>a mixture of bank sizes (odd hardware admittedly, but that includes
-> >>hardware that I was writing the driver for), we had a setup like 16 pins
-> >>on bank A, 16 on B, 1 on C and 16 on D where each bank could have a
-> >>maximum of 32, so converting from a data sheet to GPIO number is not
-> >>obvious.  Grant Likely suggested representing the banks as different
-> >>devices, so that's how I created the binding.
-> >
-> >I have no problem with the binding, if it is worth it. Do you mean you had
-> >hardware where the gpio lines where not connected? Or maybe you had an older
-> >version of the IP core?
-> >In the Socfpga case there is gpio_config_reg2, which specifies the width
-> >for every of the 4 ports. So I thought I use those values to describe my
-> >hardware. The Socfpga however only uses the first bank of its three GPIO cores,
-> >so I wouldn't be able to test if the code works for more than just that.
+On Thu, Oct 31, 2013 at 08:18:08AM +0000, Hiroshi Doyu wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 30 Oct 2013 23:44:04 +0100:
 > 
-> Having talked with Heiko at ELCE, both upcoming mach-berlin and
-> mach-rockchip will be using dw-apb-gpio as GPIO driver. Unfortunately,
-> while berlin has the CONFIG[12] registers, rockchip has not. So there
-> must be bindings to at least overwrite the obvious settings derived
-> from that registers.
+> > > +	host1x {
+> > > +		compatible = "nvidia,tegra30-host1x", "simple-bus";
+> > > +		nvidia,memory-clients = <&smmu TEGRA_SWGROUP_HC>;
+> > > +		....
+> > > +		gr3d {
+> > > +			compatible = "nvidia,tegra30-gr3d";
+> > > +			nvidia,memory-clients = <&smmu TEGRA_SWGROUP_NV
+> > > +						       TEGRA_SWGROUP_NV2>;
+> > 
+> > Why one cell for the host1x property, and two cells for the gr3d
+> > property; shouldn't they be the same length?
 > 
+> That can vary. Even a single device node in DT can belong to multiple
+> software groups.
 
-Well, okay :-( It looks like the original binding is a must than.
+Same with ARM SMMU.
 
-> Also, IIRC Heiko prefers to use platform_data driven registration as it
-> is tightly coupled with rk's pinmux. So there should really be support
-> for that and DT parsing on top that fills platform_data.
 > 
-
-If it's up to me, that may be added later when needed. But I guess I'm
-out and will leave that to Alan/Dinh as they already have a more
-appropriate series.
-
-> Can you please resend the whole set on list so we can review it again
-> with more machs involved?
+> > > diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+> > 
+> > > +static u64 smmu_of_get_memory_client(struct device *dev)
+> > 
+> > > +	np = of_parse_phandle(dev->of_node, propname, 0);
+> > > +	if (np != smmu_handle->dev->of_node)
+> > > +		return ~0;
+> > > +
+> > > +	prop = of_get_property(dev->of_node, propname, &bytes);
+> > > +	if (!prop || !bytes)
+> > > +		return ~0;
+> > 
+> > of_parse_phandle_with_fixed_args() might be a good fit here, or perhaps
+> > require a property #smmu-cells in the SMMU node, thus allowing the
+> > non-fixed-length of_parse_phandle_with_args() to be used here.
 > 
+> I once considered of_parse_phandle_with_args() but I couldn't use that
+> since "#smmu-cells" needed to be fixed in smmu node, not in client
+> node. In this case, the number of argument(number of swgroup IDs)
+> varies per client device.
 
-Dito.
+For the ARM SMMU binding, each device has a #stream-id-cells property
+describing how many IDs it has, and then the SMMU node has a phandle+args
+linkage to each of the devices attached to it, describing their stream IDs.
+While this does have some limitations (a device can't be plugged into multiple
+SMMUs with a different number of IDs), it seems generally sane.
 
 Thanks,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
