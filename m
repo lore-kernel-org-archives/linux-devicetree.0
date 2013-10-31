@@ -1,155 +1,57 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: move definition of of_find_next_cache_node into
- common code.
-Date: Thu, 31 Oct 2013 16:20:34 +1100
-Message-ID: <1383196834.28909.7.camel@pasglop>
-References: <1379501585-12532-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-	 <1379501585-12532-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/5] Add OF support to the sh-sci serial port driver
+Date: Thu, 31 Oct 2013 14:21:16 +0900
+Message-ID: <20131031052116.GJ1603@verge.net.au>
+References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379501585-12532-3-git-send-email-Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-09-18 at 11:53 +0100, Sudeep KarkadaNagesha wrote:
-> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+[ CCed Greg KH. It is my assumption that he will take this series
+  once it is ready ]
+
+On Tue, Oct 29, 2013 at 11:29:54AM +0100, Laurent Pinchart wrote:
+> Hello,
 > 
-> Since the definition of_find_next_cache_node is architecture independent,
-> the existing definition in powerpc can be moved to driver/of/base.c
+> This patch set adds device tree bindings for the sh sci serial port devices
+> and adds OF parsing to the sh-sci driver.
 > 
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
-
-I've seen no follow up on that, I'm happy to stick it in powerpc-next
-with some other late stuff.
-
-Cheers,
-Ben.
-
-> ---
->  arch/powerpc/include/asm/prom.h |  3 ---
->  arch/powerpc/kernel/prom.c      | 31 -------------------------------
->  drivers/of/base.c               | 31 +++++++++++++++++++++++++++++++
->  include/linux/of.h              |  2 ++
->  4 files changed, 33 insertions(+), 34 deletions(-)
+> The bindings are based on Bastian Hecht's proposal (see
+> http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach taken
+> here is more minimalistic: instead of describing all hardware characteristics
+> that vary between the SCI device revisions in DT (such as registers layout),
+> that information is stored in the driver and selected based on the compatible
+> property value. Only SCI revisions used on ARM devices are supported through
+> DT, as DT support for SuperH is nowhere down the line.
 > 
-> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-> index 7d0c7f3..bf09e5a 100644
-> --- a/arch/powerpc/include/asm/prom.h
-> +++ b/arch/powerpc/include/asm/prom.h
-> @@ -44,9 +44,6 @@ void of_parse_dma_window(struct device_node *dn, const __be32 *dma_window,
->  
->  extern void kdump_move_device_tree(void);
->  
-> -/* cache lookup */
-> -struct device_node *of_find_next_cache_node(struct device_node *np);
-> -
->  #ifdef CONFIG_NUMA
->  extern int of_node_to_nid(struct device_node *device);
->  #else
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index 09be275..4432fd8 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -761,37 +761,6 @@ void __init early_init_devtree(void *params)
->   *******/
->  
->  /**
-> - *	of_find_next_cache_node - Find a node's subsidiary cache
-> - *	@np:	node of type "cpu" or "cache"
-> - *
-> - *	Returns a node pointer with refcount incremented, use
-> - *	of_node_put() on it when done.  Caller should hold a reference
-> - *	to np.
-> - */
-> -struct device_node *of_find_next_cache_node(struct device_node *np)
-> -{
-> -	struct device_node *child;
-> -	const phandle *handle;
-> -
-> -	handle = of_get_property(np, "l2-cache", NULL);
-> -	if (!handle)
-> -		handle = of_get_property(np, "next-level-cache", NULL);
-> -
-> -	if (handle)
-> -		return of_find_node_by_phandle(be32_to_cpup(handle));
-> -
-> -	/* OF on pmac has nodes instead of properties named "l2-cache"
-> -	 * beneath CPU nodes.
-> -	 */
-> -	if (!strcmp(np->type, "cpu"))
-> -		for_each_child_of_node(np, child)
-> -			if (!strcmp(child->type, "cache"))
-> -				return child;
-> -
-> -	return NULL;
-> -}
-> -
-> -/**
->   * of_get_ibm_chip_id - Returns the IBM "chip-id" of a device
->   * @np: device node of the device
->   *
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 865d3f6..b2cee3d 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1884,3 +1884,34 @@ int of_device_is_stdout_path(struct device_node *dn)
->  	return of_stdout == dn;
->  }
->  EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
-> +
-> +/**
-> + *	of_find_next_cache_node - Find a node's subsidiary cache
-> + *	@np:	node of type "cpu" or "cache"
-> + *
-> + *	Returns a node pointer with refcount incremented, use
-> + *	of_node_put() on it when done.  Caller should hold a reference
-> + *	to np.
-> + */
-> +struct device_node *of_find_next_cache_node(const struct device_node *np)
-> +{
-> +	struct device_node *child;
-> +	const phandle *handle;
-> +
-> +	handle = of_get_property(np, "l2-cache", NULL);
-> +	if (!handle)
-> +		handle = of_get_property(np, "next-level-cache", NULL);
-> +
-> +	if (handle)
-> +		return of_find_node_by_phandle(be32_to_cpup(handle));
-> +
-> +	/* OF on pmac has nodes instead of properties named "l2-cache"
-> +	 * beneath CPU nodes.
-> +	 */
-> +	if (!strcmp(np->type, "cpu"))
-> +		for_each_child_of_node(np, child)
-> +			if (!strcmp(child->type, "cache"))
-> +				return child;
-> +
-> +	return NULL;
-> +}
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f95aee3..c08c07e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -226,6 +226,8 @@ static inline int of_get_child_count(const struct device_node *np)
->  	return num;
->  }
->  
-> +/* cache lookup */
-> +extern struct device_node *of_find_next_cache_node(const struct device_node *);
->  extern struct device_node *of_find_node_with_property(
->  	struct device_node *from, const char *prop_name);
->  #define for_each_node_with_property(dn, prop_name) \
+> The first three patches clean up the sh-sci driver. They're not strictly
+> required for OF support but make sense nonetheless. The last two patches add
+> OF parsing to the sh-sci driver and create DT bindings documentation.
+> 
+> The patches have been test on a Lager board (r8a7790-based). Support for other
+> SoCs will be added as needed. Note that all current Renesas ARM SoCs seem to
+> be compatible with the generic (H)SCI(F)(AB) devices, but the plan is for
+> their DT bindings to list the SoC-specific version in case incompatibilities
+> are found later.
+> 
+> Cc: devicetree@vger.kernel.org
+> 
+> Bastian Hecht (1):
+>   serial: sh-sci: Add OF support
+> 
+> Laurent Pinchart (4):
+>   serial: sh-sci: Sort headers alphabetically
+>   serial: sh-sci: Remove baud rate calculation algorithm 5
+>   serial: sh-sci: Simplify baud rate calculation algorithms
+>   serial: sh-sci: Add device tree bindings documentation
 
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent, is this series waiting on anything other than
+a review of the bindings from the Device-Tree people?
