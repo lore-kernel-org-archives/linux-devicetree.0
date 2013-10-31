@@ -1,143 +1,226 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] serial: sh-sci: Add device tree bindings documentation
-Date: Thu, 31 Oct 2013 10:00:36 -0500
-Message-ID: <B021E9B4-2795-4A84-9AD1-690EA119EF18@codeaurora.org>
-References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383042599-25151-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <9B7DF883-D119-47F5-BD71-11E30BE3DB88@codeaurora.org> <1975664.tS0XZnqC8i@avalon>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1975664.tS0XZnqC8i@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bastian Hecht <hechtb+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] clk: shmobile: Add MSTP clock support
+Date: Thu, 31 Oct 2013 16:15:31 +0100
+Message-ID: <1412461.M3SMDGpi7Z@avalon>
+References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1481817.doGcO1nQB0@avalon> <5E542DCC-EA79-4A9E-BC60-B8E1B964F16D@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5E542DCC-EA79-4A9E-BC60-B8E1B964F16D@codeaurora.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kumar,
 
-On Oct 31, 2013, at 9:55 AM, Laurent Pinchart wrote:
+On Tuesday 29 October 2013 19:19:35 Kumar Gala wrote:
+> On Oct 29, 2013, at 7:06 PM, Laurent Pinchart wrote:
+> > On Tuesday 29 October 2013 18:36:06 Kumar Gala wrote:
+> >> On Oct 29, 2013, at 9:55 AM, Laurent Pinchart wrote:
+> >>> MSTP clocks are gate clocks controlled through a register that handles
+> >>> up to 32 clocks. The register is often sparsely populated.
+> >>> 
+> >>> Those clocks are found on Renesas ARM SoCs.
+> >>> 
+> >>> Signed-off-by: Laurent Pinchart
+> >>> <laurent.pinchart+renesas@ideasonboard.com>
+> >>> ---
+> >>> .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
+> >>> drivers/clk/shmobile/Makefile                      |   1 +
+> >>> drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++
+> >>> include/dt-bindings/clock/r8a7790-clock.h          |  56 +++++
+> >>> 4 files changed, 333 insertions(+)
+> >>> create mode 100644
+> >>> Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> >>> create mode 100644 drivers/clk/shmobile/clk-mstp.c
+> >>> create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+> >>> 
+> >>> diff --git
+> >>> a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> >>> b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> >>> new
+> >>> file mode 100644
+> >>> index 0000000..b3a1ce0
+> >>> --- /dev/null
+> >>> +++
+> >>> b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> >>> @@ -0,0 +1,47 @@
+> >>> +* Renesas R8A7790 MSTP Clocks
+> >> 
+> >> can we spell out MSTP once in the heading?
+> > 
+> > Sure thing. It stands for Module Stop.
+> > 
+> >>> +
+> >>> +The CPG can gate SoC device clocks. The gates are organized in groups
+> >>> of> up to
+> >>> +32 gates.
+> >>> +
+> >>> +This device tree binding describes a single 32 gate clocks group per
+> >>> node.
+> >>> +Clocks are referenced by user nodes by the MSTP node phandle and the
+> >>> clock
+> >>> +index in the group, from 0 to 31.
+> >>> +
+> >>> +Required Properties:
+> >>> +
+> >>> +  - compatible: Must be one of the following
+> >>> +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate
+> >>> clocks
+> >>> +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> >>> +  - reg: Base address and length of the memory resource used by the
+> >>> MSTP
+> >>> +    clocks
+> >>> +  - clocks: Reference to the parent clocks
+> >>> +  - #clock-cells: Must be 1
+> >>> +  - clock-output-names: The name of the clocks as free-form strings
+> >>> +  - renesas,indices: Index of the gate clocks (0 to 31)
+> >> 
+> >> Index of the gate clock into what?
+> > 
+> > Into the 32 gates clock group. Groups have 32 entries with a 32-bit
+> > register that controls 32 gate clocks. The groups (and thus registers)
+> > are sparsly populated, this property lists the indices for the register
+> > bits corresponding to the clocks.
+> > 
+> > Would
+> > 
+> >  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
+> > 
+> > be explicit enough ?
+> 
+> I'm still confused.  As I look at the code, I'm not quite clear how
+> renesas,indices relates to a register or register bits.
 
-> Hi Kumar,
-> 
-> Thank you for the review.
-> 
-> On Thursday 31 October 2013 09:42:48 Kumar Gala wrote:
->> On Oct 29, 2013, at 5:29 AM, Laurent Pinchart wrote:
->>> Document the device tree bindings for the sci serial port devices.
->>> 
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Signed-off-by: Laurent Pinchart
->>> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->>> ---
->>> .../bindings/serial/renesas,sci-serial.txt         | 51 ++++++++++++++++++
->>> 1 file changed, 51 insertions(+)
->>> create mode 100644
->>> Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->>> 
->>> diff --git
->>> a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->>> b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
->>> file mode 100644
->>> index 0000000..5658b4f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->>> @@ -0,0 +1,51 @@
->>> +* Renesas SH-Mobile Serial Communication Interface
->>> +
->>> +Required properties:
->>> +
->>> +  - compatible: should be one of the following.
->> 
->> Being pedantic, but how about saying 'one of the following types (scif,
->> scifa, scifb, or hscif)
-> 
-> Sounds good to me.
-> 
->>> +
->>> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
->>> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
->>> UART.
->>> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible
->>> UART.
->>> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible
->>> UART.
->>> +    - "renesas,scif-generic" for generic SCIF compatible UART.
->>> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
->>> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
->>> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
->>> +
->>> +    When compatible with the generic version, nodes must also list the
->>> +    SoC-specific version corresponding to the platform.
->>> +
->>> +  - reg: Base address and length of the memory resource used by the UART.
->>> +
->>> +  - interrupt-parent: Reference to the parent interrupt controller.
->>> +  - interrupts: Interrupt number(s). Depending on the SoC SCIx UARTs are
->>> tied
->>> +    to one or multiple interrupt lines. When using multiple interrupt
->>> lines,
->>> +    specify the interrupt names as described below.
->>> +
->>> +  - clocks: Reference to the SCIx UART interface clock.
->>> +  - clock-names: Should be "sci_ick".
->>> +
->>> +Optional properties:
->>> +
->>> +  - interrupt-names: When using multiple interrupts, report the interrupt
->>> +    names as "eri" (receive error), "rxi" (receive), "txi" (transmit) and
->>> +    "bri" (break). When using a single interrupt this property should not
->>> be +    present.
->> 
->> Hmm, is there a reason not to just have the 4 interrupts always present and
->> in the case they are all wired to the same interrupt, just have the
->> interrupts all be the same?
->> 
->> example:
->> 
->> interrupts = <0 144 4>, <0 144 4>, <0 144 4>, <0 144 4>;
-> 
-> The multiple interrupts case is the exception, I thought it would be easier to 
-> specify a single interrupt in the general case and have a more complex binding 
-> for the exceptions.
-> 
->>> +
->>> +Note: Each enabled SCIx UART should have an alias correctly numbered in
->>> the +"aliases" node.
->>> +
->>> +Example:
->>> +	aliases {
->>> +		serial0 = &scifa0;
->>> +	};
->>> +
->>> +	scifa0: serial@e6c40000 {
->>> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
->>> +		reg = <0 0xe6c40000 0 64>;
->>> +		interrupt-parent = <&gic>;
->>> +		interrupts = <0 144 4>;
->>> +		clocks = <&mstp2_clks 4>;
->>> +		clock-names = "sci_ick";
->>> +	};
->> 
->> might be nice to have an example with the 4 interrupts.
-> 
-> The example would be pretty theoretical, as the r8a7790 uses a single 
-> interrupt in all cases. What about adding such an example when adding an SoC 
-> that uses multiple interrupts to the DT bindings documentation ?
+OK, this probably means that the documentation isn't clear enough. Let me try 
+to explain the situation, I'll then rephrase the bindings documentation.
 
-I'm fine with that if we strip the multiple interrupt bits out of the binding until a device/compatible exists that needs it.
+Renesas SoCs have a large number of gate clocks, referred to as the MSTP 
+clocks. Those gate clocks are controlled by a single bit each. From a control 
+point of view, those bits are located in 32-bit registers referred to as the 
+MSTP registers. Each MSTP register can thus control up to 32 gate clocks. As 
+they are sparsely populated they usually control less than 32 gate clocks and 
+have reserved bits for the clocks that are not present in the hardware. The 
+reserved bits are randomly placed in the registers.
 
-- k
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+On the DT side, each MSTP register gets a DT node. The clocks handled by that 
+register are listed in DT. The driver needs to map each clock to its bit index 
+in the MSTP register. There are two main ways to do so:
 
+- Specifying all 32 bits in the DT node, with 32 parent clocks and 32 clock 
+output names. Reserved bits would get a dummy parent and an empty clock output 
+name. The bit index would in that case be the clock index in the clock output 
+names list with a one-to-one mapping between the clock cell and the clock 
+index in the clock output names list.
+
+- Specifying the available clocks only. No dummy parent clock and empty clock 
+output name would be used. In that case there would be no one-to-one mapping 
+between the clock cell and the corresponding clock index in the clock output 
+names list. The mapping is then specified through the renesas,clock-indices 
+property. Each entry in the property stores the bit number of the 
+corresponding clock in the MSTP register.
+
+Let's take MSTP3 of the R8A7790 as an example. The register controls the 
+following clocks:
+
+0		IIC2
+1-3		Reserved
+4		TPU0
+5		MMC1
+6-9		Reserved
+10		IrDA
+11		SDHI3
+12		SDHI2
+13		SDHI1
+14		SDHI0
+15		MMC0
+16-17	Reserved
+18		IIC0
+19		PCIEC
+20-22	Reserved
+23		IIC1
+24-27	Reserved
+28		SSUSB
+29		CMT1
+30		USBDMAC0
+31		USBDMAC1
+
+The corresponding DT node would thus have the following properties
+
+		clock-output-names =
+			"iic2", "tpu0", "mmcif1", "irda", "sdhi3", "sdhi2", "sdhi1",
+			"sdhi0", "mmcif0", "iic0", "pciec", "iic1", "ssusb", "cmt1",
+			"usbdmac0", "usbcma1";
+		renesas,clock-indices = <
+				0 4 5 10 11 12 13 14 15 18 19 23 28 29 30 31
+		>
+
+The clock cell in clock users corresponds to the hardware bit index, not the 
+index of the clock in the clock output names list. To make referencing clocks 
+less error-prone, macros are defined for all bit indices in <dt-
+bindings/clock/r8a7790-clock.h>. Using this macros in the provider, we get
+
+		renesas,clock-indices = <
+				R8A7790_CLK_IIC0 R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1
+				R8A7790_CLK_IRDA R8A7790_CLK_SDHI3 R8A7790_CLK_SDHI2
+				R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0 R8A7790_CLK_MMCIF0
+				R8A7790_CLK_IIC0 R8A7790_CLK_PCIEC R8A7790_CLK_IIC1
+				R8A7790_CLK_SSUSB R8A7790_CLK_CMT1 R8A7790_CLK_USBDMAC0
+				R8A7790_CLK_USBDMAC1
+		>;
+
+Is the explanation clear enough ?
+
+> >>> +
+> >>> +The clocks, clock-output-names and renesas,indices properties contain
+> >>> one
+> >>> +entry per gate. The MSTP groups are sparsely populated. Unimplemented
+> >>> gates
+> >> 
+> >> per gate clock. (?)
+> > 
+> > I'll change that.
+> > 
+> >>> +must not be declared.
+> >>> +
+> >>> +
+> >>> +Example
+> >>> +-------
+> >>> +
+> >>> +	#include <dt-bindings/clock/r8a7790-clock.h>
+> >>> +
+> >>> +	mstp3_clks: mstp3_clks {
+> > 
+> > mstp3_clks@e615013c I suppose.
+> 
+> yes, missed that
+> `
+> 
+> >>> +		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
+> > 
+> > clocks";
+> > 
+> >>> +		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+> >>> +		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
+> >>> +			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks
+> > 
+> > R8A7790_CLK_SD0>,
+> > 
+> >>> +			 <&mmc0_clk>;
+> >>> +		#clock-cells = <1>;
+> >>> +		clock-output-names =
+> >>> +			"tpu0", "mmcif1", "sdhi3", "sdhi2",
+> >>> +			 "sdhi1", "sdhi0", "mmcif0";
+> >>> +		renesas,clock-indices = <
+> >>> +			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
+> >>> +			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
+> >>> +			R8A7790_CLK_MMCIF0
+> >>> +		>;
+> >>> +	};
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
