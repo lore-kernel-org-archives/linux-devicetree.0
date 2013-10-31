@@ -1,127 +1,253 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 5/5] serial: sh-sci: Add device tree bindings documentation
-Date: Thu, 31 Oct 2013 15:55:34 +0100
-Message-ID: <1975664.tS0XZnqC8i@avalon>
-References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383042599-25151-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <9B7DF883-D119-47F5-BD71-11E30BE3DB88@codeaurora.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 04/43] CLK: TI: Add DPLL clock support
+Date: Thu, 31 Oct 2013 16:56:09 +0200
+Message-ID: <52726F89.4000409@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-5-git-send-email-t-kristo@ti.com> <52726704.5070300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <9B7DF883-D119-47F5-BD71-11E30BE3DB88@codeaurora.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52726704.5070300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+On 10/31/2013 04:19 PM, Nishanth Menon wrote:
+> On 10/25/2013 10:56 AM, Tero Kristo wrote:
+> [...]
+>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti/dpll.txt b/Documentation/devicetree/bindings/clock/ti/dpll.txt
+>> new file mode 100644
+>> index 0000000..7b87721
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti/dpll.txt
+>> @@ -0,0 +1,81 @@
+>> +Binding for Texas Instruments DPLL clock.
+>> +
+>> +Binding status: Unstable - ABI compatibility may be broken in the future
+>> +
+>> +This binding uses the common clock binding[1].  It assumes a
+>> +register-mapped DPLL with usually two selectable input clocks
+>> +(reference clock and bypass clock), with digital phase locked
+>> +loop logic for multiplying the input clock to a desired output
+>> +clock. This clock also typically supports different operation
+>> +modes (locked, low power stop etc.) This binding has several
+>> +sub-types, which effectively result in slightly different setup
+>> +for the actual DPLL clock.
+>> +
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Required properties:
+>> +- compatible : shall be one of:
+>> +		"ti,omap3-dpll-clock",
+>> +		"ti,omap3-dpll-core-clock",
+>> +		"ti,omap3-dpll-per-clock",
+>> +		"ti,omap3-dpll-per-j-type-clock",
+>> +		"ti,omap4-dpll-clock",
+>> +		"ti,omap4-dpll-x2-clock",
+>> +		"ti,omap4-dpll-core-clock",
+>> +		"ti,omap4-dpll-m4xen-clock",
+>> +		"ti,omap4-dpll-j-type-clock",
+>> +		"ti,am3-dpll-no-gate-clock",
+>> +		"ti,am3-dpll-j-type-clock",
+>> +		"ti,am3-dpll-no-gate-j-type-clock",
+>> +		"ti,am3-dpll-clock",
+>> +		"ti,am3-dpll-core-clock",
+>> +		"ti,am3-dpll-x2-clock",
+>> +
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : link phandles of parent clocks, first entry lists reference clock
+>> +  and second entry bypass clock
+>> +- reg : offsets for the register set for controlling the DPLL.
+>> +  Registers are listed in following order:
+>> +	"control" - contains the control register base address
+>> +	"idlest" - contains the idle status register base address
+>> +	"autoidle" - contains the autoidle register base address
+>> +	"mult-div1" - contains the multiplier / divider register base address
+> If we move mult-div1 above autoidle, indices for control, idlest,
+> mult-div1 will be constant with DPLLs that dont have autoidle. a
+> little easier to debug.
 
-Thank you for the review.
+Hmm yea, might be a good idea to do that. Can change that for next rev.
 
-On Thursday 31 October 2013 09:42:48 Kumar Gala wrote:
-> On Oct 29, 2013, at 5:29 AM, Laurent Pinchart wrote:
-> > Document the device tree bindings for the sci serial port devices.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > .../bindings/serial/renesas,sci-serial.txt         | 51 ++++++++++++++++++
-> > 1 file changed, 51 insertions(+)
-> > create mode 100644
-> > Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
-> > file mode 100644
-> > index 0000000..5658b4f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > @@ -0,0 +1,51 @@
-> > +* Renesas SH-Mobile Serial Communication Interface
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: should be one of the following.
-> 
-> Being pedantic, but how about saying 'one of the following types (scif,
-> scifa, scifb, or hscif)
+>
+>> +  ti,am3-* dpll types list the registers in the same order, except "autoidle"
+>> +  register is left out as this hardware does not have it, e.g.:
+>> +	reg = <0x40>, <0x50>, <0x60>;
+>> +  results in following register map:
+>> +	base + 0x40 - control
+>> +	base + 0x50 - idlest
+>> +	base + 0x60 - mult-div1
+>> +
+>> +Optional properties:
+>> +- DPLL mode setting - defining any one or more of the following overrides
+>> +  default setting.
+>> +	- ti,low-power-stop : DPLL supports low power stop mode, gating output
+>> +	- ti,low-power-bypass : DPLL output matches rate of parent bypass clock
+>> +	- ti,lock : DPLL locks in programmed rate
+>
+>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_BYPASS) | (1 << DPLL_LOCKED),
+>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = ((1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED) |
+>> arch/arm/mach-omap2/cclock3xxx_data.c:  .modes          = (1 << DPLL_LOW_POWER_STOP) | (1 << DPLL_LOCKED),
+>> arch/arm/mach-omap2/dpll3xxx.c: _omap3_dpll_write_clken(clk, DPLL_LOCKED);
+>
+> There is no if checks for DPLL_LOCKED which is set with ti,lock,
+> should we just drop it?
 
-Sounds good to me.
+Probably better to keep it in, as there might be some code in future 
+which needs this. Kind of better for readability also, as the field is 
+specified to list the valid modes for the DPLL. One could argue that 
+current kernel code is wrong for _omap3_dpll_write_clken(clk, 
+DPLL_LOCKED) as it does not check if the mode is valid for the DPLL or not.
 
-> > +
-> > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
-> > UART.
-> > +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible
-> > UART.
-> > +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible
-> > UART.
-> > +    - "renesas,scif-generic" for generic SCIF compatible UART.
-> > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> > +
-> > +    When compatible with the generic version, nodes must also list the
-> > +    SoC-specific version corresponding to the platform.
-> > +
-> > +  - reg: Base address and length of the memory resource used by the UART.
-> > +
-> > +  - interrupt-parent: Reference to the parent interrupt controller.
-> > +  - interrupts: Interrupt number(s). Depending on the SoC SCIx UARTs are
-> > tied
-> > +    to one or multiple interrupt lines. When using multiple interrupt
-> > lines,
-> > +    specify the interrupt names as described below.
-> > +
-> > +  - clocks: Reference to the SCIx UART interface clock.
-> > +  - clock-names: Should be "sci_ick".
-> > +
-> > +Optional properties:
-> > +
-> > +  - interrupt-names: When using multiple interrupts, report the interrupt
-> > +    names as "eri" (receive error), "rxi" (receive), "txi" (transmit) and
-> > +    "bri" (break). When using a single interrupt this property should not
-> > be +    present.
-> 
-> Hmm, is there a reason not to just have the 4 interrupts always present and
-> in the case they are all wired to the same interrupt, just have the
-> interrupts all be the same?
-> 
-> example:
-> 
-> interrupts = <0 144 4>, <0 144 4>, <0 144 4>, <0 144 4>;
+>
+> [...]
+>> diff --git a/drivers/clk/ti/dpll.c b/drivers/clk/ti/dpll.c
+>> new file mode 100644
+>> index 0000000..89733c9
+>> --- /dev/null
+>> +++ b/drivers/clk/ti/dpll.c
+>
+> [...]
+>
+>> +/**
+>> + * ti_clk_register_dpll() - Registers the DPLL clock
+>> + * @name:	Name of the clock node
+>> + * @parent_names: list of parent names
+>> + * @num_parents: num of parents in parent_names
+>> + * @flags:	init flags
+>> + * @dpll_data:	DPLL data
+>> + * @ops:	ops for DPLL
+>> + */
+>> +static struct clk *ti_clk_register_dpll(const char *name,
+>> +					const char **parent_names,
+>> +					int num_parents, unsigned long flags,
+>> +					struct dpll_data *dpll_data,
+>> +					const struct clk_ops *ops,
+>> +					struct regmap *regmap)
+>> +{
+>> +	struct clk *clk;
+>> +	struct clk_init_data init = { NULL };
+>> +	struct clk_hw_omap *clk_hw;
+>> +
+>> +	/* allocate the divider */
+>> +	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+>> +	if (!clk_hw) {
+>> +		pr_err("%s: could not allocate clk_hw_omap\n", __func__);
+>
+> here and in every other driver - please dont add pr_err for kzalloc
+> not able to allocate, kzalloc will provide the warning anyways.
 
-The multiple interrupts case is the exception, I thought it would be easier to 
-specify a single interrupt in the general case and have a more complex binding 
-for the exceptions.
+Oh it does? Never seen that happen as kzalloc never failed for me. :) 
+However, I can remove these as I don't think they will ever happen anyway.
 
-> > +
-> > +Note: Each enabled SCIx UART should have an alias correctly numbered in
-> > the +"aliases" node.
-> > +
-> > +Example:
-> > +	aliases {
-> > +		serial0 = &scifa0;
-> > +	};
-> > +
-> > +	scifa0: serial@e6c40000 {
-> > +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-> > +		reg = <0 0xe6c40000 0 64>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 144 4>;
-> > +		clocks = <&mstp2_clks 4>;
-> > +		clock-names = "sci_ick";
-> > +	};
-> 
-> might be nice to have an example with the 4 interrupts.
+>
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	clk_hw->dpll_data = dpll_data;
+>> +	clk_hw->ops = &clkhwops_omap3_dpll;
+>> +	clk_hw->hw.init = &init;
+>> +	clk_hw->regmap = regmap;
+>> +
+>> +	init.name = name;
+>> +	init.ops = ops;
+>> +	init.flags = flags;
+>> +	init.parent_names = parent_names;
+>> +	init.num_parents = num_parents;
+>> +
+>> +	/* register the clock */
+>> +	clk = clk_register(NULL, &clk_hw->hw);
+>> +
+>> +	if (IS_ERR(clk)) {
+>> +		pr_err("%s: failed clk_register for %s (%ld)\n", __func__, name,
+>> +		       PTR_ERR(clk));
+>> +		kfree(clk_hw);
+>> +	} else {
+>> +		omap2_init_clk_hw_omap_clocks(clk);
+>> +	}
+>> +
+>> +	return clk;
+>> +}
+>> +
+>> +#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5) || \
+>> +	defined(CONFIG_SOC_DRA7XX) || defined(CONFIG_SOC_AM33XX)
+>> +/**
+>> + * ti_clk_register_dpll_x2() -  Registers the DPLLx2 clock
+>> + * @dev:	device pointer (if any)
+>> + * @name:	Name of the clock node
+>> + * @parent_name: parent name (only 1 parent)
+>> + * @reg:	register address for DPLL
+>> + * @ops:	ops for DPLL
+>> + */
+>> +static struct clk *ti_clk_register_dpll_x2(struct device_node *node,
+>> +					   const struct clk_ops *ops,
+>> +					   const struct clk_hw_omap_ops *hw_ops,
+>> +					   struct regmap *regmap)
+>> +{
+>> +	struct clk *clk;
+>> +	struct clk_init_data init = { NULL };
+>> +	struct clk_hw_omap *clk_hw;
+>> +	const char *name = node->name;
+>> +	const char *parent_name;
+>> +
+>> +	of_property_read_string(node, "clock-output-names", &name);
+>> +
+>> +	parent_name = of_clk_get_parent_name(node, 0);
+>> +	if (!parent_name) {
+>> +		pr_err("%s: dpll_x2 must have parent\n", __func__);
+>
+> print node->name as well?
 
-The example would be pretty theoretical, as the r8a7790 uses a single 
-interrupt in all cases. What about adding such an example when adding an SoC 
-that uses multiple interrupts to the DT bindings documentation ?
+Mkay.
 
--- 
-Regards,
+>
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+>> +	if (!clk_hw) {
+>> +		pr_err("%s: could not allocate clk_hw_omap\n", __func__);
+>
+> ^^ here again.
+>
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	clk_hw->ops = hw_ops;
+>> +	of_property_read_u32(node, "reg", (u32 *)&clk_hw->clksel_reg);
+>> +	clk_hw->regmap = regmap;
+>> +	clk_hw->hw.init = &init;
+>> +
+>> +	init.name = name;
+>> +	init.ops = ops;
+>> +	init.parent_names = &parent_name;
+>> +	init.num_parents = 1;
+>> +
+>> +	/* register the clock */
+>> +	clk = clk_register(NULL, &clk_hw->hw);
+>> +
+>> +	if (IS_ERR(clk))
+>> +		kfree(clk_hw);
+>> +	else
+>> +		omap2_init_clk_hw_omap_clocks(clk);
+>> +
+>> +	return clk;
+>> +}
+>> +#endif
+> [...]
+>> +
+>> +#ifdef CONFIG_ARCH_OMAP3
+>
+> just a mention - I understand we are still in transition and we need
+> these #ifdefs, but eventually, we should be able to make the dpll.c
+> independent of SoC variant #ifdefs.
 
-Laurent Pinchart
+Eventually yes. Currently it fails to compile if you do OMAP4 / OMAP5 
+only build, as you don't have the OMAP3 support routines in.
+
+-Tero
 
