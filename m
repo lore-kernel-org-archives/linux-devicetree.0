@@ -1,82 +1,66 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv9 01/43] clk: Add support for regmap register read/write
-Date: Thu, 31 Oct 2013 10:46:12 -0500
-Message-ID: <52727B44.4020102@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-2-git-send-email-t-kristo@ti.com> <52726342.6030406@ti.com> <52726BD5.3080704@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: gpio: dwapb: Synopsys Designware GPIO
+Date: Thu, 31 Oct 2013 16:58:03 +0100
+Message-ID: <20131031155803.GB28790@pengutronix.de>
+References: <52718C28.5030803@gmail.com>
+ <20131031082226.GZ28790@pengutronix.de>
+ <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
+ <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52726BD5.3080704@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2013 09:40 AM, Tero Kristo wrote:
-> On 10/31/2013 04:03 PM, Nishanth Menon wrote:
->> On 10/25/2013 10:56 AM, Tero Kristo wrote:
->> [...]
->>> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->>> index 7e59253..63ff78c 100644
->>> --- a/include/linux/clk-provider.h
->>> +++ b/include/linux/clk-provider.h
->>
->> [...]
->>> -static inline u32 clk_readl(u32 __iomem *reg)
->>> +static inline u32 clk_readl(u32 __iomem *reg, struct regmap *regmap)
->>>   {
->>> -	return readl(reg);
->>> +	u32 val;
->>> +
->>> +	if (regmap)
->>> +		regmap_read(regmap, (u32)reg, &val);
->>> +	else
->>> +		val = readl(reg);
->>> +	return val;
->>>   }
->>>
->>> -static inline void clk_writel(u32 val, u32 __iomem *reg)
->>> +static inline void clk_writel(u32 val, u32 __iomem *reg, struct regmap *regmap)
->>>   {
->>> -	writel(val, reg);
->>> +	if (regmap)
->>> +		regmap_write(regmap, (u32)reg, val);
->>> +	else
->>> +		writel(val, reg);
->>>   }
->>>
->>>   #endif /* CONFIG_COMMON_CLK */
->>>
->>
->> Might it not be better to introduce regmap variants?
->> static inline void clk_regmap_writel(u32 val, u32 reg, struct regmap
->> *regmap)
->> and corresponding readl? that allows cleaner readability for clk
->> drivers that use regmap and those that dont.
+Hi Alan,
+
+On Thu, Oct 31, 2013 at 10:34:50AM -0500, delicious quinoa wrote:
+> On Thu, Oct 31, 2013 at 10:18 AM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Yes, we'll post a patch up on rocketboards-next and maybe we can post them
+> > to the mailing list too?
+> >
+> Hi Steffen,
 > 
-> Well, doing that will introduce a lot of redundant code, as the checks 
-> for the presence of regmap must be copied all over the place. With this 
-> patch, all the generic clock drivers support internally both regmap or 
-> non-regmap register accesses.
+> I've posted a branch on rocketboards.orgs' linux-socfpga-next.git.
+> The branch name is dwapb-gpio-3.11.
 > 
 
-using function pointers might be an appropriate solution. in general a
-low level reg access api that uses two different approaches sounds a
-little.. umm.. fishy..
+good. I will have a look.
 
->> regmap can also return error value that could also be handled as a result.
+> The top five patches are:
+> 1. Remove the Altera gpio-dw.c driver
+> 2 & 3.  Cherrypick Jamie's stuff from his git repo
+> 4. Enable gpio-dwapb in our defconfig and dts
+> 5. This is the main patch here: use irq_domain_add_linear for
+> gpio-dwapb.c plus a few bug fixes.
 > 
-> True, however if the regmap fails for the clock code, not sure what we 
-> can do but panic. If this code is expanded, it is probably better to not 
-> inline it anymore.
+> If you'd rather see that last patch on the mailing list, I can post it
+> there for review.
 > 
-let the compiler deal with that decision. regmap operation fail should
-be percollated back to initiator of the request. in some cases that
-will be ir-recoverable, but on other cases panic might be the right
-answer - at the low level we are in no position to make that distinction.
 
+I wonder if we want to really keep the binding as it is proposed by
+Jamie. Do we really win anything by having to specify the banks in the
+DT? In my version I get the number of ports, width etc. from the config registers
+of the device. I think everything that the device knows itself and can be read
+out at runtime shouldn't be specified in the DT.
+And it seems that the binding was never merged, so I guess we can change it.
+
+What do you think? I'd then finish up my driver and rebase your irq patch onto
+it.
+
+Regards,
+Steffen
 
 -- 
-Regards,
-Nishanth Menon
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
