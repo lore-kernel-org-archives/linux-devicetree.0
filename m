@@ -1,35 +1,47 @@
-From: =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz@gmail.com>
-Subject: Re: [PATCH v2 3/4] ASoC: fsl_ssi: Add dual fifo mode support
-Date: Thu, 31 Oct 2013 08:54:12 +0100
-Message-ID: <52720CA4.3090003@gmail.com>
-References: <cover.1383197521.git.b42378@freescale.com> <0e947536358af7bd6e179559006a3526801a1abe.1383197521.git.b42378@freescale.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCHv8][ 4/4] ARM: imx_v6_v7_defconfig: Enable tsc2007 support.
+Date: Thu, 31 Oct 2013 16:00:18 +0800
+Message-ID: <20131031080016.GI23549@S2101-09.ap.freescale.net>
+References: <1383155923-24076-1-git-send-email-denis@eukrea.com>
+ <1383155923-24076-4-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <0e947536358af7bd6e179559006a3526801a1abe.1383197521.git.b42378@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, galak@codeaurora.org, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383155923-24076-4-git-send-email-denis@eukrea.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Fabio Estevam <fabio.estevam@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Wed, Oct 30, 2013 at 06:58:43PM +0100, Denis Carikli wrote:
+> The eukrea cpuimx35 and cpuimx51 have a tsc2007 touchscreen controlle=
+r,
+>   so we turn it on.
+>=20
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> Cc: Fabio Estevam <fabio.estevam@freescale.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Eric B=E9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
 
->
-> +			/* When using dual fifo mode, we need to keep watermark
-> +			 * as even numbers due to dma script limitation.
-> +			 */
-> +			ssi_private->dma_params_tx.maxburst /= 2;
-> +			ssi_private->dma_params_tx.maxburst *= 2;
-> +			ssi_private->dma_params_rx.maxburst /= 2;
-> +			ssi_private->dma_params_rx.maxburst *= 2;
->
+Applied this one.
 
-Why not using a mask here ?
-ssi_private->dma_params_tx.maxburst &= ~0x1;
-ssi_private->dma_params_rx.maxburst &= ~0x1;
+Shawn
 
-Regards,
-
-Philippe
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
