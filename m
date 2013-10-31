@@ -1,411 +1,69 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv9][ 6/6] ARM: dts: Add support for the cpuimx25 board from Eukrea and its baseboard.
-Date: Thu, 31 Oct 2013 10:15:28 +0100
-Message-ID: <1383210928-18906-6-git-send-email-denis@eukrea.com>
-References: <1383210928-18906-1-git-send-email-denis@eukrea.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 05/43] CLK: TI: add DT alias clock registration mechanism
+Date: Thu, 31 Oct 2013 11:18:03 +0200
+Message-ID: <5272204B.2030106@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>	<1382716658-6964-6-git-send-email-t-kristo@ti.com>	<CAHCPf3uPhkVhdn3Db06YZfrwQuA7khdZEXiZ+pqJ06J9YdBoLg@mail.gmail.com>	<5270C368.9000701@ti.com> <CAHCPf3vcdriV3n2BvG2+saJFH6hR_gEFU=BhTBa0yqZUUWcg1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383210928-18906-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAHCPf3vcdriV3n2BvG2+saJFH6hR_gEFU=BhTBa0yqZUUWcg1A@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Matt Sealey <neko@bakuhatsu.net>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Benoit Cousson <bcousson@baylibre.com>, rnayak@ti.com, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The following devices/functionalities were added:
- * Main and secondary UARTs.
- * i2c and the pcf8563 device.
- * CMO-QVGA(With backlight), DVI-VGA and DVI-SVGA displays
- * Ethernet.
- * NAND.
- * The BP1 button.
- * The LED.
- * Watchdog
- * SD.
+On 10/30/2013 07:38 PM, Matt Sealey wrote:
+> On Wed, Oct 30, 2013 at 3:29 AM, Tero Kristo <t-kristo@ti.com> wrote:
+>> On 10/29/2013 07:50 PM, Matt Sealey wrote:
+>>>
+>>> I have one question here, what makes this part of the patch
+>>> TI-specific at all except the definition of the structure ti_dt_clk?
+>>> Mapping DT clocks to generic clkdev legacy namings seems like it would
+>>> be a necessary evil across *all* SoC platforms.
+>>>
+>>> I would say there is a good case for this being generic
+>>
+>> An earlier implementation of this patch (or at least a patch that tries to
+>> accomplish the same as this does, add support for legacy devices) did try to
+>> add generic solution. There was some discussion on it and I decided to drop
+>> it due to bad feedback.
+>>
+>> See: http://www.spinics.net/lists/linux-omap/msg95147.html
+>
+> I don't see anything that says this should not be generic, just that
+> it was implemented relatively poorly at the time...
+>
+> I agree with Tomasz, find_by_name in device trees is basically evil
+> (it's only supposed to be used if you already know the name because
+> something else passed it to you, and just want it's phandle, but names
+> CAN be ambiguous. The real fix is always pass phandles and not strings
+> of the name property), but that's not to say this thing needs to be
+> TI-specific..
+>
+> Ah well. If it ends up getting used elsewhere, it can be quickly
+> patched into a generic version anyway, so.. yay!
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v8->v9:
-- Licenses were shortened.
----
- arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   48 +++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts  |   58 ++++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts  |   45 ++++++++
- .../imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts   |   45 ++++++++
- .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  111 ++++++++++++=
-++++++++
- 5 files changed, 307 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-cmo-qvga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-svga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-=
-dvi-vga.dts
- create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.=
-dts
+Yeah, this can be converted to generic version easily if need be. The 
+thing with this patch is also that it is kind of temporary solution, it 
+should not be needed anymore once all the drivers are converted to DT.
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/bo=
-ot/dts/imx25-eukrea-cpuimx25.dtsi
-new file mode 100644
-index 0000000..62b97b3
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
-@@ -0,0 +1,48 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "imx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX25";
-+	compatible =3D "eukrea,cpuimx25", "fsl,imx25";
-+
-+	memory {
-+		reg =3D <0x80000000 0x4000000>; /* 64M */
-+	};
-+};
-+
-+&fec {
-+	phy-mode =3D "rmii";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec_1>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1_1>;
-+	status =3D "okay";
-+
-+	pcf8563@51 {
-+		compatible =3D "nxp,pcf8563";
-+		reg =3D <0x51>;
-+	};
-+};
-+
-+&nfc {
-+	nand-bus-width =3D <8>;
-+	nand-ecc-mode =3D "hw";
-+	nand-on-flash-bbt;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-new file mode 100644
-index 0000000..fcb5bfd
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dts
-@@ -0,0 +1,58 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the CMO-QVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-cmo-qvga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	cmo_qvga: display {
-+		model =3D "CMO-QVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xcad08b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&qvga_timings>;
-+		display-timings {
-+			qvga_timings: 320x240 {
-+				clock-frequency =3D <6500000>;
-+				hactive =3D <320>;
-+				vactive =3D <240>;
-+				hback-porch =3D <30>;
-+				hfront-porch =3D <38>;
-+				vback-porch =3D <20>;
-+				vfront-porch =3D <3>;
-+				hsync-len =3D <15>;
-+				vsync-len =3D <4>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_3v3: lcd-en {
-+		compatible =3D "regulator-fixed";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_reg_lcd_3v3>;
-+		regulator-name =3D "lcd-3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 26 0>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&cmo_qvga>;
-+	fsl,pwmr =3D <0x00a903ff>;
-+	lcd-supply =3D <&reg_lcd_3v3>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svg=
-a.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-new file mode 100644
-index 0000000..8eee2f6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
-@@ -0,0 +1,45 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-SVGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-svga", "eukrea,mbimxsd=
-25-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_svga: display {
-+		model =3D "DVI-SVGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_svga_timings>;
-+		display-timings {
-+			dvi_svga_timings: 800x600 {
-+				clock-frequency =3D <40000000>;
-+				hactive =3D <800>;
-+				vactive =3D <600>;
-+				hback-porch =3D <75>;
-+				hfront-porch =3D <75>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <75>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_svga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga=
-=2Edts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-new file mode 100644
-index 0000000..447da62
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-@@ -0,0 +1,45 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "imx25-eukrea-mbimxsd25-baseboard.dts"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25 with the DVI-VGA Display";
-+	compatible =3D "eukrea,mbimxsd25-baseboard-dvi-vga", "eukrea,mbimxsd2=
-5-baseboard", "eukrea,cpuimx25", "fsl,imx25";
-+
-+	dvi_vga: display {
-+		model =3D "DVI-VGA";
-+		bits-per-pixel =3D <16>;
-+		fsl,pcr =3D <0xfa208b80>;
-+		bus-width =3D <18>;
-+		native-mode =3D <&dvi_vga_timings>;
-+		display-timings {
-+			dvi_vga_timings: 640x480 {
-+				clock-frequency =3D <31250000>;
-+				hactive =3D <640>;
-+				vactive =3D <480>;
-+				hback-porch =3D <100>;
-+				hfront-porch =3D <100>;
-+				vback-porch =3D <7>;
-+				vfront-porch =3D <100>;
-+				hsync-len =3D <7>;
-+				vsync-len =3D <7>;
-+			};
-+		};
-+	};
-+};
-+
-+&lcdc {
-+	display =3D <&dvi_vga>;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/a=
-rch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-new file mode 100644
-index 0000000..b54a9db
---- /dev/null
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -0,0 +1,111 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "imx25-eukrea-cpuimx25.dtsi"
-+
-+/ {
-+	model =3D "Eukrea MBIMXSD25";
-+	compatible =3D "eukrea,mbimxsd25-baseboard", "eukrea,cpuimx25", "fsl,=
-imx25";
-+
-+	gpio_keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
-+
-+		bp1 {
-+			label =3D "BP1";
-+			gpios =3D <&gpio3 18 1>;
-+			linux,code =3D <256>;
-+			gpio-key,wakeup;
-+			linux,input-type =3D <1>;
-+		};
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpioled>;
-+
-+		led1 {
-+			label =3D "led1";
-+			gpios =3D <&gpio3 19 1>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_audmux_1>;
-+	status =3D "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_esdhc1_1>;
-+	cd-gpios =3D <&gpio1 20>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	tlv320aic23: codec@1a {
-+		compatible =3D "ti,tlv320aic23";
-+		reg =3D <0x1a>;
-+	};
-+};
-+
-+&iomuxc {
-+	gpio_keys {
-+		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_VSTBY_ACK__GPIO_3_18 0x80000000
-+			>;
-+		};
-+	};
-+
-+	leds {
-+		pinctrl_gpioled: gpioledgrp-1 {
-+			fsl,pins =3D <
-+				MX25_PAD_POWER_FAIL__GPIO_3_19 0x80000000
-+			>;
-+		};
-+	};
-+
-+	reg_lcd_3v3 {
-+		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-+			fsl,pins =3D <
-+				MX25_PAD_PWM__GPIO_1_26  0x80000000
-+			>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	fsl,mode =3D "i2s-slave";
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
---=20
-1.7.9.5
+>
+> I'm really interested in this all going in - but I would love to see
+> where this is just all patched into a tree already. Pulling things out
+> against a bunch of trees gave me more merge failures and weird
+> happenings than I care to deal with. Is there a TI clock development
+> tree with all this in somewhere publically accessible? I'd like to get
+> a feel for how the DT looks and what's going on, I can't "see" it from
+> the patches. Once it's there.. I'll spend a week or 5 doing all of the
+> i.MX chips and you'll have a second test case for any problems :)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Did you try the fully integrated test tree I mentioned in the cover letter?
+
+tree: https://github.com/t-kristo/linux-pm.git
+branch: 3.12-rc6-dt-clks-v9
+
+This has everything in it, and compiles cleanly.
+
+-Tero
+
