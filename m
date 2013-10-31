@@ -1,54 +1,96 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
-Date: Thu, 31 Oct 2013 10:30:47 -0700
-Message-ID: <20131031173047.GK21983@codeaurora.org>
-References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org>
- <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
- <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org>
- <52717EA5.6030208@codeaurora.org>
- <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org>
- <52718118.1020009@codeaurora.org>
- <D081E03B-01D6-497F-B8D0-E994219C8282@codeaurora.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 10/19] iommu/tegra: smmu: Get "nvidia,swgroups" from DT
+Date: Thu, 31 Oct 2013 10:31:33 -0700
+Message-ID: <20131031173132.GD3037@kartoffel>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-11-git-send-email-hdoyu@nvidia.com>
+	<5271893C.6000507@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <D081E03B-01D6-497F-B8D0-E994219C8282-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5271893C.6000507-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30, Kumar Gala wrote:
+On Wed, Oct 30, 2013 at 10:33:32PM +0000, Stephen Warren wrote:
+> On 10/18/2013 04:26 AM, Hiroshi Doyu wrote:
+> > This provides the info about which H/W Accelerators are supported on
+> > Tegra SoC. This info is passed from DT. This is necessary to have the
+> > unified SMMU driver among Tegra SoCs. Instead of using platform data,
+> > DT passes "nvidia,swgroups" now. DT is mandatory in Tegra.
 > 
-> On Oct 30, 2013, at 4:58 PM, Stephen Boyd wrote:
+> > diff --git a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
+> > index 89fb543..6a844b3 100644
+> > --- a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
+> > @@ -8,6 +8,11 @@ Required properties:
+> >  - nvidia,#asids : # of ASIDs
+> >  - dma-window : IOVA start address and length.
+> >  - nvidia,ahb : phandle to the ahb bus connected to SMMU.
+> > +- nvidia,swgroups: A bitmap of supported HardWare Accelerators(HWA).
+> > +  Each bit represents one swgroup. The assignments may be found in header
+> > +  file <dt-bindings/memory/tegra-swgroup.h>. Its max is 64. 2 cells
 > 
-> > On 10/30/13 14:56, Kumar Gala wrote:
-> >> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
-> >> 
-> >>> On 10/30/13 14:45, Kumar Gala wrote:
-> >>>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
-> >>>>> +l2-cache node containing the following properties:
-> >>>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
-> >>> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
-> >>> property is showing.
-> >> Than why not have it in each cpu node?
-> > 
-> > Because that duplicates things unnecessarily? The cpus node can hold
-> > things that are common to all CPUs to avoid duplication. If it was a
-> > different PPI for each CPU then I would agree that we need to put it in
-> > each cpu node.
-> 
-> Ok, I'll accept that as the binding is specific to Krait (and I assume all SoCs w/Krait wire this up to a common interrupt)
-> 
+> That file doesn't exist at this point in the series. I think you should
+> create a patch up-front that adds that header, and modifies the binding
+> document, all in one go, and separate from any driver code changes.
+> Separate DT/driver patches were IIRC agreed to be preferablte at the
+> recent ARM workshop.
 
-Can I take that as an ack? I'll resend with the s/an/a/ fix
-today.
+That certainly matches what I recall from the ARM minisummit.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +  are required. This unique ID info can be used to calculate
+> > +  MC_SMMU_<SWGROUP name>_ASID_0 offset and HOTRESET bit.
+> 
+> I'm afraid I still don't quite understand what a swgroup is.
+> 
+> IIUC, the HW works like this based on comments in a previous patch:
+> 
+> Each bus-master attached to the MMU passes a "memory client ID" along
+> with the transaction. Some devices can generate transactions with
+> different "memory client IDs". There is a mapping inside the SMMU from
+> "memory client ID" to "address space ID". (I don't know what form that
+> mapping takes; can you point out where it's set up?). Each "address
+> space ID" has its own set of page tables. Is "swgroup" simply another
+> name for "memory client ID"? If so, it'd be good to use just one term
+> consistently.
+
+The ARM SMMU refers to these as "stream IDs", as that's the architected name
+that appears in all the hardware documentation. If "swgroup" is the term used
+in the hardware documentation I think it makes sense to stick with it, as long
+as there's a description in the binding document that points out what an
+"swgroup" is. If there's a common term that both binding documents could refer
+to to define what stream-id/swgroup are, that would be nice.
+
+There are a few other differences in approach with the current ARM SMMU binding:
+Documentation/devicetree/bindings/iommu/arm,smmu.txt
+
+We should probably begin to look for commonality such that the next iommu
+device that gets a binding is closer to a generic iommu class binding.
+
+> 
+> Assuming "swgroup" is "memory client ID", why can't the driver just
+> create a list/... of known swgroups at runtime, based on the swgroup
+> values that each device uses, which would presumably be either
+> hard-coded in the client device's driver, or represented in the DT smmu
+> property's "iommu specifier" value.
+
+Assuming that the swgroup values of IP block instances are static, that sounds
+like the ARM SMMU binding approach. Are the IDs static, or can they be assigned
+at runtime?
+
+Thanks,
+Mark.
