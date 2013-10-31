@@ -1,72 +1,243 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add initial support for cm-fx6.
-Date: Thu, 31 Oct 2013 13:56:34 +0800
-Message-ID: <20131031055631.GA23549@S2101-09.ap.freescale.net>
-References: <1383048703-2101-1-git-send-email-valentin@compulab.co.il>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V4] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Thu, 31 Oct 2013 15:01:44 +0900
+Message-ID: <20131031060141.GT1603@verge.net.au>
+References: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1383048703-2101-1-git-send-email-valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 02:11:43PM +0200, Valentin Raevsky wrote:
-> Add initial support for cm-fx6 module.
+On Wed, Oct 30, 2013 at 09:14:21PM +0400, Valentine Barshak wrote:
+> R-Car Gen2 SoCs have a different PHY which is not compatible
+> with the older R-Car H1 (R8A7779) version.
+> This adds OF/platform device id tables and PHY initialization
+> callbacks for the following Gen2 SoCs:
+>   * R-Car H2: R8A7790;
+>   * R-Car M2: R8A7791.
 > 
-> cm-fx6 is a module based on mx6q SoC with the following features:
-> - Up to 4GB of DDR3
-> - 1 LCD/DVI output port
-> - 1 HDMI output port
-> - 2 LVDS LCD ports
-> - Gigabit Ethernet
-> - Analog Audio
-> - CAN
-> - SATA
-> - NAND
-> - PCIE
+> PHY initialization method is chosen based on the device id.
+> Default PHY settings are applied for Gen2 SoCs, which should
+> suit the Gen2 boards available.
 > 
-> This patch allows to boot up the module, configures the serial console,
-> the Ethernet adapter and the heartbeat led.
+> While at it, this also adds "sata-r8a7779" compatibility string
+> for R-Car H1 SATA, while keeping the old one for compatibility.
 > 
-> cm-fx6 is embedded inside the Utilite computer.
-> 
-> Signed-off-by: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+
+I know we are going around and around in circles regarding the bindings.
+But I think you need to submit that patch which documents the bindings
+that exist after this patch in order for the bindings, as they are
+used here, to be reviewed by the device tree people.
+
+Also, I think I found a typo which I have noted below.
+
 > ---
+>  drivers/ata/sata_rcar.c | 118 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 102 insertions(+), 16 deletions(-)
 > 
-> Shawn, can this still be applied for 3.13 ?
+> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+> index c2d95e9..c9ea1bd 100644
+> --- a/drivers/ata/sata_rcar.c
+> +++ b/drivers/ata/sata_rcar.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/ata.h>
+>  #include <linux/libata.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+> @@ -123,12 +124,37 @@
+>  
+>  #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
+>  
+> +/* Gen2 Physical Layer Control Registers */
+> +#define RCAR_GEN2_PHY_CTL1_REG		0x1704
+> +#define RCAR_GEN2_PHY_CTL1		0x34180002
+> +#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
+> +
+> +#define RCAR_GEN2_PHY_CTL2_REG		0x170C
+> +#define RCAR_GEN2_PHY_CTL2		0x00002303
+> +
+> +#define RCAR_GEN2_PHY_CTL3_REG		0x171C
+> +#define RCAR_GEN2_PHY_CTL3		0x000B0194
+> +
+> +#define RCAR_GEN2_PHY_CTL4_REG		0x1724
+> +#define RCAR_GEN2_PHY_CTL4		0x00030994
+> +
+> +#define RCAR_GEN2_PHY_CTL5_REG		0x1740
+> +#define RCAR_GEN2_PHY_CTL5		0x03004001
+> +#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
+> +#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
+> +
+> +enum sata_rcar_type {
+> +	RCAR_GEN1_SATA,
+> +	RCAR_GEN2_SATA,
+> +};
+> +
+>  struct sata_rcar_priv {
+>  	void __iomem *base;
+>  	struct clk *clk;
+> +	enum sata_rcar_type type;
+>  };
+>  
+> -static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
+> +static void sata_rcar_gen1_phy_preinit(struct sata_rcar_priv *priv)
+>  {
+>  	void __iomem *base = priv->base;
+>  
+> @@ -141,8 +167,8 @@ static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
+>  	iowrite32(0, base + SATAPHYRESET_REG);
+>  }
+>  
+> -static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
+> -				int group)
+> +static void sata_rcar_gen1_phy_write(struct sata_rcar_priv *priv, u16 reg,
+> +				     u32 val, int group)
+>  {
+>  	void __iomem *base = priv->base;
+>  	int timeout;
+> @@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
+>  	iowrite32(0, base + SATAPHYADDR_REG);
+>  }
+>  
+> +static void sata_rcar_gen1_phy_init(struct sata_rcar_priv *priv)
+> +{
+> +	sata_rcar_gen1_phy_preinit(priv);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+> +}
+> +
+> +static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
+> +{
+> +	void __iomem *base = priv->base;
+> +
+> +	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
+> +	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
+> +		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
+> +}
+> +
+>  static void sata_rcar_freeze(struct ata_port *ap)
+>  {
+>  	struct sata_rcar_priv *priv = ap->host->private_data;
+> @@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>  	u32 val;
+>  
+>  	/* reset and setup phy */
+> -	sata_rcar_phy_initialize(priv);
+> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
+> -	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
+> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
+> -	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
+> +	switch (priv->type) {
+> +	case RCAR_GEN1_SATA:
+> +		sata_rcar_gen1_phy_init(priv);
+> +		break;
+> +	case RCAR_GEN2_SATA:
+> +		sata_rcar_gen2_phy_init(priv);
+> +		break;
+> +	default:
+> +		dev_warn(host->dev, "SATA phy is not initialized\n");
+> +		break;
+> +	}
+>  
+>  	/* SATA-IP reset state */
+>  	val = ioread32(base + ATAPI_CONTROL1_REG);
+> @@ -770,8 +823,40 @@ static void sata_rcar_init_controller(struct ata_host *host)
+>  	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
+>  }
+>  
+> +static struct of_device_id sata_rcar_match[] = {
+> +	{
+> +		/* Deprecated by "renesas,sata-r8a7779" */
+> +		.compatible = "renesas,rcar-sata",
+> +		.data = (void *)RCAR_GEN1_SATA,
+> +	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7779",
+> +		.data = (void *)RCAR_GEN1_SATA,
+> +	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7790",
+> +		.data = (void *)RCAR_GEN2_SATA
+> +	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7791",
+> +		.data = (void *)RCAR_GEN2_SATA
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> +
+> +static const struct platform_device_id sata_rcar_id_table[] = {
+> +	{ "sata_rcar", RCAR_GEN1_SATA }, /* Deprecated by "sata-r8a7779" */
 
-Sorry, it's late for 3.13.  Applied for 3.14 with a small fix-up below.
+s/sata_rcar/sata-rcar/ ?
 
+
+> +	{ "sata-r8a7779", RCAR_GEN1_SATA },
+> +	{ "sata-r8a7790", RCAR_GEN2_SATA },
+> +	{ "sata-r8a7791", RCAR_GEN2_SATA },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(platform, sata_rcar_id_table);
+> +
+>  static int sata_rcar_probe(struct platform_device *pdev)
+>  {
+> +	const struct of_device_id *of_id;
+>  	struct ata_host *host;
+>  	struct sata_rcar_priv *priv;
+>  	struct resource *mem;
+> @@ -787,6 +872,12 @@ static int sata_rcar_probe(struct platform_device *pdev)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> +	of_id = of_match_device(sata_rcar_match, &pdev->dev);
+> +	if (of_id)
+> +		priv->type = (enum sata_rcar_type)of_id->data;
+> +	else
+> +		priv->type = platform_get_device_id(pdev)->driver_data;
+> +
+>  	priv->clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(priv->clk)) {
+>  		dev_err(&pdev->dev, "failed to get access to sata clock\n");
+> @@ -892,15 +983,10 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
+>  };
+>  #endif
+>  
+> -static struct of_device_id sata_rcar_match[] = {
+> -	{ .compatible = "renesas,rcar-sata", },
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> -
+>  static struct platform_driver sata_rcar_driver = {
+>  	.probe		= sata_rcar_probe,
+>  	.remove		= sata_rcar_remove,
+> +	.id_table	= sata_rcar_id_table,
+>  	.driver = {
+>  		.name		= DRV_NAME,
+>  		.owner		= THIS_MODULE,
+> -- 
+> 1.8.3.1
 > 
->  arch/arm/boot/dts/Makefile         |    1 +
->  arch/arm/boot/dts/imx6q-cm-fx6.dts |   53 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-cm-fx6.dts
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 641b3c9..87ca7ca 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -131,6 +131,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
->  	imx6q-sabrelite.dtb \
->  	imx6q-sabresd.dtb \
->  	imx6q-sbc6x.dtb \
-> +	imx6q-cm-fx6.dtb \
-
-If you look at the list, you can find that they are sorted
-alphabetically.  I just moved it around to maintain the order.
-
-Shawn
-
->  	imx6sl-evk.dtb \
->  	vf610-twr.dtb
->  dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
