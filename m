@@ -1,65 +1,58 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv3 10/19] iommu/tegra: smmu: Get "nvidia,swgroups" from DT
-Date: Thu, 31 Oct 2013 10:15:31 -0700
-Message-ID: <20131031171530.GC3037@kartoffel>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-11-git-send-email-hdoyu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: gpio: dwapb: Synopsys Designware GPIO
+Date: Thu, 31 Oct 2013 18:21:46 +0100
+Message-ID: <527291AA.1030305@gmail.com>
+References: <52718C28.5030803@gmail.com> <20131031082226.GZ28790@pengutronix.de> <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com> <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com> <20131031155803.GB28790@pengutronix.de> <20131031160723.GA4572@page> <20131031161739.GC28790@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382092020-13170-11-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131031161739.GC28790-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 11:26:51AM +0100, Hiroshi Doyu wrote:
-> This provides the info about which H/W Accelerators are supported on
-> Tegra SoC. This info is passed from DT. This is necessary to have the
-> unified SMMU driver among Tegra SoCs. Instead of using platform data,
-> DT passes "nvidia,swgroups" now. DT is mandatory in Tegra.
-> 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/iommu/nvidia,tegra30-smmu.txt         |  6 +++++
->  drivers/iommu/tegra-smmu.c                         | 31 ++++++++++------------
->  2 files changed, 20 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> index 89fb543..6a844b3 100644
-> --- a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> @@ -8,6 +8,11 @@ Required properties:
->  - nvidia,#asids : # of ASIDs
->  - dma-window : IOVA start address and length.
->  - nvidia,ahb : phandle to the ahb bus connected to SMMU.
-> +- nvidia,swgroups: A bitmap of supported HardWare Accelerators(HWA).
-> +  Each bit represents one swgroup. The assignments may be found in header
-> +  file <dt-bindings/memory/tegra-swgroup.h>. Its max is 64. 2 cells
-> +  are required. This unique ID info can be used to calculate
-> +  MC_SMMU_<SWGROUP name>_ASID_0 offset and HOTRESET bit.
+On 10/31/2013 05:17 PM, Steffen Trumtrar wrote:
+> On Thu, Oct 31, 2013 at 04:07:23PM +0000, Jamie Iles wrote:
+>> On Thu, Oct 31, 2013 at 04:58:03PM +0100, Steffen Trumtrar wrote:
+>>> I wonder if we want to really keep the binding as it is proposed by
+>>> Jamie. Do we really win anything by having to specify the banks in the
+>>> DT? In my version I get the number of ports, width etc. from the config registers
+>>> of the device. I think everything that the device knows itself and can be read
+>>> out at runtime shouldn't be specified in the DT.
+>>> And it seems that the binding was never merged, so I guess we can change it.
+>>
+>> The reason for having it split into banks is that for hardware that has
+>> a mixture of bank sizes (odd hardware admittedly, but that includes
+>> hardware that I was writing the driver for), we had a setup like 16 pins
+>> on bank A, 16 on B, 1 on C and 16 on D where each bank could have a
+>> maximum of 32, so converting from a data sheet to GPIO number is not
+>> obvious.  Grant Likely suggested representing the banks as different
+>> devices, so that's how I created the binding.
+>
+> I have no problem with the binding, if it is worth it. Do you mean you had
+> hardware where the gpio lines where not connected? Or maybe you had an older
+> version of the IP core?
+> In the Socfpga case there is gpio_config_reg2, which specifies the width
+> for every of the 4 ports. So I thought I use those values to describe my
+> hardware. The Socfpga however only uses the first bank of its three GPIO cores,
+> so I wouldn't be able to test if the code works for more than just that.
 
-I'd prefer that you pointed out the type of the property explicitly at the
-beginning of the description. It's difficult to spot it in the middle, and
-while the current description defines that the property is two cells, it
-doesn't point out that they are expected to form a (big endian) u64 (rather
-than an array of two u32s).
+Having talked with Heiko at ELCE, both upcoming mach-berlin and
+mach-rockchip will be using dw-apb-gpio as GPIO driver. Unfortunately,
+while berlin has the CONFIG[12] registers, rockchip has not. So there
+must be bindings to at least overwrite the obvious settings derived
+from that registers.
 
-While we don't yet have a formal set of rules for consistent binding
-documentation, defining the explicitly is one of the requirements I'd like to
-push for in new bindings. Placing this at the start of the description makes it
-far easier to skim a binding document and perform basic sanity checks of the
-binding itself, dts using the binding, and kernel code parsing it.
+Also, IIRC Heiko prefers to use platform_data driven registration as it
+is tightly coupled with rk's pinmux. So there should really be support
+for that and DT parsing on top that fills platform_data.
 
-Cheers,
-Mark.
+Can you please resend the whole set on list so we can review it again
+with more machs involved?
+
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
