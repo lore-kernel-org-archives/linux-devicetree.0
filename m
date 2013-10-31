@@ -1,243 +1,188 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH V4] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Thu, 31 Oct 2013 15:01:44 +0900
-Message-ID: <20131031060141.GT1603@verge.net.au>
-References: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
+From: NeilBrown <neilb@suse.de>
+Subject: [PATCH] twl4030_charger: add devicetree support.
+Date: Thu, 31 Oct 2013 17:05:50 +1100
+Message-ID: <20131031170550.686cdf1e@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_//15NQXHAOSs8nREDBBW8Oss"; protocol="application/pgp-signature"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2013 at 09:14:21PM +0400, Valentine Barshak wrote:
-> R-Car Gen2 SoCs have a different PHY which is not compatible
-> with the older R-Car H1 (R8A7779) version.
-> This adds OF/platform device id tables and PHY initialization
-> callbacks for the following Gen2 SoCs:
->   * R-Car H2: R8A7790;
->   * R-Car M2: R8A7791.
-> 
-> PHY initialization method is chosen based on the device id.
-> Default PHY settings are applied for Gen2 SoCs, which should
-> suit the Gen2 boards available.
-> 
-> While at it, this also adds "sata-r8a7779" compatibility string
-> for R-Car H1 SATA, while keeping the old one for compatibility.
-> 
-> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-
-I know we are going around and around in circles regarding the bindings.
-But I think you need to submit that patch which documents the bindings
-that exist after this patch in order for the bindings, as they are
-used here, to be reviewed by the device tree people.
-
-Also, I think I found a typo which I have noted below.
-
-> ---
->  drivers/ata/sata_rcar.c | 118 +++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 102 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-> index c2d95e9..c9ea1bd 100644
-> --- a/drivers/ata/sata_rcar.c
-> +++ b/drivers/ata/sata_rcar.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/ata.h>
->  #include <linux/libata.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/clk.h>
->  #include <linux/err.h>
-> @@ -123,12 +124,37 @@
->  
->  #define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
->  
-> +/* Gen2 Physical Layer Control Registers */
-> +#define RCAR_GEN2_PHY_CTL1_REG		0x1704
-> +#define RCAR_GEN2_PHY_CTL1		0x34180002
-> +#define RCAR_GEN2_PHY_CTL1_SS		0xC180	/* Spread Spectrum */
-> +
-> +#define RCAR_GEN2_PHY_CTL2_REG		0x170C
-> +#define RCAR_GEN2_PHY_CTL2		0x00002303
-> +
-> +#define RCAR_GEN2_PHY_CTL3_REG		0x171C
-> +#define RCAR_GEN2_PHY_CTL3		0x000B0194
-> +
-> +#define RCAR_GEN2_PHY_CTL4_REG		0x1724
-> +#define RCAR_GEN2_PHY_CTL4		0x00030994
-> +
-> +#define RCAR_GEN2_PHY_CTL5_REG		0x1740
-> +#define RCAR_GEN2_PHY_CTL5		0x03004001
-> +#define RCAR_GEN2_PHY_CTL5_DC		BIT(1)	/* DC connection */
-> +#define RCAR_GEN2_PHY_CTL5_TR		BIT(2)	/* Termination Resistor */
-> +
-> +enum sata_rcar_type {
-> +	RCAR_GEN1_SATA,
-> +	RCAR_GEN2_SATA,
-> +};
-> +
->  struct sata_rcar_priv {
->  	void __iomem *base;
->  	struct clk *clk;
-> +	enum sata_rcar_type type;
->  };
->  
-> -static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
-> +static void sata_rcar_gen1_phy_preinit(struct sata_rcar_priv *priv)
->  {
->  	void __iomem *base = priv->base;
->  
-> @@ -141,8 +167,8 @@ static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
->  	iowrite32(0, base + SATAPHYRESET_REG);
->  }
->  
-> -static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
-> -				int group)
-> +static void sata_rcar_gen1_phy_write(struct sata_rcar_priv *priv, u16 reg,
-> +				     u32 val, int group)
->  {
->  	void __iomem *base = priv->base;
->  	int timeout;
-> @@ -170,6 +196,29 @@ static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
->  	iowrite32(0, base + SATAPHYADDR_REG);
->  }
->  
-> +static void sata_rcar_gen1_phy_init(struct sata_rcar_priv *priv)
-> +{
-> +	sata_rcar_gen1_phy_preinit(priv);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
-> +	sata_rcar_gen1_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-> +}
-> +
-> +static void sata_rcar_gen2_phy_init(struct sata_rcar_priv *priv)
-> +{
-> +	void __iomem *base = priv->base;
-> +
-> +	iowrite32(RCAR_GEN2_PHY_CTL1, base + RCAR_GEN2_PHY_CTL1_REG);
-> +	iowrite32(RCAR_GEN2_PHY_CTL2, base + RCAR_GEN2_PHY_CTL2_REG);
-> +	iowrite32(RCAR_GEN2_PHY_CTL3, base + RCAR_GEN2_PHY_CTL3_REG);
-> +	iowrite32(RCAR_GEN2_PHY_CTL4, base + RCAR_GEN2_PHY_CTL4_REG);
-> +	iowrite32(RCAR_GEN2_PHY_CTL5 | RCAR_GEN2_PHY_CTL5_DC |
-> +		  RCAR_GEN2_PHY_CTL5_TR, base + RCAR_GEN2_PHY_CTL5_REG);
-> +}
-> +
->  static void sata_rcar_freeze(struct ata_port *ap)
->  {
->  	struct sata_rcar_priv *priv = ap->host->private_data;
-> @@ -738,13 +787,17 @@ static void sata_rcar_init_controller(struct ata_host *host)
->  	u32 val;
->  
->  	/* reset and setup phy */
-> -	sata_rcar_phy_initialize(priv);
-> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
-> -	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
-> -	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
-> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
-> -	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
-> -	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-> +	switch (priv->type) {
-> +	case RCAR_GEN1_SATA:
-> +		sata_rcar_gen1_phy_init(priv);
-> +		break;
-> +	case RCAR_GEN2_SATA:
-> +		sata_rcar_gen2_phy_init(priv);
-> +		break;
-> +	default:
-> +		dev_warn(host->dev, "SATA phy is not initialized\n");
-> +		break;
-> +	}
->  
->  	/* SATA-IP reset state */
->  	val = ioread32(base + ATAPI_CONTROL1_REG);
-> @@ -770,8 +823,40 @@ static void sata_rcar_init_controller(struct ata_host *host)
->  	iowrite32(ATAPI_INT_ENABLE_SATAINT, base + ATAPI_INT_ENABLE_REG);
->  }
->  
-> +static struct of_device_id sata_rcar_match[] = {
-> +	{
-> +		/* Deprecated by "renesas,sata-r8a7779" */
-> +		.compatible = "renesas,rcar-sata",
-> +		.data = (void *)RCAR_GEN1_SATA,
-> +	},
-> +	{
-> +		.compatible = "renesas,sata-r8a7779",
-> +		.data = (void *)RCAR_GEN1_SATA,
-> +	},
-> +	{
-> +		.compatible = "renesas,sata-r8a7790",
-> +		.data = (void *)RCAR_GEN2_SATA
-> +	},
-> +	{
-> +		.compatible = "renesas,sata-r8a7791",
-> +		.data = (void *)RCAR_GEN2_SATA
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sata_rcar_match);
-> +
-> +static const struct platform_device_id sata_rcar_id_table[] = {
-> +	{ "sata_rcar", RCAR_GEN1_SATA }, /* Deprecated by "sata-r8a7779" */
-
-s/sata_rcar/sata-rcar/ ?
+--Sig_//15NQXHAOSs8nREDBBW8Oss
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
 
-> +	{ "sata-r8a7779", RCAR_GEN1_SATA },
-> +	{ "sata-r8a7790", RCAR_GEN2_SATA },
-> +	{ "sata-r8a7791", RCAR_GEN2_SATA },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, sata_rcar_id_table);
-> +
->  static int sata_rcar_probe(struct platform_device *pdev)
->  {
-> +	const struct of_device_id *of_id;
->  	struct ata_host *host;
->  	struct sata_rcar_priv *priv;
->  	struct resource *mem;
-> @@ -787,6 +872,12 @@ static int sata_rcar_probe(struct platform_device *pdev)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> +	of_id = of_match_device(sata_rcar_match, &pdev->dev);
-> +	if (of_id)
-> +		priv->type = (enum sata_rcar_type)of_id->data;
-> +	else
-> +		priv->type = platform_get_device_id(pdev)->driver_data;
-> +
->  	priv->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(priv->clk)) {
->  		dev_err(&pdev->dev, "failed to get access to sata clock\n");
-> @@ -892,15 +983,10 @@ static const struct dev_pm_ops sata_rcar_pm_ops = {
->  };
->  #endif
->  
-> -static struct of_device_id sata_rcar_match[] = {
-> -	{ .compatible = "renesas,rcar-sata", },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, sata_rcar_match);
-> -
->  static struct platform_driver sata_rcar_driver = {
->  	.probe		= sata_rcar_probe,
->  	.remove		= sata_rcar_remove,
-> +	.id_table	= sata_rcar_id_table,
->  	.driver = {
->  		.name		= DRV_NAME,
->  		.owner		= THIS_MODULE,
-> -- 
-> 1.8.3.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+This allows the charger to be enabled with devicetree, and
+allows the parameters for charging the backup battery to be set.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+Acked-by: Kumar Gala <galak@codeaurora.org>
+Acked-by: Grant Likely <grant.likely@linaro.org>
+
+--
+This version with correct property names and some Acked-by's.
+- NB
+
+diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Docu=
+mentation/devicetree/bindings/power/twl-charger.txt
+new file mode 100644
+index 000000000000..d5c706216df5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/twl-charger.txt
+@@ -0,0 +1,20 @@
++TWL BCI (Battery Charger Interface)
++
++Required properties:
++- compatible:
++  - "ti,twl4030-bci"
++- interrupts: two interrupt lines from the TWL SIH (secondary
++  interrupt handler) - interrupts 9 and 2.
++
++Optional properties:
++- ti,bb-uvolt: microvolts for charging the backup battery.
++- ti,bb-uamp: microamps for charging the backup battery.
++
++Examples:
++
++bci {
++   compatible =3D "ti,twl4030-bci";
++   interrupts =3D <9>, <2>;
++   ti,bb-uvolt =3D <3200000>;
++   ti,bb-uamp =3D <150>;
++};
+diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+index ae6a17aed9ee..5a12540b1d0f 100644
+--- a/arch/arm/boot/dts/twl4030.dtsi
++++ b/arch/arm/boot/dts/twl4030.dtsi
+@@ -19,6 +19,12 @@
+ 		interrupts =3D <11>;
+ 	};
+=20
++	charger: bci {
++		compatible =3D "ti,twl4030-bci";
++		interrupts =3D <9>, <2>;
++		bci3v1-supply =3D <&vusb3v1>;
++	};
++
+ 	watchdog {
+ 		compatible =3D "ti,twl4030-wdt";
+ 	};
+diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charge=
+r.c
+index d98abe911e37..f14108844e1a 100644
+--- a/drivers/power/twl4030_charger.c
++++ b/drivers/power/twl4030_charger.c
+@@ -495,10 +495,38 @@ static enum power_supply_property twl4030_charger_pro=
+ps[] =3D {
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ };
+=20
++#ifdef CONFIG_OF
++static const struct twl4030_bci_platform_data *
++twl4030_bci_parse_dt(struct device *dev)
++{
++	struct device_node *np =3D dev->of_node;
++	struct twl4030_bci_platform_data *pdata;
++	u32 num;
++
++	if (!np)
++		return NULL;
++	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return pdata;
++
++	if (of_property_read_u32(np, "ti,bb-uvolt", &num) =3D=3D 0)
++		pdata->bb_uvolt =3D num;
++	if (of_property_read_u32(np, "ti,bb-uamp", &num) =3D=3D 0)
++		pdata->bb_uamp =3D num;
++	return pdata;
++}
++#else
++static inline const struct twl4030_bci_platform_data *
++twl4030_bci_parse_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int __init twl4030_bci_probe(struct platform_device *pdev)
+ {
+ 	struct twl4030_bci *bci;
+-	struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
++	const struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
+ 	int ret;
+ 	u32 reg;
+=20
+@@ -506,6 +534,9 @@ static int __init twl4030_bci_probe(struct platform_dev=
+ice *pdev)
+ 	if (bci =3D=3D NULL)
+ 		return -ENOMEM;
+=20
++	if (!pdata)
++		pdata =3D twl4030_bci_parse_dt(&pdev->dev);
++
+ 	bci->dev =3D &pdev->dev;
+ 	bci->irq_chg =3D platform_get_irq(pdev, 0);
+ 	bci->irq_bci =3D platform_get_irq(pdev, 1);
+@@ -581,8 +612,11 @@ static int __init twl4030_bci_probe(struct platform_de=
+vice *pdev)
+=20
+ 	twl4030_charger_enable_ac(true);
+ 	twl4030_charger_enable_usb(bci, true);
+-	twl4030_charger_enable_backup(pdata->bb_uvolt,
+-				      pdata->bb_uamp);
++	if (pdata)
++		twl4030_charger_enable_backup(pdata->bb_uvolt,
++					      pdata->bb_uamp);
++	else
++		twl4030_charger_enable_backup(0, 0);
+=20
+ 	return 0;
+=20
+@@ -631,10 +665,17 @@ static int __exit twl4030_bci_remove(struct platform_=
+device *pdev)
+ 	return 0;
+ }
+=20
++static const struct of_device_id twl_bci_of_match[] =3D {
++	{.compatible =3D "ti,twl4030-bci", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, twl_bci_of_match);
++
+ static struct platform_driver twl4030_bci_driver =3D {
+ 	.driver	=3D {
+ 		.name	=3D "twl4030_bci",
+ 		.owner	=3D THIS_MODULE,
++		.of_match_table =3D of_match_ptr(twl_bci_of_match),
+ 	},
+ 	.remove	=3D __exit_p(twl4030_bci_remove),
+ };
+
+--Sig_//15NQXHAOSs8nREDBBW8Oss
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUnHzPjnsnt1WYoG5AQJHww//f3wIKV41ucIlg9fsH6dju6tWCAk8TQHo
+i3iX5+klWen1JSqMBBEJjsy6QWz9MMg7lY68TqBmhNoYKSy0F9cURpta65YEDjV6
+5Aerw9Dx9Kfev2zrScADGEK02mayftWYS2kCWX5l3/cUCZG4feZFpYy1tfOZIobd
+1m+2F9enfJN887mhSrHV54ybulsOXp7nkhE4AEHk5OWCNO32I/fV3IxpH3/HbNCC
+53SlQX+4WlKs7rNV6wDhp9pZcJ0xtXJ+F3wahNGP0za4OQ9L8lHQfi3dsifnte6f
+4LsMZzgGdec4OUfTUv15rh40vw3/GCAjplcEk580IINZAFdUNZYmMK1bb/PEC0BQ
+pMNAIwu/FcYUl/BrJpyImprncpJnVjUCo1bG0oULuhWlF9zWNM8sqBEecdsBtw1q
+Wr2/5iO2D+NoBDalhiZOxYk9cVOcjKWNImECrJ7/qWBOsvTz5ZnL9eZB0Qw8uguq
+jSwV4u0CdvxAyCvVbMEGMQSnHkNUCajsuSjuVZtrsDBuZ8pnVofJv79WVjysUTxg
+iHXjEfzGlD8/SBxF23GbaZ4u0zofbeB/+fAg5qWYbzAomH6th12GzcbUcivl/17H
+AFnNRBEGi+u/N1E3V9oGRwZEdr0XDQ4/zAju6aztm2QzEyxJULxcGpERJs13Bzf3
+iqY8Px4FRSQ=
+=eDaa
+-----END PGP SIGNATURE-----
+
+--Sig_//15NQXHAOSs8nREDBBW8Oss--
