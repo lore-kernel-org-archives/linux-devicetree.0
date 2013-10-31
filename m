@@ -1,78 +1,51 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
-	from DT
-Date: Thu, 31 Oct 2013 10:40:29 -0700
-Message-ID: <20131031174028.GF3037@kartoffel>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
-	<52718BB4.4090007@wwwdotorg.org>
-	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131031.101808.1830527808656695540.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
+Date: Thu, 31 Oct 2013 12:44:39 -0500
+Message-ID: <C796381F-AE3B-4577-BC97-DA041E5F40E8@codeaurora.org>
+References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org> <1383164736-1849-5-git-send-email-sboyd@codeaurora.org> <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org> <52717EA5.6030208@codeaurora.org> <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org> <52718118.1020009@codeaurora.org> <D081E03B-01D6-497F-B8D0-E994219C8282@codeaurora.org> <20131031173047.GK21983@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131031173047.GK21983@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 08:18:08AM +0000, Hiroshi Doyu wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 30 Oct 2013 23:44:04 +0100:
-> 
-> > > +	host1x {
-> > > +		compatible = "nvidia,tegra30-host1x", "simple-bus";
-> > > +		nvidia,memory-clients = <&smmu TEGRA_SWGROUP_HC>;
-> > > +		....
-> > > +		gr3d {
-> > > +			compatible = "nvidia,tegra30-gr3d";
-> > > +			nvidia,memory-clients = <&smmu TEGRA_SWGROUP_NV
-> > > +						       TEGRA_SWGROUP_NV2>;
-> > 
-> > Why one cell for the host1x property, and two cells for the gr3d
-> > property; shouldn't they be the same length?
-> 
-> That can vary. Even a single device node in DT can belong to multiple
-> software groups.
 
-Same with ARM SMMU.
+On Oct 31, 2013, at 12:30 PM, Stephen Boyd wrote:
 
+> On 10/30, Kumar Gala wrote:
+>> 
+>> On Oct 30, 2013, at 4:58 PM, Stephen Boyd wrote:
+>> 
+>>> On 10/30/13 14:56, Kumar Gala wrote:
+>>>> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
+>>>> 
+>>>>> On 10/30/13 14:45, Kumar Gala wrote:
+>>>>>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
+>>>>>>> +l2-cache node containing the following properties:
+>>>>>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
+>>>>> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
+>>>>> property is showing.
+>>>> Than why not have it in each cpu node?
+>>> 
+>>> Because that duplicates things unnecessarily? The cpus node can hold
+>>> things that are common to all CPUs to avoid duplication. If it was a
+>>> different PPI for each CPU then I would agree that we need to put it in
+>>> each cpu node.
+>> 
+>> Ok, I'll accept that as the binding is specific to Krait (and I assume all SoCs w/Krait wire this up to a common interrupt)
+>> 
 > 
-> > > diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-> > 
-> > > +static u64 smmu_of_get_memory_client(struct device *dev)
-> > 
-> > > +	np = of_parse_phandle(dev->of_node, propname, 0);
-> > > +	if (np != smmu_handle->dev->of_node)
-> > > +		return ~0;
-> > > +
-> > > +	prop = of_get_property(dev->of_node, propname, &bytes);
-> > > +	if (!prop || !bytes)
-> > > +		return ~0;
-> > 
-> > of_parse_phandle_with_fixed_args() might be a good fit here, or perhaps
-> > require a property #smmu-cells in the SMMU node, thus allowing the
-> > non-fixed-length of_parse_phandle_with_args() to be used here.
-> 
-> I once considered of_parse_phandle_with_args() but I couldn't use that
-> since "#smmu-cells" needed to be fixed in smmu node, not in client
-> node. In this case, the number of argument(number of swgroup IDs)
-> varies per client device.
+> Can I take that as an ack? I'll resend with the s/an/a/ fix
+> today.
 
-For the ARM SMMU binding, each device has a #stream-id-cells property
-describing how many IDs it has, and then the SMMU node has a phandle+args
-linkage to each of the devices attached to it, describing their stream IDs.
-While this does have some limitations (a device can't be plugged into multiple
-SMMUs with a different number of IDs), it seems generally sane.
+Yes, you can take that as an ack.
 
-Thanks,
-Mark.
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
