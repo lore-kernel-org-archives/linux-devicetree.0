@@ -1,15 +1,15 @@
 From: "R, Sricharan" <r.sricharan@ti.com>
-Subject: RE: [PATCH V2 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for
- routable irqs
-Date: Thu, 31 Oct 2013 10:50:04 +0000
-Message-ID: <F934AE11CE617240AE4A874A49F629E4832564@DBDE04.ent.ti.com>
+Subject: RE: [PATCH V2 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for
+ Crossbar IP
+Date: Thu, 31 Oct 2013 10:57:47 +0000
+Message-ID: <F934AE11CE617240AE4A874A49F629E4832579@DBDE04.ent.ti.com>
 References: <1383145040-15852-1-git-send-email-r.sricharan@ti.com>
- <1383145040-15852-2-git-send-email-r.sricharan@ti.com>,<alpine.DEB.2.02.1310301608380.24686@ionos.tec.linutronix.de>
+ <1383145040-15852-3-git-send-email-r.sricharan@ti.com>,<alpine.DEB.2.02.1310301615430.24686@ionos.tec.linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310301608380.24686@ionos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.02.1310301615430.24686@ionos.tec.linutronix.de>
 Content-Language: en-US
 Sender: linux-omap-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>
@@ -17,54 +17,50 @@ Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@v
 List-Id: devicetree@vger.kernel.org
 
 Hi Thomas,
-  Sorry for top posting. My mailer is not allowing me any formatting.
+  Again sorry for top post. 
 
-  I agree with both of your comments below.
-  I will post V3 for this.
+  I agree and will fix both of the comments below.
+
+  Thanks for the reviews.
 
 Regards,
  Sricharan
-
 ________________________________________
 From: Thomas Gleixner [tglx@linutronix.de]
-Sent: Wednesday, October 30, 2013 8:45 PM
+Sent: Wednesday, October 30, 2013 9:00 PM
 To: R, Sricharan
 Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-omap@vger.kernel.org; linus.walleij@linaro.org; linux@arm.linux.org.uk; tony@atomide.com; Nayak, Rajendra; marc.zyngier@arm.com; grant.likely@linaro.org; mark.rutland@arm.com; robherring2@gmail.com; Shilimkar, Santosh; Rob Herring
-Subject: Re: [PATCH V2 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable irqs
+Subject: Re: [PATCH V2 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
 
 On Wed, 30 Oct 2013, Sricharan R wrote:
-> @@ -700,11 +709,22 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
->       *out_hwirq = intspec[1] + 16;
->
->       /* For SPIs, we need to add 16 more to get the GIC irq ID number */
-> -     if (!intspec[0])
-> +     if (!intspec[0]) {
->               *out_hwirq += 16;
+> +static inline const u32 allocate_free_irq(int cb_no)
 
-Minor nit. This should be in the default implementation. The crossbar
-implementation will fill out_hwirq in its own way and is not
-interested in the +16 operation at all.
+I understand the "static inline" part, but "const u32" is more than
+fishy. What's wrong with "static inline int" ?
 
-> +             ret = gic_routable_irq_domain_ops->xlate(d, controller,
-> +                                                      intspec,
-> +                                                      intsize,
-> +                                                      out_hwirq,
-> +                                                      out_type);
+> +{
+> +     int i;
 > +
-
-> +             gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
-> +                                     hwirq_base, &gic_irq_domain_ops, gic);
-> +     } else {
-> +             if (WARN_ON(!gic_routable_irq_domain_ops))
-> +                     return;
-
-This warning is pointless, because you have default ops now.
-
+> +     for (i = 0; i < cb->int_max; i++) {
+> +             if (cb->irq_map[i] == IRQ_FREE) {
+> +                     cb->irq_map[i] = cb_no;
+> +                     return i;
+> +             }
+> +     }
 > +
-> +             gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
-> +                                                 &gic_irq_domain_ops,
-> +                                                 gic);
->       }
+> +     return -ENODEV;
+> +}
+
+> +static int crossbar_domain_xlate(struct irq_domain *d,
+> +                              struct device_node *controller,
+> +                              const u32 *intspec, unsigned int intsize,
+> +                              unsigned long *out_hwirq,
+> +                              unsigned int *out_type)
+> +{
+> +     unsigned long ret = 0;
+
+Why do you need to initialize ret when you assign a value to it in the
+next line?
 
 Thanks,
 
