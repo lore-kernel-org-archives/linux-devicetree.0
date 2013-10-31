@@ -1,70 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv3 05/19] ARM: dt: tegra114: iommu: Fix IOMMU register
-	address
-Date: Thu, 31 Oct 2013 09:51:27 -0700
-Message-ID: <20131031165127.GB3037@kartoffel>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-6-git-send-email-hdoyu@nvidia.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: gpio: dwapb: Synopsys Designware GPIO
+Date: Thu, 31 Oct 2013 16:55:24 +0000
+Message-ID: <20131031165524.GB4572@page>
+References: <52718C28.5030803@gmail.com>
+ <20131031082226.GZ28790@pengutronix.de>
+ <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
+ <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
+ <20131031155803.GB28790@pengutronix.de>
+ <20131031160723.GA4572@page>
+ <20131031161739.GC28790@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1382092020-13170-6-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20131031161739.GC28790-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2013 at 11:26:46AM +0100, Hiroshi Doyu wrote:
-> Fix IOMMU register address.
+On Thu, Oct 31, 2013 at 05:17:39PM +0100, Steffen Trumtrar wrote:
+> On Thu, Oct 31, 2013 at 04:07:23PM +0000, Jamie Iles wrote:
+> > The reason for having it split into banks is that for hardware that 
+> > has a mixture of bank sizes (odd hardware admittedly, but that 
+> > includes hardware that I was writing the driver for), we had a setup 
+> > like 16 pins on bank A, 16 on B, 1 on C and 16 on D where each bank 
+> > could have a maximum of 32, so converting from a data sheet to GPIO 
+> > number is not obvious.  Grant Likely suggested representing the 
+> > banks as different devices, so that's how I created the binding.
+> > 
 > 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra114.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-> index 2905145..8d42787 100644
-> --- a/arch/arm/boot/dts/tegra114.dtsi
-> +++ b/arch/arm/boot/dts/tegra114.dtsi
-> @@ -318,9 +318,9 @@
->  
->  	iommu {
->  		compatible = "nvidia,tegra114-smmu", "nvidia,tegra30-smmu";
-> -		reg = <0x7000f010 0x02c
-> -		       0x7000f1f0 0x010
-> -		       0x7000f228 0x074>;
-> +		reg = <0x70019010 0x02c
-> +		       0x700191f0 0x010
-> +		       0x70019228 0x074>;
+> I have no problem with the binding, if it is worth it. Do you mean you had
+> hardware where the gpio lines where not connected? Or maybe you had an older
+> version of the IP core?
 
-Minor cleanup/consistency request: as all these lines are changing anyway,
-would you mind bracketing each entry individually:
+Not even unconnected, the IP was configured to have banks of varying 
+width!  Perhaps it was something to do with the physical pads that they 
+were connected to having different I/O standards or something.
 
-		reg = <0x70019010 0x02c>,
-		      <0x700191f0 0x010>,
-		      <0x70019228 0x074>;
+> In the Socfpga case there is gpio_config_reg2, which specifies the width
+> for every of the 4 ports. So I thought I use those values to describe my
+> hardware. The Socfpga however only uses the first bank of its three GPIO cores,
+> so I wouldn't be able to test if the code works for more than just that.
 
-Cheers,
-Mark.
+I think that if there was a guarantee that all banks apart from the last 
+were configured to equal width then representing the controller as a 
+single device would be right, but given that it isn't always the case 
+then seperate devices for each bank is probably the most sensible.
 
->  		nvidia,#asids = <4>;
->  		dma-window = <0 0x40000000>;
->  		nvidia,swgroups = <0x18659fe>;
-> -- 
-> 1.8.1.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+That said I'd personally be happy either way to see the patches merged!
+
+Jamie
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
