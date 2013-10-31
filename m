@@ -1,118 +1,78 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
-Date: Thu, 31 Oct 2013 11:10:45 +0200
-Message-ID: <52721E95.4080806@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <526FDFF4.9030806@ti.com> <5270C1F3.6000409@ti.com> <52711F12.1090008@ti.com> <52716799.6040002@ti.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv9][ 2/6] video: imxfb: Also add pwmr for the device tree.
+Date: Thu, 31 Oct 2013 10:15:24 +0100
+Message-ID: <1383210928-18906-2-git-send-email-denis@eukrea.com>
+References: <1383210928-18906-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52716799.6040002@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383210928-18906-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2013 10:10 PM, Nishanth Menon wrote:
-> On 10/30/2013 10:00 AM, Nishanth Menon wrote:
->> On 10/30/2013 03:23 AM, Tero Kristo wrote:
->>> On 10/29/2013 06:19 PM, Nishanth Menon wrote:
->>>> On 10/25/2013 10:56 AM, Tero Kristo wrote:
->>>> <snip>
->>>>> Testing done:
->>>>> - omap3-beagle: boot + suspend/resume (ret + off)
->>>>> - omap4-panda-es: boot + suspend/resume
->>>>> - omap5-uevm: boot
->>>>> - dra7-evm: boot
->>>>> - am335x-bone: boot
->>>>>
->>>>> Test branches available:
->>>>>
->>>>> tree: https://github.com/t-kristo/linux-pm.git
->>>>
->>>> <snip>
->>>>> Fully functioning test branch: 3.12-rc6-dt-clks-v9
->>>>>
->>>> ^^ I tested this branch (boot testing):
->>>> Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
->>>> failed to transition)
->>>
->>> I just sent you a private email with a patch to try out, should fix the
->>> boot crash at least hopefully. Basically I forgot to convert one part of
->>> the kernel to the new regmap stuff for omap36xx.
->>
->> it does bootup yes.
->>>
->>> clkdm issues are caused by wrong data in omap_hwmod_3xxx_data.c, USB
->>> nodes are listing l3_init_clkdm for them, but this only exists on
->>> omap4+. Seems like some copy paste bug introduced by someone.
->>>
->>> dpll5 part I am not too sure, can you check if the same happens with
->>> non-dt boot?
->>
->> no-dt: http://pastebin.com/bYP9fTzH
->> dt: http://pastebin.com/xHup4L9Y
->>
->> dpll5 warning seems to be only in dt-boot?
->>
->
-> Tracked this down: you were missing the following - looks like the
-> conversion script might be missing converting the flags clock data
-> over to dts?
->
-> diff --git
-> a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-> b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-> index 7e37e3e..c9b77c8 100644
-> --- a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-> @@ -30,6 +30,7 @@
->                  compatible = "ti,omap3-dpll-clock";
->                  clocks = <&sys_ck>, <&sys_ck>;
->                  reg = <0x0d04>, <0x0d24>, <0x0d34>, <0x0d4c>;
-> +               ti,low-power-stop;
->          };
->
->          dpll5_m2_ck: dpll5_m2_ck {
->
->
->
+pwmr has to be set to get the imxfb backlight work,
+though pwmr was only configurable trough the platform data.
 
-Yea, seems I introduced the problem with the conversion script changes. 
-The valid fix for this is actually at the end of this mail (this fixes 
-both of the problems introduced, and also completes the fix you did), I 
-will add the fixes to the next rev. Question to Mike/Paul/Tony/Benoit, 
-shall I resend the complete series or only the two patches that will be 
-changed?
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/video/fsl,imx-fb.txt       |    3 +++
+ drivers/video/imxfb.c                              |    2 ++
+ 2 files changed, 5 insertions(+)
 
-----
-diff --git 
-a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi 
-b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-index 7e37e3e..08db6d8 100644
---- a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
-@@ -30,6 +30,8 @@
-                 compatible = "ti,omap3-dpll-clock";
-                 clocks = <&sys_ck>, <&sys_ck>;
-                 reg = <0x0d04>, <0x0d24>, <0x0d34>, <0x0d4c>;
-+               ti,low-power-stop;
-+               ti,lock;
-         };
+diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/D=
+ocumentation/devicetree/bindings/video/fsl,imx-fb.txt
+index 46da08d..ac457ae 100644
+--- a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+@@ -17,6 +17,9 @@ Required nodes:
+ Optional properties:
+ - fsl,dmacr: DMA Control Register value. This is optional. By default,=
+ the
+ 	register is not modified as recommended by the datasheet.
++- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property i=
+s
++	optional, but defining it is necessary to get the backlight working. =
+If that
++	property is ommited, the register is zeroed.
+ - fsl,lscr1: LCDC Sharp Configuration Register value.
+=20
+ Example:
+diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+index 322b358..08e3c36 100644
+--- a/drivers/video/imxfb.c
++++ b/drivers/video/imxfb.c
+@@ -833,6 +833,8 @@ static int imxfb_init_fbinfo(struct platform_device=
+ *pdev)
+=20
+ 		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
+=20
++		of_property_read_u32(np, "fsl,pwmr", &fbi->pwmr);
++
+ 		/* These two function pointers could be used by some specific
+ 		 * platforms. */
+ 		fbi->lcd_power =3D NULL;
+--=20
+1.7.9.5
 
-         dpll5_m2_ck: dpll5_m2_ck {
-diff --git a/arch/arm/boot/dts/omap3xxx-clocks.dtsi 
-b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-index 417bb03..e834b1c 100644
---- a/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-@@ -335,8 +335,6 @@ cm: cm@48004000 {
-                 compatible = "ti,omap3-dpll-clock";
-                 clocks = <&sys_ck>, <&dpll1_fck>;
-                 reg = <0x0904>, <0x0924>, <0x0934>, <0x0940>;
--               ti,lock;
--               ti,low-power-bypass;
-         };
-
-         dpll1_x2_ck: dpll1_x2_ck {
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
