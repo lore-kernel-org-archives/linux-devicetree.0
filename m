@@ -1,49 +1,56 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 15/19] ARM: tegra: Create a DT header defining SWGROUP ID
-Date: Thu, 31 Oct 2013 09:19:42 +0100
-Message-ID: <20131031.101942.530833331841957251.hdoyu@nvidia.com>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com><1382092020-13170-16-git-send-email-hdoyu@nvidia.com><52718CC6.5@wwwdotorg.org>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: gpio: dwapb: Synopsys Designware GPIO
+Date: Thu, 31 Oct 2013 09:22:26 +0100
+Message-ID: <20131031082226.GZ28790@pengutronix.de>
+References: <52718C28.5030803@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <52718CC6.5-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52718C28.5030803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 30 Oct 2013 23:48:38 +0100:
+Hi Dinh,
 
-> On 10/18/2013 04:26 AM, Hiroshi Doyu wrote:
-> > Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
-> > binding. "swgroups" is a group of H/W clients which Tegra SoCs
-> > support. This unique ID can be used to calculate MC_SMMU_<swgroup
-> > name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
-> > register bit. This will allow the same header to be used by both
-> > device tree files, and drivers implementing this binding, which
-> > guarantees that the two stay in sync. This also makes device trees
-> > more readable by using names instead of magic numbers.
+On Wed, Oct 30, 2013 at 05:46:00PM -0500, Dinh Nguyen wrote:
+> Hi Jamie,
 > 
-> > diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+> The socfpga platform is making use of the Synopsys Designware APB GPIO
+> module.
+> We found your patches to support them, but I could not figure out why
+> they weren't
+> merged upstream.
 > 
-> > +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
-> > +
-> > +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+> http://thread.gmane.org/gmane.linux.kernel/1234331
 > 
-> Isn't the DT match all 32-bit, such that the ULL suffix does nothing,
+> We made a few changes for the IRQs to work, and was wondering if you
+> want to continue
+> to take it upstream or we can?
+> 
 
-For the future Tegra SoC, the number of HWA grows a bit more, and it's
-supposed that "64" would be enough.
+I figured those patches were lost behind and started just yesterday to
+revitalize Jamies work. Although, I think the bank stuff doesn't seem
+necessary as the core knows all that stuff by itself AFAIK.
+But, I don't have access to the Synopsys datasheet and must go by what
+I can make out of the hps.html (which is really inconvenient to use if you
+ask me).
 
-> and TEGRA_SWGROUP_BIT(PPCS2) == 1<<32 == fail?
+Do you have that updated driver somewhere to look at? Maybe I can then just
+do something else. The gpio-dw.c from rocketboards/socfpga-3.11 doesn't look
+like it is based on Jamies work.
 
-I guess that C implict type conversion can handle this correctly.
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
