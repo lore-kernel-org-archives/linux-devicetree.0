@@ -1,56 +1,55 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: gpio: dwapb: Synopsys Designware GPIO
-Date: Thu, 31 Oct 2013 09:22:26 +0100
-Message-ID: <20131031082226.GZ28790@pengutronix.de>
-References: <52718C28.5030803@gmail.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v3 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Thu, 31 Oct 2013 16:22:37 +0800
+Message-ID: <cover.1383207153.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52718C28.5030803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, philippe.retornaz@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+Changelog
+v3:
+ * PATCH-1: Add comments to indicate the end of v1 and v2 array.
+ * PATCH-3: Use better way to keep watermark as even number.
+ *
+ * Nothing changes for PATCH-2 and PATCH-4
+v2:
+ * Instead of adding rogue scripts to current SDMA driver based on firmware
+ * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
+ * to two patches: The first is to add version check code to the SDMA driver;
+ * And the second is to add SSI dual FIFO DMATYPE.
+ *
+ * Nothing changes for the last two patches.
+v1:
+ * SSI can reduce hardware overrun/underrun possibility when using dual
+ * fifo mode. To support this mode, we need to first update sdma sciprt
+ * list, and then enable dual fifo BIT in SSI driver, and last update DT
+ * bindings of i.MX series.
+ *
+ * ! This series of patches has a direct dependency between them. When
+ * ! applying them, we need to apply to one single branch. Otherwise,
+ * ! it would break currect branches.
+Nicolin Chen (4):
+  dma: imx-sdma: Add sdma firmware version 2 support
+  dma: imx-sdma: Add new dma type for ssi dual fifo script
+  ASoC: fsl_ssi: Add dual fifo mode support
+  ARM: dts: imx: use dual-fifo sdma script for ssi
 
-On Wed, Oct 30, 2013 at 05:46:00PM -0500, Dinh Nguyen wrote:
-> Hi Jamie,
-> 
-> The socfpga platform is making use of the Synopsys Designware APB GPIO
-> module.
-> We found your patches to support them, but I could not figure out why
-> they weren't
-> merged upstream.
-> 
-> http://thread.gmane.org/gmane.linux.kernel/1234331
-> 
-> We made a few changes for the IRQs to work, and was wondering if you
-> want to continue
-> to take it upstream or we can?
-> 
-
-I figured those patches were lost behind and started just yesterday to
-revitalize Jamies work. Although, I think the bank stuff doesn't seem
-necessary as the core knows all that stuff by itself AFAIK.
-But, I don't have access to the Synopsys datasheet and must go by what
-I can make out of the hps.html (which is really inconvenient to use if you
-ask me).
-
-Do you have that updated driver somewhere to look at? Maybe I can then just
-do something else. The gpio-dw.c from rocketboards/socfpga-3.11 doesn't look
-like it is based on Jamies work.
-
-Regards,
-Steffen
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx6qdl.dtsi                     | 12 ++++++------
+ arch/arm/boot/dts/imx6sl.dtsi                      | 12 ++++++------
+ drivers/dma/imx-sdma.c                             | 19 ++++++++++++++++++-
+ include/linux/platform_data/dma-imx-sdma.h         |  5 +++++
+ include/linux/platform_data/dma-imx.h              |  1 +
+ sound/soc/fsl/fsl_ssi.c                            | 22 +++++++++++++++++++++-
+ 9 files changed, 62 insertions(+), 18 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.4
+
+
