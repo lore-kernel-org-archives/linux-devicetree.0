@@ -1,67 +1,24 @@
-From: "R, Sricharan" <r.sricharan@ti.com>
-Subject: RE: [PATCH V2 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for
- Crossbar IP
-Date: Thu, 31 Oct 2013 10:57:47 +0000
-Message-ID: <F934AE11CE617240AE4A874A49F629E4832579@DBDE04.ent.ti.com>
-References: <1383145040-15852-1-git-send-email-r.sricharan@ti.com>
- <1383145040-15852-3-git-send-email-r.sricharan@ti.com>,<alpine.DEB.2.02.1310301615430.24686@ionos.tec.linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1310301615430.24686@ionos.tec.linutronix.de>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "Nayak, Rajendra" <rnayak@ti.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robherring2@gmail.com" <robherring2@gmail.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Herring <rob.herring@calxeda.com>
+From: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Subject: [PATCH 0/2] sata_rcar: Add Gen2 PHY support and document existing DT bindings
+Date: Thu, 31 Oct 2013 15:03:12 +0400
+Message-ID: <1383217394-18582-1-git-send-email-valentine.barshak@cogentembedded.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-  Again sorry for top post. 
+This adds SATA R-Car Gen2 PHY support and documents existing DT bindings.
 
-  I agree and will fix both of the comments below.
+Valentine Barshak (2):
+  sata_rcar: Add R-Car Gen2 SATA PHY support
+  dt: Document sata_rcar bindings
 
-  Thanks for the reviews.
+ .../devicetree/bindings/ata/sata_rcar.txt          |  18 ++++
+ drivers/ata/sata_rcar.c                            | 118 ++++++++++++++++++---
+ 2 files changed, 120 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 
-Regards,
- Sricharan
-________________________________________
-From: Thomas Gleixner [tglx@linutronix.de]
-Sent: Wednesday, October 30, 2013 9:00 PM
-To: R, Sricharan
-Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-omap@vger.kernel.org; linus.walleij@linaro.org; linux@arm.linux.org.uk; tony@atomide.com; Nayak, Rajendra; marc.zyngier@arm.com; grant.likely@linaro.org; mark.rutland@arm.com; robherring2@gmail.com; Shilimkar, Santosh; Rob Herring
-Subject: Re: [PATCH V2 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
+-- 
+1.8.3.1
 
-On Wed, 30 Oct 2013, Sricharan R wrote:
-> +static inline const u32 allocate_free_irq(int cb_no)
-
-I understand the "static inline" part, but "const u32" is more than
-fishy. What's wrong with "static inline int" ?
-
-> +{
-> +     int i;
-> +
-> +     for (i = 0; i < cb->int_max; i++) {
-> +             if (cb->irq_map[i] == IRQ_FREE) {
-> +                     cb->irq_map[i] = cb_no;
-> +                     return i;
-> +             }
-> +     }
-> +
-> +     return -ENODEV;
-> +}
-
-> +static int crossbar_domain_xlate(struct irq_domain *d,
-> +                              struct device_node *controller,
-> +                              const u32 *intspec, unsigned int intsize,
-> +                              unsigned long *out_hwirq,
-> +                              unsigned int *out_type)
-> +{
-> +     unsigned long ret = 0;
-
-Why do you need to initialize ret when you assign a value to it in the
-next line?
-
-Thanks,
-
-        tglx
