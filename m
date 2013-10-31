@@ -1,41 +1,142 @@
-From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: gpio: dwapb: Synopsys Designware GPIO
-Date: Thu, 31 Oct 2013 10:34:50 -0500
-Message-ID: <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
-References: <52718C28.5030803@gmail.com>
-	<20131031082226.GZ28790@pengutronix.de>
-	<CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv9 06/43] CLK: ti: add init support for clock IP blocks
+Date: Thu, 31 Oct 2013 10:42:16 -0500
+Message-ID: <52727A58.9010903@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-7-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1382716658-6964-7-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 10:18 AM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Yes, we'll post a patch up on rocketboards-next and maybe we can post them
-> to the mailing list too?
->
-Hi Steffen,
+On 10/25/2013 10:57 AM, Tero Kristo wrote:
+> ti_dt_clk_init_provider() can now be used to initialize the contents of
+> a single clock IP block. This parses all the clocks under the IP block
+> and calls the corresponding init function for them.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/clk/ti/clk.c   |   59 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/clk/ti.h |    1 +
+>  2 files changed, 60 insertions(+)
+> 
+> diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+> index ad58b01..7f030d7 100644
+> --- a/drivers/clk/ti/clk.c
+> +++ b/drivers/clk/ti/clk.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/clk/ti.h>
+>  #include <linux/of.h>
+> +#include <linux/list.h>
+> +
+> +extern struct of_device_id __clk_of_table[];
+>  
+>  /**
+>   * ti_dt_clocks_register - register DT duplicate clocks during boot
+> @@ -50,3 +53,59 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+>  		}
+>  	}
+>  }
+> +
+> +typedef int (*ti_of_clk_init_cb_t)(struct device_node *, struct regmap *);
+> +
+> +struct clk_init_item {
+> +	struct regmap *regmap;
+> +	struct device_node *np;
+> +	ti_of_clk_init_cb_t init_cb;
+> +	struct list_head node;
+> +};
+> +
+> +static LIST_HEAD(retry_list);
+> +
+> +void __init ti_dt_clk_init_provider(struct device_node *parent,
+> +				    struct regmap *regmap)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *np;
+> +	ti_of_clk_init_cb_t clk_init_cb;
+> +	struct clk_init_item *retry;
+> +	struct clk_init_item *tmp;
+> +	int ret;
+> +
+> +	for_each_child_of_node(parent, np) {
+> +		match = of_match_node(__clk_of_table, np);
+> +		if (!match)
+> +			continue;
+> +		clk_init_cb = match->data;
 
-I've posted a branch on rocketboards.orgs' linux-socfpga-next.git.
-The branch name is dwapb-gpio-3.11.
+I must admit I am confused here.
+a) of_clk_init (in the generic clk.c) uses of_clk_init_cb_t as match
+data. The prototype of the generic of_clk_init_cb_t is typedef void
+(*of_clk_init_cb_t)(struct device_node *);
+b) both of_clk_init and ti_dt_clk_init_provider looks up clock nodes
+from __clk_of_table
 
-The top five patches are:
-1. Remove the Altera gpio-dw.c driver
-2 & 3.  Cherrypick Jamie's stuff from his git repo
-4. Enable gpio-dwapb in our defconfig and dts
-5. This is the main patch here: use irq_domain_add_linear for
-gpio-dwapb.c plus a few bug fixes.
+I assume we need ti_dt_clk_init_provider to be always called with
+clock list, as a result of_clk_init(NULL); will never be invoked. This
+is counter productive as you have have generic non SoC clock providers
+as well who would have been invoked with of_clk_init(NULL);
 
-If you'd rather see that last patch on the mailing list, I can post it
-there for review.
+I do strongly encourage using of_clk_init(NULL) and not having to
+switch the clk_init call back with SoC specific one as it forces
+un-intended dependency.
 
-Alan Tull
-Altera Corporation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Further such as SoC specific callback should have been in a header.
+> +		pr_debug("%s: initializing: %s\n", __func__, np->name);
+
+
+one further comment - using pr_fmt will save us from using __func__
+for every pr_* message :(
+
+> +		ret = clk_init_cb(np, regmap);
+> +		if (ret == -EAGAIN) {
+> +			pr_debug("%s: adding to again list...\n", np->name);
+> +			retry = kzalloc(sizeof(*retry), GFP_KERNEL);
+> +			retry->np = np;
+> +			retry->regmap = regmap;
+> +			retry->init_cb = clk_init_cb;
+> +			list_add(&retry->node, &retry_list);
+> +		} else if (ret) {
+> +			pr_err("%s: clock init failed for %s (%d)!\n", __func__,
+> +			       np->name, ret);
+> +		}
+> +	}
+> +
+> +	list_for_each_entry_safe(retry, tmp, &retry_list, node) {
+> +		pr_debug("%s: retry-init: %s\n", __func__, retry->np->name);
+> +		ret = retry->init_cb(retry->np, retry->regmap);
+> +		if (ret == -EAGAIN) {
+> +			pr_debug("%s failed again?\n", retry->np->name);
+> +		} else {
+> +			if (ret)
+> +				pr_err("%s: clock init failed for %s (%d)!\n",
+> +				       __func__, retry->np->name, ret);
+> +			list_del(&retry->node);
+> +			kfree(retry);
+> +		}
+> +	}
+> +}
+> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
+> index 9786752..7ab02fa 100644
+> --- a/include/linux/clk/ti.h
+> +++ b/include/linux/clk/ti.h
+> @@ -177,6 +177,7 @@ int omap3_dpll4_set_rate(struct clk_hw *clk, unsigned long rate,
+>  			 unsigned long parent_rate);
+>  
+>  void ti_dt_clocks_register(struct ti_dt_clk *oclks);
+> +void ti_dt_clk_init_provider(struct device_node *np, struct regmap *regmap);
+>  
+>  extern const struct clk_hw_omap_ops clkhwops_omap3_dpll;
+>  extern const struct clk_hw_omap_ops clkhwops_omap4_dpllmx;
+> 
+
+
+-- 
+Regards,
+Nishanth Menon
