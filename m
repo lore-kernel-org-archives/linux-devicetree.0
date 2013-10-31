@@ -1,69 +1,104 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 01/43] clk: Add support for regmap register read/write
-Date: Thu, 31 Oct 2013 16:40:21 +0200
-Message-ID: <52726BD5.3080704@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-2-git-send-email-t-kristo@ti.com> <52726342.6030406@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52726342.6030406@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 5/5] serial: sh-sci: Add device tree bindings documentation
+Date: Thu, 31 Oct 2013 09:42:48 -0500
+Message-ID: <9B7DF883-D119-47F5-BD71-11E30BE3DB88@codeaurora.org>
+References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383042599-25151-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1383042599-25151-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2013 04:03 PM, Nishanth Menon wrote:
-> On 10/25/2013 10:56 AM, Tero Kristo wrote:
-> [...]
->> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->> index 7e59253..63ff78c 100644
->> --- a/include/linux/clk-provider.h
->> +++ b/include/linux/clk-provider.h
->
-> [...]
->> -static inline u32 clk_readl(u32 __iomem *reg)
->> +static inline u32 clk_readl(u32 __iomem *reg, struct regmap *regmap)
->>   {
->> -	return readl(reg);
->> +	u32 val;
->> +
->> +	if (regmap)
->> +		regmap_read(regmap, (u32)reg, &val);
->> +	else
->> +		val = readl(reg);
->> +	return val;
->>   }
->>
->> -static inline void clk_writel(u32 val, u32 __iomem *reg)
->> +static inline void clk_writel(u32 val, u32 __iomem *reg, struct regmap *regmap)
->>   {
->> -	writel(val, reg);
->> +	if (regmap)
->> +		regmap_write(regmap, (u32)reg, val);
->> +	else
->> +		writel(val, reg);
->>   }
->>
->>   #endif /* CONFIG_COMMON_CLK */
->>
->
-> Might it not be better to introduce regmap variants?
-> static inline void clk_regmap_writel(u32 val, u32 reg, struct regmap
-> *regmap)
-> and corresponding readl? that allows cleaner readability for clk
-> drivers that use regmap and those that dont.
 
-Well, doing that will introduce a lot of redundant code, as the checks 
-for the presence of regmap must be copied all over the place. With this 
-patch, all the generic clock drivers support internally both regmap or 
-non-regmap register accesses.
+On Oct 29, 2013, at 5:29 AM, Laurent Pinchart wrote:
 
-> regmap can also return error value that could also be handled as a result.
+> Document the device tree bindings for the sci serial port devices.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+> .../bindings/serial/renesas,sci-serial.txt         | 51 ++++++++++++++++++++++
+> 1 file changed, 51 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> new file mode 100644
+> index 0000000..5658b4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -0,0 +1,51 @@
+> +* Renesas SH-Mobile Serial Communication Interface
+> +
+> +Required properties:
+> +
+> +  - compatible: should be one of the following.
 
-True, however if the regmap fails for the clock code, not sure what we 
-can do but panic. If this code is expanded, it is probably better to not 
-inline it anymore.
+Being pedantic, but how about saying 'one of the following types (scif, scifa, scifb, or hscif)
 
--Tero
+> +
+> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
+> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
+> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
+> +    - "renesas,scif-generic" for generic SCIF compatible UART.
+> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
+> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
+> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
+> +
+> +    When compatible with the generic version, nodes must also list the
+> +    SoC-specific version corresponding to the platform.
+> +
+> +  - reg: Base address and length of the memory resource used by the UART.
+> +
+> +  - interrupt-parent: Reference to the parent interrupt controller.
+> +  - interrupts: Interrupt number(s). Depending on the SoC SCIx UARTs are tied
+> +    to one or multiple interrupt lines. When using multiple interrupt lines,
+> +    specify the interrupt names as described below.
+> +
+> +  - clocks: Reference to the SCIx UART interface clock.
+> +  - clock-names: Should be "sci_ick".
+> +
+> +Optional properties:
+> +
+> +  - interrupt-names: When using multiple interrupts, report the interrupt
+> +    names as "eri" (receive error), "rxi" (receive), "txi" (transmit) and
+> +    "bri" (break). When using a single interrupt this property should not be
+> +    present.
+
+Hmm, is there a reason not to just have the 4 interrupts always present and in the case they are all wired to the same interrupt, just have the interrupts all be the same?
+
+example:
+
+interrupts = <0 144 4>, <0 144 4>, <0 144 4>, <0 144 4>;
+
+
+> +
+> +Note: Each enabled SCIx UART should have an alias correctly numbered in the
+> +"aliases" node.
+> +
+> +Example:
+> +	aliases {
+> +		serial0 = &scifa0;
+> +	};
+> +
+> +	scifa0: serial@e6c40000 {
+> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
+> +		reg = <0 0xe6c40000 0 64>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 144 4>;
+> +		clocks = <&mstp2_clks 4>;
+> +		clock-names = "sci_ick";
+> +	};
+
+might be nice to have an example with the 4 interrupts.
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
