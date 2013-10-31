@@ -1,188 +1,49 @@
-From: NeilBrown <neilb@suse.de>
-Subject: [PATCH] twl4030_charger: add devicetree support.
-Date: Thu, 31 Oct 2013 17:05:50 +1100
-Message-ID: <20131031170550.686cdf1e@notabene.brown>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v2 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Thu, 31 Oct 2013 14:32:02 +0800
+Message-ID: <cover.1383197521.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_//15NQXHAOSs8nREDBBW8Oss"; protocol="application/pgp-signature"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_//15NQXHAOSs8nREDBBW8Oss
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Changelog
+v2:
+ * Instead of adding rogue scripts to current SDMA driver based on firmware
+ * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
+ * to two patches: The first is to add version check code to the SDMA driver;
+ * And the second is to add SSI dual FIFO DMATYPE.
+ *
+ * Nothing changes for the last two patches.
+v1:
+ * SSI can reduce hardware overrun/underrun possibility when using dual
+ * fifo mode. To support this mode, we need to first update sdma sciprt
+ * list, and then enable dual fifo BIT in SSI driver, and last update DT
+ * bindings of i.MX series.
+ *
+ * ! This series of patches has a direct dependency between them. When
+ * ! applying them, we need to apply in one single branch. Otherwise,
+ * ! it would break currect branches.
 
+Nicolin Chen (4):
+  dma: imx-sdma: Add sdma firmware version 2 support
+  dma: imx-sdma: Add new dma type for ssi dual fifo script
+  ASoC: fsl_ssi: Add dual fifo mode support
+  ARM: dts: imx: use dual-fifo sdma script for ssi
 
-This allows the charger to be enabled with devicetree, and
-allows the parameters for charging the backup battery to be set.
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx6qdl.dtsi                     | 12 +++++------
+ arch/arm/boot/dts/imx6sl.dtsi                      | 12 +++++------
+ drivers/dma/imx-sdma.c                             | 19 ++++++++++++++++-
+ include/linux/platform_data/dma-imx-sdma.h         |  3 +++
+ include/linux/platform_data/dma-imx.h              |  1 +
+ sound/soc/fsl/fsl_ssi.c                            | 24 +++++++++++++++++++++-
+ 9 files changed, 62 insertions(+), 18 deletions(-)
 
-Signed-off-by: NeilBrown <neilb@suse.de>
-Acked-by: Kumar Gala <galak@codeaurora.org>
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
---
-This version with correct property names and some Acked-by's.
-- NB
-
-diff --git a/Documentation/devicetree/bindings/power/twl-charger.txt b/Docu=
-mentation/devicetree/bindings/power/twl-charger.txt
-new file mode 100644
-index 000000000000..d5c706216df5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/twl-charger.txt
-@@ -0,0 +1,20 @@
-+TWL BCI (Battery Charger Interface)
-+
-+Required properties:
-+- compatible:
-+  - "ti,twl4030-bci"
-+- interrupts: two interrupt lines from the TWL SIH (secondary
-+  interrupt handler) - interrupts 9 and 2.
-+
-+Optional properties:
-+- ti,bb-uvolt: microvolts for charging the backup battery.
-+- ti,bb-uamp: microamps for charging the backup battery.
-+
-+Examples:
-+
-+bci {
-+   compatible =3D "ti,twl4030-bci";
-+   interrupts =3D <9>, <2>;
-+   ti,bb-uvolt =3D <3200000>;
-+   ti,bb-uamp =3D <150>;
-+};
-diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
-index ae6a17aed9ee..5a12540b1d0f 100644
---- a/arch/arm/boot/dts/twl4030.dtsi
-+++ b/arch/arm/boot/dts/twl4030.dtsi
-@@ -19,6 +19,12 @@
- 		interrupts =3D <11>;
- 	};
-=20
-+	charger: bci {
-+		compatible =3D "ti,twl4030-bci";
-+		interrupts =3D <9>, <2>;
-+		bci3v1-supply =3D <&vusb3v1>;
-+	};
-+
- 	watchdog {
- 		compatible =3D "ti,twl4030-wdt";
- 	};
-diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charge=
-r.c
-index d98abe911e37..f14108844e1a 100644
---- a/drivers/power/twl4030_charger.c
-+++ b/drivers/power/twl4030_charger.c
-@@ -495,10 +495,38 @@ static enum power_supply_property twl4030_charger_pro=
-ps[] =3D {
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
-=20
-+#ifdef CONFIG_OF
-+static const struct twl4030_bci_platform_data *
-+twl4030_bci_parse_dt(struct device *dev)
-+{
-+	struct device_node *np =3D dev->of_node;
-+	struct twl4030_bci_platform_data *pdata;
-+	u32 num;
-+
-+	if (!np)
-+		return NULL;
-+	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return pdata;
-+
-+	if (of_property_read_u32(np, "ti,bb-uvolt", &num) =3D=3D 0)
-+		pdata->bb_uvolt =3D num;
-+	if (of_property_read_u32(np, "ti,bb-uamp", &num) =3D=3D 0)
-+		pdata->bb_uamp =3D num;
-+	return pdata;
-+}
-+#else
-+static inline const struct twl4030_bci_platform_data *
-+twl4030_bci_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int __init twl4030_bci_probe(struct platform_device *pdev)
- {
- 	struct twl4030_bci *bci;
--	struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
-+	const struct twl4030_bci_platform_data *pdata =3D pdev->dev.platform_data;
- 	int ret;
- 	u32 reg;
-=20
-@@ -506,6 +534,9 @@ static int __init twl4030_bci_probe(struct platform_dev=
-ice *pdev)
- 	if (bci =3D=3D NULL)
- 		return -ENOMEM;
-=20
-+	if (!pdata)
-+		pdata =3D twl4030_bci_parse_dt(&pdev->dev);
-+
- 	bci->dev =3D &pdev->dev;
- 	bci->irq_chg =3D platform_get_irq(pdev, 0);
- 	bci->irq_bci =3D platform_get_irq(pdev, 1);
-@@ -581,8 +612,11 @@ static int __init twl4030_bci_probe(struct platform_de=
-vice *pdev)
-=20
- 	twl4030_charger_enable_ac(true);
- 	twl4030_charger_enable_usb(bci, true);
--	twl4030_charger_enable_backup(pdata->bb_uvolt,
--				      pdata->bb_uamp);
-+	if (pdata)
-+		twl4030_charger_enable_backup(pdata->bb_uvolt,
-+					      pdata->bb_uamp);
-+	else
-+		twl4030_charger_enable_backup(0, 0);
-=20
- 	return 0;
-=20
-@@ -631,10 +665,17 @@ static int __exit twl4030_bci_remove(struct platform_=
-device *pdev)
- 	return 0;
- }
-=20
-+static const struct of_device_id twl_bci_of_match[] =3D {
-+	{.compatible =3D "ti,twl4030-bci", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, twl_bci_of_match);
-+
- static struct platform_driver twl4030_bci_driver =3D {
- 	.driver	=3D {
- 		.name	=3D "twl4030_bci",
- 		.owner	=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(twl_bci_of_match),
- 	},
- 	.remove	=3D __exit_p(twl4030_bci_remove),
- };
-
---Sig_//15NQXHAOSs8nREDBBW8Oss
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIVAwUBUnHzPjnsnt1WYoG5AQJHww//f3wIKV41ucIlg9fsH6dju6tWCAk8TQHo
-i3iX5+klWen1JSqMBBEJjsy6QWz9MMg7lY68TqBmhNoYKSy0F9cURpta65YEDjV6
-5Aerw9Dx9Kfev2zrScADGEK02mayftWYS2kCWX5l3/cUCZG4feZFpYy1tfOZIobd
-1m+2F9enfJN887mhSrHV54ybulsOXp7nkhE4AEHk5OWCNO32I/fV3IxpH3/HbNCC
-53SlQX+4WlKs7rNV6wDhp9pZcJ0xtXJ+F3wahNGP0za4OQ9L8lHQfi3dsifnte6f
-4LsMZzgGdec4OUfTUv15rh40vw3/GCAjplcEk580IINZAFdUNZYmMK1bb/PEC0BQ
-pMNAIwu/FcYUl/BrJpyImprncpJnVjUCo1bG0oULuhWlF9zWNM8sqBEecdsBtw1q
-Wr2/5iO2D+NoBDalhiZOxYk9cVOcjKWNImECrJ7/qWBOsvTz5ZnL9eZB0Qw8uguq
-jSwV4u0CdvxAyCvVbMEGMQSnHkNUCajsuSjuVZtrsDBuZ8pnVofJv79WVjysUTxg
-iHXjEfzGlD8/SBxF23GbaZ4u0zofbeB/+fAg5qWYbzAomH6th12GzcbUcivl/17H
-AFnNRBEGi+u/N1E3V9oGRwZEdr0XDQ4/zAju6aztm2QzEyxJULxcGpERJs13Bzf3
-iqY8Px4FRSQ=
-=eDaa
------END PGP SIGNATURE-----
-
---Sig_//15NQXHAOSs8nREDBBW8Oss--
+-- 
+1.8.4
