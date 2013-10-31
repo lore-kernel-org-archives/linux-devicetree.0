@@ -1,59 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 4/4] ASoC: RX-51: Add DT support to sound driver
-Date: Thu, 31 Oct 2013 08:33:16 -0700
-Message-ID: <20131031153316.GB2493@sirena.org.uk>
-References: <1382909086-10493-1-git-send-email-sre@debian.org>
- <1382909086-10493-5-git-send-email-sre@debian.org>
- <CACRpkdb1dAiDCeZkOiZ6inbDruaUwLgk3joWwuQmSRNZ9WkDGw@mail.gmail.com>
+From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: gpio: dwapb: Synopsys Designware GPIO
+Date: Thu, 31 Oct 2013 10:34:50 -0500
+Message-ID: <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com>
+References: <52718C28.5030803@gmail.com>
+	<20131031082226.GZ28790@pengutronix.de>
+	<CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="q1SX3yAxAkj1z+aD"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb1dAiDCeZkOiZ6inbDruaUwLgk3joWwuQmSRNZ9WkDGw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vg>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 31, 2013 at 10:18 AM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Yes, we'll post a patch up on rocketboards-next and maybe we can post them
+> to the mailing list too?
+>
+Hi Steffen,
 
---q1SX3yAxAkj1z+aD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've posted a branch on rocketboards.orgs' linux-socfpga-next.git.
+The branch name is dwapb-gpio-3.11.
 
-On Thu, Oct 31, 2013 at 07:44:22AM -0700, Linus Walleij wrote:
-> On Sun, Oct 27, 2013 at 2:24 PM, Sebastian Reichel <sre@debian.org> wrote:
+The top five patches are:
+1. Remove the Altera gpio-dw.c driver
+2 & 3.  Cherrypick Jamie's stuff from his git repo
+4. Enable gpio-dwapb in our defconfig and dts
+5. This is the main patch here: use irq_domain_add_linear for
+gpio-dwapb.c plus a few bug fixes.
 
-> > +- eci-sw-gpio: GPIO for ECI SW
-> > +- speaker-amp-gpio: GPIO for Speaker Amp
+If you'd rather see that last patch on the mailing list, I can post it
+there for review.
 
-> Can you please spell out the acronyms? ECI? SW? Amp?
-
-> I guess SW=switch, Amp=amplifier, but ECI beats me.
-
-ECI is the name of Nokia's accesory interface spec, it should be as
-clear as GPIO for anyone working on Nokia hardware (which this is).
-
---q1SX3yAxAkj1z+aD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJScng5AAoJELSic+t+oim99U4P/0uhuIkwZWipiyPse0NDxCLX
-YlKLJvGPIFjKfsQr0iGArWa4+zW8EnedN9F2Lxj3JgiWEOVGSQMQ6q8SkGdLuTiI
-KRnQlClpi5QnN9OylffmKNTcgfoDOEOjxn7gj7JNaWWSuNPY92zUnNZ/ODMrudeV
-CbmlZlC+t5UhG/VwIXJpRkXgoE6nfyahcr8S8kU/KPFPgrhtJ1kV2sY+xsUmNe+U
-wv6tCAv4lcMMw/DieBI5jGwSZQ/ThVxeWp9dDi9ITZ+SgcfOPc1+OvzOyqphFBzo
-bC4V4mYS+brbnqh+PiHbwN11cRZi5Vgro7NI5p9xCdqwxqygt02gdWmperwCvfs/
-uTz4Iiq6bXtB5yr726BwpLkwh2dyZUMM7b04S4OwccZCe2btKROKEC+diphzyWWa
-gZGFhIBuKw9+aHkyKXmdTRuuImnn0gtBdeBjTyA/cYsBdg+cvNJJ9J7R6jOdzKQL
-e+M1PaY0HZWKs4NE34oVaWXqjXr0hTuLZkZz6FZkbey/qnjg17pjU8vfbhei7PM7
-m0Wubz1cxHLbcVnLNOuE3mwOyYZfLusPUzRuRzpyCnRlnjvLQ8yAE5a1n/f1qYi+
-78nHMBc8gIfYMMQQCpdVtlcChpS/Y4j/EwyX3u3P+yyNaR0JF3KGT1c6VFGCm0Bm
-FxZcHnSG+DClvKI83VgH
-=D34t
------END PGP SIGNATURE-----
-
---q1SX3yAxAkj1z+aD--
+Alan Tull
+Altera Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
