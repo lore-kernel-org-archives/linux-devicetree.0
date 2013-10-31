@@ -1,57 +1,53 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: gpio: dwapb: Synopsys Designware GPIO
-Date: Thu, 31 Oct 2013 18:21:46 +0100
-Message-ID: <527291AA.1030305@gmail.com>
-References: <52718C28.5030803@gmail.com> <20131031082226.GZ28790@pengutronix.de> <CADhT+wcCzMM1MbP3UuQbdc8JmpdO+AhM421R5AiC6vxyn-osvQ@mail.gmail.com> <CANk1AXRH8zDZFFWGn=NYrkhHrygeoeLQ9QNd6o7Wm6XHmT95pQ@mail.gmail.com> <20131031155803.GB28790@pengutronix.de> <20131031160723.GA4572@page> <20131031161739.GC28790@pengutronix.de>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] edac: Document Krait L1/L2 EDAC driver binding
+Date: Thu, 31 Oct 2013 10:30:47 -0700
+Message-ID: <20131031173047.GK21983@codeaurora.org>
+References: <1383164736-1849-1-git-send-email-sboyd@codeaurora.org>
+ <1383164736-1849-5-git-send-email-sboyd@codeaurora.org>
+ <872F86E8-85CE-472B-9546-CDCC96F6F08B@codeaurora.org>
+ <52717EA5.6030208@codeaurora.org>
+ <F38814D8-723E-4A41-839D-DEE351738017@codeaurora.org>
+ <52718118.1020009@codeaurora.org>
+ <D081E03B-01D6-497F-B8D0-E994219C8282@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131031161739.GC28790-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <D081E03B-01D6-497F-B8D0-E994219C8282-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2013 05:17 PM, Steffen Trumtrar wrote:
-> On Thu, Oct 31, 2013 at 04:07:23PM +0000, Jamie Iles wrote:
->> On Thu, Oct 31, 2013 at 04:58:03PM +0100, Steffen Trumtrar wrote:
->>> I wonder if we want to really keep the binding as it is proposed by
->>> Jamie. Do we really win anything by having to specify the banks in the
->>> DT? In my version I get the number of ports, width etc. from the config registers
->>> of the device. I think everything that the device knows itself and can be read
->>> out at runtime shouldn't be specified in the DT.
->>> And it seems that the binding was never merged, so I guess we can change it.
->>
->> The reason for having it split into banks is that for hardware that has
->> a mixture of bank sizes (odd hardware admittedly, but that includes
->> hardware that I was writing the driver for), we had a setup like 16 pins
->> on bank A, 16 on B, 1 on C and 16 on D where each bank could have a
->> maximum of 32, so converting from a data sheet to GPIO number is not
->> obvious.  Grant Likely suggested representing the banks as different
->> devices, so that's how I created the binding.
->
-> I have no problem with the binding, if it is worth it. Do you mean you had
-> hardware where the gpio lines where not connected? Or maybe you had an older
-> version of the IP core?
-> In the Socfpga case there is gpio_config_reg2, which specifies the width
-> for every of the 4 ports. So I thought I use those values to describe my
-> hardware. The Socfpga however only uses the first bank of its three GPIO cores,
-> so I wouldn't be able to test if the code works for more than just that.
+On 10/30, Kumar Gala wrote:
+> 
+> On Oct 30, 2013, at 4:58 PM, Stephen Boyd wrote:
+> 
+> > On 10/30/13 14:56, Kumar Gala wrote:
+> >> On Oct 30, 2013, at 4:48 PM, Stephen Boyd wrote:
+> >> 
+> >>> On 10/30/13 14:45, Kumar Gala wrote:
+> >>>> On Oct 30, 2013, at 3:25 PM, Stephen Boyd wrote:
+> >>>>> +l2-cache node containing the following properties:
+> >>>> Is the L1 interrupt not per core L1 cache (even if they are OR together at PIC)?
+> >>> Yes it is per CPU. That is what the 0xf part of the cpus interrupts
+> >>> property is showing.
+> >> Than why not have it in each cpu node?
+> > 
+> > Because that duplicates things unnecessarily? The cpus node can hold
+> > things that are common to all CPUs to avoid duplication. If it was a
+> > different PPI for each CPU then I would agree that we need to put it in
+> > each cpu node.
+> 
+> Ok, I'll accept that as the binding is specific to Krait (and I assume all SoCs w/Krait wire this up to a common interrupt)
+> 
 
-Having talked with Heiko at ELCE, both upcoming mach-berlin and
-mach-rockchip will be using dw-apb-gpio as GPIO driver. Unfortunately,
-while berlin has the CONFIG[12] registers, rockchip has not. So there
-must be bindings to at least overwrite the obvious settings derived
-from that registers.
+Can I take that as an ack? I'll resend with the s/an/a/ fix
+today.
 
-Also, IIRC Heiko prefers to use platform_data driven registration as it
-is tightly coupled with rk's pinmux. So there should really be support
-for that and DT parsing on top that fills platform_data.
-
-Can you please resend the whole set on list so we can review it again
-with more machs involved?
-
-Sebastian
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
