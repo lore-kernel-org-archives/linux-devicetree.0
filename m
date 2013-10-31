@@ -1,80 +1,118 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v3 3/4] ASoC: fsl_ssi: Add dual fifo mode support
-Date: Thu, 31 Oct 2013 16:22:40 +0800
-Message-ID: <da997ce67d9817364248ca1eba716bb6c7814a24.1383207153.git.b42378@freescale.com>
-References: <cover.1383207153.git.b42378@freescale.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 00/43] ARM: TI SoC clock DT conversion
+Date: Thu, 31 Oct 2013 11:10:45 +0200
+Message-ID: <52721E95.4080806@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <526FDFF4.9030806@ti.com> <5270C1F3.6000409@ti.com> <52711F12.1090008@ti.com> <52716799.6040002@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1383207153.git.b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, philippe.retornaz@gmail.com
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52716799.6040002@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-By enabling dual fifo mode, it would allow SSI enter a better performance
-to transimit/receive data without occasional hardware underrun/overrun.
+On 10/30/2013 10:10 PM, Nishanth Menon wrote:
+> On 10/30/2013 10:00 AM, Nishanth Menon wrote:
+>> On 10/30/2013 03:23 AM, Tero Kristo wrote:
+>>> On 10/29/2013 06:19 PM, Nishanth Menon wrote:
+>>>> On 10/25/2013 10:56 AM, Tero Kristo wrote:
+>>>> <snip>
+>>>>> Testing done:
+>>>>> - omap3-beagle: boot + suspend/resume (ret + off)
+>>>>> - omap4-panda-es: boot + suspend/resume
+>>>>> - omap5-uevm: boot
+>>>>> - dra7-evm: boot
+>>>>> - am335x-bone: boot
+>>>>>
+>>>>> Test branches available:
+>>>>>
+>>>>> tree: https://github.com/t-kristo/linux-pm.git
+>>>>
+>>>> <snip>
+>>>>> Fully functioning test branch: 3.12-rc6-dt-clks-v9
+>>>>>
+>>>> ^^ I tested this branch (boot testing):
+>>>> Beagle-XM: http://pastebin.com/50A1qtFq (crashes + clkdm issues, dpll5
+>>>> failed to transition)
+>>>
+>>> I just sent you a private email with a patch to try out, should fix the
+>>> boot crash at least hopefully. Basically I forgot to convert one part of
+>>> the kernel to the new regmap stuff for omap36xx.
+>>
+>> it does bootup yes.
+>>>
+>>> clkdm issues are caused by wrong data in omap_hwmod_3xxx_data.c, USB
+>>> nodes are listing l3_init_clkdm for them, but this only exists on
+>>> omap4+. Seems like some copy paste bug introduced by someone.
+>>>
+>>> dpll5 part I am not too sure, can you check if the same happens with
+>>> non-dt boot?
+>>
+>> no-dt: http://pastebin.com/bYP9fTzH
+>> dt: http://pastebin.com/xHup4L9Y
+>>
+>> dpll5 warning seems to be only in dt-boot?
+>>
+>
+> Tracked this down: you were missing the following - looks like the
+> conversion script might be missing converting the flags clock data
+> over to dts?
+>
+> diff --git
+> a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+> b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+> index 7e37e3e..c9b77c8 100644
+> --- a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+> +++ b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+> @@ -30,6 +30,7 @@
+>                  compatible = "ti,omap3-dpll-clock";
+>                  clocks = <&sys_ck>, <&sys_ck>;
+>                  reg = <0x0d04>, <0x0d24>, <0x0d34>, <0x0d4c>;
+> +               ti,low-power-stop;
+>          };
+>
+>          dpll5_m2_ck: dpll5_m2_ck {
+>
+>
+>
 
-[ Passed compile-test with mpc85xx_defconfig ]
+Yea, seems I introduced the problem with the conversion script changes. 
+The valid fix for this is actually at the end of this mail (this fixes 
+both of the problems introduced, and also completes the fix you did), I 
+will add the fixes to the next rev. Question to Mike/Paul/Tony/Benoit, 
+shall I resend the complete series or only the two patches that will be 
+changed?
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- sound/soc/fsl/fsl_ssi.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+----
+diff --git 
+a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi 
+b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+index 7e37e3e..08db6d8 100644
+--- a/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
++++ b/arch/arm/boot/dts/omap36xx-am35xx-omap3430es2plus-clocks.dtsi
+@@ -30,6 +30,8 @@
+                 compatible = "ti,omap3-dpll-clock";
+                 clocks = <&sys_ck>, <&sys_ck>;
+                 reg = <0x0d04>, <0x0d24>, <0x0d34>, <0x0d4c>;
++               ti,low-power-stop;
++               ti,lock;
+         };
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 35e2773..51a2022 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -143,6 +143,7 @@ struct fsl_ssi_private {
- 	bool ssi_on_imx;
- 	bool imx_ac97;
- 	bool use_dma;
-+	bool use_dual_fifo;
- 	struct clk *clk;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
-@@ -413,6 +414,16 @@ static int fsl_ssi_setup(struct fsl_ssi_private *ssi_private)
- 		write_ssi(CCSR_SSI_SOR_WAIT(3), &ssi->sor);
- 	}
- 
-+	if (ssi_private->use_dual_fifo) {
-+		write_ssi_mask(&ssi->srcr, 0, CCSR_SSI_SRCR_RFEN1);
-+		write_ssi_mask(&ssi->stcr, 0, CCSR_SSI_STCR_TFEN1);
-+		write_ssi_mask(&ssi->scr, 0, CCSR_SSI_SCR_TCH_EN);
-+	} else {
-+		write_ssi_mask(&ssi->srcr, CCSR_SSI_SRCR_RFEN1, 0);
-+		write_ssi_mask(&ssi->stcr, CCSR_SSI_STCR_TFEN1, 0);
-+		write_ssi_mask(&ssi->scr, CCSR_SSI_SCR_TCH_EN, 0);
-+	}
-+
- 	return 0;
- }
- 
-@@ -947,7 +958,7 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 		ssi_private->fifo_depth = 8;
- 
- 	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx21-ssi")) {
--		u32 dma_events[2];
-+		u32 dma_events[2], dmas[4];
- 		ssi_private->ssi_on_imx = true;
- 
- 		ssi_private->clk = devm_clk_get(&pdev->dev, NULL);
-@@ -1001,6 +1012,15 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 			dma_events[0], shared ? IMX_DMATYPE_SSI_SP : IMX_DMATYPE_SSI);
- 		imx_pcm_dma_params_init_data(&ssi_private->filter_data_rx,
- 			dma_events[1], shared ? IMX_DMATYPE_SSI_SP : IMX_DMATYPE_SSI);
-+		if (!of_property_read_u32_array(pdev->dev.of_node, "dmas", dmas, 4)
-+				&& dmas[2] == IMX_DMATYPE_SSI_DUAL) {
-+			ssi_private->use_dual_fifo = true;
-+			/* When using dual fifo mode, we need to keep watermark
-+			 * as even numbers due to dma script limitation.
-+			 */
-+			ssi_private->dma_params_tx.maxburst &= ~0x1;
-+			ssi_private->dma_params_rx.maxburst &= ~0x1;
-+		}
- 	} else if (ssi_private->use_dma) {
- 		/* The 'name' should not have any slashes in it. */
- 		ret = devm_request_irq(&pdev->dev, ssi_private->irq,
--- 
-1.8.4
+         dpll5_m2_ck: dpll5_m2_ck {
+diff --git a/arch/arm/boot/dts/omap3xxx-clocks.dtsi 
+b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
+index 417bb03..e834b1c 100644
+--- a/arch/arm/boot/dts/omap3xxx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
+@@ -335,8 +335,6 @@ cm: cm@48004000 {
+                 compatible = "ti,omap3-dpll-clock";
+                 clocks = <&sys_ck>, <&dpll1_fck>;
+                 reg = <0x0904>, <0x0924>, <0x0934>, <0x0940>;
+-               ti,lock;
+-               ti,low-power-bypass;
+         };
+
+         dpll1_x2_ck: dpll1_x2_ck {
+
