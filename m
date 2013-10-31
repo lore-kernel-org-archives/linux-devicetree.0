@@ -1,63 +1,47 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Add vendor prefix for Voipac Technologies
- s.r.o.
-Date: Thu, 31 Oct 2013 15:37:42 +0800
-Message-ID: <20131031073738.GA23545@S2101-09.ap.freescale.net>
-References: <1382651769-21238-1-git-send-email-lisovy@gmail.com>
- <1382651769-21238-2-git-send-email-lisovy@gmail.com>
- <20131025020213.GI14529@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131025020213.GI14529-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH RFC 0/4] Add Exynos5 USB 3.0 phy driver based on generic PHY
+ framework
+Date: Thu, 31 Oct 2013 13:15:40 +0530
+Message-ID: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, kishon@ti.com, kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, t.figa@samsung.com, balbi@ti.com, jwerner@chromium.org, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+Adding a phy driver for USB 3.0 PHY controller present on Exynos5
+series of SoCs alongwith DWC3 controller for USB 3.0 operations.
 
-On Fri, Oct 25, 2013 at 10:02:16AM +0800, Shawn Guo wrote:
-> Rob,
-> 
-> Can I have your ACK on this patch?
+This driver is inline with Kamil's USB 2.0 phy driver. [1]
+Few functions used to translate ref clock rate are common to
+Kamil's changes. So we can figure out how to re-use them across
+these drivers.
 
-I just applied the patch on IMX tree.  Let me know if you have
-objection.
+Theses patches are based on usb-next branch and tested with
+Kishon's patches for adapting DWC3 to generic phy framework, [2]
+on smdk5250 as well as smdk5420 board.
 
-Shawn
+[1] [PATCH 0/5] phy: Add new Exynos USB PHY driver
+    https://lkml.org/lkml/2013/10/25/230
+[2] [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform indicates the presence of PHY's
+    (http://www.spinics.net/lists/linux-usb/msg95733.html)
+    [PATCH v2 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY Framework
+    (http://www.spinics.net/lists/linux-usb/msg95734.html)
 
-> 
-> On Thu, Oct 24, 2013 at 11:56:07PM +0200, Rostislav Lisovy wrote:
-> > Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 2956800..dc70ed0 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -69,6 +69,7 @@ ti	Texas Instruments
-> >  toshiba	Toshiba Corporation
-> >  v3	V3 Semiconductor
-> >  via	VIA Technologies, Inc.
-> > +voipac	Voipac Technologies s.r.o.
-> >  wlf	Wolfson Microelectronics
-> >  wm	Wondermedia Technologies, Inc.
-> >  winbond Winbond Electronics corp.
-> > -- 
-> > 1.7.10.4
-> > 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Vivek Gautam (4):
+  phy: Add new Exynos5 USB 3.0 PHY driver
+  dt: exynos5250: Enable support for generic USB 3.0 phy
+  dt: exynos5420: Enable support for USB 3.0 PHY controller
+  dt: exynos5420: Enable support for DWC3 controller
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/phy/samsung-phy.txt        |   20 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   17 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   50 ++
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-exynos5-usb3.c                     |  562 ++++++++++++++++++++
+ 6 files changed, 646 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/phy/phy-exynos5-usb3.c
+
+-- 
+1.7.6.5
