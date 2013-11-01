@@ -1,120 +1,164 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Fri, 1 Nov 2013 10:52:24 +0100
-Message-ID: <20131101095223.GH27864@ulmo.nvidia.com>
-References: <52718122.9000206@wwwdotorg.org>
-	<20131031.101232.80781047726461143.hdoyu@nvidia.com>
-	<527286CC.9080404@wwwdotorg.org>
-	<20131031.184603.979300613649357798.hdoyu@nvidia.com>
-	<52729912.9050800@wwwdotorg.org>
-	<20131101084909.5ed79987aa3aeb13b14e3f08@nvidia.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 10/43] clk: ti: add support for TI fixed factor clock
+Date: Fri, 1 Nov 2013 11:52:12 +0200
+Message-ID: <527379CC.60909@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-11-git-send-email-t-kristo@ti.com> <52729DA0.8010506@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1850514120842827206=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131101084909.5ed79987aa3aeb13b14e3f08-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52729DA0.8010506@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/31/2013 08:12 PM, Nishanth Menon wrote:
+> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+>> This behaves exactly in similar manner to basic fixed-factor-clock, but
+>> adds a few properties on top for handling clock hardware autoidling.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../bindings/clock/ti/fixed-factor-clock.txt       |   29 +++++++++
+>>   drivers/clk/ti/Makefile                            |    2 +-
+>>   drivers/clk/ti/fixed-factor.c                      |   65 ++++++++++++++++++++
+>>   3 files changed, 95 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
+>>   create mode 100644 drivers/clk/ti/fixed-factor.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
+>> new file mode 100644
+>> index 0000000..60b9e34
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
+>> @@ -0,0 +1,29 @@
+>> +Binding for TI fixed factor rate clock sources.
+>> +
+>> +Binding status: Unstable - ABI compatibility may be broken in the future
+>> +
+>> +This binding uses the common clock binding[1].
+>> +
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Required properties:
+>> +- compatible : shall be "ti,fixed-factor-clock".
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- ti,clock-div: fixed divider.
+>> +- ti,clock-mult: fixed multiplier.
+>> +- clocks: parent clock.
+>> +
+>> +Optional properties:
+>> +- ti,autoidle-shift: bit shift of the autoidle enable bit for the clock
+>> +- reg: offset for the autoidle register of this clock
+>> +- ti,invert-autoidle-bit: autoidle is enabled by setting the bit to 0
+>
+> The above three belong to autoidle stuff I think.. maybe pointing to
+> it's binding will help?
+>
+>> +- ti,set-rate-parent: clk_set_rate is propagated to parent
+>> +
+>> +Example:
+>> +	clock {
+>> +		compatible = "ti,fixed-factor-clock";
+>> +		clocks = <&parentclk>;
+>> +		#clock-cells = <0>;
+>> +		ti,clock-div = <2>;
+>> +		ti,clock-mult = <1>;
+>> +	};
+>> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
+>> index 640ebf9..f57fc4b 100644
+>> --- a/drivers/clk/ti/Makefile
+>> +++ b/drivers/clk/ti/Makefile
+>> @@ -1,4 +1,4 @@
+>>   ifneq ($(CONFIG_OF),)
+>>   obj-y					+= clk.o dpll.o autoidle.o divider.o \
+>> -					   composite.o
+>> +					   fixed-factor.o composite.o
+>>   endif
+>> diff --git a/drivers/clk/ti/fixed-factor.c b/drivers/clk/ti/fixed-factor.c
+>> new file mode 100644
+>> index 0000000..e0549c6
+>> --- /dev/null
+>> +++ b/drivers/clk/ti/fixed-factor.c
+>> @@ -0,0 +1,65 @@
+>> +/*
+>> + * TI Fixed Factor Clock
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments, Inc.
+>> + *
+>> + * Tero Kristo <t-kristo@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/err.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk/ti.h>
+>> +
+>> +/**
+>> + * of_ti_fixed_factor_clk_setup() - Setup function for TI fixed factor clock
+>> + */
+>> +static int __init of_ti_fixed_factor_clk_setup(struct device_node *node,
+>> +					       struct regmap *regmap)
+>> +{
+>> +	struct clk *clk;
+>> +	const char *clk_name = node->name;
+>> +	const char *parent_name;
+>> +	u32 div, mult;
+>> +	u32 flags = 0;
+>> +
+>> +	if (of_property_read_u32(node, "ti,clock-div", &div)) {
+>> +		pr_err("%s Fixed factor clock <%s> must have a clock-div property\n",
+>> +		       __func__, node->name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_u32(node, "ti,clock-mult", &mult)) {
+>> +		pr_err("%s Fixed factor clock <%s> must have a clokc-mult property\n",
+>> +		       __func__, node->name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_bool(node, "ti,set-rate-parent"))
+>> +		flags |= CLK_SET_RATE_PARENT;
+>> +
+>> +	parent_name = of_clk_get_parent_name(node, 0);
+>> +
+>> +	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
+>> +					mult, div);
+>> +
+>> +	if (!IS_ERR(clk)) {
+>> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+>> +		return of_ti_autoidle_setup(node, regmap);
+>
+> if this fails, remove provider and unregister?
 
---===============1850514120842827206==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PW0Eas8rCkcu1VkF"
-Content-Disposition: inline
+Unregister is not supported currently. I don't think I want to do 
+partial cleanup here, failing autoidle setup is not critical anyway. The 
+system will still boot-up properly, only PM is potentially broken. Can 
+add an error print though.
 
+-Tero
 
---PW0Eas8rCkcu1VkF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+>> +	}
+>> +
+>> +	return PTR_ERR(clk);
+>> +}
+>> +CLK_OF_DECLARE(ti_fixed_factor_clk, "ti,fixed-factor-clock",
+>> +	       of_ti_fixed_factor_clk_setup);
+>>
+>
+>
 
-On Fri, Nov 01, 2013 at 08:49:09AM +0200, Hiroshi Doyu wrote:
-> On Thu, 31 Oct 2013 18:53:22 +0100
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> ...
-> > We're talking about memory-mapped on-SoC devices here, that generally
-> > only exist inside Tegra SoCs.
-> >=20
-> > Even ignoring that (i.e. expanding the argument to arbitrary modules),
-> > having drivers that perform bus-master transactions call a function
-> > of_iommu_attach() or similar, which does nothing if the device isn't
-> > behind an IOMMU but otherwise does whatever is required, seems like it
-> > isn't much of an imposition.
->=20
-> Where do you expect of_iommu_attach() to be called?
-> I thought something below:
->=20
-> 	Modified drivers/base/dd.c
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 35fa368..92ec2e9 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -278,6 +278,10 @@ static int really_probe(struct device *dev, struct d=
-evice_driver *drv)
->  	if (ret)
->  		goto probe_failed;
-> =20
-> +	ret =3D of_iommu_attach(dev);
-> +	if (ret)
-> +		goto probe_failed;
-> +
->  	if (driver_sysfs_add(dev)) {
->  		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
->  			__func__, dev_name(dev));
->=20
-
-The patches for late interrupt reference resolution introduced a
-separate function, of_platform_probe(), with the intent of having it
-call potentially many resource allocation hooks. The function needs to
-be platform_device specific, and therefore is called from within the
-platform_drv_probe() function. The reason is that interrupts are stored
-as resources within struct platform_device, so you need to have access
-to a platform device.
-
-I think that devices that require attachment to an IOMMU will always end
-up being platform devices too, so even if it isn't a strict requirement
-here it would still make sense to use a similar infrastructure to avoid
-cluttering the core code with too many loose function calls.
-
-Thierry
-
---PW0Eas8rCkcu1VkF
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSc3nXAAoJEN0jrNd/PrOhs2wQALvKXOIALAkIlmgDpt/UwLZ3
-deGnliphUmS8HMxrFCU1pMU7JfVZlJUkBcewtIxIc6vND5gmyzkvoiAlUYbtGs2U
-v9AVmF8ZBf2YZMUKV2GwaUQgivBHQGR7lsjubpW22WA+wGk7UieXc4yo1VeY2Mum
-EUwbnX7X+jPV6QCoAJ4nabknLg4U2aPUlgxgjxt1uM7N9D514oxX2xT/RBhjChWp
-ftvkLnoCra99sbE7gpYzxWop9ArKOERoVZYzTIX0XwC4rNvAc6p5bRBxTtaLLnpc
-YdlVZU/x06qMbDjPJwIsYLyQEoppffwQVfnpWUcONCFXSdRm8dqH+0ywCaP58Ltp
-PYCMZFHyr11wt4YNUnqj1MJhAYMiP0zsWIvUUNFvF/XJ1y+cvTyyJ3pDxkbpf5wp
-EP81ErIhKG/XHAi1qnqm7EYdBq6oi2WCmFAE8zES9ov/06t3SUfqfvGKcQkZAIDK
-AcWcrWEcE8txOa5tEYOdoSNEk9SVlRU99N2SaaE9pZzSZT/uvKujwUfS1oCAkyRx
-n3SFf11gLxHDo2u6tkw0BfADvkRoDIJluNg3B337mj1/xbbb/J/1735qSRhg7QXr
-1XzODR2FlJUcsWSH+wV++71vi0U0GXYMZpKhsITUOutbCTTpRUiACCO7j+JH38EB
-Uir2Bafy/KMCaI27+SmN
-=hnrj
------END PGP SIGNATURE-----
-
---PW0Eas8rCkcu1VkF--
-
---===============1850514120842827206==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1850514120842827206==--
