@@ -1,39 +1,85 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: Add initial device tree support for EXYNOS5410
-Date: Fri, 01 Nov 2013 18:09:18 +0100
-Message-ID: <3553642.XBQjgGGvxT@flatron>
-References: <1381763305-7085-1-git-send-email-v.tyrtov@samsung.com> <1381763305-7085-5-git-send-email-v.tyrtov@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] extcon-gpio: add devicetree support.
+Date: Fri, 1 Nov 2013 10:16:44 -0700
+Message-ID: <20131101171643.GA2643@kartoffel>
+References: <20131101205005.659ba606@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381763305-7085-5-git-send-email-v.tyrtov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vyacheslav Tyrtov <v.tyrtov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Naour Romain <romain.naour-oid7hba3+9NWj0EZb7rXcA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131101205005.659ba606@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 of October 2013 19:08:25 Vyacheslav Tyrtov wrote:
-> From: Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Hi Neil,
+
+While I'm not fundamentally opposed to this binding, I have some issues with
+its current form and would not want to see this version hit mainline.
+
+On Fri, Nov 01, 2013 at 09:50:05AM +0000, NeilBrown wrote:
 > 
-> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
+> As this device is not vendor specific, I haven't included any "vendor,"
+> prefixes.  For my model I used "regulator-gpio" which takes a similar
+> approach.
 > 
-> Signed-off-by: Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/exynos5410-smdk5410.dts |  65 ++++++++++
->  arch/arm/boot/dts/exynos5410.dtsi         | 209
-> ++++++++++++++++++++++++++++++ 3 files changed, 275 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
->  create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> new file mode 100644
+> index 000000000000..2346b61cc620
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> @@ -0,0 +1,26 @@
+> +* EXTCON detector using GPIO
 
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+EXTCON is _extremely_ Linux-specific. The binding document needs a description
+of the class of device it's inteded to describe that does not just refer to
+Linux internals.
 
-Best regards,
-Tomasz
+I would prefer if we could have a better name for this that was not tied to the
+Linux driver name. Perhaps "gpio-presence-detector"?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +Required Properties:
+> + - compatible: "extcon-gpio"
+> + - gpios: gpio line that detects connector
+> + - interrupts: interrupt generated by that gpio
+
+We don't need this. If we need the interrupt a gpio generates, we should ask
+the gpio controller driver to map the gpio to an interrupt.
+
+We have gpiod_to_irq for this in Linux.
+
+> + - debounce-delay-ms: debouncing delay
+> +
+> +Optional Properties:
+> + - label: name for connector.  If not given, device name is used.
+> + - state-on: string to report when GPIO is high (else '0')
+> + - state-off: string to report when GPIO is low (else '1')
+
+I do not like these properties, they are very much a Linux implementation
+detail.
+
+Are extcon devices ever used standalone? If so, why?
+
+If not I see _no_ reason at all for the label property. If a userspace
+application needs to detect the presence of a particular external connector, it
+will need to know this in relation to the device the external connectors are
+attached to. In that case the application should find that device and traverse
+its set of extcon devices. The names for the external connections will be a
+property of the device, not the extcon devices themselves (along hte same lines
+as clocks), and need not be a property of the extcon device.
+
+As for state-on and state-off, we are exposing a binary property to userspace,
+the meaning of which is already dependent on the particular device the extcon
+devices are connected to. Given userspace already has to understand that, I see
+no value in embedding arbitrary strings in the device tree which attempt to
+replicate this knowledge. They provide no additional value and in my mind make
+the interface to userspace harder to use because you have ot handle an
+arbitrary set of values depending on how the dt author felt one morning rather
+than just the binary value you actually care about.
+
+Thanks,
+Mark.
