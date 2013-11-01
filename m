@@ -1,49 +1,57 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 7/9] phy: add Broadcom Kona USB2 PHY DT binding
-Date: Fri,  1 Nov 2013 15:45:56 -0400
-Message-ID: <1383335158-19730-8-git-send-email-matt.porter@linaro.org>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: [PATCH v2 3/9] usb: gadget: s3c-hsotg: enable build for other platforms
+Date: Fri,  1 Nov 2013 15:45:52 -0400
+Message-ID: <1383335158-19730-4-git-send-email-matt.porter@linaro.org>
 References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383335158-19730-1-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a binding that describes the Broadcom Kona USB2 PHY found
-on the BCM281xx family of SoCs.
+Remove unused Samsung-specific machine include and Kconfig
+dependency on S3C.
 
-Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Matt Porter <matt.porter@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
 ---
- .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+ drivers/usb/gadget/Kconfig     | 7 +++----
+ drivers/usb/gadget/s3c-hsotg.c | 2 --
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-new file mode 100644
-index 0000000..db309e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-@@ -0,0 +1,15 @@
-+BROADCOM KONA USB2 PHY
-+
-+Required properties:
-+ - compatible: brcm,kona-usb2-phy
-+ - regs: offset and length of the PHY registers
-+ - #phy-cells: must be 0
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+Example:
-+
-+	usbphy: usbphy@3f130000 {
-+		compatible = "brcm,kona-usb2-phy";
-+		reg = <0x3f130000 0x28>;
-+		#phy-cells = <0>;
-+	};
+diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
+index 48cddf3..2e69fa0 100644
+--- a/drivers/usb/gadget/Kconfig
++++ b/drivers/usb/gadget/Kconfig
+@@ -280,11 +280,10 @@ config USB_PXA27X
+ 	   gadget drivers to also be dynamically linked.
+ 
+ config USB_S3C_HSOTG
+-	tristate "S3C HS/OtG USB Device controller"
+-	depends on S3C_DEV_USB_HSOTG
++	tristate "Designware/S3C HS/OtG USB Device controller"
+ 	help
+-	  The Samsung S3C64XX USB2.0 high-speed gadget controller
+-	  integrated into the S3C64XX series SoC.
++	  The Designware USB2.0 high-speed gadget controller
++	  integrated into the S3C64XX and BCM281xx series SoC.
+ 
+ config USB_S3C2410
+ 	tristate "S3C2410 USB Device Controller"
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index a8a99e4..258bc73 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -36,8 +36,6 @@
+ #include <linux/usb/phy.h>
+ #include <linux/platform_data/s3c-hsotg.h>
+ 
+-#include <mach/map.h>
+-
+ #include "s3c-hsotg.h"
+ 
+ static const char * const s3c_hsotg_supply_names[] = {
 -- 
 1.8.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
