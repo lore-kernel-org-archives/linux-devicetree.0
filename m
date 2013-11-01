@@ -1,45 +1,72 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
-	from DT
-Date: Fri, 1 Nov 2013 09:54:30 +0200
-Message-ID: <20131101095430.4e37d15c385e87b7a379fc96@nvidia.com>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
-	<52718BB4.4090007@wwwdotorg.org>
-	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
-	<20131031174028.GF3037@kartoffel> <5272AC82.6080205@wwwdotorg.org>
+From: Li Xiubo <B47053@freescale.com>
+Subject: [PATCHv1 0/8] ALSA: Add SAI driver and enable SGT15000 codec
+Date: Fri, 1 Nov 2013 07:52:57 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828718C5@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5272AC82.6080205-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Li Xiubo <B47053@freescale.com>, Shawn Guo <r65073@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "perex@perex.cz" <perex@perex.cz>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <r49496@freescale.com>, linux-ker
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2013 20:16:18 +0100
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Sorry, forgot the Subject!
 
-> Hmm. That's interesting. I see that the ARM SMMU has a list of the
-> clients it affects, whereas this Tegra series puts information into each
-> client device about the SMMU(s) that affect it. Is it better to flip the
-> Tegra binding around to match the style of the ARM SMMU?
+Sent again.
 
-That's better from consistency POV.
 
-Can this be used to control the device instanciation order?
-
-I'm considering the following scenario:
-If a device phandle is listed in mmu-masters, that device probe would
-be defered till IOMMU is instanciated.
-
-How does ARM SMMU deal with this issue now?
+> 
+> Hello,
+> 
+> This patch series is mostly Freescale's SAI SoC Digital Audio Interface
+> driver implementation. And the implementation is only compatible with
+> device tree definition.
+> 
+> This patch series is based on linux-next and has been tested on Vybrid
+> VF610 Tower board using device tree.
+> 
+> Changed in v2:
+> - Use default settings for the generic dmaengine PCM driver.
+> - Separate receive and transmit setting in most functions, but some
+> couldn't for the HW limitation.
+> - Drop some not reduntant code.
+> - Use devm_snd_soc_register_component() instead of
+> snd_soc_register_component().
+> - Use devm_snd_soc_register_card() instead of
+> devm_snd_soc_register_card().
+> - Adjust the code sentences sequence.
+> - Make the namespacing consistent.
+> - Rename CONFIG_SND_SOC_FSL_SGTL5000 to CONFIG_SND_SOC_FSL_SGTL5000_VF610.
+> - Drop some meaningless lines.
+> - Rename the binding document file.
+> 
+> Added in v1:
+> - Add SAI SoC Digital Audio Interface driver.
+> - Add Freescale SAI ALSA SoC Digital Audio Interface node for VF610.
+> - Enables SAI ALSA SoC DAI device for Vybrid VF610 TOWER board.
+> - Add device tree bindings for Freescale SAI.
+> - Revise the bugs about the sgt15000 codec.
+> - Add SGT15000 based audio machine driver.
+> - Enable SGT15000 codec based audio driver node for VF610.
+> - Add device tree bindings for Freescale VF610 sound.
+> 
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
