@@ -1,169 +1,100 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 1 Nov 2013 10:57:55 +0100
-Message-ID: <20131101095754.GJ27864@ulmo.nvidia.com>
-References: <20131019104555.GI18477@ns203013.ovh.net>
- <2730370.0UKsY9Ox0H@avalon>
- <20131024110524.GB11296@ulmo.nvidia.com>
- <1389386.JnbumUe76M@avalon>
- <003701ced693$2f856150$8e9023f0$%han@samsung.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 1 Nov 2013 10:59:19 +0100
+Message-ID: <20131101.115919.351108054879013006.hdoyu@nvidia.com>
+References: <20131031.184603.979300613649357798.hdoyu@nvidia.com><52729912.9050800@wwwdotorg.org><20131101094644.GG27864@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlxN1C6awaFNesUv"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <003701ced693$2f856150$8e9023f0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Laurent Pinchart' <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Denis Carikli' <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Eric B??nard' <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Sascha Hauer' <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Lothar Wa??mann' <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131101094644.GG27864-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 1 Nov 2013 10:46:45 +0100:
 
---UlxN1C6awaFNesUv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> * PGP Signed by an unknown key
+> 
+> On Thu, Oct 31, 2013 at 11:53:22AM -0600, Stephen Warren wrote:
+> > On 10/31/2013 10:46 AM, Hiroshi Doyu wrote:
+> > > Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Thu, 31 Oct 2013 17:35:24 +0100:
+> > > 
+> > > ...
+> > >>>> ... and for the driver to explicitly parse that property, and wait
+> > >>>> until the driver for iommu_phandle is ready. Exactly the same as any
+> > >>>> other resource/service dependency.
+> > >>>>
+> > >>>> That will solve all the problems.
+> > >>>>
+> > >>>> The only downside is that every driver needs to contain code to parse
+> > >>>> that property. However, I think that's just one function call; the
+> > >>>> actual implementation of that function can be unified somewhere inside
+> > >>>> core code in drivers/iommu/.
+> > >>>
+> > >>> Yes, but only missing part now is that, we could do this with
+> > >>> "bus_notifier", but the current bus_notifier doesn't have the feature
+> > >>> to return error(-EPROBE_DEFER). This could be modified so that
+> > >>> bus_notifier could return (-EPROBE_DEFER) to postpone
+> > >>> probing. Alternatively this could be done in some core probe code as
+> > >>> well as Thierry pointed out.
+> > >>>
+> > >>> [1] In the reply of "[PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients" from DT"
+> > >>
+> > >> I think this should be done explicitly in drivers. It's much
+> > >> simpler,
+> > > 
+> > > Yes, we need to insert some IOMMU specific code in driver?
+> > > 
+> > >> and doesn't encode any knowledge of driver-specific bindings into some
+> > >> common bus notifier code.
+> > > 
+> > > I think that we cannot do that in drivers. We want to use drivers as
+> > > they are without any modifications indicating its dependency on
+> > > IOMMU because most of drivers are existing ones which nvidia doesn't
+> > > implement. We want to set up any IOMMU related thingy implicitly,
+> > > hided from driver. That's why we need to do this in bus_notifier or
+> > > driver core code.
+> > 
+> > We're talking about memory-mapped on-SoC devices here, that generally
+> > only exist inside Tegra SoCs.
+> > 
+> > Even ignoring that (i.e. expanding the argument to arbitrary modules),
+> > having drivers that perform bus-master transactions call a function
+> > of_iommu_attach() or similar, which does nothing if the device isn't
+> > behind an IOMMU but otherwise does whatever is required, seems like it
+> > isn't much of an imposition.
+> > 
+> > If this turns out to be something that lots of devices benefit from, we
+> > could do the same thing that pinctrl does for "hogs", and make the
+> > function call in the driver core. But note that's still part of the
+> > probing flow (just implemented in the driver core) rather than bus
+> > notifier based, hence keeps the same simplicity.
+> 
+> That's exactly what I was proposing in the first place. I did the same
+> thing in my patches for late interrupt reference resolution. The reason
+> why I think it makes sense to put it into the core is that it's
+> something that likely most devices will have to do anyway. And it also
+> is completely transparent to drivers, right? If they aren't attached to
+> an IOMMU then they just aren't but will continue to work properly. And
+> as you said, having it in the core makes drivers simpler, while at the
+> same time keeping the explicitness of having a function call (rather
+> than a somewhat obfuscated bus notifier) and the flexibility of deferred
+> probing.
 
-On Fri, Nov 01, 2013 at 08:44:48AM +0900, Jingoo Han wrote:
-> On Friday, October 25, 2013 10:58 PM, Laurent Pinchart wrote:
-> > On Thursday 24 October 2013 13:05:25 Thierry Reding wrote:
-> > > On Thu, Oct 24, 2013 at 12:38:59AM +0200, Laurent Pinchart wrote:
-> > > > On Wednesday 23 October 2013 22:20:12 Thierry Reding wrote:
-> > > > > On Wed, Oct 23, 2013 at 05:51:13PM +0100, Stephen Warren wrote:
-> > > > > > On 10/22/2013 09:01 PM, Thierry Reding wrote:
-> > > > > > > On Tue, Oct 22, 2013 at 05:34:45PM +0200, Jean-Christophe
-> > > > > >
-> > > > > > > PLAGNIOL-VILLARD wrote:
-> > > > > > ...
-> > > > > >
-> > > > > > >> I'm sorry but the blacklight descibe in DT have nothing to do
-> > > > > > >> with the common pratice that the current driver have today
-> > > > > > >
-> > > > > > > That's not at all what I said. What I said was that the major=
-ity
-> > > > > > > of backlight drivers currently default to turning the backlig=
-ht on
-> > > > > > > when probed. Therefore I think it would be consistent if this
-> > > > > > > driver did the same.
-> > > > > > >
-> > > > > > > I also said that I don't think it's a very good default, but =
-at the
-> > > > > > > same time we can't just go and change the default behaviour a=
-t will
-> > > > > > > because people may rely on it.
-> > > > > >
-> > > > > > It may well be reasonable to change the default behaviour for d=
-evices
-> > > > > > instantiated from DT. If it's not possible to instantiate the d=
-evice
-> > > > > > from DT yet, then it's not possible for anyone to be relying on=
- the
-> > > > > > default behaviour yet, since there is none. So, perhaps the def=
-ault
-> > > > > > could be:
-> > > > > >
-> > > > > > * If device instantiated from a board file, default to on, for
-> > > > > > backwards-compatibility.
-> > > > > >
-> > > > > > * If device instantiated from DT, there is no backwards compati=
-bility
-> > > > > > to be concerned with, since this is a new feature, hence defaul=
-t to
-> > > > > > off, since we think that's the correct thing to do.
-> > > > >
-> > > > > I actually had a patch to do precisely that. However I then reali=
-zed
-> > > > > that people have actually been using pwm-backlight in DT for a wh=
-ile
-> > > > > already and therefore may be relying on that behaviour as well.
-> > > > >
-> > > > > It also isn't really an issue of DT vs. non-DT. The simple fact i=
-s that
-> > > > > besides the backlight driver there's usually no other code that e=
-nables
-> > > > > a backlight on boot. The only way to do so that I know of is usin=
-g the
-> > > > > DRM panel patches that I've been working on.
-> > > >
-> > > > I would very much welcome a refactoring of the backlight code that =
-would
-> > > > remove the fbdev dependency and hook backlights to panel drivers. T=
-hat's
-> > > > something I wanted to work on myself, but that I pushed back after =
-CDF :-)
-> > >
-> > > Yeah, that would certainly be very welcome. But it's also a pretty
-> > > daunting job since there are a whole lot of devices out there that
-> > > aren't easy to test because, well, they're pretty old and chances
-> > > are that nobody that actually has one is around.
-> > >
-> > > But I guess that we can always try to solve it on a best effort basis,
-> > > though. Perhaps things can even be done in a backwards-compatible way.
-> > > I'm thinking for instance that we could introduce a new property, say
-> > > .enable, but keep any of the others suhc as state, power, fb_blank for
-> > > backwards-compatibility. Perhaps even emulate them for a while until
-> > > we've gone and cleaned up all users.
-> >=20
-> > That would work with me. I don't think we need more than a best effort
-> > approach to porting existing backlight drivers to the new model. When i=
-t comes
-> > to compatibility with the current interface, I'd like to move the
-> > compatibility code to the core instead of leaving it in the individual =
-drivers
-> > if possible.
->=20
-> I agree with you.
-> Moving the compatibility code to the core from the individual drivers
-> looks good. :-)
->=20
-> >=20
-> > > Or is there still a reason to have more than a single bit for backlig=
-ht
-> > > state? I don't know any hardware that actually makes a difference
-> > > between FB_BLANK_NORMAL, FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPE=
-ND
-> > > or FB_BLANK_POWERDOWN.
->=20
-> On Exynos side, I have never seen that FB_BLANK_VSYNC_SUSPEND,
-> FB_BLANK_HSYNC_SUSPEND are used for controlling display panels or
-> Display controllers.
->=20
-> However, I heard that FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND are
-> used for some monitors.
-
-I think that those may make sense in the context of fbdev, and looking
-at some fbdev drivers seems to substantiate that.
-
-However, I don't think backlights have any such capability. I mean they
-are either on or off, right? There's no such thing as partially off, or
-partially on. How would a backlight behave differently if the panel was
-in HSYNC suspend mode or VSYNC suspend mode?
-
-Thierry
-
---UlxN1C6awaFNesUv
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSc3siAAoJEN0jrNd/PrOhq/YQAKPo0e9vGJOiORylK3KMOfT4
-K5bTwfAjX7CakG8o6nPGTBa9A3va87SoyIK4d29b6qg/9foMKICTAjkXVqJXlOEP
-C6rGQUMad3VCiFX3ill2RZUOGE17sVVCSbgP7LwMyv800gptFi9cKI4sezRlHuXp
-rU3lAzJKcRZQMvhaYfGxOQIgwP6U2asdcrIx94x+0VslU6nQCHnVt3qgwVFrWffV
-1aZ/jTP0S9llyPXGYh2/zySlGWF7zILN05ZvFNtn40q8XMMgfGWdsr3APDdADZNt
-CoV1Gtw4ApFvGeon8Z8MtVWEveLpYZDJkT2fOo/cenUgl4WFHSe1Gs0L/Qtok7Fb
-h+6zz1TvWG2TSP8jwZ8SEXtVA+Xvr3+j7MaKBtZBQDhPbKz/SqWl/0c4pp5pViQI
-5SIGuaQdUEiqiOR8BnbzTNEzIwgCQ2SZXuscAgixTSYkz8tzxiwT1E1N1ZlTo2ia
-Ko4tCNrF8CWKyx3j0kltXMpwnpZ3/aE5ZS62H5RZmsOF53nYslagOwLjF6xo9VR2
-OxroJUXe1Dmp0x6C2/c2cmgeVCqnB+giOg8HE7hpvWWtfBKnrrpNo9Trxf90c02G
-ojtqAYSEZBAELCvZCYpAcGSYrug65p+UtYpY/RQnDOH/NfxvgUQwCWC+Qms7HUMK
-fUFT6NVDX4i+dktTHekv
-=s4gq
------END PGP SIGNATURE-----
-
---UlxN1C6awaFNesUv--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One idea is that, rather than inserting a hook(function) per
+subsystems in driver core, if we invent a new /special section/ which
+collects all hooks in sequence like initcalls, the subsystem just
+would declare a hook function for that special section. All hooks in
+that section can be called from driver core iterately. Then we
+wouldn't touch driver core code at all, once we insert a func to call
+hooks repeatedly. Looks simpler than tweaking bus notifier.
