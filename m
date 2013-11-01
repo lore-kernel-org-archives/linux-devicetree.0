@@ -1,46 +1,135 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
-Date: Fri, 01 Nov 2013 13:07:33 -0600
-Message-ID: <5273FBF5.2080004@wwwdotorg.org>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-5-git-send-email-grant.likely@linaro.org> <CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com> <CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com> <20131031185714.GA12646@quad.lixom.net> <20131101175317.A812AC40868@trevor.secretlab.ca>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv9 06/43] CLK: ti: add init support for clock IP blocks
+Date: Fri, 1 Nov 2013 14:13:55 -0500
+Message-ID: <5273FD73.7000208@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-7-git-send-email-t-kristo@ti.com> <52727A58.9010903@ti.com> <52737095.10900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131101175317.A812AC40868-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52737095.10900@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2013 11:53 AM, Grant Likely wrote:
-> On Thu, 31 Oct 2013 11:57:14 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Wed, Oct 30, 2013 at 02:25:21PM -0700, Grant Likely wrote:
->>> (Sorry for HTML mail)
+On 11/01/2013 04:12 AM, Tero Kristo wrote:
+> On 10/31/2013 05:42 PM, Nishanth Menon wrote:
+>> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+>>> ti_dt_clk_init_provider() can now be used to initialize the contents of
+>>> a single clock IP block. This parses all the clocks under the IP block
+>>> and calls the corresponding init function for them.
 >>>
->>> Can you put #define DEBUG at the top of drivers/of/irq.c and send me the
->>> log output from before and after the commit?
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>>   drivers/clk/ti/clk.c   |   59 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>   include/linux/clk/ti.h |    1 +
+>>>   2 files changed, 60 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+>>> index ad58b01..7f030d7 100644
+>>> --- a/drivers/clk/ti/clk.c
+>>> +++ b/drivers/clk/ti/clk.c
+>>> @@ -19,6 +19,9 @@
+>>>   #include <linux/clkdev.h>
+>>>   #include <linux/clk/ti.h>
+>>>   #include <linux/of.h>
+>>> +#include <linux/list.h>
+>>> +
+>>> +extern struct of_device_id __clk_of_table[];
+>>>
+>>>   /**
+>>>    * ti_dt_clocks_register - register DT duplicate clocks during boot
+>>> @@ -50,3 +53,59 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+>>>   		}
+>>>   	}
+>>>   }
+>>> +
+>>> +typedef int (*ti_of_clk_init_cb_t)(struct device_node *, struct regmap *);
+>>> +
+>>> +struct clk_init_item {
+>>> +	struct regmap *regmap;
+>>> +	struct device_node *np;
+>>> +	ti_of_clk_init_cb_t init_cb;
+>>> +	struct list_head node;
+>>> +};
+>>> +
+>>> +static LIST_HEAD(retry_list);
+>>> +
+>>> +void __init ti_dt_clk_init_provider(struct device_node *parent,
+>>> +				    struct regmap *regmap)
+>>> +{
+>>> +	const struct of_device_id *match;
+>>> +	struct device_node *np;
+>>> +	ti_of_clk_init_cb_t clk_init_cb;
+>>> +	struct clk_init_item *retry;
+>>> +	struct clk_init_item *tmp;
+>>> +	int ret;
+>>> +
+>>> +	for_each_child_of_node(parent, np) {
+>>> +		match = of_match_node(__clk_of_table, np);
+>>> +		if (!match)
+>>> +			continue;
+>>> +		clk_init_cb = match->data;
 >>
->> Here you go, quite verbose log below.
+>> I must admit I am confused here.
+> 
+> Yea this patch is something I am not quite comfortable myself yet and 
+> would like improvement ideas....
+> 
+>> a) of_clk_init (in the generic clk.c) uses of_clk_init_cb_t as match
+>> data. The prototype of the generic of_clk_init_cb_t is typedef void
+>> (*of_clk_init_cb_t)(struct device_node *);
+>> b) both of_clk_init and ti_dt_clk_init_provider looks up clock nodes
+>> from __clk_of_table
+> 
+> __clk_of_table contains the function pointers for the clock init 
+> functions, not clock nodes.
+
+yes, apologies, should have stated the prototypes of functions in a
+single __clk_of_table should not be two different argument list. The
+reason is as follows: CLK_OF_DECLARE fills up that list. there can be
+generic drivers such as [1] which might be registered, OR in the case
+of MULTI_ARCH - multiple other SoC drivers would have registered
+there. There is a bunch of stuff we could mess up here.
+
+If we do not have a choice, if we would like to maintain a different
+prototype based init list, we should probably do it in a different
+structure - example __clk_of_table_regmap or something similar..
+
+
+> 
 >>
->> Looks like we're tripping the "no reg passed in" checks, not sure if related.
+>> I assume we need ti_dt_clk_init_provider to be always called with
+>> clock list, as a result of_clk_init(NULL); will never be invoked. This
+>> is counter productive as you have have generic non SoC clock providers
+>> as well who would have been invoked with of_clk_init(NULL);
 > 
-> I think I've found the bug. See if this helps...
+> Can't call of_clk_init(NULL) anymore, as Paul wants to map the clock 
+> nodes under respective IP blocks. Two reasons here:
 > 
-> From 54a6d89d63361f8117ff69e4b65efabb12b897c7 Mon Sep 17 00:00:00 2001
-> From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Fri, 1 Nov 2013 10:50:50 -0700
-> Subject: [PATCH] of: Fixup interrupt parsing failure.
+> a) This requires me to pass some info from the IP block (CM1/CM2/PRM) to 
+> the clock init functions, basically the pointer to the memory map region 
+> (regmap.)
+> b) of_clk_init(NULL) will initialize all the clock nodes in the system, 
+> irrespective of the hierarchy considerations.
+> 
+> Only thing that can be done, is to make the API introduced in this patch 
+> a generic API and call it something like of_clk_init_children().
 
-Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+you still can do that:
 
-Thanks, this fixes the clocksource errors that I was seeing when
-performing CPU hotplug, as mentioned in:
+of_prcm_init->ti_dt_clk_init_provider-> instead of matching nodes from
+__clk_of_table, you can make it __clk_of_regmap_table -> the
+CLK_OF_DECLARE will not be good enough here ofcourse, but this will
+probably belong to a generic regmap enabled clock support framework -
+i dont see much that is TI specific in drivers/clk/ti/clk.c and it
+makes sense to be part of generic clock framework handling as generic
+clock framework will receive regmap support based on previous patches.
+that allows for other platforms to use regmap based clk drivers as well.
 
-https://lkml.org/lkml/2013/10/31/430
-Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing [CPU hotplug
-clockevents issue]
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+[1] http://marc.info/?l=linux-omap&m=138331451210184&w=2
+-- 
+Regards,
+Nishanth Menon
