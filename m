@@ -1,354 +1,85 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH] phy: Add MOXA RTL8201CP PHY support
-Date: Fri, 1 Nov 2013 10:01:50 -0700
-Message-ID: <CAGVrzcYfdChFNgkh=VAFZQfCRHyNTe_pZxx1Z6Sz1S8_1vzgtA@mail.gmail.com>
-References: <1383317673-14704-1-git-send-email-jonas.jensen@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
+	from DT
+Date: Fri, 01 Nov 2013 11:05:09 -0600
+Message-ID: <5273DF45.8050505@wwwdotorg.org>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
+	<52718BB4.4090007@wwwdotorg.org>
+	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
+	<20131031174028.GF3037@kartoffel> <5272AC82.6080205@wwwdotorg.org>
+	<5272AEA5.7020200@wwwdotorg.org>
+	<20131031193941.GB31516@mudshark.cambridge.arm.com>
+	<5273D214.90106@wwwdotorg.org>
+	<20131101163404.GC2442@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383317673-14704-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131101163404.GC2442-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jonas,
+On 11/01/2013 10:34 AM, Will Deacon wrote:
+> On Fri, Nov 01, 2013 at 04:08:52PM +0000, Stephen Warren wrote:
+>> On 10/31/2013 01:39 PM, Will Deacon wrote:
+>>> On Thu, Oct 31, 2013 at 07:25:25PM +0000, Stephen Warren wrote:
+>>>> On 10/31/2013 01:16 PM, Stephen Warren wrote:
+>>>>> Hmm. That's interesting. I see that the ARM SMMU has a list of the
+>>>>> clients it affects, whereas this Tegra series puts information into each
+>>>>> client device about the SMMU(s) that affect it. Is it better to flip the
+>>>>> Tegra binding around to match the style of the ARM SMMU?
+>>>>
+>>>> One question here: How do you ensure that the SMMU driver probe()s
+>>>> before probe() runs for devices affected by the SMMU?
+>>>
+>>> I think we get away with this by virtue of nobody actually creating IOMMU
+>>> mappings from within drivers,
+>>
+>> Where are the mapping set up? What prevents that action from happening
+>> before the IOMMU is set up and the various devices have their DMA ops
+>> hooked through the IOMMU? It's fairly clear how deferred probe of client
+>> devices could achieve that, but I'm quite unsure how some what other
+>> mechanism would ensure that.
+> 
+> This is the part where I start to struggle. If you look at a mainline
+> kernel, arm_iommu_create_mapping isn't really used, so it's difficult to
+> know at which point the IOMMU needs to be initialised across different ARM
+> SoCs.
+> 
+> For other architectures, it looks like the IOMMU initialisation hangs
+> directly off arch code (which in turn are driven from initcalls), but that's
+> generally possible because either the IOMMU is architected, or it's strongly
+> tied to PCI initialisation.
+> 
+> What are the requirements for Tegra? If the IOMMU isn't initialised, does it
+> act as a passthrough?
 
-2013/11/1 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> The MOXA UC-711X hardware(s) has an ethernet controller that seem
-> to be developed internally. The IC used is "RTL8201CP".
->
-> This patch adds an MDIO driver and also patches realtek to include
-> RTL8201CP PHY driver.
->
-> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->
-> Notes:
->     The hardware does not use a separate IRQ for PHY.
->
->     The link state change interrupt can instead be caught by MAC but the
->     current drivers/of/of_mdio.c does not allow it to be handled in MAC.
->
->     Applies to next-20131031
->
->  .../devicetree/bindings/net/moxa,moxart-mdio.txt   |  19 ++
->  drivers/net/phy/Kconfig                            |   7 +
->  drivers/net/phy/Makefile                           |   1 +
->  drivers/net/phy/mdio-moxart.c                      | 201 +++++++++++++++++++++
->  drivers/net/phy/realtek.c                          |  15 ++
->  5 files changed, 243 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/moxa,moxart-mdio.txt
->  create mode 100644 drivers/net/phy/mdio-moxart.c
->
-> diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mdio.txt b/Documentation/devicetree/bindings/net/moxa,moxart-mdio.txt
-> new file mode 100644
-> index 0000000..de0b90c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/moxa,moxart-mdio.txt
-> @@ -0,0 +1,19 @@
-> +* MOXA ART MDIO Ethernet Controller interface
-> +
-> +Required properties:
-> +- compatible: should be "moxa,moxart-mdio".
-> +- reg: address and length of the register set for the device.
-> +
-> +Example:
-> +mdio1: mdio@92000090 {
-> +       compatible = "moxa,moxart-mdio";
-> +       reg = <0x92000090 0x8>;
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       ethphy1: ethernet-phy@1 {
-> +               device_type = "ethernet-phy";
-> +               compatible = "moxa,moxart-rtl8201cp";
-> +               reg = <1>;
-> +       };
-> +};
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 342561a..9b5d46c 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -154,6 +154,13 @@ config MDIO_SUN4I
->           interface units of the Allwinner SoC that have an EMAC (A10,
->           A12, A10s, etc.)
->
-> +config MDIO_MOXART
-> +        tristate "MOXA ART MDIO interface support"
-> +        depends on ARCH_MOXART
-> +        help
-> +          This driver supports the MDIO interface found in the network
-> +          interface units of the MOXA ART SoC
-> +
->  config MDIO_BUS_MUX
->         tristate
->         depends on OF_MDIO
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 23a2ab2..9013dfa 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -31,3 +31,4 @@ obj-$(CONFIG_MDIO_BUS_MUX)    += mdio-mux.o
->  obj-$(CONFIG_MDIO_BUS_MUX_GPIO)        += mdio-mux-gpio.o
->  obj-$(CONFIG_MDIO_BUS_MUX_MMIOREG) += mdio-mux-mmioreg.o
->  obj-$(CONFIG_MDIO_SUN4I)       += mdio-sun4i.o
-> +obj-$(CONFIG_MDIO_MOXART)      += mdio-moxart.o
-> diff --git a/drivers/net/phy/mdio-moxart.c b/drivers/net/phy/mdio-moxart.c
-> new file mode 100644
-> index 0000000..ad5d0f8
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-moxart.c
-> @@ -0,0 +1,201 @@
-> +/* MOXA ART Ethernet (RTL8201CP) MDIO interface driver
-> + *
-> + * Copyright (C) 2013 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#define REG_PHY_CTRL            0
-> +#define REG_PHY_WRITE_DATA      4
-> +
-> +/* REG_PHY_CTRL */
-> +#define MIIWR                   BIT(27) /* init write sequence (auto cleared)*/
-> +#define MIIRD                   BIT(26)
-> +#define REGAD_MASK              0x3e00000
-> +#define PHYAD_MASK              0x1f0000
-> +#define MIIRDATA_MASK           0xffff
-> +
-> +/* REG_PHY_WRITE_DATA */
-> +#define MIIWDATA_MASK           0xffff
-> +
-> +struct moxart_mdio_data {
-> +       void __iomem            *base;
-> +};
-> +
-> +static int moxart_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +       struct moxart_mdio_data *data = bus->priv;
-> +       u32 ctrl = 0;
-> +       unsigned int count = 5;
-> +
-> +       dev_dbg(&bus->dev, "%s\n", __func__);
-> +
-> +       ctrl |= MIIRD | ((mii_id << 16) & PHYAD_MASK) |
-> +               ((regnum << 21) & REGAD_MASK);
-> +
-> +       writel(ctrl, data->base + REG_PHY_CTRL);
-> +
-> +       do {
-> +               ctrl = readl(data->base + REG_PHY_CTRL);
-> +
-> +               if (!(ctrl & MIIRD))
-> +                       return ctrl & MIIRDATA_MASK;
-> +
-> +               mdelay(10);
-> +               count--;
-> +       } while (count > 0);
-> +
-> +       dev_err(&bus->dev, "%s timed out\n", __func__);
+I believe so, yes. In particular we have the following register bits:
 
-I would keep these as a debugging aid and not spawn error messages on
-the console by default.
+1) Register bit AHB_ARBITRATION_XBAR_CTRL_SMMU_INIT_DONE is an overall
+SMMU enable flag. This sits outside the SMMU module itself, but the SMMU
+probe function requests drivers/amba/tegra-ahb.c:tegra_ahb_enable_smmu()
+to go enable it.
 
-> +
-> +       return -ETIMEDOUT;
-> +}
-> +
-> +static int moxart_mdio_write(struct mii_bus *bus, int mii_id,
-> +                            int regnum, u16 value)
-> +{
-> +       struct moxart_mdio_data *data = bus->priv;
-> +       u32 ctrl = 0;
-> +       unsigned int count = 5;
-> +
-> +       dev_dbg(&bus->dev, "%s\n", __func__);
-> +
-> +       ctrl |= MIIWR | ((mii_id << 16) & PHYAD_MASK) |
-> +               ((regnum << 21) & REGAD_MASK);
-> +
-> +       value &= MIIWDATA_MASK;
-> +
-> +       writel(value, data->base + REG_PHY_WRITE_DATA);
-> +       writel(ctrl, data->base + REG_PHY_CTRL);
-> +
-> +       do {
-> +               ctrl = readl(data->base + REG_PHY_CTRL);
-> +
-> +               if (!(ctrl & MIIWR))
-> +                       return 0;
-> +
-> +               mdelay(10);
-> +               count--;
-> +       } while (count > 0);
-> +
-> +       dev_err(&bus->dev, "%s timed out\n", __func__);
+2) Each memory client ID has a bit in SMMU_TRANSLATION_ENABLE_* to
+enable translation for the client. This is also enabled during the SMMU
+probe function.
 
-Ditto.
+3) Each swgroup ID has a register indicating which ASID to use for
+translation, and an associated enable bit. These are also set up during
+SMMU probe at present.
 
-> +
-> +       return -ETIMEDOUT;
-> +}
-> +
-> +static int moxart_mdio_reset(struct mii_bus *bus)
-> +{
-> +       int data, i;
-> +
-> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
-> +               data = moxart_mdio_read(bus, i, MII_BMCR);
-> +               if (data < 0)
-> +                       continue;
-> +
-> +               data |= BMCR_RESET;
-> +               if (moxart_mdio_write(bus, i, MII_BMCR, data) < 0)
-> +                       continue;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int moxart_mdio_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct mii_bus *bus;
-> +       struct moxart_mdio_data *data;
-> +       struct resource *res;
-> +       int ret, i;
-> +
-> +       bus = mdiobus_alloc_size(sizeof(*data));
-> +       if (!bus)
-> +               return -ENOMEM;
-> +
-> +       bus->name = "MOXA ART Ethernet MII";
-> +       bus->read = &moxart_mdio_read;
-> +       bus->write = &moxart_mdio_write;
-> +       bus->reset = &moxart_mdio_reset;
-> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-
-If you only support device tree probing, this might be fine, but you
-might want to be safe in case someone does a !OF instantiation and
-also use pdev->id as an additional unique identifier, so something
-like:
-
-%s-%d-mii, pdev->name, pdev->id
-
-will work.
-
-> +       bus->parent = &pdev->dev;
-> +
-> +       bus->irq = devm_kzalloc(&pdev->dev, sizeof(int) * PHY_MAX_ADDR,
-> +                       GFP_KERNEL);
-> +       if (!bus->irq) {
-> +               ret = -ENOMEM;
-> +               goto err_out_free_mdiobus;
-> +       }
-> +
-> +       /* Setting PHY_IGNORE_INTERRUPT here even if it has no effect,
-> +        * of_mdiobus_register() sets these PHY_POLL.
-> +        * Ideally, the interrupt from MAC controller could be used to
-> +        * detect link state changes, not polling, i.e. if there was
-> +        * a way phy_driver could set PHY_HAS_INTERRUPT but have that
-> +        * interrupt handled in ethernet drivercode.
-> +        */
-> +       for (i = 0; i < PHY_MAX_ADDR; i++)
-> +               bus->irq[i] = PHY_IGNORE_INTERRUPT;
-
-This type of configuration where the PHY interrupt is actually
-serviced by a link interrupt bit in the Ethernet MAC driver now works
-since 5ea94e768 ("phy: add phy_mac_interrupt() to use with
-PHY_IGNORE_INTERRUPT") so setting PHY_IGNORE_INTERRUPT is the right
-way to signal this and this will no longer make the PHY library poll
-for the link state.
-
-> +
-> +       data = bus->priv;
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       data->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(data->base)) {
-> +               ret = PTR_ERR(data->base);
-> +               goto err_out_free_mdiobus;
-> +       }
-> +
-> +       ret = of_mdiobus_register(bus, np);
-> +       if (ret < 0)
-> +               return ret;
-
-You still need to call mdiobus_free() here in case registration fails.
-
-> +
-> +       platform_set_drvdata(pdev, bus);
-> +
-> +       return 0;
-> +
-> +err_out_free_mdiobus:
-> +       mdiobus_free(bus);
-> +       return ret;
-> +}
-> +
-> +static int moxart_mdio_remove(struct platform_device *pdev)
-> +{
-> +       struct mii_bus *bus = platform_get_drvdata(pdev);
-> +
-> +       mdiobus_unregister(bus);
-> +       mdiobus_free(bus);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id moxart_mdio_dt_ids[] = {
-> +       { .compatible = "moxa,moxart-mdio" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, moxart_mdio_dt_ids);
-> +
-> +static struct platform_driver moxart_mdio_driver = {
-> +       .probe = moxart_mdio_probe,
-> +       .remove = moxart_mdio_remove,
-> +       .driver = {
-> +               .name = "moxart-mdio",
-> +               .of_match_table = moxart_mdio_dt_ids,
-> +       },
-> +};
-> +
-> +module_platform_driver(moxart_mdio_driver);
-> +
-> +MODULE_DESCRIPTION("MOXA ART MDIO interface driver");
-> +MODULE_AUTHOR("Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index 138de83..fa1d69a 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -64,6 +64,18 @@ static int rtl8211e_config_intr(struct phy_device *phydev)
->         return err;
->  }
->
-> +/* RTL8201CP */
-> +static struct phy_driver rtl8201cp_driver = {
-> +       .phy_id         = 0x00008201,
-> +       .name           = "RTL8201CP Ethernet",
-> +       .phy_id_mask    = 0x0000ffff,
-> +       .features       = PHY_BASIC_FEATURES,
-
-If this PHY is internal to your SoC (same die/package) you should also
-add PHY_IS_INTERNAL to get a consistent ethtool reporting (among
-others).
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I believe when any of those bits aren't enabled, the SMMU is a
+pass-through, considering that I'm pretty sure if I disable the SMMU
+driver in the kernel, everything will still work just fine.
