@@ -1,8 +1,8 @@
 From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: Strange location and name for platform  devices when
  device-tree is used.
-Date: Sat, 02 Nov 2013 10:09:59 +1100
-Message-ID: <1383347399.28909.46.camel@pasglop>
+Date: Sat, 02 Nov 2013 10:10:25 +1100
+Message-ID: <1383347425.28909.63.camel@pasglop>
 References: <20131101145925.66e22f73@notabene.brown>
 	 <1383279744.28909.26.camel@pasglop> <1383280054.28909.30.camel@pasglop>
 	 <20131101160329.37f3707b@notabene.brown>
@@ -35,8 +35,8 @@ On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
 > How can there be device name collisions?  All platform devices _should_
 > be named uniquely, if not, you have bigger problems...
 
-The problem is how to create a unique name from a platform device
-created from a device-tree node.
+The problem is how to create a unique name for a platform device created
+from a device-tree node.
 
 Device tree nodes aren't necessarily uniquely named. They are unique
 under a given parent but that hierarchy isn't preserved when creating
