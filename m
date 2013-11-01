@@ -1,126 +1,105 @@
-From: zhangfei gao <zhangfei.gao@gmail.com>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Fri, 1 Nov 2013 00:13:37 -0700
-Message-ID: <CAMj5BkgHE6FwBv6hUi8Mth1Ox40ed2sot4p9LQBxOToN=Fu7Qg@mail.gmail.com>
-References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
-	<1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
-	<001401ced6cb$04e2a330$0ea7e990$%jun@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <001401ced6cb$04e2a330$0ea7e990$%jun@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v5 0/5] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Fri,  1 Nov 2013 11:19:29 +0400
+Message-ID: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Seungwon
+03.10.2013 18:00, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> v2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+>> this series
+>> - introduces slave s/g support (that's support for DMA transfers which
+>>    involve peripherals in contrast to mem-to-mem transfers)
+>> - adds device tree based lookup support for DMA channels
+>> - combines floating patches and related feedback which already covered
+>>    several aspects of what the suggested LPB driver needs, to demonstrate
+>>    how integration might be done
+>> - carries Q&D SD card support to enable another DMA client during test,
+>>    while this patch needs to get dropped upon pickup
+>>
 
-Thanks for giving suggestion.
+Changes in v2:
+>> - re-order mpc8308 related code paths for improved readability, no
+>>    change in behaviour, introduction of symbolic channel names here
+>>    already
+>> - squash 'execute() start condition' and 'terminate all' into the
+>>    introduction of 'slave s/g prep' and 'device control' support; refuse
+>>    s/g lists with more than one item since slave support is operational
+>>    yet proper s/g support is missing (can get addressed later)
+>> - always start transfers from software on MPC8308 as there are no
+>>    external request lines for peripheral flow control
+>> - drop dt-bindings header file and symbolic channel names in OF nodes
 
-On Thu, Oct 31, 2013 at 11:24 PM, Seungwon Jeon <tgih.jun@samsung.com> wrote:
-> Hi Zhangfei,
+Changes in v3 and v4:
+> Part 1/5:
+> - use #define instead of enum since individual channels don't require
+>    special handling.
+> Part 2/5:
+> - add a flag "will_access_peripheral" to DMA transfer descriptor
+>    according recommendations of Gerhard Sittig.
+>    This flag is set in mpc_dma_prep_memcpy() and mpc_dma_prep_slave_sg()
+>    and is evaluated in mpc_dma_execute() to choose a type of start for
+>    the transfer.
+> - prevent descriptors of transfers which involve peripherals from
+>    being chained together;
+>    each of such transfers needs hardware initiated start.
+> - add locking while working with struct mpc_dma_chan
+>    according recommendations of Lars-Peter Clausen.
+> - remove default nbytes value. Client kernel modules must set
+>    src_maxburst and dst_maxburst fields of struct dma_slave_config (dmaengine.h).
 
->> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->> +{
->> +     struct dw_mci_k3_priv_data *priv = host->priv;
->> +
->> +     if (priv->type == DW_MCI_TYPE_HI4511)
-> There are several checking controller type.
-> But now DW_MCI_TYPE_HI4511 is just introduced alone.
-> It seems like unnecessary.
+Changes in v5:
+ Part 2/5::
+ - add and improve comments;
+ - improve the code moving transfer descriptors from 'queued' to 'active' list
+    in mpc_dma_execute();
+ - allow mpc_dma_prep_slave_sg() to run with non-empty 'active' list;
+ - take 'mdesc' back to 'free' list in case of error in mpc_dma_prep_slave_sg();
+ - improve checks of the transfer parameters;
+ - provide the default value for 'maxburst' in mpc_dma_device_control().
 
-Yes, currently only K3V2 is added, and k3v3 code will be added soon.
-Do you think type is more suitable to add later?
+Last changes are tested on MPC5125
+ - with SCLPC driver (transfers between dev and mem work fine);
+ - with dmatest module (all 64 DMA channels can perform mem-to-mem transfers
+    which are chained correctly now).
 
->> +static int dw_mci_k3_parse_dt(struct dw_mci *host)
->> +{
->> +     struct dw_mci_k3_priv_data *priv = host->priv;
->> +     struct device_node *np = host->dev->of_node;
->> +     u32 data[3];
->> +     int ret;
->> +
->> +     if (priv->type == DW_MCI_TYPE_HI4511) {
-> Didn't you see Kernel panic here?
-> host->priv is not allocated yet, it's a invalid pointer dereference.
-> dw_mci_k3_parse_dt() is called prior to dw_mci_k3_priv_init().
-> You can check dw_mci_probe() sequence.
+>> known issues:
+>> - it's yet to get confirmed whether MPC8308 can use slave support or
+>>    whether the DMA controller's driver shall actively reject it, the
+>>    information that's available so far suggests that peripheral transfers
+>>    to IP bus attached I/O is useful and shall not get blocked right away
+ - adding support for transfers which don't increment the RAM address or
+    do increment the peripheral "port's" address is easy with
+    this implementation; but which options of the common API
+    should be used for specifying such transfers?
 
-It is no problem here
-dw_mci_pltfm_register -> drv_data->init(host) -> dw_mci_probe -> dw_mci_parse_dt
 
->
->> +             ret = of_property_read_u32_array(np,
->> +                             "clken-reg", data, 2);
->> +             if (!ret) {
->> +                     priv->clken_reg = data[0];
->> +                     priv->clken_bit = data[1];
->> +             }
->> +
->> +             ret = of_property_read_u32_array(np,
->> +                             "drv-sel-reg", data, 3);
->> +             if (!ret) {
->> +                     priv->drv_reg = data[0];
->> +                     priv->drv_off = data[1];
->> +                     priv->drv_bits = data[2];
->> +             }
->> +
->> +             ret = of_property_read_u32_array(np,
->> +                             "sam-sel-reg", data, 3);
->> +             if (!ret) {
->> +                     priv->sam_reg = data[0];
->> +                     priv->sam_off = data[1];
->> +                     priv->sam_bits = data[2];
->> +             }
->> +
->> +             ret = of_property_read_u32_array(np,
->> +                             "div-reg", data, 3);
->> +             if (!ret) {
->> +                     priv->div_reg = data[0];
->> +                     priv->div_off = data[1];
->> +                     priv->div_bits = data[2];
->> +             }
-> Should these register information be got from dt?
-> It could be define in source code instead.
+Alexander Popov (2):
+  dma: mpc512x: reorder mpc8308 specific instructions
+  dma: mpc512x: add support for peripheral transfers
 
-There are many register from pctrl node instead of mmc controller.
-If set in code, we may read id and then switch id, set register, start
-bit, bits number,
-which is no rules for different controller, using defiine is not helpful.
-for example:
- switch (idx) {
-        case 0:
-                clken_reg = 0x1F8;
-                clken_bit = 0;
-                drv_sel_reg = 0x1F8;
-                drv_sel_bit = 4;
-                sam_sel_reg = 0x1F8;
-                sam_sel_bit = 8;
-                div_reg = 0x1F8;
-                div_bit = 1;
-                break;
-        case 1:
-                clken_reg = 0x1F8;
-                clken_bit = 12;
-                drv_sel_reg = 0x1F8;
-                drv_sel_bit = 16;
-                sam_sel_reg = 0x1F8;
-                sam_sel_bit = 20;
-                div_reg = 0x1F8;
-                div_bit = 13;
-                break;
-        case 2:
-                clken_reg = 0x1F8;
-                clken_bit = 24;
-                drv_sel_reg = 0x1F8;
-                drv_sel_bit = 28;
-                sam_sel_reg = 0x1FC;
-                sam_sel_bit = 0;
-                div_reg = 0x1F8;
-                div_bit = 25;
-                break;
+Gerhard Sittig (2):
+  dma: mpc512x: register for device tree channel lookup
+  HACK mmc: mxcmmc: enable clocks for the MPC512x
 
-So define register offset, start bit and bits number in dts make it simplier.
-Is this acceptable?
+Lars-Peter Clausen (1):
+  dma: of: Add common xlate function for matching by channel id
 
-Thanks.
+ .../devicetree/bindings/dma/mpc512x-dma.txt        |  55 ++++
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |   1 +
+ drivers/dma/mpc512x_dma.c                          | 295 +++++++++++++++++++--
+ drivers/dma/of-dma.c                               |  47 ++++
+ drivers/mmc/host/mxcmmc.c                          |  41 ++-
+ include/linux/of_dma.h                             |   4 +
+ 6 files changed, 404 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+
+-- 
+1.7.11.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
