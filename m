@@ -1,77 +1,59 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv2 8/8] Documentation: Add device tree bindings for Freescale VF610 sound.
-Date: Fri, 1 Nov 2013 15:04:55 +0800
-Message-ID: <1383289495-24523-9-git-send-email-Li.Xiubo@freescale.com>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RFC v5 3/5] dma: of: Add common xlate function for matching by channel id
+Date: Fri, 1 Nov 2013 08:52:05 +0100
+Message-ID: <201311010852.05709.arnd@arndb.de>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com> <1383290374-17484-4-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org
-Cc: r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383290374-17484-4-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the Document for Freescale VF610 sound driver under
-Documentation/devicetree/bindings/sound/.
+On Friday 01 November 2013, Alexander Popov wrote:
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
----
- .../bindings/sound/fsl_audio_sgt15000_vf610.txt    | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl_audio_sgt15000_vf610.txt
+> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
+> + * @dma_spec:	pointer to DMA specifier as found in the device tree
+> + * @of_dma:	pointer to DMA controller data
+> + *
+> + * This function can be used as the of xlate callback for DMA driver which wants
+> + * to match the channel based on the channel id. When using this xlate function
+> + * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
+> + * The data parameter of of_dma_controller_register must be a pointer to the
+> + * dma_device struct the function should match upon.
+> + *
+> + * Returns pointer to appropriate dma channel on success or NULL on error.
+> + */
+> +struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
+> +					 struct of_dma *ofdma)
+> +{
+> +	struct of_dma_filter_by_chan_id_args args;
+> +	dma_cap_mask_t cap;
+> +
+> +	args.dev = ofdma->of_dma_data;
+> +	if (!args.dev)
+> +		return NULL;
+> +
+> +	if (dma_spec->args_count != 1)
+> +		return NULL;
+> +
+> +	dma_cap_zero(cap);
+> +	dma_cap_set(DMA_SLAVE, cap);
+> +
+> +	args.chan_id = dma_spec->args[0];
+> +
+> +	return dma_request_channel(cap, of_dma_filter_by_chan_id, &args);
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl_audio_sgt15000_vf610.txt b/Documentation/devicetree/bindings/sound/fsl_audio_sgt15000_vf610.txt
-new file mode 100644
-index 0000000..76ff838
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/fsl_audio_sgt15000_vf610.txt
-@@ -0,0 +1,46 @@
-+Freescale VF610 audio complex with SGTL5000 codec
-+
-+Required properties:
-+- compatible: "fsl,vf610-sgtl5000"
-+- model: The user-visible name of this sound complex.
-+- saif-controllers: The phandle list of the SAI controller.
-+- audio-codec: The phandle of the SGTL5000 audio codec.
-+- audio-routing : A list of the connections between audio components.
-+  Each entry is a pair of strings, the first being the connection's sink,
-+  the second being the connection's source. Valid names could be power
-+  supplies, SGTL5000 pins, and the jacks on the board:
-+
-+  -- Power supplies:
-+     * Mic Bias
-+
-+  -- Board connectors:
-+     * Mic Jack
-+     * Line In Jack
-+     * Headphone Jack
-+     * Line Out Jack
-+     * Ext Spk
-+
-+Example:
-+
-+sound {
-+	compatible = "fsl,vf610-sgtl5000";
-+	model = "vf610-sgtl5000";
-+	saif-controller = <&sai2>;
-+	audio-codec = <&codec>;
-+	audio-routing =
-+		"MIC_IN", "Mic Jack",
-+		"Mic Jack", "Mic Bias",
-+		"LINE_IN", "Line In Jack",
-+		"Headphone Jack", "HP_OUT",
-+		"Ext Spk", "LINE_OUT";
-+};
-+
-+&i2c0 {
-+	...
-+
-+	codec: sgtl5000@0a {
-+	       compatible = "fsl,sgtl5000";
-+	       reg = <0x0a>;
-+	       clocks = <&clks VF610_CLK_SAI2>;
-+       };
-+};
--- 
-1.8.4
+This seems rather clumsy, now that we have added the dma_get_slave_channel interface.
+Can you try using that instead of dma_request_channel() now?
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
