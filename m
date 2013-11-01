@@ -1,92 +1,50 @@
-From: Li Xiubo <B47053@freescale.com>
-Subject: RE: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
-Date: Fri, 1 Nov 2013 06:34:00 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82871744@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 1 Nov 2013 08:49:09 +0200
+Message-ID: <20131101084909.5ed79987aa3aeb13b14e3f08@nvidia.com>
+References: <52718122.9000206@wwwdotorg.org>
+	<20131031.101232.80781047726461143.hdoyu@nvidia.com>
+	<527286CC.9080404@wwwdotorg.org>
+	<20131031.184603.979300613649357798.hdoyu@nvidia.com>
+	<52729912.9050800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52729912.9050800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Therry,
+On Thu, 31 Oct 2013 18:53:22 +0100
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+...
+> We're talking about memory-mapped on-SoC devices here, that generally
+> only exist inside Tegra SoCs.
+> 
+> Even ignoring that (i.e. expanding the argument to arbitrary modules),
+> having drivers that perform bus-master transactions call a function
+> of_iommu_attach() or similar, which does nothing if the device isn't
+> behind an IOMMU but otherwise does whatever is required, seems like it
+> isn't much of an imposition.
 
-The binding patch has been acked, how about the other patches ?
+Where do you expect of_iommu_attach() to be called?
+I thought something below:
 
-If they are all okey, should I sent a another official version again ?
-
-
-Thanks.
-
-
---
-Xiubo
-
-
-
-> Subject: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
-> 
-> Hello,
-> 
-> This patch series is the Freescale FTM PWM implementation. And there are
-> 8 channels most supported by the FTM PWM. This implementation is only
-> compatible with device tree definition.
-> 
-> This patch series is based on linux-next and has been tested on Vybrid
-> VF610 Tower board using device tree.
-> 
-> 
-> 
-> Changes in RFCv2 of PATVHv5:
-> - Remove "fsl,pwm-counter-clk"(all the four patches are modified).
-> 
-> Changes in v5:
-> - Remove active/idle pinctrl stuff.
-> 
-> Changes in v4:
-> - Check for the result and return an error for devm_kzalloc().
-> - Move pinmux setting from the SoC file to the board specific file.
-> - Revise the written mistake of 'ret |= FTMSC_CLKEXT;' --> 'reg |=
-> FTMSC_CLKEXT;'.
-> 
-> 
-> Changes in v3:
-> - Remove "availabe" field.
-> - Remove "fsl,pwm-avaliable-chs" property.
-> - ...
-> 
-> Changes in v2:
-> - Remove PWM CPWM/EPWM feature and sysfs.
-> - Remove some redundant code.
-> - Revise some code for more readable.
-> - Remove "fsl,pwm-clk-ps", "fsl,pwm-number", "fsl,pwm-channels",etc.
-> - Add "fsl,pwm-avaliable-chs", "fsl,pwm-counter-clk", etc.
-> - Support 8 channels default in dtsi file.
-> - Add counter clock source selection.
-> - Rename some function name, macro name, etc.
-> - Use PWM's and OF's existing function interfaces.
-> - Split clk_unprepare_enable to clk_unprepare and clk_enable,etc.
-> - ...
-> 
-> Added in v1:
-> - Add Freescale FTM PWM driver support.
-> - Add Freescale FTM PWM node for VF610.
-> - Enable Enables FTM PWM device for Vybrid VF610 TOWER.
-> - Add device tree bindings for Freescale.
-> 
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+	Modified drivers/base/dd.c
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 35fa368..92ec2e9 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -278,6 +278,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	if (ret)
+ 		goto probe_failed;
+ 
++	ret = of_iommu_attach(dev);
++	if (ret)
++		goto probe_failed;
++
+ 	if (driver_sysfs_add(dev)) {
+ 		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
+ 			__func__, dev_name(dev));
