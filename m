@@ -1,72 +1,81 @@
-From: Li Xiubo <B47053@freescale.com>
-Subject: [PATCHv1 0/8] ALSA: Add SAI driver and enable SGT15000 codec
-Date: Fri, 1 Nov 2013 07:52:57 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828718C5@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Li Xiubo <B47053@freescale.com>, Shawn Guo <r65073@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "perex@perex.cz" <perex@perex.cz>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <r49496@freescale.com>, linux-ker
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 2/2] PWM: atmel-pwm: add device tree binding document
+Date: Fri,  1 Nov 2013 16:00:11 +0800
+Message-ID: <1383292811-11343-1-git-send-email-voice.shen@atmel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, forgot the Subject!
+Add atmel pwm driver device tree binding document
 
-Sent again.
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
+---
+Changes in v6:
+  - New, split binding document as a separate patch
 
-> 
-> Hello,
-> 
-> This patch series is mostly Freescale's SAI SoC Digital Audio Interface
-> driver implementation. And the implementation is only compatible with
-> device tree definition.
-> 
-> This patch series is based on linux-next and has been tested on Vybrid
-> VF610 Tower board using device tree.
-> 
-> Changed in v2:
-> - Use default settings for the generic dmaengine PCM driver.
-> - Separate receive and transmit setting in most functions, but some
-> couldn't for the HW limitation.
-> - Drop some not reduntant code.
-> - Use devm_snd_soc_register_component() instead of
-> snd_soc_register_component().
-> - Use devm_snd_soc_register_card() instead of
-> devm_snd_soc_register_card().
-> - Adjust the code sentences sequence.
-> - Make the namespacing consistent.
-> - Rename CONFIG_SND_SOC_FSL_SGTL5000 to CONFIG_SND_SOC_FSL_SGTL5000_VF610.
-> - Drop some meaningless lines.
-> - Rename the binding document file.
-> 
-> Added in v1:
-> - Add SAI SoC Digital Audio Interface driver.
-> - Add Freescale SAI ALSA SoC Digital Audio Interface node for VF610.
-> - Enables SAI ALSA SoC DAI device for Vybrid VF610 TOWER board.
-> - Add device tree bindings for Freescale SAI.
-> - Revise the bugs about the sgt15000 codec.
-> - Add SGT15000 based audio machine driver.
-> - Enable SGT15000 codec based audio driver node for VF610.
-> - Add device tree bindings for Freescale VF610 sound.
-> 
-> 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+
+diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+new file mode 100644
+index 0000000..1c1a5fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+@@ -0,0 +1,41 @@
++Atmel PWM controller
++
++Required properties:
++  - compatible: should be one of:
++    - "atmel,at91sam9rl-pwm"
++    - "atmel,sama5d3-pwm"
++  - reg: physical base address and length of the controller's registers
++  - #pwm-cells: Should be 3. See pwm.txt in this directory for a
++    description of the cells format
++
++Example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++The following the pwm led based example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++	pwdleds {
++		compatible = "pwm-leds";
++
++		d1 {
++			label = "d1";
++			pwms = <&pwm0 3 5000 0>
++			max-brightness = <255>;
++		};
++
++		d2 {
++			label = "d2";
++			pwms = <&pwm0 1 5000 1>
++			max-brightness = <255>;
++		};
++	};
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
