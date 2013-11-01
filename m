@@ -1,59 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC v5 3/5] dma: of: Add common xlate function for matching by channel id
-Date: Fri, 1 Nov 2013 08:52:05 +0100
-Message-ID: <201311010852.05709.arnd@arndb.de>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com> <1383290374-17484-4-git-send-email-a13xp0p0v88@gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
+	from DT
+Date: Fri, 1 Nov 2013 09:54:30 +0200
+Message-ID: <20131101095430.4e37d15c385e87b7a379fc96@nvidia.com>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
+	<52718BB4.4090007@wwwdotorg.org>
+	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
+	<20131031174028.GF3037@kartoffel> <5272AC82.6080205@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383290374-17484-4-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5272AC82.6080205-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 November 2013, Alexander Popov wrote:
+On Thu, 31 Oct 2013 20:16:18 +0100
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
-> + * @dma_spec:	pointer to DMA specifier as found in the device tree
-> + * @of_dma:	pointer to DMA controller data
-> + *
-> + * This function can be used as the of xlate callback for DMA driver which wants
-> + * to match the channel based on the channel id. When using this xlate function
-> + * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
-> + * The data parameter of of_dma_controller_register must be a pointer to the
-> + * dma_device struct the function should match upon.
-> + *
-> + * Returns pointer to appropriate dma channel on success or NULL on error.
-> + */
-> +struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-> +					 struct of_dma *ofdma)
-> +{
-> +	struct of_dma_filter_by_chan_id_args args;
-> +	dma_cap_mask_t cap;
-> +
-> +	args.dev = ofdma->of_dma_data;
-> +	if (!args.dev)
-> +		return NULL;
-> +
-> +	if (dma_spec->args_count != 1)
-> +		return NULL;
-> +
-> +	dma_cap_zero(cap);
-> +	dma_cap_set(DMA_SLAVE, cap);
-> +
-> +	args.chan_id = dma_spec->args[0];
-> +
-> +	return dma_request_channel(cap, of_dma_filter_by_chan_id, &args);
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
+> Hmm. That's interesting. I see that the ARM SMMU has a list of the
+> clients it affects, whereas this Tegra series puts information into each
+> client device about the SMMU(s) that affect it. Is it better to flip the
+> Tegra binding around to match the style of the ARM SMMU?
 
-This seems rather clumsy, now that we have added the dma_get_slave_channel interface.
-Can you try using that instead of dma_request_channel() now?
+That's better from consistency POV.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can this be used to control the device instanciation order?
+
+I'm considering the following scenario:
+If a device phandle is listed in mmu-masters, that device probe would
+be defered till IOMMU is instanciated.
+
+How does ARM SMMU deal with this issue now?
