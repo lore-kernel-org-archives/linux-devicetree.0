@@ -1,129 +1,52 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 08/43] clk: ti: add composite clock support
-Date: Fri, 1 Nov 2013 11:40:30 +0200
-Message-ID: <5273770E.6090500@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-9-git-send-email-t-kristo@ti.com> <527284DC.2070701@ti.com> <5272861E.3090506@ti.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX
+	ssi
+Date: Fri, 1 Nov 2013 17:33:27 +0800
+Message-ID: <20131101093326.GE28401@MrMyself>
+References: <cover.1383226444.git.b42378@freescale.com>
+ <20131101091156.GC10324@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5272861E.3090506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20131101091156.GC10324@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, s.hauer@pengutronix.de, swarren@wwwdotorg.org, timur@tabi.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, broonie@kernel.org, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2013 06:32 PM, Nishanth Menon wrote:
-> On 10/31/2013 11:27 AM, Nishanth Menon wrote:
->> On 10/25/2013 10:57 AM, Tero Kristo wrote:
->>> This is a multipurpose clock node, which contains support for multiple
->>> sub-clocks. Uses basic composite clock type to implement the actual
->>> functionality, and TI specific gate, mux and divider clocks.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>>   .../devicetree/bindings/clock/ti/composite.txt     |   54 +++++
->>>   drivers/clk/ti/Makefile                            |    2 +-
->>>   drivers/clk/ti/composite.c                         |  222 ++++++++++++++++++++
->>>   include/linux/clk/ti.h                             |    8 +
->>>   4 files changed, 285 insertions(+), 1 deletion(-)
->>>   create mode 100644 Documentation/devicetree/bindings/clock/ti/composite.txt
->>>   create mode 100644 drivers/clk/ti/composite.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/ti/composite.txt b/Documentation/devicetree/bindings/clock/ti/composite.txt
->>> new file mode 100644
->>> index 0000000..5f43c47
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/ti/composite.txt
->>> @@ -0,0 +1,54 @@
->>> +Binding for TI composite clock.
->>> +
->>> +Binding status: Unstable - ABI compatibility may be broken in the future
->>> +
->>> +This binding uses the common clock binding[1]. It assumes a
->>> +register-mapped composite clock with multiple different sub-types;
->>> +
->>> +a multiplexer clock with multiple input clock signals or parents, one
->>> +of which can be selected as output, this behaves exactly as [2]
->>> +
->>> +an adjustable clock rate divider, this behaves exactly as [3]
->>> +
->>> +a gating function which can be used to enable and disable the output
->>> +clock, this behaves exactly as [4]
->>> +
->>> +The binding must provide a list of the component clocks that shall be
->>> +merged to this clock. The component clocks shall be of one of the
->>> +"ti,*composite*-clock" types.
->>> +
->>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->>> +[2] Documentation/devicetree/bindings/clock/ti/mux.txt
->>> +[3] Documentation/devicetree/bindings/clock/ti/divider.txt
->>> +[4] Documentation/devicetree/bindings/clock/ti/gate.txt
->>> +
->>> +Required properties:
->>> +- compatible : shall be: "ti,composite-clock"
->>> +- clocks : link phandles of component clocks
->>> +- #clock-cells : from common clock binding; shall be set to 0.
->>> +
->>> +Examples:
->>> +
->>> +usb_l4_gate_ick: usb_l4_gate_ick {
->>> +	#clock-cells = <0>;
->>> +	compatible = "ti,composite-interface-clock";
->>> +	clocks = <&l4_ick>;
->>> +	ti,bit-shift = <5>;
->>> +	reg = <0x0a10>;
->>> +};
->>> +
->>> +usb_l4_div_ick: usb_l4_div_ick {
->>> +	#clock-cells = <0>;
->>> +	compatible = "ti,composite-divider-clock";
->>> +	clocks = <&l4_ick>;
->>> +	ti,bit-shift = <4>;
->>> +	ti,max-div = <1>;
->>> +	reg = <0x0a40>;
->>> +	ti,index-starts-at-one;
->>> +};
->>> +
->>> +usb_l4_ick: usb_l4_ick {
->>> +	#clock-cells = <0>;
->>> +	compatible = "ti,composite-clock";
->>> +	clocks = <&usb_l4_gate_ick>, <&usb_l4_div_ick>;
->>> +};
+On Fri, Nov 01, 2013 at 05:11:58PM +0800, Shawn Guo wrote:
+> Nicolin,
+> 
+> The dmaengine maintainer Vinod Koul should be copied on the series.
+> (Just added).
 >
->  From Topology perspective, would this be a better approach?
->
-> usb_l4_ick: usb_l4_ick {
-> 	#clock-cells = <0>;
-> 	compatible = "ti,composite-clock";
->
-> 	usb_l4_gate_ick: usb_l4_gate_ick {
-> 		#clock-cells = <0>;
-> 		compatible = "ti,composite-interface-clock";
-> 		clocks = <&l4_ick>;
-> 		ti,bit-shift = <5>;
-> 		reg = <0x0a10>;
-> 	};
->
-> 	usb_l4_div_ick: usb_l4_div_ick {
-> 		#clock-cells = <0>;
-> 		compatible = "ti,composite-divider-clock";
-> 		clocks = <&l4_ick>;
-> 		ti,bit-shift = <4>;
-> 		ti,max-div = <1>;
-> 		reg = <0x0a40>;
-> 		ti,index-starts-at-one;
-> 	};
-> };
 
-Well I was considering this, however this would require extra level of 
-registration also:
+Ah, I was careless last night when I sent these patches. My VPN connection
+was pretty laggy :( Please forgive me, Vinod.
 
-of_ti_composite_clk_setup ->
-   (match children against composite types)
-   of_ti_composite_divider_setup
-   of_ti_composite_gate_setup
+Thank Shawn for adding for me. Much obliged.
 
-Might be cleaner overall though, so I can take a look at this.
-
--Tero
+> On Thu, Oct 31, 2013 at 09:44:12PM +0800, Nicolin Chen wrote:
+> > Nicolin Chen (4):
+> >   dma: imx-sdma: Add sdma firmware version 2 support
+> >   dma: imx-sdma: Add new dma type for ssi dual fifo script
+> >   ASoC: fsl_ssi: Add dual fifo mode support
+> >   ARM: dts: imx: use dual-fifo sdma script for ssi
+> 
+> Vinod,
+> 
+> To keep git bisect, the series has to be merged through single tree.
+> Since Mark has ACK-ed patch #3, I think it's easier to merge the series
+> through your tree, so for patch #4:
+> 
+> Acked-by: Shawn Guo <shawn.guo@linaro.org>
