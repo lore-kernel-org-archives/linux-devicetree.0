@@ -1,34 +1,168 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX ssi
-Date: Fri, 1 Nov 2013 17:11:58 +0800
-Message-ID: <20131101091156.GC10324@S2101-09.ap.freescale.net>
-References: <cover.1383226444.git.b42378@freescale.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 06/43] CLK: ti: add init support for clock IP blocks
+Date: Fri, 1 Nov 2013 11:12:53 +0200
+Message-ID: <52737095.10900@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-7-git-send-email-t-kristo@ti.com> <52727A58.9010903@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1383226444.git.b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <b42378@freescale.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: timur@tabi.org, broonie@kernel.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52727A58.9010903@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Nicolin,
+On 10/31/2013 05:42 PM, Nishanth Menon wrote:
+> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+>> ti_dt_clk_init_provider() can now be used to initialize the contents of
+>> a single clock IP block. This parses all the clocks under the IP block
+>> and calls the corresponding init function for them.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/clk/ti/clk.c   |   59 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/clk/ti.h |    1 +
+>>   2 files changed, 60 insertions(+)
+>>
+>> diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+>> index ad58b01..7f030d7 100644
+>> --- a/drivers/clk/ti/clk.c
+>> +++ b/drivers/clk/ti/clk.c
+>> @@ -19,6 +19,9 @@
+>>   #include <linux/clkdev.h>
+>>   #include <linux/clk/ti.h>
+>>   #include <linux/of.h>
+>> +#include <linux/list.h>
+>> +
+>> +extern struct of_device_id __clk_of_table[];
+>>
+>>   /**
+>>    * ti_dt_clocks_register - register DT duplicate clocks during boot
+>> @@ -50,3 +53,59 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+>>   		}
+>>   	}
+>>   }
+>> +
+>> +typedef int (*ti_of_clk_init_cb_t)(struct device_node *, struct regmap *);
+>> +
+>> +struct clk_init_item {
+>> +	struct regmap *regmap;
+>> +	struct device_node *np;
+>> +	ti_of_clk_init_cb_t init_cb;
+>> +	struct list_head node;
+>> +};
+>> +
+>> +static LIST_HEAD(retry_list);
+>> +
+>> +void __init ti_dt_clk_init_provider(struct device_node *parent,
+>> +				    struct regmap *regmap)
+>> +{
+>> +	const struct of_device_id *match;
+>> +	struct device_node *np;
+>> +	ti_of_clk_init_cb_t clk_init_cb;
+>> +	struct clk_init_item *retry;
+>> +	struct clk_init_item *tmp;
+>> +	int ret;
+>> +
+>> +	for_each_child_of_node(parent, np) {
+>> +		match = of_match_node(__clk_of_table, np);
+>> +		if (!match)
+>> +			continue;
+>> +		clk_init_cb = match->data;
+>
+> I must admit I am confused here.
 
-The dmaengine maintainer Vinod Koul should be copied on the series.
-(Just added).
+Yea this patch is something I am not quite comfortable myself yet and 
+would like improvement ideas....
 
-On Thu, Oct 31, 2013 at 09:44:12PM +0800, Nicolin Chen wrote:
-> Nicolin Chen (4):
->   dma: imx-sdma: Add sdma firmware version 2 support
->   dma: imx-sdma: Add new dma type for ssi dual fifo script
->   ASoC: fsl_ssi: Add dual fifo mode support
->   ARM: dts: imx: use dual-fifo sdma script for ssi
+> a) of_clk_init (in the generic clk.c) uses of_clk_init_cb_t as match
+> data. The prototype of the generic of_clk_init_cb_t is typedef void
+> (*of_clk_init_cb_t)(struct device_node *);
+> b) both of_clk_init and ti_dt_clk_init_provider looks up clock nodes
+> from __clk_of_table
 
-Vinod,
+__clk_of_table contains the function pointers for the clock init 
+functions, not clock nodes.
 
-To keep git bisect, the series has to be merged through single tree.
-Since Mark has ACK-ed patch #3, I think it's easier to merge the series
-through your tree, so for patch #4:
+>
+> I assume we need ti_dt_clk_init_provider to be always called with
+> clock list, as a result of_clk_init(NULL); will never be invoked. This
+> is counter productive as you have have generic non SoC clock providers
+> as well who would have been invoked with of_clk_init(NULL);
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+Can't call of_clk_init(NULL) anymore, as Paul wants to map the clock 
+nodes under respective IP blocks. Two reasons here:
+
+a) This requires me to pass some info from the IP block (CM1/CM2/PRM) to 
+the clock init functions, basically the pointer to the memory map region 
+(regmap.)
+b) of_clk_init(NULL) will initialize all the clock nodes in the system, 
+irrespective of the hierarchy considerations.
+
+Only thing that can be done, is to make the API introduced in this patch 
+a generic API and call it something like of_clk_init_children().
+
+>
+> I do strongly encourage using of_clk_init(NULL) and not having to
+> switch the clk_init call back with SoC specific one as it forces
+> un-intended dependency.
+
+Can't do this as mentioned above.
+
+>
+>
+> Further such as SoC specific callback should have been in a header.
+>> +		pr_debug("%s: initializing: %s\n", __func__, np->name);
+>
+>
+> one further comment - using pr_fmt will save us from using __func__
+> for every pr_* message :(
+
+Hmm good comment, will fix that for next rev.
+
+>
+>> +		ret = clk_init_cb(np, regmap);
+>> +		if (ret == -EAGAIN) {
+>> +			pr_debug("%s: adding to again list...\n", np->name);
+>> +			retry = kzalloc(sizeof(*retry), GFP_KERNEL);
+>> +			retry->np = np;
+>> +			retry->regmap = regmap;
+>> +			retry->init_cb = clk_init_cb;
+>> +			list_add(&retry->node, &retry_list);
+>> +		} else if (ret) {
+>> +			pr_err("%s: clock init failed for %s (%d)!\n", __func__,
+>> +			       np->name, ret);
+>> +		}
+>> +	}
+>> +
+>> +	list_for_each_entry_safe(retry, tmp, &retry_list, node) {
+>> +		pr_debug("%s: retry-init: %s\n", __func__, retry->np->name);
+>> +		ret = retry->init_cb(retry->np, retry->regmap);
+>> +		if (ret == -EAGAIN) {
+>> +			pr_debug("%s failed again?\n", retry->np->name);
+>> +		} else {
+>> +			if (ret)
+>> +				pr_err("%s: clock init failed for %s (%d)!\n",
+>> +				       __func__, retry->np->name, ret);
+>> +			list_del(&retry->node);
+>> +			kfree(retry);
+>> +		}
+>> +	}
+>> +}
+>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
+>> index 9786752..7ab02fa 100644
+>> --- a/include/linux/clk/ti.h
+>> +++ b/include/linux/clk/ti.h
+>> @@ -177,6 +177,7 @@ int omap3_dpll4_set_rate(struct clk_hw *clk, unsigned long rate,
+>>   			 unsigned long parent_rate);
+>>
+>>   void ti_dt_clocks_register(struct ti_dt_clk *oclks);
+>> +void ti_dt_clk_init_provider(struct device_node *np, struct regmap *regmap);
+>>
+>>   extern const struct clk_hw_omap_ops clkhwops_omap3_dpll;
+>>   extern const struct clk_hw_omap_ops clkhwops_omap4_dpllmx;
+>>
+>
+>
+
