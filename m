@@ -1,81 +1,64 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [PATCH v2 9/9] ARM: dts: add usb udc support to bcm281xx
-Date: Fri, 1 Nov 2013 18:52:36 -0400
-Message-ID: <20131101225236.GB17505@beef>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] phy: add Broadcom Kona USB2 PHY DT binding
+Date: Fri, 1 Nov 2013 18:56:14 -0400
+Message-ID: <20131101225614.GC17505@beef>
 References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
- <1383335158-19730-10-git-send-email-matt.porter@linaro.org>
- <52741581.9020106@cogentembedded.com>
+ <1383335158-19730-8-git-send-email-matt.porter@linaro.org>
+ <527414F2.7090402@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52741581.9020106@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+In-Reply-To: <527414F2.7090402-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 11:56:33PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 11/01/2013 10:45 PM, Matt Porter wrote:
-> 
-> >Adds USB OTG/PHY and clock support to BCM281xx and enables
-> >UDC support on the bcm11351-brt and bcm28155-ap boards.
-> 
-> >Signed-off-by: Matt Porter <matt.porter@linaro.org>
-> >Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> >Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+On Fri, Nov 01, 2013 at 09:54:10PM +0100, Arend van Spriel wrote:
+> On 11/01/2013 08:45 PM, Matt Porter wrote:
+> >Add a binding that describes the Broadcom Kona USB2 PHY found
+> >on the BCM281xx family of SoCs.
+> >
+> >Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > >---
-> >  arch/arm/boot/dts/bcm11351-brt.dts |  6 ++++++
-> >  arch/arm/boot/dts/bcm11351.dtsi    | 18 ++++++++++++++++++
-> >  arch/arm/boot/dts/bcm28155-ap.dts  |  8 ++++++++
-> >  3 files changed, 32 insertions(+)
-> 
-> [...]
-> >diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> >index 0755f43..247f9fd 100644
-> >--- a/arch/arm/boot/dts/bcm11351.dtsi
-> >+++ b/arch/arm/boot/dts/bcm11351.dtsi
-> >@@ -284,4 +284,22 @@
-> >  			#clock-cells = <0>;
-> >  		};
-> >  	};
+> >  .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> >
+> >diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> >new file mode 100644
+> >index 0000000..db309e2
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> >@@ -0,0 +1,15 @@
+> >+BROADCOM KONA USB2 PHY
 > >+
-> >+	usbotg: usbotg@3f120000 {
-> 
->    According to ePAPR spec [1], the node name should be "usb@3f120000".
-
-Will address in v3.
-
-> >+		compatible = "snps,dwc2";
-> >+		reg = <0x3f120000 0x10000>;
-> >+		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-> >+		clocks = <&usb_otg_ahb_clk>;
-> >+		clock-names = "otg";
-> >+		phys = <&usbphy>;
-> >+		phy-names = "usb2-phy";
-> >+		status = "disabled";
-> >+	};
+> >+Required properties:
+> >+ - compatible: brcm,kona-usb2-phy
+> >+ - regs: offset and length of the PHY registers
+> >+ - #phy-cells: must be 0
+> >+Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> >+
+> >+Example:
 > >+
 > >+	usbphy: usbphy@3f130000 {
-> 
->    This one should probably be named "usb-phy@3f130000", just like
-> "ethernet-phy" from the ePAPR spec.
-
-Yes, agreed that will follow the same naming convention. I'll roll this
-in v3. Thanks for the review.
-
--Matt
-
 > >+		compatible = "brcm,kona-usb2-phy";
 > >+		reg = <0x3f130000 0x28>;
+> 
+> I expect 'regs' iso 'reg' in this example.
+
+Yes, will fix the typo in that property for v3.
+
+Thanks,
+Matt
+
 > >+		#phy-cells = <0>;
-> >+		status = "disabled";
 > >+	};
-> >  };
+> >
 > 
-> [1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
 > 
-> WBR, Sergei
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
