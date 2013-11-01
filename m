@@ -1,65 +1,208 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when
- device-tree is used.
-Date: Sat, 02 Nov 2013 10:10:25 +1100
-Message-ID: <1383347425.28909.63.camel@pasglop>
-References: <20131101145925.66e22f73@notabene.brown>
-	 <1383279744.28909.26.camel@pasglop> <1383280054.28909.30.camel@pasglop>
-	 <20131101160329.37f3707b@notabene.brown>
-	 <1383282516.28909.36.camel@pasglop> <20131101204749.GA19662@kroah.com>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] extcon-gpio: add devicetree support.
+Date: Sat, 2 Nov 2013 10:33:23 +1100
+Message-ID: <20131102103323.17e208cf@notabene.brown>
+References: <20131101205005.659ba606@notabene.brown>
+	<20131101171643.GA2643@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/t0KgktJxF2dHTRgp11aukAA"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131101204749.GA19662-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20131101171643.GA2643@kartoffel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
+--Sig_/t0KgktJxF2dHTRgp11aukAA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > On my device I seem to have some platform devices registered through
-> > > device-tree, and some registered through platform_device_add (e.g.
-> > > 'alarmtimer').  Guaranteeing they remain disjoint sets if the kernel is
-> > > allowed to evolve independently of the devicetree might be tricky....
-> > > Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform" ??
-> > 
-> > No, I think device-tree created platform devices should go
-> > to /sys/devices/platform like the "classic" ones.
-> > 
-> > The problem is really how to deal with potential name duplication. We
-> > could try to register, if we get -EEXIST (assuming sysfs returns the
-> > right stuff), try again with ".1" etc...
-> 
-> How can there be device name collisions?  All platform devices _should_
-> be named uniquely, if not, you have bigger problems...
+On Fri, 1 Nov 2013 10:16:44 -0700 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 
-The problem is how to create a unique name for a platform device created
-from a device-tree node.
+> Hi Neil,
+>=20
+> While I'm not fundamentally opposed to this binding, I have some issues w=
+ith
+> its current form and would not want to see this version hit mainline.
+>=20
 
-Device tree nodes aren't necessarily uniquely named. They are unique
-under a given parent but that hierarchy isn't preserved when creating
-corresponding platform devices (and it would be very tricky to do so).
+Thanks for the review.
 
-Currently, we simply append a number to the name when creating them,
-which is obtained from a global counter.
+> On Fri, Nov 01, 2013 at 09:50:05AM +0000, NeilBrown wrote:
+> >=20
+> > As this device is not vendor specific, I haven't included any "vendor,"
+> > prefixes.  For my model I used "regulator-gpio" which takes a similar
+> > approach.
+> >=20
+> > Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b=
+/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> > new file mode 100644
+> > index 000000000000..2346b61cc620
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> > @@ -0,0 +1,26 @@
+> > +* EXTCON detector using GPIO
+>=20
+> EXTCON is _extremely_ Linux-specific. The binding document needs a descri=
+ption
+> of the class of device it's inteded to describe that does not just refer =
+to
+> Linux internals.
+>=20
+> I would prefer if we could have a better name for this that was not tied =
+to the
+> Linux driver name. Perhaps "gpio-presence-detector"?
 
-Neil is unhappy about that because on his specific hardware, the device
-has a unique name and thus we introduce a naming difference between
-device-tree usage and old-style "hard coded" board file usage.
+Maybe "cable-presence-detector" as in this case the GPIO is just an
+implementation detail.  Which isn't much different from "external-connector"
+which is where "extcon" comes from...
 
-It would be nice if we could do something that only appends the "global
-number" at the end of the name if the name isn't already unique. Thus my
-proposal of trying first with the base name, and trying again if that
-returns -EEXIST in some kind of loop.
-
-Do you have a better idea ?
-
-Cheers,
-Ben.
+I propose "external-connector" if you don't like "extcon".
 
 
+>=20
+> > +
+> > +Required Properties:
+> > + - compatible: "extcon-gpio"
+> > + - gpios: gpio line that detects connector
+> > + - interrupts: interrupt generated by that gpio
+>=20
+> We don't need this. If we need the interrupt a gpio generates, we should =
+ask
+> the gpio controller driver to map the gpio to an interrupt.
+>=20
+> We have gpiod_to_irq for this in Linux.
+
+The reason I did this was that the pre-existing platform_data wants
+'irq_flags'.  I could have an 'irq-flags' property, but it seems to make mo=
+re
+sense to use "interrupts" as that already provides a way to pass irq-flags =
+to
+a device.
+
+On reflection though, I cannot imagine why any extcon-gpio would use anythi=
+ng
+other than  IRQ_TYPE_EDGE_BOTH.  Maybe MyungJoo Ham can explain that???
+
+If there is no need for specifying irq-flags per-platform, the "interrupts"
+property can definitely go.
+
+
+>=20
+> > + - debounce-delay-ms: debouncing delay
+> > +
+> > +Optional Properties:
+> > + - label: name for connector.  If not given, device name is used.
+> > + - state-on: string to report when GPIO is high (else '0')
+> > + - state-off: string to report when GPIO is low (else '1')
+>=20
+> I do not like these properties, they are very much a Linux implementation
+> detail.
+>=20
+> Are extcon devices ever used standalone? If so, why?
+
+I'm not sure what you mean by stand alone - it is part of a mobile-phone
+motherboard so it certainly isn't alone :-)
+
+The board has a GPS which is connected to a serial port.  So the kernel
+doesn't really need to know much about it.
+There is an internal antenna and a connector for an external antenna.  There
+is some clever electronics that detects when the external antenna is plugged
+in and re-routes the antenna power to the external (and way from the
+internal).
+A gpio can read the state of this electronic switch.  It seems sensible to
+present this to user-space as an 'extcon' device.  It is stand-alone only in
+that the kernel doesn't "know" that it is related to anything else.  I and
+the user-space software know that it isn't "alone".
+
+Given that there a two antennas, internal and external, and always one is
+connected, it seems sensible to present it that way.
+
+However I don't object to the connection being called  "external-antenna"
+which reports either "0" or "1".
+That would make "state-on" and "state-off" unnecessary and I see no
+problem with removing them.
+
+I do think it is necessary to have a "label" for the  external connector
+though.  It is a specific connector with a specific purpose and deserves to
+have a "label", in exactly the same way that "leds" devices and provide a
+label for each LED.
+
+>=20
+> If not I see _no_ reason at all for the label property. If a userspace
+> application needs to detect the presence of a particular external connect=
+or, it
+> will need to know this in relation to the device the external connectors =
+are
+> attached to. In that case the application should find that device and tra=
+verse
+> its set of extcon devices. The names for the external connections will be=
+ a
+> property of the device, not the extcon devices themselves (along hte same=
+ lines
+> as clocks), and need not be a property of the extcon device.
+
+This sounds interesting but I don't follow exactly what you mean.
+In particular, where would an application "find that device" and how would =
+it
+"traverse the set of extcon devices"?
+And if there are multiple extcons in a parent, how can the name of the extc=
+on
+be a property of the parent?
+
+Confused... maybe I should explore the 'clocks' to which you refer...
+
+>=20
+> As for state-on and state-off, we are exposing a binary property to users=
+pace,
+> the meaning of which is already dependent on the particular device the ex=
+tcon
+> devices are connected to. Given userspace already has to understand that,=
+ I see
+> no value in embedding arbitrary strings in the device tree which attempt =
+to
+> replicate this knowledge. They provide no additional value and in my mind=
+ make
+> the interface to userspace harder to use because you have ot handle an
+> arbitrary set of values depending on how the dt author felt one morning r=
+ather
+> than just the binary value you actually care about.
+
+I agree with this.  I think the history is that this driver was originally
+described as a "switch" which could have two states which deserved names.
+As an 'external-connector' device, that makes less sense.
+(tough it might make sense to device a "switch" device-tree type that this
+driver could also support...)
+
+Thanks,
+NeilBrown
+
+--Sig_/t0KgktJxF2dHTRgp11aukAA
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUnQ6Qznsnt1WYoG5AQLdzw//ciQdrVhwAeI9tchhJananOmWqE5L8oeF
+oLBSXdQ5JvlGNELhi1ajukYN1m2S2StulsFXFoeqczgW7BEeWDe4JpPoXu3Xf0bM
+I3p2mUZAgOYoUmsVj1HcHObNQgh0Ivd8U9FWVRI0rK9x4N8XXWkaG4axys2QC0fa
+sTMy4cnDh3vJ2ZIh+ciBEdfiksubCh4m1MNmdJpPlgrcTRWQ/xVtI0ejlIXEr6L/
+ZJWcQ66NMolcD5e5Dyt6D8EJCaVbpg3gUGQyhTIu3rwzYRvz1mtul07O8rRqZ/hy
+Mgv9yXTVAlqNOImKhcNBjS3OGU+LlVjnT9iNZ1KE80GNWMupdN8S/ifJQvI7SYzM
+Gq7FKoFEQimpJA3V2BZq0EDMa5RSbY15yUc2fHV11ai6LhNF/vBq96vwAVuQ+3Bl
+tm+AHaJsVxzQ0CcSUKsz3c487fOTtN9/JQ8OLatDES49+4KrF2LPWxdD1DC4kL87
+w6wQs0j7VYAdBt8yZYN458O1t90ARAGOkxwAVWbOWFj0OhR9N3R+CSti/y+bkBc0
+jNQqmqEgw1Efxdw7jgzkxawotTF+SFWtlkFb8jnIGQ1DlRQoHiHxPcLUfhZKUblo
+WeDIB/5bq558lmRrUkgi+MMxpXYFZ/NcZTDzobttr+dL8Z7Un8whurx7xmnjZ77Z
+A9Lb0eXlg1E=
+=Wrl+
+-----END PGP SIGNATURE-----
+
+--Sig_/t0KgktJxF2dHTRgp11aukAA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
