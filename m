@@ -1,112 +1,44 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v5 5/5] HACK mmc: mxcmmc: enable clocks for the MPC512x
-Date: Fri,  1 Nov 2013 11:19:34 +0400
-Message-ID: <1383290374-17484-6-git-send-email-a13xp0p0v88@gmail.com>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383290374-17484-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 10/19] iommu/tegra: smmu: Get "nvidia,swgroups" from DT
+Date: Fri, 1 Nov 2013 08:27:54 +0100
+Message-ID: <20131101.092754.1629953119317466726.hdoyu@nvidia.com>
+References: <1382092020-13170-11-git-send-email-hdoyu@nvidia.com><5271893C.6000507@wwwdotorg.org><20131031173132.GD3037@kartoffel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131031173132.GD3037@kartoffel>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote @ Thu, 31 Oct 2013 18:31:33 +0100:
 
-Q&D HACK to enable SD card support without correct COMMON_CLK support,
-best viewed with 'git diff -w -b', NOT acceptable for mainline (NAKed)
+> > Assuming "swgroup" is "memory client ID", why can't the driver just
+> > create a list/... of known swgroups at runtime, based on the swgroup
+> > values that each device uses, which would presumably be either
+> > hard-coded in the client device's driver, or represented in the DT smmu
+> > property's "iommu specifier" value.
+> 
+> Assuming that the swgroup values of IP block instances are static, that sounds
+> like the ARM SMMU binding approach. Are the IDs static, or can they be assigned
+> at runtime?
 
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
----
- drivers/mmc/host/mxcmmc.c | 41 +++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+It's static.
 
-diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-index c174c6a..ae13bc9 100644
---- a/drivers/mmc/host/mxcmmc.c
-+++ b/drivers/mmc/host/mxcmmc.c
-@@ -1123,20 +1123,29 @@ static int mxcmci_probe(struct platform_device *pdev)
- 	host->res = r;
- 	host->irq = irq;
- 
--	host->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
--	if (IS_ERR(host->clk_ipg)) {
--		ret = PTR_ERR(host->clk_ipg);
--		goto out_iounmap;
--	}
-+	if (!is_mpc512x_mmc(host)) {
-+		host->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
-+		if (IS_ERR(host->clk_ipg)) {
-+			ret = PTR_ERR(host->clk_ipg);
-+			goto out_iounmap;
-+		}
- 
--	host->clk_per = devm_clk_get(&pdev->dev, "per");
--	if (IS_ERR(host->clk_per)) {
--		ret = PTR_ERR(host->clk_per);
--		goto out_iounmap;
-+		host->clk_per = devm_clk_get(&pdev->dev, "per");
-+		if (IS_ERR(host->clk_per)) {
-+			ret = PTR_ERR(host->clk_per);
-+			goto out_iounmap;
-+		}
-+	} else {
-+		host->clk_per = devm_clk_get(&pdev->dev, "sdhc_clk");
-+		if (IS_ERR(host->clk_per)) {
-+			ret = PTR_ERR(host->clk_per);
-+			goto out_iounmap;
-+		}
- 	}
- 
- 	clk_prepare_enable(host->clk_per);
--	clk_prepare_enable(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_prepare_enable(host->clk_ipg);
- 
- 	mxcmci_softreset(host);
- 
-@@ -1206,7 +1215,8 @@ out_free_dma:
- 		dma_release_channel(host->dma);
- out_clk_put:
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- out_iounmap:
- 	iounmap(host->base);
- out_free:
-@@ -1236,7 +1246,8 @@ static int mxcmci_remove(struct platform_device *pdev)
- 		dma_release_channel(host->dma);
- 
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- 
- 	release_mem_region(host->res->start, resource_size(host->res));
- 
-@@ -1255,7 +1266,8 @@ static int mxcmci_suspend(struct device *dev)
- 	if (mmc)
- 		ret = mmc_suspend_host(mmc);
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- 
- 	return ret;
- }
-@@ -1267,7 +1279,8 @@ static int mxcmci_resume(struct device *dev)
- 	int ret = 0;
- 
- 	clk_prepare_enable(host->clk_per);
--	clk_prepare_enable(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_prepare_enable(host->clk_ipg);
- 	if (mmc)
- 		ret = mmc_resume_host(mmc);
- 
--- 
-1.7.11.3
+But swgroup ID isn't documented in TRM. ID is basically calculated from register offset.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+<swgroup ID> = (MC_SMMU_<swgroup name>_ASID_0 - MC_SMMU_<the 1st swgroup name>_ASID_0) / 4
+
+Or 
+
+MC_SMMU_<swgroup name>_ASID_0 = 4 * <swgroup ID> + MC_SMMU_<the 1st swgroup name>_ASID_0)
