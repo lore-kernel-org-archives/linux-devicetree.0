@@ -1,200 +1,138 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: [PATCH 1/2] arm: correct GIC cpu interface range for Cortex A15/GIC
- 400
-Date: Fri,  1 Nov 2013 10:13:28 +0000
-Message-ID: <1383300809-7527-1-git-send-email-ian.campbell@citrix.com>
-References: <1383300776.4332.3.camel@hastur.hellion.org.uk>
+From: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv2 5/8] ASoC: SGTL5000: Enhance the SGTL5000 codec driver
+ about regulator.
+Date: Fri, 1 Nov 2013 18:02:03 +0800
+Message-ID: <20131101100201.GF28401@MrMyself>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-6-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383300776.4332.3.camel@hastur.hellion.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Ian Campbell <ian.campbell@citrix.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383289495-24523-6-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, r64188-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, oskar-fYPSZ7JpQqsAvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-GICv2 (Cortex A15/GIC 400) have CPU interface registers up to offset 0x1004
-(the 32-bit GICC_DIR register a 0x1000). The GIC 400 documentation specifies
-the CPU interface region as being 0x2000 in size.
+On Fri, Nov 01, 2013 at 03:04:52PM +0800, Xiubo Li wrote:
+> On VF610 series there are no regulators used, and now whether the
+> CONFIG_REGULATOR mirco is enabled or not, for the VF610 audio
 
-Update all DTS entries claiming "arm,cortex-a15-gic" compatibility. Of these I
-only have personal experience with the vexpress a Calxeda (ecx) platforms and
-annecdotal evidence for omap and exynos. For the others I'm just assuming.
+micro? or macro?
 
-Also update the example a15 binding in the documentation.
+> patch series, the board cannot be probe successfully.
+> And this patch will solve this issue.
+> 
 
-The "Texas Instruments Keystone 2 SoC" platform which claim to have an a15
-compatible GIC but does not include the GICH/GICV registers. I've not touched
-that here.
+I finally got your idea about what this patch does. But it seems to
+be more likely a work around. Maybe I here can't think it through
+comprehensively, but I think you can try to add a fixed regulator to
+sgtl5000 in the devicetree, rather than disabling common functions
+even if not breaking others.
 
-Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- Documentation/devicetree/bindings/arm/gic.txt | 2 +-
- arch/arm/boot/dts/ecx-2000.dts                | 2 +-
- arch/arm/boot/dts/exynos5.dtsi                | 2 +-
- arch/arm/boot/dts/exynos5440.dtsi             | 2 +-
- arch/arm/boot/dts/omap5.dtsi                  | 2 +-
- arch/arm/boot/dts/tegra114.dtsi               | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts   | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts    | 2 +-
- arch/arm/boot/dts/xenvm-4.2.dts               | 2 +-
- arch/arm64/boot/dts/foundation-v8.dts         | 2 +-
- arch/arm64/boot/dts/rtsm_ve-aemv8a.dts        | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  sound/soc/codecs/sgtl5000.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+> index 1f4093f..c2f6d86 100644
+> --- a/sound/soc/codecs/sgtl5000.c
+> +++ b/sound/soc/codecs/sgtl5000.c
+> @@ -61,6 +61,7 @@ static const struct reg_default sgtl5000_reg_defaults[] = {
+>  	{ SGTL5000_DAP_AVC_DECAY,		0x0050 },
+>  };
+>  
+> +#ifdef CONFIG_REGULATOR
+>  /* regulator supplies for sgtl5000, VDDD is an optional external supply */
+>  enum sgtl5000_regulator_supplies {
+>  	VDDA,
+> @@ -93,6 +94,9 @@ static struct regulator_init_data ldo_init_data = {
+>  	.num_consumer_supplies = 1,
+>  	.consumer_supplies = &ldo_consumer[0],
+>  };
+> +#else
+> +#define SGTL5000_SUPPLY_NUM 0
+> +#endif
+>  
+>  /*
+>   * sgtl5000 internal ldo regulator,
+> @@ -112,7 +116,9 @@ struct sgtl5000_priv {
+>  	int master;	/* i2s master or not */
+>  	int fmt;	/* i2s data format */
+>  	struct regulator_bulk_data supplies[SGTL5000_SUPPLY_NUM];
+> +#ifdef CONFIG_REGULATOR
+>  	struct ldo_regulator *ldo;
+> +#endif
+>  	struct regmap *regmap;
+>  	struct clk *mclk;
+>  };
+> @@ -879,6 +885,7 @@ static int ldo_regulator_remove(struct snd_soc_codec *codec)
+>  	return 0;
+>  }
+>  #else
+> +#ifndef CONFIG_SND_SOC_FSL_SGTL5000_VF610
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index 3dfb0c0..ea215e8 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -83,7 +83,7 @@ Example:
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg = <0x2c001000 0x1000>,
--		      <0x2c002000 0x1000>,
-+		      <0x2c002000 0x2000>,
- 		      <0x2c004000 0x2000>,
- 		      <0x2c006000 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
-index 139b40c..61927de 100644
---- a/arch/arm/boot/dts/ecx-2000.dts
-+++ b/arch/arm/boot/dts/ecx-2000.dts
-@@ -93,7 +93,7 @@
- 			interrupt-controller;
- 			interrupts = <1 9 0xf04>;
- 			reg = <0xfff11000 0x1000>,
--			      <0xfff12000 0x1000>,
-+			      <0xfff12000 0x2000>,
- 			      <0xfff14000 0x2000>,
- 			      <0xfff16000 0x2000>;
- 		};
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index f65e124..c72782f 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -44,7 +44,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg =	<0x10481000 0x1000>,
--			<0x10482000 0x1000>,
-+			<0x10482000 0x2000>,
- 			<0x10484000 0x2000>,
- 			<0x10486000 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index ff7f5d8..19c9636 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -31,7 +31,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg =	<0x2E1000 0x1000>,
--			<0x2E2000 0x1000>,
-+			<0x2E2000 0x2000>,
- 			<0x2E4000 0x2000>,
- 			<0x2E6000 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index e643620..6c4fe08 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -60,7 +60,7 @@
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
- 		reg = <0x48211000 0x1000>,
--		      <0x48212000 0x1000>,
-+		      <0x48212000 0x2000>,
- 		      <0x48214000 0x2000>,
- 		      <0x48216000 0x2000>;
- 	};
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-index abf6c40..eb7a0c4 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsi
-@@ -20,7 +20,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg = <0x50041000 0x1000>,
--		      <0x50042000 0x1000>,
-+		      <0x50042000 0x2000>,
- 		      <0x50044000 0x2000>,
- 		      <0x50046000 0x2000>;
- 		interrupts = <GIC_PPI 9
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-index 9420053..f0ec2be 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-@@ -81,7 +81,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0x2c001000 0 0x1000>,
--		      <0 0x2c002000 0 0x1000>,
-+		      <0 0x2c002000 0 0x2000>,
- 		      <0 0x2c004000 0 0x2000>,
- 		      <0 0x2c006000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index d2803be..c2db05e 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -98,7 +98,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0x2c001000 0 0x1000>,
--		      <0 0x2c002000 0 0x1000>,
-+		      <0 0x2c002000 0 0x2000>,
- 		      <0 0x2c004000 0 0x2000>,
- 		      <0 0x2c006000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm/boot/dts/xenvm-4.2.dts b/arch/arm/boot/dts/xenvm-4.2.dts
-index 3369151..92e63eb 100644
---- a/arch/arm/boot/dts/xenvm-4.2.dts
-+++ b/arch/arm/boot/dts/xenvm-4.2.dts
-@@ -56,7 +56,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0x2c001000 0 0x1000>,
--		      <0 0x2c002000 0 0x100>;
-+		      <0 0x2c002000 0 0x2000>;
- 	};
- 
- 	timer {
-diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
-index 84fcc50..3e63def 100644
---- a/arch/arm64/boot/dts/foundation-v8.dts
-+++ b/arch/arm64/boot/dts/foundation-v8.dts
-@@ -68,7 +68,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0x0 0x2c001000 0 0x1000>,
--		      <0x0 0x2c002000 0 0x1000>,
-+		      <0x0 0x2c002000 0 0x2000>,
- 		      <0x0 0x2c004000 0 0x2000>,
- 		      <0x0 0x2c006000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
-diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-index 572005e..0d271ce 100644
---- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-+++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-@@ -73,7 +73,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0x0 0x2c001000 0 0x1000>,
--		      <0x0 0x2c002000 0 0x1000>,
-+		      <0x0 0x2c002000 0 0x2000>,
- 		      <0x0 0x2c004000 0 0x2000>,
- 		      <0x0 0x2c006000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
--- 
-1.8.4.rc3
+Checking a platform or SoC specific define here is just a bit....
+
+Could you pls find a better solution? Like I said at first, use fixed regulator
+or figure out why your System would hang with current sgtl5000 driver. If it
+really has a critical bug in its regulator-related code, I think you can then
+make a greater contribution by fixing the bug rather than bypassing it.
+
+Best regards,
+Nicolin Chen
+
+>  static int ldo_regulator_register(struct snd_soc_codec *codec,
+>  				struct regulator_init_data *init_data,
+>  				int voltage)
+> @@ -886,6 +893,7 @@ static int ldo_regulator_register(struct snd_soc_codec *codec,
+>  	dev_err(codec->dev, "this setup needs regulator support in the kernel\n");
+>  	return -EINVAL;
+>  }
+> +#endif
+>  
+>  static int ldo_regulator_remove(struct snd_soc_codec *codec)
+>  {
+> @@ -1137,6 +1145,7 @@ static int sgtl5000_resume(struct snd_soc_codec *codec)
+>  #define sgtl5000_resume  NULL
+>  #endif	/* CONFIG_SUSPEND */
+>  
+> +#ifdef CONFIG_REGULATOR
+>  /*
+>   * sgtl5000 has 3 internal power supplies:
+>   * 1. VAG, normally set to vdda/2
+> @@ -1373,6 +1382,7 @@ err_regulator_free:
+>  	return ret;
+>  
+>  }
+> +#endif
+>  
+>  static int sgtl5000_probe(struct snd_soc_codec *codec)
+>  {
+> @@ -1387,6 +1397,7 @@ static int sgtl5000_probe(struct snd_soc_codec *codec)
+>  		return ret;
+>  	}
+>  
+> +#ifdef CONFIG_REGULATOR
+>  	ret = sgtl5000_enable_regulators(codec);
+>  	if (ret)
+>  		return ret;
+> @@ -1395,6 +1406,7 @@ static int sgtl5000_probe(struct snd_soc_codec *codec)
+>  	ret = sgtl5000_set_power_regs(codec);
+>  	if (ret)
+>  		goto err;
+> +#endif
+>  
+>  	/* enable small pop, introduce 400ms delay in turning off */
+>  	snd_soc_update_bits(codec, SGTL5000_CHIP_REF_CTRL,
+> -- 
+> 1.8.4
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
