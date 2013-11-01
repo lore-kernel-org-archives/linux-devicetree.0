@@ -1,70 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/5] Add OF support to the sh-sci serial port driver
-Date: Fri, 1 Nov 2013 09:17:25 +0900
-Message-ID: <20131101001724.GE6818@verge.net.au>
-References: <1383042599-25151-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20131031052116.GJ1603@verge.net.au>
- <2472479.KWXlO4kKsi@avalon>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/2] drm: omap: Enable DT support for DMM
+Date: Thu, 31 Oct 2013 17:40:22 -0700
+Message-ID: <20131101004020.GA8413@kartoffel>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
+ <1381820660-5501-1-git-send-email-archit@ti.com>
+ <1381820660-5501-3-git-send-email-archit@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2472479.KWXlO4kKsi@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <1381820660-5501-3-git-send-email-archit@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Archit Taneja <archit@ti.com>
+Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 01:30:12PM +0100, Laurent Pinchart wrote:
-> Hi Simon,
+On Tue, Oct 15, 2013 at 08:04:20AM +0100, Archit Taneja wrote:
+> Enable use of DT for DMM/Tiler.
 > 
-> On Thursday 31 October 2013 14:21:16 Simon Horman wrote:
-> > [ CCed Greg KH. It is my assumption that he will take this series
-> >   once it is ready ]
-> > 
-> > On Tue, Oct 29, 2013 at 11:29:54AM +0100, Laurent Pinchart wrote:
-> > > Hello,
-> > > 
-> > > This patch set adds device tree bindings for the sh sci serial port
-> > > devices and adds OF parsing to the sh-sci driver.
-> > > 
-> > > The bindings are based on Bastian Hecht's proposal (see
-> > > http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach
-> > > taken here is more minimalistic: instead of describing all hardware
-> > > characteristics that vary between the SCI device revisions in DT (such as
-> > > registers layout), that information is stored in the driver and selected
-> > > based on the compatible property value. Only SCI revisions used on ARM
-> > > devices are supported through DT, as DT support for SuperH is nowhere
-> > > down the line.
-> > > 
-> > > The first three patches clean up the sh-sci driver. They're not strictly
-> > > required for OF support but make sense nonetheless. The last two patches
-> > > add OF parsing to the sh-sci driver and create DT bindings documentation.
-> > > 
-> > > The patches have been test on a Lager board (r8a7790-based). Support for
-> > > other SoCs will be added as needed. Note that all current Renesas ARM
-> > > SoCs seem to be compatible with the generic (H)SCI(F)(AB) devices, but
-> > > the plan is for their DT bindings to list the SoC-specific version in
-> > > case incompatibilities are found later.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > 
-> > > Bastian Hecht (1):
-> > >   serial: sh-sci: Add OF support
-> > > 
-> > > Laurent Pinchart (4):
-> > >   serial: sh-sci: Sort headers alphabetically
-> > >   serial: sh-sci: Remove baud rate calculation algorithm 5
-> > >   serial: sh-sci: Simplify baud rate calculation algorithms
-> > >   serial: sh-sci: Add device tree bindings documentation
-> > 
-> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> > 
-> > Laurent, is this series waiting on anything other than a review of the
-> > bindings from the Device-Tree people?
+> Originally worked on by Andy Gross <andygro@gmail.com>
 > 
-> It's only waiting for review of the DT bindings and their implementation 
-> (patches 4/5 and 5/5). As I've modified Bastian's patch in 4/5 I'd like to 
-> give him an opportunity to review it as well.
+> Cc: Andy Gross <andygro@gmail.com>
+> Cc: DRI Development <dri-devel@lists.freedesktop.org>
+> Signed-off-by: Archit Taneja <archit@ti.com>
+> ---
+>  drivers/gpu/drm/omapdrm/omap_dmm_tiler.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> index acf6678..59f17de 100644
+> --- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> +++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> @@ -968,12 +968,23 @@ static const struct dev_pm_ops omap_dmm_pm_ops = {
+>  };
+>  #endif
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id dmm_of_match[] = {
+> +	{ .compatible = "ti,omap4-dmm", },
+> +	{ .compatible = "ti,omap5-dmm", },
+> +	{},
+> +};
+> +#else
+> +#define dmm_of_match NULL
+> +#endif
+> +
+>  struct platform_driver omap_dmm_driver = {
+>  	.probe = omap_dmm_probe,
+>  	.remove = omap_dmm_remove,
+>  	.driver = {
+>  		.owner = THIS_MODULE,
+>  		.name = DMM_DRIVER_NAME,
+> +		.of_match_table = dmm_of_match,
 
-Understood.
+If you use of_match_ptr(dmm_of_match) here you don't need the #else case above.
+
+Thanks,
+Mark.
