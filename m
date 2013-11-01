@@ -1,94 +1,477 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] hmc5843 - add basic dt support
-Date: Fri, 1 Nov 2013 16:35:23 +1100
-Message-ID: <20131101163523.10fed501@notabene.brown>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Fri, 01 Nov 2013 15:24:28 +0900
+Message-ID: <001401ced6cb$04e2a330$0ea7e990$%jun@samsung.com>
+References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
+ <1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/HVL5=Zr4ubuUMeMxrO4j793"; protocol="application/pgp-signature"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Zhangfei Gao' <zhangfei.gao@linaro.org>, 'Chris Ball' <cjb@laptop.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Ulf Hansson' <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/HVL5=Zr4ubuUMeMxrO4j793
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Zhangfei,
 
+On Wed, Oct 23, 2013, Zhangfei Gao wrote:
+> update: fix typo
+> 
+> Add dw_mmc-k3.c for k3v2, support sd/emmc
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Tested-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
+> ---
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   77 +++++
+>  drivers/mmc/host/Kconfig                           |   10 +
+>  drivers/mmc/host/Makefile                          |    1 +
+>  drivers/mmc/host/dw_mmc-k3.c                       |  297 ++++++++++++++++++++
+>  4 files changed, 385 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>  create mode 100644 drivers/mmc/host/dw_mmc-k3.c
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> new file mode 100644
+> index 0000000..0de8c27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> @@ -0,0 +1,77 @@
+> +* Hisilicon specific extensions to the Synopsys Designware Mobile
+> +  Storage Host Controller
+> +
+> +Read synopsis-dw-mshc.txt for more details
+> +The Synopsys designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsys dw mshc controller properties described
+> +by synopsis-dw-mshc.txt and the properties used by the Hisilicon specific
+> +extensions to the Synopsys Designware Mobile Storage Host Controller.
+> +
+> +Required Properties:
+> +
+> +* compatible: should be
+> +	- "hisilicon,hi4511-dw-mshc": for controllers with hi4511
+> +	  specific extentions.
+> +* vmmc-supply: should be vmmc used in dwmmc
+> +* fifo-depth: should be provided if register can not provide correct value
+> +* clken-reg: should be clock enable register and offset
+> +* drv-sel-reg: should be driver delay select register, offset and bits
+> +* sam-sel-reg: should be sample delay select register, offset and bits
+> +* div-reg: should be divider register, offset and bits
+> +* tune-table: should be array of clock tune mmc controller
+> +
+> +Example:
+> +
+> +  The MSHC controller node can be split into two portions, SoC specific and
+> +  board specific portions as listed below.
+> +
+> +	dwmmc_0: dwmmc0@fcd03000 {
+> +		compatible = "hisilicon,hi4511-dw-mshc";
+> +		reg = <0xfcd03000 0x1000>;
+> +		interrupts = <0 16 4>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&clk_sd>, <&clk_ddrc_per>;
+> +		clock-names = "ciu", "biu";
+> +		clken-reg = <0x1f8 0>;
+> +		drv-sel-reg = <0x1f8 4 4>;
+> +		sam-sel-reg = <0x1f8 8 4>;
+> +		div-reg = <0x1f8 1 3>;
+> +		tune-table =
+> +		<180000000 6 6 13 13 25000000>,
+> +		<0 0 0 0 0 0>,
+> +		<360000000 6 4 2 0 50000000>,
+> +		<180000000 6 4 13 13 25000000>,
+> +		<360000000 6 4 2 0 50000000>,
+> +		<720000000 6 1 9 4 100000000>,
+> +		<0 0 0 0 0 0>,
+> +		<360000000 7 1 3 0 50000000>;
+> +	};
+> +	dwmmc0@fcd03000 {
+> +		num-slots = <1>;
+> +		vmmc-supply = <&ldo12>;
+> +		fifo-depth = <0x100>;
+> +		supports-highspeed;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <4>;
+> +			disable-wp;
+> +			cd-gpios = <&gpio10 3 0>;
+> +		};
+> +	};
+> +
+> +PCTRL:
+> +
+> +Required Properties:
+> +* compatible: should be
+> +	- "hisilicon,pctrl": Peripheral control
+> +
+> +Example:
+> +
+> +	pctrl: pctrl@fca09000 {
+> +		compatible = "hisilicon,pctrl";
+> +		reg = <0xfca09000 0x1000>;
+> +	};
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 7fc5099..45aaa2d 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -575,6 +575,16 @@ config MMC_DW_SOCFPGA
+>  	  This selects support for Altera SoCFPGA specific extensions to the
+>  	  Synopsys DesignWare Memory Card Interface driver.
+> 
+> +config MMC_DW_K3
+> +	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
+> +	depends on MMC_DW
+> +	select MMC_DW_PLTFM
+> +	select MMC_DW_IDMAC
+> +	help
+> +	  This selects support for Hisilicon K3 SoC specific extensions to the
+> +	  Synopsys DesignWare Memory Card Interface driver. Select this option
+> +	  for platforms based on Hisilicon K3 SoC's.
+> +
+>  config MMC_DW_PCI
+>  	tristate "Synopsys Designware MCI support on PCI bus"
+>  	depends on MMC_DW && PCI
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index c41d0c3..64f5f8d 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_MMC_DW)		+= dw_mmc.o
+>  obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
+>  obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
+>  obj-$(CONFIG_MMC_DW_SOCFPGA)	+= dw_mmc-socfpga.o
+> +obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+>  obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+>  obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+>  obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+> diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
+> new file mode 100644
+> index 0000000..0ff75328
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-k3.c
+> @@ -0,0 +1,297 @@
+> +/*
+> + * Copyright (c) 2013 Linaro Ltd.
+> + * Copyright (c) 2013 Hisilicon Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/dw_mmc.h>
+> +#include <linux/of_address.h>
+> +
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +enum dw_mci_k3_type {
+> +	DW_MCI_TYPE_HI4511,
+> +};
+> +
+> +static struct dw_mci_k3_compatible {
+> +	char				*compatible;
+> +	enum dw_mci_k3_type		type;
+> +} k3_compat[] = {
+> +	{
+> +		.compatible	= "hisilicon,hi4511-dw-mshc",
+> +		.type		= DW_MCI_TYPE_HI4511,
+> +	},
+> +};
+> +
+> +#define TABLE_WIDTH 6
+> +#define TABLE_HEIGHT 8
+> +struct dw_mci_k3_priv_data {
+> +	enum dw_mci_k3_type	type;
+> +	int			old_timing;
+> +	u32			table[TABLE_WIDTH * TABLE_HEIGHT];
+> +	u32			clken_reg;
+> +	u32			clken_bit;
+> +	u32			sam_reg;
+> +	u32			sam_off;
+> +	u32			sam_bits;
+> +	u32			drv_reg;
+> +	u32			drv_off;
+> +	u32			drv_bits;
+> +	u32			div_reg;
+> +	u32			div_off;
+> +	u32			div_bits;
+> +};
+> +
+> +static void __iomem *pctrl;
+> +static DEFINE_SPINLOCK(mmc_tuning_lock);
+> +
+> +static u32 dw_mci_k3_delay(u32 val, u32 para, u32 off, u32 len)
+> +{
+> +	u32 i;
+> +
+> +	if (para >= 0) {
+> +		for (i = 0; i < len; i++) {
+> +			if (para % 2)
+> +				val |= 1<<(off + i);
+> +			else
+> +				val &= ~(1<<(off + i));
+> +			para = para >> 1;
+> +		}
+> +	}
+> +	return val;
+> +}
+> +
+> +static void dw_mci_k3_set_timing(struct dw_mci_k3_priv_data *priv,
+> +					u32 sam, u32 drv, u32 div)
+> +{
+> +	u32 val;
+> +	unsigned long flags;
+> +
+> +	if (!pctrl || !priv->clken_reg || !priv->sam_reg
+> +		|| !priv->drv_reg || !priv->div_reg)
+> +		return;
+> +
+> +	spin_lock_irqsave(&mmc_tuning_lock, flags);
+> +
+> +	val = readl(pctrl + priv->clken_reg);
+> +	val &= ~(1 << priv->clken_bit);
+> +	writel(val, pctrl + priv->clken_reg);
+> +
+> +	val = readl(pctrl + priv->sam_reg);
+> +	val = dw_mci_k3_delay(val, sam, priv->sam_off, priv->sam_bits);
+> +	writel(val, pctrl + priv->sam_reg);
+> +
+> +	val = readl(pctrl + priv->drv_reg);
+> +	val = dw_mci_k3_delay(val, drv, priv->drv_off, priv->drv_bits);
+> +	writel(val, pctrl + priv->drv_reg);
+> +
+> +	val = readl(pctrl + priv->div_reg);
+> +	val = dw_mci_k3_delay(val, div, priv->div_off, priv->div_bits);
+> +	writel(val, pctrl + priv->div_reg);
+> +
+> +	val = readl(pctrl + priv->clken_reg);
+> +	val |= 1 << priv->clken_bit;
+> +	writel(val, pctrl + priv->clken_reg);
+> +
+> +	spin_unlock_irqrestore(&mmc_tuning_lock, flags);
+> +}
+> +
+> +static void dw_mci_k3_tun(struct dw_mci *host, int timing)
+> +{
+> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> +	int ret;
+> +	u32 *table = &priv->table[TABLE_WIDTH * timing];
+> +
+> +	if (priv->old_timing == timing)
+> +		return;
+> +
+> +	ret = clk_set_rate(host->ciu_clk, table[0]);
+> +	if (ret) {
+> +		dev_err(host->dev, "clk_set_rate failed\n");
+> +		return;
+> +	}
+> +	dw_mci_k3_set_timing(priv, (table[3] + table[4]) / 2,
+> +			table[2], table[1]);
+> +	host->bus_hz = table[5];
+> +	priv->old_timing = timing;
+> +}
+> +
+> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> +
+> +	if (priv->type == DW_MCI_TYPE_HI4511)
+There are several checking controller type.
+But now DW_MCI_TYPE_HI4511 is just introduced alone.
+It seems like unnecessary.
 
+> +		dw_mci_k3_tun(host, ios->timing);
+> +}
+> +
+> +static int dw_mci_k3_priv_init(struct dw_mci *host)
+> +{
+> +	struct dw_mci_k3_priv_data *priv;
+> +	int i, ret;
+> +
+> +	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		dev_err(host->dev, "mem alloc failed for private data\n");
+> +		return -ENOMEM;
+> +	}
+> +	priv->old_timing = -1;
+> +	host->priv = priv;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(k3_compat); i++) {
+> +		if (of_device_is_compatible(host->dev->of_node,
+> +					k3_compat[i].compatible))
+> +			priv->type = k3_compat[i].type;
+> +	}
+> +
+> +	if (priv->type == DW_MCI_TYPE_HI4511) {
+> +		ret = of_property_read_u32_array(host->dev->of_node,
+> +			"tune-table", priv->table, TABLE_WIDTH * TABLE_HEIGHT);
+> +		if (ret) {
+> +			dev_err(host->dev, "not found tune-table\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (!pctrl) {
+> +			struct device_node *node;
+> +
+> +			node = of_find_compatible_node(NULL, NULL,
+> +						"hisilicon,pctrl");
+> +			pctrl = of_iomap(node, 0);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_mci_k3_setup_clock(struct dw_mci *host)
+> +{
+> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> +
+> +	if (priv->type == DW_MCI_TYPE_HI4511)
+> +		dw_mci_k3_tun(host, MMC_TIMING_LEGACY);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_mci_k3_parse_dt(struct dw_mci *host)
+> +{
+> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> +	struct device_node *np = host->dev->of_node;
+> +	u32 data[3];
+> +	int ret;
+> +
+> +	if (priv->type == DW_MCI_TYPE_HI4511) {
+Didn't you see Kernel panic here?
+host->priv is not allocated yet, it's a invalid pointer dereference.
+dw_mci_k3_parse_dt() is called prior to dw_mci_k3_priv_init().
+You can check dw_mci_probe() sequence.
 
-No configuration, just a compatible string and documentation.
+> +		ret = of_property_read_u32_array(np,
+> +				"clken-reg", data, 2);
+> +		if (!ret) {
+> +			priv->clken_reg = data[0];
+> +			priv->clken_bit = data[1];
+> +		}
+> +
+> +		ret = of_property_read_u32_array(np,
+> +				"drv-sel-reg", data, 3);
+> +		if (!ret) {
+> +			priv->drv_reg = data[0];
+> +			priv->drv_off = data[1];
+> +			priv->drv_bits = data[2];
+> +		}
+> +
+> +		ret = of_property_read_u32_array(np,
+> +				"sam-sel-reg", data, 3);
+> +		if (!ret) {
+> +			priv->sam_reg = data[0];
+> +			priv->sam_off = data[1];
+> +			priv->sam_bits = data[2];
+> +		}
+> +
+> +		ret = of_property_read_u32_array(np,
+> +				"div-reg", data, 3);
+> +		if (!ret) {
+> +			priv->div_reg = data[0];
+> +			priv->div_off = data[1];
+> +			priv->div_bits = data[2];
+> +		}
+Should these register information be got from dt?
+It could be define in source code instead.
 
-Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Thanks,
+Seungwon Jeon
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned long k3_dwmmc_caps[4] = {
+> +	MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED,
+> +	MMC_CAP_8_BIT_DATA | MMC_CAP_MMC_HIGHSPEED,
+> +	0,
+> +	0,
+> +};
+> +
+> +static const struct dw_mci_drv_data k3_drv_data = {
+> +	.caps			= k3_dwmmc_caps,
+> +	.init			= dw_mci_k3_priv_init,
+> +	.set_ios		= dw_mci_k3_set_ios,
+> +	.setup_clock		= dw_mci_k3_setup_clock,
+> +	.parse_dt		= dw_mci_k3_parse_dt,
+> +};
+> +
+> +static const struct of_device_id dw_mci_k3_match[] = {
+> +	{ .compatible = "hisilicon,hi4511-dw-mshc",
+> +			.data = &k3_drv_data, },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
+> +
+> +static int dw_mci_k3_probe(struct platform_device *pdev)
+> +{
+> +	const struct dw_mci_drv_data *drv_data;
+> +	const struct of_device_id *match;
+> +
+> +	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
+> +	drv_data = match->data;
+> +
+> +	return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +static int dw_mci_k3_suspend(struct device *dev)
+> +{
+> +	struct dw_mci *host = dev_get_drvdata(dev);
+> +
+> +	return dw_mci_suspend(host);
+> +}
+> +
+> +static int dw_mci_k3_resume(struct device *dev)
+> +{
+> +	struct dw_mci *host = dev_get_drvdata(dev);
+> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> +
+> +	if (priv->type == DW_MCI_TYPE_HI4511) {
+> +		priv->old_timing = -1;
+> +		dw_mci_k3_tun(host, MMC_TIMING_LEGACY);
+> +	}
+> +
+> +	return dw_mci_resume(host);
+> +}
+> +
+> +SIMPLE_DEV_PM_OPS(dw_mci_k3_pmops, dw_mci_k3_suspend, dw_mci_k3_resume);
+> +
+> +static struct platform_driver dw_mci_k3_pltfm_driver = {
+> +	.probe		= dw_mci_k3_probe,
+> +	.remove		= dw_mci_pltfm_remove,
+> +	.driver		= {
+> +		.name		= "dwmmc_k3",
+> +		.of_match_table	= dw_mci_k3_match,
+> +		.pm		= &dw_mci_k3_pmops,
+> +	},
+> +};
+> +
+> +module_platform_driver(dw_mci_k3_pltfm_driver);
+> +
+> +MODULE_DESCRIPTION("K3 Specific DW-MSHC Driver Extension");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:dwmmc-k3");
+> --
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt=
- b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
-new file mode 100644
-index 000000000000..90d5f34db04e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
-@@ -0,0 +1,17 @@
-+* Honeywell HMC5843 magnetometer sensor
-+
-+Required properties:
-+
-+  - compatible : should be "honeywell,hmc5843"
-+  - reg : the I2C address of the magnetometer - typically 0x1e
-+
-+Optional properties:
-+
-+  - gpios : should be device tree identifier of the magnetometer DRDY pin
-+
-+Example:
-+
-+hmc5843@1e {
-+        compatible =3D "honeywell,hmc5843"
-+        reg =3D <0x1e>;
-+};
-diff --git a/drivers/staging/iio/magnetometer/hmc5843.c b/drivers/staging/i=
-io/magnetometer/hmc5843.c
-index c3f3f539e787..829734a82f69 100644
---- a/drivers/staging/iio/magnetometer/hmc5843.c
-+++ b/drivers/staging/iio/magnetometer/hmc5843.c
-@@ -719,10 +719,17 @@ static const struct i2c_device_id hmc5843_id[] =3D {
- };
- MODULE_DEVICE_TABLE(i2c, hmc5843_id);
-=20
-+static const struct of_device_id hmc5843_of_match[] =3D {
-+	{ .compatible =3D "honeywell,hmc5843" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, hmc5843_of_match);
-+
- static struct i2c_driver hmc5843_driver =3D {
- 	.driver =3D {
- 		.name	=3D "hmc5843",
- 		.pm	=3D HMC5843_PM_OPS,
-+		.of_match_table =3D of_match_ptr(hmc5843_of_match),
- 	},
- 	.id_table	=3D hmc5843_id,
- 	.probe		=3D hmc5843_probe,
-
---Sig_/HVL5=Zr4ubuUMeMxrO4j793
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIVAwUBUnM9mznsnt1WYoG5AQIzRA//VnX2/SZp33/xFK51uzRi3bF0803q2h4G
-0uErbMF/y6DAF00qMveLMrkRcgBxagtLeg83oGpmCXSzBHLUCPusCfCdGE7Yx96v
-1nEogmthAuOUMGxup9p0I3ERStGIvWHtrFKM66Mr1CYYD4Cgbp+HmWQsr3J1P2h+
-9J7rGSlshwrOHrR9K/CNm4ylFXwnHmXB8ZaeCwpOQ1A7113Znzv42CoYJLiR7Vqp
-nrX4mrhq8jms8uxKNg+7kOqvp5Sr3whm11Ivbe1CcrsEvmP3Qu9EgizaBNbN/xwC
-cyzLDEuCSFFws3YPeF5B5dNfuxDZDW0SjfbNwAwcFWfr8R4CdQ9jEk4ikHBOQb8M
-LwImKUMFDRqgQ2DgEFxYjmb2spGTLz1S6Wy6et47BC5cZ0aTof3fPW8owOMKK88z
-xatQnffG7KhqclQKZZFefT9UIIP6idc+3aPMnNiy6vsfSN64ZZFTvq7gL3exF5Tc
-2f1OJ6gg9UD5jSTN0TAA+i5BsC4DitH17pteY4aw2MgeL/Ov1TBysBSEXsl6myuy
-wsybOqmaiCO/4iu1RdcOX4gd3L2shGirLvSSUVRr9GxgRToQ3vzZEbRcv/YQgA7o
-yHAqwrpyQNuLiRpXqUUfsB6H3mkBpohoYHHF65WSZgbh81GcqmY/tz9Y/E0PM5fc
-gdXGhErJtgo=
-=wKGC
------END PGP SIGNATURE-----
-
---Sig_/HVL5=Zr4ubuUMeMxrO4j793--
