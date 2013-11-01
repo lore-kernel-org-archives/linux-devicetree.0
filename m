@@ -1,59 +1,75 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv9 09/43] CLK: ti: add support for ti divider-clock
-Date: Fri, 1 Nov 2013 14:35:31 -0500
-Message-ID: <52740283.8040201@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-10-git-send-email-t-kristo@ti.com> <52729B50.5060503@ti.com> <527378FF.6020905@ti.com> <52737A73.5010700@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52737A73.5010700@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/9] USB Device Controller support for BCM281xx
+Date: Fri,  1 Nov 2013 15:45:49 -0400
+Message-ID: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2013 04:54 AM, Tero Kristo wrote:
-> On 11/01/2013 11:48 AM, Tero Kristo wrote:
->> On 10/31/2013 08:02 PM, Nishanth Menon wrote:
->>> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+Changes since v1:
+	- Convert USB phy driver to generic phy subsystem
+	- Add phy bus width apis
+	- Drop dwc2 phy bus width DT property in favor of querying the
+	  phy provider for bus width
+	- Add generic phy/clock properties to dwc2 DT binding
+	- Add generic phy subsystem support to s3c-hsotg with the
+	  existing usb phy and pdata phy methods as a fallback
+	- Split bindings out to separate patches to match the latest
+	  DT binding review guidelines
 
-[...]
->>>> diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
->>>> new file mode 100644
->>>> index 0000000..787bc8f
->>>> --- /dev/null
->>>> +++ b/drivers/clk/ti/divider.c
+This series adds USB Device Controller support for the Broadcom
+BCM281xx family of parts. BCM281xx contains a DWC2 OTG block and
+s3c-hsotg is used to support UDC operation.
 
-[...]
->>>> +    if (!IS_ERR(clk)) {
->>>> +        of_clk_add_provider(node, of_clk_src_simple_get, clk);
->>>> +        ret = of_ti_autoidle_setup(node, regmap);
->>>
->>> if this fails, table will be freed though, we have added provider and
->>> registerd table_regmap, no?
->>
->> Provider and regmap are shared for the whole IP block (CM/PRM whatever.)
->> Those are only initialized once.
-> 
-> Some minor confusion here in my comment, sorry about that.
-> 
-> Regmap is shared for the whole IP block and initialized only once, we 
-> can't remove it here as it is not owned by this clock. For 
-> clock-provider / unregister part, I don't want to clean those up as 1) 
-> unregister doesn't currently do anything 2) autoidle setup is not 
-> critical failure, it just breaks PM. I can add error print for it though.
+Part 1 adds phy bus width support to the generic phy subsystem
 
-Would IP blocks driven by clocks work with the autoidle configuration
-broken? I believe we will be writing to DPLL_XYZ_GATE_CTRL? the usage
-I believe is around
-of_ti_clk_deny_autoidle_all/of_ti_clk_allow_autoidle_all which gets
-invoked in omap2_clk_disable_autoidle_all part of xyz SoC init call.
-is'nt the reason we do that to ensure we have no potential race when
-clocks dissapear on their own without explicit control in critical
-configuration paths?
+Parts 2-6 allows s3c-hsotg to build on non-Samsung platforms, supports
+the dwc2 binding, and enables generic phy support to support fetching
+of the phy bus width.
 
+Part 7-8 add a generic phy binding and driver for the BCM Kona USB PHY.
+
+Part 9 adds the DT nodes to enable UDC support on both BCM281xx boards
+in the kernel.
+
+This series depends on the "Update Kona drivers to use clocks" series
+(https://lkml.org/lkml/2013/10/3/645). The dependencies noted for that
+series are already queued for 3.13. It also depends on the generic PHY
+subsystem which has also been queued for 3.13.
+
+Matt Porter (9):
+  phy: add phy_get_bus_width()/phy_set_bus_width() calls
+  staging: dwc2: update DT binding to add generic clock/phy properties
+  usb: gadget: s3c-hsotg: enable build for other platforms
+  usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
+  usb: gadget: s3c-hsotg: enable generic phy support
+  usb: gadget: s3c-hsotg: get phy bus width from phy subsystem
+  phy: add Broadcom Kona USB2 PHY DT binding
+  phy: add Broadcom Kona USB2 PHY driver
+  ARM: dts: add usb udc support to bcm281xx
+
+ .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt  |  15 ++
+ Documentation/devicetree/bindings/staging/dwc2.txt |  12 ++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |   6 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |  18 +++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |   8 +
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   2 +
+ drivers/phy/phy-bcm-kona-usb2.c                    | 161 +++++++++++++++++++++
+ drivers/usb/gadget/Kconfig                         |   7 +-
+ drivers/usb/gadget/s3c-hsotg.c                     |  71 ++++++---
+ drivers/usb/gadget/s3c-hsotg.h                     |   1 +
+ include/linux/phy/phy.h                            |  16 ++
+ 12 files changed, 298 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
 
 -- 
-Regards,
-Nishanth Menon
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
