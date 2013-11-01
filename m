@@ -1,486 +1,169 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 09/43] CLK: ti: add support for ti divider-clock
-Date: Fri, 1 Nov 2013 11:54:59 +0200
-Message-ID: <52737A73.5010700@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-10-git-send-email-t-kristo@ti.com> <52729B50.5060503@ti.com> <527378FF.6020905@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Fri, 1 Nov 2013 10:57:55 +0100
+Message-ID: <20131101095754.GJ27864@ulmo.nvidia.com>
+References: <20131019104555.GI18477@ns203013.ovh.net>
+ <2730370.0UKsY9Ox0H@avalon>
+ <20131024110524.GB11296@ulmo.nvidia.com>
+ <1389386.JnbumUe76M@avalon>
+ <003701ced693$2f856150$8e9023f0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <527378FF.6020905@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UlxN1C6awaFNesUv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <003701ced693$2f856150$8e9023f0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Laurent Pinchart' <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Denis Carikli' <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Eric B??nard' <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Sascha Hauer' <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Lothar Wa??mann' <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2013 11:48 AM, Tero Kristo wrote:
-> On 10/31/2013 08:02 PM, Nishanth Menon wrote:
->> On 10/25/2013 10:57 AM, Tero Kristo wrote:
->>> This patch adds support for TI divider clock binding, which simply uses
->>> the basic clock divider to provide the features needed.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>>   .../devicetree/bindings/clock/ti/divider.txt       |   86 +++++++
->>>   drivers/clk/ti/Makefile                            |    3 +-
->>>   drivers/clk/ti/divider.c                           |  239
->>> ++++++++++++++++++++
->>>   3 files changed, 327 insertions(+), 1 deletion(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/clock/ti/divider.txt
->>>   create mode 100644 drivers/clk/ti/divider.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/ti/divider.txt
->>> b/Documentation/devicetree/bindings/clock/ti/divider.txt
->>> new file mode 100644
->>> index 0000000..65e3dcd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/ti/divider.txt
->>> @@ -0,0 +1,86 @@
->>> +Binding for TI divider clock
->>> +
->>> +Binding status: Unstable - ABI compatibility may be broken in the
->>> future
->>> +
->>> +This binding uses the common clock binding[1].  It assumes a
->>> +register-mapped adjustable clock rate divider that does not gate and
->>> has
->>> +only one input clock or parent.  By default the value programmed into
->>> +the register is one less than the actual divisor value.  E.g:
->>> +
->>> +register value        actual divisor value
->>> +0            1
->>> +1            2
->>> +2            3
->>> +
->>> +This assumption may be modified by the following optional properties:
->>> +
->>> +ti,index-starts-at-one - valid divisor values start at 1, not the
->>> default
->>> +of 0.  E.g:
->>> +register value        actual divisor value
->>> +1            1
->>> +2            2
->>> +3            3
->>> +
->>> +ti,index-power-of-two - valid divisor values are powers of two.  E.g:
->>> +register value        actual divisor value
->>> +0            1
->>> +1            2
->>> +2            4
->>> +
->>> +Additionally an array of valid dividers may be supplied like so:
->>> +
->>> +    dividers = <4>, <8>, <0>, <16>;
->> ti,dividers I believe.
->
-> True.
->
->>
->>> +
->>> +Which will map the resulting values to a divisor table by their index:
->>> +register value        actual divisor value
->>> +0            4
->>> +1            8
->>> +2            <invalid divisor, skipped>
->>> +3            16
->>> +
->>> +Any zero value in this array means the corresponding bit-value is
->>> invalid
->>> +and must not be used.
->>> +
->>> +The binding must also provide the register to control the divider and
->>> +unless the divider array is provided, min and max dividers. Optionally
->>> +the number of bits to shift that mask, if necessary. If the shift value
->>> +is missing it is the same as supplying a zero shift.
->>> +
->>> +Required properties:
->>> +- compatible : shall be "ti,divider-clock".
->>
->> ti,composite-divider-clock undocumented?
->
-> Hmm yea true.
->
->>
->>> +- #clock-cells : from common clock binding; shall be set to 0.
->>> +- clocks : link to phandle of parent clock
->>> +- reg : offset for register controlling adjustable divider
->>> +
->>> +Optional properties:
->>> +- clock-output-names : from common clock binding.
->>> +- ti,dividers : array of integers defining divisors
->>> +- ti,bit-shift : number of bits to shift the divider value, defaults
->>> to 0
->>> +- ti,min-div : min divisor for dividing the input clock rate, only
->>> +  needed if the first divisor is offset from the default value (1)
->>> +- ti,max-div : max divisor for dividing the input clock rate, only
->>> needed
->>> +  if ti,dividers is not defined.
->>> +- ti,index-starts-at-one : valid divisor programming starts at 1,
->>> not zero
->>
->> makes sense only if ti,dividers are not defined, right?
->> CLK_DIVIDER_ONE_BASED is used with !table
->
-> Yeah, ignored if table is present.
->
->>
->>> +- ti,index-power-of-two : valid divisor programming must be a power
->>> of two
->>
->> makes sense only if ti,dividers are not defined, right?
->> CLK_DIVIDER_POWER_OF_TWO is used with !table
->
-> Yea.
->
->>
->>> +- ti,autoidle-shift : bit shift of the autoidle enable bit for the
->>> clock
->>> +- ti,invert-autoidle-bit : autoidle is enabled by setting the bit to 0
->>
->> These are part of auto idle driver bindings, so maybe give a link to
->> that?
->
-> Yea can do.
->
->>
->>> +- ti,set-rate-parent : clk_set_rate is propagated to parent
->>
->> yeah - this is one of those properties that should probably become
->> generic at a later point in time.
->>
->>> +
->>> +Examples:
->>> +dpll_usb_m2_ck: dpll_usb_m2_ck@4a008190 {
->>> +    #clock-cells = <0>;
->>> +    compatible = "ti,divider-clock";
->>> +    clocks = <&dpll_usb_ck>;
->>> +    ti,max-div = <127>;
->>> +    reg = <0x190>;
->>> +    ti,index-starts-at-one;
->>> +};
->>> +
->>> +aess_fclk: aess_fclk@4a004528 {
->>> +    #clock-cells = <0>;
->>> +    compatible = "ti,divider-clock";
->>> +    clocks = <&abe_clk>;
->>> +    ti,bit-shift = <24>;
->>> +    reg = <0x528>;
->>> +    ti,max-div = <2>;
->>> +};
->>
->> an example of ti,dividers will be useful as well.
->
-> Ok.
->
->>
->>> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
->>> index a4a7595..640ebf9 100644
->>> --- a/drivers/clk/ti/Makefile
->>> +++ b/drivers/clk/ti/Makefile
->>> @@ -1,3 +1,4 @@
->>>   ifneq ($(CONFIG_OF),)
->>> -obj-y                    += clk.o dpll.o autoidle.o composite.o
->>> +obj-y                    += clk.o dpll.o autoidle.o divider.o \
->>> +                       composite.o
->>>   endif
->>> diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
->>> new file mode 100644
->>> index 0000000..787bc8f
->>> --- /dev/null
->>> +++ b/drivers/clk/ti/divider.c
->>> @@ -0,0 +1,239 @@
->>> +/*
->>> + * TI Divider Clock
->>> + *
->>> + * Copyright (C) 2013 Texas Instruments, Inc.
->>> + *
->>> + * Tero Kristo <t-kristo@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>> + * kind, whether express or implied; without even the implied warranty
->>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/err.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/clk/ti.h>
->>> +
->>> +static struct clk_div_table
->>> +__init *ti_clk_get_div_table(struct device_node *node)
->>> +{
->>> +    struct clk_div_table *table;
->>> +    const __be32 *divspec;
->>> +    u32 val;
->>> +    u32 num_div;
->>> +    u32 valid_div;
->>> +    int i;
->>> +
->>> +    divspec = of_get_property(node, "ti,dividers", &num_div);
->>> +
->>> +    if (!divspec)
->>> +        return NULL;
->>> +
->>> +    num_div /= 4;
->>> +
->>> +    valid_div = 0;
->>> +
->>> +    /* Determine required size for divider table */
->>> +    for (i = 0; i < num_div; i++) {
->>> +        of_property_read_u32_index(node, "ti,dividers", i, &val);
->>> +        if (val)
->>> +            valid_div++;
->>> +    }
->>> +
->>> +    if (!valid_div) {
->>> +        pr_err("%s: no valid dividers for %s table\n", __func__,
->>> +               node->name);
->>> +        return ERR_PTR(-EINVAL);
->>> +    }
->>> +
->>> +    table = kzalloc(sizeof(*table) * (valid_div + 1), GFP_KERNEL);
->>> +
->>> +    if (!table) {
->>> +        pr_err("%s: unable to allocate memory for %s table\n",
->>> __func__,
->>> +               node->name);
->>
->> you could drop this.
->
-> True.
->
->>
->>> +        return ERR_PTR(-ENOMEM);
->>> +    }
->>> +
->>> +    valid_div = 0;
->>> +
->>> +    for (i = 0; i < num_div; i++) {
->>> +        of_property_read_u32_index(node, "ti,dividers", i, &val);
->>> +        if (val) {
->>> +            table[valid_div].div = val;
->>> +            table[valid_div].val = i;
->>> +            valid_div++;
->>> +        }
->>> +    }
->>> +
->>> +    return table;
->>> +}
->>> +
->>> +static int _get_divider_width(struct device_node *node,
->>> +                  const struct clk_div_table *table,
->>> +                  u8 flags)
->>> +{
->>> +    u32 min_div;
->>> +    u32 max_div;
->>> +    u32 val = 0;
->>> +    u32 div;
->>> +
->>> +    if (!table) {
->>> +        /* Clk divider table not provided, determine min/max divs */
->>> +        if (of_property_read_u32(node, "ti,min-div", &min_div)) {
->>> +            pr_debug("%s: no min-div for %s, default=1\n",
->>> +                 __func__, node->name);
->>> +            min_div = 1;
->>> +        }
->>> +
->>> +        if (of_property_read_u32(node, "ti,max-div", &max_div)) {
->>> +            pr_err("%s: no max-div for %s!\n", __func__,
->>> +                   node->name);
->>> +            return -EINVAL;
->>
->> will be nice to get warning if ti,divider is defined and any of the
->> non-operational properties are defined as well.
->
-> Hmm ok, can add checks for those.
->
->>
->>> +        }
->>> +
->>> +        /* Determine bit width for the field */
->>> +        if (flags & CLK_DIVIDER_ONE_BASED)
->>> +            val = 1;
->>> +
->>> +        div = min_div;
->>> +
->>> +        while (div < max_div) {
->>> +            if (flags & CLK_DIVIDER_POWER_OF_TWO)
->>> +                div <<= 1;
->>> +            else
->>> +                div++;
->>> +            val++;
->>> +        }
->>> +    } else {
->>> +        div = 0;
->>> +
->>> +        while (table[div].div) {
->>> +            val = table[div].val;
->>> +            div++;
->>> +        }
->>> +    }
->>> +
->>> +    return fls(val);
->>> +}
->>> +
->>> +/**
->>> + * of_ti_divider_clk_setup() - Setup function for simple div rate clock
->>> + */
->>> +static int __init of_ti_divider_clk_setup(struct device_node *node,
->>> +                      struct regmap *regmap)
->>> +{
->>> +    struct clk *clk;
->>> +    const char *clk_name = node->name;
->>> +    void __iomem *reg;
->>> +    const char *parent_name;
->>> +    u8 clk_divider_flags = 0;
->>> +    u8 width = 0;
->>> +    u8 shift = 0;
->>> +    struct clk_div_table *table = NULL;
->>> +    u32 val = 0;
->>> +    u32 flags = 0;
->>> +    int ret = 0;
->>> +
->>> +    parent_name = of_clk_get_parent_name(node, 0);
->>> +
->>> +    if (of_property_read_u32(node, "reg", &val)) {
->>> +        pr_err("%s: %s must have reg\n", __func__, clk_name);
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    reg = (void *)val;
->>> +
->>> +    if (!of_property_read_u32(node, "ti,bit-shift", &val))
->>> +        shift = val;
->>> +
->>> +    if (of_property_read_bool(node, "ti,index-starts-at-one"))
->>> +        clk_divider_flags |= CLK_DIVIDER_ONE_BASED;
->>> +
->>> +    if (of_property_read_bool(node, "ti,index-power-of-two"))
->>> +        clk_divider_flags |= CLK_DIVIDER_POWER_OF_TWO;
->>> +
->>> +    if (of_property_read_bool(node, "ti,set-rate-parent"))
->>> +        flags |= CLK_SET_RATE_PARENT;
->>> +
->>> +    table = ti_clk_get_div_table(node);
->>> +
->>> +    if (IS_ERR(table))
->>> +        return PTR_ERR(table);
->>> +
->>> +    ret = _get_divider_width(node, table, clk_divider_flags);
->>> +    if (ret < 0)
->>> +        goto cleanup;
->>> +
->>> +    width = ret;
->>> +
->>> +    clk = clk_register_divider_table_regmap(NULL, clk_name,
->>> parent_name,
->>> +                        flags, reg, regmap, shift,
->>> +                        width, clk_divider_flags, table,
->>> +                        NULL);
->>> +
->>> +    if (!IS_ERR(clk)) {
->>> +        of_clk_add_provider(node, of_clk_src_simple_get, clk);
->>> +        ret = of_ti_autoidle_setup(node, regmap);
->>
->> if this fails, table will be freed though, we have added provider and
->> registerd table_regmap, no?
->
-> Provider and regmap are shared for the whole IP block (CM/PRM whatever.)
-> Those are only initialized once.
 
-Some minor confusion here in my comment, sorry about that.
+--UlxN1C6awaFNesUv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regmap is shared for the whole IP block and initialized only once, we 
-can't remove it here as it is not owned by this clock. For 
-clock-provider / unregister part, I don't want to clean those up as 1) 
-unregister doesn't currently do anything 2) autoidle setup is not 
-critical failure, it just breaks PM. I can add error print for it though.
+On Fri, Nov 01, 2013 at 08:44:48AM +0900, Jingoo Han wrote:
+> On Friday, October 25, 2013 10:58 PM, Laurent Pinchart wrote:
+> > On Thursday 24 October 2013 13:05:25 Thierry Reding wrote:
+> > > On Thu, Oct 24, 2013 at 12:38:59AM +0200, Laurent Pinchart wrote:
+> > > > On Wednesday 23 October 2013 22:20:12 Thierry Reding wrote:
+> > > > > On Wed, Oct 23, 2013 at 05:51:13PM +0100, Stephen Warren wrote:
+> > > > > > On 10/22/2013 09:01 PM, Thierry Reding wrote:
+> > > > > > > On Tue, Oct 22, 2013 at 05:34:45PM +0200, Jean-Christophe
+> > > > > >
+> > > > > > > PLAGNIOL-VILLARD wrote:
+> > > > > > ...
+> > > > > >
+> > > > > > >> I'm sorry but the blacklight descibe in DT have nothing to do
+> > > > > > >> with the common pratice that the current driver have today
+> > > > > > >
+> > > > > > > That's not at all what I said. What I said was that the major=
+ity
+> > > > > > > of backlight drivers currently default to turning the backlig=
+ht on
+> > > > > > > when probed. Therefore I think it would be consistent if this
+> > > > > > > driver did the same.
+> > > > > > >
+> > > > > > > I also said that I don't think it's a very good default, but =
+at the
+> > > > > > > same time we can't just go and change the default behaviour a=
+t will
+> > > > > > > because people may rely on it.
+> > > > > >
+> > > > > > It may well be reasonable to change the default behaviour for d=
+evices
+> > > > > > instantiated from DT. If it's not possible to instantiate the d=
+evice
+> > > > > > from DT yet, then it's not possible for anyone to be relying on=
+ the
+> > > > > > default behaviour yet, since there is none. So, perhaps the def=
+ault
+> > > > > > could be:
+> > > > > >
+> > > > > > * If device instantiated from a board file, default to on, for
+> > > > > > backwards-compatibility.
+> > > > > >
+> > > > > > * If device instantiated from DT, there is no backwards compati=
+bility
+> > > > > > to be concerned with, since this is a new feature, hence defaul=
+t to
+> > > > > > off, since we think that's the correct thing to do.
+> > > > >
+> > > > > I actually had a patch to do precisely that. However I then reali=
+zed
+> > > > > that people have actually been using pwm-backlight in DT for a wh=
+ile
+> > > > > already and therefore may be relying on that behaviour as well.
+> > > > >
+> > > > > It also isn't really an issue of DT vs. non-DT. The simple fact i=
+s that
+> > > > > besides the backlight driver there's usually no other code that e=
+nables
+> > > > > a backlight on boot. The only way to do so that I know of is usin=
+g the
+> > > > > DRM panel patches that I've been working on.
+> > > >
+> > > > I would very much welcome a refactoring of the backlight code that =
+would
+> > > > remove the fbdev dependency and hook backlights to panel drivers. T=
+hat's
+> > > > something I wanted to work on myself, but that I pushed back after =
+CDF :-)
+> > >
+> > > Yeah, that would certainly be very welcome. But it's also a pretty
+> > > daunting job since there are a whole lot of devices out there that
+> > > aren't easy to test because, well, they're pretty old and chances
+> > > are that nobody that actually has one is around.
+> > >
+> > > But I guess that we can always try to solve it on a best effort basis,
+> > > though. Perhaps things can even be done in a backwards-compatible way.
+> > > I'm thinking for instance that we could introduce a new property, say
+> > > .enable, but keep any of the others suhc as state, power, fb_blank for
+> > > backwards-compatibility. Perhaps even emulate them for a while until
+> > > we've gone and cleaned up all users.
+> >=20
+> > That would work with me. I don't think we need more than a best effort
+> > approach to porting existing backlight drivers to the new model. When i=
+t comes
+> > to compatibility with the current interface, I'd like to move the
+> > compatibility code to the core instead of leaving it in the individual =
+drivers
+> > if possible.
+>=20
+> I agree with you.
+> Moving the compatibility code to the core from the individual drivers
+> looks good. :-)
+>=20
+> >=20
+> > > Or is there still a reason to have more than a single bit for backlig=
+ht
+> > > state? I don't know any hardware that actually makes a difference
+> > > between FB_BLANK_NORMAL, FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPE=
+ND
+> > > or FB_BLANK_POWERDOWN.
+>=20
+> On Exynos side, I have never seen that FB_BLANK_VSYNC_SUSPEND,
+> FB_BLANK_HSYNC_SUSPEND are used for controlling display panels or
+> Display controllers.
+>=20
+> However, I heard that FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND are
+> used for some monitors.
 
--Tero
+I think that those may make sense in the context of fbdev, and looking
+at some fbdev drivers seems to substantiate that.
 
->
->>
->>> +    } else {
->>> +        ret = PTR_ERR(clk);
->>> +    }
->>> +
->>> +    if (!ret)
->>> +        return 0;
->>> +cleanup:
->>> +    kfree(table);
->>> +    return ret;
->>> +}
->>> +CLK_OF_DECLARE(divider_clk, "ti,divider-clock",
->>> of_ti_divider_clk_setup);
->>> +
->>> +static int __init of_ti_composite_divider_clk_setup(struct
->>> device_node *node,
->>> +                             struct regmap *regmap)
->>> +{
->>> +    struct clk_divider *div;
->>> +    u32 val;
->>> +    int ret;
->>> +
->>> +    div = kzalloc(sizeof(*div), GFP_KERNEL);
->>> +    if (!div)
->>> +        return -ENOMEM;
->>> +
->>> +    of_property_read_u32(node, "reg", &val);
->>
->> reg is a mandatory property, no? error checks?
->
-> Ok can add. :P
->
->>
->>> +    div->reg = (void *)val;
->>> +    div->regmap = regmap;
->>> +
->>> +    div->table = ti_clk_get_div_table(node);
->>> +
->>> +    if (of_property_read_bool(node, "ti,index-starts-at-one"))
->>> +        div->flags |= CLK_DIVIDER_ONE_BASED;
->>
->> alright, this does not really map back to ti,divder-clock style
->> handling.. aren't they supposed to be consistent?
->> how about "ti,index-power-of-two", bit shift etc?
->
-> I can add non-used property checks yes.
->
->>> +
->>> +    ret = _get_divider_width(node, div->table, div->flags);
->>> +    if (ret < 0)
->>> +        goto cleanup;
->>> +
->>> +    div->width = ret;
->>> +
->>> +    if (of_property_read_u32(node, "ti,bit-shift", &val)) {
->>> +        pr_debug("%s: missing bit-shift property for %s, default=0\n",
->>> +             __func__, node->name);
->>> +        val = 0;
->>> +    }
->>> +    div->shift = val;
->>> +
->>> +    ret = ti_clk_add_component(node, &div->hw,
->>> CLK_COMPONENT_TYPE_DIVIDER);
->>> +    if (!ret)
->>> +        return 0;
->>> +
->>> +cleanup:
->>> +    kfree(div);
->>> +    return ret;
->>> +}
->>> +CLK_OF_DECLARE(ti_composite_divider_clk, "ti,composite-divider-clock",
->>> +           of_ti_composite_divider_clk_setup);
->>>
->>
->>
->
+However, I don't think backlights have any such capability. I mean they
+are either on or off, right? There's no such thing as partially off, or
+partially on. How would a backlight behave differently if the panel was
+in HSYNC suspend mode or VSYNC suspend mode?
 
+Thierry
+
+--UlxN1C6awaFNesUv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSc3siAAoJEN0jrNd/PrOhq/YQAKPo0e9vGJOiORylK3KMOfT4
+K5bTwfAjX7CakG8o6nPGTBa9A3va87SoyIK4d29b6qg/9foMKICTAjkXVqJXlOEP
+C6rGQUMad3VCiFX3ill2RZUOGE17sVVCSbgP7LwMyv800gptFi9cKI4sezRlHuXp
+rU3lAzJKcRZQMvhaYfGxOQIgwP6U2asdcrIx94x+0VslU6nQCHnVt3qgwVFrWffV
+1aZ/jTP0S9llyPXGYh2/zySlGWF7zILN05ZvFNtn40q8XMMgfGWdsr3APDdADZNt
+CoV1Gtw4ApFvGeon8Z8MtVWEveLpYZDJkT2fOo/cenUgl4WFHSe1Gs0L/Qtok7Fb
+h+6zz1TvWG2TSP8jwZ8SEXtVA+Xvr3+j7MaKBtZBQDhPbKz/SqWl/0c4pp5pViQI
+5SIGuaQdUEiqiOR8BnbzTNEzIwgCQ2SZXuscAgixTSYkz8tzxiwT1E1N1ZlTo2ia
+Ko4tCNrF8CWKyx3j0kltXMpwnpZ3/aE5ZS62H5RZmsOF53nYslagOwLjF6xo9VR2
+OxroJUXe1Dmp0x6C2/c2cmgeVCqnB+giOg8HE7hpvWWtfBKnrrpNo9Trxf90c02G
+ojtqAYSEZBAELCvZCYpAcGSYrug65p+UtYpY/RQnDOH/NfxvgUQwCWC+Qms7HUMK
+fUFT6NVDX4i+dktTHekv
+=s4gq
+-----END PGP SIGNATURE-----
+
+--UlxN1C6awaFNesUv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
