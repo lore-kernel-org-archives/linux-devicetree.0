@@ -1,115 +1,50 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 01 Nov 2013 08:44:48 +0900
-Message-ID: <003701ced693$2f856150$8e9023f0$%han@samsung.com>
-References: <20131019104555.GI18477@ns203013.ovh.net>
- <2730370.0UKsY9Ox0H@avalon> <20131024110524.GB11296@ulmo.nvidia.com>
- <1389386.JnbumUe76M@avalon>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V4] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Fri, 1 Nov 2013 09:13:40 +0900
+Message-ID: <20131101001340.GB6818@verge.net.au>
+References: <1383153261-17383-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <20131031060141.GT1603@verge.net.au>
+ <5272326B.3050500@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1389386.JnbumUe76M@avalon>
-Content-language: ko
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Laurent Pinchart' <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Denis Carikli' <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Eric B??nard' <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Sascha Hauer' <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Lothar Wa??mann' <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5272326B.3050500@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Valentine <valentine.barshak@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 25, 2013 10:58 PM, Laurent Pinchart wrote:
-> On Thursday 24 October 2013 13:05:25 Thierry Reding wrote:
-> > On Thu, Oct 24, 2013 at 12:38:59AM +0200, Laurent Pinchart wrote:
-> > > On Wednesday 23 October 2013 22:20:12 Thierry Reding wrote:
-> > > > On Wed, Oct 23, 2013 at 05:51:13PM +0100, Stephen Warren wrote:
-> > > > > On 10/22/2013 09:01 PM, Thierry Reding wrote:
-> > > > > > On Tue, Oct 22, 2013 at 05:34:45PM +0200, Jean-Christophe
-> > > > >
-> > > > > > PLAGNIOL-VILLARD wrote:
-> > > > > ...
-> > > > >
-> > > > > >> I'm sorry but the blacklight descibe in DT have nothing to do
-> > > > > >> with the common pratice that the current driver have today
-> > > > > >
-> > > > > > That's not at all what I said. What I said was that the majority
-> > > > > > of backlight drivers currently default to turning the backlight on
-> > > > > > when probed. Therefore I think it would be consistent if this
-> > > > > > driver did the same.
-> > > > > >
-> > > > > > I also said that I don't think it's a very good default, but at the
-> > > > > > same time we can't just go and change the default behaviour at will
-> > > > > > because people may rely on it.
-> > > > >
-> > > > > It may well be reasonable to change the default behaviour for devices
-> > > > > instantiated from DT. If it's not possible to instantiate the device
-> > > > > from DT yet, then it's not possible for anyone to be relying on the
-> > > > > default behaviour yet, since there is none. So, perhaps the default
-> > > > > could be:
-> > > > >
-> > > > > * If device instantiated from a board file, default to on, for
-> > > > > backwards-compatibility.
-> > > > >
-> > > > > * If device instantiated from DT, there is no backwards compatibility
-> > > > > to be concerned with, since this is a new feature, hence default to
-> > > > > off, since we think that's the correct thing to do.
-> > > >
-> > > > I actually had a patch to do precisely that. However I then realized
-> > > > that people have actually been using pwm-backlight in DT for a while
-> > > > already and therefore may be relying on that behaviour as well.
-> > > >
-> > > > It also isn't really an issue of DT vs. non-DT. The simple fact is that
-> > > > besides the backlight driver there's usually no other code that enables
-> > > > a backlight on boot. The only way to do so that I know of is using the
-> > > > DRM panel patches that I've been working on.
-> > >
-> > > I would very much welcome a refactoring of the backlight code that would
-> > > remove the fbdev dependency and hook backlights to panel drivers. That's
-> > > something I wanted to work on myself, but that I pushed back after CDF :-)
+On Thu, Oct 31, 2013 at 02:35:23PM +0400, Valentine wrote:
+> On 10/31/2013 10:01 AM, Simon Horman wrote:
+> >On Wed, Oct 30, 2013 at 09:14:21PM +0400, Valentine Barshak wrote:
+> >>R-Car Gen2 SoCs have a different PHY which is not compatible
+> >>with the older R-Car H1 (R8A7779) version.
+> >>This adds OF/platform device id tables and PHY initialization
+> >>callbacks for the following Gen2 SoCs:
+> >>   * R-Car H2: R8A7790;
+> >>   * R-Car M2: R8A7791.
+> >>
+> >>PHY initialization method is chosen based on the device id.
+> >>Default PHY settings are applied for Gen2 SoCs, which should
+> >>suit the Gen2 boards available.
+> >>
+> >>While at it, this also adds "sata-r8a7779" compatibility string
+> >>for R-Car H1 SATA, while keeping the old one for compatibility.
+> >>
+> >>Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
 > >
-> > Yeah, that would certainly be very welcome. But it's also a pretty
-> > daunting job since there are a whole lot of devices out there that
-> > aren't easy to test because, well, they're pretty old and chances
-> > are that nobody that actually has one is around.
+> >I know we are going around and around in circles regarding the bindings.
+> >But I think you need to submit that patch which documents the bindings
+> >that exist after this patch in order for the bindings, as they are
+> >used here, to be reviewed by the device tree people.
+> 
+> OK, I'll resend.
+> 
 > >
-> > But I guess that we can always try to solve it on a best effort basis,
-> > though. Perhaps things can even be done in a backwards-compatible way.
-> > I'm thinking for instance that we could introduce a new property, say
-> > .enable, but keep any of the others suhc as state, power, fb_blank for
-> > backwards-compatibility. Perhaps even emulate them for a while until
-> > we've gone and cleaned up all users.
+> >Also, I think I found a typo which I have noted below.
 > 
-> That would work with me. I don't think we need more than a best effort
-> approach to porting existing backlight drivers to the new model. When it comes
-> to compatibility with the current interface, I'd like to move the
-> compatibility code to the core instead of leaving it in the individual drivers
-> if possible.
+> There's no typo. I'm using "sata_rcar" device name for compatibility with the current r8a7779 code
+> that uses the driver and registers "sata_rcar" device.
 
-I agree with you.
-Moving the compatibility code to the core from the individual drivers
-looks good. :-)
-
-> 
-> > Or is there still a reason to have more than a single bit for backlight
-> > state? I don't know any hardware that actually makes a difference
-> > between FB_BLANK_NORMAL, FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND
-> > or FB_BLANK_POWERDOWN.
-
-On Exynos side, I have never seen that FB_BLANK_VSYNC_SUSPEND,
-FB_BLANK_HSYNC_SUSPEND are used for controlling display panels or
-Display controllers.
-
-However, I heard that FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND are
-used for some monitors.
-
-Best regards,
-Jingoo Han
-
-> > Many drivers in drivers/video seem to be using
-> > those, but for backlights I can see no use other than FB_BLANK_UNBLANK
-> > meaning enabled and anything else meaning disabled.
-> I see no use case for the fine-grained state in backlights at the moment.
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, sorry for the noise.
