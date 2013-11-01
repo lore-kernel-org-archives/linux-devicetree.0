@@ -1,40 +1,56 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when device-tree
- is used.
-Date: Fri, 1 Nov 2013 13:48:53 -0700
-Message-ID: <20131101204853.GB19662@kroah.com>
-References: <20131101145925.66e22f73@notabene.brown>
- <1383279744.28909.26.camel@pasglop>
- <1383280054.28909.30.camel@pasglop>
- <20131101160329.37f3707b@notabene.brown>
- <1383282516.28909.36.camel@pasglop>
- <20131101180459.81793C40A28@trevor.secretlab.ca>
+From: "Arend van Spriel" <arend@broadcom.com>
+Subject: Re: [PATCH v2 7/9] phy: add Broadcom Kona USB2 PHY DT binding
+Date: Fri, 1 Nov 2013 21:54:10 +0100
+Message-ID: <527414F2.7090402@broadcom.com>
+References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
+ <1383335158-19730-8-git-send-email-matt.porter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131101180459.81793C40A28-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383335158-19730-8-git-send-email-matt.porter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <matt.porter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 11:04:59AM -0700, Grant Likely wrote:
-> Second, I expect there is going to be userspace breakage to move them.
-> I've considered moving them before, but so far have felt that being
-> tidier hasn't been worth the potential breakage. Userspace /shouldn't/
-> be relying on the node name, but we all know that userspace always does
-> what it should, right?
+On 11/01/2013 08:45 PM, Matt Porter wrote:
+> Add a binding that describes the Broadcom Kona USB2 PHY found
+> on the BCM281xx family of SoCs.
+>
+> Signed-off-by: Matt Porter <matt.porter@linaro.org>
+> ---
+>   .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> new file mode 100644
+> index 0000000..db309e2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> @@ -0,0 +1,15 @@
+> +BROADCOM KONA USB2 PHY
+> +
+> +Required properties:
+> + - compatible: brcm,kona-usb2-phy
+> + - regs: offset and length of the PHY registers
+> + - #phy-cells: must be 0
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +
+> +	usbphy: usbphy@3f130000 {
+> +		compatible = "brcm,kona-usb2-phy";
+> +		reg = <0x3f130000 0x28>;
 
-Userspace should _never_ rely on where in the /sys/devices/ tree a
-device is, if so, it's _really_ broken.  They should be iterating and
-getting to the device from within the bus and class section of the tree
-as devices move all over the place when the box boots different times.
+I expect 'regs' iso 'reg' in this example.
 
-thanks,
+Regards,
+Arend
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		#phy-cells = <0>;
+> +	};
+>
