@@ -1,217 +1,63 @@
 From: Matt Porter <matt.porter@linaro.org>
-Subject: [PATCH v2 8/9] phy: add Broadcom Kona USB2 PHY driver
-Date: Fri,  1 Nov 2013 15:45:57 -0400
-Message-ID: <1383335158-19730-9-git-send-email-matt.porter@linaro.org>
+Subject: [PATCH v2 2/9] staging: dwc2: update DT binding to add generic
+ clock/phy properties
+Date: Fri,  1 Nov 2013 15:45:51 -0400
+Message-ID: <1383335158-19730-3-git-send-email-matt.porter@linaro.org>
 References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the internal Broadcom Kona USB 2.0 PHY found
-on the BCM281xx family of SoCs.
+dwc2/s3c-hsotg require a single clock to be specified and optionally
+a generic phy. On the s3c-hsotg driver old style USB phy support is
+present as a fallback so the generic phy properties are optional.
 
 Signed-off-by: Matt Porter <matt.porter@linaro.org>
 ---
- drivers/phy/Kconfig             |   6 ++
- drivers/phy/Makefile            |   2 +
- drivers/phy/phy-bcm-kona-usb2.c | 161 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 169 insertions(+)
- create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
+ Documentation/devicetree/bindings/staging/dwc2.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 349bef2..cedada5 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -15,4 +15,10 @@ config GENERIC_PHY
- 	  phy users can obtain reference to the PHY. All the users of this
- 	  framework should select this config.
+diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Documentation/devicetree/bindings/staging/dwc2.txt
+index 1a1b7cf..f60477e 100644
+--- a/Documentation/devicetree/bindings/staging/dwc2.txt
++++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+@@ -5,6 +5,14 @@ Required properties:
+ - compatible : "snps,dwc2"
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
++- clocks: clock provider specifier
++- clock-names: shall be "otg"
++Refer to clk/clock-bindings.txt for generic clock consumer properties
++
++Optional properties:
++- phys: phy provider specifier
++- phy-names: shall be "usb2-phy"
++Refer to phy/phy-bindings.txt for generic phy consumer properties
  
-+config BCM_KONA_USB2_PHY
-+	tristate "Broadcom Kona USB2 PHY Driver"
-+	depends on GENERIC_PHY
-+	help
-+	  Enable this to support the Broadcom Kona USB 2.0 PHY.
-+
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 9e9560f..ce83a14 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -3,3 +3,5 @@
- #
+ Example:
  
- obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
-+
-+obj-$(CONFIG_BCM_KONA_USB2_PHY)	+= phy-bcm-kona-usb2.o
-diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
-new file mode 100644
-index 0000000..1beea7f
---- /dev/null
-+++ b/drivers/phy/phy-bcm-kona-usb2.c
-@@ -0,0 +1,161 @@
-+/*
-+ * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
-+ *
-+ * Copyright (C) 2013 Linaro Limited
-+ * Matt Porter <matt.porter@linaro.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/delay.h>
-+#include <linux/platform_device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+#include <linux/phy/phy.h>
-+
-+#define OTGCTL_OTGSTAT2		(1 << 31)
-+#define OTGCTL_OTGSTAT1		(1 << 30)
-+#define OTGCTL_PRST_N_SW	(1 << 11)
-+#define OTGCTL_HRESET_N		(1 << 10)
-+#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
-+#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
-+
-+#define P1CTL_SOFT_RESET	(1 << 1)
-+#define P1CTL_NON_DRIVING	(1 << 0)
-+
-+struct bcm_kona_usb_phy_regs {
-+	u32 ctrl;
-+	u32 cfg;
-+	u32 p1ctl;
-+	u32 status;
-+	u32 bc_cfg;
-+	u32 tp_in;
-+	u32 tp_out;
-+	u32 phy_ctrl;
-+	u32 usbreg;
-+	u32 usbproben;
-+};
-+
-+struct bcm_kona_usb {
-+	struct bcm_kona_usb_phy_regs *regs;
-+};
-+
-+static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
-+{
-+	u32 val;
-+
-+	val = readl(&phy->regs->ctrl);
-+	if (on) {
-+		/* Configure and power PHY */
-+		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
-+			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
-+		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
-+		writel(val, &phy->regs->ctrl);
-+
-+		/* Soft reset PHY */
-+		val = readl(&phy->regs->p1ctl);
-+		val &= ~P1CTL_NON_DRIVING;
-+		val |= P1CTL_SOFT_RESET;
-+		writel(val, &phy->regs->p1ctl);
-+		writel(val & ~P1CTL_SOFT_RESET, &phy->regs->p1ctl);
-+		/* Reset needs to be asserted for 2ms */
-+		mdelay(2);
-+		writel(val | P1CTL_SOFT_RESET, &phy->regs->p1ctl);
-+	} else {
-+		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
-+		writel(val, &phy->regs->ctrl);
-+	}
-+}
-+
-+static int bcm_kona_usb_phy_power_on(struct phy *gphy)
-+{
-+	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
-+
-+	bcm_kona_usb_phy_power(phy, 1);
-+
-+	return 0;
-+}
-+
-+static int bcm_kona_usb_phy_power_off(struct phy *gphy)
-+{
-+	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
-+
-+	bcm_kona_usb_phy_power(phy, 0);
-+
-+	return 0;
-+}
-+
-+static struct phy_ops ops = {
-+	.power_on	= bcm_kona_usb_phy_power_on,
-+	.power_off	= bcm_kona_usb_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int bcm_kona_usb2_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct bcm_kona_usb *phy;
-+	struct resource *res;
-+	struct phy *gphy;
-+	struct phy_provider *phy_provider;
-+
-+	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-+	if (!phy)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	phy->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(phy->regs))
-+		return PTR_ERR(phy->regs);
-+
-+	platform_set_drvdata(pdev, phy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev,
-+			of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	gphy = devm_phy_create(dev, &ops, NULL);
-+	if (IS_ERR(gphy))
-+		return PTR_ERR(gphy);
-+
-+	/* The Kona PHY supports an 8-bit wide UTMI interface */
-+	phy_set_bus_width(gphy, 8);
-+
-+	phy_set_drvdata(gphy, phy);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm_kona_usb2_dt_ids[] = {
-+	{ .compatible = "brcm,kona-usb2-phy" },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, bcm_kona_usb2_dt_ids);
-+
-+static struct platform_driver bcm_kona_usb2_driver = {
-+	.probe		= bcm_kona_usb2_probe,
-+	.driver		= {
-+		.name	= "bcm-kona-usb2",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = bcm_kona_usb2_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(bcm_kona_usb2_driver);
-+
-+MODULE_ALIAS("platform:bcm-kona-usb2");
-+MODULE_AUTHOR("Matt Porter");
-+MODULE_DESCRIPTION("BCM Kona USB 2.0 PHY driver");
-+MODULE_LICENSE("GPL v2");
+@@ -12,4 +20,8 @@ Example:
+                 compatible = "ralink,rt3050-usb, snps,dwc2";
+                 reg = <0x101c0000 40000>;
+                 interrupts = <18>;
++		clocks = <&usb_otg_ahb_clk>;
++		clock-names = "otg";
++		phys = <&usbphy>;
++		phy-names = "usb2-phy";
+         };
 -- 
 1.8.4
