@@ -1,34 +1,62 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v10 00/20] iommu/exynos: Fixes and Enhancements of System
- MMU driver with DT
-Date: Fri, 1 Nov 2013 14:10:47 +0100
-Message-ID: <20131101131044.GB3348@8bytes.org>
-References: <20131007105212.1c2a9e29166ff4b4a33468f8@samsung.com>
- <20131101114224.GG17455@8bytes.org>
- <20131101213745.68172e8d47182cc64a591775@samsung.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] ARM topic: Is DT on ARM the solution,
+ or is there something better?
+Date: Fri, 01 Nov 2013 06:30:11 -0700
+Message-ID: <5273ACE3.5080200@roeck-us.net>
+References: <5265AFED.1040503@roeck-us.net> <52665314.2040904@imgtec.com> <232aa6e4-19fe-4460-8101-8bf1d639ff3c@email.android.com> <20131022164922.GA29852@roeck-us.net> <20131022203546.GC8037@mithrandir> <20131022211000.GA30394@roeck-us.net> <20131023075758.GA7404@ulmo.nvidia.com> <20131023160131.GA20675@roeck-us.net> <20131023210715.GF8828@mithrandir> <20131024151853.GB25355@roeck-us.net> <20131101103614.GM27864@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131101213745.68172e8d47182cc64a591775@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Cho KyongHo <pullip.cho@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Subash Patel <supash.ramaswamy@linaro.org>, Varun Sethi <Varun.Sethi@freescale.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131101103614.GM27864-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cho,
+On 11/01/2013 03:36 AM, Thierry Reding wrote:
+> On Thu, Oct 24, 2013 at 08:18:53AM -0700, Guenter Roeck wrote:
+>> On Wed, Oct 23, 2013 at 11:07:16PM +0200, Thierry Reding wrote:
+>> [ ... ]
+>>>>
+>>>> Was this just a matter of enabling OF on this platform, or do you have an
+>>>> out-of-tree set of patches ? If the latter, is it available somewhere
+>>>> to look at (including the complete devicetree from your above example) ?
+>>>
+>>> It was mostly a matter of enabling OF and writing the device tree. Most
+>>> of the generic kernel code changes I even got merged, but there were a
+>>> few patches that I never got around to merge. Some weren't anywhere
+>>> close to a mergeable state either.
+>>>
+>>> I no longer work for the company and don't have access to the patches.
+>>> But I can ping a few people and see if I can dig up something for you.
+>>>
+>> That would be great.
+>
+> Hi Guenter,
+>
+> It took some time, but here's the tree:
+>
+> 	https://github.com/avionic-design/linux/commits/medatom/master
+>
+> The device tree files are in arch/x86/boot/dts (as expected I guess). A
+> linux-next from over a year ago was used as the base for that branch, so
+> some of that will be stale, but DT is a stable ABI, so that should still
+> be valid. =)
+>
+> If you have any questions, please don't hesitate to ask. Although I have
+> not been working on that for a while, so my memories about it aren't all
+> that fresh anymore.
+>
+> Thierry
+>
+Hi Thierry,
 
-On Fri, Nov 01, 2013 at 09:37:45PM +0900, Cho KyongHo wrote:
-> I am preparing next patches to apply Alex Williamson's comment that
-> description of IOMMU's masters must be aligned with ARM SMMU.
-> 
-> It is delayed due to my jobs in the office.
-> 
-> I will post the next patche series in two weeks.
+that is great - thanks a lot!
 
-Thanks for the update. If the merge window is open by then please wait
-with the re-send until the merge window closes.
+Guenter
 
-Thanks,
-
-	Joerg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
