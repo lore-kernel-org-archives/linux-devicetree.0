@@ -1,81 +1,55 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 2/2] PWM: atmel-pwm: add device tree binding document
-Date: Fri,  1 Nov 2013 16:00:11 +0800
-Message-ID: <1383292811-11343-1-git-send-email-voice.shen@atmel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
+	from DT
+Date: Fri, 1 Nov 2013 10:03:25 +0200
+Message-ID: <20131101100325.caab70438d44cba042fba904@nvidia.com>
+References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
+	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
+	<52718BB4.4090007@wwwdotorg.org>
+	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
+	<20131031174028.GF3037@kartoffel> <5272AC82.6080205@wwwdotorg.org>
+	<5272AEA5.7020200@wwwdotorg.org>
+	<20131031193941.GB31516@mudshark.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131031193941.GB31516-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add atmel pwm driver device tree binding document
+On Thu, 31 Oct 2013 20:39:41 +0100
+Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
 
-Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> On Thu, Oct 31, 2013 at 07:25:25PM +0000, Stephen Warren wrote:
+> > On 10/31/2013 01:16 PM, Stephen Warren wrote:
+> > > Hmm. That's interesting. I see that the ARM SMMU has a list of the
+> > > clients it affects, whereas this Tegra series puts information into each
+> > > client device about the SMMU(s) that affect it. Is it better to flip the
+> > > Tegra binding around to match the style of the ARM SMMU?
+> > 
+> > One question here: How do you ensure that the SMMU driver probe()s
+> > before probe() runs for devices affected by the SMMU?
+> 
+> I think we get away with this by virtue of nobody actually creating IOMMU
+> mappings from within drivers, so the ordering is already handled. However, I
 
----
-Changes in v6:
-  - New, split binding document as a separate patch
+Could you explain the above a bit more?
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Currently I have a problem that IOMMU(tegra smmu) needs to be
+instanciated earlier than other IOMMU'able devices since IOMMU needs
+to configure devices IOMMU'ed at their instanciation time.
 
- .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 ++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-new file mode 100644
-index 0000000..1c1a5fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-@@ -0,0 +1,41 @@
-+Atmel PWM controller
-+
-+Required properties:
-+  - compatible: should be one of:
-+    - "atmel,at91sam9rl-pwm"
-+    - "atmel,sama5d3-pwm"
-+  - reg: physical base address and length of the controller's registers
-+  - #pwm-cells: Should be 3. See pwm.txt in this directory for a
-+    description of the cells format
-+
-+Example:
-+
-+	pwm0: pwm@f8034000 {
-+		compatible = "atmel,at91sam9rl-pwm";
-+		reg = <0xf8034000 0x400>;
-+		#pwm-cells = <3>;
-+	};
-+
-+The following the pwm led based example:
-+
-+	pwm0: pwm@f8034000 {
-+		compatible = "atmel,at91sam9rl-pwm";
-+		reg = <0xf8034000 0x400>;
-+		#pwm-cells = <3>;
-+	};
-+
-+	pwdleds {
-+		compatible = "pwm-leds";
-+
-+		d1 {
-+			label = "d1";
-+			pwms = <&pwm0 3 5000 0>
-+			max-brightness = <255>;
-+		};
-+
-+		d2 {
-+			label = "d2";
-+			pwms = <&pwm0 1 5000 1>
-+			max-brightness = <255>;
-+		};
-+	};
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now I'm considering to use iommu_bus_notifier or inserting a hook in
+dd.c:really_probe() in order to defer a device instanciation til
+IOMMU's instanciated.
