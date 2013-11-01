@@ -1,96 +1,44 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv9 12/43] CLK: TI: add support for clockdomain binding
-Date: Fri, 1 Nov 2013 15:22:17 -0500
-Message-ID: <52740D79.3090107@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-13-git-send-email-t-kristo@ti.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: Strange location and name for platform  devices when
+ device-tree is used.
+Date: Sat, 02 Nov 2013 07:33:21 +1100
+Message-ID: <1383338001.28909.42.camel@pasglop>
+References: <20131101145925.66e22f73@notabene.brown>
+	 <1383279744.28909.26.camel@pasglop> <1383280054.28909.30.camel@pasglop>
+	 <20131101160329.37f3707b@notabene.brown>
+	 <1383282516.28909.36.camel@pasglop>
+	 <20131101180459.81793C40A28@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1382716658-6964-13-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131101180459.81793C40A28@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2013 10:57 AM, Tero Kristo wrote:
-[...]
-> diff --git a/drivers/clk/ti/clockdomain.c b/drivers/clk/ti/clockdomain.c
-> new file mode 100644
-> index 0000000..1b3099e
-> --- /dev/null
-> +++ b/drivers/clk/ti/clockdomain.c
-> @@ -0,0 +1,58 @@
-> +/*
-> + * OMAP clockdomain support
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + *
-> + * Tero Kristo <t-kristo@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clk/ti.h>
-> +
-> +static void __init of_ti_clockdomain_setup(struct device_node *node)
-> +{
-> +	struct clk *clk;
-> +	struct clk_hw *clk_hw;
-> +	const char *clkdm_name = node->name;
-> +	int i;
-> +	int num_clks;
-> +
-> +	num_clks = of_count_phandle_with_args(node, "clocks", "#clock-cells");
-> +
-> +	for (i = 0; i < num_clks; i++) {
-> +		clk = of_clk_get(node, i);
-> +		if (__clk_get_flags(clk) & CLK_IS_BASIC) {
-> +			pr_warn("%s: can't setup clkdm for basic clk %s\n",
-> +				__func__, __clk_get_name(clk));
-> +			continue;
-> +		}
-> +		clk_hw = __clk_get_hw(clk);
-> +		to_clk_hw_omap(clk_hw)->clkdm_name = clkdm_name;
-> +		omap2_init_clk_clkdm(clk_hw);
+On Fri, 2013-11-01 at 11:04 -0700, Grant Likely wrote:
 
-eventually, this can disappear ofcourse.. and that will pave way to
-remove the clock domain data to dts as well.. but yes, we have to find
-a proper home for this away from current location..
+> There are two problems here. First, making the change moves all the DT
+> populated devices under the /sys/devices/platform tree, not just
+> platform devices.
 
-> +	}
-> +}
-> +
-> +static struct of_device_id ti_clkdm_match_table[] __initdata = {
-> +	{ .compatible = "ti,clockdomain" },
-> +	{ }
-> +};
-> +
-> +void __init ti_dt_clockdomains_setup(void)
+All DT populated *platform* devices. There are others that have their
+own locations.
 
-since we are using of_clk_get, it will be good to provide
-documentation w.r.t when the call is expected to be invoked.
+> Second, I expect there is going to be userspace breakage to move them.
+> I've considered moving them before, but so far have felt that being
+> tidier hasn't been worth the potential breakage. Userspace /shouldn't/
+> be relying on the node name, but we all know that userspace always does
+> what it should, right?
+> 
+> That said, I'm mostly concerned about breakage on Power machines, not on
+> the ARM devices in this regard. If you are convinced that I'm worrying about
+> nothing, then I'm fine with making the change. If anyone complains
+> however then it will need to be reverted.
 
-> +{
-> +	struct device_node *np;
-> +	for_each_matching_node(np, ti_clkdm_match_table) {
-> +		of_ti_clockdomain_setup(np);
-> +	}
-> +}
+I don't see an issue with power.
 
-
-
--- 
-Regards,
-Nishanth Menon
+Cheers,
+Ben.
