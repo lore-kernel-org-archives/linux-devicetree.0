@@ -1,180 +1,120 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] extcon-gpio: add devicetree support.
-Date: Fri, 1 Nov 2013 20:50:05 +1100
-Message-ID: <20131101205005.659ba606@notabene.brown>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 1 Nov 2013 10:52:24 +0100
+Message-ID: <20131101095223.GH27864@ulmo.nvidia.com>
+References: <52718122.9000206@wwwdotorg.org>
+	<20131031.101232.80781047726461143.hdoyu@nvidia.com>
+	<527286CC.9080404@wwwdotorg.org>
+	<20131031.184603.979300613649357798.hdoyu@nvidia.com>
+	<52729912.9050800@wwwdotorg.org>
+	<20131101084909.5ed79987aa3aeb13b14e3f08@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/09MumQEKt8uBs4t8FzqSLgU"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1850514120842827206=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131101084909.5ed79987aa3aeb13b14e3f08-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/09MumQEKt8uBs4t8FzqSLgU
-Content-Type: text/plain; charset=US-ASCII
+
+--===============1850514120842827206==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PW0Eas8rCkcu1VkF"
+Content-Disposition: inline
+
+
+--PW0Eas8rCkcu1VkF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, Nov 01, 2013 at 08:49:09AM +0200, Hiroshi Doyu wrote:
+> On Thu, 31 Oct 2013 18:53:22 +0100
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> ...
+> > We're talking about memory-mapped on-SoC devices here, that generally
+> > only exist inside Tegra SoCs.
+> >=20
+> > Even ignoring that (i.e. expanding the argument to arbitrary modules),
+> > having drivers that perform bus-master transactions call a function
+> > of_iommu_attach() or similar, which does nothing if the device isn't
+> > behind an IOMMU but otherwise does whatever is required, seems like it
+> > isn't much of an imposition.
+>=20
+> Where do you expect of_iommu_attach() to be called?
+> I thought something below:
+>=20
+> 	Modified drivers/base/dd.c
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 35fa368..92ec2e9 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -278,6 +278,10 @@ static int really_probe(struct device *dev, struct d=
+evice_driver *drv)
+>  	if (ret)
+>  		goto probe_failed;
+> =20
+> +	ret =3D of_iommu_attach(dev);
+> +	if (ret)
+> +		goto probe_failed;
+> +
+>  	if (driver_sysfs_add(dev)) {
+>  		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
+>  			__func__, dev_name(dev));
+>=20
 
-As this device is not vendor specific, I haven't included any "vendor,"
-prefixes.  For my model I used "regulator-gpio" which takes a similar
-approach.
+The patches for late interrupt reference resolution introduced a
+separate function, of_platform_probe(), with the intent of having it
+call potentially many resource allocation hooks. The function needs to
+be platform_device specific, and therefore is called from within the
+platform_drv_probe() function. The reason is that interrupts are stored
+as resources within struct platform_device, so you need to have access
+to a platform device.
 
-Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+I think that devices that require attachment to an IOMMU will always end
+up being platform devices too, so even if it isn't a strict requirement
+here it would still make sense to use a similar infrastructure to avoid
+cluttering the core code with too many loose function calls.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Doc=
-umentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 000000000000..2346b61cc620
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,26 @@
-+* EXTCON detector using GPIO
-+
-+Required Properties:
-+ - compatible: "extcon-gpio"
-+ - gpios: gpio line that detects connector
-+ - interrupts: interrupt generated by that gpio
-+ - debounce-delay-ms: debouncing delay
-+
-+Optional Properties:
-+ - label: name for connector.  If not given, device name is used.
-+ - state-on: string to report when GPIO is high (else '0')
-+ - state-off: string to report when GPIO is low (else '1')
-+
-+Example:
-+
-+antenna-detect {
-+	compatible =3D "extcon-gpio";
-+	label =3D "gps_antenna";
-+	interrupt-parent =3D <&gpio5>;
-+	interrupts =3D <16 IRQ_TYPE_EDGE_BOTH>;
-+	gpios =3D <&gpio5 16 0>;
-+	debounce-delay-ms =3D <10>;
-+	state-on =3D "external";
-+	state-off =3D "internal";
-+};
-+
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index f874c30ddbff..a683d2b99213 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -30,6 +30,9 @@
- #include <linux/gpio.h>
- #include <linux/extcon.h>
- #include <linux/extcon/extcon-gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_irq.h>
-=20
- struct gpio_extcon_data {
- 	struct extcon_dev edev;
-@@ -76,6 +79,45 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev=
- *edev, char *buf)
- 	return -EINVAL;
- }
-=20
-+#ifdef CONFIG_OF
-+static struct gpio_extcon_platform_data *
-+gpio_extcon_parse(struct device *dev)
-+{
-+	struct gpio_extcon_platform_data *pdata;
-+	struct device_node *np =3D dev->of_node;
-+	u32 num;
-+	int irq;
-+
-+	if (!np)
-+		return NULL;
-+	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+	pdata->name =3D dev_name(dev);
-+	of_property_read_string(np, "label", &pdata->name);
-+	irq =3D irq_of_parse_and_map(np, 0);
-+	pdata->irq_flags =3D irq_get_trigger_type(irq);
-+	pdata->gpio =3D of_get_named_gpio(np, "gpios", 0);
-+	if (pdata->gpio < 0)
-+		return ERR_PTR(pdata->gpio);
-+	if (irq !=3D gpio_to_irq(pdata->gpio)) {
-+		dev_err(dev, "IRQ doesn't match GPIO\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+	if (of_property_read_u32(np, "debounce-delay-ms", &num) =3D=3D 0)
-+		pdata->debounce =3D num;
-+	of_property_read_string(np, "state-on", &pdata->state_on);
-+	of_property_read_string(np, "state-off", &pdata->state_off);
-+	return pdata;
-+}
-+#else
-+static inline struct gpio_extcon_platform_data *
-+gpio_extcon_parse(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int gpio_extcon_probe(struct platform_device *pdev)
- {
- 	struct gpio_extcon_platform_data *pdata =3D pdev->dev.platform_data;
-@@ -83,7 +125,11 @@ static int gpio_extcon_probe(struct platform_device *pd=
-ev)
- 	int ret =3D 0;
-=20
- 	if (!pdata)
-+		pdata =3D gpio_extcon_parse(&pdev->dev);
-+	if (!pdata)
- 		return -EBUSY;
-+	if (IS_ERR(pdata))
-+		return PTR_ERR(pdata);
- 	if (!pdata->irq_flags) {
- 		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
- 		return -EINVAL;
-@@ -148,12 +194,19 @@ static int gpio_extcon_remove(struct platform_device =
-*pdev)
- 	return 0;
- }
-=20
-+static const struct of_device_id gpio_extcon_match[] =3D {
-+	{ .compatible =3D "extcon-gpio" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, gpio_extcon_mastch);
-+
- static struct platform_driver gpio_extcon_driver =3D {
- 	.probe		=3D gpio_extcon_probe,
- 	.remove		=3D gpio_extcon_remove,
- 	.driver		=3D {
- 		.name	=3D "extcon-gpio",
- 		.owner	=3D THIS_MODULE,
-+		.of_match_table =3D gpio_extcon_match,
- 	},
- };
-=20
+Thierry
 
---Sig_/09MumQEKt8uBs4t8FzqSLgU
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
+--PW0Eas8rCkcu1VkF
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIVAwUBUnN5TTnsnt1WYoG5AQIlFw//VNrXoxkTP8Ju2orYcHY6WANxy1ldYg8s
-in3WGs/JFb2iVu91RyX+nfWnJ3HpYsQw3qr7U/DDFyfoepBw3ztYN2j2q+qhMqJU
-5xyYvQ4XPf+5/74MhjtyGEtce0y+ZwYUBWmy21nw/ib9SgthxNpl4KcU1WpzbvOd
-wD8vPD12AFqJJwNVfGJBRMWbHjz8RymU3wElG7d//umAtJKR5gfXkRUz48xF+Q2i
-HEDiCkK+TmrD9nS1UMlt/6algJDpjV3k3PtvdcsVTrzl5fVGyBZFJ8hF2BPv/Ipy
-wsnb7hVgtcNy9nol12+5z4bhvz3gFTNry1Elq+y0j5mfSyIPGHFojGWhSPOsUmIU
-qkPuW23kORq7/hH+sYEdCUB6WIeA1VI647tJ6X9RDzTTZccleSJUQPeRUYAeOniO
-2fXKMuVLD9VPm2j8GzGvvYLJzIPqeiZVLzG7eMFxM6kayXj55RaVAZXMZ9LrEERV
-i9aonvwkcHyPT9EJtF0vI7+0uZ/maVgHcW0ovIyUQy9+M4fJU/0X5wot7IU2ldi6
-53e8sHUfxBT7ZzhXhgqZkJyXPy8H2j9BBpWMg1dUE1DaBkHZ+OBejKzdI0asSoin
-bdLF4YYypC6Gk18zDxMbAeRI5tIV/7X8uYnQcoMYWoAdtqEsffomSY1LBG1uABBA
-qA6BLfx4yRg=
-=9lMg
+iQIcBAEBAgAGBQJSc3nXAAoJEN0jrNd/PrOhs2wQALvKXOIALAkIlmgDpt/UwLZ3
+deGnliphUmS8HMxrFCU1pMU7JfVZlJUkBcewtIxIc6vND5gmyzkvoiAlUYbtGs2U
+v9AVmF8ZBf2YZMUKV2GwaUQgivBHQGR7lsjubpW22WA+wGk7UieXc4yo1VeY2Mum
+EUwbnX7X+jPV6QCoAJ4nabknLg4U2aPUlgxgjxt1uM7N9D514oxX2xT/RBhjChWp
+ftvkLnoCra99sbE7gpYzxWop9ArKOERoVZYzTIX0XwC4rNvAc6p5bRBxTtaLLnpc
+YdlVZU/x06qMbDjPJwIsYLyQEoppffwQVfnpWUcONCFXSdRm8dqH+0ywCaP58Ltp
+PYCMZFHyr11wt4YNUnqj1MJhAYMiP0zsWIvUUNFvF/XJ1y+cvTyyJ3pDxkbpf5wp
+EP81ErIhKG/XHAi1qnqm7EYdBq6oi2WCmFAE8zES9ov/06t3SUfqfvGKcQkZAIDK
+AcWcrWEcE8txOa5tEYOdoSNEk9SVlRU99N2SaaE9pZzSZT/uvKujwUfS1oCAkyRx
+n3SFf11gLxHDo2u6tkw0BfADvkRoDIJluNg3B337mj1/xbbb/J/1735qSRhg7QXr
+1XzODR2FlJUcsWSH+wV++71vi0U0GXYMZpKhsITUOutbCTTpRUiACCO7j+JH38EB
+Uir2Bafy/KMCaI27+SmN
+=hnrj
 -----END PGP SIGNATURE-----
 
---Sig_/09MumQEKt8uBs4t8FzqSLgU--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--PW0Eas8rCkcu1VkF--
+
+--===============1850514120842827206==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1850514120842827206==--
