@@ -1,59 +1,64 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/2] drm: omap: Enable DT support for DMM
-Date: Thu, 31 Oct 2013 17:40:22 -0700
-Message-ID: <20131101004020.GA8413@kartoffel>
-References: <1379063679-4869-1-git-send-email-archit@ti.com>
- <1381820660-5501-1-git-send-email-archit@ti.com>
- <1381820660-5501-3-git-send-email-archit@ti.com>
+Subject: Re: [PATCH 4/5] input: tc3589x-keypad: support probing from device
+ tree
+Date: Thu, 31 Oct 2013 17:58:40 -0700
+Message-ID: <20131101005840.GB8413@kartoffel>
+References: <1381872071-23455-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1381820660-5501-3-git-send-email-archit@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>
+In-Reply-To: <1381872071-23455-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2013 at 08:04:20AM +0100, Archit Taneja wrote:
-> Enable use of DT for DMM/Tiler.
+On Tue, Oct 15, 2013 at 10:21:11PM +0100, Linus Walleij wrote:
+> Implement device tree probing for the tc3589x keypad driver.
+> This is modeled on the STMPE keypad driver and tested on the
+> Ux500 TVK1281618 UIB.
 > 
-> Originally worked on by Andy Gross <andygro@gmail.com>
-> 
-> Cc: Andy Gross <andygro@gmail.com>
-> Cc: DRI Development <dri-devel@lists.freedesktop.org>
-> Signed-off-by: Archit Taneja <archit@ti.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/gpu/drm/omapdrm/omap_dmm_tiler.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/input/keyboard/tc3589x-keypad.c | 63 +++++++++++++++++++++++++++++++--
+>  1 file changed, 61 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-> index acf6678..59f17de 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-> @@ -968,12 +968,23 @@ static const struct dev_pm_ops omap_dmm_pm_ops = {
->  };
->  #endif
+> diff --git a/drivers/input/keyboard/tc3589x-keypad.c b/drivers/input/keyboard/tc3589x-keypad.c
+> index 208de7c..f6ec0d7 100644
+> --- a/drivers/input/keyboard/tc3589x-keypad.c
+> +++ b/drivers/input/keyboard/tc3589x-keypad.c
+> @@ -297,6 +297,62 @@ static void tc3589x_keypad_close(struct input_dev *input)
+>  	tc3589x_keypad_disable(keypad);
+>  }
 >  
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id dmm_of_match[] = {
-> +	{ .compatible = "ti,omap4-dmm", },
-> +	{ .compatible = "ti,omap5-dmm", },
-> +	{},
-> +};
-> +#else
-> +#define dmm_of_match NULL
-> +#endif
+> +#ifdef CONFIG_OF
+> +static const struct tc3589x_keypad_platform_data *
+> +tc3589x_keypad_of_probe(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct tc3589x_keypad_platform_data *plat;
+> +	u32 debounce_ms;
+> +	int proplen;
 > +
->  struct platform_driver omap_dmm_driver = {
->  	.probe = omap_dmm_probe,
->  	.remove = omap_dmm_remove,
->  	.driver = {
->  		.owner = THIS_MODULE,
->  		.name = DMM_DRIVER_NAME,
-> +		.of_match_table = dmm_of_match,
+> +	if (!np)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	plat = devm_kzalloc(dev, sizeof(*plat), GFP_KERNEL);
+> +	if (!plat)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	of_property_read_u8(np, "keypad,num-columns", &plat->kcol);
+> +	of_property_read_u8(np, "keypad,num-rows", &plat->krow);
 
-If you use of_match_ptr(dmm_of_match) here you don't need the #else case above.
+These look wrong to me, as almost every single use of of_property_read_u8 (or
+of_property_read_u16) do. They read _packed_ values out of the dt, and do not
+read (u32) cells as u8s or u16s.
+
+The matrix-keymap binding doesn't define these as 8-bit, and the example
+binding they are u32 cells. Either the binding document or this code is wrong.
+
+I'm confused as to how this can work. Are you using /bits/ 8 in your dts?
 
 Thanks,
 Mark.
