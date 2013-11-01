@@ -1,63 +1,89 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] phy: add Broadcom Kona USB2 PHY DT binding
-Date: Fri, 1 Nov 2013 18:56:14 -0400
-Message-ID: <20131101225614.GC17505@beef>
-References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
- <1383335158-19730-8-git-send-email-matt.porter@linaro.org>
- <527414F2.7090402@broadcom.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: i.MX53: dts for Voipac x53-dmm-668 module
+Date: Fri, 1 Nov 2013 15:58:00 -0700
+Message-ID: <20131101225759.GA3224@kartoffel>
+References: <1381874609-14464-1-git-send-email-lisovy@gmail.com>
+ <1381874609-14464-4-git-send-email-lisovy@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <527414F2.7090402-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1381874609-14464-4-git-send-email-lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org" <pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 09:54:10PM +0100, Arend van Spriel wrote:
-> On 11/01/2013 08:45 PM, Matt Porter wrote:
-> >Add a binding that describes the Broadcom Kona USB2 PHY found
-> >on the BCM281xx family of SoCs.
-> >
-> >Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >---
-> >  .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-> >
-> >diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-> >new file mode 100644
-> >index 0000000..db309e2
-> >--- /dev/null
-> >+++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-> >@@ -0,0 +1,15 @@
-> >+BROADCOM KONA USB2 PHY
-> >+
-> >+Required properties:
-> >+ - compatible: brcm,kona-usb2-phy
-> >+ - regs: offset and length of the PHY registers
-> >+ - #phy-cells: must be 0
-> >+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> >+
-> >+Example:
-> >+
-> >+	usbphy: usbphy@3f130000 {
-> >+		compatible = "brcm,kona-usb2-phy";
-> >+		reg = <0x3f130000 0x28>;
+On Tue, Oct 15, 2013 at 11:03:28PM +0100, Rostislav Lisovy wrote:
+> Enable UART1 and FEC
 > 
-> I expect 'regs' iso 'reg' in this example.
+> Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+>  create mode 100644 arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+> new file mode 100644
+> index 0000000..04695c9
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+> @@ -0,0 +1,195 @@
+> +/*
+> + * Copyright 2013 Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, PiKRON s.r.o.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include "imx53.dtsi"
+> +
+> +/ {
+> +	model = "Voipac i.MX53 X53-DMM-668";
+> +	compatible = "vp,imx53-dmm-668", "fsl,imx53";
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x70000000 0x20000000>;
+> +	};
+> +
+> +	memory@1 {
+> +		device_type = "memory";
+> +		reg = <0xb0000000 0x20000000>;
+> +	};
 
-Yes, will fix the typo in that property for v3.
+This looks wrong. Any unit-address should match the first reg entry, and I've
+not seen memory nodes with unit addresses anywhere else.
+
+Why not:
+
+memory {
+	device_type = "memory";
+	reg = <0x70000000 0x20000000>,
+	      <0xb0000000 0x20000000>;
+};
+
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +
+> +		reg_3p3v: 3p3v {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "3P3V";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+
+Is there any reason for placing these under a simple-bus rather than under the
+root?
 
 Thanks,
-Matt
-
-> >+		#phy-cells = <0>;
-> >+	};
-> >
-> 
-> 
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
