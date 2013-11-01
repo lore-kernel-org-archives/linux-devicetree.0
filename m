@@ -1,103 +1,862 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Sat, 2 Nov 2013 00:24:11 +1100
-Message-ID: <20131101132411.GC3430@voom.fritz.box>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <20131024234340.ADF70C403B6@trevor.secretlab.ca>
- <526A83B9.30800@wwwdotorg.org>
- <20131028101737.GC15114@voom.fritz.box>
- <5272C80A.7070204@wwwdotorg.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
+Date: Fri, 1 Nov 2013 07:48:34 -0700
+Message-ID: <CACxGe6tK7NktGqYOt5pV29UWDFXuqzNijWxFLVXesgbDTEhfCw@mail.gmail.com>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+ <1381869563-16083-5-git-send-email-grant.likely@linaro.org>
+ <CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com>
+ <CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com> <20131031185714.GA12646@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5272C80A.7070204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131031185714.GA12646@quad.lixom.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 31, 2013 at 11:57 AM, Olof Johansson <olof@lixom.net> wrote:
+> On Wed, Oct 30, 2013 at 02:25:21PM -0700, Grant Likely wrote:
+>> (Sorry for HTML mail)
+>>
+>> Can you put #define DEBUG at the top of drivers/of/irq.c and send me the
+>> log output from before and after the commit?
+>
+> Here you go, quite verbose log below.
+>
+> Looks like we're tripping the "no reg passed in" checks, not sure if related.
 
---lMM8JwqTlfDpEaS6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks.
 
-On Thu, Oct 31, 2013 at 03:13:46PM -0600, Stephen Warren wrote:
-> On 10/28/2013 04:17 AM, David Gibson wrote:
-> > On Fri, Oct 25, 2013 at 03:44:09PM +0100, Stephen Warren wrote:
-> >> On 10/25/2013 12:43 AM, Grant Likely wrote:
-> >>> On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
-> >>> <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> >>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>>=20
-> >>>> This is a very quick proof-of-concept re: how a DT schema
-> >>>> checker might look if written in C, and integrated into dtc.
-> >>>=20
-> >>> Thanks for looking at this.
-> >>>=20
-> >>> Very interesting. Certainly an expedient way to start checking
-> >>> schemas, and for certain bindings it may be the best approach.
-> >>> The downside is it forces a recompilation of DTC to bring in
-> >>> new bindings and it isn't a great meduim for mixing schema with
-> >>> documentation in the bindings.
-> >>=20
-> >> This approach would certainly require recompiling something. I
-> >> threw the code into dtc simply because it was the easiest
-> >> container for the demonstration. It could be a separate DT
-> >> validation utility if we wanted, although we'd need to split the
-> >> DT parser from dtc into a library to avoid code duplication. The
-> >> resultant utility could be part of the repo containing the DTs,
-> >> so it didn't end up as a separate package to manage.
-> >>=20
-> >> I think the additional documentation could be added as comments
-> >> in the validation functions, just like IIRC it was to be
-> >> represented as comments even in the .dts-based schema proposals.
-> >=20
-> > Fwiw, I've been starting to do some hacking on the checks code,
-> > with a view to making it accomodate the schema stuff better.
-> > Branch 'checking' on the kernel.org tree.  In a state of flux, so
-> > expect rebases.
->=20
-> Did you forget to push that? I don't see it in any of:
-> git://git.kernel.org/pub/scm/linux/kernel/git/jdl/dtc.git
-> git://git.kernel.org/pub/scm/utils/dtc/dtc.git
-> git://git.jdl.com/software/dtc.git
+Hmmm. that's very odd. The using a precalcuated delay before the
+change bothers me because there shouldn't be a functional change here
+to the users. I'll dig into it today and see if I can figure out what
+the behaviour change is.
 
-Oops.  Thought I'd pushed, but apparently not.  Should be there now
-on:
-	git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+g.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---lMM8JwqTlfDpEaS6
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSc6t7AAoJEGw4ysog2bOSgjwP/111RYgb5PMToNt+7+5N2VU9
-OR7MY+thdcwmN02XpGt1suSavx/ILjTSsDvStwrgN2LDRz87sUztnhBUHBY9CrNx
-2H9pYGetPDBC752PIjEi+zkG39RJd3kv9YH30/uu6zrmar69LWoJRHiTVZ35lgKt
-/hW/9DHRiwXyGavOc+MKmJWDp8ib8hrKn8kOEi3Hp1sqOc5oaHsak5pTT0L2SFY/
-2dg737nZHGPd3He3Wahity2caI3v9v+U0sbk5Rx6pm/WukVwzmkeBJL3E86aNJBQ
-+/23U7LezKOtNd8UybHMJhCTapJ0diLfhHvDFn7ySjQqFWmY4+e3omvjwf1wqfhn
-Cq5Rrsyo2Jok0R5XplJ7pAaBUFoXMsAoDHcx1tnt7fLfBCK4pG9Vgh7Yn5PQzpQg
-EoWE45nGartOJ8NpqV7X2Z+A04v12P0PdtJUmezjoFjBcRtLz93Myi1wOG4WfW+0
-7U0Jf5yB/mOUbvdp6mopehCvvSEpx/BOsb5b9QH6cj6JN4Fr4PcxX32lBXaymWqp
-W9gVR6SFa+55VOGlMjR3Nzt61Pkt5fzKF/NQ9OR1/riI3nhkfSL0sRpFs3RM/oGy
-C1TmjUEVRLlA/8Qm0cWzAq/FDE+TJPu5q9PsrKsex4+lMPFEovAQwv8oIZez8sn5
-XUP0j9sEFG+a85ZcwJMm
-=OdA8
------END PGP SIGNATURE-----
-
---lMM8JwqTlfDpEaS6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+> After:
+>
+> [arndale         01:05] [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+> [arndale         01:05] [    0.000000] Preemptible hierarchical RCU implementation.
+> [arndale         01:05] [    0.000000] NR_IRQS:16 nr_irqs:16 16
+> [arndale         01:05] [    0.000000] of_irq_init: init arm,cortex-a9-gic @ c1569754, parent   (null)
+> [arndale         01:05] [    0.000000] of_irq_init: init samsung,exynos4210-combiner @ c1569608, parent c1569754
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=0
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000000...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=1
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000001...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=2
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000002...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=3
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000003...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=4
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000004...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=5
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000005...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=6
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000006...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=7
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000007...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=8
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000008...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=9
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000009...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=10
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000a...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=11
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000b...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=12
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000c...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=13
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000d...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=14
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000e...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=15
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000f...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=16
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000010...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=17
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000011...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=18
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000012...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=19
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000013...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=20
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000014...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=21
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000015...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=22
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000016...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=23
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000017...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=24
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000018...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=25
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000019...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=26
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001a...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=27
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001b...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=28
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001c...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=29
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001d...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=30
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001e...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=31
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=96
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=96
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001f...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] Exynos5250: clock setup completed, armclk=1000000000
+> [arndale         01:05] [    0.000000] Exynos: Audss: clock setup completed
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/timer, index=0
+> [arndale         01:05] [    0.000000]  intspec=1 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000d...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> no reg passed in when needed !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/timer, index=1
+> [arndale         01:05] [    0.000000]  intspec=1 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000e...],ointsize=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> no reg passed in when needed !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/timer, index=2
+> [arndale         01:05] [    0.000000]  intspec=1 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000b...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> no reg passed in when needed !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/timer, index=3
+> [arndale         01:05] [    0.000000]  intspec=1 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=3 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000a...],ointsize=3
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         01:05] [    0.000000]  -> addrsize=1
+> [arndale         01:05] [    0.000000]  -> no reg passed in when needed !
+> [arndale         01:05] [    0.000000] arch_timer: No interrupt available, giving up
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=0
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000000 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=0
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000000 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=1
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000001 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=2
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000002 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=3
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000003 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=4
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000004 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=5
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000005 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=6
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=4
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000004 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=5
+> [arndale         01:05] [    0.000000]  intspec=0 intlen=12
+> [arndale         01:05] [    0.000000]  intsize=2 intlen=12
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000005 0x00000000...],ointsize=2
+> [arndale         01:05] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         01:05] [    0.000000]  -> addrsize=0
+> [arndale         01:05] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         01:05] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         01:05] [    0.000000]  -> imaplen=27
+> [arndale         01:05] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         01:05] [    0.000000]  -> got it !
+> [arndale         01:05] [    0.000000] genirq: Flags mismatch irq 347. 00015200 (mct_comp_irq) vs. 00014a00 (mct_tick0)
+> [arndale         01:05] [    0.000000] sched_clock: 32 bits at 200 Hz, resolution 5000000ns, wraps every 4294967291ms
+> [arndale         01:05] [    0.000000] Console: colour dummy device 80x30
+> [arndale         01:05] [    0.000000] Calibrating delay loop...
+> [arndale         01:05] got exception: timeout
+>
+>
+>
+> Before:
+>
+>
+> Huh, before this change we end up using pre-calculated elay loop:
+>
+>
+> [arndale         00:58] [    0.000000] Preemptible hierarchical RCU implementation.
+> [arndale         00:58] [    0.000000] NR_IRQS:16 nr_irqs:16 16
+> [arndale         00:58] [    0.000000] of_irq_init: init arm,cortex-a9-gic @ c1569754, parent   (null)
+> [arndale         00:58] [    0.000000] of_irq_init: init samsung,exynos4210-combiner @ c1569608, parent c1569754
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=0
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000000...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=1
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000001...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=2
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000002...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=3
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000003...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=4
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000004...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=5
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000005...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=6
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000006...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=7
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000007...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=8
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000008...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=9
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000009...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=10
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000a...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=11
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000b...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=12
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000c...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=13
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000d...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=14
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000e...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=15
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000000f...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=16
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000010...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=17
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000011...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=18
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000012...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=19
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000013...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=20
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000014...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=21
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000015...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=22
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000016...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=23
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000017...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=24
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000018...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=25
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x00000019...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=26
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001a...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=27
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001b...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=28
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001c...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=29
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001d...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=30
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001e...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/interrupt-controller@10440000, index=31
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=96
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=96
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000000 0x0000001f...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] Exynos5250: clock setup completed, armclk=1000000000
+> [arndale         00:58] [    0.000000] Exynos: Audss: clock setup completed
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/timer, index=0
+> [arndale         00:58] [    0.000000]  intspec=1 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000d...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/timer, index=1
+> [arndale         00:58] [    0.000000]  intspec=1 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000e...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/timer, index=2
+> [arndale         00:58] [    0.000000]  intspec=1 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000b...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/timer, index=3
+> [arndale         00:58] [    0.000000]  intspec=1 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=3 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/interrupt-controller@10481000,intspec=[0x00000001 0x0000000a...],ointsize=3
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/interrupt-controller@10481000, size=3
+> [arndale         00:58] [    0.000000]  -> addrsize=1
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] Architected cp15 timer(s) running at 24.00MHz (phys).
+> [arndale         00:58] [    0.000000] Switching to timer-based delay loop
+> [arndale         00:58] [    0.000000] sched_clock: ARM arch timer >56 bits at 24000kHz, resolution 41ns
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=0
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000000 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=0
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000000 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=1
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000001 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=2
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000002 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=3
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000003 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=15)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=12
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10440000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=4
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000004 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=15)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=12
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=10)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=6
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10481000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=5
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000005 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=15)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=12
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=10)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=6
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=4)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=0
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10481000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=6
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=4
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000004 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=15)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=12
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=10)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=6
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10481000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] of_irq_parse_one: dev=/mct@101C0000, index=5
+> [arndale         00:58] [    0.000000]  intspec=0 intlen=12
+> [arndale         00:58] [    0.000000]  intsize=2 intlen=12
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: par=/mct@101C0000/mct-map,intspec=[0x00000005 0x00000000...],ointsize=2
+> [arndale         00:58] [    0.000000] of_irq_parse_raw: ipar=/mct@101C0000/mct-map, size=2
+> [arndale         00:58] [    0.000000]  -> addrsize=0
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=30)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=27
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=25)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=22
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=20)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=17
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=15)
+> [arndale         00:58] [    0.000000]  -> newintsize=2, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=12
+> [arndale         00:58] [    0.000000]  -> match=0 (imaplen=10)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=6
+> [arndale         00:58] [    0.000000]  -> match=1 (imaplen=4)
+> [arndale         00:58] [    0.000000]  -> newintsize=3, newaddrsize=0
+> [arndale         00:58] [    0.000000]  -> imaplen=0
+> [arndale         00:58] [    0.000000]  -> new parent: /interrupt-controller@10481000
+> [arndale         00:58] [    0.000000]  -> got it !
+> [arndale         00:58] [    0.000000] sched_clock: 32 bits at 200 Hz, resolution 5000000ns, wraps every 4294967291ms
+> [arndale         00:58] [    0.000000] Console: colour dummy device 80x30
+> [arndale         00:58] [    0.012702] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=120000)
+> [arndale         00:58] [    0.022934] pid_max: default: 32768 minimum: 301
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
