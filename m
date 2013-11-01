@@ -1,63 +1,69 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 03/11] devicetree: bindings: Document qcom,kpss-acc
-Date: Fri,  1 Nov 2013 15:08:51 -0700
-Message-ID: <1383343739-23080-4-git-send-email-sboyd@codeaurora.org>
-References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 00/11] CPU enable method based SMP/hotplug + MSM conversion
+Date: Fri,  1 Nov 2013 15:08:48 -0700
+Message-ID: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-The kpss acc binding describes the clock, reset, and power domain
-controller for a Krait CPU.
+This is a rework of patches sent a few months back by Rohit[1].
+The goal of these patches is to add support for SMP and (basic)
+hotplug on MSM based SoCs. To get there, we add support for a
+generic way to add SMP/hotplug support code in the kernel. To
+show how it's used, we convert the MSM8660 SMP support code over
+to the new method. After that we add support for the rest of the
+upstream MSM SoCs (note these patches are piled high on top of
+Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
+but this should only matter to the MSM maintainers).
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt   | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This is one of the last items of code that still requires us to have
+a mach directory and a machine descriptor. We should be able to move
+the hotplug/smp code out of mach directories if this approach is
+accepted.
+
+[1] https://lkml.org/lkml/2013/8/1/770
+[2] https://lkml.org/lkml/2013/10/17/520
+[3] https://lkml.org/lkml/2013/10/18/406
+[4] http://lkml.org/lkml/2013/10/28/501
+ 
+Rohit Vaswani (7):
+  devicetree: bindings: Document cpu enable-method for ARM CPUs
+  devicetree: bindings: Document Qualcomm cpus and enable-method
+  ARM: msm: Remove pen_release usage
+  ARM: msm: Re-organize platsmp to make it extensible
+  ARM: msm: Add SMP support for KPSSv1
+  ARM: msm: Add SMP support for KPSSv2
+  ARM: dts: msm: Add nodes necessary for SMP boot
+
+Stephen Boyd (4):
+  devicetree: bindings: Document qcom,kpss-acc
+  devicetree: bindings: Document qcom,saw2 node
+  ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
+  ARM: msm: Remove nr_cpus detection logic
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |  11 +
+ .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  21 ++
+ .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  23 ++
+ arch/arm/boot/dts/qcom-msm8660-surf.dts            |  24 ++
+ arch/arm/boot/dts/qcom-msm8960-cdp.dts             |  32 +++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  49 ++++
+ arch/arm/include/asm/smp.h                         |   9 +
+ arch/arm/kernel/devtree.c                          |  38 +++
+ arch/arm/mach-msm/Makefile                         |   2 +-
+ arch/arm/mach-msm/board-dt.c                       |  14 -
+ arch/arm/mach-msm/common.h                         |   1 -
+ arch/arm/mach-msm/headsmp.S                        |  39 ---
+ arch/arm/mach-msm/hotplug.c                        |  31 +--
+ arch/arm/mach-msm/platsmp.c                        | 301 +++++++++++++++------
+ arch/arm/mach-msm/scm-boot.h                       |   8 +-
+ include/asm-generic/vmlinux.lds.h                  |  10 +
+ 16 files changed, 448 insertions(+), 165 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+ delete mode 100644 arch/arm/mach-msm/headsmp.S
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-new file mode 100644
-index 0000000..ed4a9c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-@@ -0,0 +1,21 @@
-+* Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
-+
-+The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
-+There is one ACC register region per CPU within the KPSS remaped region as
-+well as an alias register region that remaps accesses to the ACC associated
-+with the CPU accessing the region.
-+
-+Required Properties:
-+
-+- compatible : Shall contain "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2".
-+- reg: Specifies the base address and size of the banked register region.
-+- cpu-offset : per-cpu offset used when the device is accessed without the
-+		CPU remapping facilities.
-+		The offset is cpu-offset + (0x10000 * cpu-nr).
-+
-+Example:
-+
-+	clock-controller@2008000 {
-+		compatible = "qcom,kpss-acc-v2";
-+		reg = <0x02008000 0x1000>;
-+	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
