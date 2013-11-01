@@ -1,132 +1,76 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: [PATCH v2 5/9] usb: gadget: s3c-hsotg: enable generic phy support
-Date: Fri,  1 Nov 2013 15:45:54 -0400
-Message-ID: <1383335158-19730-6-git-send-email-matt.porter@linaro.org>
-References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383335158-19730-1-git-send-email-matt.porter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] ARM: dts: add usb udc support to bcm281xx
+Date: Fri, 01 Nov 2013 23:56:33 +0300
+Message-ID: <52741581.9020106@cogentembedded.com>
+References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org> <1383335158-19730-10-git-send-email-matt.porter@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383335158-19730-10-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for the generic PHY subsystem. Generic PHY
-support is probed and then the driver falls back to checking
-for an old style USB PHY and pdata if not found.
+Hello.
 
-Signed-off-by: Matt Porter <matt.porter@linaro.org>
----
- drivers/usb/gadget/s3c-hsotg.c | 54 ++++++++++++++++++++++++++++--------------
- 1 file changed, 36 insertions(+), 18 deletions(-)
+On 11/01/2013 10:45 PM, Matt Porter wrote:
 
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 3e0c124..f97978b 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -34,6 +34,7 @@
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
- #include <linux/usb/phy.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
- 
- #include "s3c-hsotg.h"
-@@ -131,7 +132,8 @@ struct s3c_hsotg_ep {
-  * struct s3c_hsotg - driver state.
-  * @dev: The parent device supplied to the probe function
-  * @driver: USB gadget driver
-- * @phy: The otg phy transceiver structure for phy control.
-+ * @phy: The otg phy transceiver structure for old USB phy control.
-+ * @gphy: The otg phy transceiver structure for generic phy control.
-  * @plat: The platform specific configuration data. This can be removed once
-  * all SoCs support usb transceiver.
-  * @regs: The memory area mapped for accessing registers.
-@@ -154,6 +156,7 @@ struct s3c_hsotg {
- 	struct device		 *dev;
- 	struct usb_gadget_driver *driver;
- 	struct usb_phy		*phy;
-+	struct phy		*gphy;
- 	struct s3c_hsotg_plat	 *plat;
- 
- 	spinlock_t              lock;
-@@ -2820,9 +2823,12 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
- 
- 	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
- 
--	if (hsotg->phy)
-+	if (hsotg->gphy) {
-+		phy_init(hsotg->gphy);
-+		phy_power_on(hsotg->gphy);
-+	} else if (hsotg->phy) {
- 		usb_phy_init(hsotg->phy);
--	else if (hsotg->plat->phy_init)
-+	} else if (hsotg->plat->phy_init)
- 		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
- }
- 
-@@ -2837,9 +2843,12 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
- {
- 	struct platform_device *pdev = to_platform_device(hsotg->dev);
- 
--	if (hsotg->phy)
-+	if (hsotg->gphy) {
-+		phy_power_off(hsotg->gphy);
-+		phy_exit(hsotg->gphy);
-+	} else if (hsotg->phy) {
- 		usb_phy_shutdown(hsotg->phy);
--	else if (hsotg->plat->phy_exit)
-+	} else if (hsotg->plat->phy_exit)
- 		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
- }
- 
-@@ -3446,6 +3455,7 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- {
- 	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
- 	struct usb_phy *phy;
-+	struct phy *gphy;
- 	struct device *dev = &pdev->dev;
- 	struct s3c_hsotg_ep *eps;
- 	struct s3c_hsotg *hsotg;
-@@ -3460,19 +3470,27 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
--	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
--	if (IS_ERR(phy)) {
--		/* Fallback for pdata */
--		plat = dev_get_platdata(&pdev->dev);
--		if (!plat) {
--			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
--			return -EPROBE_DEFER;
--		} else {
--			hsotg->plat = plat;
--		}
--	} else {
--		hsotg->phy = phy;
--	}
-+	/*
-+	 * Attempt to find a generic PHY, then look for an old style
-+	 *  USB PHY, finally fall back to pdata
-+	 */
-+	gphy = devm_phy_get(dev, "usb2-phy");
-+	if (IS_ERR(gphy)) {
-+		phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+		if (IS_ERR(phy)) {
-+			/* Fallback for pdata */
-+			plat = dev_get_platdata(&pdev->dev);
-+			if (!plat) {
-+				dev_err(&pdev->dev,
-+					"no platform data or transceiver defined\n");
-+				return -EPROBE_DEFER;
-+			} else {
-+				hsotg->plat = plat;
-+			}
-+		} else
-+			hsotg->phy = phy;
-+	} else
-+		hsotg->gphy = gphy;
- 
- 	hsotg->dev = dev;
- 
--- 
-1.8.4
+> Adds USB OTG/PHY and clock support to BCM281xx and enables
+> UDC support on the bcm11351-brt and bcm28155-ap boards.
+
+> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/bcm11351-brt.dts |  6 ++++++
+>   arch/arm/boot/dts/bcm11351.dtsi    | 18 ++++++++++++++++++
+>   arch/arm/boot/dts/bcm28155-ap.dts  |  8 ++++++++
+>   3 files changed, 32 insertions(+)
+
+[...]
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+> index 0755f43..247f9fd 100644
+> --- a/arch/arm/boot/dts/bcm11351.dtsi
+> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+> @@ -284,4 +284,22 @@
+>   			#clock-cells = <0>;
+>   		};
+>   	};
+> +
+> +	usbotg: usbotg@3f120000 {
+
+    According to ePAPR spec [1], the node name should be "usb@3f120000".
+
+
+> +		compatible = "snps,dwc2";
+> +		reg = <0x3f120000 0x10000>;
+> +		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&usb_otg_ahb_clk>;
+> +		clock-names = "otg";
+> +		phys = <&usbphy>;
+> +		phy-names = "usb2-phy";
+> +		status = "disabled";
+> +	};
+> +
+> +	usbphy: usbphy@3f130000 {
+
+    This one should probably be named "usb-phy@3f130000", just like 
+"ethernet-phy" from the ePAPR spec.
+
+> +		compatible = "brcm,kona-usb2-phy";
+> +		reg = <0x3f130000 0x28>;
+> +		#phy-cells = <0>;
+> +		status = "disabled";
+> +	};
+>   };
+
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
