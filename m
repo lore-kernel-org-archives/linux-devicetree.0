@@ -1,164 +1,113 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 10/43] clk: ti: add support for TI fixed factor clock
-Date: Fri, 1 Nov 2013 11:52:12 +0200
-Message-ID: <527379CC.60909@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-11-git-send-email-t-kristo@ti.com> <52729DA0.8010506@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Fri, 1 Nov 2013 10:53:50 +0100
+Message-ID: <20131101095349.GI27864@ulmo.nvidia.com>
+References: <20131025091104.GG19622@ulmo.nvidia.com>
+	<52718122.9000206@wwwdotorg.org> <20131030224108.GA6939@mithrandir>
+	<20131031.101405.2229107340254709582.hdoyu@nvidia.com>
+	<52728754.60307@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52729DA0.8010506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============2511476189858324374=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <52728754.60307-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2013 08:12 PM, Nishanth Menon wrote:
-> On 10/25/2013 10:57 AM, Tero Kristo wrote:
->> This behaves exactly in similar manner to basic fixed-factor-clock, but
->> adds a few properties on top for handling clock hardware autoidling.
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../bindings/clock/ti/fixed-factor-clock.txt       |   29 +++++++++
->>   drivers/clk/ti/Makefile                            |    2 +-
->>   drivers/clk/ti/fixed-factor.c                      |   65 ++++++++++++++++++++
->>   3 files changed, 95 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
->>   create mode 100644 drivers/clk/ti/fixed-factor.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
->> new file mode 100644
->> index 0000000..60b9e34
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
->> @@ -0,0 +1,29 @@
->> +Binding for TI fixed factor rate clock sources.
->> +
->> +Binding status: Unstable - ABI compatibility may be broken in the future
->> +
->> +This binding uses the common clock binding[1].
->> +
->> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +Required properties:
->> +- compatible : shall be "ti,fixed-factor-clock".
->> +- #clock-cells : from common clock binding; shall be set to 0.
->> +- ti,clock-div: fixed divider.
->> +- ti,clock-mult: fixed multiplier.
->> +- clocks: parent clock.
->> +
->> +Optional properties:
->> +- ti,autoidle-shift: bit shift of the autoidle enable bit for the clock
->> +- reg: offset for the autoidle register of this clock
->> +- ti,invert-autoidle-bit: autoidle is enabled by setting the bit to 0
->
-> The above three belong to autoidle stuff I think.. maybe pointing to
-> it's binding will help?
->
->> +- ti,set-rate-parent: clk_set_rate is propagated to parent
->> +
->> +Example:
->> +	clock {
->> +		compatible = "ti,fixed-factor-clock";
->> +		clocks = <&parentclk>;
->> +		#clock-cells = <0>;
->> +		ti,clock-div = <2>;
->> +		ti,clock-mult = <1>;
->> +	};
->> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
->> index 640ebf9..f57fc4b 100644
->> --- a/drivers/clk/ti/Makefile
->> +++ b/drivers/clk/ti/Makefile
->> @@ -1,4 +1,4 @@
->>   ifneq ($(CONFIG_OF),)
->>   obj-y					+= clk.o dpll.o autoidle.o divider.o \
->> -					   composite.o
->> +					   fixed-factor.o composite.o
->>   endif
->> diff --git a/drivers/clk/ti/fixed-factor.c b/drivers/clk/ti/fixed-factor.c
->> new file mode 100644
->> index 0000000..e0549c6
->> --- /dev/null
->> +++ b/drivers/clk/ti/fixed-factor.c
->> @@ -0,0 +1,65 @@
->> +/*
->> + * TI Fixed Factor Clock
->> + *
->> + * Copyright (C) 2013 Texas Instruments, Inc.
->> + *
->> + * Tero Kristo <t-kristo@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/slab.h>
->> +#include <linux/err.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/clk/ti.h>
->> +
->> +/**
->> + * of_ti_fixed_factor_clk_setup() - Setup function for TI fixed factor clock
->> + */
->> +static int __init of_ti_fixed_factor_clk_setup(struct device_node *node,
->> +					       struct regmap *regmap)
->> +{
->> +	struct clk *clk;
->> +	const char *clk_name = node->name;
->> +	const char *parent_name;
->> +	u32 div, mult;
->> +	u32 flags = 0;
->> +
->> +	if (of_property_read_u32(node, "ti,clock-div", &div)) {
->> +		pr_err("%s Fixed factor clock <%s> must have a clock-div property\n",
->> +		       __func__, node->name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (of_property_read_u32(node, "ti,clock-mult", &mult)) {
->> +		pr_err("%s Fixed factor clock <%s> must have a clokc-mult property\n",
->> +		       __func__, node->name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (of_property_read_bool(node, "ti,set-rate-parent"))
->> +		flags |= CLK_SET_RATE_PARENT;
->> +
->> +	parent_name = of_clk_get_parent_name(node, 0);
->> +
->> +	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
->> +					mult, div);
->> +
->> +	if (!IS_ERR(clk)) {
->> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
->> +		return of_ti_autoidle_setup(node, regmap);
->
-> if this fails, remove provider and unregister?
 
-Unregister is not supported currently. I don't think I want to do 
-partial cleanup here, failing autoidle setup is not critical anyway. The 
-system will still boot-up properly, only PM is potentially broken. Can 
-add an error print though.
+--===============2511476189858324374==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZOudaV4lSIjFTlHv"
+Content-Disposition: inline
 
--Tero
 
->
->> +	}
->> +
->> +	return PTR_ERR(clk);
->> +}
->> +CLK_OF_DECLARE(ti_fixed_factor_clk, "ti,fixed-factor-clock",
->> +	       of_ti_fixed_factor_clk_setup);
->>
->
->
+--ZOudaV4lSIjFTlHv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Oct 31, 2013 at 10:37:40AM -0600, Stephen Warren wrote:
+> On 10/31/2013 02:14 AM, Hiroshi Doyu wrote:
+> > Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Wed, 30 Oct 2013 23:4=
+1:09 +0100:
+> >=20
+> >> My earlier proposal for deferred interrupt reference resolution actual=
+ly
+> >> tries to solve that problem within the core. Essentially what it does =
+is
+> >> add a new function that gets called right before the driver's .probe()
+> >> function, so that it can parse standard resources and services from DT,
+> >> such as the interrupts property. This could theoretically be done for
+> >> other resources such as reg as well, but it really only matters where
+> >> the resource can be dynamic (as is the case for interrupts).
+> >>
+> >> In this case I would envision a standard OF function to associate a
+> >> device with its IOMMU. Perhaps something like:
+> >>
+> >> 	int of_iommu_attach(struct device *dev);
+> >>
+> >> That could be called by the core independent of the specific device and
+> >> IOMMU. IOMMU-specifics can probably be handled using .of_xlate(), quite
+> >> in a similar way to GPIO or regulators.
+> >>
+> >> That way drivers can remain agnostic of the IOMMU while still being ab=
+le
+> >> to take advantage of deferred probing.
+> >=20
+> > This could be simpler than making "bus_notifier" return "-EPROBE_DEFER".
+> >=20
+> > The disadvantage of this is that we may need to provide the similar
+> > of_<"subsystem">_attach() per subsytem if needed.
+>=20
+> Well, "per subsystem" here means per subsystem that is providing
+> resources, not per subsystem that is consuming resources. How many
+> subsystems are you expecting to provide resources like this? At present,
+> I believe IOMMU is the only subsystem missing some kind of API for
+> clients to acquire the relevant resource. I don't think there's any
+> scalability problem here.
+
+Furthermore if the subsystem wants to provide resources then it needs
+such a function anyway, so there really isn't any overhead here.
+
+Thierry
+
+--ZOudaV4lSIjFTlHv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSc3otAAoJEN0jrNd/PrOhbSEQAJCK8J2ks2NXs/JNMdaRcMVQ
+0xy8oPATYTHnw/HdNQG46CGbFUzuKsHZrbFY9mA8qEX4Yiy0AWVlZ/8rgE+VKXYD
+CqyIrusRARdB5NdqtOkLGkvQAtlqx+aGgr0DB6y4xbE6FLeiPUue/rEwTYGl+20M
+ualDsimW9HyphbnSp/n5Aw07BFSfhtVVj5OqKjwmM7P+xuD6LHIo4plG83QhiBUV
+22PuZ4AhhwKAcAosepyHldYhO1he+hxF0nOhl6ntdsfHmShyE514uVbABVjhNkDz
+vgq7j5oBICvIQHCCsiQbLwIQrOGtmDsA2s/R1EKhbBtb11doYL+lXM+QeV5YK5XR
+UBwxoXoWoEi9O0CG66S++jNWhEC0eUiKx5Mh15mLW6+HT45g0qc5zG8LnUUpAF22
+BdspoXeEzCr9mKY85WHi1iXatIK4oan579khbHzKbnOyUbHQUX++LTc4t9978Qpy
+84bfDAmZB4jzgIhw7aJ8quF5M84wQMMo7vmaS5NM3KNz+DSelDvIYT8sI4MehnPG
+cHvfi2+9GsmPPP0jf/QTPWVCwmUvooAXm7oMqnpg8DIAfiUKqsHnbnGJ4WIL1vqx
+oniBhgjrHDrRFKw3jySzOj0MmfKcRtO3/PRkcHA/0kHrNEe1SFJj7sWPWp8a7KD4
+XVESYM/LqoU91ZO4/cXe
+=Zp7z
+-----END PGP SIGNATURE-----
+
+--ZOudaV4lSIjFTlHv--
+
+--===============2511476189858324374==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2511476189858324374==--
