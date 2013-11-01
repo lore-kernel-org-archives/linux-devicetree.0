@@ -1,50 +1,126 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Fri, 1 Nov 2013 08:49:09 +0200
-Message-ID: <20131101084909.5ed79987aa3aeb13b14e3f08@nvidia.com>
-References: <52718122.9000206@wwwdotorg.org>
-	<20131031.101232.80781047726461143.hdoyu@nvidia.com>
-	<527286CC.9080404@wwwdotorg.org>
-	<20131031.184603.979300613649357798.hdoyu@nvidia.com>
-	<52729912.9050800@wwwdotorg.org>
+From: zhangfei gao <zhangfei.gao@gmail.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Fri, 1 Nov 2013 00:13:37 -0700
+Message-ID: <CAMj5BkgHE6FwBv6hUi8Mth1Ox40ed2sot4p9LQBxOToN=Fu7Qg@mail.gmail.com>
+References: <1382339639-16764-3-git-send-email-zhangfei.gao@linaro.org>
+	<1382533396-6584-1-git-send-email-zhangfei.gao@linaro.org>
+	<001401ced6cb$04e2a330$0ea7e990$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52729912.9050800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <001401ced6cb$04e2a330$0ea7e990$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2013 18:53:22 +0100
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-...
-> We're talking about memory-mapped on-SoC devices here, that generally
-> only exist inside Tegra SoCs.
-> 
-> Even ignoring that (i.e. expanding the argument to arbitrary modules),
-> having drivers that perform bus-master transactions call a function
-> of_iommu_attach() or similar, which does nothing if the device isn't
-> behind an IOMMU but otherwise does whatever is required, seems like it
-> isn't much of an imposition.
+Dear Seungwon
 
-Where do you expect of_iommu_attach() to be called?
-I thought something below:
+Thanks for giving suggestion.
 
-	Modified drivers/base/dd.c
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 35fa368..92ec2e9 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -278,6 +278,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	if (ret)
- 		goto probe_failed;
- 
-+	ret = of_iommu_attach(dev);
-+	if (ret)
-+		goto probe_failed;
-+
- 	if (driver_sysfs_add(dev)) {
- 		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
- 			__func__, dev_name(dev));
+On Thu, Oct 31, 2013 at 11:24 PM, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> Hi Zhangfei,
+
+>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>> +{
+>> +     struct dw_mci_k3_priv_data *priv = host->priv;
+>> +
+>> +     if (priv->type == DW_MCI_TYPE_HI4511)
+> There are several checking controller type.
+> But now DW_MCI_TYPE_HI4511 is just introduced alone.
+> It seems like unnecessary.
+
+Yes, currently only K3V2 is added, and k3v3 code will be added soon.
+Do you think type is more suitable to add later?
+
+>> +static int dw_mci_k3_parse_dt(struct dw_mci *host)
+>> +{
+>> +     struct dw_mci_k3_priv_data *priv = host->priv;
+>> +     struct device_node *np = host->dev->of_node;
+>> +     u32 data[3];
+>> +     int ret;
+>> +
+>> +     if (priv->type == DW_MCI_TYPE_HI4511) {
+> Didn't you see Kernel panic here?
+> host->priv is not allocated yet, it's a invalid pointer dereference.
+> dw_mci_k3_parse_dt() is called prior to dw_mci_k3_priv_init().
+> You can check dw_mci_probe() sequence.
+
+It is no problem here
+dw_mci_pltfm_register -> drv_data->init(host) -> dw_mci_probe -> dw_mci_parse_dt
+
+>
+>> +             ret = of_property_read_u32_array(np,
+>> +                             "clken-reg", data, 2);
+>> +             if (!ret) {
+>> +                     priv->clken_reg = data[0];
+>> +                     priv->clken_bit = data[1];
+>> +             }
+>> +
+>> +             ret = of_property_read_u32_array(np,
+>> +                             "drv-sel-reg", data, 3);
+>> +             if (!ret) {
+>> +                     priv->drv_reg = data[0];
+>> +                     priv->drv_off = data[1];
+>> +                     priv->drv_bits = data[2];
+>> +             }
+>> +
+>> +             ret = of_property_read_u32_array(np,
+>> +                             "sam-sel-reg", data, 3);
+>> +             if (!ret) {
+>> +                     priv->sam_reg = data[0];
+>> +                     priv->sam_off = data[1];
+>> +                     priv->sam_bits = data[2];
+>> +             }
+>> +
+>> +             ret = of_property_read_u32_array(np,
+>> +                             "div-reg", data, 3);
+>> +             if (!ret) {
+>> +                     priv->div_reg = data[0];
+>> +                     priv->div_off = data[1];
+>> +                     priv->div_bits = data[2];
+>> +             }
+> Should these register information be got from dt?
+> It could be define in source code instead.
+
+There are many register from pctrl node instead of mmc controller.
+If set in code, we may read id and then switch id, set register, start
+bit, bits number,
+which is no rules for different controller, using defiine is not helpful.
+for example:
+ switch (idx) {
+        case 0:
+                clken_reg = 0x1F8;
+                clken_bit = 0;
+                drv_sel_reg = 0x1F8;
+                drv_sel_bit = 4;
+                sam_sel_reg = 0x1F8;
+                sam_sel_bit = 8;
+                div_reg = 0x1F8;
+                div_bit = 1;
+                break;
+        case 1:
+                clken_reg = 0x1F8;
+                clken_bit = 12;
+                drv_sel_reg = 0x1F8;
+                drv_sel_bit = 16;
+                sam_sel_reg = 0x1F8;
+                sam_sel_bit = 20;
+                div_reg = 0x1F8;
+                div_bit = 13;
+                break;
+        case 2:
+                clken_reg = 0x1F8;
+                clken_bit = 24;
+                drv_sel_reg = 0x1F8;
+                drv_sel_bit = 28;
+                sam_sel_reg = 0x1FC;
+                sam_sel_bit = 0;
+                div_reg = 0x1F8;
+                div_bit = 25;
+                break;
+
+So define register offset, start bit and bits number in dts make it simplier.
+Is this acceptable?
+
+Thanks.
