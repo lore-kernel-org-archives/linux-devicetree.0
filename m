@@ -1,140 +1,455 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Fri, 1 Nov 2013 10:46:45 +0100
-Message-ID: <20131101094644.GG27864@ulmo.nvidia.com>
-References: <52718122.9000206@wwwdotorg.org>
-	<20131031.101232.80781047726461143.hdoyu@nvidia.com>
-	<527286CC.9080404@wwwdotorg.org>
-	<20131031.184603.979300613649357798.hdoyu@nvidia.com>
-	<52729912.9050800@wwwdotorg.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 09/43] CLK: ti: add support for ti divider-clock
+Date: Fri, 1 Nov 2013 11:48:47 +0200
+Message-ID: <527378FF.6020905@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-10-git-send-email-t-kristo@ti.com> <52729B50.5060503@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4037751238116727208=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <52729912.9050800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52729B50.5060503@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/31/2013 08:02 PM, Nishanth Menon wrote:
+> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+>> This patch adds support for TI divider clock binding, which simply uses
+>> the basic clock divider to provide the features needed.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../devicetree/bindings/clock/ti/divider.txt       |   86 +++++++
+>>   drivers/clk/ti/Makefile                            |    3 +-
+>>   drivers/clk/ti/divider.c                           |  239 ++++++++++++++++++++
+>>   3 files changed, 327 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/ti/divider.txt
+>>   create mode 100644 drivers/clk/ti/divider.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti/divider.txt b/Documentation/devicetree/bindings/clock/ti/divider.txt
+>> new file mode 100644
+>> index 0000000..65e3dcd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti/divider.txt
+>> @@ -0,0 +1,86 @@
+>> +Binding for TI divider clock
+>> +
+>> +Binding status: Unstable - ABI compatibility may be broken in the future
+>> +
+>> +This binding uses the common clock binding[1].  It assumes a
+>> +register-mapped adjustable clock rate divider that does not gate and has
+>> +only one input clock or parent.  By default the value programmed into
+>> +the register is one less than the actual divisor value.  E.g:
+>> +
+>> +register value		actual divisor value
+>> +0			1
+>> +1			2
+>> +2			3
+>> +
+>> +This assumption may be modified by the following optional properties:
+>> +
+>> +ti,index-starts-at-one - valid divisor values start at 1, not the default
+>> +of 0.  E.g:
+>> +register value		actual divisor value
+>> +1			1
+>> +2			2
+>> +3			3
+>> +
+>> +ti,index-power-of-two - valid divisor values are powers of two.  E.g:
+>> +register value		actual divisor value
+>> +0			1
+>> +1			2
+>> +2			4
+>> +
+>> +Additionally an array of valid dividers may be supplied like so:
+>> +
+>> +	dividers = <4>, <8>, <0>, <16>;
+> ti,dividers I believe.
 
---===============4037751238116727208==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="t4apE7yKrX2dGgJC"
-Content-Disposition: inline
+True.
 
+>
+>> +
+>> +Which will map the resulting values to a divisor table by their index:
+>> +register value		actual divisor value
+>> +0			4
+>> +1			8
+>> +2			<invalid divisor, skipped>
+>> +3			16
+>> +
+>> +Any zero value in this array means the corresponding bit-value is invalid
+>> +and must not be used.
+>> +
+>> +The binding must also provide the register to control the divider and
+>> +unless the divider array is provided, min and max dividers. Optionally
+>> +the number of bits to shift that mask, if necessary. If the shift value
+>> +is missing it is the same as supplying a zero shift.
+>> +
+>> +Required properties:
+>> +- compatible : shall be "ti,divider-clock".
+>
+> ti,composite-divider-clock undocumented?
 
---t4apE7yKrX2dGgJC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm yea true.
 
-On Thu, Oct 31, 2013 at 11:53:22AM -0600, Stephen Warren wrote:
-> On 10/31/2013 10:46 AM, Hiroshi Doyu wrote:
-> > Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Thu, 31 Oct 2013 17:35:2=
-4 +0100:
-> >=20
-> > ...
-> >>>> ... and for the driver to explicitly parse that property, and wait
-> >>>> until the driver for iommu_phandle is ready. Exactly the same as any
-> >>>> other resource/service dependency.
-> >>>>
-> >>>> That will solve all the problems.
-> >>>>
-> >>>> The only downside is that every driver needs to contain code to parse
-> >>>> that property. However, I think that's just one function call; the
-> >>>> actual implementation of that function can be unified somewhere insi=
-de
-> >>>> core code in drivers/iommu/.
-> >>>
-> >>> Yes, but only missing part now is that, we could do this with
-> >>> "bus_notifier", but the current bus_notifier doesn't have the feature
-> >>> to return error(-EPROBE_DEFER). This could be modified so that
-> >>> bus_notifier could return (-EPROBE_DEFER) to postpone
-> >>> probing. Alternatively this could be done in some core probe code as
-> >>> well as Thierry pointed out.
-> >>>
-> >>> [1] In the reply of "[PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,m=
-emory-clients" from DT"
-> >>
-> >> I think this should be done explicitly in drivers. It's much
-> >> simpler,
-> >=20
-> > Yes, we need to insert some IOMMU specific code in driver?
-> >=20
-> >> and doesn't encode any knowledge of driver-specific bindings into some
-> >> common bus notifier code.
-> >=20
-> > I think that we cannot do that in drivers. We want to use drivers as
-> > they are without any modifications indicating its dependency on
-> > IOMMU because most of drivers are existing ones which nvidia doesn't
-> > implement. We want to set up any IOMMU related thingy implicitly,
-> > hided from driver. That's why we need to do this in bus_notifier or
-> > driver core code.
->=20
-> We're talking about memory-mapped on-SoC devices here, that generally
-> only exist inside Tegra SoCs.
->=20
-> Even ignoring that (i.e. expanding the argument to arbitrary modules),
-> having drivers that perform bus-master transactions call a function
-> of_iommu_attach() or similar, which does nothing if the device isn't
-> behind an IOMMU but otherwise does whatever is required, seems like it
-> isn't much of an imposition.
->=20
-> If this turns out to be something that lots of devices benefit from, we
-> could do the same thing that pinctrl does for "hogs", and make the
-> function call in the driver core. But note that's still part of the
-> probing flow (just implemented in the driver core) rather than bus
-> notifier based, hence keeps the same simplicity.
+>
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : link to phandle of parent clock
+>> +- reg : offset for register controlling adjustable divider
+>> +
+>> +Optional properties:
+>> +- clock-output-names : from common clock binding.
+>> +- ti,dividers : array of integers defining divisors
+>> +- ti,bit-shift : number of bits to shift the divider value, defaults to 0
+>> +- ti,min-div : min divisor for dividing the input clock rate, only
+>> +  needed if the first divisor is offset from the default value (1)
+>> +- ti,max-div : max divisor for dividing the input clock rate, only needed
+>> +  if ti,dividers is not defined.
+>> +- ti,index-starts-at-one : valid divisor programming starts at 1, not zero
+>
+> makes sense only if ti,dividers are not defined, right?
+> CLK_DIVIDER_ONE_BASED is used with !table
 
-That's exactly what I was proposing in the first place. I did the same
-thing in my patches for late interrupt reference resolution. The reason
-why I think it makes sense to put it into the core is that it's
-something that likely most devices will have to do anyway. And it also
-is completely transparent to drivers, right? If they aren't attached to
-an IOMMU then they just aren't but will continue to work properly. And
-as you said, having it in the core makes drivers simpler, while at the
-same time keeping the explicitness of having a function call (rather
-than a somewhat obfuscated bus notifier) and the flexibility of deferred
-probing.
+Yeah, ignored if table is present.
 
-Thierry
+>
+>> +- ti,index-power-of-two : valid divisor programming must be a power of two
+>
+> makes sense only if ti,dividers are not defined, right?
+> CLK_DIVIDER_POWER_OF_TWO is used with !table
 
---t4apE7yKrX2dGgJC
-Content-Type: application/pgp-signature
+Yea.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+>
+>> +- ti,autoidle-shift : bit shift of the autoidle enable bit for the clock
+>> +- ti,invert-autoidle-bit : autoidle is enabled by setting the bit to 0
+>
+> These are part of auto idle driver bindings, so maybe give a link to that?
 
-iQIcBAEBAgAGBQJSc3iEAAoJEN0jrNd/PrOhke4P/jel90gXXHiZVekArr64G6+F
-GirAlD4g9REouiv4q3jYHvC8yw1hsBJ11xSQrN9a7QTg965c91zNxU3Qr3D3aBrd
-5D4ytTKVCyuR6PJ+IFzZJjcg7SS2GDbiK8lAVPwSTxn8XSVojRxPuzRundvAg3Gs
-40wzV1BK2QTKJXdvankwe9aBfpBKElsD9o9Mzl1xYW1fa726IQOzBj3pkN9dTP2M
-D3rmtczZzv9kvzXZ4cPEIzYc9kUECJKqvlf42PrSswGYx7zHho+ZB7fRlTli3+w0
-iMUYQeGK1YJpw1VJT47oMqbbtcq47VxD4EZFPCOOtmE/voBWW2YNyM4+K+4SN1qi
-i2J0iWduZrA9wiJ0PI1CC4UIw31WRKqejSQ9Wj9kQ04ci7g6w/lFXH+5QJ4iqJ9j
-PzBKnyyPFPqOwQYx5fUg8IXi6xhrrfL8wbV2ncL10igIOSBGUZePgbiBcOQ/6JY+
-1g40ZYWiv1ZpTys1IRzxHOjtJ4hc7ExKvScjPL7Ksnx7dMGjpX4ZQ9d47wJ3R0ET
-fJQ+3p4UUo8UsbqLbDIQaaDchDgx2dF1pVDI3pkHF3Qi6TX1thlHZhE/dNLRNm2a
-k7SSKMjAAsj475dsYTbPmbdtlMmRbOiukLkNNXEx+1IEC55RbX+ehA6yxdpZf6ie
-J5Treh3hlaFkCBdQAr1k
-=45nS
------END PGP SIGNATURE-----
+Yea can do.
 
---t4apE7yKrX2dGgJC--
+>
+>> +- ti,set-rate-parent : clk_set_rate is propagated to parent
+>
+> yeah - this is one of those properties that should probably become
+> generic at a later point in time.
+>
+>> +
+>> +Examples:
+>> +dpll_usb_m2_ck: dpll_usb_m2_ck@4a008190 {
+>> +	#clock-cells = <0>;
+>> +	compatible = "ti,divider-clock";
+>> +	clocks = <&dpll_usb_ck>;
+>> +	ti,max-div = <127>;
+>> +	reg = <0x190>;
+>> +	ti,index-starts-at-one;
+>> +};
+>> +
+>> +aess_fclk: aess_fclk@4a004528 {
+>> +	#clock-cells = <0>;
+>> +	compatible = "ti,divider-clock";
+>> +	clocks = <&abe_clk>;
+>> +	ti,bit-shift = <24>;
+>> +	reg = <0x528>;
+>> +	ti,max-div = <2>;
+>> +};
+>
+> an example of ti,dividers will be useful as well.
 
---===============4037751238116727208==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Ok.
 
+>
+>> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
+>> index a4a7595..640ebf9 100644
+>> --- a/drivers/clk/ti/Makefile
+>> +++ b/drivers/clk/ti/Makefile
+>> @@ -1,3 +1,4 @@
+>>   ifneq ($(CONFIG_OF),)
+>> -obj-y					+= clk.o dpll.o autoidle.o composite.o
+>> +obj-y					+= clk.o dpll.o autoidle.o divider.o \
+>> +					   composite.o
+>>   endif
+>> diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
+>> new file mode 100644
+>> index 0000000..787bc8f
+>> --- /dev/null
+>> +++ b/drivers/clk/ti/divider.c
+>> @@ -0,0 +1,239 @@
+>> +/*
+>> + * TI Divider Clock
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments, Inc.
+>> + *
+>> + * Tero Kristo <t-kristo@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/err.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk/ti.h>
+>> +
+>> +static struct clk_div_table
+>> +__init *ti_clk_get_div_table(struct device_node *node)
+>> +{
+>> +	struct clk_div_table *table;
+>> +	const __be32 *divspec;
+>> +	u32 val;
+>> +	u32 num_div;
+>> +	u32 valid_div;
+>> +	int i;
+>> +
+>> +	divspec = of_get_property(node, "ti,dividers", &num_div);
+>> +
+>> +	if (!divspec)
+>> +		return NULL;
+>> +
+>> +	num_div /= 4;
+>> +
+>> +	valid_div = 0;
+>> +
+>> +	/* Determine required size for divider table */
+>> +	for (i = 0; i < num_div; i++) {
+>> +		of_property_read_u32_index(node, "ti,dividers", i, &val);
+>> +		if (val)
+>> +			valid_div++;
+>> +	}
+>> +
+>> +	if (!valid_div) {
+>> +		pr_err("%s: no valid dividers for %s table\n", __func__,
+>> +		       node->name);
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	table = kzalloc(sizeof(*table) * (valid_div + 1), GFP_KERNEL);
+>> +
+>> +	if (!table) {
+>> +		pr_err("%s: unable to allocate memory for %s table\n", __func__,
+>> +		       node->name);
+>
+> you could drop this.
 
---===============4037751238116727208==--
+True.
+
+>
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	valid_div = 0;
+>> +
+>> +	for (i = 0; i < num_div; i++) {
+>> +		of_property_read_u32_index(node, "ti,dividers", i, &val);
+>> +		if (val) {
+>> +			table[valid_div].div = val;
+>> +			table[valid_div].val = i;
+>> +			valid_div++;
+>> +		}
+>> +	}
+>> +
+>> +	return table;
+>> +}
+>> +
+>> +static int _get_divider_width(struct device_node *node,
+>> +			      const struct clk_div_table *table,
+>> +			      u8 flags)
+>> +{
+>> +	u32 min_div;
+>> +	u32 max_div;
+>> +	u32 val = 0;
+>> +	u32 div;
+>> +
+>> +	if (!table) {
+>> +		/* Clk divider table not provided, determine min/max divs */
+>> +		if (of_property_read_u32(node, "ti,min-div", &min_div)) {
+>> +			pr_debug("%s: no min-div for %s, default=1\n",
+>> +				 __func__, node->name);
+>> +			min_div = 1;
+>> +		}
+>> +
+>> +		if (of_property_read_u32(node, "ti,max-div", &max_div)) {
+>> +			pr_err("%s: no max-div for %s!\n", __func__,
+>> +			       node->name);
+>> +			return -EINVAL;
+>
+> will be nice to get warning if ti,divider is defined and any of the
+> non-operational properties are defined as well.
+
+Hmm ok, can add checks for those.
+
+>
+>> +		}
+>> +
+>> +		/* Determine bit width for the field */
+>> +		if (flags & CLK_DIVIDER_ONE_BASED)
+>> +			val = 1;
+>> +
+>> +		div = min_div;
+>> +
+>> +		while (div < max_div) {
+>> +			if (flags & CLK_DIVIDER_POWER_OF_TWO)
+>> +				div <<= 1;
+>> +			else
+>> +				div++;
+>> +			val++;
+>> +		}
+>> +	} else {
+>> +		div = 0;
+>> +
+>> +		while (table[div].div) {
+>> +			val = table[div].val;
+>> +			div++;
+>> +		}
+>> +	}
+>> +
+>> +	return fls(val);
+>> +}
+>> +
+>> +/**
+>> + * of_ti_divider_clk_setup() - Setup function for simple div rate clock
+>> + */
+>> +static int __init of_ti_divider_clk_setup(struct device_node *node,
+>> +					  struct regmap *regmap)
+>> +{
+>> +	struct clk *clk;
+>> +	const char *clk_name = node->name;
+>> +	void __iomem *reg;
+>> +	const char *parent_name;
+>> +	u8 clk_divider_flags = 0;
+>> +	u8 width = 0;
+>> +	u8 shift = 0;
+>> +	struct clk_div_table *table = NULL;
+>> +	u32 val = 0;
+>> +	u32 flags = 0;
+>> +	int ret = 0;
+>> +
+>> +	parent_name = of_clk_get_parent_name(node, 0);
+>> +
+>> +	if (of_property_read_u32(node, "reg", &val)) {
+>> +		pr_err("%s: %s must have reg\n", __func__, clk_name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	reg = (void *)val;
+>> +
+>> +	if (!of_property_read_u32(node, "ti,bit-shift", &val))
+>> +		shift = val;
+>> +
+>> +	if (of_property_read_bool(node, "ti,index-starts-at-one"))
+>> +		clk_divider_flags |= CLK_DIVIDER_ONE_BASED;
+>> +
+>> +	if (of_property_read_bool(node, "ti,index-power-of-two"))
+>> +		clk_divider_flags |= CLK_DIVIDER_POWER_OF_TWO;
+>> +
+>> +	if (of_property_read_bool(node, "ti,set-rate-parent"))
+>> +		flags |= CLK_SET_RATE_PARENT;
+>> +
+>> +	table = ti_clk_get_div_table(node);
+>> +
+>> +	if (IS_ERR(table))
+>> +		return PTR_ERR(table);
+>> +
+>> +	ret = _get_divider_width(node, table, clk_divider_flags);
+>> +	if (ret < 0)
+>> +		goto cleanup;
+>> +
+>> +	width = ret;
+>> +
+>> +	clk = clk_register_divider_table_regmap(NULL, clk_name, parent_name,
+>> +						flags, reg, regmap, shift,
+>> +						width, clk_divider_flags, table,
+>> +						NULL);
+>> +
+>> +	if (!IS_ERR(clk)) {
+>> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+>> +		ret = of_ti_autoidle_setup(node, regmap);
+>
+> if this fails, table will be freed though, we have added provider and
+> registerd table_regmap, no?
+
+Provider and regmap are shared for the whole IP block (CM/PRM whatever.) 
+Those are only initialized once.
+
+>
+>> +	} else {
+>> +		ret = PTR_ERR(clk);
+>> +	}
+>> +
+>> +	if (!ret)
+>> +		return 0;
+>> +cleanup:
+>> +	kfree(table);
+>> +	return ret;
+>> +}
+>> +CLK_OF_DECLARE(divider_clk, "ti,divider-clock", of_ti_divider_clk_setup);
+>> +
+>> +static int __init of_ti_composite_divider_clk_setup(struct device_node *node,
+>> +						     struct regmap *regmap)
+>> +{
+>> +	struct clk_divider *div;
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	div = kzalloc(sizeof(*div), GFP_KERNEL);
+>> +	if (!div)
+>> +		return -ENOMEM;
+>> +
+>> +	of_property_read_u32(node, "reg", &val);
+>
+> reg is a mandatory property, no? error checks?
+
+Ok can add. :P
+
+>
+>> +	div->reg = (void *)val;
+>> +	div->regmap = regmap;
+>> +
+>> +	div->table = ti_clk_get_div_table(node);
+>> +
+>> +	if (of_property_read_bool(node, "ti,index-starts-at-one"))
+>> +		div->flags |= CLK_DIVIDER_ONE_BASED;
+>
+> alright, this does not really map back to ti,divder-clock style
+> handling.. aren't they supposed to be consistent?
+> how about "ti,index-power-of-two", bit shift etc?
+
+I can add non-used property checks yes.
+
+>> +
+>> +	ret = _get_divider_width(node, div->table, div->flags);
+>> +	if (ret < 0)
+>> +		goto cleanup;
+>> +
+>> +	div->width = ret;
+>> +
+>> +	if (of_property_read_u32(node, "ti,bit-shift", &val)) {
+>> +		pr_debug("%s: missing bit-shift property for %s, default=0\n",
+>> +			 __func__, node->name);
+>> +		val = 0;
+>> +	}
+>> +	div->shift = val;
+>> +
+>> +	ret = ti_clk_add_component(node, &div->hw, CLK_COMPONENT_TYPE_DIVIDER);
+>> +	if (!ret)
+>> +		return 0;
+>> +
+>> +cleanup:
+>> +	kfree(div);
+>> +	return ret;
+>> +}
+>> +CLK_OF_DECLARE(ti_composite_divider_clk, "ti,composite-divider-clock",
+>> +	       of_ti_composite_divider_clk_setup);
+>>
+>
+>
+
