@@ -1,32 +1,103 @@
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Cadence
-Date: Fri, 01 Nov 2013 13:11:33 -0500
-Message-ID: <5273EED5.409@calxeda.com>
-References: <1383320524-17689-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383320524-17689-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
+Date: Fri, 01 Nov 2013 10:53:17 -0700
+Message-ID: <20131101175317.A812AC40868@trevor.secretlab.ca>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-5-git-send-email-grant.likely@linaro.org> <CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com> <CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com> <20131031185714.GA12646@quad.lixom.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131031185714.GA12646@quad.lixom.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2013 10:42 AM, Soren Brinkmann wrote:
-> Drivers like clocksource/cadence_ttc and net/macb already use the 'cdns'
-> prefix for Cadence IP.
+On Thu, 31 Oct 2013 11:57:14 -0700, Olof Johansson <olof@lixom.net> wrote:
+> On Wed, Oct 30, 2013 at 02:25:21PM -0700, Grant Likely wrote:
+> > (Sorry for HTML mail)
+> > 
+> > Can you put #define DEBUG at the top of drivers/of/irq.c and send me the
+> > log output from before and after the commit?
 > 
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Here you go, quite verbose log below.
+> 
+> Looks like we're tripping the "no reg passed in" checks, not sure if related.
 
-Applied. Thanks.
+I think I've found the bug. See if this helps...
 
-Rob
+>From 54a6d89d63361f8117ff69e4b65efabb12b897c7 Mon Sep 17 00:00:00 2001
+From: Grant Likely <grant.likely@linaro.org>
+Date: Fri, 1 Nov 2013 10:50:50 -0700
+Subject: [PATCH] of: Fixup interrupt parsing failure.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+---
+ drivers/of/irq.c | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 8cc62b4a7988..c3427c8579a2 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -17,7 +17,7 @@
+  * device tree to actual irq numbers on an interrupt controller
+  * driver.
+  */
+-
++#define DEBUG
+ #include <linux/errno.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+@@ -97,7 +97,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	struct device_node *ipar, *tnode, *old = NULL, *newpar = NULL;
+ 	__be32 initial_match_array[8];
+ 	const __be32 *match_array = initial_match_array;
+-	const __be32 *tmp, *imap, *imask, dummy_imask[] = { ~0, ~0, ~0, ~0, ~0 };
++	const __be32 *tmp, *imap, *imask, dummy_imask[] = { ~0, ~0, ~0, ~0, ~0, ~0, ~0, ~0 };
+ 	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
+ 	int imaplen, match, i;
+ 
+@@ -147,21 +147,14 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 
+ 	pr_debug(" -> addrsize=%d\n", addrsize);
+ 
+-	/* If we were passed no "reg" property and we attempt to parse
+-	 * an interrupt-map, then #address-cells must be 0.
+-	 * Fail if it's not.
+-	 */
+-	if (addr == NULL && addrsize != 0) {
+-		pr_debug(" -> no reg passed in when needed !\n");
+-		return -EINVAL;
++	if (addrsize && addr) {
++		/* Precalculate the initial match array to simplify match loop */
++		for (i = 0; i < addrsize; i++)
++			initial_match_array[i] = addr[i];
++		for (i = 0; i < intsize; i++)
++			initial_match_array[addrsize + i] = cpu_to_be32(out_irq->args[i]);
+ 	}
+ 
+-	/* Precalculate the match array - this simplifies match loop */
+-	for (i = 0; i < addrsize; i++)
+-		initial_match_array[i] = addr[i];
+-	for (i = 0; i < intsize; i++)
+-		initial_match_array[addrsize + i] = cpu_to_be32(out_irq->args[i]);
+-
+ 	/* Now start the actual "proper" walk of the interrupt tree */
+ 	while (ipar != NULL) {
+ 		/* Now check if cursor is an interrupt-controller and if it is
+@@ -174,6 +167,15 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 			return 0;
+ 		}
+ 
++		/* If we were passed no "reg" property and we attempt to parse
++		 * an interrupt-map, then #address-cells must be 0.
++		 * Fail if it's not.
++		 */
++		if (addrsize && !addr) {
++			pr_debug(" -> no reg passed in when needed !\n");
++			return -EINVAL;
++		}
++
+ 		/* Now look for an interrupt-map */
+ 		imap = of_get_property(ipar, "interrupt-map", &imaplen);
+ 		/* No interrupt map, check for an interrupt parent */
+-- 
+1.8.1.2
