@@ -1,83 +1,94 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: Strange location and name for platform  devices when
- device-tree is used.
-Date: Fri, 01 Nov 2013 16:08:36 +1100
-Message-ID: <1383282516.28909.36.camel@pasglop>
-References: <20131101145925.66e22f73@notabene.brown>
-	 <1383279744.28909.26.camel@pasglop> <1383280054.28909.30.camel@pasglop>
-	 <20131101160329.37f3707b@notabene.brown>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH] hmc5843 - add basic dt support
+Date: Fri, 1 Nov 2013 16:35:23 +1100
+Message-ID: <20131101163523.10fed501@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131101160329.37f3707b@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/HVL5=Zr4ubuUMeMxrO4j793"; protocol="application/pgp-signature"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-11-01 at 16:03 +1100, NeilBrown wrote:
+--Sig_/HVL5=Zr4ubuUMeMxrO4j793
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Do you mean we could allow multiple devices on the one bus to have the same
-> name, but get sysfs to notice and de-duplicate by mangling one name?  I don't
-> think I like that but I might have misunderstood.
 
-What other option do we have ?
 
-> On my device I seem to have some platform devices registered through
-> device-tree, and some registered through platform_device_add (e.g.
-> 'alarmtimer').  Guaranteeing they remain disjoint sets if the kernel is
-> allowed to evolve independently of the devicetree might be tricky....
-> Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform" ??
+No configuration, just a compatible string and documentation.
 
-No, I think device-tree created platform devices should go
-to /sys/devices/platform like the "classic" ones.
+Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 
-The problem is really how to deal with potential name duplication. We
-could try to register, if we get -EEXIST (assuming sysfs returns the
-right stuff), try again with ".1" etc...
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt=
+ b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+new file mode 100644
+index 000000000000..90d5f34db04e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+@@ -0,0 +1,17 @@
++* Honeywell HMC5843 magnetometer sensor
++
++Required properties:
++
++  - compatible : should be "honeywell,hmc5843"
++  - reg : the I2C address of the magnetometer - typically 0x1e
++
++Optional properties:
++
++  - gpios : should be device tree identifier of the magnetometer DRDY pin
++
++Example:
++
++hmc5843@1e {
++        compatible =3D "honeywell,hmc5843"
++        reg =3D <0x1e>;
++};
+diff --git a/drivers/staging/iio/magnetometer/hmc5843.c b/drivers/staging/i=
+io/magnetometer/hmc5843.c
+index c3f3f539e787..829734a82f69 100644
+--- a/drivers/staging/iio/magnetometer/hmc5843.c
++++ b/drivers/staging/iio/magnetometer/hmc5843.c
+@@ -719,10 +719,17 @@ static const struct i2c_device_id hmc5843_id[] =3D {
+ };
+ MODULE_DEVICE_TABLE(i2c, hmc5843_id);
+=20
++static const struct of_device_id hmc5843_of_match[] =3D {
++	{ .compatible =3D "honeywell,hmc5843" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, hmc5843_of_match);
++
+ static struct i2c_driver hmc5843_driver =3D {
+ 	.driver =3D {
+ 		.name	=3D "hmc5843",
+ 		.pm	=3D HMC5843_PM_OPS,
++		.of_match_table =3D of_match_ptr(hmc5843_of_match),
+ 	},
+ 	.id_table	=3D hmc5843_id,
+ 	.probe		=3D hmc5843_probe,
 
-> Hoping someone who understands the device model better than me will help.
+--Sig_/HVL5=Zr4ubuUMeMxrO4j793
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
-Greg ? :-)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
- .../...
+iQIVAwUBUnM9mznsnt1WYoG5AQIzRA//VnX2/SZp33/xFK51uzRi3bF0803q2h4G
+0uErbMF/y6DAF00qMveLMrkRcgBxagtLeg83oGpmCXSzBHLUCPusCfCdGE7Yx96v
+1nEogmthAuOUMGxup9p0I3ERStGIvWHtrFKM66Mr1CYYD4Cgbp+HmWQsr3J1P2h+
+9J7rGSlshwrOHrR9K/CNm4ylFXwnHmXB8ZaeCwpOQ1A7113Znzv42CoYJLiR7Vqp
+nrX4mrhq8jms8uxKNg+7kOqvp5Sr3whm11Ivbe1CcrsEvmP3Qu9EgizaBNbN/xwC
+cyzLDEuCSFFws3YPeF5B5dNfuxDZDW0SjfbNwAwcFWfr8R4CdQ9jEk4ikHBOQb8M
+LwImKUMFDRqgQ2DgEFxYjmb2spGTLz1S6Wy6et47BC5cZ0aTof3fPW8owOMKK88z
+xatQnffG7KhqclQKZZFefT9UIIP6idc+3aPMnNiy6vsfSN64ZZFTvq7gL3exF5Tc
+2f1OJ6gg9UD5jSTN0TAA+i5BsC4DitH17pteY4aw2MgeL/Ov1TBysBSEXsl6myuy
+wsybOqmaiCO/4iu1RdcOX4gd3L2shGirLvSSUVRr9GxgRToQ3vzZEbRcv/YQgA7o
+yHAqwrpyQNuLiRpXqUUfsB6H3mkBpohoYHHF65WSZgbh81GcqmY/tz9Y/E0PM5fc
+gdXGhErJtgo=
+=wKGC
+-----END PGP SIGNATURE-----
 
-> The  'backlight' device is a virtual device.  It uses a 'pwm' device to
-> provide the variable brightness to the back light.
-> 
-> The 'pwm' device itself is virtual, making use of a 'dmtimer' to provide the
-> timing...  The timer device (timer11 in omap3.dtsi) has a 'reg' property.
-> 
-> A random example from current mainline is 
->   arch/arm/boot/dts/am335x-evmsk.dts
-> which has 'backlight' as a virtual device compatible with pwm-backlight.
-> It also has  'gpio-keys', 'gpio-leds', and 'regulator-fixed' compatible
-> virtual devices.  They seem fairly common.
-
-Ok.
-
-Cheers,
-Ben.
-
-> Thanks,
-> NeilBrown
-> 
-> 
-> > 
-> > Cheers,
-> > Ben.
-> > 
-> > > Cheers,
-> > > Ben.
-> > > 
-> > > > Any help understanding and/or fixing this discrepancy greatly appreciated.
-> > > > 
-> > > > The change of name is particularly annoying to me because one of my platform
-> > > > devices is a pwm_bl.c backlight.  With a boardfile I
-> > > > get /sys/class/pwm_backlight.  With devicetree the best I can get
-> > > > is /sys/class/pwm_backlight.23 (or similar).  It would be really nice to have
-> > > > a more stable and sensible name here.
-> > > 
-> > 
-> 
+--Sig_/HVL5=Zr4ubuUMeMxrO4j793--
