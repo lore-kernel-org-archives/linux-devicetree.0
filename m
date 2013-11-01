@@ -1,31 +1,45 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 14/19] iommu/tegra: smmu: Get "nvidia,memory-clients"
- from DT
-Date: Fri, 1 Nov 2013 09:46:47 +0200
-Message-ID: <20131101094647.440857f48f94daabde1ef1f2@nvidia.com>
-References: <1382092020-13170-1-git-send-email-hdoyu@nvidia.com>
-	<1382092020-13170-15-git-send-email-hdoyu@nvidia.com>
-	<52718BB4.4090007@wwwdotorg.org>
-	<20131031.101808.1830527808656695540.hdoyu@nvidia.com>
-	<20131031174028.GF3037@kartoffel>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: (unknown)
+Date: Fri, 1 Nov 2013 15:04:47 +0800
+Message-ID: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131031174028.GF3037@kartoffel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Subject: 
+Sender: linux-doc-owner@vger.kernel.org
+To: r65073@freescale.com, timur@tabi.org, lgirdwood@gmail.com, broonie@kernel.org
+Cc: r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2013 18:40:29 +0100
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 
-> For the ARM SMMU binding, each device has a #stream-id-cells property
-> describing how many IDs it has, and then the SMMU node has a phandle+args
-> linkage to each of the devices attached to it, describing their stream IDs.
-> While this does have some limitations (a device can't be plugged into multiple
-> SMMUs with a different number of IDs), it seems generally sane.
+Hello,
 
-I may guess that the concept of "iommu domain" can hold the nested
-IOMMU in an unified way?
+This patch series is mostly Freescale's SAI SoC Digital Audio Interface driver implementation. And the implementation is only compatible with device tree definition.
+
+This patch series is based on linux-next and has been tested on Vybrid VF610 Tower board using device tree.
+
+Changed in v2:
+- Use default settings for the generic dmaengine PCM driver.
+- Separate receive and transmit setting in most functions, but some couldn't for the HW limitation.
+- Drop some not reduntant code.
+- Use devm_snd_soc_register_component() instead of snd_soc_register_component().
+- Use devm_snd_soc_register_card() instead of devm_snd_soc_register_card().
+- Adjust the code sentences sequence.
+- Make the namespacing consistent.
+- Rename CONFIG_SND_SOC_FSL_SGTL5000 to CONFIG_SND_SOC_FSL_SGTL5000_VF610.
+- Drop some meaningless lines.
+- Rename the binding document file.
+
+Added in v1:
+- Add SAI SoC Digital Audio Interface driver.
+- Add Freescale SAI ALSA SoC Digital Audio Interface node for VF610.
+- Enables SAI ALSA SoC DAI device for Vybrid VF610 TOWER board.
+- Add device tree bindings for Freescale SAI.
+- Revise the bugs about the sgt15000 codec.
+- Add SGT15000 based audio machine driver.
+- Enable SGT15000 codec based audio driver node for VF610.
+- Add device tree bindings for Freescale VF610 sound.
+
+
+
+
