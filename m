@@ -1,69 +1,40 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 00/11] CPU enable method based SMP/hotplug + MSM conversion
-Date: Fri,  1 Nov 2013 15:08:48 -0700
-Message-ID: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: correct GIC cpu interface range for Cortex
+ A15/GIC 400
+Date: Fri, 1 Nov 2013 17:43:22 -0500
+Message-ID: <CAL_JsqL4TA48ZhrMuxd+DNUF_O28wRLiX=o08To4WHRSTkwNVw@mail.gmail.com>
+References: <1383300776.4332.3.camel@hastur.hellion.org.uk>
+	<1383300809-7527-1-git-send-email-ian.campbell@citrix.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383300809-7527-1-git-send-email-ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a rework of patches sent a few months back by Rohit[1].
-The goal of these patches is to add support for SMP and (basic)
-hotplug on MSM based SoCs. To get there, we add support for a
-generic way to add SMP/hotplug support code in the kernel. To
-show how it's used, we convert the MSM8660 SMP support code over
-to the new method. After that we add support for the rest of the
-upstream MSM SoCs (note these patches are piled high on top of
-Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
-but this should only matter to the MSM maintainers).
+On Fri, Nov 1, 2013 at 5:13 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> GICv2 (Cortex A15/GIC 400) have CPU interface registers up to offset 0x1004
+> (the 32-bit GICC_DIR register a 0x1000). The GIC 400 documentation specifies
+> the CPU interface region as being 0x2000 in size.
+>
+> Update all DTS entries claiming "arm,cortex-a15-gic" compatibility. Of these I
+> only have personal experience with the vexpress a Calxeda (ecx) platforms and
+> annecdotal evidence for omap and exynos. For the others I'm just assuming.
+>
+> Also update the example a15 binding in the documentation.
+>
+> The "Texas Instruments Keystone 2 SoC" platform which claim to have an a15
+> compatible GIC but does not include the GICH/GICV registers. I've not touched
+> that here.
+>
+> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 
-This is one of the last items of code that still requires us to have
-a mach directory and a machine descriptor. We should be able to move
-the hotplug/smp code out of mach directories if this approach is
-accepted.
-
-[1] https://lkml.org/lkml/2013/8/1/770
-[2] https://lkml.org/lkml/2013/10/17/520
-[3] https://lkml.org/lkml/2013/10/18/406
-[4] http://lkml.org/lkml/2013/10/28/501
- 
-Rohit Vaswani (7):
-  devicetree: bindings: Document cpu enable-method for ARM CPUs
-  devicetree: bindings: Document Qualcomm cpus and enable-method
-  ARM: msm: Remove pen_release usage
-  ARM: msm: Re-organize platsmp to make it extensible
-  ARM: msm: Add SMP support for KPSSv1
-  ARM: msm: Add SMP support for KPSSv2
-  ARM: dts: msm: Add nodes necessary for SMP boot
-
-Stephen Boyd (4):
-  devicetree: bindings: Document qcom,kpss-acc
-  devicetree: bindings: Document qcom,saw2 node
-  ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
-  ARM: msm: Remove nr_cpus detection logic
-
- Documentation/devicetree/bindings/arm/cpus.txt     |  11 +
- .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  21 ++
- .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  23 ++
- arch/arm/boot/dts/qcom-msm8660-surf.dts            |  24 ++
- arch/arm/boot/dts/qcom-msm8960-cdp.dts             |  32 +++
- arch/arm/boot/dts/qcom-msm8974.dtsi                |  49 ++++
- arch/arm/include/asm/smp.h                         |   9 +
- arch/arm/kernel/devtree.c                          |  38 +++
- arch/arm/mach-msm/Makefile                         |   2 +-
- arch/arm/mach-msm/board-dt.c                       |  14 -
- arch/arm/mach-msm/common.h                         |   1 -
- arch/arm/mach-msm/headsmp.S                        |  39 ---
- arch/arm/mach-msm/hotplug.c                        |  31 +--
- arch/arm/mach-msm/platsmp.c                        | 301 +++++++++++++++------
- arch/arm/mach-msm/scm-boot.h                       |   8 +-
- include/asm-generic/vmlinux.lds.h                  |  10 +
- 16 files changed, 448 insertions(+), 165 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
- delete mode 100644 arch/arm/mach-msm/headsmp.S
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
