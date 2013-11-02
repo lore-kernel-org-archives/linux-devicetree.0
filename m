@@ -1,51 +1,56 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] move of_find_next_cache_node to DT core
-Date: Sat, 02 Nov 2013 18:06:46 +0000
-Message-ID: <20131102180646.1A722C40DDC@trevor.secretlab.ca>
-References: <1379501585-12532-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130918145116.D53A5C42CDF@trevor.secretlab.ca> <5239D26E.5090505@arm.com> <524E9BA9.4000506@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524E9BA9.4000506-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
+Date: Sat, 02 Nov 2013 18:07:24 +0000
+Message-ID: <20131102180724.D8FC5C40F02@trevor.secretlab.ca>
+References: <1383109522-6879-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383109522-6879-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: stefano.stabellini@eu.citrix.com, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Oct 2013 11:42:49 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Grant,
+On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> On 18/09/13 17:18, Sudeep KarkadaNagesha wrote:
-> > On 18/09/13 15:51, Grant Likely wrote:
-> >> On Wed, 18 Sep 2013 11:53:03 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
-> >>>
-> >>> Hi,
-> >>>
-> >>> The cache bindings are generic and used by many other architectures
-> >>> apart from PPC. These patches fixes and move the existing definition
-> >>> of of_find_next_cache_node to DT common code.
-> >>>
-> >>> Regards,
-> >>> Sudeep
-> >>
-> >> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> >>
-> >> However, do you have a user for this function on other architectures
-> >> yet? I'd like to see a user for the function in the same patch series..
-> >>
-> > 
-> > Yes I have posted an RFC[1] following this series implementing cacheinfo
-> > for ARM similar to x86 implementation. I was not sure if it's good idea
-> > to combine it as its still initial RFC version.
-> > 
+> Platform devices created by DT code don't initialize dma_mask pointer to
+> anything. Set it to coherent_dma_mask by default if the architecture
+> code has not set it.
 > 
-> Do you prefer to have this a independent change or to go with the cache topology
-> support patches[1] on ARM ?
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-Ben's already picked it up, so I'm fine with it.
+I believe this is okay. I haven't done any testing to back up that
+opinion though.
 
 g.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> I think this is at least part of what is needed to fix dma_mask issue
+> raised by Stefano [1]. Things should work AFAICT with just this, but
+> I suppose the xgmac driver needs to set the mask as well (not relying
+> on the default), but some pointing the dma_mask to a valid value is
+> needed first.
+> 
+> Rob
+> 
+> [1] http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg528236.html
+> 
+>  drivers/of/platform.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index f6dcde2..fce088e 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
+>  	dev->archdata.dma_mask = 0xffffffffUL;
+>  #endif
+>  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> +	if (!dev->dev.dma_mask)
+> +		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+>  	dev->dev.bus = &platform_bus_type;
+>  	dev->dev.platform_data = platform_data;
+>  
+> -- 
+> 1.8.1.2
+> 
