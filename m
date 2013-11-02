@@ -1,81 +1,50 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when device-tree
- is used.
-Date: Sat, 2 Nov 2013 08:58:24 -0700
-Message-ID: <20131102155824.GG23938@kroah.com>
-References: <20131101145925.66e22f73@notabene.brown>
- <1383279744.28909.26.camel@pasglop>
- <1383280054.28909.30.camel@pasglop>
- <20131101160329.37f3707b@notabene.brown>
- <1383282516.28909.36.camel@pasglop>
- <20131101204749.GA19662@kroah.com>
- <1383347399.28909.46.camel@pasglop>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] phy: add phy_get_bus_width()/phy_set_bus_width()
+ calls
+Date: Sat, 2 Nov 2013 22:46:55 +0530
+Message-ID: <52753387.5030202@ti.com>
+References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org> <1383335158-19730-2-git-send-email-matt.porter@linaro.org> <2395941.Lp2U7sdS37@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383347399.28909.46.camel@pasglop>
+In-Reply-To: <2395941.Lp2U7sdS37@flatron>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 02, 2013 at 10:09:59AM +1100, Benjamin Herrenschmidt wrote:
-> On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
-> 
-> > > > On my device I seem to have some platform devices registered through
-> > > > device-tree, and some registered through platform_device_add (e.g.
-> > > > 'alarmtimer').  Guaranteeing they remain disjoint sets if the kernel is
-> > > > allowed to evolve independently of the devicetree might be tricky....
-> > > > Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform" ??
-> > > 
-> > > No, I think device-tree created platform devices should go
-> > > to /sys/devices/platform like the "classic" ones.
-> > > 
-> > > The problem is really how to deal with potential name duplication. We
-> > > could try to register, if we get -EEXIST (assuming sysfs returns the
-> > > right stuff), try again with ".1" etc...
-> > 
-> > How can there be device name collisions?  All platform devices _should_
-> > be named uniquely, if not, you have bigger problems...
-> 
-> The problem is how to create a unique name from a platform device
-> created from a device-tree node.
+Hi Tomasz,
 
-I have no idea, and frankly, I don't care, I leave that to the
-device-tree maintainers, as they are the ones that are using platform
-devices for this type of kernel interaction.
+On Saturday 02 November 2013 06:44 PM, Tomasz Figa wrote:
+> Hi Matt,
+>
+> On Friday 01 of November 2013 15:45:50 Matt Porter wrote:
+>> This adds a pair of APIs that allows the generic PHY subsystem to
+>> provide information on the PHY bus width. The PHY provider driver may
+>> use phy_set_bus_width() to set the bus width that the PHY supports.
+>> The controller driver may then use phy_get_bus_width() to fetch the
+>> PHY bus width in order to properly configure the controller.
+>
+> I somehow does not like this. If we take this path for any further
+> properties that we may need, we will end up with a lot of consumer
+> specific properties stored in a PHY object having their own accessor
+> functions.
 
-So go blame them for this, not me, remember, I'm the one who _hates_
-platform devices and wish they had never been created...
+Only after all of us feel that a property is *generic* enough, we allow 
+it to be added in the PHY object.
+>
+> Since this is just an integration detail, what about simply adding this as
+> a property in device tree node of the OTG controller (and pdata if
+> considering non-DT support)?
 
-> Device tree nodes aren't necessarily uniquely named. They are unique
-> under a given parent but that hierarchy isn't preserved when creating
-> corresponding platform devices (and it would be very tricky to do so).
-> 
-> Currently, we simply append a number to the name when creating them,
-> which is obtained from a global counter.
+We already had a discussion about this and the dt maintainers suggested 
+the property should be in the PHY. [1]
 
-That's the best solution, you can't rely on device ids being the same
-for any type of bus, that's just life.
+[1] ->  http://www.spinics.net/lists/devicetree/msg08851.html
 
-> Neil is unhappy about that because on his specific hardware, the device
-> has a unique name and thus we introduce a naming difference between
-> device-tree usage and old-style "hard coded" board file usage.
-> 
-> It would be nice if we could do something that only appends the "global
-> number" at the end of the name if the name isn't already unique. Thus my
-> proposal of trying first with the base name, and trying again if that
-> returns -EEXIST in some kind of loop.
-
-Just loop through all the platform devices before registering it to
-determine if you need to do this, the platform code can do this just
-fine.  If you try to register a duplicate name with the driver core,
-odds are it will complain loudly, so don't do that.
-
-good luck,
-
-greg k-h
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
