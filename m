@@ -1,14 +1,13 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 01/11] devicetree: bindings: Document cpu enable-method
- for ARM CPUs
-Date: Fri, 1 Nov 2013 20:00:27 -0500
-Message-ID: <CAL_Jsq+_Z8s1on3zbwUSV8y3hq9FE4hejLEzMAfNy1nz8KfsQg@mail.gmail.com>
+Subject: Re: [PATCH 02/11] devicetree: bindings: Document Qualcomm cpus and enable-method
+Date: Fri, 1 Nov 2013 20:04:19 -0500
+Message-ID: <CAL_JsqLObXEWJJ=SuifTjpPz9qTW0n43fyQNA-vjLNeLy-7-XA@mail.gmail.com>
 References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
-	<1383343739-23080-2-git-send-email-sboyd@codeaurora.org>
+	<1383343739-23080-3-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1383343739-23080-2-git-send-email-sboyd@codeaurora.org>
+In-Reply-To: <1383343739-23080-3-git-send-email-sboyd@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
 Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -17,14 +16,43 @@ List-Id: devicetree@vger.kernel.org
 On Fri, Nov 1, 2013 at 5:08 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
 > From: Rohit Vaswani <rvaswani@codeaurora.org>
 >
-> According to the ePAPR CPUs should have an enable method. On ARM
-> the enable-method property has not been used so far, so document
-> this property as an optional property and add the spin-table
-> method as one value
+> Scorpion and Krait are Qualcomm cpus. These cpus don't use the
+> spin-table enable-method. Instead they rely on mmio register
+> accesses to enable power and clocks to bring CPUs out of reset.
 >
 > Cc: <devicetree@vger.kernel.org>
 > Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> [sboyd: Split off into separate patch]
+> [sboyd: Split off into separate patch, renamed method to
+> qcom,mmio]
 > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>
+> This slightly conflicts with my krait EDAC series.
+>
+>  Documentation/devicetree/bindings/arm/cpus.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 37258f9..e2969fa2 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
+>                 "marvell,mohawk"
+>                 "marvell,xsc3"
+>                 "marvell,xscale"
+> +               "qcom,scorpion"
+> +               "qcom,krait"
+>
+>  And the following optional properties:
+>
+> @@ -52,6 +54,7 @@ And the following optional properties:
+>                  different types of cpus.
+>                  This should be one of:
+>                  "spin-table"
+> +                "qcom,mmio"
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+Not exactly specific. How would you handle variations in the enable
+method? The mmio method to enable is tied to the core type or SOC
+type?
+
+Rob
