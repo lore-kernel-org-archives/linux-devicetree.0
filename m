@@ -1,132 +1,195 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when
- device-tree is used.
-Date: Sat, 2 Nov 2013 10:45:05 +1100
-Message-ID: <20131102104505.34105cbb@notabene.brown>
-References: <20131101145925.66e22f73@notabene.brown>
-	<1383279744.28909.26.camel@pasglop>
-	<1383280054.28909.30.camel@pasglop>
-	<20131101160329.37f3707b@notabene.brown>
-	<1383282516.28909.36.camel@pasglop>
-	<20131101204749.GA19662@kroah.com>
-	<1383347425.28909.63.camel@pasglop>
+From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/4] i2c: i2c-bcm-kona: Introduce Broadcom I2C Driver
+Date: Fri, 1 Nov 2013 17:32:42 -0700
+Message-ID: <CAAYSxho8nd3TOsJ8LGfs94pHxoFYDxyZL0xjPA-CqVKVf7Nafw@mail.gmail.com>
+References: <1381960909-1735-1-git-send-email-tim.kryger@linaro.org>
+	<1381960909-1735-2-git-send-email-tim.kryger@linaro.org>
+	<20131101124958.GB6734@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/nUbqBAeyY5VVuLrRrnwTQm0"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383347425.28909.63.camel@pasglop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131101124958.GB6734@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/nUbqBAeyY5VVuLrRrnwTQm0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 1, 2013 at 5:49 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> On Wed, Oct 16, 2013 at 03:01:46PM -0700, Tim Kryger wrote:
+>> Introduce support for Broadcom Serial Controller (BSC) I2C bus found
+>> in the Kona family of Mobile SoCs.  FIFO hardware is utilized but only
+>> standard mode (100kHz), fast mode (400kHz), and fast mode plus (1MHz)
+>> bus speeds are supported.
+>>
+>> Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Looks mostly good, some remarks:
+>
+>> +struct bcm_kona_i2c_dev {
+>> +     /* Pointer to linux device struct */
+>> +     struct device *device;
+>> +
+>> +     /* Virtual address where registers are mapped */
+>> +     void __iomem *base;
+>> +
+>> +     /* Interrupt */
+>> +     int irq;
+>> +
+>> +     /* Standard Speed configuration */
+>> +     const struct bus_speed_cfg *std_cfg;
+>> +
+>> +     /* Linux I2C adapter struct */
+>> +     struct i2c_adapter adapter;
+>> +
+>> +     /* Lock for the I2C device */
+>> +     struct mutex i2c_bcm_lock;
+>> +
+>> +     /* Completion to signal an operation finished */
+>> +     struct completion done;
+>> +
+>> +     /* Handle for external clock */
+>> +     struct clk *external_clk;
+>> +};
+>
+> IMO most of the comments could go. Kind of stating the obvious :)
 
-On Sat, 02 Nov 2013 10:10:25 +1100 Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+Sure thing.
 
-> On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
->=20
-> > > > On my device I seem to have some platform devices registered through
-> > > > device-tree, and some registered through platform_device_add (e.g.
-> > > > 'alarmtimer').  Guaranteeing they remain disjoint sets if the kerne=
-l is
-> > > > allowed to evolve independently of the devicetree might be tricky..=
-..
-> > > > Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform=
-" ??
-> > >=20
-> > > No, I think device-tree created platform devices should go
-> > > to /sys/devices/platform like the "classic" ones.
-> > >=20
-> > > The problem is really how to deal with potential name duplication. We
-> > > could try to register, if we get -EEXIST (assuming sysfs returns the
-> > > right stuff), try again with ".1" etc...
-> >=20
-> > How can there be device name collisions?  All platform devices _should_
-> > be named uniquely, if not, you have bigger problems...
->=20
-> The problem is how to create a unique name for a platform device created
-> from a device-tree node.
->=20
-> Device tree nodes aren't necessarily uniquely named. They are unique
-> under a given parent but that hierarchy isn't preserved when creating
-> corresponding platform devices (and it would be very tricky to do so).
->=20
-> Currently, we simply append a number to the name when creating them,
-> which is obtained from a global counter.
->=20
-> Neil is unhappy about that because on his specific hardware, the device
-> has a unique name and thus we introduce a naming difference between
-> device-tree usage and old-style "hard coded" board file usage.
+>
+>> +/* Read any amount of data using the RX FIFO from the i2c bus */
+>> +static int bcm_kona_i2c_read_fifo(struct bcm_kona_i2c_dev *dev,
+>> +                               struct i2c_msg *msg)
+>> +{
+>> +     unsigned int bytes_to_read = MAX_RX_FIFO_SIZE;
+>> +     unsigned int last_byte_nak = 0;
+>> +     unsigned int bytes_read = 0;
+>> +     unsigned int rc;
+>
+> Should be signed.
 
-It occurs to me that a different approach could solve my problem.
+Absolutely.  Thanks for catching this one.
 
-My problem stems from the fact that the name of the device on the
-platform-bus is used as the name of the device in the "backlight" class.
+>
+>> +/* Write any amount of data using TX FIFO to the i2c bus */
+>> +static int bcm_kona_i2c_write_fifo(struct bcm_kona_i2c_dev *dev,
+>> +                                struct i2c_msg *msg)
+>> +{
+>> +     unsigned int bytes_to_write = MAX_TX_FIFO_SIZE;
+>> +     unsigned int bytes_written = 0;
+>> +     unsigned int rc;
+>
+> Ditto signed.
 
-As Greg writes elsewhere, depending on names with /sys/devices is not
-supported - we need to accept that bus-names might change.
-However names in class devices tend to be a lot more stable.
-Several devices allow these to be explicitly set.
- leds have 'label'
- regulators has "regulator-name"
- gpio-keys has 'label'.
+I shall fix it.
 
-I could just teach pwm_bl to allow a 'label' property which would be used in
-place of the platform-bus device name when creating the class/backlight
-device.
+>
+>> +/* Master transfer function */
+>> +static int bcm_kona_i2c_xfer(struct i2c_adapter *adapter,
+>> +                          struct i2c_msg msgs[], int num)
+>> +{
+>> +     struct bcm_kona_i2c_dev *dev = i2c_get_adapdata(adapter);
+>> +     struct i2c_msg *pmsg;
+>> +     int rc = 0;
+>> +     int i;
+>> +
+>> +     mutex_lock(&dev->i2c_bcm_lock);
+>
+> Huh? Why do you need that? The core has locks per bus.
 
-The maxim "you cannot trust names to remain stable in /sys/devices" can
-justify both the movement of platform devices into /sys/devices/platform, a=
-nd
-the use of "label" rather than the device-name for creating the class devic=
-e.
+In that case, I will remove the local mutex.
 
-Does that sound convincing?
+>> +static int bcm_kona_i2c_assign_bus_speed(struct bcm_kona_i2c_dev *dev)
+>> +{
+>> +     unsigned int bus_speed;
+>> +     int ret = of_property_read_u32(dev->device->of_node, "clock-frequency",
+>> +                                    &bus_speed);
+>> +     if (ret < 0) {
+>> +             dev_err(dev->device, "missing clock-frequency property\n");
+>> +             return -ENODEV;
+>> +     }
+>> +
+>> +     switch (bus_speed) {
+>> +     case 100000:
+>> +             dev->std_cfg = &std_cfg_table[BCM_SPD_100K];
+>> +             break;
+>> +     case 400000:
+>> +             dev->std_cfg = &std_cfg_table[BCM_SPD_400K];
+>> +             break;
+>> +     case 1000000:
+>> +             dev->std_cfg = &std_cfg_table[BCM_SPD_1MHZ];
+>> +             break;
+>> +     default:
+>> +             pr_err("%d hz bus speed not supported\n", bus_speed);
+>> +             return -EINVAL;
+>> +     };
+>
+> Unneeded semicolon.
+>
 
-Thanks,
-NeilBrown
+Sure.  It will be removed.
 
->=20
-> It would be nice if we could do something that only appends the "global
-> number" at the end of the name if the name isn't already unique. Thus my
-> proposal of trying first with the base name, and trying again if that
-> returns -EEXIST in some kind of loop.
->=20
-> Do you have a better idea ?
->=20
-> Cheers,
-> Ben.
->=20
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int bcm_kona_i2c_probe(struct platform_device *pdev)
+>> +{
+>> +     int rc = 0;
+>> +     struct bcm_kona_i2c_dev *dev;
+>> +     struct i2c_adapter *adap;
+>> +     struct resource *iomem;
+>> +
+>> +     /* Allocate memory for private data structure */
+>> +     dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+>> +     if (!dev) {
+>> +             rc = -ENOMEM;
+>> +             goto probe_return;
+>
+> I'd prefer simply return -Esomething. The printout at probe_return is
+> also available via driver core.
 
+Agreed.
 
---Sig_/nUbqBAeyY5VVuLrRrnwTQm0
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
+> ...
+>
+>> +     /* Add the i2c adapter */
+>> +     adap = &dev->adapter;
+>> +     i2c_set_adapdata(adap, dev);
+>> +     adap->owner = THIS_MODULE;
+>> +     adap->class = UINT_MAX; /* can be used by any I2C device */
+>
+> Why do you need class based instantiation. It will most likely cost
+> boot-time and you have devicetree means for doing instantiation.
+>
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Agreed.
 
-iQIVAwUBUnQ9Ajnsnt1WYoG5AQImjQ//VyKMMgl1op6yt7MsiAbhAGRQ8H0nBW75
-xrLPEAeTAfHaVYyaqDD1RIXgM+YCGWEE9qQApu/9eXbb/exNzz+tYaGrT4h37rqq
-VrLvOWIvkb8JV6WRJkyl+bBv0iPZka1CxR+bJjqxchzxWxjaqK1rYSYKLTazdBiw
-QjWdAFGYK8iS/uVKqUo5brDbm5E4gMi30ul3kxRPhXIDnFoYu/Mwnqq8vRgnlAZU
-DpLAnsEzNg+eeyBanIOotHspY0gNHmJO41mAZuPlmFhhmPIUvZ/SdRWIAixKev91
-LPlsl9T7CdJVSPAr4nO2/pkcwhY4B3zuNJn0WCz9Z7giqCg9T/rBZ9KJeyzUAXaD
-OwrasY50OKYhXlHE6jiXeTBUMDfrDt54JcvnJICGt5rUXPX12JRIdRyObmCvoXmE
-Iwh29vLK1shn1mOy2snCpXow644meuSb1cQ8VlntpmIJmuZZSllWTXS4eeCbFNtt
-JAuUjRDBmerXorjmJO+X0mpdmRIrM04ysXgspv0fv7ZiXwRViJVnLTqiUiK/WKM8
-2J+xeBUuzOJ9i3kzVHSYrQ8w9Q6uvAm/G6GEO0uvFUlhUVZgxlFLcNDdAMJhcWaY
-tZ+UWRTrJbdCNqOvPj5tbKqeH6FoV9Rai4GJnSxXdK2mqzlGJYdyL7M2x9Wpt0UH
-SpcvQe9h71A=
-=UYqN
------END PGP SIGNATURE-----
+>> +     strlcpy(adap->name, "Broadcom I2C adapter", sizeof(adap->name));
+>> +     adap->algo = &bcm_algo;
+>> +     adap->dev.parent = &pdev->dev;
+>> +     adap->nr = pdev->id;
+>> +     adap->dev.of_node = pdev->dev.of_node;
+>> +
+>> +     rc = i2c_add_numbered_adapter(adap);
+>
+> Maybe you want simply i2c_add_adapter here since the core has no
+> built-in support for of aliases?
+>
 
---Sig_/nUbqBAeyY5VVuLrRrnwTQm0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay.  I will switch to i2c_add_adapter and remove the adap->nr assignment.
+
+>> +
+>> +MODULE_AUTHOR("Broadcom");
+>
+> Some email address please.
+>
+>> +MODULE_DESCRIPTION("Broadcom Kona I2C Driver");
+>> +MODULE_LICENSE("GPL v2");
+>
+> Thanks,
+>
+>    Wolfram
+>
