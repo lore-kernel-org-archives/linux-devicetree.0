@@ -1,41 +1,46 @@
-From: Ming Lei <tom.leiming@gmail.com>
-Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
-Date: Sat, 2 Nov 2013 12:16:56 +0800
-Message-ID: <CACVXFVN-Vk9k=jceT1iR2nfSNvHQR5MAtrb+vjw9QwcWnn9CVw@mail.gmail.com>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-	<1381869563-16083-5-git-send-email-grant.likely@linaro.org>
-	<CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com>
-	<CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com>
-	<20131031185714.GA12646@quad.lixom.net>
-	<20131101175317.A812AC40868@trevor.secretlab.ca>
-	<20131101185401.B298FC40868@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131101185401.B298FC40868@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Silvio F <silvio.maillist-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/3] DT: sort vendor-prefixes.txt
+Date: Sat,  2 Nov 2013 08:29:04 +0100
+Message-ID: <a84f9531670c3bf71e3b4acf367477372eaa76df.1383376255.git.silvio.fricke@gmail.com>
+References: <cover.1383376255.git.silvio.fricke@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1383376255.git.silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1383376255.git.silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1383376255.git.silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 2, 2013 at 2:54 AM, Grant Likely <grant.likely@linaro.org> wrote:
->
-> That one was broken. Try this instead.
->
-> From bcbffc3d16f49451ef505dc021480aa061465a15 Mon Sep 17 00:00:00 2001
-> From: Grant Likely <grant.likely@linaro.org>
-> Date: Fri, 1 Nov 2013 10:50:50 -0700
-> Subject: [PATCH] of: Fixup interrupt parsing failure.
->
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> ---
->  drivers/of/irq.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+Signed-off-by: Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This one does fix boot hanging on Arndale board.
-
-Tested-by: Ming Lei <tom.leiming@gmail.com>
-
-Thanks,
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 8319844..2faf4a3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -65,13 +65,13 @@ snps 	Synopsys, Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
+-toumaz	Toumaz
+ ti	Texas Instruments
+ toshiba	Toshiba Corporation
++toumaz	Toumaz
+ v3	V3 Semiconductor
+ via	VIA Technologies, Inc.
+ voipac	Voipac Technologies s.r.o.
++winbond Winbond Electronics corp.
+ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
+-winbond Winbond Electronics corp.
+ xlnx	Xilinx
 -- 
-Ming Lei
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
