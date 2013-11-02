@@ -1,109 +1,55 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv9 05/43] CLK: TI: add DT alias clock registration mechanism
-Date: Sat, 02 Nov 2013 14:49:55 +0100
-Message-ID: <1545474.t3t8VtRE27@flatron>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-6-git-send-email-t-kristo@ti.com> <CAHCPf3uPhkVhdn3Db06YZfrwQuA7khdZEXiZ+pqJ06J9YdBoLg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAHCPf3uPhkVhdn3Db06YZfrwQuA7khdZEXiZ+pqJ06J9YdBoLg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Matt Sealey <neko@bakuhatsu.net>, Tero Kristo <t-kristo@ti.com>, nm@ti.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, paul@pwsan.com, Mike Turquette <mturquette@linaro.org>, Tony Lindgren <tony@atomide.com>, rnayak@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: [PATCH v4 0/6] gpio: daVinci: Fixes and feature enhancement
+Date: Sat,  2 Nov 2013 21:09:29 +0530
+Message-ID: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, linux-gpio@vger.kernel.org, Lad Prabhakar <prabhakar.csengg@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-On Tuesday 29 of October 2013 12:50:43 Matt Sealey wrote:
-> On Fri, Oct 25, 2013 at 10:56 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> > Some devices require their clocks to be available with a specific
-> > dev-id con-id mapping. With DT, the clocks can be found by default
-> > only with their name, or alternatively through the device node of
-> > the consumer. With drivers, that don't support DT fully yet, add
-> > mechanism to register specific clock names.
-> > 
-> > Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> > Tested-by: Nishanth Menon <nm@ti.com>
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> 
-> You guys are wonderful, by the way ;)
-> 
-> > +void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
-> > +{
-> > +       struct ti_dt_clk *c;
-> > +       struct device_node *node;
-> > +       struct clk *clk;
-> > +       struct of_phandle_args clkspec;
-> > +
-> > +       for (c = oclks; c->node_name != NULL; c++) {
-> > +               node = of_find_node_by_name(NULL, c->node_name);
-> > +               clkspec.np = node;
-> > +               clk = of_clk_get_from_provider(&clkspec);
-> > +
-> > +               if (!IS_ERR(clk)) {
-> > +                       c->lk.clk = clk;
-> > +                       clkdev_add(&c->lk);
-> > +               } else {
-> > +                       pr_warn("%s: failed to lookup clock node
-> > %s\n",
-> > +                               __func__, c->node_name);
-> > +               }
-> > +       }
-> > +}
-> 
-> I have one question here, what makes this part of the patch
-> TI-specific at all except the definition of the structure ti_dt_clk?
-> Mapping DT clocks to generic clkdev legacy namings seems like it would
-> be a necessary evil across *all* SoC platforms.
+Patches 1, 2 and 3 are newly added. This patch series does the following
+a> Fixes check for offset for unbanked gpios.
+b> Ports the driver to use irqdomain.
+c> Adds dt binding support for gpio-davinci.
+d> Adds DA850 dt support goio.
 
-SoC platforms that are fully converted to Device Tree do not need any 
-legacy clkdev namings, because they have all clkdev look-ups performed 
-using data from DT (see generic clock bindings).
+Changes for v4:
+1: Added irqdomain support for the driver.
+2: Dropped the ACK's.
+3: Removed unnecessary DT property.
 
-So this would be not "*all* SoC platforms", but instead "SoC platforms, 
-which are currently undergoing conversion to DT or conversion of which is 
-yet to be started".
+This patch series has been tested on DA850 for GPIO7_4
+(ie switch 8 on SW7.). Patches can be found at [1].
 
-Still this might be a good enough justification for having a generic 
-solution for this problem, but I would wait with this until the real need 
-on some of such platforms shows up. I don't see anything wrong in 
-implementing this first as TI-specific quirk and then possibly making it 
-generic if such need shows up.
+[1] http://git.linuxtv.org/mhadli/v4l-dvb-davinci_devices.git/shortlog/refs/heads/davinci_gpio
 
-By the way, we already have something like this in clk/samsung/clk.c . 
-This is called aliases there and allows registering clkdev look-ups for 
-particular clocks. However this is specific to our clock drivers that 
-register all clocks inside a single clock privder, based on static ID 
-assignment and all clocks statically listed in clock driver - see 
-clk/samsung/clk-s3c64xx.c for an example.
+KV Sujith (3):
+  gpio: davinci: add OF support
+  ARM: davinci: da850: add GPIO DT node
+  ARM: davinci: da850 evm: add GPIO pinumux entries DT node
 
-Best regards,
-Tomasz
+Lad, Prabhakar (3):
+  gpio: davinci: Fixed a check for unbanked gpio
+  gpio: davinci: remove unnecessary printk
+  gpio: davinci: use irqdomain
 
-> I would say there is a good case for this being generic and used by
-> all platforms waiting for con->id/dev->id to be moved to DT-awareness,
-> the structure itself is very generic within clkdev as long as the
-> drivers conformed anyway (and if they didn't, none of this helps) and
-> I don't think it really needs to be a TI-only thing. The next thing
-> that's going to happen when another platform arrives that wants to do
-> the same thing is duplication or consolidation - so it would probably
-> be a good idea to make this generic to start.
-> 
-> While there the names could be a bit more descriptive -
-> dt_clk_name_lookup_map_register(), struct dt_clk_name_lookup_map,
-> DT_CLK_LOOKUP_MAP() ..? The current namespace makes it look like this
-> is the absolute correct thing to do under all circumstances, but in
-> fact this is purely for mapping the old way to the new, better way..
-> in the event a brand new platform arrives, with all new drivers (or
-> only compliant drivers), none of this code should be implemented for
-> it and it should be presented this way.
-> 
-> Thanks,
-> Matt Sealey <neko@bakuhatsu.net>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 ++++++
+ arch/arm/boot/dts/da850-evm.dts                    |   20 ++++
+ arch/arm/boot/dts/da850.dtsi                       |   15 +++
+ arch/arm/mach-davinci/da830.c                      |    1 -
+ arch/arm/mach-davinci/da850.c                      |    1 -
+ arch/arm/mach-davinci/dm355.c                      |    1 -
+ arch/arm/mach-davinci/dm365.c                      |    1 -
+ arch/arm/mach-davinci/dm644x.c                     |    1 -
+ arch/arm/mach-davinci/dm646x.c                     |    1 -
+ drivers/gpio/gpio-davinci.c                        |  111 +++++++++++++++-----
+ include/linux/platform_data/gpio-davinci.h         |    3 +-
+ 11 files changed, 153 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+
+-- 
+1.7.9.5
 
