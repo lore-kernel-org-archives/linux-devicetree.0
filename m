@@ -1,58 +1,41 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 02/11] devicetree: bindings: Document Qualcomm cpus and enable-method
-Date: Fri, 1 Nov 2013 20:04:19 -0500
-Message-ID: <CAL_JsqLObXEWJJ=SuifTjpPz9qTW0n43fyQNA-vjLNeLy-7-XA@mail.gmail.com>
-References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
-	<1383343739-23080-3-git-send-email-sboyd@codeaurora.org>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
+Date: Sat, 2 Nov 2013 12:16:56 +0800
+Message-ID: <CACVXFVN-Vk9k=jceT1iR2nfSNvHQR5MAtrb+vjw9QwcWnn9CVw@mail.gmail.com>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+	<1381869563-16083-5-git-send-email-grant.likely@linaro.org>
+	<CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com>
+	<CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com>
+	<20131031185714.GA12646@quad.lixom.net>
+	<20131101175317.A812AC40868@trevor.secretlab.ca>
+	<20131101185401.B298FC40868@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1383343739-23080-3-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131101185401.B298FC40868@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 1, 2013 at 5:08 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> From: Rohit Vaswani <rvaswani@codeaurora.org>
+On Sat, Nov 2, 2013 at 2:54 AM, Grant Likely <grant.likely@linaro.org> wrote:
 >
-> Scorpion and Krait are Qualcomm cpus. These cpus don't use the
-> spin-table enable-method. Instead they rely on mmio register
-> accesses to enable power and clocks to bring CPUs out of reset.
+> That one was broken. Try this instead.
 >
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> [sboyd: Split off into separate patch, renamed method to
-> qcom,mmio]
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> From bcbffc3d16f49451ef505dc021480aa061465a15 Mon Sep 17 00:00:00 2001
+> From: Grant Likely <grant.likely@linaro.org>
+> Date: Fri, 1 Nov 2013 10:50:50 -0700
+> Subject: [PATCH] of: Fixup interrupt parsing failure.
+>
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
 > ---
->
-> This slightly conflicts with my krait EDAC series.
->
->  Documentation/devicetree/bindings/arm/cpus.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 37258f9..e2969fa2 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
->                 "marvell,mohawk"
->                 "marvell,xsc3"
->                 "marvell,xscale"
-> +               "qcom,scorpion"
-> +               "qcom,krait"
->
->  And the following optional properties:
->
-> @@ -52,6 +54,7 @@ And the following optional properties:
->                  different types of cpus.
->                  This should be one of:
->                  "spin-table"
-> +                "qcom,mmio"
+>  drivers/of/irq.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 
-Not exactly specific. How would you handle variations in the enable
-method? The mmio method to enable is tied to the core type or SOC
-type?
+This one does fix boot hanging on Arndale board.
 
-Rob
+Tested-by: Ming Lei <tom.leiming@gmail.com>
+
+Thanks,
+-- 
+Ming Lei
