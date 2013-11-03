@@ -1,100 +1,185 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when
- device-tree is used.
-Date: Mon, 04 Nov 2013 08:12:30 +1100
-Message-ID: <1383513150.4776.33.camel@pasglop>
-References: <20131101145925.66e22f73@notabene.brown>
-	 <1383279744.28909.26.camel@pasglop> <1383280054.28909.30.camel@pasglop>
-	 <20131101160329.37f3707b@notabene.brown>
-	 <1383282516.28909.36.camel@pasglop> <20131101204749.GA19662@kroah.com>
-	 <1383347399.28909.46.camel@pasglop> <20131102155824.GG23938@kroah.com>
-	 <1383423730.4776.16.camel@pasglop> <20131102204021.GA13994@kroah.com>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [early RFC] Device Tree bindings for OMAP3 Camera Subsystem
+Date: Sun, 3 Nov 2013 23:03:15 +0100
+Message-ID: <20131103220315.GA11659@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131102204021.GA13994-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2013-11-02 at 13:40 -0700, Greg Kroah-Hartman wrote:
-> On Sun, Nov 03, 2013 at 07:22:10AM +1100, Benjamin Herrenschmidt wrote:
-> > On Sat, 2013-11-02 at 08:58 -0700, Greg Kroah-Hartman wrote:
-> > > Just loop through all the platform devices before registering it to
-> > > determine if you need to do this, the platform code can do this just
-> > > fine.  If you try to register a duplicate name with the driver core,
-> > > odds are it will complain loudly, so don't do that.
-> > 
-> > But that loop + registration is racy ... oh well, we might do something
-> > better with Neil's idea of labels instead.
-> 
-> How is it racy?  Only one platform device should be allowed to be
-> registered at a time, there is a per-bus lock that should be used to
-> enforce this, right?
 
-No, platform devices can be registered from different "sources" and
-possibly from different threads. There's no fundamental reason why the
-registration would have to be serialized accross all possible entities
-capable of crating them (though it generally is at the moment).
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-There's no global mutex used by every piece of code in the kernel that
-might create/register a platform device.
+Hi,
 
-However, let's leave that aside for now and go back to the original
-issue because that's probably worth discussing a bit more.
+This is an early RFC for omap3isp DT support. For now i just created a potential DT
+binding documentation based on the existing platform data:
 
-Normally, a device "name" in sysfs shouldn't be relevant to user space,
-I think we agree. Devices get identified by function (class typically)
-and additional functional attributes associated with them.
+Binding for the OMAP3 Camera subsystem with the image signal processor (ISP) feature.
 
-For platform devices, things get a bit more murky though, ie, let's say
-we have a backlight device, that's good ... but nothing tells us what
-specific display it controls (there could be more than one in a system).
+omap3isp node
+-------------
 
-The device-tree typically provide such cross linking, but sysfs doesn't.
+Required properties:
 
-My understanding, and Neil correct me if I'm wrong, is that it's become
-a case where userspace has started relying on the "name" of the platform
-device to identify it's specific function within a class. Is that
-correct ? IE. Which screen this backlight is associated to isn't an
-explicit information provided somewhere in sysfs but something intuited
-by user space tools based on the platform device name.
+- compatible	: should be "ti,omap3isp" for OMAP3;
+- reg		: physical addresses and length of the registers set;
+- clocks	: list of clock specifiers, corresponding to entries in
+		  clock-names property;
+- clock-names	: must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
+		  "l3_ick" entries, matching entries in the clocks property;
+- interrupts	: must contain mmu interrupt;
+- ti,iommu	: phandle to isp mmu;
 
-Greg, I'm not saying that's a good thing btw :-) I'm just trying to get
-a grasp of the exact scope of the problem.
+Optional properties:
 
-Now, there's a way for userspace to sort that out using device-tree of
-course, they can parse /proc/device-tree, find the linkage, and related
-the device-tree nodes to the corresponding platform devices (are we
-creating the devspec files btw ?)
+- VDD_CSIPHY1-supply	: regulator for csi phy1
+- VDD_CSIPHY2-supply	: regulator for csi phy2
+- ti,isp-xclk-1		: device(s) attached to ISP's first external clock
+- ti,isp-xclk-2		: device(s) attached to ISP's second external clock
 
-But that only works for DT-created platform devices, not the hand-made
-ones.
+device-group subnode
+--------------------
 
-Another option would be for classes that are meaningless "seldomly" such
-as a backlight control (ie, it's always attached to *something*, a
-screen for example, etc...) to associate a separate name which isn't the
-device name in sysfs but a "label" as Neil proposed. In this case we'd
-need to add an attribute but I would object to this being specific to
-pwm_bl, instead of should generally be an attribute of all backlight
-devices.
+Required properties:
+- ti,isp-interface-type	: Integer describing the interface type, one of the following
+   * 0 = ISP_INTERFACE_PARALLEL
+   * 1 = ISP_INTERFACE_CSI2A_PHY2
+   * 2 = ISP_INTERFACE_CCP2B_PHY1
+   * 3 = ISP_INTERFACE_CCP2B_PHY2
+   * 4 = ISP_INTERFACE_CSI2C_PHY1
+- ti,isp-devices	: Array of phandles to devices connected via the interface
+- One of the following configuration nodes (depending on ti,isp-interface-type)
+ - ti,ccp2-bus-cfg	: CCP2 bus configuration (needed for ISP_INTERFACE_CCP*)
+ - ti,parallel-bus-cfg	: PARALLEL bus configuration (needed for ISP_INTERFACE_PARALLEL)
+ - ti,csi2-bus-cfg	: CSI bus configuration (needed for ISP_INTERFACE_CSI*)
 
-This could then be class specific... but should it be ? it might
-actually be a useful thing to generally be able to label devices,
-especially in the embedded world.
+ccp2-bus-cfg subnode
+--------------------
 
-But that's just one option ... the point remains, people seem to be
-relying on platform device names in sysfs and yes, that's not right, but
-we need to understand why they do it and what's the right way to do to
-replace that practice. 
+Required properties:
+- ti,video-port-clock-divisor	: integer; used for video port output clock control
 
-Cheers,
-Ben.
+Optional properties:
+- ti,inverted-clock		: boolean; clock/strobe signal is inverted
+- ti,enable-crc			: boolean; enable crc checking
+- ti,ccp2-mode-mipi		: boolean; port is used in MIPI-CSI1 mode (default: CCP2 mode)
+- ti,phy-layer-is-strobe	: boolean; use data/strobe physical layer (default: data/clock physical layer)
+- ti,data-lane-configuration	: integer array with position and polarity information for lane 1 and 2
+- ti,clock-lane-configuration	: integer array with position and polarity information for clock lane
 
+parallel-bus-cfg subnode
+------------------------
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Required properties:
+- ti,data-lane-shift				: integer; shift data lanes by this amount
+
+Optional properties:
+- ti,clock-falling-edge				: boolean; sample on falling edge (default: rising edge)
+- ti,horizontal-synchronization-active-low	: boolean; default: active high
+- ti,vertical-synchronization-active-low	: boolean; default: active high
+- ti,data-polarity-ones-complement		: boolean; data polarity is one's complement
+
+csi2-bus-cfg subnode
+--------------------
+
+Required properties:
+- ti,video-port-clock-divisor	: integer; used for video port output clock control
+
+Optional properties:
+- ti,data-lane-configuration	: integer array with position and polarity information for lane 1 and 2
+- ti,clock-lane-configuration	: integer array with position and polarity information for clock lane
+- ti,enable-crc			: boolean; enable crc checking
+
+Example for Nokia N900
+----------------------
+
+omap3isp: isp@480BC000 {
+	compatible = "ti,omap3isp";
+	reg = <
+		/* OMAP3430+ */
+		0x480BC000 0x070	/* base */
+		0x480BC100 0x078	/* cbuf */
+		0x480BC400 0x1F0 	/* cpp2 */
+		0x480BC600 0x0A8	/* ccdc */
+		0x480BCA00 0x048	/* hist */
+		0x480BCC00 0x060	/* h3a  */
+		0x480BCE00 0x0A0	/* prev */
+		0x480BD000 0x0AC	/* resz */
+		0x480BD200 0x0FC	/* sbl  */
+		0x480BD400 0x070	/* mmu  */
+	>;
+
+	clocks = < &cam_ick &cam_mclk &csi2_96m_fck &l3_ick >;
+	clock-names = "cam_ick", "cam_mclk", "csi2_96m_fck", "l3_ick";
+
+	interrupts = <24>;
+
+	ti,iommu = <&mmu_isp>;
+
+	ti,isp-xclk-1 = <
+		&et8ek8
+		&smiapp_dfl
+	>;
+
+	group1: device-group@0 {
+		ti,isp-interface-type = <2>;
+
+		ti,isp-devices = <
+			&et8ek8
+			&ad5820
+			&adp1653
+		>;
+
+		ti,ccp2-bus-cfg {
+			ti,enable-crc;
+			ti,phy-layer-is-strobe;
+			ti,video-port-clock-divisor = <1>;
+		};
+	};
+
+	group2: device-group@1 {
+		ti,isp-interface-type = <2>;
+
+		ti,isp-devices = <
+			&smiapp_dfl
+		>;
+
+		ti,ccp2-bus-cfg {
+			ti,enable-crc;
+			ti,phy-layer-is-strobe;
+			ti,video-port-clock-divisor = <1>;
+		};
+	};
+};
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSdsgjAAoJENju1/PIO/qafpMP/jOXdgXl+zA65bgciO8avCi+
+054BddL+YKj0gpFg5VUQEfvHhTVOrTzlDkXFsdutXXyhCkXuINX3X9F1ckywpJKn
+7a+cfkxWugBmknYRKVAU8BQKksmziuZQGKiA/7dTFMxSuAT32v+kJSG6YBanjbPj
+sABfMZW/cxTcgWyNG947Le+LiiCJpgvERSSSHzVJ6wY+CuaqDGFwVtYpwO0KultY
+ny18AbUYCFQXiQ4+TfScHeg4gsB9UAXoJvz+HCP6GSV3iZ84SVcrLv7hf/GlwkYB
+vT0GBdCKPdjrx3K2Zr210D3J0kkoCHIqqojYhUs18rACEEh2O/8bmyIn5mEqlzSW
+Ypz04NBg3XzuGLdd1PN9IMDPegyEF/WOvRhTEaE58aOQxo3rqdhS1T6B8HMSxTIl
+SCRNf9M10sw2cOu6aBOYPtwMusytaprTltlovzIY3TCedwnkjTYtWzqXG8qv8a6U
+w7e9zftF34p1HiRWx1IQG/Ue+TKEmA4EkLC81GAA6kCy2oQcdAXqLaq0X1PCwFor
+e5Cf7jHjrVGVM/RjwrgffrUkEDMMDCArTH+0Kgh5EO1fgHD1BzSvow8QCJaijStB
+sj1qDpbA2Xb83Gn72s7kQQifHoMdGp4USlamkEbxvQax9QUbZkqZpCTThet/Sl/z
+7t9syETUyJXR5rlMafGp
+=TBRJ
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
