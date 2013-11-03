@@ -1,29 +1,68 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] DT: sort vendor-prefixes.txt
-Date: Sun, 03 Nov 2013 13:41:27 -0600
-Message-ID: <5276A6E7.7090704@gmail.com>
-References: <cover.1383379247.git.silvio.fricke@gmail.com> <9b7eca73a352405e0eb85ce640ed290be1877358.1383379247.git.silvio.fricke@gmail.com>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: Strange location and name for platform  devices when
+ device-tree is used.
+Date: Mon, 4 Nov 2013 08:09:23 +1100
+Message-ID: <20131104080923.1ea15ebc@notabene.brown>
+References: <20131101145925.66e22f73@notabene.brown>
+	<1383279744.28909.26.camel@pasglop>
+	<1383280054.28909.30.camel@pasglop>
+	<20131101160329.37f3707b@notabene.brown>
+	<1383282516.28909.36.camel@pasglop>
+	<20131101204749.GA19662@kroah.com>
+	<1383347399.28909.46.camel@pasglop>
+	<20131102155824.GG23938@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9b7eca73a352405e0eb85ce640ed290be1877358.1383379247.git.silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Silvio F <silvio.maillist-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/bu7TFMWwKBuv+tdscbup8yg"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131102155824.GG23938@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2013 03:04 AM, Silvio F wrote:
-> Signed-off-by: Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+--Sig_/bu7TFMWwKBuv+tdscbup8yg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied. Thanks.
+On Sat, 2 Nov 2013 08:58:24 -0700 Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 
-Rob
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> So go blame them for this, not me, remember, I'm the one who _hates_
+> platform devices and wish they had never been created...
+
+Have you ever written up why you hate them?  I did a bit of googling and
+couldn't find anything obvious.
+
+Is it the whole concept, or the particular details that you don't like?
+
+(I find the concept seems to make perfect sense, though there are a lot of
+details that I don't know).
+
+Thanks,
+NeilBrown
+
+--Sig_/bu7TFMWwKBuv+tdscbup8yg
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUna7gznsnt1WYoG5AQLochAAsLXEbdfWDIwUy2BSdXxmvD1/FujnHjYq
+TDuJVeliTQs4GFbezPNxyrAgD1pByQFfsvz1cbwg9Et5Ju80DzCyi6s2T0Z7Uwg7
+txOqWSRJyIq3looyZZZWf8lgovGxFULdl45JMy3sz0Av95YuCCTqeWE+NLPmrBdV
+SR1MsaYhkTxRPhQegfeLU8Cs/IRUC4JfNW/nRr7l5kxgMk43mOgWtn/gE0jjcvSf
+n8tglq0SB76BAA3v5K+SMCPxAXfr992RtKyMM1DHzkAyD/x9jwKTis7+5oVJssfp
+aifAiWJ8qxFXxMV1Liei1H0+Iw2yXyQUzF+xHTepuu7r1lO/2tluM482uyEuqzpb
+BeCEOBPIuOHwsICNXVR1T24U++aomn+iolaTEpzIpvS82viHyMms5M0JahdeUxjf
+M+c6LfNNbeZuw43/VcmhHy+qmgEvzi4A4B/QH+5+j0Jd5xwYat2JSpEwTA4h+baY
+f28Es2MxVcxTtdDlcQwJj9OFm5YD2TX4zN43X6VDgOmPTYJ2PMkIvSL2UCim13D/
+7SKclnTSAAq6pSVyOUuxMo8nXDD/BqomaFJuSLjGEsx307YRsT+3MJof3BQOn9AP
+oqUwyV8VHglljPWSRytiI3albfOWyc47cYOJ3hmRwXvhMoG/3S3E9dN4VFdOaEnc
+DCMR8QcmAQs=
+=aZNB
+-----END PGP SIGNATURE-----
+
+--Sig_/bu7TFMWwKBuv+tdscbup8yg--
