@@ -1,185 +1,99 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [early RFC] Device Tree bindings for OMAP3 Camera Subsystem
-Date: Sun, 3 Nov 2013 23:03:15 +0100
-Message-ID: <20131103220315.GA11659@earth.universe>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Mon, 04 Nov 2013 00:15:58 +0100
+Message-ID: <1432962.yW4lKnaQJE@flatron>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <E1VZjCU-0005RE-Vt@jdl.com> <20131025231106.GC17659@voom.redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sebastian Reichel <sre@debian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131025231106.GC17659-1s0os16eZneny3qCrzbmXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Saturday 26 of October 2013 10:11:06 David Gibson wrote:
+> On Fri, Oct 25, 2013 at 10:21:22AM -0500, Jon Loeliger wrote:
+> > > On 10/25/2013 12:43 AM, Grant Likely wrote:
+> > > > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
+> > > > <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> > 
+> > > wrote:
+> > > >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > >> 
+> > > >> This is a very quick proof-of-concept re: how a DT schema checker
+> > > >> might
+> > > >> look if written in C, and integrated into dtc.
+> > > > 
+> > > > Thanks for looking at this.
+> > > > 
+> > > > Very interesting. Certainly an expedient way to start checking
+> > > > schemas,
+> > > > and for certain bindings it may be the best approach. The downside
+> > > > is it forces a recompilation of DTC to bring in new bindings and
+> > > > it isn't a great meduim for mixing schema with documentation in
+> > > > the bindings.> > 
+> > > This approach would certainly require recompiling something. I threw
+> > > the code into dtc simply because it was the easiest container for
+> > > the demonstration. It could be a separate DT validation utility if
+> > > we wanted, although we'd need to split the DT parser from dtc into
+> > > a library to avoid code duplication. The resultant utility could be
+> > > part of the repo containing the DTs, so it didn't end up as a
+> > > separate package to manage.
+> > > 
+> > > I think the additional documentation could be added as comments in
+> > > the
+> > > validation functions, just like IIRC it was to be represented as
+> > > comments even in the .dts-based schema proposals.
+> > 
+> > DTers,
+> > 
+> > I think the additional benefit of starting with a direct C
+> > implementation is that it causes us to begin to actually
+> > codify the schema requirements.  Sure, it may not be ideal
+> > at first, but over time it may reveal consistent patterns
+> > that can be extracted.  And it may reveal what a real schema
+> > might look like and how it might be expressed better.  Which
+> > is to say that perhaps we are letting "perfect" get in the
+> > way of "good enough to start"?
+> > 
+> > In the meantime, someone has shown us the code and we can
+> > get started.  It's a Small Matter of Refactoring later. :-)
+> 
+> Yes!  This!
+> 
+> Think of this prototype as a mechanism for collating and applying a
+> bunch of schemas to the tree.  At the moment the schemas are all hard
+> coded in C, but it can be extended to load some or all of them
+> dynamically from a description / template / whatever.
+> 
+> That also gives us the flexibility to start out with a simple but
+> limited schema language which handles common cases, while leaving the
+> complex cases in C, at least until we understand the requirements well
+> enough to extend the schema language.
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is fine as an intermediate step, but I'm afraid that the overhead of 
+work needed to describe all the bindings using C language directly will be 
+pretty big. C language isn't really best fitted for such purposes.
 
-Hi,
+If we agree to base on this, but solely as a mechanism and a base for 
+further work, my idea would be to introduce a schema description language 
+anyway and then some code generator that would generate C code from 
+schemas described using such language (and possibly also something to 
+generate textual documentation from schemas, so we could have a central 
+repository of indexed DT bindings, for example on [1] - maybe kerneldoc 
+could be reused here).
 
-This is an early RFC for omap3isp DT support. For now i just created a potential DT
-binding documentation based on the existing platform data:
+Such design would allow for describing a lot of cases using a simple 
+description language, while leaving the possibility of adding inline C 
+snippets, like PHP in HTML, to handle those super complex ones.
 
-Binding for the OMAP3 Camera subsystem with the image signal processor (ISP) feature.
+[1] https://www.kernel.org/doc/htmldocs/
 
-omap3isp node
--------------
+Best regards,
+Tomasz
 
-Required properties:
-
-- compatible	: should be "ti,omap3isp" for OMAP3;
-- reg		: physical addresses and length of the registers set;
-- clocks	: list of clock specifiers, corresponding to entries in
-		  clock-names property;
-- clock-names	: must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
-		  "l3_ick" entries, matching entries in the clocks property;
-- interrupts	: must contain mmu interrupt;
-- ti,iommu	: phandle to isp mmu;
-
-Optional properties:
-
-- VDD_CSIPHY1-supply	: regulator for csi phy1
-- VDD_CSIPHY2-supply	: regulator for csi phy2
-- ti,isp-xclk-1		: device(s) attached to ISP's first external clock
-- ti,isp-xclk-2		: device(s) attached to ISP's second external clock
-
-device-group subnode
---------------------
-
-Required properties:
-- ti,isp-interface-type	: Integer describing the interface type, one of the following
-   * 0 = ISP_INTERFACE_PARALLEL
-   * 1 = ISP_INTERFACE_CSI2A_PHY2
-   * 2 = ISP_INTERFACE_CCP2B_PHY1
-   * 3 = ISP_INTERFACE_CCP2B_PHY2
-   * 4 = ISP_INTERFACE_CSI2C_PHY1
-- ti,isp-devices	: Array of phandles to devices connected via the interface
-- One of the following configuration nodes (depending on ti,isp-interface-type)
- - ti,ccp2-bus-cfg	: CCP2 bus configuration (needed for ISP_INTERFACE_CCP*)
- - ti,parallel-bus-cfg	: PARALLEL bus configuration (needed for ISP_INTERFACE_PARALLEL)
- - ti,csi2-bus-cfg	: CSI bus configuration (needed for ISP_INTERFACE_CSI*)
-
-ccp2-bus-cfg subnode
---------------------
-
-Required properties:
-- ti,video-port-clock-divisor	: integer; used for video port output clock control
-
-Optional properties:
-- ti,inverted-clock		: boolean; clock/strobe signal is inverted
-- ti,enable-crc			: boolean; enable crc checking
-- ti,ccp2-mode-mipi		: boolean; port is used in MIPI-CSI1 mode (default: CCP2 mode)
-- ti,phy-layer-is-strobe	: boolean; use data/strobe physical layer (default: data/clock physical layer)
-- ti,data-lane-configuration	: integer array with position and polarity information for lane 1 and 2
-- ti,clock-lane-configuration	: integer array with position and polarity information for clock lane
-
-parallel-bus-cfg subnode
-------------------------
-
-Required properties:
-- ti,data-lane-shift				: integer; shift data lanes by this amount
-
-Optional properties:
-- ti,clock-falling-edge				: boolean; sample on falling edge (default: rising edge)
-- ti,horizontal-synchronization-active-low	: boolean; default: active high
-- ti,vertical-synchronization-active-low	: boolean; default: active high
-- ti,data-polarity-ones-complement		: boolean; data polarity is one's complement
-
-csi2-bus-cfg subnode
---------------------
-
-Required properties:
-- ti,video-port-clock-divisor	: integer; used for video port output clock control
-
-Optional properties:
-- ti,data-lane-configuration	: integer array with position and polarity information for lane 1 and 2
-- ti,clock-lane-configuration	: integer array with position and polarity information for clock lane
-- ti,enable-crc			: boolean; enable crc checking
-
-Example for Nokia N900
-----------------------
-
-omap3isp: isp@480BC000 {
-	compatible = "ti,omap3isp";
-	reg = <
-		/* OMAP3430+ */
-		0x480BC000 0x070	/* base */
-		0x480BC100 0x078	/* cbuf */
-		0x480BC400 0x1F0 	/* cpp2 */
-		0x480BC600 0x0A8	/* ccdc */
-		0x480BCA00 0x048	/* hist */
-		0x480BCC00 0x060	/* h3a  */
-		0x480BCE00 0x0A0	/* prev */
-		0x480BD000 0x0AC	/* resz */
-		0x480BD200 0x0FC	/* sbl  */
-		0x480BD400 0x070	/* mmu  */
-	>;
-
-	clocks = < &cam_ick &cam_mclk &csi2_96m_fck &l3_ick >;
-	clock-names = "cam_ick", "cam_mclk", "csi2_96m_fck", "l3_ick";
-
-	interrupts = <24>;
-
-	ti,iommu = <&mmu_isp>;
-
-	ti,isp-xclk-1 = <
-		&et8ek8
-		&smiapp_dfl
-	>;
-
-	group1: device-group@0 {
-		ti,isp-interface-type = <2>;
-
-		ti,isp-devices = <
-			&et8ek8
-			&ad5820
-			&adp1653
-		>;
-
-		ti,ccp2-bus-cfg {
-			ti,enable-crc;
-			ti,phy-layer-is-strobe;
-			ti,video-port-clock-divisor = <1>;
-		};
-	};
-
-	group2: device-group@1 {
-		ti,isp-interface-type = <2>;
-
-		ti,isp-devices = <
-			&smiapp_dfl
-		>;
-
-		ti,ccp2-bus-cfg {
-			ti,enable-crc;
-			ti,phy-layer-is-strobe;
-			ti,video-port-clock-divisor = <1>;
-		};
-	};
-};
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSdsgjAAoJENju1/PIO/qafpMP/jOXdgXl+zA65bgciO8avCi+
-054BddL+YKj0gpFg5VUQEfvHhTVOrTzlDkXFsdutXXyhCkXuINX3X9F1ckywpJKn
-7a+cfkxWugBmknYRKVAU8BQKksmziuZQGKiA/7dTFMxSuAT32v+kJSG6YBanjbPj
-sABfMZW/cxTcgWyNG947Le+LiiCJpgvERSSSHzVJ6wY+CuaqDGFwVtYpwO0KultY
-ny18AbUYCFQXiQ4+TfScHeg4gsB9UAXoJvz+HCP6GSV3iZ84SVcrLv7hf/GlwkYB
-vT0GBdCKPdjrx3K2Zr210D3J0kkoCHIqqojYhUs18rACEEh2O/8bmyIn5mEqlzSW
-Ypz04NBg3XzuGLdd1PN9IMDPegyEF/WOvRhTEaE58aOQxo3rqdhS1T6B8HMSxTIl
-SCRNf9M10sw2cOu6aBOYPtwMusytaprTltlovzIY3TCedwnkjTYtWzqXG8qv8a6U
-w7e9zftF34p1HiRWx1IQG/Ue+TKEmA4EkLC81GAA6kCy2oQcdAXqLaq0X1PCwFor
-e5Cf7jHjrVGVM/RjwrgffrUkEDMMDCArTH+0Kgh5EO1fgHD1BzSvow8QCJaijStB
-sj1qDpbA2Xb83Gn72s7kQQifHoMdGp4USlamkEbxvQax9QUbZkqZpCTThet/Sl/z
-7t9syETUyJXR5rlMafGp
-=TBRJ
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
