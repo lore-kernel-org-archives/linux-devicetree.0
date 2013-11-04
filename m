@@ -1,78 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] extcon-gpio: add devicetree support.
-Date: Mon, 4 Nov 2013 10:39:32 -0800
-Message-ID: <20131104183932.GQ2493@sirena.org.uk>
-References: <20131101205005.659ba606@notabene.brown>
- <20131101171643.GA2643@kartoffel>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Mon, 4 Nov 2013 10:57:36 -0800
+Message-ID: <CAOesGMhHH7XENmEVJEbOQX03Zc_Q8775ijUfg5r1fLLGTLUymw@mail.gmail.com>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+	<1432962.yW4lKnaQJE@flatron>
+	<25161583.XICaeMWvPh@flatron>
+	<2443024.JdDKnfkC18@wuerfel>
+	<5277CD33.6030003@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Uc2nn8srCdMFAHlk"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131101171643.GA2643@kartoffel>
+In-Reply-To: <5277CD33.6030003-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 4, 2013 at 8:37 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
---Uc2nn8srCdMFAHlk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I had suggested that while talking to someone at the kernel summit,
+> basically each driver supplies functions like:
+>
+> 1) ACPI -> platform data or resources converter
+> 2) DT -> platform or resources data converter
+> 3) anything else -> platform or resources data converter
+> 4) probe()
+>
+> One of (1)..(3) (depending on device instantiation source) is called to
+> translate the data source to platform data or resources, before probe
+> (and could indeed handle much of deferred probe I suppose).
+>
+> (4) is called to actually initialize the device, and always has complete
+> pre-parsed platform data/resources available, and does no DT/ACPI/...
+> parsing.
+>
+> I forget who I was talking to, but it was asserted something like this
+> had been proposed before, and wasn't accepted. Unfortunately, I don't
+> entirely recall why...
+>
+> It may have been due to the fact I proposed (1) and (2) above being
+> separate, rather than identical, due to using some unified API to read
+> data from ACPI and DT. That wasn't the most interesting aspect of the
+> proposal though. Still, I think conceptually there could be other data
+> sources in the future, so we may need to allow different types of
+> conversion function at some point, even if the ACPI and DT
+> implementations can end up being the same.
 
-On Fri, Nov 01, 2013 at 10:16:44AM -0700, Mark Rutland wrote:
-> On Fri, Nov 01, 2013 at 09:50:05AM +0000, NeilBrown wrote:
+I think it might have been me you were talking to. I know Grant
+considered something like that when first doing the device tree
+enablement, and chose not to do it then but I am not sure what the
+motivations were. Given that we have cleaned up a lot of driver
+probing already by now, it might be suitable to try again.
 
-> > + - label: name for connector.  If not given, device name is used.
 
-> Are extcon devices ever used standalone? If so, why?
-
-They are sometimes used for things that don't have/need any other
-software representation in the system like detection of attachment of
-covers or as bundles for other connectors (like the Apple 30 pin cables,
-they have the base connector with multiple possible things connected on
-it).
-
-> If not I see _no_ reason at all for the label property. If a userspace
-> application needs to detect the presence of a particular external connector, it
-> will need to know this in relation to the device the external connectors are
-> attached to. In that case the application should find that device and traverse
-> its set of extcon devices. The names for the external connections will be a
-> property of the device, not the extcon devices themselves (along hte same lines
-> as clocks), and need not be a property of the extcon device.
-
-This is often done for user display purposes rather than for the
-application and is sometimes done from the perspective of "what's
-plugged into my system" (eg, helping someone cable up their system)
-rather than from the point of view of using an individual device.
-
-For example the HDA spec connector objects include information like the
-connector label (ie, writing on the case) and colour as part of the
-object for the connector and DMI does similar things for PCI slots.
-
---Uc2nn8srCdMFAHlk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSd+naAAoJELSic+t+oim9dJQP/i8dJjYJQCSQD1mqGhxWqy9U
-3wNdJyFp1l2Y9P1GIMPhbc+NEhkf4oXl3INdq2eKy9puMIslJV3wyyHSGSWcjXkF
-gxfn82FnjV5uwZOS1IqNEUqqt2NJ8l7gYV7yWy1V751UYO1eg58FBfkr6tTPw6tK
-6CJr9RVln08WSVh4kybtucGrQhWRF2hhBdzHsQFfbJuufJv0IzpfdQ3X2qC0vzUE
-ttINznW8lOhV60kylD4rwjOtWPBCsvHIJWsh3gWAWqpgcag3gMgEmc/Hb2U8cQ3b
-sQ+JYLW5/KMvyDtG1DR2zo6X2CrRZ0t8GDLKNfbJmiNgFiABbO+jPyKYJs9TZcV1
-eHxzfoaxO683xAl86LXlS+0OHa8iHdDi8gsmnXrJUA5uFwzGNXvJtmpdDgP+fPxr
-a2DWtA543S871gUYcWnzGgXiYXxrOYZUebHifU3BIEhc0XgAtNgotBf3QPPHFZwp
-8RP6JDoZX6lBFBuxjJingHWND4faAhc6BfuOoFrcsKevYG5UhQTjYPdjBw5lR1eD
-1MrvJRb1jvWOi6yJdXOIBsDwBAusVRJh3Q9NO1Vi3mv90vca2Jj+5ArHSDwoymP2
-9So0N03S5JzPxWNFas5y4Gk3JfjSeTOV0Izemnew7Nya+07ltmhD66OY+NA9I2Q4
-w+I36qbXe8fvgbDYpldR
-=jiya
------END PGP SIGNATURE-----
-
---Uc2nn8srCdMFAHlk--
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
