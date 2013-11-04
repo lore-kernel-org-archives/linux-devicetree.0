@@ -1,34 +1,76 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] of: Add AU Optronics Corporation vendor prefix
-Date: Mon, 04 Nov 2013 11:21:26 -0600
-Message-ID: <5277D796.5050805@gmail.com>
-References: <1383553706-27287-1-git-send-email-treding@nvidia.com> <5277D75B.9060907@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 02/11] devicetree: bindings: Document Qualcomm cpus and
+ enable-method
+Date: Mon, 4 Nov 2013 09:36:06 -0800
+Message-ID: <20131104173606.GL21983@codeaurora.org>
+References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
+ <1383343739-23080-3-git-send-email-sboyd@codeaurora.org>
+ <CAL_JsqLObXEWJJ=SuifTjpPz9qTW0n43fyQNA-vjLNeLy-7-XA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5277D75B.9060907-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLObXEWJJ=SuifTjpPz9qTW0n43fyQNA-vjLNeLy-7-XA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/2013 11:20 AM, Rob Herring wrote:
-> On 11/04/2013 02:28 AM, Thierry Reding wrote:
->> AU Optronics is listed as AUO on the stock exchange, so use that as the
->> vendor prefix.
->>
->> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v4:
->> - rebase on linux-next to resolve alphabetical ordering conflicts
+On 11/01, Rob Herring wrote:
+> On Fri, Nov 1, 2013 at 5:08 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > From: Rohit Vaswani <rvaswani@codeaurora.org>
+> >
+> > Scorpion and Krait are Qualcomm cpus. These cpus don't use the
+> > spin-table enable-method. Instead they rely on mmio register
+> > accesses to enable power and clocks to bring CPUs out of reset.
+> >
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+> > [sboyd: Split off into separate patch, renamed method to
+> > qcom,mmio]
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > ---
+> >
+> > This slightly conflicts with my krait EDAC series.
+> >
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> > index 37258f9..e2969fa2 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
+> >                 "marvell,mohawk"
+> >                 "marvell,xsc3"
+> >                 "marvell,xscale"
+> > +               "qcom,scorpion"
+> > +               "qcom,krait"
+> >
+> >  And the following optional properties:
+> >
+> > @@ -52,6 +54,7 @@ And the following optional properties:
+> >                  different types of cpus.
+> >                  This should be one of:
+> >                  "spin-table"
+> > +                "qcom,mmio"
 > 
-> Applied for 3.13.
+> Not exactly specific. How would you handle variations in the enable
+> method? The mmio method to enable is tied to the core type or SOC
+> type?
 
-For all 3 of them that is.
+Variations in the enable method are handled by searching for
+another node with different compatible strings. Later on in this
+series you'll see that we search for gcc-8660, kpss-acc-v1, or
+kpps-acc-v2. Once we find one of these nodes we perform the
+correct cold boot routine.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm actually considering renaming this to "qcom,cold-boot". We
+could further extend the enable-metho property to allow
+"qcom,warm-boot" and then for cases like kexec we could make the
+enable method be warm boot and our smp code could be smart enough
+to know to skip the whole cold boot sequence.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
