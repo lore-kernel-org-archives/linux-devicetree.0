@@ -1,202 +1,79 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] gpio: davinci: add OF support
-Date: Mon, 4 Nov 2013 20:28:34 +0200
-Message-ID: <5277E752.8090005@ti.com>
-References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
-	<1383406775-14902-5-git-send-email-prabhakar.csenng@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] extcon-gpio: add devicetree support.
+Date: Mon, 4 Nov 2013 10:39:32 -0800
+Message-ID: <20131104183932.GQ2493@sirena.org.uk>
+References: <20131101205005.659ba606@notabene.brown>
+ <20131101171643.GA2643@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1383406775-14902-5-git-send-email-prabhakar.csenng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Uc2nn8srCdMFAHlk"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131101171643.GA2643@kartoffel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar Lad,
 
-On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
-> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
->
-> This patch adds OF parser support for davinci gpio
-> driver and also appropriate documentation in gpio-davinci.txt
-> located at Documentation/devicetree/bindings/gpio/.
+--Uc2nn8srCdMFAHlk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I worry, do we need to have gpio_chip.of_xlate() callback implemented?
-- From one side, Davinci GPIO controller in DT described by one entry
-which defines number of supported GPIOs as "ti,ngpio = <144>;"
+On Fri, Nov 01, 2013 at 10:16:44AM -0700, Mark Rutland wrote:
+> On Fri, Nov 01, 2013 at 09:50:05AM +0000, NeilBrown wrote:
 
-- From other side, on Linux level more than one gpio_chip objects are 
-instantiated (one per each 32 GPIO).
+> > + - label: name for connector.  If not given, device name is used.
 
-How the standard GPIO biding will work in this case? .. And will they?
+> Are extcon devices ever used standalone? If so, why?
 
-Linus, I'd very appreciate if you will be able to clarify this point.
+They are sometimes used for things that don't have/need any other
+software representation in the system like detection of attachment of
+covers or as bundles for other connectors (like the Apple 30 pin cables,
+they have the base connector with multiple possible things connected on
+it).
 
->
-> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-> [prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: simplified the OF code, removed
-> 		unnecessary DT property and also simplified
-> 		the commit message]
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 ++++++++++++
->   drivers/gpio/gpio-davinci.c                        |   54 ++++++++++++++++++--
->   2 files changed, 83 insertions(+), 3 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> new file mode 100644
-> index 0000000..55aae1c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -0,0 +1,32 @@
-> +Davinci GPIO controller bindings
-> +
-> +Required Properties:
-> +- compatible: should be "ti,dm6441-gpio"
-> +
-> +- reg: Physical base address of the controller and the size of memory mapped
-> +       registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- interrupts: Array of GPIO interrupt number.
+> If not I see _no_ reason at all for the label property. If a userspace
+> application needs to detect the presence of a particular external connector, it
+> will need to know this in relation to the device the external connectors are
+> attached to. In that case the application should find that device and traverse
+> its set of extcon devices. The names for the external connections will be a
+> property of the device, not the extcon devices themselves (along hte same lines
+> as clocks), and need not be a property of the extcon device.
 
-May be meaning of <interrupts> property need to be extended, because,
-as of now, only banked or unbanked IRQs are supported - and not both.
+This is often done for user display purposes rather than for the
+application and is sometimes done from the perspective of "what's
+plugged into my system" (eg, helping someone cable up their system)
+rather than from the point of view of using an individual device.
 
-> +
-> +- ti,ngpio: The number of GPIO pins supported.
-> +
-> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an individual interrupt
-> +		             line to processor.
+For example the HDA spec connector objects include information like the
+connector label (ie, writing on the case) and colour as part of the
+object for the connector and DMI does similar things for PCI slots.
 
-Should interrupt-controller; specifier be added here?
+--Uc2nn8srCdMFAHlk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +
-> +Example:
-> +
-> +gpio: gpio@1e26000 {
-> +	compatible = "ti,dm6441-gpio";
-> +	gpio-controller;
-> +	reg = <0x226000 0x1000>;
-> +	interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
-> +		44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
-> +		46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
-> +		48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
-> +		50 IRQ_TYPE_EDGE_BOTH>;
-> +	ti,ngpio = <144>;
-> +	ti,davinci-gpio-irq-base = <101>;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-         ^^ Is it still needed?
+iQIcBAEBAgAGBQJSd+naAAoJELSic+t+oim9dJQP/i8dJjYJQCSQD1mqGhxWqy9U
+3wNdJyFp1l2Y9P1GIMPhbc+NEhkf4oXl3INdq2eKy9puMIslJV3wyyHSGSWcjXkF
+gxfn82FnjV5uwZOS1IqNEUqqt2NJ8l7gYV7yWy1V751UYO1eg58FBfkr6tTPw6tK
+6CJr9RVln08WSVh4kybtucGrQhWRF2hhBdzHsQFfbJuufJv0IzpfdQ3X2qC0vzUE
+ttINznW8lOhV60kylD4rwjOtWPBCsvHIJWsh3gWAWqpgcag3gMgEmc/Hb2U8cQ3b
+sQ+JYLW5/KMvyDtG1DR2zo6X2CrRZ0t8GDLKNfbJmiNgFiABbO+jPyKYJs9TZcV1
+eHxzfoaxO683xAl86LXlS+0OHa8iHdDi8gsmnXrJUA5uFwzGNXvJtmpdDgP+fPxr
+a2DWtA543S871gUYcWnzGgXiYXxrOYZUebHifU3BIEhc0XgAtNgotBf3QPPHFZwp
+8RP6JDoZX6lBFBuxjJingHWND4faAhc6BfuOoFrcsKevYG5UhQTjYPdjBw5lR1eD
+1MrvJRb1jvWOi6yJdXOIBsDwBAusVRJh3Q9NO1Vi3mv90vca2Jj+5ArHSDwoymP2
+9So0N03S5JzPxWNFas5y4Gk3JfjSeTOV0Izemnew7Nya+07ltmhD66OY+NA9I2Q4
+w+I36qbXe8fvgbDYpldR
+=jiya
+-----END PGP SIGNATURE-----
 
-> +	ti,davinci-gpio-unbanked = <0>;
-> +};
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index bcb6d8d..bb20a39 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -17,6 +17,9 @@
->   #include <linux/io.h>
->   #include <linux/irq.h>
->   #include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/platform_device.h>
->   #include <linux/platform_data/gpio-davinci.h>
->
-> @@ -134,6 +137,40 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
->   	__raw_writel((1 << offset), value ? &g->set_data : &g->clr_data);
->   }
->
-> +static struct davinci_gpio_platform_data *
-> +davinci_gpio_get_pdata(struct platform_device *pdev)
-> +{
-> +	struct device_node *dn = pdev->dev.of_node;
-> +	struct davinci_gpio_platform_data *pdata;
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
-> +		return pdev->dev.platform_data;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
-> +
-> +	ret = of_property_read_u32(dn, "ti,ngpio", &val);
-> +	if (ret)
-> +		goto of_err;
-> +
-> +	pdata->ngpio = val;
-> +
-> +	ret = of_property_read_u32(dn, "ti,davinci-gpio-unbanked", &val);
-> +	if (ret)
-> +		goto of_err;
-> +
-> +	pdata->gpio_unbanked = val;
-> +
-> +	return pdata;
-> +
-> +of_err:
-> +	dev_err(&pdev->dev, "Populating pdata from DT failed: err %d\n", ret);
-> +	return NULL;
-> +}
-> +
->   static int davinci_gpio_probe(struct platform_device *pdev)
->   {
->   	int i, base;
-> @@ -144,12 +181,14 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct resource *res;
->
-> -	pdata = dev->platform_data;
-> +	pdata = davinci_gpio_get_pdata(pdev);
->   	if (!pdata) {
->   		dev_err(dev, "No platform data found\n");
->   		return -EINVAL;
->   	}
->
-> +	dev->platform_data = pdata;
-> +
->   	/*
->   	 * The gpio banks conceptually expose a segmented bitmap,
->   	 * and "ngpio" is one more than the largest zero-based
-> @@ -501,11 +540,20 @@ done:
->   	return 0;
->   }
->
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id davinci_gpio_ids[] = {
-> +	{ .compatible = "ti,dm6441-gpio", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
-> +#endif
-> +
->   static struct platform_driver davinci_gpio_driver = {
->   	.probe		= davinci_gpio_probe,
->   	.driver		= {
-> -		.name	= "davinci_gpio",
-> -		.owner	= THIS_MODULE,
-> +		.name		= "davinci_gpio",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(davinci_gpio_ids),
->   	},
->   };
->
->
-Regards,
-- Grygorii
+--Uc2nn8srCdMFAHlk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
