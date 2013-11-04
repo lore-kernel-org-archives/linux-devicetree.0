@@ -1,110 +1,57 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Mon, 04 Nov 2013 00:26:29 +0100
-Message-ID: <25161583.XICaeMWvPh@flatron>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <20131025231106.GC17659@voom.redhat.com> <1432962.yW4lKnaQJE@flatron>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4] video: backlight: gpio-backlight: Add DT support.
+Date: Mon, 04 Nov 2013 09:20:08 +0900
+Message-ID: <004101ced8f3$9e4e7ec0$daeb7c40$%han@samsung.com>
+References: <20131019104555.GI18477@ns203013.ovh.net>
+ <2730370.0UKsY9Ox0H@avalon> <20131024110524.GB11296@ulmo.nvidia.com>
+ <1389386.JnbumUe76M@avalon> <003701ced693$2f856150$8e9023f0$%han@samsung.com>
+ <20131101095754.GJ27864@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432962.yW4lKnaQJE@flatron>
+In-reply-to: <20131101095754.GJ27864-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Laurent Pinchart' <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Denis Carikli' <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Eric B??nard' <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Sascha Hauer' <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Lothar Wa??mann' <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 of November 2013 00:15:58 Tomasz Figa wrote:
-> On Saturday 26 of October 2013 10:11:06 David Gibson wrote:
-> > On Fri, Oct 25, 2013 at 10:21:22AM -0500, Jon Loeliger wrote:
-> > > > On 10/25/2013 12:43 AM, Grant Likely wrote:
-> > > > > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
-> > > > > <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> >
-> > > > 
-> > > > wrote:
-> > > > >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > >> 
-> > > > >> This is a very quick proof-of-concept re: how a DT schema
-> > > > >> checker
-> > > > >> might
-> > > > >> look if written in C, and integrated into dtc.
-> > > > > 
-> > > > > Thanks for looking at this.
-> > > > > 
-> > > > > Very interesting. Certainly an expedient way to start checking
-> > > > > schemas,
-> > > > > and for certain bindings it may be the best approach. The
-> > > > > downside
-> > > > > is it forces a recompilation of DTC to bring in new bindings and
-> > > > > it isn't a great meduim for mixing schema with documentation in
-> > > > > the bindings.> >
-> > > > 
-> > > > This approach would certainly require recompiling something. I
-> > > > threw
-> > > > the code into dtc simply because it was the easiest container for
-> > > > the demonstration. It could be a separate DT validation utility if
-> > > > we wanted, although we'd need to split the DT parser from dtc into
-> > > > a library to avoid code duplication. The resultant utility could
-> > > > be
-> > > > part of the repo containing the DTs, so it didn't end up as a
-> > > > separate package to manage.
-> > > > 
-> > > > I think the additional documentation could be added as comments in
-> > > > the
-> > > > validation functions, just like IIRC it was to be represented as
-> > > > comments even in the .dts-based schema proposals.
-> > > 
-> > > DTers,
-> > > 
-> > > I think the additional benefit of starting with a direct C
-> > > implementation is that it causes us to begin to actually
-> > > codify the schema requirements.  Sure, it may not be ideal
-> > > at first, but over time it may reveal consistent patterns
-> > > that can be extracted.  And it may reveal what a real schema
-> > > might look like and how it might be expressed better.  Which
-> > > is to say that perhaps we are letting "perfect" get in the
-> > > way of "good enough to start"?
-> > > 
-> > > In the meantime, someone has shown us the code and we can
-> > > get started.  It's a Small Matter of Refactoring later. :-)
-> > 
-> > Yes!  This!
-> > 
-> > Think of this prototype as a mechanism for collating and applying a
-> > bunch of schemas to the tree.  At the moment the schemas are all hard
-> > coded in C, but it can be extended to load some or all of them
-> > dynamically from a description / template / whatever.
-> > 
-> > That also gives us the flexibility to start out with a simple but
-> > limited schema language which handles common cases, while leaving the
-> > complex cases in C, at least until we understand the requirements well
-> > enough to extend the schema language.
-> 
-> This is fine as an intermediate step, but I'm afraid that the overhead
-> of work needed to describe all the bindings using C language directly
-> will be pretty big. C language isn't really best fitted for such
-> purposes.
-> 
-> If we agree to base on this, but solely as a mechanism and a base for
-> further work, my idea would be to introduce a schema description
-> language anyway and then some code generator that would generate C code
-> from schemas described using such language (and possibly also something
-> to generate textual documentation from schemas, so we could have a
-> central repository of indexed DT bindings, for example on [1] - maybe
-> kerneldoc could be reused here).
-> 
-> Such design would allow for describing a lot of cases using a simple
-> description language, while leaving the possibility of adding inline C
-> snippets, like PHP in HTML, to handle those super complex ones.
-> 
-> [1] https://www.kernel.org/doc/htmldocs/
+On Friday, November 01, 2013 6:58 PM, Thierry Reding wrote:
+> On Fri, Nov 01, 2013 at 08:44:48AM +0900, Jingoo Han wrote:
+>> On Friday, October 25, 2013 10:58 PM, Laurent Pinchart wrote:
+>>> On Thursday 24 October 2013 13:05:25 Thierry Reding wrote:
 
-Aha, one more thing. As it was mentioned on ARM Mini Summit, as a long 
-term goal, we will eventually have to introduce another validation tool 
-that checks device drivers against device tree bindings. We should keep 
-this in mind when considering schema design.
- 
+[....]
+
+>>>> Or is there still a reason to have more than a single bit for backlight
+>>>> state? I don't know any hardware that actually makes a difference
+>>>> between FB_BLANK_NORMAL, FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND
+>>>> or FB_BLANK_POWERDOWN.
+>>
+>> On Exynos side, I have never seen that FB_BLANK_VSYNC_SUSPEND,
+>> FB_BLANK_HSYNC_SUSPEND are used for controlling display panels or
+>> Display controllers.
+>>
+>> However, I heard that FB_BLANK_VSYNC_SUSPEND, FB_BLANK_HSYNC_SUSPEND are
+>> used for some monitors.
+> 
+> I think that those may make sense in the context of fbdev, and looking
+> at some fbdev drivers seems to substantiate that.
+> 
+> However, I don't think backlights have any such capability. I mean they
+> are either on or off, right? There's no such thing as partially off, or
+> partially on. How would a backlight behave differently if the panel was
+> in HSYNC suspend mode or VSYNC suspend mode?
+
+Hi Thierry Reding.
+
+I agree with you.
+In the case of backlight, there is no need that a backlight behaves
+differently in HSYNC suspend mode or VSYNC suspend mode.
+
 Best regards,
-Tomasz
+Jingoo Han
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
