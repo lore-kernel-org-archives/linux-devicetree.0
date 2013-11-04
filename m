@@ -1,111 +1,46 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Mon, 04 Nov 2013 09:42:29 -0700
-Message-ID: <5277CE75.6070804@wwwdotorg.org>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <E1VZjCU-0005RE-Vt@jdl.com> <20131025231106.GC17659@voom.redhat.com> <1432962.yW4lKnaQJE@flatron>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4][ 5/6] ARM: dts: i.MX35: Add display support.
+Date: Mon, 4 Nov 2013 15:05:37 -0200
+Message-ID: <CAOMZO5AScU=eNjnoBxUHibJihZewQdjT-PB-4yZ-fmQMgc4ZHA@mail.gmail.com>
+References: <1383581724-14817-1-git-send-email-denis@eukrea.com>
+	<1383581724-14817-5-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1432962.yW4lKnaQJE@flatron>
+In-Reply-To: <1383581724-14817-5-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2013 04:15 PM, Tomasz Figa wrote:
-> On Saturday 26 of October 2013 10:11:06 David Gibson wrote:
->> On Fri, Oct 25, 2013 at 10:21:22AM -0500, Jon Loeliger wrote:
->>>> On 10/25/2013 12:43 AM, Grant Likely wrote:
->>>>> On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
->>>>> <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> > 
->>>> wrote:
->>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> This is a very quick proof-of-concept re: how a DT schema checker
->>>>>> might
->>>>>> look if written in C, and integrated into dtc.
->>>>>
->>>>> Thanks for looking at this.
->>>>>
->>>>> Very interesting. Certainly an expedient way to start checking
->>>>> schemas,
->>>>> and for certain bindings it may be the best approach. The downside
->>>>> is it forces a recompilation of DTC to bring in new bindings and
->>>>> it isn't a great meduim for mixing schema with documentation in
->>>>> the bindings.> > 
->>>> This approach would certainly require recompiling something. I threw
->>>> the code into dtc simply because it was the easiest container for
->>>> the demonstration. It could be a separate DT validation utility if
->>>> we wanted, although we'd need to split the DT parser from dtc into
->>>> a library to avoid code duplication. The resultant utility could be
->>>> part of the repo containing the DTs, so it didn't end up as a
->>>> separate package to manage.
->>>>
->>>> I think the additional documentation could be added as comments in
->>>> the
->>>> validation functions, just like IIRC it was to be represented as
->>>> comments even in the .dts-based schema proposals.
->>>
->>> DTers,
->>>
->>> I think the additional benefit of starting with a direct C
->>> implementation is that it causes us to begin to actually
->>> codify the schema requirements.  Sure, it may not be ideal
->>> at first, but over time it may reveal consistent patterns
->>> that can be extracted.  And it may reveal what a real schema
->>> might look like and how it might be expressed better.  Which
->>> is to say that perhaps we are letting "perfect" get in the
->>> way of "good enough to start"?
->>>
->>> In the meantime, someone has shown us the code and we can
->>> get started.  It's a Small Matter of Refactoring later. :-)
->>
->> Yes!  This!
->>
->> Think of this prototype as a mechanism for collating and applying a
->> bunch of schemas to the tree.  At the moment the schemas are all hard
->> coded in C, but it can be extended to load some or all of them
->> dynamically from a description / template / whatever.
->>
->> That also gives us the flexibility to start out with a simple but
->> limited schema language which handles common cases, while leaving the
->> complex cases in C, at least until we understand the requirements well
->> enough to extend the schema language.
-> 
-> This is fine as an intermediate step, but I'm afraid that the overhead of 
-> work needed to describe all the bindings using C language directly will be 
-> pretty big. C language isn't really best fitted for such purposes.
+Hi Denis,
 
-My opinion is the exact opposite.
+On Mon, Nov 4, 2013 at 2:15 PM, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org> wrote:
+> +                       ipu: ipu@53fc0000 {
+> +                               compatible = "fsl,imx31-ipu";
+> +                               reg = < 0x53fc0000 0x5f
+> +                                       0x53fc0088 0x2b >;
+> +                               interrupts = <42 41>;
+> +                               clocks = <&clks 55>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       lcdc: mx3fb@53fc00b4 {
+> +                               compatible = "fsl,mx3-fb";
+> +                               reg = <0x53fc00b4 0x0b>;
+> +                               clocks = <&clks 55>;
+> +                               status = "disabled";
+> +                       };
 
-If you create a custom schema language, you have to develop:
+MX35 Reference Manual states that the IPU address range is 0x53fc0000
+- 0x53fc3fff
 
-* An entire new language specification, and perhaps syntax to represent
-the schema.
+There is no 'lcdc' peripheral listed there, so I don't think 'lcdc'
+should be included here.
 
-* A new parser (if not lexer).
+Regards,
 
-* Keep extending that as new schemas require more and more different
-validation that wasn't originally considered.
-
-Once we've specified every schema, we'll end up having had to invent a
-completely new Turing-complete language.
-
-However, if schemas are simply C code, you simply write code to validate
-the data. In my opinion, nothing could be simpler. Everyone working on
-the kernel is already familiar with C. We can refactor common patterns
-into function calls so people don't have to re-implement it.
-
-I don't see any reason why the C schema checker couldn't be linked into
-the kernel and applied at run-time, assuming we take a little care to
-write is as a library we call from dtc, rather than something closely
-coupled with dtc's internals. (Or implement it as a separate app).
-
-(Note that there's a bit more information in a .dts that a DTB, so some
-schema checking might be harder on a DTB). For example, phandle
-references are just another cell in the binary, but have a unique syntax
-in the source.
+Fabio Estevam
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
