@@ -1,123 +1,64 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCHv2 1/8] ALSA: Add SAI SoC Digital Audio
-	Interface driver.
-Date: Mon, 4 Nov 2013 12:33:39 +0800
-Message-ID: <20131104043338.GA2345@MrMyself>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
- <1383289495-24523-2-git-send-email-Li.Xiubo@freescale.com>
- <20131101085904.GC28401@MrMyself>
- <1DD289F6464F0949A2FCA5AA6DC23F82874201@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
+Date: Sun, 3 Nov 2013 21:04:55 -0800
+Message-ID: <20131104050455.GA3651@quad.lixom.net>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+ <1381869563-16083-5-git-send-email-grant.likely@linaro.org>
+ <CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com>
+ <CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com>
+ <20131031185714.GA12646@quad.lixom.net>
+ <20131101175317.A812AC40868@trevor.secretlab.ca>
+ <20131101185401.B298FC40868@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82874201@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Xiubo Li-B47053 <B47053@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>, "oskar@scara.com" <oskar@scara.co>
+In-Reply-To: <20131101185401.B298FC40868-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2013 at 11:45:10AM +0800, Xiubo Li-B47053 wrote:
-> > > +snd-soc-fsl-sai-objs := fsl-sai.o
+On Fri, Nov 01, 2013 at 11:54:01AM -0700, Grant Likely wrote:
+> On Fri, 01 Nov 2013 10:53:17 -0700, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Thu, 31 Oct 2013 11:57:14 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> > > On Wed, Oct 30, 2013 at 02:25:21PM -0700, Grant Likely wrote:
+> > > > (Sorry for HTML mail)
+> > > > 
+> > > > Can you put #define DEBUG at the top of drivers/of/irq.c and send me the
+> > > > log output from before and after the commit?
+> > > 
+> > > Here you go, quite verbose log below.
+> > > 
+> > > Looks like we're tripping the "no reg passed in" checks, not sure if related.
 > > 
-> > And I think it should be better to put it along with fsl-ssi.o and fsl-
-> > spdif.o
-> > 
+> > I think I've found the bug. See if this helps...
 > 
-> But fsl-ssi.o and fsl-spdif.o is based PowrePC platform? Which we can see from the comments.
-
-No. fsl-ssi.c is compatible to both ARM and PPC. And fsl-spdif.c is currently
-used on ARM only. So please just put along with them.
-
-> > > +	case SNDRV_PCM_TRIGGER_START:
-> > > +	case SNDRV_PCM_TRIGGER_RESUME:
-> > > +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> > > +		tcsr |= FSL_SAI_CSR_TERE;
-> > > +		rcsr |= FSL_SAI_CSR_TERE;
-> > > +		writel(rcsr, sai->base + FSL_SAI_RCSR);
-> > > +		udelay(10);
-> > 
-> > Does SAI really needs this udelay() here? Required by IP's operation flow?
-> > If so, I think it's better to add comments here to explain it.
-> > 
-> +++++++++++++++++
-> Synchronous mode
-> The SAI transmitter and receiver can be configured to operate with synchronous bit clock
-> and frame sync.
+> That one was broken. Try this instead.
 > 
-> 1,
-> If the transmitter bit clock and frame sync are to be used by both the transmitter and
-> receiver:
-> 	...
-> * It is recommended that the transmitter is the last enabled and the first disabled.
+> From bcbffc3d16f49451ef505dc021480aa061465a15 Mon Sep 17 00:00:00 2001
+> From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date: Fri, 1 Nov 2013 10:50:50 -0700
+> Subject: [PATCH] of: Fixup interrupt parsing failure.
 > 
-> 2,
-> If the receiver bit clock and frame sync are to be used by both the transmitter and
-> receiver:
-> 	...
-> * It is recommended that the receiver is the last enabled and the first disabled.
-> ------------------
-> 
-> So I think the delay is needed, and I still tunning it.
-> 
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-The udelay just doesn't make sense to what you are talking about.
+Well, it boots. That's an improvement. :) It is again going for the
+precalculated delay loop. I'm not sure why the code path diverged before,
+especially given the below irq request fail for MCT.
 
-Does SAI really need 10us delay between two register-updating?
+I do see a bunch of new printk errors that I didn't use to though:
 
-We basically use udelay only if the IP hardware actually needs it: some
-IP needs time to boot itself up after doing software reset for example.
-But it doesn't look reasonable to me by using udelay to make sure "the 
-last enabled".
+[    0.000000] genirq: Flags mismatch irq 160. 00015200 (mct_comp_irq) vs. 00014a00 (mct_tick0)
+[    0.040401] genirq: Flags mismatch irq 160. 00014a00 (mct_tick1) vs. 00014a00 (mct_tick0)
+[    0.040405] exynos-mct: cannot register IRQ 160
 
-And from the 'Synchronous mode' you just provided, there're another issue:
-
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		tcsr |= FSL_SAI_CSR_TERE;
-+		rcsr |= FSL_SAI_CSR_TERE;
-+		writel(rcsr, sai->base + FSL_SAI_RCSR);
-+		udelay(10);
-+		writel(tcsr, sai->base + FSL_SAI_TCSR);
-+		break;
-+
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (!(dai->playback_active || dai->capture_active)) {
-+			tcsr &= ~FSL_SAI_CSR_TERE;
-+			rcsr &= ~FSL_SAI_CSR_TERE;
-+		}
-+		writel(rcsr, sai->base + FSL_SAI_RCSR);
-+		udelay(10);
-+		writel(tcsr, sai->base + FSL_SAI_TCSR);
-+		break;
-
-ISSUE 1: You might make sure transmitter is the last enabled.
-	 However, it's not the first disabled. Is this okay?
-
-ISSUE 2: There are two cases listed in 'Synchronous mode'.
-	 However, your driver doesn't take care of them.
-	 The SAI's synchronous mode looks like more flexible
-	 than SSI's. The driver needs to be more sophisticated
-	 so that it can handle multiple cases when TX/RX clocks
-	 are controlled by either TX or RX, and surely, the
-	 asynchronous mode as well.
+So I don't think we're home safe yet. I need to spend some time this week
+actually debugging this... Good thing the merge window is delayed.
 
 
-And there's another personal tip: I think you can first try to focus on
-this SAI driver and pend the others. There might be two many things you
-need to refine if you are doing them at the same time.
-
-Best regards,
-Nicolin Chen
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
