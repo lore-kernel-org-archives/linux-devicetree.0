@@ -1,223 +1,249 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] phy: Add MOXA RTL8201CP PHY support
-Date: Mon, 4 Nov 2013 09:51:24 -0800
-Message-ID: <CAGVrzcZW=CLWPZgRqkqR1wNh+S7dfwRZAzn1Uq7Ji6K0=iGYtg@mail.gmail.com>
-References: <1383317673-14704-1-git-send-email-jonas.jensen@gmail.com>
- <CAGVrzcYfdChFNgkh=VAFZQfCRHyNTe_pZxx1Z6Sz1S8_1vzgtA@mail.gmail.com> <CACmBeS3aUq_yPVg_GaKmQRQMhAmO8RZVzUGY=T6Ghn7v0sP8Dw@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] gpio: davinci: use irqdomain
+Date: Mon, 4 Nov 2013 20:27:46 +0200
+Message-ID: <5277E722.50205@ti.com>
+References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+	<1383406775-14902-4-git-send-email-prabhakar.csenng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACmBeS3aUq_yPVg_GaKmQRQMhAmO8RZVzUGY=T6Ghn7v0sP8Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1383406775-14902-4-git-send-email-prabhakar.csenng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2013/11/4 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Thanks for the replies.
->
-> On 1 November 2013 18:01, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->>> +       dev_err(&bus->dev, "%s timed out\n", __func__);
->>
->> I would keep these as a debugging aid and not spawn error messages on
->> the console by default.
->
-> Done.
->
->
->>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
->>
->> If you only support device tree probing, this might be fine, but you
->> might want to be safe in case someone does a !OF instantiation and
->> also use pdev->id as an additional unique identifier, so something
->> like:
->>
->> %s-%d-mii, pdev->name, pdev->id
->>
->> will work.
->
-> Done.
->
->
->>> +       /* Setting PHY_IGNORE_INTERRUPT here even if it has no effect,
->>> +        * of_mdiobus_register() sets these PHY_POLL.
->>> +        * Ideally, the interrupt from MAC controller could be used to
->>> +        * detect link state changes, not polling, i.e. if there was
->>> +        * a way phy_driver could set PHY_HAS_INTERRUPT but have that
->>> +        * interrupt handled in ethernet drivercode.
->>> +        */
->>> +       for (i = 0; i < PHY_MAX_ADDR; i++)
->>> +               bus->irq[i] = PHY_IGNORE_INTERRUPT;
->>
->> This type of configuration where the PHY interrupt is actually
->> serviced by a link interrupt bit in the Ethernet MAC driver now works
->> since 5ea94e768 ("phy: add phy_mac_interrupt() to use with
->> PHY_IGNORE_INTERRUPT") so setting PHY_IGNORE_INTERRUPT is the right
->> way to signal this and this will no longer make the PHY library poll
->> for the link state.
->
-> Yes, I tried using phy_mac_interrupt() but had some difficulties (I'll
-> explain below). It seemed to be what I want and is wrapped with
-> EXPORT_SYMBOL().
->
-> However, as of next-20131104 I don't see how this works for DT probed
-> devices (those that set PHY_IGNORE_INTERRUPT).
->
-> As I tried to explain in my comment, of_mdiobus_register() assigns
-> PHY_POLL to the IRQ array:
->
-> drivers/of/of_mdio.c
-> ..
-> int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
-> {
-> ..
->         /* Clear all the IRQ properties */
->         if (mdio->irq)
->                 for (i=0; i<PHY_MAX_ADDR; i++)
->                         mdio->irq[i] = PHY_POLL;
+Hi Prabhakar Lad,
 
-You are right, I missed that part. We can't really assign a dedicated
-interrupt line for your PHY, so we need another way of dealing with
-these PHY interrupts present at the Ethernet MAC level.
+On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> This patch converts the davinci gpio driver to use irqdomain
+> support.
 
-[snip]
+This patch needs to be splitted in two:
+1) add IRQ domain support
+2) remove intc_irq_num
 
-> This is why I ended up setting PHY_IGNORE_INTERRUPT and the comment
-> about its effectiveness. Polling works but the extra reads on the bus
-> seem unnecessary.
-> Ideas how they can be eliminated are appreciated.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   arch/arm/mach-davinci/da830.c              |    1 -
+>   arch/arm/mach-davinci/da850.c              |    1 -
+>   arch/arm/mach-davinci/dm355.c              |    1 -
+>   arch/arm/mach-davinci/dm365.c              |    1 -
+>   arch/arm/mach-davinci/dm644x.c             |    1 -
+>   arch/arm/mach-davinci/dm646x.c             |    1 -
+>   drivers/gpio/gpio-davinci.c                |   49 ++++++++++++++++++----------
+>   include/linux/platform_data/gpio-davinci.h |    3 +-
+>   8 files changed, 32 insertions(+), 26 deletions(-)
+> 
 
-As of today, the only way to work around it is not to use
-of_mdiobus_register() and use mdiobus_register() directly which will
-allow you to properly describe such a configuration.
+[...]
 
->
->
-> Another problem, when phy_mac_interrupt() is called from NAPI it looks
-> like it's trying to take a lock it already has. I tried moving it out
-> of poll, placing it directly in IRQ handler, with the same result:
->
-> [   18.230000] moxart-ethernet 90900000.mac eth0: moxart_poll: PHYSTS_CHG
-> [   18.240000]
-> [   18.240000] =================================
-> [   18.240000] [ INFO: inconsistent lock state ]
-> [   18.240000] 3.12.0-rc7-next-20131104+ #1067 Not tainted
-> [   18.240000] ---------------------------------
-> [   18.240000] inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
-> [   18.240000] kworker/0:1/123 [HC0[0]:SC0[0]:HE1:SE1] takes:
-> [   18.240000]  ((&dev->phy_queue)){+.?...}, at: [<c0028c08>]
-> process_one_work+0x13c/0x430
-> [   18.240000] {IN-SOFTIRQ-W} state was registered at:
-> [   18.240000]   [<c0055648>] mark_lock+0x144/0x670
-> [   18.240000]   [<c005777c>] __lock_acquire+0x5e4/0x1c24
-> [   18.240000]   [<c00592cc>] lock_acquire+0x6c/0x80
-> [   18.240000]   [<c002a024>] flush_work+0x44/0x278
-> [   18.240000]   [<c002a2e0>] __cancel_work_timer+0x88/0x124
-> [   18.240000]   [<c002a390>] cancel_work_sync+0x14/0x18
-> [   18.240000]   [<c01b0190>] phy_mac_interrupt+0x20/0x40
-> [   18.240000]   [<c01b3450>] moxart_poll+0x2b4/0x4b4
-> [   18.240000]   [<c01fe3c8>] net_rx_action+0x130/0x22c
-> [   18.240000]   [<c00174cc>] __do_softirq+0xe8/0x238
-> [   18.240000]   [<c0017a2c>] irq_exit+0xac/0xfc
-> [   18.240000]   [<c0009b40>] handle_IRQ+0x3c/0x8c
-> [   18.240000]   [<c0008534>] handle_irq+0x98/0xa8
-> [   18.240000]   [<c000c478>] __irq_svc+0x38/0x68
-> [   18.240000]   [<c00487ec>] rcu_idle_exit+0x78/0xdc
-> [   18.240000]   [<c0040618>] cpu_startup_entry+0x88/0x130
-> [   18.240000]   [<c026d3c8>] rest_init+0xb8/0xe0
-> [   18.240000]   [<c033ea1c>] start_kernel+0x298/0x2dc
-> [   18.240000] irq event stamp: 2659
-> [   18.240000] hardirqs last  enabled at (2659): [<c0276298>]
-> _raw_spin_unlock_irq+0x2c/0x60
-> [   18.240000] hardirqs last disabled at (2658): [<c02760f0>]
-> _raw_spin_lock_irq+0x28/0x78
-> [   18.240000] softirqs last  enabled at (2654): [<c0017568>]
-> __do_softirq+0x184/0x238
-> [   18.240000] softirqs last disabled at (2637): [<c0017a2c>] irq_exit+0xac/0xfc
-> [   18.240000]
-> [   18.240000] other info that might help us debug this:
-> [   18.240000]  Possible unsafe locking scenario:
-> [   18.240000]
-> [   18.240000]        CPU0
-> [   18.240000]        ----
-> [   18.240000]   lock([   18.240000] moxart-ethernet 90900000.mac
-> eth0: TX ring end reached
-> [   18.240000] (&dev->phy_queue));
-> [   18.240000]   <Interrupt>
-> [   18.240000]     lock((&dev->phy_queue));
-> [   18.240000]
-> [   18.240000]  *** DEADLOCK ***
-> [   18.240000]
-> [   18.240000] 1 lock held by kworker/0:1/123:
-> [   18.240000]  #0:  (events){.+.+..}, at: [<c0028c08>]
-> process_one_work+0x13c/0x430
-> [   18.240000]
-> [   18.240000] stack backtrace:
-> [   18.240000] CPU: 0 PID: 123 Comm: kworker/0:1 Not tainted
-> 3.12.0-rc7-next-20131104+ #1067
-> [   18.240000] Workqueue: events phy_change
-> [   18.240000] [<c000d214>] (unwind_backtrace+0x0/0xf4) from
-> [<c000b964>] (show_stack+0x18/0x1c)
-> [   18.240000] [<c000b964>] (show_stack+0x18/0x1c) from [<c0271614>]
-> (dump_stack+0x20/0x28)
-> [   18.240000] [<c0271614>] (dump_stack+0x20/0x28) from [<c026fee0>]
-> (print_usage_bug.part.26+0x220/0x288)
-> [   18.240000] [<c026fee0>] (print_usage_bug.part.26+0x220/0x288) from
-> [<c0055b3c>] (mark_lock+0x638/0x670)
-> [   18.240000] [<c0055b3c>] (mark_lock+0x638/0x670) from [<c00577c4>]
-> (__lock_acquire+0x62c/0x1c24)
-> [   18.240000] [<c00577c4>] (__lock_acquire+0x62c/0x1c24) from
-> [<c00592cc>] (lock_acquire+0x6c/0x80)
-> [   18.240000] [<c00592cc>] (lock_acquire+0x6c/0x80) from [<c0028c70>]
-> (process_one_work+0x1a4/0x430)
-> [   18.240000] [<c0028c70>] (process_one_work+0x1a4/0x430) from
-> [<c0029304>] (worker_thread+0x13c/0x3dc)
-> [   18.240000] [<c0029304>] (worker_thread+0x13c/0x3dc) from
-> [<c002f500>] (kthread+0xb8/0xd4)
-> [   18.240000] [<c002f500>] (kthread+0xb8/0xd4) from [<c0009360>]
-> (ret_from_fork+0x14/0x34)
-> [   18.610000] libphy: phy_change
+>   
+>   int __init dm646x_gpio_register(void)
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 95c6df1..bcb6d8d 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/err.h>
+>   #include <linux/io.h>
+>   #include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/platform_data/gpio-davinci.h>
+>   
+> @@ -292,7 +293,7 @@ gpio_irq_handler(unsigned irq, struct irq_desc *desc)
+>   		__raw_writel(status, &g->intstat);
+>   
+>   		/* now demux them to the right lowlevel handler */
+> -		n = d->irq_base;
+> +		n = irq_find_mapping(d->irq_domain, 0);
 
-Ok, I will take a look into this, I realize that I was calling this
-from a workqueue which won't show the locking problem, thanks for the
-report.
+Sorry, but I don't understand why have you used <0> as hwirq?
 
->
->
->>> +       ret = of_mdiobus_register(bus, np);
->>> +       if (ret < 0)
->>> +               return ret;
->>
->> You still need to call mdiobus_free() here in case registration fails.
->
-> Done.
->
->
->>> +/* RTL8201CP */
->>> +static struct phy_driver rtl8201cp_driver = {
->>> +       .phy_id         = 0x00008201,
->>> +       .name           = "RTL8201CP Ethernet",
->>> +       .phy_id_mask    = 0x0000ffff,
->>> +       .features       = PHY_BASIC_FEATURES,
->>
->> If this PHY is internal to your SoC (same die/package) you should also
->> add PHY_IS_INTERNAL to get a consistent ethtool reporting (among
->> others).
->
-> I was wondering about that, and now I'm sure it should not be set, the
-> physical chip is separate, as can be seen here:
->
-> https://lh4.googleusercontent.com/-A-2FXDrObU8/UMcMc_K2vEI/AAAAAAAABwg/ldaLZ7ps1P4/w1331-h998-no/UC-7112-LX-picture4.jpg
+All below logic may not work in case if we switch to use Linear IRQ domain :(
+- irq_create_mapping() may return ANY Linux IRQ number. It means, for 
+example, for bank0(ngpio=32)[0] it may return Linux_IRQ=200 or 201 or any other.
+ Also, for bank3(ngpio=16)[0] it may return Linux_IRQ=150, etc.
+- More over, if you call irq_create_mapping() 32 times you may NOT get
+ sequential Linux_IRQ numbers.
 
-Right, then make that a separate patch instead.
---
-Florian
+So, the better sequence here can be smth. as below
+(I can't verify it - my HW support only unbanked IRQs):
+
+	if (irq & 1)
+		mask <<= 16;
+
+	while (1) {
+		u32		status;
+		int		bit;
+
+		/* ack any irqs */
+		status = __raw_readl(&g->intstat) & mask;
+		if (!status)
+			break;
+		__raw_writel(status, &g->intstat);
+
+		/* now demux them to the right lowlevel handler */
+		while (status) {
+			bit = __ffs(status);
+                        status &= ~(1 << bit);
+			generic_handle_irq(irq_find_mapping(d->irq_domain, bit));
+		}
+	}
 
 
+>   		if (irq & 1) {
+>   			n += 16;
+>   			status >>= 16;
+> @@ -313,10 +314,7 @@ static int gpio_to_irq_banked(struct gpio_chip *chip, unsigned offset)
+>   {
+>   	struct davinci_gpio_controller *d = chip2controller(chip);
+>   
+> -	if (d->irq_base >= 0)
+> -		return d->irq_base + offset;
+> -	else
+> -		return -ENODEV;
+> +	return irq_find_mapping(d->irq_domain, offset);
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think you can use irq_create_mapping() here instead of 
+irq_find_mapping(), so IRQ will be mapped/allocated on demand.
+Also, it seems, above code may crash in case if SoC has >1 GPIO banks and
+gpio_unbanked > 0 and someone will call gpio_to_irq(>31).
+
+>   }
+>   
+>   static int gpio_to_irq_unbanked(struct gpio_chip *chip, unsigned offset)
+> @@ -373,6 +371,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>   	struct davinci_gpio_controller *chips = platform_get_drvdata(pdev);
+>   	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>   	struct davinci_gpio_regs __iomem *g;
+> +	int gpio_irq = 0;
+>   
+>   	ngpio = pdata->ngpio;
+>   	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> @@ -402,9 +401,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>   	 */
+>   	for (gpio = 0, bank = 0; gpio < ngpio; bank++, gpio += 32) {
+>   		chips[bank].chip.to_irq = gpio_to_irq_banked;
+> -		chips[bank].irq_base = pdata->gpio_unbanked
+> -			? -EINVAL
+> -			: (pdata->intc_irq_num + gpio);
+> +		if (!pdata->gpio_unbanked) {
+> +			chips[bank].irq_domain =
+> +				irq_domain_add_linear(NULL, 32,
+
+Use chips[i].chip.ngpio here instead of const 32?
+
+> +						      &irq_domain_simple_ops,
+
+Pass &davinci_gpio_irq_ops (see below)
+
+> +						      NULL);
+
+Pass &chips[bank] as host_data and use .map() callback (see below)
+
+> +
+> +			if (!chips[bank].irq_domain)
+> +				return -ENOMEM;
+> +		}
+>   	}
+>   
+>   	/*
+> @@ -445,9 +450,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>   	 * Or, AINTC can handle IRQs for banks of 16 GPIO IRQs, which we
+>   	 * then chain through our own handler.
+>   	 */
+> -	for (gpio = 0, irq = gpio_to_irq(0), bank = 0;
+> -			gpio < ngpio;
+> -			bank++, bank_irq++) {
+> +	for (gpio = 0, irq = 0, bank = 0; gpio < ngpio; bank++, bank_irq++) {
+>   		unsigned		i;
+>   
+>   		/* disabled by default, enabled only as needed */
+> @@ -465,12 +468,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>   		 */
+>   		irq_set_handler_data(bank_irq, &chips[gpio / 32]);
+>   
+> -		for (i = 0; i < 16 && gpio < ngpio; i++, irq++, gpio++) {
+> -			irq_set_chip(irq, &gpio_irqchip);
+> -			irq_set_chip_data(irq, (__force void *)g);
+> -			irq_set_handler_data(irq, (void *)__gpio_mask(gpio));
+> -			irq_set_handler(irq, handle_simple_irq);
+> -			set_irq_flags(irq, IRQF_VALID);
+> +		if (!(bank % 2))
+> +			irq = 0;
+> +		else
+> +			irq = 16;
+
+As I mentioned above, I think, it is not good to play with IRQ numbers here.
+Only chained IRQs and <binten> can be configured in this cycle.
+
+> +
+> +		for (i = 0; i < 16 && gpio < ngpio; i++, gpio++) {
+> +			int irqno =
+> +				irq_create_mapping(chips[gpio / 32].irq_domain,
+> +						   i + irq);
+> +
+> +			irq_set_chip(irqno, &gpio_irqchip);
+> +			irq_set_chip_data(irqno, (__force void *)g);
+> +			irq_set_handler_data(irqno, (void *)__gpio_mask(gpio));
+> +			irq_set_handler(irqno, handle_simple_irq);
+> +			set_irq_flags(irqno, IRQF_VALID);
+
+It makes no sense to manually create mapping. Usually it can be done in
+.map() callback of IRQ domain. Like:
+
+static int davinci_gpio_irq_map(struct irq_domain *d, unsigned int irq,
+			    irq_hw_number_t hw)
+{
+	struct davinci_gpio_controller *chip = d->host_data;
+	unsigned gpio = chip->chip.base + hw;
+
+	irq_set_chip_and_handler_name(irq, &gpio_irqchip, handle_simple_irq,
+				      "davinci_gpio");
+	irq_set_irq_type(irq, IRQ_TYPE_NONE);
+	set_irq_flags(irq, IRQF_VALID);
+...
+	return 0;
+}
+
+static const struct irq_domain_ops davinci_gpio_irq_ops = {
+	.map = davinci_gpio_irq_map,
+	.xlate = irq_domain_xlate_onetwocell,
+};
+
+
+> +			gpio_irq++;
+>   		}
+>   
+>   		binten |= BIT(bank);
+> @@ -483,7 +496,7 @@ done:
+>   	 */
+>   	__raw_writel(binten, gpio_base + BINTEN);
+>   
+> -	printk(KERN_INFO "DaVinci: %d gpio irqs\n", irq - gpio_to_irq(0));
+> +	pr_info("DaVinci: %d gpio irqs\n", gpio_irq);
+>   
+>   	return 0;
+>   }
+[...]
+>   	spinlock_t		lock;
+>   	void __iomem		*regs;
+> 
+start
+
+Regards,
+- grygorii
