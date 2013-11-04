@@ -1,46 +1,63 @@
-From: Li Xiubo <B47053@freescale.com>
-Subject: Re: [PATCHv2 6/8] ASoC: fsl: add SGTL5000 based audio
- machine driver.
-Date: Mon, 4 Nov 2013 09:52:44 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82874583@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
- <1383289495-24523-7-git-send-email-Li.Xiubo@freescale.com>
- <20131101184008.GF2493@sirena.org.uk>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 07/43] CLK: TI: add autoidle support
+Date: Mon, 4 Nov 2013 12:00:34 +0200
+Message-ID: <52777042.40703@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-8-git-send-email-t-kristo@ti.com> <52727FDA.7060009@ti.com> <527371F5.9080702@ti.com> <5273FDF1.6090405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131101184008.GF2493@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5273FDF1.6090405@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-> > Conflicts:
-> > 	sound/soc/fsl/Makefile
-> 
-> Ahem.
-> 
-
-This will be removed.
-
-> > +static int fsl_sgtl5000_remove(struct platform_device *pdev) {
-> > +	snd_soc_unregister_card(&fsl_sgt1500_card);
-> > +
-> > +	return 0;
-> > +}
-> 
-> You're using snd_soc_unregister_card() so you don't need to do this.
+On 11/01/2013 09:16 PM, Nishanth Menon wrote:
+> On 11/01/2013 04:18 AM, Tero Kristo wrote:
+>> On 10/31/2013 06:05 PM, Nishanth Menon wrote:
+>>> On 10/25/2013 10:57 AM, Tero Kristo wrote:
 >
+> [...]
+>>>> diff --git a/drivers/clk/ti/autoidle.c b/drivers/clk/ti/autoidle.c
+>>>> new file mode 100644
+>>>> index 0000000..efa2a3e
+>>>> --- /dev/null
+>>>> +++ b/drivers/clk/ti/autoidle.c
+> [...]
+>>>> +}
+>>>> +
+>>>> +static void ti_deny_autoidle(struct clk_ti_autoidle *clk)
+>>>> +{
+>>>> +	u32 val;
+>>>> +
+>>>> +	regmap_read(clk->regmap, clk->reg, &val);
+>>>> +
+>>>> +	if (clk->flags & AUTOIDLE_LOW)
+>>>> +		val |= (1 << clk->shift);
+>>>> +	else
+>>>> +		val &= ~(1 << clk->shift);
+>>>> +
+>>>> +	regmap_write(clk->regmap, clk->reg, val);
+>>> regmap_update_bits ?
+>>
+>> Same.
+>>
+>>>
+>>> and ofcourse error handling for regmap ops..
+>>
+>> What do you propose to do in error case? Panic, WARN() or just printk?
+>
+> return error to caller and percolate back up the call stack.
 
-See the next version.
+Ok can do that.
+
+> one other thing I missed, will be nice to introduce a common bindings
+> for autoidle which tends to be reused in other drivers..
+
+You mean documentation or? Autoidle from this patch is only used by two 
+clock drivers (divider + fixed-factor.) DPLLs use completely different 
+setup. Converting the interface clocks to use the same might be rather 
+nasty thing to do.
+
+-Tero
