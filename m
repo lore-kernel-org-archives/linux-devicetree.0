@@ -1,200 +1,167 @@
-From: jean-philippe francois <jp.francois@cynove.com>
-Subject: Re: [early RFC] Device Tree bindings for OMAP3 Camera Subsystem
-Date: Mon, 4 Nov 2013 20:49:50 +0100
-Message-ID: <CAGGh5h3R0bEuFnpG2Ak+_OXSd2YsnsdDxCQkgoG0Og5sSABYGw@mail.gmail.com>
-References: <20131103220315.GA11659@earth.universe>
+From: <dinguyen@altera.com>
+Subject: [PATCHv2 1/4] clk: socfpga: Add a clock driver for SOCFPGA's system manager
+Date: Mon, 4 Nov 2013 14:36:02 -0600
+Message-ID: <1383597364-25613-2-git-send-email-dinguyen@altera.com>
+References: <1383597364-25613-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20131103220315.GA11659@earth.universe>
-Sender: linux-media-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1383597364-25613-1-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinh.linux@gmail.com
+Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-013/11/3 Sebastian Reichel <sre@debian.org>:
-> Hi,
->
-> This is an early RFC for omap3isp DT support. For now i just created =
-a potential DT
-> binding documentation based on the existing platform data:
->
-> Binding for the OMAP3 Camera subsystem with the image signal processo=
-r (ISP) feature.
->
+From: Dinh Nguyen <dinguyen@altera.com>
 
-This is very interesting, I am in the process of transforming an (out
-of tree) machine board file into
-a device tree description, and I was precisely searching for "oma3isp
-dt" when I saw your mail.
-I would be happy to test or help develop any patch aiming at DT
-support for omap3isp. I am new to DT, so I
-will leave the DT bindings review to  people that actually  have a clue=
-=2E
+The system manager is an IP block on the SOCFPGA platform. The system manager
+contains registers that control other IPs on the platform. One of the IPs that
+the system manager has control over is the SD/MMC, by way of controlling the
+clock phase on the SD/MMC Card Interface Unit.
 
-I am looking forward to testing patches and bugging you when things bre=
-ak ;)
-Regards,
-Jean-Philippe Fran=C3=A7ois
+This patch adds a clock driver that the SD/MMC driver can use by calling
+the common clock API in order to set the appropriate register in the
+system manager by way of a syscon driver.
 
-> omap3isp node
-> -------------
->
-> Required properties:
->
-> - compatible    : should be "ti,omap3isp" for OMAP3;
-> - reg           : physical addresses and length of the registers set;
-> - clocks        : list of clock specifiers, corresponding to entries =
-in
->                   clock-names property;
-> - clock-names   : must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
->                   "l3_ick" entries, matching entries in the clocks pr=
-operty;
-> - interrupts    : must contain mmu interrupt;
-> - ti,iommu      : phandle to isp mmu;
->
-> Optional properties:
->
-> - VDD_CSIPHY1-supply    : regulator for csi phy1
-> - VDD_CSIPHY2-supply    : regulator for csi phy2
-> - ti,isp-xclk-1         : device(s) attached to ISP's first external =
-clock
-> - ti,isp-xclk-2         : device(s) attached to ISP's second external=
- clock
->
-> device-group subnode
-> --------------------
->
-> Required properties:
-> - ti,isp-interface-type : Integer describing the interface type, one =
-of the following
->    * 0 =3D ISP_INTERFACE_PARALLEL
->    * 1 =3D ISP_INTERFACE_CSI2A_PHY2
->    * 2 =3D ISP_INTERFACE_CCP2B_PHY1
->    * 3 =3D ISP_INTERFACE_CCP2B_PHY2
->    * 4 =3D ISP_INTERFACE_CSI2C_PHY1
-> - ti,isp-devices        : Array of phandles to devices connected via =
-the interface
-> - One of the following configuration nodes (depending on ti,isp-inter=
-face-type)
->  - ti,ccp2-bus-cfg      : CCP2 bus configuration (needed for ISP_INTE=
-RFACE_CCP*)
->  - ti,parallel-bus-cfg  : PARALLEL bus configuration (needed for ISP_=
-INTERFACE_PARALLEL)
->  - ti,csi2-bus-cfg      : CSI bus configuration (needed for ISP_INTER=
-=46ACE_CSI*)
->
-> ccp2-bus-cfg subnode
-> --------------------
->
-> Required properties:
-> - ti,video-port-clock-divisor   : integer; used for video port output=
- clock control
->
-> Optional properties:
-> - ti,inverted-clock             : boolean; clock/strobe signal is inv=
-erted
-> - ti,enable-crc                 : boolean; enable crc checking
-> - ti,ccp2-mode-mipi             : boolean; port is used in MIPI-CSI1 =
-mode (default: CCP2 mode)
-> - ti,phy-layer-is-strobe        : boolean; use data/strobe physical l=
-ayer (default: data/clock physical layer)
-> - ti,data-lane-configuration    : integer array with position and pol=
-arity information for lane 1 and 2
-> - ti,clock-lane-configuration   : integer array with position and pol=
-arity information for clock lane
->
-> parallel-bus-cfg subnode
-> ------------------------
->
-> Required properties:
-> - ti,data-lane-shift                            : integer; shift data=
- lanes by this amount
->
-> Optional properties:
-> - ti,clock-falling-edge                         : boolean; sample on =
-falling edge (default: rising edge)
-> - ti,horizontal-synchronization-active-low      : boolean; default: a=
-ctive high
-> - ti,vertical-synchronization-active-low        : boolean; default: a=
-ctive high
-> - ti,data-polarity-ones-complement              : boolean; data polar=
-ity is one's complement
->
-> csi2-bus-cfg subnode
-> --------------------
->
-> Required properties:
-> - ti,video-port-clock-divisor   : integer; used for video port output=
- clock control
->
-> Optional properties:
-> - ti,data-lane-configuration    : integer array with position and pol=
-arity information for lane 1 and 2
-> - ti,clock-lane-configuration   : integer array with position and pol=
-arity information for clock lane
-> - ti,enable-crc                 : boolean; enable crc checking
->
-> Example for Nokia N900
-> ----------------------
->
-> omap3isp: isp@480BC000 {
->         compatible =3D "ti,omap3isp";
->         reg =3D <
->                 /* OMAP3430+ */
->                 0x480BC000 0x070        /* base */
->                 0x480BC100 0x078        /* cbuf */
->                 0x480BC400 0x1F0        /* cpp2 */
->                 0x480BC600 0x0A8        /* ccdc */
->                 0x480BCA00 0x048        /* hist */
->                 0x480BCC00 0x060        /* h3a  */
->                 0x480BCE00 0x0A0        /* prev */
->                 0x480BD000 0x0AC        /* resz */
->                 0x480BD200 0x0FC        /* sbl  */
->                 0x480BD400 0x070        /* mmu  */
->         >;
->
->         clocks =3D < &cam_ick &cam_mclk &csi2_96m_fck &l3_ick >;
->         clock-names =3D "cam_ick", "cam_mclk", "csi2_96m_fck", "l3_ic=
-k";
->
->         interrupts =3D <24>;
->
->         ti,iommu =3D <&mmu_isp>;
->
->         ti,isp-xclk-1 =3D <
->                 &et8ek8
->                 &smiapp_dfl
->         >;
->
->         group1: device-group@0 {
->                 ti,isp-interface-type =3D <2>;
->
->                 ti,isp-devices =3D <
->                         &et8ek8
->                         &ad5820
->                         &adp1653
->                 >;
->
->                 ti,ccp2-bus-cfg {
->                         ti,enable-crc;
->                         ti,phy-layer-is-strobe;
->                         ti,video-port-clock-divisor =3D <1>;
->                 };
->         };
->
->         group2: device-group@1 {
->                 ti,isp-interface-type =3D <2>;
->
->                 ti,isp-devices =3D <
->                         &smiapp_dfl
->                 >;
->
->                 ti,ccp2-bus-cfg {
->                         ti,enable-crc;
->                         ti,phy-layer-is-strobe;
->                         ti,video-port-clock-divisor =3D <1>;
->                 };
->         };
-> };
+This clock driver can also be re-used for other IPs that need to poke the system
+manager.
+
+Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+CC: Arnd Bergmann <arnd@arndb.de>
+Cc: Mike Turquette <mturquette@linaro.org>
+CC: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ian.campbell@citrix.com>
+Cc: Chris Ball <cjb@laptop.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
+
+---
+v2: Use the syscon driver
+---
+ drivers/clk/socfpga/Makefile     |    2 +-
+ drivers/clk/socfpga/clk-sysmgr.c |   98 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 99 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/socfpga/clk-sysmgr.c
+
+diff --git a/drivers/clk/socfpga/Makefile b/drivers/clk/socfpga/Makefile
+index 0303c0b..cfceabc 100644
+--- a/drivers/clk/socfpga/Makefile
++++ b/drivers/clk/socfpga/Makefile
+@@ -1 +1 @@
+-obj-y += clk.o
++obj-y += clk.o clk-sysmgr.o
+diff --git a/drivers/clk/socfpga/clk-sysmgr.c b/drivers/clk/socfpga/clk-sysmgr.c
+new file mode 100644
+index 0000000..96f9b26
+--- /dev/null
++++ b/drivers/clk/socfpga/clk-sysmgr.c
+@@ -0,0 +1,98 @@
++/*
++ * Copyright 2013 Altera Corporation <www.altera.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++
++/* SDMMC Group for System Manager defines */
++#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
++	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
++
++struct socfpga_sysmgr {
++	struct clk_hw	hw;
++	struct regmap	*sysreg;
++	u32     reg;
++};
++#define to_sysmgr_clk(p) container_of(p, struct socfpga_sysmgr, hw)
++
++static int sysmgr_set_dwmmc_drvsel_smpsel(struct clk_hw *hwclk)
++{
++	struct device_node *np;
++	struct socfpga_sysmgr *socfpga_sysmgr = to_sysmgr_clk(hwclk);
++	u32 timing[2];
++	u32 hs_timing;
++
++	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
++	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
++	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[1], timing[0]);
++	regmap_write(socfpga_sysmgr->sysreg, socfpga_sysmgr->reg, hs_timing);
++	return 0;
++}
++
++static const struct clk_ops clk_sysmgr_sdmmc_ops = {
++	.enable = sysmgr_set_dwmmc_drvsel_smpsel,
++};
++
++static void __init socfpga_sysmgr_init(struct device_node *node, const struct clk_ops *ops)
++{
++	u32 reg;
++	struct clk *clk;
++	struct socfpga_sysmgr *socfpga_sysmgr;
++	const char *clk_name = node->name;
++	struct clk_init_data init;
++	int rc;
++
++	socfpga_sysmgr = kzalloc(sizeof(*socfpga_sysmgr), GFP_KERNEL);
++	if (WARN_ON(!socfpga_sysmgr))
++		return;
++
++	rc = of_property_read_u32(node, "reg", &reg);
++	if (WARN_ON(rc))
++		return;
++
++	socfpga_sysmgr->reg = reg;
++
++	socfpga_sysmgr->sysreg = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
++	if (WARN_ON(IS_ERR(socfpga_sysmgr->sysreg))) {
++		pr_err("%s: No sysmgr phandle specified\n", __func__);
++		return;
++	}
++
++	init.name = clk_name;
++	init.ops = ops;
++	init.flags = 0;
++	init.num_parents = 0;
++
++	socfpga_sysmgr->hw.init = &init;
++	clk = clk_register(NULL, &socfpga_sysmgr->hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(socfpga_sysmgr);
++		return;
++	}
++	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	if (WARN_ON(rc))
++		return;
++}
++
++static void __init sysmgr_init(struct device_node *node)
++{
++	socfpga_sysmgr_init(node, &clk_sysmgr_sdmmc_ops);
++}
++CLK_OF_DECLARE(sysmgr, "altr,sysmgr-sdmmc-sdr", sysmgr_init);
+-- 
+1.7.9.5
+
+
