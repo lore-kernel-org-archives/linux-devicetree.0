@@ -1,142 +1,42 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 8/9] phy: add Broadcom Kona USB2 PHY driver
-Date: Mon, 4 Nov 2013 11:57:10 +0530
-Message-ID: <52773E3E.10909@ti.com>
-References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org> <1383335158-19730-9-git-send-email-matt.porter@linaro.org>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
+Date: Mon, 4 Nov 2013 07:42:48 +0100
+Message-ID: <20131104.084248.48379321856602699.hdoyu@nvidia.com>
+References: <20131101094644.GG27864@ulmo.nvidia.com><20131101.115919.351108054879013006.hdoyu@nvidia.com><527420EF.1070102@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383335158-19730-9-git-send-email-matt.porter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <matt.porter@linaro.org>
-Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <527420EF.1070102-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Fri, 1 Nov 2013 22:45:19 +0100:
 
-On Saturday 02 November 2013 01:15 AM, Matt Porter wrote:
-> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
-> on the BCM281xx family of SoCs.
->
-> Signed-off-by: Matt Porter <matt.porter@linaro.org>
-> ---
->   drivers/phy/Kconfig             |   6 ++
->   drivers/phy/Makefile            |   2 +
->   drivers/phy/phy-bcm-kona-usb2.c | 161 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 169 insertions(+)
->   create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
->
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 349bef2..cedada5 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -15,4 +15,10 @@ config GENERIC_PHY
->   	  phy users can obtain reference to the PHY. All the users of this
->   	  framework should select this config.
->
-> +config BCM_KONA_USB2_PHY
-> +	tristate "Broadcom Kona USB2 PHY Driver"
-> +	depends on GENERIC_PHY
-> +	help
-> +	  Enable this to support the Broadcom Kona USB 2.0 PHY.
-> +
->   endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 9e9560f..ce83a14 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -3,3 +3,5 @@
->   #
->
->   obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
-> +
-> +obj-$(CONFIG_BCM_KONA_USB2_PHY)	+= phy-bcm-kona-usb2.o
-> diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
-> new file mode 100644
-> index 0000000..1beea7f
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-kona-usb2.c
-> @@ -0,0 +1,161 @@
-> +/*
-> + * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
-> + *
-> + * Copyright (C) 2013 Linaro Limited
-> + * Matt Porter <matt.porter@linaro.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/delay.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#define OTGCTL_OTGSTAT2		(1 << 31)
-> +#define OTGCTL_OTGSTAT1		(1 << 30)
-> +#define OTGCTL_PRST_N_SW	(1 << 11)
-> +#define OTGCTL_HRESET_N		(1 << 10)
-> +#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
-> +#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
-> +
-> +#define P1CTL_SOFT_RESET	(1 << 1)
-> +#define P1CTL_NON_DRIVING	(1 << 0)
-> +
-> +struct bcm_kona_usb_phy_regs {
-> +	u32 ctrl;
-> +	u32 cfg;
-> +	u32 p1ctl;
-> +	u32 status;
-> +	u32 bc_cfg;
-> +	u32 tp_in;
-> +	u32 tp_out;
-> +	u32 phy_ctrl;
-> +	u32 usbreg;
-> +	u32 usbproben;
-> +};
+> On 11/01/2013 03:59 AM, Hiroshi Doyu wrote:
+> ...
+> > One idea is that, rather than inserting a hook(function) per
+> > subsystems in driver core, if we invent a new /special section/ which
+> > collects all hooks in sequence like initcalls, the subsystem just
+> > would declare a hook function for that special section. All hooks in
+> > that section can be called from driver core iterately. Then we
+> > wouldn't touch driver core code at all, once we insert a func to call
+> > hooks repeatedly. Looks simpler than tweaking bus notifier.
+> 
+> That sounds like a lot of effort to avoid adding a simple function call
+> to the core's probe path.
 
-I would prefer to have constant macros for register offset unless you 
-have a good reason to do otherwise.
-> +
-> +struct bcm_kona_usb {
-> +	struct bcm_kona_usb_phy_regs *regs;
-> +};
-> +
-> +static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(&phy->regs->ctrl);
-> +	if (on) {
-> +		/* Configure and power PHY */
-> +		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
-> +			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
-> +		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
-> +		writel(val, &phy->regs->ctrl);
-> +
-> +		/* Soft reset PHY */
-> +		val = readl(&phy->regs->p1ctl);
-> +		val &= ~P1CTL_NON_DRIVING;
-> +		val |= P1CTL_SOFT_RESET;
-> +		writel(val, &phy->regs->p1ctl);
-> +		writel(val & ~P1CTL_SOFT_RESET, &phy->regs->p1ctl);
-> +		/* Reset needs to be asserted for 2ms */
-> +		mdelay(2);
-> +		writel(val | P1CTL_SOFT_RESET, &phy->regs->p1ctl);
+True.
 
-Is soft reset needed for every power-on? Shouldn't soft reset be present 
-in phy_init?
-
-Cheers
-Kishon
+Can be implemented/revisited later if needed after we once have a
+simple function call, of_iommu_attach() in drvier core.
