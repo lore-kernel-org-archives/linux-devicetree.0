@@ -1,71 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Mon, 4 Nov 2013 13:24:10 +0100
-Message-ID: <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
-	<1380846199-12829-4-git-send-email-syin@broadcom.com>
-	<CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
-	<051069C10411E24D9749790C498526FA1BE027EA@SJEXCHMB12.corp.ad.broadcom.com>
-	<CACRpkdarPC+LxAAezT2LRiz=Y2RduUsb75YYHUgq7HqePzkD3Q@mail.gmail.com>
-	<051069C10411E24D9749790C498526FA1BE03D43@SJEXCHMB12.corp.ad.broadcom.com>
-	<051069C10411E24D9749790C498526FA1BE0841D@SJEXCHMB12.corp.ad.broadcom.com>
-	<051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Mon, 04 Nov 2013 13:26:44 +0100
+Message-ID: <1539581.zprt32081v@amdc1227>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
+ <1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
+ <527744B2.4090303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+In-reply-to: <527744B2.4090303@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sherman Yin <syin@broadcom.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, balbi@ti.com, jwerner@chromium.org, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2013 at 12:48 AM, Sherman Yin <syin@broadcom.com> wrote:
+Hi Kishon,
 
-> So I will go ahead and make the change in pinconf-generic.c and pinctrl-bindings.txt
-> to include parsing of the "slew-rate" property and submit it as part of my pinctrl
-> changes.
+On Monday 04 of November 2013 12:24:42 Kishon Vijay Abraham I wrote:
+> Hi Vivek,
+> 
+> On Thursday 31 October 2013 01:15 PM, Vivek Gautam wrote:
+> > Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+> > The new driver uses the generic PHY framework and will interact
+> > with DWC3 controller present on Exynos5 series of SoCs.
+> 
+> In Exynos, you have a single IP that supports both USB3 and USB2 PHY 
+> right? I think that needs to be mentioned here.
 
-OK, good.
+Nope. There are two separate, different IPs.
 
-> Question regarding pinctrl-generic: in pinctrl-bindings.txt, this is said about the
-> "function" property:
->
-> 169- function takes a list of function names/IDs as a required argument. The
-> 170  specific binding for the hardware defines:
-> 171  - Whether the entries are integers or strings, and their meaning.
-> 172  - Whether only a single entry is allowed (which is applied to all entries
-> 173    in the pins property), or whether there may alternatively be one entry per
-> 174    entry in the pins property, in which case the list lengths must match, and
-> 175    for each list index i, the function at list index i is applied to the pin
-> 176    at list index i.
->
-> (Although it looks like pinconf_generic_dt_subnode_to_map() does not support
-> the "one entry per pin feature" for the "function" property yet.)
->
-> In my driver, I have the "one entry per pin" support for all my properties instead
-> of just the function property, like the "drive_str" property below:
->
-> +               grp_1 {
-> +                       brcm,pins       = "pin1", "pin2", "pin3";
-> +                       brcm,function   = "alt1", "alt2", "alt1";
-> +                       brcm,drive_str  = <2 4 6>;
-> +                       brcm,slew       = <1>;
-> +               };
+> Do you have separate registers that should be used for 
+> initializing/powerin_on/powering_off etc.. for usb2 phy and usb3 phy? If 
+> so, then you should model this driver as a single driver that supports 
+> two PHYs similar to what Sylwester has done before?
 
-OK.
+Sylwester's MIPI PHY uses such model because it has a single register
+that controls both PHYs.
 
-> I thought that would be convenient and allow users to group pins together based
-> on functionality and without the restriction that the pins must have the same
-> properties.  Do you think that's a good idea and are there plans to support that in
-> the generic pinconfig?  If so, I can look into porting my implementation to
-> pinconf-generic.c - but first I have to figure out how some of the properties would
-> work if more than one value could be specified (eg. "bias-disable" which takes no
-> values)
+Best regards,
+Tomasz
 
-Hm I don't quite get it I think. It depends on the old bindings still working
-and full compatibility with old device trees. It might be a bit confusing.
-
-I need help from Heiko on this I think.
-
-Yours,
-Linus Walleij
