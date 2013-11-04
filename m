@@ -1,39 +1,46 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Mon, 04 Nov 2013 10:28:49 +0100
-Message-ID: <2443024.JdDKnfkC18@wuerfel>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <1432962.yW4lKnaQJE@flatron> <25161583.XICaeMWvPh@flatron>
+From: Li Xiubo <B47053@freescale.com>
+Subject: Re: [PATCHv2 6/8] ASoC: fsl: add SGTL5000 based audio
+ machine driver.
+Date: Mon, 4 Nov 2013 09:52:44 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82874583@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-7-git-send-email-Li.Xiubo@freescale.com>
+ <20131101184008.GF2493@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <25161583.XICaeMWvPh@flatron>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131101184008.GF2493@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 November 2013 00:26:29 Tomasz Figa wrote:
+
+> > Conflicts:
+> > 	sound/soc/fsl/Makefile
 > 
-> Aha, one more thing. As it was mentioned on ARM Mini Summit, as a long 
-> term goal, we will eventually have to introduce another validation tool 
-> that checks device drivers against device tree bindings. We should keep 
-> this in mind when considering schema design.
+> Ahem.
+> 
 
-Incidentally I have just had an idea for a new driver-level API that
-should let us do this much easier. I hope to find some time in the
-next few days to come up with draft kernel patches. If you don't hear
-back from me soon but want to work on validating the drivers against
-the bindings, please contact me again.
+This will be removed.
 
-The basic idea is to extend 'devres' to automatically register
-all the resources (registers, irq, dma, gpio, pinctrl, clk, regulator, ...)
-and simple properties before the ->probe() callback is even called,
-based on a per-driver data structure that describes them, and that
-can be easily parsed by an external tool.
+> > +static int fsl_sgtl5000_remove(struct platform_device *pdev) {
+> > +	snd_soc_unregister_card(&fsl_sgt1500_card);
+> > +
+> > +	return 0;
+> > +}
+> 
+> You're using snd_soc_unregister_card() so you don't need to do this.
+>
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+See the next version.
