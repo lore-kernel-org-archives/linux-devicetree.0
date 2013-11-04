@@ -1,223 +1,157 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Mon, 4 Nov 2013 15:28:23 +0100
-Message-ID: <5277AF07.7060100@st.com>
-References: <1381754813-4679-1-git-send-email-maxime.coquelin@st.com> <1381754813-4679-2-git-send-email-maxime.coquelin@st.com> <20131101111645.GA4260@katana>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Tue, 5 Nov 2013 00:28:28 +1000
+Message-ID: <20131104142828.GD3430@voom.fritz.box>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <E1VZjCU-0005RE-Vt@jdl.com>
+ <20131025231106.GC17659@voom.redhat.com>
+ <1432962.yW4lKnaQJE@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131101111645.GA4260@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stephen.gallimore-qxv4g6HH51o@public.gmane.org, stuart.menefy-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1432962.yW4lKnaQJE@flatron>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
 
-On 11/01/2013 12:16 PM, Wolfram Sang wrote:
-> Hi,
->
-...
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
->> new file mode 100644
->> index 0000000..8b2fd0b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
->> @@ -0,0 +1,38 @@
->> +ST SSC binding, for I2C mode operation
->> +
->> +Required properties :
->> +- compatible : Must be "st,comms-i2c"
->
-> I personally don't care about naming here. Has there been a solution
-> now?
+--kvUQC+jR9YzypDnK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Srini proposes to add 2 compatible strings, as the IP is compatible with 
-two SSC IPs:
-"st,comms-ssc-i2c"
-"st,comms-ssc4-i2c"
+On Mon, Nov 04, 2013 at 12:15:58AM +0100, Tomasz Figa wrote:
+> On Saturday 26 of October 2013 10:11:06 David Gibson wrote:
+> > On Fri, Oct 25, 2013 at 10:21:22AM -0500, Jon Loeliger wrote:
+> > > > On 10/25/2013 12:43 AM, Grant Likely wrote:
+> > > > > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
+> > > > > <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> >=20
+> > > > wrote:
+> > > > >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > >>=20
+> > > > >> This is a very quick proof-of-concept re: how a DT schema checker
+> > > > >> might
+> > > > >> look if written in C, and integrated into dtc.
+> > > > >=20
+> > > > > Thanks for looking at this.
+> > > > >=20
+> > > > > Very interesting. Certainly an expedient way to start checking
+> > > > > schemas,
+> > > > > and for certain bindings it may be the best approach. The downside
+> > > > > is it forces a recompilation of DTC to bring in new bindings and
+> > > > > it isn't a great meduim for mixing schema with documentation in
+> > > > > the bindings.> >=20
+> > > > This approach would certainly require recompiling something. I threw
+> > > > the code into dtc simply because it was the easiest container for
+> > > > the demonstration. It could be a separate DT validation utility if
+> > > > we wanted, although we'd need to split the DT parser from dtc into
+> > > > a library to avoid code duplication. The resultant utility could be
+> > > > part of the repo containing the DTs, so it didn't end up as a
+> > > > separate package to manage.
+> > > >=20
+> > > > I think the additional documentation could be added as comments in
+> > > > the
+> > > > validation functions, just like IIRC it was to be represented as
+> > > > comments even in the .dts-based schema proposals.
+> > >=20
+> > > DTers,
+> > >=20
+> > > I think the additional benefit of starting with a direct C
+> > > implementation is that it causes us to begin to actually
+> > > codify the schema requirements.  Sure, it may not be ideal
+> > > at first, but over time it may reveal consistent patterns
+> > > that can be extracted.  And it may reveal what a real schema
+> > > might look like and how it might be expressed better.  Which
+> > > is to say that perhaps we are letting "perfect" get in the
+> > > way of "good enough to start"?
+> > >=20
+> > > In the meantime, someone has shown us the code and we can
+> > > get started.  It's a Small Matter of Refactoring later. :-)
+> >=20
+> > Yes!  This!
+> >=20
+> > Think of this prototype as a mechanism for collating and applying a
+> > bunch of schemas to the tree.  At the moment the schemas are all hard
+> > coded in C, but it can be extended to load some or all of them
+> > dynamically from a description / template / whatever.
+> >=20
+> > That also gives us the flexibility to start out with a simple but
+> > limited schema language which handles common cases, while leaving the
+> > complex cases in C, at least until we understand the requirements well
+> > enough to extend the schema language.
+>=20
+> This is fine as an intermediate step, but I'm afraid that the overhead of=
+=20
+> work needed to describe all the bindings using C language directly will b=
+e=20
+> pretty big. C language isn't really best fitted for such purposes.
 
->> +
->> +Optional properties :
->> +- clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
->> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
->> +  are supported, possible values are 100000 and 400000.
->> +- i2c-min-scl-pulse-width-us : The minimum valid SCL pulse width that is
->> +  allowed through the deglitch circuit. In units of us.
->> +- i2c-min-sda-pulse-width-us : The minimum valid SDA pulse width that is
->> +  allowed through the deglitch circuit. In units of us.
->
-> Okay, so we had lots of dt bindings discussions at kernel summit. Since
-> we don't have unstable bindings yet, I have been convinced that it is
-> okay two have one or two vendor specific bindings before introducing a
-> generic one. That will create a little bit of cruft, but increases
-> chances that the generic bindings are proper. So, really sorry for going
-> back and forth, but it was important for the process. Vendor binding is
-> it now. Period.
->
-> ...
-No problem wolfram! Thanks for clarifying this thing.
+I don't disagree.
 
->
->> +/**
->> + * struct st_i2c_deglitch - Anti-glitch filter configuration
->> + * @scl_min_width_us: SCL line minimum pulse width in ns
->> + * @sda_min_width_us: SDA line minimum pulse width in ns
->> + */
->> +struct st_i2c_deglitch {
->> +	u32	scl_min_width_us;
->> +	u32	sda_min_width_us;
->> +};
->
-> Minor: Why a seperate struct?
-This not needed, I will move its fields into st_i2c_dev struct.
+> If we agree to base on this, but solely as a mechanism and a base for=20
+> further work, my idea would be to introduce a schema description language=
+=20
+> anyway and then some code generator that would generate C code from=20
+> schemas described using such language
 
->
->> +/**
->> + * st_i2c_handle_write() - Handle FIFO enmpty interrupt in case of read
->> + * @i2c_dev: Controller's private data
->> + */
->> +static void st_i2c_handle_read(struct st_i2c_dev *i2c_dev)
->> +{
->> +	struct st_i2c_client *c = &i2c_dev->client;
->> +	u32 ien;
->> +
->> +	/* Trash the address read back */
->> +	if (!c->xfered) {
->> +		readl(i2c_dev->base + SSC_RBUF);
->> +		st_i2c_clr_bits(i2c_dev->base + SSC_I2C, SSC_I2C_TXENB);
->> +	} else
->> +		st_i2c_read_rx_fifo(i2c_dev);
->
-> Braces around else branch.
-Okay
->
->> +
->> +	if (!c->count) {
->> +		/* End of xfer, send stop or repstart */
->> +		st_i2c_terminate_xfer(i2c_dev);
->> +	} else if (c->count == 1) {
->> +		/* Penultimate byte to xfer, disable ACK gen. */
->> +		st_i2c_clr_bits(i2c_dev->base + SSC_I2C, SSC_I2C_ACKG);
->> +
->> +		/* Last received byte is to be handled by NACK interrupt */
->> +		ien = SSC_IEN_NACKEN | SSC_IEN_ARBLEN;
->> +		writel(ien, i2c_dev->base + SSC_IEN);
->> +
->> +		st_i2c_rd_fill_tx_fifo(i2c_dev, c->count);
->> +	} else
->> +		st_i2c_rd_fill_tx_fifo(i2c_dev, c->count - 1);
->
-> Braces around else branch.
-Ditto
->
->> +}
->> +static int st_i2c_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct st_i2c_dev *i2c_dev;
->> +	struct resource *res;
->> +	u32 clk_rate;
->> +	struct i2c_adapter *adap;
->> +	int ret;
->> +
->> +	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
->> +	if (!i2c_dev)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	i2c_dev->base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(i2c_dev->base))
->> +		return PTR_ERR(i2c_dev->base);
->> +
->> +	i2c_dev->irq = irq_of_parse_and_map(np, 0);
->> +	if (!i2c_dev->irq) {
->> +		dev_err(&pdev->dev, "IRQ missing or invalid\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	i2c_dev->clk = of_clk_get_by_name(np, "ssc");
->> +	if (IS_ERR(i2c_dev->clk)) {
->> +		dev_err(&pdev->dev, "Unable to request clock\n");
->> +		return PTR_ERR(i2c_dev->clk);
->> +	}
->> +
->> +	i2c_dev->mode = I2C_MODE_STANDARD;
->> +	ret = of_property_read_u32(np, "clock-frequency", &clk_rate);
->> +	if ((!ret) && (clk_rate == 400000))
->> +		i2c_dev->mode = I2C_MODE_FAST;
->> +
->> +	i2c_dev->dev = &pdev->dev;
->> +
->> +	ret = devm_request_irq(&pdev->dev, i2c_dev->irq, st_i2c_isr, 0,
->> +			pdev->name, i2c_dev);
->
-> Suggestion: Maybe threaded irq since you do fifo handling in the isr?
-That's a good point, I will switch to threaded irq.
+I suspect interpreting the schemas rather than compiling them into C
+code will be more convenient, but that's a detail, really.
 
->
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
->> +		return ret;
->> +	}
->> +
->> +	pinctrl_pm_select_default_state(i2c_dev->dev);
->> +	/* In case idle state available, select it */
->> +	pinctrl_pm_select_idle_state(i2c_dev->dev);
->> +
->> +	ret = st_i2c_of_get_deglitch(np, i2c_dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	adap = &i2c_dev->adap;
->> +	i2c_set_adapdata(adap, i2c_dev);
->> +	snprintf(adap->name, sizeof(adap->name), "ST I2C(0x%08x)", res->start);
->
-> resource_size_t can also be 64 bit.
-Okay, I will change to 0x%x
->
->> +	adap->owner = THIS_MODULE;
->> +	adap->timeout = 2 * HZ;
->> +	adap->retries = 0;
->> +	adap->class = I2C_CLASS_HWMON | I2C_CLASS_DDC | I2C_CLASS_SPD;
->
-> This question is still open:
-> Why do you need class based instantiation. It will most likely cost
-> boot-time and you have devicetree means for doing instantiation.
-Sorry, I missed to take your remark into account last time...
-This is indeed useless and adds a cost at boot time, it will be removed 
-in next series.
+> (and possibly also something to=20
+> generate textual documentation from schemas, so we could have a central=
+=20
+> repository of indexed DT bindings, for example on [1] - maybe kerneldoc=
+=20
+> could be reused here).
 
->
->> +	adap->algo = &st_i2c_algo;
->> +	adap->dev.parent = &pdev->dev;
->> +	adap->dev.of_node = pdev->dev.of_node;
->> +
->> +	init_completion(&i2c_dev->complete);
->> +
->> +	ret = i2c_add_adapter(adap);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to add adapter\n");
->> +		return ret;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, i2c_dev);
->> +
->> +	dev_info(i2c_dev->dev, "%s initialized\n", adap->name);
->> +
->> +	return 0;
->> +}
->> +
->
-> Rest looks good! We are mostly ready to go.
-Perfect! :)
-I will try to send a new series this week.
+Hrm.  I think trying to generate documentation from a schema is a bit
+backwards.  I think it makes more sense to think of the binding as the
+documentation, some parts of which are machine parseable to generate
+the formal schema.  Literate schema programming, if you want to think
+of it that way.
 
-Thanks,
-Maxime
->
-> Thanks,
->
->     Wolfram
->
+> Such design would allow for describing a lot of cases using a simple=20
+> description language, while leaving the possibility of adding inline C=20
+> snippets, like PHP in HTML, to handle those super complex ones.
+>=20
+> [1] https://www.kernel.org/doc/htmldocs/
+>=20
+> Best regards,
+> Tomasz
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--kvUQC+jR9YzypDnK
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSd68MAAoJEGw4ysog2bOSHLQP/24dRqJh3SUaJux3i2nRoiiK
+owEstRRORQcnasGDsp60G66lL6VFx3HINBF8NlBNDq3HcmJHPeIDJu5jZ9Ct042V
+ewS+870qSfY85VQCj7Lwj/yxkVBPgLvTRajF+gzhWHLImlAmXHKkUJxCm3uQCYy7
+bkGgGXvK+6OO1iTXoEgiTX6Z2rCCdqX1umH3o5V7uFdbF7fsChzEMaOSjIdcdJzN
+k8yyWEh8+q8kvUvMmMy4Rux7wK49LfsflGKsH6425vZf5LnQCIj/tAkVxlh5uOMq
++gS7S/+c3cDT/If9P1uW9JZocdacgjhEG9VcBO4XVSUjPk1kxt1UE8XDHG0+2uyU
+JqkqIowLJi7e0BaUj5RdQ3esDWx3e6nFkwTOHURyAdkxovw+XLZT3DZLnIbZOgVZ
+8J0Dn9ZBavMOlxkqtn003xU1AiuVGO+VfgT8rSAeHC3XiaZ42/hPBK9EXuZ9hrGl
+A6MGtn56W/kC8BZJujPej5Rr52H9ifP494BoTlhHKmHZzagl4ZaVcUEeTfJERUGk
+9j2akSHoyJuyOFSoBPhXImuIn8OZcJnpKsON821IwrmsuPPbDh0cyPuik5AMnU0r
+n2zsIu2k3kSWyQUnAeokmuC7NPfJ/YjYc+s0vbPMzgcndfjcJCoV3RJ9SfBKTSrm
+5rDwWFEWdWfZExqvxmgO
+=sg0u
+-----END PGP SIGNATURE-----
+
+--kvUQC+jR9YzypDnK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
