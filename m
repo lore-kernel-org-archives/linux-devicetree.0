@@ -1,70 +1,109 @@
-From: Matt Sealey <neko@bakuhatsu.net>
-Subject: Re: [PATCHv9 05/43] CLK: TI: add DT alias clock registration mechanism
-Date: Mon, 4 Nov 2013 16:45:57 -0600
-Message-ID: <CAHCPf3vkKMmTsk_Pdm5tAmPm7yRW7_yxLGr1w18A4aqbYh2+5Q@mail.gmail.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
-	<1382716658-6964-6-git-send-email-t-kristo@ti.com>
-	<CAHCPf3uPhkVhdn3Db06YZfrwQuA7khdZEXiZ+pqJ06J9YdBoLg@mail.gmail.com>
-	<1545474.t3t8VtRE27@flatron>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Tue, 5 Nov 2013 00:26:55 +0100
+Message-ID: <201311050026.56321.heiko@sntech.de>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com> <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com> <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1545474.t3t8VtRE27@flatron>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, paul@pwsan.com, Mike Turquette <mturquette@linaro.org>, Tony Lindgren <tony@atomide.com>, rnayak@ti.com, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sherman Yin <syin@broadcom.com>, Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 2, 2013 at 8:49 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Matt,
+Am Montag, 4. November 2013, 13:24:10 schrieb Linus Walleij:
+> > In my driver, I have the "one entry per pin" support for all my
+> > properties instead of just the function property, like the "drive_str"
+> > property below:
+> > 
+> > +               grp_1 {
+> > +                       brcm,pins       = "pin1", "pin2", "pin3";
+> > +                       brcm,function   = "alt1", "alt2", "alt1";
+> > +                       brcm,drive_str  = <2 4 6>;
+> > +                       brcm,slew       = <1>;
+> > +               };
 >
->> I have one question here, what makes this part of the patch
->> TI-specific at all except the definition of the structure ti_dt_clk?
->> Mapping DT clocks to generic clkdev legacy namings seems like it would
->> be a necessary evil across *all* SoC platforms.
->
-> SoC platforms that are fully converted to Device Tree do not need any
-> legacy clkdev namings, because they have all clkdev look-ups performed
-> using data from DT (see generic clock bindings).
->
-> So this would be not "*all* SoC platforms", but instead "SoC platforms,
-> which are currently undergoing conversion to DT or conversion of which is
-> yet to be started".
+> On Sat, Oct 26, 2013 at 12:48 AM, Sherman Yin <syin@broadcom.com> wrote:
+> > I thought that would be convenient and allow users to group pins together
+> > based on functionality and without the restriction that the pins must
+> > have the same properties.
+> > Do you think that's a good idea and are there
+> > plans to support that in the generic pinconfig?  If so, I can look into
+> > porting my implementation to pinconf-generic.c - but first I have to
+> > figure out how some of the properties would work if more than one value
+> > could be specified (eg. "bias-disable" which takes no values)
+> 
+> Hm I don't quite get it I think. It depends on the old bindings still
+> working and full compatibility with old device trees. It might be a bit
+> confusing.
+> 
+> I need help from Heiko on this I think.
 
-That is well understood here, I have a long-running hobby project to
-do this for i.MX5 and i.MX6 - I have a tree from months ago where I
-restructured the way clocks are probed for both these (moving from
-mach-imx to drivers/clk and putting in the right places) and
-successfully moved 8 clocks (on i.MX51, 3 core PLLs, some fixed clocks
-which got done in the meantime upstream, and one in the CCM - the CPU
-freq divider) with the correct references and it all operated really
-well.
+I remember we had a discussion about how things like bias-disable explicitly 
+shouldn't have a value, when they are represented in the list-format:
 
-In the meantime I had to add a bunch of weird hacks to the drivers to
-deal with the missing connection names, so this being generic would
-allow the core clock work to be finished while the drivers are brought
-up to the new convention.
+		pcfg_pull_none: pcfg_pull_none {
+			bias-disable;
+		};
 
-> Still this might be a good enough justification for having a generic
-> solution for this problem, but I would wait with this until the real need
-> on some of such platforms shows up. I don't see anything wrong in
-> implementing this first as TI-specific quirk and then possibly making it
-> generic if such need shows up.
+so a bias-disable = <1> was explicitly "forbidden" [for a lack of a better 
+word]. And it was similar for other options, the parameter not meant to be 
+indicating if they are active but really only setting the "strength" or so.
 
-Indeed.. and I would like to make use of it but I'm not coding on a TI
-platform or a Samsung platform:)
+But how to represent this in the list variant above, I don't know.
 
-> By the way, we already have something like this in clk/samsung/clk.c .
-> This is called aliases there and allows registering clkdev look-ups for
-> particular clocks. However this is specific to our clock drivers that
-> register all clocks inside a single clock privder, based on static ID
-> assignment and all clocks statically listed in clock driver - see
-> clk/samsung/clk-s3c64xx.c for an example.
+Having a brcm,bias-disable = <0>, <1>, ... thus looks wrong and also does not 
+seem to scale well to all the possible options (bias-* and the others).
 
-Right. I'll keep it in mind as I do this.
+Having a brcm,bias = <x>, <y>, <z>, ... with constants denoting pull-up, -
+down, disable, etc might be possible, but I'm missing the electrical 
+engineering knowledge on the possibility of those bias-things being combined.
 
-Thanks, this does make my life a lot easier, means I might have it
-working and submitted before the end of the month instead of sometime
-next year, I was dreading reworking all these drivers up front ;)
 
-Matt Sealey <neko@bakuhatsu.net>
+
+For example on my rockchip-pinctrl driver, the pins also do not need to have 
+the same configuration to be grouped together - inspired at the time by the 
+format the at91 driver uses. Here each pin forms a tuple instead of being 
+identified by an index. In it the basic function is set directly and then 
+references a predefined list of pinctrl options.
+
+
+		pcfg_pull_none: pcfg_pull_none {
+			bias-disable;
+		};
+
+		uart0 {
+			uart0_xfer: uart0-xfer {
+				rockchip,pins = <RK_GPIO1 0 RK_FUNC_1 &pcfg_pull_none>,
+							 <RK_GPIO1 1 RK_FUNC_1 &pcfg_pull_none>;
+			};
+
+...
+		};
+
+
+
+A switch to something like to following would also be a possibility:
+
+	pcfg1: pcfg1 {
+		bias-disable;
+		slew-rate = <1>;
+	};
+
+	pcfg2: pcfg2 {
+		drive-strength = <2>;
+	};
+
+	grp_1 {
+		brcm,pins       = "pin1", "pin2", "pin3";
+		brcm,function   = "alt1", "alt2", "alt1";
+		brcm,pinconf = <&pcfg1>, <&pcfg2>
+	};
+
+
+
+So far my unsorted thoughts [and recoverable memory] on this :-)
+Heiko
