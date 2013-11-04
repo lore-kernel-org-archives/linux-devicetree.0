@@ -1,157 +1,1087 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Tue, 5 Nov 2013 00:28:28 +1000
-Message-ID: <20131104142828.GD3430@voom.fritz.box>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <E1VZjCU-0005RE-Vt@jdl.com>
- <20131025231106.GC17659@voom.redhat.com>
- <1432962.yW4lKnaQJE@flatron>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCHv9][ 4/6] pinctrl: pinctrl-imx: add imx25 pinctrl driver
+Date: Mon, 4 Nov 2013 15:31:40 +0100
+Message-ID: <20131104143140.GD15098@pengutronix.de>
+References: <1383210928-18906-1-git-send-email-denis@eukrea.com>
+ <1383210928-18906-4-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1432962.yW4lKnaQJE@flatron>
+In-Reply-To: <1383210928-18906-4-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?utf-8?Q?B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 04, 2013 at 12:15:58AM +0100, Tomasz Figa wrote:
-> On Saturday 26 of October 2013 10:11:06 David Gibson wrote:
-> > On Fri, Oct 25, 2013 at 10:21:22AM -0500, Jon Loeliger wrote:
-> > > > On 10/25/2013 12:43 AM, Grant Likely wrote:
-> > > > > On Thu, 24 Oct 2013 22:51:28 +0100, Stephen Warren
-> > > > > <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> >=20
-> > > > wrote:
-> > > > >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > >>=20
-> > > > >> This is a very quick proof-of-concept re: how a DT schema checker
-> > > > >> might
-> > > > >> look if written in C, and integrated into dtc.
-> > > > >=20
-> > > > > Thanks for looking at this.
-> > > > >=20
-> > > > > Very interesting. Certainly an expedient way to start checking
-> > > > > schemas,
-> > > > > and for certain bindings it may be the best approach. The downside
-> > > > > is it forces a recompilation of DTC to bring in new bindings and
-> > > > > it isn't a great meduim for mixing schema with documentation in
-> > > > > the bindings.> >=20
-> > > > This approach would certainly require recompiling something. I threw
-> > > > the code into dtc simply because it was the easiest container for
-> > > > the demonstration. It could be a separate DT validation utility if
-> > > > we wanted, although we'd need to split the DT parser from dtc into
-> > > > a library to avoid code duplication. The resultant utility could be
-> > > > part of the repo containing the DTs, so it didn't end up as a
-> > > > separate package to manage.
-> > > >=20
-> > > > I think the additional documentation could be added as comments in
-> > > > the
-> > > > validation functions, just like IIRC it was to be represented as
-> > > > comments even in the .dts-based schema proposals.
-> > >=20
-> > > DTers,
-> > >=20
-> > > I think the additional benefit of starting with a direct C
-> > > implementation is that it causes us to begin to actually
-> > > codify the schema requirements.  Sure, it may not be ideal
-> > > at first, but over time it may reveal consistent patterns
-> > > that can be extracted.  And it may reveal what a real schema
-> > > might look like and how it might be expressed better.  Which
-> > > is to say that perhaps we are letting "perfect" get in the
-> > > way of "good enough to start"?
-> > >=20
-> > > In the meantime, someone has shown us the code and we can
-> > > get started.  It's a Small Matter of Refactoring later. :-)
-> >=20
-> > Yes!  This!
-> >=20
-> > Think of this prototype as a mechanism for collating and applying a
-> > bunch of schemas to the tree.  At the moment the schemas are all hard
-> > coded in C, but it can be extended to load some or all of them
-> > dynamically from a description / template / whatever.
-> >=20
-> > That also gives us the flexibility to start out with a simple but
-> > limited schema language which handles common cases, while leaving the
-> > complex cases in C, at least until we understand the requirements well
-> > enough to extend the schema language.
+On Thu, Oct 31, 2013 at 10:15:26AM +0100, Denis Carikli wrote:
+> This is mostly cut and paste from the imx35 pinctrl driver.
+> The data was generated using sed and awk on
+>   arch/arm/plat-mxc/include/mach/iomux-mx25.h.
 >=20
-> This is fine as an intermediate step, but I'm afraid that the overhead of=
-=20
-> work needed to describe all the bindings using C language directly will b=
-e=20
-> pretty big. C language isn't really best fitted for such purposes.
-
-I don't disagree.
-
-> If we agree to base on this, but solely as a mechanism and a base for=20
-> further work, my idea would be to introduce a schema description language=
-=20
-> anyway and then some code generator that would generate C code from=20
-> schemas described using such language
-
-I suspect interpreting the schemas rather than compiling them into C
-code will be more convenient, but that's a detail, really.
-
-> (and possibly also something to=20
-> generate textual documentation from schemas, so we could have a central=
-=20
-> repository of indexed DT bindings, for example on [1] - maybe kerneldoc=
-=20
-> could be reused here).
-
-Hrm.  I think trying to generate documentation from a schema is a bit
-backwards.  I think it makes more sense to think of the binding as the
-documentation, some parts of which are machine parseable to generate
-the formal schema.  Literate schema programming, if you want to think
-of it that way.
-
-> Such design would allow for describing a lot of cases using a simple=20
-> description language, while leaving the possibility of adding inline C=20
-> snippets, like PHP in HTML, to handle those super complex ones.
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> ---
+> ChangeLog v8->v9:
+> - Whitespace cleanup betwen the CC: and Signed-off-by.
+> - Kconfig: rebased to make it apply on the new HEAD.
+> ---
+>  .../bindings/pinctrl/fsl,imx25-pinctrl.txt         |   33 ++
+>  arch/arm/boot/dts/imx25-pinfunc.h                  |  513 ++++++++++=
+++++++++++
+>  arch/arm/boot/dts/imx25.dtsi                       |    1 +
+>  arch/arm/mach-imx/Kconfig                          |    2 +
+>  drivers/pinctrl/Kconfig                            |    8 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/pinctrl-imx25.c                    |  351 ++++++++++=
+++++
+>  7 files changed, 909 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx=
+25-pinctrl.txt
+>  create mode 100644 arch/arm/boot/dts/imx25-pinfunc.h
+>  create mode 100644 drivers/pinctrl/pinctrl-imx25.c
 >=20
-> [1] https://www.kernel.org/doc/htmldocs/
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx25-pinc=
+trl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx25-pinctrl.t=
+xt
+> new file mode 100644
+> index 0000000..64906ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx25-pinctrl.txt
+> @@ -0,0 +1,33 @@
+> +* Freescale IMX25 IOMUX Controller
+> +
+> +Please refer to fsl,imx-pinctrl.txt in this directory for common bin=
+ding part
+> +and usage.
+> +
+> +Required properties:
+> +- compatible: "fsl,imx25-iomuxc"
+> +- fsl,pins: two integers array, represents a group of pins mux and c=
+onfig
+> +  setting. The format is fsl,pins =3D <PIN_FUNC_ID CONFIG>, PIN_FUNC=
+_ID is a
+> +  pin working on a specific function, CONFIG is the pad setting valu=
+e like
+> +  pull-up for this pin. Please refer to imx25 datasheet for the vali=
+d pad
+> +  config settings.
+> +
+> +CONFIG bits definition:
+> +PAD_CTL_DRIVE_VOLAGAGE_18	(1 << 13)
+> +PAD_CTL_DRIVE_VOLAGAGE_33	(0 << 13)
+> +PAD_CTL_HYS			(1 << 8)
+> +PAD_CTL_PKE			(1 << 7)
+> +PAD_CTL_PUE			(1 << 6)
+> +PAD_CTL_PUS_100K_DOWN		(0 << 4)
+> +PAD_CTL_PUS_47K_UP		(1 << 4)
+> +PAD_CTL_PUS_100K_UP		(2 << 4)
+> +PAD_CTL_PUS_22K_UP		(3 << 4)
+> +PAD_CTL_ODE_CMOS		(0 << 3)
+> +PAD_CTL_ODE_OPENDRAIN		(1 << 3)
+> +PAD_CTL_DSE_NOMINAL		(0 << 1)
+> +PAD_CTL_DSE_HIGH		(1 << 1)
+> +PAD_CTL_DSE_MAX			(2 << 1)
+> +PAD_CTL_SRE_FAST		(1 << 0)
+> +PAD_CTL_SRE_SLOW		(0 << 0)
+> +
+> +Refer to imx25-pinfunc.h in device tree source folder for all availa=
+ble
+> +imx25 PIN_FUNC_ID.
+> diff --git a/arch/arm/boot/dts/imx25-pinfunc.h b/arch/arm/boot/dts/im=
+x25-pinfunc.h
+> new file mode 100644
+> index 0000000..0a9f9a2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx25-pinfunc.h
+> @@ -0,0 +1,513 @@
+> +/*
+> + * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> + * Based on imx35-pinfunc.h in the same directory Which is:
+> + * Copyright 2013 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __DTS_IMX25_PINFUNC_H
+> +#define __DTS_IMX25_PINFUNC_H
+> +
+> +/*
+> + * The pin function ID is a tuple of
+> + * <mux_reg conf_reg input_reg mux_mode input_val>
+> + */
+> +
+> +#define MX25_PAD_A10__A10			0x008 0x000 0x000 0x00 0x000
+> +#define MX25_PAD_A10__GPIO_4_0			0x008 0x000 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_A13__A13			0x00c 0x22C 0x000 0x00 0x000
+> +#define MX25_PAD_A13__GPIO_4_1			0x00c 0x22C 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_A14__A14			0x010 0x230 0x000 0x10 0x000
+> +#define MX25_PAD_A14__GPIO_2_0			0x010 0x230 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A15__A15			0x014 0x234 0x000 0x10 0x000
+> +#define MX25_PAD_A15__GPIO_2_1			0x014 0x234 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A16__A16			0x018 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_A16__GPIO_2_2			0x018 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A17__A17			0x01c 0x238 0x000 0x10 0x000
+> +#define MX25_PAD_A17__GPIO_2_3			0x01c 0x238 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A18__A18			0x020 0x23c 0x000 0x10 0x000
+> +#define MX25_PAD_A18__GPIO_2_4			0x020 0x23c 0x000 0x15 0x000
+> +#define MX25_PAD_A18__FEC_COL			0x020 0x23c 0x504 0x17 0x000
+> +
+> +#define MX25_PAD_A19__A19			0x024 0x240 0x000 0x10 0x000
+> +#define MX25_PAD_A19__FEC_RX_ER			0x024 0x240 0x518 0x17 0x000
+> +#define MX25_PAD_A19__GPIO_2_5			0x024 0x240 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A20__A20			0x028 0x244 0x000 0x10 0x000
+> +#define MX25_PAD_A20__GPIO_2_6			0x028 0x244 0x000 0x15 0x000
+> +#define MX25_PAD_A20__FEC_RDATA2		0x028 0x244 0x50c 0x17 0x000
+> +
+> +#define MX25_PAD_A21__A21			0x02c 0x248 0x000 0x10 0x000
+> +#define MX25_PAD_A21__GPIO_2_7			0x02c 0x248 0x000 0x15 0x000
+> +#define MX25_PAD_A21__FEC_RDATA3		0x02c 0x248 0x510 0x17 0x000
+> +
+> +#define MX25_PAD_A22__A22			0x030 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_A22__GPIO_2_8			0x030 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A23__A23			0x034 0x24c 0x000 0x10 0x000
+> +#define MX25_PAD_A23__GPIO_2_9			0x034 0x24c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_A24__A24			0x038 0x250 0x000 0x10 0x000
+> +#define MX25_PAD_A24__GPIO_2_10			0x038 0x250 0x000 0x15 0x000
+> +#define MX25_PAD_A24__FEC_RX_CLK		0x038 0x250 0x514 0x17 0x000
+> +
+> +#define MX25_PAD_A25__A25			0x03c 0x254 0x000 0x10 0x000
+> +#define MX25_PAD_A25__GPIO_2_11			0x03c 0x254 0x000 0x15 0x000
+> +#define MX25_PAD_A25__FEC_CRS			0x03c 0x254 0x508 0x17 0x000
+> +
+> +#define MX25_PAD_EB0__EB0			0x040 0x258 0x000 0x10 0x000
+> +#define MX25_PAD_EB0__AUD4_TXD			0x040 0x258 0x464 0x14 0x000
+> +#define MX25_PAD_EB0__GPIO_2_12			0x040 0x258 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_EB1__EB1			0x044 0x25c 0x000 0x10 0x000
+> +#define MX25_PAD_EB1__AUD4_RXD			0x044 0x25c 0x460 0x14 0x000
+> +#define MX25_PAD_EB1__GPIO_2_13			0x044 0x25c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_OE__OE				0x048 0x260 0x000 0x10 0x000
+> +#define MX25_PAD_OE__AUD4_TXC			0x048 0x260 0x000 0x14 0x000
+> +#define MX25_PAD_OE__GPIO_2_14			0x048 0x260 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CS0__CS0			0x04c 0x000 0x000 0x00 0x000
+> +#define MX25_PAD_CS0__GPIO_4_2			0x04c 0x000 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_CS1__CS1			0x050 0x000 0x000 0x00 0x000
+> +#define MX25_PAD_CS1__NF_CE3			0x050 0x000 0x000 0x01 0x000
+> +#define MX25_PAD_CS1__GPIO_4_3			0x050 0x000 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_CS4__CS4			0x054 0x264 0x000 0x10 0x000
+> +#define MX25_PAD_CS4__NF_CE1			0x054 0x264 0x000 0x01 0x000
+> +#define MX25_PAD_CS4__UART5_CTS			0x054 0x264 0x000 0x13 0x000
+> +#define MX25_PAD_CS4__GPIO_3_20			0x054 0x264 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CS5__CS5			0x058 0x268 0x000 0x10 0x000
+> +#define MX25_PAD_CS5__NF_CE2			0x058 0x268 0x000 0x01 0x000
+> +#define MX25_PAD_CS5__UART5_RTS			0x058 0x268 0x574 0x13 0x000
+> +#define MX25_PAD_CS5__GPIO_3_21			0x058 0x268 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NF_CE0__NF_CE0			0x05c 0x26c 0x000 0x10 0x000
+> +#define MX25_PAD_NF_CE0__GPIO_3_22		0x05c 0x26c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_ECB__ECB			0x060 0x270 0x000 0x10 0x000
+> +#define MX25_PAD_ECB__UART5_TXD_MUX		0x060 0x270 0x000 0x13 0x000
+> +#define MX25_PAD_ECB__GPIO_3_23			0x060 0x270 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LBA__LBA			0x064 0x274 0x000 0x10 0x000
+> +#define MX25_PAD_LBA__UART5_RXD_MUX		0x064 0x274 0x578 0x13 0x000
+> +#define MX25_PAD_LBA__GPIO_3_24			0x064 0x274 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_BCLK__BCLK			0x068 0x000 0x000 0x00 0x000
+> +#define MX25_PAD_BCLK__GPIO_4_4			0x068 0x000 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_RW__RW				0x06c 0x278 0x000 0x10 0x000
+> +#define MX25_PAD_RW__AUD4_TXFS			0x06c 0x278 0x474 0x14 0x000
+> +#define MX25_PAD_RW__GPIO_3_25			0x06c 0x278 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFWE_B__NFWE_B			0x070 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_NFWE_B__GPIO_3_26		0x070 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFRE_B__NFRE_B			0x074 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_NFRE_B__GPIO_3_27		0x074 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFALE__NFALE			0x078 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_NFALE__GPIO_3_28		0x078 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFCLE__NFCLE			0x07c 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_NFCLE__GPIO_3_29		0x07c 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFWP_B__NFWP_B			0x080 0x000 0x000 0x10 0x000
+> +#define MX25_PAD_NFWP_B__GPIO_3_30		0x080 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_NFRB__NFRB			0x084 0x27c 0x000 0x10 0x000
+> +#define MX25_PAD_NFRB__GPIO_3_31		0x084 0x27c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_D15__D15			0x088 0x280 0x000 0x00 0x000
+> +#define MX25_PAD_D15__LD16			0x088 0x280 0x000 0x01 0x000
+> +#define MX25_PAD_D15__GPIO_4_5			0x088 0x280 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D14__D14			0x08c 0x284 0x000 0x00 0x000
+> +#define MX25_PAD_D14__LD17			0x08c 0x284 0x000 0x01 0x000
+> +#define MX25_PAD_D14__GPIO_4_6			0x08c 0x284 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D13__D13			0x090 0x288 0x000 0x00 0x000
+> +#define MX25_PAD_D13__LD18			0x090 0x288 0x000 0x01 0x000
+> +#define MX25_PAD_D13__GPIO_4_7			0x090 0x288 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D12__D12			0x094 0x28c 0x000 0x00 0x000
+> +#define MX25_PAD_D12__GPIO_4_8			0x094 0x28c 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D11__D11			0x098 0x290 0x000 0x00 0x000
+> +#define MX25_PAD_D11__GPIO_4_9			0x098 0x290 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D10__D10			0x09c 0x294 0x000 0x00 0x000
+> +#define MX25_PAD_D10__GPIO_4_10			0x09c 0x294 0x000 0x05 0x000
+> +#define MX25_PAD_D10__USBOTG_OC			0x09c 0x294 0x57c 0x06 0x000
+> +
+> +#define MX25_PAD_D9__D9				0x0a0 0x298 0x000 0x00 0x000
+> +#define MX25_PAD_D9__GPIO_4_11			0x0a0 0x298 0x000 0x05 0x000
+> +#define MX25_PAD_D9__USBH2_PWR			0x0a0 0x298 0x000 0x06 0x000
+> +
+> +#define MX25_PAD_D8__D8				0x0a4 0x29c 0x000 0x00 0x000
+> +#define MX25_PAD_D8__GPIO_4_12			0x0a4 0x29c 0x000 0x05 0x000
+> +#define MX25_PAD_D8__USBH2_OC			0x0a4 0x29c 0x580 0x06 0x000
+> +
+> +#define MX25_PAD_D7__D7				0x0a8 0x2a0 0x000 0x00 0x000
+> +#define MX25_PAD_D7__GPIO_4_13			0x0a8 0x2a0 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D6__D6				0x0ac 0x2a4 0x000 0x00 0x000
+> +#define MX25_PAD_D6__GPIO_4_14			0x0ac 0x2a4 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D5__D5				0x0b0 0x2a8 0x000 0x00 0x000
+> +#define MX25_PAD_D5__GPIO_4_15			0x0b0 0x2a8 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D4__D4				0x0b4 0x2ac 0x000 0x00 0x000
+> +#define MX25_PAD_D4__GPIO_4_16			0x0b4 0x2ac 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D3__D3				0x0b8 0x2b0 0x000 0x00 0x000
+> +#define MX25_PAD_D3__GPIO_4_17			0x0b8 0x2b0 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D2__D2				0x0bc 0x2b4 0x000 0x00 0x000
+> +#define MX25_PAD_D2__GPIO_4_18			0x0bc 0x2b4 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D1__D1				0x0c0 0x2b8 0x000 0x00 0x000
+> +#define MX25_PAD_D1__GPIO_4_19			0x0c0 0x2b8 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_D0__D0				0x0c4 0x2bc 0x000 0x00 0x000
+> +#define MX25_PAD_D0__GPIO_4_20			0x0c4 0x2bc 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_LD0__LD0			0x0c8 0x2c0 0x000 0x10 0x000
+> +#define MX25_PAD_LD0__CSI_D0			0x0c8 0x2c0 0x488 0x12 0x000
+> +#define MX25_PAD_LD0__GPIO_2_15			0x0c8 0x2c0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD1__LD1			0x0cc 0x2c4 0x000 0x10 0x000
+> +#define MX25_PAD_LD1__CSI_D1			0x0cc 0x2c4 0x48c 0x12 0x000
+> +#define MX25_PAD_LD1__GPIO_2_16			0x0cc 0x2c4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD2__LD2			0x0d0 0x2c8 0x000 0x10 0x000
+> +#define MX25_PAD_LD2__GPIO_2_17			0x0d0 0x2c8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD3__LD3			0x0d4 0x2cc 0x000 0x10 0x000
+> +#define MX25_PAD_LD3__GPIO_2_18			0x0d4 0x2cc 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD4__LD4			0x0d8 0x2d0 0x000 0x10 0x000
+> +#define MX25_PAD_LD4__GPIO_2_19			0x0d8 0x2d0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD5__LD5			0x0dc 0x2d4 0x000 0x10 0x000
+> +#define MX25_PAD_LD5__GPIO_1_19			0x0dc 0x2d4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD6__LD6			0x0e0 0x2d8 0x000 0x10 0x000
+> +#define MX25_PAD_LD6__GPIO_1_20			0x0e0 0x2d8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD7__LD7			0x0e4 0x2dc 0x000 0x10 0x000
+> +#define MX25_PAD_LD7__GPIO_1_21			0x0e4 0x2dc 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD8__LD8			0x0e8 0x2e0 0x000 0x10 0x000
+> +#define MX25_PAD_LD8__FEC_TX_ERR		0x0e8 0x2e0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD9__LD9			0x0ec 0x2e4 0x000 0x10 0x000
+> +#define MX25_PAD_LD9__FEC_COL			0x0ec 0x2e4 0x504 0x15 0x001
+> +
+> +#define MX25_PAD_LD10__LD10			0x0f0 0x2e8 0x000 0x10 0x000
+> +#define MX25_PAD_LD10__FEC_RX_ER		0x0f0 0x2e8 0x518 0x15 0x001
+> +
+> +#define MX25_PAD_LD11__LD11			0x0f4 0x2ec 0x000 0x10 0x000
+> +#define MX25_PAD_LD11__FEC_RDATA2		0x0f4 0x2ec 0x50c 0x15 0x001
+> +
+> +#define MX25_PAD_LD12__LD12			0x0f8 0x2f0 0x000 0x10 0x000
+> +#define MX25_PAD_LD12__FEC_RDATA3		0x0f8 0x2f0 0x510 0x15 0x001
+> +
+> +#define MX25_PAD_LD13__LD13			0x0fc 0x2f4 0x000 0x10 0x000
+> +#define MX25_PAD_LD13__FEC_TDATA2		0x0fc 0x2f4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD14__LD14			0x100 0x2f8 0x000 0x10 0x000
+> +#define MX25_PAD_LD14__FEC_TDATA3		0x100 0x2f8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LD15__LD15			0x104 0x2fc 0x000 0x10 0x000
+> +#define MX25_PAD_LD15__FEC_RX_CLK		0x104 0x2fc 0x514 0x15 0x001
+> +
+> +#define MX25_PAD_HSYNC__HSYNC			0x108 0x300 0x000 0x10 0x000
+> +#define MX25_PAD_HSYNC__GPIO_1_22		0x108 0x300 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_VSYNC__VSYNC			0x10c 0x304 0x000 0x10 0x000
+> +#define MX25_PAD_VSYNC__GPIO_1_23		0x10c 0x304 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_LSCLK__LSCLK			0x110 0x308 0x000 0x10 0x000
+> +#define MX25_PAD_LSCLK__GPIO_1_24		0x110 0x308 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_OE_ACD__OE_ACD			0x114 0x30c 0x000 0x10 0x000
+> +#define MX25_PAD_OE_ACD__GPIO_1_25		0x114 0x30c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CONTRAST__CONTRAST		0x118 0x310 0x000 0x10 0x000
+> +#define MX25_PAD_CONTRAST__PWM4_PWMO		0x118 0x310 0x000 0x14 0x000
+> +#define MX25_PAD_CONTRAST__FEC_CRS		0x118 0x310 0x508 0x15 0x001
+> +
+> +#define MX25_PAD_PWM__PWM			0x11c 0x314 0x000 0x10 0x000
+> +#define MX25_PAD_PWM__GPIO_1_26			0x11c 0x314 0x000 0x15 0x000
+> +#define MX25_PAD_PWM__USBH2_OC			0x11c 0x314 0x580 0x16 0x001
+> +
+> +#define MX25_PAD_CSI_D2__CSI_D2			0x120 0x318 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D2__UART5_RXD_MUX		0x120 0x318 0x578 0x11 0x001
+> +#define MX25_PAD_CSI_D2__GPIO_1_27		0x120 0x318 0x000 0x15 0x000
+> +#define MX25_PAD_CSI_D2__CSPI3_MOSI		0x120 0x318 0x000 0x17 0x000
+> +
+> +#define MX25_PAD_CSI_D3__CSI_D3			0x124 0x31c 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D3__GPIO_1_28		0x124 0x31c 0x000 0x15 0x000
+> +#define MX25_PAD_CSI_D3__CSPI3_MISO		0x124 0x31c 0x4b4 0x17 0x001
+> +
+> +#define MX25_PAD_CSI_D4__CSI_D4			0x128 0x320 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D4__UART5_RTS		0x128 0x320 0x574 0x11 0x001
+> +#define MX25_PAD_CSI_D4__GPIO_1_29		0x128 0x320 0x000 0x15 0x000
+> +#define MX25_PAD_CSI_D4__CSPI3_SCLK		0x128 0x320 0x000 0x17 0x000
+> +
+> +#define MX25_PAD_CSI_D5__CSI_D5			0x12c 0x324 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D5__GPIO_1_30		0x12c 0x324 0x000 0x15 0x000
+> +#define MX25_PAD_CSI_D5__CSPI3_RDY		0x12c 0x324 0x000 0x17 0x000
+> +
+> +#define MX25_PAD_CSI_D6__CSI_D6			0x130 0x328 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D6__GPIO_1_31		0x130 0x328 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_D7__CSI_D7			0x134 0x32c 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D7__GPIO_1_6		0x134 0x32c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_D8__CSI_D8			0x138 0x330 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D8__GPIO_1_7		0x138 0x330 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_D9__CSI_D9			0x13c 0x334 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_D9__GPIO_4_21		0x13c 0x334 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_MCLK__CSI_MCLK		0x140 0x338 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_MCLK__GPIO_1_8		0x140 0x338 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_VSYNC__CSI_VSYNC		0x144 0x33c 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_VSYNC__GPIO_1_9		0x144 0x33c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_HSYNC__CSI_HSYNC		0x148 0x340 0x000 0x10 0x000
+> +#define MX25_PAD_CSI_HSYNC__GPIO_1_10		0x148 0x340 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSI_PIXCLK__CSI_PIXCLK		0x14c 0x344 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_CSI_PIXCLK__GPIO_1_11		0x14c 0x344 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_I2C1_CLK__I2C1_CLK		0x150 0x348 0x000 0x10 0x000
+> +#define MX25_PAD_I2C1_CLK__GPIO_1_12		0x150 0x348 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_I2C1_DAT__I2C1_DAT		0x154 0x34c 0x000 0x10 0x000
+> +#define MX25_PAD_I2C1_DAT__GPIO_1_13		0x154 0x34c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_MOSI__CSPI1_MOSI		0x158 0x350 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_CSPI1_MOSI__GPIO_1_14		0x158 0x350 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_MISO__CSPI1_MISO		0x15c 0x354 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_CSPI1_MISO__GPIO_1_15		0x15c 0x354 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_SS0__CSPI1_SS0		0x160 0x358 0x000 0x10 0x000
+> +#define MX25_PAD_CSPI1_SS0__GPIO_1_16		0x160 0x358 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_SS1__CSPI1_SS1		0x164 0x35c 0x000 0x10 0x000
+> +#define MX25_PAD_CSPI1_SS1__GPIO_1_17		0x164 0x35c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_SCLK__CSPI1_SCLK		0x168 0x360 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_CSPI1_SCLK__GPIO_1_18		0x168 0x360 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CSPI1_RDY__CSPI1_RDY		0x16c 0x364 0x000 0x10 0x000
+> +#define MX25_PAD_CSPI1_RDY__GPIO_2_22		0x16c 0x364 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART1_RXD__UART1_RXD		0x170 0x368 0x000 0x10 0x000
+> +#define MX25_PAD_UART1_RXD__GPIO_4_22		0x170 0x368 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART1_TXD__UART1_TXD		0x174 0x36c 0x000 0x10 0x000
+> +#define MX25_PAD_UART1_TXD__GPIO_4_23		0x174 0x36c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART1_RTS__UART1_RTS		0x178 0x370 0x000 0x10 0x000
+> +#define MX25_PAD_UART1_RTS__CSI_D0		0x178 0x370 0x488 0x11 0x001
+> +#define MX25_PAD_UART1_RTS__GPIO_4_24		0x178 0x370 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART1_CTS__UART1_CTS		0x17c 0x374 0x000 0x10 0x000
+> +#define MX25_PAD_UART1_CTS__CSI_D1		0x17c 0x374 0x48c 0x11 0x001
+> +#define MX25_PAD_UART1_CTS__GPIO_4_25		0x17c 0x374 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART2_RXD__UART2_RXD		0x180 0x378 0x000 0x10 0x000
+> +#define MX25_PAD_UART2_RXD__GPIO_4_26		0x180 0x378 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART2_TXD__UART2_TXD		0x184 0x37c 0x000 0x10 0x000
+> +#define MX25_PAD_UART2_TXD__GPIO_4_27		0x184 0x37c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART2_RTS__UART2_RTS		0x188 0x380 0x000 0x10 0x000
+> +#define MX25_PAD_UART2_RTS__FEC_COL		0x188 0x380 0x504 0x12 0x002
+> +#define MX25_PAD_UART2_RTS__GPIO_4_28		0x188 0x380 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UART2_CTS__FEC_RX_ER		0x18c 0x384 0x518 0x12 0x002
+> +#define MX25_PAD_UART2_CTS__UART2_CTS		0x18c 0x384 0x000 0x10 0x000
+> +#define MX25_PAD_UART2_CTS__GPIO_4_29		0x18c 0x384 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_CMD__SD1_CMD		0x190 0x388 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_CMD__FEC_RDATA2		0x190 0x388 0x50c 0x12 0x002
+> +#define MX25_PAD_SD1_CMD__GPIO_2_23		0x190 0x388 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_CLK__SD1_CLK		0x194 0x38c 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_CLK__FEC_RDATA3		0x194 0x38c 0x510 0x12 0x002
+> +#define MX25_PAD_SD1_CLK__GPIO_2_24		0x194 0x38c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_DATA0__SD1_DATA0		0x198 0x390 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_DATA0__GPIO_2_25		0x198 0x390 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_DATA1__SD1_DATA1		0x19c 0x394 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_DATA1__AUD7_RXD		0x19c 0x394 0x478 0x13 0x000
+> +#define MX25_PAD_SD1_DATA1__GPIO_2_26		0x19c 0x394 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_DATA2__SD1_DATA2		0x1a0 0x398 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_DATA2__FEC_RX_CLK		0x1a0 0x398 0x514 0x15 0x002
+> +#define MX25_PAD_SD1_DATA2__GPIO_2_27		0x1a0 0x398 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_SD1_DATA3__SD1_DATA3		0x1a4 0x39c 0x000 0x10 0x000
+> +#define MX25_PAD_SD1_DATA3__FEC_CRS		0x1a4 0x39c 0x508 0x10 0x002
+> +#define MX25_PAD_SD1_DATA3__GPIO_2_28		0x1a4 0x39c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_ROW0__KPP_ROW0		0x1a8 0x3a0 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_ROW0__GPIO_2_29		0x1a8 0x3a0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_ROW1__KPP_ROW1		0x1ac 0x3a4 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_ROW1__GPIO_2_30		0x1ac 0x3a4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_ROW2__KPP_ROW2		0x1b0 0x3a8 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_ROW2__CSI_D0		0x1b0 0x3a8 0x488 0x13 0x002
+> +#define MX25_PAD_KPP_ROW2__GPIO_2_31		0x1b0 0x3a8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_ROW3__KPP_ROW3		0x1b4 0x3ac 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_ROW3__CSI_LD1		0x1b4 0x3ac 0x48c 0x13 0x002
+> +#define MX25_PAD_KPP_ROW3__GPIO_3_0		0x1b4 0x3ac 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_COL0__KPP_COL0		0x1b8 0x3b0 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_COL0__UART4_RXD_MUX	0x1b8 0x3b0 0x570 0x11 0x00=
+1
+> +#define MX25_PAD_KPP_COL0__AUD5_TXD		0x1b8 0x3b0 0x000 0x12 0x000
+> +#define MX25_PAD_KPP_COL0__GPIO_3_1		0x1b8 0x3b0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_COL1__KPP_COL1		0x1bc 0x3b4 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_COL1__UART4_TXD_MUX	0x1bc 0x3b4 0x000 0x11 0x00=
+0
+> +#define MX25_PAD_KPP_COL1__AUD5_RXD		0x1bc 0x3b4 0x000 0x12 0x000
+> +#define MX25_PAD_KPP_COL1__GPIO_3_2		0x1bc 0x3b4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_COL2__KPP_COL2		0x1c0 0x3b8 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_COL2__UART4_RTS		0x1c0 0x3b8 0x000 0x11 0x000
+> +#define MX25_PAD_KPP_COL2__AUD5_TXC		0x1c0 0x3b8 0x000 0x12 0x000
+> +#define MX25_PAD_KPP_COL2__GPIO_3_3		0x1c0 0x3b8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_KPP_COL3__KPP_COL3		0x1c4 0x3bc 0x000 0x10 0x000
+> +#define MX25_PAD_KPP_COL3__UART4_CTS		0x1c4 0x3bc 0x000 0x11 0x000
+> +#define MX25_PAD_KPP_COL3__AUD5_TXFS		0x1c4 0x3bc 0x000 0x12 0x000
+> +#define MX25_PAD_KPP_COL3__GPIO_3_4		0x1c4 0x3bc 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_MDC__FEC_MDC		0x1c8 0x3c0 0x000 0x10 0x000
+> +#define MX25_PAD_FEC_MDC__AUD4_TXD		0x1c8 0x3c0 0x464 0x12 0x001
+> +#define MX25_PAD_FEC_MDC__GPIO_3_5		0x1c8 0x3c0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_MDIO__FEC_MDIO		0x1cc 0x3c4 0x000 0x10 0x000
+> +#define MX25_PAD_FEC_MDIO__AUD4_RXD		0x1cc 0x3c4 0x460 0x12 0x001
+> +#define MX25_PAD_FEC_MDIO__GPIO_3_6		0x1cc 0x3c4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_TDATA0__FEC_TDATA0		0x1d0 0x3c8 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_FEC_TDATA0__GPIO_3_7		0x1d0 0x3c8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_TDATA1__FEC_TDATA1		0x1d4 0x3cc 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_FEC_TDATA1__AUD4_TXFS		0x1d4 0x3cc 0x474 0x12 0x001
+> +#define MX25_PAD_FEC_TDATA1__GPIO_3_8		0x1d4 0x3cc 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_TX_EN__FEC_TX_EN		0x1d8 0x3d0 0x000 0x10 0x000
+> +#define MX25_PAD_FEC_TX_EN__GPIO_3_9		0x1d8 0x3d0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_RDATA0__FEC_RDATA0		0x1dc 0x3d4 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_FEC_RDATA0__GPIO_3_10		0x1dc 0x3d4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_RDATA1__FEC_RDATA1		0x1e0 0x3d8 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_FEC_RDATA1__GPIO_3_11		0x1e0 0x3d8 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_RX_DV__FEC_RX_DV		0x1e4 0x3dc 0x000 0x10 0x000
+> +#define MX25_PAD_FEC_RX_DV__CAN2_RX		0x1e4 0x3dc 0x484 0x14 0x000
+> +#define MX25_PAD_FEC_RX_DV__GPIO_3_12		0x1e4 0x3dc 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_FEC_TX_CLK__FEC_TX_CLK		0x1e8 0x3e0 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_FEC_TX_CLK__GPIO_3_13		0x1e8 0x3e0 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_RTCK__RTCK			0x1ec 0x3e4 0x000 0x10 0x000
+> +#define MX25_PAD_RTCK__OWIRE			0x1ec 0x3e4 0x000 0x11 0x000
+> +#define MX25_PAD_RTCK__GPIO_3_14		0x1ec 0x3e4 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_DE_B__DE_B			0x1f0 0x3ec 0x000 0x10 0x000
+> +#define MX25_PAD_DE_B__GPIO_2_20		0x1f0 0x3ec 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_TDO__TDO			0x000 0x3e8 0x000 0x00 0x000
+> +
+> +#define MX25_PAD_GPIO_A__GPIO_A			0x1f4 0x3f0 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_A__CAN1_TX		0x1f4 0x3f0 0x000 0x16 0x000
+> +#define MX25_PAD_GPIO_A__USBOTG_PWR		0x1f4 0x3f0 0x000 0x12 0x000
+> +
+> +#define MX25_PAD_GPIO_B__GPIO_B			0x1f8 0x3f4 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_B__CAN1_RX		0x1f8 0x3f4 0x480 0x16 0x001
+> +#define MX25_PAD_GPIO_B__USBOTG_OC		0x1f8 0x3f4 0x57c 0x12 0x001
+> +
+> +#define MX25_PAD_GPIO_C__GPIO_C			0x1fc 0x3f8 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_C__CAN2_TX		0x1fc 0x3f8 0x000 0x16 0x000
+> +
+> +#define MX25_PAD_GPIO_D__GPIO_D			0x200 0x3fc 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_E__LD16			0x204 0x400 0x000 0x02 0x000
+> +#define MX25_PAD_GPIO_D__CAN2_RX		0x200 0x3fc 0x484 0x16 0x001
+> +
+> +#define MX25_PAD_GPIO_E__GPIO_E			0x204 0x400 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_F__LD17			0x208 0x404 0x000 0x02 0x000
+> +#define MX25_PAD_GPIO_E__AUD7_TXD		0x204 0x400 0x000 0x14 0x000
+> +
+> +#define MX25_PAD_GPIO_F__GPIO_F			0x208 0x404 0x000 0x10 0x000
+> +#define MX25_PAD_GPIO_F__AUD7_TXC		0x208 0x404 0x000 0x14 0x000
+> +
+> +#define MX25_PAD_EXT_ARMCLK__EXT_ARMCLK		0x20c 0x000 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_EXT_ARMCLK__GPIO_3_15		0x20c 0x000 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_UPLL_BYPCLK__UPLL_BYPCLK	0x210 0x000 0x000 0x10 0x0=
+00
+> +#define MX25_PAD_UPLL_BYPCLK__GPIO_3_16		0x210 0x000 0x000 0x15 0x00=
+0
+> +
+> +#define MX25_PAD_VSTBY_REQ__VSTBY_REQ		0x214 0x408 0x000 0x10 0x000
+> +#define MX25_PAD_VSTBY_REQ__AUD7_TXFS		0x214 0x408 0x000 0x14 0x000
+> +#define MX25_PAD_VSTBY_REQ__GPIO_3_17		0x214 0x408 0x000 0x15 0x000
+> +#define MX25_PAD_VSTBY_ACK__VSTBY_ACK		0x218 0x40c 0x000 0x10 0x000
+> +#define MX25_PAD_VSTBY_ACK__GPIO_3_18		0x218 0x40c 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_POWER_FAIL__POWER_FAIL		0x21c 0x410 0x000 0x10 0x00=
+0
+> +#define MX25_PAD_POWER_FAIL__AUD7_RXD		0x21c 0x410 0x478 0x14 0x001
+> +#define MX25_PAD_POWER_FAIL__GPIO_3_19		0x21c 0x410 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_CLKO__CLKO			0x220 0x414 0x000 0x10 0x000
+> +#define MX25_PAD_CLKO__GPIO_2_21		0x220 0x414 0x000 0x15 0x000
+> +
+> +#define MX25_PAD_BOOT_MODE0__BOOT_MODE0		0x224 0x000 0x000 0x00 0x00=
+0
+> +#define MX25_PAD_BOOT_MODE0__GPIO_4_30		0x224 0x000 0x000 0x05 0x000
+> +#define MX25_PAD_BOOT_MODE1__BOOT_MODE1		0x228 0x000 0x000 0x00 0x00=
+0
+> +#define MX25_PAD_BOOT_MODE1__GPIO_4_31		0x228 0x000 0x000 0x05 0x000
+> +
+> +#define MX25_PAD_CTL_GRP_DVS_MISC		0x000 0x418 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_FEC		0x000 0x41c 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_JTAG		0x000 0x420 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_NFC		0x000 0x424 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_CSI		0x000 0x428 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_WEIM		0x000 0x42c 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_DDR		0x000 0x430 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_CRM		0x000 0x434 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_KPP		0x000 0x438 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_SDHC1		0x000 0x43c 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_LCD		0x000 0x440 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_UART		0x000 0x444 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_NFC		0x000 0x448 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_CSI		0x000 0x44c 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DSE_CSPI1		0x000 0x450 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DDRTYPE		0x000 0x454 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_SDHC1		0x000 0x458 0x000 0x00 0x000
+> +#define MX25_PAD_CTL_GRP_DVS_LCD		0x000 0x45c 0x000 0x00 0x000
+
+These pinfunctions do not define a pinmux function for a pin. Instead
+they are used to configure the pin characteristics for a whole group of
+pins. I am not sure if they should be defined as "pin functions" for th=
+e
+iomux driver.
+
+Regards,
+
+Markus Pargmann
+
+> +
+> +#endif /* __DTS_IMX25_PINFUNC_H */
+> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.d=
+tsi
+> index 623ed55..1c19ad3 100644
+> --- a/arch/arm/boot/dts/imx25.dtsi
+> +++ b/arch/arm/boot/dts/imx25.dtsi
+> @@ -10,6 +10,7 @@
+>   */
+> =20
+>  #include "skeleton.dtsi"
+> +#include "imx25-pinfunc.h"
+> =20
+>  / {
+>  	aliases {
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 7a6e6f7..9d19b3f 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -109,6 +109,8 @@ config SOC_IMX25
+>  	select ARCH_MXC_IOMUX_V3
+>  	select CPU_ARM926T
+>  	select MXC_AVIC
+> +	select PINCTRL
+> +	select PINCTRL_IMX25
+> =20
+>  config SOC_IMX27
+>  	bool
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index db1ddca..6fefb10 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -114,6 +114,14 @@ config PINCTRL_IMX1_CORE
+>  	select PINMUX
+>  	select PINCONF
+> =20
+> +config PINCTRL_IMX25
+> +        bool "IMX25 pinctrl driver"
+> +        depends on OF
+> +        depends on SOC_IMX25
+> +        select PINCTRL_IMX
+> +        help
+> +          Say Y here to enable the imx25 pinctrl driver
+> +
+>  config PINCTRL_IMX27
+>  	bool "IMX27 pinctrl driver"
+>  	depends on OF
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index 915d19c..663b793 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_PINCTRL_IMX6SL)	+=3D pinctrl-imx6sl.o
+>  obj-$(CONFIG_PINCTRL_FALCON)	+=3D pinctrl-falcon.o
+>  obj-$(CONFIG_PINCTRL_MXS)	+=3D pinctrl-mxs.o
+>  obj-$(CONFIG_PINCTRL_IMX23)	+=3D pinctrl-imx23.o
+> +obj-$(CONFIG_PINCTRL_IMX25)	+=3D pinctrl-imx25.o
+>  obj-$(CONFIG_PINCTRL_IMX28)	+=3D pinctrl-imx28.o
+>  obj-$(CONFIG_PINCTRL_NOMADIK)	+=3D pinctrl-nomadik.o
+>  obj-$(CONFIG_PINCTRL_STN8815)	+=3D pinctrl-nomadik-stn8815.o
+> diff --git a/drivers/pinctrl/pinctrl-imx25.c b/drivers/pinctrl/pinctr=
+l-imx25.c
+> new file mode 100644
+> index 0000000..8994b43
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-imx25.c
+> @@ -0,0 +1,351 @@
+> +/*
+> + * imx25 pinctrl driver.
+> + *
+> + * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This driver was mostly copied from the imx51 pinctrl driver which=
+ has:
+> + *
+> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Linaro, Inc.
+> + *
+> + * Author: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as=
+ published
+> + * by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +
+> +#include "pinctrl-imx.h"
+> +
+> +enum imx25_pads {
+> +	MX25_PAD_RESERVE0 =3D 1,
+> +	MX25_PAD_RESERVE1 =3D 2,
+> +	MX25_PAD_A10 =3D 3,
+> +	MX25_PAD_A13 =3D 4,
+> +	MX25_PAD_A14 =3D 5,
+> +	MX25_PAD_A15 =3D 6,
+> +	MX25_PAD_A16 =3D 7,
+> +	MX25_PAD_A17 =3D 8,
+> +	MX25_PAD_A18 =3D 9,
+> +	MX25_PAD_A19 =3D 10,
+> +	MX25_PAD_A20 =3D 11,
+> +	MX25_PAD_A21 =3D 12,
+> +	MX25_PAD_A22 =3D 13,
+> +	MX25_PAD_A23 =3D 14,
+> +	MX25_PAD_A24 =3D 15,
+> +	MX25_PAD_A25 =3D 16,
+> +	MX25_PAD_EB0 =3D 17,
+> +	MX25_PAD_EB1 =3D 18,
+> +	MX25_PAD_OE =3D 19,
+> +	MX25_PAD_CS0 =3D 20,
+> +	MX25_PAD_CS1 =3D 21,
+> +	MX25_PAD_CS4 =3D 22,
+> +	MX25_PAD_CS5 =3D 23,
+> +	MX25_PAD_NF_CE0 =3D 24,
+> +	MX25_PAD_ECB =3D 25,
+> +	MX25_PAD_LBA =3D 26,
+> +	MX25_PAD_BCLK =3D 27,
+> +	MX25_PAD_RW =3D 28,
+> +	MX25_PAD_NFWE_B =3D 29,
+> +	MX25_PAD_NFRE_B =3D 30,
+> +	MX25_PAD_NFALE =3D 31,
+> +	MX25_PAD_NFCLE =3D 32,
+> +	MX25_PAD_NFWP_B =3D 33,
+> +	MX25_PAD_NFRB =3D 34,
+> +	MX25_PAD_D15 =3D 35,
+> +	MX25_PAD_D14 =3D 36,
+> +	MX25_PAD_D13 =3D 37,
+> +	MX25_PAD_D12 =3D 38,
+> +	MX25_PAD_D11 =3D 39,
+> +	MX25_PAD_D10 =3D 40,
+> +	MX25_PAD_D9 =3D 41,
+> +	MX25_PAD_D8 =3D 42,
+> +	MX25_PAD_D7 =3D 43,
+> +	MX25_PAD_D6 =3D 44,
+> +	MX25_PAD_D5 =3D 45,
+> +	MX25_PAD_D4 =3D 46,
+> +	MX25_PAD_D3 =3D 47,
+> +	MX25_PAD_D2 =3D 48,
+> +	MX25_PAD_D1 =3D 49,
+> +	MX25_PAD_D0 =3D 50,
+> +	MX25_PAD_LD0 =3D 51,
+> +	MX25_PAD_LD1 =3D 52,
+> +	MX25_PAD_LD2 =3D 53,
+> +	MX25_PAD_LD3 =3D 54,
+> +	MX25_PAD_LD4 =3D 55,
+> +	MX25_PAD_LD5 =3D 56,
+> +	MX25_PAD_LD6 =3D 57,
+> +	MX25_PAD_LD7 =3D 58,
+> +	MX25_PAD_LD8 =3D 59,
+> +	MX25_PAD_LD9 =3D 60,
+> +	MX25_PAD_LD10 =3D 61,
+> +	MX25_PAD_LD11 =3D 62,
+> +	MX25_PAD_LD12 =3D 63,
+> +	MX25_PAD_LD13 =3D 64,
+> +	MX25_PAD_LD14 =3D 65,
+> +	MX25_PAD_LD15 =3D 66,
+> +	MX25_PAD_HSYNC =3D 67,
+> +	MX25_PAD_VSYNC =3D 68,
+> +	MX25_PAD_LSCLK =3D 69,
+> +	MX25_PAD_OE_ACD =3D 70,
+> +	MX25_PAD_CONTRAST =3D 71,
+> +	MX25_PAD_PWM =3D 72,
+> +	MX25_PAD_CSI_D2 =3D 73,
+> +	MX25_PAD_CSI_D3 =3D 74,
+> +	MX25_PAD_CSI_D4 =3D 75,
+> +	MX25_PAD_CSI_D5 =3D 76,
+> +	MX25_PAD_CSI_D6 =3D 77,
+> +	MX25_PAD_CSI_D7 =3D 78,
+> +	MX25_PAD_CSI_D8 =3D 79,
+> +	MX25_PAD_CSI_D9 =3D 80,
+> +	MX25_PAD_CSI_MCLK =3D 81,
+> +	MX25_PAD_CSI_VSYNC =3D 82,
+> +	MX25_PAD_CSI_HSYNC =3D 83,
+> +	MX25_PAD_CSI_PIXCLK =3D 84,
+> +	MX25_PAD_I2C1_CLK =3D 85,
+> +	MX25_PAD_I2C1_DAT =3D 86,
+> +	MX25_PAD_CSPI1_MOSI =3D 87,
+> +	MX25_PAD_CSPI1_MISO =3D 88,
+> +	MX25_PAD_CSPI1_SS0 =3D 89,
+> +	MX25_PAD_CSPI1_SS1 =3D 90,
+> +	MX25_PAD_CSPI1_SCLK =3D 91,
+> +	MX25_PAD_CSPI1_RDY =3D 92,
+> +	MX25_PAD_UART1_RXD =3D 93,
+> +	MX25_PAD_UART1_TXD =3D 94,
+> +	MX25_PAD_UART1_RTS =3D 95,
+> +	MX25_PAD_UART1_CTS =3D 96,
+> +	MX25_PAD_UART2_RXD =3D 97,
+> +	MX25_PAD_UART2_TXD =3D 98,
+> +	MX25_PAD_UART2_RTS =3D 99,
+> +	MX25_PAD_UART2_CTS =3D 100,
+> +	MX25_PAD_SD1_CMD =3D 101,
+> +	MX25_PAD_SD1_CLK =3D 102,
+> +	MX25_PAD_SD1_DATA0 =3D 103,
+> +	MX25_PAD_SD1_DATA1 =3D 104,
+> +	MX25_PAD_SD1_DATA2 =3D 105,
+> +	MX25_PAD_SD1_DATA3 =3D 106,
+> +	MX25_PAD_KPP_ROW0 =3D 107,
+> +	MX25_PAD_KPP_ROW1 =3D 108,
+> +	MX25_PAD_KPP_ROW2 =3D 109,
+> +	MX25_PAD_KPP_ROW3 =3D 110,
+> +	MX25_PAD_KPP_COL0 =3D 111,
+> +	MX25_PAD_KPP_COL1 =3D 112,
+> +	MX25_PAD_KPP_COL2 =3D 113,
+> +	MX25_PAD_KPP_COL3 =3D 114,
+> +	MX25_PAD_FEC_MDC =3D 115,
+> +	MX25_PAD_FEC_MDIO =3D 116,
+> +	MX25_PAD_FEC_TDATA0 =3D 117,
+> +	MX25_PAD_FEC_TDATA1 =3D 118,
+> +	MX25_PAD_FEC_TX_EN =3D 119,
+> +	MX25_PAD_FEC_RDATA0 =3D 120,
+> +	MX25_PAD_FEC_RDATA1 =3D 121,
+> +	MX25_PAD_FEC_RX_DV =3D 122,
+> +	MX25_PAD_FEC_TX_CLK =3D 123,
+> +	MX25_PAD_RTCK =3D 124,
+> +	MX25_PAD_DE_B =3D 125,
+> +	MX25_PAD_GPIO_A =3D 126,
+> +	MX25_PAD_GPIO_B =3D 127,
+> +	MX25_PAD_GPIO_C =3D 128,
+> +	MX25_PAD_GPIO_D =3D 129,
+> +	MX25_PAD_GPIO_E =3D 130,
+> +	MX25_PAD_GPIO_F =3D 131,
+> +	MX25_PAD_EXT_ARMCLK =3D 132,
+> +	MX25_PAD_UPLL_BYPCLK =3D 133,
+> +	MX25_PAD_VSTBY_REQ =3D 134,
+> +	MX25_PAD_VSTBY_ACK =3D 135,
+> +	MX25_PAD_POWER_FAIL  =3D 136,
+> +	MX25_PAD_CLKO =3D 137,
+> +	MX25_PAD_BOOT_MODE0 =3D 138,
+> +	MX25_PAD_BOOT_MODE1 =3D 139,
+> +};
+> +
+> +/* Pad names for the pinmux subsystem */
+> +static const struct pinctrl_pin_desc imx25_pinctrl_pads[] =3D {
+> +	IMX_PINCTRL_PIN(MX25_PAD_RESERVE0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_RESERVE1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A10),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A13),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A14),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A15),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A16),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A17),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A18),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A19),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A20),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A21),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A22),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A23),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A24),
+> +	IMX_PINCTRL_PIN(MX25_PAD_A25),
+> +	IMX_PINCTRL_PIN(MX25_PAD_EB0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_EB1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_OE),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CS0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CS1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CS4),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CS5),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NF_CE0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_ECB),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LBA),
+> +	IMX_PINCTRL_PIN(MX25_PAD_BCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_RW),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFWE_B),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFRE_B),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFALE),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFCLE),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFWP_B),
+> +	IMX_PINCTRL_PIN(MX25_PAD_NFRB),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D15),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D14),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D13),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D12),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D11),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D10),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D9),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D8),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D7),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D6),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D5),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D4),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_D0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD4),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD5),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD6),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD7),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD8),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD9),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD10),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD11),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD12),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD13),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD14),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LD15),
+> +	IMX_PINCTRL_PIN(MX25_PAD_HSYNC),
+> +	IMX_PINCTRL_PIN(MX25_PAD_VSYNC),
+> +	IMX_PINCTRL_PIN(MX25_PAD_LSCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_OE_ACD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CONTRAST),
+> +	IMX_PINCTRL_PIN(MX25_PAD_PWM),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D4),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D5),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D6),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D7),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D8),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_D9),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_MCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_VSYNC),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_HSYNC),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSI_PIXCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_I2C1_CLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_I2C1_DAT),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_MOSI),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_MISO),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_SS0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_SS1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_SCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CSPI1_RDY),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART1_RXD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART1_TXD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART1_RTS),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART1_CTS),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART2_RXD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART2_TXD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART2_RTS),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UART2_CTS),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_CMD),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_CLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_DATA0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_DATA1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_DATA2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_SD1_DATA3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_ROW0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_ROW1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_ROW2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_ROW3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_COL0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_COL1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_COL2),
+> +	IMX_PINCTRL_PIN(MX25_PAD_KPP_COL3),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_MDC),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_MDIO),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_TDATA0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_TDATA1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_TX_EN),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_RDATA0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_RDATA1),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_RX_DV),
+> +	IMX_PINCTRL_PIN(MX25_PAD_FEC_TX_CLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_RTCK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_DE_B),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_A),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_B),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_C),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_D),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_E),
+> +	IMX_PINCTRL_PIN(MX25_PAD_GPIO_F),
+> +	IMX_PINCTRL_PIN(MX25_PAD_EXT_ARMCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_UPLL_BYPCLK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_VSTBY_REQ),
+> +	IMX_PINCTRL_PIN(MX25_PAD_VSTBY_ACK),
+> +	IMX_PINCTRL_PIN(MX25_PAD_POWER_FAIL),
+> +	IMX_PINCTRL_PIN(MX25_PAD_CLKO),
+> +	IMX_PINCTRL_PIN(MX25_PAD_BOOT_MODE0),
+> +	IMX_PINCTRL_PIN(MX25_PAD_BOOT_MODE1),
+> +};
+> +
+> +static struct imx_pinctrl_soc_info imx25_pinctrl_info =3D {
+> +	.pins =3D imx25_pinctrl_pads,
+> +	.npins =3D ARRAY_SIZE(imx25_pinctrl_pads),
+> +};
+> +
+> +static struct of_device_id imx25_pinctrl_of_match[] =3D {
+> +	{ .compatible =3D "fsl,imx25-iomuxc", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int imx25_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +	return imx_pinctrl_probe(pdev, &imx25_pinctrl_info);
+> +}
+> +
+> +static struct platform_driver imx25_pinctrl_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "imx25-pinctrl",
+> +		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(imx25_pinctrl_of_match),
+> +	},
+> +	.probe =3D imx25_pinctrl_probe,
+> +	.remove =3D imx_pinctrl_remove,
+> +};
+> +
+> +static int __init imx25_pinctrl_init(void)
+> +{
+> +	return platform_driver_register(&imx25_pinctrl_driver);
+> +}
+> +arch_initcall(imx25_pinctrl_init);
+> +
+> +static void __exit imx25_pinctrl_exit(void)
+> +{
+> +	platform_driver_unregister(&imx25_pinctrl_driver);
+> +}
+> +module_exit(imx25_pinctrl_exit);
+> +MODULE_AUTHOR("Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Freescale IMX25 pinctrl driver");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 1.7.9.5
 >=20
-> Best regards,
-> Tomasz
 >=20
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSd68MAAoJEGw4ysog2bOSHLQP/24dRqJh3SUaJux3i2nRoiiK
-owEstRRORQcnasGDsp60G66lL6VFx3HINBF8NlBNDq3HcmJHPeIDJu5jZ9Ct042V
-ewS+870qSfY85VQCj7Lwj/yxkVBPgLvTRajF+gzhWHLImlAmXHKkUJxCm3uQCYy7
-bkGgGXvK+6OO1iTXoEgiTX6Z2rCCdqX1umH3o5V7uFdbF7fsChzEMaOSjIdcdJzN
-k8yyWEh8+q8kvUvMmMy4Rux7wK49LfsflGKsH6425vZf5LnQCIj/tAkVxlh5uOMq
-+gS7S/+c3cDT/If9P1uW9JZocdacgjhEG9VcBO4XVSUjPk1kxt1UE8XDHG0+2uyU
-JqkqIowLJi7e0BaUj5RdQ3esDWx3e6nFkwTOHURyAdkxovw+XLZT3DZLnIbZOgVZ
-8J0Dn9ZBavMOlxkqtn003xU1AiuVGO+VfgT8rSAeHC3XiaZ42/hPBK9EXuZ9hrGl
-A6MGtn56W/kC8BZJujPej5Rr52H9ifP494BoTlhHKmHZzagl4ZaVcUEeTfJERUGk
-9j2akSHoyJuyOFSoBPhXImuIn8OZcJnpKsON821IwrmsuPPbDh0cyPuik5AMnU0r
-n2zsIu2k3kSWyQUnAeokmuC7NPfJ/YjYc+s0vbPMzgcndfjcJCoV3RJ9SfBKTSrm
-5rDwWFEWdWfZExqvxmgO
-=sg0u
------END PGP SIGNATURE-----
-
---kvUQC+jR9YzypDnK--
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
