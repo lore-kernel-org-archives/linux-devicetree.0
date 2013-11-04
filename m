@@ -1,64 +1,108 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC 4/9] of/irq: Refactor interrupt-map parsing
-Date: Sun, 3 Nov 2013 21:04:55 -0800
-Message-ID: <20131104050455.GA3651@quad.lixom.net>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
- <1381869563-16083-5-git-send-email-grant.likely@linaro.org>
- <CAOesGMj03kgJXttm80pHvPYeqg5hOaeOJAJ4DA8tf5LxqdArrQ@mail.gmail.com>
- <CACxGe6uE+KvycQq3XBavRcvprff6PhBaxX54W_Cb1cfuVpMXvQ@mail.gmail.com>
- <20131031185714.GA12646@quad.lixom.net>
- <20131101175317.A812AC40868@trevor.secretlab.ca>
- <20131101185401.B298FC40868@trevor.secretlab.ca>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/9] phy: add phy_get_bus_width()/phy_set_bus_width()
+ calls
+Date: Mon, 4 Nov 2013 11:34:37 +0530
+Message-ID: <527738F5.1040305@ti.com>
+References: <1383335158-19730-1-git-send-email-matt.porter@linaro.org> <52753387.5030202@ti.com> <20131102174709.GE17505@beef> <1391452.2H43C6z4fl@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131101185401.B298FC40868-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391452.2H43C6z4fl@flatron>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Matt Porter <matt.porter@linaro.org>, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 11:54:01AM -0700, Grant Likely wrote:
-> On Fri, 01 Nov 2013 10:53:17 -0700, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Thu, 31 Oct 2013 11:57:14 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> > > On Wed, Oct 30, 2013 at 02:25:21PM -0700, Grant Likely wrote:
-> > > > (Sorry for HTML mail)
-> > > > 
-> > > > Can you put #define DEBUG at the top of drivers/of/irq.c and send me the
-> > > > log output from before and after the commit?
-> > > 
-> > > Here you go, quite verbose log below.
-> > > 
-> > > Looks like we're tripping the "no reg passed in" checks, not sure if related.
-> > 
-> > I think I've found the bug. See if this helps...
-> 
-> That one was broken. Try this instead.
-> 
-> From bcbffc3d16f49451ef505dc021480aa061465a15 Mon Sep 17 00:00:00 2001
-> From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Fri, 1 Nov 2013 10:50:50 -0700
-> Subject: [PATCH] of: Fixup interrupt parsing failure.
-> 
-> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi,
 
-Well, it boots. That's an improvement. :) It is again going for the
-precalculated delay loop. I'm not sure why the code path diverged before,
-especially given the below irq request fail for MCT.
+On Saturday 02 November 2013 11:28 PM, Tomasz Figa wrote:
+> On Saturday 02 of November 2013 13:47:09 Matt Porter wrote:
+>> On Sat, Nov 02, 2013 at 10:46:55PM +0530, Kishon Vijay Abraham I wrote:
+>>> Hi Tomasz,
+>>>
+>>> On Saturday 02 November 2013 06:44 PM, Tomasz Figa wrote:
+>>>> Hi Matt,
+>>>>
+>>>> On Friday 01 of November 2013 15:45:50 Matt Porter wrote:
+>>>>> This adds a pair of APIs that allows the generic PHY subsystem to
+>>>>> provide information on the PHY bus width. The PHY provider driver
+>>>>> may
+>>>>> use phy_set_bus_width() to set the bus width that the PHY supports.
+>>>>> The controller driver may then use phy_get_bus_width() to fetch the
+>>>>> PHY bus width in order to properly configure the controller.
+>>>>
+>>>> I somehow does not like this. If we take this path for any further
+>>>> properties that we may need, we will end up with a lot of consumer
+>>>> specific properties stored in a PHY object having their own accessor
+>>>> functions.
+>>>
+>>> Only after all of us feel that a property is *generic* enough, we
+>>> allow it to be added in the PHY object.
+>>
+>> I also want to note that this was discussed over in another thread [2]
+>> where you did consider my rough stab at a more generic attribute
+>> accessor. It was definitely my first reaction as the way to do it like
+>> Tomasz has said. The specific accessors are more readable to me besides
+>> the justification you mention above.
+>>
+>> [2] http://lkml.indiana.edu/hypermail/linux/kernel/1310.3/00673.html
+>
+> Personally I like that version much better, but still it would need to be
+> polished a bit.
+>
+> How I imagine such interface to be implemented:
+>
+> phy.h:
+>
+> struct phy {
+> 	// ...
+> 	const struct phy_attrs *attrs;
+> 	// ...
+> };
+>
+> static inline const struct phy_attrs *phy_get_attrs(struct phy *phy) {
+> 	return phy->attrs;
+> };
 
-I do see a bunch of new printk errors that I didn't use to though:
+API's like get_attrs is loosely defined. I'd prefer to have fully 
+defined APIs. There might be other attributes which the consumer might 
+not be interested in. Instead of returning the entire structure, it 
+would be better if we have facilities for the consumer to request only 
+the required attributes.
+>
+> phy driver:
+>
+> static const struct phy_attrs my_phy_attrs = {
+> 	// ...
+> };
+>
+> static int my_phy_probe(...)
+> {
+> 	// ...
+> 	phy = devm_phy_create_attrs(dev, &ops, &my_phy_attrs, NULL);
+> 	// ...
+> }
+>
+> phy consumer:
+>
+> 	// ...
+> 	const struct phy_attrs *phy_attrs;
+>
+> 	phy_attrs = phy_get_attrs(phy);
+> 	// ...
+>
+> Why I think it is better than what I've seen in this and previous instance
+> of this thread? (in random order)
+>   a) Only the PHY driver can set the attrs.
+>   b) PHY consumer has access only to a const pointer.
+>   c) PHY attributes can be placed in a static struct inside a driver file,
+> without the need to call any functions to set particular attributes.
 
-[    0.000000] genirq: Flags mismatch irq 160. 00015200 (mct_comp_irq) vs. 00014a00 (mct_tick0)
-[    0.040401] genirq: Flags mismatch irq 160. 00014a00 (mct_tick1) vs. 00014a00 (mct_tick0)
-[    0.040405] exynos-mct: cannot register IRQ 160
+Agree with all your points for setting the attributes apart from the 
+fact that we won't be able to add any validation criteria for the 
+attributes while setting it if needed and also there won't be symmetric 
+APIs for getting and setting the attributes..
 
-So I don't think we're home safe yet. I need to spend some time this week
-actually debugging this... Good thing the merge window is delayed.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+Kishon
