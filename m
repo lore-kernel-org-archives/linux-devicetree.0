@@ -1,40 +1,60 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v2 13/27] drm/tegra: Move subdevice infrastructure to
- host1x
-Date: Mon, 4 Nov 2013 11:20:55 +0100
-Message-ID: <20131104102054.GD4167@phenom.ffwll.local>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
- <1381134884-5816-14-git-send-email-treding@nvidia.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv9 09/43] CLK: ti: add support for ti divider-clock
+Date: Mon, 4 Nov 2013 12:54:43 +0200
+Message-ID: <52777CF3.7000802@ti.com>
+References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-10-git-send-email-t-kristo@ti.com> <52729B50.5060503@ti.com> <527378FF.6020905@ti.com> <52737A73.5010700@ti.com> <52740283.8040201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1381134884-5816-14-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52740283.8040201@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2013 at 10:34:30AM +0200, Thierry Reding wrote:
-> +static struct drm_bus drm_host1x_bus = {
-> +	.bus_type = DRIVER_BUS_HOST1X,
-> +	.set_busid = drm_host1x_set_busid,
-> +};
+On 11/01/2013 09:35 PM, Nishanth Menon wrote:
+> On 11/01/2013 04:54 AM, Tero Kristo wrote:
+>> On 11/01/2013 11:48 AM, Tero Kristo wrote:
+>>> On 10/31/2013 08:02 PM, Nishanth Menon wrote:
+>>>> On 10/25/2013 10:57 AM, Tero Kristo wrote:
+>
+> [...]
+>>>>> diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
+>>>>> new file mode 100644
+>>>>> index 0000000..787bc8f
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/clk/ti/divider.c
+>
+> [...]
+>>>>> +    if (!IS_ERR(clk)) {
+>>>>> +        of_clk_add_provider(node, of_clk_src_simple_get, clk);
+>>>>> +        ret = of_ti_autoidle_setup(node, regmap);
+>>>>
+>>>> if this fails, table will be freed though, we have added provider and
+>>>> registerd table_regmap, no?
+>>>
+>>> Provider and regmap are shared for the whole IP block (CM/PRM whatever.)
+>>> Those are only initialized once.
+>>
+>> Some minor confusion here in my comment, sorry about that.
+>>
+>> Regmap is shared for the whole IP block and initialized only once, we
+>> can't remove it here as it is not owned by this clock. For
+>> clock-provider / unregister part, I don't want to clean those up as 1)
+>> unregister doesn't currently do anything 2) autoidle setup is not
+>> critical failure, it just breaks PM. I can add error print for it though.
+>
+> Would IP blocks driven by clocks work with the autoidle configuration
+> broken? I believe we will be writing to DPLL_XYZ_GATE_CTRL? the usage
+> I believe is around
+> of_ti_clk_deny_autoidle_all/of_ti_clk_allow_autoidle_all which gets
+> invoked in omap2_clk_disable_autoidle_all part of xyz SoC init call.
+> is'nt the reason we do that to ensure we have no potential race when
+> clocks dissapear on their own without explicit control in critical
+> configuration paths?
 
-Imo this needs to die asap, i.e. before it lands in drm-next. I've just
-spent a bit of time trying to rid ourselves of this midlayer
-brain-damange, and now new stuff crops up. See
+They will work, but they just don't transition to low-power mode ever.
 
-http://cgit.freedesktop.org/~danvet/drm/log/?h=drm-init-cleanup
+-Tero
 
-drm_bus is a terribly midlayer madness disaster and needs to just burn
-down. So what exactly is the reason here to not go with the drm_platform.c
-stuff until I've gotten around to completely rip it all out?
-
-Adding Dave.
-
-Cheers, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
