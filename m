@@ -1,60 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv7][ 1/4] Input: tsc2007: Add device tree support.
-Date: Mon, 4 Nov 2013 13:01:59 +0100
-Message-ID: <CACRpkdbuB6g+Qo0FCXaueKpAvT6vUKuNmoceWCGfG0KLa8+3Aw@mail.gmail.com>
-References: <1382618536-25320-1-git-send-email-denis@eukrea.com>
-	<20131024151736.GE9044@ulmo.nvidia.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv9][ 4/6] pinctrl: pinctrl-imx: add imx25 pinctrl driver
+Date: Mon, 4 Nov 2013 13:12:40 +0100
+Message-ID: <CACRpkdbKzFFSmC9sE8o+L=HBQ9E-p=Aw7i2e5nNsRHTEt4JFNw@mail.gmail.com>
+References: <1383210928-18906-1-git-send-email-denis@eukrea.com>
+	<1383210928-18906-4-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20131024151736.GE9044@ulmo.nvidia.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Denis Carikli <denis@eukrea.com>, Rob Herring <rob.herring@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>, =?ISO-8859-1?Q?Eric_B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux Input <linux-input@vger.kernel.org>, =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW@karo-electronics.de>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383210928-18906-4-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?Eric_B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2013 at 5:17 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Thu, Oct 24, 2013 at 02:42:13PM +0200, Denis Carikli wrote:
+On Thu, Oct 31, 2013 at 10:15 AM, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org> wrot=
+e:
 
->> +Optional properties:
->> +- gpios: the interrupt gpio the chip is connected to (trough the penirq pin)
->> +  (see GPIO binding[2] for more details).
->> +- interrupt-parent: the phandle for the gpio controller
->> +  (see interrupt binding[1]).
->> +- interrupts: (gpio) interrupt to which the chip is connected
->> +  (see interrupt binding[1]).
->> +- pinctrl-0: Should specify pin control groups used for the gpio
->> +  (see pinctrl bindings[0]).
->> +- pinctrl-names: Should contain only one value - "default"
->> +  (see pinctrl bindings[0]).
+> This is mostly cut and paste from the imx35 pinctrl driver.
+> The data was generated using sed and awk on
+>   arch/arm/plat-mxc/include/mach/iomux-mx25.h.
 >
-> Also I haven't seen a response as to why this can't be handled by the
-> GPIO driver. Adding Linus Walleij, perhaps he knows a more definitive
-> answer.
->
-> Linus, the issue here is that the pinctrl properties for this chip are
-> supposed to pinmux the pendown GPIO for this chip. I was under the
-> impression that this should be handled by the GPIO controller itself, so
-> that when gpio_request() was called on a pin it would be the GPIO
-> controller driver's responsibility to pinmux it appropriately.
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> ---
+> ChangeLog v8->v9:
+> - Whitespace cleanup betwen the CC: and Signed-off-by.
+> - Kconfig: rebased to make it apply on the new HEAD.
 
-If this is the only thing it does (just mux in the GPIO and not setting
-any pulls or other pin config properties) then it can fall through from
-the GPIO controller's request function to pinctrl_request_gpio()
-and then pinctrl_free_gpio(), pinctrl_gpio_direction_input()
-and pinctrl_gpio_direction_output() respectively so that pin control
-provides a muxing back end to the GPIO driver.
+This will be for the next kernel cycle.
 
-Actually these functions are up to the driver to implement, but
-the core will call ->gpio_request_enable() on the pinctrl driver,
-and if all GPIOs are set up the same way (i.e. the same bits
-are always poked into the hardware) then this can be done
-in that routine.
-
-If more fine-grained control is needed, this approach providing
-a full pin control handle and state settings connected to the
-struct device * can and should be used instead.
+I want to see a review from the maintainers first ...
+and Markus, can you look at this too?
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
