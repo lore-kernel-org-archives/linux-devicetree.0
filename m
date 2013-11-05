@@ -1,172 +1,52 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] gpio: davinci: add OF support
-Date: Tue, 5 Nov 2013 18:59:27 +0200
-Message-ID: <527923EF.4070602@ti.com>
-References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
-	<1383406775-14902-5-git-send-email-prabhakar.csenng@gmail.com>
-	<5277E752.8090005@ti.com>
-	<CA+V-a8uV0g36LoQtxFjR56SaMxj7KOE2ztC+pfT_Pn1wGcqEmw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <CA+V-a8uV0g36LoQtxFjR56SaMxj7KOE2ztC+pfT_Pn1wGcqEmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dlos <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: undocumented compatible strings
+Date: Tue, 5 Nov 2013 11:09:36 -0600
+Message-ID: <0198783C-A824-4165-871C-9FDCFBCF04AA@codeaurora.org>
+References: <527838F0.2000803@gmail.com> <CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA@mail.gmail.com> <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2013 10:53 AM, Prabhakar Lad wrote:> Hi Grygorii,
- >
- > Thanks for the review.
- >
- > On Mon, Nov 4, 2013 at 11:58 PM, Grygorii Strashko
- > <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
- >> Hi Prabhakar Lad,
- >>
- >>
- >> On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
- >>>
- >>> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
- >>>
- >>> This patch adds OF parser support for davinci gpio
- >>> driver and also appropriate documentation in gpio-davinci.txt
- >>> located at Documentation/devicetree/bindings/gpio/.
- >>
- >>
- >> I worry, do we need to have gpio_chip.of_xlate() callback implemented?
- >
- > I looked for the other OF GPIO implementations with same "ngpio"
- > property (marvel, msm) but I don=92t see of_xlate() callback implemented.
 
-The question: will below definitions in DT work or not after this series?
-  Will of_get_gpio()/of_get_named_gpio() work?
+On Nov 5, 2013, at 7:59 AM, Rob Herring wrote:
 
-Example1 - leds:
-	leds {
-		compatible =3D "gpio-leds";
-		debug0 {
-			label =3D "green:debug0";
-			gpios =3D <&gpio 29 GPIO_ACTIVE_HIGH>;
-		};
-	};
-
-Example2 - any dev:
-devA {
-	compatible =3D "devA";
-	gpios =3D <&gpio 120 GPIO_ACTIVE_LOW>;
-}
+> On Mon, Nov 4, 2013 at 10:01 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> On Mon, Nov 4, 2013 at 4:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> 
+>>> Undocumented compatible strings in kernel sources:
+>>> 1682m-rng
+>>> electra-cf
+>>> electra-ide
+>>> pasemi,localbus
+>>> pasemi,localbus-nand
+>>> pasemi,pwrficient-rng
+>>> pasemi,sdc
+>> 
+>> These will never be documented in the same way as flat device tree,
+>> just as the IBM and Sparc bindings won't be.
+> 
+> Yes, I know. As well as FSL PPC...
+> 
+> We may need some way to filter these out from whatever checker we come
+> up with. I was debating whether to add an undocumented, grandfathered
+> bindings document to capture these.
 
 
- >
- >> - From one side, Davinci GPIO controller in DT described by one entry
- >> which defines number of supported GPIOs as "ti,ngpio =3D <144>;"
- >>
- >> - From other side, on Linux level more than one gpio_chip objects are
- >> instantiated (one per each 32 GPIO).
- >>
- >> How the standard GPIO biding will work in this case? .. And will they?
- >>
- >> Linus, I'd very appreciate if you will be able to clarify this point.
- >>
- >>
- >>>
- >>> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
- >>> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
- >>> [prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: simplified the OF code, removed
- >>>                  unnecessary DT property and also simplified
- >>>                  the commit message]
- >>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- >>> ---
- >>>    .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 =
+The FSL PPC should have bindings, there are some cases that we put in things with simple nodes that had a compat, a reg, and maybe an irq w/o having a full binding.
 
-++++++++++++
- >>>    drivers/gpio/gpio-davinci.c                        |   54
- >>> ++++++++++++++++++--
- >>>    2 files changed, 83 insertions(+), 3 deletions(-)
- >>>    create mode 100644
- >>> Documentation/devicetree/bindings/gpio/gpio-davinci.txt
- >>>
- >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
- >>> b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
- >>> new file mode 100644
- >>> index 0000000..55aae1c
- >>> --- /dev/null
- >>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
- >>> @@ -0,0 +1,32 @@
- >>> +Davinci GPIO controller bindings29
- >>> +
- >>> +Required Properties:
- >>> +- compatible: should be "ti,dm6441-gpio"
- >>> +
- >>> +- reg: Physical base address of the controller and the size of memory
- >>> mapped
- >>> +       registers.
- >>> +
- >>> +- gpio-controller : Marks the device node as a gpio controller.
- >>> +
- >>> +- interrupts: Array of GPIO interrupt number.
- >>
- >>
- >> May be meaning of <interrupts> property need to be extended, because,
- >> as of now, only banked or unbanked IRQs are supported - and not both.
- >>
- >>
- > OK
- >
- >>> +
- >>> +- ti,ngpio: The number of GPIO pins supported.
- >>> +
- >>> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an =
+- k
 
-individual
- >>> interrupt
- >>> +                            line to processor.
- >>
- >>
- >> Should interrupt-controller; specifier be added here?
- >>
- > No
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-So, it would be impossible to map GPIO IRQ to device through DT. Right?
-Like:
-	devX@0 {
-		compatible =3D "devX";
-		interrupt-parent =3D <&gpio>;
-		interrupts =3D <50 IRQ_TYPE_EDGE_FALLING>; /* gpio line 50 */
-
-	};
-
-
- >
- >>
- >>> +
- >>> +Example:
- >>> +
- >>> +gpio: gpio@1e26000 {
- >>> +       compatible =3D "ti,dm6441-gpio";
- >>> +       gpio-controller;
- >>> +       reg =3D <0x226000 0x1000>;
- >>> +       interrupts =3D <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
- >>> +               44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
- >>> +               46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
- >>> +               48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
- >>> +               50 IRQ_TYPE_EDGE_BOTH>;
- >>> +       ti,ngpio =3D <144>;
- >>> +       ti,davinci-gpio-irq-base =3D <101>;
- >>
- >>
- >>          ^^ Is it still needed?
- >>
- > OOps missed to remove that.
- >
-Regards,
--grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
