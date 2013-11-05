@@ -1,97 +1,54 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's
- minimum required ECC
-Date: Tue, 5 Nov 2013 14:19:49 +0800
-Message-ID: <52788E05.6070907@freescale.com>
-References: <1382929517-22606-1-git-send-email-b32955@freescale.com>
+From: Li Xiubo <B47053@freescale.com>
+Subject: Re: [PATCHv2 6/8] ASoC: fsl: add SGTL5000 based audio
+ machine driver.
+Date: Tue, 5 Nov 2013 06:17:32 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F8287564A@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-7-git-send-email-Li.Xiubo@freescale.com>
+ <20131101102805.GG28401@MrMyself>
+ <20131101120700.GE10324@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382929517-22606-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131101120700.GE10324@S2101-09.ap.freescale.net>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>, Guangyu Chen <B42378@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <bro>
 List-Id: devicetree@vger.kernel.org
 
-=D3=DA 2013=C4=EA10=D4=C228=C8=D5 11:05, Huang Shijie =D0=B4=B5=C0:
-> In default way, we use the ecc_strength/ecc_step size calculated by o=
-urselves
-> and use all the OOB area.
->
-> This patch adds a new property : "fsl,use-minimum-ecc"
->
-> If we enable it, we will firstly try to use the datasheet's minimum r=
-equired
-> ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-> in the nand_chip{}). So we may have free space in the OOB area by usi=
-ng the
-> minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Mi=
-cron's
-> SLC NAND.
->
-> If we fail to use the minimum ECC, we will use the legacy method to c=
-alculate
-> the ecc_strength and ecc_step size.
->
-> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v1 --> v2:
-> 	based on David's patch to fix the regression.
-> ---
->  .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
->  2 files changed, 9 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Do=
-cumentation/devicetree/bindings/mtd/gpmi-nand.txt
-> index 551b2a1..4297795 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  Optional properties:
->    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
->                         present false
-> +  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi=
- will try
-> +                       to use the datasheet's minimum required ECC p=
-rovided by
-> +                       the MTD layer (the ecc_strength_ds/ecc_step_d=
-s fields
-> +                       in the nand_chip{}). So we may have free spac=
-e in the OOB
-> +                       area by using the minimum ECC, and we may sup=
-port JFFS2
-> +                       with some SLC NANDs, such as Micron's SLC NAN=
-D.
-> =20
->  The device tree may optionally contain sub-nodes describing partitio=
-ns of the
->  address space. See partition.txt for more detail.
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nan=
-d/gpmi-nand/gpmi-nand.c
-> index 7ac2280..3ec55d0 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> @@ -352,6 +352,9 @@ static int legacy_set_geometry(struct gpmi_nand_d=
-ata *this)
-> =20
->  int common_nfc_set_geometry(struct gpmi_nand_data *this)
->  {
-> +	if (of_property_read_bool(this->dev->of_node, "fsl,use-minimum-ecc"=
-)
-> +		&& set_geometry_by_ecc_info(this))
-> +		return 0;
->  	return legacy_set_geometry(this);
->  }
-> =20
-any comment about this patch?
 
-thanks
-Huang Shijie
+> > >  sound/soc/fsl/fsl-sgtl5000-vf610.c | 208
+> > > +++++++++++++++++++++++++++++++++++++
+> >
+> > I just doubt if this file naming is appropriate. Even if we might not
+> > have rigor rule for the file names, according to existing ones, they
+> > are all in a same pattern: [SoC name]-[codec name].c
+> >
+> > "imx-sgtl5000.c" for example
+> >
+> > I think it would make user less confused about what this file exactly
+> > is if this machine driver also follow the pattern: vf610-sgtl5000.c
+> >
+> >
+> > @Shawn
+> >
+> > What do you think about the file name?
+> 
+> Yeah, it would be better to name the file following the existing the
+> pattern.
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please see the next version.
+
+Best Regards,
+Xiubo
