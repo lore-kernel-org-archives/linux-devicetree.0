@@ -1,73 +1,63 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Tue, 5 Nov 2013 13:36:59 -0700
-Message-ID: <20131105203659.GA26576@obsidianresearch.com>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <201311052034.01114.arnd@arndb.de>
- <20131105195820.GB20600@obsidianresearch.com>
- <201311052117.33443.arnd@arndb.de>
+From: =?ISO-8859-2?Q?Micha=B3_Miros=B3aw?= <mirqus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 08/11] usb: phy-mxs: Enable IC fixes for related SoCs
+Date: Tue, 5 Nov 2013 22:02:35 +0100
+Message-ID: <CAHXqBFKTTY8vxs9BzK1xQAa7HeRLSBucsxb4wkLejLWmCnckaA@mail.gmail.com>
+References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com> <1383616183-10511-9-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201311052117.33443.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1383616183-10511-9-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 09:17:32PM +0100, Arnd Bergmann wrote:
-> Creating a platform_device (or a plain device, for that matter)
-> from a proper probe() function would have a similar effect from
-> the perspective of the TPM subsystem (or other subsystems using
+2013/11/5 Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
+> Some PHY bugs are fixed by IC logic, but these bits are not
+> enabled by default, so we enable them at driver.
+>
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c |   32 ++++++++++++++++++++++++++++++-=
+-
+>  1 files changed, 30 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-=
+usb.c
+> index c794011..b7e1744 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -31,6 +31,10 @@
+>  #define HW_USBPHY_CTRL_SET                     0x34
+>  #define HW_USBPHY_CTRL_CLR                     0x38
+>
+> +#define HW_USBPHY_IP                           0x90
+> +#define HW_USBPHY_IP_SET                       0x94
+> +#define HW_USBPHY_IP_CLR                       0x98
+> +
+>  #define BM_USBPHY_CTRL_SFTRST                  BIT(31)
+>  #define BM_USBPHY_CTRL_CLKGATE                 BIT(30)
+>  #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS       BIT(26)
+> @@ -60,6 +64,18 @@
+>   */
+>  #define MXS_PHY_SENDING_SOF_TOO_FAST           BIT(2)
+>
+> +/*
+> + * IC fix for MXS_PHY_ABNORAML_IN_SUSPEND, bit 17 is the effective b=
+it
+> + * in HW_USBPHY_IP.
+> + */
+> +#define MXS_PHY_FIX_ABNORAML_IN_SUSPEND                BIT(17)
+[...]
 
-I'd rather see the core get fixed than more muck in the drivers,
-especially since things are going in that direction :)
+s/ABNORAML/ABNORMAL/ ?
 
-> Yes. Note that the use of new 'class'es is not recommended any more,
-> nowadays we are supposed to use 'bus_type' for this, which is
-> traditionally something slightly different, but technically almost
-> the same implementation-wise.
-
-Thanks, I will look into that!
- 
-> That depends: the requirement is that no user space breaks after
-> a change. I assume that there is a fairly limited set of packages
-> accessing the tpm sysfs files. If all of them are written properly,
-> they should be able to deal with looking at the files in a different
-> place in sysfs.
-
-The other issue is that none of the sysfs files are even close to
-following the one value per file rule, they are all wrong. I actually
-think that nothing in userspace ever uses them and they were only ever
-done for debugfs-like purposes.
-
-My dark hope is to move them all to debugfs and entirely out of
-sysfs.. But I think it will be through a CONFIG_TPM_SYSFS_COMPAT=y +
-printk_once("Stop using these sysfs attributes!") kind of scheme.
- 
-> Another option is to change the TPM core sysfs attributes not to
-> look at drvdata, but to use devres_find() to find the data they
-> need.
-
-Ooh, that looks like it could work well, I will keep that in mind!
-
-So there is a path forward, it is just long :)
-
-BTW, in the final form TPM will require a 2 stage init much like net,
-the sequence will be:
- - Allocate the core and driver memory and resources
- - Setup the driver fully
- - Perform TPM commands on the fully active driver to setup the
-   TPM itself
- - Register the TPM with the system
-
-Just remarking,I don't see a problem with this and your devm_probe
-plan.
-
-Thanks
-Jason
+Best Regards,
+Micha=C5=82 Miros=C5=82aw
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
