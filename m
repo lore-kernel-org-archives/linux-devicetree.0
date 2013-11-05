@@ -1,55 +1,60 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 11/11] usb: phy-mxs: Add system suspend/resume API
-Date: Tue, 5 Nov 2013 12:04:14 +0800
-Message-ID: <20131105040412.GM19770@S2101-09.ap.freescale.net>
-References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
- <1383616183-10511-12-git-send-email-peter.chen@freescale.com>
- <20131105030513.GI19770@S2101-09.ap.freescale.net>
- <20131105025916.GD13472@shlinux1.ap.freescale.net>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
+Date: Tue, 5 Nov 2013 09:51:47 +0530
+Message-ID: <CALt3h78rZou7i4riQ=-aMnO4e0bsV22C7MNWDSt-UukpKsj1Zg@mail.gmail.com>
+References: <5261967E.6010001@samsung.com>
+	<20131028201136.6f66d3f7@samsung.com>
+	<526EFC06.70101@gmail.com>
+	<20131029105426.0969741c.m.chehab@samsung.com>
+	<5270503C.8070200@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131105025916.GD13472@shlinux1.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <5270503C.8070200@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 10:59:17AM +0800, Peter Chen wrote:
-> > > @@ -83,6 +90,15 @@
-> > >   */
-> > >  #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
-> > >  
-> > > +/* imx23 style PHY */
-> > > +#define MXS_PHY_IMX23				BIT(3)
-> > > +
-> > > +/* imx6q style PHY */
-> > > +#define MXS_PHY_IMX6Q				BIT(4)
-> > > +
-> > > +/* imx6sl style PHY */
-> > > +#define MXS_PHY_IMX6SL				BIT(5)
-> > > +
-> > 
-> > We will not need these, if we do what I suggested to carry a pointer
-> > to mxs_phy_data in mxs_phy.
-> > 
-> > struct mxs_phy {
-> > 	...
-> > 	struct mxs_phy_data *data;
-> > };
-> > 
-> > The check then can be done like below.
-> > 
-> > static inline int is_imx6q_phy(struct mxs_phy *mxs_phy)
-> > {
-> >         return mxs_phy->data == &imx6q_phy_data;
-> > }
-> > 
-> 
-> What's the benefit compared to current one?
+Hi Sylwester,
 
-Save those pointless flags.
+Sorry for the delayed response as I was on leave.
+I will address the comments from Mark today itself and post those DT
+binding patches.
 
-Shawn
+Regards
+Arun
 
+On Wed, Oct 30, 2013 at 5:48 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> On 10/29/2013 01:54 PM, Mauro Carvalho Chehab wrote:
+> [...]
+>
+>> Yeah, it seems that we've waited for a long time to get an ack there.
+>>
+>> So, let's do this:
+>>
+>> Please send a new version with Mark's comments. Also, please split Doc
+>> changes from the code changes on the new series. I'll wait for a couple
+>> days for DT people to review it. If we don't have any reply, I'll review
+>> and apply it for Kernel 3.13, if I don't see anything really weird on it.
+>
+>
+> Ok, I will make sure all DT binding documentation is in separate patches,
+> actually only one patch needs to be reworked.
+>
+> Since Mark already reviewed the FIMC-IS and the S5K4E5 image sensor DT
+> binding patches the only one which may need further review is this one:
+> https://patchwork.linuxtv.org/patch/20237
+>
+> Arun, could you send us the updated series ? Unfortunately I might not be
+> able to find time to address those comments myself until Friday.
+>
+> --
+> Thanks,
+> Sylwester
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
