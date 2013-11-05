@@ -1,81 +1,78 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the
- datasheet's minimum required ECC
-Date: Tue, 5 Nov 2013 12:07:29 -0800
-Message-ID: <20131105200729.GT20061@ld-irv-0074.broadcom.com>
-References: <1382929517-22606-1-git-send-email-b32955@freescale.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH V2 1/3] thermal: bcm281xx: Add Temperature Monitor driver
+Date: Tue, 05 Nov 2013 12:15:29 -0800
+Message-ID: <1383682529.4387.37.camel@joe-AO722>
+References: <1383681284-17643-1-git-send-email-wendy.ng@broadcom.com>
+	 <1383681284-17643-2-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1382929517-22606-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383681284-17643-2-git-send-email-wendy.ng@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wendy Ng <wendy.ng@broadcom.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eduardo Valentin <eduardo.valentin@ti.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 11:05:17AM +0800, Huang Shijie wrote:
-> In default way, we use the ecc_strength/ecc_step size calculated by ourselves
-> and use all the OOB area.
-> 
-> This patch adds a new property : "fsl,use-minimum-ecc"
-> 
-> If we enable it, we will firstly try to use the datasheet's minimum required
-> ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-> in the nand_chip{}). So we may have free space in the OOB area by using the
-> minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
-> SLC NAND.
-> 
-> If we fail to use the minimum ECC, we will use the legacy method to calculate
-> the ecc_strength and ecc_step size.
-> 
-> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v1 --> v2:
-> 	based on David's patch to fix the regression.
-> ---
->  .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
->  2 files changed, 9 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> index 551b2a1..4297795 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  Optional properties:
->    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
->                         present false
-> +  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
-> +                       to use the datasheet's minimum required ECC provided by
-> +                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-> +                       in the nand_chip{}). So we may have free space in the OOB
-> +                       area by using the minimum ECC, and we may support JFFS2
-> +                       with some SLC NANDs, such as Micron's SLC NAND.
+On Tue, 2013-11-05 at 11:54 -0800, Wendy Ng wrote:
+> This adds the support for Temperature Monitor (TMON) driver for
+> Broadcom bcm281xx SoCs. This driver plugs into the Thermal Framework.
 
-This description still uses Linux-isms/MTD-isms (ecc_strength_ds,
-ecc_step_ds, nand_chip{}, JFFS2). I would personally write this as
-something like the following:
+trivia:
 
-  - fsl,use-minimum-ecc: Protect this NAND flash with the minimum ECC
-			 strength required. The required ECC strength is
-			 automatically discoverable for some flash
-			 (e.g., according to the ONFI standard).
-			 However, note that if this strength is not
-			 discoverable, the software may choose an
-			 implementation-defined ECC scheme.
+> diff --git a/drivers/thermal/bcm_kona_tmon.c b/drivers/thermal/bcm_kona_tmon.c
 
-Is that enough weaseling? Any comments from the DT folks, or shall we
-simply take this binding without review?
+Please add
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+before any #include to prefix the pr_<level> dmesg output.
 
->  
->  The device tree may optionally contain sub-nodes describing partitions of the
->  address space. See partition.txt for more detail.
+If you _really_ want __func__ with each output, you could use
+#define pr_fmt(fmt) KBUILD_MODNAME ":%s: " fmt, __func__
+though I think __func__ isn't particularly useful.
 
-...
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+[]
+> +static int bcm_get_temp(void *sensor_data, long *temp)
+> +{
+> +	u32 raw;
+> +	long mcelsius;
+> +	struct bcm_tmon_data_priv *priv = sensor_data;
+> +
+> +	if (!priv) {
+> +		pr_err("%s: input sensor_data not initialized.\n", __func__);
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+then this could become
+		pr_err("input sensor_data not initialized\n");
+
+Also, there's no real need to terminate messages with sentence
+ending ".".  dmesg output generally isn't a sentence.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	raw = (readl(priv->base + TMON_TEMP_VAL_OFFSET)
+> +		& TMON_TEMP_VAL_TEMP_VAL_MASK) >> TMON_TEMP_VAL_TEMP_VAL_SHIFT;
+> +
+> +	pr_debug("%s: raw temp 0x%x\n", __func__, raw);
+
+also consider:
+
+	pr_debug("raw temp: %#x\n", raw);
+
+
+> +static int bcm_kona_tmon_probe(struct platform_device *pdev)
+> +{
+[]
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		dev_err(&pdev->dev, "Failed to malloc priv.\n");
+> +		return -ENOMEM;
+> +	}
+
+Generic OOM messages are already emitted by devm_kzalloc.
+This could be written as:
+
+	priv = devm_kzalloc(etc...)
+	if (!priv)
+		return -ENOMEM;
