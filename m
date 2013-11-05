@@ -1,123 +1,79 @@
-From: "Wendy Ng" <wendy.ng@broadcom.com>
-Subject: [PATCH V2 3/3] ARM: dts: Add TMON driver support to bcm281xx
-Date: Tue, 5 Nov 2013 11:54:44 -0800
-Message-ID: <1383681284-17643-4-git-send-email-wendy.ng@broadcom.com>
-References: <1383681284-17643-1-git-send-email-wendy.ng@broadcom.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Tue, 5 Nov 2013 12:58:20 -0700
+Message-ID: <20131105195820.GB20600@obsidianresearch.com>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <201311051948.11992.arnd@arndb.de>
+ <20131105191230.GA20600@obsidianresearch.com>
+ <201311052034.01114.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383681284-17643-1-git-send-email-wendy.ng@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eduardo Valentin <eduardo.valentin@ti.com>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Wendy Ng <wendy.ng@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201311052034.01114.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the support of Temperature Monitor (TMON) driver for
-Broadcom bcm281xx SoCs to the DT node. This also adds the
-thermal framework device-tree binding such that TMON driver
-can be used within the thermal framework.
+On Tue, Nov 05, 2013 at 08:34:00PM +0100, Arnd Bergmann wrote:
+> On Tuesday 05 November 2013, Jason Gunthorpe wrote:
+> > The issue is sysfs, the TPM core attaches attributes to the driver's
+> > struct device, which means it has to convert from struct device * to
+> > its own private data. It is totally wrong, but that is the way
+> > it has been for ever. :(
+> 
+> I've just had a very brief look at that subsystem, and the first driver
+> I looked at (tpm_atmel) actually creates a child platform_device for
+> the sole purpose of registering that with the tpm subsystem, which seems
+> to avoid this problem. 
 
-Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
-Reviewed-by: Markus Mayer <mmayer@broadcom.com>
-Reviewed-by: Christian Daudt <csd@broadcom.com>
-Reviewed-by: Matt Porter <matt.porter@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
-Acked-by: Kumar Gala <galak@codeaurora.org>
----
- arch/arm/boot/dts/bcm11351-brt.dts |    4 ++++
- arch/arm/boot/dts/bcm11351.dtsi    |   29 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm28155-ap.dts  |    4 ++++
- 3 files changed, 37 insertions(+)
+The TPM subsystem requires a struct device to bind onto (for sysfs at
+least), so drivers that don't have one are required to create one :|
 
-diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
-index 5a269c7..c24fd12 100644
---- a/arch/arm/boot/dts/bcm11351-brt.dts
-+++ b/arch/arm/boot/dts/bcm11351-brt.dts
-@@ -43,6 +43,10 @@
- 		status = "okay";
- 	};
- 
-+	tmon: tmon@34008000 {
-+		status = "okay";
-+	};
-+
- 	usbotg@3f120000 {
- 		status = "okay";
- 	};
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 29987e2..0f17beb 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -13,6 +13,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -25,6 +26,24 @@
- 		bootargs = "console=ttyS0,115200n8";
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu_thermal {
-+			polling-delay-passive = <250>; /* msec */
-+			polling-delay = <1000>; /* msec */
-+
-+					   /* sensor */
-+			thermal-sensors = <&tmon>;
-+
-+			trips {
-+				cpu_crit: cpu_crit {
-+				        temperature = <105000>; /* mCelsius */
-+				        hysteresis = <2000>; /* mCelsius */
-+				        type = THERMAL_TRIP_CRITICAL;
-+				};
-+			};
-+		};
-+	};
-+
- 	gic: interrupt-controller@3ff00100 {
- 		compatible = "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
-@@ -285,6 +304,15 @@
- 		};
- 	};
- 
-+	tmon: tmon@34008000 {
-+		compatible = "brcm,bcm11351-tmon", "brcm,kona-tmon";
-+		reg = <0x34008000 0x0024>;
-+		clocks = <&tmon_1m_clk>;
-+		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-+		#thermal-sensor-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	usbotg: usbotg@3f120000 {
- 		compatible = "snps,dwc2";
- 		reg = <0x3f120000 0x10000>;
-@@ -305,4 +333,5 @@
- 		compatible = "brcm,kona-usb2";
- 		status = "disabled";
- 	};
-+
- };
-diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
-index 02ebaaf..7151c25 100644
---- a/arch/arm/boot/dts/bcm28155-ap.dts
-+++ b/arch/arm/boot/dts/bcm28155-ap.dts
-@@ -63,6 +63,10 @@
- 		status = "okay";
- 	};
- 
-+	tmon: tmon@34008000 {
-+		status = "okay";
-+	};
-+
- 	usbotg@3f120000 {
- 		status = "okay";
- 	};
--- 
-1.7.9.5
+atmel is unusual as most drivers have a pre-existing device.
+
+> Maybe the same can be done for the other drivers as
+> well. Unfortunately, that will change the sysfs structure, which
+> might break user space relying on the current path to the
+> device. 
+
+AFAIK the correct fix is to have the TPM subsystem core create a
+struct device for its own use (eg tpm0), under its own class, which is
+what other subsystems I looked at do. This way the subsystem can have
+access to a release function that is properly tied to the actual
+object lifetime, and it can use container_of to retrieve its own
+private data from, eg sysfs. Combined with get_ops/put_ops style
+access I think you can solve the unload lifetime issues with sysfs..
+
+However, even if all that is done, compatibility sysfs's under the
+driver's struct device will still be needed, which AFAICT will still
+require the drvdata be owned by the subsystem not the driver :(
+
+> The TPM subsystem definely seems a bit unusual in this regard, so I
+> hope not too many other parts of the kernel have this particular
+> problem.
+
+It is just old, it was never updated to modern standards, hopefully that
+is rare :|
+
+> (side note: another unusual aspect of the TPM subsystem is the use of a
+>  custom 'release' function override. Seems harmless, but very weird).	
+
+Near as I can tell that is a hack that was put in to avoid panics
+around unload lifetime issues - it doesn't solve any problems, just
+makes them less common..
+
+This is why I looked so closely at devm, I thought 'lets just remove
+that release function hack and use devm', but they are not
+equivalent. :)
+
+Thanks for looking at this, a good chunk of the first round of
+my cleanups will hit 3.13, next on the list are these problems.
+https://lkml.org/lkml/2013/9/23/444
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
