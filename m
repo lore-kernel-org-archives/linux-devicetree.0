@@ -1,314 +1,106 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v3 8/9] ARM: add Armada 1500-mini and Chromecast device tree files
-Date: Tue,  5 Nov 2013 15:28:42 +0100
-Message-ID: <1383661723-17956-9-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v3 0/9] ARM: Initial support for Marvell Berlin SoCs
+Date: Tue,  5 Nov 2013 15:28:34 +0100
+Message-ID: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds very basic device tree files for the Marvell Armada
-1500-mini SoC (Berlin BG2CD) and the Google Chromecast. Currently,
-SoC only has nodes for cpu, some clocks, l2 cache controller, local
-timer, apb timers, uart, and interrupt controllers.
-The Google Chromecast is a consumer device comprising the Armada
-1500-mini SoC above.
+Another kernel release, another Berlin SoC patch set...
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+This patch set add initial support for Marvell Berlin SoCs, e.g.
+Armada 1000, Armada 1500, Armada 1500-mini.
+
+Currently, initial support just means that the kernel boots on one
+CPU, sets up irq, timers, and UART. As Berlin SoCs share some amount
+of IP with Marvell PXA/MMP[23] SoCs plus some Synopsys DW IP, I expect
+functionality to grow quite quickly. I do have further patches for
+SMP but do not want to stall this patch set even further.
+
+Compared to last version sent, this patch set adds additional support
+for the Armada 1500-mini and the Google Chromecast. It is based on
+v3.12 and still depends on on ARM's arch-wide call to of_clk_init [3]
+plus some fixes for Synopsys DWtimers [4]. 
+
+This patch set is indended for v3.13. I hope to the last Acks required
+from Thomas Gleixner and the DT maintainers, rebase on v3.13-rc1 and
+send the pull request.
+
+I also prepared a branch for those able to test with open boot loader
+on GoogleTV or Chromecast at
+https://github.com/shesselba/linux-berlin.git topic/initial
+
+[1] https://lkml.org/lkml/2013/8/16/626
+[2] https://lkml.org/lkml/2013/8/27/608
+[3] http://www.spinics.net/lists/arm-kernel/msg276175.html
+[4] http://www.spinics.net/lists/arm-kernel/msg277763.html
+
+Sebastian Hesselbarth (9):
+  irqchip: add DesignWare APB ICTL interrupt controller
+  MAINTAINERS: add ARM Marvell Berlin SoC
+  ARM: l2x0: add Marvell Tauros3 support
+  ARM: add Marvell Berlin SoC familiy to Marvell doc
+  ARM: add Marvell Berlin SoCs to multi_v7_defconfig
+  ARM: add Marvell Berlin UART0 lowlevel debug
+  ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
+  ARM: add Armada 1500-mini and Chromecast device tree files
+  ARM: add initial support for Marvell Berlin SoCs
+
+ Documentation/arm/Marvell/README                   |   29 +++
+ Documentation/devicetree/bindings/arm/l2cc.txt     |   23 +-
+ .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
+ .../interrupt-controller/snps,dw-apb-ictl.txt      |   32 +++
+ MAINTAINERS                                        |    6 +
+ arch/arm/Kconfig                                   |    2 +
+ arch/arm/Kconfig.debug                             |   10 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
+ arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |   29 +++
+ arch/arm/boot/dts/berlin2cd.dtsi                   |  212 ++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig                |    3 +
+ arch/arm/include/asm/hardware/cache-l2x0.h         |    1 +
+ arch/arm/mach-berlin/Kconfig                       |   30 +++
+ arch/arm/mach-berlin/Makefile                      |    1 +
+ arch/arm/mach-berlin/berlin.c                      |   39 ++++
+ arch/arm/mm/cache-l2x0.c                           |   49 ++++-
+ arch/arm/mm/cache-tauros3.h                        |   41 ++++
+ drivers/irqchip/Kconfig                            |    4 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-dw-apb-ictl.c                  |  150 +++++++++++++
+ 23 files changed, 927 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+ create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+ create mode 100644 arch/arm/boot/dts/berlin2.dtsi
+ create mode 100644 arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+ create mode 100644 arch/arm/boot/dts/berlin2cd.dtsi
+ create mode 100644 arch/arm/mach-berlin/Kconfig
+ create mode 100644 arch/arm/mach-berlin/Makefile
+ create mode 100644 arch/arm/mach-berlin/berlin.c
+ create mode 100644 arch/arm/mm/cache-tauros3.h
+ create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+
 ---
-Changelog:
-v3:
-- initial patch
-
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rob Landley <rob@landley.net>
 Cc: Rob Herring <rob.herring@calxeda.com>
 Cc: Pawel Moll <pawel.moll@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Stephen Warren <swarren@wwwdotorg.org>
 Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Rob Landley <rob@landley.net>
 Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Kevin Hilman <khilman@kernel.org>
 Cc: devicetree@vger.kernel.org
 Cc: linux-doc@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/Makefile                        |    3 +-
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts |   29 +++
- arch/arm/boot/dts/berlin2cd.dtsi                  |  212 +++++++++++++++++++++
- 3 files changed, 243 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/berlin2cd-google-chromecast.dts
- create mode 100644 arch/arm/boot/dts/berlin2cd.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c9c1a6c..dac733f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -47,7 +47,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
- 	bcm28155-ap.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
--	berlin2-sony-nsz-gs7.dtb
-+	berlin2-sony-nsz-gs7.dtb \
-+	berlin2cd-google-chromecast.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
- dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-new file mode 100644
-index 0000000..bcd81ff
---- /dev/null
-+++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -0,0 +1,29 @@
-+/*
-+ * Device Tree file for Google Chromecast
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+
-+#include "berlin2cd.dtsi"
-+
-+/ {
-+	model = "Google Chromecast";
-+	compatible = "google,chromecast", "marvell,berlin2cd", "marvell,berlin";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x20000000>; /* 512 MB */
-+	};
-+};
-+
-+&uart0 { status = "okay"; };
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
-new file mode 100644
-index 0000000..40d1bed
---- /dev/null
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -0,0 +1,212 @@
-+/*
-+ * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * based on GPL'ed 2.6 kernel sources
-+ *  (c) Marvell International Ltd.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Marvell Armada 1500-mini (BG2CD) SoC";
-+	compatible = "marvell,berlin2cd", "marvell,berlin";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <0>;
-+		};
-+	};
-+
-+	clocks {
-+		smclk: sysmgr-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		cfgclk: cfg-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <75000000>;
-+		};
-+
-+		sysclk: system-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <300000000>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-parent = <&gic>;
-+
-+		ranges = <0 0xf7000000 0x1000000>;
-+
-+		l2: l2-cache-controller@ac0000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0xac0000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+			arm,prefetch-ctrl = <0x70000007>;
-+			arm,pwr-ctrl = <0x3>;
-+		};
-+
-+		gic: interrupt-controller@ad1000 {
-+			compatible = "arm,cortex-a9-gic";
-+			reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		local-timer@ad0600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0xad0600 0x20>;
-+			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sysclk>;
-+		};
-+
-+		apb@e80000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0xe80000 0x10000>;
-+			interrupt-parent = <&aic>;
-+
-+			timer0: timer@2c00 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c00 0x14>;
-+				interrupts = <8>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "okay";
-+			};
-+
-+			timer1: timer@2c14 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c14 0x14>;
-+				interrupts = <9>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "okay";
-+			};
-+
-+			timer2: timer@2c28 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c28 0x14>;
-+				interrupts = <10>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer3: timer@2c3c {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c3c 0x14>;
-+				interrupts = <11>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer4: timer@2c50 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c50 0x14>;
-+				interrupts = <12>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer5: timer@2c64 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c64 0x14>;
-+				interrupts = <13>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer6: timer@2c78 {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c78 0x14>;
-+				interrupts = <14>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			timer7: timer@2c8c {
-+				compatible = "snps,dw-apb-timer";
-+				reg = <0x2c8c 0x14>;
-+				interrupts = <15>;
-+				clocks = <&cfgclk>;
-+				clock-names = "timer";
-+				status = "disabled";
-+			};
-+
-+			aic: interrupt-controller@3000 {
-+				compatible = "snps,dw-apb-ictl";
-+				reg = <0x3000 0xc00>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		apb@fc0000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0xfc0000 0x10000>;
-+			interrupt-parent = <&sic>;
-+
-+			uart0: serial@9000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0x9000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <8>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@a000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0xa000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <9>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
-+			sic: interrupt-controller@e000 {
-+				compatible = "snps,dw-apb-ictl";
-+				reg = <0xe000 0x400>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+	};
-+};
 -- 
 1.7.10.4
