@@ -1,60 +1,138 @@
 From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [GIT PULL FOR 3.13] Exynos5 SoC FIMC-IS imaging subsystem driver
-Date: Tue, 5 Nov 2013 09:51:47 +0530
-Message-ID: <CALt3h78rZou7i4riQ=-aMnO4e0bsV22C7MNWDSt-UukpKsj1Zg@mail.gmail.com>
-References: <5261967E.6010001@samsung.com>
-	<20131028201136.6f66d3f7@samsung.com>
-	<526EFC06.70101@gmail.com>
-	<20131029105426.0969741c.m.chehab@samsung.com>
-	<5270503C.8070200@gmail.com>
+Subject: Re: [PATCH v10 01/12] exynos5-fimc-is: Add Exynos5 FIMC-IS device
+ tree bindings documentation
+Date: Tue, 5 Nov 2013 11:00:30 +0530
+Message-ID: <CALt3h78pyyKU35k7A=JZkvf2K4-3tSb2n2o2LZKnPef9zqWuNQ@mail.gmail.com>
+References: <1382074659-31130-1-git-send-email-arun.kk@samsung.com>
+	<1382074659-31130-2-git-send-email-arun.kk@samsung.com>
+	<20131028233205.GC4763@kartoffel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5270503C.8070200@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20131028233205.GC4763@kartoffel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "shaik.ameer@samsung.com" <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Mark,
 
-Sorry for the delayed response as I was on leave.
-I will address the comments from Mark today itself and post those DT
-binding patches.
+Thank you for the review.
+Will address your comments.
 
 Regards
 Arun
 
-On Wed, Oct 30, 2013 at 5:48 AM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> On 10/29/2013 01:54 PM, Mauro Carvalho Chehab wrote:
-> [...]
+On Tue, Oct 29, 2013 at 5:02 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> Hi,
 >
->> Yeah, it seems that we've waited for a long time to get an ack there.
+> Apologies for the late reply. I have a few comments, but nothing major.
+>
+> On Fri, Oct 18, 2013 at 06:37:28AM +0100, Arun Kumar K wrote:
+>> The patch adds the DT binding documentation for Samsung
+>> Exynos5 SoC series imaging subsystem (FIMC-IS).
 >>
->> So, let's do this:
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 ++++++++++++++++++++
+>>  1 file changed, 84 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
 >>
->> Please send a new version with Mark's comments. Also, please split Doc
->> changes from the code changes on the new series. I'll wait for a couple
->> days for DT people to review it. If we don't have any reply, I'll review
->> and apply it for Kernel 3.13, if I don't see anything really weird on it.
+>> diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+>> new file mode 100644
+>> index 0000000..0525417
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+>> @@ -0,0 +1,84 @@
+>> +Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
+>> +------------------------------------------------------
+>> +
+>> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
+>> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
+>> +FIMC-LITE IPs but has a much improved version of FIMC-IS which can
+>> +handle sensor controls and camera post-processing operations. The
+>> +Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
+>> +post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
+>> +dedicated scalers (SCC and SCP).
+>> +
+>> +fimc-is node
+>> +------------
+>> +
+>> +Required properties:
+>> +
+>> +- compatible        : must be "samsung,exynos5250-fimc-is"
 >
+> s/must be/should contain/
 >
-> Ok, I will make sure all DT binding documentation is in separate patches,
-> actually only one patch needs to be reworked.
+>> +- reg               : physical base address and size of the memory mapped
+>> +                      registers
+>> +- interrupt-parent  : parent interrupt controller
 >
-> Since Mark already reviewed the FIMC-IS and the S5K4E5 image sensor DT
-> binding patches the only one which may need further review is this one:
-> https://patchwork.linuxtv.org/patch/20237
+> I don't think this is actually required in all cases. It's a standard property
+> that people can add if it happens to be required in a particular instance.
 >
-> Arun, could you send us the updated series ? Unfortunately I might not be
-> able to find time to address those comments myself until Friday.
+>> +- interrupts        : fimc-is interrupt to the parent interrupt controller
 >
-> --
+> Is this the only interrupt the device generates? If so:
+>
+> - interrupts: interrupt-specifier for the fimc-is interrupt.
+>
+>> +- clocks            : list of clock specifiers, corresponding to entries in
+>> +                      clock-names property
+>> +- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
+>> +                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
+>> +                      matching entries in the clocks property
+>> +- samsung,pmu       : phandle to the Power Management Unit (PMU) node
+>> +
+>> +i2c-isp (ISP I2C bus controller) nodes
+>> +--------------------------------------
+>> +The i2c-isp node is defined as the child node of fimc-is.
+>
+> There are multiple of these, so how about the following instead:
+>
+> The i2c-isp nodes should be children of the fimc-is node.
+>
+> It might be worth pointing out that ranges, #address-cells, and #size-cells
+> should be present as appropriate.
+>
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : should be "samsung,exynos4212-i2c-isp" for Exynos4212,
+>> +               Exynos4412 and Exynos5250 SoCs
+>
+> Similarly, s/should be/must contain/
+>
+>> +- reg                : physical base address and length of the registers set
+>> +- clocks     : must contain gate clock specifier for this controller
+>> +- clock-names        : must contain "i2c_isp" entry
+>
+> I'd prefer clocks to be described as for the simc-is, with clock names being
+> something like:
+>
+> - clock-names: should contain "i2c_isp" for the gate clock.
+>
+>> +
+>> +For the i2c-isp node, it is required to specify a pinctrl state named "default",
+>> +according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
+>
+> I'd prefer a mention of pinctrl-0 and pinctrl-names, as that's what most other
+> bindings do.
+>
+> Also, as this is described as required it should be in the example.
+>
+>> +
+>> +Device tree nodes of the image sensors controlled directly by the FIMC-IS
+>> +firmware must be child nodes of their corresponding ISP I2C bus controller node.
+>> +The data link of these image sensors must be specified using the common video
+>> +interfaces bindings, defined in video-interfaces.txt.
+>
+> These don't seem to be in the example and probably should be.
+>
+> Otherwise, this looks fine. With those points fixed up:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
 > Thanks,
-> Sylwester
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Mark.
