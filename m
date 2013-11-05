@@ -1,52 +1,75 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/1] Documentation/mfd: Fix typos in s2mps11.txt
-Date: Tue,  5 Nov 2013 12:27:20 +0530
-Message-ID: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Tue, 5 Nov 2013 12:42:03 +0530
+Message-ID: <CAFp+6iF443AR1SKPxozdGn2Y-Dm+pSwh5Xx9FFvNqGyRz9k7xw@mail.gmail.com>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
+	<1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
+	<527744B2.4090303@ti.com>
+	<1539581.zprt32081v@amdc1227>
+	<CAFp+6iG5SAe5h0-RRsBuAhtWO_NBW6G=7jQeObd4Y2BQGaRHyA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iG5SAe5h0-RRsBuAhtWO_NBW6G=7jQeObd4Y2BQGaRHyA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jingoo Han <jg1.han@samsung.com>, linux-doc@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Felipe Balbi <balbi@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixed trivial typos to improve readability.
+On Tue, Nov 5, 2013 at 11:06 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+> Hi Tomasz,
 
-Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Sorry my mail client had some problem, so forwarding this again.
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index c9332c6..0ff4e65 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,10 +1,10 @@
- 
- * Samsung S2MPS11 Voltage and Current Regulator
- 
--The Samsung S2MP211 is a multi-function device which includes voltage and
-+The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
--interfaced to the host controller using a I2C interface. Each sub-block is
--addressed by the host system using different I2C slave address.
-+interfaced to the host controller using an I2C interface. Each sub-block is
-+addressed by the host system using different I2C slave addresses.
- 
- Required properties:
- - compatible: Should be "samsung,s2mps11-pmic".
-@@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
- 
-  BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explictly
-  regulator-ramp-delay = <0> can be used for them to disable ramp delay.
-- In absence of regulator-ramp-delay property, default ramp delay will be used.
-+ In the absence of regulator-ramp-delay property, default ramp delay will
-+ be used.
- 
- NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
- for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+>
+> On Nov 4, 2013 5:59 PM, "Tomasz Figa" <t.figa@samsung.com> wrote:
+>>
+>> Hi Kishon,
+>>
+>> On Monday 04 of November 2013 12:24:42 Kishon Vijay Abraham I wrote:
+>> > Hi Vivek,
+>> >
+>> > On Thursday 31 October 2013 01:15 PM, Vivek Gautam wrote:
+>> > > Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>> > > The new driver uses the generic PHY framework and will interact
+>> > > with DWC3 controller present on Exynos5 series of SoCs.
+>> >
+>> > In Exynos, you have a single IP that supports both USB3 and USB2 PHY
+>> > right? I think that needs to be mentioned here.
+>>
+>> Nope. There are two separate, different IPs.
+>
+> AFAICS the dwc3 controller (aka usb 3.0 drd controller, as mentioned in
+> exynos5 UM) uses a combo of usb 2 (utmi+) and usb 3 (pipe 3) phy (with base
+> address starting 0x12100000), thereby giving the driver only freedom to
+> control them as one. The entire set of registers with base 0x12100000 for
+> exynos5250 and later 0x12500000 for exynos5420 are being programmed by this
+> driver. That's the reason i structured the driver this way, and thereby it
+> makes the dwc3 controller to just use only single phy.
+> Please correct me if i am wrong.
+>
+>>
+>> > Do you have separate registers that should be used for
+>> > initializing/powerin_on/powering_off etc.. for usb2 phy and usb3 phy? If
+>> > so, then you should model this driver as a single driver that supports
+>> > two PHYs similar to what Sylwester has done before?
+>>
+>> Sylwester's MIPI PHY uses such model because it has a single register
+>> that controls both PHYs.
+>>
+>> Best regards,
+>> Tomasz
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
