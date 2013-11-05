@@ -1,241 +1,96 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v4 3/6] gpio: davinci: use irqdomain
-Date: Tue, 5 Nov 2013 13:30:29 +0530
-Message-ID: <CA+V-a8uLAnVdjNiqNJnOaP1qJU8wF4pqkO0b1DKo1Q3bM8qPcg@mail.gmail.com>
-References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
- <1383406775-14902-4-git-send-email-prabhakar.csenng@gmail.com> <5277E722.50205@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] dtc: Dynamic symbols & fixup support (v2)
+Date: Tue, 5 Nov 2013 09:02:12 +0100
+Message-ID: <20131105080212.GD24559@pengutronix.de>
+References: <1383575773-7296-1-git-send-email-panto@antoniou-consulting.com>
+ <20131104145342.GW24559@pengutronix.de>
+ <53AA440E-7F33-4AC1-9323-7D109D4B5852@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5277E722.50205@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, LDOC <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, dlos <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53AA440E-7F33-4AC1-9323-7D109D4B5852-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi grygorii,
+On Mon, Nov 04, 2013 at 04:58:38PM +0200, Pantelis Antoniou wrote:
+> Hi Sascha,
+> 
+> On Nov 4, 2013, at 4:53 PM, Sascha Hauer wrote:
+> 
+> > Hi Pantelis,
+> > 
+> > Thank you for working on this again. I would really appreciate seeing
+> > this upstream.
+> > 
+> 
+> Don't mention it. Let's try to make it happen then.
+> 
+> > On Mon, Nov 04, 2013 at 04:36:13PM +0200, Pantelis Antoniou wrote:
+> >> +Notice that all the nodes that had a label have been recorded, and that
+> >> +phandles have been generated for them.
+> >> +
+> >> +This blob can be used to boot the board normally, the __symbols__ node will
+> >> +be safely ignored both by the bootloader and the kernel (the only loss will
+> >> +be a few bytes of memory and disk space).
+> >> +
+> >> +3.b) The Device Tree fragments must be compiled with the same option but they
+> >> +must also have a tag (/plugin/) that allows undefined references to labels
+> >> +that are not present at compilation time to be recorded so that the runtime
+> >> +loader can fix them.
+> >> +
+> >> +So the bar peripheral's DTS format would be of the form:
+> >> +
+> >> +/plugin/;	/* allow undefined label references and record them */
+> >> +/ {
+> >> +	....	/* various properties for loader use; i.e. part id etc. */
+> >> +	fragment@0 {
+> >> +		target = <&ocp>;
+> >> +		__overlay__ {
+> >> +			/* bar peripheral */
+> >> +			bar {
+> >> +				compatible = "corp,bar";
+> >> +				... /* various properties and child nodes */
+> >> +			}
+> >> +		};
+> >> +	};
+> >> +};
+> > 
+> > When last looking at this patch I created the attached follow up. What
+> > I didn't like about this patch is that we currently have to write dts
+> > files explicitely as overlays. With the attached patch the above could
+> > be written as:
+> > 
+> > &ocp: {
+> > 	compatible = "corp,bar";
+> > };
+> > 
+> > This is easier to write and more important a dts snippet could be either
+> > compiled into a dtb or used as an overlay.
+> > 
+> 
+> I see your point.
+> 
+> In my use case I always needed some out-of-band properties for the loader/manager 
+> to track. Let me test your and see if it doesn't break my use-cases.
 
-Thanks for the review.
+You mean for unloading an overlay afterwards?
 
-On Mon, Nov 4, 2013 at 11:57 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-> Hi Prabhakar Lad,
->
-> On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->>
->> This patch converts the davinci gpio driver to use irqdomain
->> support.
->
-> This patch needs to be splitted in two:
-> 1) add IRQ domain support
-> 2) remove intc_irq_num
->
-OK
+> 
+> If it's fine, then I have no objections in including it.
 
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> ---
->>   arch/arm/mach-davinci/da830.c              |    1 -
->>   arch/arm/mach-davinci/da850.c              |    1 -
->>   arch/arm/mach-davinci/dm355.c              |    1 -
->>   arch/arm/mach-davinci/dm365.c              |    1 -
->>   arch/arm/mach-davinci/dm644x.c             |    1 -
->>   arch/arm/mach-davinci/dm646x.c             |    1 -
->>   drivers/gpio/gpio-davinci.c                |   49 ++++++++++++++++++----------
->>   include/linux/platform_data/gpio-davinci.h |    3 +-
->>   8 files changed, 32 insertions(+), 26 deletions(-)
->>
->
-> [...]
->
->>
->>   int __init dm646x_gpio_register(void)
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 95c6df1..bcb6d8d 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -16,6 +16,7 @@
->>   #include <linux/err.h>
->>   #include <linux/io.h>
->>   #include <linux/irq.h>
->> +#include <linux/irqdomain.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/platform_data/gpio-davinci.h>
->>
->> @@ -292,7 +293,7 @@ gpio_irq_handler(unsigned irq, struct irq_desc *desc)
->>               __raw_writel(status, &g->intstat);
->>
->>               /* now demux them to the right lowlevel handler */
->> -             n = d->irq_base;
->> +             n = irq_find_mapping(d->irq_domain, 0);
->
-> Sorry, but I don't understand why have you used <0> as hwirq?
->
-> All below logic may not work in case if we switch to use Linear IRQ domain :(
-> - irq_create_mapping() may return ANY Linux IRQ number. It means, for
-> example, for bank0(ngpio=32)[0] it may return Linux_IRQ=200 or 201 or any other.
->  Also, for bank3(ngpio=16)[0] it may return Linux_IRQ=150, etc.
-> - More over, if you call irq_create_mapping() 32 times you may NOT get
->  sequential Linux_IRQ numbers.
->
-> So, the better sequence here can be smth. as below
-> (I can't verify it - my HW support only unbanked IRQs):
->
-Yeah below logic works fine for banked IRQs.
+Thanks.
 
->         if (irq & 1)
->                 mask <<= 16;
->
->         while (1) {
->                 u32             status;
->                 int             bit;
->
->                 /* ack any irqs */
->                 status = __raw_readl(&g->intstat) & mask;
->                 if (!status)
->                         break;
->                 __raw_writel(status, &g->intstat);
->
->                 /* now demux them to the right lowlevel handler */
->                 while (status) {
->                         bit = __ffs(status);
->                         status &= ~(1 << bit);
->                         generic_handle_irq(irq_find_mapping(d->irq_domain, bit));
->                 }
->         }
->
->
->>               if (irq & 1) {
->>                       n += 16;
->>                       status >>= 16;
->> @@ -313,10 +314,7 @@ static int gpio_to_irq_banked(struct gpio_chip *chip, unsigned offset)
->>   {
->>       struct davinci_gpio_controller *d = chip2controller(chip);
->>
->> -     if (d->irq_base >= 0)
->> -             return d->irq_base + offset;
->> -     else
->> -             return -ENODEV;
->> +     return irq_find_mapping(d->irq_domain, offset);
->
-> I think you can use irq_create_mapping() here instead of
-> irq_find_mapping(), so IRQ will be mapped/allocated on demand.
-> Also, it seems, above code may crash in case if SoC has >1 GPIO banks and
-> gpio_unbanked > 0 and someone will call gpio_to_irq(>31).
->
-Fixed it.
+Sascha
 
->>   }
->>
->>   static int gpio_to_irq_unbanked(struct gpio_chip *chip, unsigned offset)
->> @@ -373,6 +371,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>       struct davinci_gpio_controller *chips = platform_get_drvdata(pdev);
->>       struct davinci_gpio_platform_data *pdata = dev->platform_data;
->>       struct davinci_gpio_regs __iomem *g;
->> +     int gpio_irq = 0;
->>
->>       ngpio = pdata->ngpio;
->>       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> @@ -402,9 +401,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>        */
->>       for (gpio = 0, bank = 0; gpio < ngpio; bank++, gpio += 32) {
->>               chips[bank].chip.to_irq = gpio_to_irq_banked;
->> -             chips[bank].irq_base = pdata->gpio_unbanked
->> -                     ? -EINVAL
->> -                     : (pdata->intc_irq_num + gpio);
->> +             if (!pdata->gpio_unbanked) {
->> +                     chips[bank].irq_domain =
->> +                             irq_domain_add_linear(NULL, 32,
->
-> Use chips[i].chip.ngpio here instead of const 32?
->
-OK
-
->> +                                                   &irq_domain_simple_ops,
->
-> Pass &davinci_gpio_irq_ops (see below)
->
->> +                                                   NULL);
->
-> Pass &chips[bank] as host_data and use .map() callback (see below)
->
-OK
-
->> +
->> +                     if (!chips[bank].irq_domain)
->> +                             return -ENOMEM;
->> +             }
->>       }
->>
->>       /*
->> @@ -445,9 +450,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>        * Or, AINTC can handle IRQs for banks of 16 GPIO IRQs, which we
->>        * then chain through our own handler.
->>        */
->> -     for (gpio = 0, irq = gpio_to_irq(0), bank = 0;
->> -                     gpio < ngpio;
->> -                     bank++, bank_irq++) {
->> +     for (gpio = 0, irq = 0, bank = 0; gpio < ngpio; bank++, bank_irq++) {
->>               unsigned                i;
->>
->>               /* disabled by default, enabled only as needed */
->> @@ -465,12 +468,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>                */
->>               irq_set_handler_data(bank_irq, &chips[gpio / 32]);
->>
->> -             for (i = 0; i < 16 && gpio < ngpio; i++, irq++, gpio++) {
->> -                     irq_set_chip(irq, &gpio_irqchip);
->> -                     irq_set_chip_data(irq, (__force void *)g);
->> -                     irq_set_handler_data(irq, (void *)__gpio_mask(gpio));
->> -                     irq_set_handler(irq, handle_simple_irq);
->> -                     set_irq_flags(irq, IRQF_VALID);
->> +             if (!(bank % 2))
->> +                     irq = 0;
->> +             else
->> +                     irq = 16;
->
-> As I mentioned above, I think, it is not good to play with IRQ numbers here.
-> Only chained IRQs and <binten> can be configured in this cycle.
->
-Done
-
->> +
->> +             for (i = 0; i < 16 && gpio < ngpio; i++, gpio++) {
->> +                     int irqno =
->> +                             irq_create_mapping(chips[gpio / 32].irq_domain,
->> +                                                i + irq);
->> +
->> +                     irq_set_chip(irqno, &gpio_irqchip);
->> +                     irq_set_chip_data(irqno, (__force void *)g);
->> +                     irq_set_handler_data(irqno, (void *)__gpio_mask(gpio));
->> +                     irq_set_handler(irqno, handle_simple_irq);
->> +                     set_irq_flags(irqno, IRQF_VALID);
->
-> It makes no sense to manually create mapping. Usually it can be done in
-> .map() callback of IRQ domain. Like:
->
-> static int davinci_gpio_irq_map(struct irq_domain *d, unsigned int irq,
->                             irq_hw_number_t hw)
-> {
->         struct davinci_gpio_controller *chip = d->host_data;
->         unsigned gpio = chip->chip.base + hw;
->
->         irq_set_chip_and_handler_name(irq, &gpio_irqchip, handle_simple_irq,
->                                       "davinci_gpio");
->         irq_set_irq_type(irq, IRQ_TYPE_NONE);
->         set_irq_flags(irq, IRQF_VALID);
-> ...
->         return 0;
-> }
->
-> static const struct irq_domain_ops davinci_gpio_irq_ops = {
->         .map = davinci_gpio_irq_map,
->         .xlate = irq_domain_xlate_onetwocell,
-> };
->
->
-Fixed it.
-
-Regards,
---Prabhakar Lad
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
