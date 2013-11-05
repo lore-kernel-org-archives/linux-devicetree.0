@@ -1,89 +1,82 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Tue, 5 Nov 2013 21:17:32 +0100
-Message-ID: <201311052117.33443.arnd@arndb.de>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <201311052034.01114.arnd@arndb.de> <20131105195820.GB20600@obsidianresearch.com>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: re: max17042: Add POR init procedure from Maxim appnote
+Date: Tue, 5 Nov 2013 23:24:44 +0300
+Message-ID: <20131105202444.GG3949@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131105195820.GB20600-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 November 2013, Jason Gunthorpe wrote:
-> On Tue, Nov 05, 2013 at 08:34:00PM +0100, Arnd Bergmann wrote:
-> > On Tuesday 05 November 2013, Jason Gunthorpe wrote:
-> > > The issue is sysfs, the TPM core attaches attributes to the driver's
-> > > struct device, which means it has to convert from struct device * to
-> > > its own private data. It is totally wrong, but that is the way
-> > > it has been for ever. :(
-> > 
-> > I've just had a very brief look at that subsystem, and the first driver
-> > I looked at (tpm_atmel) actually creates a child platform_device for
-> > the sole purpose of registering that with the tpm subsystem, which seems
-> > to avoid this problem. 
-> 
-> The TPM subsystem requires a struct device to bind onto (for sysfs at
-> least), so drivers that don't have one are required to create one :|
-> 
-> atmel is unusual as most drivers have a pre-existing device.
+Hello Ramakrishna Pallala,
 
-Eeek, yes I see now. OTOH, it would still be able to do the same thing
-by binding to the actual platform_device. Judging from the copyright
-notice, this driver predates the move to creating 'struct device'
-instances for (most) device nodes, and it uses the old-style
-method of searching the DT from the module_init function, which is
-not how we do things today.
+The patch f3a71a6eb13b: "max17042: Add POR init procedure from Maxim 
+appnote" from Mar 13, 2012, leads to the following
+static checker warning: "drivers/power/max17042_battery.c:339 
+max17042_init_model()
+	 warn: passing casted pointer 'temp_data' to 'max17042_model_data_compare()' 32 vs 16."
 
-Creating a platform_device (or a plain device, for that matter)
-from a proper probe() function would have a similar effect from
-the perspective of the TPM subsystem (or other subsystems using
-the same drvdata trick), and make it possible to use my proposed
-devm_probe method from any tpm driver. The main downside I can
-see is that it requires duplicating some code in each TPM driver
-that wants to convert to devm_probe, but on the upside it doesn't
-require any changes to the TPM subsystem or to other drivers the
-way that a proper fix would.
+drivers/power/max17042_battery.c
+   307  static inline int max17042_model_data_compare(struct max17042_chip *chip,
+   308                                          u16 *data1, u16 *data2, int size)
+   309  {
+   310          int i;
+   311  
+   312          if (memcmp(data1, data2, size)) {
+   313                  dev_err(&chip->client->dev, "%s compare failed\n", __func__);
+   314                  for (i = 0; i < size; i++)
+   315                          dev_info(&chip->client->dev, "0x%x, 0x%x",
+   316                                  data1[i], data2[i]);
+   317                  dev_info(&chip->client->dev, "\n");
+   318                  return -EINVAL;
+   319          }
+   320          return 0;
+   321  }
+   322  
+   323  static int max17042_init_model(struct max17042_chip *chip)
+   324  {
+   325          int ret;
+   326          int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
+   327          u32 *temp_data;
+   328  
+   329          temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
+   330          if (!temp_data)
+   331                  return -ENOMEM;
+   332  
+   333          max10742_unlock_model(chip);
+   334          max17042_write_model_data(chip, MAX17042_MODELChrTbl,
+   335                                  table_size);
+   336          max17042_read_model_data(chip, MAX17042_MODELChrTbl, temp_data,
+   337                                  table_size);
+   338  
+   339          ret = max17042_model_data_compare(
+   340                  chip,
+   341                  chip->pdata->config_data->cell_char_tbl,
+   342                  (u16 *)temp_data,
+   343                  table_size);
 
-> > Maybe the same can be done for the other drivers as
-> > well. Unfortunately, that will change the sysfs structure, which
-> > might break user space relying on the current path to the
-> > device. 
-> 
-> AFAIK the correct fix is to have the TPM subsystem core create a
-> struct device for its own use (eg tpm0), under its own class, which is
-> what other subsystems I looked at do.
+temp_data is a buffer of 32 bit numbers.
 
-Yes. Note that the use of new 'class'es is not recommended any more,
-nowadays we are supposed to use 'bus_type' for this, which is
-traditionally something slightly different, but technically almost
-the same implementation-wise.
+table_size is the number of 32 bit numbers in temp_data.
 
-> This way the subsystem can have
-> access to a release function that is properly tied to the actual
-> object lifetime, and it can use container_of to retrieve its own
-> private data from, eg sysfs. Combined with get_ops/put_ops style
-> access I think you can solve the unload lifetime issues with sysfs..
-> 
-> However, even if all that is done, compatibility sysfs's under the
-> driver's struct device will still be needed, which AFAICT will still
-> require the drvdata be owned by the subsystem not the driver :(
+The max17042_model_data_compare() function is quite buggy because the
+memcmp() assumes u8 and the for loop assumes u16.  Both can't be correct
+and in fact both are wrong since we are passing the size in terms of
+u32.
 
-That depends: the requirement is that no user space breaks after
-a change. I assume that there is a fairly limited set of packages
-accessing the tpm sysfs files. If all of them are written properly,
-they should be able to deal with looking at the files in a different
-place in sysfs.
+   344  
+   345          max10742_lock_model(chip);
+   346          kfree(temp_data);
+   347  
+   348          return ret;
+   349  }
 
-Another option is to change the TPM core sysfs attributes not to
-look at drvdata, but to use devres_find() to find the data they
-need.
+regards,
+dan carpenter
 
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
