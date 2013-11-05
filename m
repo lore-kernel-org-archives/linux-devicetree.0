@@ -1,14 +1,14 @@
 From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 03/11] devicetree: bindings: Document qcom,kpss-acc
-Date: Tue, 5 Nov 2013 11:13:47 -0600
-Message-ID: <EA8C3C10-2AD6-4179-A785-12001E439364@codeaurora.org>
-References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org> <1383343739-23080-4-git-send-email-sboyd@codeaurora.org>
+Subject: Re: [PATCH 04/11] devicetree: bindings: Document qcom,saw2 node
+Date: Tue, 5 Nov 2013 11:16:14 -0600
+Message-ID: <CF57F27A-A622-4FA7-B0B0-AEA18C6F1E43@codeaurora.org>
+References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org> <1383343739-23080-5-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1383343739-23080-4-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383343739-23080-5-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
 Cc: linux-arm-kernel@lists.infradead.org, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -16,49 +16,67 @@ List-Id: devicetree@vger.kernel.org
 
 On Nov 1, 2013, at 5:08 PM, Stephen Boyd wrote:
 
-> The kpss acc binding describes the clock, reset, and power domain
-> controller for a Krait CPU.
+> The saw2 binding describes the SPM/AVS wrapper hardware used to
+> control the regulator supplying voltage to the Krait CPUs.
 > 
 > Cc: <devicetree@vger.kernel.org>
 > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 > ---
-> .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt   | 21 +++++++++++++++++++++
-> 1 file changed, 21 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+> When a SAW is for a CPU it is put behind the CPU alias region similar
+> to the ACC and timers. I haven't documented that here because I'm not using
+> it right now. I'm also thinking perhaps l2-saw2 is not important (technically
+> its the same hardware block as a CPU's saw). Instead I should point to this
+> node via the l2-cache node via some *-supply property. Thoughts?
+
+I don't get this, why wouldn't the SAW just be under the soc node?  Do we really need to encode a relationship between the cpu and the SAW?
+
+And kill the "l2-saw2" stuff until its needed.
+
+Also are SAWs specific to a given SoC or not?
+
+> 
+> .../devicetree/bindings/arm/msm/qcom,saw2.txt      | 23 ++++++++++++++++++++++
+> 1 file changed, 23 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
 > new file mode 100644
-> index 0000000..ed4a9c8
+> index 0000000..6360db2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-> @@ -0,0 +1,21 @@
-> +* Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+> @@ -0,0 +1,23 @@
+> +* SPM AVS Wrapper 2 (SAW2)
 > +
-> +The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
-> +There is one ACC register region per CPU within the KPSS remaped region as
-> +well as an alias register region that remaps accesses to the ACC associated
-> +with the CPU accessing the region.
+> +The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and the
+> +Adaptive Voltage Scaling (AVS) hardware. The SPM is programmable
+> +micro-controller that transitions a piece of hardware (like a processor) into
+> +and out of low power modes via a direct connection to the PMIC. It can also
+> +be wired up to interact with other processors in the system, notifying them
+> +when a low power state is entered or exited.
 > +
 > +Required Properties:
 > +
-> +- compatible : Shall contain "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2".
-> +- reg: Specifies the base address and size of the banked register region.
-> +- cpu-offset : per-cpu offset used when the device is accessed without the
-> +		CPU remapping facilities.
-> +		The offset is cpu-offset + (0x10000 * cpu-nr).
+> +- compatible : Shall contain "qcom,saw2".
+> +	       A more specific property can be specified as follows:
+> +		"qcom,l2-saw2"
+> +- reg: Specifies the base address and size of the register region.
 > +
 > +Example:
 > +
-> +	clock-controller@2008000 {
-> +		compatible = "qcom,kpss-acc-v2";
-> +		reg = <0x02008000 0x1000>;
+> +	regulator@f9012000 {
+> +		compatible = "qcom,l2-saw2", "qcom,saw2";
+> +		reg = <0xf9012000 0x1000>;
 > +	};
+> +
 > -- 
-
-I don't get the cpu-offset business, shouldn't this just be:
-	reg = <0x02008000 0x1000>, <0x02018000 0x1000>, <0x02028000 0x1000>, <0x02038000 0x1000>;
-
-- k
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 -- 
 Employee of Qualcomm Innovation Center, Inc.
