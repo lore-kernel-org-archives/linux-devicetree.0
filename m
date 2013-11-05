@@ -1,45 +1,68 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] of: irq: Fix interrupt-map entry matching
-Date: Tue, 05 Nov 2013 16:21:18 +0100
-Message-ID: <2713030.RoDxNQo0oz@amdc1227>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 2/2] of: irq: Check for reg property presence only when parsing
+ interrupt-map
+Date: Tue, 05 Nov 2013 16:21:36 +0100
+Message-ID: <11085147.qYFvaZYATK@amdc1227>
 References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
  <20131104050455.GA3651@quad.lixom.net> <2177804.l4VGDTRFDu@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <2177804.l4VGDTRFDu@amdc1227>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes interrupt-map entry matching code to properly match all
-specifier cells with interrupt map entries.
+This patch fixes the of_irq_parse_raw() function to check for reg
+property only when really parsing interrupt map property, as it is not
+required otherwise and breaks existing device trees.
 
-Signed-off-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
 ---
- drivers/of/irq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/irq.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 0ed5ed4..717eed4 100644
+index 717eed4..72e9c51 100644
 --- a/drivers/of/irq.c
 +++ b/drivers/of/irq.c
-@@ -195,7 +195,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
- 			/* Compare specifiers */
- 			match = 1;
- 			for (i = 0; i < (addrsize + intsize); i++, imaplen--)
--				match = !((match_array[i] ^ *imap++) & imask[i]);
-+				match &= !((match_array[i] ^ *imap++) & imask[i]);
+@@ -147,17 +147,8 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
  
- 			pr_debug(" -> match=%d (imaplen=%d)\n", match, imaplen);
+ 	pr_debug(" -> addrsize=%d\n", addrsize);
  
+-	/* If we were passed no "reg" property and we attempt to parse
+-	 * an interrupt-map, then #address-cells must be 0.
+-	 * Fail if it's not.
+-	 */
+-	if (addr == NULL && addrsize != 0) {
+-		pr_debug(" -> no reg passed in when needed !\n");
+-		return -EINVAL;
+-	}
+-
+ 	/* Precalculate the match array - this simplifies match loop */
+-	for (i = 0; i < addrsize; i++)
++	for (i = 0; i < addrsize && addr; i++)
+ 		initial_match_array[i] = addr[i];
+ 	for (i = 0; i < intsize; i++)
+ 		initial_match_array[addrsize + i] = cpu_to_be32(out_irq->args[i]);
+@@ -184,6 +175,16 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 		}
+ 		imaplen /= sizeof(u32);
+ 
++		/*
++		 * If we were passed no "reg" property and we attempt to parse
++		 * an interrupt-map, then #address-cells must be 0.
++		 * Fail if it's not.
++		 */
++		if (addr == NULL && addrsize != 0) {
++			pr_debug(" -> no reg passed in when needed !\n");
++			return -EINVAL;
++		}
++
+ 		/* Look for a mask */
+ 		imask = of_get_property(ipar, "interrupt-map-mask", NULL);
+ 		if (!imask)
 -- 
 1.8.4.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
