@@ -1,52 +1,81 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: undocumented compatible strings
-Date: Tue, 5 Nov 2013 11:09:36 -0600
-Message-ID: <0198783C-A824-4165-871C-9FDCFBCF04AA@codeaurora.org>
-References: <527838F0.2000803@gmail.com> <CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA@mail.gmail.com> <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w@mail.gmail.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 02/11] devicetree: bindings: Document Qualcomm cpus and enable-method
+Date: Tue, 5 Nov 2013 11:12:27 -0600
+Message-ID: <378446F7-DC51-448D-AF99-93F98CEAFB03@codeaurora.org>
+References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org> <1383343739-23080-3-git-send-email-sboyd@codeaurora.org> <CAL_JsqLObXEWJJ=SuifTjpPz9qTW0n43fyQNA-vjLNeLy-7-XA@mail.gmail.com> <20131104173606.GL21983@codeaurora.org>
 Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131104173606.GL21983@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Nov 5, 2013, at 7:59 AM, Rob Herring wrote:
+On Nov 4, 2013, at 11:36 AM, Stephen Boyd wrote:
 
-> On Mon, Nov 4, 2013 at 10:01 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Mon, Nov 4, 2013 at 4:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 11/01, Rob Herring wrote:
+>> On Fri, Nov 1, 2013 at 5:08 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> From: Rohit Vaswani <rvaswani@codeaurora.org>
+>>> 
+>>> Scorpion and Krait are Qualcomm cpus. These cpus don't use the
+>>> spin-table enable-method. Instead they rely on mmio register
+>>> accesses to enable power and clocks to bring CPUs out of reset.
+>>> 
+>>> Cc: <devicetree@vger.kernel.org>
+>>> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+>>> [sboyd: Split off into separate patch, renamed method to
+>>> qcom,mmio]
+>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>>> ---
+>>> 
+>>> This slightly conflicts with my krait EDAC series.
+>>> 
+>>> Documentation/devicetree/bindings/arm/cpus.txt | 3 +++
+>>> 1 file changed, 3 insertions(+)
+>>> 
+>>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>>> index 37258f9..e2969fa2 100644
+>>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>>> @@ -44,6 +44,8 @@ For the ARM architecture every CPU node must contain the following properties:
+>>>                "marvell,mohawk"
+>>>                "marvell,xsc3"
+>>>                "marvell,xscale"
+>>> +               "qcom,scorpion"
+>>> +               "qcom,krait"
+>>> 
+>>> And the following optional properties:
+>>> 
+>>> @@ -52,6 +54,7 @@ And the following optional properties:
+>>>                 different types of cpus.
+>>>                 This should be one of:
+>>>                 "spin-table"
+>>> +                "qcom,mmio"
 >> 
->>> Undocumented compatible strings in kernel sources:
->>> 1682m-rng
->>> electra-cf
->>> electra-ide
->>> pasemi,localbus
->>> pasemi,localbus-nand
->>> pasemi,pwrficient-rng
->>> pasemi,sdc
->> 
->> These will never be documented in the same way as flat device tree,
->> just as the IBM and Sparc bindings won't be.
+>> Not exactly specific. How would you handle variations in the enable
+>> method? The mmio method to enable is tied to the core type or SOC
+>> type?
 > 
-> Yes, I know. As well as FSL PPC...
+> Variations in the enable method are handled by searching for
+> another node with different compatible strings. Later on in this
+> series you'll see that we search for gcc-8660, kpss-acc-v1, or
+> kpps-acc-v2. Once we find one of these nodes we perform the
+> correct cold boot routine.
 > 
-> We may need some way to filter these out from whatever checker we come
-> up with. I was debating whether to add an undocumented, grandfathered
-> bindings document to capture these.
+> I'm actually considering renaming this to "qcom,cold-boot". We
+> could further extend the enable-metho property to allow
+> "qcom,warm-boot" and then for cases like kexec we could make the
+> enable method be warm boot and our smp code could be smart enough
+> to know to skip the whole cold boot sequence.
 
 
-The FSL PPC should have bindings, there are some cases that we put in things with simple nodes that had a compat, a reg, and maybe an irq w/o having a full binding.
+I think this should be more specific than just 'qcom,mmio' or 'qcom,warm-boot'.  It should be 'qcom,kpss-acc-v1' or 'qcom-gcc-8660'.
 
 - k
 
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
