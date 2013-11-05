@@ -1,162 +1,49 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v3 11/11] usb: phy-mxs: Add system suspend/resume API
-Date: Tue, 5 Nov 2013 09:49:43 +0800
-Message-ID: <1383616183-10511-12-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 04/11] ARM: dts: imx6: add anatop phandle for usbphy
+Date: Tue, 5 Nov 2013 09:49:36 +0800
+Message-ID: <1383616183-10511-5-git-send-email-peter.chen@freescale.com>
 References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We need this to keep PHY's power on or off during the system
-suspend mode. If we need to enable USB wakeup, then we
-must keep PHY's power being on during the system suspend mode.
-Otherwise, we need to keep PHY's power being off to save power.
+Add anatop phandle for usbphy
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   66 +++++++++++++++++++++++++++++++++++++++--
- 1 files changed, 63 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index ff8b98c..4588c72 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -55,11 +55,18 @@
- #define BM_USBPHY_DEBUG_CLKGATE			BIT(30)
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 226ce75..bb79678 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -559,6 +559,7 @@
+ 				reg = <0x020c9000 0x1000>;
+ 				interrupts = <0 44 0x04>;
+ 				clocks = <&clks 182>;
++				fsl,anatop = <&anatop>;
+ 			};
  
- /* Anatop Registers */
-+#define ANADIG_ANA_MISC0			0x150
-+#define ANADIG_ANA_MISC0_SET			0x154
-+#define ANADIG_ANA_MISC0_CLR			0x158
-+
- #define ANADIG_USB1_VBUS_DET_STAT		0x1c0
+ 			usbphy2: usbphy@020ca000 {
+@@ -566,6 +567,7 @@
+ 				reg = <0x020ca000 0x1000>;
+ 				interrupts = <0 45 0x04>;
+ 				clocks = <&clks 183>;
++				fsl,anatop = <&anatop>;
+ 			};
  
- #define ANADIG_USB1_LOOPBACK_SET		0x1e4
- #define ANADIG_USB1_LOOPBACK_CLR		0x1e8
- 
-+#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
-+#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
-+
- #define BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID	BIT(3)
- 
- #define BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1	BIT(2)
-@@ -83,6 +90,15 @@
-  */
- #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
- 
-+/* imx23 style PHY */
-+#define MXS_PHY_IMX23				BIT(3)
-+
-+/* imx6q style PHY */
-+#define MXS_PHY_IMX6Q				BIT(4)
-+
-+/* imx6sl style PHY */
-+#define MXS_PHY_IMX6SL				BIT(5)
-+
- /*
-  * IC fix for MXS_PHY_ABNORAML_IN_SUSPEND, bit 17 is the effective bit
-  * in HW_USBPHY_IP.
-@@ -100,19 +116,23 @@ struct mxs_phy_platform_flag {
- };
- 
- static const struct mxs_phy_platform_flag imx23_phy_data = {
--	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
-+	.flags = MXS_PHY_ABNORAML_IN_SUSPEND |
-+		MXS_PHY_SENDING_SOF_TOO_FAST |
-+		MXS_PHY_IMX23,
- };
- 
- static const struct mxs_phy_platform_flag imx6q_phy_data = {
- 	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
- 		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
--		MXS_PHY_FIX_ABNORAML_IN_SUSPEND,
-+		MXS_PHY_FIX_ABNORAML_IN_SUSPEND |
-+		MXS_PHY_IMX6Q,
- };
- 
- static const struct mxs_phy_platform_flag imx6sl_phy_data = {
- 	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
- 		MXS_PHY_FIX_ABNORAML_IN_SUSPEND |
--		MXS_PHY_FIX_SENDING_SOF_TOO_FAST,
-+		MXS_PHY_FIX_SENDING_SOF_TOO_FAST |
-+		MXS_PHY_IMX6SL,
- };
- 
- static const struct of_device_id mxs_phy_dt_ids[] = {
-@@ -210,6 +230,22 @@ static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
- 			? "disconnected" : "connected");
- }
- 
-+static void mxs_phy_enable_ldo_in_suspend(struct mxs_phy *mxs_phy, bool on)
-+{
-+	unsigned int reg = on ? ANADIG_ANA_MISC0_SET : ANADIG_ANA_MISC0_CLR;
-+
-+	/* If the SoCs don't have anatop, quit */
-+	if (!mxs_phy->regmap_anatop)
-+		return;
-+
-+	if (mxs_phy->flags & MXS_PHY_IMX6Q)
-+		regmap_write(mxs_phy->regmap_anatop, reg,
-+			BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG);
-+	else if (mxs_phy->flags & MXS_PHY_IMX6SL)
-+		regmap_write(mxs_phy->regmap_anatop,
-+			reg, BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL);
-+}
-+
- static int mxs_phy_init(struct usb_phy *phy)
- {
- 	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-@@ -395,6 +431,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, &mxs_phy->phy);
- 
-+	device_set_wakeup_capable(&pdev->dev, true);
- 	ret = usb_add_phy_dev(&mxs_phy->phy);
- 	if (ret)
- 		return ret;
-@@ -411,6 +448,28 @@ static int mxs_phy_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int mxs_phy_system_suspend(struct device *dev)
-+{
-+	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		mxs_phy_enable_ldo_in_suspend(mxs_phy, true);
-+
-+	return 0;
-+}
-+
-+static int mxs_phy_system_resume(struct device *dev)
-+{
-+	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		mxs_phy_enable_ldo_in_suspend(mxs_phy, false);
-+
-+	return 0;
-+}
-+
-+SIMPLE_DEV_PM_OPS(mxs_phy_pm, mxs_phy_system_suspend, mxs_phy_system_resume);
-+
- static struct platform_driver mxs_phy_driver = {
- 	.probe = mxs_phy_probe,
- 	.remove = mxs_phy_remove,
-@@ -418,6 +477,7 @@ static struct platform_driver mxs_phy_driver = {
- 		.name = DRIVER_NAME,
- 		.owner	= THIS_MODULE,
- 		.of_match_table = mxs_phy_dt_ids,
-+		.pm = &mxs_phy_pm,
- 	 },
- };
- 
+ 			snvs@020cc000 {
 -- 
 1.7.1
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
