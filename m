@@ -1,227 +1,240 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH v11 03/12] [media] exynos5-fimc-is: Add common driver
- header files
-Date: Tue, 5 Nov 2013 18:46:06 +0530
-Message-ID: <CALt3h7_BCj7yJi6sy=KVOHoET4aWm_a-N=u63R8-bZ-uQ=AGag@mail.gmail.com>
-References: <1383631964-26514-1-git-send-email-arun.kk@samsung.com>
-	<1383631964-26514-4-git-send-email-arun.kk@samsung.com>
-	<20131105125108.GF23061@valkosipuli.retiisi.org.uk>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH V3 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
+ irqs
+Date: Tue, 5 Nov 2013 18:44:11 +0530
+Message-ID: <1383657257-3458-2-git-send-email-r.sricharan@ti.com>
+References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20131105125108.GF23061@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1383657257-3458-1-git-send-email-r.sricharan@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, santosh.shilimkar@ti.com, galak@codeaurora.org, r.sricharan@ti.com
+Cc: Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+In some socs the gic can be preceded by a crossbar IP which
+routes the peripheral interrupts to the gic inputs. The peripheral
+interrupts are associated with a fixed crossbar input line and the
+crossbar routes that to one of the free gic input line.
 
-Thank you for the review.
+The DT entries for peripherals provides the fixed crossbar input line
+as its interrupt number and the mapping code should associate this with
+a free gic input line. This patch adds the support inside the gic irqchip
+to handle such routable irqs. The routable irqs are registered in a linear
+domain. The registered routable domain's callback should be implemented
+to get a free irq and to configure the IP to route it.
 
-On Tue, Nov 5, 2013 at 6:21 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Arun,
->
-> On Tue, Nov 05, 2013 at 11:42:34AM +0530, Arun Kumar K wrote:
->> This patch adds all the common header files used by the fimc-is
->> driver. It includes the commands for interfacing with the firmware
->> and error codes from IS firmware, metadata and command parameter
->> definitions.
->>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 ++++
->>  drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++++
->>  .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++++++
->>  drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 ++++++++++++++++++++
->>  4 files changed, 2370 insertions(+)
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
->>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
->>
->> diff --git a/drivers/media/platform/exynos5-is/fimc-is-cmd.h b/drivers/media/platform/exynos5-is/fimc-is-cmd.h
->> new file mode 100644
->> index 0000000..6250280
->> --- /dev/null
->> +++ b/drivers/media/platform/exynos5-is/fimc-is-cmd.h
->> @@ -0,0 +1,187 @@
->> +/*
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Sricharan R <r.sricharan@ti.com>
+---
+ [V2] Added default routable-irqs functions to avoid
+      unnecessary if checks as per Thomas Gleixner comments
+      and renamed routable-irq binding as per
+      Kumar Gala <galak@codeaurora.org> comments.
 
-[snip]
+ [V3] Addressed unnecessary warn-on and updated default
+      xlate function as per Thomas Gleixner comments
 
->> +struct is_common_reg {
->> +     u32 hicmd;
->> +     u32 hic_sensorid;
->> +     u32 hic_param[4];
->> +
->> +     u32 reserved1[3];
->> +
->> +     u32 ihcmd_iflag;
->> +     u32 ihcmd;
->> +     u32 ihc_sensorid;
->> +     u32 ihc_param[4];
->> +
->> +     u32 reserved2[3];
->> +
->> +     u32 isp_bayer_iflag;
->> +     u32 isp_bayer_sensor_id;
->> +     u32 isp_bayer_param[2];
->> +
->> +     u32 reserved3[4];
->> +
->> +     u32 scc_iflag;
->> +     u32 scc_sensor_id;
->> +     u32 scc_param[3];
->> +
->> +     u32 reserved4[3];
->> +
->> +     u32 dnr_iflag;
->> +     u32 dnr_sensor_id;
->> +     u32 dnr_param[2];
->> +
->> +     u32 reserved5[4];
->> +
->> +     u32 scp_iflag;
->> +     u32 scp_sensor_id;
->> +     u32 scp_param[3];
->> +
->> +     u32 reserved6[1];
->> +
->> +     u32 isp_yuv_iflag;
->> +     u32 isp_yuv_sensor_id;
->> +     u32 isp_yuv_param[2];
->> +
->> +     u32 reserved7[1];
->> +
->> +     u32 shot_iflag;
->> +     u32 shot_sensor_id;
->> +     u32 shot_param[2];
->> +
->> +     u32 reserved8[1];
->> +
->> +     u32 meta_iflag;
->> +     u32 meta_sensor_id;
->> +     u32 meta_param1;
->> +
->> +     u32 reserved9[1];
->> +
->> +     u32 fcount;
->
-> If these structs define an interface that's not used by the driver only it
-> might be a good idea to use __packed to ensure no padding is added.
->
+ Documentation/devicetree/bindings/arm/gic.txt |    6 ++
+ drivers/irqchip/irq-gic.c                     |   81 ++++++++++++++++++++++---
+ include/linux/irqchip/arm-gic.h               |    8 ++-
+ 3 files changed, 84 insertions(+), 11 deletions(-)
 
-The same structure is used as is in the firmware code and so it is retained
-in the driver.
-
->> +};
->> +
->> +struct is_mcuctl_reg {
->> +     u32 mcuctl;
->> +     u32 bboar;
->> +
->> +     u32 intgr0;
->> +     u32 intcr0;
->> +     u32 intmr0;
->> +     u32 intsr0;
->> +     u32 intmsr0;
->> +
->> +     u32 intgr1;
->> +     u32 intcr1;
->> +     u32 intmr1;
->> +     u32 intsr1;
->> +     u32 intmsr1;
->> +
->> +     u32 intcr2;
->> +     u32 intmr2;
->> +     u32 intsr2;
->> +     u32 intmsr2;
->> +
->> +     u32 gpoctrl;
->> +     u32 cpoenctlr;
->> +     u32 gpictlr;
->> +
->> +     u32 pad[0xD];
->> +
->> +     struct is_common_reg common_reg;
->> +};
->> +#endif
-> ...
->> diff --git a/drivers/media/platform/exynos5-is/fimc-is-metadata.h b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
->> new file mode 100644
->> index 0000000..02367c4
->> --- /dev/null
->> +++ b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
->> @@ -0,0 +1,767 @@
->> +/*
->> + * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
->> + *
->> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
->> + * Kil-yeon Lim <kilyeon.im@samsung.com>
->> + * Arun Kumar K <arun.kk@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#ifndef FIMC_IS_METADATA_H_
->> +#define FIMC_IS_METADATA_H_
->> +
->> +struct rational {
->> +     uint32_t num;
->> +     uint32_t den;
->> +};
->> +
->> +#define CAMERA2_MAX_AVAILABLE_MODE   21
->> +#define CAMERA2_MAX_FACES            16
->> +
->> +/*
->> + * Controls/dynamic metadata
->> + */
->> +
->> +enum metadata_mode {
->> +     METADATA_MODE_NONE,
->> +     METADATA_MODE_FULL
->> +};
->> +
->> +struct camera2_request_ctl {
->> +     uint32_t                id;
->> +     enum metadata_mode      metadatamode;
->> +     uint8_t                 outputstreams[16];
->> +     uint32_t                framecount;
->> +};
->> +
->> +struct camera2_request_dm {
->> +     uint32_t                id;
->> +     enum metadata_mode      metadatamode;
->> +     uint32_t                framecount;
->> +};
->> +
->> +
->> +
->> +enum optical_stabilization_mode {
->> +     OPTICAL_STABILIZATION_MODE_OFF,
->> +     OPTICAL_STABILIZATION_MODE_ON
->> +};
->> +
->> +enum lens_facing {
->> +     LENS_FACING_BACK,
->> +     LENS_FACING_FRONT
->> +};
->> +
->> +struct camera2_lens_ctl {
->> +     uint32_t                                focus_distance;
->> +     float                                   aperture;
->
-> Floating point numbers? Really? :-)
->
-
-Yes as mentioned, the same structure is used by the firmware and
-so it is used as is in the kernel.
-
-Regards
-Arun
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index 3dfb0c0..5357745 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -49,6 +49,11 @@ Optional
+   regions, used when the GIC doesn't have banked registers. The offset is
+   cpu-offset * cpu-nr.
+ 
++- arm,routable-irqs : Total number of gic irq inputs which are not directly
++		  connected from the peripherals, but are routed dynamically
++		  by a crossbar/multiplexer preceding the GIC. The GIC irq
++		  input line is assigned dynamically when the corresponding
++		  peripheral's crossbar line is mapped.
+ Example:
+ 
+ 	intc: interrupt-controller@fff11000 {
+@@ -56,6 +61,7 @@ Example:
+ 		#interrupt-cells = <3>;
+ 		#address-cells = <1>;
+ 		interrupt-controller;
++		arm,routable-irqs = <160>;
+ 		reg = <0xfff11000 0x1000>,
+ 		      <0xfff10100 0x100>;
+ 	};
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index d0e9480..07be228 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -681,16 +681,25 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ 		irq_set_chip_and_handler(irq, &gic_chip,
+ 					 handle_fasteoi_irq);
+ 		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
++
++		gic_routable_irq_domain_ops->map(d, irq, hw);
+ 	}
+ 	irq_set_chip_data(irq, d->host_data);
+ 	return 0;
+ }
+ 
++static void gic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
++{
++	gic_routable_irq_domain_ops->unmap(d, irq);
++}
++
+ static int gic_irq_domain_xlate(struct irq_domain *d,
+ 				struct device_node *controller,
+ 				const u32 *intspec, unsigned int intsize,
+ 				unsigned long *out_hwirq, unsigned int *out_type)
+ {
++	unsigned long ret = 0;
++
+ 	if (d->of_node != controller)
+ 		return -EINVAL;
+ 	if (intsize < 3)
+@@ -700,11 +709,20 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
+ 	*out_hwirq = intspec[1] + 16;
+ 
+ 	/* For SPIs, we need to add 16 more to get the GIC irq ID number */
+-	if (!intspec[0])
+-		*out_hwirq += 16;
++	if (!intspec[0]) {
++		ret = gic_routable_irq_domain_ops->xlate(d, controller,
++							 intspec,
++							 intsize,
++							 out_hwirq,
++							 out_type);
++
++		if (IS_ERR_VALUE(ret))
++			return ret;
++	}
+ 
+ 	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
+-	return 0;
++
++	return ret;
+ }
+ 
+ #ifdef CONFIG_SMP
+@@ -728,9 +746,41 @@ static struct notifier_block gic_cpu_notifier = {
+ 
+ const struct irq_domain_ops gic_irq_domain_ops = {
+ 	.map = gic_irq_domain_map,
++	.unmap = gic_irq_domain_unmap,
+ 	.xlate = gic_irq_domain_xlate,
+ };
+ 
++/* Default functions for routable irq domain */
++static int gic_routable_irq_domain_map(struct irq_domain *d, unsigned int irq,
++			      irq_hw_number_t hw)
++{
++	return 0;
++}
++
++static void gic_routable_irq_domain_unmap(struct irq_domain *d,
++					  unsigned int irq)
++{
++}
++
++static int gic_routable_irq_domain_xlate(struct irq_domain *d,
++				struct device_node *controller,
++				const u32 *intspec, unsigned int intsize,
++				unsigned long *out_hwirq,
++				unsigned int *out_type)
++{
++	*out_hwirq += 16;
++	return 0;
++}
++
++const struct irq_domain_ops gic_default_routable_irq_domain_ops = {
++	.map = gic_routable_irq_domain_map,
++	.unmap = gic_routable_irq_domain_unmap,
++	.xlate = gic_routable_irq_domain_xlate,
++};
++
++const struct irq_domain_ops *gic_routable_irq_domain_ops =
++					&gic_default_routable_irq_domain_ops;
++
+ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+ 			   void __iomem *dist_base, void __iomem *cpu_base,
+ 			   u32 percpu_offset, struct device_node *node)
+@@ -738,6 +788,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+ 	irq_hw_number_t hwirq_base;
+ 	struct gic_chip_data *gic;
+ 	int gic_irqs, irq_base, i;
++	int nr_routable_irqs;
+ 
+ 	BUG_ON(gic_nr >= MAX_GIC_NR);
+ 
+@@ -803,14 +854,24 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+ 	gic->gic_irqs = gic_irqs;
+ 
+ 	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+-	irq_base = irq_alloc_descs(irq_start, 16, gic_irqs, numa_node_id());
+-	if (IS_ERR_VALUE(irq_base)) {
+-		WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
+-		     irq_start);
+-		irq_base = irq_start;
++
++	if (of_property_read_u32(node, "arm,routable-irqs", &nr_routable_irqs)) {
++		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
++					   numa_node_id());
++		if (IS_ERR_VALUE(irq_base)) {
++			WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
++			     irq_start);
++			irq_base = irq_start;
++		}
++
++		gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
++					hwirq_base, &gic_irq_domain_ops, gic);
++	} else {
++		gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
++						    &gic_irq_domain_ops,
++						    gic);
+ 	}
+-	gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
+-				    hwirq_base, &gic_irq_domain_ops, gic);
++
+ 	if (WARN_ON(!gic->domain))
+ 		return;
+ 
+diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
+index 0e5d9ec..c5f9529 100644
+--- a/include/linux/irqchip/arm-gic.h
++++ b/include/linux/irqchip/arm-gic.h
+@@ -74,6 +74,12 @@ static inline void gic_init(unsigned int nr, int start,
+ 	gic_init_bases(nr, start, dist, cpu, 0, NULL);
+ }
+ 
+-#endif /* __ASSEMBLY */
++extern const struct irq_domain_ops *gic_routable_irq_domain_ops;
++static inline void __init register_routable_domain_ops
++					(const struct irq_domain_ops *ops)
++{
++	gic_routable_irq_domain_ops = ops;
++}
+ 
++#endif /* __ASSEMBLY */
+ #endif
+-- 
+1.7.9.5
