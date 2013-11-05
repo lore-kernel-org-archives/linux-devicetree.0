@@ -1,108 +1,158 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Tue, 05 Nov 2013 21:03:19 +0900
-Message-ID: <000101ceda1f$04ca6f20$0e5f4d60$%han@samsung.com>
-References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
- <1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
- <527744B2.4090303@ti.com> <030d01ced946$d6e23490$84a69db0$%debski@samsung.com>
- <52779D28.9000905@ti.com>
- <CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com>
- <00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>
- <000001ceda17$f41c2030$dc546090$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v12 00/12] Exynos5 IS driver
+Date: Tue,  5 Nov 2013 17:43:17 +0530
+Message-ID: <1383653610-11835-1-git-send-email-arun.kk@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <000001ceda17$f41c2030$dc546090$%han@samsung.com>
-Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kamil Debski' <k.debski@samsung.com>, 'Vivek Gautam' <gautamvivek1987@gmail.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>
-Cc: 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 'Greg KH' <gregkh@linuxfoundation.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Julius Werner' <jwerner@chromium.org>, 'Jingoo Han' <jg1.han@samsung.com>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 05, 2013 8:13 PM, Jingoo Han wrote:
-> On Tuesday, November 05, 2013 6:37 PM, Kamil Debski wrote:
-> > On Tuesday, November 05, 2013 8:20 AM, Vivek Gautam wrote:
-> > > On Mon, Nov 4, 2013 at 6:42 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> > > > On Monday 04 November 2013 03:45 PM, Kamil Debski wrote:
-> > > >> On Monday, November 04, 2013 7:55 AM, Kishon Vijay Abraham I wrote:
-> > > >>> On Thursday 31 October 2013 01:15 PM, Vivek Gautam wrote:
-> > > >>>>
-> > > >>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
-> > > >>>> The new driver uses the generic PHY framework and will interact
-> > > >>>> with
-> > > >>>> DWC3 controller present on Exynos5 series of SoCs.
-> > > >>>
-> > > >>>
-> > > >>> In Exynos, you have a single IP that supports both USB3 and USB2
-> > > PHY
-> > > >>> right? I think that needs to be mentioned here.
-> > > >>
-> > > >>
-> > > >> As far as I know the IP is different.
-> > > >
-> > > >
-> > > > Ok. Sometime back Vivek was mentioning about a single IP for both
-> > > USB3
-> > > > and USB2. Thought it should be this driver. Anyway thanks for the
-> > > clarification.
-> > >
-> > > Right Kishon, I had mentioned that Exynos5's dwc3 controller have a
-> > > single IP for USB2 and USB3 phy.
-> > > From what i see, on exynos5 systems the dwc3 controller uses a combo of
-> > > usb 2 (utmi+) and usb 3 (pipe 3) phy (with base address starting
-> > > 0x12100000).
-> > >
-> > > Kamil, Tomasz,
-> > >
-> > > Please correct me if i am wrong.
-> >
-> > I have the Exynos 5250 documentation and I found two phy register ranges:
-> > 1) USB 2.0 PHY having the base address of 0x1213 0000
-> > 	Chapter 33. USB 2.0 Host Controller
-> > 	Subchapter 33.5.2 Phy Control Register p. 1696
-> > 	First register's description is
-> > 	"USB2.0 phy control register"
-> > 2) USB 3.0 PHY (I guess) with the base address 0x1210 0000
-> > 	Chapter 35. USB 3.0 DRD Controller
-> > 	Subchapter 35.4.6 PHY Control Register p. 1872
-> >
-> > Jingoo, could you comment on the above? You may know more than we do :)
-> 
-> Hi Kamil,
-> 
-> Thank you for trusting me. :-)
-> I just asked my validation engineer about 5250 USB PHY.
-> As I know, she has the best knowledge about Samsung SoC USB hardware.
-> She said that there are 2 PHY controllers such as USB 2.0 PHY, USB 3.0 PHY.
-> 
->   1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
->   2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
-> 
-> > In addition, I have a question to you Vivek - does your USB 3.0
-> > PHY support both host and device?
-> 
-> According to her, USB3.0 PHY can support both 3.0 Host and 3.0 Device.
-> Thank you.
+The patch series adds support for exynos5 fimc-is driver and a
+new sensor s5k4e5. The media driver part is omitted form this series
+as it is already applied.
 
-In addition to this,
+Changes from v11
+----------------
+- Addressed review comments from Sakari Ailus
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg68134.html
 
-Vivek's comment is also right. :-)
-A few minutes ago, I asked one of my USB S/W engineers.
+Changes from v10
+---------------
+- Addressed DT binding review comments from Mark Rutland
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg67806.html
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg67808.html
 
-USB3.0 PHY consists of two blocks such as 3.0 block and 2.0 block.
-This USB3.0 PHY can support UTMI+ and PIPE3 interface for 3.0 block
-and 2.0 block, respectively.
+Changes from v9
+---------------
+- Addressed review comments from Hans and Sylwester
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg67102.html
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg67624.html
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg67623.html
+- Skipped already applied media driver
 
-Conclusion:
+Changes from v8
+---------------
+- Moved i2c-isp device nodes into the fimc-is node as suggested
+  by Sylwester
+- Addressed comments given by Sylwester and Philipp Zabel
 
-   1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
-                       Base address: 0x1213 0000
+Changes from v7
+---------------
+- Addressed few DT related review comments from Sylwester
+  http://www.mail-archive.com/linux-media@vger.kernel.org/msg66403.html
+- Few fixes added after some regression testing
 
-   2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
-                       Base address: 0x1210 0000
-                       2.0 block(UTMI+) & 3.0 block(PIPE3)
+Changes from v6
+---------------
+- Addressed DT binding doc review comments from Sylwester
+  http://www.mail-archive.com/linux-media@vger.kernel.org/msg65771.html
+  http://www.mail-archive.com/linux-media@vger.kernel.org/msg65772.html
+
+Changes from v5
+---------------
+- Addressed review comments from Sylwester
+  http://www.mail-archive.com/linux-media@vger.kernel.org/msg65578.html
+  http://www.mail-archive.com/linux-media@vger.kernel.org/msg65605.html
+
+Changes from v4
+---------------
+- Addressed all review comments from Sylwester
+- Added separate PMU node as suggested by Stephen Warren
+- Added phandle based discovery of subdevs instead of node name
+
+Changes from v3
+---------------
+- Dropped the RFC tag
+- Addressed all review comments from Sylwester and Sachin
+- Removed clock provider for media dev
+- Added s5k4e5 sensor devicetree binding doc
+
+Changes from v2
+---------------
+- Added exynos5 media device driver from Shaik to this series
+- Added ISP pipeline support in media device driver
+- Based on Sylwester's latest exynos4-is development
+- Asynchronos registration of sensor subdevs
+- Made independent IS-sensor support
+- Add s5k4e5 sensor driver
+- Addressed review comments from Sylwester, Hans, Andrzej, Sachin
+
+Changes from v1
+---------------
+- Addressed all review comments from Sylwester
+- Made sensor subdevs as independent i2c devices
+- Lots of cleanup
+- Debugfs support added
+- Removed PMU global register access
 
 
-Best regards,
-Jingoo Han
+Arun Kumar K (12):
+  [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings
+    documentation
+  [media] exynos5-fimc-is: Add driver core files
+  [media] exynos5-fimc-is: Add common driver header files
+  [media] exynos5-fimc-is: Add register definition and context header
+  [media] exynos5-fimc-is: Add isp subdev
+  [media] exynos5-fimc-is: Add scaler subdev
+  [media] exynos5-fimc-is: Add sensor interface
+  [media] exynos5-fimc-is: Add the hardware pipeline control
+  [media] exynos5-fimc-is: Add the hardware interface module
+  [media] exynos5-is: Add Kconfig and Makefile
+  V4L: Add DT binding doc for s5k4e5 image sensor
+  V4L: Add s5k4e5 sensor driver
+
+ .../devicetree/bindings/media/exynos5-fimc-is.txt  |  113 ++
+ .../devicetree/bindings/media/samsung-s5k4e5.txt   |   45 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5k4e5.c                         |  344 ++++
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/exynos5-is/Kconfig          |   20 +
+ drivers/media/platform/exynos5-is/Makefile         |    7 +
+ drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
+ drivers/media/platform/exynos5-is/fimc-is-core.c   |  387 +++++
+ drivers/media/platform/exynos5-is/fimc-is-core.h   |  117 ++
+ drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
+ .../media/platform/exynos5-is/fimc-is-interface.c  |  810 ++++++++++
+ .../media/platform/exynos5-is/fimc-is-interface.h  |  124 ++
+ drivers/media/platform/exynos5-is/fimc-is-isp.c    |  534 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-isp.h    |   90 ++
+ .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++
+ drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 +++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1699 ++++++++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+ drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.c |  476 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 ++
+ drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +
+ drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 +
+ drivers/media/platform/exynos5-is/fimc-is.h        |  160 ++
+ 27 files changed, 7757 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k4e5.txt
+ create mode 100644 drivers/media/i2c/s5k4e5.c
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
+
+-- 
+1.7.9.5
