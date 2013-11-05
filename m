@@ -1,41 +1,314 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: undocumented compatible strings
-Date: Tue, 5 Nov 2013 07:59:56 -0600
-Message-ID: <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w@mail.gmail.com>
-References: <527838F0.2000803@gmail.com>
-	<CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v3 8/9] ARM: add Armada 1500-mini and Chromecast device tree files
+Date: Tue,  5 Nov 2013 15:28:42 +0100
+Message-ID: <1383661723-17956-9-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2013 at 10:01 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Mon, Nov 4, 2013 at 4:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Undocumented compatible strings in kernel sources:
->> 1682m-rng
->> electra-cf
->> electra-ide
->> pasemi,localbus
->> pasemi,localbus-nand
->> pasemi,pwrficient-rng
->> pasemi,sdc
->
-> These will never be documented in the same way as flat device tree,
-> just as the IBM and Sparc bindings won't be.
+This adds very basic device tree files for the Marvell Armada
+1500-mini SoC (Berlin BG2CD) and the Google Chromecast. Currently,
+SoC only has nodes for cpu, some clocks, l2 cache controller, local
+timer, apb timers, uart, and interrupt controllers.
+The Google Chromecast is a consumer device comprising the Armada
+1500-mini SoC above.
 
-Yes, I know. As well as FSL PPC...
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Changelog:
+v3:
+- initial patch
 
-We may need some way to filter these out from whatever checker we come
-up with. I was debating whether to add an undocumented, grandfathered
-bindings document to capture these.
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Rob Landley <rob@landley.net>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/Makefile                        |    3 +-
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts |   29 +++
+ arch/arm/boot/dts/berlin2cd.dtsi                  |  212 +++++++++++++++++++++
+ 3 files changed, 243 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+ create mode 100644 arch/arm/boot/dts/berlin2cd.dtsi
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index c9c1a6c..dac733f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -47,7 +47,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+ dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
+ 	bcm28155-ap.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+-	berlin2-sony-nsz-gs7.dtb
++	berlin2-sony-nsz-gs7.dtb \
++	berlin2cd-google-chromecast.dtb
+ dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
+ 	da850-evm.dtb
+ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+new file mode 100644
+index 0000000..bcd81ff
+--- /dev/null
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -0,0 +1,29 @@
++/*
++ * Device Tree file for Google Chromecast
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "berlin2cd.dtsi"
++
++/ {
++	model = "Google Chromecast";
++	compatible = "google,chromecast", "marvell,berlin2cd", "marvell,berlin";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x20000000>; /* 512 MB */
++	};
++};
++
++&uart0 { status = "okay"; };
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+new file mode 100644
+index 0000000..40d1bed
+--- /dev/null
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -0,0 +1,212 @@
++/*
++ * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * based on GPL'ed 2.6 kernel sources
++ *  (c) Marvell International Ltd.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include "skeleton.dtsi"
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "Marvell Armada 1500-mini (BG2CD) SoC";
++	compatible = "marvell,berlin2cd", "marvell,berlin";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a9";
++			device_type = "cpu";
++			next-level-cache = <&l2>;
++			reg = <0>;
++		};
++	};
++
++	clocks {
++		smclk: sysmgr-clock {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		cfgclk: cfg-clock {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <75000000>;
++		};
++
++		sysclk: system-clock {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <300000000>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-parent = <&gic>;
++
++		ranges = <0 0xf7000000 0x1000000>;
++
++		l2: l2-cache-controller@ac0000 {
++			compatible = "arm,pl310-cache";
++			reg = <0xac0000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++			arm,prefetch-ctrl = <0x70000007>;
++			arm,pwr-ctrl = <0x3>;
++		};
++
++		gic: interrupt-controller@ad1000 {
++			compatible = "arm,cortex-a9-gic";
++			reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		local-timer@ad0600 {
++			compatible = "arm,cortex-a9-twd-timer";
++			reg = <0xad0600 0x20>;
++			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&sysclk>;
++		};
++
++		apb@e80000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0 0xe80000 0x10000>;
++			interrupt-parent = <&aic>;
++
++			timer0: timer@2c00 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c00 0x14>;
++				interrupts = <8>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer1: timer@2c14 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c14 0x14>;
++				interrupts = <9>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer2: timer@2c28 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c28 0x14>;
++				interrupts = <10>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer3: timer@2c3c {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c3c 0x14>;
++				interrupts = <11>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer4: timer@2c50 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c50 0x14>;
++				interrupts = <12>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer5: timer@2c64 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c64 0x14>;
++				interrupts = <13>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer6: timer@2c78 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c78 0x14>;
++				interrupts = <14>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer7: timer@2c8c {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x2c8c 0x14>;
++				interrupts = <15>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			aic: interrupt-controller@3000 {
++				compatible = "snps,dw-apb-ictl";
++				reg = <0x3000 0xc00>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
++		apb@fc0000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0 0xfc0000 0x10000>;
++			interrupt-parent = <&sic>;
++
++			uart0: serial@9000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x9000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <1>;
++				interrupts = <8>;
++				clocks = <&smclk>;
++				status = "disabled";
++			};
++
++			uart1: serial@a000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0xa000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <1>;
++				interrupts = <9>;
++				clocks = <&smclk>;
++				status = "disabled";
++			};
++
++			sic: interrupt-controller@e000 {
++				compatible = "snps,dw-apb-ictl";
++				reg = <0xe000 0x400>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++	};
++};
+-- 
+1.7.10.4
