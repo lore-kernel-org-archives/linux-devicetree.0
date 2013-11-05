@@ -1,74 +1,149 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v3 06/11] usb: phy: add notify suspend and resume callback
-Date: Tue, 5 Nov 2013 09:49:38 +0800
-Message-ID: <1383616183-10511-7-git-send-email-peter.chen@freescale.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 01/11] usb: phy-mxs: Add platform judgement code
+Date: Tue, 5 Nov 2013 10:29:50 +0800
+Message-ID: <20131105022948.GE19770@S2101-09.ap.freescale.net>
 References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
+ <1383616183-10511-2-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, peter.chen@freescale.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383616183-10511-2-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-They are used to notify PHY that the controller enters suspend
-or finishes resume.
+On Tue, Nov 05, 2013 at 09:49:33AM +0800, Peter Chen wrote:
+> The mxs-phy has several bugs and features at different
+> versions, the driver code can get it through of_device_id.data.
+> 
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c |   59 ++++++++++++++++++++++++++++++++++------
+>  1 files changed, 50 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> index fdd33b4..8b9d80c 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
+>   * Copyright (C) 2012 Marek Vasut <marex@denx.de>
+>   * on behalf of DENX Software Engineering GmbH
+>   *
+> @@ -20,6 +20,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+> +#include <linux/of_device.h>
+>  
+>  #define DRIVER_NAME "mxs_phy"
+>  
+> @@ -34,13 +35,55 @@
+>  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+>  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
+>  
+> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> +
+> +/* Do disconnection between PHY and controller without vbus */
+> +#define MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS	BIT(0)
+> +
+> +/*
+> + * The PHY will be in messy if there is an wakeup after putting
+> + * bus to suspend (set portsc.suspendM) but before setting PHY to low
+> + * power mode (set portsc.phcd).
+> + */
+> +#define MXS_PHY_ABNORAML_IN_SUSPEND		BIT(1)
+> +
+> +/*
+> + * The SOF sends too fast after resuming, it will cause disconnection
+> + * between host and high speed device.
+> + */
+> +#define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
+> +
+> +struct mxs_phy_platform_flag {
+> +	unsigned int flags;
+> +};
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
----
- include/linux/usb/phy.h |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
+We should design it as a structure not only for flags but any data that
+we may need to define.  That said, mxs_phy_platform_flag is not a good
+name to me.  I think mxs_phy_data should be more scalable and future
+proof, considering one day we may have more to add into the structure.
 
-diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-index 6c0b1c5..a747960 100644
---- a/include/linux/usb/phy.h
-+++ b/include/linux/usb/phy.h
-@@ -116,6 +116,11 @@ struct usb_phy {
- 			enum usb_device_speed speed);
- 	int	(*notify_disconnect)(struct usb_phy *x,
- 			enum usb_device_speed speed);
-+	int	(*notify_suspend)(struct usb_phy *x,
-+			enum usb_device_speed speed);
-+	int	(*notify_resume)(struct usb_phy *x,
-+			enum usb_device_speed speed);
-+
- };
- 
- /**
-@@ -282,6 +287,24 @@ usb_phy_notify_disconnect(struct usb_phy *x, enum usb_device_speed speed)
- 		return 0;
- }
- 
-+static inline int usb_phy_notify_suspend
-+	(struct usb_phy *x, enum usb_device_speed speed)
-+{
-+	if (x && x->notify_suspend)
-+		return x->notify_suspend(x, speed);
-+	else
-+		return 0;
-+}
-+
-+static inline int usb_phy_notify_resume
-+	(struct usb_phy *x, enum usb_device_speed speed)
-+{
-+	if (x && x->notify_resume)
-+		return x->notify_resume(x, speed);
-+	else
-+		return 0;
-+}
-+
- /* notifiers */
- static inline int
- usb_register_notifier(struct usb_phy *x, struct notifier_block *nb)
--- 
-1.7.1
+> +
+> +static const struct mxs_phy_platform_flag imx23_phy_data = {
+> +	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
+> +};
+> +
+> +static const struct mxs_phy_platform_flag imx6q_phy_data = {
+> +	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
+> +		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
+> +};
+> +
+> +static const struct mxs_phy_platform_flag imx6sl_phy_data = {
+> +	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
+> +};
+> +
+> +static const struct of_device_id mxs_phy_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
+> +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
+> +	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> +
+>  struct mxs_phy {
+>  	struct usb_phy phy;
+>  	struct clk *clk;
+> +	unsigned int flags;
+
+Here, we should have a pointer to struct mxs_phy_data.
+
+Shawn
+
+>  };
+>  
+> -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> -
+>  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>  {
+>  	int ret;
+> @@ -131,6 +174,9 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>  	struct clk *clk;
+>  	struct mxs_phy *mxs_phy;
+>  	int ret;
+> +	const struct of_device_id *of_id =
+> +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
+> +	const struct mxs_phy_platform_flag *platform_flag = of_id->data;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	base = devm_ioremap_resource(&pdev->dev, res);
+> @@ -163,6 +209,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>  	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
+>  
+>  	mxs_phy->clk = clk;
+> +	mxs_phy->flags = platform_flag->flags;
+>  
+>  	platform_set_drvdata(pdev, &mxs_phy->phy);
+>  
+> @@ -182,12 +229,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id mxs_phy_dt_ids[] = {
+> -	{ .compatible = "fsl,imx23-usbphy", },
+> -	{ /* sentinel */ }
+> -};
+> -MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> -
+>  static struct platform_driver mxs_phy_driver = {
+>  	.probe = mxs_phy_probe,
+>  	.remove = mxs_phy_remove,
+> -- 
+> 1.7.1
+> 
+> 
+
