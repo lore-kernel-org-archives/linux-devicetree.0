@@ -1,34 +1,55 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: undocumented compatible strings
-Date: Mon, 4 Nov 2013 20:01:59 -0800
-Message-ID: <CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA@mail.gmail.com>
-References: <527838F0.2000803@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 11/11] usb: phy-mxs: Add system suspend/resume API
+Date: Tue, 5 Nov 2013 12:04:14 +0800
+Message-ID: <20131105040412.GM19770@S2101-09.ap.freescale.net>
+References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
+ <1383616183-10511-12-git-send-email-peter.chen@freescale.com>
+ <20131105030513.GI19770@S2101-09.ap.freescale.net>
+ <20131105025916.GD13472@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <527838F0.2000803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131105025916.GD13472@shlinux1.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2013 at 4:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Tue, Nov 05, 2013 at 10:59:17AM +0800, Peter Chen wrote:
+> > > @@ -83,6 +90,15 @@
+> > >   */
+> > >  #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
+> > >  
+> > > +/* imx23 style PHY */
+> > > +#define MXS_PHY_IMX23				BIT(3)
+> > > +
+> > > +/* imx6q style PHY */
+> > > +#define MXS_PHY_IMX6Q				BIT(4)
+> > > +
+> > > +/* imx6sl style PHY */
+> > > +#define MXS_PHY_IMX6SL				BIT(5)
+> > > +
+> > 
+> > We will not need these, if we do what I suggested to carry a pointer
+> > to mxs_phy_data in mxs_phy.
+> > 
+> > struct mxs_phy {
+> > 	...
+> > 	struct mxs_phy_data *data;
+> > };
+> > 
+> > The check then can be done like below.
+> > 
+> > static inline int is_imx6q_phy(struct mxs_phy *mxs_phy)
+> > {
+> >         return mxs_phy->data == &imx6q_phy_data;
+> > }
+> > 
+> 
+> What's the benefit compared to current one?
 
-> Undocumented compatible strings in kernel sources:
-> 1682m-rng
-> electra-cf
-> electra-ide
-> pasemi,localbus
-> pasemi,localbus-nand
-> pasemi,pwrficient-rng
-> pasemi,sdc
+Save those pointless flags.
 
-These will never be documented in the same way as flat device tree,
-just as the IBM and Sparc bindings won't be.
+Shawn
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
