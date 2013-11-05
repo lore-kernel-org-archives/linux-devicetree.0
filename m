@@ -1,298 +1,241 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Tue, 5 Nov 2013 16:56:40 +0900
-Message-ID: <CANqRtoRrDT49NXFS6rxMYnp9es_9mj+SjKpFfWja1s8V3W1nfw@mail.gmail.com>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 3/6] gpio: davinci: use irqdomain
+Date: Tue, 5 Nov 2013 13:30:29 +0530
+Message-ID: <CA+V-a8uLAnVdjNiqNJnOaP1qJU8wF4pqkO0b1DKo1Q3bM8qPcg@mail.gmail.com>
+References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+ <1383406775-14902-4-git-send-email-prabhakar.csenng@gmail.com> <5277E722.50205@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5277E722.50205@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, LDOC <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, dlos <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 11:55 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> The R8A7790 has several clocks that are too custom to be supported in a
-> generic driver. Those clocks can be divided in two categories:
+Hi grygorii,
+
+Thanks for the review.
+
+On Mon, Nov 4, 2013 at 11:57 PM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> Hi Prabhakar Lad,
 >
-> - Fixed rate clocks with multiplier and divisor set according to boot
->   mode configuration
+> On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>>
+>> This patch converts the davinci gpio driver to use irqdomain
+>> support.
 >
-> - Custom divider clocks with SoC-specific divider values
+> This patch needs to be splitted in two:
+> 1) add IRQ domain support
+> 2) remove intc_irq_num
 >
-> This driver supports both.
+OK
+
+>>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> ---
+>>   arch/arm/mach-davinci/da830.c              |    1 -
+>>   arch/arm/mach-davinci/da850.c              |    1 -
+>>   arch/arm/mach-davinci/dm355.c              |    1 -
+>>   arch/arm/mach-davinci/dm365.c              |    1 -
+>>   arch/arm/mach-davinci/dm644x.c             |    1 -
+>>   arch/arm/mach-davinci/dm646x.c             |    1 -
+>>   drivers/gpio/gpio-davinci.c                |   49 ++++++++++++++++++----------
+>>   include/linux/platform_data/gpio-davinci.h |    3 +-
+>>   8 files changed, 32 insertions(+), 26 deletions(-)
+>>
 >
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../bindings/clock/renesas,r8a7790-cpg-clocks.txt  |  26 +++
->  drivers/clk/shmobile/Makefile                      |   1 +
->  drivers/clk/shmobile/clk-r8a7790.c                 | 176 +++++++++++++++++++++
->  include/dt-bindings/clock/r8a7790-clock.h          |  10 ++
->  include/linux/clk/shmobile.h                       |  19 +++
->  5 files changed, 232 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
->  create mode 100644 drivers/clk/shmobile/clk-r8a7790.c
->  create mode 100644 include/linux/clk/shmobile.h
+> [...]
 >
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
-> new file mode 100644
-> index 0000000..d889917
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r8a7790-cpg-clocks.txt
-> @@ -0,0 +1,26 @@
-> +* Renesas R8A7790 Clock Pulse Generator (CPG)
-> +
-> +The CPG generates core clocks for the R8A7790. It includes three PLLs and
-> +several fixed ratio dividers.
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "renesas,r8a7790-cpg-clocks"
-> +  - reg: Base address and length of the memory resource used by the CPG
-> +  - clocks: Reference to the parent clock
-> +  - #clock-cells: Must be 1
-> +  - clock-output-names: The name of the clocks, must be "main", "pll1",
-> +    "pll3", "lb", "qspi", "sdh", "sd0", "sd1".
-> +
-> +
-> +Example
-> +-------
-> +
-> +       cpg_clocks: cpg_clocks {
-> +               compatible = "renesas,r8a7790-cpg-clocks";
-> +               reg = <0 0xe6150000 0 0x1000>;
-> +               clocks = <&extal_clk>;
-> +               #clock-cells = <1>;
-> +               clock-output-names = "main", "pll1", "pll3", "lb",
-> +                                    "qspi", "sdh", "sd0", "sd1";
-> +       };
-> diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-> index 3275c78..949f29e 100644
-> --- a/drivers/clk/shmobile/Makefile
-> +++ b/drivers/clk/shmobile/Makefile
-> @@ -1,4 +1,5 @@
->  obj-$(CONFIG_ARCH_EMEV2)               += clk-emev2.o
-> +obj-$(CONFIG_ARCH_R8A7790)             += clk-r8a7790.o
->  obj-$(CONFIG_ARCH_SHMOBILE_MULTI)      += clk-div6.o
->  obj-$(CONFIG_ARCH_SHMOBILE_MULTI)      += clk-mstp.o
+>>
+>>   int __init dm646x_gpio_register(void)
+>> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+>> index 95c6df1..bcb6d8d 100644
+>> --- a/drivers/gpio/gpio-davinci.c
+>> +++ b/drivers/gpio/gpio-davinci.c
+>> @@ -16,6 +16,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/io.h>
+>>   #include <linux/irq.h>
+>> +#include <linux/irqdomain.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/platform_data/gpio-davinci.h>
+>>
+>> @@ -292,7 +293,7 @@ gpio_irq_handler(unsigned irq, struct irq_desc *desc)
+>>               __raw_writel(status, &g->intstat);
+>>
+>>               /* now demux them to the right lowlevel handler */
+>> -             n = d->irq_base;
+>> +             n = irq_find_mapping(d->irq_domain, 0);
 >
-> diff --git a/drivers/clk/shmobile/clk-r8a7790.c b/drivers/clk/shmobile/clk-r8a7790.c
-> new file mode 100644
-> index 0000000..2e76638
-> --- /dev/null
-> +++ b/drivers/clk/shmobile/clk-r8a7790.c
-> @@ -0,0 +1,176 @@
-> +/*
-> + * r8a7790 Core CPG Clocks
-> + *
-> + * Copyright (C) 2013  Ideas On Board SPRL
-> + *
-> + * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk/shmobile.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <dt-bindings/clock/r8a7790-clock.h>
-> +
-> +#define CPG_NUM_CLOCKS                 (R8A7790_CLK_SD1 + 1)
-> +
-> +struct r8a7790_cpg {
-> +       struct clk_onecell_data data;
-> +       spinlock_t lock;
-> +       void __iomem *reg;
-> +};
-> +
-> +/*
-> + *   MD                EXTAL           PLL0    PLL1    PLL3
-> + * 14 13 19    (MHz)           *1      *1
-> + *---------------------------------------------------
-> + * 0  0  0     15 x 1          x172/2  x208/2  x106
-> + * 0  0  1     15 x 1          x172/2  x208/2  x88
-> + * 0  1  0     20 x 1          x130/2  x156/2  x80
-> + * 0  1  1     20 x 1          x130/2  x156/2  x66
-> + * 1  0  0     26 / 2          x200/2  x240/2  x122
-> + * 1  0  1     26 / 2          x200/2  x240/2  x102
-> + * 1  1  0     30 / 2          x172/2  x208/2  x106
-> + * 1  1  1     30 / 2          x172/2  x208/2  x88
-> + *
-> + * *1 :        Table 7.6 indicates VCO ouput (PLLx = VCO/2)
-> + */
-> +#define CPG_PLL_CONFIG_INDEX(md)       ((((md) & BIT(14)) >> 12) | \
-> +                                        (((md) & BIT(13)) >> 12) | \
-> +                                        (((md) & BIT(19)) >> 19))
-> +struct cpg_pll_config {
-> +       unsigned int extal_div;
-> +       unsigned int pll1_mult;
-> +       unsigned int pll3_mult;
-> +};
-> +
-> +static const struct cpg_pll_config cpg_pll_configs[8] = {
-> +       { 1, 208, 106 }, { 1, 208,  88 }, { 1, 156,  80 }, { 1, 156,  66 },
-> +       { 2, 240, 122 }, { 2, 240, 102 }, { 2, 208, 106 }, { 2, 208,  88 },
-> +};
-> +
-> +/* SDHI divisors */
-> +static const struct clk_div_table cpg_sdh_div_table[] = {
-> +       {  0,  2 }, {  1,  3 }, {  2,  4 }, {  3,  6 },
-> +       {  4,  8 }, {  5, 12 }, {  6, 16 }, {  7, 18 },
-> +       {  8, 24 }, { 10, 36 }, { 11, 48 }, {  0,  0 },
-> +};
-> +
-> +static const struct clk_div_table cpg_sd01_div_table[] = {
-> +       {  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
-> +       { 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
-> +};
-> +
-> +static u32 cpg_mode __initdata;
-> +
-> +#define CPG_SDCKCR                     0x00000074
-> +
-> +static void __init r8a7790_cpg_clocks_init(struct device_node *np)
-> +{
-> +       const struct cpg_pll_config *config;
-> +       struct r8a7790_cpg *cpg;
-> +       struct clk **clks;
-> +       unsigned int i;
-> +
-> +       cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
-> +       clks = kzalloc(CPG_NUM_CLOCKS * sizeof(*clks), GFP_KERNEL);
-> +       if (cpg == NULL || clks == NULL) {
-> +               kfree(clks);
-> +               kfree(cpg);
-> +               pr_err("%s: failed to allocate cpg\n", __func__);
-> +               return;
-> +       }
-> +
-> +       spin_lock_init(&cpg->lock);
-> +
-> +       cpg->data.clks = clks;
-> +       cpg->data.clk_num = CPG_NUM_CLOCKS;
-> +
-> +       cpg->reg = of_iomap(np, 0);
-> +       if (WARN_ON(cpg->reg == NULL)) {
-> +               kfree(cpg->data.clks);
-> +               kfree(cpg);
-> +               return;
-> +       }
-> +
-> +       config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-> +
-> +       for (i = 0; i < CPG_NUM_CLOCKS; ++i) {
-> +               const struct clk_div_table *table = NULL;
-> +               const char *parent_name = "main";
-> +               const char *name;
-> +               unsigned int shift;
-> +               unsigned int mult = 1;
-> +               unsigned int div = 1;
-> +               struct clk *clk;
-> +
-> +               of_property_read_string_index(np, "clock-output-names", i,
-> +                                             &name);
-> +
-> +               switch (i) {
-> +               case R8A7790_CLK_MAIN:
-> +                       parent_name = of_clk_get_parent_name(np, 0);
-> +                       div = config->extal_div;
-> +                       break;
-> +               case R8A7790_CLK_PLL1:
-> +                       mult = config->pll1_mult / 2;
-> +                       break;
-> +               case R8A7790_CLK_PLL3:
-> +                       mult = config->pll3_mult;
-> +                       break;
-> +               case R8A7790_CLK_LB:
-> +                       div = cpg_mode & BIT(18) ? 36 : 24;
-> +                       break;
-> +               case R8A7790_CLK_QSPI:
-> +                       div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
-> +                           ? 16 : 20;
-> +                       break;
-> +               case R8A7790_CLK_SDH:
-> +                       table = cpg_sdh_div_table;
-> +                       shift = 8;
-> +                       break;
-> +               case R8A7790_CLK_SD0:
-> +                       table = cpg_sd01_div_table;
-> +                       shift = 4;
-> +                       break;
-> +               case R8A7790_CLK_SD1:
-> +                       table = cpg_sd01_div_table;
-> +                       shift = 0;
-> +                       break;
-> +               }
-> +
-> +               if (!table)
-> +                       clk = clk_register_fixed_factor(NULL, name, parent_name,
-> +                                                       0, mult, div);
-> +               else
-> +                       clk = clk_register_divider_table(NULL, name,
-> +                                                        parent_name, 0,
-> +                                                        cpg->reg + CPG_SDCKCR,
-> +                                                        shift, 4, 0, table,
-> +                                                        &cpg->lock);
-> +
-> +               if (IS_ERR(clk))
-> +                       pr_err("%s: failed to register %s %s clock (%ld)\n",
-> +                              __func__, np->name, name, PTR_ERR(clk));
-> +       }
-> +
-> +       of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
-> +}
-> +CLK_OF_DECLARE(r8a7790_cpg_clks, "renesas,r8a7790-cpg-clocks",
-> +              r8a7790_cpg_clocks_init);
-> +
-> +void __init r8a7790_clocks_init(u32 mode)
-> +{
-> +       cpg_mode = mode;
-> +
-> +       of_clk_init(NULL);
-> +}
+> Sorry, but I don't understand why have you used <0> as hwirq?
+>
+> All below logic may not work in case if we switch to use Linear IRQ domain :(
+> - irq_create_mapping() may return ANY Linux IRQ number. It means, for
+> example, for bank0(ngpio=32)[0] it may return Linux_IRQ=200 or 201 or any other.
+>  Also, for bank3(ngpio=16)[0] it may return Linux_IRQ=150, etc.
+> - More over, if you call irq_create_mapping() 32 times you may NOT get
+>  sequential Linux_IRQ numbers.
+>
+> So, the better sequence here can be smth. as below
+> (I can't verify it - my HW support only unbanked IRQs):
+>
+Yeah below logic works fine for banked IRQs.
 
-Hi Laurent,
+>         if (irq & 1)
+>                 mask <<= 16;
+>
+>         while (1) {
+>                 u32             status;
+>                 int             bit;
+>
+>                 /* ack any irqs */
+>                 status = __raw_readl(&g->intstat) & mask;
+>                 if (!status)
+>                         break;
+>                 __raw_writel(status, &g->intstat);
+>
+>                 /* now demux them to the right lowlevel handler */
+>                 while (status) {
+>                         bit = __ffs(status);
+>                         status &= ~(1 << bit);
+>                         generic_handle_irq(irq_find_mapping(d->irq_domain, bit));
+>                 }
+>         }
+>
+>
+>>               if (irq & 1) {
+>>                       n += 16;
+>>                       status >>= 16;
+>> @@ -313,10 +314,7 @@ static int gpio_to_irq_banked(struct gpio_chip *chip, unsigned offset)
+>>   {
+>>       struct davinci_gpio_controller *d = chip2controller(chip);
+>>
+>> -     if (d->irq_base >= 0)
+>> -             return d->irq_base + offset;
+>> -     else
+>> -             return -ENODEV;
+>> +     return irq_find_mapping(d->irq_domain, offset);
+>
+> I think you can use irq_create_mapping() here instead of
+> irq_find_mapping(), so IRQ will be mapped/allocated on demand.
+> Also, it seems, above code may crash in case if SoC has >1 GPIO banks and
+> gpio_unbanked > 0 and someone will call gpio_to_irq(>31).
+>
+Fixed it.
 
-Thanks a lot for your efforts on this. In general I think it all looks
-good, I have however one question regarding the "probe" interface
-between the SoC code in arch/arm/mach-shmobile and drivers/clk. The
-code above in r8a7790_clocks_init() looks a bit spaghetti-style to me,
-perhaps it is possible to make it cleaner somehow?
+>>   }
+>>
+>>   static int gpio_to_irq_unbanked(struct gpio_chip *chip, unsigned offset)
+>> @@ -373,6 +371,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>       struct davinci_gpio_controller *chips = platform_get_drvdata(pdev);
+>>       struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>>       struct davinci_gpio_regs __iomem *g;
+>> +     int gpio_irq = 0;
+>>
+>>       ngpio = pdata->ngpio;
+>>       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>> @@ -402,9 +401,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>        */
+>>       for (gpio = 0, bank = 0; gpio < ngpio; bank++, gpio += 32) {
+>>               chips[bank].chip.to_irq = gpio_to_irq_banked;
+>> -             chips[bank].irq_base = pdata->gpio_unbanked
+>> -                     ? -EINVAL
+>> -                     : (pdata->intc_irq_num + gpio);
+>> +             if (!pdata->gpio_unbanked) {
+>> +                     chips[bank].irq_domain =
+>> +                             irq_domain_add_linear(NULL, 32,
+>
+> Use chips[i].chip.ngpio here instead of const 32?
+>
+OK
 
-I realize that you need some way to read out the mode pin setting, and
-that is currently provided by the SoC code in arch/arm/mach-shmobile/.
-Today it seems that you instead of letting the drivers/clk/ code call
-SoC code to get the mode pin setting (and add a SoC link dependency)
-you simply feed the settings to the clk code from the SoC code using
-the parameter to r8a7790_clocks_init(). This direction seems good to
-me. I'm however not too keen on the current symbol dependency in the
-"other" direction.
+>> +                                                   &irq_domain_simple_ops,
+>
+> Pass &davinci_gpio_irq_ops (see below)
+>
+>> +                                                   NULL);
+>
+> Pass &chips[bank] as host_data and use .map() callback (see below)
+>
+OK
 
-If possible I'd like to keep the interface between the SoC code and
-the driver code to "standard" driver model functions. For instance,
-using of_clk_init(NULL) from the SoC code seems like a pretty good
-standard interface - without any link time dependencies. So with the
-current code, the r8a7790_clocks_init() function somehow goes against
-this no-symbol-dependency preference that I happen to have. =)
+>> +
+>> +                     if (!chips[bank].irq_domain)
+>> +                             return -ENOMEM;
+>> +             }
+>>       }
+>>
+>>       /*
+>> @@ -445,9 +450,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>        * Or, AINTC can handle IRQs for banks of 16 GPIO IRQs, which we
+>>        * then chain through our own handler.
+>>        */
+>> -     for (gpio = 0, irq = gpio_to_irq(0), bank = 0;
+>> -                     gpio < ngpio;
+>> -                     bank++, bank_irq++) {
+>> +     for (gpio = 0, irq = 0, bank = 0; gpio < ngpio; bank++, bank_irq++) {
+>>               unsigned                i;
+>>
+>>               /* disabled by default, enabled only as needed */
+>> @@ -465,12 +468,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>                */
+>>               irq_set_handler_data(bank_irq, &chips[gpio / 32]);
+>>
+>> -             for (i = 0; i < 16 && gpio < ngpio; i++, irq++, gpio++) {
+>> -                     irq_set_chip(irq, &gpio_irqchip);
+>> -                     irq_set_chip_data(irq, (__force void *)g);
+>> -                     irq_set_handler_data(irq, (void *)__gpio_mask(gpio));
+>> -                     irq_set_handler(irq, handle_simple_irq);
+>> -                     set_irq_flags(irq, IRQF_VALID);
+>> +             if (!(bank % 2))
+>> +                     irq = 0;
+>> +             else
+>> +                     irq = 16;
+>
+> As I mentioned above, I think, it is not good to play with IRQ numbers here.
+> Only chained IRQs and <binten> can be configured in this cycle.
+>
+Done
 
-Would it for instance be possible let the SoC code read out the mode
-pin setting, and then pass the current setting using the argument of
-of_clk_init() to select different dividers? That way the symbol
-dependency goes away. Or maybe it becomes too verbose?
+>> +
+>> +             for (i = 0; i < 16 && gpio < ngpio; i++, gpio++) {
+>> +                     int irqno =
+>> +                             irq_create_mapping(chips[gpio / 32].irq_domain,
+>> +                                                i + irq);
+>> +
+>> +                     irq_set_chip(irqno, &gpio_irqchip);
+>> +                     irq_set_chip_data(irqno, (__force void *)g);
+>> +                     irq_set_handler_data(irqno, (void *)__gpio_mask(gpio));
+>> +                     irq_set_handler(irqno, handle_simple_irq);
+>> +                     set_irq_flags(irqno, IRQF_VALID);
+>
+> It makes no sense to manually create mapping. Usually it can be done in
+> .map() callback of IRQ domain. Like:
+>
+> static int davinci_gpio_irq_map(struct irq_domain *d, unsigned int irq,
+>                             irq_hw_number_t hw)
+> {
+>         struct davinci_gpio_controller *chip = d->host_data;
+>         unsigned gpio = chip->chip.base + hw;
+>
+>         irq_set_chip_and_handler_name(irq, &gpio_irqchip, handle_simple_irq,
+>                                       "davinci_gpio");
+>         irq_set_irq_type(irq, IRQ_TYPE_NONE);
+>         set_irq_flags(irq, IRQF_VALID);
+> ...
+>         return 0;
+> }
+>
+> static const struct irq_domain_ops davinci_gpio_irq_ops = {
+>         .map = davinci_gpio_irq_map,
+>         .xlate = irq_domain_xlate_onetwocell,
+> };
+>
+>
+Fixed it.
 
-Let me know what you think. I would like to follow the same style for r8a7791.
-
-Cheers,
-
-/ magnus
+Regards,
+--Prabhakar Lad
