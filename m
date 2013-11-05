@@ -1,55 +1,38 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 03/11] usb: doc: phy-mxs: update binding for adding
- anatop phandle
-Date: Tue, 5 Nov 2013 11:15:14 +0800
-Message-ID: <20131105031511.GK19770@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH v3 04/11] ARM: dts: imx6: add anatop phandle for usbphy
+Date: Tue, 5 Nov 2013 11:16:57 +0800
+Message-ID: <20131105031654.GL19770@S2101-09.ap.freescale.net>
 References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
- <1383616183-10511-4-git-send-email-peter.chen@freescale.com>
- <20131105023404.GF19770@S2101-09.ap.freescale.net>
- <20131105025001.GB13472@shlinux1.ap.freescale.net>
+ <1383616183-10511-5-git-send-email-peter.chen@freescale.com>
+ <20131105024130.GG19770@S2101-09.ap.freescale.net>
+ <20131105025307.GC13472@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131105025001.GB13472@shlinux1.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <20131105025307.GC13472@shlinux1.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
 To: Peter Chen <peter.chen@freescale.com>
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rob.herring@calxeda.com, balbi@ti.com, kernel@pengutronix.de, grant.likely@linaro.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 10:50:02AM +0800, Peter Chen wrote:
-> On Tue, Nov 05, 2013 at 10:34:06AM +0800, Shawn Guo wrote:
-> > On Tue, Nov 05, 2013 at 09:49:35AM +0800, Peter Chen wrote:
-> > > Add anatop phandle which is used to access anatop registers to
-> > > control PHY's power and other USB operations.
+On Tue, Nov 05, 2013 at 10:53:08AM +0800, Peter Chen wrote:
+> On Tue, Nov 05, 2013 at 10:41:33AM +0800, Shawn Guo wrote:
+> > On Tue, Nov 05, 2013 at 09:49:36AM +0800, Peter Chen wrote:
+> > > Add anatop phandle for usbphy
 > > > 
 > > > Signed-off-by: Peter Chen <peter.chen@freescale.com>
 > > > ---
-> > >  Documentation/devicetree/bindings/usb/mxs-phy.txt |    2 ++
+> > >  arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
 > > >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > > index 5835b27..e2d5211 100644
-> > > --- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-> > > @@ -4,10 +4,12 @@ Required properties:
-> > >  - compatible: Should be "fsl,imx23-usbphy"
 > > 
-> > This needs update too, as we now have another two compatible strings.
+> > Does imx6sl.dtsi need the same update?
 > > 
 > 
-> One question, this is needed to change when adding compatible string
-> to dts or using that compatible string at driver?
+> It is needed (for chipidea, it is the same), but I still have
+> no time to test on it. Will add them later.
 
-When compatible match table in the driver gets new entries.
+So all "fsl,imx6sl-usbphy" code is untested so far?
 
 Shawn
+
