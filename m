@@ -1,138 +1,98 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH v10 01/12] exynos5-fimc-is: Add Exynos5 FIMC-IS device
- tree bindings documentation
-Date: Tue, 5 Nov 2013 11:00:30 +0530
-Message-ID: <CALt3h78pyyKU35k7A=JZkvf2K4-3tSb2n2o2LZKnPef9zqWuNQ@mail.gmail.com>
-References: <1382074659-31130-1-git-send-email-arun.kk@samsung.com>
-	<1382074659-31130-2-git-send-email-arun.kk@samsung.com>
-	<20131028233205.GC4763@kartoffel>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] usb: phy-mxs: Add anatop regmap
+Date: Tue, 5 Nov 2013 13:17:47 +0800
+Message-ID: <20131105051746.GF13472@shlinux1.ap.freescale.net>
+References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
+ <1383616183-10511-6-git-send-email-peter.chen@freescale.com>
+ <20131105024753.GH19770@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20131028233205.GC4763@kartoffel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "shaik.ameer@samsung.com" <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131105024753.GH19770-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Tue, Nov 05, 2013 at 10:47:55AM +0800, Shawn Guo wrote:
+> On Tue, Nov 05, 2013 at 09:49:37AM +0800, Peter Chen wrote:
+> > It is needed by imx6 SoC serial, but not for imx23 and imx28.
+> 
+> s/serial/series
+> 
+> Should we have another MXS_PHY_XXX flag for this, so that we can
+> explicitly check when anatop must be there?
+> 
 
-Thank you for the review.
-Will address your comments.
+OK, I will add it, it can let the imx23/28 do not check dts.
 
-Regards
-Arun
+> Shawn
+> 
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/phy/phy-mxs-usb.c |   15 +++++++++++++++
+> >  1 files changed, 15 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> > index 472fe36..8cdfbf1 100644
+> > --- a/drivers/usb/phy/phy-mxs-usb.c
+> > +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > @@ -21,6 +21,8 @@
+> >  #include <linux/err.h>
+> >  #include <linux/io.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/syscon.h>
+> >  
+> >  #define DRIVER_NAME "mxs_phy"
+> >  
+> > @@ -87,6 +89,7 @@ struct mxs_phy {
+> >  	struct usb_phy phy;
+> >  	struct clk *clk;
+> >  	unsigned int flags;
+> > +	struct regmap *regmap_anatop;
+> >  };
+> >  
+> >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> > @@ -191,6 +194,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
+> >  	const struct of_device_id *of_id =
+> >  			of_match_device(mxs_phy_dt_ids, &pdev->dev);
+> >  	const struct mxs_phy_platform_flag *platform_flag = of_id->data;
+> > +	struct device_node *np = pdev->dev.of_node;
+> >  
+> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >  	base = devm_ioremap_resource(&pdev->dev, res);
+> > @@ -210,6 +214,17 @@ static int mxs_phy_probe(struct platform_device *pdev)
+> >  		return -ENOMEM;
+> >  	}
+> >  
+> > +	/* Some SoCs don't have anatop registers */
+> > +	if (of_get_property(np, "fsl,anatop", NULL)) {
+> > +		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
+> > +			(np, "fsl,anatop");
+> > +		if (IS_ERR(mxs_phy->regmap_anatop)) {
+> > +			dev_dbg(&pdev->dev,
+> > +				"failed to find regmap for anatop\n");
+> > +			return PTR_ERR(mxs_phy->regmap_anatop);
+> > +		}
+> > +	}
+> > +
+> >  	mxs_phy->phy.io_priv		= base;
+> >  	mxs_phy->phy.dev		= &pdev->dev;
+> >  	mxs_phy->phy.label		= DRIVER_NAME;
+> > -- 
+> > 1.7.1
+> > 
+> > 
 
-On Tue, Oct 29, 2013 at 5:02 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> Hi,
->
-> Apologies for the late reply. I have a few comments, but nothing major.
->
-> On Fri, Oct 18, 2013 at 06:37:28AM +0100, Arun Kumar K wrote:
->> The patch adds the DT binding documentation for Samsung
->> Exynos5 SoC series imaging subsystem (FIMC-IS).
->>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 ++++++++++++++++++++
->>  1 file changed, 84 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
->> new file mode 100644
->> index 0000000..0525417
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
->> @@ -0,0 +1,84 @@
->> +Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
->> +------------------------------------------------------
->> +
->> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
->> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
->> +FIMC-LITE IPs but has a much improved version of FIMC-IS which can
->> +handle sensor controls and camera post-processing operations. The
->> +Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
->> +post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
->> +dedicated scalers (SCC and SCP).
->> +
->> +fimc-is node
->> +------------
->> +
->> +Required properties:
->> +
->> +- compatible        : must be "samsung,exynos5250-fimc-is"
->
-> s/must be/should contain/
->
->> +- reg               : physical base address and size of the memory mapped
->> +                      registers
->> +- interrupt-parent  : parent interrupt controller
->
-> I don't think this is actually required in all cases. It's a standard property
-> that people can add if it happens to be required in a particular instance.
->
->> +- interrupts        : fimc-is interrupt to the parent interrupt controller
->
-> Is this the only interrupt the device generates? If so:
->
-> - interrupts: interrupt-specifier for the fimc-is interrupt.
->
->> +- clocks            : list of clock specifiers, corresponding to entries in
->> +                      clock-names property
->> +- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
->> +                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
->> +                      matching entries in the clocks property
->> +- samsung,pmu       : phandle to the Power Management Unit (PMU) node
->> +
->> +i2c-isp (ISP I2C bus controller) nodes
->> +--------------------------------------
->> +The i2c-isp node is defined as the child node of fimc-is.
->
-> There are multiple of these, so how about the following instead:
->
-> The i2c-isp nodes should be children of the fimc-is node.
->
-> It might be worth pointing out that ranges, #address-cells, and #size-cells
-> should be present as appropriate.
->
->> +
->> +Required properties:
->> +
->> +- compatible : should be "samsung,exynos4212-i2c-isp" for Exynos4212,
->> +               Exynos4412 and Exynos5250 SoCs
->
-> Similarly, s/should be/must contain/
->
->> +- reg                : physical base address and length of the registers set
->> +- clocks     : must contain gate clock specifier for this controller
->> +- clock-names        : must contain "i2c_isp" entry
->
-> I'd prefer clocks to be described as for the simc-is, with clock names being
-> something like:
->
-> - clock-names: should contain "i2c_isp" for the gate clock.
->
->> +
->> +For the i2c-isp node, it is required to specify a pinctrl state named "default",
->> +according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
->
-> I'd prefer a mention of pinctrl-0 and pinctrl-names, as that's what most other
-> bindings do.
->
-> Also, as this is described as required it should be in the example.
->
->> +
->> +Device tree nodes of the image sensors controlled directly by the FIMC-IS
->> +firmware must be child nodes of their corresponding ISP I2C bus controller node.
->> +The data link of these image sensors must be specified using the common video
->> +interfaces bindings, defined in video-interfaces.txt.
->
-> These don't seem to be in the example and probably should be.
->
-> Otherwise, this looks fine. With those points fixed up:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
-> Thanks,
-> Mark.
+-- 
+
+Best Regards,
+Peter Chen
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
