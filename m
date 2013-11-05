@@ -1,250 +1,78 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v3 3/9] ARM: l2x0: add Marvell Tauros3 support
-Date: Tue,  5 Nov 2013 15:28:37 +0100
-Message-ID: <1383661723-17956-4-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv11][ 2/7] video: imxfb: Also add pwmr for the device tree.
+Date: Tue,  5 Nov 2013 15:39:09 +0100
+Message-ID: <1383662354-22417-2-git-send-email-denis@eukrea.com>
+References: <1383662354-22417-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383662354-22417-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Marvell Tauros3 cache controller which
-is compatible with pl310 cache controller but broadcasts L1 cache
-operations to L2 cache. While updating the binding documentation,
-clean up the list of possible compatibles. Also reorder driver
-compatibles to allow non-ARM derivated to be compatible to ARM
-cache controller compatibles.
+pwmr has to be set to get the imxfb backlight work,
+though pwmr was only configurable trough the platform data.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-Changelog:
-v2->v3:
-- none
-v1->v2:
-- add tauros3 data without outer cache ops (Suggested by Jisheng Zhang)
-- reorder compatibles to allow derivates to be compatible with ARM
-  controllers (Suggested by Mark Rutland)
+ .../devicetree/bindings/video/fsl,imx-fb.txt       |    3 +++
+ drivers/video/imxfb.c                              |    2 ++
+ 2 files changed, 5 insertions(+)
 
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Rob Landley <rob@landley.net>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- Documentation/devicetree/bindings/arm/l2cc.txt |   23 +++++------
- arch/arm/include/asm/hardware/cache-l2x0.h     |    1 +
- arch/arm/mm/cache-l2x0.c                       |   49 ++++++++++++++++++++----
- arch/arm/mm/cache-tauros3.h                    |   41 ++++++++++++++++++++
- 4 files changed, 95 insertions(+), 19 deletions(-)
- create mode 100644 arch/arm/mm/cache-tauros3.h
+diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/D=
+ocumentation/devicetree/bindings/video/fsl,imx-fb.txt
+index 46da08d..ac457ae 100644
+--- a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+@@ -17,6 +17,9 @@ Required nodes:
+ Optional properties:
+ - fsl,dmacr: DMA Control Register value. This is optional. By default,=
+ the
+ 	register is not modified as recommended by the datasheet.
++- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property i=
+s
++	optional, but defining it is necessary to get the backlight working. =
+If that
++	property is ommited, the register is zeroed.
+ - fsl,lscr1: LCDC Sharp Configuration Register value.
+=20
+ Example:
+diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+index a2fe8bd..d2447d2 100644
+--- a/drivers/video/imxfb.c
++++ b/drivers/video/imxfb.c
+@@ -835,6 +835,8 @@ static int imxfb_init_fbinfo(struct platform_device=
+ *pdev)
+=20
+ 		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
+=20
++		of_property_read_u32(np, "fsl,pwmr", &fbi->pwmr);
++
+ 		/* These two function pointers could be used by some specific
+ 		 * platforms. */
+ 		fbi->lcd_power =3D NULL;
+--=20
+1.7.9.5
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index c0c7626..b513cb8 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -7,20 +7,21 @@ The ARM L2 cache representation in the device tree should be done as follows:
- Required properties:
- 
- - compatible : should be one of:
--	"arm,pl310-cache"
--	"arm,l220-cache"
--	"arm,l210-cache"
--	"marvell,aurora-system-cache": Marvell Controller designed to be
-+  "arm,pl310-cache"
-+  "arm,l220-cache"
-+  "arm,l210-cache"
-+  "bcm,bcm11351-a2-pl310-cache": DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
-+  "brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
-+     offset needs to be added to the address before passing down to the L2
-+     cache controller
-+  "marvell,aurora-system-cache": Marvell Controller designed to be
-      compatible with the ARM one, with system cache mode (meaning
-      maintenance operations on L1 are broadcasted to the L2 and L2
-      performs the same operation).
--	"marvell,"aurora-outer-cache: Marvell Controller designed to be
--	 compatible with the ARM one with outer cache mode.
--	"brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
--	offset needs to be added to the address before passing down to the L2
--	cache controller
--	"bcm,bcm11351-a2-pl310-cache": DEPRECATED by
--	                               "brcm,bcm11351-a2-pl310-cache"
-+  "marvell,aurora-outer-cache": Marvell Controller designed to be
-+     compatible with the ARM one with outer cache mode.
-+  "marvell,tauros3-cache": Marvell Tauros3 cache controller, compatible
-+     with arm,pl310-cache controller.
- - cache-unified : Specifies the cache is a unified cache.
- - cache-level : Should be set to 2 for a level 2 cache.
- - reg : Physical base address and size of cache controller's memory mapped
-diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
-index 3b2c40b..6795ff7 100644
---- a/arch/arm/include/asm/hardware/cache-l2x0.h
-+++ b/arch/arm/include/asm/hardware/cache-l2x0.h
-@@ -131,6 +131,7 @@ struct l2x0_regs {
- 	unsigned long prefetch_ctrl;
- 	unsigned long pwr_ctrl;
- 	unsigned long ctrl;
-+	unsigned long aux2_ctrl;
- };
- 
- extern struct l2x0_regs l2x0_saved_regs;
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 447da6f..a70a4f5 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -25,6 +25,7 @@
- 
- #include <asm/cacheflush.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include "cache-tauros3.h"
- #include "cache-aurora-l2.h"
- 
- #define CACHE_LINE_SIZE		32
-@@ -767,6 +768,14 @@ static void aurora_save(void)
- 	l2x0_saved_regs.aux_ctrl = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
- }
- 
-+static void __init tauros3_save(void)
-+{
-+	l2x0_saved_regs.aux2_ctrl =
-+		readl_relaxed(l2x0_base + TAUROS3_AUX2_CTRL);
-+	l2x0_saved_regs.prefetch_ctrl =
-+		readl_relaxed(l2x0_base + L2X0_PREFETCH_CTRL);
-+}
-+
- static void l2x0_resume(void)
- {
- 	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & L2X0_CTRL_EN)) {
-@@ -821,6 +830,18 @@ static void aurora_resume(void)
- 	}
- }
- 
-+static void tauros3_resume(void)
-+{
-+	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & L2X0_CTRL_EN)) {
-+		writel_relaxed(l2x0_saved_regs.aux2_ctrl,
-+			       l2x0_base + TAUROS3_AUX2_CTRL);
-+		writel_relaxed(l2x0_saved_regs.prefetch_ctrl,
-+			       l2x0_base + L2X0_PREFETCH_CTRL);
-+	}
-+
-+	l2x0_resume();
-+}
-+
- static void __init aurora_broadcast_l2_commands(void)
- {
- 	__u32 u;
-@@ -906,6 +927,15 @@ static const struct l2x0_of_data aurora_no_outer_data = {
- 	},
- };
- 
-+static const struct l2x0_of_data tauros3_data = {
-+	.setup = NULL,
-+	.save  = tauros3_save,
-+	/* Tauros3 broadcasts L1 cache operations to L2 */
-+	.outer_cache = {
-+		.resume      = tauros3_resume,
-+	},
-+};
-+
- static const struct l2x0_of_data bcm_l2x0_data = {
- 	.setup = pl310_of_setup,
- 	.save  = pl310_save,
-@@ -922,17 +952,20 @@ static const struct l2x0_of_data bcm_l2x0_data = {
- };
- 
- static const struct of_device_id l2x0_ids[] __initconst = {
-+	{ .compatible = "bcm,bcm11351-a2-pl310-cache", /* deprecated name */
-+	  .data = (void *)&bcm_l2x0_data},
-+	{ .compatible = "brcm,bcm11351-a2-pl310-cache",
-+	  .data = (void *)&bcm_l2x0_data},
-+	{ .compatible = "marvell,aurora-outer-cache",
-+	  .data = (void *)&aurora_with_outer_data},
-+	{ .compatible = "marvell,aurora-system-cache",
-+	  .data = (void *)&aurora_no_outer_data},
-+	{ .compatible = "marvell,tauros3-cache",
-+	  .data = (void *)&tauros3_data },
-+	/* keep ARM compatibles below non-ARM derivates */
- 	{ .compatible = "arm,pl310-cache", .data = (void *)&pl310_data },
- 	{ .compatible = "arm,l220-cache", .data = (void *)&l2x0_data },
- 	{ .compatible = "arm,l210-cache", .data = (void *)&l2x0_data },
--	{ .compatible = "marvell,aurora-system-cache",
--	  .data = (void *)&aurora_no_outer_data},
--	{ .compatible = "marvell,aurora-outer-cache",
--	  .data = (void *)&aurora_with_outer_data},
--	{ .compatible = "brcm,bcm11351-a2-pl310-cache",
--	  .data = (void *)&bcm_l2x0_data},
--	{ .compatible = "bcm,bcm11351-a2-pl310-cache", /* deprecated name */
--	  .data = (void *)&bcm_l2x0_data},
- 	{}
- };
- 
-diff --git a/arch/arm/mm/cache-tauros3.h b/arch/arm/mm/cache-tauros3.h
-new file mode 100644
-index 0000000..02c0a97
---- /dev/null
-+++ b/arch/arm/mm/cache-tauros3.h
-@@ -0,0 +1,41 @@
-+/*
-+ * Marvell Tauros3 cache controller includes
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * based on GPL'ed 2.6 kernel sources
-+ *  (c) Marvell International Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-+ */
-+
-+#ifndef __ASM_ARM_HARDWARE_TAUROS3_H
-+#define __ASM_ARM_HARDWARE_TAUROS3_H
-+
-+/*
-+ * Marvell Tauros3 L2CC is compatible with PL310 r0p0
-+ * but with PREFETCH_CTRL (r2p0) and an additional event counter.
-+ * Also, there is AUX2_CTRL for some Marvell specific control.
-+ */
-+
-+#define TAUROS3_EVENT_CNT2_CFG		0x224
-+#define TAUROS3_EVENT_CNT2_VAL		0x228
-+#define TAUROS3_INV_ALL			0x780
-+#define TAUROS3_CLEAN_ALL		0x784
-+#define TAUROS3_AUX2_CTRL		0x820
-+
-+/* Registers shifts and masks */
-+#define TAUROS3_AUX2_CTRL_LINEFILL_BURST8_EN	(1 << 2)
-+
-+#endif
--- 
-1.7.10.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
