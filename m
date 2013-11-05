@@ -1,67 +1,120 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 03/11] devicetree: bindings: Document qcom,kpss-acc
-Date: Tue, 5 Nov 2013 11:51:07 -0600
-Message-ID: <E034522B-A62C-40A4-800C-00D592AAEF47@codeaurora.org>
-References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org> <1383343739-23080-4-git-send-email-sboyd@codeaurora.org> <EA8C3C10-2AD6-4179-A785-12001E439364@codeaurora.org> <52792E78.4060600@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52792E78.4060600@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Tue, 5 Nov 2013 23:26:01 +0530
+Message-ID: <CAFp+6iE_EgPJCSHqRrNDMhmc6ODtM=LogVyfG8SpR6TPH0MicA@mail.gmail.com>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
+	<1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
+	<527744B2.4090303@ti.com>
+	<030d01ced946$d6e23490$84a69db0$%debski@samsung.com>
+	<52779D28.9000905@ti.com>
+	<CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com>
+	<00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Felipe Balbi <balbi@ti.com>, Julius Werner <jwerner@chromium.org>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kamil,
 
-On Nov 5, 2013, at 11:44 AM, Stephen Boyd wrote:
 
-> On 11/05/13 09:13, Kumar Gala wrote:
->> On Nov 1, 2013, at 5:08 PM, Stephen Boyd wrote:
->> 
->>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->>> new file mode 100644
->>> index 0000000..ed4a9c8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->>> @@ -0,0 +1,21 @@
->>> +* Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
->>> +
->>> +The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
->>> +There is one ACC register region per CPU within the KPSS remaped region as
->>> +well as an alias register region that remaps accesses to the ACC associated
->>> +with the CPU accessing the region.
->>> +
->>> +Required Properties:
->>> +
->>> +- compatible : Shall contain "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2".
->>> +- reg: Specifies the base address and size of the banked register region.
->>> +- cpu-offset : per-cpu offset used when the device is accessed without the
->>> +		CPU remapping facilities.
->>> +		The offset is cpu-offset + (0x10000 * cpu-nr).
->>> +
->>> +Example:
->>> +
->>> +	clock-controller@2008000 {
->>> +		compatible = "qcom,kpss-acc-v2";
->>> +		reg = <0x02008000 0x1000>;
->>> +	};
->>> -- 
->> I don't get the cpu-offset business, shouldn't this just be:
->> 	reg = <0x02008000 0x1000>, <0x02018000 0x1000>, <0x02028000 0x1000>, <0x02038000 0x1000>;
->> 
-> 
-> (Sorry I forgot to add the cpu-offset to the example.)
-> 
-> Your reg property is one way to do it. I was following the example of
-> the GIC binding which just specifies the alias region of the GIC's CPU
-> registers and then has a cpu-offset property to describe how to reach a
-> specific CPU's region.
+On Tue, Nov 5, 2013 at 3:06 PM, Kamil Debski <k.debski@samsung.com> wrote:
+> Hi,
+>
+>> From: Vivek Gautam [mailto:gautamvivek1987@gmail.com]
+>> Sent: Tuesday, November 05, 2013 8:20 AM
+>> To: Kishon Vijay Abraham I
+>> Cc: Kamil Debski; Vivek Gautam; Linux USB Mailing List; linux-samsung-
+>> soc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> linux-doc@vger.kernel.org; Greg KH; Kukjin Kim; Sylwester Nawrocki;
+>> Tomasz Figa; Felipe Balbi; Julius Werner; Jingoo Han
+>> Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+>>
+>> Hi Kishon,
+>>
+>>
+>>
+>> On Mon, Nov 4, 2013 at 6:42 PM, Kishon Vijay Abraham I <kishon@ti.com>
+>> wrote:
+>> > Hi,
+>> >
+>> >
+>> > On Monday 04 November 2013 03:45 PM, Kamil Debski wrote:
+>> >>
+>> >> Hi Kishon,
+>> >>
+>> >>> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+>> >>> Sent: Monday, November 04, 2013 7:55 AM
+>> >>>
+>> >>> Hi Vivek,
+>> >>>
+>> >>> On Thursday 31 October 2013 01:15 PM, Vivek Gautam wrote:
+>> >>>>
+>> >>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>> >>>> The new driver uses the generic PHY framework and will interact
+>> >>>> with
+>> >>>> DWC3 controller present on Exynos5 series of SoCs.
+>> >>>
+>> >>>
+>> >>> In Exynos, you have a single IP that supports both USB3 and USB2
+>> PHY
+>> >>> right? I think that needs to be mentioned here.
+>> >>
+>> >>
+>> >> As far as I know the IP is different.
+>> >
+>> >
+>> > Ok. Sometime back Vivek was mentioning about a single IP for both
+>> USB3
+>> > and USB2. Thought it should be this driver. Anyway thanks for the
+>> clarification.
+>>
+>> Right Kishon, I had mentioned that Exynos5's dwc3 controller have a
+>> single IP for USB2 and USB3 phy.
+>> From what i see, on exynos5 systems the dwc3 controller uses a combo of
+>> usb 2 (utmi+) and usb 3 (pipe 3) phy (with base address starting
+>> 0x12100000).
+>>
+>> Kamil, Tomasz,
+>>
+>> Please correct me if i am wrong.
+>
+> I have the Exynos 5250 documentation and I found two phy register ranges:
+> 1) USB 2.0 PHY having the base address of 0x1213 0000
+>         Chapter 33. USB 2.0 Host Controller
+>         Subchapter 33.5.2 Phy Control Register p. 1696
+>         First register's description is
+>         "USB2.0 phy control register"
+> 2) USB 3.0 PHY (I guess) with the base address 0x1210 0000
+>         Chapter 35. USB 3.0 DRD Controller
+>         Subchapter 35.4.6 PHY Control Register p. 1872
+>
+> Jingoo, could you comment on the above? You may know more than we do :)
+>
+> In addition, I have a question to you Vivek - does your USB 3.0
+> PHY support both host and device?
 
-Even in the gic's case I think we should have the reg property cover the memory map.
+Yes, this PHY driver supports both Host as well as device type of
+operations of DWC3 controller.
+This driver is a straight port from older driver available at
+drivers/usb/phy/phy-samsung-usb3.c which also had been tested
+for host as well as device operation of DWC3.
 
-- k
+>
+> [snip]
+>
+> Best wishes,
+> Kamil Debski
+>
+
+
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
