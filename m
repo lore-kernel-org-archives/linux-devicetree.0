@@ -1,72 +1,74 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v3 05/11] usb: phy-mxs: Add anatop regmap
-Date: Tue, 5 Nov 2013 09:49:37 +0800
-Message-ID: <1383616183-10511-6-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v3 06/11] usb: phy: add notify suspend and resume callback
+Date: Tue, 5 Nov 2013 09:49:38 +0800
+Message-ID: <1383616183-10511-7-git-send-email-peter.chen@freescale.com>
 References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, peter.chen@freescale.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It is needed by imx6 SoC serial, but not for imx23 and imx28.
+They are used to notify PHY that the controller enters suspend
+or finishes resume.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+ include/linux/usb/phy.h |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 472fe36..8cdfbf1 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -21,6 +21,8 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- 
- #define DRIVER_NAME "mxs_phy"
- 
-@@ -87,6 +89,7 @@ struct mxs_phy {
- 	struct usb_phy phy;
- 	struct clk *clk;
- 	unsigned int flags;
-+	struct regmap *regmap_anatop;
+diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+index 6c0b1c5..a747960 100644
+--- a/include/linux/usb/phy.h
++++ b/include/linux/usb/phy.h
+@@ -116,6 +116,11 @@ struct usb_phy {
+ 			enum usb_device_speed speed);
+ 	int	(*notify_disconnect)(struct usb_phy *x,
+ 			enum usb_device_speed speed);
++	int	(*notify_suspend)(struct usb_phy *x,
++			enum usb_device_speed speed);
++	int	(*notify_resume)(struct usb_phy *x,
++			enum usb_device_speed speed);
++
  };
  
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-@@ -191,6 +194,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id =
- 			of_match_device(mxs_phy_dt_ids, &pdev->dev);
- 	const struct mxs_phy_platform_flag *platform_flag = of_id->data;
-+	struct device_node *np = pdev->dev.of_node;
+ /**
+@@ -282,6 +287,24 @@ usb_phy_notify_disconnect(struct usb_phy *x, enum usb_device_speed speed)
+ 		return 0;
+ }
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
-@@ -210,6 +214,17 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	/* Some SoCs don't have anatop registers */
-+	if (of_get_property(np, "fsl,anatop", NULL)) {
-+		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
-+			(np, "fsl,anatop");
-+		if (IS_ERR(mxs_phy->regmap_anatop)) {
-+			dev_dbg(&pdev->dev,
-+				"failed to find regmap for anatop\n");
-+			return PTR_ERR(mxs_phy->regmap_anatop);
-+		}
-+	}
++static inline int usb_phy_notify_suspend
++	(struct usb_phy *x, enum usb_device_speed speed)
++{
++	if (x && x->notify_suspend)
++		return x->notify_suspend(x, speed);
++	else
++		return 0;
++}
 +
- 	mxs_phy->phy.io_priv		= base;
- 	mxs_phy->phy.dev		= &pdev->dev;
- 	mxs_phy->phy.label		= DRIVER_NAME;
++static inline int usb_phy_notify_resume
++	(struct usb_phy *x, enum usb_device_speed speed)
++{
++	if (x && x->notify_resume)
++		return x->notify_resume(x, speed);
++	else
++		return 0;
++}
++
+ /* notifiers */
+ static inline int
+ usb_register_notifier(struct usb_phy *x, struct notifier_block *nb)
 -- 
 1.7.1
-
-
