@@ -1,33 +1,30 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Tue, 5 Nov 2013 09:22:01 +0100
-Message-ID: <201311050922.01970.arnd@arndb.de>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org> <1704730.RnIqE1USnv@wuerfel> <527816AE.1080508@wwwdotorg.org>
+Date: Tue, 5 Nov 2013 09:39:20 +0100
+Message-ID: <201311050939.21071.arnd@arndb.de>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <1704730.RnIqE1USnv@wuerfel> <20131104212930.GB9638@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <527816AE.1080508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131104212930.GB9638@obsidianresearch.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Jon Loeliger <jdl@jdl.com>, khilman@linaro.org, Stephen Warren <swarren@nvidia.com>, s.nawrocki@samsung.com, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, a.hajda@samsung.com, Benoit Cousson <bcousson@baylibre.com>, galak@codeaurora.org, olof@lixom.net, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 November 2013, Stephen Warren wrote:
-> On 11/04/2013 01:43 PM, Arnd Bergmann wrote:
-> > int devm_probe_gpio(struct device *dev, const struct devm_probe *probe)
-> ...
-> > #define DEVM_GPIO(_struct, _member, _index) {				 \
-> ...
-> > #define DEVM_GPIO_NAMED(_struct, _member, _name) { 			 \
+On Monday 04 November 2013, Jason Gunthorpe wrote:
+> On Mon, Nov 04, 2013 at 09:43:22PM +0100, Arnd Bergmann wrote:
 > 
-> Should those save the GPIO flags too? Or, do we assume that gpiod-based
-> GPIOs already handle the flags inside the gpiod API?
-
-The latter. I would certainly hope to get away with assigning just one
-structure field per callback function.
- 
 > > /*
 > >  * this lists all properties we access from the driver. The list
 > >  * is interpreted by devm_probe() and can be programmatically
@@ -37,47 +34,49 @@ structure field per callback function.
 > > 	DEVM_ALLOC(foo_priv),
 > > 	DEVM_IOMAP(foo_priv, regs, 0, 0),
 > > 	DEVM_PROP_BOOL(foo_priv, oldstyle_dma, "foo,oldstyle-dma"),
-> 
-> I wonder if it makes sense to handle pure data here, or whether this
-> only makes sense for resources/services that are provided by some other
-> device?
-> 
-> I guess it's nice for all resources and configuration to come through to
-> probe() in the same way, but I rather wonder how we'd handle bindings
-> that have large custom (driver-specific) tables of data. Would be simply
-> defer such things to custom code in probe()? If so, it feels slightly
-> inconsistent to handle some data in the probe_list[] and some in code in
-> probe(). Still, I guess there's something to be said for keeping the
-> simple cases simple.
-
-Right, and I didn't intend to solve all cases in a completely generic way.
-Thinking about it some more, a driver could actually add a custom callback
-for some properties, but I don't know if that adds any value over just
-interpreting them from the regular probe() function.
-
 > > 	DEVM_DMA_SLAVE(foo_priv, rxdma, "rx");
 > > 	DEVM_DMA_SLAVE(foo_priv, txdma, "tx");
 > > 	DEVM_GPIO(foo_priv, gpio, 0);
 > > 	DEVM_IRQ_NAMED(foo_priv, irq, foo_irq_handler, "fifo", IRQF_SHARED),
+> > 	{},
+> > };
 > 
-> What about the case where some resources are optional, or only required
-> based on the values of certain other properties? I suppose that probe()
-> could call devm_probe() multiple times, with different probe_list[]s,
-> based on whatever algorithm they need.
+> Drivers are required to gain control of, and disable the device before
+> they bind and enable things like DMA or interrupts.
+> 
+> At the very least the action list above needs an explicit callback to
+> do that step..
 
-That's one open question that I haven't found the best solution for yet.
-My first take on that was to add another field in struct devm_probe to
-mark a property as optional, but that would increase the overall
-complexity. I'd first want to do a survey of what kinds of properties
-are typically optional. If it's only a few of them, we could have
-something like
+I was aware of this for the interrupts, my plan for this was to either
+leave the interrupt disabled when requesting it and leave it up to the
+probe function to call enable_irq(), or to have the irq request function
+last in the list, and preceded by a custom per-driver callback. AFAIK
+this is only required for some drivers anyway, while other drivers
+would function just fine when the irq is enabled early, because they
+never raise an IRQ without first having something touch their registers.
+Another option would be to have a flag in the driver data that lets
+the irq handler know it should ignore the interrupt (or disable the source)
+if the probe function has not completed yet.
 
-DEVM_DMA_SLAVE_OPTIONAL()
+What is the requirement for DMA channels? I did not expect the
+dma_request_slave_channel step to have any ordering requirements.
 
-for the cases that need it, with a variant of the callback function.
+> > static int foo_probe(struct platform_device *dev)
+> > {
+> > 	int ret;
+> > 
+> > 	ret = devm_probe(dev->dev, foo_probe_list);
+> 
+> Some subsystems (like net) have the core system allocate the private
+> data, and some subsystem (like tpm) steal the drvdata for use in the
+> core, drivers can't touch it.
+
+I think we can handle the first case by adding a per-subsystem DEV_ALLOC
+variant. For the second case, I don't see a solution other than than
+changing the subsystem not to steal the driver_data pointer. I need
+to find out how common this case is. If a lot of subsystems do it,
+we probably want a different solution.
+
+Thanks a lot for your insights!
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
