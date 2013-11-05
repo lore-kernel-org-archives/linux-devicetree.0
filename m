@@ -1,44 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Tue, 5 Nov 2013 20:34:00 +0100
-Message-ID: <201311052034.01114.arnd@arndb.de>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <201311051948.11992.arnd@arndb.de>
- <20131105191230.GA20600@obsidianresearch.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/5] OF: Clear detach flag on attach
+Date: Tue, 5 Nov 2013 20:43:10 +0100
+Message-ID: <20131105194310.GB17929@book.gsilab.sittig.org>
+References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com>
+ <1383673816-29293-2-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131105191230.GA20600@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Jon Loeliger <jdl@jdl.com>, khilman@linaro.org, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <bcousson@baylibre.com>, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, a.hajda@samsung.com, s.nawrocki@samsung.com, galak@codeaurora.org, olof@lixom.net, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383673816-29293-2-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 November 2013, Jason Gunthorpe wrote:
-> The issue is sysfs, the TPM core attaches attributes to the driver's
-> struct device, which means it has to convert from struct device * to
-> its own private data. It is totally wrong, but that is the way
-> it has been for ever. :(
+On Tue, Nov 05, 2013 at 19:50 +0200, Pantelis Antoniou wrote:
+> 
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1641,6 +1641,7 @@ int of_attach_node(struct device_node *np)
+>  	np->allnext = of_allnodes;
+>  	np->parent->child = np;
+>  	of_allnodes = np;
+> +	of_node_clear_flag(np, OF_DETACHED);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	of_add_proc_dt_entry(np);
 
-I've just had a very brief look at that subsystem, and the first driver
-I looked at (tpm_atmel) actually creates a child platform_device for
-the sole purpose of registering that with the tpm subsystem, which seems
-to avoid this problem. Maybe the same can be done for the other drivers
-as well. Unfortunately, that will change the sysfs structure, which might
-break user space relying on the current path to the device. The TPM
-subsystem definely seems a bit unusual in this regard, so I hope not too
-many other parts of the kernel have this particular problem.
+Does this add a call to a routine which only gets introduced in a
+subsequent patch (2/5)?  If so, it would break builds during the
+series, and thus would hinder bisection.
 
-(side note: another unusual aspect of the TPM subsystem is the use of a
- custom 'release' function override. Seems harmless, but very weird).	
 
-	Arnd
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
