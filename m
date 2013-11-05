@@ -1,85 +1,44 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCHv9 01/43] clk: Add support for regmap register read/write
-Date: Tue, 5 Nov 2013 22:43:20 +0100
-Message-ID: <20131105214320.GC17929@book.gsilab.sittig.org>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com>
- <1382716658-6964-2-git-send-email-t-kristo@ti.com>
- <52726342.6030406@ti.com>
- <52726BD5.3080704@ti.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 3/3] use linear irq domain in gpio-dwapb
+Date: Tue, 5 Nov 2013 16:19:44 -0600
+Message-ID: <CANk1AXSn_75d3hX+h2n_gqf+Bs0HWWPJZw0L11x6ECU+Xb=cUw@mail.gmail.com>
+References: <1383670552-17566-1-git-send-email-delicious.quinoa@gmail.com>
+	<1383670552-17566-4-git-send-email-delicious.quinoa@gmail.com>
+	<527963D9.1070007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52726BD5.3080704@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527963D9.1070007@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jamie Iles <jamie@jamieiles.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 16:40 +0200, Tero Kristo wrote:
-> 
-> On 10/31/2013 04:03 PM, Nishanth Menon wrote:
-> >On 10/25/2013 10:56 AM, Tero Kristo wrote:
-> >[...]
-> >>diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> >>index 7e59253..63ff78c 100644
-> >>--- a/include/linux/clk-provider.h
-> >>+++ b/include/linux/clk-provider.h
-> >
-> >[...]
-> >>-static inline u32 clk_readl(u32 __iomem *reg)
-> >>+static inline u32 clk_readl(u32 __iomem *reg, struct regmap *regmap)
-> >>  {
-> >>-	return readl(reg);
-> >>+	u32 val;
-> >>+
-> >>+	if (regmap)
-> >>+		regmap_read(regmap, (u32)reg, &val);
-> >>+	else
-> >>+		val = readl(reg);
-> >>+	return val;
-> >>  }
-> >>
-> >>-static inline void clk_writel(u32 val, u32 __iomem *reg)
-> >>+static inline void clk_writel(u32 val, u32 __iomem *reg, struct regmap *regmap)
-> >>  {
-> >>-	writel(val, reg);
-> >>+	if (regmap)
-> >>+		regmap_write(regmap, (u32)reg, val);
-> >>+	else
-> >>+		writel(val, reg);
-> >>  }
-> >>
-> >>  #endif /* CONFIG_COMMON_CLK */
-> >>
-> >
-> >Might it not be better to introduce regmap variants?
-> >static inline void clk_regmap_writel(u32 val, u32 reg, struct regmap
-> >*regmap)
-> >and corresponding readl? that allows cleaner readability for clk
-> >drivers that use regmap and those that dont.
-> 
-> Well, doing that will introduce a lot of redundant code, as the
-> checks for the presence of regmap must be copied all over the place.
-> With this patch, all the generic clock drivers support internally
-> both regmap or non-regmap register accesses.
+On Tue, Nov 5, 2013 at 3:32 PM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> On 11/05/2013 05:55 PM, Alan Tull wrote:
+>>
+>> From: Alan Tull <atull@altera.com>
+>>
+>>   * Changes to get gpio-dwapb (originally v3.2-rc7) driver building and
+>>     working on current kernel.
+>>   * Use linear irq domain.
+>>   * Fix setting irq edge type for 'rising' and 'both'.
+>>   * Support as a loadable module.
+>>   * Use bgpio_chip's spinlock during register access.
+>
+>
+> As this patch is basically messing what I have commented before,
+> I really lost interest in reviewing this again. Please just squash
+> them into one.
 
-Please keep in mind that the "identity" of clk_readl() and
-readl() only applies in the current source code (ARM only use of
-common CCF primitives), while patches are pending (currently
-under review and receiving further improvement) which introduce
-several alternative implementations of clk_readl() depending on
-the platform.  Making all of them duplicate the "regmap vs direct
-register access" branch would be as bad.  Keeping one set of
-clk_readl() and clk_writel() routines and adding #ifdefs around
-the direct register access would be rather ugly, and I understand
-that preprocessor ifdef counts should get reduced instead of
-introduced.
+Hi Sebastian,
 
+Thanks for the review.  I'm working on implementing these changes.
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+Do you want me to squash all 3 patches or just the last two?
+
+In either case, I will be taking off all the Ack's and Signed-off-by's
+as I will  be changing the patches post-ack/signoff.
+
+Alan
