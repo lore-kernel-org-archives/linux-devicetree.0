@@ -1,60 +1,79 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v4 2/2] drm: omap: Enable DT support for DMM
-Date: Tue, 5 Nov 2013 11:20:42 +0530
-Message-ID: <52788732.4030609@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1381820660-5501-1-git-send-email-archit@ti.com> <1381820660-5501-3-git-send-email-archit@ti.com> <20131101004020.GA8413@kartoffel>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCHv4][ 2/6] dma: ipu: Add devicetree support.
+Date: Tue, 5 Nov 2013 07:09:29 +0100
+Message-ID: <20131105060929.GX24559@pengutronix.de>
+References: <1383581724-14817-1-git-send-email-denis@eukrea.com>
+ <1383581724-14817-2-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131101004020.GA8413@kartoffel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "bcousson@baylibre.com" <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andygro@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383581724-14817-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eric =?iso-8859-15?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 November 2013 06:10 AM, Mark Rutland wrote:
-> On Tue, Oct 15, 2013 at 08:04:20AM +0100, Archit Taneja wrote:
->> Enable use of DT for DMM/Tiler.
->>
->> Originally worked on by Andy Gross <andygro@gmail.com>
->>
->> Cc: Andy Gross <andygro@gmail.com>
->> Cc: DRI Development <dri-devel@lists.freedesktop.org>
->> Signed-off-by: Archit Taneja <archit@ti.com>
->> ---
->>   drivers/gpu/drm/omapdrm/omap_dmm_tiler.c | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
->> index acf6678..59f17de 100644
->> --- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
->> +++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
->> @@ -968,12 +968,23 @@ static const struct dev_pm_ops omap_dmm_pm_ops = {
->>   };
->>   #endif
->>
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id dmm_of_match[] = {
->> +	{ .compatible = "ti,omap4-dmm", },
->> +	{ .compatible = "ti,omap5-dmm", },
->> +	{},
->> +};
->> +#else
->> +#define dmm_of_match NULL
->> +#endif
->> +
->>   struct platform_driver omap_dmm_driver = {
->>   	.probe = omap_dmm_probe,
->>   	.remove = omap_dmm_remove,
->>   	.driver = {
->>   		.owner = THIS_MODULE,
->>   		.name = DMM_DRIVER_NAME,
->> +		.of_match_table = dmm_of_match,
->
-> If you use of_match_ptr(dmm_of_match) here you don't need the #else case above.
+On Mon, Nov 04, 2013 at 05:15:20PM +0100, Denis Carikli wrote:
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
+> new file mode 100644
+> index 0000000..2f3c976
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-ipu.txt
+> @@ -0,0 +1,20 @@
+> +* Freescale Image Processing Unit (IPU) support for i.MX3x.
+> +
+> +This driver supports the imx31 and imx35 devices.
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx31-ipu".
+> +- reg : Should contain IPU registers location and length.
+> +- interrupts : First item should be IPU interrupt, second one is optional and
+> +    should contain IPU Error interrupt.
+> +
+> +Example:
+> +
+> +	ipu: ipu@53fc0000 {
+> +		compatible = "fsl,imx31-ipu";
+> +		reg = <	0x53fc0000 0x5f
+> +			0x53fc0088 0x2b >;
+> +		interrupts = <42 41>;
+> +		clocks = <&clks 55>;
+> +		clock-names = "";
+> +	};
 
-Thanks for the tip. I'll make this update.
+As said before: I don't think that splitting the IPU in several nodes
+like above just to satisfy the current Linux driver setup is
+appropriate.
 
-Archit
+The IPU should rather look like:
 
+ipu: ipu@53fc0000 {
+	compatible = "fsl,imx31-ipu";
+	reg = <0x53fc0000 0x4000>;
+	interrupts = <42 31>;
+	clocks = <&clks 55 ...>;
+	clock-names = "...";
+};
+
+Note that the above covers the whole address space of the IPU. This is
+more close to the IPUv3 binding. With separating the IDMAC and DI nodes
+you force us to keep the current driver separation between dma and fb
+driver. The IPU should never have used the Linux DMA driver framework
+though.
+
+When you cover the whole address space you could then in the
+corresponding driver register platform devices which match to the
+current dma/fb driver combination.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
