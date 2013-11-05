@@ -1,126 +1,155 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 01/11] usb: phy-mxs: Add platform judgement code
-Date: Tue, 5 Nov 2013 09:49:33 +0800
-Message-ID: <1383616183-10511-2-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v3 10/11] usb: phy-mxs: Add implementation of set_wakeup
+Date: Tue, 5 Nov 2013 09:49:42 +0800
+Message-ID: <1383616183-10511-11-git-send-email-peter.chen@freescale.com>
 References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mxs-phy has several bugs and features at different
-versions, the driver code can get it through of_device_id.data.
+When we need the PHY can be waken up by external signals,
+we can call this API. Besides, we call mxs_phy_disconnect_line
+at this API to close the connection between USB PHY and
+controller, after that, the line state from controller is SE0.
+Once the PHY is out of power, without calling mxs_phy_disconnect_line,
+there are unknown wakeups due to dp/dm floating at device mode.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   59 ++++++++++++++++++++++++++++++++++------
- 1 files changed, 50 insertions(+), 9 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   79 +++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 79 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index fdd33b4..8b9d80c 100644
+index b7e1744..ff8b98c 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2012-2013 Freescale Semiconductor, Inc.
-  * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-  * on behalf of DENX Software Engineering GmbH
-  *
-@@ -20,6 +20,7 @@
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/of_device.h>
+@@ -31,6 +31,9 @@
+ #define HW_USBPHY_CTRL_SET			0x34
+ #define HW_USBPHY_CTRL_CLR			0x38
  
- #define DRIVER_NAME "mxs_phy"
- 
-@@ -34,13 +35,55 @@
++#define HW_USBPHY_DEBUG_SET			0x54
++#define HW_USBPHY_DEBUG_CLR			0x58
++
+ #define HW_USBPHY_IP				0x90
+ #define HW_USBPHY_IP_SET			0x94
+ #define HW_USBPHY_IP_CLR			0x98
+@@ -39,6 +42,9 @@
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+ #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
+ #define BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE	BIT(25)
++#define BM_USBPHY_CTRL_ENVBUSCHG_WKUP		BIT(23)
++#define BM_USBPHY_CTRL_ENIDCHG_WKUP		BIT(22)
++#define BM_USBPHY_CTRL_ENDPDMCHG_WKUP		BIT(21)
+ #define BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD	BIT(20)
+ #define BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE	BIT(19)
+ #define BM_USBPHY_CTRL_ENAUTO_PWRON_PLL		BIT(18)
+@@ -46,6 +52,19 @@
  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
  
-+#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
++#define BM_USBPHY_DEBUG_CLKGATE			BIT(30)
 +
-+/* Do disconnection between PHY and controller without vbus */
-+#define MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS	BIT(0)
++/* Anatop Registers */
++#define ANADIG_USB1_VBUS_DET_STAT		0x1c0
 +
-+/*
-+ * The PHY will be in messy if there is an wakeup after putting
-+ * bus to suspend (set portsc.suspendM) but before setting PHY to low
-+ * power mode (set portsc.phcd).
-+ */
-+#define MXS_PHY_ABNORAML_IN_SUSPEND		BIT(1)
++#define ANADIG_USB1_LOOPBACK_SET		0x1e4
++#define ANADIG_USB1_LOOPBACK_CLR		0x1e8
 +
-+/*
-+ * The SOF sends too fast after resuming, it will cause disconnection
-+ * between host and high speed device.
-+ */
-+#define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
++#define BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID	BIT(3)
 +
-+struct mxs_phy_platform_flag {
-+	unsigned int flags;
-+};
++#define BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1	BIT(2)
++#define BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN	BIT(5)
 +
-+static const struct mxs_phy_platform_flag imx23_phy_data = {
-+	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
-+};
-+
-+static const struct mxs_phy_platform_flag imx6q_phy_data = {
-+	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
-+		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+};
-+
-+static const struct mxs_phy_platform_flag imx6sl_phy_data = {
-+	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+};
-+
-+static const struct of_device_id mxs_phy_dt_ids[] = {
-+	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-+	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
-+	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-+
- struct mxs_phy {
- 	struct usb_phy phy;
- 	struct clk *clk;
-+	unsigned int flags;
- };
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
  
--#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
--
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- {
- 	int ret;
-@@ -131,6 +174,9 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	struct mxs_phy *mxs_phy;
- 	int ret;
-+	const struct of_device_id *of_id =
-+			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-+	const struct mxs_phy_platform_flag *platform_flag = of_id->data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
-@@ -163,6 +209,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
- 
- 	mxs_phy->clk = clk;
-+	mxs_phy->flags = platform_flag->flags;
- 
- 	platform_set_drvdata(pdev, &mxs_phy->phy);
- 
-@@ -182,12 +229,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
+ /* Do disconnection between PHY and controller without vbus */
+@@ -149,6 +168,48 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
  	return 0;
  }
  
--static const struct of_device_id mxs_phy_dt_ids[] = {
--	{ .compatible = "fsl,imx23-usbphy", },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
++static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
++{
++	void __iomem *base = mxs_phy->phy.io_priv;
++	bool vbus_is_on = false;
++	static bool line_is_disconnected;
++	unsigned int vbus_value = 0;
++
++	/* If the SoCs don't need to disconnect line without vbus, quit */
++	if (!(mxs_phy->flags & MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS))
++		return;
++
++	/* If the SoCs don't have anatop, quit */
++	if (!mxs_phy->regmap_anatop)
++		return;
++
++	regmap_read(mxs_phy->regmap_anatop, ANADIG_USB1_VBUS_DET_STAT,
++			&vbus_value);
++	if (vbus_value & BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID)
++		vbus_is_on = true;
++
++	if (on && !vbus_is_on) {
++		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
++			base + HW_USBPHY_DEBUG_CLR);
++		regmap_write(mxs_phy->regmap_anatop, ANADIG_USB1_LOOPBACK_SET,
++				BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1 |
++				BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN);
++		/* Delay some time, and let Linestate be SE0 for controller */
++		usleep_range(500, 1000);
++		line_is_disconnected = true;
++	} else if (line_is_disconnected) {
++		regmap_write(mxs_phy->regmap_anatop, ANADIG_USB1_LOOPBACK_CLR,
++				BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1 |
++				BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN);
++		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
++				base + HW_USBPHY_DEBUG_SET);
++		line_is_disconnected = false;
++	}
++
++	dev_dbg(mxs_phy->phy.dev, "line is %s\n", line_is_disconnected
++			? "disconnected" : "connected");
++}
++
+ static int mxs_phy_init(struct usb_phy *phy)
+ {
+ 	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
+@@ -186,6 +247,23 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+ 	return 0;
+ }
+ 
++static int mxs_phy_set_wakeup(struct usb_phy *x, bool enabled)
++{
++	struct mxs_phy *mxs_phy = to_mxs_phy(x);
++	u32 value = BM_USBPHY_CTRL_ENVBUSCHG_WKUP |
++			BM_USBPHY_CTRL_ENDPDMCHG_WKUP |
++				BM_USBPHY_CTRL_ENIDCHG_WKUP;
++	if (enabled) {
++		mxs_phy_disconnect_line(mxs_phy, true);
++		writel_relaxed(value, x->io_priv + HW_USBPHY_CTRL_SET);
++	} else {
++		writel_relaxed(value, x->io_priv + HW_USBPHY_CTRL_CLR);
++		mxs_phy_disconnect_line(mxs_phy, false);
++	}
++
++	return 0;
++}
++
+ static int mxs_phy_on_connect(struct usb_phy *phy,
+ 		enum usb_device_speed speed)
+ {
+@@ -304,6 +382,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 	mxs_phy->phy.notify_connect	= mxs_phy_on_connect;
+ 	mxs_phy->phy.notify_disconnect	= mxs_phy_on_disconnect;
+ 	mxs_phy->phy.type		= USB_PHY_TYPE_USB2;
++	mxs_phy->phy.set_wakeup		= mxs_phy_set_wakeup;
+ 
+ 	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
+ 
+-- 
+1.7.1
+
+
