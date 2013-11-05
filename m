@@ -1,83 +1,28 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: re: max17042: Add POR init procedure from Maxim appnote
-Date: Tue, 5 Nov 2013 23:24:44 +0300
-Message-ID: <20131105202444.GG3949@elgon.mountain>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Tue, 5 Nov 2013 13:28:43 -0700
+Message-ID: <CAErSpo7c1KiOKqpM1+v6GM09Mspge=Yq9orwXVYjZZjsQssCHA@mail.gmail.com>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+ <1379319655-20210-4-git-send-email-xobs@kosagi.com> <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
+ <0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
+ <CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
+ <0E83723C55F66F43A6041464FE31119D40FD55@039-SN2MPN1-011.039d.mgd.msft.net>
+ <CAJ+vNU2ifxfprYsgcQs+Kkgu37+diXHJS6DEqs4d51+U3F4sLQ@mail.gmail.com> <52792C5E.6030008@writeme.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <52792C5E.6030008@writeme.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sinan Akman <sinan@writeme.com>
+Cc: Tim Harvey <tharvey@gateworks.com>, Zhu Richard-R65037 <r65037@freescale.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pratyush Anand <pratyush.anand@st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Troy Kisky <troy.kisky@boundarydevices.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Ramakrishna Pallala,
+On Tue, Nov 5, 2013 at 10:35 AM, Sinan Akman <sinan@writeme.com> wrote:
+>   Tim, Sean what is the status of this patch ? Is it part of any tree
+> already ? I'd like to test few things.
 
-The patch f3a71a6eb13b: "max17042: Add POR init procedure from Maxim 
-appnote" from Mar 13, 2012, leads to the following
-static checker warning: "drivers/power/max17042_battery.c:339 
-max17042_init_model()
-	 warn: passing casted pointer 'temp_data' to 'max17042_model_data_compare()' 32 vs 16."
+This patch is in my "next" branch and will be merged into Linus' tree
+during the v3.13 merge window (probably next week).  It's also in the
+linux-next tree.
 
-drivers/power/max17042_battery.c
-   307  static inline int max17042_model_data_compare(struct max17042_chip *chip,
-   308                                          u16 *data1, u16 *data2, int size)
-   309  {
-   310          int i;
-   311  
-   312          if (memcmp(data1, data2, size)) {
-   313                  dev_err(&chip->client->dev, "%s compare failed\n", __func__);
-   314                  for (i = 0; i < size; i++)
-   315                          dev_info(&chip->client->dev, "0x%x, 0x%x",
-   316                                  data1[i], data2[i]);
-   317                  dev_info(&chip->client->dev, "\n");
-   318                  return -EINVAL;
-   319          }
-   320          return 0;
-   321  }
-   322  
-   323  static int max17042_init_model(struct max17042_chip *chip)
-   324  {
-   325          int ret;
-   326          int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
-   327          u32 *temp_data;
-   328  
-   329          temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
-   330          if (!temp_data)
-   331                  return -ENOMEM;
-   332  
-   333          max10742_unlock_model(chip);
-   334          max17042_write_model_data(chip, MAX17042_MODELChrTbl,
-   335                                  table_size);
-   336          max17042_read_model_data(chip, MAX17042_MODELChrTbl, temp_data,
-   337                                  table_size);
-   338  
-   339          ret = max17042_model_data_compare(
-   340                  chip,
-   341                  chip->pdata->config_data->cell_char_tbl,
-   342                  (u16 *)temp_data,
-   343                  table_size);
-
-temp_data is a buffer of 32 bit numbers.
-
-table_size is the number of 32 bit numbers in temp_data.
-
-The max17042_model_data_compare() function is quite buggy because the
-memcmp() assumes u8 and the for loop assumes u16.  Both can't be correct
-and in fact both are wrong since we are passing the size in terms of
-u32.
-
-   344  
-   345          max10742_lock_model(chip);
-   346          kfree(temp_data);
-   347  
-   348          return ret;
-   349  }
-
-regards,
-dan carpenter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=next&id=bb38919ec56e0758c3ae56dfc091dcde1391353e
