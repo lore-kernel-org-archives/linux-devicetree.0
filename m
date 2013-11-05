@@ -1,45 +1,41 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCHv4][ 1/6] fbdev: Add the lacking FB_SYNC_* for matching
- the DISPLAY_FLAGS_*
-Date: Tue, 5 Nov 2013 13:47:46 +0000
-Message-ID: <20131105134746.GR16735@n2100.arm.linux.org.uk>
-References: <1383581724-14817-1-git-send-email-denis@eukrea.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: undocumented compatible strings
+Date: Tue, 5 Nov 2013 07:59:56 -0600
+Message-ID: <CAL_JsqKp0RFX-3MQpNK=agQPBp358dsCQFCt0D=JY=9zzb=x1w@mail.gmail.com>
+References: <527838F0.2000803@gmail.com>
+	<CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1383581724-14817-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMh5GR+s5yHgJbQwOOgxvDP9Tn8+TJj=zYmN3L+YBKo-AA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2013 at 05:15:19PM +0100, Denis Carikli wrote:
-> Without that fix, drivers using the fb_videomode_from_videomode
->   function will not be able to get certain information because
->   some DISPLAY_FLAGS_* have no corresponding FB_SYNC_*.
+On Mon, Nov 4, 2013 at 10:01 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Mon, Nov 4, 2013 at 4:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> Undocumented compatible strings in kernel sources:
+>> 1682m-rng
+>> electra-cf
+>> electra-ide
+>> pasemi,localbus
+>> pasemi,localbus-nand
+>> pasemi,pwrficient-rng
+>> pasemi,sdc
+>
+> These will never be documented in the same way as flat device tree,
+> just as the IBM and Sparc bindings won't be.
 
-Please describe how userspace knows how to set these flags.
+Yes, I know. As well as FSL PPC...
 
-Flags such as the polarity of the hsync and vsync signals are fairly well
-defined based upon the display mode, but aren't things like data enable
-and the pixel clock edge a property of the attached LCD panel, which is
-something that is configured according to the panel which is attached.
+We may need some way to filter these out from whatever checker we come
+up with. I was debating whether to add an undocumented, grandfathered
+bindings document to capture these.
 
-In other words, this information should not be passed from userspace, but
-should be part of the DT description about the connected panel.  So should
-be the polarity of the line and frame pulses (iow, hsync and vsync pulses)
-in the case of a connected panel.
-
-Moreover, in the case of a connected LCD panel, chances are it can only
-support a very limited number of settings, so support for userspace
-changing the timings is arguably incorrect from a system point of view.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
