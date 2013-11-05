@@ -1,133 +1,46 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v4 4/6] gpio: davinci: add OF support
-Date: Tue, 5 Nov 2013 14:23:54 +0530
-Message-ID: <CA+V-a8uV0g36LoQtxFjR56SaMxj7KOE2ztC+pfT_Pn1wGcqEmw@mail.gmail.com>
-References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
- <1383406775-14902-5-git-send-email-prabhakar.csenng@gmail.com> <5277E752.8090005@ti.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/1] Documentation/pwm: Update supported SoC name for pwm-samsung
+Date: Tue, 5 Nov 2013 14:42:28 +0530
+Message-ID: <CAK9yfHy9nst+gB3wjjnjEXvxDP9es18eEbYMWcHtsDZRx=JzAw@mail.gmail.com>
+References: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5277E752.8090005@ti.com>
+In-Reply-To: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, LDOC <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, dlos <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: linux-pwm@vger.kernel.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
+Hi Thierry,
 
-Thanks for the review.
+On 30 October 2013 10:09, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> Updated supported SoC name for pwm-samsung.
+>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  .../devicetree/bindings/pwm/pwm-samsung.txt        |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> index d61fccd..5538de9 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> @@ -15,7 +15,7 @@ Required properties:
+>      samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
+>                           Exynos4210 rev0 SoCs
+>      samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
+> -                          Exynos4x12 and Exynos5250 SoCs
+> +                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
+>  - reg: base address and size of register area
+>  - interrupts: list of timer interrupts (one interrupt per timer, starting at
+>    timer 0)
+> --
+> 1.7.9.5
+>
 
-On Mon, Nov 4, 2013 at 11:58 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-> Hi Prabhakar Lad,
->
->
-> On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
->>
->> From: KV Sujith <sujithkv@ti.com>
->>
->> This patch adds OF parser support for davinci gpio
->> driver and also appropriate documentation in gpio-davinci.txt
->> located at Documentation/devicetree/bindings/gpio/.
->
->
-> I worry, do we need to have gpio_chip.of_xlate() callback implemented=
-?
+Can you please pick this one too?
 
-I looked for the other OF GPIO implementations with same "ngpio"
-property (marvel, msm) but I don=92t see of_xlate() callback implemente=
-d.
-
-> - From one side, Davinci GPIO controller in DT described by one entry
-> which defines number of supported GPIOs as "ti,ngpio =3D <144>;"
->
-> - From other side, on Linux level more than one gpio_chip objects are
-> instantiated (one per each 32 GPIO).
->
-> How the standard GPIO biding will work in this case? .. And will they=
-?
->
-> Linus, I'd very appreciate if you will be able to clarify this point.
->
->
->>
->> Signed-off-by: KV Sujith <sujithkv@ti.com>
->> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
->> [prabhakar.csengg@gmail.com: simplified the OF code, removed
->>                 unnecessary DT property and also simplified
->>                 the commit message]
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> ---
->>   .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 ++++++++=
-++++
->>   drivers/gpio/gpio-davinci.c                        |   54
->> ++++++++++++++++++--
->>   2 files changed, 83 insertions(+), 3 deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> new file mode 100644
->> index 0000000..55aae1c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> @@ -0,0 +1,32 @@
->> +Davinci GPIO controller bindings
->> +
->> +Required Properties:
->> +- compatible: should be "ti,dm6441-gpio"
->> +
->> +- reg: Physical base address of the controller and the size of memo=
-ry
->> mapped
->> +       registers.
->> +
->> +- gpio-controller : Marks the device node as a gpio controller.
->> +
->> +- interrupts: Array of GPIO interrupt number.
->
->
-> May be meaning of <interrupts> property need to be extended, because,
-> as of now, only banked or unbanked IRQs are supported - and not both.
->
->
-OK
-
->> +
->> +- ti,ngpio: The number of GPIO pins supported.
->> +
->> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an indivi=
-dual
->> interrupt
->> +                            line to processor.
->
->
-> Should interrupt-controller; specifier be added here?
->
-No
-
->
->> +
->> +Example:
->> +
->> +gpio: gpio@1e26000 {
->> +       compatible =3D "ti,dm6441-gpio";
->> +       gpio-controller;
->> +       reg =3D <0x226000 0x1000>;
->> +       interrupts =3D <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
->> +               44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
->> +               46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
->> +               48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
->> +               50 IRQ_TYPE_EDGE_BOTH>;
->> +       ti,ngpio =3D <144>;
->> +       ti,davinci-gpio-irq-base =3D <101>;
->
->
->         ^^ Is it still needed?
->
-OOps missed to remove that.
-
-Regards,
---Prabhakar Lad
+-- 
+With warm regards,
+Sachin
