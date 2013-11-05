@@ -1,44 +1,88 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH 3/3] use linear irq domain in gpio-dwapb
-Date: Tue, 5 Nov 2013 16:19:44 -0600
-Message-ID: <CANk1AXSn_75d3hX+h2n_gqf+Bs0HWWPJZw0L11x6ECU+Xb=cUw@mail.gmail.com>
-References: <1383670552-17566-1-git-send-email-delicious.quinoa@gmail.com>
-	<1383670552-17566-4-git-send-email-delicious.quinoa@gmail.com>
-	<527963D9.1070007@gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH V6 3/3] drivers/rtc/rtc-as3722: add RTC driver
+Date: Tue, 5 Nov 2013 15:32:10 -0800
+Message-ID: <20131105153210.e4c93cf589fbbe46fcd831c1@linux-foundation.org>
+References: <1382356041-30973-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <527963D9.1070007@gmail.com>
+In-Reply-To: <1382356041-30973-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jamie Iles <jamie@jamieiles.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2013 at 3:32 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
-> On 11/05/2013 05:55 PM, Alan Tull wrote:
->>
->> From: Alan Tull <atull@altera.com>
->>
->>   * Changes to get gpio-dwapb (originally v3.2-rc7) driver building and
->>     working on current kernel.
->>   * Use linear irq domain.
->>   * Fix setting irq edge type for 'rising' and 'both'.
->>   * Support as a loadable module.
->>   * Use bgpio_chip's spinlock during register access.
+On Mon, 21 Oct 2013 17:17:21 +0530 Laxman Dewangan <ldewangan@nvidia.com> wrote:
+
+> The ams AS3722 is a compact system PMU suitable for mobile phones,
+> tablets etc.
+> 
+> Add a driver to support accessing the RTC found on the ams AS3722
+> PMIC using RTC framework.
+> 
+> ...
 >
->
-> As this patch is basically messing what I have commented before,
-> I really lost interest in reviewing this again. Please just squash
-> them into one.
+> +static int as3722_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct as3722 *as3722 = dev_get_drvdata(pdev->dev.parent);
+> +	struct as3722_rtc *as3722_rtc;
+> +	int ret;
+> +
+> +	as3722_rtc = devm_kzalloc(&pdev->dev, sizeof(*as3722_rtc), GFP_KERNEL);
+> +	if (!as3722_rtc)
+> +		return -ENOMEM;
+> +
+> +	as3722_rtc->as3722 = as3722;
+> +	as3722_rtc->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, as3722_rtc);
+> +
+> +	/* Enable the RTC to make sure it is running. */
+> +	ret = as3722_update_bits(as3722, AS3722_RTC_CONTROL_REG,
+> +			AS3722_RTC_ON | AS3722_RTC_ALARM_WAKEUP_EN,
+> +			AS3722_RTC_ON | AS3722_RTC_ALARM_WAKEUP_EN);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "RTC_CONTROL reg write failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+> +	as3722_rtc->rtc = rtc_device_register("as3722", &pdev->dev,
+> +				&as3722_rtc_ops, THIS_MODULE);
 
-Hi Sebastian,
+Could use devm_rtc_device_register() here.
 
-Thanks for the review.  I'm working on implementing these changes.
+> +	if (IS_ERR(as3722_rtc->rtc)) {
+> +		ret = PTR_ERR(as3722_rtc->rtc);
+> +		dev_err(&pdev->dev, "RTC register failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	as3722_rtc->alarm_irq = platform_get_irq(pdev, 0);
+> +	dev_info(&pdev->dev, "RTC interrupt %d\n", as3722_rtc->alarm_irq);
+> +
+> +	ret = request_threaded_irq(as3722_rtc->alarm_irq, NULL,
+> +			as3722_alarm_irq, IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> +			"rtc-alarm", as3722_rtc);
 
-Do you want me to squash all 3 patches or just the last two?
+devm_request_threaded_irq()?
 
-In either case, I will be taking off all the Ack's and Signed-off-by's
-as I will  be changing the patches post-ack/signoff.
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
+> +				as3722_rtc->alarm_irq, ret);
+> +		goto scrub;
+> +	}
+> +	disable_irq(as3722_rtc->alarm_irq);
 
-Alan
+Why is this necessary?
+
+Would it be safer to do this before the request_threaded_irq()?
+
+> +	return 0;
+> +scrub:
+> +	rtc_device_unregister(as3722_rtc->rtc);
+> +	return ret;
+> +}
+> +
+
