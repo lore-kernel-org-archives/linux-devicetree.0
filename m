@@ -1,149 +1,122 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 01/11] usb: phy-mxs: Add platform judgement code
-Date: Tue, 5 Nov 2013 10:29:50 +0800
-Message-ID: <20131105022948.GE19770@S2101-09.ap.freescale.net>
-References: <1383616183-10511-1-git-send-email-peter.chen@freescale.com>
- <1383616183-10511-2-git-send-email-peter.chen@freescale.com>
+From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v11 3/3] DMA: Freescale: update driver to support 8-channel
+ DMA engine
+Date: Tue, 5 Nov 2013 10:31:27 +0800
+Message-ID: <5278587F.7090500@freescale.com>
+References: <1380188023-3936-1-git-send-email-hongbo.zhang@freescale.com> <1380188023-3936-4-git-send-email-hongbo.zhang@freescale.com> <525F7C18.3010409@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383616183-10511-2-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <525F7C18.3010409-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org
+Cc: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 09:49:33AM +0800, Peter Chen wrote:
-> The mxs-phy has several bugs and features at different
-> versions, the driver code can get it through of_device_id.data.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |   59 ++++++++++++++++++++++++++++++++++------
->  1 files changed, 50 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index fdd33b4..8b9d80c 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
->   * Copyright (C) 2012 Marek Vasut <marex@denx.de>
->   * on behalf of DENX Software Engineering GmbH
->   *
-> @@ -20,6 +20,7 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/of_device.h>
->  
->  #define DRIVER_NAME "mxs_phy"
->  
-> @@ -34,13 +35,55 @@
->  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
->  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
->  
-> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> +
-> +/* Do disconnection between PHY and controller without vbus */
-> +#define MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS	BIT(0)
-> +
-> +/*
-> + * The PHY will be in messy if there is an wakeup after putting
-> + * bus to suspend (set portsc.suspendM) but before setting PHY to low
-> + * power mode (set portsc.phcd).
-> + */
-> +#define MXS_PHY_ABNORAML_IN_SUSPEND		BIT(1)
-> +
-> +/*
-> + * The SOF sends too fast after resuming, it will cause disconnection
-> + * between host and high speed device.
-> + */
-> +#define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
-> +
-> +struct mxs_phy_platform_flag {
-> +	unsigned int flags;
-> +};
+Hi Vinod Koul and Dan Williams,
+Ping?
 
-We should design it as a structure not only for flags but any data that
-we may need to define.  That said, mxs_phy_platform_flag is not a good
-name to me.  I think mxs_phy_data should be more scalable and future
-proof, considering one day we may have more to add into the structure.
 
-> +
-> +static const struct mxs_phy_platform_flag imx23_phy_data = {
-> +	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
-> +};
-> +
-> +static const struct mxs_phy_platform_flag imx6q_phy_data = {
-> +	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
-> +		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +};
-> +
-> +static const struct mxs_phy_platform_flag imx6sl_phy_data = {
-> +	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +};
-> +
-> +static const struct of_device_id mxs_phy_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-> +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
-> +	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> +
->  struct mxs_phy {
->  	struct usb_phy phy;
->  	struct clk *clk;
-> +	unsigned int flags;
+On 10/17/2013 01:56 PM, Hongbo Zhang wrote:
+> Hi Vinod,
+> I have gotten ACK from Mark for both the 1/3 and 2/3 patches.
+> Thanks.
+>
+>
+> On 09/26/2013 05:33 PM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+>> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> This patch adds support to 8-channel DMA engine, thus the driver 
+>> works for both
+>> the new 8-channel and the legacy 4-channel DMA engines.
+>>
+>> Signed-off-by: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> ---
+>>   drivers/dma/Kconfig  |    9 +++++----
+>>   drivers/dma/fsldma.c |    9 ++++++---
+>>   drivers/dma/fsldma.h |    2 +-
+>>   3 files changed, 12 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 6825957..3979c65 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -89,14 +89,15 @@ config AT_HDMAC
+>>         Support the Atmel AHB DMA controller.
+>>     config FSL_DMA
+>> -    tristate "Freescale Elo and Elo Plus DMA support"
+>> +    tristate "Freescale Elo series DMA support"
+>>       depends on FSL_SOC
+>>       select DMA_ENGINE
+>>       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+>>       ---help---
+>> -      Enable support for the Freescale Elo and Elo Plus DMA 
+>> controllers.
+>> -      The Elo is the DMA controller on some 82xx and 83xx parts, and 
+>> the
+>> -      Elo Plus is the DMA controller on 85xx and 86xx parts.
+>> +      Enable support for the Freescale Elo series DMA controllers.
+>> +      The Elo is the DMA controller on some mpc82xx and mpc83xx 
+>> parts, the
+>> +      EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 
+>> is on
+>> +      some Txxx and Bxxx parts.
+>>     config MPC512X_DMA
+>>       tristate "Freescale MPC512x built-in DMA engine support"
+>> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+>> index 49e8fbd..16a9a48 100644
+>> --- a/drivers/dma/fsldma.c
+>> +++ b/drivers/dma/fsldma.c
+>> @@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct 
+>> fsldma_device *fdev,
+>>       WARN_ON(fdev->feature != chan->feature);
+>>         chan->dev = fdev->dev;
+>> -    chan->id = ((res.start - 0x100) & 0xfff) >> 7;
+>> +    chan->id = (res.start & 0xfff) < 0x300 ?
+>> +           ((res.start - 0x100) & 0xfff) >> 7 :
+>> +           ((res.start - 0x200) & 0xfff) >> 7;
+>>       if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
+>>           dev_err(fdev->dev, "too many channels for device\n");
+>>           err = -EINVAL;
+>> @@ -1434,6 +1436,7 @@ static int fsldma_of_remove(struct 
+>> platform_device *op)
+>>   }
+>>     static const struct of_device_id fsldma_of_ids[] = {
+>> +    { .compatible = "fsl,elo3-dma", },
+>>       { .compatible = "fsl,eloplus-dma", },
+>>       { .compatible = "fsl,elo-dma", },
+>>       {}
+>> @@ -1455,7 +1458,7 @@ static struct platform_driver fsldma_of_driver = {
+>>     static __init int fsldma_init(void)
+>>   {
+>> -    pr_info("Freescale Elo / Elo Plus DMA driver\n");
+>> +    pr_info("Freescale Elo series DMA driver\n");
+>>       return platform_driver_register(&fsldma_of_driver);
+>>   }
+>>   @@ -1467,5 +1470,5 @@ static void __exit fsldma_exit(void)
+>>   subsys_initcall(fsldma_init);
+>>   module_exit(fsldma_exit);
+>>   -MODULE_DESCRIPTION("Freescale Elo / Elo Plus DMA driver");
+>> +MODULE_DESCRIPTION("Freescale Elo series DMA driver");
+>>   MODULE_LICENSE("GPL");
+>> diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+>> index f5c3879..1ffc244 100644
+>> --- a/drivers/dma/fsldma.h
+>> +++ b/drivers/dma/fsldma.h
+>> @@ -112,7 +112,7 @@ struct fsldma_chan_regs {
+>>   };
+>>     struct fsldma_chan;
+>> -#define FSL_DMA_MAX_CHANS_PER_DEVICE 4
+>> +#define FSL_DMA_MAX_CHANS_PER_DEVICE 8
+>>     struct fsldma_device {
+>>       void __iomem *regs;    /* DGSR register base */
+>
+>
 
-Here, we should have a pointer to struct mxs_phy_data.
 
-Shawn
 
->  };
->  
-> -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> -
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  {
->  	int ret;
-> @@ -131,6 +174,9 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	struct clk *clk;
->  	struct mxs_phy *mxs_phy;
->  	int ret;
-> +	const struct of_device_id *of_id =
-> +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-> +	const struct mxs_phy_platform_flag *platform_flag = of_id->data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -163,6 +209,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
->  
->  	mxs_phy->clk = clk;
-> +	mxs_phy->flags = platform_flag->flags;
->  
->  	platform_set_drvdata(pdev, &mxs_phy->phy);
->  
-> @@ -182,12 +229,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id mxs_phy_dt_ids[] = {
-> -	{ .compatible = "fsl,imx23-usbphy", },
-> -	{ /* sentinel */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> -
->  static struct platform_driver mxs_phy_driver = {
->  	.probe = mxs_phy_probe,
->  	.remove = mxs_phy_remove,
-> -- 
-> 1.7.1
-> 
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
