@@ -1,46 +1,29 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10][ 4/7] pinctrl: pinctrl-imx: add imx25 pinctrl driver
-Date: Tue, 5 Nov 2013 20:22:52 +0800
-Message-ID: <20131105122250.GO19770@S2101-09.ap.freescale.net>
-References: <1383647918-27315-1-git-send-email-denis@eukrea.com>
- <1383647918-27315-4-git-send-email-denis@eukrea.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/6] gpio: davinci: Fixed a check for unbanked gpio
+Date: Tue, 5 Nov 2013 13:39:58 +0100
+Message-ID: <CACRpkdZ7pwGQnK0NN4tybLUNdMxu5WVaGX8Dqu+kMgVBuyF16w@mail.gmail.com>
+References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+	<1383406775-14902-2-git-send-email-prabhakar.csenng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383647918-27315-4-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383406775-14902-2-git-send-email-prabhakar.csenng@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 11:38:35AM +0100, Denis Carikli wrote:
->  .../bindings/pinctrl/fsl,imx25-pinctrl.txt         |   33 ++
+On Sat, Nov 2, 2013 at 4:39 PM, Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 
->  arch/arm/boot/dts/imx25-pinfunc.h                  |  513 ++++++++++++++++++++
->  arch/arm/boot/dts/imx25-pingrp.h                   |   79 +++
->  arch/arm/boot/dts/imx25.dtsi                       |    1 +
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>
+> This patch fixes the check for the offset in
+> gpio_to_irq_unbanked() function.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Unless Linus gives his ACK on the patch to have it go via IMX tree, we
-need to split above 3 files into another patch that we can apply on IMX
-tree, because other patches e.g. the last one in the series depends on
-them.
+Is this a regression that should go in right now?
 
-BTW, it seems that you missed the comments that Sascha and Markus put on
-the v9 of the patch.
-
-Shawn
-
->  drivers/pinctrl/Kconfig                            |    9 +
->  drivers/pinctrl/Makefile                           |    1 +
->  drivers/pinctrl/pinctrl-imx25.c                    |  351 ++++++++++++++
->  7 files changed, 987 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx25-pinctrl.txt
->  create mode 100644 arch/arm/boot/dts/imx25-pinfunc.h
->  create mode 100644 arch/arm/boot/dts/imx25-pingrp.h
->  create mode 100644 drivers/pinctrl/pinctrl-imx25.c
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
