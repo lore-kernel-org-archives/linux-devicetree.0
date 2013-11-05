@@ -1,79 +1,45 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCHv9][ 2/2] ARM: dts: cpuimx51 Add touchscreen support.
-Date: Tue,  5 Nov 2013 14:37:07 +0100
-Message-ID: <1383658627-1948-2-git-send-email-denis@eukrea.com>
-References: <1383658627-1948-1-git-send-email-denis@eukrea.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv4][ 1/6] fbdev: Add the lacking FB_SYNC_* for matching
+ the DISPLAY_FLAGS_*
+Date: Tue, 5 Nov 2013 13:47:46 +0000
+Message-ID: <20131105134746.GR16735@n2100.arm.linux.org.uk>
+References: <1383581724-14817-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1383658627-1948-1-git-send-email-denis@eukrea.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Denis Carikli <denis@eukrea.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Shawn Guo <shawn.guo@linaro.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1383581724-14817-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Eric B=C3=A9nard <eric@eukrea.com>
-Signed-off-by: Denis Carikli <denis@eukrea.com>
----
-ChangeLog v8->v9:
-- Rebased.
-- Adapted to request the tsc2007 gpio pinctrl outside of the tsc2007 bi=
-ndings.
+On Mon, Nov 04, 2013 at 05:15:19PM +0100, Denis Carikli wrote:
+> Without that fix, drivers using the fb_videomode_from_videomode
+>   function will not be able to get certain information because
+>   some DISPLAY_FLAGS_* have no corresponding FB_SYNC_*.
 
-ChangeLog v7->v8:
-- Added Shawn Guo in the cc list.
----
- arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Please describe how userspace knows how to set these flags.
 
-diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/bo=
-ot/dts/imx51-eukrea-cpuimx51.dtsi
-index b22841a..dfd9549 100644
---- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-+++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-@@ -42,11 +42,23 @@
- 		compatible =3D "nxp,pcf8563";
- 		reg =3D <0x51>;
- 	};
-+
-+	tsc2007: tsc2007@49 {
-+		compatible =3D "ti,tsc2007";
-+		reg =3D <0x49>;
-+		interrupt-parent =3D <&gpio4>;
-+		interrupts =3D <0x0 0x8>;
-+		gpios =3D <&gpio4 0 0>;
-+		ti,x-plate-ohms =3D <180>;
-+	};
- };
-=20
- &iomuxc {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_hog>;
-+
- 	imx51-eukrea {
--		pinctrl_tsc2007_1: tsc2007grp-1 {
-+		pinctrl_hog: hoggrp {
- 			fsl,pins =3D <
- 				MX51_PAD_GPIO_NAND__GPIO_NAND 0x1f5
- 				MX51_PAD_NANDF_D8__GPIO4_0 0x1f5
---=20
-1.7.9.5
+Flags such as the polarity of the hsync and vsync signals are fairly well
+defined based upon the display mode, but aren't things like data enable
+and the pixel clock edge a property of the attached LCD panel, which is
+something that is configured according to the panel which is attached.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In other words, this information should not be passed from userspace, but
+should be part of the DT description about the connected panel.  So should
+be the polarity of the line and frame pulses (iow, hsync and vsync pulses)
+in the case of a connected panel.
+
+Moreover, in the case of a connected LCD panel, chances are it can only
+support a very limited number of settings, so support for userspace
+changing the timings is arguably incorrect from a system point of view.
