@@ -1,314 +1,172 @@
-From: Alan Tull <delicious.quinoa@gmail.com>
-Subject: [PATCH 1/3] gpio: add a driver for the Synopsys DesignWare APB GPIO block
-Date: Tue, 5 Nov 2013 10:55:50 -0600
-Message-ID: <1383670552-17566-2-git-send-email-delicious.quinoa@gmail.com>
-References: <1383670552-17566-1-git-send-email-delicious.quinoa@gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] gpio: davinci: add OF support
+Date: Tue, 5 Nov 2013 18:59:27 +0200
+Message-ID: <527923EF.4070602@ti.com>
+References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+	<1383406775-14902-5-git-send-email-prabhakar.csenng@gmail.com>
+	<5277E752.8090005@ti.com>
+	<CA+V-a8uV0g36LoQtxFjR56SaMxj7KOE2ztC+pfT_Pn1wGcqEmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383670552-17566-1-git-send-email-delicious.quinoa@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jamie Iles <jamie@jamieiles.com>, delicious quinoa <delicious.quinoa@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CA+V-a8uV0g36LoQtxFjR56SaMxj7KOE2ztC+pfT_Pn1wGcqEmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dlos <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jamie Iles <jamie@jamieiles.com>
+On 11/05/2013 10:53 AM, Prabhakar Lad wrote:> Hi Grygorii,
+ >
+ > Thanks for the review.
+ >
+ > On Mon, Nov 4, 2013 at 11:58 PM, Grygorii Strashko
+ > <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+ >> Hi Prabhakar Lad,
+ >>
+ >>
+ >> On 11/02/2013 05:39 PM, Lad, Prabhakar wrote:
+ >>>
+ >>> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
+ >>>
+ >>> This patch adds OF parser support for davinci gpio
+ >>> driver and also appropriate documentation in gpio-davinci.txt
+ >>> located at Documentation/devicetree/bindings/gpio/.
+ >>
+ >>
+ >> I worry, do we need to have gpio_chip.of_xlate() callback implemented?
+ >
+ > I looked for the other OF GPIO implementations with same "ngpio"
+ > property (marvel, msm) but I don=92t see of_xlate() callback implemented.
 
-The Synopsys DesignWare block is used in some ARM devices (picoxcell)
-and can be configured to provide multiple banks of GPIO pins.
+The question: will below definitions in DT work or not after this series?
+  Will of_get_gpio()/of_get_named_gpio() work?
 
-v5:	- handle sparse bank population correctly
-v3:	- depend on rather than select IRQ_DOMAIN
-	- split IRQ support into a separate patch
-v2:	- use Rob Herring's irqdomain in generic irq chip patches
-	- use reg property to indicate bank index
-	- support irqs on both edges based on LinusW's u300 driver
+Example1 - leds:
+	leds {
+		compatible =3D "gpio-leds";
+		debug0 {
+			label =3D "green:debug0";
+			gpios =3D <&gpio 29 GPIO_ACTIVE_HIGH>;
+		};
+	};
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linus Walleij <linus.walleij@stericsson.com>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Jamie Iles <jamie@jamieiles.com>
----
- .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   57 +++++++
- drivers/gpio/Kconfig                               |    9 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-dwapb.c                          |  172 ++++++++++++++++++++
- 4 files changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
- create mode 100644 drivers/gpio/gpio-dwapb.c
+Example2 - any dev:
+devA {
+	compatible =3D "devA";
+	gpios =3D <&gpio 120 GPIO_ACTIVE_LOW>;
+}
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-new file mode 100644
-index 0000000..73adf37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-@@ -0,0 +1,57 @@
-+* Synopsys DesignWare APB GPIO controller
-+
-+Required properties:
-+- compatible : Should be "snps,dw-apb-gpio"
-+- reg : Address and length of the register set for the device
-+
-+The GPIO controller has a configurable number of banks, each of which are
-+represented as child nodes with the following properties:
-+
-+Required properties:
-+- compatible : "snps,dw-apb-gpio-bank"
-+- gpio-controller : Marks the device node as a gpio controller.
-+- #gpio-cells : Should be two.  The first cell is the pin number and
-+  the second cell is used to specify optional parameters (currently
-+  unused).
-+- reg : The integer bank index of the bank, a single cell.
-+- nr-gpio : The number of pins in the bank, a single cell.
-+
-+Optional properties:
-+- interrupt-controller : The first bank may be configured to be an interrupt
-+controller.
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
-+the second encodes the triger flags encoded as described in
-+Documentation/devicetree/bindings/interrupts.txt
-+- interrupt-parent : The parent interrupt controller.
-+- interrupts : The interrupts to the parent controller raised when GPIOs
-+generate the interrupts.
-+
-+Example:
-+
-+gpio: gpio@20000 {
-+	compatible = "snps,dw-apb-gpio";
-+	reg = <0x20000 0x1000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	banka: gpio-controller@0 {
-+		compatible = "snps,dw-apb-gpio-bank";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		nr-gpio = <8>;
-+		reg = <0>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&vic1>;
-+		interrupts = <0 1 2 3 4 5 6 7>;
-+	};
-+
-+	bankb: gpio-controller@1 {
-+		compatible = "snps,dw-apb-gpio-bank";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		nr-gpio = <8>;
-+		reg = <1>;
-+	};
-+};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b6ed304..c5e7868 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -121,6 +121,15 @@ config GPIO_GENERIC_PLATFORM
- 	help
- 	  Say yes here to support basic platform_device memory-mapped GPIO controllers.
- 
-+config GPIO_DWAPB
-+	bool "Synopsys DesignWare APB GPIO driver"
-+	select GPIO_GENERIC
-+	select GENERIC_IRQ_CHIP
-+	depends on OF_GPIO
-+	help
-+	  Say Y or M here to build support for the Synopsys DesignWare APB
-+	  GPIO block.  This requires device tree support.
-+
- config GPIO_IT8761E
- 	tristate "IT8761E GPIO support"
- 	depends on X86  # unconditional access to IO space.
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 98e23eb..8de041a 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_GPIO_CS5535)	+= gpio-cs5535.o
- obj-$(CONFIG_GPIO_DA9052)	+= gpio-da9052.o
- obj-$(CONFIG_GPIO_DA9055)	+= gpio-da9055.o
- obj-$(CONFIG_ARCH_DAVINCI)	+= gpio-davinci.o
-+obj-$(CONFIG_GPIO_DWAPB)	+= gpio-dwapb.o
- obj-$(CONFIG_GPIO_EM)		+= gpio-em.o
- obj-$(CONFIG_GPIO_EP93XX)	+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_F7188X)	+= gpio-f7188x.o
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-new file mode 100644
-index 0000000..3a28697
---- /dev/null
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -0,0 +1,172 @@
-+/*
-+ * Copyright (c) 2011 Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * All enquiries to support@picochip.com
-+ */
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/basic_mmio_gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+
-+struct dwapb_gpio;
-+
-+struct dwapb_gpio_bank {
-+	struct bgpio_chip	bgc;
-+	unsigned int		bank_idx;
-+	bool			is_registered;
-+	struct dwapb_gpio	*gpio;
-+};
-+
-+struct dwapb_gpio {
-+	struct device_node	*of_node;
-+	struct	device		*dev;
-+	void __iomem		*regs;
-+	struct dwapb_gpio_bank	*banks;
-+	unsigned int		nr_banks;
-+};
-+
-+static unsigned int dwapb_gpio_nr_banks(struct device_node *of_node)
-+{
-+	unsigned int nr_banks = 0;
-+	struct device_node *np;
-+
-+	for_each_child_of_node(of_node, np)
-+		++nr_banks;
-+
-+	return nr_banks;
-+}
-+
-+static int dwapb_gpio_add_bank(struct dwapb_gpio *gpio,
-+			       struct device_node *bank_np,
-+			       unsigned int offs)
-+{
-+	struct dwapb_gpio_bank *bank;
-+	u32 bank_idx, ngpio;
-+	int err;
-+
-+	if (of_property_read_u32(bank_np, "reg", &bank_idx)) {
-+		dev_err(gpio->dev, "invalid bank index for %s\n",
-+			bank_np->full_name);
-+		return -EINVAL;
-+	}
-+	bank = &gpio->banks[offs];
-+	bank->gpio = gpio;
-+
-+	if (of_property_read_u32(bank_np, "nr-gpio", &ngpio)) {
-+		dev_err(gpio->dev, "failed to get number of gpios for %s\n",
-+			bank_np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	bank->bank_idx = bank_idx;
-+	err = bgpio_init(&bank->bgc, gpio->dev, 4,
-+			 gpio->regs + 0x50 + (bank_idx * 0x4),
-+			 gpio->regs + 0x00 + (bank_idx * 0xc),
-+			 NULL, gpio->regs + 0x04 + (bank_idx * 0xc), NULL,
-+			 false);
-+	if (err) {
-+		dev_err(gpio->dev, "failed to init gpio chip for %s\n",
-+			bank_np->full_name);
-+		return err;
-+	}
-+
-+	bank->bgc.gc.ngpio = ngpio;
-+	bank->bgc.gc.of_node = bank_np;
-+
-+	err = gpiochip_add(&bank->bgc.gc);
-+	if (err)
-+		dev_err(gpio->dev, "failed to register gpiochip for %s\n",
-+			bank_np->full_name);
-+	else
-+		bank->is_registered = true;
-+
-+	return err;
-+}
-+
-+static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
-+{
-+	unsigned int m;
-+
-+	for (m = 0; m < gpio->nr_banks; ++m)
-+		if (gpio->banks[m].is_registered)
-+			WARN_ON(gpiochip_remove(&gpio->banks[m].bgc.gc));
-+	of_node_put(gpio->of_node);
-+}
-+
-+static int __devinit dwapb_gpio_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct dwapb_gpio *gpio;
-+	struct device_node *np;
-+	int err;
-+	unsigned int offs = 0;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+	gpio->dev = &pdev->dev;
-+
-+	gpio->nr_banks = dwapb_gpio_nr_banks(pdev->dev.of_node);
-+	if (!gpio->nr_banks)
-+		return -EINVAL;
-+	gpio->banks = devm_kzalloc(&pdev->dev, gpio->nr_banks *
-+				   sizeof(*gpio->banks), GFP_KERNEL);
-+	if (!gpio->banks)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "failed to get iomem\n");
-+		return -ENXIO;
-+	}
-+	gpio->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-+	if (!gpio->regs)
-+		return -ENOMEM;
-+
-+	gpio->of_node = of_node_get(pdev->dev.of_node);
-+	for_each_child_of_node(pdev->dev.of_node, np) {
-+		err = dwapb_gpio_add_bank(gpio, np, offs++);
-+		if (err)
-+			goto out_unregister;
-+	}
-+	platform_set_drvdata(pdev, gpio);
-+
-+	return 0;
-+
-+out_unregister:
-+	dwapb_gpio_unregister(gpio);
-+
-+	return err;
-+}
-+
-+static const struct of_device_id dwapb_of_match_table[] = {
-+	{ .compatible = "snps,dw-apb-gpio" },
-+	{ /* Sentinel */ }
-+};
-+
-+static struct platform_driver dwapb_gpio_driver = {
-+	.driver		= {
-+		.name	= "gpio-dwapb",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = dwapb_of_match_table,
-+	},
-+	.probe		= dwapb_gpio_probe,
-+};
-+
-+static int __init dwapb_gpio_init(void)
-+{
-+	return platform_driver_register(&dwapb_gpio_driver);
-+}
-+postcore_initcall(dwapb_gpio_init);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Jamie Iles");
-+MODULE_DESCRIPTION("Synopsys DesignWare APB GPIO driver");
--- 
-1.7.9.5
+
+ >
+ >> - From one side, Davinci GPIO controller in DT described by one entry
+ >> which defines number of supported GPIOs as "ti,ngpio =3D <144>;"
+ >>
+ >> - From other side, on Linux level more than one gpio_chip objects are
+ >> instantiated (one per each 32 GPIO).
+ >>
+ >> How the standard GPIO biding will work in this case? .. And will they?
+ >>
+ >> Linus, I'd very appreciate if you will be able to clarify this point.
+ >>
+ >>
+ >>>
+ >>> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
+ >>> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+ >>> [prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: simplified the OF code, removed
+ >>>                  unnecessary DT property and also simplified
+ >>>                  the commit message]
+ >>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ >>> ---
+ >>>    .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 =
+
+++++++++++++
+ >>>    drivers/gpio/gpio-davinci.c                        |   54
+ >>> ++++++++++++++++++--
+ >>>    2 files changed, 83 insertions(+), 3 deletions(-)
+ >>>    create mode 100644
+ >>> Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+ >>>
+ >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+ >>> b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+ >>> new file mode 100644
+ >>> index 0000000..55aae1c
+ >>> --- /dev/null
+ >>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+ >>> @@ -0,0 +1,32 @@
+ >>> +Davinci GPIO controller bindings29
+ >>> +
+ >>> +Required Properties:
+ >>> +- compatible: should be "ti,dm6441-gpio"
+ >>> +
+ >>> +- reg: Physical base address of the controller and the size of memory
+ >>> mapped
+ >>> +       registers.
+ >>> +
+ >>> +- gpio-controller : Marks the device node as a gpio controller.
+ >>> +
+ >>> +- interrupts: Array of GPIO interrupt number.
+ >>
+ >>
+ >> May be meaning of <interrupts> property need to be extended, because,
+ >> as of now, only banked or unbanked IRQs are supported - and not both.
+ >>
+ >>
+ > OK
+ >
+ >>> +
+ >>> +- ti,ngpio: The number of GPIO pins supported.
+ >>> +
+ >>> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an =
+
+individual
+ >>> interrupt
+ >>> +                            line to processor.
+ >>
+ >>
+ >> Should interrupt-controller; specifier be added here?
+ >>
+ > No
+
+So, it would be impossible to map GPIO IRQ to device through DT. Right?
+Like:
+	devX@0 {
+		compatible =3D "devX";
+		interrupt-parent =3D <&gpio>;
+		interrupts =3D <50 IRQ_TYPE_EDGE_FALLING>; /* gpio line 50 */
+
+	};
+
+
+ >
+ >>
+ >>> +
+ >>> +Example:
+ >>> +
+ >>> +gpio: gpio@1e26000 {
+ >>> +       compatible =3D "ti,dm6441-gpio";
+ >>> +       gpio-controller;
+ >>> +       reg =3D <0x226000 0x1000>;
+ >>> +       interrupts =3D <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
+ >>> +               44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
+ >>> +               46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
+ >>> +               48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
+ >>> +               50 IRQ_TYPE_EDGE_BOTH>;
+ >>> +       ti,ngpio =3D <144>;
+ >>> +       ti,davinci-gpio-irq-base =3D <101>;
+ >>
+ >>
+ >>          ^^ Is it still needed?
+ >>
+ > OOps missed to remove that.
+ >
+Regards,
+-grygorii
