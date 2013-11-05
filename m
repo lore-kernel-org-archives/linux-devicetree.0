@@ -1,54 +1,80 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 1/5] OF: Clear detach flag on attach
-Date: Tue, 5 Nov 2013 22:03:34 +0200
-Message-ID: <033B1C12-1AD8-44E3-A9BE-C216AEBA45F2@antoniou-consulting.com>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-2-git-send-email-panto@antoniou-consulting.com> <20131105194310.GB17929@book.gsilab.sittig.org>
-Mime-Version: 1.0 (Apple Message framework v1085)
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the
+ datasheet's minimum required ECC
+Date: Tue, 5 Nov 2013 12:07:29 -0800
+Message-ID: <20131105200729.GT20061@ld-irv-0074.broadcom.com>
+References: <1382929517-22606-1-git-send-email-b32955@freescale.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131105194310.GB17929-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1382929517-22606-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerhard,
-
-On Nov 5, 2013, at 9:43 PM, Gerhard Sittig wrote:
-
-> On Tue, Nov 05, 2013 at 19:50 +0200, Pantelis Antoniou wrote:
->> 
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1641,6 +1641,7 @@ int of_attach_node(struct device_node *np)
->> 	np->allnext = of_allnodes;
->> 	np->parent->child = np;
->> 	of_allnodes = np;
->> +	of_node_clear_flag(np, OF_DETACHED);
->> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> 
->> 	of_add_proc_dt_entry(np);
+On Mon, Oct 28, 2013 at 11:05:17AM +0800, Huang Shijie wrote:
+> In default way, we use the ecc_strength/ecc_step size calculated by ourselves
+> and use all the OOB area.
 > 
-> Does this add a call to a routine which only gets introduced in a
-> subsequent patch (2/5)?  If so, it would break builds during the
-> series, and thus would hinder bisection.
+> This patch adds a new property : "fsl,use-minimum-ecc"
 > 
-
-You're right, I'll re-order on the next series.
-
+> If we enable it, we will firstly try to use the datasheet's minimum required
+> ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+> in the nand_chip{}). So we may have free space in the OOB area by using the
+> minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
+> SLC NAND.
 > 
-> virtually yours
-> Gerhard Sittig
-> -- 
-> DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-> HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-> Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+> If we fail to use the minimum ECC, we will use the legacy method to calculate
+> the ecc_strength and ecc_step size.
+> 
+> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> v1 --> v2:
+> 	based on David's patch to fix the regression.
+> ---
+>  .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
+>  2 files changed, 9 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> index 551b2a1..4297795 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> @@ -17,6 +17,12 @@ Required properties:
+>  Optional properties:
+>    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
+>                         present false
+> +  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
+> +                       to use the datasheet's minimum required ECC provided by
+> +                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+> +                       in the nand_chip{}). So we may have free space in the OOB
+> +                       area by using the minimum ECC, and we may support JFFS2
+> +                       with some SLC NANDs, such as Micron's SLC NAND.
 
-Regards
+This description still uses Linux-isms/MTD-isms (ecc_strength_ds,
+ecc_step_ds, nand_chip{}, JFFS2). I would personally write this as
+something like the following:
 
--- Pantelis
+  - fsl,use-minimum-ecc: Protect this NAND flash with the minimum ECC
+			 strength required. The required ECC strength is
+			 automatically discoverable for some flash
+			 (e.g., according to the ONFI standard).
+			 However, note that if this strength is not
+			 discoverable, the software may choose an
+			 implementation-defined ECC scheme.
 
+Is that enough weaseling? Any comments from the DT folks, or shall we
+simply take this binding without review?
+
+>  
+>  The device tree may optionally contain sub-nodes describing partitions of the
+>  address space. See partition.txt for more detail.
+
+...
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
