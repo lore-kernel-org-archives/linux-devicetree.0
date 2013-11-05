@@ -1,28 +1,73 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Tue, 5 Nov 2013 13:28:43 -0700
-Message-ID: <CAErSpo7c1KiOKqpM1+v6GM09Mspge=Yq9orwXVYjZZjsQssCHA@mail.gmail.com>
-References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
- <1379319655-20210-4-git-send-email-xobs@kosagi.com> <CAJ+vNU36neHP77dVnqSP=+oMxaU=-6PxWQ8Afni-tTRjNTkM_A@mail.gmail.com>
- <0E83723C55F66F43A6041464FE31119D40FC99@039-SN2MPN1-011.039d.mgd.msft.net>
- <CAJ+vNU13FA5s7tt-yEnBYNSBV+FHmHqZNoykFq8aF=O=TvqTnA@mail.gmail.com>
- <0E83723C55F66F43A6041464FE31119D40FD55@039-SN2MPN1-011.039d.mgd.msft.net>
- <CAJ+vNU2ifxfprYsgcQs+Kkgu37+diXHJS6DEqs4d51+U3F4sLQ@mail.gmail.com> <52792C5E.6030008@writeme.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
+Date: Tue, 5 Nov 2013 13:36:59 -0700
+Message-ID: <20131105203659.GA26576@obsidianresearch.com>
+References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
+ <201311052034.01114.arnd@arndb.de>
+ <20131105195820.GB20600@obsidianresearch.com>
+ <201311052117.33443.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <52792C5E.6030008@writeme.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sinan Akman <sinan@writeme.com>
-Cc: Tim Harvey <tharvey@gateworks.com>, Zhu Richard-R65037 <r65037@freescale.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pratyush Anand <pratyush.anand@st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Troy Kisky <troy.kisky@boundarydevices.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201311052117.33443.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2013 at 10:35 AM, Sinan Akman <sinan@writeme.com> wrote:
->   Tim, Sean what is the status of this patch ? Is it part of any tree
-> already ? I'd like to test few things.
+On Tue, Nov 05, 2013 at 09:17:32PM +0100, Arnd Bergmann wrote:
+> Creating a platform_device (or a plain device, for that matter)
+> from a proper probe() function would have a similar effect from
+> the perspective of the TPM subsystem (or other subsystems using
 
-This patch is in my "next" branch and will be merged into Linus' tree
-during the v3.13 merge window (probably next week).  It's also in the
-linux-next tree.
+I'd rather see the core get fixed than more muck in the drivers,
+especially since things are going in that direction :)
 
-http://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=next&id=bb38919ec56e0758c3ae56dfc091dcde1391353e
+> Yes. Note that the use of new 'class'es is not recommended any more,
+> nowadays we are supposed to use 'bus_type' for this, which is
+> traditionally something slightly different, but technically almost
+> the same implementation-wise.
+
+Thanks, I will look into that!
+ 
+> That depends: the requirement is that no user space breaks after
+> a change. I assume that there is a fairly limited set of packages
+> accessing the tpm sysfs files. If all of them are written properly,
+> they should be able to deal with looking at the files in a different
+> place in sysfs.
+
+The other issue is that none of the sysfs files are even close to
+following the one value per file rule, they are all wrong. I actually
+think that nothing in userspace ever uses them and they were only ever
+done for debugfs-like purposes.
+
+My dark hope is to move them all to debugfs and entirely out of
+sysfs.. But I think it will be through a CONFIG_TPM_SYSFS_COMPAT=y +
+printk_once("Stop using these sysfs attributes!") kind of scheme.
+ 
+> Another option is to change the TPM core sysfs attributes not to
+> look at drvdata, but to use devres_find() to find the data they
+> need.
+
+Ooh, that looks like it could work well, I will keep that in mind!
+
+So there is a path forward, it is just long :)
+
+BTW, in the final form TPM will require a 2 stage init much like net,
+the sequence will be:
+ - Allocate the core and driver memory and resources
+ - Setup the driver fully
+ - Perform TPM commands on the fully active driver to setup the
+   TPM itself
+ - Register the TPM with the system
+
+Just remarking,I don't see a problem with this and your devm_probe
+plan.
+
+Thanks
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
