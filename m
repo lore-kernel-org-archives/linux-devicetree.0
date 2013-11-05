@@ -1,43 +1,58 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 1/5] OF: Clear detach flag on attach
-Date: Tue, 5 Nov 2013 20:43:10 +0100
-Message-ID: <20131105194310.GB17929@book.gsilab.sittig.org>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com>
- <1383673816-29293-2-git-send-email-panto@antoniou-consulting.com>
+From: "Wendy Ng" <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH V2 0/3] thermal: bcm281xx: Add Temperature Monitor
+ driver
+Date: Tue, 5 Nov 2013 11:54:41 -0800
+Message-ID: <1383681284-17643-1-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383673816-29293-2-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 19:50 +0200, Pantelis Antoniou wrote:
-> 
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1641,6 +1641,7 @@ int of_attach_node(struct device_node *np)
->  	np->allnext = of_allnodes;
->  	np->parent->child = np;
->  	of_allnodes = np;
-> +	of_node_clear_flag(np, OF_DETACHED);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  
->  	of_add_proc_dt_entry(np);
+This patch series adds the support of the Temperature Monitor driver
+for Broadcom bcm281xx SoCs. This TMON driver can be used with the
+Thermal Framework.
 
-Does this add a call to a routine which only gets introduced in a
-subsequent patch (2/5)?  If so, it would break builds during the
-series, and thus would hinder bisection.
+This patch series incoporates the feedback from the old series:
+V1: https://lkml.org/lkml/2013/9/23/424
+V2: https://lkml.org/lkml/2013/9/27/555
+
+Note that this patch series is dependent on the following patches:
+https://lkml.org/lkml/2013/9/26/787
+http://www.spinics.net/lists/arm-kernel/msg274963.html
+https://lkml.org/lkml/2013/10/3/645
+
+---
+Delta from V1 of this patch series:
+1. Update bcm-kona-thermal.txt to remove the 'status' property
+2. Added the references to the generic thermal sensor binding 
+and the generic clock consumer binding in bcm-kona-thermal.txt.
 
 
-virtually yours
-Gerhard Sittig
+Wendy Ng (3):
+  thermal: bcm281xx: Add Temperature Monitor driver
+  ARM: configs:enable thermal framework for bcm281xx
+  ARM: dts: Add TMON driver support to bcm281xx
+
+ .../bindings/thermal/bcm-kona-thermal.txt          |   27 +++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |    4 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |   29 ++++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+ arch/arm/configs/bcm_defconfig                     |    4 +-
+ drivers/thermal/Kconfig                            |   11 ++
+ drivers/thermal/Makefile                           |    1 +
+ drivers/thermal/bcm_kona_tmon.c                    |  173 ++++++++++++++++++++
+ 8 files changed, 252 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+ create mode 100644 drivers/thermal/bcm_kona_tmon.c
+
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+1.7.9.5
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
