@@ -1,67 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Wed, 06 Nov 2013 13:41:09 +0100
-Message-ID: <1550251.naXFpxhfMk@avalon>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2775658.fxp7sbhy9u@avalon> <8738na1csg.wl%kuninori.morimoto.gx@renesas.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V2 1/5] mfd: as3722: add clock driver as mfd-sub device
+Date: Wed, 6 Nov 2013 12:43:11 +0000
+Message-ID: <20131106124311.GJ30901@lee--X1>
+References: <1383740303-10956-1-git-send-email-ldewangan@nvidia.com>
+ <1383740303-10956-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8738na1csg.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383740303-10956-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: sameo@linux.intel.com, mturquette@linaro.org, dwmw2@infradead.org, anton@enomsg.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+On Wed, 06 Nov 2013, Laxman Dewangan wrote:
 
-On Tuesday 05 November 2013 18:31:31 Kuninori Morimoto wrote:
-> Hi Laurent
-> 
-> > > Please correct me if my understanding was wrong.
-> > > Does your "of_clk_get_parent_name()" means "case R8A7790_CLK_MAIN"'s one
-> > > ?
-> > > If Yes, it is needed on "parent" clock side, not here ?
-> > > If No,  who need/call of_clk_get_parent_name() for this ?
-> > > does "qspi", "sdh", "sd0", "sd1" can be parent clock for some device ??
-> > 
-> > All those clocks are parents of other clocks (DIV6, MSTP or fixed-factor
-> > clocks). The DIV6, MSTP and fixed-factor clock drivers call
-> > of_clk_get_parent_name() to get the name of their parent clock, which is
-> > required to register the clocks with CCF. See of_fixed_factor_clk_setup()
-> > for instance.
-> 
-> Ahh... OK, I understand.
-> 
-> Hmm...
-> I guesss We can use [1/3] and [2/3] patches for all Renesas SoC as generic
-> driver, but, all SoC needs clk/shmobile/clk-xxxx.c like [3/3].
-> Because it has SoC special divider values.
-> Is this correct ?
+> Device ams AS3722 supports the one 32KHz clock output. The clock
+> control support is provided through clock driver.
+>=20
+> Add clock driver as mfd sub device to probe the clock driver.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from V1:
+> - Move the DT doc change to separate change.
+>=20
+>  drivers/mfd/as3722.c |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/mfd/as3722.c b/drivers/mfd/as3722.c
+> index f161f2e..1d3415c 100644
+> --- a/drivers/mfd/as3722.c
+> +++ b/drivers/mfd/as3722.c
+> @@ -72,6 +72,9 @@ static struct mfd_cell as3722_devs[] =3D {
+>  		.resources =3D as3722_adc_resource,
+>  	},
+>  	{
+> +		.name =3D "as3722-clk",
+> +	},
+> +	{
+>  		.name =3D "as3722-power-off",
+>  	},
+>  };
 
-That's correct.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> Now, your [1/3] patch (= for MSTP) added renesas special property
-> as "renesas,clock-indices".
-> Is it impossible to add renesas special property like
-> "renesas,clock-custom-divider" which can specify custom divider values in
-> generic cpg driver ?
-> If we can have it, all Renesas SoC can use generic driver ?
-
-The clocks supported by the SoC CPG driver are special in the sense that 
-they're not really standardized. Most of them are fixed-factor clocks with a 
-factor that depends on boot mode pins. The others are DIV4 clocks that vary 
-widely from SoC to SoC. Expressing all that information in DT would be much 
-more complex than expressing it in C code, which is why I've decided to go for 
-a per-SoC CPG driver, especially given that the amount of code isn't that 
-large.
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
