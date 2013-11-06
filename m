@@ -1,53 +1,69 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Wed, 6 Nov 2013 21:08:15 +0200
-Message-ID: <C10E33D7-53F6-4A50-9B84-1149DDBDC46F@antoniou-consulting.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <20131106190152.GA8662@breakpoint.cc>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/3] DT: proc: Add runtime overlay interface in /proc
+Date: Wed, 6 Nov 2013 13:10:27 -0600
+Message-ID: <CAL_Jsq+k9NoHxOaNujTG2=0MHm=s4Mh+xhXCZbhPG1EnHvo50A@mail.gmail.com>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
+	<1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131106190152.GA8662@breakpoint.cc>
+In-Reply-To: <1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@breakpoint.cc>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Tue, Nov 5, 2013 at 12:41 PM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+> Add a runtime interface to /proc to enable generic device tree overlay
+> usage.
+>
+> Two new /proc files are added:
+>
+> /proc/device-tree-overlay & /proc/device-tree-overlay-status
 
-On Nov 6, 2013, at 9:01 PM, Sebastian Andrzej Siewior wrote:
+I think we really want all this to live under sysfs. Grant did patches
+to move /proc/device-tree to /sys, but it never went upstream:
 
-> On 05.11.13, Pantelis Antoniou wrote:
->> The following patchset introduces Device Tree overlays, a method
->> of dynamically altering the kernel's live Device Tree, along with
->> a generic interface to use it in a board agnostic manner.
-> 
-> In case this has been discussed and I missed it: Why are we doing this?
-> Isn't it possible to d o the overlay thingy in u-boot and pass a
-> complete device tree to the kernel?
-> Are you trying to do something like hotplug-PCI where the PCI card can
-> be replaced at runtime?
-> 
+v2: https://lkml.org/lkml/2013/3/21/215
+v1: https://lkml.org/lkml/2013/3/20/311
 
-It has been discussed.
+> /proc/device-tree-overlay accepts a stream of a device tree objects and
+> applies it to the running kernel's device tree.
+>
+>         $ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
+>         overlay_proc_release: Applied #2 overlay segments @0
+>
+> /proc/device-tree-overlay-status displays the the overlays added using
+> the /proc interface
+>
+>         $ cat device-tree-overlay-status
+>         0: 861 bytes BB-UART2:00A0
 
-We are doing it because
+Is the size useful information?
 
-a) We tried to do it in u-boot and it has been a complete disaster.
-Regular users just can't handle bootloader updates.
+>
+> The format of the status line is
+>         <ID>: <SIZE> bytes <part-number>:<version>
+>
+> <ID> is the id of the overlay
+> <SIZE> is the size of the overlay in bytes
+> <part-number>, <version> are (optional) root level properties of the DTBO
+>
+> You can remove an overlay by echoing the <ID> number of the overlay
+> precedded with a '-'
+>
+> So
+>         $ echo "-0" >device-tree-overlay-status
+>
+> Removes the overlay.
 
-b) It is similar to that. It was originally created for the beaglebone,
-which has a concept of capes (similar to Arduino shields).
-http://circuitco.com/support/index.php?title=BeagleBone_Capes
-Turns out it's really useful to anyone doing reconfigurable hardware too,
-so that's why FPGA people are thinking of using it.
+This interface seems racy. Could the id change on you between reading
+the status and echoing to remove the overlay?
 
-c) There are people that want to tinker with Linux based hardware boards
-but are not kernel developers. This gives them a way to do so without
-having to recompile the kernel and/or reboot while tinkering.
- 
-> Sebastian
+I would rather see a file created for each overlay and simply echo 0
+or "remove" to remove the overlay. Or possibly it needs to be a
+directory per overlay with several files for info and control. This
+would be more inline with typical sysfs design.
 
-Regards
-
--- Pantelis
+Rob
