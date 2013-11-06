@@ -1,78 +1,105 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH 1/1] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Wed, 6 Nov 2013 17:18:54 -0600
-Message-ID: <CANk1AXTys8B-jW0bATu19pOauVqe=aMc7v=SxXPm7npWb2y7eA@mail.gmail.com>
-References: <1383778182-16941-1-git-send-email-delicious.quinoa@gmail.com>
-	<1383778182-16941-2-git-send-email-delicious.quinoa@gmail.com>
-	<CAOMZO5BarpUGOExmDR8c2e0YOL41MmNkMii2ZU+jKrmEVtcmig@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: undocumented bindings in linux-next
+Date: Wed, 06 Nov 2013 17:24:04 -0600
+Message-ID: <527ACF94.5080204@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BarpUGOExmDR8c2e0YOL41MmNkMii2ZU+jKrmEVtcmig@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jamie Iles <jamie@jamieiles.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2013 at 5:09 PM, Fabio Estevam <festevam@gmail.com> wrote:
-> On Wed, Nov 6, 2013 at 8:49 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
->
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       gpio->regs = devm_ioremap_resource(&pdev->dev, res);
->> +       if (!gpio->regs) {
->> +               err = -ENOMEM;
->> +               goto out_free_ports;
->
-> The correct way to handle the error here would be:
->
-> if (IS_ERR(gpio->regs) {
->      err = PTR_ERR(gpio->regs)
->      goto out_free_ports;
->
->
->> +out_unregister:
->> +       dwapb_gpio_unregister(gpio);
->> +
->> +       if (gpio->domain) {
->> +               irq_dispose_mapping(gpio->hwirq);
->> +               irq_domain_remove(gpio->domain);
->> +       }
->> +
->> +out_free_ports:
->> +       devm_kfree(&pdev->dev, gpio->ports);
->
-> No need to call devm_kfree
->
->> +
->> +out_err:
->> +       devm_kfree(&pdev->dev, gpio);
->
-> Same here.
->
->> +       return err;
->> +}
->> +
->> +static int dwapb_gpio_remove(struct platform_device *pdev)
->> +{
->> +       struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
->> +
->> +       dwapb_gpio_unregister(gpio);
->> +       if (gpio->domain) {
->> +               irq_dispose_mapping(gpio->hwirq);
->> +               irq_domain_remove(gpio->domain);
->> +       }
->> +       devm_kfree(&pdev->dev, gpio->ports);
->> +       devm_kfree(&pdev->dev, gpio);
->
-> No need to call devm_kfree
->
-> Regards,
->
-> Fabio Estevam
+This list is newly added compatible strings in ARM dts files in
+linux-next without documentation. Unlike my prior list, this is only the
+diff of v3.12 to linux-next. I believe I've eliminated all the false
+positives. Documentation patches welcome.
 
-Cool, I agree.  I will fix in v7.
+287 compatible strings documented
+80 compatible strings undocumented
 
-Thanks,
-Alan
+acx565akm
+adi,adv7180
+adi,adv7393
+adi,adv7611
+altr,socfpga-perip-clk
+at24,24c256
+at,24c1024
+atmel,24c08
+atmel,at91sam9g45-isi
+atmel,sam9g46-sha
+dallas,ds1672
+edt,edt-ft5x06
+fsl,fxos8700
+fsl,imx28-tx28-sgtl5000
+fsl,imx53-voipac-sgtl5000
+fsl,imx6q-sabrelite-sgtl5000
+fsl,imx6sl-anatop
+fsl,imx6sl-iomuxc-gpr
+fsl,tzic
+fsl,vf610-sai
+gw,gsp
+ltc,ltc3676
+marvell,sky2
+mcp,24c02
+mxim,ds1339
+nvidia,tegra124
+nxp,pca9554
+onnn,nct1008
+pixcir,pixcir_ts
+plx,pex8606
+plx,pex8609
+qt1070
+renesas,irqc
+renesas,r7s72100
+renesas,r8a7778
+renesas,r8a7791
+renesas,sh-mmcif
+rohm,bh1780gli
+samsung,exynos5420-dw-mshc-smu
+sil,si52147
+sil,si53156
+sirf,atlas6-ble
+sirf,prima2-cphifbg
+sirf,prima2-memc
+sirf,prima2-memcmon
+sirf,prima2-rsc
+sirf,prima2-spi
+spidev
+sst,w25q256
+stericsson,cpufreq-ux500
+stericsson,db8500-cpufreq-cooling
+st-ericsson,u8500
+stericsson,u8500-clks
+st,m25l1605d
+st,nomadik-mtu
+st,stw4811
+st,stw481x-vmmc
+tc3589x
+tc3589x-gpio
+ti,bq27200
+ti,emif-4d5
+ti,omap2-mcspi
+ti,omap3-1w
+ti,omap36xx
+ti,omap4430-sdma
+ti,omap4-des
+ti,omap4-hwspinlock
+ti,omap4-mailbox
+ti,omap5-mpu
+ti,omap5-sham
+ti,omap-control-usb
+ti,omap-infra
+ti,palmas-usb-vid
+ti,tlv320aic23
+ti,tps659038-pmic
+ti,tsc2007
+ti,twl4030-pwrbutton
+ti,twl5031
+tps61052
+tsc2005
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
