@@ -1,28 +1,56 @@
-From: Alexander Sverdlin <alexander.sverdlin@nsn.com>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Wed, 06 Nov 2013 09:53:46 +0100
-Message-ID: <527A039A.8090409@nsn.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
+From: Li Xiubo <B47053@freescale.com>
+Subject: Re: [PATCHv2 5/8] ASoC: SGTL5000: Enhance the SGTL5000
+ codec driver about regulator.
+Date: Wed, 6 Nov 2013 08:59:53 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82876EFF@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131101185045.GG2493@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ext Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131101185045.GG2493@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis,
+> > On VF610 series there are no regulators used, and now whether the
+> > CONFIG_REGULATOR mirco is enabled or not, for the VF610 audio patch
+> > series, the board cannot be probe successfully.
+> > And this patch will solve this issue.
+> 
+> I don't understand what this is for at all, you're just saying there is a
+> problem you're trying to solve but you don't explain anything about what
+> the problem is or how your changes address it.
+> 
 
-On 05/11/13 19:41, ext Pantelis Antoniou wrote:
-> The following patchset introduces Device Tree overlays, a method
-> of dynamically altering the kernel's live Device Tree, along with
-> a generic interface to use it in a board agnostic manner.
+Sorry for confusing.
 
-I'm glad to see it again! Will test the whole series on our MIPS64 platforms
-(currently old patchset from bbxm tree is successfully used for a while).
+The SGTL5000 is based on regulators and when it is disabled, there will be an error returns directly while the SGTL5000 codec is probing.
+But on VF610 boards there has no regulators or needn't configure them, so the CONFIG_REGULATOR is disabled, and then the error is returned causing
+to the SGTL5000 probe broken. 
 
--- 
-Best regards,
-Alexander Sverdlin.
+Has I make it clear?
+
+> > +#ifndef CONFIG_SND_SOC_FSL_SGTL5000_VF610
+> >  static int ldo_regulator_register(struct snd_soc_codec *codec,
+> 
+> This is definitely broken, it won't work with multi-platform kernels, and
+> I don't understand what this is supposed to do - what is the reason for
+> making this change?
+>
+
+Yes, it is.
+
+How about adding one node properties like : "regulator-exist", which will be controlled by platform data ?
