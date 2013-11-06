@@ -1,41 +1,55 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's
- minimum required ECC
-Date: Wed, 6 Nov 2013 10:39:27 +0800
-Message-ID: <5279ABDF.7070709@freescale.com>
-References: <1382929517-22606-1-git-send-email-b32955@freescale.com> <20131105200729.GT20061@ld-irv-0074.broadcom.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCHv4 02/18] thermal: core: allow binding via .bind when tzp
+ is present
+Date: Wed, 6 Nov 2013 10:56:48 +0800
+Message-ID: <5279AFF0.1080105@nvidia.com>
+References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
+ <1380251605-3804-3-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131105200729.GT20061-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1380251605-3804-3-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2013=E5=B9=B411=E6=9C=8806=E6=97=A5 04:07, Brian Norris =E5=86=
-=99=E9=81=93:
-> This description still uses Linux-isms/MTD-isms (ecc_strength_ds,
-> ecc_step_ds, nand_chip{}, JFFS2). I would personally write this as
-> something like the following:
->
->    - fsl,use-minimum-ecc: Protect this NAND flash with the minimum EC=
-C
-> 			 strength required. The required ECC strength is
-> 			 automatically discoverable for some flash
-> 			 (e.g., according to the ONFI standard).
-> 			 However, note that if this strength is not
-> 			 discoverable, the software may choose an
-> 			 implementation-defined ECC scheme.
-this description is better then mine.
+On 09/27/2013 11:13 AM, Eduardo Valentin wrote:
+> This patch allows drivers register thermal zone devices
+> with thermal zone params and .bind callbacks. In this case,
+> it will use the .bind callback.
+> 
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> ---
+>  drivers/thermal/thermal_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 8a94300..f7a9f4f 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -247,7 +247,7 @@ static void bind_cdev(struct thermal_cooling_device *cdev)
+>  		if (!pos->tzp && !pos->ops->bind)
+>  			continue;
+>  
+> -		if (!pos->tzp && pos->ops->bind) {
+> +		if (pos->ops->bind) {
 
-thanks
-Huang Shijie
+Hi, Eduardo
+In bind_tz() routine, it also has same problem.
+I had sent out similar patch "[PATCHv4 02/18] thermal: core: allow
+binding via .bind when tzp is present" to fix it, but no response yet.
+I think you can add my changes in your series :)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+Wei.
+
+>  			ret = pos->ops->bind(pos, cdev);
+>  			if (ret)
+>  				print_bind_err_msg(pos, cdev, ret);
+> 
+
