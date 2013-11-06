@@ -1,127 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Wed, 06 Nov 2013 00:57:16 +0100
-Message-ID: <2199055.1gOuVSSAtq@avalon>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <87r4avnsc6.wl%kuninori.morimoto.gx@renesas.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Wed, 06 Nov 2013 09:07:00 +0900
+Message-ID: <000301ceda84$1d648bf0$582da3d0$%han@samsung.com>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
+ <1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
+ <527744B2.4090303@ti.com> <030d01ced946$d6e23490$84a69db0$%debski@samsung.com>
+ <52779D28.9000905@ti.com>
+ <CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com>
+ <00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>
+ <000001ceda17$f41c2030$dc546090$%han@samsung.com>
+ <000101ceda1f$04ca6f20$0e5f4d60$%han@samsung.com>
+ <CAFp+6iFAZab35F-MOOZHcHpzSEOL=51gWBK2KZbOJS+0731GJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <87r4avnsc6.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iFAZab35F-MOOZHcHpzSEOL=51gWBK2KZbOJS+0731GJQ@mail.gmail.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautamvivek1987@gmail.com>
+Cc: 'Kamil Debski' <k.debski@samsung.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 'Greg KH' <gregkh@linuxfoundation.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Julius Werner' <jwerner@chromium.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+On Wednesday, November 06, 2013 2:58 AM, Vivek Gautam wrote:
+> On Tue, Nov 5, 2013 at 5:33 PM, Jingoo Han <jg1.han@samsung.com> wrote:
 
-On Tuesday 05 November 2013 00:52:29 Kuninori Morimoto wrote:
-> Hi Laurent
-> 
-> > +Required Properties:
-> > +
-> > +  - compatible: Must be "renesas,r8a7790-cpg-clocks"
-> > +  - reg: Base address and length of the memory resource used by the CPG
-> > +  - clocks: Reference to the parent clock
-> > +  - #clock-cells: Must be 1
-> > +  - clock-output-names: The name of the clocks, must be "main", "pll1",
-> > +    "pll3", "lb", "qspi", "sdh", "sd0", "sd1".
-> 
-> (snip)
-> 
-> > +	for (i = 0; i < CPG_NUM_CLOCKS; ++i) {
-> > +		const struct clk_div_table *table = NULL;
-> > +		const char *parent_name = "main";
-> > +		const char *name;
-> > +		unsigned int shift;
-> > +		unsigned int mult = 1;
-> > +		unsigned int div = 1;
-> > +		struct clk *clk;
-> > +
-> > +		of_property_read_string_index(np, "clock-output-names", i,
-> > +					      &name);
-> > +
-> > +		switch (i) {
-> > +		case R8A7790_CLK_MAIN:
-> > +			parent_name = of_clk_get_parent_name(np, 0);
-> > +			div = config->extal_div;
-> > +			break;
-> > +		case R8A7790_CLK_PLL1:
-> > +			mult = config->pll1_mult / 2;
-> > +			break;
-> > +		case R8A7790_CLK_PLL3:
-> > +			mult = config->pll3_mult;
-> > +			break;
-> > +		case R8A7790_CLK_LB:
-> > +			div = cpg_mode & BIT(18) ? 36 : 24;
-> > +			break;
-> > +		case R8A7790_CLK_QSPI:
-> > +			div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
-> > +			    ? 16 : 20;
-> > +			break;
-> > +		case R8A7790_CLK_SDH:
-> > +			table = cpg_sdh_div_table;
-> > +			shift = 8;
-> > +			break;
-> > +		case R8A7790_CLK_SD0:
-> > +			table = cpg_sd01_div_table;
-> > +			shift = 4;
-> > +			break;
-> > +		case R8A7790_CLK_SD1:
-> > +			table = cpg_sd01_div_table;
-> > +			shift = 0;
-> > +			break;
-> > +		}
-> 
-> Is this clock-output-names realy "Required" property ?
-> The "name" and "order" seem fixed, then,
-> I guess it can simply use "name array" ?
+[.....]
 
-The clock-output-names property is required by the of_clk_get_parent_name() 
-function. The property is mandatory for all clocks that need to be referenced 
-by name, which is the case of all non-leaf clocks on our platforms. We thus 
-need it.
+>> USB3.0 PHY consists of two blocks such as 3.0 block and 2.0 block.
+>> This USB3.0 PHY can support UTMI+ and PIPE3 interface for 3.0 block
+>> and 2.0 block, respectively.
+>>
+>> Conclusion:
+>>
+>>    1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
+>>                        Base address: 0x1213 0000
+>>
+>>    2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
+>>                        Base address: 0x1210 0000
+>>                        2.0 block(UTMI+) & 3.0 block(PIPE3)
+>
+> And this is of course the PHY used by DWC3 controller, which works at
+> both High speed as well as Super Speed.
+> Right ?
 
-> > +static void __init r8a7790_cpg_clocks_init(struct device_node *np)
-> > +{
-> > +	const struct cpg_pll_config *config;
-> > +	struct r8a7790_cpg *cpg;
-> > +	struct clk **clks;
-> > +	unsigned int i;
-> > +
-> > +	cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
-> > +	clks = kzalloc(CPG_NUM_CLOCKS * sizeof(*clks), GFP_KERNEL);
-> > +	if (cpg == NULL || clks == NULL) {
-> > +		kfree(clks);
-> > +		kfree(cpg);
-> > +		pr_err("%s: failed to allocate cpg\n", __func__);
-> > +		return;
-> > +	}
-> > +
-> > +	spin_lock_init(&cpg->lock);
-> > +
-> > +	cpg->data.clks = clks;
-> > +	cpg->data.clk_num = CPG_NUM_CLOCKS;
-> > +
-> > +	cpg->reg = of_iomap(np, 0);
-> > +	if (WARN_ON(cpg->reg == NULL)) {
-> > +		kfree(cpg->data.clks);
-> > +		kfree(cpg);
-> > +		return;
-> > +	}
-> 
-> Above 2 error cases are doing same thing.
-> If can use goto xxx_error.
+Right.
 
-Good point.
+While 3.0 block(PIPE3) can be used for Super Speed, 2.0 block(UTMI+)
+can be used for High speed.
 
-Given that a failure to allocate memory or ioremap registers will lead to a 
-boot failure, I wonder whether we couldn't just remove the kfree() calls and 
-leak memory. Is there a point in cleaning up behind us if the system will no 
-boot due to missing core clocks anyway ?
-
--- 
-Regards,
-
-Laurent Pinchart
+Best regards,
+Jingoo Han
 
