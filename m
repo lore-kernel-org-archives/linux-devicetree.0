@@ -1,73 +1,53 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: [PATCH v6 4/8] ARM: dts: imx27 pinctrl
-Date: Wed, 6 Nov 2013 16:43:37 -0600
-Message-ID: <CAHCPf3sz6eOYrnNDfOTo5Z5dZP2U9+GtQMKYZEb-1WfuXepa6A@mail.gmail.com>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
-	<1382950843-26066-5-git-send-email-mpa@pengutronix.de>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: [PATCH 0/1] gpio: add a driver for the Synopsys DesignWare APB GPIO
+Date: Wed, 6 Nov 2013 16:49:41 -0600
+Message-ID: <1383778182-16941-1-git-send-email-delicious.quinoa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382950843-26066-5-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jamie Iles <jamie@jamieiles.com>, delicious quinoa <delicious.quinoa@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 4:00 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Pinctrl driver node and pin group definitions for other driver nodes.
->
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx27.dtsi | 102 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-> index b7a1c6d..641a63d 100644
-> --- a/arch/arm/boot/dts/imx27.dtsi
-> +++ b/arch/arm/boot/dts/imx27.dtsi
-> @@ -10,6 +10,7 @@
->   */
->
->  #include "skeleton.dtsi"
-> +#include "imx27-pinfunc.h"
->
->  / {
->         aliases {
-> @@ -235,6 +236,12 @@
->                                 status = "disabled";
->                         };
->
-> +                       iomuxc: iomuxc@10015000 {
-> +                               compatible = "fsl,imx27-iomuxc";
-> +                               reg = <0x10015000 0x600>;
-> +
-> +                       };
-> +
->                         gpio1: gpio@10015000 {
->                                 compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->                                 reg = <0x10015000 0x100>;
+From: Alan Tull <atull@altera.com>
 
-Linus,
+Version 6 - Implementing Sebastian's suggestions.
 
-Case in point, you can't have two nodes which overlap registers.
+To make reviewing more to-the-point, I squashed all three commits
+into one.  I hope that expedites things rather than getting in the
+way, we will see.
 
-Probably the most reasonable way to effect this is to keep the GPIO
-bindings, put pinctrl definitions in there (there's no reason pinctrl
-and gpio drivers can't probe the same compatible property) and use
-regmap internally on that single node.
+I am currently leaving nr-gpios as a required property because I saw a
+mailing list comment that that register to read the IP configuration is
+not available on earlier versions of the IP.
 
-On the good news side, this makes the pinctrl binding easier as every
-single one would be is parented by a gpio instance (gpio1 as above,
-for example), so it doesn't need to specify a port number anymore or
-do any (port*32)+pin math - just a pin index within that port.
+s/bank/port/ because the register names use the word 'port'
 
-Schema guys: is the DT validator code prepped for checking for
-overlapping register spaces, because this is totally undesirable
-behavior in device trees..
+s/nr-gpio/nr-gpios/
 
-Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I removed previous acked-by's and sign-off-by's as I felt that
+it would be weird and sneaky to make lots of changes and keep
+them, although it feels like a step backwards.
+
+I didn't want to mess with the interrupt enable/mask stuff so I
+left those as separate.
+
+Alan Tull
+
+
+Jamie Iles (1):
+  gpio: add a driver for the Synopsys DesignWare APB GPIO block
+
+ .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   57 +++
+ drivers/gpio/Kconfig                               |    9 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-dwapb.c                          |  458 ++++++++++++++++++++
+ 4 files changed, 525 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+ create mode 100644 drivers/gpio/gpio-dwapb.c
+
+-- 
+1.7.9.5
+
+
