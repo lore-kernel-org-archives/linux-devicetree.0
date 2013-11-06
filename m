@@ -1,74 +1,78 @@
-From: Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH 3/3] DT: proc: Add runtime overlay interface in /proc
-Date: Wed, 06 Nov 2013 10:51:43 +0100
-Message-ID: <527A112F.6070908@nsn.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 1/8] ALSA: Add SAI SoC Digital Audio
+	Interface driver.
+Date: Wed, 6 Nov 2013 09:53:38 +0000
+Message-ID: <20131106095338.GG11602@sirena.org.uk>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131101182514.GE2493@sirena.org.uk>
+ <1DD289F6464F0949A2FCA5AA6DC23F8287439D@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131104161537.GI2493@sirena.org.uk>
+ <1DD289F6464F0949A2FCA5AA6DC23F82875482@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383676898-29819-4-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2826641297338348364=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82875482@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Li Xiubo <B47053@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 05.11.2013 19:41, ext Pantelis Antoniou wrote:
-> Add a runtime interface to /proc to enable generic device tree overlay
-> usage.
-> 
-> Two new /proc files are added:
-> 
-> /proc/device-tree-overlay & /proc/device-tree-overlay-status
-> 
-> /proc/device-tree-overlay accepts a stream of a device tree objects and
-> applies it to the running kernel's device tree.
-> 
-> 	$ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
-> 	overlay_proc_release: Applied #2 overlay segments @0
-> 
-> /proc/device-tree-overlay-status displays the the overlays added using
-> the /proc interface
-> 
-> 	$ cat device-tree-overlay-status
-> 	0: 861 bytes BB-UART2:00A0
-> 
-> The format of the status line is
-> 	<ID>: <SIZE> bytes <part-number>:<version>
-> 
-> <ID> is the id of the overlay
-> <SIZE> is the size of the overlay in bytes
-> <part-number>, <version> are (optional) root level properties of the DTBO
-> 
-> You can remove an overlay by echoing the <ID> number of the overlay
-> precedded with a '-'
-> 
-> So
-> 	$ echo "-0" >device-tree-overlay-status
-> 
+--===============2826641297338348364==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JbKQpFqZXJ2T76Sg"
+Content-Disposition: inline
 
-Wouldn't it be easier if echo "-BB-UART2-00A0" > device-tree-overlay-status was
-supported also? That way one doesn't need to know the order in which the
-overlays were applied or parse the status file to get the <ID>.
 
-> Removes the overlay.
-> 
-> Note that this seldom works on most platforms since platform_device
-> removal is something that almost never works without extra patches.
-> 
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+--JbKQpFqZXJ2T76Sg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It would be very helpful to me if I would have a notification mechanism
-for overlay add and remove operations based on blocking_notifier_call_chain(),.
-This way other drivers can be notified when the dt changes.
+On Tue, Nov 05, 2013 at 03:21:49AM +0000, Li Xiubo wrote:
 
-But I guess that could be added in the future with another patch.
+> As your opinions, should I move the four register writing operations to .set_sysclk/set_clkdiv/... functions too ?
+> Or just add a clk_disable_unprepare() after them here, and then add clk_prepare_enable in one of .set_sysclk/set_clkdiv/...?
 
-Thanks,
-Ionut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The latter.
+
+--JbKQpFqZXJ2T76Sg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSehGeAAoJELSic+t+oim9WUUP/Ax7GnAFra3plXuggkpCC7no
+LSUiyDh4EDSRG7BgpC3qpaeJls0wMwMz0D6nM7Pj6Gx5VgLepd9L+LM0+GHKqir4
+KtIJic+2QSCA30cbcY/+m6DPkL+ZNPQL9VqQnzSxUD+BHEZHhC8wvD/CW84Cud8c
+vEQDukAQmvMF0HMn4djX+afFwbuLfDI90LiVvKqskRNuKapbQlx2QsZWajnsBcE4
+MuLTtT2SClFy7Wd4FVUDH/FgrPrYVy9xAqWdd0uNSNLvhIACH0u1Y6/u9gZQHHx6
+SzPid8xhjHvFMcninvghAHLyQqGITN1UFceddqscQaIVtIhC+GRAGGDFz29Ct56Z
+xBy3HwCeESdJOBcMCqVyOZdqk9nuRtLDXe8cfgCHy+XELbZctb+PYJNig0IcscdK
+oEomtNsNU0agV4QtKcbqeRIgJHy6unVy4l/2f/AbtczcNCSWj6JYEvSLibsnhNxh
+syKetHrt5bsIa4Ki2ufhL3breEeRQ6Wj7X0hU3eZ7TA9o7jolcLNLU7W9a7Y8VPW
+KZnxRCjcP3je3dgawJq4fw/e9IOWBjG5Dwtic29+bZc+cyjTX1jN+5qceDnA2Ubp
+DdUXaRjYJ1ffFEF4KsH7Xyb0IzfiX2gaDTkiTNwoF6H2RDs0ZRo217unJq0pE6+Z
+sVC8mJvgcTvmX1/5LqwJ
+=AUrm
+-----END PGP SIGNATURE-----
+
+--JbKQpFqZXJ2T76Sg--
+
+--===============2826641297338348364==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2826641297338348364==--
