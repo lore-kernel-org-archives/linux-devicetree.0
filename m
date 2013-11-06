@@ -1,55 +1,56 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCHv4 02/18] thermal: core: allow binding via .bind when tzp
- is present
-Date: Wed, 6 Nov 2013 10:56:48 +0800
-Message-ID: <5279AFF0.1080105@nvidia.com>
-References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
- <1380251605-3804-3-git-send-email-eduardo.valentin@ti.com>
+From: Li Xiubo <B47053@freescale.com>
+Subject: Re: [PATCHv2 1/8] ALSA: Add SAI SoC Digital Audio
+	Interface driver.
+Date: Wed, 6 Nov 2013 03:27:47 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82876A53@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131101085904.GC28401@MrMyself>
+ <1DD289F6464F0949A2FCA5AA6DC23F82874201@039-SN2MPN1-013.039d.mgd.msft.net>
+ <5278F1FA.1060706@tabi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1380251605-3804-3-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <5278F1FA.1060706@tabi.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Timur Tabi <timur@tabi.org>, Guangyu Chen <B42378@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>, "oskar@scara.com" <oskar@scara.com>, Fabio Estevam <r49496@freescale.com>, lgir
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2013 11:13 AM, Eduardo Valentin wrote:
-> This patch allows drivers register thermal zone devices
-> with thermal zone params and .bind callbacks. In this case,
-> it will use the .bind callback.
+> > But fsl-ssi.o and fsl-spdif.o is based PowrePC platform? Which we can
+> see from the comments.
 > 
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> ---
->  drivers/thermal/thermal_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> fsl_ssi was originally PPC-only, but it now supports PPC and ARM.  You
+> can see that from the git history.
 > 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 8a94300..f7a9f4f 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -247,7 +247,7 @@ static void bind_cdev(struct thermal_cooling_device *cdev)
->  		if (!pos->tzp && !pos->ops->bind)
->  			continue;
->  
-> -		if (!pos->tzp && pos->ops->bind) {
-> +		if (pos->ops->bind) {
+> If there are any comments that say PPC but are not PPC-specific, that
+> should be fixed.
 
-Hi, Eduardo
-In bind_tz() routine, it also has same problem.
-I had sent out similar patch "[PATCHv4 02/18] thermal: core: allow
-binding via .bind when tzp is present" to fix it, but no response yet.
-I think you can add my changes in your series :)
+Yes, find it.
 
-Thanks.
-Wei.
+The comments is in "sound/soc/fsl/Makefile" :
++++++++++++
+"# Freescale PowerPC SSI/DMA Platform Support"
+-----------
 
->  			ret = pos->ops->bind(pos, cdev);
->  			if (ret)
->  				print_bind_err_msg(pos, cdev, ret);
-> 
+But fsl-spdif.o is also under it.
+And this is also support ARM and PowerPC platforms at the same time ?
+If so, the comments should be modified to :
++++++++++++
+"# Freescale PowerPC and ARM SSI/DMA Platform Support"
+-----------
 
+
+
+Best Regards,
+Xiubo
