@@ -1,104 +1,88 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: undocumented bindings in linux-next
-Date: Wed, 06 Nov 2013 17:24:04 -0600
-Message-ID: <527ACF94.5080204@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Thu, 07 Nov 2013 00:29:17 +0100
+Message-ID: <527AD0CD.8020001@gmail.com>
+References: <1383778182-16941-1-git-send-email-delicious.quinoa@gmail.com> <1383778182-16941-2-git-send-email-delicious.quinoa@gmail.com> <CAOMZO5BarpUGOExmDR8c2e0YOL41MmNkMii2ZU+jKrmEVtcmig@mail.gmail.com> <CANk1AXTys8B-jW0bATu19pOauVqe=aMc7v=SxXPm7npWb2y7eA@mail.gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANk1AXTys8B-jW0bATu19pOauVqe=aMc7v=SxXPm7npWb2y7eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This list is newly added compatible strings in ARM dts files in
-linux-next without documentation. Unlike my prior list, this is only the
-diff of v3.12 to linux-next. I believe I've eliminated all the false
-positives. Documentation patches welcome.
+On 11/07/2013 12:18 AM, delicious quinoa wrote:
+> On Wed, Nov 6, 2013 at 5:09 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, Nov 6, 2013 at 8:49 PM, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +       gpio->regs = devm_ioremap_resource(&pdev->dev, res);
+>>> +       if (!gpio->regs) {
+>>> +               err = -ENOMEM;
+>>> +               goto out_free_ports;
+>>
+>> The correct way to handle the error here would be:
+>>
+>> if (IS_ERR(gpio->regs) {
+>>       err = PTR_ERR(gpio->regs)
+>>       goto out_free_ports;
+>>
+>>
+>>> +out_unregister:
+>>> +       dwapb_gpio_unregister(gpio);
+>>> +
+>>> +       if (gpio->domain) {
+>>> +               irq_dispose_mapping(gpio->hwirq);
+>>> +               irq_domain_remove(gpio->domain);
+>>> +       }
+>>> +
+>>> +out_free_ports:
+>>> +       devm_kfree(&pdev->dev, gpio->ports);
+>>
+>> No need to call devm_kfree
+>>
+>>> +
+>>> +out_err:
+>>> +       devm_kfree(&pdev->dev, gpio);
+>>
+>> Same here.
+>>
+>>> +       return err;
+>>> +}
+>>> +
+>>> +static int dwapb_gpio_remove(struct platform_device *pdev)
+>>> +{
+>>> +       struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+>>> +
+>>> +       dwapb_gpio_unregister(gpio);
+>>> +       if (gpio->domain) {
+>>> +               irq_dispose_mapping(gpio->hwirq);
+>>> +               irq_domain_remove(gpio->domain);
+>>> +       }
+>>> +       devm_kfree(&pdev->dev, gpio->ports);
+>>> +       devm_kfree(&pdev->dev, gpio);
+>>
+>> No need to call devm_kfree
+>>
+>> Regards,
+>>
+>> Fabio Estevam
+>
+> Cool, I agree.  I will fix in v7.
 
-287 compatible strings documented
-80 compatible strings undocumented
+Alan, will review tomorrow. Please do not send v7 too quickly,
+but let it idle for some more days. Especially, DT maintainers
+have so many reviews to do - so be patient.
 
-acx565akm
-adi,adv7180
-adi,adv7393
-adi,adv7611
-altr,socfpga-perip-clk
-at24,24c256
-at,24c1024
-atmel,24c08
-atmel,at91sam9g45-isi
-atmel,sam9g46-sha
-dallas,ds1672
-edt,edt-ft5x06
-fsl,fxos8700
-fsl,imx28-tx28-sgtl5000
-fsl,imx53-voipac-sgtl5000
-fsl,imx6q-sabrelite-sgtl5000
-fsl,imx6sl-anatop
-fsl,imx6sl-iomuxc-gpr
-fsl,tzic
-fsl,vf610-sai
-gw,gsp
-ltc,ltc3676
-marvell,sky2
-mcp,24c02
-mxim,ds1339
-nvidia,tegra124
-nxp,pca9554
-onnn,nct1008
-pixcir,pixcir_ts
-plx,pex8606
-plx,pex8609
-qt1070
-renesas,irqc
-renesas,r7s72100
-renesas,r8a7778
-renesas,r8a7791
-renesas,sh-mmcif
-rohm,bh1780gli
-samsung,exynos5420-dw-mshc-smu
-sil,si52147
-sil,si53156
-sirf,atlas6-ble
-sirf,prima2-cphifbg
-sirf,prima2-memc
-sirf,prima2-memcmon
-sirf,prima2-rsc
-sirf,prima2-spi
-spidev
-sst,w25q256
-stericsson,cpufreq-ux500
-stericsson,db8500-cpufreq-cooling
-st-ericsson,u8500
-stericsson,u8500-clks
-st,m25l1605d
-st,nomadik-mtu
-st,stw4811
-st,stw481x-vmmc
-tc3589x
-tc3589x-gpio
-ti,bq27200
-ti,emif-4d5
-ti,omap2-mcspi
-ti,omap3-1w
-ti,omap36xx
-ti,omap4430-sdma
-ti,omap4-des
-ti,omap4-hwspinlock
-ti,omap4-mailbox
-ti,omap5-mpu
-ti,omap5-sham
-ti,omap-control-usb
-ti,omap-infra
-ti,palmas-usb-vid
-ti,tlv320aic23
-ti,tps659038-pmic
-ti,tsc2007
-ti,twl4030-pwrbutton
-ti,twl5031
-tps61052
-tsc2005
+Also, for v7, you should use
+'git format-patch --subject-prefix "PATCH v7" ...' to reflect
+the patch version in email subject line.
+
+Sebastian
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
