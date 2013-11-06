@@ -1,406 +1,46 @@
-From: Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH 5/5] OF: Introduce utility helper functions
-Date: Wed, 06 Nov 2013 10:21:22 +0100
-Message-ID: <527A0A12.2050803@nsn.com>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-6-git-send-email-panto@antoniou-consulting.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Wed, 6 Nov 2013 10:29:47 +0100
+Message-ID: <CACRpkdaNnsM1cVTooYH=ePgjtvjrCiwuOD4oyYBZ_uzTYBnA_A@mail.gmail.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+	<051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+	<CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+	<201311050026.56321.heiko@sntech.de>
+	<527835FE.2030102@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383673816-29293-6-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527835FE.2030102@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Sherman Yin <syin@broadcom.com>, Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Nov 5, 2013 at 1:04 AM, Stephen Warren <swarren@wwwdotorg.org> =
+wrote:
+> On 11/04/2013 04:26 PM, Heiko St=FCbner wrote:
 
-First of all, good to see this patch set being submitted again!
+> Pure Boolean values should be represented as a valueless property. If
+> the property is present, the value is true, otherwise false.
+>
+> However, pinctrl bindings often don't represent Boolean values, but
+> rather tri-states, with the following values:
+>
+> * Don't touch this configuration option at all (missing)
+> * Enable the option (<1>)
+> * Disable the option (<0>)
 
-We're using an older version of your patch set for some time and
-they're working good for us.
+But in this case we actually have these booleans to specify
+exactly what we want to do:
 
-On 05.11.2013 18:50, ext Pantelis Antoniou wrote:
-> Introduce helper functions for working with the live DT tree.
-> 
-> __of_free_property() frees a dynamically created property
-> __of_free_tree() recursively frees a device node tree
-> __of_copy_property() copies a property dynamically
-> __of_create_empty_node() creates an empty node
-> __of_find_node_by_full_name() finds the node with the full name
-> and
-> of_multi_prop_cmp() performs a multi property compare but without
-> having to take locks.
-> 
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-> ---
->  drivers/of/Makefile |   2 +-
->  drivers/of/util.c   | 253 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h  |  59 ++++++++++++
->  3 files changed, 313 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/of/util.c
-> 
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index efd0510..9bc6d8c 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-y = base.o device.o platform.o
-> +obj-y = base.o device.o platform.o util.o
->  obj-$(CONFIG_OF_FLATTREE) += fdt.o
->  obj-$(CONFIG_OF_PROMTREE) += pdt.o
->  obj-$(CONFIG_OF_ADDRESS)  += address.o
-> diff --git a/drivers/of/util.c b/drivers/of/util.c
-> new file mode 100644
-> index 0000000..5117e2b
-> --- /dev/null
-> +++ b/drivers/of/util.c
-> @@ -0,0 +1,253 @@
-> +/*
-> + * Utility functions for working with device tree(s)
-> + *
-> + * Copyright (C) 2012 Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-> + * Copyright (C) 2012 Texas Instruments Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/string.h>
-> +#include <linux/ctype.h>
-> +#include <linux/errno.h>
-> +#include <linux/string.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +
-> +/**
-> + * __of_free_property - release the memory of an allocated property
-> + * @prop:	Property to release
-> + *
-> + * Release the memory of an allocated property only after checking
-> + * that the property has been marked as OF_DYNAMIC.
-> + * Only call on known allocated properties.
-> + */
-> +void __of_free_property(struct property *prop)
-> +{
-> +	if (prop == NULL)
-> +		return;
-> +
-> +	if (of_property_check_flag(prop, OF_DYNAMIC)) {
-> +		kfree(prop->value);
-> +		kfree(prop->name);
-> +		kfree(prop);
-> +	} else {
-> +		pr_warn("%s: property %p cannot be freed; memory is gone\n",
-> +				__func__, prop);
-> +	}
-> +}
-> +
-> +/**
-> + * __of_free_tree - release the memory of a device tree node and
-> + *		    of all it's children + properties.
-> + * @node:	Device Tree node to release
-> + *
-> + * Release the memory of a device tree node and of all it's children.
-> + * Also release the properties and the dead properties.
-> + * Only call on detached node trees, and you better be sure that
-> + * no pointer exist for any properties. Only safe to do if you 
-> + * absolutely control the life cycle of the node.
-> + * Also note that the node is not removed from the all_nodes list,
-> + * neither from the parent's child list; this should be handled before
-> + * calling this function.
-> + */
-> +void __of_free_tree(struct device_node *node)
-> +{
-> +	struct property *prop;
-> +	struct device_node *noden;
-> +
-> +	/* sanity check */
-> +	if (!node)
-> +		return;
-> +
-> +	/* free recursively any children */
-> +	while ((noden = node->child) != NULL) {
-> +		node->child = noden->sibling;
-> +		__of_free_tree(noden);
-> +	}
-> +
-> +	/* free every property already allocated */
-> +	while ((prop = node->properties) != NULL) {
-> +		node->properties = prop->next;
-> +		__of_free_property(prop);
-> +	}
-> +
-> +	/* free dead properties already allocated */
-> +	while ((prop = node->deadprops) != NULL) {
-> +		node->deadprops = prop->next;
-> +		__of_free_property(prop);
-> +	}
-> +
-> +	if (of_node_check_flag(node, OF_DYNAMIC)) {
-> +		kfree(node->type);
-> +		kfree(node->name);
-> +		kfree(node);
-> +	} else {
-> +		pr_warn("%s: node %p cannot be freed; memory is gone\n",
-> +				__func__, node);
-> +	}
-> +}
-> +
-> +/**
-> + * __of_copy_property - Copy a property dynamically.
-> + * @prop:	Property to copy
-> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
-> + *
-> + * Copy a property by dynamically allocating the memory of both the
-> + * property stucture and the property name & contents. The property's
-> + * flags have the OF_DYNAMIC bit set so that we can differentiate between
-> + * dynamically allocated properties and not.
-> + * Returns the newly allocated property or NULL on out of memory error.
-> + */
-> +struct property *__of_copy_property(const struct property *prop, gfp_t flags)
-> +{
-> +	struct property *propn;
-> +
-> +	propn = kzalloc(sizeof(*prop), flags);
-> +	if (propn == NULL)
-> +		return NULL;
-> +
-> +	propn->name = kstrdup(prop->name, flags);
-> +	if (propn->name == NULL)
-> +		goto err_fail_name;
-> +
-> +	if (prop->length > 0) {
-> +		propn->value = kmalloc(prop->length, flags);
-> +		if (propn->value == NULL)
-> +			goto err_fail_value;
-> +		memcpy(propn->value, prop->value, prop->length);
-> +		propn->length = prop->length;
-> +	}
+bias-disable            - disable any pin bias
+bias-high-impedance     - high impedance mode ("third-state", "floating=
+")
+bias-bus-hold           - latch weakly
+bias-pull-up            - pull up the pin
+bias-pull-down          - pull down the pin
+bias-pull-pin-default   - use pin-default pull state
 
-
-I think the prop->length check, should be removed. Properties with length 0, such
-as "interrupt-controller;" have length 0 and some parts of the linux kernel actually
-rely on their value being not NULL.
-
-For example in drivers/of/irq.c, of_irq_map_raw() checks that a node is an interrupt
-controller by calling:
-
-of_get_property(ipar, "interrupt-controller", NULL)
-
-and checking that it returns a non-null value.
-
-We can safely use kmalloc with size 0 which will return ZERO_SIZE_PTR. This will cause
-all the tests for non-null values in case of zero length properties to pass.
-
-I've sent you a patch a while ago for this. I'm not sure you had time to review it.
-
-Thanks,
-Ionut
-
-> +
-> +	/* mark the property as dynamic */
-> +	of_property_set_flag(propn, OF_DYNAMIC);
-> +
-> +	return propn;
-> +
-> +err_fail_value:
-> +	kfree(propn->name);
-> +err_fail_name:
-> +	kfree(propn);
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * __of_create_empty_node - Create an empty device node dynamically.
-> + * @name:	Name of the new device node
-> + * @type:	Type of the new device node
-> + * @full_name:	Full name of the new device node
-> + * @phandle:	Phandle of the new device node
-> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
-> + *
-> + * Create an empty device tree node, suitable for further modification.
-> + * The node data are dynamically allocated and all the node flags
-> + * have the OF_DYNAMIC & OF_DETACHED bits set.
-> + * Returns the newly allocated node or NULL on out of memory error.
-> + */
-> +struct device_node *__of_create_empty_node(
-> +		const char *name, const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags)
-> +{
-> +	struct device_node *node;
-> +
-> +	node = kzalloc(sizeof(*node), flags);
-> +	if (node == NULL)
-> +		return NULL;
-> +
-> +	node->name = kstrdup(name, flags);
-> +	if (node->name == NULL)
-> +		goto err_return;
-> +
-> +	node->type = kstrdup(type, flags);
-> +	if (node->type == NULL)
-> +		goto err_return;
-> +
-> +	node->full_name = kstrdup(full_name, flags);
-> +	if (node->type == NULL)
-> +		goto err_return;
-> +
-> +	node->phandle = phandle;
-> +	kref_init(&node->kref);
-> +	of_node_set_flag(node, OF_DYNAMIC);
-> +	of_node_set_flag(node, OF_DETACHED);
-> +
-> +	return node;
-> +
-> +err_return:
-> +	__of_free_tree(node);
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * __of_find_node_by_full_name - Find a node with the full name recursively
-> + * @node:	Root of the tree to perform the search
-> + * @full_name:	Full name of the node to find.
-> + *
-> + * Find a node with the give full name by recursively following any of 
-> + * the child node links.
-> + * Returns the matching node, or NULL if not found.
-> + * Note that the devtree lock is not taken, so this function is only
-> + * safe to call on either detached trees, or when devtree lock is already
-> + * taken.
-> + */
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name)
-> +{
-> +	struct device_node *child, *found;
-> +
-> +	if (node == NULL)
-> +		return NULL;
-> +
-> +	/* check */
-> +	if (of_node_cmp(node->full_name, full_name) == 0)
-> +		return node;
-> +
-> +	__for_each_child_of_node(node, child) {
-> +		found = __of_find_node_by_full_name(child, full_name);
-> +		if (found != NULL)
-> +			return found;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * of_multi_prop_cmp - Check if a property matches a value
-> + * @prop:	Property to check
-> + * @value:	Value to check against
-> + *
-> + * Check whether a property matches a value, using the standard
-> + * of_compat_cmp() test on each string. It is similar to the test
-> + * of_device_is_compatible() makes, but it can be performed without
-> + * taking the devtree_lock, which is required in some cases.
-> + * Returns 0 on a match, -1 on no match.
-> + */
-> +int of_multi_prop_cmp(const struct property *prop, const char *value)
-> +{
-> +	const char *cp;
-> +	int cplen, vlen, l;
-> +
-> +	if (prop == NULL || value == NULL)
-> +		return -1;
-> +
-> +	cp = prop->value;
-> +	cplen = prop->length;
-> +	vlen = strlen(value);
-> +
-> +	while (cplen > 0) {
-> +		if (of_compat_cmp(cp, value, vlen) == 0)
-> +			return 0;
-> +		l = strlen(cp) + 1;
-> +		cp += l;
-> +		cplen -= l;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a56c450..9d69bd2 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -662,4 +662,63 @@ extern void proc_device_tree_update_prop(struct proc_dir_entry *pde,
->  					 struct property *oldprop);
->  #endif
->  
-> +/**
-> + * General utilities for working with live trees.
-> + *
-> + * All functions with two leading underscores operate
-> + * without taking node references, so you either have to
-> + * own the devtree lock or work on detached trees only.
-> + */
-> +
-> +#ifdef CONFIG_OF
-> +
-> +/* iterator for internal use; not references, neither affects devtree lock */
-> +#define __for_each_child_of_node(dn, chld) \
-> +	for (chld = (dn)->child; chld != NULL; chld = chld->sibling)
-> +
-> +void __of_free_property(struct property *prop);
-> +void __of_free_tree(struct device_node *node);
-> +struct property *__of_copy_property(const struct property *prop, gfp_t flags);
-> +struct device_node *__of_create_empty_node( const char *name,
-> +		const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags);
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name);
-> +int of_multi_prop_cmp(const struct property *prop, const char *value);
-> +
-> +#else /* !CONFIG_OF */
-> +
-> +#define __for_each_child_of_node(dn, chld) \
-> +	while (0)
-> +
-> +static inline void __of_free_property(struct property *prop) { }
-> +
-> +static inline void __of_free_tree(struct device_node *node) { }
-> +
-> +static inline struct property *__of_copy_property(const struct property *prop,
-> +		gfp_t flags)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *__of_create_empty_node( const char *name,
-> +		const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int of_multi_prop_cmp(const struct property *prop, const char *value)
-> +{
-> +	return -1;
-> +}
-> +
-> +#endif	/* !CONFIG_OF */
-> +
->  #endif /* _LINUX_OF_H */
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
