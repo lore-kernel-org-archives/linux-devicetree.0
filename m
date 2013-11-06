@@ -1,78 +1,66 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Wed, 6 Nov 2013 13:23:18 +0100
-Message-ID: <20131106122317.GA8806@ulmo.nvidia.com>
-References: <527A1983.6020603@keymile.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
+Date: Wed, 06 Nov 2013 13:41:09 +0100
+Message-ID: <1550251.naXFpxhfMk@avalon>
+References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2775658.fxp7sbhy9u@avalon> <8738na1csg.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <527A1983.6020603-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <8738na1csg.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Morimoto-san,
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 05 November 2013 18:31:31 Kuninori Morimoto wrote:
+> Hi Laurent
+> 
+> > > Please correct me if my understanding was wrong.
+> > > Does your "of_clk_get_parent_name()" means "case R8A7790_CLK_MAIN"'s one
+> > > ?
+> > > If Yes, it is needed on "parent" clock side, not here ?
+> > > If No,  who need/call of_clk_get_parent_name() for this ?
+> > > does "qspi", "sdh", "sd0", "sd1" can be parent clock for some device ??
+> > 
+> > All those clocks are parents of other clocks (DIV6, MSTP or fixed-factor
+> > clocks). The DIV6, MSTP and fixed-factor clock drivers call
+> > of_clk_get_parent_name() to get the name of their parent clock, which is
+> > required to register the clocks with CCF. See of_fixed_factor_clk_setup()
+> > for instance.
+> 
+> Ahh... OK, I understand.
+> 
+> Hmm...
+> I guesss We can use [1/3] and [2/3] patches for all Renesas SoC as generic
+> driver, but, all SoC needs clk/shmobile/clk-xxxx.c like [3/3].
+> Because it has SoC special divider values.
+> Is this correct ?
 
-On Wed, Nov 06, 2013 at 11:27:15AM +0100, Gerlando Falauto wrote:
-> Hi everyone,
->=20
-> I am currently trying to describe an external device within a device
-> tree in a Kirkwood design.
-> Such device is accessed through a local (parallel) bus. Since
-> Kirkwood does not provide such an interface, we added a custom FPGA
-> (PCIe device) which implements a PCIe-to-localbus bridge.
-> So essentially BAR0 provides the configuration space for such a
-> bridge, and BAR1 provides a remapped area where accesses to the
-> localbus can be performed. BAR2 and BAR3 provide other functions.
->=20
-> So with the appropriate reg encoding of the PCI device, the PCI
-> driver for the FPGA will automatically get an of_node.
->=20
-> My question is: is there any way I can describe this external device
-> (I believe as a child node of the PCI device), so that a call to
-> of_address_to_resource() (or equivalent) from its driver will
-> automatically translate a localbus address (e.g. 0x0000abcd) to
-> whatever address was assigned to BAR1 (in my case 0xe0000000 ->
-> 0xe000abcd)?
+That's correct.
 
-Perhaps I don't understand properly, but what good is the local bus
-address to any driver? I mean you'll have to have a PCI driver to bind
-to the PCI device, right? And that PCI driver will only need to obtain
-the register addresses from BAR1, then access that region.
+> Now, your [1/3] patch (= for MSTP) added renesas special property
+> as "renesas,clock-indices".
+> Is it impossible to add renesas special property like
+> "renesas,clock-custom-divider" which can specify custom divider values in
+> generic cpg driver ?
+> If we can have it, all Renesas SoC can use generic driver ?
 
-Why would you need to have it translated via DT?
+The clocks supported by the SoC CPG driver are special in the sense that 
+they're not really standardized. Most of them are fixed-factor clocks with a 
+factor that depends on boot mode pins. The others are DIV4 clocks that vary 
+widely from SoC to SoC. Expressing all that information in DT would be much 
+more complex than expressing it in C code, which is why I've decided to go for 
+a per-SoC CPG driver, especially given that the amount of code isn't that 
+large.
 
-Thierry
+-- 
+Regards,
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature
+Laurent Pinchart
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSejS1AAoJEN0jrNd/PrOh5LsQAIRurfrtJtLnsBxKXXSqXEVe
-0JsDA9mIyAR9f57EX5r9Sbg/hUuSymO8jfqqBiUCbUNefqxpwOaQyYOuvCEBela3
-PHMuUJJNzEsViBt1yyJgZDX7yO7nrMyijYr65NLcT3O5LCcTCDflfVffQKLWZfe7
-gzadnq5FAsNLbBJtJmovBiN7SN+MrEn9gxqQnvPnMA/gkiBwfbZt+P0il+yvDXlF
-ARsB46tmM7Z86eH0C7mfs/3HFFbUv4ABqVF9nYPnyewHOoskhGqgT2ni/Nty6RX4
-1mHcmoe32v49eXDNGTYsYqcJBbyFR57MUCDXbWtmdA+HfelnQPydj46Tu2yZjqOc
-GHd+ZNJmQ+cV4IIgDT1BfOBwbGgbCFQgramhIRQjKZZS+7JHcWORwaKNu6K/PS8l
-r6SeF71SLMGrVBqe9fVVmkSoJUoeM+iNZigkK5LsM0pcQSmijZlARuQIbzEBcWqp
-dmF5hhGv/HXF45DGmVVDF5rRyK3OUz3oRZyBUw089KA3pbdiC85XN3uEB0YHhIbL
-p56/QQaiwRDiXXO5Pw6GCkxHTwUCR2LEUGP6SgI3/AVNkIoIA0wv5jMgyjo6aYwL
-x5o6r0O6zljLhC6IvisvgV0D3hY4Ta7ow8TIkLHv6xlLn7EGW4CYeUE5OCYTXDaS
-YKOjZvzXGbC1fdMpbrF6
-=XDag
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
