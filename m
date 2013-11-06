@@ -1,51 +1,42 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 06/13] ASoC: ux500_pcm: Extend ux500 MSP binding for
- enumeration
-Date: Wed, 6 Nov 2013 12:07:58 +0000
-Message-ID: <20131106120758.GG30901@lee--X1>
+Subject: Re: [PATCH 01/13] dma: ste_dma40: Expand DT binding to accept
+ 'high-priority channel' flag
+Date: Wed, 6 Nov 2013 12:11:46 +0000
+Message-ID: <20131106121146.GI30901@lee--X1>
 References: <1383732985-18928-1-git-send-email-lee.jones@linaro.org>
- <1383732985-18928-7-git-send-email-lee.jones@linaro.org>
- <20131106104658.GE11602@sirena.org.uk>
- <CACRpkdZgi9Egvm585Y9tJpmj0YX-oJBDg-C7pCu91Pf5ALMGLg@mail.gmail.com>
+ <1383732985-18928-2-git-send-email-lee.jones@linaro.org>
+ <CACRpkdaVPy8yuhYKohL7ewnmT5y7QrQ7ig2qf4t49YZ-+noDvQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZgi9Egvm585Y9tJpmj0YX-oJBDg-C7pCu91Pf5ALMGLg@mail.gmail.com>
+In-Reply-To: <CACRpkdaVPy8yuhYKohL7ewnmT5y7QrQ7ig2qf4t49YZ-+noDvQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 06 Nov 2013, Linus Walleij wrote:
 
-> On Wed, Nov 6, 2013 at 11:46 AM, Mark Brown <broonie@kernel.org> wrot=
-e:
-> > On Wed, Nov 06, 2013 at 10:16:18AM +0000, Lee Jones wrote:
+> On Wed, Nov 6, 2013 at 11:16 AM, Lee Jones <lee.jones@linaro.org> wro=
+te:
 >=20
-> >> + - id               : MSP ID - used during component registration
-> >
-> > I have no idea what this means or how one would pick the number?  I=
-t
-> > looks like something purely internal to the driver...
+> > --- a/Documentation/devicetree/bindings/dma/ste-dma40.txt
+> > +++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
+> > @@ -50,6 +50,9 @@ Each dmas request consists of 4 cells:
+> >          0x00000008: Use fixed channel:
+> >                  Use automatic channel selection when unset
+> >                  Use DMA request line number when set
+> > +        0x00000010: Set channel as high priority:
+> > +                Normal priority when unset
+> > +                High priority when set
 >=20
-> Actually it's quite common when we have several HW blocks of the
-> same thing to add something like an id. For example for different
-> GPIO banks.
->=20
-> But in this case I guess it may make more sense to flag one MSP
-> for RX and one for TX or something?
->=20
-> There are also two more such MSPs for streaming audio to the
-> Bluetooth audio portions.
+> We should probably switch these magic numbers to #defines
+> but it's another subject so
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Right, we have 4 of them:
-
-MSP0: Tx and Rx
-MSP1: Tx
-MSP2: Tx and Rx
-MSP3: Rx
+Happy to do that in a subsequent set.
 
 --=20
 Lee Jones
