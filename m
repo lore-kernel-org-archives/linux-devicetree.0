@@ -1,47 +1,47 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 2/3] clk: shmobile: Add MSTP clock support
-Date: Wed, 6 Nov 2013 17:33:39 +0900
-Message-ID: <CANqRtoRe2repacDdWhoZxY7sMP=AOhW=Mtwm3P9AgzVvwoBGKA@mail.gmail.com>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1383058511-26046-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Alexander Sverdlin <alexander.sverdlin@nsn.com>
+Subject: Re: [PATCH 1/5] OF: Clear detach flag on attach
+Date: Wed, 06 Nov 2013 09:46:01 +0100
+Message-ID: <527A01C9.2090306@nsn.com>
+References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-2-git-send-email-panto@antoniou-consulting.com> <20131105194310.GB17929@book.gsilab.sittig.org> <033B1C12-1AD8-44E3-A9BE-C216AEBA45F2@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1383058511-26046-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <033B1C12-1AD8-44E3-A9BE-C216AEBA45F2@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ext Pantelis Antoniou <panto@antoniou-consulting.com>, Gerhard Sittig <gsi@denx.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello Pantelis,
 
-On Tue, Oct 29, 2013 at 11:55 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> MSTP clocks are gate clocks controlled through a register that handles
-> up to 32 clocks. The register is often sparsely populated.
->
-> Those clocks are found on Renesas ARM SoCs.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
->  drivers/clk/shmobile/Makefile                      |   1 +
->  drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++++++++
->  include/dt-bindings/clock/r8a7790-clock.h          |  56 +++++
->  4 files changed, 333 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
->  create mode 100644 drivers/clk/shmobile/clk-mstp.c
+On 05/11/13 21:03, ext Pantelis Antoniou wrote:
+> On Nov 5, 2013, at 9:43 PM, Gerhard Sittig wrote:
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -1641,6 +1641,7 @@ int of_attach_node(struct device_node *np)
+>>> 	np->allnext = of_allnodes;
+>>> 	np->parent->child = np;
+>>> 	of_allnodes = np;
+>>> +	of_node_clear_flag(np, OF_DETACHED);
+>>> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>>>
+>>> 	of_add_proc_dt_entry(np);
+>>
+>> Does this add a call to a routine which only gets introduced in a
+>> subsequent patch (2/5)?  If so, it would break builds during the
+>> series, and thus would hinder bisection.
+>>
+> 
+> You're right, I'll re-order on the next series.
 
-Thanks for this. The MSTP driver looks fine to me, but..
+Is it necessary at all now, after these fixes:
+9e401275 of: fdt: fix memory initialization for expanded DT
+0640332e of: Fix missing memory initialization on FDT unflattening
+92d31610 of/fdt: Remove duplicate memory clearing on FDT unflattening
 
->  create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+?
 
-.. why do you bundle r8a7790-specific bits with the generic MSTP
-driver in this patch?
-
-It looks to me that you want these r8a7790 bits included with the
-r8a7790 support code.
-
-Cheers,
-
-/ magnus
+-- 
+Best regards,
+Alexander Sverdlin.
