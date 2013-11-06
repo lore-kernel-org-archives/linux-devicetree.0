@@ -1,32 +1,27 @@
-From: Support Embedded Linux <support.os-xeNldRymT6hBDgjK7y7TUQ@public.gmane.org>
-Subject: keymap for tca8418 i2c keypad
-Date: Wed, 06 Nov 2013 09:54:10 +0530
-Message-ID: <5279C46A.6090903@clancor.com>
+From: "Pallala, Ramakrishna" <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: max17042: Add POR init procedure from Maxim appnote
+Date: Wed, 6 Nov 2013 05:43:19 +0000
+Message-ID: <D854C92F57B1B347B57E531E78D05EAD2DE1A0C0@BGSMSX104.gar.corp.intel.com>
+References: <20131105202444.GG3949@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131105202444.GG3949-mgFCXtclrQlZLf2FXnZxJA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Support Embedded Linux <support.os-xeNldRymT6hBDgjK7y7TUQ@public.gmane.org>
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi device tree,
+>>The patch f3a71a6eb13b: "max17042: Add POR init procedure from Maxim appnote" from Mar 13, 2012, leads to the following static checker warning: "drivers/power/max17042_battery.c:339
+>>max17042_init_model()
+>>	 warn: passing casted pointer 'temp_data' to 'max17042_model_data_compare()' 32 vs 16."
 
-        I am working on tca8418 i2c keypad on beaglebone black. I have to
-map the direct keys (not through after pressing shift) for !,@,#,$
-symbols in linux,keymap definition at beaglebone black device tree ( i
-mean  arch/arm/boot/dts/am335x-bone-common.dtsi)?
+Dan, Thanks for pointing out the bug. I will fix it.
 
-      Any ideas to do within linux,keymap?
-
--- 
-Regards
-
-Vignesh Rajendran
-Embedded Linux engineer
-Clancor Technovates
-
+Thanks,,
+Ram
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
