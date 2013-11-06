@@ -1,96 +1,79 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 3/3] DT: proc: Add runtime overlay interface in /proc
-Date: Wed, 6 Nov 2013 11:57:50 +0200
-Message-ID: <FE390E17-5AFB-41AE-9EB3-7EBA3B5D92FF@antoniou-consulting.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <1383676898-29819-4-git-send-email-panto@antoniou-consulting.com> <527A112F.6070908@nsn.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <527A112F.6070908@nsn.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ionut Nicu <ioan.nicu.ext@nsn.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 5/8] ASoC: SGTL5000: Enhance the SGTL5000
+ codec driver about regulator.
+Date: Wed, 6 Nov 2013 10:03:05 +0000
+Message-ID: <20131106100305.GI11602@sirena.org.uk>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131101185045.GG2493@sirena.org.uk>
+ <1DD289F6464F0949A2FCA5AA6DC23F82876EFF@039-SN2MPN1-013.039d.mgd.msft.net>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2817226714879845084=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82876EFF@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Li Xiubo <B47053@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ionut,
 
-On Nov 6, 2013, at 11:51 AM, Ionut Nicu wrote:
-
-> Hi,
-> 
-> On 05.11.2013 19:41, ext Pantelis Antoniou wrote:
->> Add a runtime interface to /proc to enable generic device tree overlay
->> usage.
->> 
->> Two new /proc files are added:
->> 
->> /proc/device-tree-overlay & /proc/device-tree-overlay-status
->> 
->> /proc/device-tree-overlay accepts a stream of a device tree objects and
->> applies it to the running kernel's device tree.
->> 
->> 	$ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
->> 	overlay_proc_release: Applied #2 overlay segments @0
->> 
->> /proc/device-tree-overlay-status displays the the overlays added using
->> the /proc interface
->> 
->> 	$ cat device-tree-overlay-status
->> 	0: 861 bytes BB-UART2:00A0
->> 
->> The format of the status line is
->> 	<ID>: <SIZE> bytes <part-number>:<version>
->> 
->> <ID> is the id of the overlay
->> <SIZE> is the size of the overlay in bytes
->> <part-number>, <version> are (optional) root level properties of the DTBO
->> 
->> You can remove an overlay by echoing the <ID> number of the overlay
->> precedded with a '-'
->> 
->> So
->> 	$ echo "-0" >device-tree-overlay-status
->> 
-> 
-> Wouldn't it be easier if echo "-BB-UART2-00A0" > device-tree-overlay-status was
-> supported also? That way one doesn't need to know the order in which the
-> overlays were applied or parse the status file to get the <ID>.
-> 
-
-Unfortunately no since this is a raw bytestream interface; there is no file
-information. The patchset does display any root level part-number & version properties
-but that's completely options.
-
-We could standardize in a named root property to use on each overlay, and the part-number &
-version are as good as any.
+--===============2817226714879845084==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2xeD/fx0+7k8I/QN"
+Content-Disposition: inline
 
 
+--2xeD/fx0+7k8I/QN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> Removes the overlay.
->> 
->> Note that this seldom works on most platforms since platform_device
->> removal is something that almost never works without extra patches.
->> 
->> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
-> 
-> It would be very helpful to me if I would have a notification mechanism
-> for overlay add and remove operations based on blocking_notifier_call_chain(),.
-> This way other drivers can be notified when the dt changes.
-> 
+On Wed, Nov 06, 2013 at 08:59:53AM +0000, Li Xiubo wrote:
 
-Yes. Some people expressed interest in something similar.
+Please fix your mailer to word wrap within paragraphs.
 
-> But I guess that could be added in the future with another patch.
-> 
+> The SGTL5000 is based on regulators and when it is disabled, there
+> will be an error returns directly while the SGTL5000 codec is probing.
 
-Yep.
+What makes you say this?  That's not how the regulator API works.  Have
+you actually seen any problems?
 
-> Thanks,
-> Ionut
+--2xeD/fx0+7k8I/QN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Let's get the basic support in now, and we can fix all of that on later patches.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Regards
+iQIcBAEBAgAGBQJSehPWAAoJELSic+t+oim99j8P/0Q5VxOl7Cz2kOdpkUtx05aO
+zfsY9qshNzATK+jYfwNtZpX1HNqQqNLyb9Yrbwcwt/w0fHG3TNOlX22yN1B0zNP3
+31rbjJ8j8VlYknZU9Ht8wxixe9MiUgZfZFxZD+m9J5PJm3kRD47eM5KGUq4J42B4
+ZmlEjfTXyhfeIkZmK2UYQmqIFmNLsN4geLH3KdyeKpGIMG7SJpKkEnt21MtvdCXP
+dv3Im3P1/+GJDaC9ygXvZrBhmKenQyxnOk7aBshU4n8nRdU5Cx2aa+DYPMocA/8t
+zFNguQriZQk5T9RaOGv8LxXNhuCUpTMpiKGaKt/4v3/KbtuuZRHXiFWYZKAqcYcR
+jYMmpzIanQGedpAndpM/NsdqzhuEf5pmj43wwzeJY0ky3sn6jPEqBVRiPNJ0mRir
+/zOxppmx4OKeBsAxsiHMBcyqcr1xgZqHhjCzz7UB0aeSZAhHgHgTf/AmvAYF+/XZ
+hC/NQcojgd3ik/nFATsSIiW0ByDgMzWWt+7xssB4eZ8TvGnwQMUvK354NLODPRzr
+bOwTmbavXmhjziSQhqZe98VD4SAp8xL63RIxfQO/0Qc1KtoyQZ5/RFdRNA+vjbcQ
+Oa3EbyyltfT8SbF+uZr0Pxnby+YTN42AbTj2PrefRNJ1CngTxvzKcjkdrxWa++SJ
+aKaPNTTIaZfBZXE2HIBG
+=lgFY
+-----END PGP SIGNATURE-----
 
--- Pantelis
+--2xeD/fx0+7k8I/QN--
+
+--===============2817226714879845084==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2817226714879845084==--
