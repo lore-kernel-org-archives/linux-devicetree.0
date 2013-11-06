@@ -1,139 +1,122 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Wed, 6 Nov 2013 13:07:09 -0700
-Message-ID: <20131106200709.GB26881@obsidianresearch.com>
-References: <527A1983.6020603@keymile.com>
- <20131106173649.GA25515@obsidianresearch.com>
- <527A9AB9.2050903@keymile.com>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] DT: proc: Add runtime overlay interface in /proc
+Date: Wed, 6 Nov 2013 15:16:20 -0500
+Message-ID: <20131106201620.GN28156@beef>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
+ <1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
+ <CAL_Jsq+k9NoHxOaNujTG2=0MHm=s4Mh+xhXCZbhPG1EnHvo50A@mail.gmail.com>
+ <8EBC2D5B-74A4-4A85-8BEE-9EAEBFF045D4@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <527A9AB9.2050903-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <8EBC2D5B-74A4-4A85-8BEE-9EAEBFF045D4-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2013 at 08:38:33PM +0100, Gerlando Falauto wrote:
-
-> So let me get this straight.
-> First of all (though slightly unrelated), I looked at
-> drivers/gpio/gpio-generic.c and found no reference whatsoever to the
-> of_* infrastructure.
-
-Yes, I have a patch to enable that:
-https://github.com/jgunthorpe/linux/commit/da2881f55c094338f3b76617962e6af6c15f9cb9
-
-People didn't like the DT binding, so I'm just sitting on it.
-
-> So I realized of_device_alloc() populates the resource table of the
-> platform_device automatically -- I wasn't aware of that.
-
-Yes, in most cases platform drivers should not call of functions to get
-resources 
-
-> Second of all, if I understand it correctly (guessing the values for
-> #size-cells and #address-cells), your translation scheme works as
-> follows (let's say for the first register 0x8 of gpio3):
+On Wed, Nov 06, 2013 at 09:24:12PM +0200, Pantelis Antoniou wrote:
+> Hi Rob,
 > 
-> gpio3 (0x8)
-> -> range 0 of fpga@0       ==> 0x00000000 0x82000000 0x00000000
-> -> range 0 of pcie@1,0     ==> 0x82000000 0x1 0
-> -> range 1 of pex@e0000000 ==> MBUS_ID(0x04, 0xe8) 0
-> -> range 0 of mbus         ==> 0xe0000000
+> On Nov 6, 2013, at 9:10 PM, Rob Herring wrote:
 > 
-> so you end up accessing @0xe0000008, is that right?
-
-Almost:
- -> reg 0x8 pf gpio3
- -> range 0 of fpga@0       ==> 0x82000000 0x00000000 0x00000008
- -> range 0 of pcie@1,0     ==> 0x82000000 0x1 8
- -> range 1 of pex@e0000000 ==> MBUS_ID(0x04, 0xe8) 8
- -> range 0 of mbus         ==> 0xe0000008
-
-Each translation represents something concrete:
- 0x8 -> 0x82000000 0x00000000 0x00000008
-    This is the BAR 0 decoder of the PCI device
- 0x82000000 0x00000000 0x00000008 -> 0x82000000 0x1 8
-    This is the PCI bridge's memory window decoder
-  0x82000000 0x1 8 -> MBUS_ID(0x04, 0xe8) 8
-    This is the MBUS window associated with the PEX
- MBUS_ID(0x04, 0xe8) 8 -> 0xe0000008
-    This is the physical CPU BUS address associated with the MBUS
-    window
-
-> Looks like it ends up at the beginning of the memory region for
-> PCIe, and that's no wonder since you only have a single device with
-> a single BAR... right?
-
-The mapping of the FPGA bus into a BAR is done by a single ranges:
-
-> >                                 fpga@0 {
-> >                                         reg = <0x8 0 0  0 0>;
-> >                                         ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000>;
-> >                                         gpio3: fpga_gpio@8 {
-
-That ranges says 'put address 0 of the child bus at 0x82000000
-0x00000000 0x00000000', which is the BAR 0 address, relative to the
-bridge's memory window.
-
-> So suppose you also had a bigger BAR1 which would then shift your
-> GPIO block at @0xe8000000.
-> Until we get that figured out, where would you hardcode such offset then?
-
-Since your BAR layout of your device is fixed you can adjust the
-single ranges:
-
-  ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000>;
-
-It is possible as well to do this in code in the FPGA driver.
-
-> How would you also deal with a second (let's say identical) device on BAR1?
-
-  ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000  //  BAR 0
-            0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> // BAR 1
-
-Use reg <0x10000abc xxx> to refer to the 2nd BAR. There are other ways
-to organize things.
-
-> I guess I could live with hardcoded values in the DT, as long as
-> they're easy to spot and there's only one per BAR/device.
-> Then it's easy to do a comparison with whatever gets assigned during
-> probing.
-
-I'd see it as an interm step, pending on some kind of core support for
-this sort of stuff.
-
-> >I use code like this in the FPGA PCI driver to load the DT nodes:
-> >
-> >         struct of_device_id match_table[2] = {};
-> >         struct device_node *child;
-> >         int rc = 0;
-> >
-> >         for_each_child_of_node(root, child) {
-> >                 /* Can't just create a single device.. */
-> >                 strlcpy(match_table[0].name, child->name,
-> >                         sizeof(match_table[0].name));
-> >                 strlcpy(match_table[0].type, child->type,
-> >                         sizeof(match_table[0].type));
-> >                 rc = of_platform_bus_probe(child, match_table,
-> >                                            parent);
-> >                 if (rc)
-> >                         break;
-> >         }
-> >(root would be the of_node of the FPGA)
+> > On Tue, Nov 5, 2013 at 12:41 PM, Pantelis Antoniou
+> > <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> >> Add a runtime interface to /proc to enable generic device tree overlay
+> >> usage.
+> >> 
+> >> Two new /proc files are added:
+> >> 
+> >> /proc/device-tree-overlay & /proc/device-tree-overlay-status
+> > 
+> > I think we really want all this to live under sysfs. Grant did patches
+> > to move /proc/device-tree to /sys, but it never went upstream:
+> > 
+> > v2: https://lkml.org/lkml/2013/3/21/215
+> > v1: https://lkml.org/lkml/2013/3/20/311
+> > 
 > 
-> Stupid question... why not the following:
+> Yes, I'm aware; the location of this control interface in /proc is
+> unusual, but had to go somewhere. It should be easy enough to move it to
+> /sys.
 > 
-> rc = of_platform_populate(root, NULL, NULL, parent);
+> >> /proc/device-tree-overlay accepts a stream of a device tree objects and
+> >> applies it to the running kernel's device tree.
+> >> 
+> >>        $ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
+> >>        overlay_proc_release: Applied #2 overlay segments @0
+> >> 
+> >> /proc/device-tree-overlay-status displays the the overlays added using
+> >> the /proc interface
+> >> 
+> >>        $ cat device-tree-overlay-status
+> >>        0: 861 bytes BB-UART2:00A0
+> > 
+> > Is the size useful information?
+> > 
+> 
+> If the overlay doesn't contain part-number/version properties there is nothing
+> to differentiate each one loaded. No file information, it is just a byte stream
+> interface.
+> 
+> >> 
+> >> The format of the status line is
+> >>        <ID>: <SIZE> bytes <part-number>:<version>
+> >> 
+> >> <ID> is the id of the overlay
+> >> <SIZE> is the size of the overlay in bytes
+> >> <part-number>, <version> are (optional) root level properties of the DTBO
+> >> 
+> >> You can remove an overlay by echoing the <ID> number of the overlay
+> >> precedded with a '-'
+> >> 
+> >> So
+> >>        $ echo "-0" >device-tree-overlay-status
+> >> 
+> >> Removes the overlay.
+> > 
+> > This interface seems racy. Could the id change on you between reading
+> > the status and echoing to remove the overlay?
+> > 
+> > I would rather see a file created for each overlay and simply echo 0
+> > or "remove" to remove the overlay. Or possibly it needs to be a
+> > directory per overlay with several files for info and control. This
+> > would be more inline with typical sysfs design.
+> > 
+> 
+> It was suggested to use a configfs interface. IIRC configfs can do what you
+> propose.
+> 
+> Something like 
+> 
+> /config/dto/add 	<- load by cat overlay.dtbo >/config/dto/load
 
-Yes, that probably works. My version of the above has an additional
-bit of code that I removed which filters the children to
-create. Basically FPGA version 1.0 has a different list of devices
-than version 1.1, etc.
+In a configfs it makes more sense to mkdir. FWIW, USB gadget configfs
+is a good example of this.
 
-Jason
+	mkdir /config/dto/0
+
+which would cause the kernel to create the attribute under that
+directory:
+
+	/config/dto/0/load
+
+Which you use to load as noted above.
+
+Only problem is that configfs doesn't support binary attributes like
+sysfs. If it is a agreed that overlays are configuration then that would
+be a strong argument to bring over the binary attribute feature.
+
+
+> /config/dto/0/remove 	<- unload by echo 1 >/config/dto/0/remove
+
+	rmdir /config/dto/0
+
+> /config/dto/0/${prop}   <- root level properties that are ignore by the overlay
+> 			   mechanism
+
+-Matt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
