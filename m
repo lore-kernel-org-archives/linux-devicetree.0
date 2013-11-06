@@ -1,69 +1,221 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/3] DT: proc: Add runtime overlay interface in /proc
-Date: Wed, 6 Nov 2013 13:10:27 -0600
-Message-ID: <CAL_Jsq+k9NoHxOaNujTG2=0MHm=s4Mh+xhXCZbhPG1EnHvo50A@mail.gmail.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
-	<1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383676898-29819-4-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Wed, 6 Nov 2013 21:16:13 +0200
+Message-ID: <20246965-EEE8-4EF0-A632-0633774A572A@antoniou-consulting.com>
+References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate> <334037D0-02FB-459F-9E40-129EC830AF65@antoniou-consulting.com> <20131106185658.GC25879@obsidianresearch.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131106185658.GC25879-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Cl?ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2013 at 12:41 PM, Pantelis Antoniou
-<panto@antoniou-consulting.com> wrote:
-> Add a runtime interface to /proc to enable generic device tree overlay
-> usage.
->
-> Two new /proc files are added:
->
-> /proc/device-tree-overlay & /proc/device-tree-overlay-status
+Hi Jason,
 
-I think we really want all this to live under sysfs. Grant did patches
-to move /proc/device-tree to /sys, but it never went upstream:
 
-v2: https://lkml.org/lkml/2013/3/21/215
-v1: https://lkml.org/lkml/2013/3/20/311
+On Nov 6, 2013, at 8:56 PM, Jason Gunthorpe wrote:
 
-> /proc/device-tree-overlay accepts a stream of a device tree objects and
-> applies it to the running kernel's device tree.
->
->         $ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
->         overlay_proc_release: Applied #2 overlay segments @0
->
-> /proc/device-tree-overlay-status displays the the overlays added using
-> the /proc interface
->
->         $ cat device-tree-overlay-status
->         0: 861 bytes BB-UART2:00A0
+> On Wed, Nov 06, 2013 at 08:33:39PM +0200, Pantelis Antoniou wrote:
+> 
+>> On DT this fall downs completely, and you get abominations like the
+>> OMAP GPMC bindings...
+> 
+> This looks similar to Ezequiel's expansion bus bindings for MVEBU.
+> 
+> Maybe you can clarify the issue you see?
+> 
+> The general pattern I expect is something like this:
+> 
+>  some_bus_bridge {
+>     compatible = 'bridge bus driver';
+> 
+>     ranges <[CS#] 0  [CS window base]  [size]>;
+> 
+>     chip-select,1 {
+>       < All Parameters to configure timing, etc, for this
+>         chip select>
+>       ranges = <0  1 0  [size]>;
+> 
+>       my device {
+>           compatble = 'camera'
+>           reg = <0 [size]>
+>       }
+>     }
+> 
+> The way it works is the DT machinery instantiates a some_bus_bridge.
+> 
+> The bridge driver goes through and parses the ranges, it sets up the
+> address mappings as necessary to create a window for each CS. If this
+> address assignment is dynamic then it needs to make the 'ranges'
+> correct. (MVEBU land does this in the mbus driver)
+> 
+> The bridge driver parses each child and configures the bus CS timing
+> parameters. (this is done in the external memory driver, IIRC)
+> 
+> The bridge driver constructs a struct device for each child in every
+> chip-select (the 'my device' node). Normal OF address translation
+> makes this work fine.
+> 
+> Your camera driver attaches to the 'my device' node, not to the chip
+> select node. The chip select node is used only by the bus bridge
+> driver to setup that specific chip select.
+> 
 
-Is the size useful information?
+No. I get the point about the bridge driver, but that's not what I want.
 
->
-> The format of the status line is
->         <ID>: <SIZE> bytes <part-number>:<version>
->
-> <ID> is the id of the overlay
-> <SIZE> is the size of the overlay in bytes
-> <part-number>, <version> are (optional) root level properties of the DTBO
->
-> You can remove an overlay by echoing the <ID> number of the overlay
-> precedded with a '-'
->
-> So
->         $ echo "-0" >device-tree-overlay-status
->
-> Removes the overlay.
+I agree that the bridge driver configures the chip selects, address ranges
+and timings, but it shouldn't do that at the time the bridge driver is
+instantiated. 
 
-This interface seems racy. Could the id change on you between reading
-the status and echoing to remove the overlay?
+That would mean that all configuration is fixed at boot time.
 
-I would rather see a file created for each overlay and simply echo 0
-or "remove" to remove the overlay. Or possibly it needs to be a
-directory per overlay with several files for info and control. This
-would be more inline with typical sysfs design.
 
-Rob
+> The example you have looks close to that except for a few details:
+> 
+>> Observe:
+>> 
+>>>                        status = "okay";
+>>> 
+>>>                        #address-cells = <2>;
+>>>                        #size-cells = <1>;
+>>> 
+>>>                        pinctrl-names = "default";
+>>>                        pinctrl-0 = <&gpmc_pins>;
+>>> 
+>>>                        /* chip select ranges */
+>>>                        ranges = <0 0 0x08000000 0x10000000>,        /* bootloader has this enabled */
+>>>                                 <1 0 0x18000000 0x08000000>,
+>>>                                 <2 0 0x20000000 0x08000000>,
+>>>                                 <3 0 0x28000000 0x08000000>,
+>>>                                 <4 0 0x30000000 0x08000000>,
+>>>                                 <5 0 0x38000000 0x04000000>,
+>>>                                 <6 0 0x3c000000 0x04000000>;
+> 
+> OK, seems reasonable, setting up chip select windows, giving them base
+> addresess and sizes.
+> 
+>>>                        camera {
+>>>                                compatible = "cssp-camera";
+>>>                                status = "okay";
+>>>                                pinctrl-names = "default";
+>>>                                pinctrl-0 = <&cssp_camera_pins>;
+>>> 
+>>>                                reg = <1 0 0x01000000>;       /* CS1 */
+> 
+> Here we want to hoist bus specific stuff out of 'camera' and into
+> 'cs1@', so:
+> 
+> No reg at this point.
+> 
+>>>                                bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
+>>>                                gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
+> [...]
+> 
+> Timing parameters seem reasonable.
+> 
+>>> 
+>>>                                /* not using dma engine yet, but we can get the channel number here */
+>>>                                dmas = <&edma 20>;
+>>>                                dma-names = "cssp";
+> 
+> DMA's/gpios, etc probably belong in the child. Maybe clocks belong in
+> the CS? Depends on the bridge driver..
+> 
+>>>                                /* clocks */
+>>>                                cssp,camera-clk-name = "adjustable_clkout2_ck";
+>>>                                cssp,camera-clk-rate = <32000000>;
+>>> 
+>>>                                /* reset */
+>>>                                reset-gpio = <&gpio1 4 0>;
+>>> 
+>>>                                /* orientation; -> MT9T112_FLAG_VFLIP */
+>>>                                orientation-gpio = <&gpio1 30 0>;
+>>> 
+>>>                                /* reset controller (for the black) */
+>>>                                reset = <&rstctl 0 0>;
+>>>                                reset-names = "eMMC_RSTn-CAM3";
+> 
+> Missing:
+> 
+> ranges = <0  1 0  0x01000000>;
+> 
+> Missing:
+> 
+> camera@0 {
+>    reg = <0 0x01000000>;
+> 
+> Put DMA's/etc here.
+> 
+>>>                                /* camera sensor */
+>>>                                cssp,sensor {
+>>>                                        i2c-adapter = <&i2c2>;
+> 
+> Yikes!
+> 
+> If there is an i2c component then a phandle to the component itself is
+> way better:
+> 
+>    i2c-component = <&i2c_camera>
+> 
+> i2c2: ...
+> { 
+>         i2c_camera: m59t112 {
+>             compatible = "aptina,mt9t112";
+>             reg = <0x3c>;
+>         }
+> }
+> 
+> Sprinkle address-cells/size-cells as necessary.
+> 
+>> 	gpmc {
+>> 		compatible = "ti,gpmc";
+>> 
+>> 		camera_gpmc_config {
+>> 
+>>                         bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
+>> 
+>>                         gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
+>>                         gpmc,sync-read;                        /* GPMC_CONFIG1_READTYPE_SYNC */
+>>                         gpmc,sync-write;                /* GPMC_CONFIG1_WRITETYPE_SYNC */
+>>                         gpmc,clk-activation-ns = <20>;        /* GPMC_CONFIG1_CLKACTIVATIONTIME(2) */
+>>                         gpmc,burst-length = <16>;        /* GPMC_CONFIG1_PAGE_LEN(2) */
+>>                         gpmc,mux-add-data = <2>;        /* GPMC_CONFIG1_MUXTYPE(2) */
+>> 		};
+>> 	}
+> 
+> Similar idea, but you have thrown away the nesting.
+> 
+
+The bindings presented was just for illustration, I just wanted to present the idea :)
+
+> DT should reflect the address translation hierarchy of the system, so
+> 'ti,gpmc' does address translation, the things it translates for
+> should be its children.
+> 
+
+That's where we disagree. I don't want the drivers to be children of the bridge.
+
+All the drivers that are controlled by a chip select and/or bus access method are
+written without ever dealing with the bridge; they just expect the configuration to be
+valid and need to only know the address range they reside.
+
+As you pointed the i2c component, which was a child of the device node, it is better to become a 
+phandle reference.
+
+That's what I'm proposing for the bridge configuration as well, so that the configuration is applied
+only when a device requests it. This is important for hot-plugging, and or when using stuff like
+device overlays.
+
+> Jason
+
+Regards
+
+-- Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
