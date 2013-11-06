@@ -1,94 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Wed, 06 Nov 2013 02:00:28 +0100
-Message-ID: <2775658.fxp7sbhy9u@avalon>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2199055.1gOuVSSAtq@avalon> <874n7q1ha3.wl%kuninori.morimoto.gx@renesas.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v3 1/3] phy: Add new Exynos USB PHY driver
+Date: Wed, 06 Nov 2013 10:02:42 +0900
+Message-ID: <000c01ceda8b$e54dbef0$afe93cd0$%han@samsung.com>
+References: <1383668001-19141-1-git-send-email-k.debski@samsung.com>
+ <1383668001-19141-2-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <874n7q1ha3.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1383668001-19141-2-git-send-email-k.debski@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kamil Debski' <k.debski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, galak@codeaurora.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
-
-On Tuesday 05 November 2013 16:54:31 Kuninori Morimoto wrote:
-> Hi Laurent
+On Wednesday, November 06, 2013 1:13 AM, Kamil Debski wrote:
 > 
-> > > > +	for (i = 0; i < CPG_NUM_CLOCKS; ++i) {
-> > > > +		const struct clk_div_table *table = NULL;
-> > > > +		const char *parent_name = "main";
-> > > > +		const char *name;
-> > > > +		unsigned int shift;
-> > > > +		unsigned int mult = 1;
-> > > > +		unsigned int div = 1;
-> > > > +		struct clk *clk;
-> > > > +
-> > > > +		of_property_read_string_index(np, "clock-output-names", i,
-> > > > +					      &name);
-> > > > +
-> > > > +		switch (i) {
-> > > > +		case R8A7790_CLK_MAIN:
-> > > > +			parent_name = of_clk_get_parent_name(np, 0);
-> > > > +			div = config->extal_div;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_PLL1:
-> > > > +			mult = config->pll1_mult / 2;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_PLL3:
-> > > > +			mult = config->pll3_mult;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_LB:
-> > > > +			div = cpg_mode & BIT(18) ? 36 : 24;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_QSPI:
-> > > > +			div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
-> > > > +			    ? 16 : 20;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_SDH:
-> > > > +			table = cpg_sdh_div_table;
-> > > > +			shift = 8;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_SD0:
-> > > > +			table = cpg_sd01_div_table;
-> > > > +			shift = 4;
-> > > > +			break;
-> > > > +		case R8A7790_CLK_SD1:
-> > > > +			table = cpg_sd01_div_table;
-> > > > +			shift = 0;
-> > > > +			break;
-> > > > +		}
-> > > 
-> > > Is this clock-output-names realy "Required" property ?
-> > > The "name" and "order" seem fixed, then,
-> > > I guess it can simply use "name array" ?
-> > 
-> > The clock-output-names property is required by the
-> > of_clk_get_parent_name()
-> > function. The property is mandatory for all clocks that need to be
-> > referenced by name, which is the case of all non-leaf clocks on our
-> > platforms. We thus need it.
+> Add a new driver for the Exynos USB PHY. The new driver uses the generic
+> PHY framework. The driver includes support for the Exynos 4x10 and 4x12
+> SoC families.
 > 
-> Please correct me if my understanding was wrong.
-> Does your "of_clk_get_parent_name()" means "case R8A7790_CLK_MAIN"'s one ?
-> If Yes, it is needed on "parent" clock side, not here ?
-> If No,  who need/call of_clk_get_parent_name() for this ?
-> does "qspi", "sdh", "sd0", "sd1" can be parent clock for some device ??
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/phy/samsung-usbphy.txt     |   52 ++++
+>  drivers/phy/Kconfig                                |   23 +-
+>  drivers/phy/Makefile                               |    4 +
+>  drivers/phy/phy-exynos-usb2.c                      |  234 ++++++++++++++
+>  drivers/phy/phy-exynos-usb2.h                      |   87 ++++++
+>  drivers/phy/phy-exynos4210-usb2.c                  |  272 ++++++++++++++++
+>  drivers/phy/phy-exynos4212-usb2.c                  |  324 ++++++++++++++++++++
+>  7 files changed, 995 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/samsung-usbphy.txt
+>  create mode 100644 drivers/phy/phy-exynos-usb2.c
+>  create mode 100644 drivers/phy/phy-exynos-usb2.h
+>  create mode 100644 drivers/phy/phy-exynos4210-usb2.c
+>  create mode 100644 drivers/phy/phy-exynos4212-usb2.c
 
-All those clocks are parents of other clocks (DIV6, MSTP or fixed-factor 
-clocks). The DIV6, MSTP and fixed-factor clock drivers call 
-of_clk_get_parent_name() to get the name of their parent clock, which is 
-required to register the clocks with CCF. See of_fixed_factor_clk_setup() for 
-instance.
+[....]
 
-> And, parent of main clock is fixed by MD pin settings.
-> SW can't exchange it.
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index d0caae9..c87bc65 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -7,3 +7,7 @@ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> +obj-$(CONFIG_PHY_EXYNOS5250_USB)	+= phy-exynos5250-usb.o
 
--- 
-Regards,
+Hi Kamil,
 
-Laurent Pinchart
+Would you add 'phy-exynos5250-usb.c' file? :-)
 
+Now, I am testing Exynos5250 USB HOST with your patchset.
+However, it makes error because there is no PHY driver for
+Exynos5250.
+
+  WARNING: CPU: 0 PID: 18 at drivers/phy/phy-core.c:366 phy_get+0x1e8/0x224()
+  Device: exynos-ehci
+  missing string
+  .....
+
+Best regards,
+Jingoo Han
