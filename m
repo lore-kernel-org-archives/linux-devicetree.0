@@ -1,40 +1,46 @@
 From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Fwd: [PATCH 8/8] arm: dts: keystone: add watchdog entry
-Date: Wed, 6 Nov 2013 13:33:04 +0200
-Message-ID: <527A28F0.6050406@ti.com>
-References: <1383680783-12114-9-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: Fwd: [PATCH 7/8] watchdog: davinci: add "clocks" property
+Date: Wed, 6 Nov 2013 13:32:56 +0200
+Message-ID: <527A28E8.4010204@ti.com>
+References: <1383680783-12114-8-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383680783-12114-9-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1383680783-12114-8-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Santosh Shilimkar <santosh.shilimkar@ti.com>, wim@iguana.be, nsekhar@ti.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 Cc: grant.likely@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, galak@kernel.crashing.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog entry to keystone device tree.
+The Keystone arch is using clocks in DT and source clock for watchdog
+has to be specified, so add this to binding.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- arch/arm/boot/dts/keystone.dts |    6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone.dts b/arch/arm/boot/dts/keystone.dts
-index 100bdf5..a6e5f91 100644
---- a/arch/arm/boot/dts/keystone.dts
-+++ b/arch/arm/boot/dts/keystone.dts
-@@ -179,5 +179,11 @@
- 			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkspi>;
- 		};
+diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+index fddced9..4db4d0e 100644
+--- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+@@ -7,6 +7,10 @@ Required properties:
+ 
+ - reg : Should contain WDT registers location and length
+ 
++- clocks: phandle reference to the controller clock.
++	  Required only for Keystone arch.
++	  See clock-bindings.txt
 +
-+		wdt: wdt@022f0080 {
-+			compatible = "ti,keystone-wdt";
-+			reg = <0x022f0080 0x80>;
-+			clocks = <&clkwdtimer0>;
-+		};
- 	};
+ Optional properties:
+ 
+ - timeout-sec:		Contains the watchdog timeout in seconds
+@@ -21,4 +25,5 @@ wdt: wdt@2320000 {
+ 	compatible = "ti,davinci-wdt";
+ 	reg = <0x02320000 0x80>;
+ 	timeout-sec = <30>;
++	clocks = <&clkwdtimer0>;
  };
 -- 
 1.7.9.5
