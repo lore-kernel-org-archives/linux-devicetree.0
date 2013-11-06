@@ -1,81 +1,36 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's
- minimum required ECC
-Date: Wed, 06 Nov 2013 15:39:07 +0100
-Message-ID: <1818094.INS0lkJjja@amdc1227>
-References: <1382929517-22606-1-git-send-email-b32955@freescale.com>
- <20131105200729.GT20061@ld-irv-0074.broadcom.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5/5] OF: Introduce utility helper functions
+Date: Wed, 06 Nov 2013 06:53:13 -0800
+Message-ID: <527A57D9.3070402@roeck-us.net>
+References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-6-git-send-email-panto@antoniou-consulting.com> <527A0A12.2050803@nsn.com> <57092A71-2C68-4B92-A748-5D0DE69EC141@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20131105200729.GT20061-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57092A71-2C68-4B92-A748-5D0DE69EC141@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>, Ionut Nicu <ioan.nicu.ext@nsn.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Pantelis,
 
-On Tuesday 05 of November 2013 12:07:29 Brian Norris wrote:
-> On Mon, Oct 28, 2013 at 11:05:17AM +0800, Huang Shijie wrote:
-> > In default way, we use the ecc_strength/ecc_step size calculated by ourselves
-> > and use all the OOB area.
-> > 
-> > This patch adds a new property : "fsl,use-minimum-ecc"
-> > 
-> > If we enable it, we will firstly try to use the datasheet's minimum required
-> > ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-> > in the nand_chip{}). So we may have free space in the OOB area by using the
-> > minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
-> > SLC NAND.
-> > 
-> > If we fail to use the minimum ECC, we will use the legacy method to calculate
-> > the ecc_strength and ecc_step size.
-> > 
-> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> > v1 --> v2:
-> > 	based on David's patch to fix the regression.
-> > ---
-> >  .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
-> >  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
-> >  2 files changed, 9 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> > index 551b2a1..4297795 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-> > @@ -17,6 +17,12 @@ Required properties:
-> >  Optional properties:
-> >    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
-> >                         present false
-> > +  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
-> > +                       to use the datasheet's minimum required ECC provided by
-> > +                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
-> > +                       in the nand_chip{}). So we may have free space in the OOB
-> > +                       area by using the minimum ECC, and we may support JFFS2
-> > +                       with some SLC NANDs, such as Micron's SLC NAND.
-> 
-> This description still uses Linux-isms/MTD-isms (ecc_strength_ds,
-> ecc_step_ds, nand_chip{}, JFFS2). I would personally write this as
-> something like the following:
-> 
->   - fsl,use-minimum-ecc: Protect this NAND flash with the minimum ECC
-> 			 strength required. The required ECC strength is
-> 			 automatically discoverable for some flash
-> 			 (e.g., according to the ONFI standard).
-> 			 However, note that if this strength is not
-> 			 discoverable, the software may choose an
-> 			 implementation-defined ECC scheme.
+On 11/06/2013 01:34 AM, Pantelis Antoniou wrote:
 
-After reading this description, it is not clear to me what is the default
-behavior if this property is not present.
+>
+> As I mentioned earlier I'm trying to get this accepted in general term and then we'll
+> get around fixing any minor problems.
+>
 
-Best regards,
-Tomasz
+I think it is quite likely at this point that your series will be accepted.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, from my experience with larger submissions like this one, it is quite common
+that the maintainers ask for all feedback to be addressed before that happens -
+especially for feedback like this, where there is common understanding that some
+changes to the code are necessary.
+
+Maybe the device tree maintainers could chime in at this point and let us all know
+what will need to happen to get the series accepted.
+
+Thanks,
+Guenter
