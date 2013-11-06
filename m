@@ -1,305 +1,173 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT core
-Date: Wed, 6 Nov 2013 13:31:08 +0200
-Message-ID: <527A287C.2090401@ti.com>
-References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH v11 03/12] [media] exynos5-fimc-is: Add common driver
+ header files
+Date: Wed, 6 Nov 2013 17:21:19 +0530
+Message-ID: <CALt3h78Lwa5+s6oAykZ5xhMvJdVT-D3Sihe2PZ2S_Zs68X2yuw@mail.gmail.com>
+References: <1383631964-26514-1-git-send-email-arun.kk@samsung.com>
+	<1383631964-26514-4-git-send-email-arun.kk@samsung.com>
+	<20131105125108.GF23061@valkosipuli.retiisi.org.uk>
+	<CALt3h7_BCj7yJi6sy=KVOHoET4aWm_a-N=u63R8-bZ-uQ=AGag@mail.gmail.com>
+	<527A269B.5040007@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383680783-12114-2-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <527A269B.5040007@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-To reduce code duplicate and increase code readability use WDT core
-code to handle WDT interface.
+Hi Sylwester,
 
-Remove io_lock as the WDT core uses mutex to lock each wdt device.
-Remove wdt_state as the WDT core track state with its own variable.
+On Wed, Nov 6, 2013 at 4:53 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Hi,
+>
+> On 05/11/13 14:16, Arun Kumar K wrote:
+>>>> +struct is_common_reg {
+>>>> +     u32 hicmd;
+>>>> +     u32 hic_sensorid;
+>>>> +     u32 hic_param[4];
+>>>> +
+>>>> +     u32 reserved1[3];
+> [...]
+>>>> +     u32 meta_iflag;
+>>>> +     u32 meta_sensor_id;
+>>>> +     u32 meta_param1;
+>>>> +
+>>>> +     u32 reserved9[1];
+>>>> +
+>>>> +     u32 fcount;
+>>>
+>>> If these structs define an interface that's not used by the driver only it
+>>> might be a good idea to use __packed to ensure no padding is added.
+>>>
+>>
+>> The same structure is used as is in the firmware code and so it is retained
+>> in the driver.
+>
+> I agree it makes sense to use __packed attribute to ensure no padding is
+> added by the compiler. The firmware source and the driver will likely be
+> compiled with different toolchains, and in both cases we should ensure
+> no padding is added.
+>
 
-The watchdog_init_timeout() can read timeout value from timeout-sec
-property if the passed value is out of bounds. So set initial
-heartbeat value more than max value in order to initialize heartbeat
-in next way. If heartbeat is not set thought module parameter, try
-to read it's value from WDT node timeout-sec property. If node has
-no one, use default value.
+Yes the toolchains are different and ideally the firmware also should
+use a __packed
+attribute which possibly is not happening.
 
-The heartbeat is hold in wdd->timeout by WDT core, so use it in
-order to set timeout period.
+>>>> diff --git a/drivers/media/platform/exynos5-is/fimc-is-metadata.h b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
+>>>> new file mode 100644
+>>>> index 0000000..02367c4
+>>>> --- /dev/null
+>>>> +++ b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
+>>>> @@ -0,0 +1,767 @@
+> [..]
+>>>> +enum metadata_mode {
+>>>> +     METADATA_MODE_NONE,
+>>>> +     METADATA_MODE_FULL
+>>>> +};
+>>>> +
+>>>> +struct camera2_request_ctl {
+>>>> +     uint32_t                id;
+>>>> +     enum metadata_mode      metadatamode;
+>>>> +     uint8_t                 outputstreams[16];
+>>>> +     uint32_t                framecount;
+>>>> +};
+>>>> +
+>>>> +struct camera2_request_dm {
+>>>> +     uint32_t                id;
+>>>> +     enum metadata_mode      metadatamode;
+>>>> +     uint32_t                framecount;
+>>>> +};
+> [...]
+>>>> +struct camera2_lens_ctl {
+>>>> +     uint32_t                                focus_distance;
+>>>> +     float                                   aperture;
+>>>
+>>> Floating point numbers? Really? :-)
+>>>
+>>
+>> Yes as mentioned, the same structure is used by the firmware and
+>> so it is used as is in the kernel.
+>
+> These floating numbers are pretty painful, but I don't think they can
+> be avoided unless the firmware is changed. I hope there is no need to
+> touch those in the kernel.
+>
+> There are already precedents of using floating point numbers in driver's
+> public interface, e.g. some gpu/drm drivers.
+>
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
----
- drivers/watchdog/Kconfig       |    1 +
- drivers/watchdog/davinci_wdt.c |  150 ++++++++++------------------------------
- 2 files changed, 38 insertions(+), 113 deletions(-)
+Ok
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index d1d53f3..2c954b5 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -271,6 +271,7 @@ config IOP_WATCHDOG
- config DAVINCI_WATCHDOG
- 	tristate "DaVinci watchdog"
- 	depends on ARCH_DAVINCI
-+	select WATCHDOG_CORE
- 	help
- 	  Say Y here if to include support for the watchdog timer
- 	  in the DaVinci DM644x/DM646x processors.
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index bead774..a6eef71 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -3,7 +3,7 @@
-  *
-  * Watchdog driver for DaVinci DM644x/DM646x processors
-  *
-- * Copyright (C) 2006 Texas Instruments.
-+ * Copyright (C) 2013 Texas Instruments.
-  *
-  * 2007 (c) MontaVista Software, Inc. This file is licensed under
-  * the terms of the GNU General Public License version 2. This program
-@@ -15,18 +15,12 @@
- #include <linux/moduleparam.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
--#include <linux/fs.h>
--#include <linux/miscdevice.h>
- #include <linux/watchdog.h>
- #include <linux/init.h>
--#include <linux/bitops.h>
- #include <linux/platform_device.h>
--#include <linux/spinlock.h>
--#include <linux/uaccess.h>
- #include <linux/io.h>
- #include <linux/device.h>
- #include <linux/clk.h>
--#include <linux/slab.h>
- #include <linux/err.h>
- 
- #define MODULE_NAME "DAVINCI-WDT: "
-@@ -61,31 +55,13 @@
- #define WDKEY_SEQ0		(0xa5c6 << 16)
- #define WDKEY_SEQ1		(0xda7e << 16)
- 
--static int heartbeat = DEFAULT_HEARTBEAT;
--
--static DEFINE_SPINLOCK(io_lock);
--static unsigned long wdt_status;
--#define WDT_IN_USE        0
--#define WDT_OK_TO_CLOSE   1
--#define WDT_REGION_INITED 2
--#define WDT_DEVICE_INITED 3
--
-+static int heartbeat = MAX_HEARTBEAT + 1;
- static void __iomem	*wdt_base;
- struct clk		*wdt_clk;
-+static struct watchdog_device	wdt_wdd;
- 
--static void wdt_service(void)
--{
--	spin_lock(&io_lock);
--
--	/* put watchdog in service state */
--	iowrite32(WDKEY_SEQ0, wdt_base + WDTCR);
--	/* put watchdog in active state */
--	iowrite32(WDKEY_SEQ1, wdt_base + WDTCR);
--
--	spin_unlock(&io_lock);
--}
--
--static void wdt_enable(void)
-+/* davinci_wdt_start - enable watchdog */
-+static int davinci_wdt_start(struct watchdog_device *wdd)
- {
- 	u32 tgcr;
- 	u32 timer_margin;
-@@ -93,8 +69,6 @@ static void wdt_enable(void)
- 
- 	wdt_freq = clk_get_rate(wdt_clk);
- 
--	spin_lock(&io_lock);
--
- 	/* disable, internal clock source */
- 	iowrite32(0, wdt_base + TCR);
- 	/* reset timer, set mode to 64-bit watchdog, and unreset */
-@@ -105,9 +79,9 @@ static void wdt_enable(void)
- 	iowrite32(0, wdt_base + TIM12);
- 	iowrite32(0, wdt_base + TIM34);
- 	/* set timeout period */
--	timer_margin = (((u64)heartbeat * wdt_freq) & 0xffffffff);
-+	timer_margin = (((u64)wdd->timeout * wdt_freq) & 0xffffffff);
- 	iowrite32(timer_margin, wdt_base + PRD12);
--	timer_margin = (((u64)heartbeat * wdt_freq) >> 32);
-+	timer_margin = (((u64)wdd->timeout * wdt_freq) >> 32);
- 	iowrite32(timer_margin, wdt_base + PRD34);
- 	/* enable run continuously */
- 	iowrite32(ENAMODE12_PERIODIC, wdt_base + TCR);
-@@ -119,84 +93,28 @@ static void wdt_enable(void)
- 	iowrite32(WDKEY_SEQ0 | WDEN, wdt_base + WDTCR);
- 	/* put watchdog in active state */
- 	iowrite32(WDKEY_SEQ1 | WDEN, wdt_base + WDTCR);
--
--	spin_unlock(&io_lock);
--}
--
--static int davinci_wdt_open(struct inode *inode, struct file *file)
--{
--	if (test_and_set_bit(WDT_IN_USE, &wdt_status))
--		return -EBUSY;
--
--	wdt_enable();
--
--	return nonseekable_open(inode, file);
-+	return 0;
- }
- 
--static ssize_t
--davinci_wdt_write(struct file *file, const char *data, size_t len,
--		  loff_t *ppos)
-+static int davinci_wdt_ping(struct watchdog_device *wdd)
- {
--	if (len)
--		wdt_service();
--
--	return len;
-+	/* put watchdog in service state */
-+	iowrite32(WDKEY_SEQ0, wdt_base + WDTCR);
-+	/* put watchdog in active state */
-+	iowrite32(WDKEY_SEQ1, wdt_base + WDTCR);
-+	return 0;
- }
- 
--static const struct watchdog_info ident = {
-+static const struct watchdog_info davinci_wdt_info = {
- 	.options = WDIOF_KEEPALIVEPING,
- 	.identity = "DaVinci Watchdog",
- };
- 
--static long davinci_wdt_ioctl(struct file *file,
--					unsigned int cmd, unsigned long arg)
--{
--	int ret = -ENOTTY;
--
--	switch (cmd) {
--	case WDIOC_GETSUPPORT:
--		ret = copy_to_user((struct watchdog_info *)arg, &ident,
--				   sizeof(ident)) ? -EFAULT : 0;
--		break;
--
--	case WDIOC_GETSTATUS:
--	case WDIOC_GETBOOTSTATUS:
--		ret = put_user(0, (int *)arg);
--		break;
--
--	case WDIOC_KEEPALIVE:
--		wdt_service();
--		ret = 0;
--		break;
--
--	case WDIOC_GETTIMEOUT:
--		ret = put_user(heartbeat, (int *)arg);
--		break;
--	}
--	return ret;
--}
--
--static int davinci_wdt_release(struct inode *inode, struct file *file)
--{
--	wdt_service();
--	clear_bit(WDT_IN_USE, &wdt_status);
--
--	return 0;
--}
--
--static const struct file_operations davinci_wdt_fops = {
--	.owner = THIS_MODULE,
--	.llseek = no_llseek,
--	.write = davinci_wdt_write,
--	.unlocked_ioctl = davinci_wdt_ioctl,
--	.open = davinci_wdt_open,
--	.release = davinci_wdt_release,
--};
--
--static struct miscdevice davinci_wdt_miscdev = {
--	.minor = WATCHDOG_MINOR,
--	.name = "watchdog",
--	.fops = &davinci_wdt_fops,
-+static const struct watchdog_ops davinci_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= davinci_wdt_start,
-+	.stop		= davinci_wdt_ping,
-+	.ping		= davinci_wdt_ping,
- };
- 
- static int davinci_wdt_probe(struct platform_device *pdev)
-@@ -204,6 +122,7 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	struct device *dev = &pdev->dev;
- 	struct resource  *wdt_mem;
-+	struct watchdog_device *wdd;
- 
- 	wdt_clk = devm_clk_get(dev, NULL);
- 	if (WARN_ON(IS_ERR(wdt_clk)))
-@@ -211,29 +130,35 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 
- 	clk_prepare_enable(wdt_clk);
- 
--	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
--		heartbeat = DEFAULT_HEARTBEAT;
-+	wdd			= &wdt_wdd;
-+	wdd->info		= &davinci_wdt_info;
-+	wdd->ops		= &davinci_wdt_ops;
-+	wdd->min_timeout 	= 1;
-+	wdd->max_timeout 	= MAX_HEARTBEAT;
-+	wdd->timeout		= DEFAULT_HEARTBEAT;
-+
-+	if (heartbeat)
-+		watchdog_init_timeout(wdd, heartbeat, dev);
-+
-+	dev_info(dev, "heartbeat %d sec\n", wdd->timeout);
- 
--	dev_info(dev, "heartbeat %d sec\n", heartbeat);
-+	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 
- 	wdt_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	wdt_base = devm_ioremap_resource(dev, wdt_mem);
- 	if (IS_ERR(wdt_base))
- 		return PTR_ERR(wdt_base);
- 
--	ret = misc_register(&davinci_wdt_miscdev);
--	if (ret < 0) {
--		dev_err(dev, "cannot register misc device\n");
--	} else {
--		set_bit(WDT_DEVICE_INITED, &wdt_status);
--	}
-+	ret = watchdog_register_device(wdd);
-+	if (ret < 0)
-+		dev_err(dev, "cannot register watchdog device\n");
- 
- 	return ret;
- }
- 
- static int davinci_wdt_remove(struct platform_device *pdev)
- {
--	misc_deregister(&davinci_wdt_miscdev);
-+	watchdog_unregister_device(&wdt_wdd);
- 	clk_disable_unprepare(wdt_clk);
- 
- 	return 0;
-@@ -267,5 +192,4 @@ MODULE_PARM_DESC(heartbeat,
- 		 __MODULE_STRING(DEFAULT_HEARTBEAT));
- 
- MODULE_LICENSE("GPL");
--MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
- MODULE_ALIAS("platform:watchdog");
--- 
-1.7.9.5
+> I noticed there is another issue in this firmware/kernel interface, i.e.
+> some data structures contain enums in them, e.g.
+>
+> struct camera2_lens_ctl {
+>         uint32_t                                focus_distance;
+>         float                                   aperture;
+>         float                                   focal_length;
+>         float                                   filter_density;
+>         enum optical_stabilization_mode         optical_stabilization_mode;
+> };
+>
+> It looks like a mistake in the interface design, as size of an enum is
+> implementation specific.
+>
+> I guess size of those enum types is supposed to be 4 bytes ? Presumably
+> you should, e.g. use fixed data type like uin32_t or __u32 instead of those
+> enums. It looks pretty fragile as it is now.
+>
 
+Yes its better to use 4byte data structures. Will change that.
 
+> In addition all those data structures should be declared with __packed
+> attribute, to ensure a specific data structure layout and to avoid
+> an unexpected padding.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+>>> diff --git a/drivers/media/platform/exynos5-is/fimc-is-param.h b/drivers/media/platform/exynos5-is/fimc-is-param.h
+>>> new file mode 100644
+>>> index 0000000..015cc13
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/exynos5-is/fimc-is-param.h
+>> ...
+>>> +struct param_control {
+>>> +    u32 cmd;
+>>
+>> You use uint32_t in some other headers. It's not wrong to use both C99 and
+>> Linux types but I'd try to stick to either one.
+>
+> I tend to agree with that, it's probably better to use one convention, u32
+> for kernel internal structures and __u32 for any public interfaces. I don't
+> think it is e requirement but would be nice to keep it more consistent.
+>
+
+Ok
+
+> Even if we wanted to keep the firmware defined data structures in sync with
+> the Linux driver, there are already some Linux types used within the firmware
+> interface. if I understood things correctly.
+>
+>>> +    u32 bypass;
+>>> +    u32 buffer_address;
+>>> +    u32 buffer_number;
+>>> +    /* 0: continuous, 1: single */
+>>> +    u32 run_mode;
+>>> +    u32 reserved[PARAMETER_MAX_MEMBER - 6];
+>>> +    u32 err;
+>>> +};
+>
+> Can you please address those issues in follow up patches ?
+> I will be sending these patches for inclusion in the media tree,
+> I would prefer to avoid keeping it on the ML for more than those
+> 7 months already passed.
+>
+
+Ok will address these comments in follow up patches.
+
+Thanks & Regards
+Arun
