@@ -1,150 +1,75 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v11 03/12] [media] exynos5-fimc-is: Add common driver
- header files
-Date: Wed, 06 Nov 2013 12:23:07 +0100
-Message-ID: <527A269B.5040007@samsung.com>
-References: <1383631964-26514-1-git-send-email-arun.kk@samsung.com>
- <1383631964-26514-4-git-send-email-arun.kk@samsung.com>
- <20131105125108.GF23061@valkosipuli.retiisi.org.uk>
- <CALt3h7_BCj7yJi6sy=KVOHoET4aWm_a-N=u63R8-bZ-uQ=AGag@mail.gmail.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Fwd: [PATCH 0/8] Update Davinci watchdog driver
+Date: Wed, 6 Nov 2013 13:30:18 +0200
+Message-ID: <527A284A.8000901@ti.com>
+References: <1383680783-12114-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <CALt3h7_BCj7yJi6sy=KVOHoET4aWm_a-N=u63R8-bZ-uQ=AGag@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Arun Kumar K <arunkk.samsung@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383680783-12114-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+These patches are intended to update Davinci watchdog to use WDT core
+and reuse driver for keystone arch, because Keystone uses the similar
+IP like Davinci.
 
-On 05/11/13 14:16, Arun Kumar K wrote:
->>> +struct is_common_reg {
->>> +     u32 hicmd;
->>> +     u32 hic_sensorid;
->>> +     u32 hic_param[4];
->>> +
->>> +     u32 reserved1[3];
-[...]
->>> +     u32 meta_iflag;
->>> +     u32 meta_sensor_id;
->>> +     u32 meta_param1;
->>> +
->>> +     u32 reserved9[1];
->>> +
->>> +     u32 fcount;
->>
->> If these structs define an interface that's not used by the driver only it
->> might be a good idea to use __packed to ensure no padding is added.
->>
-> 
-> The same structure is used as is in the firmware code and so it is retained
-> in the driver.
+See Documentation:
+Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
 
-I agree it makes sense to use __packed attribute to ensure no padding is
-added by the compiler. The firmware source and the driver will likely be 
-compiled with different toolchains, and in both cases we should ensure
-no padding is added.
+Also:
+ - improved to support GET_TIMELEFT and GET_STATUS options.
+ - added "clocks" and "timeout-sec" properties to DT.
 
->>> diff --git a/drivers/media/platform/exynos5-is/fimc-is-metadata.h b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
->>> new file mode 100644
->>> index 0000000..02367c4
->>> --- /dev/null
->>> +++ b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
->>> @@ -0,0 +1,767 @@
-[..]
->>> +enum metadata_mode {
->>> +     METADATA_MODE_NONE,
->>> +     METADATA_MODE_FULL
->>> +};
->>> +
->>> +struct camera2_request_ctl {
->>> +     uint32_t                id;
->>> +     enum metadata_mode      metadatamode;
->>> +     uint8_t                 outputstreams[16];
->>> +     uint32_t                framecount;
->>> +};
->>> +
->>> +struct camera2_request_dm {
->>> +     uint32_t                id;
->>> +     enum metadata_mode      metadatamode;
->>> +     uint32_t                framecount;
->>> +};
-[...]
->>> +struct camera2_lens_ctl {
->>> +     uint32_t                                focus_distance;
->>> +     float                                   aperture;
->>
->> Floating point numbers? Really? :-)
->>
-> 
-> Yes as mentioned, the same structure is used by the firmware and
-> so it is used as is in the kernel.
+Based on
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+keystone/master
 
-These floating numbers are pretty painful, but I don't think they can
-be avoided unless the firmware is changed. I hope there is no need to 
-touch those in the kernel.
+TO:
+Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> (maintainer: TI KEYSTONE MACHIN...)
+Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org> (maintainer:WATCHDOG DEVICE D...)
+Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> (supporter:TI DAVINCI MACHIN...)
+linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:WATCHDOG DEVICE D...)
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND...)
 
-There are already precedents of using floating point numbers in driver's
-public interface, e.g. some gpu/drm drivers. 
+CC:
+Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM SUB-ARCHITECT...)
 
-I noticed there is another issue in this firmware/kernel interface, i.e. 
-some data structures contain enums in them, e.g.
+Ivan Khoronzhuk (8):
+  watchdog: davinci: change driver to use WDT core
+  watchdog: davinci: use davinci_wdt_device structure to hold device
+    data
+  watchdog: davinci: add GET_TIMELEFT option support
+  watchdog: davinci: add GET_STATUS option support
+  watchdog: davinci: add "timeout-sec" property
+  watchdog: davinci: reuse driver for keystone arch
+  watchdog: davinci: add "clocks" property
+  arm: dts: keystone: add watchdog entry
 
-struct camera2_lens_ctl {
-	uint32_t				focus_distance;
-	float					aperture;
-	float					focal_length;
-	float					filter_density;
-	enum optical_stabilization_mode		optical_stabilization_mode;
-};
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |   21 +-
+ arch/arm/boot/dts/keystone.dts                     |    6 +
+ drivers/watchdog/Kconfig                           |    5 +-
+ drivers/watchdog/davinci_wdt.c                     |  234 ++++++++++----------
+ 4 files changed, 139 insertions(+), 127 deletions(-)
 
-It looks like a mistake in the interface design, as size of an enum is
-implementation specific.
+-- 
+1.7.9.5
 
-I guess size of those enum types is supposed to be 4 bytes ? Presumably
-you should, e.g. use fixed data type like uin32_t or __u32 instead of those 
-enums. It looks pretty fragile as it is now.
 
-In addition all those data structures should be declared with __packed
-attribute, to ensure a specific data structure layout and to avoid 
-an unexpected padding.
-
->> diff --git a/drivers/media/platform/exynos5-is/fimc-is-param.h b/drivers/media/platform/exynos5-is/fimc-is-param.h
->> new file mode 100644
->> index 0000000..015cc13
->> --- /dev/null
->> +++ b/drivers/media/platform/exynos5-is/fimc-is-param.h
-> ...
->> +struct param_control {
->> +	u32 cmd;
-> 
-> You use uint32_t in some other headers. It's not wrong to use both C99 and
-> Linux types but I'd try to stick to either one.
-
-I tend to agree with that, it's probably better to use one convention, u32
-for kernel internal structures and __u32 for any public interfaces. I don't
-think it is e requirement but would be nice to keep it more consistent.
-
-Even if we wanted to keep the firmware defined data structures in sync with
-the Linux driver, there are already some Linux types used within the firmware
-interface. if I understood things correctly.
-
->> +	u32 bypass;
->> +	u32 buffer_address;
->> +	u32 buffer_number;
->> +	/* 0: continuous, 1: single */
->> +	u32 run_mode;
->> +	u32 reserved[PARAMETER_MAX_MEMBER - 6];
->> +	u32 err;
->> +};
-
-Can you please address those issues in follow up patches ?
-I will be sending these patches for inclusion in the media tree,
-I would prefer to avoid keeping it on the ML for more than those
-7 months already passed.
 
 --
-Regards,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
