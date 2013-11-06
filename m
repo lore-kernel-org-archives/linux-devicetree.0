@@ -1,185 +1,93 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 00/17] ARM: at91: move to common clk framework
-Date: Sat, 30 Nov 2013 14:56:26 -0800
-Message-ID: <20131130225626.16819.99250@quantum>
-References: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <dinh.linux@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20131105190633.GA21178@roeck-us.net>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
+	<20131105190633.GA21178@roeck-us.net>
+Date: Tue, 5 Nov 2013 18:01:33 -0600
+Message-ID: <CADhT+wf+=WMVwa0=pY=aR17_a_pGfbvt9q9g3iw6HNDXaD4csw@mail.gmail.com>
+Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Content-Type: multipart/alternative; boundary=089e013d14b21fff6504ea76da7a
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-Quoting Boris BREZILLON (2013-11-12 12:51:52)
-> Hello,
-> 
-> This patch series is the 5th version of the at91 clk implementations
-> using the Common Clk Framework.
+--089e013d14b21fff6504ea76da7a
+Content-Type: text/plain; charset=ISO-8859-1
 
-Thanks for sending this latest version. A couple recurring themes to be
-addressed:
+Hi Pantelis,
 
-1) Some clocks implement .prepare and .disable but not .unprepre nor
-.enable. Please only use .prepare and .unprepare in this case.
 
-2) Remove the file names & paths from the comment block at the top of
-the files.
+On Tue, Nov 5, 2013 at 1:06 PM, Guenter Roeck <linux@roeck-us.net> wrote:
 
-These are minor issues. Are you taking these through your platform tree or the
-clk tree? If you want to take them through your platform tree then feel
-free to add my acked-by to the next version.
+> On Tue, Nov 05, 2013 at 08:41:35PM +0200, Pantelis Antoniou wrote:
+> > The following patchset introduces Device Tree overlays, a method
+> > of dynamically altering the kernel's live Device Tree, along with
+> > a generic interface to use it in a board agnostic manner.
+> >
+> Hi Pantelis,
+>
+> great to see this going. I'll apply the patches to our tree and test.
+>
+> I have a couple of patches on top of yours:
+> - export overlay functions
+> - declare of_free_overlay_info as static inline if OF is undefined.
+> - ignore PCI devices when inserting or removing overlays
+>   [ Based on the idea that PCI/PCIe ports are handled by the PCI subsystem
+> ]
+>
+> I'll rebase those to the new version of your patches and send it out
+> after I get it all working.
+>
 
-Regards,
-Mike
+Alan and  I will also test on top of the FPGA framework.
 
-> 
-> Most of the clock provided by the PMC (Power Management Controller) are
-> implemented :
-> - main clock (main oscillator)
-> - pll clocks
-> - master clock
-> - programmable clocks
-> - utmi clock
-> - peripheral clocks
-> - system clocks
-> 
-> Actually some clk drivers are missing (slow clk, main clk and processor
-> clk), and some drivers only implement a subset of the hardware capabilities
-> (master clk rate change is missing).
-> But this series implements all the already available clks, and I will hopefully
-> add missing features in a near future.
-> 
-> This implementation is only compatible with device tree definition.
-> The goal is to define the whole clock tree using the device tree.
-> 
-> BTW, could a dt maintainer take a look at these dt bindinds ?
-> 
-> Just a note to let you know these bindings are currently unstable and might
-> change in the future.
-> 
-> 
-> Mike, I know you already acked the previous version, but I slighty changed
-> the dt bindings, according to some feedbacks I got during ELCE.
-> Could you take a look at this new version (at least the new dt bindings),
-> and add your acked-by if you agree with these changes ?
-> 
-> Best Regards,
-> Boris
-> 
-> Changes since v4:
->  - rework dt bindings:
->    * replace "atmel,clk-id" property by the standard "reg" property
->    * reference system, peripheral and programmable clks using the direct
->      clk node instead of the parent node plus a clk id
->  - provide a new helper function (of_at91_get_clk_range) to retrieve a clk
->    range from the device tree
-> 
-> Changes since v3:
->  - simplify master clk implementation (drop set_rate/parent support)
->  - fix bug in set_rate function of pll driver
->  - fix coding style issues
->  - define macros and constants where needed
->  - remove peripheral id macro references
->  - remove sam9g35 specific handling (sam9g35 = sam9x5)
->  - rework main clk prepare function to handle automatic rate calculation
-> 
-> Changes since v2:
->  - fix several bugs in clk implementations
->  - drop non-dt boards support
->  - split the series to ease review and tests:
->    * 1 patch series for new clk implementations (this series)
->    * 1 patch series to move each at91 SoC to common clk framework (coming soon)
->  - modify dt-bindings (add atmel,clk- prefix to atmel specific properties)
->  - add clk macros for dt-bindings
->  - add pmc framework (helper function to access pmc registers)
->  - add interrupt support to enable passive wait in clk_prepare functions
-> 
-> Changes since v1:
->  - fix bugs in pll, programmable and system clock implementations
->    (wrong bit position).
->  - add usb clock configuration support (ohci and udc drivers +
->    clk_lookup for non dt boards)
->  - rework of the system clock interfaces (no need to define a parent clock,
->    system clock is a gate with no rate info)
->  - change system, peripheral and programmable clk dt bindings (1 master node
->    and multiple child nodes each defining a system/peripheral or prog clock)
->  - fix bugs in sama5 dt definition
-> 
-> Boris BREZILLON (17):
->   ARM: at91: move at91_pmc.h to include/linux/clk/at91_pmc.h
->   ARM: at91: add Kconfig options for common clk support
->   clk: at91: add PMC base support
->   clk: at91: add PMC macro file for dt definitions
->   clk: at91: add PMC main clock
->   clk: at91: add PMC pll clocks
->   clk: at91: add PMC master clock
->   clk: at91: add PMC system clocks
->   clk: at91: add PMC peripheral clocks
->   clk: at91: add peripheral clk macros for peripheral clk dt bindings
->   clk: at91: add PMC programmable clocks
->   clk: at91: add PMC utmi clock
->   clk: at91: add PMC usb clock
->   clk: at91: add PMC smd clock
->   clk: at91: add PMC clk device tree binding doc.
->   ARM: at91: move pit timer to common clk framework
->   ARM: at91: add new compatible strings for pmc driver
-> 
->  .../devicetree/bindings/clock/at91-clock.txt       |  339 +++++++++++++
->  arch/arm/mach-at91/Kconfig                         |   44 ++
->  arch/arm/mach-at91/Kconfig.non_dt                  |    6 +
->  arch/arm/mach-at91/Makefile                        |    2 +-
->  arch/arm/mach-at91/at91rm9200.c                    |    2 +-
->  arch/arm/mach-at91/at91sam9260.c                   |    2 +-
->  arch/arm/mach-at91/at91sam9261.c                   |    2 +-
->  arch/arm/mach-at91/at91sam9263.c                   |    2 +-
->  arch/arm/mach-at91/at91sam926x_time.c              |   14 +-
->  arch/arm/mach-at91/at91sam9g45.c                   |    2 +-
->  arch/arm/mach-at91/at91sam9n12.c                   |    2 +-
->  arch/arm/mach-at91/at91sam9rl.c                    |    2 +-
->  arch/arm/mach-at91/at91sam9x5.c                    |    2 +-
->  arch/arm/mach-at91/clock.c                         |    7 +-
->  arch/arm/mach-at91/generic.h                       |    3 +-
->  arch/arm/mach-at91/pm.c                            |    2 +-
->  arch/arm/mach-at91/pm_slowclock.S                  |    2 +-
->  arch/arm/mach-at91/sama5d3.c                       |    2 +-
->  arch/arm/mach-at91/setup.c                         |    8 +-
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/at91/Makefile                          |   12 +
->  drivers/clk/at91/clk-main.c                        |  189 +++++++
->  drivers/clk/at91/clk-master.c                      |  272 ++++++++++
->  drivers/clk/at91/clk-peripheral.c                  |  412 +++++++++++++++
->  drivers/clk/at91/clk-pll.c                         |  534 ++++++++++++++++++++
->  drivers/clk/at91/clk-plldiv.c                      |  137 +++++
->  drivers/clk/at91/clk-programmable.c                |  368 ++++++++++++++
->  drivers/clk/at91/clk-smd.c                         |  173 +++++++
->  drivers/clk/at91/clk-system.c                      |  137 +++++
->  drivers/clk/at91/clk-usb.c                         |  400 +++++++++++++++
->  drivers/clk/at91/clk-utmi.c                        |  162 ++++++
->  drivers/clk/at91/pmc.c                             |  399 +++++++++++++++
->  drivers/clk/at91/pmc.h                             |  116 +++++
->  drivers/usb/gadget/atmel_usba_udc.c                |    2 +-
->  include/dt-bindings/clk/at91.h                     |   28 +
->  .../include/mach => include/linux/clk}/at91_pmc.h  |    4 +-
->  36 files changed, 3771 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
->  create mode 100644 drivers/clk/at91/Makefile
->  create mode 100644 drivers/clk/at91/clk-main.c
->  create mode 100644 drivers/clk/at91/clk-master.c
->  create mode 100644 drivers/clk/at91/clk-peripheral.c
->  create mode 100644 drivers/clk/at91/clk-pll.c
->  create mode 100644 drivers/clk/at91/clk-plldiv.c
->  create mode 100644 drivers/clk/at91/clk-programmable.c
->  create mode 100644 drivers/clk/at91/clk-smd.c
->  create mode 100644 drivers/clk/at91/clk-system.c
->  create mode 100644 drivers/clk/at91/clk-usb.c
->  create mode 100644 drivers/clk/at91/clk-utmi.c
->  create mode 100644 drivers/clk/at91/pmc.c
->  create mode 100644 drivers/clk/at91/pmc.h
->  create mode 100644 include/dt-bindings/clk/at91.h
->  rename {arch/arm/mach-at91/include/mach => include/linux/clk}/at91_pmc.h (98%)
-> 
-> -- 
-> 1.7.9.5
+Thanks,
+Dinh
+
+>
+> Thanks,
+> Guenter
+>
+
+--089e013d14b21fff6504ea76da7a
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Pantelis,<br><div class=3D"gmail_extra"><br><br><div cl=
+ass=3D"gmail_quote">On Tue, Nov 5, 2013 at 1:06 PM, Guenter Roeck <span dir=
+=3D"ltr">&lt;<a href=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@=
+roeck-us.net</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div class=3D"im">On Tue, Nov 05, 2013 at 08=
+:41:35PM +0200, Pantelis Antoniou wrote:<br>
+&gt; The following patchset introduces Device Tree overlays, a method<br>
+&gt; of dynamically altering the kernel&#39;s live Device Tree, along with<=
+br>
+&gt; a generic interface to use it in a board agnostic manner.<br>
+&gt;<br>
+</div>Hi Pantelis,<br>
+<br>
+great to see this going. I&#39;ll apply the patches to our tree and test.<b=
+r>
+<br>
+I have a couple of patches on top of yours:<br>
+- export overlay functions<br>
+- declare of_free_overlay_info as static inline if OF is undefined.<br>
+- ignore PCI devices when inserting or removing overlays<br>
+=A0 [ Based on the idea that PCI/PCIe ports are handled by the PCI subsyste=
+m ]<br>
+<br>
+I&#39;ll rebase those to the new version of your patches and send it out<br=
+>
+after I get it all working.<br></blockquote><div><br></div><div>Alan and =
+=A0I will also test on top of the FPGA framework.</div><div><br></div><div>=
+Thanks,</div><div>Dinh=A0</div><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+
+<br>
+Thanks,<br>
+Guenter<br>
+</blockquote></div><br></div></div>
+
+--089e013d14b21fff6504ea76da7a--
