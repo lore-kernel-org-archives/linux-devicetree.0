@@ -1,84 +1,58 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: RE: [PATCH v3 1/3] phy: Add new Exynos USB PHY driver
-Date: Wed, 06 Nov 2013 11:56:48 +0100
-Message-ID: <000001cedade$e534a2f0$af9de8d0$%debski@samsung.com>
-References: <1383668001-19141-1-git-send-email-k.debski@samsung.com>
- <1383668001-19141-2-git-send-email-k.debski@samsung.com>
- <000c01ceda8b$e54dbef0$afe93cd0$%han@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 06/13] ASoC: ux500_pcm: Extend ux500 MSP binding for
+ enumeration
+Date: Wed, 6 Nov 2013 10:46:58 +0000
+Message-ID: <20131106104658.GE11602@sirena.org.uk>
+References: <1383732985-18928-1-git-send-email-lee.jones@linaro.org>
+ <1383732985-18928-7-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fkwCrey//1f/3EP1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <000c01ceda8b$e54dbef0$afe93cd0$%han@samsung.com>
-Content-language: pl
+Content-Disposition: inline
+In-Reply-To: <1383732985-18928-7-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Jingoo Han' <jg1.han@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, galak@codeaurora.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-> From: Jingoo Han [mailto:jg1.han@samsung.com]
-> Sent: Wednesday, November 06, 2013 2:03 AM
-> 
-> On Wednesday, November 06, 2013 1:13 AM, Kamil Debski wrote:
-> >
-> > Add a new driver for the Exynos USB PHY. The new driver uses the
-> > generic PHY framework. The driver includes support for the Exynos
-> 4x10
-> > and 4x12 SoC families.
-> >
-> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > ---
-> >  .../devicetree/bindings/phy/samsung-usbphy.txt     |   52 ++++
-> >  drivers/phy/Kconfig                                |   23 +-
-> >  drivers/phy/Makefile                               |    4 +
-> >  drivers/phy/phy-exynos-usb2.c                      |  234
-> ++++++++++++++
-> >  drivers/phy/phy-exynos-usb2.h                      |   87 ++++++
-> >  drivers/phy/phy-exynos4210-usb2.c                  |  272
-> ++++++++++++++++
-> >  drivers/phy/phy-exynos4212-usb2.c                  |  324
-> ++++++++++++++++++++
-> >  7 files changed, 995 insertions(+), 1 deletion(-)  create mode
-> 100644
-> > Documentation/devicetree/bindings/phy/samsung-usbphy.txt
-> >  create mode 100644 drivers/phy/phy-exynos-usb2.c  create mode 100644
-> > drivers/phy/phy-exynos-usb2.h  create mode 100644
-> > drivers/phy/phy-exynos4210-usb2.c  create mode 100644
-> > drivers/phy/phy-exynos4212-usb2.c
-> 
-> [....]
-> 
-> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile index
-> > d0caae9..c87bc65 100644
-> > --- a/drivers/phy/Makefile
-> > +++ b/drivers/phy/Makefile
-> > @@ -7,3 +7,7 @@ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-
-> video.o
-> >  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-> >  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
-> >  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-> > +obj-$(CONFIG_PHY_EXYNOS5250_USB)	+= phy-exynos5250-usb.o
-> 
-> Hi Kamil,
-> 
-> Would you add 'phy-exynos5250-usb.c' file? :-)
-> 
-> Now, I am testing Exynos5250 USB HOST with your patchset.
-> However, it makes error because there is no PHY driver for Exynos5250.
-> 
->   WARNING: CPU: 0 PID: 18 at drivers/phy/phy-core.c:366
-> phy_get+0x1e8/0x224()
->   Device: exynos-ehci
->   missing string
->   .....
+--fkwCrey//1f/3EP1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I have to rewrite the power_on/power_off function in Exynos 5250 and I will
-include it in the next version.
+On Wed, Nov 06, 2013 at 10:16:18AM +0000, Lee Jones wrote:
 
-Best wishes,
--- 
-Kamil Debski
-Samsung R&D Institute Poland
+> +++ b/Documentation/devicetree/bindings/sound/ux500-msp.txt
+> @@ -3,6 +3,7 @@
+>  Required properties:
+>   - compatible       :"stericsson,ux500-msp-i2s"
+>   - reg              : Physical base address and length of the device's registers.
+> + - id               : MSP ID - used during component registration
+
+I have no idea what this means or how one would pick the number?  It
+looks like something purely internal to the driver...
+
+--fkwCrey//1f/3EP1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSeh4fAAoJELSic+t+oim9IsQQAJCrU2JOLqC8c0KGyJW3FdNT
+zGzPCcV1M3aEsC1oJVHSTHCKVQJAr7/3lh+XlCNH25ldHd48zj+jeMYh3zfDGhEP
+AtcBMjH30YDqeKw67AIBUPwQFdJcu7JYmrHqlH+3Bv5GykRlPyC7dJq5ZBR+pDbM
+R8WtvQ+THBMTXgQlpmTkj6UiPDgsmn/oZMcV5XSNn3po0rJxfkUjwVyS620X3Wbr
+P+AP15xdOPj9lZxLKADY+Ior8wyYClHFsRdQmLNxoDSNBMhMC+ZMtuQkHG9Dm0OU
+lD3yMQ9gqQYQSF6VFkd25WLFLjlxGvoxEVT9vvT7jTix3X8T+Rd6Kgg4x4QXtU7v
+KIzle4oza8aa8Iz67qAI4JWqFEJw6etcfgmnWnTgu/WnA2cWPJ7QWuTuK/MJSx5N
+uslPBZxVW9cAuSnXXGZxpgHpTGhuddexkFiWUNatoIudQXPEjFS0MESH8KvkMlB4
+nYSEBMA3VrHcs3F5WIe/dLfD+exoq6DiBVcFjMY78uzuluJFzaZSUi+MZrW6puyy
+RXlLQAS0siXQv/jyVMVpt5eP+vql7qMbzqp/4jWqDBbqsk54NxE3hgZnIzOrK1ci
+9/8ExTmijTRuFeR/GAqtvpgXAVh5HnGe/o9rSZzczc5RS4epWZXRvZnoTPlJbMdA
+ZHl7qLh4BM6ohkG5sM98
+=2TZH
+-----END PGP SIGNATURE-----
+
+--fkwCrey//1f/3EP1--
