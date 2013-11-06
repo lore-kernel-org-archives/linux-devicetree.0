@@ -1,93 +1,135 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH RFC] dt: bindings: submitting patches document
-Date: Wed,  6 Nov 2013 17:32:00 +0000
-Message-ID: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Wed, 6 Nov 2013 10:36:49 -0700
+Message-ID: <20131106173649.GA25515@obsidianresearch.com>
+References: <527A1983.6020603@keymile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <527A1983.6020603-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-All,
+On Wed, Nov 06, 2013 at 11:27:15AM +0100, Gerlando Falauto wrote:
+> Hi everyone,
+> 
+> I am currently trying to describe an external device within a device
+> tree in a Kirkwood design.
 
-Since I've now had to answer this question a couple of times, I thought it
-might be worth trying to put it in a document.  I don't like long documents, so
-this is pretty concise, and most likely wrong.  Hence, RFC.  :)
+Here is what works for me:
 
-I also dislike quoting people from my imperfect memory, much better to have an
-agreed upon document we can point people towards.
+        mbus {
+                compatible = "marvell,kirkwood-mbus", "simple-bus";
+                ranges = <MBUS_ID(0x04, 0xe8) 0 0xe0000000 0x8000000  /* PEX 0 MEM */
+                          MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000     /* internal-regs */
+                          MBUS_ID(0x01, 0x2f) 0 0xf4000000 0x10000      /* nand flash */
+                          MBUS_ID(0x01, 0x1d) 0 0xffe00000 0x10000      /* boot rom */
+                          MBUS_ID(0x01, 0x1e) 0 0xfff00000 0x10000      /* spi */
+                          >;
+                pcie-mem-aperture = <0xe0000000 0x10000000>; /* 256 MiB memory space */
+                pex@e0000000 {
+                        compatible = "marvell,kirkwood-pcie";
+                        device_type = "pci";
+                        ranges = <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000 /* Controller regs */
+                                  0x82000000 1 0       MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
+                                  >;
 
-thx,
+                        bus-range = <0x0 0xFF>;
+                        pcie@1,0 {
+                                device_type = "pci";
+                                assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
+                                reg = <0x0800 0 0 0 0>;
+                                ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
+                                          0x81000000 0 0 0x81000000 0x1 0 1 0>;
+                                fpga@0 {
+                                        reg = <0x8 0 0  0 0>;
+                                        ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000>;
+                                        gpio3: fpga_gpio@8 {
+                                                #gpio-cells = <2>;
+                                                compatible = "linux,basic-mmio-gpio";
+                                                gpio-controller;
+                                                reg-names = "dat", "set", "dirin";
+                                                reg = <0x8 4>,
+                                                      <0xc 4>,
+                                                      <0x10 4>;
+                                        };
 
-Jason.
+(some hopefully irrelevant items omitted for brevity)
 
- .../devicetree/bindings/submitting-patches.txt     | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+I use code like this in the FPGA PCI driver to load the DT nodes:
 
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-new file mode 100644
-index 000000000000..5a84d5ebb0f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -0,0 +1,52 @@
-+
-+  Submitting devicetree (DT) binding patches
-+
-+I. For patch submitters
-+
-+  0) Normal patch submission rules from Documentation/SubmittingPatches
-+     applies.
-+
-+  1) The Documentation/ portion of the patch should be a separate patch
-+     and clearly labelled as such.  For example:
-+
-+       [PATCH X/Y] dt: binding: mvebu mbus driver
-+
-+     This makes the binding portion easy to find among large patch series.
-+
-+  2) Submit the entire series to the devicetree mailinglist at
-+
-+       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+
-+II. For sub-system maintainers
-+
-+  1) If you aren't comfortable reviewing a given binding, reply to it and ask
-+     the devicetree maintainers for guidance.  This will help them prioritize
-+     which ones to review and which ones are ok to let go.
-+
-+  2) If you are comfortable with the binding, and it hasn't received an
-+     Acked-by from the devicetree maintainers after a few weeks, go ahead and
-+     take it.
-+
-+  3) For a series going though multiple trees, the binding patch should be
-+     kept with the driver using the binding.
-+
-+III.  General binding rules
-+
-+  1) Don't hold up a binding because it isn't perfect.
-+
-+  2) Use specific compatible strings so that if we need to add a feature (DMA)
-+     in the future, we can create a new compatible string.
-+
-+  3) Ideally, all bindings receive sufficient review.  In the real world, we
-+     need to prioritize.  Bindings for a specific block of IP aren't as
-+     critical as a binding for a common subsystem, like PCI.
-+
-+  4) Don't submit bindings for staging or unstable.  That will be decided by
-+     the devicetree maintainers *after* discussion on the mailinglist.
-+
-+IV. Notes
-+
-+  This document is intended as a general familiarization with the process as
-+  decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-+  devicetree maintainers overrules this document.  In that situation, a patch
-+  updating this document would be appreciated.
--- 
-1.8.4.2
+        struct of_device_id match_table[2] = {};
+        struct device_node *child;
+        int rc = 0;
 
+        for_each_child_of_node(root, child) {
+                /* Can't just create a single device.. */
+                strlcpy(match_table[0].name, child->name,
+                        sizeof(match_table[0].name));
+                strlcpy(match_table[0].type, child->type,
+                        sizeof(match_table[0].type));
+                rc = of_platform_bus_probe(child, match_table,
+                                           parent);
+                if (rc)
+                        break;
+        }
+(root would be the of_node of the FPGA)
+
+My system hot plugs the FPGA in and out, so I use this in the FPGA
+remove function to tear it all down:
+
+        struct device_node *child;
+        struct platform_device *devs[100];
+        unsigned int cur = 0;
+
+        /* We need to remove the platform devices in the reverse of the order
+           we created them. The DT is topo sorted in dependency order. */
+        for_each_child_of_node(pdev->dev.of_node, child) {
+                struct platform_device *dev = of_find_device_by_node(child);
+                if (dev)
+                        devs[cur++] = dev;
+        }
+
+        while (cur != 0) {
+                cur--;
+                platform_device_unregister(devs[cur]);
+        }
+
+Which is a bit tricky and suboptimal.
+
+Thomas: There is one buglet here that I haven't had time to do
+anything about. Notice the DT is listing the PEX memory window in its
+ranges. I've done this for two reasons
+ - The bootloader sets this address range up, so it is correct to
+   include in the DT
+ - The address translation machinery requires it, otherwise we can't
+   translate addreses of the non-PCI sub devices (eg gpio3)
+
+The latter is a kernel issue. As we discussed when mbus was first put
+together something needs to make the ranges consistent with the actual
+mapping so that address translation works. IIRC people objected to
+actually changing the ranges at runtime, so the alternate mechanism of
+hooking the address translation seems necessary?
+
+Unfortunately if you add the ranges then the mbus driver throws a
+warning that it is trying to overwrite existing windows, but otherwise
+things work OK.
+
+> But I found no way to describe which BAR it should refer to, for instance.
+> 
+> Perhaps the "rrrrrrrr" part of phys.hi, using BAR0=0x10, BAR1=0x14,
+> and so on?  Or else I should define a new instance of of bus (i.e.
+> "pci_lbus_bridge") and invent yet another address encoding syntax?
+
+I do feel there is some missing dynamic elements in this scheme, eg
+the ranges value at the FPGA node should be dynamic based on the BAR
+offset, but that is a generality that isn't important if you have only
+one PCI device.
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
