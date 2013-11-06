@@ -1,202 +1,186 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Wed, 6 Nov 2013 20:33:39 +0200
-Message-ID: <334037D0-02FB-459F-9E40-129EC830AF65@antoniou-consulting.com>
-References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate>
-Mime-Version: 1.0 (Apple Message framework v1085)
+Date: Wed, 6 Nov 2013 11:56:58 -0700
+Message-ID: <20131106185658.GC25879@obsidianresearch.com>
+References: <527A1983.6020603@keymile.com>
+ <20131106173649.GA25515@obsidianresearch.com>
+ <20131106190308.01f7a4a9@skate>
+ <334037D0-02FB-459F-9E40-129EC830AF65@antoniou-consulting.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131106190308.01f7a4a9@skate>
+Content-Disposition: inline
+In-Reply-To: <334037D0-02FB-459F-9E40-129EC830AF65-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Gregory_Cl=E9ment?= <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Cl?ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Wed, Nov 06, 2013 at 08:33:39PM +0200, Pantelis Antoniou wrote:
 
-On Nov 6, 2013, at 8:03 PM, Thomas Petazzoni wrote:
+> On DT this fall downs completely, and you get abominations like the
+> OMAP GPMC bindings...
 
-> Dear Jason Gunthorpe,
-> 
+This looks similar to Ezequiel's expansion bus bindings for MVEBU.
 
-[snip]
+Maybe you can clarify the issue you see?
 
-> 
-> Thomas
-> -- 
-> Thomas Petazzoni, CTO, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+The general pattern I expect is something like this:
 
-I don't know if that's really revevant, but this sounds very similar to the way that the GPMC driver 
-works (badly) on OMAPs.
+  some_bus_bridge {
+     compatible = 'bridge bus driver';
+     
+     ranges <[CS#] 0  [CS window base]  [size]>;
 
-In the old days we used to rely on the bootloader setting up things like chip selects, address windows
-and what nots, and the kernel being very careful not messing with them.
+     chip-select,1 {
+       < All Parameters to configure timing, etc, for this
+         chip select>
+       ranges = <0  1 0  [size]>;
 
-So the drivers needed nothing more to work than being pointed the address windows that their device
-happened to be configured by the bootloader.
+       my device {
+           compatble = 'camera'
+           reg = <0 [size]>
+       }
+     }
 
-Now that with the trend in bootloaders being really minimal, that task falls to the kernel.
-Using board files one can get away with it using some per-board specific initialization.
+The way it works is the DT machinery instantiates a some_bus_bridge.
 
-On DT this fall downs completely, and you get abominations like the OMAP GPMC bindings...
+The bridge driver goes through and parses the ranges, it sets up the
+address mappings as necessary to create a window for each CS. If this
+address assignment is dynamic then it needs to make the 'ranges'
+correct. (MVEBU land does this in the mbus driver)
 
-Observe:
+The bridge driver parses each child and configures the bus CS timing
+parameters. (this is done in the external memory driver, IIRC)
 
->                         status = "okay";
-> 
->                         #address-cells = <2>;
->                         #size-cells = <1>;
-> 
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&gpmc_pins>;
-> 
->                         /* chip select ranges */
->                         ranges = <0 0 0x08000000 0x10000000>,        /* bootloader has this enabled */
->                                  <1 0 0x18000000 0x08000000>,
->                                  <2 0 0x20000000 0x08000000>,
->                                  <3 0 0x28000000 0x08000000>,
->                                  <4 0 0x30000000 0x08000000>,
->                                  <5 0 0x38000000 0x04000000>,
->                                  <6 0 0x3c000000 0x04000000>;
-> 
->                         /*
->                          * This is complete and utter cr*p
->                          * It doesn't belong here, but we don't
->                          * have a memory controller abstraction.
->                          * So we muddle along...
->                          */
->                         camera {
->                                 compatible = "cssp-camera";
->                                 status = "okay";
->                                 pinctrl-names = "default";
->                                 pinctrl-0 = <&cssp_camera_pins>;
-> 
->                                 reg = <1 0 0x01000000>;                /* CS1 */
-> 
->                                 bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
-> 
->                                 gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
->                                 gpmc,sync-read;                        /* GPMC_CONFIG1_READTYPE_SYNC */
->                                 gpmc,sync-write;                /* GPMC_CONFIG1_WRITETYPE_SYNC */
->                                 gpmc,clk-activation-ns = <20>;        /* GPMC_CONFIG1_CLKACTIVATIONTIME(2) */
->                                 gpmc,burst-length = <16>;        /* GPMC_CONFIG1_PAGE_LEN(2) */
->                                 gpmc,mux-add-data = <2>;        /* GPMC_CONFIG1_MUXTYPE(2) */
-> 
->                                 gpmc,sync-clk-ps = <20000>;        /* CONFIG2 */
-> 
->                                 gpmc,cs-on-ns = <1>;
->                                 gpmc,cs-rd-off-ns = <160>;
->                                 gpmc,cs-wr-off-ns = <310>;
-> 
->                                 gpmc,adv-on-ns = <0>;                /* CONFIG3 */
->                                 gpmc,adv-rd-off-ns = <40>;
->                                 gpmc,adv-wr-off-ns = <40>;
-> 
->                                 gpmc,we-on-ns = <60>;                /* CONFIG4 */
->                                 gpmc,we-off-ns = <310>;
->                                 gpmc,oe-on-ns = <60>;
->                                 gpmc,oe-off-ns = <160>;
-> 
->                                 gpmc,page-burst-access-ns = <20>;        /* CONFIG 5 */
->                                 gpmc,access-ns = <140>;
->                                 gpmc,rd-cycle-ns = <160>;
->                                 gpmc,wr-cycle-ns = <310>;
-> 
->                                 gpmc,wr-access-ns = <100>;                /* CONFIG 6 */
->                                 gpmc,wr-data-mux-bus-ns = <60>;
-> 
->                                 gpmc,bus-turnaround-ns = <40>;                /* CONFIG6:3:0 = 4 */
->                                 gpmc,cycle2cycle-samecsen;                /* CONFIG6:7 = 1 */
->                                 gpmc,cycle2cycle-delay-ns = <40>;        /* CONFIG6:11:8 = 4 */
-> 
->                                 /* not using dma engine yet, but we can get the channel number here */
->                                 dmas = <&edma 20>;
->                                 dma-names = "cssp";
-> 
->                                 /* clocks */
->                                 cssp,camera-clk-name = "adjustable_clkout2_ck";
->                                 cssp,camera-clk-rate = <32000000>;
-> 
->                                 /* reset */
->                                 reset-gpio = <&gpio1 4 0>;
-> 
->                                 /* orientation; -> MT9T112_FLAG_VFLIP */
->                                 orientation-gpio = <&gpio1 30 0>;
-> 
->                                 /* reset controller (for the black) */
->                                 reset = <&rstctl 0 0>;
->                                 reset-names = "eMMC_RSTn-CAM3";
-> 
->                                 /* camera sensor */
->                                 cssp,sensor {
->                                         i2c-adapter = <&i2c2>;
-> 
->                                         /* need it to stop the whinning */
->                                         #address-cells = <1>;
->                                         #size-cells = <0>;
-> 
->                                         /* fake i2c device node */
->                                         m59t112 {
->                                                 compatible = "aptina,mt9t112";
->                                                 reg = <0x3c>;
-> 
->                                                 /* m, n, p1-7 */
->                                                 flags = <0>;
->                                                 pll-divider = <24 1 0 7 0 10 14 7 0>;
->                                         };
->                                 };
-> 
->                         };
-> 
->    
+The bridge driver constructs a struct device for each child in every
+chip-select (the 'my device' node). Normal OF address translation
+makes this work fine.
 
-This is a fragment from a camera instantiation that happens to be connected to the GPMC interface.
+Your camera driver attaches to the 'my device' node, not to the chip
+select node. The chip select node is used only by the bus bridge
+driver to setup that specific chip select.
 
-The GPMC driver has to be hacked to support _any_ possible device it might be connected, and
-there is a abundance of GPMC configuration properties in an unrelated device driver.
-
-I could be wrong and jumped in the wrong thread, but I believe what we really need is a generic GPMC
-framework, similar to the way pinctrl works.
-
-So instead of doing the above we could just add a property that contains a reference to the required GPMC
-configuration.
-
-i.e.
-
-
-	gpmc {
-		compatible = "ti,gpmc";
-
-		camera_gpmc_config {
-
-                         bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
-
-                         gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
-                         gpmc,sync-read;                        /* GPMC_CONFIG1_READTYPE_SYNC */
-                         gpmc,sync-write;                /* GPMC_CONFIG1_WRITETYPE_SYNC */
-                         gpmc,clk-activation-ns = <20>;        /* GPMC_CONFIG1_CLKACTIVATIONTIME(2) */
-                         gpmc,burst-length = <16>;        /* GPMC_CONFIG1_PAGE_LEN(2) */
-                         gpmc,mux-add-data = <2>;        /* GPMC_CONFIG1_MUXTYPE(2) */
-		};
-	}
-	
-        camera {
-                compatible = "cssp-camera";
-                reg = <0 0x01000000>;                /* CS1 */
-		gpmc-config = <&camera_gpmc_config 1>	/* CS1 */
- 		...
-	};
-
-Regards
-
--- Pantelis
+The example you have looks close to that except for a few details:
  
+> Observe:
+> 
+> >                         status = "okay";
+> > 
+> >                         #address-cells = <2>;
+> >                         #size-cells = <1>;
+> > 
+> >                         pinctrl-names = "default";
+> >                         pinctrl-0 = <&gpmc_pins>;
+> > 
+> >                         /* chip select ranges */
+> >                         ranges = <0 0 0x08000000 0x10000000>,        /* bootloader has this enabled */
+> >                                  <1 0 0x18000000 0x08000000>,
+> >                                  <2 0 0x20000000 0x08000000>,
+> >                                  <3 0 0x28000000 0x08000000>,
+> >                                  <4 0 0x30000000 0x08000000>,
+> >                                  <5 0 0x38000000 0x04000000>,
+> >                                  <6 0 0x3c000000 0x04000000>;
 
- 
+OK, seems reasonable, setting up chip select windows, giving them base
+addresess and sizes.
 
+> >                         camera {
+> >                                 compatible = "cssp-camera";
+> >                                 status = "okay";
+> >                                 pinctrl-names = "default";
+> >                                 pinctrl-0 = <&cssp_camera_pins>;
+> > 
+> >                                 reg = <1 0 0x01000000>;       /* CS1 */
+
+Here we want to hoist bus specific stuff out of 'camera' and into
+'cs1@', so:
+
+No reg at this point.
+
+> >                                 bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
+> >                                 gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
+[...]
+
+Timing parameters seem reasonable.
+
+> > 
+> >                                 /* not using dma engine yet, but we can get the channel number here */
+> >                                 dmas = <&edma 20>;
+> >                                 dma-names = "cssp";
+
+DMA's/gpios, etc probably belong in the child. Maybe clocks belong in
+the CS? Depends on the bridge driver..
+
+> >                                 /* clocks */
+> >                                 cssp,camera-clk-name = "adjustable_clkout2_ck";
+> >                                 cssp,camera-clk-rate = <32000000>;
+> > 
+> >                                 /* reset */
+> >                                 reset-gpio = <&gpio1 4 0>;
+> > 
+> >                                 /* orientation; -> MT9T112_FLAG_VFLIP */
+> >                                 orientation-gpio = <&gpio1 30 0>;
+> > 
+> >                                 /* reset controller (for the black) */
+> >                                 reset = <&rstctl 0 0>;
+> >                                 reset-names = "eMMC_RSTn-CAM3";
+
+Missing:
+
+ranges = <0  1 0  0x01000000>;
+
+Missing:
+
+ camera@0 {
+    reg = <0 0x01000000>;
+
+Put DMA's/etc here.
+
+> >                                 /* camera sensor */
+> >                                 cssp,sensor {
+> >                                         i2c-adapter = <&i2c2>;
+
+Yikes!
+
+If there is an i2c component then a phandle to the component itself is
+way better:
+
+    i2c-component = <&i2c_camera>
+
+i2c2: ...
+{ 
+         i2c_camera: m59t112 {
+             compatible = "aptina,mt9t112";
+             reg = <0x3c>;
+         }
+}
+
+Sprinkle address-cells/size-cells as necessary.
+
+> 	gpmc {
+> 		compatible = "ti,gpmc";
+> 
+> 		camera_gpmc_config {
+> 
+>                          bank-width = <2>;                /* GPMC_CONFIG1_DEVICESIZE(1) */
+> 
+>                          gpmc,burst-read;                /* GPMC_CONFIG1_READMULTIPLE_SUPP */
+>                          gpmc,sync-read;                        /* GPMC_CONFIG1_READTYPE_SYNC */
+>                          gpmc,sync-write;                /* GPMC_CONFIG1_WRITETYPE_SYNC */
+>                          gpmc,clk-activation-ns = <20>;        /* GPMC_CONFIG1_CLKACTIVATIONTIME(2) */
+>                          gpmc,burst-length = <16>;        /* GPMC_CONFIG1_PAGE_LEN(2) */
+>                          gpmc,mux-add-data = <2>;        /* GPMC_CONFIG1_MUXTYPE(2) */
+> 		};
+> 	}
+
+Similar idea, but you have thrown away the nesting.
+
+DT should reflect the address translation hierarchy of the system, so
+'ti,gpmc' does address translation, the things it translates for
+should be its children.
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
