@@ -1,58 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 06/13] ASoC: ux500_pcm: Extend ux500 MSP binding for
- enumeration
-Date: Wed, 6 Nov 2013 10:46:58 +0000
-Message-ID: <20131106104658.GE11602@sirena.org.uk>
-References: <1383732985-18928-1-git-send-email-lee.jones@linaro.org>
- <1383732985-18928-7-git-send-email-lee.jones@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Wed, 6 Nov 2013 11:01:54 +0000
+Message-ID: <20131106110154.GG11602@sirena.org.uk>
+References: <1383203126-3243-1-git-send-email-wni@nvidia.com>
+ <20131031162029.GF2493@sirena.org.uk>
+ <527737C5.5080901@nvidia.com>
+ <20131104161828.GK2493@sirena.org.uk>
+ <5278B4CB.9050305@nvidia.com>
+ <20131106085100.GB11602@sirena.org.uk>
+ <527A1C47.6050405@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fkwCrey//1f/3EP1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="uTCAFClMX+U9tLbX"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1383732985-18928-7-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org
+In-Reply-To: <527A1C47.6050405-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---fkwCrey//1f/3EP1
+--uTCAFClMX+U9tLbX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Nov 06, 2013 at 10:16:18AM +0000, Lee Jones wrote:
+On Wed, Nov 06, 2013 at 06:39:03PM +0800, Wei Ni wrote:
 
-> +++ b/Documentation/devicetree/bindings/sound/ux500-msp.txt
-> @@ -3,6 +3,7 @@
->  Required properties:
->   - compatible       :"stericsson,ux500-msp-i2s"
->   - reg              : Physical base address and length of the device's registers.
-> + - id               : MSP ID - used during component registration
+> I still can't find a good place to set full_constraints, could you
+> please show me some reference codes where we can set it?
 
-I have no idea what this means or how one would pick the number?  It
-looks like something purely internal to the driver...
+The places where we unflatten the device tree for example, or start
+instantiating devices from DT.
 
---fkwCrey//1f/3EP1
+--uTCAFClMX+U9tLbX
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSeh4fAAoJELSic+t+oim9IsQQAJCrU2JOLqC8c0KGyJW3FdNT
-zGzPCcV1M3aEsC1oJVHSTHCKVQJAr7/3lh+XlCNH25ldHd48zj+jeMYh3zfDGhEP
-AtcBMjH30YDqeKw67AIBUPwQFdJcu7JYmrHqlH+3Bv5GykRlPyC7dJq5ZBR+pDbM
-R8WtvQ+THBMTXgQlpmTkj6UiPDgsmn/oZMcV5XSNn3po0rJxfkUjwVyS620X3Wbr
-P+AP15xdOPj9lZxLKADY+Ior8wyYClHFsRdQmLNxoDSNBMhMC+ZMtuQkHG9Dm0OU
-lD3yMQ9gqQYQSF6VFkd25WLFLjlxGvoxEVT9vvT7jTix3X8T+Rd6Kgg4x4QXtU7v
-KIzle4oza8aa8Iz67qAI4JWqFEJw6etcfgmnWnTgu/WnA2cWPJ7QWuTuK/MJSx5N
-uslPBZxVW9cAuSnXXGZxpgHpTGhuddexkFiWUNatoIudQXPEjFS0MESH8KvkMlB4
-nYSEBMA3VrHcs3F5WIe/dLfD+exoq6DiBVcFjMY78uzuluJFzaZSUi+MZrW6puyy
-RXlLQAS0siXQv/jyVMVpt5eP+vql7qMbzqp/4jWqDBbqsk54NxE3hgZnIzOrK1ci
-9/8ExTmijTRuFeR/GAqtvpgXAVh5HnGe/o9rSZzczc5RS4epWZXRvZnoTPlJbMdA
-ZHl7qLh4BM6ohkG5sM98
-=2TZH
+iQIcBAEBAgAGBQJSeiGfAAoJELSic+t+oim9C28P/1PUja8uWq2GXBEkSEv/gOCW
+Sm/Z3rCZXvDlXYFKogej0Tp6BALks4rfpjH/dejBTG/6V1dsm1mjEyhTgFmJUpr/
+xrz8taO/9hJwkboWHLGved7MTv18TmrA2oWcRkGwKrqL2s1nxgHjaOrl+4lKF1B/
+wjMa4BkbC368appNMaPbn7NRbY0v8GbGIwOVggnV7IXpeBQfFAnG2s1fxCxEjMAT
+Fg3CvtbR0ufI8E4F/hwZyVeChBgPed8vmCGvxO3oEjffHkYjru8dlhDvwlC0In6v
+YwCTm2S0PDmN/bjlMSGZcjupumi5qXzAEYl7UQKhwHqmlQiMbwGttFT6WJpBAgAB
+UFftsuq/EQMM87f2EBhT5dQYMXM6LGL8VwTPyLdpJ9ZBDU+Kv3Z2REOG8n2Ceo1I
+dvmpYK6x2fPM56qTck7qbWyxC3KBcemyka+DmqHAjR2f4kv+DeE+uVkKwBxwCJjM
+fWEAt9gcYeeM0HosIRdqYdwTcsdeAx9dxtrhoq92MV1kWOgxSXFf82nDe+z8krU1
+MN4EyxB7hkJSw2nubcnj2aiwk2nF8p44iUMcY5uiaWnx0db4RdWTRXbb74Emlk+X
+n0oTSPX0daUh3LvsqtIEzY6n+BfIP3SBwDwWWsCHnXl5a042MQ5amihkFxLYoABe
+jy1pcFpnD89GG2gDtgvf
+=VPYf
 -----END PGP SIGNATURE-----
 
---fkwCrey//1f/3EP1--
+--uTCAFClMX+U9tLbX--
