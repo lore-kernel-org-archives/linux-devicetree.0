@@ -1,109 +1,84 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv9 01/43] clk: Add support for regmap register read/write
-Date: Wed, 6 Nov 2013 12:54:53 +0200
-Message-ID: <527A1FFD.1080506@ti.com>
-References: <1382716658-6964-1-git-send-email-t-kristo@ti.com> <1382716658-6964-2-git-send-email-t-kristo@ti.com> <52726342.6030406@ti.com> <52726BD5.3080704@ti.com> <20131105214320.GC17929@book.gsilab.sittig.org>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH v3 1/3] phy: Add new Exynos USB PHY driver
+Date: Wed, 06 Nov 2013 11:56:48 +0100
+Message-ID: <000001cedade$e534a2f0$af9de8d0$%debski@samsung.com>
+References: <1383668001-19141-1-git-send-email-k.debski@samsung.com>
+ <1383668001-19141-2-git-send-email-k.debski@samsung.com>
+ <000c01ceda8b$e54dbef0$afe93cd0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131105214320.GC17929@book.gsilab.sittig.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, bcousson@baylibre.com, rnayak@ti.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <000c01ceda8b$e54dbef0$afe93cd0$%han@samsung.com>
+Content-language: pl
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Jingoo Han' <jg1.han@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2013 11:43 PM, Gerhard Sittig wrote:
-> On Thu, Oct 31, 2013 at 16:40 +0200, Tero Kristo wrote:
->>
->> On 10/31/2013 04:03 PM, Nishanth Menon wrote:
->>> On 10/25/2013 10:56 AM, Tero Kristo wrote:
->>> [...]
->>>> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->>>> index 7e59253..63ff78c 100644
->>>> --- a/include/linux/clk-provider.h
->>>> +++ b/include/linux/clk-provider.h
->>>
->>> [...]
->>>> -static inline u32 clk_readl(u32 __iomem *reg)
->>>> +static inline u32 clk_readl(u32 __iomem *reg, struct regmap *regmap)
->>>>   {
->>>> -	return readl(reg);
->>>> +	u32 val;
->>>> +
->>>> +	if (regmap)
->>>> +		regmap_read(regmap, (u32)reg, &val);
->>>> +	else
->>>> +		val = readl(reg);
->>>> +	return val;
->>>>   }
->>>>
->>>> -static inline void clk_writel(u32 val, u32 __iomem *reg)
->>>> +static inline void clk_writel(u32 val, u32 __iomem *reg, struct regmap *regmap)
->>>>   {
->>>> -	writel(val, reg);
->>>> +	if (regmap)
->>>> +		regmap_write(regmap, (u32)reg, val);
->>>> +	else
->>>> +		writel(val, reg);
->>>>   }
->>>>
->>>>   #endif /* CONFIG_COMMON_CLK */
->>>>
->>>
->>> Might it not be better to introduce regmap variants?
->>> static inline void clk_regmap_writel(u32 val, u32 reg, struct regmap
->>> *regmap)
->>> and corresponding readl? that allows cleaner readability for clk
->>> drivers that use regmap and those that dont.
->>
->> Well, doing that will introduce a lot of redundant code, as the
->> checks for the presence of regmap must be copied all over the place.
->> With this patch, all the generic clock drivers support internally
->> both regmap or non-regmap register accesses.
->
-> Please keep in mind that the "identity" of clk_readl() and
-> readl() only applies in the current source code (ARM only use of
-> common CCF primitives), while patches are pending (currently
-> under review and receiving further improvement) which introduce
-> several alternative implementations of clk_readl() depending on
-> the platform.  Making all of them duplicate the "regmap vs direct
-> register access" branch would be as bad.  Keeping one set of
-> clk_readl() and clk_writel() routines and adding #ifdefs around
-> the direct register access would be rather ugly, and I understand
-> that preprocessor ifdef counts should get reduced instead of
-> introduced.
+Hi,
 
-So, it might be better to provide platform / or clock specific 
-clk_reg_ops or something, so we can cover all the possible cases easily.
+> From: Jingoo Han [mailto:jg1.han@samsung.com]
+> Sent: Wednesday, November 06, 2013 2:03 AM
+> 
+> On Wednesday, November 06, 2013 1:13 AM, Kamil Debski wrote:
+> >
+> > Add a new driver for the Exynos USB PHY. The new driver uses the
+> > generic PHY framework. The driver includes support for the Exynos
+> 4x10
+> > and 4x12 SoC families.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> > ---
+> >  .../devicetree/bindings/phy/samsung-usbphy.txt     |   52 ++++
+> >  drivers/phy/Kconfig                                |   23 +-
+> >  drivers/phy/Makefile                               |    4 +
+> >  drivers/phy/phy-exynos-usb2.c                      |  234
+> ++++++++++++++
+> >  drivers/phy/phy-exynos-usb2.h                      |   87 ++++++
+> >  drivers/phy/phy-exynos4210-usb2.c                  |  272
+> ++++++++++++++++
+> >  drivers/phy/phy-exynos4212-usb2.c                  |  324
+> ++++++++++++++++++++
+> >  7 files changed, 995 insertions(+), 1 deletion(-)  create mode
+> 100644
+> > Documentation/devicetree/bindings/phy/samsung-usbphy.txt
+> >  create mode 100644 drivers/phy/phy-exynos-usb2.c  create mode 100644
+> > drivers/phy/phy-exynos-usb2.h  create mode 100644
+> > drivers/phy/phy-exynos4210-usb2.c  create mode 100644
+> > drivers/phy/phy-exynos4212-usb2.c
+> 
+> [....]
+> 
+> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile index
+> > d0caae9..c87bc65 100644
+> > --- a/drivers/phy/Makefile
+> > +++ b/drivers/phy/Makefile
+> > @@ -7,3 +7,7 @@ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-
+> video.o
+> >  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+> >  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+> >  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> > +obj-$(CONFIG_PHY_EXYNOS5250_USB)	+= phy-exynos5250-usb.o
+> 
+> Hi Kamil,
+> 
+> Would you add 'phy-exynos5250-usb.c' file? :-)
+> 
+> Now, I am testing Exynos5250 USB HOST with your patchset.
+> However, it makes error because there is no PHY driver for Exynos5250.
+> 
+>   WARNING: CPU: 0 PID: 18 at drivers/phy/phy-core.c:366
+> phy_get+0x1e8/0x224()
+>   Device: exynos-ehci
+>   missing string
+>   .....
 
-The requirement from TI SoC point of view is that:
+I have to rewrite the power_on/power_off function in Exynos 5250 and I will
+include it in the next version.
 
-1) need to be able to specify custom register read/write ops
-2) need to be able to provide an index parameter to the read/write ops
-3) need to be able to provide a register offset to the read/write ops
-
-This could be done in following way for example:
-
-clk_readl / clk_writel would be accessed through a single platform 
-specific struct which provides function pointers to both.
-
-The content of 'reg' provided to the clk_readl / clk_writel would be 
-internally interpreted as a
-
-struct omap_clk_reg_internal {
-	u16 offset;
-	u16 index;
-};
-
-... the index part would be used to select the appropriate regmap to 
-use, and TI SoC:s would be using 3...4 regmaps for actually accessing 
-the physical registers themselves.
-
--Tero
-
->
->
-> virtually yours
-> Gerhard Sittig
->
-
+Best wishes,
+-- 
+Kamil Debski
+Samsung R&D Institute Poland
