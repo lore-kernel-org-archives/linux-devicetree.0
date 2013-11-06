@@ -1,99 +1,30 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Wed, 6 Nov 2013 20:00:22 +0100
-Message-ID: <20131106200022.0008a8b9@skate>
-References: <527A1983.6020603@keymile.com>
-	<20131106173649.GA25515@obsidianresearch.com>
-	<20131106190308.01f7a4a9@skate>
-	<20131106182457.GA25879@obsidianresearch.com>
+From: Sebastian Andrzej Siewior <bigeasy-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
+Date: Wed, 6 Nov 2013 20:01:52 +0100
+Message-ID: <20131106190152.GA8662@breakpoint.cc>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131106182457.GA25879-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383676898-29819-1-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Jason Gunthorpe,
+On 05.11.13, Pantelis Antoniou wrote:
+> The following patchset introduces Device Tree overlays, a method
+> of dynamically altering the kernel's live Device Tree, along with
+> a generic interface to use it in a board agnostic manner.
 
-On Wed, 6 Nov 2013 11:24:57 -0700, Jason Gunthorpe wrote:
+In case this has been discussed and I missed it: Why are we doing this?
+Isn't it possible to d o the overlay thingy in u-boot and pass a
+complete device tree to the kernel?
+Are you trying to do something like hotplug-PCI where the PCI card can
+be replaced at runtime?
 
-> > The fact that the bootloader sets this MBus window is more-or-less
-> > irrelevant because when the mvebu-mbus driver is initialized, it
-> > completely clears *all* existing MBus windows:
-> 
-> Yes, but it is not irrelevent. In my case this same DT is supporting
-> 3.10 and 3.12 kernels - 3.10 doesn't even have a MBUS driver or
-> dynamic PEX driver and it relies upon the ranges entry matching the
-> static bootloader configuration to work properly.
-
-Ok, I understand.
-
-> > I indeed remember some objections, but I'm not sure what they were
-> > precisely. Maybe we didn't had a precise use case back at the time, to
-> > really make people objecting realize what the problem was?
-> 
-> That is about where I am at too..
-
-So maybe we should revive this direction then?
-
-> > On the other hand, I think the of_*() API is quite limited when it
-> > comes to updating the DT. If I remember correctly, you can update some
-> > nodes, but you can never reclaim the memory that was used for the
-> > previous value of the node. So any change to the in-memory DT
-> > representation is basically a memory leak for the entire lifetime of
-> > the system (of course, I might be wrong on this, I haven't dived into
-> > all the hardcore details of DT manipulation in the kernel).
-> 
-> I'm not clear on that either, but it seems plausible..
-> 
-> > I'm not sure what would be the alternate mechanism to hook into the
-> > address translation. of_translate_one(), where all the translation
-> > through ranges takes place is really tied to the DT only, adding
-> > another mechanism to hook some custom address translation in there
-> > seems a bit weird, no?
-> 
-> I agree, some kind of callback scheme would really be needed.. Sort of
-> like the xlate callback we have for IRQs?
-> 
-> So the mbus would register an address xlate for its node that is
-> called instead of ranges parsing. For the example in my last message
-> the FPGA driver would register an xlate that made addresses relative
-> to its own BAR0 address.
-
-Interesting. I admit I never had a look how the IRQ ->xlate() stuff was
-hooked into the OF code, maybe it's a good starting point. This
-discussion is on the DT mailing list, so maybe some DT person will
-agree to let us know what they think the good approach is?
-
-> > However, it just works by pure luck: nothing guarantees you that the
-> > PCIe 0 memory window will start at 0xe0000000. Of course, since you
-> 
-> Right, the general case is totally borked here - the dynamic changes
-> to the address map by MBUS and PCI are not being reflected to the
-> of_address machinery, be they from MBUS or from PCI BAR assignment.
-
-Right.
-
-> However, address assignment is very predicatble, so if you have a
-> constrained system it can work.
-
-Indeed.
-
-> In the normal DT use case (eg on a SPARC or something) the DT itself
-> would be self-consistent with the addresses assigned from the firmware
-> and the PCI machinery should try to respect the bootloader addresses
-> if they are workable during address assignment.
-
-So ARM isn't a "normal DT use case" ? :-)
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Sebastian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
