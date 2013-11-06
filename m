@@ -1,59 +1,65 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
-Date: Wed, 6 Nov 2013 16:46:31 +0000
-Message-ID: <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com>
-References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
+Date: Wed, 6 Nov 2013 10:54:02 -0600
+Message-ID: <CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg@mail.gmail.com>
+References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
+	<1383057139-25304-1-git-send-email-mpa@pengutronix.de>
+	<CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131102180724.D8FC5C40F02-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2 Nov 2013, Grant Likely wrote:
-> On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > Platform devices created by DT code don't initialize dma_mask pointer to
-> > anything. Set it to coherent_dma_mask by default if the architecture
-> > code has not set it.
-> > 
-> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> I believe this is okay. I haven't done any testing to back up that
-> opinion though.
+On Tue, Oct 29, 2013 at 11:00 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Oct 29, 2013 at 7:32 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>
+>> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
+>> similar to other imx pincontrol drivers.
+>>
+>> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> Hi,
+>>
+>> another binding documentation update. The MUX_ID components are described more
+>> detailed now.
+>
+> Patch tentatively applied unless someone has very fundamental
+> issues with it, it stays in. I really want a full transfer of i.MX
+> pin controllers to the subsystem, using device tree so we can
+> get rid of the old i.MX cruft in arch/arm.
 
-Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+I think this is a rush-in patch. I actually read the manual last night
+and found some serious weirdness.
 
- 
-> > I think this is at least part of what is needed to fix dma_mask issue
-> > raised by Stefano [1]. Things should work AFAICT with just this, but
-> > I suppose the xgmac driver needs to set the mask as well (not relying
-> > on the default), but some pointing the dma_mask to a valid value is
-> > needed first.
-> > 
-> > Rob
-> > 
-> > [1] http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg528236.html
-> > 
-> >  drivers/of/platform.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index f6dcde2..fce088e 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
-> >  	dev->archdata.dma_mask = 0xffffffffUL;
-> >  #endif
-> >  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> > +	if (!dev->dev.dma_mask)
-> > +		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-> >  	dev->dev.bus = &platform_bus_type;
-> >  	dev->dev.platform_data = platform_data;
-> >  
+The i.MX27 doesn't have a dedicated IOMUX controller so actually
+having a whole separate node for it in the device tree - or even a
+separate driver - makes very little sense. I understand pinctrl and
+gpiolib are somewhat separated as software, but this is encoding a
+Linuxism into the tree.
+
+In fact, the binding will conflict with actual binding of the GPIO
+(i.e. setting data, receiving interrupts) module since it's all one
+register set, and the "fsl,imx27-iomuxc" compatible property does not
+represent reality except to collect data in a different spot. There's
+no reason for it except to cut the documentation and tree definition
+in half, and have two nodes for Linux.
+
+Would it be so bad to implement this as a regmap and have two drivers
+access the same regmap on the Linux side? You don't need two nodes for
+that, and the IOMUX definitions can live under the GPIO node. There is
+NOTHING stopping two drivers on Linux matching the same compatible
+property. Locking and coordination in software of a single IP block
+used by two drivers shouldn't be arbitrated by the device tree.
+
+Thanks,
+Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
