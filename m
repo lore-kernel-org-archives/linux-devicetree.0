@@ -1,35 +1,151 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Wed, 6 Nov 2013 11:30:41 -0800
-Message-ID: <20131106193041.GA26796@roeck-us.net>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
- <20131106190152.GA8662@breakpoint.cc>
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Wed, 06 Nov 2013 20:38:33 +0100
+Message-ID: <527A9AB9.2050903@keymile.com>
+References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131106190152.GA8662@breakpoint.cc>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@breakpoint.cc>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131106173649.GA25515-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2013 at 08:01:52PM +0100, Sebastian Andrzej Siewior wrote:
-> On 05.11.13, Pantelis Antoniou wrote:
-> > The following patchset introduces Device Tree overlays, a method
-> > of dynamically altering the kernel's live Device Tree, along with
-> > a generic interface to use it in a board agnostic manner.
-> 
-> In case this has been discussed and I missed it: Why are we doing this?
-> Isn't it possible to d o the overlay thingy in u-boot and pass a
-> complete device tree to the kernel?
-> Are you trying to do something like hotplug-PCI where the PCI card can
-> be replaced at runtime?
-> 
+Hi Jason,
 
-At least that is our use case. u-boot doesn't know which cards are going to be
-inserted at runtime. Even PCIe hotplug itself is insufficient, as the PCIe
-configuration differs per card, and the cards support a variety of i2c devices
-as well as other card specific devices such LEDs and multi-function FPGAs.
+thank you for your feeback.
 
-Guenter
+On 11/06/2013 06:36 PM, Jason Gunthorpe wrote:
+> On Wed, Nov 06, 2013 at 11:27:15AM +0100, Gerlando Falauto wrote:
+>> Hi everyone,
+>>
+>> I am currently trying to describe an external device within a device
+>> tree in a Kirkwood design.
+>
+> Here is what works for me:
+>
+>          mbus {
+>                  compatible = "marvell,kirkwood-mbus", "simple-bus";
+>                  ranges = <MBUS_ID(0x04, 0xe8) 0 0xe0000000 0x8000000  /* PEX 0 MEM */
+>                            MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000     /* internal-regs */
+>                            MBUS_ID(0x01, 0x2f) 0 0xf4000000 0x10000      /* nand flash */
+>                            MBUS_ID(0x01, 0x1d) 0 0xffe00000 0x10000      /* boot rom */
+>                            MBUS_ID(0x01, 0x1e) 0 0xfff00000 0x10000      /* spi */
+>                            >;
+>                  pcie-mem-aperture = <0xe0000000 0x10000000>; /* 256 MiB memory space */
+>                  pex@e0000000 {
+>                          compatible = "marvell,kirkwood-pcie";
+>                          device_type = "pci";
+>                          ranges = <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000 /* Controller regs */
+>                                    0x82000000 1 0       MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
+>                                    >;
+>
+>                          bus-range = <0x0 0xFF>;
+>                          pcie@1,0 {
+>                                  device_type = "pci";
+>                                  assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
+>                                  reg = <0x0800 0 0 0 0>;
+>                                  ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
+>                                            0x81000000 0 0 0x81000000 0x1 0 1 0>;
+>                                  fpga@0 {
+>                                          reg = <0x8 0 0  0 0>;
+>                                          ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000>;
+>                                          gpio3: fpga_gpio@8 {
+>                                                  #gpio-cells = <2>;
+>                                                  compatible = "linux,basic-mmio-gpio";
+>                                                  gpio-controller;
+>                                                  reg-names = "dat", "set", "dirin";
+>                                                  reg = <0x8 4>,
+>                                                        <0xc 4>,
+>                                                        <0x10 4>;
+>                                          };
+>
+> (some hopefully irrelevant items omitted for brevity)
+
+So let me get this straight.
+First of all (though slightly unrelated), I looked at 
+drivers/gpio/gpio-generic.c and found no reference whatsoever to the 
+of_* infrastructure.
+So I realized of_device_alloc() populates the resource table of the 
+platform_device automatically -- I wasn't aware of that.
+
+Second of all, if I understand it correctly (guessing the values for 
+#size-cells and #address-cells), your translation scheme works as 
+follows (let's say for the first register 0x8 of gpio3):
+
+gpio3 (0x8)
+-> range 0 of fpga@0       ==> 0x00000000 0x82000000 0x00000000
+-> range 0 of pcie@1,0     ==> 0x82000000 0x1 0
+-> range 1 of pex@e0000000 ==> MBUS_ID(0x04, 0xe8) 0
+-> range 0 of mbus         ==> 0xe0000000
+
+so you end up accessing @0xe0000008, is that right?
+
+Looks like it ends up at the beginning of the memory region for PCIe, 
+and that's no wonder since you only have a single device with a single 
+BAR... right?
+
+So suppose you also had a bigger BAR1 which would then shift your GPIO 
+block at @0xe8000000.
+I believe we've established (in other followup mails) it would be nice 
+to have a dynamic translation mechanism, which is not in place yet.
+Until we get that figured out, where would you hardcode such offset then?
+How would you also deal with a second (let's say identical) device on BAR1?
+I guess I could live with hardcoded values in the DT, as long as they're 
+easy to spot and there's only one per BAR/device.
+Then it's easy to do a comparison with whatever gets assigned during 
+probing.
+
+(Apologies in advance if I'm talking nonsense, but I only see a bunch of 
+numbers in the above tree, I'm having a really hard time figuring out 
+how this whole translation works...)
+
+> I use code like this in the FPGA PCI driver to load the DT nodes:
+>
+>          struct of_device_id match_table[2] = {};
+>          struct device_node *child;
+>          int rc = 0;
+>
+>          for_each_child_of_node(root, child) {
+>                  /* Can't just create a single device.. */
+>                  strlcpy(match_table[0].name, child->name,
+>                          sizeof(match_table[0].name));
+>                  strlcpy(match_table[0].type, child->type,
+>                          sizeof(match_table[0].type));
+>                  rc = of_platform_bus_probe(child, match_table,
+>                                             parent);
+>                  if (rc)
+>                          break;
+>          }
+> (root would be the of_node of the FPGA)
+
+Stupid question... why not the following:
+
+rc = of_platform_populate(root, NULL, NULL, parent);
+
+I've been using this in several places, though I've always wondered 
+whether there was indeed something wrong it...
+
+[...]
+>> But I found no way to describe which BAR it should refer to, for instance.
+>>
+>> Perhaps the "rrrrrrrr" part of phys.hi, using BAR0=0x10, BAR1=0x14,
+>> and so on?  Or else I should define a new instance of of bus (i.e.
+>> "pci_lbus_bridge") and invent yet another address encoding syntax?
+>
+> I do feel there is some missing dynamic elements in this scheme, eg
+> the ranges value at the FPGA node should be dynamic based on the BAR
+> offset, but that is a generality that isn't important if you have only
+> one PCI device.
+
+Right, which is my case... except, I have several BARs within it, which 
+does complicate things quite a bit, I'm afraid.
+
+Thanks again Jason!
+Gerlando
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
