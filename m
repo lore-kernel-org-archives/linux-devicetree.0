@@ -1,91 +1,97 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] phy: Add new Exynos USB PHY driver
-Date: Wed, 6 Nov 2013 18:20:36 +0530
-Message-ID: <527A3B1C.50200@ti.com>
-References: <1383668001-19141-1-git-send-email-k.debski@samsung.com> <1383668001-19141-2-git-send-email-k.debski@samsung.com> <5279FB45.3010808@ti.com> <2656549.jVSier62Qi@amdc1227>
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Wed, 06 Nov 2013 13:50:52 +0100
+Message-ID: <527A3B2C.6070209@keymile.com>
+References: <527A1983.6020603@keymile.com> <20131106122317.GA8806@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2656549.jVSier62Qi@amdc1227>
+In-Reply-To: <20131106122317.GA8806-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thierry,
 
-On Wednesday 06 November 2013 05:08 PM, Tomasz Figa wrote:
-> Hi Kishon
->
-> On Wednesday 06 of November 2013 13:48:13 Kishon Vijay Abraham I wrote:
->> Hi,
+thanks again for your patience!
+
+On 11/06/2013 01:23 PM, Thierry Reding wrote:
+> On Wed, Nov 06, 2013 at 11:27:15AM +0100, Gerlando Falauto wrote:
+>> Hi everyone,
 >>
->> On Tuesday 05 November 2013 09:43 PM, Kamil Debski wrote:
->>> Add a new driver for the Exynos USB PHY. The new driver uses the generic
->>> PHY framework. The driver includes support for the Exynos 4x10 and 4x12
->>> SoC families.
->>>
->>> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>>    .../devicetree/bindings/phy/samsung-usbphy.txt     |   52 ++++
->>>    drivers/phy/Kconfig                                |   23 +-
->>>    drivers/phy/Makefile                               |    4 +
->>>    drivers/phy/phy-exynos-usb2.c                      |  234 ++++++++++++++
->>>    drivers/phy/phy-exynos-usb2.h                      |   87 ++++++
->>>    drivers/phy/phy-exynos4210-usb2.c                  |  272 ++++++++++++++++
->>>    drivers/phy/phy-exynos4212-usb2.c                  |  324 ++++++++++++++++++++
->>>    7 files changed, 995 insertions(+), 1 deletion(-)
->>>    create mode 100644 Documentation/devicetree/bindings/phy/samsung-usbphy.txt
->>>    create mode 100644 drivers/phy/phy-exynos-usb2.c
->>>    create mode 100644 drivers/phy/phy-exynos-usb2.h
->>>    create mode 100644 drivers/phy/phy-exynos4210-usb2.c
->>>    create mode 100644 drivers/phy/phy-exynos4212-usb2.c
-> [snip]
->>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>> index a344f3d..bdf0fab 100644
->>> --- a/drivers/phy/Kconfig
->>> +++ b/drivers/phy/Kconfig
-> [snip]
->>> @@ -51,4 +51,25 @@ config PHY_EXYNOS_DP_VIDEO
->>>    	help
->>>    	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
->>>
->>> +config PHY_EXYNOS_USB2
->>> +	tristate "Samsung USB 2.0 PHY driver"
->>> +	help
->>> +	  Enable this to support Samsung USB phy helper driver for Samsung SoCs.
->>> +	  This driver provides common interface to interact, for Samsung
->>> +	  USB 2.0 PHY driver.
+>> I am currently trying to describe an external device within a device
+>> tree in a Kirkwood design.
+>> Such device is accessed through a local (parallel) bus. Since
+>> Kirkwood does not provide such an interface, we added a custom FPGA
+>> (PCIe device) which implements a PCIe-to-localbus bridge.
+>> So essentially BAR0 provides the configuration space for such a
+>> bridge, and BAR1 provides a remapped area where accesses to the
+>> localbus can be performed. BAR2 and BAR3 provide other functions.
 >>
->> I still think we can get rid of this helper driver and have a single
->> driver for both PHY_EXYNOS4210_USB2 and PHY_EXYNOS4212_USB2.
+>> So with the appropriate reg encoding of the PCI device, the PCI
+>> driver for the FPGA will automatically get an of_node.
+>>
+>> My question is: is there any way I can describe this external device
+>> (I believe as a child node of the PCI device), so that a call to
+>> of_address_to_resource() (or equivalent) from its driver will
+>> automatically translate a localbus address (e.g. 0x0000abcd) to
+>> whatever address was assigned to BAR1 (in my case 0xe0000000 ->
+>> 0xe000abcd)?
 >
-> This helper driver is a really nice way to avoid code duplication, while
-> still leaving the code clean and readable.
->
-> All the Samsung USB 2.0 PHYs require exactly the same semantics
-> (isolation, reference rate configuration, power up, power on), but each
-> one has completely different layout of registers and bits inside
-> registers.
+> Perhaps I don't understand properly, but what good is the local bus
+> address to any driver? I mean you'll have to have a PCI driver to bind
+> to the PCI device, right?
 
-I just did a diff of registers in exynos 4210 and 4212 PHY drivers [1] 
-and couldn't find that big a difference in register layout. Of course 
-there are a few changes in HSIC bit fields and PHYFSEL but that's only 
-minimal and could well be handled in a single driver.
+Correct, and that's the PCI driver for the FPGA, which is (among other 
+things) a PCI-to-localbus bridge.
 
-[1] -> http://diffchecker.com/py3tp68m
->
-> Making a big single driver would end up being identical to the old Exynos
-> USB2PHY driver with a lot of if and switch statements inside most of
-> functions, which is not only ugly but makes any further extension hard.
+ > And that PCI driver will only need to obtain
+> the register addresses from BAR1,
 
-Probably we shouldn't try to over design and just convert the old exynos 
-usb2 phy driver to the generic phy framework to begin with?
+Correct.
 
-Thanks
-Kishon
+> then access that region.
+
+That's not 100% right. The PCI driver will only _provide_ the region for 
+BAR1 (as it is a bridge), not _access_ it.
+
+> Why would you need to have it translated via DT?
+
+Because it would be a *separate* driver, the one handling the /external/ 
+"slave" device, to use that region.
+
+In principle, if I wanted to reuse that same external device on a 
+completely different architecture (which *does* natively provide a 
+localbus) I should be able to move that same device node together with 
+its driver. Provided the node is under the right bus, and translation is 
+configured properly in the device tree, it should then work out of the 
+box. Or am I completely mistaken?
+
+What I did now (and it works) was to put the device node for the 
+external device right under the main bus,
+
+/ {
+...
+	ocp@f1000000 {
+		slave@0,0 {
+...
+			compatible = "keymile,slave";
+			reg = <0xe0000000 0x200>;
+		};
+	};
+};
+
+where "0xe0000000" is hardcoded, being the result of the dynamic assignment:
+
+pci 0000:01:00.0: BAR 1: assigned [mem 0xe0000000-0xe7ffffff]
+
+I'd like to avoid that, saying "slave@0,0 is accessible through the 
+memory area 0x0-0x200 within BAR1 of device 0 on bus 1".
+
+Thanks again,
+Gerlando
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
