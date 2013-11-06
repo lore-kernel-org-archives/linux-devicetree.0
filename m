@@ -1,78 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 1/8] ALSA: Add SAI SoC Digital Audio
-	Interface driver.
-Date: Wed, 6 Nov 2013 09:53:38 +0000
-Message-ID: <20131106095338.GG11602@sirena.org.uk>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
- <1383289495-24523-2-git-send-email-Li.Xiubo@freescale.com>
- <20131101182514.GE2493@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F8287439D@039-SN2MPN1-013.039d.mgd.msft.net>
- <20131104161537.GI2493@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F82875482@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/6] gpio: davinci: Fixed a check for unbanked gpio
+Date: Wed, 6 Nov 2013 10:56:24 +0100
+Message-ID: <CACRpkdbLTopHMaog7FDW7O4-yLyv+mmnvgkNuXgeQR-pEtbz6Q@mail.gmail.com>
+References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
+	<1383406775-14902-2-git-send-email-prabhakar.csenng@gmail.com>
+	<CACRpkdZ7pwGQnK0NN4tybLUNdMxu5WVaGX8Dqu+kMgVBuyF16w@mail.gmail.com>
+	<CA+V-a8tE3bxsHMSh2i3Xeq=kJUjmxTjcU25Kuka5e_iXeB--pQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2826641297338348364=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82875482@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Li Xiubo <B47053@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Guangyu Chen <B42378@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "oskar@scara.com" <oskar@scara.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8tE3bxsHMSh2i3Xeq=kJUjmxTjcU25Kuka5e_iXeB--pQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Alex Elder <alex.elder@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 6, 2013 at 10:33 AM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> On Tue, Nov 5, 2013 at 6:09 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Sat, Nov 2, 2013 at 4:39 PM, Lad, Prabhakar
+>> <prabhakar.csengg@gmail.com> wrote:
+>>
+>>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>>>
+>>> This patch fixes the check for the offset in
+>>> gpio_to_irq_unbanked() function.
+>>>
+>>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>>
+>> Is this a regression that should go in right now?
+>>
+> Yes it needs too.
 
---===============2826641297338348364==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JbKQpFqZXJ2T76Sg"
-Content-Disposition: inline
+But on top of *what* exactly?
 
+This does not apply to my gpio tree devel branch and
+not even on the mainline kernel.
 
---JbKQpFqZXJ2T76Sg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Is this something that should go on top of the davinci
+GPIO patch set that is still being elaborated on?
 
-On Tue, Nov 05, 2013 at 03:21:49AM +0000, Li Xiubo wrote:
-
-> As your opinions, should I move the four register writing operations to .set_sysclk/set_clkdiv/... functions too ?
-> Or just add a clk_disable_unprepare() after them here, and then add clk_prepare_enable in one of .set_sysclk/set_clkdiv/...?
-
-The latter.
-
---JbKQpFqZXJ2T76Sg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSehGeAAoJELSic+t+oim9WUUP/Ax7GnAFra3plXuggkpCC7no
-LSUiyDh4EDSRG7BgpC3qpaeJls0wMwMz0D6nM7Pj6Gx5VgLepd9L+LM0+GHKqir4
-KtIJic+2QSCA30cbcY/+m6DPkL+ZNPQL9VqQnzSxUD+BHEZHhC8wvD/CW84Cud8c
-vEQDukAQmvMF0HMn4djX+afFwbuLfDI90LiVvKqskRNuKapbQlx2QsZWajnsBcE4
-MuLTtT2SClFy7Wd4FVUDH/FgrPrYVy9xAqWdd0uNSNLvhIACH0u1Y6/u9gZQHHx6
-SzPid8xhjHvFMcninvghAHLyQqGITN1UFceddqscQaIVtIhC+GRAGGDFz29Ct56Z
-xBy3HwCeESdJOBcMCqVyOZdqk9nuRtLDXe8cfgCHy+XELbZctb+PYJNig0IcscdK
-oEomtNsNU0agV4QtKcbqeRIgJHy6unVy4l/2f/AbtczcNCSWj6JYEvSLibsnhNxh
-syKetHrt5bsIa4Ki2ufhL3breEeRQ6Wj7X0hU3eZ7TA9o7jolcLNLU7W9a7Y8VPW
-KZnxRCjcP3je3dgawJq4fw/e9IOWBjG5Dwtic29+bZc+cyjTX1jN+5qceDnA2Ubp
-DdUXaRjYJ1ffFEF4KsH7Xyb0IzfiX2gaDTkiTNwoF6H2RDs0ZRo217unJq0pE6+Z
-sVC8mJvgcTvmX1/5LqwJ
-=AUrm
------END PGP SIGNATURE-----
-
---JbKQpFqZXJ2T76Sg--
-
---===============2826641297338348364==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2826641297338348364==--
+Yours,
+Linus Walleij
