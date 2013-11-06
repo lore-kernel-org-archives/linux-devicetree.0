@@ -1,369 +1,209 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 1/3] phy: Add new Exynos USB PHY driver
-Date: Wed, 6 Nov 2013 13:48:13 +0530
-Message-ID: <5279FB45.3010808@ti.com>
-References: <1383668001-19141-1-git-send-email-k.debski@samsung.com> <1383668001-19141-2-git-send-email-k.debski@samsung.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
+Date: Wed, 6 Nov 2013 17:19:48 +0900
+Message-ID: <CANqRtoSJoC7DNwTze9MYzk1RhPOm4YEr7KkBdPnRX_7nefrjLQ@mail.gmail.com>
+References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1383058511-26046-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CANqRtoRrDT49NXFS6rxMYnp9es_9mj+SjKpFfWja1s8V3W1nfw@mail.gmail.com>
+	<1410337.86GqGttdXc@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1383668001-19141-2-git-send-email-k.debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1410337.86GqGttdXc@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Laurent,
 
-On Tuesday 05 November 2013 09:43 PM, Kamil Debski wrote:
-> Add a new driver for the Exynos USB PHY. The new driver uses the generic
-> PHY framework. The driver includes support for the Exynos 4x10 and 4x12
-> SoC families.
+On Wed, Nov 6, 2013 at 8:47 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Magnus,
 >
-> Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->   .../devicetree/bindings/phy/samsung-usbphy.txt     |   52 ++++
->   drivers/phy/Kconfig                                |   23 +-
->   drivers/phy/Makefile                               |    4 +
->   drivers/phy/phy-exynos-usb2.c                      |  234 ++++++++++++++
->   drivers/phy/phy-exynos-usb2.h                      |   87 ++++++
->   drivers/phy/phy-exynos4210-usb2.c                  |  272 ++++++++++++++++
->   drivers/phy/phy-exynos4212-usb2.c                  |  324 ++++++++++++++++++++
->   7 files changed, 995 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/samsung-usbphy.txt
->   create mode 100644 drivers/phy/phy-exynos-usb2.c
->   create mode 100644 drivers/phy/phy-exynos-usb2.h
->   create mode 100644 drivers/phy/phy-exynos4210-usb2.c
->   create mode 100644 drivers/phy/phy-exynos4212-usb2.c
+> (And a question for Mike below)
 >
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-usbphy.txt b/Documentation/devicetree/bindings/phy/samsung-usbphy.txt
-> new file mode 100644
-> index 0000000..c8fbc70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/samsung-usbphy.txt
-> @@ -0,0 +1,52 @@
-> +Samsung S5P/EXYNOS SoC series USB PHY
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible : should be one of the listed compatibles:
-> +	- "samsung,exynos4210-usbphy"
-> +	- "samsung,exynos4212-usbphy"
-> +- reg : a list of registers used by phy driver
-> +	- first and obligatory is the location of phy modules registers
-> +	- second and also required is the location of isolation registers
-> +	  (isolation registers control the physical connection between the in
-> +	  SoC modules and outside of the SoC, this also can be called enable
-> +	  control in the documentation of the SoC)
-> +	- third is the location of the mode switch register, this only applies
-> +	  to SoCs that have such a feature; mode switching enables to have
-> +	  both host and device used the same SoC pins and is commonly used
-> +	  when OTG is supported
-> +- #phy-cells : from the generic phy bindings, must be 1;
-> +- clocks and clock-names:
-> +	- the "phy" clocks is required by the phy module
-> +	- other clocks are associated by name with their respective phys and
-> +	  are used to determine the value of the clock settings register
-> +
-> +The second cell in the PHY specifier identifies the PHY, its  meaning is
-> +compatible dependent. For the currently supported SoCs (Exynos 4210 and
-> +Exynos 4212) it is as follows:
-> +  0 - USB device,
-> +  1 - USB host,
-> +  2 - HSIC0,
-> +  3 - HSIC1,
-> +
-> +Example:
-> +
-> +For Exynos 4412 (compatible with Exynos 4212):
-> +
-> +exynos_usbphy: exynos-usbphy@125B0000 {
-> +	compatible = "samsung,exynos4212-usbphy";
-> +	reg = <0x125B0000 0x100 0x10020704 0x0c 0x1001021c 0x4>;
-> +	clocks = <&clock 305>, <&clock 2>, <&clock 2>, <&clock 2>,
-> +							<&clock 2>;
-> +	clock-names = "phy", "device", "host", "hsic0", "hsic1";
-> +	status = "okay";
-> +	#phy-cells = <1>;
-> +};
-> +
-> +Then the PHY can be used in other nodes such as:
-> +
-> +ehci@12580000 {
-> +	status = "okay";
-> +	phys = <&exynos_usbphy 2>;
-> +	phy-names = "hsic0";
-> +};
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index a344f3d..bdf0fab 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -14,7 +14,7 @@ config GENERIC_PHY
->   	  API by which phy drivers can create PHY using the phy framework and
->   	  phy users can obtain reference to the PHY. All the users of this
->   	  framework should select this config.
-> -
-> +	
-spurious change
->   config PHY_EXYNOS_MIPI_VIDEO
->   	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
->   	help
-> @@ -51,4 +51,25 @@ config PHY_EXYNOS_DP_VIDEO
->   	help
->   	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
+> On Tuesday 05 November 2013 16:56:40 Magnus Damm wrote:
+>> On Tue, Oct 29, 2013 at 11:55 PM, Laurent Pinchart wrote:
+>> > The R8A7790 has several clocks that are too custom to be supported in a
+>> > generic driver. Those clocks can be divided in two categories:
+>> >
+>> > - Fixed rate clocks with multiplier and divisor set according to boot
+>> >   mode configuration
+>> >
+>> > - Custom divider clocks with SoC-specific divider values
+>> >
+>> > This driver supports both.
+>> >
+>> > Signed-off-by: Laurent Pinchart
+>> > <laurent.pinchart+renesas@ideasonboard.com>
+>> > ---
+
+>> > +void __init r8a7790_clocks_init(u32 mode)
+>> > +{
+>> > +       cpg_mode = mode;
+>> > +
+>> > +       of_clk_init(NULL);
+>> > +}
+>>
+>> Hi Laurent,
+>>
+>> Thanks a lot for your efforts on this. In general I think it all looks good,
 >
-> +config PHY_EXYNOS_USB2
-> +	tristate "Samsung USB 2.0 PHY driver"
-> +	help
-> +	  Enable this to support Samsung USB phy helper driver for Samsung SoCs.
-> +	  This driver provides common interface to interact, for Samsung
-> +	  USB 2.0 PHY driver.
+> Thank you.
+>
+>> I have however one question regarding the "probe" interface between the SoC
+>> code in arch/arm/mach-shmobile and drivers/clk. The code above in
+>> r8a7790_clocks_init() looks a bit spaghetti-style to me, perhaps it is
+>> possible to make it cleaner somehow?
+>
+> Isn't it just a loop ? :-) The clocks handled by this driver are "special",
+> they need to be initialized manually.
 
-I still think we can get rid of this helper driver and have a single 
-driver for both PHY_EXYNOS4210_USB2 and PHY_EXYNOS4212_USB2.
-> +
-> +config PHY_EXYNOS4210_USB2
-> +	bool "Support for Exynos 4210"
-> +	depends on PHY_EXYNOS_USB2
-> +	depends on CPU_EXYNOS4210
-> +	help
-> +	  Enable USB PHY support for Exynos 4210
-> +
-> +config PHY_EXYNOS4212_USB2
-> +	bool "Support for Exynos 4212"
-> +	depends on PHY_EXYNOS_USB2
-> +	depends on (SOC_EXYNOS4212 || SOC_EXYNOS4412)
-> +	help
-> +	  Enable USB PHY support for Exynos 4212
-> +
->   endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index d0caae9..c87bc65 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -7,3 +7,7 @@ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
->   obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
->   obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-> +obj-$(CONFIG_PHY_EXYNOS5250_USB)	+= phy-exynos5250-usb.o
-> +obj-$(CONFIG_PHY_EXYNOS_USB2)		+= phy-exynos-usb2.o
-> +obj-$(CONFIG_PHY_EXYNOS4210_USB2)	+= phy-exynos4210-usb2.o
-> +obj-$(CONFIG_PHY_EXYNOS4212_USB2)	+= phy-exynos4212-usb2.o
-> diff --git a/drivers/phy/phy-exynos-usb2.c b/drivers/phy/phy-exynos-usb2.c
-> new file mode 100644
-> index 0000000..3e9d525
-> --- /dev/null
-> +++ b/drivers/phy/phy-exynos-usb2.c
-> @@ -0,0 +1,234 @@
-> +/*
-> + * Samsung S5P/EXYNOS SoC series USB PHY driver
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Kamil Debski <k.debski@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include "phy-exynos-usb2.h"
-> +
-> +static int exynos_usb2_phy_power_on(struct phy *phy)
-> +{
-> +	struct usb2_phy_instance *inst = phy_get_drvdata(phy);
-> +	struct usb2_phy_driver *drv = inst->drv;
-> +	int ret;
-> +
-> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
-> +							inst->cfg->label);
-> +	ret = clk_prepare_enable(drv->clk);
-> +	if (ret)
-> +		return ret;
-> +	if (inst->cfg->power_on) {
-> +		spin_lock(&drv->lock);
-> +		ret = inst->cfg->power_on(inst);
-> +		spin_unlock(&drv->lock);
-> +	}
-> +	clk_disable_unprepare(drv->clk);
-> +	return ret;
-> +}
-> +
-> +static int exynos_usb2_phy_power_off(struct phy *phy)
-> +{
-> +	struct usb2_phy_instance *inst = phy_get_drvdata(phy);
-> +	struct usb2_phy_driver *drv = inst->drv;
-> +	int ret;
-> +
-> +	dev_dbg(drv->dev, "Request to power_off \"%s\" usb phy\n",
-> +							inst->cfg->label);
-> +	ret = clk_prepare_enable(drv->clk);
-> +	if (ret)
-> +		return ret;
-> +	if (inst->cfg->power_off) {
-> +		spin_lock(&drv->lock);
-> +		ret = inst->cfg->power_off(inst);
-> +		spin_unlock(&drv->lock);
-> +	}
-> +	clk_disable_unprepare(drv->clk);
-> +	return ret;
-> +}
-> +
-> +static struct phy_ops exynos_usb2_phy_ops = {
-> +	.power_on	= exynos_usb2_phy_power_on,
-> +	.power_off	= exynos_usb2_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static struct phy *exynos_usb2_phy_xlate(struct device *dev,
-> +					struct of_phandle_args *args)
-> +{
-> +	struct usb2_phy_driver *drv;
-> +
-> +	drv = dev_get_drvdata(dev);
-> +	if (!drv)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (WARN_ON(args->args[0] >= drv->cfg->num_phys))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return drv->usb2_phy_instances[args->args[0]].phy;
-> +}
-> +
-> +static const struct of_device_id exynos_usb2_phy_of_match[];
-> +
-> +static int exynos_usb2_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct usb2_phy_driver *drv;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *mem;
-> +	struct phy_provider *phy_provider;
-> +
-> +	const struct of_device_id *match;
-> +	const struct usb2_phy_config *cfg;
-> +	struct clk *clk;
-> +
-> +	int i;
-> +
-> +	match = of_match_node(exynos_usb2_phy_of_match, pdev->dev.of_node);
-> +	if (!match) {
-> +		dev_err(dev, "of_match_node() failed\n");
-> +		return -EINVAL;
-> +	}
-> +	cfg = match->data;
-> +	if (!cfg) {
-> +		dev_err(dev, "Failed to get configuration\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	drv = devm_kzalloc(dev, sizeof(struct usb2_phy_driver) +
-> +		cfg->num_phys * sizeof(struct usb2_phy_instance), GFP_KERNEL);
-> +
-> +	if (!drv) {
-> +		dev_err(dev, "Failed to allocate memory\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	dev_set_drvdata(dev, drv);
-> +	spin_lock_init(&drv->lock);
-> +
-> +	drv->cfg = cfg;
-> +	drv->dev = dev;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	drv->reg_phy = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(drv->reg_phy)) {
-> +		dev_err(dev, "Failed to map register memory (phy)\n");
-> +		return PTR_ERR(drv->reg_phy);
-> +	}
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	drv->reg_isol = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(drv->reg_isol)) {
-> +		dev_err(dev, "Failed to map register memory (isolation)\n");
-> +		return PTR_ERR(drv->reg_isol);
-> +	}
-> +
-> +	if (drv->cfg->has_mode_switch) {
-> +		mem = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-> +		drv->reg_mode = devm_ioremap_resource(dev, mem);
-> +		if (IS_ERR(drv->reg_mode)) {
-> +			dev_err(dev, "Failed to map register memory (mode switch)\n");
-> +			return PTR_ERR(drv->reg_mode);
-> +		}
-> +	}
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev,
-> +							exynos_usb2_phy_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(drv->dev, "Failed to register phy provider\n");
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	drv->clk = devm_clk_get(dev, "phy");
-> +	if (IS_ERR(drv->clk)) {
-> +		dev_err(dev, "Failed to get clock of phy controller\n");
-> +		return PTR_ERR(drv->clk);
-> +	}
-> +
-> +	for (i = 0; i < drv->cfg->num_phys; i++) {
-> +		char *label = drv->cfg->phys[i].label;
-> +		struct usb2_phy_instance *p = &drv->usb2_phy_instances[i];
-> +
-> +		dev_dbg(dev, "Creating phy \"%s\"\n", label);
-> +		p->phy = devm_phy_create(dev, &exynos_usb2_phy_ops, NULL);
-> +		if (IS_ERR(p->phy)) {
-> +			dev_err(drv->dev, "Failed to create usb2_phy \"%s\"\n",
-> +						label);
-> +			return PTR_ERR(p->phy);
-> +		}
-> +
-> +		p->cfg = &drv->cfg->phys[i];
-> +		p->drv = drv;
-> +		phy_set_drvdata(p->phy, p);
-> +
-> +		clk = clk_get(dev, p->cfg->label);
-> +		if (IS_ERR(clk)) {
-> +			dev_err(dev, "Failed to get clock of \"%s\" phy\n",
-> +								p->cfg->label);
-> +			return PTR_ERR(clk);
-> +		}
-> +
-> +		p->rate = clk_get_rate(clk);
-> +
-> +		if (p->cfg->rate_to_clk) {
-> +			p->clk = p->cfg->rate_to_clk(p->rate);
-> +			if (p->clk == CLKSEL_ERROR) {
-> +				dev_err(dev, "Clock rate (%ld) not supported\n",
-> +								p->rate);
-> +				clk_put(clk);
-> +				return -EINVAL;
-> +			}
-> +		}
-> +		clk_put(clk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +extern const struct usb2_phy_config exynos4210_usb2_phy_config;
-> +extern const struct usb2_phy_config exynos4212_usb2_phy_config;
-> +
-> +static const struct of_device_id exynos_usb2_phy_of_match[] = {
-> +#ifdef CONFIG_PHY_EXYNOS4210_USB2
+Spaghetti-O's? =) I agree that some special handling is needed.
 
-I don't think you'll need #ifdef here. Anyways the driver data can be 
-obtained using the appropriate compatible value in dt data no?
+>> I realize that you need some way to read out the mode pin setting, and that
+>> is currently provided by the SoC code in arch/arm/mach-shmobile/. Today it
+>> seems that you instead of letting the drivers/clk/ code call SoC code to get
+>> the mode pin setting (and add a SoC link dependency) you simply feed the
+>> settings to the clk code from the SoC code using the parameter to
+>> r8a7790_clocks_init(). This direction seems good to me. I'm however not too
+>> keen on the current symbol dependency in the "other" direction.
+>>
+>> If possible I'd like to keep the interface between the SoC code and the
+>> driver code to "standard" driver model functions. For instance, using
+>> of_clk_init(NULL) from the SoC code seems like a pretty good standard
+>> interface - without any link time dependencies. So with the current code,
+>> the r8a7790_clocks_init() function somehow goes against this no-symbol-
+>> dependency preference that I happen to have. =)
+>>
+>> Would it for instance be possible let the SoC code read out the mode pin
+>> setting, and then pass the current setting using the argument of
+>> of_clk_init() to select different dividers? That way the symbol dependency
+>> goes away. Or maybe it becomes too verbose?
+>
+> The of_clk_init() argument is an array of struct of_device_id that is used by
+> the clock core to match device tree nodes. I don't really see how you would
+> like to use it to pass the boot mode pins state to the driver.
 
-Thanks
-Kishon
+Yeah, it seems that interface isn't such a good match. Thanks.
+
+> There is currently no dedicated API (at least to my knowledge) to pass clock
+> configuration information between arch/arm and drivers/clk. Here's a couple of
+> methods that can be used.
+>
+> - Call a drivers/clk function from platform code with the clock configuration
+> information and store that information in a driver global variable for later
+> use (this is the method currently used by this patch).
+>
+> - Call a platform code function from driver code to read the configuration.
+> This is pretty similar to the above, with a dependency in the other direction.
+>
+> - Read the value directly from the hardware in the clock driver. This doesn't
+> feel really right, as that's not the job of the clock driver. In a more
+> general case this solution might not always be possible, as reading the
+> configuration might require access to resources not available to drivers.
+>
+> - Create a standard API for this purpose. It might be overengineering.
+>
+> - Use AUXDATA filled by platform code.
+>
+> There might be other solutions I haven't thought of. I went for the first
+> method as there's already 8 other clock drivers that expose an initialization
+> function to platform code. I might just have copied a mistake though.
+
+Thanks for listing these. I have come across another option:
+
+Use of_update_property() and of_property_read_u32() to pass using a
+property, see below.
+
+> Mike, do you have an opinion on this ? In a nutshell, the code clocks are
+> fixed factor but their factor depend on a boot mode configuration. The
+> configuration value is thus needed when instantiating the clocks. It can be
+> read from a hardware register, outside of the clocks IP core.
+
+Yeah, I too would be interested to hear what Mike thinks about this matter.
+
+Please see below for a prototype patch on top of your code that shows
+the driver side of my DT property proposal. The omitted SoC side
+becomes slightly more complicated but that code can be shared between
+multiple R-Car SoCs so I think it should be acceptable size-wise.
+
+With this patch applied the interface between the driver and the SoC
+code is a DT property (that needs documentation) and
+of_clk_init(NULL). No more evil link time symbol dependencies between
+arch/ and drivers/...
+
+ drivers/clk/shmobile/clk-r8a7790.c |   15 ++++++---------
+ include/linux/clk/shmobile.h       |   19 -------------------
+ 2 files changed, 6 insertions(+), 28 deletions(-)
+
+--- 0018/drivers/clk/shmobile/clk-r8a7790.c
++++ work/drivers/clk/shmobile/clk-r8a7790.c     2013-11-06 16:59:59.000000000 +0
+900
+@@ -12,7 +12,6 @@
+
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+-#include <linux/clk/shmobile.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+@@ -70,8 +69,6 @@ static const struct clk_div_table cpg_sd
+        { 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
+ };
+
+-static u32 cpg_mode __initdata;
+-
+ #define CPG_SDCKCR                     0x00000074
+
+ static void __init r8a7790_cpg_clocks_init(struct device_node *np)
+@ -80,6 +77,12 @@ static void __init r8a7790_cpg_clocks_in
+        struct r8a7790_cpg *cpg;
+        struct clk **clks;
+        unsigned int i;
++       u32 cpg_mode;
++
++       if (of_property_read_u32(node, "cpg-mode", &cpg_mode)) {
++               pr_err("%s: failed to determine CPG mode\n", __func__);
++               return;
++       }
+
+        cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
+        clks = kzalloc(CPG_NUM_CLOCKS * sizeof(*clks), GFP_KERNEL);
+@ -168,9 +171,3 @@ static void __init r8a7790_cpg_clocks_in
+ CLK_OF_DECLARE(r8a7790_cpg_clks, "renesas,r8a7790-cpg-clocks",
+               r8a7790_cpg_clocks_init);
+
+-void __init r8a7790_clocks_init(u32 mode)
+-{
+-       cpg_mode = mode;
+-
+-       of_clk_init(NULL);
+-}
+--- 0018/include/linux/clk/shmobile.h
++++ /dev/null   2013-06-03 21:41:10.638032047 +0900
+@@ -1,19 +0,0 @@
+-/*
+- * Copyright 2013 Ideas On Board SPRL
+- *
+- * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- */
+-
+-#ifndef __LINUX_CLK_SHMOBILE_H_
+-#define __LINUX_CLK_SHMOBILE_H_
+-
+-#include <linux/types.h>
+-
+-void r8a7790_clocks_init(u32 mode);
+-
+-#endif
+
+Cheers,
+
+/ magnus
