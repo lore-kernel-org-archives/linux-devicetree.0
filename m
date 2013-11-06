@@ -1,56 +1,55 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: voipac: Improve fixed voltage regulator
- definition
-Date: Wed, 6 Nov 2013 11:35:15 +0800
-Message-ID: <20131106033514.GQ19770@S2101-09.ap.freescale.net>
-References: <1383655760-28206-1-git-send-email-lisovy@gmail.com>
+From: Li Xiubo <B47053@freescale.com>
+Subject: Re: [PATCHv2 1/8] ALSA: Add SAI SoC Digital Audio
+	Interface driver.
+Date: Wed, 6 Nov 2013 03:53:24 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82876B08@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131101085904.GC28401@MrMyself>
+ <1DD289F6464F0949A2FCA5AA6DC23F82874201@039-SN2MPN1-013.039d.mgd.msft.net>
+ <5278F1FA.1060706@tabi.org>
+ <1DD289F6464F0949A2FCA5AA6DC23F82876A53@039-SN2MPN1-013.039d.mgd.msft.net>
+ <5279B822.9010401@tabi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383655760-28206-1-git-send-email-lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <5279B822.9010401@tabi.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Timur Tabi <timur@tabi.org>, Guangyu Chen <B42378@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Huan Wang <B18965@freescale.com>, Shawn Guo <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "broonie@kernel.org" <broonie@kernel.org>, "oskar@scara.com" <oskar@scara.com>, Fabio Estevam <r49496@freescale.com>, lgir
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 01:49:20PM +0100, Rostislav Lisovy wrote:
-> Signed-off-by: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> >> If there are any comments that say PPC but are not PPC-specific, that
+> >> >should be fixed.
+> > Yes, find it.
+> >
+> > The comments is in "sound/soc/fsl/Makefile" :
+> > +++++++++++
+> > "# Freescale PowerPC SSI/DMA Platform Support"
+> > -----------
+> >
+> > But fsl-spdif.o is also under it.
+> > And this is also support ARM and PowerPC platforms at the same time ?
+> > If so, the comments should be modified to :
+> > +++++++++++
+> > "# Freescale PowerPC and ARM SSI/DMA Platform Support"
+> > -----------
 > 
-> diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> index a7d03ad..4f1d8fa 100644
-> --- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> +++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
-> @@ -27,9 +27,12 @@
->  
->  	regulators {
->  		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  
-> -		reg_3p3v: 3p3v {
-> +		reg_3p3v: regulator@0 {
-
-Yeah, instead of using arbitrary node name, the generic regulator@num is
-more preferable. I will make this change to the rest of IMX dts files.
-
-Applied, thanks.
-
-Shawn
-
->  			compatible = "regulator-fixed";
-> +			reg = <0>;
->  			regulator-name = "3P3V";
->  			regulator-min-microvolt = <3300000>;
->  			regulator-max-microvolt = <3300000>;
-> -- 
-> 1.7.10.4
+> Yes, this should be changed.
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about :
++++++++++
+"# Freescale PowerPC and ARM SSI/DMA/SAI/SPDIF Platform Support"	
+---------
+ ?
