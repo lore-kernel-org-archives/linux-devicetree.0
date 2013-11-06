@@ -1,33 +1,81 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC 4/4] ASoC: RX-51: Add DT support to sound driver
-Date: Wed, 6 Nov 2013 15:32:48 +0100
-Message-ID: <20131106143248.GD15551@amd.pavel.ucw.cz>
-References: <1382909086-10493-1-git-send-email-sre@debian.org>
- <1382909086-10493-5-git-send-email-sre@debian.org>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: gpmi: add a new DT property to use the datasheet's
+ minimum required ECC
+Date: Wed, 06 Nov 2013 15:39:07 +0100
+Message-ID: <1818094.INS0lkJjja@amdc1227>
+References: <1382929517-22606-1-git-send-email-b32955@freescale.com>
+ <20131105200729.GT20061@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1382909086-10493-5-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20131105200729.GT20061-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi,
 
-> This patch adds device tree support to the Nokia N900 audio driver.
+On Tuesday 05 of November 2013 12:07:29 Brian Norris wrote:
+> On Mon, Oct 28, 2013 at 11:05:17AM +0800, Huang Shijie wrote:
+> > In default way, we use the ecc_strength/ecc_step size calculated by ourselves
+> > and use all the OOB area.
+> > 
+> > This patch adds a new property : "fsl,use-minimum-ecc"
+> > 
+> > If we enable it, we will firstly try to use the datasheet's minimum required
+> > ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+> > in the nand_chip{}). So we may have free space in the OOB area by using the
+> > minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
+> > SLC NAND.
+> > 
+> > If we fail to use the minimum ECC, we will use the legacy method to calculate
+> > the ecc_strength and ecc_step size.
+> > 
+> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > v1 --> v2:
+> > 	based on David's patch to fix the regression.
+> > ---
+> >  .../devicetree/bindings/mtd/gpmi-nand.txt          |    6 ++++++
+> >  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
+> >  2 files changed, 9 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> > index 551b2a1..4297795 100644
+> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> > @@ -17,6 +17,12 @@ Required properties:
+> >  Optional properties:
+> >    - nand-on-flash-bbt: boolean to enable on flash bbt option if not
+> >                         present false
+> > +  - fsl,use-minimum-ecc: By enabling this boolean property, the gpmi will try
+> > +                       to use the datasheet's minimum required ECC provided by
+> > +                       the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+> > +                       in the nand_chip{}). So we may have free space in the OOB
+> > +                       area by using the minimum ECC, and we may support JFFS2
+> > +                       with some SLC NANDs, such as Micron's SLC NAND.
+> 
+> This description still uses Linux-isms/MTD-isms (ecc_strength_ds,
+> ecc_step_ds, nand_chip{}, JFFS2). I would personally write this as
+> something like the following:
+> 
+>   - fsl,use-minimum-ecc: Protect this NAND flash with the minimum ECC
+> 			 strength required. The required ECC strength is
+> 			 automatically discoverable for some flash
+> 			 (e.g., according to the ONFI standard).
+> 			 However, note that if this strength is not
+> 			 discoverable, the software may choose an
+> 			 implementation-defined ECC scheme.
 
-Note, N900 audio driver.
+After reading this description, it is not clear to me what is the default
+behavior if this property is not present.
 
-> +- compatible: "nokia,rx51-audio"
+Best regards,
+Tomasz
 
-Still, it is rx51-audio. If it is feasible, could we move away from
-rx51 naming and into n900 naming that is familiar to mere humans?
-
-We can rename the sources later, but I guess we should get dts binding
-right first time...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
