@@ -1,144 +1,130 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH] usb: ohci-exynos: Change to use phy provided by the generic
- phy framework
-Date: Wed, 06 Nov 2013 10:27:49 +0900
-Message-ID: <001401ceda8f$67f1ee50$37d5caf0$%han@samsung.com>
+From: "Sherman Yin" <syin@broadcom.com>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Tue, 5 Nov 2013 18:02:01 -0800
+Message-ID: <5279A319.5060701@broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+ <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+ <201311050026.56321.heiko@sntech.de> <527835FE.2030102@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org
-Cc: 'Kamil Debski' <k.debski@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, m.szyprowski@samsung.com, gautam.vivek@samsung.com, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>, 'Yulgon Kim' <yulgon.kim@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, 'Anton Tikhomirov' <av.tikhomirov@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>'Kamil Debski' <k.debski@samsung.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527835FE.2030102@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, =?ISO-8859-1?Q?Heiko_St=FCb?= =?ISO-8859-1?Q?ner?= <heiko@sntech.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Change the phy provider used from the old usb phy specific to a new one
-using the generic phy framework.
+On 13-11-04 04:04 PM, Stephen Warren wrote:
+> On 11/04/2013 04:26 PM, Heiko St=FCbner wrote:
+>
+>> I remember we had a discussion about how things like bias-disable ex=
+plicitly
+>> shouldn't have a value, when they are represented in the list-format=
+:
+>>
+>> 		pcfg_pull_none: pcfg_pull_none {
+>> 			bias-disable;
+>> 		};
+>>
+>> so a bias-disable =3D <1> was explicitly "forbidden" [for a lack of =
+a better
+>> word]. And it was similar for other options, the parameter not meant=
+ to be
+>> indicating if they are active but really only setting the "strength"=
+ or so.
+>
+> Pure Boolean values should be represented as a valueless property. If
+> the property is present, the value is true, otherwise false.
+>
+> However, pinctrl bindings often don't represent Boolean values, but
+> rather tri-states, with the following values:
+>
+> * Don't touch this configuration option at all (missing)
+> * Enable the option (<1>)
+> * Disable the option (<0>)
+>
+> The reason for using tri-states being that you might want to write:
+>
+> xxx1 {
+>      pins =3D <PINA>, <PINB>, <PINC>;
+>      function =3D <...>;
+>      // this node doesn't affect pullup
+> }
+> xxx2 {
+>      pins =3D <PINA>, <PINB>;
+>      // this node doesn't affect function
+>      pull-up =3D <1>; // change, and enable
+> }
+> xxx3 {
+>      pins =3D <PINAC>;
+>      // this node doesn't affect function
+>      pull-up =3D <0>; // change, and disable
+> }
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>
----
-Exynos OHCI driver also uses Exynos USB2.0 PHY. Thus, I make this
-patch based-on Kamil Debski's patchset for adding Exynos USB 2.0 PHY
-driver.
-(http://www.spinics.net/lists/linux-samsung-soc/msg24104.html)
+If I understand correctly, in Stephen's example, if a certain driver=20
+wants to configure PINA PINB and PINC, the pin configuration nodes=20
+"xxx1", "xxx2", and "xxx3" will all have to be selected for the=20
+particular pin state.  This works fine.  However, I'm just thinking tha=
+t=20
+it would have been easier if we could specify just one node:
 
- drivers/usb/host/ohci-exynos.c |   28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+xxx {
+	pins =3D <PINA>, <PINB>, <PINC>;
+	function =3D <...>;
+	pull-up =3D <1 1 0>;
+}
 
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index a87baed..76eb4d3 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -17,12 +17,12 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/usb/phy.h>
- #include <linux/usb/samsung_usb_phy.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
--#include <linux/usb/otg.h>
- 
- #include "ohci.h"
- 
-@@ -35,8 +35,7 @@ static struct hc_driver __read_mostly exynos_ohci_hc_driver;
- 
- struct exynos_ohci_hcd {
- 	struct clk *clk;
--	struct usb_phy *phy;
--	struct usb_otg *otg;
-+	struct phy *phy;
- };
- 
- static void exynos_ohci_phy_enable(struct platform_device *pdev)
-@@ -45,7 +44,7 @@ static void exynos_ohci_phy_enable(struct platform_device *pdev)
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
- 
- 	if (exynos_ohci->phy)
--		usb_phy_init(exynos_ohci->phy);
-+		phy_power_on(exynos_ohci->phy);
- }
- 
- static void exynos_ohci_phy_disable(struct platform_device *pdev)
-@@ -54,7 +53,7 @@ static void exynos_ohci_phy_disable(struct platform_device *pdev)
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
- 
- 	if (exynos_ohci->phy)
--		usb_phy_shutdown(exynos_ohci->phy);
-+		phy_power_off(exynos_ohci->phy);
- }
- 
- static int exynos_ohci_probe(struct platform_device *pdev)
-@@ -62,7 +61,8 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 	struct exynos_ohci_hcd *exynos_ohci;
- 	struct usb_hcd *hcd;
- 	struct resource *res;
--	struct usb_phy *phy;
-+	struct phy *phy;
-+	const char *phy_name;
- 	int irq;
- 	int err;
- 
-@@ -89,14 +89,14 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 					"samsung,exynos5440-ohci"))
- 		goto skip_phy;
- 
--	phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-+	phy_name = of_get_property(pdev->dev.of_node, "phy-names", NULL);
-+	phy =  devm_phy_get(&pdev->dev, phy_name);
- 	if (IS_ERR(phy)) {
- 		usb_put_hcd(hcd);
- 		dev_warn(&pdev->dev, "no platform data or transceiver defined\n");
- 		return -EPROBE_DEFER;
- 	} else {
- 		exynos_ohci->phy = phy;
--		exynos_ohci->otg = phy->otg;
- 	}
- 
- skip_phy:
-@@ -135,9 +135,6 @@ skip_phy:
- 		goto fail_io;
- 	}
- 
--	if (exynos_ohci->otg)
--		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
--
- 	platform_set_drvdata(pdev, hcd);
- 
- 	exynos_ohci_phy_enable(pdev);
-@@ -165,9 +162,6 @@ static int exynos_ohci_remove(struct platform_device *pdev)
- 
- 	usb_remove_hcd(hcd);
- 
--	if (exynos_ohci->otg)
--		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
--
- 	exynos_ohci_phy_disable(pdev);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
-@@ -210,9 +204,6 @@ static int exynos_ohci_suspend(struct device *dev)
- 
- 	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 
--	if (exynos_ohci->otg)
--		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
--
- 	exynos_ohci_phy_disable(pdev);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
-@@ -231,9 +222,6 @@ static int exynos_ohci_resume(struct device *dev)
- 
- 	clk_prepare_enable(exynos_ohci->clk);
- 
--	if (exynos_ohci->otg)
--		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
--
- 	exynos_ohci_phy_enable(pdev);
- 
- 	ohci_resume(hcd, false);
--- 
-1.7.10.4
+This "feature" seems a bit more concise to me and is what I did for my=20
+original pinctrl driver.  The only downside is that with this method,=20
+one cannot specify "don't touch this option for this pin" if the same=20
+property must provide values for other pins.
+
+When Linus asked me to try using generic pinconf instead, I ran into=20
+problems with this feature due to how the generic pinconf properties ar=
+e=20
+defined differently than my properties - perhaps this feature just=20
+doesn't work for generic pinconf-based drivers with the (Unless we are=20
+ok with using 1/0 for boolean properties, but it has already been=20
+pointed out that these should be valueless.).
+
+While I'd love to be able define my pin config nodes this way, if I hav=
+e=20
+to use generic pinconf for the driver to be upstreamed, then I'm fine=20
+with it.
+
+Going back to some questions regarding generic pinconf properties -=20
+could I get some help with these?
+
+ >"input disable"
+ >This setting disconnects the input (DIN) to the internal logic from=20
+ >the pin pad. However, the output (DOUT) can still drive the pad.  It
+ >seems to match PIN_CONFIG_OUTPUT, but the current generic option is
+ >either "output-low" or "output-high" - are these referring to a stati=
+c
+ >output of 0 and 1?
+
+What's the best property to use in this case?
+
+ >"mode"
+ >This controls several aspect of the pin (slew rate, pull up strength,
+ >etc) to meet I2C specs for Standard/Fast mode vs High Speed mode.  I
+ >think the best way is to map this to slew rate, which would require
+ >some explanation because the meaning of slew rate differs depending o=
+n
+ >what pin function is selected:
+ >- When I2C (*_SCL or *_SDA) function is selected for the pin: 0:
+ >  Standard (100kbps)
+ >  & Fast mode (400kbps), 1: High Speed mode (3.4Mbps)
+ >- When IC_DM or IC_DP function is selected, 0: normal slew rate, 1:
+ >  fast slew rate
+ >- Else: 0: fast slew rate, 1: normal slew rate
+
+Do we agree that the "slew rate" is the best property to use for "mode"=
+?
+
+Thanks,
+Sherman
+
