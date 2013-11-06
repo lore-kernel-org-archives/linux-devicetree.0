@@ -1,178 +1,79 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Fwd: [PATCH 2/8] watchdog: davinci: use davinci_wdt_device structure
- to hold device data
-Date: Wed, 6 Nov 2013 13:31:20 +0200
-Message-ID: <527A2888.5030604@ti.com>
-References: <1383680783-12114-3-git-send-email-ivan.khoronzhuk@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Fwd: [PATCH 3/8] watchdog: davinci: add GET_TIMELEFT option support
+Date: Wed, 6 Nov 2013 13:31:59 +0200
+Message-ID: <527A28AF.9040308@ti.com>
+References: <1383680783-12114-4-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383680783-12114-3-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, wim@iguana.be, nsekhar@ti.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383680783-12114-4-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs, like Keystone 2, can support more than one WDT and each
-watchdog device has to use it's own base address, clock source,
-wdd device, so add new davinci_wdt_device structure to hold device
-data.
+Currently, the davinci watchdog can be read while counting,
+so we can add ability to report the remaining time before
+the system will reboot.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 ---
- drivers/watchdog/davinci_wdt.c |   74 ++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 26 deletions(-)
+ drivers/watchdog/davinci_wdt.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index a6eef71..1fc2093 100644
+index 1fc2093..6cbf2e1 100644
 --- a/drivers/watchdog/davinci_wdt.c
 +++ b/drivers/watchdog/davinci_wdt.c
-@@ -56,9 +56,18 @@
- #define WDKEY_SEQ1		(0xda7e << 16)
- 
- static int heartbeat = MAX_HEARTBEAT + 1;
--static void __iomem	*wdt_base;
--struct clk		*wdt_clk;
--static struct watchdog_device	wdt_wdd;
-+
-+/*
-+ * struct to hold data for each WDT device
-+ * @base - base io address of WD device
-+ * @clk - source clock of WDT
-+ * @wdd - hold watchdog device as is in WDT core
-+ */
-+struct davinci_wdt_device {
-+	void __iomem		*base;
-+	struct clk		*clk;
-+	struct watchdog_device	wdd;
-+};
- 
- /* davinci_wdt_start - enable watchdog */
- static int davinci_wdt_start(struct watchdog_device *wdd)
-@@ -66,42 +75,45 @@ static int davinci_wdt_start(struct watchdog_device *wdd)
- 	u32 tgcr;
- 	u32 timer_margin;
- 	unsigned long wdt_freq;
-+	struct davinci_wdt_device *davinci_wdt = watchdog_get_drvdata(wdd);
- 
--	wdt_freq = clk_get_rate(wdt_clk);
-+	wdt_freq = clk_get_rate(davinci_wdt->clk);
- 
- 	/* disable, internal clock source */
--	iowrite32(0, wdt_base + TCR);
-+	iowrite32(0, davinci_wdt->base + TCR);
- 	/* reset timer, set mode to 64-bit watchdog, and unreset */
--	iowrite32(0, wdt_base + TGCR);
-+	iowrite32(0, davinci_wdt->base + TGCR);
- 	tgcr = TIMMODE_64BIT_WDOG | TIM12RS_UNRESET | TIM34RS_UNRESET;
--	iowrite32(tgcr, wdt_base + TGCR);
-+	iowrite32(tgcr, davinci_wdt->base + TGCR);
- 	/* clear counter regs */
--	iowrite32(0, wdt_base + TIM12);
--	iowrite32(0, wdt_base + TIM34);
-+	iowrite32(0, davinci_wdt->base + TIM12);
-+	iowrite32(0, davinci_wdt->base + TIM34);
- 	/* set timeout period */
- 	timer_margin = (((u64)wdd->timeout * wdt_freq) & 0xffffffff);
--	iowrite32(timer_margin, wdt_base + PRD12);
-+	iowrite32(timer_margin, davinci_wdt->base + PRD12);
- 	timer_margin = (((u64)wdd->timeout * wdt_freq) >> 32);
--	iowrite32(timer_margin, wdt_base + PRD34);
-+	iowrite32(timer_margin, davinci_wdt->base + PRD34);
- 	/* enable run continuously */
--	iowrite32(ENAMODE12_PERIODIC, wdt_base + TCR);
-+	iowrite32(ENAMODE12_PERIODIC, davinci_wdt->base + TCR);
- 	/* Once the WDT is in pre-active state write to
- 	 * TIM12, TIM34, PRD12, PRD34, TCR, TGCR, WDTCR are
- 	 * write protected (except for the WDKEY field)
- 	 */
- 	/* put watchdog in pre-active state */
--	iowrite32(WDKEY_SEQ0 | WDEN, wdt_base + WDTCR);
-+	iowrite32(WDKEY_SEQ0 | WDEN, davinci_wdt->base + WDTCR);
- 	/* put watchdog in active state */
--	iowrite32(WDKEY_SEQ1 | WDEN, wdt_base + WDTCR);
-+	iowrite32(WDKEY_SEQ1 | WDEN, davinci_wdt->base + WDTCR);
+@@ -117,6 +117,33 @@ static int davinci_wdt_ping(struct watchdog_device *wdd)
  	return 0;
  }
  
- static int davinci_wdt_ping(struct watchdog_device *wdd)
- {
++static unsigned int davinci_wdt_get_timeleft(struct watchdog_device *wdd)
++{
++	u64 timer_counter;
++	unsigned long freq;
++	u32 val;
 +	struct davinci_wdt_device *davinci_wdt = watchdog_get_drvdata(wdd);
 +
- 	/* put watchdog in service state */
--	iowrite32(WDKEY_SEQ0, wdt_base + WDTCR);
-+	iowrite32(WDKEY_SEQ0, davinci_wdt->base + WDTCR);
- 	/* put watchdog in active state */
--	iowrite32(WDKEY_SEQ1, wdt_base + WDTCR);
-+	iowrite32(WDKEY_SEQ1, davinci_wdt->base + WDTCR);
- 	return 0;
- }
- 
-@@ -123,14 +135,21 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct resource  *wdt_mem;
- 	struct watchdog_device *wdd;
-+	struct davinci_wdt_device *davinci_wdt;
++	/* if timeout is occured then return 0 */
++	val = ioread32(davinci_wdt->base + WDTCR);
++	if (val & WDFLAG)
++		return 0;
 +
-+	davinci_wdt = devm_kzalloc(dev, sizeof(*davinci_wdt), GFP_KERNEL);
-+	if (!davinci_wdt)
-+		return -ENOMEM;
- 
--	wdt_clk = devm_clk_get(dev, NULL);
--	if (WARN_ON(IS_ERR(wdt_clk)))
--		return PTR_ERR(wdt_clk);
-+	davinci_wdt->clk = devm_clk_get(dev, NULL);
-+	if (WARN_ON(IS_ERR(davinci_wdt->clk)))
-+		return PTR_ERR(davinci_wdt->clk);
- 
--	clk_prepare_enable(wdt_clk);
-+	clk_prepare_enable(davinci_wdt->clk);
- 
--	wdd			= &wdt_wdd;
-+	platform_set_drvdata(pdev, davinci_wdt);
++	freq = clk_get_rate(davinci_wdt->clk);
 +
-+	wdd			= &davinci_wdt->wdd;
- 	wdd->info		= &davinci_wdt_info;
- 	wdd->ops		= &davinci_wdt_ops;
- 	wdd->min_timeout 	= 1;
-@@ -142,12 +161,13 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 
- 	dev_info(dev, "heartbeat %d sec\n", wdd->timeout);
- 
-+	watchdog_set_drvdata(wdd, davinci_wdt);
- 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 
- 	wdt_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	wdt_base = devm_ioremap_resource(dev, wdt_mem);
--	if (IS_ERR(wdt_base))
--		return PTR_ERR(wdt_base);
-+	davinci_wdt->base = devm_ioremap_resource(dev, wdt_mem);
-+	if (IS_ERR(davinci_wdt->base))
-+		return PTR_ERR(davinci_wdt->base);
- 
- 	ret = watchdog_register_device(wdd);
- 	if (ret < 0)
-@@ -158,8 +178,10 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 
- static int davinci_wdt_remove(struct platform_device *pdev)
- {
--	watchdog_unregister_device(&wdt_wdd);
--	clk_disable_unprepare(wdt_clk);
-+	struct davinci_wdt_device *davinci_wdt = platform_get_drvdata(pdev);
++	if (!freq) {
++		dev_err(wdd->dev, "clock freq is not set\n");
++		return 0;
++	}
 +
-+	watchdog_unregister_device(&davinci_wdt->wdd);
-+	clk_disable_unprepare(davinci_wdt->clk);
++	timer_counter = ioread32(davinci_wdt->base + TIM12);
++	timer_counter |= ((u64)ioread32(davinci_wdt->base + TIM34) << 32);
++
++	do_div(timer_counter, freq);
++
++	return wdd->timeout - timer_counter;
++}
++
+ static const struct watchdog_info davinci_wdt_info = {
+ 	.options = WDIOF_KEEPALIVEPING,
+ 	.identity = "DaVinci Watchdog",
+@@ -127,6 +154,7 @@ static const struct watchdog_ops davinci_wdt_ops = {
+ 	.start		= davinci_wdt_start,
+ 	.stop		= davinci_wdt_ping,
+ 	.ping		= davinci_wdt_ping,
++	.get_timeleft	= davinci_wdt_get_timeleft,
+ };
  
- 	return 0;
- }
+ static int davinci_wdt_probe(struct platform_device *pdev)
 -- 
 1.7.9.5
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
