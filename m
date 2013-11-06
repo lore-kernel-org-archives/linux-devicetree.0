@@ -1,79 +1,305 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] gpio: davinci: Fixed a check for unbanked gpio
-Date: Wed, 6 Nov 2013 17:12:47 +0530
-Message-ID: <527A2B37.4040308@ti.com>
-References: <1383406775-14902-1-git-send-email-prabhakar.csenng@gmail.com>
-	<1383406775-14902-2-git-send-email-prabhakar.csenng@gmail.com>
-	<CACRpkdZ7pwGQnK0NN4tybLUNdMxu5WVaGX8Dqu+kMgVBuyF16w@mail.gmail.com>
-	<CA+V-a8tE3bxsHMSh2i3Xeq=kJUjmxTjcU25Kuka5e_iXeB--pQ@mail.gmail.com>
-	<CACRpkdbLTopHMaog7FDW7O4-yLyv+mmnvgkNuXgeQR-pEtbz6Q@mail.gmail.com>
-	<CA+V-a8tZTm9bh+arQ+uFyTVHxfdf07bWaM_Sdqo08TO=UCMMUg@mail.gmail.com>
-	<527A1EC7.20400@ti.com> <527A28EF.9070601@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT core
+Date: Wed, 6 Nov 2013 13:31:08 +0200
+Message-ID: <527A287C.2090401@ti.com>
+References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <527A28EF.9070601-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383680783-12114-2-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
+To reduce code duplicate and increase code readability use WDT core
+code to handle WDT interface.
 
-On Wednesday 06 November 2013 05:03 PM, Grygorii Strashko wrote:
-> Hi Sekhar, Linus,
-> 
-> On 11/06/2013 12:49 PM, Sekhar Nori wrote:
->> On Wednesday 06 November 2013 03:45 PM, Prabhakar Lad wrote:
->>> Hi Linus,
->>>
->>> On Wed, Nov 6, 2013 at 3:26 PM, Linus Walleij
->>> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> On Wed, Nov 6, 2013 at 10:33 AM, Prabhakar Lad
->>>> <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> On Tue, Nov 5, 2013 at 6:09 PM, Linus Walleij
->>>>> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Sat, Nov 2, 2013 at 4:39 PM, Lad, Prabhakar
->>>>>> <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>>
->>>>>>> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>>
->>>>>>> This patch fixes the check for the offset in
->>>>>>> gpio_to_irq_unbanked() function.
->>>>>>>
->>>>>>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>
->>>>>> Is this a regression that should go in right now?
->>>>>>
->>>>> Yes it needs too.
->>>>
->>>> But on top of *what* exactly?
->>>>
->>>> This does not apply to my gpio tree devel branch and
->>>> not even on the mainline kernel.
->>>>
->>> Looks like this needs to go via ARM tree as the earlier
->>> patches have  gone via ARM tree itself [1].
->>> If you can ACK it Sekhar can get it in via ARM tree.
->>
->> The dependent patches are all in linux-next through ARM SoC queued for
->> v3.13 merge. This fix can either be sent late in merge cycle once Linus
->> has pulled ARM SoC or after v3.13-rc1 comes out.
-> 
-> Pls, wait a bit - this fix is incomplete :( The below changes have to be
-> done too:
+Remove io_lock as the WDT core uses mutex to lock each wdt device.
+Remove wdt_state as the WDT core track state with its own variable.
 
-Can either you or Prabhakar send a separate patch (series) with only the
-fixes?
+The watchdog_init_timeout() can read timeout value from timeout-sec
+property if the passed value is out of bounds. So set initial
+heartbeat value more than max value in order to initialize heartbeat
+in next way. If heartbeat is not set thought module parameter, try
+to read it's value from WDT node timeout-sec property. If node has
+no one, use default value.
 
-Thanks,
-Sekhar
+The heartbeat is hold in wdd->timeout by WDT core, so use it in
+order to set timeout period.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+---
+ drivers/watchdog/Kconfig       |    1 +
+ drivers/watchdog/davinci_wdt.c |  150 ++++++++++------------------------------
+ 2 files changed, 38 insertions(+), 113 deletions(-)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index d1d53f3..2c954b5 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -271,6 +271,7 @@ config IOP_WATCHDOG
+ config DAVINCI_WATCHDOG
+ 	tristate "DaVinci watchdog"
+ 	depends on ARCH_DAVINCI
++	select WATCHDOG_CORE
+ 	help
+ 	  Say Y here if to include support for the watchdog timer
+ 	  in the DaVinci DM644x/DM646x processors.
+diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
+index bead774..a6eef71 100644
+--- a/drivers/watchdog/davinci_wdt.c
++++ b/drivers/watchdog/davinci_wdt.c
+@@ -3,7 +3,7 @@
+  *
+  * Watchdog driver for DaVinci DM644x/DM646x processors
+  *
+- * Copyright (C) 2006 Texas Instruments.
++ * Copyright (C) 2013 Texas Instruments.
+  *
+  * 2007 (c) MontaVista Software, Inc. This file is licensed under
+  * the terms of the GNU General Public License version 2. This program
+@@ -15,18 +15,12 @@
+ #include <linux/moduleparam.h>
+ #include <linux/types.h>
+ #include <linux/kernel.h>
+-#include <linux/fs.h>
+-#include <linux/miscdevice.h>
+ #include <linux/watchdog.h>
+ #include <linux/init.h>
+-#include <linux/bitops.h>
+ #include <linux/platform_device.h>
+-#include <linux/spinlock.h>
+-#include <linux/uaccess.h>
+ #include <linux/io.h>
+ #include <linux/device.h>
+ #include <linux/clk.h>
+-#include <linux/slab.h>
+ #include <linux/err.h>
+ 
+ #define MODULE_NAME "DAVINCI-WDT: "
+@@ -61,31 +55,13 @@
+ #define WDKEY_SEQ0		(0xa5c6 << 16)
+ #define WDKEY_SEQ1		(0xda7e << 16)
+ 
+-static int heartbeat = DEFAULT_HEARTBEAT;
+-
+-static DEFINE_SPINLOCK(io_lock);
+-static unsigned long wdt_status;
+-#define WDT_IN_USE        0
+-#define WDT_OK_TO_CLOSE   1
+-#define WDT_REGION_INITED 2
+-#define WDT_DEVICE_INITED 3
+-
++static int heartbeat = MAX_HEARTBEAT + 1;
+ static void __iomem	*wdt_base;
+ struct clk		*wdt_clk;
++static struct watchdog_device	wdt_wdd;
+ 
+-static void wdt_service(void)
+-{
+-	spin_lock(&io_lock);
+-
+-	/* put watchdog in service state */
+-	iowrite32(WDKEY_SEQ0, wdt_base + WDTCR);
+-	/* put watchdog in active state */
+-	iowrite32(WDKEY_SEQ1, wdt_base + WDTCR);
+-
+-	spin_unlock(&io_lock);
+-}
+-
+-static void wdt_enable(void)
++/* davinci_wdt_start - enable watchdog */
++static int davinci_wdt_start(struct watchdog_device *wdd)
+ {
+ 	u32 tgcr;
+ 	u32 timer_margin;
+@@ -93,8 +69,6 @@ static void wdt_enable(void)
+ 
+ 	wdt_freq = clk_get_rate(wdt_clk);
+ 
+-	spin_lock(&io_lock);
+-
+ 	/* disable, internal clock source */
+ 	iowrite32(0, wdt_base + TCR);
+ 	/* reset timer, set mode to 64-bit watchdog, and unreset */
+@@ -105,9 +79,9 @@ static void wdt_enable(void)
+ 	iowrite32(0, wdt_base + TIM12);
+ 	iowrite32(0, wdt_base + TIM34);
+ 	/* set timeout period */
+-	timer_margin = (((u64)heartbeat * wdt_freq) & 0xffffffff);
++	timer_margin = (((u64)wdd->timeout * wdt_freq) & 0xffffffff);
+ 	iowrite32(timer_margin, wdt_base + PRD12);
+-	timer_margin = (((u64)heartbeat * wdt_freq) >> 32);
++	timer_margin = (((u64)wdd->timeout * wdt_freq) >> 32);
+ 	iowrite32(timer_margin, wdt_base + PRD34);
+ 	/* enable run continuously */
+ 	iowrite32(ENAMODE12_PERIODIC, wdt_base + TCR);
+@@ -119,84 +93,28 @@ static void wdt_enable(void)
+ 	iowrite32(WDKEY_SEQ0 | WDEN, wdt_base + WDTCR);
+ 	/* put watchdog in active state */
+ 	iowrite32(WDKEY_SEQ1 | WDEN, wdt_base + WDTCR);
+-
+-	spin_unlock(&io_lock);
+-}
+-
+-static int davinci_wdt_open(struct inode *inode, struct file *file)
+-{
+-	if (test_and_set_bit(WDT_IN_USE, &wdt_status))
+-		return -EBUSY;
+-
+-	wdt_enable();
+-
+-	return nonseekable_open(inode, file);
++	return 0;
+ }
+ 
+-static ssize_t
+-davinci_wdt_write(struct file *file, const char *data, size_t len,
+-		  loff_t *ppos)
++static int davinci_wdt_ping(struct watchdog_device *wdd)
+ {
+-	if (len)
+-		wdt_service();
+-
+-	return len;
++	/* put watchdog in service state */
++	iowrite32(WDKEY_SEQ0, wdt_base + WDTCR);
++	/* put watchdog in active state */
++	iowrite32(WDKEY_SEQ1, wdt_base + WDTCR);
++	return 0;
+ }
+ 
+-static const struct watchdog_info ident = {
++static const struct watchdog_info davinci_wdt_info = {
+ 	.options = WDIOF_KEEPALIVEPING,
+ 	.identity = "DaVinci Watchdog",
+ };
+ 
+-static long davinci_wdt_ioctl(struct file *file,
+-					unsigned int cmd, unsigned long arg)
+-{
+-	int ret = -ENOTTY;
+-
+-	switch (cmd) {
+-	case WDIOC_GETSUPPORT:
+-		ret = copy_to_user((struct watchdog_info *)arg, &ident,
+-				   sizeof(ident)) ? -EFAULT : 0;
+-		break;
+-
+-	case WDIOC_GETSTATUS:
+-	case WDIOC_GETBOOTSTATUS:
+-		ret = put_user(0, (int *)arg);
+-		break;
+-
+-	case WDIOC_KEEPALIVE:
+-		wdt_service();
+-		ret = 0;
+-		break;
+-
+-	case WDIOC_GETTIMEOUT:
+-		ret = put_user(heartbeat, (int *)arg);
+-		break;
+-	}
+-	return ret;
+-}
+-
+-static int davinci_wdt_release(struct inode *inode, struct file *file)
+-{
+-	wdt_service();
+-	clear_bit(WDT_IN_USE, &wdt_status);
+-
+-	return 0;
+-}
+-
+-static const struct file_operations davinci_wdt_fops = {
+-	.owner = THIS_MODULE,
+-	.llseek = no_llseek,
+-	.write = davinci_wdt_write,
+-	.unlocked_ioctl = davinci_wdt_ioctl,
+-	.open = davinci_wdt_open,
+-	.release = davinci_wdt_release,
+-};
+-
+-static struct miscdevice davinci_wdt_miscdev = {
+-	.minor = WATCHDOG_MINOR,
+-	.name = "watchdog",
+-	.fops = &davinci_wdt_fops,
++static const struct watchdog_ops davinci_wdt_ops = {
++	.owner		= THIS_MODULE,
++	.start		= davinci_wdt_start,
++	.stop		= davinci_wdt_ping,
++	.ping		= davinci_wdt_ping,
+ };
+ 
+ static int davinci_wdt_probe(struct platform_device *pdev)
+@@ -204,6 +122,7 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource  *wdt_mem;
++	struct watchdog_device *wdd;
+ 
+ 	wdt_clk = devm_clk_get(dev, NULL);
+ 	if (WARN_ON(IS_ERR(wdt_clk)))
+@@ -211,29 +130,35 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+ 
+ 	clk_prepare_enable(wdt_clk);
+ 
+-	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+-		heartbeat = DEFAULT_HEARTBEAT;
++	wdd			= &wdt_wdd;
++	wdd->info		= &davinci_wdt_info;
++	wdd->ops		= &davinci_wdt_ops;
++	wdd->min_timeout 	= 1;
++	wdd->max_timeout 	= MAX_HEARTBEAT;
++	wdd->timeout		= DEFAULT_HEARTBEAT;
++
++	if (heartbeat)
++		watchdog_init_timeout(wdd, heartbeat, dev);
++
++	dev_info(dev, "heartbeat %d sec\n", wdd->timeout);
+ 
+-	dev_info(dev, "heartbeat %d sec\n", heartbeat);
++	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+ 
+ 	wdt_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	wdt_base = devm_ioremap_resource(dev, wdt_mem);
+ 	if (IS_ERR(wdt_base))
+ 		return PTR_ERR(wdt_base);
+ 
+-	ret = misc_register(&davinci_wdt_miscdev);
+-	if (ret < 0) {
+-		dev_err(dev, "cannot register misc device\n");
+-	} else {
+-		set_bit(WDT_DEVICE_INITED, &wdt_status);
+-	}
++	ret = watchdog_register_device(wdd);
++	if (ret < 0)
++		dev_err(dev, "cannot register watchdog device\n");
+ 
+ 	return ret;
+ }
+ 
+ static int davinci_wdt_remove(struct platform_device *pdev)
+ {
+-	misc_deregister(&davinci_wdt_miscdev);
++	watchdog_unregister_device(&wdt_wdd);
+ 	clk_disable_unprepare(wdt_clk);
+ 
+ 	return 0;
+@@ -267,5 +192,4 @@ MODULE_PARM_DESC(heartbeat,
+ 		 __MODULE_STRING(DEFAULT_HEARTBEAT));
+ 
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
+ MODULE_ALIAS("platform:watchdog");
+-- 
+1.7.9.5
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
