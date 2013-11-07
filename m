@@ -1,139 +1,107 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 2/2] LEDS: tca6502: add device-tree support for GPIO configuration.
-Date: Thu, 7 Nov 2013 15:39:00 -0800
-Message-ID: <CAK5ve-LzYLr0xuvNA3MX=pECPPfAkDFqExPpmQt8GF+9jf5uHg@mail.gmail.com>
-References: <20131101134120.13a44225@notabene.brown>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 26/31] mtd: nand: pxa3xx: Introduce multiple page I/O
+ support
+Date: Thu, 7 Nov 2013 20:45:00 -0300
+Message-ID: <20131107234459.GB2467@localhost>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1383837455-30721-27-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20131101134120.13a44225@notabene.brown>
-Sender: linux-leds-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383837455-30721-27-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2013 at 7:41 PM, NeilBrown <neilb@suse.de> wrote:
->
+Hello,
 
-[PATCH 2/2] LEDS: tca6502: add device-tree support for GPIO configuration.
+I have a concern about the ECC mode and strength determination.
 
-I think it should be tca6507, right? Typo?
-
-For other parts of this patch, I'm OK for them.
-
-And just a quick scan of the leds-tca6507, I found bunch of typos in
-the comments:
-
-* An led-tca6507 device must be provided with platform data.  This data
- * lists for each output: the name, default trigger, and whether the signal
- * is being used as a GPiO rather than an led.  'struct led_plaform_data'
-
-Can we unify to use GPIO and gpio?
-
- * is used for this.  If 'name' is NULL, the output isn't used.  If 'flags'
- * is TCA6507_MAKE_CPIO, the output is a GPO.
-
-Here should be TCA6507_MAKE_GPIO and GPIO instead of GPO
-
- * The "struct led_platform_data" can be embedded in a
- * "struct tca6507_platform_data" which adds a 'gpio_base' for the GPiOs,
- * and a 'setup' callback which is called once the GPiOs are available.
-
-Don't use GPiO, please.
-
-Could you please review the code again and submit a cleanup patch to
-fix those typos?
-
-Thanks,
--Bryan
-
-
-> The 7 lines driven by the TCA6507 can either drive LEDs or act as output-only
-> GPIOs.
->
-> To make this distinction in devicetree we use the "compatible" property.
->
-> If the device attached to a line is "compatible" with "gpio", we treat it
-> like a GPIO.  If it is "compatible" with "led" (or if no "compatible" value
-> is set) we treat it like an LED.
->
-> Signed-off-by: NeilBrown <neilb@suse.de>
->
-> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
-> index 80ff3dfb1f32..d7221b84987c 100644
-> --- a/Documentation/devicetree/bindings/leds/tca6507.txt
-> +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
-> @@ -2,6 +2,13 @@ LEDs connected to tca6507
->
->  Required properties:
->  - compatible : should be : "ti,tca6507".
-> +- #address-cells: must be 1
-> +- #size-cells: must be 0
-> +- reg: typically 0x45.
+On Thu, Nov 07, 2013 at 12:17:30PM -0300, Ezequiel Garcia wrote:
+[..]
+> @@ -1152,7 +1289,28 @@ static int armada370_ecc_init(struct pxa3xx_na=
+nd_info *info,
+>  			      struct nand_ecc_ctrl *ecc,
+>  			      int strength, int page_size)
+>  {
+> -	/* Unimplemented yet */
+> +	if (strength =3D=3D 4 && page_size =3D=3D 4096) {
+> +		info->ecc_bch =3D 1;
+> +		info->chunk_size =3D 2048;
+> +		info->spare_size =3D 32;
+> +		info->ecc_size =3D 32;
+> +		ecc->mode =3D NAND_ECC_HW;
+> +		ecc->size =3D info->chunk_size;
+> +		ecc->layout =3D &ecc_layout_4KB_bch4bit;
+> +		ecc->strength =3D 16;
+> +		return 1;
 > +
-> +Optional properties:
-> +- gpio-controller: allows lines to be used as output-only GPIOs.
-> +- #gpio-cells: if present, must be 0.
->
->  Each led is represented as a sub-node of the ti,tca6507 device.
->
-> @@ -10,6 +17,7 @@ LED sub-node properties:
->  - reg : number of LED line (could be from 0 to 6)
->  - linux,default-trigger : (optional)
->     see Documentation/devicetree/bindings/leds/common.txt
-> +- compatible: either "led" (the default) or "gpio".
->
->  Examples:
->
-> @@ -19,6 +27,9 @@ tca6507@45 {
->         #size-cells = <0>;
->         reg = <0x45>;
->
-> +       gpio-controller;
-> +       #gpio-cells = <2>;
-> +
->         led0: red-aux@0 {
->                 label = "red:aux";
->                 reg = <0x0>;
-> @@ -29,5 +40,10 @@ tca6507@45 {
->                 reg = <0x5>;
->                 linux,default-trigger = "default-on";
->         };
-> +
-> +       wifi-reset@6 {
-> +               reg = <0x6>;
-> +               compatible = "gpio";
-> +       };
->  };
->
-> diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
-> index f5063f447463..93a2b1759054 100644
-> --- a/drivers/leds/leds-tca6507.c
-> +++ b/drivers/leds/leds-tca6507.c
-> @@ -638,6 +638,9 @@ static int tca6507_probe_gpios(struct i2c_client *client,
->         tca->gpio.direction_output = tca6507_gpio_direction_output;
->         tca->gpio.set = tca6507_gpio_set_value;
->         tca->gpio.dev = &client->dev;
-> +#ifdef CONFIG_OF_GPIO
-> +       tca->gpio.of_node = of_node_get(client->dev.of_node);
-> +#endif
->         err = gpiochip_add(&tca->gpio);
->         if (err) {
->                 tca->gpio.ngpio = 0;
-> @@ -696,6 +699,8 @@ tca6507_led_dt_init(struct i2c_client *client)
->                 led.default_trigger =
->                         of_get_property(child, "linux,default-trigger", NULL);
->                 led.flags = 0;
-> +               if (of_property_match_string(child, "compatible", "gpio") >= 0)
-> +                       led.flags |= TCA6507_MAKE_GPIO;
->                 ret = of_property_read_u32(child, "reg", &reg);
->                 if (ret != 0 || reg < 0 || reg >= NUM_LEDS)
->                         continue;
-> @@ -709,6 +714,7 @@ tca6507_led_dt_init(struct i2c_client *client)
->
->         pdata->leds.leds = tca_leds;
->         pdata->leds.num_leds = NUM_LEDS;
-> +       pdata->gpio_base = -1;
->
->         return pdata;
+> +	} else if (strength =3D=3D 8 && page_size =3D=3D 4096) {
+> +		info->ecc_bch =3D 1;
+> +		info->chunk_size =3D 1024;
+> +		info->spare_size =3D 0;
+> +		info->ecc_size =3D 32;
+> +		ecc->mode =3D NAND_ECC_HW;
+> +		ecc->size =3D info->chunk_size;
+> +		ecc->layout =3D &ecc_layout_4KB_bch8bit;
+> +		ecc->strength =3D 16;
+> +		return 1;
+> +	}
+>  	return 0;
 >  }
+> =20
+
+The above shows I tried to be very careful (aka paranoid) in the ECC
+mode determination. Please note that what I call "ECC mode", is
+determined by the chunk->size value only.
+
+As the included documentation explains this controller supports two
+different BCH ECC strength: 16-over-1024, or 16-over-2048. Setting the =
+chunk
+size to either 1024 or 2048 is what determines which of the above will
+actually take effect.
+
+In past mails, we've refered to these two as BCH4 or BCH8, but this is =
+not
+really accurate (as Brian has pointed out) so I droped that terms in
+favor of the real thing: 16 correctable bits over 1024 data bytes, or
+16 correctable bits over 2048 data bytes.
+
+In turn, such BCH mode setting affects heavily the page layout, because
+after each transfered chunk (which is either 1024+spare or 2048+spare)
+the controller reads and writes a 30B ECC region.
+
+In other words, the kernel cannot arbitrarily change this setting, or
+the image won't be readable/writeable any longer.
+
+=46or this reason, I'm starting to think the above method of picking
+the "ECC mode" based solely on the page size or the strength is slightl=
+y
+fragile (future developers might come and "improve" the driver breaking
+images).
+
+Besides: what if a user wants the kernel to use a "higher" than
+required strength?
+
+In conclusion: I'm starting to think a better (and long-term safer)
+approach is to set the ECC mode in the DT. I know this sucks, but from
+my point of view the flash device contains an image that "must" be
+read/write with a given ECC mode, and this ECC mode is by no means
+discoverable.
+
+Now, let's suppose we want to set this in the DT: what property
+would we use? "marvell,nand-ecc-opt =3D 16-2048"? (a bit odd, no?).
+
+What do you think?
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
