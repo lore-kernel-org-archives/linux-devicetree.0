@@ -1,63 +1,77 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] thermal: exynos: handle gate clock for misplaced TRIMINFO
- register
-Date: Thu, 07 Nov 2013 15:18:57 +0100
-Message-ID: <1695605.pk9l7dqkqm@amdc1227>
-References: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: l2x0: add prefetch and power ctrl registers
+ configuration support
+Date: Thu, 7 Nov 2013 15:16:43 +0100
+Message-ID: <20131107141643.GB4440@lunn.ch>
+References: <1383800872-7982-1-git-send-email-jszhang@marvell.com>
+ <527B8BB4.3050200@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <527B8BB4.3050200@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Naveen,
-
-On Thursday 07 of November 2013 18:12:34 Naveen Krishna Chatradhi wrote:
-> On Exynos5420 the TMU(4) for GPU has a seperate clock enable bit from
-> the other TMU channels(0 ~ 3). Hence, accessing TRIMINFO for base_second
-> should be acompanied by enabling the respective clock.
+On Thu, Nov 07, 2013 at 01:46:44PM +0100, Sebastian Hesselbarth wrote:
+> On 11/07/13 06:07, Jisheng Zhang wrote:
+> >PL310 supports Prefetch offset/control register from r2p0 and Power
+> >control register from r3p0. This patch adds the support to configure
+> >these two registers if there are. The dt binding document is also updated.
+> >
+> >Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> >---
+> >  Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+> >  arch/arm/mm/cache-l2x0.c                       | 19 +++++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> >
+> >diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> >index c0c7626..32cd08c 100644
+> >--- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> >+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> >@@ -39,6 +39,10 @@ Optional properties:
+> >  - arm,filter-ranges : <start length> Starting address and length of window to
+> >    filter. Addresses in the filter window are directed to the M1 port. Other
+> >    addresses will go to the M0 port.
+> >+- arm,prefetch-ctrl : The value for Prefetch Offset/Control Register if there
+> >+  is. This is a single cell.
+> >+- arm,pwr-ctrl : The value for Power Control Register if there is. This is a
+> >+  single cell.
 > 
-> This patch which allow for a "clk_sec" clock to be specified in the
-> device-tree which will be ungated when accessing the TRIMINFO register.
+> Jisheng,
 > 
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> ---
->  drivers/thermal/samsung/exynos_tmu.c |   24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> I did some research over L2x0/L310 aux-ctrl registers and possible
+> properties for them. Both properties introduced here, just allow you
+> to put in a magic number, while IMHO properties should better reflect
+> the actual function rather than hard-coded values.
+> 
+> A quick look at L310 TRM for Power Control Register gives:
+> 
+> Bit 1: dynamic_clk_gating_en (1=enabled, 0=masked)
+> Bit 0: standby mode en (1=enabled, 0=masked)
+> 
+> So, properties should one of:
+> 
+> (a) arm,dynamic-clock-gating = <0/1>
+>     arm,standby-mode = <0/1>
+> (b) arm,dynamic-clock-gating-enable/-disable;
+>     arm,standby-mode-enable/-disable
+> 
+> If we want to have set/clear/don't touch behavior, I'd prefer (a) as
+> it is easier to deal with in code. Moreover, -enable/-disable of (b)
+> may not always fit the property name, so there will also be
+> arm,no-feature-foo or arm,force-feature-bar.
 
-This patch modifies the device binding, but fails to mention anything
-about the modification in respective documentation. Please do not do that.
+Hi Sebastian
 
-In addition, since the series adding support for Exynos 5420 has not been
-merged yet, I would rather make this patch a part of that series.
+There have been some comments about properties with Boolean
+values. Rather than having a Boolean, you simply don't list the
+property.
 
-Also please see my comment below.
+What you have here is slightly different, since you have
+set/clear/don't touch. How to represent this should be decided once by
+the DT folks, and used consistently in all bindings.
 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index b54825a..33edd1a 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-[snip]
-> @@ -641,6 +650,15 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
-> +	if (!IS_ERR(data->clk_sec)) {
-
-This code does not check if the clock was specified for TMU channels that
-require it, i.e. the driver will not fail if you don't specify this clock.
-
-Instead, it would be better create a separate compatible value for such
-channels, like "samsung,exynos5420-tmu-broken-triminfo", for which this
-clock would be mandatory and for which, if this clock is not specified,
-the driver would fail.
-
-Best regards,
-Tomasz
-
+    Andrew
