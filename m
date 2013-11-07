@@ -1,198 +1,52 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 1/6] ARM: hi3xxx: add board support with device tree
-Date: Thu, 07 Nov 2013 03:50:30 -0600
-Message-ID: <527B6266.9020107@gmail.com>
-References: <1383813691-31587-1-git-send-email-haojian.zhuang@linaro.org> <1383813691-31587-2-git-send-email-haojian.zhuang@linaro.org>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
+Date: Thu, 7 Nov 2013 19:11:39 +0900
+Message-ID: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383813691-31587-2-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Just a set of small fixes to address the concerns expressed on v9 with the
+non-prefixed version DT properties. I hope there won't be a need for an
+eleventh (!) version. :P
 
-On 11/7/13 2:41 AM, Haojian Zhuang wrote:
-> Add board support with device tree for Hisilicon Hi3620 SoC platform.
->
-> Changelog:
-> v11:
-> 1. Add comments for iotable.
->
-> v10:
-> 1. Add .map_io() & debug_ll_io_init() back. Since debug_ll_io_init() is
-> only called if .map_io() isn't assigned. Use .map_io() to setup static
-> IO mapping that is used in clock driver.
->
-> v3:
-> 1. Remove .map_io() in DT machine descriptor. Since debug_ll_io_init()
-> is called by default.
-> 2. Remove .init_machine() in DT machine descriptor. Since
-> of_platform_populate() is called by default in DT mode.
->
-> v2:
-> 1. Remove .init_irq() in DT machine descriptor. Since irqchip_init()
-> is called by default in DT mode.
->
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/arm/hisilicon/hisilicon.txt           | 10 ++++
->  arch/arm/Kconfig                                   |  2 +
->  arch/arm/Makefile                                  |  1 +
->  arch/arm/mach-hi3xxx/Kconfig                       | 12 +++++
->  arch/arm/mach-hi3xxx/Makefile                      |  5 ++
->  arch/arm/mach-hi3xxx/hi3xxx.c                      | 60 ++++++++++++++++++++++
->  6 files changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->  create mode 100644 arch/arm/mach-hi3xxx/Kconfig
->  create mode 100644 arch/arm/mach-hi3xxx/Makefile
->  create mode 100644 arch/arm/mach-hi3xxx/hi3xxx.c
->
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> new file mode 100644
-> index 0000000..3be60c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> @@ -0,0 +1,10 @@
-> +Hisilicon Platforms Device Tree Bindings
-> +----------------------------------------------------
-> +
-> +Hi3716 Development Board
-> +Required root node properties:
-> +	- compatible = "hisilicon,hi3716-dkb";
-> +
-> +Hi4511 Board
-> +Required root node properties:
-> +	- compatible = "hisilicon,hi3620-hi4511";
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 3f7714d..0118443 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -946,6 +946,8 @@ source "arch/arm/mach-footbridge/Kconfig"
->  
->  source "arch/arm/mach-gemini/Kconfig"
->  
-> +source "arch/arm/mach-hi3xxx/Kconfig"
-> +
->  source "arch/arm/mach-highbank/Kconfig"
->  
->  source "arch/arm/mach-integrator/Kconfig"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index a37a50f..23fb0b0 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -155,6 +155,7 @@ machine-$(CONFIG_ARCH_EBSA110)		+= ebsa110
->  machine-$(CONFIG_ARCH_EP93XX)		+= ep93xx
->  machine-$(CONFIG_ARCH_EXYNOS)		+= exynos
->  machine-$(CONFIG_ARCH_GEMINI)		+= gemini
-> +machine-$(CONFIG_ARCH_HI3xxx)		+= hi3xxx
->  machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
->  machine-$(CONFIG_ARCH_INTEGRATOR)	+= integrator
->  machine-$(CONFIG_ARCH_IOP13XX)		+= iop13xx
-> diff --git a/arch/arm/mach-hi3xxx/Kconfig b/arch/arm/mach-hi3xxx/Kconfig
-> new file mode 100644
-> index 0000000..68bd26c
-> --- /dev/null
-> +++ b/arch/arm/mach-hi3xxx/Kconfig
-> @@ -0,0 +1,12 @@
-> +config ARCH_HI3xxx
-> +	bool "Hisilicon Hi36xx/Hi37xx family" if ARCH_MULTI_V7
-> +	select ARM_AMBA
-> +	select ARM_GIC
-> +	select ARM_TIMER_SP804
-> +	select CACHE_L2X0
-> +	select CLKSRC_OF
-I think you need COMMON_CLK here.
-> +	select GENERIC_CLOCKEVENTS
-> +	select PINCTRL
-> +	select PINCTRL_SINGLE
-> +	help
-> +	  Support for Hisilicon Hi36xx/Hi37xx processor family
-> diff --git a/arch/arm/mach-hi3xxx/Makefile b/arch/arm/mach-hi3xxx/Makefile
-> new file mode 100644
-> index 0000000..d68ebb3
-> --- /dev/null
-> +++ b/arch/arm/mach-hi3xxx/Makefile
-> @@ -0,0 +1,5 @@
-> +#
-> +# Makefile for Hisilicon Hi36xx/Hi37xx processors line
-> +#
-> +
-> +obj-y	+= hi3xxx.o
-> diff --git a/arch/arm/mach-hi3xxx/hi3xxx.c b/arch/arm/mach-hi3xxx/hi3xxx.c
-> new file mode 100644
-> index 0000000..925af13
-> --- /dev/null
-> +++ b/arch/arm/mach-hi3xxx/hi3xxx.c
-> @@ -0,0 +1,60 @@
-> +/*
-> + * (Hisilicon's Hi36xx/Hi37xx SoC based) flattened device tree enabled machine
-> + *
-> + * Copyright (c) 2012-2013 Hisilicon Ltd.
-> + * Copyright (c) 2012-2013 Linaro Ltd.
-> + *
-> + * Author: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/map.h>
-> +
-> +/*
-> + * This table is only for optimization. Since ioremap() could always share
-> + * the same mapping if it's defined as static IO mapping.
-> + *
-> + * Without this table, system could also work. The cost is some virtual address
-> + * spaces wasted since ioremap() may be called multi times for the same
-> + * IO space.
-> + */
-> +static struct map_desc hi3620_io_desc[] __initdata = {
-> +	{
-> +		.pfn		= __phys_to_pfn(0xfc802000),
-> +		.virtual	= 0xfe802000,
-> +		.length		= 0x1000,
-> +		.type		= MT_DEVICE,
-> +	},
-> +};
-> +
-> +static void __init hi3620_map_io(void)
-> +{
-> +	debug_ll_io_init();
-> +	iotable_init(hi3620_io_desc, ARRAY_SIZE(hi3620_io_desc));
-> +}
-> +
-> +static void __init hi3xxx_timer_init(void)
-> +{
-> +	of_clk_init(NULL);
-> +	clocksource_of_init();
-> +}
-Once you have COMMON_CLK, then this function can go away.
-> +
-> +static const char *hi3xxx_compat[] __initdata = {
-> +	"hisilicon,hi3620-hi4511",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
-> +	.map_io		= hi3620_map_io,
-> +	.init_time	= hi3xxx_timer_init,
-.init_time can go away if you have COMMON_CLK.
+Changelog from v9:
+- Renamed tl vendor prefix to tlm (for Trusted Logic Mobility)
+- Prefixed version properties with "tlm,"
+- Split the DT bindings patches as per new recommendations
 
-Dinh
-> +	.dt_compat	= hi3xxx_compat,
-> +MACHINE_END
+Alexandre Courbot (7):
+  ARM: add basic support for Trusted Foundations
+  of: add vendor prefix for Trusted Logic Mobility
+  of: add Trusted Foundations bindings
+  ARM: tegra: add support for Trusted Foundations
+  ARM: tegra: split setting of CPU reset handler
+  ARM: tegra: set CPU reset handler with firmware op
+  ARM: tegra: support Trusted Foundations by default
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../arm/firmware/tlm,trusted-foundations.txt       | 20 ++++++
+ Documentation/devicetree/bindings/arm/tegra.txt    |  5 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/Kconfig                                   |  2 +
+ arch/arm/Makefile                                  |  1 +
+ arch/arm/configs/tegra_defconfig                   |  1 +
+ arch/arm/firmware/Kconfig                          | 28 ++++++++
+ arch/arm/firmware/Makefile                         |  1 +
+ arch/arm/firmware/trusted_foundations.c            | 81 ++++++++++++++++++++++
+ arch/arm/include/asm/trusted_foundations.h         | 67 ++++++++++++++++++
+ arch/arm/mach-tegra/Kconfig                        |  1 +
+ arch/arm/mach-tegra/common.c                       |  2 +
+ arch/arm/mach-tegra/reset.c                        | 40 ++++++++---
+ 13 files changed, 239 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt
+ create mode 100644 arch/arm/firmware/Kconfig
+ create mode 100644 arch/arm/firmware/Makefile
+ create mode 100644 arch/arm/firmware/trusted_foundations.c
+ create mode 100644 arch/arm/include/asm/trusted_foundations.h
+
+-- 
+1.8.4.2
