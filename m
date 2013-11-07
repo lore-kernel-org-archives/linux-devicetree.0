@@ -1,55 +1,35 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: irq: Fix interrupt-map entry matching
-Date: Thu, 07 Nov 2013 12:32:25 +0100
-Message-ID: <1773667.KXPxL5WsyI@amdc1227>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
- <2177804.l4VGDTRFDu@amdc1227> <2713030.RoDxNQo0oz@amdc1227>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v5 3/5] dma: of: Add common xlate function for
+ matching by channel id
+Date: Thu, 7 Nov 2013 15:33:10 +0400
+Message-ID: <CAF0T0X5Qxa5yGVrL2U2DfAuXcYx23WObA2BArG74+ZBFbwKb6g@mail.gmail.com>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+	<1383290374-17484-4-git-send-email-a13xp0p0v88@gmail.com>
+	<201311010852.05709.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <2713030.RoDxNQo0oz@amdc1227>
+In-Reply-To: <201311010852.05709.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+2013/11/1 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Friday 01 November 2013, Alexander Popov wrote:
+>> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
+>> + * @dma_spec:        pointer to DMA specifier as found in the device tree
+>> + * @of_dma:  pointer to DMA controller data
+>
+> This seems rather clumsy, now that we have added the dma_get_slave_channel interface.
+> Can you try using that instead of dma_request_channel() now?
+>
 
-Could you pick this patch up? It fixes boot-up at least on several Exynos
-based platforms, which use interrupt-map nodes with #interrupt-cells
-higher than 1.
-
-Also please disregard patch 2/2, as your fix that has been merged seems
-to be fine.
+Thanks, Arnd.
+I'll return with the fixed version.
 
 Best regards,
-Tomasz
-
-On Tuesday 05 of November 2013 16:21:18 Tomasz Figa wrote:
-> This patch fixes interrupt-map entry matching code to properly match all
-> specifier cells with interrupt map entries.
-> 
-> Signed-off-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/of/irq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 0ed5ed4..717eed4 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -195,7 +195,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
->  			/* Compare specifiers */
->  			match = 1;
->  			for (i = 0; i < (addrsize + intsize); i++, imaplen--)
-> -				match = !((match_array[i] ^ *imap++) & imask[i]);
-> +				match &= !((match_array[i] ^ *imap++) & imask[i]);
->  
->  			pr_debug(" -> match=%d (imaplen=%d)\n", match, imaplen);
->  
-> 
-
+Alexander.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
