@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 30/31] ARM: mvebu: Enable NAND controller in Armada XP GP board
-Date: Thu,  7 Nov 2013 12:17:34 -0300
-Message-ID: <1383837455-30721-31-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v4 31/31] ARM: mvebu: Enable NAND controller in Armada 370 Mirabox
+Date: Thu,  7 Nov 2013 12:17:35 -0300
+Message-ID: <1383837455-30721-32-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1383837455-30721-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,24 +10,24 @@ To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kerne
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Armada XP GP board has a NAND flash, so enable it in the devicetree.
+The Armada 370 Mirabox has a NAND flash, so enable it in the devicetree
+and add the partitions as prepared in the factory images.
 
-In order to skip the driver's custom device detection and use only ONFI
-detection, the "marvell,keep-config" parameter is used.
-This is needed because we haven't support for setting the timings
-parameters yet and must rely in bootloader's.
+In order to skip the driver's custom device detection and use only
+ONFI detection, the "marvell,keep-config" parameter is used.
+This is needed because we have no support for setting the timings parameters yet.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-xp-gp.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/armada-370-mirabox.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 2298e4a..274e2ad 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -175,6 +175,14 @@
- 					spi-max-frequency = <108000000>;
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index 2471d9d..1e73017 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -139,6 +139,27 @@
+ 					reg = <0x25>;
  				};
  			};
 +
@@ -37,6 +37,19 @@ index 2298e4a..274e2ad 100644
 +				marvell,nand-keep-config;
 +				marvell,nand-enable-arbiter;
 +				nand-on-flash-bbt;
++
++				partition@0 {
++					label = "U-Boot";
++					reg = <0 0x400000>;
++				};
++				partition@400000 {
++					label = "Linux";
++					reg = <0x400000 0x400000>;
++				};
++				partition@800000 {
++					label = "Filesystem";
++					reg = <0x800000 0x3f800000>;
++				};
 +			};
  		};
  	};
