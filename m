@@ -1,83 +1,106 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH 1/1] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Thu, 7 Nov 2013 15:06:04 -0600
-Message-ID: <CANk1AXQSoZPpMFu3qWqHW9HurGA868RLTFei8cdxuS9wCnWTbg@mail.gmail.com>
-References: <1383778182-16941-1-git-send-email-delicious.quinoa@gmail.com>
-	<1383778182-16941-2-git-send-email-delicious.quinoa@gmail.com>
-	<20131106233427.GA6090@maple>
-	<527AD477.9080704@gmail.com>
+From: "Sherman Yin" <syin@broadcom.com>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Thu, 7 Nov 2013 14:01:26 -0800
+Message-ID: <527C0DB6.5060303@broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+ <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+ <201311050026.56321.heiko@sntech.de> <527835FE.2030102@wwwdotorg.org>
+ <5279A319.5060701@broadcom.com> <527A75A6.5010904@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <527AD477.9080704@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <527A75A6.5010904@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, =?ISO-8859-1?Q?Heiko_St=FCb?= =?ISO-8859-1?Q?ner?= <heiko@sntech.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2013 at 5:44 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
->>> +struct dwapb_gpio {
->>> +       struct  device          *dev;
->>> +       void __iomem            *regs;
->>> +       struct dwapb_gpio_port  *ports;
->>> +       unsigned int            nr_ports;
->>> +       struct irq_domain       *domain;
->>> +       int                     hwirq;
+On 13-11-06 09:00 AM, Stephen Warren wrote:
+> You probably don't want to reference the individual xxx1/2/3 nodes in
+> the client pinctrl properties, but instead wrap them in a higher-level
+> node that represents the whole pinctrl state. Then, the client pinctrl
+> properties can reference just that single parent node, instead of many
+> small nodes. In other words:
+>
+> pinctrl@... {
+> 	...
+> 	sx: state_xxx {
+> 		xxx1 { ... };
+> 		xxx2 { ... };
+> 		xxx3 { ... };
+> 	};
+> 	sy: state_yyy {
+> 		yyy1 { ... };
+> 		yyy2 { ... };
+> 	};
+> }
+>
+> some_client@... {
+> 	...
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&sx>;
+> };
+>
+> other_client@... {
+> 	...
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&sy>;
+> };
+>
+> rather than:
+>
+> pinctrl@... {
+> 	...
+> 	sx1: xxx1 { ... };
+> 	sx2: xxx2 { ... };
+> 	sx3: xxx3 { ... };
+> 	sy1: yyy1 { ... };
+> 	sy2: yyy2 { ... };
+> }
+>
+> some_client@... {
+> 	...
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&sx1 &sx2 &sx3>;
+> };
+>
+> other_client@... {
+> 	...
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&sy1 &sy2>;
+> };
+>
+> This is exactly how the Tegra pinctrl bindings work for example.
+
+Ok, right, I mistakenly thought the "xxx1" nodes are pin config nodes. 
+Actually that's the way my original driver works as well, other than the 
+fact that I don't have as many "xxx1" type nodes as decribed in the 
+"xxx" node below.
+
+>> This works fine.  However, I'm just thinking that
+>> it would have been easier if we could specify just one node:
 >>
+>> xxx {
+>>      pins = <PINA>, <PINB>, <PINC>;
+>>      function = <...>;
+>>      pull-up = <1 1 0>;
+>> }
 >>
->> I'm not sure I fully understand what hwirq is in this context - is it
->> the IRQ line from the Synopsys block to the system interrupt controller?
->> If so I don't think this covers all configurations - the Picochip
->> devices for instance have each GPIO in port A as an individual IRQ going
->> to the VIC.
+>> This "feature" seems a bit more concise to me and is what I did for my
+>> original pinctrl driver.  The only downside is that with this method,
+>> one cannot specify "don't touch this option for this pin" if the same
+>> property must provide values for other pins.
 >
->
-> Usually, hwirq is the interrupt as seen from this very device, i.e. in
-> this case it is 0 up to 32 referencing the portA gpio line that
-> triggered an interrupt. In this drivers context 'hwirq' above is
-> actually the virtual irq number Linux made up to identify an interrupt
-> coming from this IP block.
->
-> Therefore, above should really be irq instead of hwirq - but with a
-> more detailed review, I think it can be removed completely.
->
->> It looks here like hwirq is used for all of the interrupt registers so
->> only one GPIO interrupt is supported?
->
->
-> Looking in _probe, currently only one upstream interrupt is requested.
-> Jamie is right, that you should grab all interrupts - but you can forget
-> their virtual number after registering the handler. There are helper
-> functions to get it back in irq handler.
->
+> The other downside is that if the lists get even slightly long, it get
+> really hard to match up the entries in the t properties.
 
-The IP configuration I have has only one irq line going to the gic,
-(that is the "hwirq" here) so I had one hwirq (the gic) for each IP
-instance.  The domain maps a Linux IRQ number for each gpio line.
+Agree that it would start to get difficult to read if a subnode has too 
+many pins.  I guess the solution would be to somehow split up the pins 
+to more subnodes with fewer pins each.
 
-I will need to rework this to also support both this (one irq per IP
-block) and the picochip (one irq per gpio line coming out of the IP
-block).
-
->>> +static void __exit dwapb_gpio_exit(void)
->>> +{
->>> +       platform_driver_unregister(&dwapb_gpio_driver);
->>> +}
->>> +module_exit(dwapb_gpio_exit);
->>
->>
->> We can replace the registration and unregistration with
->> module_platform_driver() now.
->
->
-> +1 (again)
-
-OK
-
-Alan
-
->
-> Sebastian
->
+Regards,
+Sherman
