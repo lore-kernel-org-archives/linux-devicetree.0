@@ -1,80 +1,54 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH] thermal: exynos: handle gate clock for misplaced TRIMINFO register
-Date: Thu, 7 Nov 2013 20:41:57 +0530
-Message-ID: <CAHfPSqDrkn5nPfP17bMRQUQTHSc48nGXu4_+XVBBixfx+Wvj5g@mail.gmail.com>
-References: <1383828154-428-1-git-send-email-ch.naveen@samsung.com> <1695605.pk9l7dqkqm@amdc1227>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1695605.pk9l7dqkqm@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 02/31] ARM: mvebu: Add Core Divider clock device-tree binding
+Date: Thu,  7 Nov 2013 12:17:06 -0300
+Message-ID: <1383837455-30721-3-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383837455-30721-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 November 2013 19:48, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Naveen,
->
-> On Thursday 07 of November 2013 18:12:34 Naveen Krishna Chatradhi wrote:
->> On Exynos5420 the TMU(4) for GPU has a seperate clock enable bit from
->> the other TMU channels(0 ~ 3). Hence, accessing TRIMINFO for base_second
->> should be acompanied by enabling the respective clock.
->>
->> This patch which allow for a "clk_sec" clock to be specified in the
->> device-tree which will be ungated when accessing the TRIMINFO register.
->>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> ---
->>  drivers/thermal/samsung/exynos_tmu.c |   24 +++++++++++++++++++++++-
->>  1 file changed, 23 insertions(+), 1 deletion(-)
->
-> This patch modifies the device binding, but fails to mention anything
-> about the modification in respective documentation. Please do not do that.
-Will make a note to update Documentation from now on.
+The Armada 370/XP SoCs have a Core Divider clock providing
+several clocks. For now, only the NAND clock is supported.
 
->
-> In addition, since the series adding support for Exynos 5420 has not been
-> merged yet, I would rather make this patch a part of that series.
-Will merge and upload the whole set, first thing tomorrow.
->
-> Also please see my comment below.
->
->> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
->> index b54825a..33edd1a 100644
->> --- a/drivers/thermal/samsung/exynos_tmu.c
->> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> [snip]
->> @@ -641,6 +650,15 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->>       if (ret)
->>               return ret;
->>
->> +     data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
->> +     if (!IS_ERR(data->clk_sec)) {
->
-> This code does not check if the clock was specified for TMU channels that
-> require it, i.e. the driver will not fail if you don't specify this clock.
-I thought of making it mandatory, And TMU on Exynos5440 may not need
-second clock for accessing the second base. I Will confirm with the Exynso5440
-specs and update accordingly.
->
-> Instead, it would be better create a separate compatible value for such
-> channels, like "samsung,exynos5420-tmu-broken-triminfo", for which this
-> clock would be mandatory and for which, if this clock is not specified,
-> the driver would fail.
-Right
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/clock/mvebu-corediv-clock.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
 
-Sure Tomasz,
-Creating a new compatible makes handling this case really simple
-
-Thanks for reviewing.
->
-> Best regards,
-> Tomasz
->
-
-
-
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+new file mode 100644
+index 0000000..c62391f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+@@ -0,0 +1,19 @@
++* Core Divider Clock bindings for Marvell MVEBU SoCs
++
++The following is a list of provided IDs and clock names on Armada 370/XP:
++ 0 = nand (NAND clock)
++
++Required properties:
++- compatible : must be "marvell,armada-370-corediv-clock"
++- reg : must be the register address of Core Divider control register
++- #clock-cells : from common clock binding; shall be set to 1
++- clocks : must be set to the parent's phandle
++
++Example:
++
++corediv_clk: corediv-clocks@18740 {
++	compatible = "marvell,armada-370-corediv-clock";
++	reg = <0x18740 0xc>;
++	#clock-cells = <1>;
++	clocks = <&pll>;
++};
 -- 
-Shine bright,
-(: Nav :)
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
