@@ -1,50 +1,76 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v10 3/7] of: add Trusted Foundations bindings
-Date: Thu, 7 Nov 2013 19:11:42 +0900
-Message-ID: <1383819106-1400-4-git-send-email-acourbot@nvidia.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3] mtd: gpmi: add a new DT property to use the datasheet's minimum required ECC
+Date: Thu, 7 Nov 2013 18:07:38 +0800
+Message-ID: <1383818858-5410-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <t.figa@samsung.com>
-Cc: Olof Johansson <olof@lixom.net>, Dave Martin <Dave.Martin@arm.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Courbot <acourbot@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Device Tree bindings for the Trusted Foundation secure monitor.
+In default way, we use the ecc_strength/ecc_step size calculated by ourselves
+and use all the OOB area.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+This patch adds a new property : "fsl,use-minimum-ecc"
+
+If we enable it, we will firstly try to use the datasheet's minimum required
+ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+in the nand_chip{}). So we may have free space in the OOB area by using the
+minimum ECC, and we may support JFFS2 with some SLC NANDs, such as Micron's
+SLC NAND.
+
+If we fail to use the minimum ECC, we will use the legacy method to calculate
+the ecc_strength and ecc_step size.
+
+Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- .../arm/firmware/tlm,trusted-foundations.txt         | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt
+v1 -- > v2: rebase this patch on the latest l2-mtd.
+v2 -- > v3: change the descriptions.
+---
+ .../devicetree/bindings/mtd/gpmi-nand.txt          |    8 ++++++++
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
+ 2 files changed, 11 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt
-new file mode 100644
-index 000000000000..adb471c3d2dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt
-@@ -0,0 +1,20 @@
-+Trusted Foundations
-+-------------------
-+
-+Boards that use the Trusted Foundations secure monitor can signal its
-+presence by declaring a node compatible with "tlm,trusted-foundations"
-+under the /firmware/ node
-+
-+Required properties:
-+- compatible : "tlm,trusted-foundations"
-+- tlm,version-major : major version number of Trusted Foundations firmware
-+- tlm,version-minor: minor version number of Trusted Foundations firmware
-+
-+Example:
-+	firmware {
-+		trusted-foundations {
-+			compatible = "tlm,trusted-foundations";
-+			tlm,version-major = <2>;
-+			tlm,version-minor = <8>;
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+index 551b2a1..458d596 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+@@ -17,6 +17,14 @@ Required properties:
+ Optional properties:
+   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
+                        present false
++  - fsl,use-minimum-ecc: Protect this NAND flash with the minimum ECC
++                       strength required. The required ECC strength is
++                       automatically discoverable for some flash
++                       (e.g., according to the ONFI standard).
++                       However, note that if this strength is not
++                       discoverable or this property is not enabled,
++                       the software may chooses an implementation-defined
++                       ECC scheme.
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+ address space. See partition.txt for more detail.
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index 8f4e5b1..b849b92 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -353,6 +353,9 @@ static int legacy_set_geometry(struct gpmi_nand_data *this)
+ 
+ int common_nfc_set_geometry(struct gpmi_nand_data *this)
+ {
++	if (of_property_read_bool(this->dev->of_node, "fsl,use-minimum-ecc")
++		&& set_geometry_by_ecc_info(this))
++		return 0;
+ 	return legacy_set_geometry(this);
+ }
+ 
 -- 
-1.8.4.2
+1.7.2.rc3
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
