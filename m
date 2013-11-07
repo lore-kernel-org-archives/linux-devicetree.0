@@ -1,107 +1,90 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 26/31] mtd: nand: pxa3xx: Introduce multiple page I/O
- support
-Date: Thu, 7 Nov 2013 20:45:00 -0300
-Message-ID: <20131107234459.GB2467@localhost>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-27-git-send-email-ezequiel.garcia@free-electrons.com>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 2/2] LEDS: tca6502: add device-tree support for GPIO
+ configuration.
+Date: Fri, 8 Nov 2013 10:46:04 +1100
+Message-ID: <20131108104604.54366464@notabene.brown>
+References: <20131101134120.13a44225@notabene.brown>
+	<CAK5ve-LzYLr0xuvNA3MX=pECPPfAkDFqExPpmQt8GF+9jf5uHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383837455-30721-27-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/7srOLHoSFsyr8_R9uFOIQ_V"; protocol="application/pgp-signature"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAK5ve-LzYLr0xuvNA3MX=pECPPfAkDFqExPpmQt8GF+9jf5uHg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--Sig_/7srOLHoSFsyr8_R9uFOIQ_V
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I have a concern about the ECC mode and strength determination.
+On Thu, 7 Nov 2013 15:39:00 -0800 Bryan Wu <cooloney@gmail.com> wrote:
 
-On Thu, Nov 07, 2013 at 12:17:30PM -0300, Ezequiel Garcia wrote:
-[..]
-> @@ -1152,7 +1289,28 @@ static int armada370_ecc_init(struct pxa3xx_na=
-nd_info *info,
->  			      struct nand_ecc_ctrl *ecc,
->  			      int strength, int page_size)
->  {
-> -	/* Unimplemented yet */
-> +	if (strength =3D=3D 4 && page_size =3D=3D 4096) {
-> +		info->ecc_bch =3D 1;
-> +		info->chunk_size =3D 2048;
-> +		info->spare_size =3D 32;
-> +		info->ecc_size =3D 32;
-> +		ecc->mode =3D NAND_ECC_HW;
-> +		ecc->size =3D info->chunk_size;
-> +		ecc->layout =3D &ecc_layout_4KB_bch4bit;
-> +		ecc->strength =3D 16;
-> +		return 1;
-> +
-> +	} else if (strength =3D=3D 8 && page_size =3D=3D 4096) {
-> +		info->ecc_bch =3D 1;
-> +		info->chunk_size =3D 1024;
-> +		info->spare_size =3D 0;
-> +		info->ecc_size =3D 32;
-> +		ecc->mode =3D NAND_ECC_HW;
-> +		ecc->size =3D info->chunk_size;
-> +		ecc->layout =3D &ecc_layout_4KB_bch8bit;
-> +		ecc->strength =3D 16;
-> +		return 1;
-> +	}
->  	return 0;
->  }
-> =20
+> On Thu, Oct 31, 2013 at 7:41 PM, NeilBrown <neilb@suse.de> wrote:
+> >
+>=20
+> [PATCH 2/2] LEDS: tca6502: add device-tree support for GPIO configuration.
+>=20
+> I think it should be tca6507, right? Typo?
 
-The above shows I tried to be very careful (aka paranoid) in the ECC
-mode determination. Please note that what I call "ECC mode", is
-determined by the chunk->size value only.
+Obviously I'm still dreaming of the Apple IIe.  Yes, a typo.
 
-As the included documentation explains this controller supports two
-different BCH ECC strength: 16-over-1024, or 16-over-2048. Setting the =
-chunk
-size to either 1024 or 2048 is what determines which of the above will
-actually take effect.
+>=20
+> For other parts of this patch, I'm OK for them.
+>=20
+> And just a quick scan of the leds-tca6507, I found bunch of typos in
+> the comments:
+>=20
+> * An led-tca6507 device must be provided with platform data.  This data
+>  * lists for each output: the name, default trigger, and whether the sign=
+al
+>  * is being used as a GPiO rather than an led.  'struct led_plaform_data'
+>=20
+> Can we unify to use GPIO and gpio?
+>=20
+>  * is used for this.  If 'name' is NULL, the output isn't used.  If 'flag=
+s'
+>  * is TCA6507_MAKE_CPIO, the output is a GPO.
+>=20
+> Here should be TCA6507_MAKE_GPIO and GPIO instead of GPO
+>=20
+>  * The "struct led_platform_data" can be embedded in a
+>  * "struct tca6507_platform_data" which adds a 'gpio_base' for the GPiOs,
+>  * and a 'setup' callback which is called once the GPiOs are available.
+>=20
+> Don't use GPiO, please.
+>=20
+> Could you please review the code again and submit a cleanup patch to
+> fix those typos?
 
-In past mails, we've refered to these two as BCH4 or BCH8, but this is =
-not
-really accurate (as Brian has pointed out) so I droped that terms in
-favor of the real thing: 16 correctable bits over 1024 data bytes, or
-16 correctable bits over 2048 data bytes.
+Yes, I'll send a patch shortly.
 
-In turn, such BCH mode setting affects heavily the page layout, because
-after each transfered chunk (which is either 1024+spare or 2048+spare)
-the controller reads and writes a 30B ECC region.
+Thanks,
+NeilBrown
 
-In other words, the kernel cannot arbitrarily change this setting, or
-the image won't be readable/writeable any longer.
 
-=46or this reason, I'm starting to think the above method of picking
-the "ECC mode" based solely on the page size or the strength is slightl=
-y
-fragile (future developers might come and "improve" the driver breaking
-images).
 
-Besides: what if a user wants the kernel to use a "higher" than
-required strength?
+--Sig_/7srOLHoSFsyr8_R9uFOIQ_V
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
-In conclusion: I'm starting to think a better (and long-term safer)
-approach is to set the ECC mode in the DT. I know this sucks, but from
-my point of view the flash device contains an image that "must" be
-read/write with a given ECC mode, and this ECC mode is by no means
-discoverable.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-Now, let's suppose we want to set this in the DT: what property
-would we use? "marvell,nand-ecc-opt =3D 16-2048"? (a bit odd, no?).
+iQIVAwUBUnwmPDnsnt1WYoG5AQIWLg/+P0wdrBjWoPIgvwKtvSdWBDoldOIdDVH5
+9X60txSnJIEN2N0CIhcu5VWQ+cH9XtZmY0Ab2RnMjUmXfHg5I1gIPYoGXjtJaJYD
+j8CeD/OIG8qumMJAZtAtbUOsV8UI6rp77acVhAEiOEPcRJS7BG2GG40gxw4S7d68
+BOgX9LWyQDWdneyj32j2SzUYhyepMh2zdQLYsGfCLollbfZfyoHP/F3KdcIJZNu4
+kci3jKsfBfzGJCMXVtbARsyC7e4+OAUpq+f/sG7ZwqeN2j7pyp8EnWpV56AUQYBN
+ijQLfqk36YjVIFpBX/fplCG0z8oDq2WJcUYorQrmuM8LNOq9ozUV9FJbN4g21EeG
+lH4jR9OYVrqnBcfZ3jvo6HFfMi31ozTgcLEUGGy4M6n8K2uEbVqax9zJxnbcNcme
+/WzT4BGJ4oDpEyPPXjUnSRbvO3uXC7wciZg/ZFx2BCVEZhXUeSqT/yLyAuqF+fgo
+KS+VGQm1mdnd4jWtL4Aq/6VeAg6EY1U7OxzkRTPJXKUn3c/J2DbbbjjA1LW8Bsad
+uAPNYiIwrVS7pHZKMqDzobvfDEnCCzGNQOZnki57xfQvwpO8iDMMKNCve68eMZc6
+m5Lzx0y5IYQCC+s/A9bTMPrreiJceHKYtm7KJTCVpExZBDYDZAlecW8I6/Z7Q+Lt
+il68/XeSKI0=
+=EV88
+-----END PGP SIGNATURE-----
 
-What do you think?
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Sig_/7srOLHoSFsyr8_R9uFOIQ_V--
