@@ -1,83 +1,66 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 05/11] ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu
- hotplug/smp
-Date: Wed, 6 Nov 2013 19:50:05 -0600
-Message-ID: <20131107015005.GE22684@joshc.qualcomm.com>
-References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org>
- <1383343739-23080-6-git-send-email-sboyd@codeaurora.org>
+From: Li Xiubo <Li.Xiubo@freescale.com>
+Subject: Re: [PATCHv2 5/8] ASoC: SGTL5000: Enhance the SGTL5000
+ codec driver about regulator.
+Date: Thu, 7 Nov 2013 03:01:02 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828783E6@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
+ <1383289495-24523-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131101185045.GG2493@sirena.org.uk>
+ <1DD289F6464F0949A2FCA5AA6DC23F82876EFF@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131106100305.GI11602@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383343739-23080-6-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131106100305.GI11602@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Shawn Guo <Shawn.Guo@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Zhengxiong Jin <Jason.Jin@freescale.com>, "oskar@scara.com" <oskar@scara.com>, Fab
 List-Id: devicetree@vger.kernel.org
 
-Hey Stephen-
+> > The SGTL5000 is based on regulators and when it is disabled, there
+> > will be an error returns directly while the SGTL5000 codec is probing.
+> 
+> What makes you say this?  
+>
 
-Nit/suggestion below:
+>From the code:
+File path: "sound/soc/codecs/sgtl5000.c"
+==================
+#ifdef CONFIG_REGULATOR
+.....
+#else
+static int ldo_regulator_register(struct snd_soc_codec *codec,
+                                struct regulator_init_data *init_data,
+                                int voltage)
+{
+        dev_err(codec->dev, "this setup needs regulator support in the kernel\n");
+        return -EINVAL;
+}
 
-On Fri, Nov 01, 2013 at 03:08:53PM -0700, Stephen Boyd wrote:
-[..]
-> diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
-> index a8cae71c..c27ec55 100644
-> --- a/arch/arm/include/asm/smp.h
-> +++ b/arch/arm/include/asm/smp.h
-> @@ -112,6 +112,15 @@ struct smp_operations {
->  #endif
->  };
->  
-> +struct of_cpu_method {
-> +	const char *method;
-> +	struct smp_operations *ops;
-> +};
-> +
-> +#define CPU_METHOD_OF_DECLARE(name, _method, _ops)			\
-> +	static const struct of_cpu_method __cpu_method_of_table_##name	\
-> +		__used __section(__cpu_method_of_table)			\
-> +		= { .method = _method, .ops = _ops }
->  /*
->   * set platform specific SMP operations
->   */
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index f35906b..71a8592 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -25,6 +25,7 @@
->  #include <asm/smp_plat.h>
->  #include <asm/mach/arch.h>
->  #include <asm/mach-types.h>
-> +#include <asm/smp.h>
->  
->  void __init early_init_dt_add_memory_arch(u64 base, u64 size)
->  {
-> @@ -63,6 +64,36 @@ void __init arm_dt_memblock_reserve(void)
->  	}
->  }
->  
-> +#ifdef CONFIG_SMP
-> +extern struct of_cpu_method __cpu_method_of_table[];
-> +
-> +static const struct of_cpu_method __cpu_method_of_table_sentinel
-> +	__used __section(__cpu_method_of_table_end);
+static int ldo_regulator_remove(struct snd_soc_codec *codec)
+{
+        return 0;
+}
+#endif
+-------------------
 
-Having a sentinel allocated into the linked image makes a lot of sense
-in other cases (IRQCHIP/CLOCKSOURCE_OF_DECLARE, etc), where it's used to
-terminate an of_device_id table (as is expected by of_match_table and
-friends).
+sgtl5000_probe() -->
+sgtl5000_enable_regulators() -->
+sgtl5000_replace_vddd_with_ldo() -->
+ldo_regulator_register().
 
-In this case, however, you aren't building a match table, so having a
-sentinel allocated isn't necessary.  I'd suggest bookending the table
-with a VMLINUX_SYMBOL(__cpu_method_of_table_end) instead.
 
-A whole 2 pointers worth of savings!
+> That's not how the regulator API works.  Have
+> you actually seen any problems?
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are some regulator APIs implemented by SGTL5000 driver, not the regulator subsystem APIs.
