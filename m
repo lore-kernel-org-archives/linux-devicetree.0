@@ -1,60 +1,83 @@
-From: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Thu, 7 Nov 2013 21:46:26 +0100
-Message-ID: <20131107204626.GA11746@breakpoint.cc>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
- <20131106190152.GA8662@breakpoint.cc>
- <20131106193041.GA26796@roeck-us.net>
- <20131106203821.GC8662@breakpoint.cc>
- <20131106211754.GA29300@roeck-us.net>
- <20131107192558.GA11453@breakpoint.cc>
- <4F47D5F8-F3C7-45CA-9D88-2D814BDC1BC7@antoniou-consulting.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 1/1] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Thu, 7 Nov 2013 15:06:04 -0600
+Message-ID: <CANk1AXQSoZPpMFu3qWqHW9HurGA868RLTFei8cdxuS9wCnWTbg@mail.gmail.com>
+References: <1383778182-16941-1-git-send-email-delicious.quinoa@gmail.com>
+	<1383778182-16941-2-git-send-email-delicious.quinoa@gmail.com>
+	<20131106233427.GA6090@maple>
+	<527AD477.9080704@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F47D5F8-F3C7-45CA-9D88-2D814BDC1BC7-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527AD477.9080704@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jamie Iles <jamie@jamieiles.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.11.13, Pantelis Antoniou wrote:
-> Hi Sebastian,
-Hi Pantelis,
+On Wed, Nov 6, 2013 at 5:44 PM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+>>> +struct dwapb_gpio {
+>>> +       struct  device          *dev;
+>>> +       void __iomem            *regs;
+>>> +       struct dwapb_gpio_port  *ports;
+>>> +       unsigned int            nr_ports;
+>>> +       struct irq_domain       *domain;
+>>> +       int                     hwirq;
+>>
+>>
+>> I'm not sure I fully understand what hwirq is in this context - is it
+>> the IRQ line from the Synopsys block to the system interrupt controller?
+>> If so I don't think this covers all configurations - the Picochip
+>> devices for instance have each GPIO in port A as an individual IRQ going
+>> to the VIC.
+>
+>
+> Usually, hwirq is the interrupt as seen from this very device, i.e. in
+> this case it is 0 up to 32 referencing the portA gpio line that
+> triggered an interrupt. In this drivers context 'hwirq' above is
+> actually the virtual irq number Linux made up to identify an interrupt
+> coming from this IP block.
+>
+> Therefore, above should really be irq instead of hwirq - but with a
+> more detailed review, I think it can be removed completely.
+>
+>> It looks here like hwirq is used for all of the interrupt registers so
+>> only one GPIO interrupt is supported?
+>
+>
+> Looking in _probe, currently only one upstream interrupt is requested.
+> Jamie is right, that you should grab all interrupts - but you can forget
+> their virtual number after registering the handler. There are helper
+> functions to get it back in irq handler.
+>
 
-> FWIW DT has been ported to x86. And is present on arm/powerpc/mips/arc and possibly
-> others.
+The IP configuration I have has only one irq line going to the gic,
+(that is the "hwirq" here) so I had one hwirq (the gic) for each IP
+instance.  The domain maps a Linux IRQ number for each gpio line.
 
-Yes, I know. I am the one that did the work for CE4100, the first one
-that boots with DT on x86.
+I will need to rework this to also support both this (one irq per IP
+block) and the picochip (one irq per gpio line coming out of the IP
+block).
 
-> So what are we talking about again? If you care about the non-DT case, why
-> don't you make a patch about how you could support Guenter's use case on
-> the x86.
+>>> +static void __exit dwapb_gpio_exit(void)
+>>> +{
+>>> +       platform_driver_unregister(&dwapb_gpio_driver);
+>>> +}
+>>> +module_exit(dwapb_gpio_exit);
+>>
+>>
+>> We can replace the registration and unregistration with
+>> module_platform_driver() now.
+>
+>
+> +1 (again)
 
-I am only saying that this "hot-plug a device at a non hot-plugagle bus at
-runtime" is not limited to DT but this solution is. X86 + ACPI is not
-the only limitation. ARM is (forced) going to ACPI as well as far I
-know. And this solution is limited to DT. This is what I am pointing
-out.
+OK
 
-> His use case is not uncommon, believe it or not, and x86 would benefit from
-> something this flexible.
+Alan
 
-I *think* a more flexible solution would be something like bus_type which is
-exposed via configfs. It would be attached behind a certain device/bus where
-the "physical" hotplug interface is. The user would then be able to read the
-configuration based on whatever information he has and could then create
-devices he likes at runtime. This wouldn't depend much on the firmware that is
-used but would require a little more work I think.
-
-> Regards
-> 
-> -- Pantelis
-
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Sebastian
+>
