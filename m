@@ -1,71 +1,146 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v10 6/7] ARM: tegra: set CPU reset handler with firmware op
-Date: Thu, 7 Nov 2013 19:11:45 +0900
-Message-ID: <1383819106-1400-7-git-send-email-acourbot@nvidia.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383819106-1400-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 8/9] ARM: add Armada 1500-mini and Chromecast device
+ tree files
+Date: Thu, 07 Nov 2013 11:12:45 +0100
+Message-ID: <527B679D.8040602@gmail.com>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com> <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1383661723-17956-9-git-send-email-sebastian.hesselbarth@gmail.com> <20131107134802.2234bff1@xhacker>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131107134802.2234bff1@xhacker>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Use a firmware operation to set the CPU reset handler and only resort to
-doing it ourselves if there is none defined.
+On 11/07/13 06:48, Jisheng Zhang wrote:
+> On Tue, 5 Nov 2013 06:28:42 -0800
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>> This adds very basic device tree files for the Marvell Armada
+>> 1500-mini SoC (Berlin BG2CD) and the Google Chromecast. Currently,
+>> SoC only has nodes for cpu, some clocks, l2 cache controller, local
+>> timer, apb timers, uart, and interrupt controllers.
+>> The Google Chromecast is a consumer device comprising the Armada
+>> 1500-mini SoC above.
+>>
+>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>> ---
+[...]
+>> diff --git a/arch/arm/boot/dts/berlin2cd.dtsi
+>> b/arch/arm/boot/dts/berlin2cd.dtsi new file mode 100644
+>> index 0000000..40d1bed
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/berlin2cd.dtsi
+>> @@ -0,0 +1,212 @@
+>> +/*
+>> + * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
+>> + *
+>> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>> + *
+>> + * based on GPL'ed 2.6 kernel sources
+>> + *  (c) Marvell International Ltd.
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#include "skeleton.dtsi"
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +       model = "Marvell Armada 1500-mini (BG2CD) SoC";
+>> +       compatible = "marvell,berlin2cd", "marvell,berlin";
+>> +
+>> +       cpus {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               cpu@0 {
+>> +                       compatible = "arm,cortex-a9";
+>> +                       device_type = "cpu";
+>> +                       next-level-cache = <&l2>;
+>> +                       reg = <0>;
+>> +               };
+>> +       };
+>> +
+[...]
+>> +       soc {
+>> +               compatible = "simple-bus";
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               interrupt-parent = <&gic>;
+>> +
+>> +               ranges = <0 0xf7000000 0x1000000>;
+>> +
+>> +               l2: l2-cache-controller@ac0000 {
+>> +                       compatible = "arm,pl310-cache";
+>> +                       reg = <0xac0000 0x1000>;
+>> +                       cache-unified;
+>> +                       cache-level = <2>;
+>> +                       arm,prefetch-ctrl = <0x70000007>;
+>> +                       arm,pwr-ctrl = <0x3>;
+> These two setting depend on the following prefetch and power control support patch.
+> We have it in our internal tree for a long time.
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/209700.html
 
-This supports the booting of secondary CPUs on devices using a TrustZone
-secure monitor.
+Right, consider the above as a debug left-over. I was blindly guessing
+and picked that patch and the both properties above from your tree.
 
-Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/mach-tegra/reset.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Will remove them now, we can add them later when the binding has been
+accepted. I will reply to that patch next, I guess arm,prefetch-ctrl
+will not be accepted that way, as we try to avoid hex-bashing
+properties.
 
-diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
-index e282395b071c..368af0afde46 100644
---- a/arch/arm/mach-tegra/reset.c
-+++ b/arch/arm/mach-tegra/reset.c
-@@ -21,6 +21,7 @@
- 
- #include <asm/cacheflush.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include <asm/firmware.h>
- 
- #include "iomap.h"
- #include "irammap.h"
-@@ -65,6 +66,7 @@ static void __init tegra_cpu_reset_handler_enable(void)
- 	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
- 	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
- 						tegra_cpu_reset_handler_offset;
-+	int err;
- 
- 	BUG_ON(is_enabled);
- 	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
-@@ -72,9 +74,18 @@ static void __init tegra_cpu_reset_handler_enable(void)
- 	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
- 			tegra_cpu_reset_handler_size);
- 
--	tegra_cpu_reset_handler_set(reset_address);
--
--	is_enabled = true;
-+	err = call_firmware_op(set_cpu_boot_addr, 0, reset_address);
-+	switch (err) {
-+	case -ENOSYS:
-+		tegra_cpu_reset_handler_set(reset_address);
-+		/* pass-through */
-+	case 0:
-+		is_enabled = true;
-+		break;
-+	default:
-+		pr_crit("Cannot set CPU reset handler: %d\n", err);
-+		BUG();
-+	}
- }
- 
- void __init tegra_cpu_reset_handler_init(void)
--- 
-1.8.4.2
+I did some research on feature/property matrix for the l2x0/l310 as
+there is public documentation, hope to find some time to polish the
+matrix and get a patch ready.
+
+>> +               };
+>> +
+>> +               gic: interrupt-controller@ad1000 {
+>> +                       compatible = "arm,cortex-a9-gic";
+>> +                       reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
+>> +                       interrupt-controller;
+>> +                       #interrupt-cells = <3>;
+>> +               };
+>> +
+>> +               local-timer@ad0600 {
+>> +                       compatible = "arm,cortex-a9-twd-timer";
+>> +                       reg = <0xad0600 0x20>;
+>> +                       interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       clocks = <&sysclk>;
+>> +               };
+>> +
+>> +               apb@e80000 {
+>> +                       compatible = "simple-bus";
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <1>;
+>> +
+>> +                       ranges = <0 0xe80000 0x10000>;
+>> +                       interrupt-parent = <&aic>;
+>> +
+>> +                       timer0: timer@2c00 {
+>> +                               compatible = "snps,dw-apb-timer";
+> snps,dw-apb-timer-osc?
+
+As stated in the cover letter, snps,dw-apb-timer-osc/-sp have been
+deprecated by [1].
+
+[1] http://www.spinics.net/lists/arm-kernel/msg277763.html
+
+>> +                               reg = <0x2c00 0x14>;
+>> +                               interrupts = <8>;
+>> +                               clocks = <&cfgclk>;
+>> +                               clock-names = "timer";
+>> +                               status = "okay";
+>> +                       };
+>> +
+>> +                       timer1: timer@2c14 {
+>> +                               compatible = "snps,dw-apb-timer";
+> ditto for the remaining
+
+ditto.
+
+Sebastian
