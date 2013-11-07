@@ -1,137 +1,54 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH RFC] dt: bindings: submitting patches document
-Date: Thu, 7 Nov 2013 06:56:04 -0500
-Message-ID: <20131107115604.GJ8308@titan.lakedaemon.net>
-References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
- <527B7C94.7030708@atmel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
+Date: Thu, 07 Nov 2013 13:15:26 +0100
+Message-ID: <3394178.9T7q17vczr@avalon>
+References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <87zjpggalc.wl%kuninori.morimoto.gx@renesas.com> <871u2s65kz.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <527B7C94.7030708-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <871u2s65kz.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 12:42:12PM +0100, Nicolas Ferre wrote:
-> On 06/11/2013 18:32, Jason Cooper :
-> >Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> >---
-> >All,
-> >
-> >Since I've now had to answer this question a couple of times, I thought it
-> >might be worth trying to put it in a document.  I don't like long documents, so
-> >this is pretty concise, and most likely wrong.  Hence, RFC.  :)
-> >
-> >I also dislike quoting people from my imperfect memory, much better to have an
-> >agreed upon document we can point people towards.
-> >
-> >thx,
-> >
-> >Jason.
-> >
-> >  .../devicetree/bindings/submitting-patches.txt     | 52 ++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
-> >
-> >diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-> >new file mode 100644
-> >index 000000000000..5a84d5ebb0f5
-> >--- /dev/null
-> >+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-> >@@ -0,0 +1,52 @@
-> >+
-> >+  Submitting devicetree (DT) binding patches
-> >+
-> >+I. For patch submitters
-> >+
-> >+  0) Normal patch submission rules from Documentation/SubmittingPatches
-> >+     applies.
-> >+
-> >+  1) The Documentation/ portion of the patch should be a separate patch
-> >+     and clearly labelled as such.  For example:
-> >+
-> >+       [PATCH X/Y] dt: binding: mvebu mbus driver
-> >+
-> >+     This makes the binding portion easy to find among large patch series.
-> >+
-> >+  2) Submit the entire series to the devicetree mailinglist at
+Hi Morimoto-san,
+
+On Wednesday 06 November 2013 23:20:32 Kuninori Morimoto wrote:
+> Hi Laurent again
 > 
-> This is not what I understood.
-> It seems that we said that only the patch that was containing the
-> binding documentation have to be sent to the devicetree
-> mainling-list (but this patch being part of a patch series anyway).
-> This way the devicetree maintainers would not have to deal with the
-> patch review process, even if they can have a look to the code
-> source on the mailing-list archive if they need to.
-
-And that is the exact reason I wrote this doc.  ;-)  Mark Rutland said
-on Friday during the Q&A portion of the DT talk that he wanted to be
-able to refer to the code changes that went with the binding doc patch.
-
-I raised my hand and pointed to the elephant in the room, that this was
-the exact opposite of what was decided during the mini-summit.  Grant
-said to send the whole series since he has better filters now for
-finding the binding documentation changes.
-
-Since he isn't the only reviewer, I came up with the 'dt: binding: ...'
-subject line to make the patch easier to find and review.
-
-Long story short, we changed our mind on the last day, and as I said in
-the comment section, I don't like quoting others from my imperfect
-memory.  So, I'd like to have an agreed upon doc.
-
-> Someone to clarify?
-
-Please.
-
-thx,
-
-Jason.
-
-
-> >+       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >+
-> >+II. For sub-system maintainers
-> >+
-> >+  1) If you aren't comfortable reviewing a given binding, reply to it and ask
-> >+     the devicetree maintainers for guidance.  This will help them prioritize
-> >+     which ones to review and which ones are ok to let go.
-> >+
-> >+  2) If you are comfortable with the binding, and it hasn't received an
-> >+     Acked-by from the devicetree maintainers after a few weeks, go ahead and
-> >+     take it.
-> >+
-> >+  3) For a series going though multiple trees, the binding patch should be
-> >+     kept with the driver using the binding.
-> >+
-> >+III.  General binding rules
-> >+
-> >+  1) Don't hold up a binding because it isn't perfect.
-> >+
-> >+  2) Use specific compatible strings so that if we need to add a feature (DMA)
-> >+     in the future, we can create a new compatible string.
-> >+
-> >+  3) Ideally, all bindings receive sufficient review.  In the real world, we
-> >+     need to prioritize.  Bindings for a specific block of IP aren't as
-> >+     critical as a binding for a common subsystem, like PCI.
-> >+
-> >+  4) Don't submit bindings for staging or unstable.  That will be decided by
-> >+     the devicetree maintainers *after* discussion on the mailinglist.
-> >+
-> >+IV. Notes
-> >+
-> >+  This document is intended as a general familiarization with the process as
-> >+  decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-> >+  devicetree maintainers overrules this document.  In that situation, a patch
-> >+  updating this document would be appreciated.
-> >
+> > In my SuperH experience, CPG clock divier has same pattern.
+> > In H2's SDCKCR register, SDHFC and SD0FC looks different.
+> > But, the real different is only enabled bit area,
+> > the value is same.
+> > You can find same pattern on FRQCRB register too,
+> > and, you can find same pattern on M2.
+> > 
+> > I guess FRQCRB/SDHFC can share code if it has mask.
+> > This idea was used on R-Mobile series on div4.
+> > (ex clock-sh73a0.c :: div4_clks)
 > 
+> I talked it with Magnus, and I understand your headache.
+> I can agree about your approach now.
 > 
-> -- 
-> Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> But, I guess H2 and M2 are very similar SoC.
+> and I don't want too many clock-${SoC} files.
+> Is it possible to share code like clk-gen2.c ?
+
+Sure, if the hardware is very similar, it makes sense to share code. I've had 
+a quick look at the M2 documentation, and it seems to be indeed mostly 
+identical to H2. Only a couple of clocks are missing, and a new GPU clock 
+register is documented. As the GPU clock is mentioned in the H2 documentation 
+as being programmable I would assume that the GPU clock register exists and is 
+identical in H2 but has been forgotten in the documentation.
+
+We should probably extend clock-r8a7790.c with M2 support and rename it to 
+clock-rcar-gen2.c before pushing it to mainline. Would you like to submit a 
+patch ? :-)
+
+-- 
+Regards,
+
+Laurent Pinchart
+
