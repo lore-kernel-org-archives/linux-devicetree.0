@@ -1,95 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 5/8] ASoC: SGTL5000: Enhance the SGTL5000 codec driver
- about regulator.
-Date: Thu, 7 Nov 2013 20:38:38 +0000
-Message-ID: <20131107203838.GC2493@sirena.org.uk>
-References: <1383289495-24523-1-git-send-email-Li.Xiubo@freescale.com>
- <1383289495-24523-6-git-send-email-Li.Xiubo@freescale.com>
- <20131101185045.GG2493@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F82876EFF@039-SN2MPN1-013.039d.mgd.msft.net>
- <20131106100305.GI11602@sirena.org.uk>
- <1DD289F6464F0949A2FCA5AA6DC23F828783E6@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
+Date: Thu, 7 Nov 2013 21:46:26 +0100
+Message-ID: <20131107204626.GA11746@breakpoint.cc>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
+ <20131106190152.GA8662@breakpoint.cc>
+ <20131106193041.GA26796@roeck-us.net>
+ <20131106203821.GC8662@breakpoint.cc>
+ <20131106211754.GA29300@roeck-us.net>
+ <20131107192558.GA11453@breakpoint.cc>
+ <4F47D5F8-F3C7-45CA-9D88-2D814BDC1BC7@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7752616928672572048=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F828783E6@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Xiubo <Li.Xiubo@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "perex@perex.cz" <perex@perex.cz>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Shawn Guo <Shawn.Guo@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Zhengxiong Jin <Jason.Jin@freescale.com>, oskar
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F47D5F8-F3C7-45CA-9D88-2D814BDC1BC7-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07.11.13, Pantelis Antoniou wrote:
+> Hi Sebastian,
+Hi Pantelis,
 
---===============7752616928672572048==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CdJmqRynzCmrDwyG"
-Content-Disposition: inline
+> FWIW DT has been ported to x86. And is present on arm/powerpc/mips/arc and possibly
+> others.
 
+Yes, I know. I am the one that did the work for CE4100, the first one
+that boots with DT on x86.
 
---CdJmqRynzCmrDwyG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> So what are we talking about again? If you care about the non-DT case, why
+> don't you make a patch about how you could support Guenter's use case on
+> the x86.
 
-On Thu, Nov 07, 2013 at 03:01:02AM +0000, Li Xiubo wrote:
-> > > The SGTL5000 is based on regulators and when it is disabled, there
-> > > will be an error returns directly while the SGTL5000 codec is probing.
+I am only saying that this "hot-plug a device at a non hot-plugagle bus at
+runtime" is not limited to DT but this solution is. X86 + ACPI is not
+the only limitation. ARM is (forced) going to ACPI as well as far I
+know. And this solution is limited to DT. This is what I am pointing
+out.
 
-> > What makes you say this? =20
+> His use case is not uncommon, believe it or not, and x86 would benefit from
+> something this flexible.
 
-> static int ldo_regulator_register(struct snd_soc_codec *codec,
->                                 struct regulator_init_data *init_data,
->                                 int voltage)
+I *think* a more flexible solution would be something like bus_type which is
+exposed via configfs. It would be attached behind a certain device/bus where
+the "physical" hotplug interface is. The user would then be able to read the
+configuration based on whatever information he has and could then create
+devices he likes at runtime. This wouldn't depend much on the firmware that is
+used but would require a little more work I think.
 
-If the regulator is not used in the system then why is the driver
-getting as far as trying to register it?  Surely this is a system
-configuration error?  This all sounds like some problem with either the
-system integration or the driver which is causing it to try to register
-the regulator needlessly - you should be fixing that problem, not adding
-ifdefs.  I'm still unclear on exactly what the issue is so it's hard to
-say exactly what the best way forwards is.
+> Regards
+> 
+> -- Pantelis
 
---CdJmqRynzCmrDwyG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSe/pLAAoJELSic+t+oim99WkQAJmoFKa2Rxz+LvulqUAubIQZ
-0bAeSYIuQKpgagL7BdzTsqxBrJCnDMeXEZeootYApoG7tUbebtIMxbvThbAg5crq
-Mpqn51/w4mCGUzZugWRlHqKo4d2+GwPeFqC95hpNvjoOxNyn+zpl1cY+f70r7VV+
-aKw1HHjD6z9ylDPiVwiPGUKg/P/ovmeaL250QW9GYrpcyoRYGyjYxRQqcAtTVU7e
-yZ+bV7mLtgRylRp7fXtHiNEz7bmzIlWd+hxyZ89lKrqYwzmlXISPA5iW52sxgoew
-i2HRgibRdV5ba1L/cKfxsAVJ72piDyFDzeC/50vx3ZQQQZ6IDD7UQ5Fv1LgSOKVK
-gOdj+ZL6d885HquLtOQf/Dytdoz676vuFvBAjVc7hkvX+gwt21VQWY6WU98SpK0M
-iXXy/7kFXh2LkIyQ6wzR1l3CkSlnwuWXTaf0OkpuDrsjIHxkZ/fFXlFSsN7UWE9/
-bppBmkVvEMLAcm84U5/by8+uEr5wPf9oJgatfVBUfuiCRlDMOymTSlzguCz0fWYW
-sqlSAt7+ttAA45PXwiLp4F5XiGkj/ai8F0IGNN+b1HOzCej5zmaKx6pWKm3gMa5U
-1rhfGMJE+1SclPaTuJvIQygLwx6/n+VsYcxmKzNKreVUpfHhGVn4+g2OVYUhUSTF
-yFN3a1PSBcNCxyw+Uxz5
-=f1d4
------END PGP SIGNATURE-----
-
---CdJmqRynzCmrDwyG--
-
-
---===============7752616928672572048==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7752616928672572048==--
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
