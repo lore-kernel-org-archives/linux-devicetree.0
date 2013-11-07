@@ -1,49 +1,35 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: I2C add ov2640 ?
-Date: Fri, 08 Nov 2013 09:12:06 +0800
-Message-ID: <527C3A66.4010108@gtsys.com.hk>
-References: <52784785.1040406@gtsys.com.hk>	<5278C2B4.802@gtsys.com.hk>	<CAOMZO5DdUyvKAJdwYLpVR2+V5HBCt-AqgDxwgkh4AHQsE+evng@mail.gmail.com>	<527B330D.3040704@gtsys.com.hk> <CAOMZO5Acink+VzWZmv_w1dEyp4AU3mS9fHwt82c28h+VHFDmUw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5Acink+VzWZmv_w1dEyp4AU3mS9fHwt82c28h+VHFDmUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Eric Witcher <ewitcher@mindspring.com>
+Subject: [RESEND][PATCH] ARM: OMAP: devicetree: fix SPI node compatible property syntax items
+Date: Thu,  7 Nov 2013 08:45:38 -0500
+Message-ID: <1383831938-9402-1-git-send-email-ewitcher@mindspring.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: robherring2@gmail.com, bcousson@baylibre.com, matt.porter@linaro.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 08, 2013 02:08 AM, Fabio Estevam wrote:
-> On Thu, Nov 7, 2013 at 4:28 AM, Chris Ruehl<chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>  wrote:
->
->> c) in the patch dev_err(&adapter->dev, "OV2640 Not probed mclk missing\n");
->> give me the hint was wrong.
->>
->> from your conversation with Sascha Hauer
->> http://www.spinics.net/lists/linux-i2c/msg09099.html
->>
->> I see that's other ways to get a clock, thats works for
->>   v4l2_clk_get(&client->dev, "mclk")
->>   v4l2_clk_get(&client->dev, NULL)
->
-> You probably need to pass the mclk clock via device tree.
->
-> Please start a new thread about it on linux-media and add Guennadi on Cc.
->
-> Regards,
->
-> Fabio Estveam
+Correct the SPI node compatible property items to match example code and
+match current DTS usage.
 
-Hi Fabio,
+Signed-off-by: Eric Witcher <ewitcher@mindspring.com>
+---
+ Documentation/devicetree/bindings/spi/omap-spi.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for the hint,, found an old thread
-  https://lkml.org/lkml/2013/7/30/246
+diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
+index 4c85c4c..2ba5f9c 100644
+--- a/Documentation/devicetree/bindings/spi/omap-spi.txt
++++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
+@@ -2,8 +2,8 @@ OMAP2+ McSPI device
+ 
+ Required properties:
+ - compatible :
+-  - "ti,omap2-spi" for OMAP2 & OMAP3.
+-  - "ti,omap4-spi" for OMAP4+.
++  - "ti,omap2-mcspi" for OMAP2 & OMAP3.
++  - "ti,omap4-mcspi" for OMAP4+.
+ - ti,spi-num-cs : Number of chipselect supported  by the instance.
+ - ti,hwmods: Name of the hwmod associated to the McSPI
+ - ti,pindir-d0-out-d1-in: Select the D0 pin as output and D1 as
+-- 
+1.7.11.7
 
-where the clock is provided to a sound card via device tree. I will see if I can 
-make a patch and then I post it again.
-
-Chris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
