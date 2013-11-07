@@ -1,36 +1,34 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC v5 3/5] dma: of: Add common xlate function for
- matching by channel id
-Date: Thu, 7 Nov 2013 15:33:10 +0400
-Message-ID: <CAF0T0X5Qxa5yGVrL2U2DfAuXcYx23WObA2BArG74+ZBFbwKb6g@mail.gmail.com>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
-	<1383290374-17484-4-git-send-email-a13xp0p0v88@gmail.com>
-	<201311010852.05709.arnd@arndb.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 2/2] of: irq: Check for reg property presence only when
+ parsing interrupt-map
+Date: Thu, 07 Nov 2013 12:33:26 +0100
+Message-ID: <1489788.4u43h9g5sZ@amdc1227>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+ <2177804.l4VGDTRFDu@amdc1227> <11085147.qYFvaZYATK@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201311010852.05709.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <11085147.qYFvaZYATK@amdc1227>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/11/1 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Friday 01 November 2013, Alexander Popov wrote:
->> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
->> + * @dma_spec:        pointer to DMA specifier as found in the device tree
->> + * @of_dma:  pointer to DMA controller data
->
-> This seems rather clumsy, now that we have added the dma_get_slave_channel interface.
-> Can you try using that instead of dma_request_channel() now?
->
+Hi,
 
-Thanks, Arnd.
-I'll return with the fixed version.
+On Tuesday 05 of November 2013 16:21:36 Tomasz Figa wrote:
+> This patch fixes the of_irq_parse_raw() function to check for reg
+> property only when really parsing interrupt map property, as it is not
+> required otherwise and breaks existing device trees.
+> 
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  drivers/of/irq.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+
+Please disregard this patch. It seems like Grant's fix that has been
+already merged also fixes the same problem.
 
 Best regards,
-Alexander.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tomasz
