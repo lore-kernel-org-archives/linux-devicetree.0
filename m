@@ -1,32 +1,109 @@
-From: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 00/12] pwm-backlight: Add GPIO and power supply support
-Date: Thu, 7 Nov 2013 13:44:38 +0100
-Message-ID: <CAH9NwWei-PQQKNqB51eTqh_3z+JXxbGNp7PCnsStrVF7Dg_s5w@mail.gmail.com>
-References: <1381145866-445-1-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381145866-445-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] ARM: l2x0: add prefetch and power ctrl registers configuration
+ support
+Date: Thu, 07 Nov 2013 13:46:44 +0100
+Message-ID: <527B8BB4.3050200@gmail.com>
+References: <1383800872-7982-1-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383800872-7982-1-git-send-email-jszhang@marvell.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry
+On 11/07/13 06:07, Jisheng Zhang wrote:
+> PL310 supports Prefetch offset/control register from r2p0 and Power
+> control register from r3p0. This patch adds the support to configure
+> these two registers if there are. The dt binding document is also updated.
+>
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> ---
+>   Documentation/devicetree/bindings/arm/l2cc.txt |  4 ++++
+>   arch/arm/mm/cache-l2x0.c                       | 19 +++++++++++++++++++
+>   2 files changed, 23 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index c0c7626..32cd08c 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -39,6 +39,10 @@ Optional properties:
+>   - arm,filter-ranges : <start length> Starting address and length of window to
+>     filter. Addresses in the filter window are directed to the M1 port. Other
+>     addresses will go to the M0 port.
+> +- arm,prefetch-ctrl : The value for Prefetch Offset/Control Register if there
+> +  is. This is a single cell.
+> +- arm,pwr-ctrl : The value for Power Control Register if there is. This is a
+> +  single cell.
 
+Jisheng,
 
-> This series adds the ability to specify a GPIO and a power supply to
-> enable a backlight.
+I did some research over L2x0/L310 aux-ctrl registers and possible
+properties for them. Both properties introduced here, just allow you
+to put in a magic number, while IMHO properties should better reflect
+the actual function rather than hard-coded values.
 
+A quick look at L310 TRM for Power Control Register gives:
 
-Whats the state of this patch set? I am looking for this kind of
-functionality for a pwm based
-backlight on a devicetree only imx6 device.
+Bit 1: dynamic_clk_gating_en (1=enabled, 0=masked)
+Bit 0: standby mode en (1=enabled, 0=masked)
 
-greets
---
-Christian Gmeiner, MSc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, properties should one of:
+
+(a) arm,dynamic-clock-gating = <0/1>
+     arm,standby-mode = <0/1>
+(b) arm,dynamic-clock-gating-enable/-disable;
+     arm,standby-mode-enable/-disable
+
+If we want to have set/clear/don't touch behavior, I'd prefer (a) as
+it is easier to deal with in code. Moreover, -enable/-disable of (b)
+may not always fit the property name, so there will also be
+arm,no-feature-foo or arm,force-feature-bar.
+
+The same also applies for Prefetch Control register, too.
+
+Sebastian
+
+>   - interrupts : 1 combined interrupt.
+>   - cache-id-part: cache id part number to be used if it is not present
+>     on hardware
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index 447da6f..8f536ea 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -704,6 +704,8 @@ static void __init pl310_of_setup(const struct device_node *np,
+>   	u32 data[3] = { 0, 0, 0 };
+>   	u32 tag[3] = { 0, 0, 0 };
+>   	u32 filter[2] = { 0, 0 };
+> +	u32 l2x0_revision = readl_relaxed(l2x0_base + L2X0_CACHE_ID) &
+> +		L2X0_CACHE_ID_RTL_MASK;
+>
+>   	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
+>   	if (tag[0] && tag[1] && tag[2])
+> @@ -730,6 +732,23 @@ static void __init pl310_of_setup(const struct device_node *np,
+>   		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L2X0_ADDR_FILTER_EN,
+>   			       l2x0_base + L2X0_ADDR_FILTER_START);
+>   	}
+> +
+> +	if (l2x0_revision >= L2X0_CACHE_ID_RTL_R2P0) {
+> +		u32 prefetch_ctrl = 0;
+> +
+> +		of_property_read_u32(np, "arm,prefetch-ctrl",
+> +				     &prefetch_ctrl);
+> +		if (prefetch_ctrl)
+> +			writel_relaxed(prefetch_ctrl, l2x0_base +
+> +					L2X0_PREFETCH_CTRL);
+> +		if (l2x0_revision >= L2X0_CACHE_ID_RTL_R3P0) {
+> +			u32 pwr_ctrl = 0;
+> +			of_property_read_u32(np, "arm,pwr-ctrl", &pwr_ctrl);
+> +			if (pwr_ctrl)
+> +				writel_relaxed(pwr_ctrl, l2x0_base +
+> +						L2X0_POWER_CTRL);
+> +		}
+> +	}
+>   }
+>
+>   static void __init pl310_save(void)
+>
+
