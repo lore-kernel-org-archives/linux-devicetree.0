@@ -1,52 +1,39 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v4 05/31] mtd: nand: pxa3xx: devicetree binding update
-Date: Thu, 7 Nov 2013 12:54:08 -0500
-Message-ID: <20131107175408.GL8308@titan.lakedaemon.net>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131107153210.GK8308@titan.lakedaemon.net>
- <20131107164132.GA30917@localhost>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v3 0/2] clk/zynq: fclk-enable feature
+Date: Thu,  7 Nov 2013 10:00:42 -0800
+Message-ID: <1383847244-2079-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131107164132.GA30917@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 01:41:33PM -0300, Ezequiel Garcia wrote:
-> On Thu, Nov 07, 2013 at 10:32:10AM -0500, Jason Cooper wrote:
-> > On Thu, Nov 07, 2013 at 12:17:09PM -0300, Ezequiel Garcia wrote:
-> > > Since the driver supports the new compatible string, the binding
-> > > documentation must be updated to reflect it.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > Thanks for adding this, but please remember to update the Subject
-> > string in the future.  Both this patch and the next one are changing the
-> > Documentation/ portion of the tree, not drivers/.
-> > 
-> 
-> Come again?
-> 
-> You mean "[PATCH] Documentation: mtd: nand: Do this"
-> 
-> In that case: sorry, I do it differently on purpose, it looks better
-> to me (focus the affected driver), but maybe I'm wrong.
+Hi,
 
-but it makes it more difficult for devicetree binding reviewers to find
-the patch in the series.  Perhaps having 'binding' in the Subject is
-sufficient.  We'll see how things unfold over the next few days.
+this is v3. The only change is a doc fix. Regarding the vendor prefix f=
+or
+properties, I counted one vote for it and one against + the already exi=
+sting
+bindings that don't have a vendor prefix and my personal preference; an=
+d nobody
+else seems to have a strong opinion on this. Therefore I left it out.
 
-thx,
+	Thanks,
+	S=C3=B6ren
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Soren Brinkmann (2):
+  clk/zynq/clkc: Add 'fclk-enable' feature
+  arm: dt: zynq: Add fclk-enable property to clkc node
+
+ Documentation/devicetree/bindings/clock/zynq-7000.txt |  4 ++++
+ arch/arm/boot/dts/zynq-7000.dtsi                      |  1 +
+ drivers/clk/zynq/clkc.c                               | 18 +++++++++++=
+++++---
+ 3 files changed, 20 insertions(+), 3 deletions(-)
+
+--=20
+1.8.4.2
+
