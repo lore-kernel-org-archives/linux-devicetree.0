@@ -1,288 +1,109 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v11 6/6] ARM: hi3xxx: add hotplug support
-Date: Thu,  7 Nov 2013 16:41:31 +0800
-Message-ID: <1383813691-31587-7-git-send-email-haojian.zhuang@linaro.org>
-References: <1383813691-31587-1-git-send-email-haojian.zhuang@linaro.org>
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Thu, 07 Nov 2013 10:07:01 +0100
+Message-ID: <527B5835.3060906@keymile.com>
+References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <527A9AB9.2050903@keymile.com> <20131106200709.GB26881@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383813691-31587-1-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20131106200709.GB26881-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 11/06/2013 09:07 PM, Jason Gunthorpe wrote:
+> On Wed, Nov 06, 2013 at 08:38:33PM +0100, Gerlando Falauto wrote:
+>
+[...]
+> Each translation represents something concrete:
+>   0x8 -> 0x82000000 0x00000000 0x00000008
+>      This is the BAR 0 decoder of the PCI device
+>   0x82000000 0x00000000 0x00000008 -> 0x82000000 0x1 8
+>      This is the PCI bridge's memory window decoder
+>    0x82000000 0x1 8 -> MBUS_ID(0x04, 0xe8) 8
+>      This is the MBUS window associated with the PEX
+>   MBUS_ID(0x04, 0xe8) 8 -> 0xe0000008
+>      This is the physical CPU BUS address associated with the MBUS
+>      window
 
-Enable hotplug support on hi3xxx platform
+Uhm, OK, sounds good. Except you must know the whole mapping in advance. 
+Fair enough.
+Would that work without the whole mbus driver (I guess Ezequiel's)?
+I'm dealing with 3.10.
 
-How to test:
-cat proc/interrupts
-echo 0 > /sys/devices/system/cpu/cpuX/online
-cat proc/interrupts
-echo 1 > /sys/devices/system/cpu/cpuX/online
+Where does the 0x82000000 come from?
+What about the 0x1 (second cell)?
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Tested-by: Zhang Mingjun <zhang.mingjun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mach-hi3xxx/Makefile  |   1 +
- arch/arm/mach-hi3xxx/core.h    |   4 +
- arch/arm/mach-hi3xxx/hotplug.c | 200 +++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-hi3xxx/platsmp.c |   5 ++
- 4 files changed, 210 insertions(+)
- create mode 100644 arch/arm/mach-hi3xxx/hotplug.c
+>> Looks like it ends up at the beginning of the memory region for
+>> PCIe, and that's no wonder since you only have a single device with
+>> a single BAR... right?
+>
+> The mapping of the FPGA bus into a BAR is done by a single ranges:
+>
+>>>                                  fpga@0 {
+>>>                                          reg = <0x8 0 0  0 0>;
+>>>                                          ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000>;
+>>>                                          gpio3: fpga_gpio@8 {
+>
+> That ranges says 'put address 0 of the child bus at 0x82000000
+> 0x00000000 0x00000000', which is the BAR 0 address, relative to the
+> bridge's memory window.
+>
+>> So suppose you also had a bigger BAR1 which would then shift your
+>> GPIO block at @0xe8000000.
+>> Until we get that figured out, where would you hardcode such offset then?
+>
+> Since your BAR layout of your device is fixed you can adjust the
+> single ranges:
 
-diff --git a/arch/arm/mach-hi3xxx/Makefile b/arch/arm/mach-hi3xxx/Makefile
-index 7a869a7..c9919e8 100644
---- a/arch/arm/mach-hi3xxx/Makefile
-+++ b/arch/arm/mach-hi3xxx/Makefile
-@@ -4,3 +4,4 @@
- 
- obj-y	+= hi3xxx.o
- obj-$(CONFIG_SMP)		+= platsmp.o
-+obj-$(CONFIG_HOTPLUG_CPU)	+= hotplug.o
-diff --git a/arch/arm/mach-hi3xxx/core.h b/arch/arm/mach-hi3xxx/core.h
-index 226f020..af23ec2 100644
---- a/arch/arm/mach-hi3xxx/core.h
-+++ b/arch/arm/mach-hi3xxx/core.h
-@@ -8,4 +8,8 @@ extern int hi3xxx_get_cpu_jump(int cpu);
- extern void secondary_startup(void);
- extern struct smp_operations hi3xxx_smp_ops;
- 
-+extern void hi3xxx_cpu_die(unsigned int cpu);
-+extern int hi3xxx_cpu_kill(unsigned int cpu);
-+extern void hi3xxx_set_cpu(int cpu, bool enable);
-+
- #endif
-diff --git a/arch/arm/mach-hi3xxx/hotplug.c b/arch/arm/mach-hi3xxx/hotplug.c
-new file mode 100644
-index 0000000..5dc949e
---- /dev/null
-+++ b/arch/arm/mach-hi3xxx/hotplug.c
-@@ -0,0 +1,200 @@
-+/*
-+ * Copyright (c) 2013 Linaro Ltd.
-+ * Copyright (c) 2013 Hisilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <asm/cacheflush.h>
-+#include <asm/smp_plat.h>
-+#include "core.h"
-+
-+/* Sysctrl registers in Hi3620 SoC */
-+#define SCISOEN				0xc0
-+#define SCISODIS			0xc4
-+#define SCPERPWREN			0xd0
-+#define SCPERPWRDIS			0xd4
-+#define SCCPUCOREEN			0xf4
-+#define SCCPUCOREDIS			0xf8
-+#define SCPERCTRL0			0x200
-+#define SCCPURSTEN			0x410
-+#define SCCPURSTDIS			0x414
-+
-+/*
-+ * bit definition in SCISOEN/SCPERPWREN/...
-+ *
-+ * CPU2_ISO_CTRL	(1 << 5)
-+ * CPU3_ISO_CTRL	(1 << 6)
-+ * ...
-+ */
-+#define CPU2_ISO_CTRL			(1 << 5)
-+
-+/*
-+ * bit definition in SCPERCTRL0
-+ *
-+ * CPU0_WFI_MASK_CFG	(1 << 28)
-+ * CPU1_WFI_MASK_CFG	(1 << 29)
-+ * ...
-+ */
-+#define CPU0_WFI_MASK_CFG		(1 << 28)
-+
-+/*
-+ * bit definition in SCCPURSTEN/...
-+ *
-+ * CPU0_SRST_REQ_EN	(1 << 0)
-+ * CPU1_SRST_REQ_EN	(1 << 1)
-+ * ...
-+ */
-+#define CPU0_HPM_SRST_REQ_EN		(1 << 22)
-+#define CPU0_DBG_SRST_REQ_EN		(1 << 12)
-+#define CPU0_NEON_SRST_REQ_EN		(1 << 4)
-+#define CPU0_SRST_REQ_EN		(1 << 0)
-+
-+enum {
-+	HI3620_CTRL,
-+	ERROR_CTRL,
-+};
-+
-+static void __iomem *ctrl_base = NULL;
-+static int id;
-+
-+static void set_cpu_hi3620(int cpu, bool enable)
-+{
-+	u32 val = 0;
-+
-+	if (enable) {
-+		/* MTCMOS set */
-+		if ((cpu == 2) || (cpu == 3))
-+			writel_relaxed(CPU2_ISO_CTRL << (cpu - 2),
-+				       ctrl_base + SCPERPWREN);
-+		udelay(100);
-+
-+		/* Enable core */
-+		writel_relaxed(0x01 << cpu, ctrl_base + SCCPUCOREEN);
-+
-+		/* unreset */
-+		val = CPU0_DBG_SRST_REQ_EN | CPU0_NEON_SRST_REQ_EN
-+			| CPU0_SRST_REQ_EN;
-+		writel_relaxed(val << cpu, ctrl_base + SCCPURSTDIS);
-+		/* reset */
-+		val |= CPU0_HPM_SRST_REQ_EN;
-+		writel_relaxed(val << cpu, ctrl_base + SCCPURSTEN);
-+
-+		/* ISO disable */
-+		if ((cpu == 2) || (cpu == 3))
-+			writel_relaxed(CPU2_ISO_CTRL << (cpu - 2),
-+				       ctrl_base + SCISODIS);
-+		udelay(1);
-+
-+		/* WFI Mask */
-+		val = readl_relaxed(ctrl_base + SCPERCTRL0);
-+		val &= ~(CPU0_WFI_MASK_CFG << cpu);
-+		writel_relaxed(val, ctrl_base + SCPERCTRL0);
-+
-+		/* Unreset */
-+		val = CPU0_DBG_SRST_REQ_EN | CPU0_NEON_SRST_REQ_EN
-+			| CPU0_SRST_REQ_EN | CPU0_HPM_SRST_REQ_EN;
-+		writel_relaxed(val << cpu, ctrl_base + SCCPURSTDIS);
-+	} else {
-+		/* wfi mask */
-+		val = readl_relaxed(ctrl_base + SCPERCTRL0);
-+		val |= (CPU0_WFI_MASK_CFG << cpu);
-+		writel_relaxed(val, ctrl_base + SCPERCTRL0);
-+
-+		/* disable core*/
-+		writel_relaxed(0x01 << cpu, ctrl_base + SCCPUCOREDIS);
-+
-+		if ((cpu == 2) || (cpu == 3)) {
-+			/* iso enable */
-+			writel_relaxed(CPU2_ISO_CTRL << (cpu - 2),
-+				       ctrl_base + SCISOEN);
-+			udelay(1);
-+		}
-+
-+		/* reset */
-+		val = CPU0_DBG_SRST_REQ_EN | CPU0_NEON_SRST_REQ_EN
-+			| CPU0_SRST_REQ_EN | CPU0_HPM_SRST_REQ_EN;
-+		writel_relaxed(val << cpu, ctrl_base + SCCPURSTEN);
-+
-+		if ((cpu == 2) || (cpu == 3)) {
-+			/* MTCMOS unset */
-+			writel_relaxed(CPU2_ISO_CTRL << (cpu - 2),
-+				       ctrl_base + SCPERPWRDIS);
-+			udelay(100);
-+		}
-+	}
-+}
-+
-+static int hi3xxx_hotplug_init(void)
-+{
-+	struct device_node *node;
-+
-+	node = of_find_compatible_node(NULL, NULL, "hisilicon,sysctrl");
-+	if (node) {
-+		ctrl_base = of_iomap(node, 0);
-+		id = HI3620_CTRL;
-+		return 0;
-+	}
-+	id = ERROR_CTRL;
-+	return -ENOENT;
-+}
-+
-+void hi3xxx_set_cpu(int cpu, bool enable)
-+{
-+	if (!ctrl_base) {
-+		if (hi3xxx_hotplug_init() < 0)
-+			return;
-+	}
-+
-+	if (id == HI3620_CTRL)
-+		set_cpu_hi3620(cpu, enable);
-+}
-+
-+static inline void cpu_enter_lowpower(void)
-+{
-+	unsigned int v;
-+
-+	flush_cache_all();
-+
-+	/*
-+	 * Turn off coherency and L1 D-cache
-+	 */
-+	asm volatile(
-+	"	mrc	p15, 0, %0, c1, c0, 1\n"
-+	"	bic	%0, %0, #0x40\n"
-+	"	mcr	p15, 0, %0, c1, c0, 1\n"
-+	"	mrc	p15, 0, %0, c1, c0, 0\n"
-+	"	bic	%0, %0, #0x04\n"
-+	"	mcr	p15, 0, %0, c1, c0, 0\n"
-+	  : "=&r" (v)
-+	  : "r" (0)
-+	  : "cc");
-+}
-+
-+void hi3xxx_cpu_die(unsigned int cpu)
-+{
-+	cpu_enter_lowpower();
-+	hi3xxx_set_cpu_jump(cpu, phys_to_virt(0));
-+	cpu_do_idle();
-+
-+	/* We should have never returned from idle */
-+	panic("cpu %d unexpectedly exit from shutdown\n", cpu);
-+}
-+
-+int hi3xxx_cpu_kill(unsigned int cpu)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(50);
-+
-+	while (hi3xxx_get_cpu_jump(cpu))
-+		if (time_after(jiffies, timeout))
-+			return 0;
-+	hi3xxx_set_cpu(cpu, false);
-+	return 1;
-+}
-diff --git a/arch/arm/mach-hi3xxx/platsmp.c b/arch/arm/mach-hi3xxx/platsmp.c
-index a4d04c0..4357758 100644
---- a/arch/arm/mach-hi3xxx/platsmp.c
-+++ b/arch/arm/mach-hi3xxx/platsmp.c
-@@ -73,6 +73,7 @@ static void __init hi3xxx_smp_prepare_cpus(unsigned int max_cpus)
- 
- static int hi3xxx_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
-+	hi3xxx_set_cpu(cpu, true);
- 	hi3xxx_set_cpu_jump(cpu, secondary_startup);
- 	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
- 	return 0;
-@@ -81,4 +82,8 @@ static int hi3xxx_boot_secondary(unsigned int cpu, struct task_struct *idle)
- struct smp_operations hi3xxx_smp_ops __initdata = {
- 	.smp_prepare_cpus	= hi3xxx_smp_prepare_cpus,
- 	.smp_boot_secondary	= hi3xxx_boot_secondary,
-+#ifdef CONFIG_HOTPLUG_CPU
-+	.cpu_die		= hi3xxx_cpu_die,
-+	.cpu_kill		= hi3xxx_cpu_kill,
-+#endif
- };
--- 
-1.8.3.2
+By "single" you mean that it's just *one* range, right?
 
+>
+>    ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000>;
+>
+> It is possible as well to do this in code in the FPGA driver.
+
+Uhm... why? And how? You mean dynamically upgrading the ranges window?
+
+>
+>> How would you also deal with a second (let's say identical) device on BAR1?
+>
+>    ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000  //  BAR 0
+>              0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> // BAR 1
+
+Aren't in this case the two regions aliased? Shouldn't the fourth column 
+on either row be 0x00000000? Like:
+
+     ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000 
+//  BAR 0
+               0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> 
+// BAR 1
+
+> Use reg <0x10000abc xxx> to refer to the 2nd BAR. There are other ways
+> to organize things.
+
+Now I completely lost you. According to the above description (BTW, I 
+like the double space to separate groups -- it makes this whole mess a 
+little messy!) the child address should have a single cell.
+Why use two then?
+
+>> I guess I could live with hardcoded values in the DT, as long as
+>> they're easy to spot and there's only one per BAR/device.
+>> Then it's easy to do a comparison with whatever gets assigned during
+>> probing.
+>
+> I'd see it as an interm step, pending on some kind of core support for
+> this sort of stuff.
+
+Right.
+
+Sorry for being pedantic, but I'd really like to get this straight once 
+and for all...
+
+Thanks again,
+Gerlando
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
