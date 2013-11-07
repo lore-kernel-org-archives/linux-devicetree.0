@@ -1,54 +1,56 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Thu, 7 Nov 2013 14:22:05 -0800
-Message-ID: <20131107222205.GA24450@roeck-us.net>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
- <20131106190152.GA8662@breakpoint.cc>
- <20131106193041.GA26796@roeck-us.net>
- <20131106203821.GC8662@breakpoint.cc>
- <20131106211754.GA29300@roeck-us.net>
- <20131107192558.GA11453@breakpoint.cc>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 05/11] ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu
+ hotplug/smp
+Date: Thu, 07 Nov 2013 14:34:15 -0800
+Message-ID: <527C1567.8000005@codeaurora.org>
+References: <1383343739-23080-1-git-send-email-sboyd@codeaurora.org> <1383343739-23080-6-git-send-email-sboyd@codeaurora.org> <20131107015005.GE22684@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131107192558.GA11453-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131107015005.GE22684@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 08:25:58PM +0100, Sebastian Andrzej Siewior wro=
-te:
-> On 06.11.13, Guenter Roeck wrote:
-> |=E2=80=A6
-> thanks for the explanation.
->=20
-> > We use DT overlays to describe the hardware on those boards and, if=
- necessary,
-> > its configuration. For example, if there is a PCIe switch, the over=
-lay would
-> > describe its memory and bus number configuration.
->=20
-> So have your "fix" configuration and a few overlays you switch at
-> runtime. The problem you have is that you want to switch a specific p=
-art
-> if your configuration at runtime. I assume you run DT on ARM. What
-> happens if you swtich from ARM to x86 and you "keep" your FPGA
-> configuration requirement? You can't use both, DT and ACPI, right? So
-> what happens then?
->=20
-We intend to use DT on x86 to augment ACPI data. There is a variety of =
-reasons
-why we can not use ACPI, nor do we want to as we prefer a single method=
- for
-handling OIR on all platforms. FWIW, the non-x86 platform is powerpc, n=
-ot arm.
+On 11/06/13 17:50, Josh Cartwright wrote:
+> On Fri, Nov 01, 2013 at 03:08:53PM -0700, Stephen Boyd wrote:
+>> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+>> index f35906b..71a8592 100644
+>> --- a/arch/arm/kernel/devtree.c
+>> +++ b/arch/arm/kernel/devtree.c
+>> @@ -25,6 +25,7 @@
+>>  #include <asm/smp_plat.h>
+>>  #include <asm/mach/arch.h>
+>>  #include <asm/mach-types.h>
+>> +#include <asm/smp.h>
+>>  
+>>  void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+>>  {
+>> @@ -63,6 +64,36 @@ void __init arm_dt_memblock_reserve(void)
+>>  	}
+>>  }
+>>  
+>> +#ifdef CONFIG_SMP
+>> +extern struct of_cpu_method __cpu_method_of_table[];
+>> +
+>> +static const struct of_cpu_method __cpu_method_of_table_sentinel
+>> +	__used __section(__cpu_method_of_table_end);
+> Having a sentinel allocated into the linked image makes a lot of sense
+> in other cases (IRQCHIP/CLOCKSOURCE_OF_DECLARE, etc), where it's used to
+> terminate an of_device_id table (as is expected by of_match_table and
+> friends).
+>
+> In this case, however, you aren't building a match table, so having a
+> sentinel allocated isn't necessary.  I'd suggest bookending the table
+> with a VMLINUX_SYMBOL(__cpu_method_of_table_end) instead.
+>
+> A whole 2 pointers worth of savings!
+>
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, will do. Thanks.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
