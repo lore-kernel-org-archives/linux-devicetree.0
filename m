@@ -1,95 +1,38 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Thu, 7 Nov 2013 10:01:47 -0700
-Message-ID: <20131107170147.GA1057@obsidianresearch.com>
-References: <527A1983.6020603@keymile.com>
- <20131106173649.GA25515@obsidianresearch.com>
- <527A9AB9.2050903@keymile.com>
- <20131106200709.GB26881@obsidianresearch.com>
- <527B5835.3060906@keymile.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Thu, 7 Nov 2013 12:05:37 -0500 (EST)
+Message-ID: <alpine.LFD.2.03.1311071204510.18068@syhkavp.arg>
+References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com>
+ <1383811969-32712-4-git-send-email-v.tyrtov@samsung.com>
+ <20131107130141.GA3129@localhost.localdomain>
+ <alpine.LFD.2.03.1311071147480.18068@syhkavp.arg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <527B5835.3060906-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.LFD.2.03.1311071147480.18068@syhkavp.arg>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 10:07:01AM +0100, Gerlando Falauto wrote:
-> On 11/06/2013 09:07 PM, Jason Gunthorpe wrote:
-> >On Wed, Nov 06, 2013 at 08:38:33PM +0100, Gerlando Falauto wrote:
-> >
-> [...]
-> >Each translation represents something concrete:
-> >  0x8 -> 0x82000000 0x00000000 0x00000008
-> >     This is the BAR 0 decoder of the PCI device
-> >  0x82000000 0x00000000 0x00000008 -> 0x82000000 0x1 8
-> >     This is the PCI bridge's memory window decoder
-> >   0x82000000 0x1 8 -> MBUS_ID(0x04, 0xe8) 8
-> >     This is the MBUS window associated with the PEX
-> >  MBUS_ID(0x04, 0xe8) 8 -> 0xe0000008
-> >     This is the physical CPU BUS address associated with the MBUS
-> >     window
+On Thu, 7 Nov 2013, Nicolas Pitre wrote:
+
+> On Thu, 7 Nov 2013, Dave Martin wrote:
 > 
-> Uhm, OK, sounds good. Except you must know the whole mapping in
-> advance. Fair enough.
-> Would that work without the whole mbus driver (I guess Ezequiel's)?
-> I'm dealing with 3.10.
+> > On Thu, Nov 07, 2013 at 08:12:48AM +0000, Vyacheslav Tyrtov wrote:
 
-Yes, I am using this in 3.10. On 3.10 the ranges at the mbus level has
-to match the hardwired address mapping in Linux.
+[...]
 
-> Where does the 0x82000000 come from?
-> What about the 0x1 (second cell)?
+Gah.  Sorry for the triplicates.
 
-0x82000000 is part of the OF PCI spec, it indicates the address space
-is memory (vs io, vs prefetchable memory, etc)
 
-The 0x1 is an arbitary unique value that matches the next ranges. It
-would probably have been clearer if it was MBUS_ID(0x04, 0xe8)
-instead...
-
-> >   ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000>;
-> >
-> >It is possible as well to do this in code in the FPGA driver.
-> 
-> Uhm... why? And how? You mean dynamically upgrading the ranges window?
-
-If you can't predict where your BAR will be assigned when you create
-the DT then you could update the ranges value at runtime in your pci
-driver before probing the children. A bit hacky.
-
-> >
-> >>How would you also deal with a second (let's say identical) device on BAR1?
-> >
-> >   ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000  //  BAR 0
-> >             0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> // BAR 1
-> 
-> Aren't in this case the two regions aliased? Shouldn't the fourth
-> column on either row be 0x00000000? Like:
-
-Yes, you are right!
-
->     ranges = <0x00000000  0x82000000 0x00000000 0x00000000
-> 0x8000000 //  BAR 0
->               0x10000000  0x82000000 0x00000000 0x08000000
-> 0x8000000> // BAR 1
-> 
-> >Use reg <0x10000abc xxx> to refer to the 2nd BAR. There are other ways
-> >to organize things.
->
-> Now I completely lost you. According to the above description (BTW,
-> I like the double space to separate groups -- it makes this whole
-> mess a little messy!) the child address should have a single cell.
-> Why use two then?
-
-0x10000abc is the address, xxxx is the size, reg always has address +
-size
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nicolas
