@@ -1,34 +1,113 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/2] of: irq: Check for reg property presence only when
- parsing interrupt-map
-Date: Thu, 07 Nov 2013 12:33:26 +0100
-Message-ID: <1489788.4u43h9g5sZ@amdc1227>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
- <2177804.l4VGDTRFDu@amdc1227> <11085147.qYFvaZYATK@amdc1227>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC] dt: bindings: submitting patches document
+Date: Thu, 7 Nov 2013 12:42:12 +0100
+Message-ID: <527B7C94.7030708@atmel.com>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <11085147.qYFvaZYATK@amdc1227>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383759120-21571-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 05 of November 2013 16:21:36 Tomasz Figa wrote:
-> This patch fixes the of_irq_parse_raw() function to check for reg
-> property only when really parsing interrupt map property, as it is not
-> required otherwise and breaks existing device trees.
-> 
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+On 06/11/2013 18:32, Jason Cooper :
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > ---
->  drivers/of/irq.c | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
+> All,
+>
+> Since I've now had to answer this question a couple of times, I thought it
+> might be worth trying to put it in a document.  I don't like long documents, so
+> this is pretty concise, and most likely wrong.  Hence, RFC.  :)
+>
+> I also dislike quoting people from my imperfect memory, much better to have an
+> agreed upon document we can point people towards.
+>
+> thx,
+>
+> Jason.
+>
+>   .../devicetree/bindings/submitting-patches.txt     | 52 ++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+>
+> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+> new file mode 100644
+> index 000000000000..5a84d5ebb0f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
+> @@ -0,0 +1,52 @@
+> +
+> +  Submitting devicetree (DT) binding patches
+> +
+> +I. For patch submitters
+> +
+> +  0) Normal patch submission rules from Documentation/SubmittingPatches
+> +     applies.
+> +
+> +  1) The Documentation/ portion of the patch should be a separate patch
+> +     and clearly labelled as such.  For example:
+> +
+> +       [PATCH X/Y] dt: binding: mvebu mbus driver
+> +
+> +     This makes the binding portion easy to find among large patch series.
+> +
+> +  2) Submit the entire series to the devicetree mailinglist at
 
-Please disregard this patch. It seems like Grant's fix that has been
-already merged also fixes the same problem.
+This is not what I understood.
+It seems that we said that only the patch that was containing the 
+binding documentation have to be sent to the devicetree mainling-list 
+(but this patch being part of a patch series anyway). This way the 
+devicetree maintainers would not have to deal with the patch review 
+process, even if they can have a look to the code source on the 
+mailing-list archive if they need to.
 
-Best regards,
-Tomasz
+Someone to clarify?
+
+
+> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +
+> +II. For sub-system maintainers
+> +
+> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
+> +     the devicetree maintainers for guidance.  This will help them prioritize
+> +     which ones to review and which ones are ok to let go.
+> +
+> +  2) If you are comfortable with the binding, and it hasn't received an
+> +     Acked-by from the devicetree maintainers after a few weeks, go ahead and
+> +     take it.
+> +
+> +  3) For a series going though multiple trees, the binding patch should be
+> +     kept with the driver using the binding.
+> +
+> +III.  General binding rules
+> +
+> +  1) Don't hold up a binding because it isn't perfect.
+> +
+> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
+> +     in the future, we can create a new compatible string.
+> +
+> +  3) Ideally, all bindings receive sufficient review.  In the real world, we
+> +     need to prioritize.  Bindings for a specific block of IP aren't as
+> +     critical as a binding for a common subsystem, like PCI.
+> +
+> +  4) Don't submit bindings for staging or unstable.  That will be decided by
+> +     the devicetree maintainers *after* discussion on the mailinglist.
+> +
+> +IV. Notes
+> +
+> +  This document is intended as a general familiarization with the process as
+> +  decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +  devicetree maintainers overrules this document.  In that situation, a patch
+> +  updating this document would be appreciated.
+>
+
+
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
