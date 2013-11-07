@@ -1,103 +1,81 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
-Date: Thu,  7 Nov 2013 12:12:55 +0530
-Message-ID: <1383806575-28401-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, Prathyush K <prathyush.k@samsung.com>
+From: Li Xiubo <Li.Xiubo@freescale.com>
+Subject: RE: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
+Date: Thu, 7 Nov 2013 07:00:41 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F82878657@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Li Xiubo <Li.Xiubo@freescale.com>, Shawn Guo <Shawn.Guo@freescale.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Prathyush K <prathyush.k@samsung.com>
+Hi Thierry,
 
-Different power domains of Exynos SOCs have different enable values.
-E.g. Exynos5250:
-ROTATOR_MEM_CONFIGURATION -> 0x3
-GSCL_CONFIGURATION -> 0x7
-Currently, there is no way to differentiate between these power domains
-and we write default value of 0x7 to turn on all the power domains.
+The document binding patch of this patch series has been acked.
+And other patches have been acked before.
 
-This patch adds a new 'enable' property to the power domain structure.
-This enable value can be set from the device tree by adding a property
-'enable' in the device node. If no such property is found, the default
-value of 0x7 is used as enable value.
+Should I send a V6 patch series ?
 
-Signed-off-by: Prathyush K <prathyush.k@samsung.com>
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../bindings/arm/exynos/power_domain.txt           |    5 +++++
- arch/arm/mach-exynos/pm_domains.c                  |   10 +++++++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
+Thanks very much.
 
-diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-index 5216b419016a..6b24b234617c 100644
---- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-+++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-@@ -9,6 +9,10 @@ Required Properties:
- - reg: physical base address of the controller and length of memory mapped
-     region.
- 
-+Optional Properties:
-+- enable: enable value of the register which is used to turn on the power
-+    domain. If no enable is specificed, default value of 0x7 is used.
-+
- Node of a device using power domains must have a samsung,power-domain property
- defined with a phandle to respective power domain.
- 
-@@ -17,6 +21,7 @@ Example:
- 	lcd0: power-domain-lcd0 {
- 		compatible = "samsung,exynos4210-pd";
- 		reg = <0x10023C00 0x10>;
-+		enable = <0x1>;
- 	};
- 
- Example of the node using power domain:
-diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
-index 1703593e366c..84e0483a0500 100644
---- a/arch/arm/mach-exynos/pm_domains.c
-+++ b/arch/arm/mach-exynos/pm_domains.c
-@@ -33,6 +33,7 @@ struct exynos_pm_domain {
- 	char const *name;
- 	bool is_off;
- 	struct generic_pm_domain pd;
-+	u32 enable;
- };
- 
- static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
-@@ -45,13 +46,13 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
- 	pd = container_of(domain, struct exynos_pm_domain, pd);
- 	base = pd->base;
- 
--	pwr = power_on ? S5P_INT_LOCAL_PWR_EN : 0;
-+	pwr = power_on ? pd->enable : 0;
- 	__raw_writel(pwr, base);
- 
- 	/* Wait max 1ms */
- 	timeout = 10;
- 
--	while ((__raw_readl(base + 0x4) & S5P_INT_LOCAL_PWR_EN)	!= pwr) {
-+	while ((__raw_readl(base + 0x4) & pd->enable) != pwr) {
- 		if (!timeout) {
- 			op = (power_on) ? "enable" : "disable";
- 			pr_err("Power domain %s %s failed\n", domain->name, op);
-@@ -164,6 +165,9 @@ static __init int exynos4_pm_init_power_domain(void)
- 			return -ENOMEM;
- 		}
- 
-+		if (of_property_read_u32(np, "enable", &pd->enable))
-+			pd->enable = S5P_INT_LOCAL_PWR_EN;
-+
- 		pd->pd.name = kstrdup(np->name, GFP_KERNEL);
- 		pd->name = pd->pd.name;
- 		pd->base = of_iomap(np, 0);
-@@ -173,7 +177,7 @@ static __init int exynos4_pm_init_power_domain(void)
- 
- 		platform_set_drvdata(pdev, pd);
- 
--		on = __raw_readl(pd->base + 0x4) & S5P_INT_LOCAL_PWR_EN;
-+		on = __raw_readl(pd->base + 0x4) & pd->enable;
- 
- 		pm_genpd_init(&pd->pd, NULL, !on);
- 	}
--- 
-1.7.9.5
+
+--
+
+
+> Subject: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
+> 
+> Hello,
+> 
+> This patch series is the Freescale FTM PWM implementation. And there are
+> 8 channels most supported by the FTM PWM. This implementation is only
+> compatible with device tree definition.
+> 
+> This patch series is based on linux-next and has been tested on Vybrid
+> VF610 Tower board using device tree.
+> 
+> 
+> 
+> Changes in RFCv2 of PATVHv5:
+> - Remove "fsl,pwm-counter-clk"(all the four patches are modified).
+> 
+> Changes in v5:
+> - Remove active/idle pinctrl stuff.
+> 
+> Changes in v4:
+> - Check for the result and return an error for devm_kzalloc().
+> - Move pinmux setting from the SoC file to the board specific file.
+> - Revise the written mistake of 'ret |= FTMSC_CLKEXT;' --> 'reg |=
+> FTMSC_CLKEXT;'.
+> 
+> 
+> Changes in v3:
+> - Remove "availabe" field.
+> - Remove "fsl,pwm-avaliable-chs" property.
+> - ...
+> 
+> Changes in v2:
+> - Remove PWM CPWM/EPWM feature and sysfs.
+> - Remove some redundant code.
+> - Revise some code for more readable.
+> - Remove "fsl,pwm-clk-ps", "fsl,pwm-number", "fsl,pwm-channels",etc.
+> - Add "fsl,pwm-avaliable-chs", "fsl,pwm-counter-clk", etc.
+> - Support 8 channels default in dtsi file.
+> - Add counter clock source selection.
+> - Rename some function name, macro name, etc.
+> - Use PWM's and OF's existing function interfaces.
+> - Split clk_unprepare_enable to clk_unprepare and clk_enable,etc.
+> - ...
+> 
+> Added in v1:
+> - Add Freescale FTM PWM driver support.
+> - Add Freescale FTM PWM node for VF610.
+> - Enable Enables FTM PWM device for Vybrid VF610 TOWER.
+> - Add device tree bindings for Freescale.
+
+
+
