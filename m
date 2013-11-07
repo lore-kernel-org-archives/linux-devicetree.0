@@ -1,81 +1,155 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 05/31] mtd: nand: pxa3xx: devicetree binding update
-Date: Thu, 7 Nov 2013 13:41:33 -0300
-Message-ID: <20131107164132.GA30917@localhost>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131107153210.GK8308@titan.lakedaemon.net>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v2] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+Date: Thu, 07 Nov 2013 17:45:16 +0100
+Message-ID: <6654895.bR12A8qC1P@amdc1227>
+References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
+ <22321712.GIyJDTupbe@amdc1227>
+ <CAHfPSqARSJqbXv9F+Fgro_=k3P2xE3XNsF-KYOW43WdVtKeSEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131107153210.GK8308-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAHfPSqARSJqbXv9F+Fgro_=k3P2xE3XNsF-KYOW43WdVtKeSEA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 10:32:10AM -0500, Jason Cooper wrote:
-> On Thu, Nov 07, 2013 at 12:17:09PM -0300, Ezequiel Garcia wrote:
-> > Since the driver supports the new compatible string, the binding
-> > documentation must be updated to reflect it.
-> >=20
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> Thanks for adding this, but please remember to update the Subject
-> string in the future.  Both this patch and the next one are changing =
-the
-> Documentation/ portion of the tree, not drivers/.
->=20
+Hi Naveen,
 
-Come again?
+On Thursday 07 of November 2013 22:02:10 Naveen Krishna Ch wrote:
+> Hello Tomasz,
+> 
+> On 7 November 2013 19:53, Tomasz Figa <t.figa@samsung.com> wrote:
+> > Hi Naveen,
+> >
+> > On Thursday 07 of November 2013 18:37:49 Naveen Krishna Chatradhi wrote:
+> >> Exynos5420 SoC has per core thermal management unit.
+> >> 5 TMU channels 4 for CPUs and 5th for GPU.
+> >>
+> >> This patch adds the device tree nodes to the DT device list.
+> >>
+> >> Nodes carry the misplaced second base address and the second
+> >> clock to access the misplaced base address.
+> >>
+> >> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> >> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> >> ---
+> >> Changes since v1:
+> >> 1. Nodes carry the misplaced second base address and the second
+> >>    clock to access the misplaced base address.
+> >> 2. Correct the clock number for the TMU4
+> >
+> > First of all, this patch should be a part of the whole series adding
+> > support for thermal on Exynos 5420.
+> Right, Reason why i posted this patch myself fixing the nits (As Leela
+> and i work closely)
+> Should have been along with the set.
 
-You mean "[PATCH] Documentation: mtd: nand: Do this"
+OK.
 
-In that case: sorry, I do it differently on purpose, it looks better
-to me (focus the affected driver), but maybe I'm wrong.
+> >
+> > In addition, see my comment below.
+> >
+> >>  arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 48 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> >> index 6ffefd1..d736b40 100644
+> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> >> @@ -369,4 +369,52 @@
+> >>               clock-names = "gscl";
+> >>               samsung,power-domain = <&gsc_pd>;
+> >>       };
+> >> +
+> >> +     /* tmu for CPU0 */
+> >> +     tmu@10060000 {
+> >> +             compatible = "samsung,exynos5420-tmu";
+> >> +             reg = <0x10060000 0x100>;
+> >> +             interrupts = <0 65 0>;
+> >> +             clocks = <&clock 318>;
+> >> +             clock-names = "tmu_apbif";
+> >> +     };
+> >> +
+> >> +     /* tmu for CPU1 */
+> >> +     tmu@10064000 {
+> >> +             compatible = "samsung,exynos5420-tmu";
+> >> +             reg = <0x10064000 0x100>;
+> >> +             interrupts = <0 183 0>;
+> >> +             clocks = <&clock 318>;
+> >> +             clock-names = "tmu_apbif";
+> >> +     };
+> >> +
+> >> +     /* tmu for CPU2 */
+> >> +     tmu@10068000 {
+> >> +             compatible = "samsung,exynos5420-tmu";
+> >> +             /* 2nd reg is for the misplaced TRIMINFO register */
+> >
+> > Instead of this comment, such broken TMU variant should use a separate
+> > compatible value, like "samsung,exynos5420-tmu-broken-triminfo", like
+> > I mentioned in my comments to your other patch.
+> Will make a note of it.
 
-> And,
->=20
-> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->=20
+OK.
 
-Thanks!
+> >
+> > For this compatible value, both second reg entry and second clock would
+> > be required.
+> >
+> >> +             reg = <0x10068000 0x100>, <0x1006c000 0x4>;
+> >> +             interrupts = <0 184 0>;
+> >> +             clocks = <&clock 318>;
+> >> +             clock-names = "tmu_apbif";
+> >> +     };
+> >> +
+> >> +     /* tmu for CPU3 */
+> >> +     tmu@1006c000 {
+> >> +             compatible = "samsung,exynos5420-tmu";
+> >> +             /* 2nd reg is for the misplaced TRIMINFO register */
+> >> +             reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
+> >> +             interrupts = <0 185 0>;
+> >> +             clocks = <&clock 318>, <&clock 319>;
+> >> +             clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+> >
+> > The "tmu_apbif_triminfo" clock is not specified in exynos-thermal binding
+> > documentation. In addition, the patch of yours adding support for second
+> > clock uses another name - "tmu_apbif_sec".
+> >
+> > As for the name itself, I would prefer "tmu_apbif_triminfo" as it's more
+> > meaningful.
+> TMU hardware on Exynos5440 and Exynos5420 has two different abnormalities
+> On Exynos5440 Some registers are interleaved between the channels
+> On Exynos5420, TRIMINFO is misplaced between, channels 2, 3 and 4.
 
-> thx,
->=20
-> Jason.
->=20
-> > diff --git a/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt =
-b/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-> > index f1421e2..bed8390 100644
-> > --- a/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-> > @@ -2,7 +2,9 @@ PXA3xx NAND DT bindings
-> > =20
-> >  Required properties:
-> > =20
-> > - - compatible:		Should be "marvell,pxa3xx-nand"
-> > + - compatible:		Should be set to one of the following:
-> > +			marvell,pxa3xx-nand
-> > +			marvell,armada370-nand
-> >   - reg: 		The register base for the controller
-> >   - interrupts:		The interrupt to map
-> >   - #address-cells:	Set to <1> if the node includes partitions
-> > --=20
-> > 1.8.1.5
-> >=20
+I know that those cases are different, but my point was not about it.
 
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In your patch adding support for this second clock, you add following call
+to devm_clk_get():
+
+	data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
+
+However in device tree nodes added by this patch, you have
+
+	clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+
+and this where my confusion comes from.
+
+> having second_base was for the fix by Amit to address Exynos5440 problem,
+> Which was already merged.
+> After several reviews i tried to solve it by reusing the second_base
+> for Exynos5420 aswell.
+> Hence, I tried to use the "clk_sec" or "clk_second" which will rhyme
+> along with the
+> "second_base" in the driver.
+> 
+> I'm still not sure this having second clock is needed for Exynos5440 aswell.
+> Will figure it out tomorrow.
+
+Even if Exynos 5440 does not need the second clock, it uses a different
+compatible value, so you can easily distinguish the cases when the second
+clock is required or not.
+
+Best regards,
+Tomasz
