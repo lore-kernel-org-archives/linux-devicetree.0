@@ -1,337 +1,166 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v3 8/9] ARM: add Armada 1500-mini and Chromecast device
- tree files
-Date: Thu, 7 Nov 2013 13:48:02 +0800
-Message-ID: <20131107134802.2234bff1@xhacker>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1383661723-17956-9-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383661723-17956-9-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 1/3 v8] thermal: samsung: add intclr_fall_shift bit in
+ exynos_tmu_register struct
+Date: Thu, 07 Nov 2013 11:22:42 +0530
+Message-ID: <1383803562-31752-1-git-send-email-ch.naveen@samsung.com>
+References: <1381979473-7079-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1381979473-7079-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Nov 2013 06:28:42 -0800
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+On Exynos5250, the FALL interrupt related en, status and clear bits are
+available at an offset of
+16 in INTEN, INTSTAT registers and at an offset of
+12 in INTCLEAR register.
 
-> This adds very basic device tree files for the Marvell Armada
-> 1500-mini SoC (Berlin BG2CD) and the Google Chromecast. Currently,
-> SoC only has nodes for cpu, some clocks, l2 cache controller, local
-> timer, apb timers, uart, and interrupt controllers.
-> The Google Chromecast is a consumer device comprising the Armada
-> 1500-mini SoC above.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-> Changelog:
-> v3:
-> - initial patch
-> 
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/arm/boot/dts/Makefile                        |    3 +-
->  arch/arm/boot/dts/berlin2cd-google-chromecast.dts |   29 +++
->  arch/arm/boot/dts/berlin2cd.dtsi                  |  212
-> +++++++++++++++++++++ 3 files changed, 243 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/berlin2cd-google-chromecast.dts
->  create mode 100644 arch/arm/boot/dts/berlin2cd.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c9c1a6c..dac733f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -47,7 +47,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
->  dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
->         bcm28155-ap.dtb
->  dtb-$(CONFIG_ARCH_BERLIN) += \
-> -       berlin2-sony-nsz-gs7.dtb
-> +       berlin2-sony-nsz-gs7.dtb \
-> +       berlin2cd-google-chromecast.dtb
->  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
->         da850-evm.dtb
->  dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts new file mode 100644
-> index 0000000..bcd81ff
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> @@ -0,0 +1,29 @@
-> +/*
-> + * Device Tree file for Google Chromecast
-> + *
-> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "berlin2cd.dtsi"
-> +
-> +/ {
-> +       model = "Google Chromecast";
-> +       compatible = "google,chromecast", "marvell,berlin2cd",
-> "marvell,berlin"; +
-> +       chosen {
-> +               bootargs = "console=ttyS0,115200 earlyprintk";
-> +       };
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x00000000 0x20000000>; /* 512 MB */
-> +       };
-> +};
-> +
-> +&uart0 { status = "okay"; };
-> diff --git a/arch/arm/boot/dts/berlin2cd.dtsi
-> b/arch/arm/boot/dts/berlin2cd.dtsi new file mode 100644
-> index 0000000..40d1bed
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/berlin2cd.dtsi
-> @@ -0,0 +1,212 @@
-> +/*
-> + * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
-> + *
-> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> + *
-> + * based on GPL'ed 2.6 kernel sources
-> + *  (c) Marvell International Ltd.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include "skeleton.dtsi"
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +       model = "Marvell Armada 1500-mini (BG2CD) SoC";
-> +       compatible = "marvell,berlin2cd", "marvell,berlin";
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a9";
-> +                       device_type = "cpu";
-> +                       next-level-cache = <&l2>;
-> +                       reg = <0>;
-> +               };
-> +       };
-> +
-> +       clocks {
-> +               smclk: sysmgr-clock {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <25000000>;
-> +               };
-> +
-> +               cfgclk: cfg-clock {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <75000000>;
-> +               };
-> +
-> +               sysclk: system-clock {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <300000000>;
-> +               };
-> +       };
-> +
-> +       soc {
-> +               compatible = "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               interrupt-parent = <&gic>;
-> +
-> +               ranges = <0 0xf7000000 0x1000000>;
-> +
-> +               l2: l2-cache-controller@ac0000 {
-> +                       compatible = "arm,pl310-cache";
-> +                       reg = <0xac0000 0x1000>;
-> +                       cache-unified;
-> +                       cache-level = <2>;
-> +                       arm,prefetch-ctrl = <0x70000007>;
-> +                       arm,pwr-ctrl = <0x3>;
-These two setting depend on the following prefetch and power control support patch.
-We have it in our internal tree for a long time.
+On Exynos5420, the FALL interrupt related en, status and clear bits are
+available at an offset of
+16 in INTEN, INTSTAT and INTCLEAR registers.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/209700.html
-> +               };
-> +
-> +               gic: interrupt-controller@ad1000 {
-> +                       compatible = "arm,cortex-a9-gic";
-> +                       reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +               };
-> +
-> +               local-timer@ad0600 {
-> +                       compatible = "arm,cortex-a9-twd-timer";
-> +                       reg = <0xad0600 0x20>;
-> +                       interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&sysclk>;
-> +               };
-> +
-> +               apb@e80000 {
-> +                       compatible = "simple-bus";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       ranges = <0 0xe80000 0x10000>;
-> +                       interrupt-parent = <&aic>;
-> +
-> +                       timer0: timer@2c00 {
-> +                               compatible = "snps,dw-apb-timer";
-snps,dw-apb-timer-osc?
-> +                               reg = <0x2c00 0x14>;
-> +                               interrupts = <8>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "okay";
-> +                       };
-> +
-> +                       timer1: timer@2c14 {
-> +                               compatible = "snps,dw-apb-timer";
-ditto for the remaining
-> +                               reg = <0x2c14 0x14>;
-> +                               interrupts = <9>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "okay";
-> +                       };
-> +
-> +                       timer2: timer@2c28 {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c28 0x14>;
-> +                               interrupts = <10>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       timer3: timer@2c3c {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c3c 0x14>;
-> +                               interrupts = <11>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       timer4: timer@2c50 {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c50 0x14>;
-> +                               interrupts = <12>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       timer5: timer@2c64 {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c64 0x14>;
-> +                               interrupts = <13>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       timer6: timer@2c78 {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c78 0x14>;
-> +                               interrupts = <14>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       timer7: timer@2c8c {
-> +                               compatible = "snps,dw-apb-timer";
-> +                               reg = <0x2c8c 0x14>;
-> +                               interrupts = <15>;
-> +                               clocks = <&cfgclk>;
-> +                               clock-names = "timer";
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       aic: interrupt-controller@3000 {
-> +                               compatible = "snps,dw-apb-ictl";
-> +                               reg = <0x3000 0xc00>;
-> +                               interrupt-controller;
-> +                               #interrupt-cells = <1>;
-> +                               interrupt-parent = <&gic>;
-> +                               interrupts = <GIC_SPI 3
-> IRQ_TYPE_LEVEL_HIGH>;
-> +                       };
-> +               };
-> +
-> +               apb@fc0000 {
-> +                       compatible = "simple-bus";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       ranges = <0 0xfc0000 0x10000>;
-> +                       interrupt-parent = <&sic>;
-> +
-> +                       uart0: serial@9000 {
-> +                               compatible = "snps,dw-apb-uart";
-> +                               reg = <0x9000 0x100>;
-> +                               reg-shift = <2>;
-> +                               reg-io-width = <1>;
-> +                               interrupts = <8>;
-> +                               clocks = <&smclk>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       uart1: serial@a000 {
-> +                               compatible = "snps,dw-apb-uart";
-> +                               reg = <0xa000 0x100>;
-> +                               reg-shift = <2>;
-> +                               reg-io-width = <1>;
-> +                               interrupts = <9>;
-> +                               clocks = <&smclk>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       sic: interrupt-controller@e000 {
-> +                               compatible = "snps,dw-apb-ictl";
-> +                               reg = <0xe000 0x400>;
-> +                               interrupt-controller;
-> +                               #interrupt-cells = <1>;
-> +                               interrupt-parent = <&gic>;
-> +                               interrupts = <GIC_SPI 15
-> IRQ_TYPE_LEVEL_HIGH>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 1.7.10.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On Exynos5440,
+the FALL_IRQEN bits are at an offset of 4
+and the RISE_IRQEN bits are at an offset of 0
 
+This patch introduces a new bit field intclr_fall_shift to handle the
+offset for exyns5250 and exynos5440
+Also removes the unused macros EXYNOS_TMU_FALL_INT_SHIFT and
+EXYNOS5440_TMU_FALL_INT_SHIFT, inten_fall_shift field
+
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
+Changes since v1:
+Changes since v2:
+Changes since v3:
+  None
+Changes since v4:
+ Correct the CLEAR_FALL_INT_SHIFT for Exynos5250/Exynos5440
+Changes since v5:
+ Modify the commit message
+Changes since v6:
+ - Use EXYNOS_TMU_CLEAR_FALL_INT_SHIFT instead of EXYNOS5250_TMU_CLEAR_FALL_INT_SHIFT
+ as the same is being used for Exynos4412
+Changes since v7:
+ - also removes the unused macros EXYNOS_TMU_FALL_INT_SHIFT and
+ EXYNOS5440_TMU_FALL_INT_SHIFT, inten_fall_shift field
+
+ 
+ drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+ drivers/thermal/samsung/exynos_tmu.h      |    4 ++--
+ drivers/thermal/samsung/exynos_tmu_data.c |    4 ++--
+ drivers/thermal/samsung/exynos_tmu_data.h |    4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index 32f38b9..b2202fa 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -265,7 +265,7 @@ skip_calib_data:
+ 				data->base + reg->threshold_th1);
+ 
+ 		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+-			(reg->inten_fall_mask << reg->inten_fall_shift),
++			(reg->inten_fall_mask << reg->intclr_fall_shift),
+ 				data->base + reg->tmu_intclear);
+ 
+ 		/* if last threshold limit is also present */
+diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+index 3fb6554..39fca47 100644
+--- a/drivers/thermal/samsung/exynos_tmu.h
++++ b/drivers/thermal/samsung/exynos_tmu.h
+@@ -124,7 +124,6 @@ enum soc_type {
+ 	enable bits.
+  * @inten_rise_shift: shift bits of all rising interrupt bits.
+  * @inten_rise_mask: mask bits of all rising interrupt bits.
+- * @inten_fall_shift: shift bits of all rising interrupt bits.
+  * @inten_fall_mask: mask bits of all rising interrupt bits.
+  * @inten_rise0_shift: shift bits of rising 0 interrupt bits.
+  * @inten_rise1_shift: shift bits of rising 1 interrupt bits.
+@@ -136,6 +135,7 @@ enum soc_type {
+  * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+  * @tmu_intstat: Register containing the interrupt status values.
+  * @tmu_intclear: Register for clearing the raised interrupt status.
++ * @intclr_fall_shift: shift bits for interrupt clear fall 0
+  * @emul_con: TMU emulation controller register.
+  * @emul_temp_shift: shift bits of emulation temperature.
+  * @emul_time_shift: shift bits of emulation time.
+@@ -193,7 +193,6 @@ struct exynos_tmu_registers {
+ 	u32	tmu_inten;
+ 	u32	inten_rise_shift;
+ 	u32	inten_rise_mask;
+-	u32	inten_fall_shift;
+ 	u32	inten_fall_mask;
+ 	u32	inten_rise0_shift;
+ 	u32	inten_rise1_shift;
+@@ -207,6 +206,7 @@ struct exynos_tmu_registers {
+ 	u32	tmu_intstat;
+ 
+ 	u32	tmu_intclear;
++	u32	intclr_fall_shift;
+ 
+ 	u32	emul_con;
+ 	u32	emul_temp_shift;
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+index 073c292..70ad559 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.c
++++ b/drivers/thermal/samsung/exynos_tmu_data.c
+@@ -115,7 +115,6 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+ 	.inten_rise_mask = EXYNOS_TMU_RISE_INT_MASK,
+ 	.inten_rise_shift = EXYNOS_TMU_RISE_INT_SHIFT,
+ 	.inten_fall_mask = EXYNOS_TMU_FALL_INT_MASK,
+-	.inten_fall_shift = EXYNOS_TMU_FALL_INT_SHIFT,
+ 	.inten_rise0_shift = EXYNOS_TMU_INTEN_RISE0_SHIFT,
+ 	.inten_rise1_shift = EXYNOS_TMU_INTEN_RISE1_SHIFT,
+ 	.inten_rise2_shift = EXYNOS_TMU_INTEN_RISE2_SHIFT,
+@@ -123,6 +122,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+ 	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
++	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.emul_con = EXYNOS_EMUL_CON,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+ 	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+@@ -220,7 +220,6 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+ 	.inten_rise_mask = EXYNOS5440_TMU_RISE_INT_MASK,
+ 	.inten_rise_shift = EXYNOS5440_TMU_RISE_INT_SHIFT,
+ 	.inten_fall_mask = EXYNOS5440_TMU_FALL_INT_MASK,
+-	.inten_fall_shift = EXYNOS5440_TMU_FALL_INT_SHIFT,
+ 	.inten_rise0_shift = EXYNOS5440_TMU_INTEN_RISE0_SHIFT,
+ 	.inten_rise1_shift = EXYNOS5440_TMU_INTEN_RISE1_SHIFT,
+ 	.inten_rise2_shift = EXYNOS5440_TMU_INTEN_RISE2_SHIFT,
+@@ -228,6 +227,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+ 	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
++	.intclr_fall_shift = EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+ 	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+index a1ea19d..d9495a4 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.h
++++ b/drivers/thermal/samsung/exynos_tmu_data.h
+@@ -69,9 +69,10 @@
+ #define EXYNOS_TMU_RISE_INT_MASK	0x111
+ #define EXYNOS_TMU_RISE_INT_SHIFT	0
+ #define EXYNOS_TMU_FALL_INT_MASK	0x111
+-#define EXYNOS_TMU_FALL_INT_SHIFT	12
+ #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+ #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
++#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
++#define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT	4
+ #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+ #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+ #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+@@ -119,7 +120,6 @@
+ #define EXYNOS5440_TMU_RISE_INT_MASK		0xf
+ #define EXYNOS5440_TMU_RISE_INT_SHIFT		0
+ #define EXYNOS5440_TMU_FALL_INT_MASK		0xf
+-#define EXYNOS5440_TMU_FALL_INT_SHIFT		4
+ #define EXYNOS5440_TMU_INTEN_RISE0_SHIFT	0
+ #define EXYNOS5440_TMU_INTEN_RISE1_SHIFT	1
+ #define EXYNOS5440_TMU_INTEN_RISE2_SHIFT	2
+-- 
+1.7.10.4
