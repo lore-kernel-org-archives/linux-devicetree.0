@@ -1,54 +1,144 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] clk: shmobile: Add R8A7790 clocks support
-Date: Thu, 07 Nov 2013 13:15:26 +0100
-Message-ID: <3394178.9T7q17vczr@avalon>
-References: <1383058511-26046-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <87zjpggalc.wl%kuninori.morimoto.gx@renesas.com> <871u2s65kz.wl%kuninori.morimoto.gx@renesas.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC 3/4] ASoC: Allow Aux Codecs to be specified using DT
+Date: Thu, 7 Nov 2013 13:26:55 +0100
+Message-ID: <20131107122655.GA7110@amd.pavel.ucw.cz>
+References: <1382909086-10493-1-git-send-email-sre@debian.org>
+ <1382909086-10493-4-git-send-email-sre@debian.org>
+ <20131106142559.GC15551@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <871u2s65kz.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131106142559.GC15551-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+Hi!
 
-On Wednesday 06 November 2013 23:20:32 Kuninori Morimoto wrote:
-> Hi Laurent again
-> 
-> > In my SuperH experience, CPG clock divier has same pattern.
-> > In H2's SDCKCR register, SDHFC and SD0FC looks different.
-> > But, the real different is only enabled bit area,
-> > the value is same.
-> > You can find same pattern on FRQCRB register too,
-> > and, you can find same pattern on M2.
-> > 
-> > I guess FRQCRB/SDHFC can share code if it has mask.
-> > This idea was used on R-Mobile series on div4.
-> > (ex clock-sh73a0.c :: div4_clks)
-> 
-> I talked it with Magnus, and I understand your headache.
-> I can agree about your approach now.
-> 
-> But, I guess H2 and M2 are very similar SoC.
-> and I don't want too many clock-${SoC} files.
-> Is it possible to share code like clk-gen2.c ?
 
-Sure, if the hardware is very similar, it makes sense to share code. I've had 
-a quick look at the M2 documentation, and it seems to be indeed mostly 
-identical to H2. Only a couple of clocks are missing, and a new GPU clock 
-register is documented. As the GPU clock is mentioned in the H2 documentation 
-as being programmable I would assume that the GPU clock register exists and is 
-identical in H2 but has been forgotten in the documentation.
+> So in (error) case of ! aux_dev->codec_of_node && ! aux_dev->codec_name 
+> we match first possible codec?
+> 
+> Given code similarity between this and the one above, should there be
+> helper function that does the comparison (or even walks the list)?
 
-We should probably extend clock-r8a7790.c with M2 support and rename it to 
-clock-rcar-gen2.c before pushing it to mainline. Would you like to submit a 
-patch ? :-)
+Something like this? soc_probe_aux_dev now looks better... (Only
+compile tested).
+
+Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 392f479..3097e17 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1526,69 +1526,65 @@ static void soc_unregister_ac97_dai_link(struct snd_soc_codec *codec)
+ }
+ #endif
+ 
+-static int soc_check_aux_dev(struct snd_soc_card *card, int num)
++struct snd_soc_codec *soc_find_matching_codec(struct snd_soc_card *card, int num)
+ {
+ 	struct snd_soc_aux_dev *aux_dev = &card->aux_dev[num];
+-	const char *codecname = aux_dev->codec_name;
+ 	struct snd_soc_codec *codec;
+ 
+-	/* find CODEC from registered CODECs*/
++	/* find CODEC from registered CODECs */
+ 	list_for_each_entry(codec, &codec_list, list) {
+-		if (aux_dev->codec_of_node &&
+-				codec->dev->of_node == aux_dev->codec_of_node)
+-			return 0;
+-		if (aux_dev->codec_name &&
+-				!strcmp(codec->name, aux_dev->codec_name))
+-			return 0;
++		if (aux_dev->codec_of_node && 
++		    (codec->dev->of_node != aux_dev->codec_of_node))
++			continue;
++		if (aux_dev->codec_name && strcmp(codec->name, aux_dev->codec_name))
++			continue;
++		return codec;
+ 	}
++	return NULL;
++}
+ 
++static int soc_check_aux_dev(struct snd_soc_card *card, int num)
++{
++	struct snd_soc_aux_dev *aux_dev = &card->aux_dev[num];
++	const char *codecname = aux_dev->codec_name;
++	struct snd_soc_codec *codec = soc_find_matching_codec(card, num);
++
++	if (codec)
++		return 0;
+ 	if (aux_dev->codec_of_node)
+ 		codecname = of_node_full_name(aux_dev->codec_of_node);
+ 
+ 	dev_err(card->dev, "ASoC: %s not registered\n", codecname);
+-
+ 	return -EPROBE_DEFER;
+ }
+ 
++
+ static int soc_probe_aux_dev(struct snd_soc_card *card, int num)
+ {
+ 	struct snd_soc_aux_dev *aux_dev = &card->aux_dev[num];
+-	struct snd_soc_codec *codec;
+ 	const char *codecname = aux_dev->codec_name;
+ 	int ret = -ENODEV;
++	struct snd_soc_codec *codec = soc_find_matching_codec(card, num);
+ 
+-	/* find CODEC from registered CODECs*/
+-	list_for_each_entry(codec, &codec_list, list) {
+-		if (aux_dev->codec_of_node &&
+-				codec->dev->of_node != aux_dev->codec_of_node)
+-			continue;
+-		if (aux_dev->codec_name &&
+-				strcmp(codec->name, aux_dev->codec_name))
+-			continue;
++	if (!codec) {
++		if (aux_dev->codec_of_node)
++			codecname = of_node_full_name(aux_dev->codec_of_node);
+ 
+-		if (codec->probed) {
+-			dev_err(codec->dev, "ASoC: codec already probed");
+-			ret = -EBUSY;
+-			goto out;
+-		}
+-		goto found;
++		/* codec not found */
++		dev_err(card->dev, "ASoC: codec %s not found", codecname);
++		return -EPROBE_DEFER;
+ 	}
+ 
+-	if (aux_dev->codec_of_node)
+-		codecname = of_node_full_name(aux_dev->codec_of_node);
+-
+-	/* codec not found */
+-	dev_err(card->dev, "ASoC: codec %s not found", codecname);
+-	return -EPROBE_DEFER;
++	if (codec->probed) {
++		dev_err(codec->dev, "ASoC: codec already probed");
++		return -EBUSY;
++	}
+ 
+-found:
+ 	ret = soc_probe_codec(card, codec);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	ret = soc_post_component_init(card, codec, num, 1);
+-
+-out:
+ 	return ret;
+ }
+ 
+
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
