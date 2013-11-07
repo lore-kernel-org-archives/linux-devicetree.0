@@ -1,55 +1,38 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] dt/irq: add empty of_irq_count for !OF_IRQ
-Date: Thu,  7 Nov 2013 12:15:49 -0600
-Message-ID: <1383848149-15488-2-git-send-email-robherring2@gmail.com>
-References: <1383848149-15488-1-git-send-email-robherring2@gmail.com>
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: [PATCH v2 0/5] OF: Fixes in preperation of DT overlays
+Date: Thu,  7 Nov 2013 21:31:01 +0200
+Message-ID: <1383852666-13551-1-git-send-email-panto@antoniou-consulting.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383848149-15488-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+This patchset introduces a number of fixes that are required
+for the subsequent patches that add DT overlays support.
 
-Add an empty version of of_irq_count for !OF_IRQ. This fixes build error
-on sparc in linux-next:
+Most of them are trivial, adding small bits that are missing,
+or exporting functions that were private before.
 
-drivers/gpio/gpio-bcm-kona.c:542: undefined reference to `of_irq_count'
+Changes in V2:
+ * Reorded patchset so that bisect works
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- include/linux/of_irq.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Pantelis Antoniou (5):
+  OF: Introduce device tree node flag helpers.
+  OF: Clear detach flag on attach
+  OF: export of_property_notify
+  OF: Export all DT proc update functions
+  OF: Introduce utility helper functions
 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index c0d6dfe..3f23b44 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -37,12 +37,20 @@ extern int of_irq_parse_one(struct device_node *device, int index,
- extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
- extern int of_irq_to_resource(struct device_node *dev, int index,
- 			      struct resource *r);
--extern int of_irq_count(struct device_node *dev);
- extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
- 
- extern void of_irq_init(const struct of_device_id *matches);
- 
-+#ifdef CONFIG_OF_IRQ
-+extern int of_irq_count(struct device_node *dev);
-+#else
-+static inline int of_irq_count(struct device_node *dev)
-+{
-+	return 0;
-+}
-+#endif
-+
- #if defined(CONFIG_OF)
- /*
-  * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
+ drivers/of/Makefile |   2 +-
+ drivers/of/base.c   |  77 ++++++++--------
+ drivers/of/util.c   | 253 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h  | 119 ++++++++++++++++++++++++
+ 4 files changed, 413 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/of/util.c
+
 -- 
-1.8.1.2
+1.7.12
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
