@@ -1,119 +1,27 @@
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ASoC: cs42l52: Add Device Tree support for CS42L52
-Date: Thu, 7 Nov 2013 14:22:16 -0600
-Message-ID: <1383855737-8499-1-git-send-email-brian.austin@cirrus.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] phy: Add MOXA MDIO driver
+Date: Thu, 07 Nov 2013 15:37:29 -0500 (EST)
+Message-ID: <20131107.153729.485901803954655270.davem@davemloft.net>
+References: <1383317673-14704-1-git-send-email-jonas.jensen@gmail.com>
+	<1383666901-22354-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1383666901-22354-1-git-send-email-jonas.jensen@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: jonas.jensen@gmail.com
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for DT platform data and I2C/RST initialization
-support
+From: Jonas Jensen <jonas.jensen@gmail.com>
+Date: Tue,  5 Nov 2013 16:55:01 +0100
 
-Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
----
- sound/soc/codecs/cs42l52.c | 51 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 49 insertions(+), 2 deletions(-)
+> The MOXA UC-711X hardware(s) has an ethernet controller that seem
+> to be developed internally. The IC used is "RTL8201CP".
+> 
+> This patch adds an MDIO driver which handles the MII bus.
+> 
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
 
-diff --git a/sound/soc/codecs/cs42l52.c b/sound/soc/codecs/cs42l52.c
-index 8b427c9..c8078c7 100644
---- a/sound/soc/codecs/cs42l52.c
-+++ b/sound/soc/codecs/cs42l52.c
-@@ -17,7 +17,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/i2c.h>
- #include <linux/input.h>
-@@ -1174,6 +1174,7 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client,
- 	struct cs42l52_private *cs42l52;
- 	struct cs42l52_platform_data *pdata = dev_get_platdata(&i2c_client->dev);
- 	int ret;
-+	u32 val32;
- 	unsigned int devid = 0;
- 	unsigned int reg;
- 
-@@ -1190,8 +1191,47 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client,
- 		return ret;
- 	}
- 
--	if (pdata)
-+	if (pdata) {
- 		cs42l52->pdata = *pdata;
-+	} else {
-+		pdata = devm_kzalloc(&i2c_client->dev,
-+				     sizeof(struct cs42l52_platform_data),
-+				GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&i2c_client->dev, "could not allocate pdata\n");
-+			return -ENOMEM;
-+		}
-+		if (i2c_client->dev.of_node) {
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"mica_cfg", &val32) >= 0)
-+				pdata->mica_cfg = val32;
-+
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"micb_cfg", &val32) >= 0)
-+				pdata->micb_cfg = val32;
-+
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"mica_sel", &val32) >= 0)
-+				pdata->mica_sel = val32;
-+
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"micb_sel", &val32) >= 0)
-+				pdata->micb_sel = val32;
-+
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"micbias_lvl", &val32) >= 0)
-+				pdata->micbias_lvl = val32;
-+
-+			if (of_property_read_u32(i2c_client->dev.of_node,
-+				"chgfreq", &val32) >= 0)
-+				pdata->chgfreq = val32;
-+
-+			pdata->reset_gpio =
-+				of_get_named_gpio(i2c_client->dev.of_node,
-+						"reset_gpio", 0);
-+		}
-+		cs42l52->pdata = *pdata;
-+	}
- 
- 	if (cs42l52->pdata.reset_gpio) {
- 		ret = gpio_request_one(cs42l52->pdata.reset_gpio,
-@@ -1274,6 +1314,12 @@ static int cs42l52_i2c_remove(struct i2c_client *client)
- 	return 0;
- }
- 
-+static const struct of_device_id cs42l52_of_match[] = {
-+	{ .compatible = "cirrus,cs42l52", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cs42l52_of_match);
-+
- static const struct i2c_device_id cs42l52_id[] = {
- 	{ "cs42l52", 0 },
- 	{ }
-@@ -1284,6 +1330,7 @@ static struct i2c_driver cs42l52_i2c_driver = {
- 	.driver = {
- 		.name = "cs42l52",
- 		.owner = THIS_MODULE,
-+		.of_match_table = cs42l52_of_match,
- 	},
- 	.id_table = cs42l52_id,
- 	.probe =    cs42l52_i2c_probe,
--- 
-1.8.4.rc3
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks Jonas.
