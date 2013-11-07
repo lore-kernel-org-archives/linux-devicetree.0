@@ -1,53 +1,65 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
-Date: Thu, 07 Nov 2013 10:28:01 +0100
-Message-ID: <1383816481.4115.2.camel@weser.hi.pengutronix.de>
-References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
-	 <1383057139-25304-1-git-send-email-mpa@pengutronix.de>
-	 <CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
-	 <CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg@mail.gmail.com>
-	 <20131107091212.GH15098@pengutronix.de>
+From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
+Date: Thu, 07 Nov 2013 10:45:58 +0100
+Message-ID: <527B6156.1080000@nsn.com>
+References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <20131106190152.GA8662@breakpoint.cc> <C10E33D7-53F6-4A50-9B84-1149DDBDC46F@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131107091212.GH15098-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <C10E33D7-53F6-4A50-9B84-1149DDBDC46F-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 07.11.2013, 10:12 +0100 schrieb Markus Pargmann:
-> On Wed, Nov 06, 2013 at 10:54:02AM -0600, Matt Sealey wrote:
-[...]
-> > 
-> > Would it be so bad to implement this as a regmap and have two drivers
-> > access the same regmap on the Linux side? You don't need two nodes for
-> > that, and the IOMUX definitions can live under the GPIO node. There is
-> > NOTHING stopping two drivers on Linux matching the same compatible
-> > property. Locking and coordination in software of a single IP block
-> > used by two drivers shouldn't be arbitrated by the device tree.
-> 
-> I am not sure if it is practical to use the GPIO nodes for the IOMUX
-> driver. There are actually 6 GPIO nodes. This would lead to 6
-> iomux controllers? The different pin functions may be distributed over
-> different controllers then.
-> 
-> The first version of this series [1] was designed to have a iomux node
-> with 6 gpio subnodes.
+Hi!
 
-Why was this changed? Having two different DT nodes requesting the same
-IO region is certainly the wrong thing to do.
+On 06/11/13 20:08, ext Pantelis Antoniou wrote:
+>>> The following patchset introduces Device Tree overlays, a method
+>>> of dynamically altering the kernel's live Device Tree, along with
+>>> a generic interface to use it in a board agnostic manner.
+>>
+>> In case this has been discussed and I missed it: Why are we doing this?
+>> Isn't it possible to d o the overlay thingy in u-boot and pass a
+>> complete device tree to the kernel?
+>> Are you trying to do something like hotplug-PCI where the PCI card can
+>> be replaced at runtime?
+>>
+> 
+> It has been discussed.
+> 
+> We are doing it because
+> 
+> a) We tried to do it in u-boot and it has been a complete disaster.
+> Regular users just can't handle bootloader updates.
 
-Regards,
-Lucas
+There are buses we simply do not want to deal with in uboot, like SRIO, PCIe, everything-over-ethernet.
+All of them are hot-pluggable. And yeah, device-tree processing in uboot is possible, but in Linux
+it's way easier...
+ 
+> b) It is similar to that. It was originally created for the beaglebone,
+> which has a concept of capes (similar to Arduino shields).
+> http://circuitco.com/support/index.php?title=BeagleBone_Capes
+> Turns out it's really useful to anyone doing reconfigurable hardware too,
+> so that's why FPGA people are thinking of using it.
+> 
+> c) There are people that want to tinker with Linux based hardware boards
+> but are not kernel developers. This gives them a way to do so without
+> having to recompile the kernel and/or reboot while tinkering.
+>  
+>> Sebastian
+> 
+> Regards
+> 
+> -- Pantelis
+> 
+> 
+> 
 
 -- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
+Best regards,
+Alexander Sverdlin.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
