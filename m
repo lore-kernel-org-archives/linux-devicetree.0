@@ -1,109 +1,94 @@
-From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Thu, 07 Nov 2013 10:07:01 +0100
-Message-ID: <527B5835.3060906@keymile.com>
-References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <527A9AB9.2050903@keymile.com> <20131106200709.GB26881@obsidianresearch.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
+Date: Thu, 7 Nov 2013 10:12:12 +0100
+Message-ID: <20131107091212.GH15098@pengutronix.de>
+References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
+ <1383057139-25304-1-git-send-email-mpa@pengutronix.de>
+ <CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
+ <CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131106200709.GB26881-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2013 09:07 PM, Jason Gunthorpe wrote:
-> On Wed, Nov 06, 2013 at 08:38:33PM +0100, Gerlando Falauto wrote:
->
-[...]
-> Each translation represents something concrete:
->   0x8 -> 0x82000000 0x00000000 0x00000008
->      This is the BAR 0 decoder of the PCI device
->   0x82000000 0x00000000 0x00000008 -> 0x82000000 0x1 8
->      This is the PCI bridge's memory window decoder
->    0x82000000 0x1 8 -> MBUS_ID(0x04, 0xe8) 8
->      This is the MBUS window associated with the PEX
->   MBUS_ID(0x04, 0xe8) 8 -> 0xe0000008
->      This is the physical CPU BUS address associated with the MBUS
->      window
+On Wed, Nov 06, 2013 at 10:54:02AM -0600, Matt Sealey wrote:
+> On Tue, Oct 29, 2013 at 11:00 AM, Linus Walleij
+> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Oct 29, 2013 at 7:32 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >
+> >> imx27 pincontrol driver using the imx1 core driver. The DT bindings are
+> >> similar to other imx pincontrol drivers.
+> >>
+> >> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> Hi,
+> >>
+> >> another binding documentation update. The MUX_ID components are described more
+> >> detailed now.
+> >
+> > Patch tentatively applied unless someone has very fundamental
+> > issues with it, it stays in. I really want a full transfer of i.MX
+> > pin controllers to the subsystem, using device tree so we can
+> > get rid of the old i.MX cruft in arch/arm.
+> 
+> I think this is a rush-in patch. I actually read the manual last night
+> and found some serious weirdness.
+> 
+> The i.MX27 doesn't have a dedicated IOMUX controller so actually
+> having a whole separate node for it in the device tree - or even a
+> separate driver - makes very little sense. I understand pinctrl and
+> gpiolib are somewhat separated as software, but this is encoding a
+> Linuxism into the tree.
+> 
+> In fact, the binding will conflict with actual binding of the GPIO
+> (i.e. setting data, receiving interrupts) module since it's all one
+> register set, and the "fsl,imx27-iomuxc" compatible property does not
+> represent reality except to collect data in a different spot. There's
+> no reason for it except to cut the documentation and tree definition
+> in half, and have two nodes for Linux.
 
-Uhm, OK, sounds good. Except you must know the whole mapping in advance. 
-Fair enough.
-Would that work without the whole mbus driver (I guess Ezequiel's)?
-I'm dealing with 3.10.
+Yes this is potentially conflicting. But in reality the used registers
+are not the same. The GPIO driver uses GPIO Data Register, Data
+Direction register and some interrupt registers. IOMUX is using input
+configuration, output configuration, GPIO in use and data direction
+registers. So it is conflicting in exactly one register that is
+controlling the data direction.
 
-Where does the 0x82000000 come from?
-What about the 0x1 (second cell)?
+> 
+> Would it be so bad to implement this as a regmap and have two drivers
+> access the same regmap on the Linux side? You don't need two nodes for
+> that, and the IOMUX definitions can live under the GPIO node. There is
+> NOTHING stopping two drivers on Linux matching the same compatible
+> property. Locking and coordination in software of a single IP block
+> used by two drivers shouldn't be arbitrated by the device tree.
 
->> Looks like it ends up at the beginning of the memory region for
->> PCIe, and that's no wonder since you only have a single device with
->> a single BAR... right?
->
-> The mapping of the FPGA bus into a BAR is done by a single ranges:
->
->>>                                  fpga@0 {
->>>                                          reg = <0x8 0 0  0 0>;
->>>                                          ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000>;
->>>                                          gpio3: fpga_gpio@8 {
->
-> That ranges says 'put address 0 of the child bus at 0x82000000
-> 0x00000000 0x00000000', which is the BAR 0 address, relative to the
-> bridge's memory window.
->
->> So suppose you also had a bigger BAR1 which would then shift your
->> GPIO block at @0xe8000000.
->> Until we get that figured out, where would you hardcode such offset then?
->
-> Since your BAR layout of your device is fixed you can adjust the
-> single ranges:
+I am not sure if it is practical to use the GPIO nodes for the IOMUX
+driver. There are actually 6 GPIO nodes. This would lead to 6
+iomux controllers? The different pin functions may be distributed over
+different controllers then.
 
-By "single" you mean that it's just *one* range, right?
+The first version of this series [1] was designed to have a iomux node
+with 6 gpio subnodes.
 
->
->    ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000>;
->
-> It is possible as well to do this in code in the FPGA driver.
+Regards,
 
-Uhm... why? And how? You mean dynamically upgrading the ranges window?
+Markus
 
->
->> How would you also deal with a second (let's say identical) device on BAR1?
->
->    ranges = <0x00000000  0x82000000 0x00000000 0x08000000  0x8000000  //  BAR 0
->              0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> // BAR 1
 
-Aren't in this case the two regions aliased? Shouldn't the fourth column 
-on either row be 0x00000000? Like:
+[1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/257180/focus=257184
 
-     ranges = <0x00000000  0x82000000 0x00000000 0x00000000  0x8000000 
-//  BAR 0
-               0x10000000  0x82000000 0x00000000 0x08000000  0x8000000> 
-// BAR 1
-
-> Use reg <0x10000abc xxx> to refer to the 2nd BAR. There are other ways
-> to organize things.
-
-Now I completely lost you. According to the above description (BTW, I 
-like the double space to separate groups -- it makes this whole mess a 
-little messy!) the child address should have a single cell.
-Why use two then?
-
->> I guess I could live with hardcoded values in the DT, as long as
->> they're easy to spot and there's only one per BAR/device.
->> Then it's easy to do a comparison with whatever gets assigned during
->> probing.
->
-> I'd see it as an interm step, pending on some kind of core support for
-> this sort of stuff.
-
-Right.
-
-Sorry for being pedantic, but I'd really like to get this straight once 
-and for all...
-
-Thanks again,
-Gerlando
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
