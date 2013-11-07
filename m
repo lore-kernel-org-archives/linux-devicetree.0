@@ -1,65 +1,197 @@
-From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Thu, 07 Nov 2013 10:45:58 +0100
-Message-ID: <527B6156.1080000@nsn.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <20131106190152.GA8662@breakpoint.cc> <C10E33D7-53F6-4A50-9B84-1149DDBDC46F@antoniou-consulting.com>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 1/6] ARM: hi3xxx: add board support with device tree
+Date: Thu, 07 Nov 2013 03:50:30 -0600
+Message-ID: <527B6266.9020107@gmail.com>
+References: <1383813691-31587-1-git-send-email-haojian.zhuang@linaro.org> <1383813691-31587-2-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C10E33D7-53F6-4A50-9B84-1149DDBDC46F-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <1383813691-31587-2-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-On 06/11/13 20:08, ext Pantelis Antoniou wrote:
->>> The following patchset introduces Device Tree overlays, a method
->>> of dynamically altering the kernel's live Device Tree, along with
->>> a generic interface to use it in a board agnostic manner.
->>
->> In case this has been discussed and I missed it: Why are we doing this?
->> Isn't it possible to d o the overlay thingy in u-boot and pass a
->> complete device tree to the kernel?
->> Are you trying to do something like hotplug-PCI where the PCI card can
->> be replaced at runtime?
->>
-> 
-> It has been discussed.
-> 
-> We are doing it because
-> 
-> a) We tried to do it in u-boot and it has been a complete disaster.
-> Regular users just can't handle bootloader updates.
-
-There are buses we simply do not want to deal with in uboot, like SRIO, PCIe, everything-over-ethernet.
-All of them are hot-pluggable. And yeah, device-tree processing in uboot is possible, but in Linux
-it's way easier...
- 
-> b) It is similar to that. It was originally created for the beaglebone,
-> which has a concept of capes (similar to Arduino shields).
-> http://circuitco.com/support/index.php?title=BeagleBone_Capes
-> Turns out it's really useful to anyone doing reconfigurable hardware too,
-> so that's why FPGA people are thinking of using it.
-> 
-> c) There are people that want to tinker with Linux based hardware boards
-> but are not kernel developers. This gives them a way to do so without
-> having to recompile the kernel and/or reboot while tinkering.
+On 11/7/13 2:41 AM, Haojian Zhuang wrote:
+> Add board support with device tree for Hisilicon Hi3620 SoC platform.
+>
+> Changelog:
+> v11:
+> 1. Add comments for iotable.
+>
+> v10:
+> 1. Add .map_io() & debug_ll_io_init() back. Since debug_ll_io_init() is
+> only called if .map_io() isn't assigned. Use .map_io() to setup static
+> IO mapping that is used in clock driver.
+>
+> v3:
+> 1. Remove .map_io() in DT machine descriptor. Since debug_ll_io_init()
+> is called by default.
+> 2. Remove .init_machine() in DT machine descriptor. Since
+> of_platform_populate() is called by default in DT mode.
+>
+> v2:
+> 1. Remove .init_irq() in DT machine descriptor. Since irqchip_init()
+> is called by default in DT mode.
+>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/arm/hisilicon/hisilicon.txt           | 10 ++++
+>  arch/arm/Kconfig                                   |  2 +
+>  arch/arm/Makefile                                  |  1 +
+>  arch/arm/mach-hi3xxx/Kconfig                       | 12 +++++
+>  arch/arm/mach-hi3xxx/Makefile                      |  5 ++
+>  arch/arm/mach-hi3xxx/hi3xxx.c                      | 60 ++++++++++++++++++++++
+>  6 files changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>  create mode 100644 arch/arm/mach-hi3xxx/Kconfig
+>  create mode 100644 arch/arm/mach-hi3xxx/Makefile
+>  create mode 100644 arch/arm/mach-hi3xxx/hi3xxx.c
+>
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> new file mode 100644
+> index 0000000..3be60c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -0,0 +1,10 @@
+> +Hisilicon Platforms Device Tree Bindings
+> +----------------------------------------------------
+> +
+> +Hi3716 Development Board
+> +Required root node properties:
+> +	- compatible = "hisilicon,hi3716-dkb";
+> +
+> +Hi4511 Board
+> +Required root node properties:
+> +	- compatible = "hisilicon,hi3620-hi4511";
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 3f7714d..0118443 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -946,6 +946,8 @@ source "arch/arm/mach-footbridge/Kconfig"
 >  
->> Sebastian
-> 
-> Regards
-> 
-> -- Pantelis
-> 
-> 
-> 
+>  source "arch/arm/mach-gemini/Kconfig"
+>  
+> +source "arch/arm/mach-hi3xxx/Kconfig"
+> +
+>  source "arch/arm/mach-highbank/Kconfig"
+>  
+>  source "arch/arm/mach-integrator/Kconfig"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index a37a50f..23fb0b0 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -155,6 +155,7 @@ machine-$(CONFIG_ARCH_EBSA110)		+= ebsa110
+>  machine-$(CONFIG_ARCH_EP93XX)		+= ep93xx
+>  machine-$(CONFIG_ARCH_EXYNOS)		+= exynos
+>  machine-$(CONFIG_ARCH_GEMINI)		+= gemini
+> +machine-$(CONFIG_ARCH_HI3xxx)		+= hi3xxx
+>  machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
+>  machine-$(CONFIG_ARCH_INTEGRATOR)	+= integrator
+>  machine-$(CONFIG_ARCH_IOP13XX)		+= iop13xx
+> diff --git a/arch/arm/mach-hi3xxx/Kconfig b/arch/arm/mach-hi3xxx/Kconfig
+> new file mode 100644
+> index 0000000..68bd26c
+> --- /dev/null
+> +++ b/arch/arm/mach-hi3xxx/Kconfig
+> @@ -0,0 +1,12 @@
+> +config ARCH_HI3xxx
+> +	bool "Hisilicon Hi36xx/Hi37xx family" if ARCH_MULTI_V7
+> +	select ARM_AMBA
+> +	select ARM_GIC
+> +	select ARM_TIMER_SP804
+> +	select CACHE_L2X0
+> +	select CLKSRC_OF
+I think you need COMMON_CLK here.
+> +	select GENERIC_CLOCKEVENTS
+> +	select PINCTRL
+> +	select PINCTRL_SINGLE
+> +	help
+> +	  Support for Hisilicon Hi36xx/Hi37xx processor family
+> diff --git a/arch/arm/mach-hi3xxx/Makefile b/arch/arm/mach-hi3xxx/Makefile
+> new file mode 100644
+> index 0000000..d68ebb3
+> --- /dev/null
+> +++ b/arch/arm/mach-hi3xxx/Makefile
+> @@ -0,0 +1,5 @@
+> +#
+> +# Makefile for Hisilicon Hi36xx/Hi37xx processors line
+> +#
+> +
+> +obj-y	+= hi3xxx.o
+> diff --git a/arch/arm/mach-hi3xxx/hi3xxx.c b/arch/arm/mach-hi3xxx/hi3xxx.c
+> new file mode 100644
+> index 0000000..925af13
+> --- /dev/null
+> +++ b/arch/arm/mach-hi3xxx/hi3xxx.c
+> @@ -0,0 +1,60 @@
+> +/*
+> + * (Hisilicon's Hi36xx/Hi37xx SoC based) flattened device tree enabled machine
+> + *
+> + * Copyright (c) 2012-2013 Hisilicon Ltd.
+> + * Copyright (c) 2012-2013 Linaro Ltd.
+> + *
+> + * Author: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/of_platform.h>
+> +
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/map.h>
+> +
+> +/*
+> + * This table is only for optimization. Since ioremap() could always share
+> + * the same mapping if it's defined as static IO mapping.
+> + *
+> + * Without this table, system could also work. The cost is some virtual address
+> + * spaces wasted since ioremap() may be called multi times for the same
+> + * IO space.
+> + */
+> +static struct map_desc hi3620_io_desc[] __initdata = {
+> +	{
+> +		.pfn		= __phys_to_pfn(0xfc802000),
+> +		.virtual	= 0xfe802000,
+> +		.length		= 0x1000,
+> +		.type		= MT_DEVICE,
+> +	},
+> +};
+> +
+> +static void __init hi3620_map_io(void)
+> +{
+> +	debug_ll_io_init();
+> +	iotable_init(hi3620_io_desc, ARRAY_SIZE(hi3620_io_desc));
+> +}
+> +
+> +static void __init hi3xxx_timer_init(void)
+> +{
+> +	of_clk_init(NULL);
+> +	clocksource_of_init();
+> +}
+Once you have COMMON_CLK, then this function can go away.
+> +
+> +static const char *hi3xxx_compat[] __initdata = {
+> +	"hisilicon,hi3620-hi4511",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
+> +	.map_io		= hi3620_map_io,
+> +	.init_time	= hi3xxx_timer_init,
+.init_time can go away if you have COMMON_CLK.
 
--- 
-Best regards,
-Alexander Sverdlin.
+Dinh
+> +	.dt_compat	= hi3xxx_compat,
+> +MACHINE_END
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
