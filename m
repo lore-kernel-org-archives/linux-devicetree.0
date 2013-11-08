@@ -1,76 +1,37 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 7/9] ARM: add Armada 1500 and Sony NSZ-GS7 device
- tree files
-Date: Fri, 8 Nov 2013 14:30:54 -0500
-Message-ID: <20131108193054.GJ10335@titan.lakedaemon.net>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-8-git-send-email-sebastian.hesselbarth@gmail.com>
- <0AF697FD-60AA-4B8B-A35F-3DF2FFBCF7AF@codeaurora.org>
- <20131108165721.GA10335@titan.lakedaemon.net>
- <8DC09031-553C-4FD5-8F05-F93D6FE40F3A@codeaurora.org>
- <20131108182415.GG10335@titan.lakedaemon.net>
- <CAOesGMhfr3CNxKNRJa+eJepr2Fc-jx4rTQ7cPerTkQM-CyzuCg@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: common location for devicetree files
+Date: Fri, 8 Nov 2013 11:33:00 -0800
+Message-ID: <CAOesGMgyqXS8tq0Ru=ibypV89-oAJ8bzxhdFTnSAvfOobEC+Lw@mail.gmail.com>
+References: <1438803E-C904-428B-B042-891978BC15DF@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMhfr3CNxKNRJa+eJepr2Fc-jx4rTQ7cPerTkQM-CyzuCg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Kumar Gala <galak@codeaurora.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438803E-C904-428B-B042-891978BC15DF-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2013 at 11:14:07AM -0800, Olof Johansson wrote:
-> On Fri, Nov 8, 2013 at 10:24 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> > On Fri, Nov 08, 2013 at 12:06:26PM -0600, Kumar Gala wrote:
-> >>
-> >> On Nov 8, 2013, at 10:57 AM, Jason Cooper wrote:
-> >>
-> >> > On Fri, Nov 08, 2013 at 10:13:19AM -0600, Kumar Gala wrote:
-> >> >> On Nov 5, 2013, at 8:28 AM, Sebastian Hesselbarth wrote:
-> >> > ...
-> >> >>> .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
-> >> >>> arch/arm/boot/dts/Makefile                         |    2 +
-> >> >>> arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
-> >> >>> arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
-> >> >>> 4 files changed, 282 insertions(+)
-> >> >>> create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
-> >> >>> create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-> >> >>> create mode 100644 arch/arm/boot/dts/berlin2.dtsi
-> >> >>
-> >> >> Haven't we been trying to go away from non-prefixed dts/dtsi?
-> >> >
-> >> > hmmm, this is the first I've heard of that.  Although, your proposal
-> >> > (in another thread) makes more sense now.  :)
-> >> >
-> >> >> So should these be something like marvell-berlin2-...
-> >> >
-> >> > I don't recall this being brought up at the summit, nor in Grant's
-> >> > report.  I do need to give it a more careful read this weekend, though.
-> >> > Perhaps I missed something.
-> >>
-> >> This was based on review comments Olof gave when we pushed some .dts
-> >> files for MSM/APQ Qualcomm Technologies soc/boards.
-> >
-> > As Andrew Lunn mentioned to me earlier, we should consider the fact that
-> > the dts file names are being used by Debian's flash-kernel.  Oh no!
-> > Another ABI! ;-)
-> 
-> Yes, the names are mostly stable. ST-Ericsson renamed their dts files
-> and it caused some pain, some build environments have them hardcoded,
-> etc.
-> 
-> Still, it is a good idea to start adding new ones using family or
-> vendor prefixes, so they are easier to group. Please keep that in mind
-> on new ones too, Jason -- I don't think I've discussed with you in the
-> past. :-)
+On Thu, Nov 7, 2013 at 3:21 PM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> As we start having more sharing of device trees between architectures (arm & arm64, arm & powerpc, guessing maybe mips & arm) we need dts to live in location that
+>
+> I was wondering what people felt about doing:
+>
+>         arch/dts/<VENDOR>/
+>
+> as a common location that could be shared.  I'm up for other suggestions.
 
-Nope, I definitely missed that if you did ;-)  Will do in the future.
+dts isn't an architecture, so having it directly under arch/ doesn't
+make sense. I know it's the first common parent of a lot of platforms
+though.
 
-Perhaps now is the time to consider separating the dts filename from the
-dtb filename?  I'm warming up to my idea of globalscale,mirabox.dtb...
+I'd be ok with adding a toplevel dts/ directory for this, for lack of
+better options. It doesn't really fit under firmware, lib, kernel,
+scripts, tools...
 
-thx,
 
-Jason.
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
