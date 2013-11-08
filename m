@@ -1,130 +1,160 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v4 4/4] ARM: dts: imx: use dual-fifo sdma script for ssi
-Date: Fri, 8 Nov 2013 18:49:36 +0800
-Message-ID: <086ab5d4ad12e1bf8b4a8a2e1fb38108b5728919.1383907685.git.b42378@freescale.com>
-References: <cover.1383907685.git.b42378@freescale.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [RESEND PATCH v2 1/6] ARM: dts: Declare clocks as fixed on bcm11351
+Date: Fri, 08 Nov 2013 11:53:25 +0100
+Message-ID: <527CC2A5.7080000@linaro.org>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org> <1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1383907685.git.b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Use dual-fifo sdma scripts instead of shared scripts for ssi on i.MX series.
+On 10/16/2013 11:47 PM, Tim Kryger wrote:
+> Declare clocks that are enabled and configured by bootloaders as fixe=
+d
+> rate clocks in the DTS such that device drivers may use standard cloc=
+k
+> function calls.
+>
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> ---
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- arch/arm/boot/dts/imx51.dtsi   |  4 ++--
- arch/arm/boot/dts/imx53.dtsi   |  4 ++--
- arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++++------
- arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++++------
- 4 files changed, 16 insertions(+), 16 deletions(-)
+Hi Tim,
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 54cee65..1a71eac 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -154,8 +154,8 @@
- 					reg = <0x70014000 0x4000>;
- 					interrupts = <30>;
- 					clocks = <&clks 49>;
--					dmas = <&sdma 24 1 0>,
--					       <&sdma 25 1 0>;
-+					dmas = <&sdma 24 22 0>,
-+					       <&sdma 25 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					fsl,ssi-dma-events = <25 24 23 22>; /* TX0 RX0 TX1 RX1 */
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 4307e80..7208fde 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -153,8 +153,8 @@
- 					reg = <0x50014000 0x4000>;
- 					interrupts = <30>;
- 					clocks = <&clks 49>;
--					dmas = <&sdma 24 1 0>,
--					       <&sdma 25 1 0>;
-+					dmas = <&sdma 24 22 0>,
-+					       <&sdma 25 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					fsl,ssi-dma-events = <25 24 23 22>; /* TX0 RX0 TX1 RX1 */
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 57e9c38..6e096ca 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -223,8 +223,8 @@
- 					reg = <0x02028000 0x4000>;
- 					interrupts = <0 46 0x04>;
- 					clocks = <&clks 178>;
--					dmas = <&sdma 37 1 0>,
--					       <&sdma 38 1 0>;
-+					dmas = <&sdma 37 22 0>,
-+					       <&sdma 38 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					fsl,ssi-dma-events = <38 37>;
-@@ -236,8 +236,8 @@
- 					reg = <0x0202c000 0x4000>;
- 					interrupts = <0 47 0x04>;
- 					clocks = <&clks 179>;
--					dmas = <&sdma 41 1 0>,
--					       <&sdma 42 1 0>;
-+					dmas = <&sdma 41 22 0>,
-+					       <&sdma 42 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					fsl,ssi-dma-events = <42 41>;
-@@ -249,8 +249,8 @@
- 					reg = <0x02030000 0x4000>;
- 					interrupts = <0 48 0x04>;
- 					clocks = <&clks 180>;
--					dmas = <&sdma 45 1 0>,
--					       <&sdma 46 1 0>;
-+					dmas = <&sdma 45 22 0>,
-+					       <&sdma 46 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					fsl,ssi-dma-events = <46 45>;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index c46651e..b32ba99 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -195,8 +195,8 @@
- 					reg = <0x02028000 0x4000>;
- 					interrupts = <0 46 0x04>;
- 					clocks = <&clks IMX6SL_CLK_SSI1>;
--					dmas = <&sdma 37 1 0>,
--					       <&sdma 38 1 0>;
-+					dmas = <&sdma 37 22 0>,
-+					       <&sdma 38 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					status = "disabled";
-@@ -207,8 +207,8 @@
- 					reg = <0x0202c000 0x4000>;
- 					interrupts = <0 47 0x04>;
- 					clocks = <&clks IMX6SL_CLK_SSI2>;
--					dmas = <&sdma 41 1 0>,
--					       <&sdma 42 1 0>;
-+					dmas = <&sdma 41 22 0>,
-+					       <&sdma 42 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					status = "disabled";
-@@ -219,8 +219,8 @@
- 					reg = <0x02030000 0x4000>;
- 					interrupts = <0 48 0x04>;
- 					clocks = <&clks IMX6SL_CLK_SSI3>;
--					dmas = <&sdma 45 1 0>,
--					       <&sdma 46 1 0>;
-+					dmas = <&sdma 45 22 0>,
-+					       <&sdma 46 22 0>;
- 					dma-names = "rx", "tx";
- 					fsl,fifo-depth = <15>;
- 					status = "disabled";
--- 
-1.8.4
+I was wondering what is the status of this patchset ?
+
+The patchset touches different areas maintained by different people.=20
+Through what tree do you expect this patchset to be merged ??
+
+Thanks
+   -- Daniel
+
+>   arch/arm/boot/dts/bcm11351.dtsi | 97 ++++++++++++++++++++++++++++++=
++++++++++++
+>   1 file changed, 97 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm1=
+1351.dtsi
+> index 98e6bc0..c6464fb 100644
+> --- a/arch/arm/boot/dts/bcm11351.dtsi
+> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+> @@ -126,4 +126,101 @@
+>   		status =3D "disabled";
+>   	};
+>
+> +	clocks {
+> +		bsc1_clk: bsc1 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		bsc2_clk: bsc2 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		bsc3_clk: bsc3 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		pmu_bsc_clk: pmu_bsc {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		hub_timer_clk: hub_timer {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <32768>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		pwm_clk: pwm {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <26000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		sdio1_clk: sdio1 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <48000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		sdio2_clk: sdio2 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <48000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		sdio3_clk: sdio3 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <48000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		sdio4_clk: sdio4 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <48000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		tmon_1m_clk: tmon_1m {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <1000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		uartb_clk: uartb {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		uartb2_clk: uartb2 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		uartb3_clk: uartb3 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		uartb4_clk: uartb4 {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <13000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		usb_otg_ahb_clk: usb_otg_ahb {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <52000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +	};
+>   };
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
