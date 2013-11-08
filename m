@@ -1,65 +1,84 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH v5 7/7] ARM: davinci: da850 evm: add GPIO pinumux entries DT node
-Date: Fri,  8 Nov 2013 15:41:50 +0530
-Message-ID: <1383905510-31760-8-git-send-email-prabhakar.csengg@gmail.com>
-References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] Documentation/mfd: Fix typos in s2mps11.txt
+Date: Fri, 8 Nov 2013 10:28:53 +0000
+Message-ID: <20131108102853.GV30901@lee--X1>
+References: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-From: KV Sujith <sujithkv@ti.com>
+As this is only a trivial patch, I'll take it out the hands of the
+already overloaded DT maintainers.
 
-Add GPIO DT node and pinmux entries for DA850 EVM. GPIO is
-configurable differently on different boards. So add GPIO
-pinmuxing in dts file.
+> Fixed trivial typos to improve readability.
+>=20
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |    9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
+mentation/devicetree/bindings/mfd/s2mps11.txt
+> index c9332c6..0ff4e65 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -1,10 +1,10 @@
+> =20
+>  * Samsung S2MPS11 Voltage and Current Regulator
+> =20
+> -The Samsung S2MP211 is a multi-function device which includes voltag=
+e and
+> +The Samsung S2MPS11 is a multi-function device which includes voltag=
+e and
 
-Signed-off-by: KV Sujith <sujithkv@ti.com>
-Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- arch/arm/boot/dts/da850-evm.dts |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Nice catch eagle-eye!
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 588ce58..f82c129 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -17,6 +17,21 @@
- 	soc {
- 		pmx_core: pinmux@1c14120 {
- 			status = "okay";
-+
-+			gpio_pins: pinmux_gpio_pins {
-+				pinctrl-single,bits = <
-+					/* GPIO2_4 GPIO2_6 */
-+					0x18 0x00008080 0x0000f0f0
-+					/* GPIO2_8 GPIO2_15 */
-+					0x14 0x80000008 0xf000000f
-+					/* GPIO3_12 GPIO3_13 */
-+					0x1C 0x00008800 0x0000ff00
-+					/* GPIO4_0 GPIO4_1 */
-+					0x28 0x88000000 0xff000000
-+					/* GPIO6_9 GPIO6_10 GPIO6_13 */
-+					0x34 0x08800800 0x0ff00f00
-+				>;
-+			};
- 		};
- 		serial0: serial@1c42000 {
- 			status = "okay";
-@@ -101,6 +116,11 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&mii_pins>;
- 		};
-+		gpio: gpio@1e26000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gpio_pins>;
-+		};
- 	};
- 	nand_cs3@62000000 {
- 		status = "okay";
--- 
-1.7.9.5
+>  current regulators, RTC, charger controller and other sub-blocks. It=
+ is
+> -interfaced to the host controller using a I2C interface. Each sub-bl=
+ock is
+> -addressed by the host system using different I2C slave address.
+> +interfaced to the host controller using an I2C interface. Each sub-b=
+lock is
+> +addressed by the host system using different I2C slave addresses.
+> =20
+>  Required properties:
+>  - compatible: Should be "samsung,s2mps11-pmic".
+> @@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
+> =20
+>   BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explict=
+ly
+>   regulator-ramp-delay =3D <0> can be used for them to disable ramp d=
+elay.
+> - In absence of regulator-ramp-delay property, default ramp delay wil=
+l be used.
+> + In the absence of regulator-ramp-delay property, default ramp delay=
+ will
+> + be used.
+
+So if we're being pertinacity here, your correction isn't much better.
+
+s/of regulator-ramp-delay property,/of {the,an} regulator-ramp-delay pr=
+operty, the
+
+or=20
+
+s/of regulator-ramp-delay property,/of regulator-ramp-delay, the
+
+>  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value wi=
+ll be set
+>  for a particular group of BUCKs. So provide same regulator-ramp-dela=
+y<value>.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
