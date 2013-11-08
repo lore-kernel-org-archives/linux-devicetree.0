@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: [PATCH v4 4/5] OF: Export all DT proc update functions
-Date: Fri,  8 Nov 2013 17:03:59 +0200
-Message-ID: <1383923040-24803-5-git-send-email-panto@antoniou-consulting.com>
+Subject: [PATCH v4 3/5] OF: export of_property_notify
+Date: Fri,  8 Nov 2013 17:03:58 +0200
+Message-ID: <1383923040-24803-4-git-send-email-panto@antoniou-consulting.com>
 References: <1383923040-24803-1-git-send-email-panto@antoniou-consulting.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1383923040-24803-1-git-send-email-panto@antoniou-consulting.com>
@@ -10,172 +10,58 @@ To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-There are other users for the proc DT functions.
-Export them.
+of_property_notify can be utilized by other users too, export it.
 
 Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
 ---
- drivers/of/base.c  | 70 ++++++++++++++++++++++++++++++------------------------
- include/linux/of.h | 29 ++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 31 deletions(-)
+ drivers/of/base.c  |  9 ++-------
+ include/linux/of.h | 11 +++++++++++
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 6603795..9c4afb5 100644
+index ca10916..6603795 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -1436,6 +1436,40 @@ int of_property_notify(int action, struct device_node *np,
- EXPORT_SYMBOL(of_property_notify);
+@@ -1424,7 +1424,7 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+ EXPORT_SYMBOL(of_count_phandle_with_args);
+ 
+ #if defined(CONFIG_OF_DYNAMIC)
+-static int of_property_notify(int action, struct device_node *np,
++int of_property_notify(int action, struct device_node *np,
+ 			      struct property *prop)
+ {
+ 	struct of_prop_reconfig pr;
+@@ -1433,12 +1433,7 @@ static int of_property_notify(int action, struct device_node *np,
+ 	pr.prop = prop;
+ 	return of_reconfig_notify(action, &pr);
+ }
+-#else
+-static int of_property_notify(int action, struct device_node *np,
+-			      struct property *prop)
+-{
+-	return 0;
+-}
++EXPORT_SYMBOL(of_property_notify);
  #endif
  
-+#ifdef CONFIG_PROC_DEVICETREE
-+
-+void of_add_proc_dt_entry(struct device_node *dn)
-+{
-+	struct proc_dir_entry *ent;
-+
-+	ent = proc_mkdir(strrchr(dn->full_name, '/') + 1, dn->parent->pde);
-+	if (ent)
-+		proc_device_tree_add_node(dn, ent);
-+}
-+
-+void of_add_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop)
-+{
-+	if (np && prop && np->pde)
-+		proc_device_tree_add_prop(np->pde, prop);
-+}
-+
-+void of_remove_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop)
-+{
-+	if (np && prop && np->pde)
-+		proc_device_tree_remove_prop(np->pde, prop);
-+}
-+
-+void of_update_proc_dt_prop_entry(struct device_node *np,
-+		struct property *newprop, struct property *oldprop)
-+{
-+	if (np && newprop && oldprop && np->pde)
-+		proc_device_tree_update_prop(np->pde, newprop, oldprop);
-+}
-+
-+#endif /* CONFIG_PROC_DEVICETREE */
-+
  /**
-  * of_add_property - Add a property to a node
-  */
-@@ -1463,11 +1497,8 @@ int of_add_property(struct device_node *np, struct property *prop)
- 	*next = prop;
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--#ifdef CONFIG_PROC_DEVICETREE
- 	/* try to add to proc as well if it was initialized */
--	if (np->pde)
--		proc_device_tree_add_prop(np->pde, prop);
--#endif /* CONFIG_PROC_DEVICETREE */
-+	of_add_proc_dt_prop_entry(np, prop);
- 
- 	return 0;
- }
-@@ -1509,11 +1540,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 	if (!found)
- 		return -ENODEV;
- 
--#ifdef CONFIG_PROC_DEVICETREE
--	/* try to remove the proc node as well */
--	if (np->pde)
--		proc_device_tree_remove_prop(np->pde, prop);
--#endif /* CONFIG_PROC_DEVICETREE */
-+	of_remove_proc_dt_prop_entry(np, prop);
- 
- 	return 0;
- }
-@@ -1563,11 +1590,8 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (!found)
- 		return -ENODEV;
- 
--#ifdef CONFIG_PROC_DEVICETREE
- 	/* try to add to proc as well if it was initialized */
--	if (np->pde)
--		proc_device_tree_update_prop(np->pde, newprop, oldprop);
--#endif /* CONFIG_PROC_DEVICETREE */
-+	of_update_proc_dt_prop_entry(np, newprop, oldprop);
- 
- 	return 0;
- }
-@@ -1603,22 +1627,6 @@ int of_reconfig_notify(unsigned long action, void *p)
- 	return notifier_to_errno(rc);
- }
- 
--#ifdef CONFIG_PROC_DEVICETREE
--static void of_add_proc_dt_entry(struct device_node *dn)
--{
--	struct proc_dir_entry *ent;
--
--	ent = proc_mkdir(strrchr(dn->full_name, '/') + 1, dn->parent->pde);
--	if (ent)
--		proc_device_tree_add_node(dn, ent);
--}
--#else
--static void of_add_proc_dt_entry(struct device_node *dn)
--{
--	return;
--}
--#endif
--
- /**
-  * of_attach_node - Plug a device node into the tree and global list.
-  */
-@@ -1644,12 +1652,12 @@ int of_attach_node(struct device_node *np)
- }
- 
- #ifdef CONFIG_PROC_DEVICETREE
--static void of_remove_proc_dt_entry(struct device_node *dn)
-+void of_remove_proc_dt_entry(struct device_node *dn)
- {
- 	proc_remove(dn->pde);
- }
- #else
--static void of_remove_proc_dt_entry(struct device_node *dn)
-+void of_remove_proc_dt_entry(struct device_node *dn)
- {
- 	return;
- }
 diff --git a/include/linux/of.h b/include/linux/of.h
-index 6fec255..a56c450 100644
+index 786c4f6..6fec255 100644
 --- a/include/linux/of.h
 +++ b/include/linux/of.h
-@@ -318,6 +318,35 @@ static inline int of_property_notify(int action, struct device_node *np,
- }
- #endif
+@@ -307,6 +307,17 @@ extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
+ extern int of_count_phandle_with_args(const struct device_node *np,
+ 	const char *list_name, const char *cells_name);
  
-+#ifdef CONFIG_PROC_DEVICETREE
-+
-+extern void of_add_proc_dt_entry(struct device_node *dn);
-+extern void of_remove_proc_dt_entry(struct device_node *dn);
-+
-+extern void of_add_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop);
-+
-+extern void of_remove_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop);
-+
-+extern void of_update_proc_dt_prop_entry(struct device_node *np,
-+		struct property *newprop, struct property *oldprop);
++#if defined(CONFIG_OF_DYNAMIC)
++extern int of_property_notify(int action, struct device_node *np,
++			      struct property *prop);
 +#else
-+
-+static inline void of_add_proc_dt_entry(struct device_node *dn) { }
-+static inline void of_remove_proc_dt_entry(struct device_node *dn) { }
-+
-+static inline void of_add_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop) { }
-+
-+static inline void of_remove_proc_dt_prop_entry(struct device_node *np,
-+		struct property *prop) { }
-+
-+static inline void of_update_proc_dt_prop_entry(struct device_node *np,
-+		struct property *newprop, struct property *oldprop) { }
-+
++static inline int of_property_notify(int action, struct device_node *np,
++			      struct property *prop)
++{
++	return 0;
++}
 +#endif
 +
  extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
