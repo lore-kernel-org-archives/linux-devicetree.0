@@ -1,56 +1,51 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] gpio: davinci: remove unnecessary printk
-Date: Fri, 8 Nov 2013 17:39:38 +0200
-Message-ID: <527D05BA.3000008@ti.com>
-References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1383905510-31760-2-git-send-email-prabhakar.csengg@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 3/4] ASoC: fsl_ssi: Add dual fifo mode support
+Date: Fri, 8 Nov 2013 15:45:32 +0000
+Message-ID: <20131108154532.GO2493@sirena.org.uk>
+References: <cover.1383910029.git.b42378@freescale.com>
+ <1045921af1119333da2d14628473a20ed7a202bd.1383910029.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1383905510-31760-2-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JIgDBBEDRU2Tt5Ar"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1045921af1119333da2d14628473a20ed7a202bd.1383910029.git.b42378@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> the devm_*() helper prints error messages in case of
-> errors no need to do the same in the driver.
 
-Pls, drop it - devm_clk_get() doesn't always print error messages
->
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   drivers/gpio/gpio-davinci.c |    6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 84be701..7230c43 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -389,11 +389,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->   	}
->
->   	clk = devm_clk_get(dev, "gpio");
-> -	if (IS_ERR(clk)) {
-> -		printk(KERN_ERR "Error %ld getting gpio clock?\n",
-> -		       PTR_ERR(clk));
-> +	if (IS_ERR(clk))
->   		return PTR_ERR(clk);
-> -	}
-> +
->   	clk_prepare_enable(clk);
->
->   	/*
->
+--JIgDBBEDRU2Tt5Ar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Nov 08, 2013 at 07:32:53PM +0800, Nicolin Chen wrote:
+> By enabling dual fifo mode, it would allow SSI enter a better performance
+> to transimit/receive data without occasional hardware underrun/overrun.
+
+Acked-by: Mark Brown <broonie@linaro.org>
+
+--JIgDBBEDRU2Tt5Ar
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSfQcYAAoJELSic+t+oim9B5MQAI2hUJqc2K2G9SSoRLNfYlqF
+s1znFLKOQ1cTecd5jwJj/Akt19icp1fcEwwQi/mOGZxhAoKUic6tMuzDDfRKbxZB
+eccwytknKUWQncezIZz6u384W49bBABPTKCmAkKSJHstzXiVVxSWeRgMTvRVkGEC
+kjKLQQDON30zmLcT/8mEtEt6nT0vT3dimRXIHEiBi31SK1kBynYqDDd67SuICKPB
+YLsRY6f7cpw5+Bs3Pk+HHIdnMtMMl3gj51Hr0xO9THGJu3PoLIqW24mCvV2qXK4U
+zALThl+fgQRJ+PN9Oz/lXUE4gDgLNLKMDVXKe//8upl52Q7B27APZcSZG22IlYDb
+Qvg+JgMunRpZaHQGd1/cA/lgFSF8dBYcbysWao9xqf+IPzrW6o8HELrwIWFO+og/
+a20Jekpn6WFpsVJSLxOrUORDN/IfmlyCu18YQHAC7uYKDGNgLjVa7wGVVXk6XyF1
+BCw+EBPF7+t2H3oobFwcR5gaD1+omJ7A2FB9gdK1I+zSDeaz7edSqbWFnEMzvdTx
+Ynlpf6PR04g+UvHQr+Kn5RxofSKLJPdD1sumQPvArfw+fdKeKUUCSMAtH72BupvV
+g/HqT99wyMcQiPyWPToDe3M1iNABmi7jHWyUEv8C/AcoZn4IdLJQ4Hnfh3EKXK/8
+NRwu3wOKk0FhDaJwhzG0
+=eddQ
+-----END PGP SIGNATURE-----
+
+--JIgDBBEDRU2Tt5Ar--
