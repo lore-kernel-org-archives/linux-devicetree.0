@@ -1,77 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX
-	ssi
-Date: Fri, 8 Nov 2013 11:44:41 +0000
-Message-ID: <20131108114441.GM2493@sirena.org.uk>
-References: <cover.1383907685.git.b42378@freescale.com>
- <20131108112919.GA5159@MrMyself>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
+Date: Fri, 08 Nov 2013 15:52:45 +0400
+Message-ID: <527CD08D.80004@cogentembedded.com>
+References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com> <7820946.JfD46VSKC7@avalon> <527CCA76.5060706@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0720057666028432787=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131108112919.GA5159@MrMyself>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, vinod.koul@intel.com, s.hauer@pengutronix.de, swarren@wwwdotorg.org, timur@tabi.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, dmaengine@vger.kernel.org, dan.j.williams@intel.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <527CCA76.5060706@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11/08/2013 03:26 PM, Valentine wrote:
+> On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
+>> Hi Valentine,
+>>
+>
+> Hi Laurent,
+>
+>> Thank you for the patch. Two small comments below.
+>>
+>> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
+>>> These bindings can be used to register SATA devices found on R-Car SoC.
+>>>
+>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>>> Acked-by: Kumar Gala <galak@codeaurora.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
+>>> 1 file changed, 18 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode 100644
+>>> index 0000000..d6b20a6
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>> @@ -0,0 +1,18 @@
+>>> +* Renesas R-Car SATA
+>>> +
+>>> +Required properties:
+>>> +- compatible        : should contain one of the following:
+>>> +              - "renesas,sata-r8a7779" for R-Car H1
+>>> +              - "renesas,sata-r8a7790" for R-Car H2
+>>> +              - "renesas,sata-r8a7791" for R-Car M2
+>>> +- reg            : offset and length of the SATA registers;
+>>
+>> Maybe address instead of offset ?
+>
+> OK.
+>
+>>
+>>> +- interrupts        : must consist of one interrupt specifier.
+>>> +
+>>> +Example:
+>>> +
+>>> +sata: sata@fc600000 {
+>>> +    compatible = "renesas,sata-r8a7779";
+>>> +    reg = <0xfc600000 0x2000>;
+>>> +    interrupt-parent = <&gic>;
+>>> +    interrupts = <0 100 0x4>;
+>>
+>> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
+>
+> OK, I'll do that.
+>
+> Please, note that all the Renesas dts[i] files do not include <dt-bindings/interrupt-controller/irq.h>
+> Thus, blindly following this bindings documentation when adding new SATA nodes to the existing
+> r8a7790.dtsi, for example, will cause DT compilation error.
+>
 
---===============0720057666028432787==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vYlOGI1a8wP+YbIl"
-Content-Disposition: inline
+BTW, we'll also have to switch to #include instead of /include/ to make it work.
 
-
---vYlOGI1a8wP+YbIl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 08, 2013 at 07:29:20PM +0800, Nicolin Chen wrote:
-
-> Sorry all, I mistook the version number. It should be version 5.
-
-> Please ignore this series version.
-
-There is no need to resend for things like getting the version number
-wrong in the subject line, that's just noise.  Please only resend things
-if there's a change in the actual patches.
-
---vYlOGI1a8wP+YbIl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSfM6mAAoJELSic+t+oim9awQP/0qHWvJ9Nnz/8tr9RuT9ALD3
-hZqkVqGUMpmCsRuCgpGWMqw+BfTa181ivuRaIhgB7sJaFp+F7Herz0cdUfft+5dr
-1OiI/HRAgJPorCRRLpJV8tGHClN2PFTW6eAs33esQuMye/LDgezrpCoz7fWRhr0V
-ocKnVJdzLL1nc1nA8HpB2MibaStHHv3yB6OQHVDzzxiaH6/An0cqPGF6RUYYsiC1
-MyudSXDkUCXvZkDgX3b48VV9jc6qERMbnobUuaEJ12B18aUtnHAEtjHzpJeHz3qt
-ZbYPRyskYtCwxPFxg3+hEERrGJYOm9r0qQatdvLCVSYe360VBOHkVdZrhKZEmXA8
-zji2NpmpkCwMqnarnQwPTjxiA6Ct4hvr9pw7PdzRBfz5mhQxJHV/nszqbraGOBvz
-aMBgTzrZQeT4IqMhtU+L5/GFKvCZliQA7F+WrR07N36O2tvBSS+VYF/PrDZ/2Yiv
-H+VpZCeSfwpA/EWDYHcgNBu/Q9xLvlfKYuTJOkHYHrzrgXsP0qLBhuHi14wNn+4e
-LcfHLfbXE3L6pP4y54nTaUgd+bmX1cN3IJQCW4NwqSsml08CWnZgwQZPeKznoprk
-4q9EOrDGuKQ0ttgAEDQWN5kJ4iUak8gD3bnEzPkYev6NORBaHaoZinI5AkrQj2B4
-uVoK66I3Hyinf006EdWh
-=27sP
------END PGP SIGNATURE-----
-
---vYlOGI1a8wP+YbIl--
-
---===============0720057666028432787==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0720057666028432787==--
+Thanks,
+Val.
