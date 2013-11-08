@@ -1,77 +1,36 @@
-From: Valentine <valentine.barshak@cogentembedded.com>
-Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
-Date: Fri, 08 Nov 2013 15:26:46 +0400
-Message-ID: <527CCA76.5060706@cogentembedded.com>
-References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com> <7820946.JfD46VSKC7@avalon>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Fri, 8 Nov 2013 19:29:20 +0800
+Message-ID: <20131108112919.GA5159@MrMyself>
+References: <cover.1383907685.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <7820946.JfD46VSKC7@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1383907685.git.b42378@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
-> Hi Valentine,
->
+On Fri, Nov 08, 2013 at 06:49:32PM +0800, Nicolin Chen wrote:
+>  * ! This series of patches has a direct dependency between them. When
+>  * ! applying them, we need to apply to one single branch. Otherwise,
+>  * ! it would break currect branches.
+> 
+> Changelog
+> v4:
+>  * PATCH-3: Add period size constraint when using dual fifo mode
+>  *
+>  * Nothing changes for PATCH-1, PATCH-2 and PATCH-4
 
-Hi Laurent,
 
-> Thank you for the patch. Two small comments below.
->
-> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
->> These bindings can be used to register SATA devices found on R-Car SoC.
->>
->> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->> Acked-by: Kumar Gala <galak@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
->> 1 file changed, 18 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
->>
->> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
->> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode 100644
->> index 0000000..d6b20a6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
->> @@ -0,0 +1,18 @@
->> +* Renesas R-Car SATA
->> +
->> +Required properties:
->> +- compatible		: should contain one of the following:
->> +			  - "renesas,sata-r8a7779" for R-Car H1
->> +			  - "renesas,sata-r8a7790" for R-Car H2
->> +			  - "renesas,sata-r8a7791" for R-Car M2
->> +- reg			: offset and length of the SATA registers;
->
-> Maybe address instead of offset ?
+Sorry all, I mistook the version number. It should be version 5.
 
-OK.
+Please ignore this series version.
 
->
->> +- interrupts		: must consist of one interrupt specifier.
->> +
->> +Example:
->> +
->> +sata: sata@fc600000 {
->> +	compatible = "renesas,sata-r8a7779";
->> +	reg = <0xfc600000 0x2000>;
->> +	interrupt-parent = <&gic>;
->> +	interrupts = <0 100 0x4>;
->
-> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
+I'll resend v5 soon.
 
-OK, I'll do that.
+Nicolin Chen
 
-Please, note that all the Renesas dts[i] files do not include <dt-bindings/interrupt-controller/irq.h>
-Thus, blindly following this bindings documentation when adding new SATA nodes to the existing
-r8a7790.dtsi, for example, will cause DT compilation error.
-
->
->> +};
-
-Thanks,
-Val.
 
