@@ -1,44 +1,70 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
-Date: Fri, 8 Nov 2013 11:12:09 -0800
-Message-ID: <20131108191209.GB25932@roeck-us.net>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com>
- <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
+Date: Fri, 8 Nov 2013 11:14:07 -0800
+Message-ID: <CAOesGMhfr3CNxKNRJa+eJepr2Fc-jx4rTQ7cPerTkQM-CyzuCg@mail.gmail.com>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1383661723-17956-8-git-send-email-sebastian.hesselbarth@gmail.com>
+	<0AF697FD-60AA-4B8B-A35F-3DF2FFBCF7AF@codeaurora.org>
+	<20131108165721.GA10335@titan.lakedaemon.net>
+	<8DC09031-553C-4FD5-8F05-F93D6FE40F3A@codeaurora.org>
+	<20131108182415.GG10335@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131108182415.GG10335-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2013 at 05:06:09PM +0200, Pantelis Antoniou wrote:
-> Introduce DT overlay support.
-> Using this functionality it is possible to dynamically overlay a part of
-> the kernel's tree with another tree that's been dynamically loaded.
-> It is also possible to remove node and properties.
-> 
-> Note that the I2C client devices are 'special', as in they're not platform
-> devices. They need to be registered with an I2C specific method.
-> 
-> In general I2C is just no good platform device citizen and needs
-> special casing.
-> 
-> PCI is another special case where PCI device insertion and removal
-> is implemented in the PCI subsystem.
-> 
-> Bug fixes & PCI support by Guenter Roeck <groeck@juniper.net>
-> 
-> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+On Fri, Nov 8, 2013 at 10:24 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> On Fri, Nov 08, 2013 at 12:06:26PM -0600, Kumar Gala wrote:
+>>
+>> On Nov 8, 2013, at 10:57 AM, Jason Cooper wrote:
+>>
+>> > On Fri, Nov 08, 2013 at 10:13:19AM -0600, Kumar Gala wrote:
+>> >> On Nov 5, 2013, at 8:28 AM, Sebastian Hesselbarth wrote:
+>> > ...
+>> >>> .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
+>> >>> arch/arm/boot/dts/Makefile                         |    2 +
+>> >>> arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
+>> >>> arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
+>> >>> 4 files changed, 282 insertions(+)
+>> >>> create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
+>> >>> create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+>> >>> create mode 100644 arch/arm/boot/dts/berlin2.dtsi
+>> >>
+>> >> Haven't we been trying to go away from non-prefixed dts/dtsi?
+>> >
+>> > hmmm, this is the first I've heard of that.  Although, your proposal
+>> > (in another thread) makes more sense now.  :)
+>> >
+>> >> So should these be something like marvell-berlin2-...
+>> >
+>> > I don't recall this being brought up at the summit, nor in Grant's
+>> > report.  I do need to give it a more careful read this weekend, though.
+>> > Perhaps I missed something.
+>>
+>> This was based on review comments Olof gave when we pushed some .dts
+>> files for MSM/APQ Qualcomm Technologies soc/boards.
+>
+> As Andrew Lunn mentioned to me earlier, we should consider the fact that
+> the dts file names are being used by Debian's flash-kernel.  Oh no!
+> Another ABI! ;-)
 
-Hi Pantelis,
+Yes, the names are mostly stable. ST-Ericsson renamed their dts files
+and it caused some pain, some build environments have them hardcoded,
+etc.
 
-another nitpick:
+Still, it is a good idea to start adding new ones using family or
+vendor prefixes, so they are easier to group. Please keep that in mind
+on new ones too, Jason -- I don't think I've discussed with you in the
+past. :-)
 
-.git/rebase-apply/patch:195: trailing whitespace.
-end up filling in the fields of the of_overlay_info array.
-warning: 1 line adds whitespace errors.
 
-Guenter
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
