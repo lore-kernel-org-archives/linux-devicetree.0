@@ -1,37 +1,42 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH] ARM: dts: doc: Document missing compatible property for omap-sham driver
-Date: Fri, 8 Nov 2013 11:07:36 +0530
-Message-ID: <1383889056-17336-1-git-send-email-lokeshvutla@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: santosh.shilimkar@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, bcousson@baylibre.com, linux-doc@vger.kernel.org, joelf@ti.com, lokeshvutla@ti.com
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/2] mmc: dw_mmc: add dw_mmc-k3
+Date: Fri,  8 Nov 2013 13:38:45 +0800
+Message-ID: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-A new compatible property "ti,omap5-sham" is added to the omap-sham driver
-recently to support SHA/MD5 for OMAP5,DRA7 and AM43XX. Documenting the
-same.
+v3:
+0001: 
+Put set/clear_bit DW_MMC_CARD_PRESENT in dw_mci_get_cd, 
+Since dw_mci_request will check DW_MMC_CARD_PRESENT before sending cmd
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- .../devicetree/bindings/crypto/omap-sham.txt       |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+0002:
+Follow suggestion from Chris, Kumar and Seungwon
+Sync to latest mmc-next, which is 3.12-rc2
+Remove enum dw_mci_k3_type etc
 
-diff --git a/Documentation/devicetree/bindings/crypto/omap-sham.txt b/Documentation/devicetree/bindings/crypto/omap-sham.txt
-index f839acd..ad91155 100644
---- a/Documentation/devicetree/bindings/crypto/omap-sham.txt
-+++ b/Documentation/devicetree/bindings/crypto/omap-sham.txt
-@@ -6,7 +6,7 @@ Required properties:
-   SHAM versions:
-   - "ti,omap2-sham" for OMAP2 & OMAP3.
-   - "ti,omap4-sham" for OMAP4 and AM33XX.
--  Note that these two versions are incompatible.
-+  - "ti,omap5-sham" for OMAP5, DRA7 and AM43XX.
- - ti,hwmods: Name of the hwmod associated with the SHAM module
- - reg : Offset and length of the register set for the module
- - interrupts : the interrupt-specifier for the SHAM module.
+v2:
+Follow Jaehoon's suggestion
+Use slot-gpio.c handle cd pin
+Move table out to dts
+other suggestion
+
+Zhangfei Gao (2):
+  mmc: dw_mmc: add dw_mci_of_get_cd_gpio to handle cd pin
+  mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   83 +++++++
+ drivers/mmc/host/Kconfig                           |   10 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/dw_mmc-k3.c                       |  247 ++++++++++++++++++++
+ drivers/mmc/host/dw_mmc.c                          |   52 +++--
+ 5 files changed, 380 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-k3.c
+
 -- 
 1.7.9.5
 
