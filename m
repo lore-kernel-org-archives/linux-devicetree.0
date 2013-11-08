@@ -1,67 +1,62 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v5 2/4] dma: imx-sdma: Add new dma type for ssi dual fifo script
-Date: Fri, 8 Nov 2013 19:32:52 +0800
-Message-ID: <ea134688ce580e1159a22a9c5666b3e568f23963.1383910029.git.b42378@freescale.com>
-References: <cover.1383910029.git.b42378@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1383910029.git.b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] Documentation/mfd: Update s2mps11.txt
+Date: Fri,  8 Nov 2013 17:05:42 +0530
+Message-ID: <1383910542-19349-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, rob@landley.net, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new DMA_TYPE for SSI dual FIFO script, included
-in SDMA firmware version 2. This script would allow SSI use dual
-fifo mode to transimit/receive data without occasional hardware
-underrun/overrun.
+Updated the number of LDOs and BUCKs as per the user manual.
+Fixed trivial typos to improve readability.
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- drivers/dma/imx-sdma.c                                 | 4 ++++
- include/linux/platform_data/dma-imx.h                  | 1 +
- 3 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 4fa814d..68b83ec 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -42,6 +42,7 @@ The full ID of peripheral types can be found below.
- 	19	IPU Memory
- 	20	ASRC
- 	21	ESAI
-+	22	SSI Dual FIFO	(needs firmware ver >= 2)
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index c9332c626021..78a840d7510d 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,10 +1,10 @@
  
- The third cell specifies the transfer priority as below.
+ * Samsung S2MPS11 Voltage and Current Regulator
  
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index c7ece8d..efaa9a9 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -725,6 +725,10 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
- 		per_2_emi = sdma->script_addrs->app_2_mcu_addr;
- 		emi_2_per = sdma->script_addrs->mcu_2_app_addr;
- 		break;
-+	case IMX_DMATYPE_SSI_DUAL:
-+		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
-+		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
-+		break;
- 	case IMX_DMATYPE_SSI_SP:
- 	case IMX_DMATYPE_MMC:
- 	case IMX_DMATYPE_SDHC:
-diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
-index beac6b8..bcbc6c3 100644
---- a/include/linux/platform_data/dma-imx.h
-+++ b/include/linux/platform_data/dma-imx.h
-@@ -39,6 +39,7 @@ enum sdma_peripheral_type {
- 	IMX_DMATYPE_IPU_MEMORY,	/* IPU Memory */
- 	IMX_DMATYPE_ASRC,	/* ASRC */
- 	IMX_DMATYPE_ESAI,	/* ESAI */
-+	IMX_DMATYPE_SSI_DUAL,	/* SSI Dual FIFO */
- };
+-The Samsung S2MP211 is a multi-function device which includes voltage and
++The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+-interfaced to the host controller using a I2C interface. Each sub-block is
+-addressed by the host system using different I2C slave address.
++interfaced to the host controller using an I2C interface. Each sub-block is
++addressed by the host system using different I2C slave addresses.
  
- enum imx_dma_prio {
+ Required properties:
+ - compatible: Should be "samsung,s2mps11-pmic".
+@@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
+ 
+  BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explictly
+  regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+- In absence of regulator-ramp-delay property, default ramp delay will be used.
++ In the absence of the regulator-ramp-delay property, the default ramp
++ delay will be used.
+ 
+ NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+ for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+@@ -58,10 +59,10 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+ as per the datasheet of s2mps11.
+ 
+ 	- LDOn
+-		  - valid values for n are 1 to 28
++		  - valid values for n are 1 to 38
+ 		  - Example: LDO0, LD01, LDO28
+ 	- BUCKn
+-		  - valid values for n are 1 to 9.
++		  - valid values for n are 1 to 10.
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
+ Example:
 -- 
-1.8.4
+1.7.9.5
+
