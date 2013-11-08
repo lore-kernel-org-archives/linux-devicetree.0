@@ -1,39 +1,51 @@
-From: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 00/12] pwm-backlight: Add GPIO and power supply support
-Date: Fri, 8 Nov 2013 14:58:56 +0100
-Message-ID: <CAH9NwWc0AjmnXX1uen1z1bX5Z0pRyYrGY9a949L6=ZAF6YeL8w@mail.gmail.com>
-References: <1381145866-445-1-git-send-email-treding@nvidia.com>
- <CAH9NwWfDRiQ3FegMyx1YBQ5jUgPvc7h2cxd3KgyeDdnsq6UgMw@mail.gmail.com> <20131108123619.GC31551@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: disable self-tests for !OF_IRQ
+Date: Fri, 08 Nov 2013 14:09:23 +0000
+Message-ID: <20131108140923.544A6C421A8@trevor.secretlab.ca>
+References: <1383848149-15488-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131108123619.GC31551-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <1383848149-15488-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/11/8 Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> On Thu, Nov 07, 2013 at 01:00:04PM +0100, Christian Gmeiner wrote:
->> Hi Thierry
->>
->>
->> This series adds the ability to specify a GPIO and a power supply to
->> > enable a backlight.
->> >
->>
->> Whats the state of this patch set? I am looking for this kind of
->> functionality for a pwm based
->> backlight on a devicetree only imx6 device.
->
-> Those patches (except the one that adds the backlight-boot-off property)
-> will be part of my pull request for 3.13.
->
+On Thu,  7 Nov 2013 12:15:48 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Fix OF selftest compile on sparc which does not enable OF_IRQ.
+> 
+> drivers/of/selftest.c:177: undefined reference to `of_irq_parse_one'
+> drivers/of/selftest.c:197: undefined reference to `of_irq_parse_one'
+> drivers/of/selftest.c:248: undefined reference to `of_irq_parse_one'
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-That are really good news.. will try this patch set on a 3.12 kernel.
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---
-Christian Gmeiner, MSc
+g.
+
+
+> ---
+>  drivers/of/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 9d2009a..9b28f8b 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -17,6 +17,7 @@ config PROC_DEVICETREE
+>  
+>  config OF_SELFTEST
+>  	bool "Device Tree Runtime self tests"
+> +	depends on OF_IRQ
+>  	help
+>  	  This option builds in test cases for the device tree infrastructure
+>  	  that are executed one at boot time, and the results dumped to the
+> -- 
+> 1.8.1.2
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
