@@ -1,75 +1,77 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] Documentation/mfd: Fix typos in s2mps11.txt
-Date: Fri, 8 Nov 2013 16:50:09 +0530
-Message-ID: <CAK9yfHwOPrMn-OTOBP8Efdw6sMFaoU8yQpQqV3o1+=Ffdryv=g@mail.gmail.com>
-References: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
-	<20131108102853.GV30901@lee--X1>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
+Date: Fri, 08 Nov 2013 15:26:46 +0400
+Message-ID: <527CCA76.5060706@cogentembedded.com>
+References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com> <7820946.JfD46VSKC7@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131108102853.GV30901@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <7820946.JfD46VSKC7@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8 November 2013 15:58, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> As this is only a trivial patch, I'll take it out the hands of the
-> already overloaded DT maintainers.
+On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
+> Hi Valentine,
 >
->> Fixed trivial typos to improve readability.
+
+Hi Laurent,
+
+> Thank you for the patch. Two small comments below.
+>
+> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
+>> These bindings can be used to register SATA devices found on R-Car SoC.
 >>
->> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>> Acked-by: Kumar Gala <galak@codeaurora.org>
 >> ---
->>  Documentation/devicetree/bindings/mfd/s2mps11.txt |    9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
+>> 1 file changed, 18 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> index c9332c6..0ff4e65 100644
->> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> @@ -1,10 +1,10 @@
->>
->>  * Samsung S2MPS11 Voltage and Current Regulator
->>
->> -The Samsung S2MP211 is a multi-function device which includes voltage and
->> +The Samsung S2MPS11 is a multi-function device which includes voltage and
+>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode 100644
+>> index 0000000..d6b20a6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>> @@ -0,0 +1,18 @@
+>> +* Renesas R-Car SATA
+>> +
+>> +Required properties:
+>> +- compatible		: should contain one of the following:
+>> +			  - "renesas,sata-r8a7779" for R-Car H1
+>> +			  - "renesas,sata-r8a7790" for R-Car H2
+>> +			  - "renesas,sata-r8a7791" for R-Car M2
+>> +- reg			: offset and length of the SATA registers;
 >
-> Nice catch eagle-eye!
+> Maybe address instead of offset ?
 
-:)
+OK.
 
 >
->>  current regulators, RTC, charger controller and other sub-blocks. It is
->> -interfaced to the host controller using a I2C interface. Each sub-block is
->> -addressed by the host system using different I2C slave address.
->> +interfaced to the host controller using an I2C interface. Each sub-block is
->> +addressed by the host system using different I2C slave addresses.
->>
->>  Required properties:
->>  - compatible: Should be "samsung,s2mps11-pmic".
->> @@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
->>
->>   BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explictly
->>   regulator-ramp-delay = <0> can be used for them to disable ramp delay.
->> - In absence of regulator-ramp-delay property, default ramp delay will be used.
->> + In the absence of regulator-ramp-delay property, default ramp delay will
->> + be used.
+>> +- interrupts		: must consist of one interrupt specifier.
+>> +
+>> +Example:
+>> +
+>> +sata: sata@fc600000 {
+>> +	compatible = "renesas,sata-r8a7779";
+>> +	reg = <0xfc600000 0x2000>;
+>> +	interrupt-parent = <&gic>;
+>> +	interrupts = <0 100 0x4>;
 >
-> So if we're being pertinacity here, your correction isn't much better.
->
-> s/of regulator-ramp-delay property,/of {the,an} regulator-ramp-delay property, the
+> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
 
-I like this one :)
->
-> or
->
-> s/of regulator-ramp-delay property,/of regulator-ramp-delay, the
+OK, I'll do that.
 
--- 
-With warm regards,
-Sachin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please, note that all the Renesas dts[i] files do not include <dt-bindings/interrupt-controller/irq.h>
+Thus, blindly following this bindings documentation when adding new SATA nodes to the existing
+r8a7790.dtsi, for example, will cause DT compilation error.
+
+>
+>> +};
+
+Thanks,
+Val.
+
