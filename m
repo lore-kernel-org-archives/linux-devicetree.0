@@ -1,66 +1,103 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V3 2/2] dt: Document sata_rcar bindings
-Date: Fri, 08 Nov 2013 15:30:54 +0100
-Message-ID: <3353398.KxY2PdxubL@avalon>
-References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com> <1383912570-8393-3-git-send-email-valentine.barshak@cogentembedded.com> <E0BF568D-6856-4DDE-AEBA-7C21CB1CE1F3@codeaurora.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] OF: Introduce utility helper functions
+Date: Fri, 08 Nov 2013 06:54:46 -0800
+Message-ID: <527CFB36.5000205@roeck-us.net>
+References: <1383855454-15191-1-git-send-email-panto@antoniou-consulting.com> <1383855454-15191-6-git-send-email-panto@antoniou-consulting.com> <527CA9F4.9080003@nsn.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <E0BF568D-6856-4DDE-AEBA-7C21CB1CE1F3@codeaurora.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <527CA9F4.9080003-OYasijW0DpE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+On 11/08/2013 01:08 AM, Alexander Sverdlin wrote:
+> Hello Pantelis,
+>
+> On 07/11/13 21:17, ext Pantelis Antoniou wrote:
+>> Introduce helper functions for working with the live DT tree.
+>>
+>> __of_free_property() frees a dynamically created property
+>> __of_free_tree() recursively frees a device node tree
+>> __of_copy_property() copies a property dynamically
+>> __of_create_empty_node() creates an empty node
+>> __of_find_node_by_full_name() finds the node with the full name
+>> and
+>> of_multi_prop_cmp() performs a multi property compare but without
+>> having to take locks.
+>>
+>> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+>> ---
+>>   drivers/of/Makefile |   2 +-
+>>   drivers/of/util.c   | 253 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/of.h  |  59 ++++++++++++
+>>   3 files changed, 313 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/of/util.c
+>>
+>
+> ...
+>
+>> +struct property *__of_copy_property(const struct property *prop, gfp_t flags)
+>> +{
+>> +	struct property *propn;
+>> +
+>> +	propn = kzalloc(sizeof(*prop), flags);
+>> +	if (propn == NULL)
+>> +		return NULL;
+>> +
+>> +	propn->name = kstrdup(prop->name, flags);
+>> +	if (propn->name == NULL)
+>> +		goto err_fail_name;
+>> +
+>> +	if (prop->length > 0) {
+>          ^^^^^^^^^^^^^^^^^^^^^^^
+> As Ioan already mentioned, this is really a problem.
+> There is a bunch of places, where properties without values are used.
+> Like gpio-controller; ranges; interrupt-controller;
+> Refer, for example, to of_irq_map_raw() which checks
+> of_get_property(ipar, "interrupt-controller", NULL) != NULL
+> and some other occurrences of exactly same construct.
+> This will simply be broken for merged device-tree parts.
+>
 
-On Friday 08 November 2013 08:26:47 Kumar Gala wrote:
-> On Nov 8, 2013, at 6:09 AM, Valentine Barshak wrote:
-> > These bindings can be used to register SATA devices found on R-Car SoC.
-> > 
-> > Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-> > ---
-> > Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 +++++++++++++++++
-> > 1 file changed, 18 insertions(+)
-> > create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode
-> > 100644
-> > index 0000000..1e61113
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > @@ -0,0 +1,18 @@
-> > +* Renesas R-Car SATA
-> > +
-> > +Required properties:
-> > +- compatible		: should contain one of the following:
-> > +			  - "renesas,sata-r8a7779" for R-Car H1
-> > +			  - "renesas,sata-r8a7790" for R-Car H2
-> > +			  - "renesas,sata-r8a7791" for R-Car M2
-> > +- reg			: address and length of the SATA registers;
-> > +- interrupts		: must consist of one interrupt specifier.
-> > +
-> > +Example:
-> > +
-> > +sata: sata@fc600000 {
-> > +	compatible = "renesas,sata-r8a7779";
-> > +	reg = <0xfc600000 0x2000>;
-> > +	interrupt-parent = <&gic>;
-> > +	interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> Sorry, I missed the discussion on this, but I think it would be better in
-> the example to leave this as 4.  There is no reference in the binding at
-> all to figure out where IRQ_TYPE_LEVEL_HIGH is defined.
+Folks,
 
-Then I'd rather reference the interrupts binding document, otherwise people 
-will blindly write device tree sources with 4 instead of IRQ_TYPE_LEVEL_HIGH, 
-which I don't want to encourage.
+it might help if you explain what exactly is broken, and how to fix it.
+It is not as if the property is not copied, only its value
+is not copied. And the value does not exist.
 
-> > +};
--- 
-Regards,
+What do you think the code needs to do differently ? Obviously it can
+not copy a non-existing value. So what would have to be in the else case ?
 
-Laurent Pinchart
+Thanks,
+Guenter
 
+>> +		propn->value = kmalloc(prop->length, flags);
+>> +		if (propn->value == NULL)
+>> +			goto err_fail_value;
+>> +		memcpy(propn->value, prop->value, prop->length);
+>> +		propn->length = prop->length;
+>> +	}
+>> +
+>> +	/* mark the property as dynamic */
+>> +	of_property_set_flag(propn, OF_DYNAMIC);
+>> +
+>> +	return propn;
+>> +
+>> +err_fail_value:
+>> +	kfree(propn->name);
+>> +err_fail_name:
+>> +	kfree(propn);
+>> +	return NULL;
+>> +}
+>> +
+>
+> ...
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
