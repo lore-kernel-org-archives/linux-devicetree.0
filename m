@@ -1,43 +1,52 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 08/29] metag: use unflatten_and_copy_device_tree
-Date: Fri, 8 Nov 2013 17:34:18 +0000
-Message-ID: <527D209A.8090305@imgtec.com>
-References: <1381163377-21044-1-git-send-email-robherring2@gmail.com> <1381163377-21044-9-git-send-email-robherring2@gmail.com> <527CE32F.6090305@imgtec.com> <CAL_JsqKprnCn7JQj7QFbMbLW3Ei-paBH6RYti+CgEFCb4JUaAQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKprnCn7JQj7QFbMbLW3Ei-paBH6RYti+CgEFCb4JUaAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-metag <linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qais <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Qais Yousef <qsyousef-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: common location for devicetree files
+Date: Fri, 8 Nov 2013 11:59:56 -0600
+Message-ID: <5957C301-9698-45B0-BFED-749DE79D0A74@codeaurora.org>
+References: <1438803E-C904-428B-B042-891978BC15DF@codeaurora.org> <20131108165255.GA32668@titan.lakedaemon.net>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131108165255.GA32668-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/13 17:26, Rob Herring wrote:
-> On Fri, Nov 8, 2013 at 7:12 AM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> On 07/10/13 17:29, Rob Herring wrote:
->>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>
->>> Use the common unflatten_and_copy_device_tree to copy the built-in FDT
->>> out of init section.
->>>
->>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>> Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>
->> With Qais' suggestion of removing the extern void copy_fdt(void) from
->> arch/metag/include/asm/prom.h (thanks Qais):
->> Acked-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+On Nov 8, 2013, at 10:52 AM, Jason Cooper wrote:
+
+> On Thu, Nov 07, 2013 at 05:21:58PM -0600, Kumar Gala wrote:
+>> As we start having more sharing of device trees between architectures
+>> (arm & arm64, arm & powerpc, guessing maybe mips & arm) we need dts to
+>> live in location that 
+>> 
+>> I was wondering what people felt about doing:
+>> 
+>> 	arch/dts/<VENDOR>/
+>> 
+>> as a common location that could be shared.  I'm up for other
+>> suggestions.
 > 
-> Look at the second series with the prom.h clean-up. prom.h is removed
-> from metag altogether now.
+> What do we really need to do before the move?  Should all arch dts files
+> be able to #include from any arch?  What's the minimum churn needed to
+> accomplish that?  Maybe just move the needed bits to arch/dts/include/ ?
+> 
+> I'm not real keen on separating by vendor.  For example, us mvebu folks
+> would probably miss useful/duplicated effort in another vendor's
+> subdirectory.  Which was the whole reason for moving driver code out of
+> machine directories to begin with.
 
-Ah yes. It should technically be removed in this patch, but since prom.h
-is going away anyway it doesn't particularly bother me.
 
-Thanks
-James
+Can you explain that further, what would you miss from other vendors.  All the patches should still be going via devicetree ML.
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-metag" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
