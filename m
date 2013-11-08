@@ -1,243 +1,77 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv7][ 2/3] arm/dts: Add support for the cpuimx35 board from Eukrea and its baseboard.
-Date: Fri,  8 Nov 2013 12:43:30 +0100
-Message-ID: <1383911012-8905-2-git-send-email-denis@eukrea.com>
-References: <1383911012-8905-1-git-send-email-denis@eukrea.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX
+	ssi
+Date: Fri, 8 Nov 2013 11:44:41 +0000
+Message-ID: <20131108114441.GM2493@sirena.org.uk>
+References: <cover.1383907685.git.b42378@freescale.com>
+ <20131108112919.GA5159@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383911012-8905-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0720057666028432787=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131108112919.GA5159@MrMyself>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, vinod.koul@intel.com, s.hauer@pengutronix.de, swarren@wwwdotorg.org, timur@tabi.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, dmaengine@vger.kernel.org, dan.j.williams@intel.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The following devices/functionalities were added:
- * Main and secondary UARTs.
- * i2c and the pcf8563 device.
- * Ethernet.
- * NAND.
- * The BP1 button.
- * The LED.
- * Watchdog
- * SD.
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-ChangeLog v6->v7:
-- Added Grant Likely in the Cc list.
-- Shortened the license.
-- The tsc2007 pads were moved in another patch.
+--===============0720057666028432787==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vYlOGI1a8wP+YbIl"
+Content-Disposition: inline
 
-ChangeLog v5->v6:
-- Shawn Guo was added in the Cc.
----
- arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   46 ++++++++
- .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  119 ++++++++++++=
-++++++++
- 2 files changed, 165 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.=
-dts
 
-diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/bo=
-ot/dts/imx35-eukrea-cpuimx35.dtsi
-new file mode 100644
-index 0000000..b9cb5a5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-@@ -0,0 +1,46 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "imx35.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX35";
-+	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
-+
-+	memory {
-+		reg =3D <0x80000000 0x8000000>; /* 128M */
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec_1>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1_1>;
-+	status =3D "okay";
-+	pcf8563@51 {
-+		compatible =3D "nxp,pcf8563";
-+		reg =3D <0x51>;
-+	};
-+};
-+
-+&nfc {
-+	nand-bus-width =3D <8>;
-+	nand-ecc-mode =3D "hw";
-+	nand-on-flash-bbt;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
-rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-new file mode 100644
-index 0000000..9b1af1f
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-@@ -0,0 +1,119 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "imx35-eukrea-cpuimx35.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX35";
-+	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fsl,=
-imx35";
-+
-+	gpio_keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys_1>;
-+
-+		bp1 {
-+			label =3D "BP1";
-+			gpios =3D <&gpio3 25 1>;
-+			linux,code =3D <256>;
-+			gpio-key,wakeup;
-+			linux,input-type =3D <1>;
-+		};
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpioled>;
-+
-+		led1 {
-+			label =3D "led1";
-+			gpios =3D <&gpio3 29 1>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_audmux_1>;
-+	status =3D "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_esdhc1_1 &pinctrl_esdhc1_cd>;
-+	cd-gpios =3D <&gpio3 24 0>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	tlv320aic23: codec@1a {
-+		compatible =3D "ti,tlv320aic23";
-+		reg =3D <0x1a>;
-+	};
-+};
-+
-+&iomuxc {
-+	esdhc1 {
-+		pinctrl_esdhc1_cd: esdhc1_cd_grp-1 {
-+			fsl,pins =3D <
-+				MX35_PAD_LD18__GPIO3_24 0x80000000
-+			>;
-+		};
-+	};
-+
-+	gpio_keys {
-+		pinctrl_gpiokeys_1: gpiokeysgrp-1 {
-+			fsl,pins =3D <
-+				MX35_PAD_LD19__GPIO3_25 0x80000000
-+			>;
-+		};
-+	};
-+
-+	leds {
-+		pinctrl_gpioled: gpioledgrp-1 {
-+			fsl,pins =3D <
-+				MX35_PAD_LD23__GPIO3_29 0x80000000
-+			>;
-+		};
-+	};
-+
-+	reg_lcd_3v3 {
-+		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-+			fsl,pins =3D <
-+				MX35_PAD_D3_CLS__GPIO1_4 0x80000000
-+			>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	fsl,mode =3D "i2s-slave";
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2_1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
---=20
-1.7.9.5
+--vYlOGI1a8wP+YbIl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Nov 08, 2013 at 07:29:20PM +0800, Nicolin Chen wrote:
+
+> Sorry all, I mistook the version number. It should be version 5.
+
+> Please ignore this series version.
+
+There is no need to resend for things like getting the version number
+wrong in the subject line, that's just noise.  Please only resend things
+if there's a change in the actual patches.
+
+--vYlOGI1a8wP+YbIl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSfM6mAAoJELSic+t+oim9awQP/0qHWvJ9Nnz/8tr9RuT9ALD3
+hZqkVqGUMpmCsRuCgpGWMqw+BfTa181ivuRaIhgB7sJaFp+F7Herz0cdUfft+5dr
+1OiI/HRAgJPorCRRLpJV8tGHClN2PFTW6eAs33esQuMye/LDgezrpCoz7fWRhr0V
+ocKnVJdzLL1nc1nA8HpB2MibaStHHv3yB6OQHVDzzxiaH6/An0cqPGF6RUYYsiC1
+MyudSXDkUCXvZkDgX3b48VV9jc6qERMbnobUuaEJ12B18aUtnHAEtjHzpJeHz3qt
+ZbYPRyskYtCwxPFxg3+hEERrGJYOm9r0qQatdvLCVSYe360VBOHkVdZrhKZEmXA8
+zji2NpmpkCwMqnarnQwPTjxiA6Ct4hvr9pw7PdzRBfz5mhQxJHV/nszqbraGOBvz
+aMBgTzrZQeT4IqMhtU+L5/GFKvCZliQA7F+WrR07N36O2tvBSS+VYF/PrDZ/2Yiv
+H+VpZCeSfwpA/EWDYHcgNBu/Q9xLvlfKYuTJOkHYHrzrgXsP0qLBhuHi14wNn+4e
+LcfHLfbXE3L6pP4y54nTaUgd+bmX1cN3IJQCW4NwqSsml08CWnZgwQZPeKznoprk
+4q9EOrDGuKQ0ttgAEDQWN5kJ4iUak8gD3bnEzPkYev6NORBaHaoZinI5AkrQj2B4
+uVoK66I3Hyinf006EdWh
+=27sP
+-----END PGP SIGNATURE-----
+
+--vYlOGI1a8wP+YbIl--
+
+--===============0720057666028432787==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0720057666028432787==--
