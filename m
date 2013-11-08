@@ -1,59 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/8] ARM: dts: imx27 pinctrl
-Date: Fri, 8 Nov 2013 10:45:01 +0100
-Message-ID: <CACRpkdazhujHpjVuOhee9UXfi=zV3Z7TjbxzQ_3H+gmFrgDmWA@mail.gmail.com>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
-	<1382950843-26066-5-git-send-email-mpa@pengutronix.de>
-	<CAHCPf3sz6eOYrnNDfOTo5Z5dZP2U9+GtQMKYZEb-1WfuXepa6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHCPf3sz6eOYrnNDfOTo5Z5dZP2U9+GtQMKYZEb-1WfuXepa6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH v5 0/7] gpio: daVinci: cleanup and feature enhancement
+Date: Fri,  8 Nov 2013 15:41:43 +0530
+Message-ID: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2013 at 11:43 PM, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org> wrote:
-> On Mon, Oct 28, 2013 at 4:00 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>
->> +                       iomuxc: iomuxc@10015000 {
->> +                               compatible = "fsl,imx27-iomuxc";
->> +                               reg = <0x10015000 0x600>;
->> +
->> +                       };
->> +
->>                         gpio1: gpio@10015000 {
->>                                 compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->>                                 reg = <0x10015000 0x100>;
->
-> Linus,
->
-> Case in point, you can't have two nodes which overlap registers.
->
-> Probably the most reasonable way to effect this is to keep the GPIO
-> bindings, put pinctrl definitions in there (there's no reason pinctrl
-> and gpio drivers can't probe the same compatible property) and use
-> regmap internally on that single node.
+From: KV Sujith <sujithkv@ti.com>
 
-If the I/O region is tightly coupled across two subsystems like
-that we usually merge the driver into one combined
-pinctrl+gpio driver and put it into drivers/pinctrl/*.
+This patch series does the following
+1> Ports the driver to use irqdomain.
+2> Adds dt binding support for gpio-davinci.
+3> Adds DA850 dt support goio.
 
-This often solves more problems and make the code
-simpler too.
+Changes for v5:
+1: Fixed review comments pointed by Grygorii.
+2: Dropped the fixup patch
 
-An alternative if address 0x10015000- 0x100150ff is
-really only used for GPIO is to map the pinctrl like
-that:
+This patch series is based on following fixup series
+http://us.generation-nt.com/answer/patch-0-2-davinci-gpio-fixes-help-212978272.html
 
-reg = <0x10015100 0x500>
+KV Sujith (3):
+  gpio: davinci: add OF support
+  ARM: davinci: da850: add GPIO DT node
+  ARM: davinci: da850 evm: add GPIO pinumux entries DT node
 
-and rewrite all the base offset handling in the driver.
+Lad, Prabhakar (4):
+  gpio: davinci: remove unnecessary printk
+  gpio: davinci: use readl/writel instead of __raw_*
+  gpio: davinci: use irqdomain
+  gpio: davinci: remove unused variable intc_irq_num
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   39 +++++
+ arch/arm/boot/dts/da850-evm.dts                    |   20 +++
+ arch/arm/boot/dts/da850.dtsi                       |   14 ++
+ arch/arm/mach-davinci/da830.c                      |    1 -
+ arch/arm/mach-davinci/da850.c                      |    1 -
+ arch/arm/mach-davinci/dm355.c                      |    1 -
+ arch/arm/mach-davinci/dm365.c                      |    1 -
+ arch/arm/mach-davinci/dm644x.c                     |    1 -
+ arch/arm/mach-davinci/dm646x.c                     |    1 -
+ drivers/gpio/gpio-davinci.c                        |  170 +++++++++++++-------
+ include/linux/platform_data/gpio-davinci.h         |    3 +-
+ 11 files changed, 185 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+
+-- 
+1.7.9.5
+
