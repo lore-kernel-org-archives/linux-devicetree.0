@@ -1,100 +1,71 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 7/9] ARM: add Armada 1500 and Sony NSZ-GS7 device
- tree files
-Date: Fri, 8 Nov 2013 15:29:30 -0500
-Message-ID: <20131108202930.GL10335@titan.lakedaemon.net>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1383661723-17956-8-git-send-email-sebastian.hesselbarth@gmail.com>
- <0AF697FD-60AA-4B8B-A35F-3DF2FFBCF7AF@codeaurora.org>
- <20131108165721.GA10335@titan.lakedaemon.net>
- <8DC09031-553C-4FD5-8F05-F93D6FE40F3A@codeaurora.org>
- <20131108182415.GG10335@titan.lakedaemon.net>
- <CAOesGMhfr3CNxKNRJa+eJepr2Fc-jx4rTQ7cPerTkQM-CyzuCg@mail.gmail.com>
- <20131108193054.GJ10335@titan.lakedaemon.net>
- <CAOesGMir+Zar0hskPQ+ZN6Z7+R-G5GhrafenQPgjZGbVGG9uwA@mail.gmail.com>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH V3 2/2] dt: Document sata_rcar bindings
+Date: Sat, 09 Nov 2013 00:30:45 +0400
+Message-ID: <527D49F5.9030704@cogentembedded.com>
+References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com> <1383912570-8393-3-git-send-email-valentine.barshak@cogentembedded.com> <E0BF568D-6856-4DDE-AEBA-7C21CB1CE1F3@codeaurora.org> <3353398.KxY2PdxubL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMir+Zar0hskPQ+ZN6Z7+R-G5GhrafenQPgjZGbVGG9uwA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Kumar Gala <galak@codeaurora.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <3353398.KxY2PdxubL@avalon>
+Sender: linux-ide-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2013 at 12:10:27PM -0800, Olof Johansson wrote:
-> On Fri, Nov 8, 2013 at 11:30 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> > On Fri, Nov 08, 2013 at 11:14:07AM -0800, Olof Johansson wrote:
-> >> On Fri, Nov 8, 2013 at 10:24 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> >> > On Fri, Nov 08, 2013 at 12:06:26PM -0600, Kumar Gala wrote:
-> >> >>
-> >> >> On Nov 8, 2013, at 10:57 AM, Jason Cooper wrote:
-> >> >>
-> >> >> > On Fri, Nov 08, 2013 at 10:13:19AM -0600, Kumar Gala wrote:
-> >> >> >> On Nov 5, 2013, at 8:28 AM, Sebastian Hesselbarth wrote:
-> >> >> > ...
-> >> >> >>> .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
-> >> >> >>> arch/arm/boot/dts/Makefile                         |    2 +
-> >> >> >>> arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
-> >> >> >>> arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
-> >> >> >>> 4 files changed, 282 insertions(+)
-> >> >> >>> create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
-> >> >> >>> create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-> >> >> >>> create mode 100644 arch/arm/boot/dts/berlin2.dtsi
-> >> >> >>
-> >> >> >> Haven't we been trying to go away from non-prefixed dts/dtsi?
-> >> >> >
-> >> >> > hmmm, this is the first I've heard of that.  Although, your proposal
-> >> >> > (in another thread) makes more sense now.  :)
-> >> >> >
-> >> >> >> So should these be something like marvell-berlin2-...
-> >> >> >
-> >> >> > I don't recall this being brought up at the summit, nor in Grant's
-> >> >> > report.  I do need to give it a more careful read this weekend, though.
-> >> >> > Perhaps I missed something.
-> >> >>
-> >> >> This was based on review comments Olof gave when we pushed some .dts
-> >> >> files for MSM/APQ Qualcomm Technologies soc/boards.
-> >> >
-> >> > As Andrew Lunn mentioned to me earlier, we should consider the fact that
-> >> > the dts file names are being used by Debian's flash-kernel.  Oh no!
-> >> > Another ABI! ;-)
-> >>
-> >> Yes, the names are mostly stable. ST-Ericsson renamed their dts files
-> >> and it caused some pain, some build environments have them hardcoded,
-> >> etc.
-> >>
-> >> Still, it is a good idea to start adding new ones using family or
-> >> vendor prefixes, so they are easier to group. Please keep that in mind
-> >> on new ones too, Jason -- I don't think I've discussed with you in the
-> >> past. :-)
-> >
-> > Nope, I definitely missed that if you did ;-)  Will do in the future.
-> >
-> > Perhaps now is the time to consider separating the dts filename from the
-> > dtb filename?  I'm warming up to my idea of globalscale,mirabox.dtb...
-> 
-> Having a "dtb-install" make target that sets those up as softlinks
-> could be a good idea, at least.
+On 11/08/2013 06:30 PM, Laurent Pinchart wrote:
+> Hi Kumar,
+>
+> On Friday 08 November 2013 08:26:47 Kumar Gala wrote:
+>> On Nov 8, 2013, at 6:09 AM, Valentine Barshak wrote:
+>>> These bindings can be used to register SATA devices found on R-Car SoC.
+>>>
+>>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+>>> ---
+>>> Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 +++++++++++++++++
+>>> 1 file changed, 18 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode
+>>> 100644
+>>> index 0000000..1e61113
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+>>> @@ -0,0 +1,18 @@
+>>> +* Renesas R-Car SATA
+>>> +
+>>> +Required properties:
+>>> +- compatible		: should contain one of the following:
+>>> +			  - "renesas,sata-r8a7779" for R-Car H1
+>>> +			  - "renesas,sata-r8a7790" for R-Car H2
+>>> +			  - "renesas,sata-r8a7791" for R-Car M2
+>>> +- reg			: address and length of the SATA registers;
+>>> +- interrupts		: must consist of one interrupt specifier.
+>>> +
+>>> +Example:
+>>> +
+>>> +sata: sata@fc600000 {
+>>> +	compatible = "renesas,sata-r8a7779";
+>>> +	reg = <0xfc600000 0x2000>;
+>>> +	interrupt-parent = <&gic>;
+>>> +	interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
+>>
+>> Sorry, I missed the discussion on this, but I think it would be better in
+>> the example to leave this as 4.  There is no reference in the binding at
+>> all to figure out where IRQ_TYPE_LEVEL_HIGH is defined.
+>
+> Then I'd rather reference the interrupts binding document, otherwise people
+> will blindly write device tree sources with 4 instead of IRQ_TYPE_LEVEL_HIGH,
+> which I don't want to encourage.
+>
+>>> +};
 
-oooh, I like that.  Something like
+Is it possible to get the functional SATA phy changes from the first patch applied
+and have a separate discussion regarding DT bindings?
+This DT discussion is not related to the SATA PHY changes.
+There were comments to keep both patches as a single series, but I don't see any reason
+for that anymore.
 
-$ dtc -L -o kirkwood-dreamplug.dtb kirkwood-dreamplug.dts
-$ ls
-...
-globalscale,dreamplug.dtb -> kirkwood-dreamplug.dtb
-...
-kirkwood-dreamplug.dtb
-...
-$
-
-Otherwise the build system would have to learn to parse dts/dtbs...
-
-> I'm not sold on using them as filenames myself though.
-
-fair enough.
-
-thx,
-
-Jason.
+Thanks,
+Val.
