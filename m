@@ -1,38 +1,34 @@
-From: Guangyu Chen <guangyu.chen@freescale.com>
-Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX ssi
-Date: Fri, 8 Nov 2013 11:52:48 +0000
-Message-ID: <qhujk71bqaj71qtkkasql3ga.1383911576584@email.android.com>
-References: <cover.1383907685.git.b42378@freescale.com>
- <20131108112919.GA5159@MrMyself>,<20131108114441.GM2493@sirena.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] Documentation/mfd: Update s2mps11.txt
+Date: Fri, 8 Nov 2013 11:53:12 +0000
+Message-ID: <20131108115312.GW30901@lee--X1>
+References: <1383910542-19349-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131108114441.GM2493@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Guangyu Chen <guangyu.chen@freescale.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "timur@tabi.org" <timur@tabi.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@li>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383910542-19349-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Oh,  I am sorry about that.
+On Fri, 08 Nov 2013, Sachin Kamat wrote:
 
-I will follow the rule next time.
+> Updated the number of LDOs and BUCKs as per the user manual.
+> Fixed trivial typos to improve readability.
+>=20
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |   13 +++++++----=
+--
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 
-Thank you.
+Applied, thanks.
 
-Sent by Android device.
-
-Mark Brown <broonie@kernel.org> wrote:
-
-
-On Fri, Nov 08, 2013 at 07:29:20PM +0800, Nicolin Chen wrote:
-
-> Sorry all, I mistook the version number. It should be version 5.
-
-> Please ignore this series version.
-
-There is no need to resend for things like getting the version number
-wrong in the subject line, that's just noise.  Please only resend things
-if there's a change in the actual patches.
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
