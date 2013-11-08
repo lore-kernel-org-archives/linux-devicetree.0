@@ -1,64 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
-Date: Fri, 08 Nov 2013 02:02:11 +0100
-Message-ID: <7820946.JfD46VSKC7@avalon>
-References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com>
+From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Subject: Re: I2C add ov2640 ?
+Date: Fri, 08 Nov 2013 09:12:06 +0800
+Message-ID: <527C3A66.4010108@gtsys.com.hk>
+References: <52784785.1040406@gtsys.com.hk>	<5278C2B4.802@gtsys.com.hk>	<CAOMZO5DdUyvKAJdwYLpVR2+V5HBCt-AqgDxwgkh4AHQsE+evng@mail.gmail.com>	<527B330D.3040704@gtsys.com.hk> <CAOMZO5Acink+VzWZmv_w1dEyp4AU3mS9fHwt82c28h+VHFDmUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5Acink+VzWZmv_w1dEyp4AU3mS9fHwt82c28h+VHFDmUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Valentine,
+On Friday, November 08, 2013 02:08 AM, Fabio Estevam wrote:
+> On Thu, Nov 7, 2013 at 4:28 AM, Chris Ruehl<chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>  wrote:
+>
+>> c) in the patch dev_err(&adapter->dev, "OV2640 Not probed mclk missing\n");
+>> give me the hint was wrong.
+>>
+>> from your conversation with Sascha Hauer
+>> http://www.spinics.net/lists/linux-i2c/msg09099.html
+>>
+>> I see that's other ways to get a clock, thats works for
+>>   v4l2_clk_get(&client->dev, "mclk")
+>>   v4l2_clk_get(&client->dev, NULL)
+>
+> You probably need to pass the mclk clock via device tree.
+>
+> Please start a new thread about it on linux-media and add Guennadi on Cc.
+>
+> Regards,
+>
+> Fabio Estveam
 
-Thank you for the patch. Two small comments below.
+Hi Fabio,
 
-On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
-> These bindings can be used to register SATA devices found on R-Car SoC.
-> 
-> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-> Acked-by: Kumar Gala <galak@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
-> 1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode 100644
-> index 0000000..d6b20a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> @@ -0,0 +1,18 @@
-> +* Renesas R-Car SATA
-> +
-> +Required properties:
-> +- compatible		: should contain one of the following:
-> +			  - "renesas,sata-r8a7779" for R-Car H1
-> +			  - "renesas,sata-r8a7790" for R-Car H2
-> +			  - "renesas,sata-r8a7791" for R-Car M2
-> +- reg			: offset and length of the SATA registers;
+Thanks for the hint,, found an old thread
+  https://lkml.org/lkml/2013/7/30/246
 
-Maybe address instead of offset ?
+where the clock is provided to a sound card via device tree. I will see if I can 
+make a patch and then I post it again.
 
-> +- interrupts		: must consist of one interrupt specifier.
-> +
-> +Example:
-> +
-> +sata: sata@fc600000 {
-> +	compatible = "renesas,sata-r8a7779";
-> +	reg = <0xfc600000 0x2000>;
-> +	interrupt-parent = <&gic>;
-> +	interrupts = <0 100 0x4>;
-
-Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
-
-> +};
--- 
-Regards,
-
-Laurent Pinchart
-
+Chris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
