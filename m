@@ -1,78 +1,65 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v2 08/29] metag: use unflatten_and_copy_device_tree
-Date: Fri, 8 Nov 2013 13:12:15 +0000
-Message-ID: <527CE32F.6090305@imgtec.com>
-References: <1381163377-21044-1-git-send-email-robherring2@gmail.com> <1381163377-21044-9-git-send-email-robherring2@gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
+Date: Fri, 8 Nov 2013 14:14:49 +0100
+Message-ID: <20131108.151449.1092512147495774962.hdoyu@nvidia.com>
+References: <52729912.9050800@wwwdotorg.org><20131101084909.5ed79987aa3aeb13b14e3f08@nvidia.com><20131106160623.2cb72f91cd071e555d0d4b9a@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381163377-21044-9-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-metag <linux-metag@vger.kernel.org>, Qais <qais.yousef@imgtec.com>, Qais Yousef <qsyousef@gmail.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131106160623.2cb72f91cd071e555d0d4b9a-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/13 17:29, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Use the common unflatten_and_copy_device_tree to copy the built-in FDT
-> out of init section.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: James Hogan <james.hogan@imgtec.com>
+Hi Stephen,
 
-With Qais' suggestion of removing the extern void copy_fdt(void) from
-arch/metag/include/asm/prom.h (thanks Qais):
-Acked-by: James Hogan <james.hogan@imgtec.com>
+Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Wed, 6 Nov 2013 15:06:23 +0100:
 
-Cheers
-James
+> Experimentally I have implemented "of_iommu_attach()" called from
+> drvier/core to control the order of device instanciation.
+> 
+> In the Tegra SMMU PATCHv3, we've discussed how to control the order of
+> device instanciation. Thierry/Stephen proposed to insert a hook in
+> driver/core to control this order, depending on whether an iommu
+> device is ready or not."of_iommu_attach()" is implement for that
+> purpose now. Along with this patch, I attached DT part of modication
+> to this mail. I used the same iommu bindings which arm,smmu uses.
+> 
+> [RFC][PATCHv3+ 2/2] ARM: DT: tegra30: iommu: Add "stream-id-cells"/"mmu-masters"
+> 
+> "#stream-id-cells" is used to identify whether a device is IOMMU'able
+> or not. If a device is IOMMU'able, we'll defer to instanciate that
+> device till an iommu device is instanciated/ready. Once an iommu device
+> is instanciated, "dev->bus->iommu_ops" is set in the bus. After an
+> iommu device is instanciated, those defered devices are instanciated
+> as IOMMU'able with help of the iommu driver via iommu_ops->add_device().
+> 
+> We don't call bus_set_iommu() until an iommu device is instanciated
+> because we need to support 2 kind of IOMMU drivers, SMMU and GART so
+> that this bus_set_iommu() needs to be defered till an iommu device is
+> instanciated. So the single image can support 2 iommu drivers at once.
+> 
+> With this patch, the following HACK patches in v3[1] are not needed
+> anymore.
+> 
+>   patch 1: [HACK] of: dev_node has struct device pointer
+>   patch 2: [HACK] ARM: tegra: Populate AHB/IOMMU earlier than others
+>   patch 3: [HACK] amba: Move AHB to core_initcall
+>   patch 4: [HACK] iommu/tegra: smmu: Move IOMMU to core_initcall
+> 
+> Any comment would be really appreciated.
 
-> ---
->  arch/metag/kernel/devtree.c | 16 ----------------
->  arch/metag/kernel/setup.c   |  4 +---
->  2 files changed, 1 insertion(+), 19 deletions(-)
-> 
-> diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
-> index 7cd0252..049af56 100644
-> --- a/arch/metag/kernel/devtree.c
-> +++ b/arch/metag/kernel/devtree.c
-> @@ -94,21 +94,5 @@ struct machine_desc * __init setup_machine_fdt(void *dt)
->  	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
->  
->  	return mdesc_best;
-> -}
->  
-> -/**
-> - * copy_fdt - Copy device tree into non-init memory.
-> - *
-> - * We must copy the flattened device tree blob into non-init memory because the
-> - * unflattened device tree will reference the strings in it directly.
-> - */
-> -void __init copy_fdt(void)
-> -{
-> -	void *alloc = early_init_dt_alloc_memory_arch(
-> -			be32_to_cpu(initial_boot_params->totalsize), 0x40);
-> -	if (alloc) {
-> -		memcpy(alloc, initial_boot_params,
-> -		       be32_to_cpu(initial_boot_params->totalsize));
-> -		initial_boot_params = alloc;
-> -	}
->  }
-> diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
-> index c396cd0..2c697d3 100644
-> --- a/arch/metag/kernel/setup.c
-> +++ b/arch/metag/kernel/setup.c
-> @@ -408,9 +408,7 @@ void __init setup_arch(char **cmdline_p)
->  	cpu_2_hwthread_id[smp_processor_id()] = hard_processor_id();
->  	hwthread_id_2_cpu[hard_processor_id()] = smp_processor_id();
->  
-> -	/* Copy device tree blob into non-init memory before unflattening */
-> -	copy_fdt();
-> -	unflatten_device_tree();
-> +	unflatten_and_copy_device_tree();
->  
->  #ifdef CONFIG_SMP
->  	smp_init_cpus();
-> 
+Have you had any chance to take a look at this one?
+
+I plan to send version 4 of this series with the above design next
+week. In v4, I use "mmu-masters" binding stolen from "arm,smmu" DT.
