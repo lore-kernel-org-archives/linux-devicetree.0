@@ -1,24 +1,118 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] doc: devicetree: Add bindings documentation for omap-des
- driver
-Date: Thu, 7 Nov 2013 19:40:22 -0500
-Message-ID: <527C32F6.2040908@ti.com>
-References: <1383871035-16608-1-git-send-email-joelf@ti.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 26/31] mtd: nand: pxa3xx: Introduce multiple page
+ I/O support
+Date: Thu, 7 Nov 2013 16:46:00 -0800
+Message-ID: <20131108004600.GZ20061@ld-irv-0074.broadcom.com>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1383837455-30721-27-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20131107234459.GB2467@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1383871035-16608-1-git-send-email-joelf@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, DOCUMENTATION <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131107234459.GB2467@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 November 2013 07:37 PM, Joel Fernandes wrote:
-> Add documentation for the generic OMAP DES crypto module describing the device
-> tree bindings.
+Hi,
+
+I haven't taken a look at all your changes yet, but I'll get this
+comment off my chest while it's still fresh :)
+
+On Thu, Nov 07, 2013 at 08:45:00PM -0300, Ezequiel Garcia wrote:
+> Hello,
 > 
-> Signed-off-by: Joel Fernandes <joelf@ti.com>
-> ---
-Thanks Joel for picking this up.
-FWIW, Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> I have a concern about the ECC mode and strength determination.
+> 
+> On Thu, Nov 07, 2013 at 12:17:30PM -0300, Ezequiel Garcia wrote:
+> [..]
+> > @@ -1152,7 +1289,28 @@ static int armada370_ecc_init(struct pxa3xx_nand_info *info,
+> >  			      struct nand_ecc_ctrl *ecc,
+> >  			      int strength, int page_size)
+> >  {
+> > -	/* Unimplemented yet */
+> > +	if (strength == 4 && page_size == 4096) {
+> > +		info->ecc_bch = 1;
+> > +		info->chunk_size = 2048;
+> > +		info->spare_size = 32;
+> > +		info->ecc_size = 32;
+> > +		ecc->mode = NAND_ECC_HW;
+> > +		ecc->size = info->chunk_size;
+> > +		ecc->layout = &ecc_layout_4KB_bch4bit;
+> > +		ecc->strength = 16;
+> > +		return 1;
+> > +
+> > +	} else if (strength == 8 && page_size == 4096) {
+> > +		info->ecc_bch = 1;
+> > +		info->chunk_size = 1024;
+> > +		info->spare_size = 0;
+> > +		info->ecc_size = 32;
+> > +		ecc->mode = NAND_ECC_HW;
+> > +		ecc->size = info->chunk_size;
+> > +		ecc->layout = &ecc_layout_4KB_bch8bit;
+> > +		ecc->strength = 16;
+> > +		return 1;
+> > +	}
+> >  	return 0;
+> >  }
+> >  
+> 
+> The above shows I tried to be very careful (aka paranoid) in the ECC
+> mode determination. Please note that what I call "ECC mode", is
+> determined by the chunk->size value only.
+> 
+> As the included documentation explains this controller supports two
+> different BCH ECC strength: 16-over-1024, or 16-over-2048. Setting the chunk
+> size to either 1024 or 2048 is what determines which of the above will
+> actually take effect.
+> 
+> In past mails, we've refered to these two as BCH4 or BCH8, but this is not
+> really accurate (as Brian has pointed out) so I droped that terms in
+> favor of the real thing: 16 correctable bits over 1024 data bytes, or
+> 16 correctable bits over 2048 data bytes.
+> 
+> In turn, such BCH mode setting affects heavily the page layout, because
+> after each transfered chunk (which is either 1024+spare or 2048+spare)
+> the controller reads and writes a 30B ECC region.
+> 
+> In other words, the kernel cannot arbitrarily change this setting, or
+> the image won't be readable/writeable any longer.
+> 
+> For this reason, I'm starting to think the above method of picking
+> the "ECC mode" based solely on the page size or the strength is slightly
+> fragile (future developers might come and "improve" the driver breaking
+> images).
+> 
+> Besides: what if a user wants the kernel to use a "higher" than
+> required strength?
+> 
+> In conclusion: I'm starting to think a better (and long-term safer)
+> approach is to set the ECC mode in the DT. I know this sucks, but from
+> my point of view the flash device contains an image that "must" be
+> read/write with a given ECC mode, and this ECC mode is by no means
+> discoverable.
+
+I think that's the way to go, in general. We can get by with
+"implementation defined behavior" (i.e., make the driver do what makes
+sense) for now, but to avoid breakage in the future, the bootloader
+needs to specify what ECC configuration is required -- via DT. But your
+current patch is still probably fine without it, since you're supporting
+new hardware.
+
+> Now, let's suppose we want to set this in the DT: what property
+> would we use? "marvell,nand-ecc-opt = 16-2048"? (a bit odd, no?).
+> 
+> What do you think?
+
+If ECC is purely determined by the chunk size, then why not just:
+
+  marvell,nand-chunk-size = 2048;
+  (with a value of 2048, 1024, or 512?)
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
