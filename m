@@ -1,39 +1,50 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [RESEND PATCH v2 1/6] ARM: dts: Declare clocks as fixed on bcm11351
-Date: Fri, 8 Nov 2013 11:42:12 -0800
-Message-ID: <CAAYSxhoHYaFzcoxEAJrNb6d8n1aKGDN68K3eekRT22s0h7960w@mail.gmail.com>
-References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
-	<1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
-	<527CC2A5.7080000@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 3/3] DT: proc: Add runtime overlay interface in /proc
+Date: Fri, 8 Nov 2013 12:00:01 -0800
+Message-ID: <20131108200001.GA26694@roeck-us.net>
+References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com>
+ <1383923170-24914-4-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <527CC2A5.7080000@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Patch Tracking <patches@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383923170-24914-4-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 8, 2013 at 2:53 AM, Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Fri, Nov 08, 2013 at 05:06:10PM +0200, Pantelis Antoniou wrote:
+> Add a runtime interface to /proc to enable generic device tree overlay
+> usage.
+> 
 
-> I was wondering what is the status of this patchset ?
->
-> The patchset touches different areas maintained by different people. Through
-> what tree do you expect this patchset to be merged ??
+Hi Pantelis,
 
-Hi Daniel,
+> ---
+>  fs/proc/proc_devtree.c | 278 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 278 insertions(+)
+> 
+[ ... ]
 
-I plan to send an updated version soon to address some concerns raised by Mark.
+> +
+> +		/* start at 256K at first */
+> +		if (od->alloc == 0)
+> +			od->alloc = SZ_256K / 2;
+> +
 
-Once all the maintainers are satisfied and provide their acks, I would
-like Christian to take the series into his tree.
+I have to include <linux/sizes.h> to get this to build.
 
-I expect Christian will have a few other Broadcom DTS file changes in
-his tree so sending the series through him should make it easier to
-avoid/manage conflicts.
+Also, even though /proc/device-tree-overlay is supposed to be write only, I get
+this:
 
-Christian, would that work for you?
+# cat /proc/device-tree-overlay
+cat: [  651.973568] overlay_proc_release: failed to unflatten tree
+/proc/device-tree-overlay: Input/output error
+
+which seems to be a bit odd. I did not spend any time to track it down, though.
+
+Otherwise, the code seems to be working well.
 
 Thanks,
-Tim Kryger
+Guenter
