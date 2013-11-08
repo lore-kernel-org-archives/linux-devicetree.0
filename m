@@ -1,581 +1,419 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH V4] clk: palmas: add clock driver for palmas
-Date: Fri, 8 Nov 2013 10:47:57 +0200
-Message-ID: <527CA53D.6060400@ti.com>
-References: <1381316687-1756-1-git-send-email-ldewangan@nvidia.com>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH RESEND 1/2] clk: add clk accuracy retrieval support
+Date: Fri, 08 Nov 2013 09:54:45 +0100
+Message-ID: <527CA6D5.9070807@overkiz.com>
+References: <1381684631-10835-1-git-send-email-b.brezillon@overkiz.com> <1381684631-10835-2-git-send-email-b.brezillon@overkiz.com> <20131108005147.19193.42349@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381316687-1756-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, mturquette@linaro.org
-Cc: broonie@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131108005147.19193.42349@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lexman,
+Hello Mike,
 
-On 10/09/2013 02:04 PM, Laxman Dewangan wrote:
-> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
-> which can be enable/disable through software.
->=20
-> Add clock driver support for the Palmas 32KHz clocks.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1:=20
-> - Call prepare if the clk is needed for boot-enable or sleep control.
-> - change is_enabled to is_prepared.
-> - Added ops palmas_clks_recalc_rate.
-> - Added of_clk_add_provider().
->=20
-> Changes from V2:
-> - Convert magic number to defines.
->=20
-> Changes from V3:
-> - Drop the option of clock enable at boot.
-> - Add the dt-binding header for DTS file and added macros for ext pin=
- and
->   clock id.
-> - Rephrase some of sentences.
-> - Error check on init conifgurations.
-> - Code cleanups for getting  rid of some of enums.
->=20
->  .../devicetree/bindings/clock/clk-palmas.txt       |   50 +++
->  drivers/clk/Kconfig                                |    7 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/clk-palmas.c                           |  333 ++++++++++=
-++++++++++
->  include/dt-bindings/mfd/palmas.h                   |   22 ++
->  5 files changed, 413 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-palma=
-s.txt
->  create mode 100644 drivers/clk/clk-palmas.c
->  create mode 100644 include/dt-bindings/mfd/palmas.h
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/clk-palmas.txt b=
-/Documentation/devicetree/bindings/clock/clk-palmas.txt
-> new file mode 100644
-> index 0000000..907c454
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clk-palmas.txt
-> @@ -0,0 +1,50 @@
-> +* Palmas 32KHz clocks *
-> +
-> +Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
-> +
-> +This binding uses the common clock binding ./clock-bindings.txt.
-> +
-> +Required properties:
-> +- compatible : shall be "ti,palmas-clk".
-> +- #clock-cells : from common clock binding; shall be set to 1. The c=
-lock id for
-> +		different clocks are:
-> +			0 for CLK32K_KG
-> +			1 for CLK32K_KG_AUDIO.
-> +		The macros of clocks id for DTS is defined at
-> +			dt-bindings/mfd/palmas.h
-> +
-> +Optional subnode:
-> +	The clock node has optional subnode to provide the init configurati=
-on of
-> +	clocks like sleep control.
-> +
-> +	The subnode name is fixed and it should be
-> +		clk32k_kg for the 32KHz KG clock.
-> +		clk32k_kg_audio for the 32KHz KG_AUDIO clock.
-> +
-> +	Optional subnode properties:
-> +	ti,external-sleep-control: The external enable input pins controlle=
-d the
-> +		enable/disable of clocks.  The external enable input pins ENABLE1,
-> +		ENABLE2 and NSLEEP. The valid values for the external pins are:
-> +			1 for ENABLE1
-> +			2 for ENABLE2
-> +			3 for NSLEEP.
-> +		Option 0 or missing this property means the clock is
-> +		enabled/disabled via register access and these pins do
-> +		not have any control.
-> +		The macros of external control pins for DTS is defined at
-> +			dt-bindings/mfd/palmas.h
-> +
-> +Example:
-> +	#include <dt-bindings/mfd/palmas.h>
-> +	...
-> +	palmas: tps65913@58 {
-> +		...
-> +		clock {
-> +			compatible =3D "ti,palmas-clk";
-> +			#clock-cells =3D <1>;
-> +			clk32k_kg {
-> +				ti,external-sleep-control =3D <PALMAS_EXT_CONTROL_PIN_NSLEEP>;
-> +			};
-> +		};
-> +		...
-> +	};
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 279407a..6b8c233 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -93,6 +93,13 @@ config CLK_PPC_CORENET
->  	  This adds the clock driver support for Freescale PowerPC corenet
->  	  platforms using common clock framework.
-> =20
-> +config COMMON_CLK_PALMAS
-> +	tristate "Clock driver for TI Palmas devices"
+On 08/11/2013 01:51, Mike Turquette wrote:
+> Quoting Boris BREZILLON (2013-10-13 10:17:10)
+>> The clock accuracy is expressed in ppb (parts per billion) and represents
+>> the possible clock drift.
+>> Say you have a clock (e.g. an oscillator) which provides a fixed clock of
+>> 20MHz with an accuracy of +- 20Hz. This accuracy expressed in ppb is
+>> 20Hz/20MHz = 1000 ppb (or 1 ppm).
+>>
+>> Clock users may need the clock accuracy information in order to choose
+>> the best clock (the one with the best accuracy) across several available
+>> clocks.
+>>
+>> This patch adds clk accuracy retrieval support for common clk framework by
+>> means of a new function called clk_get_accuracy.
+>> This function returns the given clock accuracy expressed in ppb.
+>>
+>> In order to get the clock accuracy, this implementation adds one callback
+>> called recalc_accuracy to the clk_ops structure.
+>> This callback is given the parent clock accuracy (if the clock is not a
+>> root clock) and should recalculate the given clock accuracy.
+>>
+>> This callback is optional and may be implemented if the clock is not
+>> a perfect clock (accuracy != 0 ppb).
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   Documentation/clk.txt        |    4 ++
+>>   drivers/clk/Kconfig          |    4 ++
+>>   drivers/clk/clk.c            |   92 ++++++++++++++++++++++++++++++++++++++++--
+>>   include/linux/clk-private.h  |    1 +
+>>   include/linux/clk-provider.h |   11 +++++
+>>   include/linux/clk.h          |   17 ++++++++
+>>   6 files changed, 125 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/clk.txt b/Documentation/clk.txt
+>> index 3aeb5c4..dc52da1 100644
+>> --- a/Documentation/clk.txt
+>> +++ b/Documentation/clk.txt
+>> @@ -77,6 +77,8 @@ the operations defined in clk.h:
+>>                  int             (*set_parent)(struct clk_hw *hw, u8 index);
+>>                  u8              (*get_parent)(struct clk_hw *hw);
+>>                  int             (*set_rate)(struct clk_hw *hw, unsigned long);
+>> +               unsigned long   (*recalc_accuracy)(struct clk_hw *hw,
+>> +                                                  unsigned long parent_accuracy);
+>>                  void            (*init)(struct clk_hw *hw);
+>>          };
+>>   
+>> @@ -202,6 +204,8 @@ optional or must be evaluated on a case-by-case basis.
+>>   .set_parent     |      |             | n             | y           | n    |
+>>   .get_parent     |      |             | n             | y           | n    |
+>>                   |      |             |               |             |      |
+>> +.recalc_rate    |      |             |               |             |      |
+> s/recalc_rate/recalc_accuracy/
 
-I would use bool instead of tristate to avoid situations when the clock=
- driver
-is removed while users are still loaded. We also have issue with module=
- load
-dependecies since from the client drivers using this clock we do not ha=
-ve
-direct calls -> the clk-palmas driver might not be loaded before the cl=
-ient
-drivers load which causes them to not find the clk32k clock from palmas=
-=2E
-Either way I think it isw not a good idea to allow the removal of a clo=
-ck
-driver from the live system.
+Oops. I'll fix it :).
+>
+>> +                |      |             |               |             |      |
+>>   .init           |      |             |               |             |      |
+>>                   -----------------------------------------------------------
+>>   [1] either one of round_rate or determine_rate is required.
+>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>> index 279407a..4d12ae7 100644
+>> --- a/drivers/clk/Kconfig
+>> +++ b/drivers/clk/Kconfig
+>> @@ -6,12 +6,16 @@ config CLKDEV_LOOKUP
+>>   config HAVE_CLK_PREPARE
+>>          bool
+>>   
+>> +config HAVE_CLK_GET_ACCURACY
+>> +       bool
+>> +
+> This sort of thing gets messy. For platforms converted to common struct
+> clk we select HAVE_CLK_PREPARE and we let legacy platforms select it on
+> a case-by-case basis.
+>
+> For something like HAVE_CLK_GET_ACCURACY I am inclined to only add it
+> for platforms converted to the common struct clk and not even expose it
+> to legacy clock framework implementations. In those cases the call to
+> clk_get_accuracy would return -EINVAL or -EPERM or something.
+Okay.
+If Russell agrees, I'll define a static inline function returning an
+error (-ENOTSUPP ?) in case CONFIG_COMMON_CLK is not defined.
 
-> +	depends on MFD_PALMAS
-> +	---help---
-> +	  This driver supports TI Palmas devices 32KHz output KG and KG_AUD=
-IO
-> +	  using common clock framework.
-> +
->  endmenu
-> =20
->  source "drivers/clk/mvebu/Kconfig"
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 7b11106..32e04cf 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -43,3 +43,4 @@ obj-$(CONFIG_COMMON_CLK_SI5351) +=3D clk-si5351.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11) +=3D clk-s2mps11.o
->  obj-$(CONFIG_CLK_TWL6040)	+=3D clk-twl6040.o
->  obj-$(CONFIG_CLK_PPC_CORENET)	+=3D clk-ppc-corenet.o
-> +obj-$(CONFIG_COMMON_CLK_PALMAS)	+=3D clk-palmas.o
-> diff --git a/drivers/clk/clk-palmas.c b/drivers/clk/clk-palmas.c
-> new file mode 100644
-> index 0000000..e6e56d1
-> --- /dev/null
-> +++ b/drivers/clk/clk-palmas.c
-> @@ -0,0 +1,333 @@
-> +/*
-> + * Clock driver for Palmas device.
-> + *
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + *
-> + * Author: Laxman Dewangan <ldewangan@nvidia.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any k=
-ind,
-> + * whether express or implied; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-> + * 02111-1307, USA
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/mfd/palmas.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define PALMAS_CLOCK_MAX			2
-> +
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE1	1
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE2	2
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_NSLEEP	3
-> +
-> +struct palmas_clks;
-> +
-> +struct palmas_clk32k_desc {
-> +	const char *clk_name;
-> +	unsigned int control_reg;
-> +	unsigned int enable_mask;
-> +	unsigned int sleep_mask;
-> +	unsigned int sleep_reqstr_id;
-> +};
-> +
-> +struct palmas_clock_info {
-> +	struct clk *clk;
-> +	struct clk_hw hw;
-> +	struct palmas_clk32k_desc *clk_desc;
-> +	struct palmas_clks *palmas_clk;
-> +	int ext_control_pin;
-> +};
-> +
-> +struct palmas_clks {
-> +	struct device *dev;
-> +	struct palmas *palmas;
-> +	struct clk_onecell_data clk_data;
-> +	struct palmas_clock_info clk_info[PALMAS_CLOCK_MAX];
-> +};
-> +
-> +static struct palmas_clk32k_desc palmas_clk32k_descs[] =3D {
-> +	{
-> +		.clk_name =3D "clk32k_kg",
-> +		.control_reg =3D PALMAS_CLK32KG_CTRL,
-> +		.enable_mask =3D PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
-> +		.sleep_mask =3D PALMAS_CLK32KG_CTRL_MODE_SLEEP,
-> +		.sleep_reqstr_id =3D PALMAS_EXTERNAL_REQSTR_ID_CLK32KG,
-> +	}, {
-> +		.clk_name =3D "clk32k_kg_audio",
-> +		.control_reg =3D PALMAS_CLK32KGAUDIO_CTRL,
-> +		.enable_mask =3D PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
-> +		.sleep_mask =3D PALMAS_CLK32KG_CTRL_MODE_SLEEP,
-> +		.sleep_reqstr_id =3D PALMAS_EXTERNAL_REQSTR_ID_CLK32KGAUDIO,
-> +	},
-> +};
-> +
-> +static inline struct palmas_clock_info *to_palmas_clks_info(struct c=
-lk_hw *hw)
-> +{
-> +	return container_of(hw, struct palmas_clock_info, hw);
-> +}
-> +
-> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
-> +	unsigned long parent_rate)
-> +{
-> +	return 32768;
-> +}
-> +
-> +static int palmas_clks_prepare(struct clk_hw *hw)
-> +{
-> +	struct palmas_clock_info *cinfo =3D to_palmas_clks_info(hw);
-> +	struct palmas_clks *palmas_clks =3D cinfo->palmas_clk;
-> +	int ret;
-> +
-> +	ret =3D palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BAS=
-E,
-> +			cinfo->clk_desc->control_reg,
-> +			cinfo->clk_desc->enable_mask,
-> +			cinfo->clk_desc->enable_mask);
-> +	if (ret < 0)
-> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-> +			cinfo->clk_desc->control_reg, ret);
+>
+> Russell, any thoughts on that approach?
+>
+>>   config HAVE_MACH_CLKDEV
+>>          bool
+>>   
+>>   config COMMON_CLK
+>>          bool
+>>          select HAVE_CLK_PREPARE
+>> +       select HAVE_CLK_GET_ACCURACY
+>>          select CLKDEV_LOOKUP
+>>          ---help---
+>>            The common clock framework is a single definition of struct
+>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+>> index a004769..6a8f3ef 100644
+>> --- a/drivers/clk/clk.c
+>> +++ b/drivers/clk/clk.c
+>> @@ -104,10 +104,11 @@ static void clk_summary_show_one(struct seq_file *s, struct clk *c, int level)
+>>          if (!c)
+>>                  return;
+>>   
+>> -       seq_printf(s, "%*s%-*s %-11d %-12d %-10lu",
+>> +       seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu",
+>>                     level * 3 + 1, "",
+>>                     30 - level * 3, c->name,
+>> -                  c->enable_count, c->prepare_count, clk_get_rate(c));
+>> +                  c->enable_count, c->prepare_count, clk_get_rate(c),
+>> +                  clk_get_accuracy(c));
+>>          seq_printf(s, "\n");
+>>   }
+>>   
+>> @@ -129,8 +130,8 @@ static int clk_summary_show(struct seq_file *s, void *data)
+>>   {
+>>          struct clk *c;
+>>   
+>> -       seq_printf(s, "   clock                        enable_cnt  prepare_cnt  rate\n");
+>> -       seq_printf(s, "---------------------------------------------------------------------\n");
+>> +       seq_printf(s, "   clock                        enable_cnt  prepare_cnt  rate        accuracy\n");
+>> +       seq_printf(s, "---------------------------------------------------------------------------------\n");
+>>   
+>>          clk_prepare_lock();
+>>   
+>> @@ -167,6 +168,7 @@ static void clk_dump_one(struct seq_file *s, struct clk *c, int level)
+>>          seq_printf(s, "\"enable_count\": %d,", c->enable_count);
+>>          seq_printf(s, "\"prepare_count\": %d,", c->prepare_count);
+>>          seq_printf(s, "\"rate\": %lu", clk_get_rate(c));
+>> +       seq_printf(s, "\"accuracy\": %lu", clk_get_accuracy(c));
+>>   }
+>>   
+>>   static void clk_dump_subtree(struct seq_file *s, struct clk *c, int level)
+>> @@ -248,6 +250,11 @@ static int clk_debug_create_one(struct clk *clk, struct dentry *pdentry)
+>>          if (!d)
+>>                  goto err_out;
+>>   
+>> +       d = debugfs_create_u32("clk_accuracy", S_IRUGO, clk->dentry,
+>> +                       (u32 *)&clk->accuracy);
+>> +       if (!d)
+>> +               goto err_out;
+>> +
+>>          d = debugfs_create_x32("clk_flags", S_IRUGO, clk->dentry,
+>>                          (u32 *)&clk->flags);
+>>          if (!d)
+>> @@ -602,6 +609,11 @@ out:
+>>          return ret;
+>>   }
+>>   
+>> +unsigned long __clk_get_accuracy(struct clk *clk)
+>> +{
+>> +       return !clk ? 0 : clk->accuracy;
+>> +}
+>> +
+>>   unsigned long __clk_get_flags(struct clk *clk)
+>>   {
+>>          return !clk ? 0 : clk->flags;
+>> @@ -1016,6 +1028,59 @@ static int __clk_notify(struct clk *clk, unsigned long msg,
+>>   }
+>>   
+>>   /**
+>> + * __clk_recalc_accuracies
+>> + * @clk: first clk in the subtree
+>> + * @msg: notification type (see include/linux/clk.h)
+>> + *
+>> + * Walks the subtree of clks starting with clk and recalculates accuracies as
+>> + * it goes.  Note that if a clk does not implement the .recalc_rate callback
+>> + * then it is assumed that the clock will take on the rate of it's parent.
+>> + *
+>> + * Caller must hold prepare_lock.
+>> + */
+>> +static void __clk_recalc_accuracies(struct clk *clk)
+>> +{
+>> +       unsigned long parent_accuracy = 0;
+>> +       struct clk *child;
+>> +
+>> +       if (clk->parent)
+>> +               parent_accuracy = clk->parent->accuracy;
+>> +
+>> +       if (clk->ops->recalc_accuracy)
+>> +               clk->accuracy = clk->ops->recalc_accuracy(clk->hw,
+>> +                                                         parent_accuracy);
+>> +       else
+>> +               clk->accuracy = parent_accuracy;
+>> +
+>> +       hlist_for_each_entry(child, &clk->children, child_node)
+>> +               __clk_recalc_accuracies(child);
+>> +}
+>> +
+>> +/**
+>> + * clk_get_accuracy - return the accuracy of clk
+>> + * @clk: the clk whose accuracy is being returned
+>> + *
+>> + * Simply returns the cached accuracy of the clk, unless
+>> + * CLK_GET_ACCURACY_NOCACHE flag is set, which means a recalc_rate will be
+>> + * issued.
+>> + * If clk is NULL then returns 0.
+>> + */
+>> +unsigned long clk_get_accuracy(struct clk *clk)
+>> +{
+>> +       unsigned long accuracy;
+>> +       clk_prepare_lock();
+>> +
+>> +       if (clk && (clk->flags & CLK_GET_ACCURACY_NOCACHE))
+>> +               __clk_recalc_accuracies(clk);
+> I think that there is some overlap between recalculating the accuracy
+> here and simply getting it. You only provide clk_get_accuracy and it
+> serves both purposes. It would be better if clk_recalc_accuracy walked
+> the subtree of children and if clk_get_accuracy simply returned a cached
+> value.
 
-It would be good to take into account that the clk32k clocks in Palmas =
-have
-settling time. Based on the TRM udelay(200) should cover this with a sm=
-all margin.
-We could as well have the settling time as DT property for the individu=
-al
-clk32k clocks in case we have external passive elements affecting the s=
-ettling
-time.
+I'm not sure I get your point.
 
-> +
-> +	return ret;
-> +}
-> +
-> +static void palmas_clks_unprepare(struct clk_hw *hw)
-> +{
-> +	struct palmas_clock_info *cinfo =3D to_palmas_clks_info(hw);
-> +	struct palmas_clks *palmas_clks =3D cinfo->palmas_clk;
-> +	int ret;
-> +
-> +	/*
-> +	 * Clock can be disabled through external pin if it is externally
-> +	 * controlled.
-> +	 */
-> +	if (cinfo->ext_control_pin)
-> +		return;
-> +
-> +	ret =3D palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BAS=
-E,
-> +			cinfo->clk_desc->control_reg,
-> +			cinfo->clk_desc->enable_mask, 0);
-> +	if (ret < 0)
-> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-> +			cinfo->clk_desc->control_reg, ret);
-> +
-> +}
-> +
-> +static int palmas_clks_is_prepared(struct clk_hw *hw)
-> +{
-> +	struct palmas_clock_info *cinfo =3D to_palmas_clks_info(hw);
-> +	struct palmas_clks *palmas_clks =3D cinfo->palmas_clk;
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (cinfo->ext_control_pin)
-> +		return 1;
-> +
-> +	ret =3D palmas_read(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-> +			cinfo->clk_desc->control_reg, &val);
-> +	if (ret < 0) {
-> +		dev_err(palmas_clks->dev, "Reg 0x%02x read failed, %d\n",
-> +				cinfo->clk_desc->control_reg, ret);
-> +		return ret;
-> +	}
-> +	return !!(val & cinfo->clk_desc->enable_mask);
-> +}
-> +
-> +static struct clk_ops palmas_clks_ops =3D {
-> +	.prepare	=3D palmas_clks_prepare,
-> +	.unprepare	=3D palmas_clks_unprepare,
-> +	.is_prepared	=3D palmas_clks_is_prepared,
-> +	.recalc_rate	=3D palmas_clks_recalc_rate,
-> +};
-> +
-> +static struct clk_init_data palmas_clks_hw_init[PALMAS_CLOCK_MAX] =3D=
- {
-> +	{
-> +		.name =3D "clk32k_kg",
-> +		.ops =3D &palmas_clks_ops,
-> +		.flags =3D CLK_IS_ROOT | CLK_IGNORE_UNUSED,
-> +	}, {
-> +		.name =3D "clk32k_kg_audio",
-> +		.ops =3D &palmas_clks_ops,
-> +		.flags =3D CLK_IS_ROOT | CLK_IGNORE_UNUSED,
-> +	},
-> +};
-> +
-> +static int palmas_clks_get_clk_data(struct platform_device *pdev,
-> +	struct palmas_clks *palmas_clks)
-> +{
-> +	struct device_node *node =3D pdev->dev.of_node;
-> +	struct device_node *child;
-> +	struct palmas_clock_info *cinfo;
-> +	unsigned int prop;
-> +	int ret;
-> +	int i;
-> +
-> +	for (i =3D 0; i < PALMAS_CLOCK_MAX; ++i) {
-> +		child =3D of_get_child_by_name(node,
-> +				palmas_clk32k_descs[i].clk_name);
-> +		if (!child)
-> +			continue;
-> +
-> +		cinfo =3D &palmas_clks->clk_info[i];
-> +
-> +		ret =3D of_property_read_u32(child, "ti,external-sleep-control",
-> +					&prop);
-> +		if (!ret) {
-> +			switch (prop) {
-> +			case PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE1:
-> +				prop =3D PALMAS_EXT_CONTROL_ENABLE1;
-> +				break;
-> +			case PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE2:
-> +				prop =3D PALMAS_EXT_CONTROL_ENABLE2;
-> +				break;
-> +			case PALMAS_CLOCK_DT_EXT_CONTROL_NSLEEP:
-> +				prop =3D PALMAS_EXT_CONTROL_NSLEEP;
-> +				break;
-> +			default:
-> +				WARN_ON(1);
-> +				dev_warn(&pdev->dev,
-> +					"%s: Invalid ext control option: %u\n",
-> +					child->name, prop);
-> +				prop =3D 0;
-> +				break;
-> +			}
-> +			cinfo->ext_control_pin =3D prop;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int palmas_clks_init_configure(struct palmas_clock_info *cinf=
-o)
-> +{
-> +	struct palmas_clks *palmas_clks =3D cinfo->palmas_clk;
-> +	int ret;
-> +
-> +	ret =3D palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BAS=
-E,
-> +			cinfo->clk_desc->control_reg,
-> +			cinfo->clk_desc->sleep_mask, 0);
-> +	if (ret < 0) {
-> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-> +			cinfo->clk_desc->control_reg, ret);
-> +		return ret;
-> +	}
-> +
-> +	if (cinfo->ext_control_pin) {
-> +		ret =3D clk_prepare(cinfo->clk);
-> +		if (ret < 0) {
-> +			dev_err(palmas_clks->dev,
-> +				"Clock prep failed, %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret =3D palmas_ext_control_req_config(palmas_clks->palmas,
-> +				cinfo->clk_desc->sleep_reqstr_id,
-> +				cinfo->ext_control_pin, true);
-> +		if (ret < 0) {
-> +			dev_err(palmas_clks->dev,
-> +				"Ext config for %s failed, %d\n",
-> +				cinfo->clk_desc->clk_name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int palmas_clks_probe(struct platform_device *pdev)
-> +{
-> +	struct palmas *palmas =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct palmas_clock_info *cinfo;
-> +	struct palmas_clks *palmas_clks;
-> +	struct clk *clk;
-> +	int i, ret;
-> +
-> +	palmas_clks =3D devm_kzalloc(&pdev->dev, sizeof(*palmas_clks),
-> +				GFP_KERNEL);
-> +	if (!palmas_clks)
-> +		return -ENOMEM;
-> +
-> +	palmas_clks->clk_data.clks =3D devm_kzalloc(&pdev->dev,
-> +			PALMAS_CLOCK_MAX * sizeof(*palmas_clks->clk_data.clks),
-> +			GFP_KERNEL);
-> +	if (!palmas_clks->clk_data.clks)
-> +		return -ENOMEM;
-> +
-> +	palmas_clks_get_clk_data(pdev, palmas_clks);
-> +	platform_set_drvdata(pdev, palmas_clks);
-> +
-> +	palmas_clks->dev =3D &pdev->dev;
-> +	palmas_clks->palmas =3D palmas;
-> +
-> +	for (i =3D 0; i < PALMAS_CLOCK_MAX; i++) {
-> +		cinfo =3D &palmas_clks->clk_info[i];
-> +		cinfo->clk_desc =3D &palmas_clk32k_descs[i];
-> +		cinfo->hw.init =3D &palmas_clks_hw_init[i];
-> +		cinfo->palmas_clk =3D palmas_clks;
-> +		clk =3D devm_clk_register(&pdev->dev, &cinfo->hw);
-> +		if (IS_ERR(clk)) {
-> +			ret =3D PTR_ERR(clk);
-> +			dev_err(&pdev->dev, "Fail to register clock %s, %d\n",
-> +				palmas_clk32k_descs[i].clk_name, ret);
-> +			return ret;
-> +		}
-> +
-> +		cinfo->clk =3D clk;
-> +		palmas_clks->clk_data.clks[i] =3D clk;
-> +		palmas_clks->clk_data.clk_num++;
-> +		ret =3D palmas_clks_init_configure(cinfo);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "Clock config failed, %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret =3D of_clk_add_provider(pdev->dev.of_node, of_clk_src_simple_ge=
-t,
-> +			&palmas_clks->clk_data);
+I used exactly the same model as for clk rate retrieval.
 
-Should use of_clk_src_onecell_get as filter function here:
+Actually there's one flag (CLK_GET_ACCURACY_NOCACHE) which is
+checked to decide wether the accuracy should be recalculated each
+time the get_accuracy is called or not.
 
-	ret =3D of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
-			&palmas_clks->clk_data);
+This means most of the time the clk_get_accuracy will return the cached
+value unless the clk provider explicitely ask for accuracy recalculation
+(e.g. a clk with dynamic accuracy according to temperature range ?).
+
+Are you suggesting to expose 2 functions to clk users (clk_get_accuracy
+and clk_recalc_accuracy) ?
+Or is clk_recalc_accuracy an internal/private function used by the CCF ?
+
+>
+>> +
+>> +       accuracy = __clk_get_accuracy(clk);
+>> +       clk_prepare_unlock();
+>> +
+>> +       return accuracy;
+>> +}
+>> +EXPORT_SYMBOL_GPL(clk_get_accuracy);
+>> +
+>> +/**
+>>    * __clk_recalc_rates
+>>    * @clk: first clk in the subtree
+>>    * @msg: notification type (see include/linux/clk.h)
+>> @@ -1545,6 +1610,7 @@ void __clk_reparent(struct clk *clk, struct clk *new_parent)
+>>   {
+>>          clk_reparent(clk, new_parent);
+>>          clk_debug_reparent(clk, new_parent);
+>> +       __clk_recalc_accuracies(clk);
+> Similar to the above statement. Why do this here? We do this for rates
+> since calls to clk_get_rate will return the cached rate (unless the
+> NOCACHE flag is set). But since a call to clk_get_accuracy will always
+> recalculate it then there is no benefit to doing that here.
+
+This is the same for clk_get_accuracies (it returns the cached
+accuracy unless CLK_GET_ACCURACY_NOCACHE is defined).
+
+And changing parent of a clk will indirectly change the clk
+accuracy (clk accuracies are cumulative).
+
+>
+>>          __clk_recalc_rates(clk, POST_RATE_CHANGE);
+>>   }
+>>   
+>> @@ -1615,6 +1681,9 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
+>>          /* do the re-parent */
+>>          ret = __clk_set_parent(clk, parent, p_index);
+>>   
+>> +       /* propagate accuracy recalculation */
+>> +       __clk_recalc_accuracies(clk);
+> Ditto.
+Ditto. :)
 
 
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "Fail to add clock driver, %d\n", ret);
-> +	return ret;
-> +}
-> +
-> +static int palmas_clks_remove(struct platform_device *pdev)
-> +{
-> +	of_clk_del_provider(pdev->dev.of_node);
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id of_palmas_clks_match_tbl[] =3D {
-> +	{ .compatible =3D "ti,palmas-clk", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, of_palmas_clks_match_tbl);
+Please tell me if I misunderstood your requests.
 
-Not sure if it has been already discussed for the earlier series, but I=
- think
-we should have separate compatible for the individual clk32k clocks fro=
-m
-Palmas typo of devices.
-We already have devices which have both clk32kg, clk32kgaudio, other re=
-vision
-have only clk32kg. We might (or not) see device with only clk32kgaudio =
-or will
-have more than two clk32k clocks.
+Best Regards,
 
-I have a branch using this v4 patch with additional patches to convert =
-the
-driver to use separate compatible for the clocks here (omap5-uevm audio=
- support):
-git://gitorious.org/omap-audio/linux-audio.git peter/ti/ti-linux-3.12.y=
--pull
+Boris
 
-You can find my patches for clk-palmas in this branch with "clk: clk-pa=
-lmas:"
-prefix, the rest is to get audio working on omap5-uevm which needs the
-clk32kgaudio clock.
+>
+> Regards,
+> Mike
+>
+>> +
+>>          /* propagate rate recalculation accordingly */
+>>          if (ret)
+>>                  __clk_recalc_rates(clk, ABORT_RATE_CHANGE);
+>> @@ -1724,6 +1793,21 @@ int __clk_init(struct device *dev, struct clk *clk)
+>>                  hlist_add_head(&clk->child_node, &clk_orphan_list);
+>>   
+>>          /*
+>> +        * Set clk's accuracy.  The preferred method is to use
+>> +        * .recalc_accuracy. For simple clocks and lazy developers the default
+>> +        * fallback is to use the parent's accuracy.  If a clock doesn't have a
+>> +        * parent (or is orphaned) then accuracy is set to zero (perfect
+>> +        * clock).
+>> +        */
+>> +       if (clk->ops->recalc_accuracy)
+>> +               clk->accuracy = clk->ops->recalc_accuracy(clk->hw,
+>> +                                       __clk_get_accuracy(clk->parent));
+>> +       else if (clk->parent)
+>> +               clk->accuracy = clk->parent->accuracy;
+>> +       else
+>> +               clk->accuracy = 0;
+>> +
+>> +       /*
+>>           * Set clk's rate.  The preferred method is to use .recalc_rate.  For
+>>           * simple clocks and lazy developers the default fallback is to use the
+>>           * parent's rate.  If a clock doesn't have a parent (or is orphaned)
+>> diff --git a/include/linux/clk-private.h b/include/linux/clk-private.h
+>> index 8138c94..accb517 100644
+>> --- a/include/linux/clk-private.h
+>> +++ b/include/linux/clk-private.h
+>> @@ -41,6 +41,7 @@ struct clk {
+>>          unsigned long           flags;
+>>          unsigned int            enable_count;
+>>          unsigned int            prepare_count;
+>> +       unsigned long           accuracy;
+>>          struct hlist_head       children;
+>>          struct hlist_node       child_node;
+>>          unsigned int            notifier_count;
+>> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+>> index 73bdb69..942811d 100644
+>> --- a/include/linux/clk-provider.h
+>> +++ b/include/linux/clk-provider.h
+>> @@ -29,6 +29,7 @@
+>>   #define CLK_IS_BASIC           BIT(5) /* Basic clk, can't do a to_clk_foo() */
+>>   #define CLK_GET_RATE_NOCACHE   BIT(6) /* do not use the cached clk rate */
+>>   #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
+>> +#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
+>>   
+>>   struct clk_hw;
+>>   
+>> @@ -108,6 +109,13 @@ struct clk_hw;
+>>    *             which is likely helpful for most .set_rate implementation.
+>>    *             Returns 0 on success, -EERROR otherwise.
+>>    *
+>> + * @recalc_accuracy: Recalculate the accuracy of this clock. The clock accuracy
+>> + *             is expressed in ppb (parts per billion). The parent accuracy is
+>> + *             an input parameter.
+>> + *             Returns the calculated accuracy.  Optional - if this op is not
+>> + *             set then clock accuracy will be initialized to parent accuracy
+>> + *             or 0 (perfect clock) if clock has no parent.
+>> + *
+>>    * The clk_enable/clk_disable and clk_prepare/clk_unprepare pairs allow
+>>    * implementations to split any work between atomic (enable) and sleepable
+>>    * (prepare) contexts.  If enabling a clock requires code that might sleep,
+>> @@ -139,6 +147,8 @@ struct clk_ops {
+>>          u8              (*get_parent)(struct clk_hw *hw);
+>>          int             (*set_rate)(struct clk_hw *hw, unsigned long,
+>>                                      unsigned long);
+>> +       unsigned long   (*recalc_accuracy)(struct clk_hw *hw,
+>> +                                          unsigned long parent_accuracy);
+>>          void            (*init)(struct clk_hw *hw);
+>>   };
+>>   
+>> @@ -194,6 +204,7 @@ struct clk_hw {
+>>   struct clk_fixed_rate {
+>>          struct          clk_hw hw;
+>>          unsigned long   fixed_rate;
+>> +       unsigned long   fixed_accuracy;
+>>          u8              flags;
+>>   };
+>>   
+>> diff --git a/include/linux/clk.h b/include/linux/clk.h
+>> index 9a6d045..2fe3b54 100644
+>> --- a/include/linux/clk.h
+>> +++ b/include/linux/clk.h
+>> @@ -85,6 +85,23 @@ int clk_notifier_unregister(struct clk *clk, struct notifier_block *nb);
+>>   #endif
+>>   
+>>   /**
+>> + * clk_get_accuracy - obtain the clock accuracy in ppb (parts per billion)
+>> + *                   for a clock source.
+>> + * @clk: clock source
+>> + *
+>> + * This gets the clock source accuracy expressed in ppb.
+>> + * A perfect clock returns 0.
+>> + */
+>> +#ifdef CONFIG_HAVE_CLK_GET_ACCURACY
+>> +unsigned long clk_get_accuracy(struct clk *clk);
+>> +#else
+>> +static inline unsigned long clk_get_accuracy(struct clk *clk)
+>> +{
+>> +       return 0;
+>> +}
+>> +#endif
+>> +
+>> +/**
+>>    * clk_prepare - prepare a clock source
+>>    * @clk: clock source
+>>    *
+>> -- 
+>> 1.7.9.5
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +
-> +static struct platform_driver palmas_clks_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "palmas-clk",
-> +		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D of_palmas_clks_match_tbl,
-> +	},
-> +	.probe =3D palmas_clks_probe,
-> +	.remove =3D palmas_clks_remove,
-> +};
-> +
-> +module_platform_driver(palmas_clks_driver);
-> +
-> +MODULE_DESCRIPTION("Clock driver for Palmas Series Devices");
-> +MODULE_ALIAS("platform:palmas-clk");
-> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/dt-bindings/mfd/palmas.h b/include/dt-bindings/m=
-fd/palmas.h
-> new file mode 100644
-> index 0000000..dcfa5fc
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/palmas.h
-> @@ -0,0 +1,22 @@
-> +/*
-> + * This header provides macros for Palmas device bindings.
-> + *
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + *
-> + * Author: Laxman Dewangan <ldewangan@nvidia.com>
-> + *
-> + */
-> +
-> +#ifndef __DT_BINDINGS_PALMAS_H__
-> +#define __DT_BINDINGS_PALMAS_H
-> +
-> +/* External control pins */
-> +#define PALMAS_EXT_CONTROL_PIN_ENABLE1	1
-> +#define PALMAS_EXT_CONTROL_PIN_ENABLE2	2
-> +#define PALMAS_EXT_CONTROL_PIN_NSLEEP	3
-> +
-> +/* Palmas device's clocks id */
-> +#define PALMAS_CLOCKS_CLK32K_KG		0
-> +#define PALMAS_CLOCKS_CLK32K_KG_AUDIO	1
-> +
-> +#endif /* __DT_BINDINGS_PALMAS_H */
->=20
-
-
---=20
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
