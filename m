@@ -1,93 +1,26 @@
-Return-Path: <dinh.linux@gmail.com>
+Return-Path: <qsyousef@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20131105190633.GA21178@roeck-us.net>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com>
-	<20131105190633.GA21178@roeck-us.net>
-Date: Tue, 5 Nov 2013 18:01:33 -0600
-Message-ID: <CADhT+wf+=WMVwa0=pY=aR17_a_pGfbvt9q9g3iw6HNDXaD4csw@mail.gmail.com>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Content-Type: multipart/alternative; boundary=089e013d14b21fff6504ea76da7a
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <1381163377-21044-9-git-send-email-robherring2@gmail.com>
+References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+	<1381163377-21044-9-git-send-email-robherring2@gmail.com>
+Date: Fri, 8 Nov 2013 11:39:29 +0000
+Message-ID: <CA+mqd+4s8_8GSfxe0j2ftdSscbwJHkasg2njvbwga12uUTO3Bg@mail.gmail.com>
+Subject: Re: [PATCH v2 08/29] metag: use unflatten_and_copy_device_tree
+From: Qais Yousef <qsyousef@gmail.com>
+Content-Type: multipart/alternative; boundary=089e0111bca4cf2d5d04eaa8d526
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, James Hogan <james.hogan@imgtec.com>
 List-ID: <devicetree@vger.kernel.org>
 
---089e013d14b21fff6504ea76da7a
+--089e0111bca4cf2d5d04eaa8d526
 Content-Type: text/plain; charset=ISO-8859-1
 
-Hi Pantelis,
+should remove extern void copy_fdt(void) declaration from prom.h too as you
+removed the definition and the only user.
 
-
-On Tue, Nov 5, 2013 at 1:06 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On Tue, Nov 05, 2013 at 08:41:35PM +0200, Pantelis Antoniou wrote:
-> > The following patchset introduces Device Tree overlays, a method
-> > of dynamically altering the kernel's live Device Tree, along with
-> > a generic interface to use it in a board agnostic manner.
-> >
-> Hi Pantelis,
->
-> great to see this going. I'll apply the patches to our tree and test.
->
-> I have a couple of patches on top of yours:
-> - export overlay functions
-> - declare of_free_overlay_info as static inline if OF is undefined.
-> - ignore PCI devices when inserting or removing overlays
->   [ Based on the idea that PCI/PCIe ports are handled by the PCI subsystem
-> ]
->
-> I'll rebase those to the new version of your patches and send it out
-> after I get it all working.
->
-
-Alan and  I will also test on top of the FPGA framework.
-
-Thanks,
-Dinh
-
->
-> Thanks,
-> Guenter
->
-
---089e013d14b21fff6504ea76da7a
+--089e0111bca4cf2d5d04eaa8d526
 Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi Pantelis,<br><div class=3D"gmail_extra"><br><br><div cl=
-ass=3D"gmail_quote">On Tue, Nov 5, 2013 at 1:06 PM, Guenter Roeck <span dir=
-=3D"ltr">&lt;<a href=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@=
-roeck-us.net</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"im">On Tue, Nov 05, 2013 at 08=
-:41:35PM +0200, Pantelis Antoniou wrote:<br>
-&gt; The following patchset introduces Device Tree overlays, a method<br>
-&gt; of dynamically altering the kernel&#39;s live Device Tree, along with<=
-br>
-&gt; a generic interface to use it in a board agnostic manner.<br>
-&gt;<br>
-</div>Hi Pantelis,<br>
-<br>
-great to see this going. I&#39;ll apply the patches to our tree and test.<b=
-r>
-<br>
-I have a couple of patches on top of yours:<br>
-- export overlay functions<br>
-- declare of_free_overlay_info as static inline if OF is undefined.<br>
-- ignore PCI devices when inserting or removing overlays<br>
-=A0 [ Based on the idea that PCI/PCIe ports are handled by the PCI subsyste=
-m ]<br>
-<br>
-I&#39;ll rebase those to the new version of your patches and send it out<br=
->
-after I get it all working.<br></blockquote><div><br></div><div>Alan and =
-=A0I will also test on top of the FPGA framework.</div><div><br></div><div>=
-Thanks,</div><div>Dinh=A0</div><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+<div dir="ltr"><div class="gmail_extra">should remove extern void copy_fdt(void) declaration from prom.h too as you removed the definition and the only user.<br></div></div>
 
-<br>
-Thanks,<br>
-Guenter<br>
-</blockquote></div><br></div></div>
-
---089e013d14b21fff6504ea76da7a--
+--089e0111bca4cf2d5d04eaa8d526--
