@@ -1,119 +1,62 @@
-From: "Sherman Yin" <syin@broadcom.com>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Thu, 7 Nov 2013 16:29:52 -0800
-Message-ID: <527C3080.5050202@broadcom.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
- <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
- <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
- <201311050026.56321.heiko@sntech.de> <527835FE.2030102@wwwdotorg.org>
- <5279A319.5060701@broadcom.com>
- <CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
+From: Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] doc: devicetree: Add bindings documentation for omap-des driver
+Date: Thu, 7 Nov 2013 18:37:09 -0600
+Message-ID: <1383871035-16608-1-git-send-email-joelf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=iso-8859-1;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, =?ISO-8859-1?Q?Heiko_St=FCb?= =?ISO-8859-1?Q?ner?= <heiko@sntech.de>, Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-11-06 01:40 AM, Linus Walleij wrote:
-> On Wed, Nov 6, 2013 at 3:02 AM, Sherman Yin <syin@broadcom.com> wrote:
->> When Linus asked me to try using generic pinconf instead, I ran into
->> problems with this feature due to how the generic pinconf properties are
->> defined differently than my properties - perhaps this feature just doesn't
->> work for generic pinconf-based drivers with the (Unless we are ok with using
->> 1/0 for boolean properties, but it has already been pointed out that these
->> should be valueless.).
->
-> Well it seems you would need a way to pass an array of the same
-> boolean property and that seems a bit more complex and hard to
-> read than the generic boolean bindings.
->
-> You would have to patch the OF core to do something like that:
->
-> bias-pull-up = <true true false>;
->
-> 1/0 isn't so good I think, what should the parser do with e.g. 2?
-> This is more to the point.
+Add documentation for the generic OMAP DES crypto module describing the device
+tree bindings.
 
-I would imagine that the platform-specific device tree bindings would 
-need to clearly explain what the valid values are, as they should.  If 
-we're using integers, we could either have a) !0 and 0, or b) just 1 and 
-0, and everything else is an error.  Or c) the platform could decide 
-that the value provides addition info like pull-up-strength, so 0 = no 
-pull up, >0 = pull up enabled and the number is the pull up strength in 
-Ohm (bindings should indicate which values are valid), and everything 
-else is an error.
+Signed-off-by: Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/crypto/omap-des.txt        | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
 
->> While I'd love to be able define my pin config nodes this way, if I have to
->> use generic pinconf for the driver to be upstreamed, then I'm fine with it.
->
-> Well you need to use generic pin config because all the custom
-> stuff - i.MX comes to mind - is creating a mess. I prefer that we
-> share bindings and code, as any programmer would...
+diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
+new file mode 100644
+index 0000000..0637647
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
+@@ -0,0 +1,28 @@
++OMAP SoC DES crypto Module
++
++Required properties:
++
++- compatible : Should be "ti,omap4-des"
++- ti,hwmods: Name of the hwmod associated with the DES module
++- reg : Offset and length of the register set for the module
++- interrupts : the interrupt-specifier for the DES module
++- clocks : phandle to the functional clock node of the DES module
++- clock-names : Name of the functional clock
++
++Optional properties:
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++	Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: DMA request names should include "tx" and "rx" if present
++
++Example:
++	/* DRA7xx SoC */
++	des: des@480a5000 {
++		compatible = "ti,omap4-des";
++		ti,hwmods = "des";
++		reg = <0x480a5000 0xa0>;
++		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&sdma 117>, <&sdma 116>;
++		dma-names = "tx", "rx";
++		clocks = <&l3_iclk_div>;
++		clock-names = "fck";
++	};
+-- 
+1.8.1.2
 
-Ok
-
-> That said, if you can patch the OF core and the generic pin config
-> parser to do what you want with lists like that, it's your pick.
-> It may take some time though.
-
-I don't mind patching the generic pin config, and I don't think the core 
-needs to change, but first there needs to be an agreement on the changes 
-since other drivers will need to use pinconf-generic. Am I the only one 
-who would like to see this feature, or do others see value in being able 
-to group more pins together - resulting in fewer sub-nodes?  Do the pros 
-out-weight the cons?
-
->>> "input disable"
->>> This setting disconnects the input (DIN) to the internal logic from >the
->>> pin pad. However, the output (DOUT) can still drive the pad.  It
->>> seems to match PIN_CONFIG_OUTPUT, but the current generic option is
->>> either "output-low" or "output-high" - are these referring to a static
->>> output of 0 and 1?
->>
->> What's the best property to use in this case?
->
-> Seems like a new case.
->
-> What about you patch include/linux/pinctrl/pinconf-generic.h
-> to add PIN_CONFIG_INPUT_DISABLE with this semantic
-> and also patch the generic pinconf parser in drivers/pinctrl/pinconf-generic.c
-> to handle this?
-
-Sure, I can add PIN_CONFIG_INPUT_DISABLE.  However I suspect people 
-might be confused by this and PIN_CONFIG_OUTPUT.
-
->>> "mode"
->>> This controls several aspect of the pin (slew rate, pull up strength,
->>> etc) to meet I2C specs for Standard/Fast mode vs High Speed mode.  I
->>> think the best way is to map this to slew rate, which would require
->>> some explanation because the meaning of slew rate differs depending on
->>> what pin function is selected:
->>> - When I2C (*_SCL or *_SDA) function is selected for the pin: 0:
->>>   Standard (100kbps)
->>>   & Fast mode (400kbps), 1: High Speed mode (3.4Mbps)
->>> - When IC_DM or IC_DP function is selected, 0: normal slew rate, 1:
->>>   fast slew rate
->>> - Else: 0: fast slew rate, 1: normal slew rate
->>
->> Do we agree that the "slew rate" is the best property to use for "mode"?
->
-> It seems to be indeed mostly related to slew rate.
->
-> However if you want a custom brcm,mode binding that should
-> be possible too, as well as augmenting the driver to use
-> *both* generic pinconf *and* some custom config options
-> on top. That has not been done so far though I think, so you
-> might need a bit of hacking to do that.
-
-I think I'll stick with slew rate.  :)
-
-Regards,
-Sherman
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
