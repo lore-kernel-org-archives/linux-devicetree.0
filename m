@@ -1,160 +1,75 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [RESEND PATCH v2 1/6] ARM: dts: Declare clocks as fixed on bcm11351
-Date: Fri, 08 Nov 2013 11:53:25 +0100
-Message-ID: <527CC2A5.7080000@linaro.org>
-References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org> <1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] Documentation/mfd: Fix typos in s2mps11.txt
+Date: Fri, 8 Nov 2013 16:50:09 +0530
+Message-ID: <CAK9yfHwOPrMn-OTOBP8Efdw6sMFaoU8yQpQqV3o1+=Ffdryv=g@mail.gmail.com>
+References: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
+	<20131108102853.GV30901@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131108102853.GV30901@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2013 11:47 PM, Tim Kryger wrote:
-> Declare clocks that are enabled and configured by bootloaders as fixe=
-d
-> rate clocks in the DTS such that device drivers may use standard cloc=
-k
-> function calls.
+On 8 November 2013 15:58, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> As this is only a trivial patch, I'll take it out the hands of the
+> already overloaded DT maintainers.
 >
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
-> ---
-
-Hi Tim,
-
-I was wondering what is the status of this patchset ?
-
-The patchset touches different areas maintained by different people.=20
-Through what tree do you expect this patchset to be merged ??
-
-Thanks
-   -- Daniel
-
->   arch/arm/boot/dts/bcm11351.dtsi | 97 ++++++++++++++++++++++++++++++=
-+++++++++++
->   1 file changed, 97 insertions(+)
+>> Fixed trivial typos to improve readability.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/s2mps11.txt |    9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>> index c9332c6..0ff4e65 100644
+>> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>> @@ -1,10 +1,10 @@
+>>
+>>  * Samsung S2MPS11 Voltage and Current Regulator
+>>
+>> -The Samsung S2MP211 is a multi-function device which includes voltage and
+>> +The Samsung S2MPS11 is a multi-function device which includes voltage and
 >
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm1=
-1351.dtsi
-> index 98e6bc0..c6464fb 100644
-> --- a/arch/arm/boot/dts/bcm11351.dtsi
-> +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -126,4 +126,101 @@
->   		status =3D "disabled";
->   	};
+> Nice catch eagle-eye!
+
+:)
+
 >
-> +	clocks {
-> +		bsc1_clk: bsc1 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		bsc2_clk: bsc2 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		bsc3_clk: bsc3 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		pmu_bsc_clk: pmu_bsc {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		hub_timer_clk: hub_timer {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <32768>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		pwm_clk: pwm {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <26000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		sdio1_clk: sdio1 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <48000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		sdio2_clk: sdio2 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <48000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		sdio3_clk: sdio3 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <48000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		sdio4_clk: sdio4 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <48000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		tmon_1m_clk: tmon_1m {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <1000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		uartb_clk: uartb {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		uartb2_clk: uartb2 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		uartb3_clk: uartb3 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		uartb4_clk: uartb4 {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <13000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		usb_otg_ahb_clk: usb_otg_ahb {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <52000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +	};
->   };
+>>  current regulators, RTC, charger controller and other sub-blocks. It is
+>> -interfaced to the host controller using a I2C interface. Each sub-block is
+>> -addressed by the host system using different I2C slave address.
+>> +interfaced to the host controller using an I2C interface. Each sub-block is
+>> +addressed by the host system using different I2C slave addresses.
+>>
+>>  Required properties:
+>>  - compatible: Should be "samsung,s2mps11-pmic".
+>> @@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
+>>
+>>   BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explictly
+>>   regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+>> - In absence of regulator-ramp-delay property, default ramp delay will be used.
+>> + In the absence of regulator-ramp-delay property, default ramp delay will
+>> + be used.
 >
+> So if we're being pertinacity here, your correction isn't much better.
+>
+> s/of regulator-ramp-delay property,/of {the,an} regulator-ramp-delay property, the
 
+I like this one :)
+>
+> or
+>
+> s/of regulator-ramp-delay property,/of regulator-ramp-delay, the
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+-- 
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
