@@ -1,56 +1,38 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH 1/7] arm: dt: zynq: Remove 'clock-ranges' from TTC nodes
-Date: Fri,  8 Nov 2013 13:21:11 -0800
-Message-ID: <1383945677-29674-2-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH 4/7] clocksource/cadence_ttc: Adjust interval in clock notifier
+Date: Fri,  8 Nov 2013 13:21:14 -0800
+Message-ID: <1383945677-29674-5-git-send-email-soren.brinkmann@xilinx.com>
 References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The bindings for the TTC changed in commit 'arm: zynq: Use standard
-timer binding' (e932900a3279b5dbb6d8f43c7b369003620e137c). That change
-removed possible subnodes from this driver rendering the 'clock-ranges'
-property invalid for this node.
+The clockevent has to be reprogrammed if the timer's input
+clock frequency changes and the timer is in periodic mode, in order to
+maintain the correct timer interval.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
 ---
- arch/arm/boot/dts/zynq-7000.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/clocksource/cadence_ttc_timer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index e32b92b949d2..27ebc1ba9671 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -98,7 +98,6 @@
- 			compatible = "cdns,ttc";
- 			clocks = <&clkc 6>;
- 			reg = <0xF8001000 0x1000>;
--			clock-ranges;
- 		};
+diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clocksource/cadence_ttc_timer.c
+index a92350b55d32..68a336038d8f 100644
+--- a/drivers/clocksource/cadence_ttc_timer.c
++++ b/drivers/clocksource/cadence_ttc_timer.c
+@@ -338,6 +338,10 @@ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
+ 		/* update cached frequency */
+ 		ttc->freq = ndata->new_rate;
  
- 		ttc1: ttc1@f8002000 {
-@@ -107,7 +106,6 @@
- 			compatible = "cdns,ttc";
- 			clocks = <&clkc 6>;
- 			reg = <0xF8002000 0x1000>;
--			clock-ranges;
- 		};
- 		scutimer: scutimer@f8f00600 {
- 			interrupt-parent = <&intc>;
++		if (ttcce->ce.mode == CLOCK_EVT_MODE_PERIODIC)
++			ttc_set_interval(ttc, DIV_ROUND_CLOSEST(ttc->freq,
++						PRESCALE * HZ));
++
+ 		/* fall through */
+ 	}
+ 	case PRE_RATE_CHANGE:
 -- 
 1.8.4.2
