@@ -1,77 +1,38 @@
-From: Valentine <valentine.barshak@cogentembedded.com>
-Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
-Date: Fri, 08 Nov 2013 15:52:45 +0400
-Message-ID: <527CD08D.80004@cogentembedded.com>
-References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1383854642-21660-3-git-send-email-valentine.barshak@cogentembedded.com> <7820946.JfD46VSKC7@avalon> <527CCA76.5060706@cogentembedded.com>
+From: Guangyu Chen <guangyu.chen@freescale.com>
+Subject: Re: [PATCH v4 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Fri, 8 Nov 2013 11:52:48 +0000
+Message-ID: <qhujk71bqaj71qtkkasql3ga.1383911576584@email.android.com>
+References: <cover.1383907685.git.b42378@freescale.com>
+ <20131108112919.GA5159@MrMyself>,<20131108114441.GM2493@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <527CCA76.5060706@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131108114441.GM2493@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Guangyu Chen <guangyu.chen@freescale.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "timur@tabi.org" <timur@tabi.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@li>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2013 03:26 PM, Valentine wrote:
-> On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
->> Hi Valentine,
->>
->
-> Hi Laurent,
->
->> Thank you for the patch. Two small comments below.
->>
->> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
->>> These bindings can be used to register SATA devices found on R-Car SoC.
->>>
->>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
->>> Acked-by: Kumar Gala <galak@codeaurora.org>
->>> ---
->>>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
->>> 1 file changed, 18 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
->>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode 100644
->>> index 0000000..d6b20a6
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
->>> @@ -0,0 +1,18 @@
->>> +* Renesas R-Car SATA
->>> +
->>> +Required properties:
->>> +- compatible        : should contain one of the following:
->>> +              - "renesas,sata-r8a7779" for R-Car H1
->>> +              - "renesas,sata-r8a7790" for R-Car H2
->>> +              - "renesas,sata-r8a7791" for R-Car M2
->>> +- reg            : offset and length of the SATA registers;
->>
->> Maybe address instead of offset ?
->
-> OK.
->
->>
->>> +- interrupts        : must consist of one interrupt specifier.
->>> +
->>> +Example:
->>> +
->>> +sata: sata@fc600000 {
->>> +    compatible = "renesas,sata-r8a7779";
->>> +    reg = <0xfc600000 0x2000>;
->>> +    interrupt-parent = <&gic>;
->>> +    interrupts = <0 100 0x4>;
->>
->> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
->
-> OK, I'll do that.
->
-> Please, note that all the Renesas dts[i] files do not include <dt-bindings/interrupt-controller/irq.h>
-> Thus, blindly following this bindings documentation when adding new SATA nodes to the existing
-> r8a7790.dtsi, for example, will cause DT compilation error.
->
+Oh,  I am sorry about that.
 
-BTW, we'll also have to switch to #include instead of /include/ to make it work.
+I will follow the rule next time.
 
-Thanks,
-Val.
+Thank you.
+
+Sent by Android device.
+
+Mark Brown <broonie@kernel.org> wrote:
+
+
+On Fri, Nov 08, 2013 at 07:29:20PM +0800, Nicolin Chen wrote:
+
+> Sorry all, I mistook the version number. It should be version 5.
+
+> Please ignore this series version.
+
+There is no need to resend for things like getting the version number
+wrong in the subject line, that's just noise.  Please only resend things
+if there's a change in the actual patches.
+
