@@ -1,62 +1,90 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 00/12] pwm-backlight: Add GPIO and power supply support
-Date: Fri, 8 Nov 2013 13:36:20 +0100
-Message-ID: <20131108123619.GC31551@ulmo.nvidia.com>
-References: <1381145866-445-1-git-send-email-treding@nvidia.com>
- <CAH9NwWfDRiQ3FegMyx1YBQ5jUgPvc7h2cxd3KgyeDdnsq6UgMw@mail.gmail.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv5][ 1/5] fbdev: Add the lacking FB_SYNC_* for matching the DISPLAY_FLAGS_*
+Date: Fri,  8 Nov 2013 14:01:29 +0100
+Message-ID: <1383915693-9422-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAH9NwWfDRiQ3FegMyx1YBQ5jUgPvc7h2cxd3KgyeDdnsq6UgMw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Without that fix, drivers using the fb_videomode_from_videomode
+  function will not be able to get certain information because
+  some DISPLAY_FLAGS_* have no corresponding FB_SYNC_*.
 
---9Ek0hoCL9XbhcSqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+ChangeLog v4->v5:
+- Added Geert Uytterhoeven, Grant Likely and Shawn Guo in the Cc list.
+- Moved the definitions to a non-userspace header.
+- Corrected the comment of the second define.
 
-On Thu, Nov 07, 2013 at 01:00:04PM +0100, Christian Gmeiner wrote:
-> Hi Thierry
->=20
->=20
-> This series adds the ability to specify a GPIO and a power supply to
-> > enable a backlight.
-> >
->=20
-> Whats the state of this patch set? I am looking for this kind of
-> functionality for a pwm based
-> backlight on a devicetree only imx6 device.
+ChangeLog v3->v4:
+- Fixed the issue with FB_SYNC_PIXDAT_HIGH_ACT value.
 
-Those patches (except the one that adds the backlight-boot-off property)
-will be part of my pull request for 3.13.
+ChangeLog v2->v3:
+- Added Jean-Christophe PLAGNIOL-VILLARD's ACK.
+---
+ drivers/video/fbmon.c |    4 ++++
+ include/linux/fb.h    |    3 +++
+ 2 files changed, 7 insertions(+)
 
-Thierry
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index 6103fa6..29a9ed0 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -1402,6 +1402,10 @@ int fb_videomode_from_videomode(const struct vid=
+eomode *vm,
+ 		fbmode->sync |=3D FB_SYNC_HOR_HIGH_ACT;
+ 	if (vm->flags & DISPLAY_FLAGS_VSYNC_HIGH)
+ 		fbmode->sync |=3D FB_SYNC_VERT_HIGH_ACT;
++	if (vm->flags & DISPLAY_FLAGS_DE_HIGH)
++		fbmode->sync |=3D FB_SYNC_DE_HIGH_ACT;
++	if (vm->flags & DISPLAY_FLAGS_PIXDATA_POSEDGE)
++		fbmode->sync |=3D FB_SYNC_PIXDAT_HIGH_ACT;
+ 	if (vm->flags & DISPLAY_FLAGS_INTERLACED)
+ 		fbmode->vmode |=3D FB_VMODE_INTERLACED;
+ 	if (vm->flags & DISPLAY_FLAGS_DOUBLESCAN)
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index ffac70a..cf2ad5d 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -45,6 +45,9 @@ struct device_node;
+ #define FB_SIGNAL_SYNC_ON_GREEN	8
+ #define FB_SIGNAL_SERRATION_ON	16
+=20
++#define FB_SYNC_DE_HIGH_ACT     64      /* data enable active high fla=
+g */
++#define FB_SYNC_PIXDAT_HIGH_ACT 128     /* drive data on positive edge=
+ */
++
+ #define FB_MISC_PRIM_COLOR	1
+ #define FB_MISC_1ST_DETAIL	2	/* First Detailed Timing is preferred */
+ struct fb_chroma {
+--=20
+1.7.9.5
 
---9Ek0hoCL9XbhcSqy
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSfNrDAAoJEN0jrNd/PrOhH1UQAL7jttcTfVnZ9RxshEnCGtCw
-D1jrRKm8Tw/Hq95+SB6z+Oc/fk8yZN+RNyjYIqiARW9yjqD8xJfMtAuJcEVoa0wQ
-vOb2zcRmHRKeBH7257M6iGns6e26LcrZbyHmlnbFWVBmjfTuOdXjLu2A9BXCQAwO
-pO3Q7N5oRC4uEAU+5CCnFOZvPHjczGjctbKLkr2U6jzbGQNhT7gGBIKZyL2z6aq/
-Sy6ybFU0dqXAqjUNMxMmBGP8CtS5k1tc7VEpHvXNlWW+GLW8EISSN881ibBwNXPG
-Ll4uEhxBvdPXz6XowkYQNh1xFwlqGYR9BWhlag1Cn2k5zYMbplfBTONda3zw1EIn
-Fouj+DRCuqcBLyY2F7frypIms6f1K2z8425SOxJEbDpiCgIE0qDqwB/kFx2mfW9+
-noz9hJiMUWj/MofXdjvzaU0N+8Yp0SZwnltYTX87E8vQOYIhXrHMafx0NuCDI41M
-EzUIhyaY0DkcnAJTeydf2225VwlrQTrE+Rt7znYQyjTtvsMg+ErnNWCrz+6hhqVJ
-N+w56L7W5dV/Ak1ws43tLLY5bz1rrqA+mf63JE4n8FzqE5GSTTTsbUq1v1qFKhXW
-MeJbYPc7PgcOfE+btJ+dQIZxyuqM12X0HhHzEepx6L4ARZi6KlGlC99uVlLr3bcG
-SrB7eBmJswyzLW3/BaXw
-=NWQy
------END PGP SIGNATURE-----
-
---9Ek0hoCL9XbhcSqy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
