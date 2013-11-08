@@ -1,52 +1,61 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: disable self-tests for !OF_IRQ
-Date: Fri, 08 Nov 2013 14:09:23 +0000
-Message-ID: <20131108140923.544A6C421A8@trevor.secretlab.ca>
-References: <1383848149-15488-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383848149-15488-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH V3 2/2] dt: Document sata_rcar bindings
+Date: Fri, 8 Nov 2013 08:26:47 -0600
+Message-ID: <E0BF568D-6856-4DDE-AEBA-7C21CB1CE1F3@codeaurora.org>
+References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com> <1383912570-8393-3-git-send-email-valentine.barshak@cogentembedded.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1383912570-8393-3-git-send-email-valentine.barshak@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  7 Nov 2013 12:15:48 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+On Nov 8, 2013, at 6:09 AM, Valentine Barshak wrote:
+
+> These bindings can be used to register SATA devices found on R-Car SoC.
 > 
-> Fix OF selftest compile on sparc which does not enable OF_IRQ.
-> 
-> drivers/of/selftest.c:177: undefined reference to `of_irq_parse_one'
-> drivers/of/selftest.c:197: undefined reference to `of_irq_parse_one'
-> drivers/of/selftest.c:248: undefined reference to `of_irq_parse_one'
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-g.
-
-
+> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
 > ---
->  drivers/of/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 ++++++++++++++++++
+> 1 file changed, 18 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
 > 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 9d2009a..9b28f8b 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -17,6 +17,7 @@ config PROC_DEVICETREE
->  
->  config OF_SELFTEST
->  	bool "Device Tree Runtime self tests"
-> +	depends on OF_IRQ
->  	help
->  	  This option builds in test cases for the device tree infrastructure
->  	  that are executed one at boot time, and the results dumped to the
+> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> new file mode 100644
+> index 0000000..1e61113
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> @@ -0,0 +1,18 @@
+> +* Renesas R-Car SATA
+> +
+> +Required properties:
+> +- compatible		: should contain one of the following:
+> +			  - "renesas,sata-r8a7779" for R-Car H1
+> +			  - "renesas,sata-r8a7790" for R-Car H2
+> +			  - "renesas,sata-r8a7791" for R-Car M2
+> +- reg			: address and length of the SATA registers;
+> +- interrupts		: must consist of one interrupt specifier.
+> +
+> +Example:
+> +
+> +sata: sata@fc600000 {
+> +	compatible = "renesas,sata-r8a7779";
+> +	reg = <0xfc600000 0x2000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
+
+Sorry, I missed the discussion on this, but I think it would be better in the example to leave this as 4.  There is no reference in the binding at all to figure out where IRQ_TYPE_LEVEL_HIGH is defined.
+
+> +};
 > -- 
-> 1.8.1.2
+> 1.8.3.1
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
