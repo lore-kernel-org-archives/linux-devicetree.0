@@ -1,40 +1,39 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: common location for devicetree files
-Date: Fri, 8 Nov 2013 14:37:22 -0500
-Message-ID: <20131108193722.GK10335@titan.lakedaemon.net>
-References: <1438803E-C904-428B-B042-891978BC15DF@codeaurora.org>
- <CAOesGMgyqXS8tq0Ru=ibypV89-oAJ8bzxhdFTnSAvfOobEC+Lw@mail.gmail.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: Re: [RESEND PATCH v2 1/6] ARM: dts: Declare clocks as fixed on bcm11351
+Date: Fri, 8 Nov 2013 11:42:12 -0800
+Message-ID: <CAAYSxhoHYaFzcoxEAJrNb6d8n1aKGDN68K3eekRT22s0h7960w@mail.gmail.com>
+References: <1381960030-1640-1-git-send-email-tim.kryger@linaro.org>
+	<1381960030-1640-2-git-send-email-tim.kryger@linaro.org>
+	<527CC2A5.7080000@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgyqXS8tq0Ru=ibypV89-oAJ8bzxhdFTnSAvfOobEC+Lw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <527CC2A5.7080000@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Patch Tracking <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2013 at 11:33:00AM -0800, Olof Johansson wrote:
-> On Thu, Nov 7, 2013 at 3:21 PM, Kumar Gala <galak@codeaurora.org> wrote:
-> > As we start having more sharing of device trees between architectures (arm & arm64, arm & powerpc, guessing maybe mips & arm) we need dts to live in location that
-> >
-> > I was wondering what people felt about doing:
-> >
-> >         arch/dts/<VENDOR>/
-> >
-> > as a common location that could be shared.  I'm up for other suggestions.
-> 
-> dts isn't an architecture, so having it directly under arch/ doesn't
-> make sense. I know it's the first common parent of a lot of platforms
-> though.
-> 
-> I'd be ok with adding a toplevel dts/ directory for this, for lack of
-> better options. It doesn't really fit under firmware, lib, kernel,
-> scripts, tools...
+On Fri, Nov 8, 2013 at 2:53 AM, Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 
-I'll admit I shied away from that thought (dts/) for fear of the wrath
-of the greybeards.  :)
+> I was wondering what is the status of this patchset ?
+>
+> The patchset touches different areas maintained by different people. Through
+> what tree do you expect this patchset to be merged ??
 
-thx,
+Hi Daniel,
 
-Jason.
+I plan to send an updated version soon to address some concerns raised by Mark.
+
+Once all the maintainers are satisfied and provide their acks, I would
+like Christian to take the series into his tree.
+
+I expect Christian will have a few other Broadcom DTS file changes in
+his tree so sending the series through him should make it easier to
+avoid/manage conflicts.
+
+Christian, would that work for you?
+
+Thanks,
+Tim Kryger
