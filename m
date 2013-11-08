@@ -1,77 +1,94 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v3 7/9] ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
-Date: Fri, 8 Nov 2013 10:13:19 -0600
-Message-ID: <0AF697FD-60AA-4B8B-A35F-3DF2FFBCF7AF@codeaurora.org>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com> <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1383661723-17956-8-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383661723-17956-8-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv6][ 1/2] backlight: gpio_backlight: Use a default state enum.
+Date: Fri,  8 Nov 2013 17:31:29 +0100
+Message-ID: <1383928290-9487-1-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+That enum adds a "keep" state which permits to tell the
+  driver trough its platform data not to touch the
+  hardware during the probe.
 
-On Nov 5, 2013, at 8:28 AM, Sebastian Hesselbarth wrote:
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v5->v6:
+- New patch.
+---
+ drivers/video/backlight/gpio_backlight.c     |    7 +++++--
+ include/linux/platform_data/gpio_backlight.h |    6 ++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-> This adds very basic device tree files for the Marvell Armada 1500 SoC
-> (Berlin BG2) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
-> nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
-> uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
-> device comprising the Armada 1500 SoC above.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Reviewed-by: Jason Cooper <jason@lakedaemon.net>
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Jisheng Zhang <jszhang@marvell.com>
-> ---
-> Changelog:
-> v1->v2:
-> - add "arm,pl310-cache" compatible to l2cc (Suggested by Mark Rutland)
-> - replace 88DE3xxx numbering with SoC variant name
->  (Requested by Jisheng Zhang)
-> RCFv2->v1:
-> - switch to (soon to be) correct "marvell,pj4b" cpu compatible
-> - reference fixed-clock for uarts instead of hard-coded clock-frequency
-> - disable timers except two for clksrc and clkevt
-> RFCv1->RFCv2:
-> - add binding documentation (Reported by Jason Cooper)
-> - change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
-> - add copyright reference
-> - adapt compatibles to mach-berlin instead of mach-mvebu
-> 
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> .../devicetree/bindings/arm/marvell,berlin.txt     |   24 +++
-> arch/arm/boot/dts/Makefile                         |    2 +
-> arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |   29 +++
-> arch/arm/boot/dts/berlin2.dtsi                     |  227 ++++++++++++++++++++
-> 4 files changed, 282 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
-> create mode 100644 arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
-> create mode 100644 arch/arm/boot/dts/berlin2.dtsi
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
+acklight/gpio_backlight.c
+index 81fb127..6ddeba9 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -23,6 +23,7 @@ struct gpio_backlight {
+=20
+ 	int gpio;
+ 	int active;
++	enum gpio_backlight_default_state def_value;
+ };
+=20
+ static int gpio_backlight_update_status(struct backlight_device *bl)
+@@ -103,8 +104,10 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 		return PTR_ERR(bl);
+ 	}
+=20
+-	bl->props.brightness =3D pdata->def_value;
+-	backlight_update_status(bl);
++	if (pdata->def_value !=3D BACKLIGHT_GPIO_DEFSTATE_KEEP) {
++		bl->props.brightness =3D pdata->def_value;
++		backlight_update_status(bl);
++	}
+=20
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
+diff --git a/include/linux/platform_data/gpio_backlight.h b/include/lin=
+ux/platform_data/gpio_backlight.h
+index 5ae0d9c..3b437b3 100644
+--- a/include/linux/platform_data/gpio_backlight.h
++++ b/include/linux/platform_data/gpio_backlight.h
+@@ -10,6 +10,12 @@
+=20
+ struct device;
+=20
++enum gpio_backlight_default_state {
++	BACKLIGHT_GPIO_DEFSTATE_OFF,
++	BACKLIGHT_GPIO_DEFSTATE_ON,
++	BACKLIGHT_GPIO_DEFSTATE_KEEP,
++};
++
+ struct gpio_backlight_platform_data {
+ 	struct device *fbdev;
+ 	int gpio;
+--=20
+1.7.9.5
 
-Haven't we been trying to go away from non-prefixed dts/dtsi?
-
-So should these be something like marvell-berlin2-...
-
-- k
-
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
