@@ -1,84 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/1] Documentation/mfd: Fix typos in s2mps11.txt
-Date: Fri, 8 Nov 2013 10:28:53 +0000
-Message-ID: <20131108102853.GV30901@lee--X1>
-References: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH 1/2] ARM: dts: doc: Document missing binding for omap5-mpu
+Date: Fri, 8 Nov 2013 16:08:48 +0530
+Message-ID: <1383907129-7325-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383634640-26869-1-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net
+To: linux-omap@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: bcousson@baylibre.com, santosh.shilimkar@ti.com, r.sricharan@ti.com
 List-Id: devicetree@vger.kernel.org
 
-As this is only a trivial patch, I'll take it out the hands of the
-already overloaded DT maintainers.
+The binding and support for omap5-mpu which has a cortex-a15
+smp core, gic and integrated L2 cache has been existing for sometime.
+So Documenting the missing binding here.
 
-> Fixed trivial typos to improve readability.
->=20
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index c9332c6..0ff4e65 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,10 +1,10 @@
-> =20
->  * Samsung S2MPS11 Voltage and Current Regulator
-> =20
-> -The Samsung S2MP211 is a multi-function device which includes voltag=
-e and
-> +The Samsung S2MPS11 is a multi-function device which includes voltag=
-e and
+Cc: Benoit Cousson <bcousson@baylibre.com>
+Signed-off-by: Sricharan R <r.sricharan@ti.com>
+---
+ Documentation/devicetree/bindings/arm/omap/mpu.txt |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Nice catch eagle-eye!
+diff --git a/Documentation/devicetree/bindings/arm/omap/mpu.txt b/Documentation/devicetree/bindings/arm/omap/mpu.txt
+index 1a5a42c..83f405b 100644
+--- a/Documentation/devicetree/bindings/arm/omap/mpu.txt
++++ b/Documentation/devicetree/bindings/arm/omap/mpu.txt
+@@ -7,10 +7,18 @@ The MPU contain CPUs, GIC, L2 cache and a local PRCM.
+ Required properties:
+ - compatible : Should be "ti,omap3-mpu" for OMAP3
+                Should be "ti,omap4-mpu" for OMAP4
++	       Should be "ti,omap5-mpu" for OMAP5
+ - ti,hwmods: "mpu"
+ 
+ Examples:
+ 
++- For an OMAP5 SMP system:
++
++mpu {
++    compatible = "ti,omap5-mpu";
++    ti,hwmods = "mpu"
++};
++
+ - For an OMAP4 SMP system:
+ 
+ mpu {
+-- 
+1.7.9.5
 
->  current regulators, RTC, charger controller and other sub-blocks. It=
- is
-> -interfaced to the host controller using a I2C interface. Each sub-bl=
-ock is
-> -addressed by the host system using different I2C slave address.
-> +interfaced to the host controller using an I2C interface. Each sub-b=
-lock is
-> +addressed by the host system using different I2C slave addresses.
-> =20
->  Required properties:
->  - compatible: Should be "samsung,s2mps11-pmic".
-> @@ -43,7 +43,8 @@ sub-node should be of the format as listed below.
-> =20
->   BUCK[2/3/4/6] supports disabling ramp delay on hardware, so explict=
-ly
->   regulator-ramp-delay =3D <0> can be used for them to disable ramp d=
-elay.
-> - In absence of regulator-ramp-delay property, default ramp delay wil=
-l be used.
-> + In the absence of regulator-ramp-delay property, default ramp delay=
- will
-> + be used.
-
-So if we're being pertinacity here, your correction isn't much better.
-
-s/of regulator-ramp-delay property,/of {the,an} regulator-ramp-delay pr=
-operty, the
-
-or=20
-
-s/of regulator-ramp-delay property,/of regulator-ramp-delay, the
-
->  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value wi=
-ll be set
->  for a particular group of BUCKs. So provide same regulator-ramp-dela=
-y<value>.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
