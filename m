@@ -1,45 +1,229 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 5/5] OF: Introduce utility helper functions
-Date: Fri, 8 Nov 2013 11:10:39 -0800
-Message-ID: <20131108191039.GA25932@roeck-us.net>
-References: <1383923040-24803-1-git-send-email-panto@antoniou-consulting.com>
- <1383923040-24803-6-git-send-email-panto@antoniou-consulting.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
+Date: Fri, 8 Nov 2013 19:11:17 +0000
+Message-ID: <20131108191117.GT16735@n2100.arm.linux.org.uk>
+References: <527D1DDA.2040004@koalo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1383923040-24803-6-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <527D1DDA.2040004-oZ8rN/sblLk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2013 at 05:04:00PM +0200, Pantelis Antoniou wrote:
-> Introduce helper functions for working with the live DT tree.
-> 
-> __of_free_property() frees a dynamically created property
-> __of_free_tree() recursively frees a device node tree
-> __of_copy_property() copies a property dynamically
-> __of_create_empty_node() creates an empty node
-> __of_find_node_by_full_name() finds the node with the full name
-> and
-> of_multi_prop_cmp() performs a multi property compare but without
-> having to take locks.
-> 
-> Bug fix about prop->len == 0 by Ionut Nicu <ioan.nicu.ext@nsn.com>
-> 
-> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+On Fri, Nov 08, 2013 at 06:22:34PM +0100, Florian Meier wrote:
 
-Hi Pantelis,
+Hi Florian, some initial comments.
 
-nitpick:
+> +#define BCM2835_DMA_DATA_TYPE_S8 1
+> +#define BCM2835_DMA_DATA_TYPE_S16 2
+> +#define BCM2835_DMA_DATA_TYPE_S32 4
+> +#define BCM2835_DMA_DATA_TYPE_S128 16
+...
+> +
+> +static const unsigned es_bytes[] = {
+> +	[BCM2835_DMA_DATA_TYPE_S8] = 1,
+> +	[BCM2835_DMA_DATA_TYPE_S16] = 2,
+> +	[BCM2835_DMA_DATA_TYPE_S32] = 4,
+> +	[BCM2835_DMA_DATA_TYPE_S128] = 16
+> +};
 
-.git/rebase-apply/patch:77: trailing whitespace.
- * no pointer exist for any properties. Only safe to do if you
-.git/rebase-apply/patch:213: trailing whitespace.
- * Find a node with the give full name by recursively following any of
-.git/rebase-apply/patch:274: new blank line at EOF.
- +
-warning: 3 lines add whitespace errors.
+This looks rather fun - and the only place d->es is used is to convey
+this as an index into this table for bcm2835_dma_desc_size().  I can't
+quite see the point of this table existing.
 
-Guenter
+> +static void bcm2835_dma_start_sg(struct bcm2835_chan *c, struct bcm2835_desc *d,
+> +		unsigned idx)
+> +{
+> +	struct bcm2835_sg *sg = d->sg + idx;
+> +	int frame;
+> +	int frames = sg->fn;
+> +
+> +	/*
+> +	 * Iterate over all frames and create a control block
+> +	 * for each frame and link them together.
+> +	 */
+> +	for (frame = 0; frame < frames; frame++) {
+> +		struct bcm2835_dma_cb *control_block =
+> +			&d->control_block_base[frame];
+> +
+> +		/* Setup adresses */
+> +		if (d->dir == DMA_DEV_TO_MEM) {
+> +			control_block->info = BCM2835_DMA_D_INC;
+> +			control_block->src = d->dev_addr;
+> +			control_block->dst = sg->addr+frame*sg->en;
+> +		} else {
+> +			control_block->info = BCM2835_DMA_S_INC;
+> +			control_block->src = sg->addr+frame*sg->en;
+> +			control_block->dst = d->dev_addr;
+> +		}
+> +
+> +		/* Enable interrupt */
+> +		control_block->info |= BCM2835_DMA_INT_EN;
+> +
+> +		/* Setup synchronization */
+> +		if (d->sync_type != 0)
+> +			control_block->info |= d->sync_type;
+> +
+> +		/* Setup DREQ channel */
+> +		if (d->sync_dreq != 0)
+> +			control_block->info |=
+> +				BCM2835_DMA_PER_MAP(d->sync_dreq);
+> +
+> +		/* Length of a frame */
+> +		control_block->length = sg->en;
+> +
+> +		/*
+> +		 * Next block is the next frame.
+> +		 * This DMA engine driver currently only supports cyclic DMA.
+> +		 * Therefore, wrap around at number of frames.
+> +		 */
+> +		control_block->next = d->control_block_base_phys +
+> +			sizeof(struct bcm2835_dma_cb)*((frame+1)%(frames));
+> +
+> +		/* The following fields are not used here */
+> +		control_block->stride = 0;
+> +		control_block->pad[0] = 0;
+> +		control_block->pad[1] = 0;
+> +	}
+
+Why not move the initialisation of this control block to the preparation
+function?  I think doing that would simplify this code somewhat, as
+you won't be converting the information passed to the preparation function
+multiple times.
+
+> +static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+> +	int ret;
+> +	struct bcm2835_dmadev *d = to_bcm2835_dma_dev(chan->device);
+> +	uint32_t chans = d->chans_available;
+> +	int chanID = 0;
+> +
+> +	dev_dbg(c->vc.chan.device->dev,
+> +			"allocating channel for %u\n", c->dma_sig);
+> +
+> +	/* do not use the FIQ and BULK channels */
+> +	chans &= ~0xD;
+> +
+> +	if (chans) {
+> +		/* return the ordinal of the first channel in the bitmap */
+> +		while (chans != 0 && (chans & 1) == 0) {
+> +			chans >>= 1;
+> +			chanID++;
+> +		}
+> +
+> +		/* claim the channel */
+> +		d->chans_available &= ~(1 << chanID);
+> +
+> +		c->dma_chan_base = BCM2835_DMA_CHANIO(d->dma_base, chanID);
+> +
+> +		c->dma_irq_number = d->dma_irq_numbers[chanID];
+> +
+> +		c->dma_ch = chanID;
+> +	} else {
+> +		return -ENOMEM;
+> +	}
+> +
+> +	c->dma_irq_handler.name = "DMA engine IRQ handler";
+> +	c->dma_irq_handler.flags = 0;
+> +	c->dma_irq_handler.handler = bcm2835_dma_callback;
+> +
+> +	ret = request_any_context_irq(c->dma_irq_number,
+> +			bcm2835_dma_callback, 0, "DMA IRQ", c);
+
+Hmm.  Why "request_any_context_irq" ?  Looking at what your "dma callback"
+is doing, it's operating entirely beneath a spinlock with IRQs disabled.
+You might as well handle it in hard IRQ context.
+
+> +static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+> +	struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+> +	size_t period_len, enum dma_transfer_direction direction,
+> +	unsigned long flags, void *context)
+> +{
+> +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+> +	enum dma_slave_buswidth dev_width;
+> +	struct bcm2835_desc *d;
+> +	dma_addr_t dev_addr;
+> +	unsigned int es, sync_type, sync_dreq;
+> +
+> +	/* Grab configuration */
+> +	if (direction == DMA_DEV_TO_MEM) {
+> +		dev_addr = c->cfg.src_addr;
+> +		dev_width = c->cfg.src_addr_width;
+> +		sync_type = BCM2835_DMA_S_DREQ;
+> +		sync_dreq = c->cfg.slave_id;
+> +	} else if (direction == DMA_MEM_TO_DEV) {
+> +		dev_addr = c->cfg.dst_addr;
+> +		dev_width = c->cfg.dst_addr_width;
+> +		sync_type = BCM2835_DMA_D_DREQ;
+> +		sync_dreq = c->cfg.slave_id;
+> +	} else {
+> +		dev_err(chan->device->dev, "%s: bad direction?\n", __func__);
+> +		return NULL;
+> +	}
+
+Please move sync_dreq out of the if() statements; it doesn't appear to
+depend on the direction (there's only one of them in that structure too.)
+While there, you might as well assign it directly to d->sync_dreq below.
+
+Even better, with the code in bcm2835_dma_start_sg() moved into this
+function to generate the control block, you don't need to save a lot
+of the information in your descriptor.
+
+> +
+> +	/* Bus width translates to the element size (ES) */
+> +	switch (dev_width) {
+> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> +		es = BCM2835_DMA_DATA_TYPE_S32;
+> +		break;
+> +	default:
+> +		return NULL;
+> +	}
+> +
+> +	/* Now allocate and setup the descriptor. */
+> +	d = kzalloc(sizeof(*d) + sizeof(d->sg[0]), GFP_ATOMIC);
+> +	if (!d)
+> +		return NULL;
+> +
+> +	d->dir = direction;
+> +	d->dev_addr = dev_addr;
+> +	d->es = es;
+> +	d->sync_type = sync_type;
+> +	d->sync_dreq = sync_dreq;
+> +	d->sg[0].addr = buf_addr;
+> +	d->sg[0].en = period_len;
+> +	d->sg[0].fn = buf_len / period_len;
+> +	d->sglen = 1;
+> +
+> +	/* Allocate memory for control blocks */
+> +	d->control_block_size = d->sg[0].fn*sizeof(struct bcm2835_dma_cb);
+> +	d->control_block_base = dma_alloc_coherent(chan->device->dev,
+> +			d->control_block_size, &d->control_block_base_phys,
+> +			GFP_KERNEL);
+> +
+> +	if (!d->control_block_base) {
+> +		dev_err(chan->device->dev,
+> +				"%s: Memory allocation error\n", __func__);
+> +		return NULL;
+> +	}
+> +
+> +	memset(d->control_block_base, 0, d->control_block_size);
+> +
+> +	if (!c->cyclic) {
+> +		c->cyclic = true;
+> +		/* nothing else is implemented */
+> +	}
+
+This is needlessly complex; please simplify this.
+
+> +
+> +	return vchan_tx_prep(&c->vc, &d->vd, DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+
+You should pass 'flags' as the 3rd argument here.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
