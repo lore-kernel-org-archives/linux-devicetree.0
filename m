@@ -1,75 +1,364 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCH] hwmon: add support for GMT G751 chip in lm75 driver
-Date: Sat, 09 Nov 2013 20:42:05 +0100
-Message-ID: <87txflfjle.fsf@natisbad.org>
-References: <87bo1th3ul.fsf@natisbad.org>
-	<20131109182707.GA19407@roeck-us.net>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Sat, 09 Nov 2013 21:27:32 +0100
+Message-ID: <87bo1tmibv.fsf@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <khali@linux-fr.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
 
-Guenter Roeck <linux@roeck-us.net> writes:
+All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+controllers, G751 temperature sensor) except for:
 
-> On Sat, Nov 09, 2013 at 06:39:14PM +0100, Arnaud Ebalard wrote:
->> 
->> This was tested on a NETGEAR ReadyNAS 2120 device (Marvell Armada XP
->> based board, via DT).
->> 
->> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
->
-> Looks good. I'll apply it to my -next branch. Since I already sent my 
-> pull request to Linus, this will only go in after -rc1, which I hope
-> should be ok (unless Jean wants to pick it up for his pull request).
+ - the Intersil ISL12057 I2C RTC Chip,
+ - the Armada NAND controller.
 
-Perfect, thanks.
+Support for both of those is currently work in progress and does not
+prevent boot.
 
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+Hi,
 
->> ---
->> Hi Guenter,
->> 
->> As a side note, I removed the hunk that was present in previous patch to
->> add gmt to the list of DT vendor prefixes because I noticed someone had
->> taken care: https://lkml.org/lkml/2013/9/12/365
->> 
->> For the records, here is what I get on my NAS with the attached patch:
->> 
->> root@thin:/sys# sensors
->> g762-i2c-0-3e
->> Adapter: mv64xxx_i2c adapter
->> fan1:        5461 RPM  (div = 1)
->> 
->> g762-i2c-0-48
->> Adapter: mv64xxx_i2c adapter
->> fan1:        5461 RPM  (div = 1)
->> 
->> g762-i2c-0-49
->> Adapter: mv64xxx_i2c adapter
->> fan1:        5461 RPM  (div = 1)
->> 
-> Those rpms are pretty high. Are the fans all really running that fast ?
+This one is intended for v3.14. This depends on the recent fix I pushed
+for mv78230 PCIe and also on a small patch Guenter Roeck just accepted
+to have lm75 driver support GMT G751 Temperature sensor (see 
+https://lkml.org/lkml/2013/11/9/273).
 
-Unlike the fans on NETGEAR ReadyNAS 102 and 104 which are Protechnic
-MGT9212YB-025 92mmx92mm running at 3200 RPM max, the three fans in the
-RN2120 are Protechnic MGT4012XB-O20, i.e. 40mmx40mm running at 8000 RPM
-max. At least, this is the max RPM value I found on their website
-(Search Products on left side of http://www.protechnic-us.com/en/) for
-both devices.
+Regarding the SATA presence and power pin definitions under pinctrl
+node if you wonder, I thought it would not harm to have them for
+reference even though they are currently not used. FWIW, I am currently
+looking if a GPIO regulator can make any use of those.
 
-When pushing one a bit, here is the max rotation speed I get:
-
- root@thin:/sys/bus/i2c/drivers/g762/0-003e# echo 9000 > fan1_target ; \
-                                             sleep 5 ; cat fan1_input
- 8057
-
-which AFAICT validates current settings for G762 and fan combination.
-Did I miss something?
+Comments welcome,
 
 Cheers,
 
 a+
+
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 289 +++++++++++++++++++++++++
+ 2 files changed, 290 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 802720e..c6dd4de 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -112,6 +112,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+ 	armada-xp-axpwifiap.dtb \
+ 	armada-xp-db.dtb \
+ 	armada-xp-gp.dtb \
++	armada-xp-netgear-rn2120.dtb \
+ 	armada-xp-openblocks-ax3-4.dtb
+ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx25-karo-tx25.dtb \
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+new file mode 100644
+index 0000000..2651ba3
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -0,0 +1,289 @@
++/*
++ * Device Tree file for NETGEAR ReadyNAS 2120
++ *
++ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++#include "armada-xp-mv78230.dtsi"
++
++/ {
++	model = "NETGEAR ReadyNAS 2120";
++	compatible = "netgear,readynas-2120", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
++
++		pcie-controller {
++			status = "okay";
++
++			/* Connected to first Marvell 88SE9170 SATA controller */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++
++			/* Connected to second Marvell 88SE9170 SATA controller */
++			pcie@2,0 {
++				/* Port 0, Lane 1 */
++				status = "okay";
++			};
++
++			/* Connected to Fresco Logic FL1009 USB 3.0 controller */
++			pcie@5,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
++		};
++
++		internal-regs {
++			pinctrl {
++				poweroff: poweroff {
++					marvell,pins = "mpp42";
++					marvell,function = "gpio";
++				};
++
++				power_key_pin: power-key-pin {
++					marvell,pins = "mpp27";
++					marvell,function = "gpio";
++				};
++
++				reset_key_pin: reset-key-pin {
++					marvell,pins = "mpp41";
++					marvell,function = "gpio";
++				};
++
++				sata1_led_pin: sata1-led-pin {
++					marvell,pins = "mpp31";
++					marvell,function = "gpio";
++				};
++
++				sata2_led_pin: sata2-led-pin {
++					marvell,pins = "mpp40";
++					marvell,function = "gpio";
++				};
++
++				sata3_led_pin: sata3-led-pin {
++					marvell,pins = "mpp44";
++					marvell,function = "gpio";
++				};
++
++				sata4_led_pin: sata4-led-pin {
++					marvell,pins = "mpp47";
++					marvell,function = "gpio";
++				};
++
++				sata1_power_pin: sata1-power-pin {
++					marvell,pins = "mpp24";
++					marvell,function = "gpio";
++				};
++
++				sata2_power_pin: sata2-power-pin {
++					marvell,pins = "mpp25";
++					marvell,function = "gpio";
++				};
++
++				sata3_power_pin: sata3-power-pin {
++					marvell,pins = "mpp26";
++					marvell,function = "gpio";
++				};
++
++				sata4_power_pin: sata4-power-pin {
++					marvell,pins = "mpp28";
++					marvell,function = "gpio";
++				};
++
++				sata1_pres_pin: sata1-pres-pin {
++					marvell,pins = "mpp32";
++					marvell,function = "gpio";
++				};
++
++				sata2_pres_pin: sata2-pres-pin {
++					marvell,pins = "mpp33";
++					marvell,function = "gpio";
++				};
++
++				sata3_pres_pin: sata3-pres-pin {
++					marvell,pins = "mpp34";
++					marvell,function = "gpio";
++				};
++
++				sata4_pres_pin: sata4-pres-pin {
++					marvell,pins = "mpp35";
++					marvell,function = "gpio";
++				};
++
++				err_led_pin: err-led-pin {
++					marvell,pins = "mpp45";
++					marvell,function = "gpio";
++				};
++			};
++
++			serial@12000 {
++				clock-frequency = <250000000>;
++				status = "okay";
++			};
++
++			mdio {
++				phy0: ethernet-phy@0 {
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 {
++					reg = <1>;
++				};
++			};
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++
++			ethernet@74000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii-id";
++			};
++
++			/* Front USB 2.0 port */
++			usb@50000 {
++				status = "okay";
++			};
++
++			i2c@11000 {
++				compatible = "marvell,mv64xxx-i2c";
++				clock-frequency = <400000>;
++				status = "okay";
++
++				/* Rear fan #1 of 3 (Protechnic MGT4012XB-O20,
++				 * 8000RPM) near eSATA port */
++				g762_fan1: g762@3e {
++					compatible = "gmt,g762";
++					reg = <0x3e>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				/* Rear fan #2 of 3 at the center */
++				g762_fan2: g762@48 {
++					compatible = "gmt,g762";
++					reg = <0x48>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				/* Rear fan #3 of 3 */
++				g762_fan3: g762@49 {
++					compatible = "gmt,g762";
++					reg = <0x49>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				g751: g751@4c {
++					compatible = "gmt,g751";
++					reg = <0x4c>;
++				};
++			};
++		};
++	};
++
++	clocks {
++	       #address-cells = <1>;
++	       #size-cells = <0>;
++
++	       g762_clk: fixedclk {
++			 compatible = "fixed-clock";
++			 #clock-cells = <0>;
++			 clock-frequency = <32768>;
++	       };
++	};
++
++	gpio_leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
++			     &sata3_led_pin &sata4_led_pin>;
++		pinctrl-names = "default";
++
++		red_sata1_led {
++			label = "rn2120:red:sata1";
++			gpios = <&gpio0 31 0>;   /* GPIO 31 Active High */
++			default-state = "off";
++		};
++
++		red_sata2_led {
++			label = "rn2120:red:sata2";
++			gpios = <&gpio1 8 0>;   /* GPIO 40 Active High */
++			default-state = "off";
++		};
++
++		red_sata3_led {
++			label = "rn2120:red:sata3";
++			gpios = <&gpio1 12 0>;   /* GPIO 44 Active High */
++			default-state = "off";
++		};
++
++		red_sata4_led {
++			label = "rn2120:red:sata4";
++			gpios = <&gpio1 15 0>;   /* GPIO 47 Active High */
++			default-state = "off";
++		};
++
++		red_err_led {
++			label = "rn2120:red:err";
++			gpios = <&gpio1 13 1>;   /* GPIO 45 Active Low */
++			default-state = "off";
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&power_key_pin
++			     &reset_key_pin>;
++		pinctrl-names = "default";
++
++		button@1 {
++			label = "Power Button";
++			linux,code = <116>;     /* KEY_POWER */
++			gpios = <&gpio0 27 0>;
++		};
++
++		button@2 {
++			label = "Reset Button";
++			linux,code = <0x198>;   /* KEY_RESTART */
++			gpios = <&gpio1 9 1>;
++		};
++	};
++
++	gpio_poweroff {
++		compatible = "gpio-poweroff";
++		pinctrl-0 = <&poweroff>;
++		pinctrl-names = "default";
++		gpios = <&gpio1 10 1>;
++	};
++};
+-- 
+1.8.4.rc3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
