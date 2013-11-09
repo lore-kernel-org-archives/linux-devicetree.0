@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 7/7] ARM: shmobile: armadillo-reference: Use low level IRQ for ST1231
-Date: Sat,  9 Nov 2013 13:23:59 +0100
-Message-ID: <1383999839-3339-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 4/7] ARM: shmobile: marzen-reference: Use falling edge IRQ for LAN9221
+Date: Sat,  9 Nov 2013 13:23:56 +0100
+Message-ID: <1383999839-3339-5-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -11,27 +11,28 @@ Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori M
 List-Id: devicetree@vger.kernel.org
 
 The device is configured to generate an active-low interrupt signal that
-needs to be acknowledged by the host. Configure the IRQ to trigger on
-low level.
+is automatically deasserted without requiring any action from the host.
+Use falling edge trigger as that is the configuration currently used on
+the board.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 +-
+ arch/arm/boot/dts/r8a7779-marzen-reference.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-index aef425f..04e9d49 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-@@ -95,7 +95,7 @@
- 		compatible = "sitronix,st1232";
- 		reg = <0x55>;
- 		interrupt-parent = <&irqpin1>;
--		interrupts = <2 IRQ_TYPE_NONE>; /* IRQ10: hwirq 2 on irqpin1 */
-+		interrupts = <2 IRQ_TYPE_LOW_LEVEL>;
- 		pinctrl-0 = <&st1232_pins>;
- 		pinctrl-names = "default";
- 		gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/r8a7779-marzen-reference.dts b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+index 0f5c614..13fa8be 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen-reference.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+@@ -44,7 +44,7 @@
+ 
+ 		phy-mode = "mii";
+ 		interrupt-parent = <&irqpin0>;
+-		interrupts = <1 IRQ_TYPE_NONE>; /* IRQ1: hwirq 1 on irqpin0 */
++		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+ 		reg-io-width = <4>;
+ 		vddvario-supply = <&fixedregulator3v3>;
+ 		vdd33a-supply = <&fixedregulator3v3>;
 -- 
 1.8.1.5
 
