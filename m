@@ -1,61 +1,246 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: doc: Document missing binding for ti-sdma
- controller
-Date: Sat, 9 Nov 2013 17:23:50 +0530
-Message-ID: <527E224E.5020405@ti.com>
-References: <1383907129-7325-1-git-send-email-r.sricharan@ti.com> <1383907129-7325-2-git-send-email-r.sricharan@ti.com> <CAL_JsqLT0zOMDEQD5gkvTN2KYD2D--=pM6xgwQqPQOmkgcQBVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLT0zOMDEQD5gkvTN2KYD2D--=pM6xgwQqPQOmkgcQBVg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 1/7] ARM: shmobile: Use #include in device tree sources
+Date: Sat,  9 Nov 2013 13:23:53 +0100
+Message-ID: <1383999839-3339-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+In order to allow usage of the preprocessor in the SoC device tree
+sources, switch from /include/ to #include.
 
-On Saturday 09 November 2013 03:24 AM, Rob Herring wrote:
-> On Fri, Nov 8, 2013 at 4:38 AM, Sricharan R <r.sricharan@ti.com> wrote:
->> The binding and support for system DMA module present in OMAP2+ Socs
->> and DRA7 with dma-engine is already present. So adding the missing
->> documentation for the same.
->>
->> Cc: Benoit Cousson <bcousson@baylibre.com>
->> Signed-off-by: Sricharan R <r.sricharan@ti.com>
->> ---
->>  Documentation/devicetree/bindings/dma/ti-sdma.txt |   28 +++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/ti-sdma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti-sdma.txt b/Documentation/devicetree/bindings/dma/ti-sdma.txt
->> new file mode 100644
->> index 0000000..7fb2342
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/ti-sdma.txt
->> @@ -0,0 +1,28 @@
->> +TI SDMA
->> +
->> +Required Properties:
->> +- compatible : Should be "ti,omap2420-sdma", "ti,omap2430-sdma" for OMAP2
->> +               Should be "ti,omap3430-sdma", "ti,omap3630-sdma" for OMAP3
->> +               Should be "ti,omap4430-sdma" for OMAP4, OMAP5 and DRA7
->> +- reg: Memory map for accessing module
->> +- interrupts: Interrupt request number from the dma controller to
-> s/dma/DMA/
->
->> +             interrupt controller
->> +- dma-cells: Should be set to <1>
->> +- dma-channels: Total number of logical DMA channels supported by the
->> +               controller
->> +- dma-requests: Total number of dma request signals supported by the
-> s/dma/DMA/
- Ok, will correct case.
->> +               controller
-> These should have the # included.
- Sorry, i do not follow this ?
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ arch/arm/boot/dts/r7s72100-genmai.dts                   | 2 +-
+ arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts         | 2 +-
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts                   | 2 +-
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 +-
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts           | 2 +-
+ arch/arm/boot/dts/r8a7778-bockw-reference.dts           | 2 +-
+ arch/arm/boot/dts/r8a7778-bockw.dts                     | 2 +-
+ arch/arm/boot/dts/r8a7779-marzen-reference.dts          | 2 +-
+ arch/arm/boot/dts/r8a7779-marzen.dts                    | 2 +-
+ arch/arm/boot/dts/r8a7790-lager-reference.dts           | 2 +-
+ arch/arm/boot/dts/r8a7790-lager.dts                     | 2 +-
+ arch/arm/boot/dts/r8a7791-koelsch-reference.dts         | 2 +-
+ arch/arm/boot/dts/r8a7791-koelsch.dts                   | 2 +-
+ arch/arm/boot/dts/sh7372-mackerel.dts                   | 2 +-
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts            | 2 +-
+ arch/arm/boot/dts/sh73a0-kzm9g.dts                      | 2 +-
+ 16 files changed, 16 insertions(+), 16 deletions(-)
 
-Regards,
- Sricharan
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index 1fb20f2..b1deaf7 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r7s72100.dtsi"
++#include "r7s72100.dtsi"
+ 
+ / {
+ 	model = "Genmai";
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
+index 25dbc1c..338f0cb 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a73a4.dtsi"
++#include "r8a73a4.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index 91436b5..7db8d79 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a73a4.dtsi"
++#include "r8a73a4.dtsi"
+ 
+ / {
+ 	model = "APE6EVM";
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 6a54219..c7c5bcb 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7740.dtsi"
++#include "r8a7740.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pwm/pwm.h>
+ 
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+index 426cd9c..a06a11e 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7740.dtsi"
++#include "r8a7740.dtsi"
+ 
+ / {
+ 	model = "armadillo 800 eva";
+diff --git a/arch/arm/boot/dts/r8a7778-bockw-reference.dts b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
+index 9c8bd37..e7751ee 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw-reference.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
+@@ -15,7 +15,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7778.dtsi"
++#include "r8a7778.dtsi"
+ 
+ / {
+ 	model = "bockw";
+diff --git a/arch/arm/boot/dts/r8a7778-bockw.dts b/arch/arm/boot/dts/r8a7778-bockw.dts
+index 12bbebc..46a884d 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw.dts
+@@ -15,7 +15,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7778.dtsi"
++#include "r8a7778.dtsi"
+ 
+ / {
+ 	model = "bockw";
+diff --git a/arch/arm/boot/dts/r8a7779-marzen-reference.dts b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+index ce3fe9e..08b9ee37 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen-reference.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+@@ -10,7 +10,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7779.dtsi"
++#include "r8a7779.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+index f3f7f79..a7af2c2 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+@@ -10,7 +10,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7779.dtsi"
++#include "r8a7779.dtsi"
+ 
+ / {
+ 	model = "marzen";
+diff --git a/arch/arm/boot/dts/r8a7790-lager-reference.dts b/arch/arm/boot/dts/r8a7790-lager-reference.dts
+index ec82674..cce7dbf 100644
+--- a/arch/arm/boot/dts/r8a7790-lager-reference.dts
++++ b/arch/arm/boot/dts/r8a7790-lager-reference.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7790.dtsi"
++#include "r8a7790.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 203bd08..8799dfb 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7790.dtsi"
++#include "r8a7790.dtsi"
+ 
+ / {
+ 	model = "Lager";
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch-reference.dts b/arch/arm/boot/dts/r8a7791-koelsch-reference.dts
+index b8a374a..1a0f082 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch-reference.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch-reference.dts
+@@ -10,7 +10,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7791.dtsi"
++#include "r8a7791.dtsi"
+ 
+ / {
+ 	model = "Koelsch";
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 1ce5250..c4e8b3a 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -10,7 +10,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r8a7791.dtsi"
++#include "r8a7791.dtsi"
+ 
+ / {
+ 	model = "Koelsch";
+diff --git a/arch/arm/boot/dts/sh7372-mackerel.dts b/arch/arm/boot/dts/sh7372-mackerel.dts
+index 8acf51e..a759a27 100644
+--- a/arch/arm/boot/dts/sh7372-mackerel.dts
++++ b/arch/arm/boot/dts/sh7372-mackerel.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "sh7372.dtsi"
++#include "sh7372.dtsi"
+ 
+ / {
+ 	model = "Mackerel (AP4 EVM 2nd)";
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index df75aea..d5a6d74 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -12,7 +12,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "sh73a0.dtsi"
++#include "sh73a0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+index 0f1ca77..27c5f42 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "sh73a0.dtsi"
++#include "sh73a0.dtsi"
+ 
+ / {
+ 	model = "KZM-A9-GT";
+-- 
+1.8.1.5
 
