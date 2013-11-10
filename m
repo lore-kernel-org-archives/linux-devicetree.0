@@ -1,50 +1,121 @@
-From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
-Date: Sun, 10 Nov 2013 07:51:46 +0200
-Message-ID: <20131110055145.GA7947@chokladfabriken.org>
-References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+From: Bharat Bhushan <Bharat.Bhushan@freescale.com>
+Subject: RE: [PATCH v4 1/4] dma: imx-sdma: Add sdma firmware version 2
+ support
+Date: Sun, 10 Nov 2013 06:57:08 +0000
+Message-ID: <6A3DF150A5B70D4F9B66A25E3F7C888D071EDFC5@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <cover.1383907685.git.b42378@freescale.com>
+ <1524b725cecd208ad63741f0b7214d0039608ac0.1383907685.git.b42378@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
-Content-Disposition: inline
-In-Reply-To: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, Kevin Mehall <contact@kevinmehall.net>, linux-kernel@vger.kernel.org, linux@lists.openrisc.net
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1524b725cecd208ad63741f0b7214d0039608ac0.1383907685.git.b42378@freescale.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Guangyu Chen <guangyu.chen@freescale.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "timur@tabi.org" <timur@tabi.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 09, 2013 at 09:37:31PM +0100, Geert Uytterhoeven wrote:
-> Add a DTS and defconfig for the Terasic DE0-Nano Development and Education
-> Board running ORPSoC.  This board contains an Altera Cyclone IV FPGA with
-> support chips and I/O.
-> 
-> The DTS was derived from published versions by Kevin Mehall and Marek
-> Czerski.
 
-To give credit where credit is due, this was created by:
-Gong Tao <gongtao0607@gmail.com>
 
+> -----Original Message-----
+> From: Linuxppc-dev [mailto:linuxppc-dev-
+> bounces+bharat.bhushan=freescale.com@lists.ozlabs.org] On Behalf Of Nicolin Chen
+> Sent: Friday, November 08, 2013 4:20 PM
+> To: vinod.koul@intel.com; dan.j.williams@intel.com; s.hauer@pengutronix.de;
+> timur@tabi.org; shawn.guo@linaro.org; broonie@kernel.org
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org; alsa-devel@alsa-
+> project.org; pawel.moll@arm.com; linux-doc@vger.kernel.org;
+> swarren@wwwdotorg.org; linux-kernel@vger.kernel.org; rob.herring@calxeda.com;
+> dmaengine@vger.kernel.org; ijc+devicetree@hellion.org.uk; linuxppc-
+> dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org
+> Subject: [PATCH v4 1/4] dma: imx-sdma: Add sdma firmware version 2 support
 > 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Kevin Mehall <contact@kevinmehall.net>
-> Cc: Marek Czerski <ma.czerski@gmail.com>
+> On i.MX5/6 series, SDMA is using new version firmware to support SSI dual FIFO
+> feature and HDMI Audio (i.MX6Q/DL only). Thus add it.
+> 
+> Signed-off-by: Nicolin Chen <b42378@freescale.com>
 > ---
-> Notable changes:
->   - Change flash0 to spansion,s25sl064p, due to kernel message
->     m25p80 spi32766.0: found s25sl064p, expected m25p10
+>  drivers/dma/imx-sdma.c                     | 15 ++++++++++++++-
+>  include/linux/platform_data/dma-imx-sdma.h |  5 +++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> fc43603..c7ece8d 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -323,6 +323,7 @@ struct sdma_engine {
+>  	struct clk			*clk_ipg;
+>  	struct clk			*clk_ahb;
+>  	spinlock_t			channel_0_lock;
+> +	u32				script_number;
+>  	struct sdma_script_start_addrs	*script_addrs;
+>  	const struct sdma_driver_data	*drvdata;
+>  };
+> @@ -1238,6 +1239,7 @@ static void sdma_issue_pending(struct dma_chan *chan)  }
+> 
+>  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+> 
+>  static void sdma_add_scripts(struct sdma_engine *sdma,
+>  		const struct sdma_script_start_addrs *addr) @@ -1246,7 +1248,7 @@
+> static void sdma_add_scripts(struct sdma_engine *sdma,
+>  	s32 *saddr_arr = (u32 *)sdma->script_addrs;
+>  	int i;
+> 
+> -	for (i = 0; i < SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1; i++)
+> +	for (i = 0; i < sdma->script_number; i++)
+>  		if (addr_arr[i] > 0)
+>  			saddr_arr[i] = addr_arr[i];
+>  }
+> @@ -1272,6 +1274,17 @@ static void sdma_load_firmware(const struct firmware *fw,
+> void *context)
+>  		goto err_firmware;
+>  	if (header->ram_code_start + header->ram_code_size > fw->size)
+>  		goto err_firmware;
+> +	switch (header->version_major) {
+> +		case 1:
+> +			sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
+> +			break;
+> +		case 2:
+> +			sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2;
+> +			break;
+> +		default:
+> +			dev_err(sdma->dev, "unknown firmware version\n");
+> +			return;
 
-This is due to Altera changing the EPCS chip on newer revisions
-of that board, older versions are "relabeled" m25p10 and
-newer once s25sl064p.
-The change is fine though, you have to pick one.
+Why return and not "goto err_firmware" ?
 
-Stefan
+-Bharat
+
+> +	}
+> 
+>  	addr = (void *)header + header->script_addrs_start;
+>  	ram_code = (void *)header + header->ram_code_start; diff --git
+> a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-
+> imx-sdma.h
+> index 3a39428..eabac4e 100644
+> --- a/include/linux/platform_data/dma-imx-sdma.h
+> +++ b/include/linux/platform_data/dma-imx-sdma.h
+> @@ -43,6 +43,11 @@ struct sdma_script_start_addrs {
+>  	s32 dptc_dvfs_addr;
+>  	s32 utra_addr;
+>  	s32 ram_code_start_addr;
+> +	/* End of v1 array */
+> +	s32 mcu_2_ssish_addr;
+> +	s32 ssish_2_mcu_addr;
+> +	s32 hdmi_dma_addr;
+> +	/* End of v2 array */
+>  };
+> 
+>  /**
+> --
+> 1.8.4
+> 
+> 
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
+
+
