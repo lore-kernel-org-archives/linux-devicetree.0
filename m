@@ -1,91 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Sun, 10 Nov 2013 22:07:16 +0400
-Message-ID: <527FCB54.404@cogentembedded.com>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCHv3 1/3] ARM: dts: exynos4212: Add PMU dt data for pmu-irq
+Date: Sun, 10 Nov 2013 19:12:18 +0100
+Message-ID: <9228109.fILkd0ZUhT@flatron>
+References: <1383530161-24080-1-git-send-email-cw00.choi@samsung.com> <1383530161-24080-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org
-Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1383530161-24080-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 10-11-2013 7:33, Laurent Pinchart wrote:
+Hi Chanwoo,
 
-> Document the device tree bindings for the sci serial port devices.
+Please add a patch description. Even if trivial, it is good to have one.
 
-> Cc: devicetree@vger.kernel.org
-
-    Hm, why are you not CCing a bunch of people responsible for the DT 
-bindings maintenance that scripts/get_maintainer.pl should yield?
-
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+On Monday 04 of November 2013 10:55:59 Chanwoo Choi wrote:
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->   .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++++++++
->   1 file changed, 42 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> new file mode 100644
-> index 0000000..66d3bca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -0,0 +1,42 @@
-> +* Renesas SH-Mobile Serial Communication Interface
+>  arch/arm/boot/dts/exynos4212.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
+> index 6f34d7f..3081bae 100644
+> --- a/arch/arm/boot/dts/exynos4212.dtsi
+> +++ b/arch/arm/boot/dts/exynos4212.dtsi
+> @@ -56,4 +56,10 @@
+>  					<0x5 0 &gic 1 12 0>;
+>  		};
+>  	};
 > +
-> +Required properties:
-> +
-> +  - compatible: one of the following types (scif, scifa, scifb, hscif).
-> +
-> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
-> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
-> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
-> +    - "renesas,scif-generic" for generic SCIF compatible UART.
-> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> +
-> +    When compatible with the generic version, nodes must also list the
-> +    SoC-specific version corresponding to the platform.
-
-    Which are not all specified here?
-
-> +
-> +  - reg: Base address and length of the memory resource used by the UART.
-> +
-> +  - interrupt-parent: Reference to the parent interrupt controller.
-
-    This is not a required property. It can be specified in the parent node.
-
-> +  - interrupts: Interrupt number.
-
-    s/number/specifier/
-
-> +
-> +  - clocks: Reference to the SCIx UART interface clock.
-> +  - clock-names: Should be "sci_ick".
-> +
-> +Note: Each enabled SCIx UART should have an alias correctly numbered in the
-> +"aliases" node.
-> +
-> +Example:
-> +	aliases {
-> +		serial0 = &scifa0;
-> +	};
-> +
-> +	scifa0: serial@e6c40000 {
-> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-> +		reg = <0 0xe6c40000 0 64>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 144 4>;
-> +		clocks = <&mstp2_clks 4>;
-> +		clock-names = "sci_ick";
+> +	pmu {
+> +		compatible = "arm,cortex-a9-pmu";
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <2 2>, <3 2>;
 > +	};
 
-WBR, Sergei
+I believe it would be better to put this in exynos4x12.dtsi, specifying
+all four interrupts for possible four cores in Exynos4412. It would be
+fine, since the interrupt layout is the same on all Exynos4x12 SoCs, just
+some interrupts are not used.
 
+Best regards,
+Tomasz
