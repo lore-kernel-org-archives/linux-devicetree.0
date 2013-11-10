@@ -1,49 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
-Date: Sun, 10 Nov 2013 09:15:33 +0100
-Message-ID: <20131110091533.463cabb2@skate>
-References: <87bo1tmibv.fsf@natisbad.org>
-	<527ECBDD.7050607@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Sun, 10 Nov 2013 09:18:05 +0100
+Message-ID: <CAMuHMdVDvN=E1wJ4Od2gohfoqwmcQ=P7u_ehtWQb-23GQBgt_Q@mail.gmail.com>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+	<20131110055145.GA7947@chokladfabriken.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <527ECBDD.7050607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <20131110055145.GA7947@chokladfabriken.org>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: devicetree@vger.kernel.org, Kevin Mehall <contact@kevinmehall.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-Dear Sebastian Hesselbarth,
+On Sun, Nov 10, 2013 at 6:51 AM, Stefan Kristiansson
+<stefan.kristiansson@saunalahti.fi> wrote:
+> On Sat, Nov 09, 2013 at 09:37:31PM +0100, Geert Uytterhoeven wrote:
+>> Add a DTS and defconfig for the Terasic DE0-Nano Development and Education
+>> Board running ORPSoC.  This board contains an Altera Cyclone IV FPGA with
+>> support chips and I/O.
+>>
+>> The DTS was derived from published versions by Kevin Mehall and Marek
+>> Czerski.
+>
+> To give credit where credit is due, this was created by:
+> Gong Tao <gongtao0607@gmail.com>
 
-On Sun, 10 Nov 2013 00:57:17 +0100, Sebastian Hesselbarth wrote:
+Sorry, I didn't know that. Jonas: please add.
 
-> >   arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 289 +++++++++++++++++++++++++
-> 
-> Arnaud,
-> 
-> thanks for providing this! I do have some comments below.
-> 
-> we recently had a discussion about the naming of new DTS files, which
-> proposes to name those after vendor,board.dts (or vendor-board.dts).
-> 
-> I personally prefer vendor,board.dts which would give
-> netgear,readynas-2120.dts based on your compatible below.
-> The final call for ',' vs '-' has not been made, so I  suggest Jason
-> makes a call here.
+Gr{oetje,eeting}s,
 
-Hum, do we really want that? The current naming scheme is really,
-really great, because whenever you want to grep through all Armada
-370/XP DTS, you just have to use armada-*, for all Kirkwood,
-kirkwood-*. I've found this very very convenient to verify the
-coherency between .dts/.dtsi for a given family of SoCs.
+                        Geert
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
