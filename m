@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 1/7] clk: shmobile: Add R-Car Gen2 clocks support
-Date: Sun, 10 Nov 2013 04:09:31 +0100
-Message-ID: <1384052977-30616-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 3/7] clk: shmobile: Add MSTP clock support
+Date: Sun, 10 Nov 2013 04:09:33 +0100
+Message-ID: <1384052977-30616-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,89 +10,96 @@ To: linux-sh@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The R-Car Gen2 SoCs (R8A7790 and R8A7791) have several clocks that are
-too custom to be supported in a generic driver. Those clocks can be
-divided in two categories:
+MSTP clocks are gate clocks controlled through a register that handles
+up to 32 clocks. The register is often sparsely populated.
 
-- Fixed rate clocks with multiplier and divisor set according to boot
-  mode configuration
-
-- Custom divider clocks with SoC-specific divider values
-
-This driver supports both.
+Those clocks are found on Renesas ARM SoCs.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../clock/renesas,rcar-gen2-cpg-clocks.txt         |  32 ++++
- drivers/clk/shmobile/Makefile                      |   5 +-
- drivers/clk/shmobile/clk-rcar-gen2.c               | 187 +++++++++++++++++++++
- include/linux/clk/shmobile.h                       |  19 +++
- 4 files changed, 242 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
- create mode 100644 drivers/clk/shmobile/clk-rcar-gen2.c
- create mode 100644 include/linux/clk/shmobile.h
+ .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  47 +++++
+ drivers/clk/shmobile/Makefile                      |   1 +
+ drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++++++++
+ 3 files changed, 277 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+ create mode 100644 drivers/clk/shmobile/clk-mstp.c
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
 new file mode 100644
-index 0000000..f85a0ed
+index 0000000..5a1e050
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -0,0 +1,32 @@
-+* Renesas R-Car Gen2 Clock Pulse Generator (CPG)
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+@@ -0,0 +1,47 @@
++* Renesas R8A7790 Module Stop (MSTP) Clocks
 +
-+The CPG generates core clocks for the R-Car Gen2 SoCs. It includes three PLLs
-+and several fixed ratio dividers.
++The CPG can gate SoC device clocks. The gates are organized in groups of up to
++32 gates.
++
++This device tree binding describes a single 32 gate clocks group per node.
++Clocks are referenced by user nodes by the MSTP node phandle and the clock
++index in the group, from 0 to 31.
 +
 +Required Properties:
 +
-+  - compatible: Must be one of
-+    - "renesas,r8a7790-cpg-clocks" for the r8a7790 CPG
-+    - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
-+    - "renesas,rcar-gen2-cpg-clocks" for the generic R-Car Gen2 CPG
-+
-+  - reg: Base address and length of the memory resource used by the CPG
-+
-+  - clocks: Reference to the parent clock
++  - compatible: Must be one of the following
++    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
++    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
++  - reg: Base address and length of the memory resource used by the MSTP
++    clocks
++  - clocks: Reference to the parent clocks
 +  - #clock-cells: Must be 1
-+  - clock-output-names: The names of the clocks. Supported clocks are "main",
-+    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0" and "sd1".
++  - clock-output-names: The name of the clocks as free-form strings
++  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
++
++The clocks, clock-output-names and renesas,indices properties contain one
++entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
++gate clocks must not be declared.
 +
 +
 +Example
 +-------
 +
-+	cpg_clocks: cpg_clocks@e6150000 {
-+		compatible = "renesas,r8a7790-cpg-clocks",
-+			     "renesas,rcar-gen2-cpg-clocks";
-+		reg = <0 0xe6150000 0 0x1000>;
-+		clocks = <&extal_clk>;
++	#include <dt-bindings/clock/r8a7790-clock.h>
++
++	mstp3_clks: mstp3_clks@e615013c {
++		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
++		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
++		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
++			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks R8A7790_CLK_SD0>,
++			 <&mmc0_clk>;
 +		#clock-cells = <1>;
-+		clock-output-names = "main", "pll0, "pll1", "pll3",
-+				     "lb", "qspi", "sdh", "sd0", "sd1";
++		clock-output-names =
++			"tpu0", "mmcif1", "sdhi3", "sdhi2",
++			 "sdhi1", "sdhi0", "mmcif0";
++		renesas,clock-indices = <
++			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
++			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
++			R8A7790_CLK_MMCIF0
++		>;
 +	};
 diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-index 2240730..40d88e6 100644
+index eded163..4df35a0 100644
 --- a/drivers/clk/shmobile/Makefile
 +++ b/drivers/clk/shmobile/Makefile
-@@ -1,3 +1,6 @@
--obj-$(CONFIG_ARCH_EMEV2)	+= clk-emev2.o
-+obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
-+obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
-+obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
-+
+@@ -2,6 +2,7 @@ obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
+ obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
+ obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
+ obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
++obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-mstp.o
+ 
  # for emply built-in.o
  obj-n	:= dummy
-diff --git a/drivers/clk/shmobile/clk-rcar-gen2.c b/drivers/clk/shmobile/clk-rcar-gen2.c
+diff --git a/drivers/clk/shmobile/clk-mstp.c b/drivers/clk/shmobile/clk-mstp.c
 new file mode 100644
-index 0000000..1d309f0
+index 0000000..e576b60
 --- /dev/null
-+++ b/drivers/clk/shmobile/clk-rcar-gen2.c
-@@ -0,0 +1,187 @@
++++ b/drivers/clk/shmobile/clk-mstp.c
+@@ -0,0 +1,229 @@
 +/*
-+ * rcar_gen2 Core CPG Clocks
++ * R-Car MSTP clocks
 + *
-+ * Copyright (C) 2013  Ideas On Board SPRL
++ * Copyright (C) 2013 Ideas On Board SPRL
 + *
 + * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 + *
@@ -103,204 +110,221 @@ index 0000000..1d309f0
 +
 +#include <linux/clk-provider.h>
 +#include <linux/clkdev.h>
-+#include <linux/clk/shmobile.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
++#include <linux/io.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
 +#include <linux/spinlock.h>
 +
-+struct rcar_gen2_cpg {
-+	struct clk_onecell_data data;
-+	spinlock_t lock;
-+	void __iomem *reg;
-+};
-+
 +/*
-+ *   MD		EXTAL		PLL0	PLL1	PLL3
-+ * 14 13 19	(MHz)		*1	*1
-+ *---------------------------------------------------
-+ * 0  0  0	15 x 1		x172/2	x208/2	x106
-+ * 0  0  1	15 x 1		x172/2	x208/2	x88
-+ * 0  1  0	20 x 1		x130/2	x156/2	x80
-+ * 0  1  1	20 x 1		x130/2	x156/2	x66
-+ * 1  0  0	26 / 2		x200/2	x240/2	x122
-+ * 1  0  1	26 / 2		x200/2	x240/2	x102
-+ * 1  1  0	30 / 2		x172/2	x208/2	x106
-+ * 1  1  1	30 / 2		x172/2	x208/2	x88
-+ *
-+ * *1 :	Table 7.6 indicates VCO ouput (PLLx = VCO/2)
++ * MSTP clocks. We can't use standard gate clocks as we need to poll on the
++ * status register when enabling the clock.
 + */
-+#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 12) | \
-+					 (((md) & BIT(13)) >> 12) | \
-+					 (((md) & BIT(19)) >> 19))
-+struct cpg_pll_config {
-+	unsigned int extal_div;
-+	unsigned int pll1_mult;
-+	unsigned int pll3_mult;
++
++#define MSTP_MAX_CLOCKS		32
++
++/**
++ * struct mstp_clock_group - MSTP gating clocks group
++ *
++ * @data: clocks in this group
++ * @smstpcr: module stop control register
++ * @mstpsr: module stop status register (optional)
++ * @lock: protects writes to SMSTPCR
++ */
++struct mstp_clock_group {
++	struct clk_onecell_data data;
++	void __iomem *smstpcr;
++	void __iomem *mstpsr;
++	spinlock_t lock;
 +};
 +
-+static const struct cpg_pll_config cpg_pll_configs[8] __initconst = {
-+	{ 1, 208, 106 }, { 1, 208,  88 }, { 1, 156,  80 }, { 1, 156,  66 },
-+	{ 2, 240, 122 }, { 2, 240, 102 }, { 2, 208, 106 }, { 2, 208,  88 },
++/**
++ * struct mstp_clock - MSTP gating clock
++ * @hw: handle between common and hardware-specific interfaces
++ * @bit_index: control bit index
++ * @group: MSTP clocks group
++ */
++struct mstp_clock {
++	struct clk_hw hw;
++	u32 bit_index;
++	struct mstp_clock_group *group;
 +};
 +
-+/* SDHI divisors */
-+static const struct clk_div_table cpg_sdh_div_table[] = {
-+	{  0,  2 }, {  1,  3 }, {  2,  4 }, {  3,  6 },
-+	{  4,  8 }, {  5, 12 }, {  6, 16 }, {  7, 18 },
-+	{  8, 24 }, { 10, 36 }, { 11, 48 }, {  0,  0 },
++#define to_mstp_clock(_hw) container_of(_hw, struct mstp_clock, hw)
++
++static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
++{
++	struct mstp_clock *clock = to_mstp_clock(hw);
++	struct mstp_clock_group *group = clock->group;
++	u32 bitmask = BIT(clock->bit_index);
++	unsigned long flags;
++	unsigned int i;
++	u32 value;
++
++	spin_lock_irqsave(&group->lock, flags);
++
++	value = clk_readl(group->smstpcr);
++	if (enable)
++		value &= ~bitmask;
++	else
++		value |= bitmask;
++	clk_writel(value, group->smstpcr);
++
++	spin_unlock_irqrestore(&group->lock, flags);
++
++	if (!enable || !group->mstpsr)
++		return 0;
++
++	for (i = 1000; i > 0; --i) {
++		if (!(clk_readl(group->mstpsr) & bitmask))
++			break;
++		cpu_relax();
++	}
++
++	if (!i) {
++		pr_err("%s: failed to enable %p[%d]\n", __func__,
++		       group->smstpcr, clock->bit_index);
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static int cpg_mstp_clock_enable(struct clk_hw *hw)
++{
++	return cpg_mstp_clock_endisable(hw, true);
++}
++
++static void cpg_mstp_clock_disable(struct clk_hw *hw)
++{
++	cpg_mstp_clock_endisable(hw, false);
++}
++
++static int cpg_mstp_clock_is_enabled(struct clk_hw *hw)
++{
++	struct mstp_clock *clock = to_mstp_clock(hw);
++	struct mstp_clock_group *group = clock->group;
++	u32 value;
++
++	if (group->mstpsr)
++		value = clk_readl(group->mstpsr);
++	else
++		value = clk_readl(group->smstpcr);
++
++	return !!(value & BIT(clock->bit_index));
++}
++
++static const struct clk_ops cpg_mstp_clock_ops = {
++	.enable = cpg_mstp_clock_enable,
++	.disable = cpg_mstp_clock_disable,
++	.is_enabled = cpg_mstp_clock_is_enabled,
 +};
-+
-+static const struct clk_div_table cpg_sd01_div_table[] = {
-+	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
-+	{ 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
-+};
-+
-+#define CPG_SDCKCR			0x00000074
-+#define CPG_PLL0CR			0x000000d8
-+
-+static u32 cpg_mode __initdata;
 +
 +static struct clk * __init
-+rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
-+			     const struct cpg_pll_config *config,
-+			     const char *name)
++cpg_mstp_clock_register(const char *name, const char *parent_name,
++			unsigned int index, struct mstp_clock_group *group)
 +{
-+	const struct clk_div_table *table = NULL;
-+	const char *parent_name = "main";
-+	unsigned int shift;
-+	unsigned int mult = 1;
-+	unsigned int div = 1;
++	struct clk_init_data init;
++	struct mstp_clock *clock;
++	struct clk *clk;
 +
-+	if (!strcmp(name, "main")) {
-+		parent_name = of_clk_get_parent_name(np, 0);
-+		div = config->extal_div;
-+	} else if (!strcmp(name, "pll0")) {
-+		/* PLL0 is a configurable multiplier clock. Register it as a
-+		 * fixed factor clock for now as there's no generic multiplier
-+		 * clock implementation and we currently have no need to change
-+		 * the multiplier value.
-+		 */
-+		u32 value = clk_readl(cpg->reg + CPG_PLL0CR);
-+		mult = ((value >> 24) & ((1 << 7) - 1)) + 1;
-+	} else if (!strcmp(name, "pll1")) {
-+		mult = config->pll1_mult / 2;
-+	} else if (!strcmp(name, "pll3")) {
-+		mult = config->pll3_mult;
-+	} else if (!strcmp(name, "lb")) {
-+		div = cpg_mode & BIT(18) ? 36 : 24;
-+	} else if (!strcmp(name, "qspi")) {
-+		div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
-+		    ? 16 : 20;
-+	} else if (!strcmp(name, "sdh")) {
-+		table = cpg_sdh_div_table;
-+		shift = 8;
-+	} else if (!strcmp(name, "sd0")) {
-+		table = cpg_sd01_div_table;
-+		shift = 4;
-+	} else if (!strcmp(name, "sd0")) {
-+		table = cpg_sd01_div_table;
-+		shift = 0;
-+	} else {
-+		return ERR_PTR(-EINVAL);
++	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
++	if (!clock) {
++		pr_err("%s: failed to allocate MSTP clock.\n", __func__);
++		return ERR_PTR(-ENOMEM);
 +	}
 +
-+	if (!table)
-+		return clk_register_fixed_factor(NULL, name, parent_name, 0,
-+						 mult, div);
-+	else
-+		return clk_register_divider_table(NULL, name, parent_name, 0,
-+						 cpg->reg + CPG_SDCKCR, shift,
-+						 4, 0, table, &cpg->lock);
++	init.name = name;
++	init.ops = &cpg_mstp_clock_ops;
++	init.flags = CLK_IS_BASIC;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	clock->bit_index = index;
++	clock->group = group;
++	clock->hw.init = &init;
++
++	clk = clk_register(NULL, &clock->hw);
++
++	if (IS_ERR(clk))
++		kfree(clock);
++
++	return clk;
 +}
 +
-+static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
++static void __init cpg_mstp_clocks_init(struct device_node *np)
 +{
-+	const struct cpg_pll_config *config;
-+	struct rcar_gen2_cpg *cpg;
++	struct mstp_clock_group *group;
 +	struct clk **clks;
 +	unsigned int i;
-+	int num_clks;
 +
-+	num_clks = of_property_count_strings(np, "clock-output-names");
-+	if (num_clks < 0) {
-+		pr_err("%s: failed to count clocks\n", __func__);
++	group = kzalloc(sizeof(*group), GFP_KERNEL);
++	clks = kzalloc(MSTP_MAX_CLOCKS * sizeof(*clks), GFP_KERNEL);
++	if (group == NULL || clks == NULL) {
++		kfree(group);
++		kfree(clks);
++		pr_err("%s: failed to allocate group\n", __func__);
 +		return;
 +	}
 +
-+	cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
-+	clks = kzalloc(num_clks * sizeof(*clks), GFP_KERNEL);
-+	if (cpg == NULL || clks == NULL) {
-+		/* We're leaking memory on purpose, there's no point in cleaning
-+		 * up as the system won't boot anyway.
-+		 */
-+		pr_err("%s: failed to allocate cpg\n", __func__);
++	spin_lock_init(&group->lock);
++	group->data.clks = clks;
++
++	group->smstpcr = of_iomap(np, 0);
++	group->mstpsr = of_iomap(np, 1);
++
++	if (group->smstpcr == NULL) {
++		pr_err("%s: failed to remap SMSTPCR\n", __func__);
++		kfree(group);
++		kfree(clks);
 +		return;
 +	}
 +
-+	spin_lock_init(&cpg->lock);
-+
-+	cpg->data.clks = clks;
-+	cpg->data.clk_num = num_clks;
-+
-+	cpg->reg = of_iomap(np, 0);
-+	if (WARN_ON(cpg->reg == NULL))
-+		return;
-+
-+	config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-+
-+	for (i = 0; i < num_clks; ++i) {
++	for (i = 0; i < MSTP_MAX_CLOCKS; ++i) {
++		const char *parent_name;
 +		const char *name;
-+		struct clk *clk;
++		u32 clkidx;
++		int ret;
 +
-+		of_property_read_string_index(np, "clock-output-names", i,
-+					      &name);
++		/* Skip clocks with no name. */
++		ret = of_property_read_string_index(np, "clock-output-names",
++						    i, &name);
++		if (ret < 0 || strlen(name) == 0)
++			continue;
 +
-+		clk = rcar_gen2_cpg_register_clock(np, cpg, config, name);
-+		if (IS_ERR(clk))
++		parent_name = of_clk_get_parent_name(np, i);
++		ret = of_property_read_u32_index(np, "renesas,clock-indices", i,
++						 &clkidx);
++		if (parent_name == NULL || ret < 0)
++			break;
++
++		if (clkidx >= MSTP_MAX_CLOCKS) {
++			pr_err("%s: invalid clock %s %s index %u)\n",
++			       __func__, np->name, name, clkidx);
++			continue;
++		}
++
++		clks[clkidx] = cpg_mstp_clock_register(name, parent_name, i,
++						       group);
++		if (!IS_ERR(clks[clkidx])) {
++			group->data.clk_num = max(group->data.clk_num, clkidx);
++			/*
++			 * Register a clkdev to let board code retrieve the
++			 * clock by name and register aliases for non-DT
++			 * devices.
++			 *
++			 * FIXME: Remove this when all devices that require a
++			 * clock will be instantiated from DT.
++			 */
++			clk_register_clkdev(clks[clkidx], name, NULL);
++		} else {
 +			pr_err("%s: failed to register %s %s clock (%ld)\n",
-+			       __func__, np->name, name, PTR_ERR(clk));
-+		else
-+			cpg->data.clks[i] = clk;
++			       __func__, np->name, name, PTR_ERR(clks[clkidx]));
++		}
 +	}
 +
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
++	of_clk_add_provider(np, of_clk_src_onecell_get, &group->data);
 +}
-+CLK_OF_DECLARE(rcar_gen2_cpg_clks, "renesas,rcar-gen2-cpg-clocks",
-+	       rcar_gen2_cpg_clocks_init);
-+
-+void __init rcar_gen2_clocks_init(u32 mode)
-+{
-+	cpg_mode = mode;
-+
-+	of_clk_init(NULL);
-+}
-diff --git a/include/linux/clk/shmobile.h b/include/linux/clk/shmobile.h
-new file mode 100644
-index 0000000..f9bf080
---- /dev/null
-+++ b/include/linux/clk/shmobile.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright 2013 Ideas On Board SPRL
-+ *
-+ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __LINUX_CLK_SHMOBILE_H_
-+#define __LINUX_CLK_SHMOBILE_H_
-+
-+#include <linux/types.h>
-+
-+void rcar_gen2_clocks_init(u32 mode);
-+
-+#endif
++CLK_OF_DECLARE(cpg_mstp_clks, "renesas,cpg-mstp-clocks", cpg_mstp_clocks_init);
 -- 
 1.8.1.5
 
