@@ -1,132 +1,173 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 2/4] clk: exynos5410: register clocks using common clock framework
-Date: Sun, 10 Nov 2013 18:41:28 +0100
-Message-ID: <6379094.zWymlDc09O@flatron>
-References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com> <1383811969-32712-3-git-send-email-v.tyrtov@samsung.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/32] Add additional sandbox features and infrastructure
+Date: Sun, 10 Nov 2013 10:43:55 -0700
+Message-ID: <1384105467-31986-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1383811969-32712-3-git-send-email-v.tyrtov@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagannadha Sutradharudu Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vadim Bendebury <vbendeb-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jagannadha Sutradharudu Teki <jaganna-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+At present sandbox only supports a basic set of features. To help addre=
+ss
+this, a recent series added SPI and SPI flash support; this series expa=
+nds
+the coverage further.
 
-On Thursday 07 of November 2013 12:12:47 Vyacheslav Tyrtov wrote:
-> From: Tarek Dakhran <t.dakhran@samsung.com>
-> 
-> The EXYNOS5410 clocks are statically listed and registered
-> using the Samsung specific common clock helper functions.
+=46irstly SDL is used to provide LCD and audio support. Sandbox gains i=
+ts own
+LCD driver which can display images, host a command line, etc. The audi=
+o
+support is basic and needs additional work, but it is a starting point.
+SDL also provides a keyboard emulation (using the Chrome OS EC code as =
+a
+base).
 
-Thanks for keeping up with addressing the comments. However there are
-still few things that need to be corrected. Please see my comments inline.
+Secondly a TPM emulation is added. This does not include all features (=
+the
+implementation is quite simplistic) but it is enough to do basic secure
+boot operations.
 
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> ---
->  .../devicetree/bindings/clock/exynos5410-clock.txt |  37 ++++
->  drivers/clk/samsung/Makefile                       |   1 +
->  drivers/clk/samsung/clk-exynos5410.c               | 239 +++++++++++++++++++++
->  include/dt-bindings/clock/exynos5410.h             | 175 +++++++++++++++
->  4 files changed, 452 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
->  create mode 100644 drivers/clk/samsung/clk-exynos5410.c
->  create mode 100644 include/dt-bindings/clock/exynos5410.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5410-clock.txt b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
-> new file mode 100644
-> index 0000000..a462da231
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
-> @@ -0,0 +1,37 @@
-> +* Samsung Exynos5410 Clock Controller
-> +
-> +The Exynos5410 clock controller generates and supplies clock to various
-> +controllers within the Exynos5410 SoC.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "samsung,exynos5410-clock"
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
+=46inally, various pieces of useful infrastructure are adding, includin=
+g:
 
-If there are any external clocks that need to be provided (and I believe
-there are), you should mention them in the documentation.
+- loading and saving of the emulated SDRAM to permit test runs to carry
+over state
+- loading and saving of general sandbox state (for example a driver can
+save its stage and reload it on the next run)
+- support for using bootm to load a kernel
+- providing a device tree for use by sandbox
+- block device emulation using host files
+- a means to jump to another U-Boot while preserving state (useful for
+test environments which want to run a series of tests with
+script-selectable state)
+- allowing the console to be active on start-up so that errors are not
+silent supressed
 
-Also, to make this more future-proof, I would add clock-names and clocks
-properties to the binding, listing all those external clocks. It's just
-about the binding definition - you don't have to implement this in the
-driver yet, as we don't have the framework to handle this at early system
-initialization. However, when we finally implement this in the Common
-Clock Framework, we will not have to change existing DT bindings.
+The block device emulation provides access to filesystems from sandbox
+which should make it possible to write comprehensive filesystem tests.
 
-> +
-> +All available clocks are defined as preprocessor macros in
-> +dt-bindings/clock/exynos5410.h header and can be used in device
-> +tree sources.
-> +
-> +Example 1: An example of a clock controller node is listed below.
-> +
-> +	clock: clock-controller@0x10010000 {
-> +		compatible = "samsung,exynos5410-clock";
-> +		reg = <0x10010000 0x30000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +Example 2: UART controller node that consumes the clock generated by the clock
-> +	   controller. Refer to the standard clock bindings for information
-> +	   about 'clocks' and 'clock-names' property.
-> +
-> +	serial@12C20000 {
-> +		compatible = "samsung,exynos4210-uart";
-> +		reg = <0x12C00000 0x100>;
-> +		interrupts = <0 51 0>;
-> +		clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
-> +		clock-names = "uart", "clk_uart_baud0";
-> +	};
-[snip]
-> diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
-> new file mode 100644
-> index 0000000..9b4a58b
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/exynos5410.h
-> @@ -0,0 +1,175 @@
-> +#ifndef _DT_BINDINGS_CLOCK_EXYNOS_5410_H
-> +#define _DT_BINDINGS_CLOCK_EXYNOS_5410_H
-> +
-> +/* core clocks */
-> +#define CLK_FIN_PLL 1
+Major functions which still remain without sandbox support are I2C,
+networking and USB.
 
-This is external clock, not provided by this clock controller, isn't it?
 
-> +#define CLK_FOUT_APLL 2
-> +#define CLK_FOUT_CPLL 3
-> +#define CLK_FOUT_DPLL 4
-> +#define CLK_FOUT_EPLL 5
-[snip]
-> +#define CLK_ACLK_G3D 500
-> +#define CLK_G3D 501
-> +#define CLK_SMMU_MIXER 502
-> +
-> +/* mux clocks */
-> +#define CLK_MOUT_HDMI 640
+Che-Liang Chiou (1):
+  sandbox: tpm: Fix nvwrite command
 
-This definition does not seem to be used anywhere in the driver itself.
+Henrik Nordstr=C3=B6m (1):
+  sandbox: block driver using host file/device as backing store
 
-> +
-> +/* divider clocks */
-> +#define CLK_DOUT_PIXEL 768
+Simon Glass (29):
+  Add crc8 routine
+  sandbox: Use system headers first for sandbox's os.c
+  sandbox: Use uint64_t instead of u64 for time
+  sandbox: Increase memory size to 32MB
+  sandbox: spi: Adjust 'sf test' to work on sandbox
+  sandbox: Build a device tree file for sandbox
+  sandbox: config: Don't use 64-bit physical memory
+  sandbox: Correct data sizes and printf() strings in fdtdec.c
+  sandbox: Use os functions to read host device tree
+  sandbox: Improve/augment memory allocation functions
+  sandbox: Correct help message <arg> garbling
+  sandbox: Allow return from board_init_f()
+  sandbox: Implement the bootm command for sandbox
+  sandbox: Allow the console to work earlier
+  sandbox: Add -i option to enter interactive mode
+  sandbox: Allow reading/writing of RAM buffer
+  sandbox: Add facility to save/restore sandbox state
+  sandbox: tpm: Add TPM emulation
+  sandbox: dts: Add display and keyboard to sandbox
+  sandbox: Add a prototype for cleanup_before_linux()
+  cros_ec: Add an enum for the number of flash regions
+  fdt: Add a function for reading a flash map entry
+  cros_ec: Add a function for decoding the Chrome OS EC flashmap
+  cros_ec: sandbox: Add Chrome OS EC emulation
+  sandbox: Add os_jump_to_image() to run another executable
+  sandbox: Add -j option to indicate a jump from a previous U-Boot
+  sandbox: Add SDL library for LCD, keyboard, audio
+  sandbox: Add a simple sound driver
+  sandbox: Add LCD driver
 
-Ditto.
+Vadim Bendebury (1):
+  cros_ec: Move EC interface into common library
 
-Please don't define IDs for clocks that are not yet provided by the
-driver.
+ Makefile                                      |   1 +
+ arch/sandbox/config.mk                        |   7 +
+ arch/sandbox/cpu/Makefile                     |  12 +-
+ arch/sandbox/cpu/cpu.c                        |  21 +-
+ arch/sandbox/cpu/os.c                         | 187 ++++++++-
+ arch/sandbox/cpu/sdl.c                        | 334 +++++++++++++++
+ arch/sandbox/cpu/start.c                      | 121 +++++-
+ arch/sandbox/cpu/state.c                      | 353 ++++++++++++++++
+ arch/sandbox/include/asm/arch-sandbox/sound.h |  14 +
+ arch/sandbox/include/asm/global_data.h        |   2 +-
+ arch/sandbox/include/asm/sdl.h                |  20 +
+ arch/sandbox/include/asm/state.h              | 132 +++++-
+ arch/sandbox/include/asm/types.h              |   4 +-
+ arch/sandbox/include/asm/u-boot-sandbox.h     |   5 +
+ board/samsung/smdk5250/exynos5-dt.c           |   5 -
+ board/sandbox/dts/sandbox.dts                 |  91 +++++
+ board/sandbox/sandbox/sandbox.c               |  19 +-
+ common/Makefile                               |   1 +
+ common/board_f.c                              |  63 ++-
+ common/cmd_sandbox.c                          |  64 +++
+ common/cmd_sf.c                               |  14 +-
+ common/console.c                              |  16 +-
+ common/cros_ec.c                              |  44 ++
+ common/lcd.c                                  |  21 +-
+ config.mk                                     |   9 +-
+ disk/part.c                                   |  23 +-
+ doc/device-tree-bindings/video/sandbox-fb.txt |  13 +
+ drivers/block/Makefile                        |   1 +
+ drivers/block/sandbox.c                       | 124 ++++++
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/cros_ec.c                        |  50 +++
+ drivers/misc/cros_ec_sandbox.c                | 558 ++++++++++++++++++=
+++++++++
+ drivers/serial/sandbox.c                      |   4 +
+ drivers/sound/Makefile                        |   2 +
+ drivers/sound/sandbox.c                       |  23 ++
+ drivers/tpm/Makefile                          |   1 +
+ drivers/tpm/tpm_tis_sandbox.c                 | 260 ++++++++++++
+ drivers/video/Makefile                        |   1 +
+ drivers/video/sandbox_sdl.c                   |  70 ++++
+ include/config_fallbacks.h                    |   3 +-
+ include/configs/sandbox.h                     |   9 +-
+ include/cros_ec.h                             |  45 +++
+ include/ec_commands.h                         |   4 +-
+ include/fdtdec.h                              |  20 +
+ include/lcd.h                                 |   3 +
+ include/linux/crc8.h                          |  23 ++
+ include/os.h                                  |  88 +++-
+ include/part.h                                |   5 +
+ include/sandboxblockdev.h                     |  18 +
+ lib/Makefile                                  |   1 +
+ lib/crc8.c                                    |  25 ++
+ lib/fdtdec.c                                  |  34 +-
+ 52 files changed, 2866 insertions(+), 103 deletions(-)
+ create mode 100644 arch/sandbox/cpu/sdl.c
+ create mode 100644 arch/sandbox/include/asm/arch-sandbox/sound.h
+ create mode 100644 arch/sandbox/include/asm/sdl.h
+ create mode 100644 board/sandbox/dts/sandbox.dts
+ create mode 100644 common/cros_ec.c
+ create mode 100644 doc/device-tree-bindings/video/sandbox-fb.txt
+ create mode 100644 drivers/block/sandbox.c
+ create mode 100644 drivers/misc/cros_ec_sandbox.c
+ create mode 100644 drivers/sound/sandbox.c
+ create mode 100644 drivers/tpm/tpm_tis_sandbox.c
+ create mode 100644 drivers/video/sandbox_sdl.c
+ create mode 100644 include/linux/crc8.h
+ create mode 100644 include/sandboxblockdev.h
+ create mode 100644 lib/crc8.c
 
-Best regards,
-Tomasz
+--=20
+1.8.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
