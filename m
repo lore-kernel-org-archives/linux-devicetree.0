@@ -1,267 +1,137 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 2/7] clk: shmobile: Add DIV6 clock support
-Date: Sun, 10 Nov 2013 04:09:32 +0100
-Message-ID: <1384052977-30616-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 00/29] Add OF support to the sh-sci serial port driver
+Date: Sun, 10 Nov 2013 04:33:12 +0100
+Message-ID: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
+Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DIV6 clocks are divider gate clocks controlled through a single
-register. The divider is expressed on 6 bits, hence the name, and can
-take values from 1/1 to 1/64.
+Hello,
 
-Those clocks are found on Renesas ARM SoCs.
+This is the second version of the patch set adds device tree bindings for the
+sh sci serial port devices and adds OF parsing to the sh-sci driver.
+
+The bindings are based on Bastian Hecht's proposal (see
+http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach taken
+here is more minimalistic: instead of describing all hardware characteristics
+that vary between the SCI device revisions in DT (such as registers layout),
+that information is stored in the driver and selected based on the compatible
+property value. Only SCI revisions used on ARM devices are supported through
+DT, as DT support for SuperH is nowhere down the line.
+
+Patches 01/29 to 06/29 clean up the sh-sci driver. Patches 07/29 to 27/29
+replace memory and interrupt resources passed through platform data with
+platform resources. Beside replacing a custom mechanism with a standard one,
+it will also make the DT parsing code simpler as resource allocation will be
+shared between DT and non-DT code paths. Finally, patches 28/29 to 29/29 add
+OF parsing to the sh-sci driver and create DT bindings documentation.
+
+The patches have been test on a Lager board (r8a7790-based). Support for other
+SoCs will be added as needed. Note that all current Renesas ARM SoCs seem to
+be compatible with the generic (H)SCI(F)(AB) devices, but the plan is for
+their DT bindings to list the SoC-specific version in case incompatibilities
+are found later.
+
+Patch 08/29 ("serial: sh-sci: Support resources passed through platform
+resources") is the only dependency of the arch/arm and arch/sh patches present
+in this series. As it's too late to get it in v3.13, Simon will need a stable
+branch of the linux serial tree with that patch included.
+
+Changes compared to v1:
+
+- Patches 04/29 to 27/29 have been added
+- Multi-interrupt support has been removed from the DT bindings as they don't
+  support any SoC requiring multi-interrupt yet
 
 Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/clock/renesas,cpg-div6-clocks.txt     |  27 +++
- drivers/clk/shmobile/Makefile                      |   1 +
- drivers/clk/shmobile/clk-div6.c                    | 185 +++++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
- create mode 100644 drivers/clk/shmobile/clk-div6.c
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-new file mode 100644
-index 0000000..316d745
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-@@ -0,0 +1,27 @@
-+* Renesas CPG DIV6 Clock
-+
-+The CPG DIV6 clocks are variable factor clocks provided by the Clock Pulse
-+Generator (CPG). They clock input is divided by a configurable factor from 1
-+to 64.
-+
-+Required Properties:
-+
-+  - compatible: Must be one of the following
-+    - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
-+    - "renesas,cpg-div6-clock" for generic DIV6 clocks
-+  - reg: Base address and length of the memory resource used by the DIV6 clock
-+  - clocks: Reference to the parent clock
-+  - #clock-cells: Must be 0
-+  - clock-output-names: The name of the clock as a free-form string
-+
-+
-+Example
-+-------
-+
-+	sd2_clk: sd2_clk@e6150078 {
-+		compatible = "renesas,r8a7790-div6-clock", "renesas,cpg-div6-clock";
-+		reg = <0 0xe6150078 0 4>;
-+		clocks = <&pll1_div2_clk>;
-+		#clock-cells = <0>;
-+		clock-output-names = "sd2";
-+	};
-diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-index 40d88e6..eded163 100644
---- a/drivers/clk/shmobile/Makefile
-+++ b/drivers/clk/shmobile/Makefile
-@@ -1,6 +1,7 @@
- obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
- obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
- obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
-+obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
- 
- # for emply built-in.o
- obj-n	:= dummy
-diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-new file mode 100644
-index 0000000..aac4756
---- /dev/null
-+++ b/drivers/clk/shmobile/clk-div6.c
-@@ -0,0 +1,185 @@
-+/*
-+ * r8a7790 Common Clock Framework support
-+ *
-+ * Copyright (C) 2013  Renesas Solutions Corp.
-+ *
-+ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#define CPG_DIV6_CKSTP		BIT(8)
-+#define CPG_DIV6_DIV(d)		((d) & 0x3f)
-+#define CPG_DIV6_DIV_MASK	0x3f
-+
-+/**
-+ * struct div6_clock - MSTP gating clock
-+ * @hw: handle between common and hardware-specific interfaces
-+ * @reg: IO-remapped register
-+ * @div: divisor value (1-64)
-+ */
-+struct div6_clock {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+	unsigned int div;
-+};
-+
-+#define to_div6_clock(_hw) container_of(_hw, struct div6_clock, hw)
-+
-+static int cpg_div6_clock_enable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static void cpg_div6_clock_disable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	/* DIV6 clocks require the divisor field to be non-zero when stopping
-+	 * the clock.
-+	 */
-+	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
-+		   clock->reg);
-+}
-+
-+static int cpg_div6_clock_is_enabled(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	return !(clk_readl(clock->reg) & CPG_DIV6_CKSTP);
-+}
-+
-+static unsigned long cpg_div6_clock_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	return parent_rate / div;
-+}
-+
-+static unsigned int cpg_div6_clock_calc_div(unsigned long rate,
-+					    unsigned long parent_rate)
-+{
-+	unsigned int div;
-+
-+	div = DIV_ROUND_CLOSEST(parent_rate, rate);
-+	return clamp_t(unsigned int, div, 1, 64);
-+}
-+
-+static long cpg_div6_clock_round_rate(struct clk_hw *hw, unsigned long rate,
-+				      unsigned long *parent_rate)
-+{
-+	unsigned int div = cpg_div6_clock_calc_div(rate, *parent_rate);
-+
-+	return *parent_rate / div;
-+}
-+
-+static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
-+
-+	clock->div = div;
-+
-+	/* Only program the new divisor if the clock isn't stopped. */
-+	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
-+		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops cpg_div6_clock_ops = {
-+	.enable = cpg_div6_clock_enable,
-+	.disable = cpg_div6_clock_disable,
-+	.is_enabled = cpg_div6_clock_is_enabled,
-+	.recalc_rate = cpg_div6_clock_recalc_rate,
-+	.round_rate = cpg_div6_clock_round_rate,
-+	.set_rate = cpg_div6_clock_set_rate,
-+};
-+
-+static void __init cpg_div6_clock_init(struct device_node *np)
-+{
-+	struct clk_init_data init;
-+	struct div6_clock *clock;
-+	const char *parent_name;
-+	const char *name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
-+	if (!clock) {
-+		pr_err("%s: failed to allocate %s DIV6 clock\n",
-+		       __func__, np->name);
-+		return;
-+	}
-+
-+	/* Remap the clock register and read the divisor. Disabling the
-+	 * clock overwrites the divisor, so we need to cache its value for the
-+	 * enable operation.
-+	 */
-+	clock->reg = of_iomap(np, 0);
-+	if (clock->reg == NULL) {
-+		pr_err("%s: failed to map %s DIV6 clock register\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	/* Parse the DT properties. */
-+	ret = of_property_read_string(np, "clock-output-names", &name);
-+	if (ret < 0) {
-+		pr_err("%s: failed to get %s DIV6 clock output name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (parent_name == NULL) {
-+		pr_err("%s: failed to get %s DIV6 clock parent name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	/* Register the clock. */
-+	init.name = name;
-+	init.ops = &cpg_div6_clock_ops;
-+	init.flags = CLK_IS_BASIC;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	clock->hw.init = &init;
-+
-+	clk = clk_register(NULL, &clock->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
-+		       __func__, np->name, PTR_ERR(clk));
-+		goto error;
-+	}
-+
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+
-+	return;
-+
-+error:
-+	if (clock->reg)
-+		iounmap(clock->reg);
-+	kfree(clock);
-+}
-+CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
+Bastian Hecht (1):
+  serial: sh-sci: Add OF support
+
+Laurent Pinchart (28):
+  serial: sh-sci: Sort headers alphabetically
+  serial: sh-sci: Remove baud rate calculation algorithm 5
+  serial: sh-sci: Simplify baud rate calculation algorithms
+  serial: sh-sci: Remove duplicate interrupt check in verify port op
+  serial: sh-sci: Set the UPF_FIXED_PORT flag
+  serial: sh-sci: Don't check IRQ in verify port operation
+  serial: sh-sci: Support resources passed through platform resources
+  ARM: shmobile: sh7372: Use macros to declare SCIF devices
+  ARM: shmobile: sh73a0: Use macros to declare SCIF devices
+  ARM: shmobile: r8a7740: Use macros to declare SCIF devices
+  ARM: shmobile: r8a7779: Use macros to declare SCIF devices
+  ARM: shmobile: r7s72100: Don't define SCIF platform data in an array
+  ARM: shmobile: r8a73a4: Don't define SCIF platform data in an array
+  ARM: shmobile: r8a7778: Don't define SCIF platform data in an array
+  ARM: shmobile: r8a7790: Don't define SCIF platform data in an array
+  ARM: shmobile: r8a7791: Don't define SCIF platform data in an array
+  ARM: shmobile: sh7372: Declare SCIF register base and IRQ as resources
+  ARM: shmobile: sh73a0: Declare SCIF register base and IRQ as resources
+  ARM: shmobile: r7s72100: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a73a4: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a7740: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a7778: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a7779: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a7790: Declare SCIF register base and IRQ as
+    resources
+  ARM: shmobile: r8a7791: Declare SCIF register base and IRQ as
+    resources
+  sh: Declare SCIF register base and IRQ as resources
+  serial: sh-sci: Remove platform data mapbase and irqs fields
+  serial: sh-sci: Add device tree bindings documentation
+
+ .../bindings/serial/renesas,sci-serial.txt         |  42 ++++
+ arch/arm/mach-shmobile/setup-r7s72100.c            |  63 +++---
+ arch/arm/mach-shmobile/setup-r8a73a4.c             |  65 +++---
+ arch/arm/mach-shmobile/setup-r8a7740.c             | 196 +++--------------
+ arch/arm/mach-shmobile/setup-r8a7778.c             |  45 ++--
+ arch/arm/mach-shmobile/setup-r8a7779.c             | 129 +++--------
+ arch/arm/mach-shmobile/setup-r8a7790.c             | 117 +++++-----
+ arch/arm/mach-shmobile/setup-r8a7791.c             | 130 +++++------
+ arch/arm/mach-shmobile/setup-sh7372.c              | 161 +++-----------
+ arch/arm/mach-shmobile/setup-sh73a0.c              | 192 +++--------------
+ arch/sh/kernel/cpu/sh2/setup-sh7619.c              |  27 ++-
+ arch/sh/kernel/cpu/sh2a/setup-mxg.c                |   9 +-
+ arch/sh/kernel/cpu/sh2a/setup-sh7201.c             |  72 +++++--
+ arch/sh/kernel/cpu/sh2a/setup-sh7203.c             |  36 +++-
+ arch/sh/kernel/cpu/sh2a/setup-sh7206.c             |  36 +++-
+ arch/sh/kernel/cpu/sh2a/setup-sh7264.c             |  96 +++++++--
+ arch/sh/kernel/cpu/sh2a/setup-sh7269.c             |  96 +++++++--
+ arch/sh/kernel/cpu/sh3/setup-sh7705.c              |  18 +-
+ arch/sh/kernel/cpu/sh3/setup-sh770x.c              |  27 ++-
+ arch/sh/kernel/cpu/sh3/setup-sh7710.c              |  18 +-
+ arch/sh/kernel/cpu/sh3/setup-sh7720.c              |  18 +-
+ arch/sh/kernel/cpu/sh4/setup-sh4-202.c             |  15 +-
+ arch/sh/kernel/cpu/sh4/setup-sh7750.c              |  18 +-
+ arch/sh/kernel/cpu/sh4/setup-sh7760.c              |  58 +++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7343.c             |  36 +++-
+ arch/sh/kernel/cpu/sh4a/setup-sh7366.c             |   9 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7722.c             |  27 ++-
+ arch/sh/kernel/cpu/sh4a/setup-sh7723.c             |  54 +++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7724.c             |  54 +++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7734.c             |  66 ++++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7757.c             |  27 ++-
+ arch/sh/kernel/cpu/sh4a/setup-sh7763.c             |  27 ++-
+ arch/sh/kernel/cpu/sh4a/setup-sh7770.c             |  90 ++++++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7780.c             |  18 +-
+ arch/sh/kernel/cpu/sh4a/setup-sh7785.c             |  54 +++--
+ arch/sh/kernel/cpu/sh4a/setup-sh7786.c             |  82 +++++--
+ arch/sh/kernel/cpu/sh4a/setup-shx3.c               |  45 ++--
+ arch/sh/kernel/cpu/sh5/setup-sh5.c                 |  11 +-
+ drivers/tty/serial/sh-sci.c                        | 238 ++++++++++++++++-----
+ include/linux/serial_sci.h                         |  35 +--
+ 40 files changed, 1443 insertions(+), 1114 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+
 -- 
-1.8.1.5
+Regards,
+
+Laurent Pinchart
 
