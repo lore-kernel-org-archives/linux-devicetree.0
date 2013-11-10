@@ -1,173 +1,91 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 4/4] ARM: dts: Add initial device tree support for EXYNOS5410
-Date: Sun, 10 Nov 2013 19:02:50 +0100
-Message-ID: <19495187.Nrl1zS8Kog@flatron>
-References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com> <1383811969-32712-5-git-send-email-v.tyrtov@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
+Date: Sun, 10 Nov 2013 22:07:16 +0400
+Message-ID: <527FCB54.404@cogentembedded.com>
+References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1383811969-32712-5-git-send-email-v.tyrtov@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org
+Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 10-11-2013 7:33, Laurent Pinchart wrote:
 
-Please see my comments inline.
+> Document the device tree bindings for the sci serial port devices.
 
-On Thursday 07 of November 2013 12:12:49 Vyacheslav Tyrtov wrote:
-> From: Tarek Dakhran <t.dakhran@samsung.com>
-> 
-> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
-> 
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+> Cc: devicetree@vger.kernel.org
+
+    Hm, why are you not CCing a bunch of people responsible for the DT 
+bindings maintenance that scripts/get_maintainer.pl should yield?
+
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
 > ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/exynos5410-smdk5410.dts |  65 ++++++++++
->  arch/arm/boot/dts/exynos5410.dtsi         | 209 ++++++++++++++++++++++++++++++
->  3 files changed, 275 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
->  create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
-[snip]
-> diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+>   .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++++++++
+>   1 file changed, 42 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
 > new file mode 100644
-> index 0000000..06ae479
+> index 0000000..66d3bca
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> @@ -0,0 +1,65 @@
-> +/*
-> + * SAMSUNG SMDK5410 board device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -0,0 +1,42 @@
+> +* Renesas SH-Mobile Serial Communication Interface
 > +
-> +/dts-v1/;
-> +#include "exynos5410.dtsi"
-> +/ {
-> +	model = "Samsung SMDK5410 board based on EXYNOS5410";
-> +	compatible = "samsung,smdk5410", "samsung,exynos5410";
+> +Required properties:
 > +
-> +	memory {
-> +		reg = <0x40000000 0x80000000>;
+> +  - compatible: one of the following types (scif, scifa, scifb, hscif).
+> +
+> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
+> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
+> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
+> +    - "renesas,scif-generic" for generic SCIF compatible UART.
+> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
+> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
+> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
+> +
+> +    When compatible with the generic version, nodes must also list the
+> +    SoC-specific version corresponding to the platform.
+
+    Which are not all specified here?
+
+> +
+> +  - reg: Base address and length of the memory resource used by the UART.
+> +
+> +  - interrupt-parent: Reference to the parent interrupt controller.
+
+    This is not a required property. It can be specified in the parent node.
+
+> +  - interrupts: Interrupt number.
+
+    s/number/specifier/
+
+> +
+> +  - clocks: Reference to the SCIx UART interface clock.
+> +  - clock-names: Should be "sci_ick".
+> +
+> +Note: Each enabled SCIx UART should have an alias correctly numbered in the
+> +"aliases" node.
+> +
+> +Example:
+> +	aliases {
+> +		serial0 = &scifa0;
 > +	};
 > +
-> +	chosen {
-> +		bootargs = "console=ttySAC2,115200";
-> +	};
-> +
-> +	oscclk: oscclk {
-
-coding style: According to ePAPR recommendation, node name should
-represent hardware type, not particular instance of hardware.
-
-So instead, the preferred way would be to specify the clock using
-following layout:
-
-	clocks {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		oscclk: clock@0 {
-			compatible = "fixed-clock";
-			reg = <0>;
-			#clock-cells = <0>;
-			clock-frequency = <24000000>;
-			clock-output-names = "fin_pll";
-		};
-	};
-
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "fin_pll";
-> +	};
-[snip]
-> +
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> new file mode 100644
-> index 0000000..9921b66
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -0,0 +1,209 @@
-> +/*
-> + * SAMSUNG EXYNOS5410 SoC device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * SAMSUNG EXYNOS5410 SoC device nodes are listed in this file.
-> + * EXYNOS5410 based board files can include this file and provide
-> + * values for board specfic bindings.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <dt-bindings/clock/exynos5410.h>
-> +#include "exynos5.dtsi"
-> +/ {
-[snip]
-> +	clock: clock-controller@10010000 {
-> +		compatible = "samsung,exynos5410-clock";
-> +		reg = <0x10010000 0x30000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	mct@101C0000 {
-
-A generic name would be: timer@101C0000
-
-> +		compatible = "samsung,exynos4210-mct";
-> +		reg = <0x101C0000 0xB00>;
-> +		interrupt-controller;
-> +		#interrups-cells = <1>;
-
-MCT is not an interrupt controller, so both interrupt-controller and
-#interrupt-cells properties are incorrect. I guess that's due to the
-broken example in the documentation, that I already posted patches to fix.
-
-> +		interrupt-parent = <&mct_map>;
-> +		interrupts = <0>, <1>, <2>, <3>,
-> +			<4>, <5>, <6>, <7>,
-> +			<8>, <9>, <10>, <11>;
-> +		clocks = <&oscclk>, <&clock CLK_MCT>;
-> +		clock-names = "fin_pll", "mct";
-> +
-> +		mct_map: mct-map {
-
-Again, interrupt-map would be a better name for this node.
-
-> +			#interrupt-cells = <1>;
-> +			#address-cells = <0>;
-> +			#size-cells = <0>;
-> +			interrupt-map = <0 &combiner 23 3>,
-> +					<1 &combiner 23 4>,
-> +					<2 &combiner 25 2>,
-> +					<3 &combiner 25 3>,
-> +					<4 &gic 0 120 0>,
-> +					<5 &gic 0 121 0>,
-> +					<6 &gic 0 122 0>,
-> +					<7 &gic 0 123 0>,
-> +					<8 &gic 0 128 0>,
-> +					<9 &gic 0 129 0>,
-> +					<10 &gic 0 130 0>,
-> +					<11 &gic 0 131 0>;
-> +		};
+> +	scifa0: serial@e6c40000 {
+> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
+> +		reg = <0 0xe6c40000 0 64>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 144 4>;
+> +		clocks = <&mstp2_clks 4>;
+> +		clock-names = "sci_ick";
 > +	};
 
-Otherwise, the patch looks good.
-
-Best regards,
-Tomasz
+WBR, Sergei
 
