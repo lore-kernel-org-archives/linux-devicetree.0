@@ -1,232 +1,306 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
-Date: Sun, 10 Nov 2013 01:57:09 +0100
-Message-ID: <527ED9E5.80800@gmail.com>
-References: <87bo1tmibv.fsf@natisbad.org> <527ECBDD.7050607@gmail.com> <87hablulxu.fsf@natisbad.org>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87hablulxu.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 1/7] clk: shmobile: Add R-Car Gen2 clocks support
+Date: Sun, 10 Nov 2013 04:09:31 +0100
+Message-ID: <1384052977-30616-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2013 01:42 AM, Arnaud Ebalard wrote:
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> On 11/09/2013 09:27 PM, Arnaud Ebalard wrote:
->>> All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
->>> 2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
->>> USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
->>> serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
->>> controllers, G751 temperature sensor) except for:
->>>
->>>    - the Intersil ISL12057 I2C RTC Chip,
->>>    - the Armada NAND controller.
->>>
->>> Support for both of those is currently work in progress and does not
->>> prevent boot.
->>>
->>> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
->>> ---
->> [...]
->>>    arch/arm/boot/dts/Makefile                     |   1 +
->>>    arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 289 +++++++++++++++++++++++++
->>
->> Arnaud,
->>
->> thanks for providing this! I do have some comments below.
->>
->> we recently had a discussion about the naming of new DTS files, which
->> proposes to name those after vendor,board.dts (or vendor-board.dts).
->>
->> I personally prefer vendor,board.dts which would give
->> netgear,readynas-2120.dts based on your compatible below.
->> The final call for ',' vs '-' has not been made, so I  suggest Jason
->> makes a call here.
->
-> ok, will wait for a decision before resending. I a am not in a hurry.
->
->>> +
->>> +			serial@12000 {
->>> +				clock-frequency = <250000000>;
->>
->> Where does that 250MHz come from? If it is an internal clock
->> and we already have a DT clock provider for it, please use
->> clocks = <&provider num>;
->>
->> If it is TCLK it can be optained from <&coreclk 0>.
->
-> Well, no innovation here: to be honest - it's not a valid argument but -
-> I copy pasted the line from other armada-xp-*.dts files:
->
-> $ grep 250000000 armada-xp-*.dts
-> armada-xp-axpwifiap.dts:                                clock-frequency = <250000000>;
-> armada-xp-axpwifiap.dts:                                clock-frequency = <250000000>;
-> armada-xp-db.dts:                               clock-frequency = <250000000>;
-> armada-xp-db.dts:                               clock-frequency = <250000000>;
-> armada-xp-db.dts:                               clock-frequency = <250000000>;
-> armada-xp-db.dts:                               clock-frequency = <250000000>;
-> armada-xp-gp.dts:                               clock-frequency = <250000000>;
-> armada-xp-gp.dts:                               clock-frequency = <250000000>;
-> armada-xp-gp.dts:                               clock-frequency = <250000000>;
-> armada-xp-gp.dts:                               clock-frequency = <250000000>;
-> armada-xp-openblocks-ax3-4.dts:                         clock-frequency = <250000000>;
-> armada-xp-openblocks-ax3-4.dts:                         clock-frequency = <250000000>;
->
-> I will use <&coreclk 0> in next resend.
+The R-Car Gen2 SoCs (R8A7790 and R8A7791) have several clocks that are
+too custom to be supported in a generic driver. Those clocks can be
+divided in two categories:
 
-Yeah, I never said that existing dts are perfect ;)
+- Fixed rate clocks with multiplier and divisor set according to boot
+  mode configuration
 
-If you feel like fixing this, I suggest to put clocks property in
-SoC dtsi. I am sure Gregory can confirm this, but there is no other
-clock possible for Armada 370/XP's serial IP.
+- Custom divider clocks with SoC-specific divider values
 
-But anyway, I checked drivers/clk/mvebu/armada-xp.c and 250MHz is TCLK
-which can be referenced as <&coreclk 0>.
+This driver supports both.
 
->>> +				status = "okay";
->>> +			};
->>> +
->>> +			mdio {
->>> +				phy0: ethernet-phy@0 {
->>> +					reg = <0>;
->>
->> Can you evaluate PHYs compatible from u-boot or post vendor:prodid
->> from MDIO registers?
->
-> Looking at the PCB, 88E1318-NNB2. I will dig into Documentation/ the
-> associated compatible. Out of curiosity, how do you get the PHY model
-> from u-boot or userland?
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../clock/renesas,rcar-gen2-cpg-clocks.txt         |  32 ++++
+ drivers/clk/shmobile/Makefile                      |   5 +-
+ drivers/clk/shmobile/clk-rcar-gen2.c               | 187 +++++++++++++++++++++
+ include/linux/clk/shmobile.h                       |  19 +++
+ 4 files changed, 242 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+ create mode 100644 drivers/clk/shmobile/clk-rcar-gen2.c
+ create mode 100644 include/linux/clk/shmobile.h
 
-If it is 88e1318 the compatible is "marvell,88e1318" then. I usually
-look at u-boot messages which sometimes reveal the PHY used. If that
-is not sufficient, you can read PHY ID 1/2 (SMI address 2 and 3)
-registers and go looking for model numbers.
+diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+new file mode 100644
+index 0000000..f85a0ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+@@ -0,0 +1,32 @@
++* Renesas R-Car Gen2 Clock Pulse Generator (CPG)
++
++The CPG generates core clocks for the R-Car Gen2 SoCs. It includes three PLLs
++and several fixed ratio dividers.
++
++Required Properties:
++
++  - compatible: Must be one of
++    - "renesas,r8a7790-cpg-clocks" for the r8a7790 CPG
++    - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
++    - "renesas,rcar-gen2-cpg-clocks" for the generic R-Car Gen2 CPG
++
++  - reg: Base address and length of the memory resource used by the CPG
++
++  - clocks: Reference to the parent clock
++  - #clock-cells: Must be 1
++  - clock-output-names: The names of the clocks. Supported clocks are "main",
++    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0" and "sd1".
++
++
++Example
++-------
++
++	cpg_clocks: cpg_clocks@e6150000 {
++		compatible = "renesas,r8a7790-cpg-clocks",
++			     "renesas,rcar-gen2-cpg-clocks";
++		reg = <0 0xe6150000 0 0x1000>;
++		clocks = <&extal_clk>;
++		#clock-cells = <1>;
++		clock-output-names = "main", "pll0, "pll1", "pll3",
++				     "lb", "qspi", "sdh", "sd0", "sd1";
++	};
+diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
+index 2240730..40d88e6 100644
+--- a/drivers/clk/shmobile/Makefile
++++ b/drivers/clk/shmobile/Makefile
+@@ -1,3 +1,6 @@
+-obj-$(CONFIG_ARCH_EMEV2)	+= clk-emev2.o
++obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
++obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
++obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
++
+ # for emply built-in.o
+ obj-n	:= dummy
+diff --git a/drivers/clk/shmobile/clk-rcar-gen2.c b/drivers/clk/shmobile/clk-rcar-gen2.c
+new file mode 100644
+index 0000000..1d309f0
+--- /dev/null
++++ b/drivers/clk/shmobile/clk-rcar-gen2.c
+@@ -0,0 +1,187 @@
++/*
++ * rcar_gen2 Core CPG Clocks
++ *
++ * Copyright (C) 2013  Ideas On Board SPRL
++ *
++ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/clk/shmobile.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/spinlock.h>
++
++struct rcar_gen2_cpg {
++	struct clk_onecell_data data;
++	spinlock_t lock;
++	void __iomem *reg;
++};
++
++/*
++ *   MD		EXTAL		PLL0	PLL1	PLL3
++ * 14 13 19	(MHz)		*1	*1
++ *---------------------------------------------------
++ * 0  0  0	15 x 1		x172/2	x208/2	x106
++ * 0  0  1	15 x 1		x172/2	x208/2	x88
++ * 0  1  0	20 x 1		x130/2	x156/2	x80
++ * 0  1  1	20 x 1		x130/2	x156/2	x66
++ * 1  0  0	26 / 2		x200/2	x240/2	x122
++ * 1  0  1	26 / 2		x200/2	x240/2	x102
++ * 1  1  0	30 / 2		x172/2	x208/2	x106
++ * 1  1  1	30 / 2		x172/2	x208/2	x88
++ *
++ * *1 :	Table 7.6 indicates VCO ouput (PLLx = VCO/2)
++ */
++#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 12) | \
++					 (((md) & BIT(13)) >> 12) | \
++					 (((md) & BIT(19)) >> 19))
++struct cpg_pll_config {
++	unsigned int extal_div;
++	unsigned int pll1_mult;
++	unsigned int pll3_mult;
++};
++
++static const struct cpg_pll_config cpg_pll_configs[8] __initconst = {
++	{ 1, 208, 106 }, { 1, 208,  88 }, { 1, 156,  80 }, { 1, 156,  66 },
++	{ 2, 240, 122 }, { 2, 240, 102 }, { 2, 208, 106 }, { 2, 208,  88 },
++};
++
++/* SDHI divisors */
++static const struct clk_div_table cpg_sdh_div_table[] = {
++	{  0,  2 }, {  1,  3 }, {  2,  4 }, {  3,  6 },
++	{  4,  8 }, {  5, 12 }, {  6, 16 }, {  7, 18 },
++	{  8, 24 }, { 10, 36 }, { 11, 48 }, {  0,  0 },
++};
++
++static const struct clk_div_table cpg_sd01_div_table[] = {
++	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
++	{ 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
++};
++
++#define CPG_SDCKCR			0x00000074
++#define CPG_PLL0CR			0x000000d8
++
++static u32 cpg_mode __initdata;
++
++static struct clk * __init
++rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
++			     const struct cpg_pll_config *config,
++			     const char *name)
++{
++	const struct clk_div_table *table = NULL;
++	const char *parent_name = "main";
++	unsigned int shift;
++	unsigned int mult = 1;
++	unsigned int div = 1;
++
++	if (!strcmp(name, "main")) {
++		parent_name = of_clk_get_parent_name(np, 0);
++		div = config->extal_div;
++	} else if (!strcmp(name, "pll0")) {
++		/* PLL0 is a configurable multiplier clock. Register it as a
++		 * fixed factor clock for now as there's no generic multiplier
++		 * clock implementation and we currently have no need to change
++		 * the multiplier value.
++		 */
++		u32 value = clk_readl(cpg->reg + CPG_PLL0CR);
++		mult = ((value >> 24) & ((1 << 7) - 1)) + 1;
++	} else if (!strcmp(name, "pll1")) {
++		mult = config->pll1_mult / 2;
++	} else if (!strcmp(name, "pll3")) {
++		mult = config->pll3_mult;
++	} else if (!strcmp(name, "lb")) {
++		div = cpg_mode & BIT(18) ? 36 : 24;
++	} else if (!strcmp(name, "qspi")) {
++		div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
++		    ? 16 : 20;
++	} else if (!strcmp(name, "sdh")) {
++		table = cpg_sdh_div_table;
++		shift = 8;
++	} else if (!strcmp(name, "sd0")) {
++		table = cpg_sd01_div_table;
++		shift = 4;
++	} else if (!strcmp(name, "sd0")) {
++		table = cpg_sd01_div_table;
++		shift = 0;
++	} else {
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!table)
++		return clk_register_fixed_factor(NULL, name, parent_name, 0,
++						 mult, div);
++	else
++		return clk_register_divider_table(NULL, name, parent_name, 0,
++						 cpg->reg + CPG_SDCKCR, shift,
++						 4, 0, table, &cpg->lock);
++}
++
++static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
++{
++	const struct cpg_pll_config *config;
++	struct rcar_gen2_cpg *cpg;
++	struct clk **clks;
++	unsigned int i;
++	int num_clks;
++
++	num_clks = of_property_count_strings(np, "clock-output-names");
++	if (num_clks < 0) {
++		pr_err("%s: failed to count clocks\n", __func__);
++		return;
++	}
++
++	cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
++	clks = kzalloc(num_clks * sizeof(*clks), GFP_KERNEL);
++	if (cpg == NULL || clks == NULL) {
++		/* We're leaking memory on purpose, there's no point in cleaning
++		 * up as the system won't boot anyway.
++		 */
++		pr_err("%s: failed to allocate cpg\n", __func__);
++		return;
++	}
++
++	spin_lock_init(&cpg->lock);
++
++	cpg->data.clks = clks;
++	cpg->data.clk_num = num_clks;
++
++	cpg->reg = of_iomap(np, 0);
++	if (WARN_ON(cpg->reg == NULL))
++		return;
++
++	config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
++
++	for (i = 0; i < num_clks; ++i) {
++		const char *name;
++		struct clk *clk;
++
++		of_property_read_string_index(np, "clock-output-names", i,
++					      &name);
++
++		clk = rcar_gen2_cpg_register_clock(np, cpg, config, name);
++		if (IS_ERR(clk))
++			pr_err("%s: failed to register %s %s clock (%ld)\n",
++			       __func__, np->name, name, PTR_ERR(clk));
++		else
++			cpg->data.clks[i] = clk;
++	}
++
++	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
++}
++CLK_OF_DECLARE(rcar_gen2_cpg_clks, "renesas,rcar-gen2-cpg-clocks",
++	       rcar_gen2_cpg_clocks_init);
++
++void __init rcar_gen2_clocks_init(u32 mode)
++{
++	cpg_mode = mode;
++
++	of_clk_init(NULL);
++}
+diff --git a/include/linux/clk/shmobile.h b/include/linux/clk/shmobile.h
+new file mode 100644
+index 0000000..f9bf080
+--- /dev/null
++++ b/include/linux/clk/shmobile.h
+@@ -0,0 +1,19 @@
++/*
++ * Copyright 2013 Ideas On Board SPRL
++ *
++ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __LINUX_CLK_SHMOBILE_H_
++#define __LINUX_CLK_SHMOBILE_H_
++
++#include <linux/types.h>
++
++void rcar_gen2_clocks_init(u32 mode);
++
++#endif
+-- 
+1.8.1.5
 
->>> +
->>> +	clocks {
->>> +	       #address-cells = <1>;
->>> +	       #size-cells = <0>;
->>
->> Your nodes below neither have a reg property nor can they be
->> addressed in any way.
->
-> I think I do not understand that comment. Can you clarify, possibly w/
-> an example of you think is wrong and how it could be corrected?
-
-Above two properties define that reg properties below "clocks" node
-have 1 address cell and no size. As it is usually just an unsorted list
-of oscillators and clock generators and no "bus", there is no
-"addressing" of that devices.
-
-No addressing, no reg property, no #address-cells/#size-cells required.
-
-Sebastian
-
->> Both properties above are not required, so please remove them.
->>
->>> +	       g762_clk: fixedclk {
->>
->> s/fixedclk/oscillator/ ?
->>
->>> +			 compatible = "fixed-clock";
->>> +			 #clock-cells = <0>;
->>> +			 clock-frequency = <32768>;
->>> +	       };
->>> +	};
->>> +
->
-> Something like the following?
->
->          clocks {
->                 g762_clk: oscillator {
->                           compatible = "fixed-clock";
->                           #clock-cells = <0>;
->                           clock-frequency = <32768>;
->                 };
->          };
->
-> I think I could then backport that change to all readynas .dts and
-> the Documentation/devicetree/bindings/hwmon/g762.txt at some point.
-
-Ah, it is just a name. No need to backport this.
-
->>> +	gpio_leds {
->>> +		compatible = "gpio-leds";
->>> +		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
->>> +			     &sata3_led_pin &sata4_led_pin>;
->>> +		pinctrl-names = "default";
->>> +
->>> +		red_sata1_led {
->>> +			label = "rn2120:red:sata1";
->>> +			gpios = <&gpio0 31 0>;   /* GPIO 31 Active High */
->>
->> You can
->>
->> #include <dt-bindings/gpio/gpio.h>
->>
->> then use
->>
->> gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>
->>
->> and get rid of the comments.
->
-> ok, will do.
->
->
->>> +			default-state = "off";
->>> +		};
->>> +
->>> +		red_sata2_led {
->>> +			label = "rn2120:red:sata2";
->>> +			gpios = <&gpio1 8 0>;   /* GPIO 40 Active High */
->>> +			default-state = "off";
->>> +		};
->>> +
->>> +		red_sata3_led {
->>> +			label = "rn2120:red:sata3";
->>> +			gpios = <&gpio1 12 0>;   /* GPIO 44 Active High */
->>> +			default-state = "off";
->>> +		};
->>> +
->>> +		red_sata4_led {
->>> +			label = "rn2120:red:sata4";
->>> +			gpios = <&gpio1 15 0>;   /* GPIO 47 Active High */
->>> +			default-state = "off";
->>> +		};
->>> +
->>> +		red_err_led {
->>> +			label = "rn2120:red:err";
->>> +			gpios = <&gpio1 13 1>;   /* GPIO 45 Active Low */
->>> +			default-state = "off";
->>> +		};
->>> +	};
->>> +
->>> +	gpio_keys {
->>> +		compatible = "gpio-keys";
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>
->> Again, no addressing of those buttons possible.
->>
->>> +		pinctrl-0 = <&power_key_pin
->>> +			     &reset_key_pin>;
->>> +		pinctrl-names = "default";
->>> +
->>> +		button@1 {
->>
->> Instead of button@n you can name the nodes after their function,
->> e.g. power_button, reset_button, ...
->
-> ok, will change that.
->
->> I know both comments above are in the current binding documentation
->> (at least for gpio-keys-polled.txt, there is no gpio-keys.txt); but
->> IMHO both "bus-like" structure of gpio_keys and numbering of buttons
->> just looks so wrong.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
