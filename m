@@ -1,108 +1,82 @@
-From: Chris Packham <judge.packham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Fwd: fdtdump and libfdt SEGV with corrupt file
-Date: Mon, 11 Nov 2013 09:55:29 +1300
-Message-ID: <CAFOYHZAVAWpaQnKMVD+EqV+FkvxzHbu-UxNqqQ6PExKd0a2Pyg@mail.gmail.com>
-References: <CAFOYHZDmxB-EN9qG0B_tNK6XyQdLS_3G=_TGoo1psPKFi-Ht-A@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 00/31] Armada 370/XP NAND support
+Date: Sun, 10 Nov 2013 20:24:07 -0300
+Message-ID: <20131110232406.GB15892@localhost>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFOYHZDmxB-EN9qG0B_tNK6XyQdLS_3G=_TGoo1psPKFi-Ht-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383837455-30721-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(resend to updated list address)
+Hello,
 
-Hi,
+On Thu, Nov 07, 2013 at 12:17:04PM -0300, Ezequiel Garcia wrote:
+> Another version of the Armada 370/XP SoCs v3 patchset, addressing
+> all the feedback provided by Brian Norris.
+>=20
+> Please see Documentation/mtd/nand/pxa3xx-nand.txt for specific detail=
+s
+> about the controller and the driver.
+>=20
+> Just as the last version, the bad block factory initial detection iss=
+ue
+> is not addressed by this patchset, but support for it will be added i=
+n
+> a near future once we decide the proper roadmap. See here the discuss=
+ion
+> about it:
+>=20
+>   http://permalink.gmane.org/gmane.linux.drivers.mtd/49401
+>=20
+> As usual patches 1-4, adding the clock infrastructure have already be=
+en merged
+> and will be dropped once this series can be based on v3.13-rc1.
+> I'm including them just for completeness.
+>=20
+> Based in l2-mtd's master branch. Also, I've pushed a branch to our gi=
+thub
+> in case anyone wants to test it:
+>=20
+>   https://github.com/MISL-EBU-System-SW/mainline-public/tree/l2-mtd/u=
+pstream-nand-v4
+>=20
+> As per Jason Cooper's suggestion I'm Ccing devicetree mailing list, t=
+o get a review
+> on the small binding changes this patchset contains. If the devicetre=
+e people wants
+> us to just Cc you on the relevant patches, just let us know.
+>=20
+> Of course, there's some room for improvements in this driver, and I'l=
+l probably
+> continue working on it. However, for now I'd like to focus in adding =
+the strict
+> minimum amount of changes required to support the new SoC family and =
+pospone any
+> improvements.
+>=20
 
-Four our embedded device we use a FIT[1] image to encapsulate our
-kernel, initrd etc. We use libfdt to do some verification on an image
-before it is installed.
+After some powering issues, I could boot my PXA3xx board (CM-X300 from
+Compulab) and I've tested this patchset on it. In other words: no
+regression on PXA! both DMA and non-DMA works.
 
-With a particular corrupt file we're seeing the following crash from
-our application using libfdt (hopefully gmail doesn't munge the
-formatting too much).
+Daniel: feel free to confirm my check, but it's no longer required,
+in case you are too busy at the moment. I'll be able to test your
+dmaengine work on this board, so feel free to Cc me on it.
 
-Program terminated with signal 11, Segmentation fault.
-#0  0x0f7b1108 in _IO_acquire_lock_fct (fp=<value optimized out>) at
-../libio/libioP.h:940
-        in ../libio/libioP.h
---------------------------------------------------------------------------------
-Thread Information:
-* 1 Thread 6922  0x0f7b1108 in strlen () from /lib/libc.so.6
---------------------------------------------------------------------------------
-Current Thread Local Variables:
-No symbol table info available.
---------------------------------------------------------------------------------
-Thread Backtraces:
-Thread 1 (Thread 6922):
-#0  0x0f7b1108 in strlen () from /lib/libc.so.6
-#1  0x0fe741f0 in _fdt_string_eq (fdt=0x3002e000, offset=8,
-name=0xfe753d2 "target", namelen=6, lenp=0x7fa41358) at
-libfdt/fdt_ro.c:88
-#2  fdt_get_property_namelen (fdt=0x3002e000, offset=8, name=0xfe753d2
-"target", namelen=6, lenp=0x7fa41358) at libfdt/fdt_ro.c:274
-#3  0x0fe742a0 in fdt_get_property (fdt=0x3002e000, nodeoffset=<value
-optimized out>, name=<value optimized out>, lenp=0x7fa41358) at
-libfdt/fdt_ro.c:288
-...
-(note dtc-v1.3.0 was being used for the above crash but the same
-problem exists with dtc-v1.4.0)
-
-Looking at the code I think this problem is related to _fdt_string_eq
-doing the strlen on the data before the memcmp which would have
-terminated early. I could fix my problem by reversing the calls to
-strlen and memcmp but I suspect that would only mask harder to find
-problems.
-
-When I run fdtdump on the file I get a different crash
-
-Program terminated with signal 11, Segmentation fault.
-#0  0x0ff02108 in _IO_acquire_lock_fct (fp=<value optimized out>) at
-../libio/libioP.h:940
-        in ../libio/libioP.h
---------------------------------------------------------------------------------
-Thread Information:
-* 1 Thread 5448  0x0ff02108 in strlen () from /lib/libc.so.6
---------------------------------------------------------------------------------
-Current Thread Local Variables:
-No symbol table info available.
---------------------------------------------------------------------------------
-Thread Backtraces:
-Thread 1 (Thread 5448):
-#0  0x0ff02108 in strlen () from /lib/libc.so.6
-#1  0x0feccae8 in _IO_vfprintf_internal (s=0xffc48f8,
-format=0x100022b9 "%*s%s", ap=0x7fceecb8) at vfprintf.c:1629
-#2  0x0ff5dff0 in ___printf_chk (flag=1, format=0x100022b9 "%*s%s") at
-printf_chk.c:36
-#3  0x10000f20 in printf (argc=<value optimized out>, argv=<value
-optimized out>)
-    at /usr/include/bits/stdio2.h:104
-#4  dump_blob (argc=<value optimized out>, argv=<value optimized out>)
-at fdtdump.c:140
-#5  main (argc=<value optimized out>, argv=<value optimized out>) at
-fdtdump.c:224
-
-Similar problem with an unbounded string. In this case I can't think
-of an easy fix.
-
-The corrupt file is around 16MB so I won't post it. I will see if I
-can come up with a shorter file that shows the same problem.
-
-Any thoughts on how to detect this corruption and/or avoid the
-crashes? We're calling fdt_check_header to catch invalid files but the
-corrupt file passes this check.
-
-Thanks,
-Chris
-
-P.S. Is there a tarball release for v1.4.0?
-http://www.jdl.com/software/ only goes up to v1.3.0.
-
+Big thanks to Compulab for sending me the board, and specially
+to Igor and Nikita!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-[1] - http://git.denx.de/cgi-bin/gitweb.cgi?p=u-boot.git;a=blob;f=doc/uImage.FIT/howto.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
