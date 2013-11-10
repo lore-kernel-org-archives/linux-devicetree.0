@@ -1,73 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Sun, 10 Nov 2013 04:33:40 +0100
-Message-ID: <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Sun, 10 Nov 2013 07:51:46 +0200
+Message-ID: <20131110055145.GA7947@chokladfabriken.org>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+Content-Disposition: inline
+In-Reply-To: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, Kevin Mehall <contact@kevinmehall.net>, linux-kernel@vger.kernel.org, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the sci serial port devices.
+On Sat, Nov 09, 2013 at 09:37:31PM +0100, Geert Uytterhoeven wrote:
+> Add a DTS and defconfig for the Terasic DE0-Nano Development and Education
+> Board running ORPSoC.  This board contains an Altera Cyclone IV FPGA with
+> support chips and I/O.
+> 
+> The DTS was derived from published versions by Kevin Mehall and Marek
+> Czerski.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
----
- .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+To give credit where credit is due, this was created by:
+Gong Tao <gongtao0607@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-new file mode 100644
-index 0000000..66d3bca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -0,0 +1,42 @@
-+* Renesas SH-Mobile Serial Communication Interface
-+
-+Required properties:
-+
-+  - compatible: one of the following types (scif, scifa, scifb, hscif).
-+
-+    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-+    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
-+    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
-+    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
-+    - "renesas,scif-generic" for generic SCIF compatible UART.
-+    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-+    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-+    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-+
-+    When compatible with the generic version, nodes must also list the
-+    SoC-specific version corresponding to the platform.
-+
-+  - reg: Base address and length of the memory resource used by the UART.
-+
-+  - interrupt-parent: Reference to the parent interrupt controller.
-+  - interrupts: Interrupt number.
-+
-+  - clocks: Reference to the SCIx UART interface clock.
-+  - clock-names: Should be "sci_ick".
-+
-+Note: Each enabled SCIx UART should have an alias correctly numbered in the
-+"aliases" node.
-+
-+Example:
-+	aliases {
-+		serial0 = &scifa0;
-+	};
-+
-+	scifa0: serial@e6c40000 {
-+		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-+		reg = <0 0xe6c40000 0 64>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 144 4>;
-+		clocks = <&mstp2_clks 4>;
-+		clock-names = "sci_ick";
-+	};
--- 
-1.8.1.5
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Kevin Mehall <contact@kevinmehall.net>
+> Cc: Marek Czerski <ma.czerski@gmail.com>
+> ---
+> Notable changes:
+>   - Change flash0 to spansion,s25sl064p, due to kernel message
+>     m25p80 spi32766.0: found s25sl064p, expected m25p10
 
+This is due to Altera changing the EPCS chip on newer revisions
+of that board, older versions are "relabeled" m25p10 and
+newer once s25sl064p.
+The change is fine though, you have to pick one.
+
+Stefan
