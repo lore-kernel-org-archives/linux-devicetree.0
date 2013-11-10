@@ -1,121 +1,49 @@
-From: Bharat Bhushan <Bharat.Bhushan@freescale.com>
-Subject: RE: [PATCH v4 1/4] dma: imx-sdma: Add sdma firmware version 2
- support
-Date: Sun, 10 Nov 2013 06:57:08 +0000
-Message-ID: <6A3DF150A5B70D4F9B66A25E3F7C888D071EDFC5@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <cover.1383907685.git.b42378@freescale.com>
- <1524b725cecd208ad63741f0b7214d0039608ac0.1383907685.git.b42378@freescale.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Sun, 10 Nov 2013 09:15:33 +0100
+Message-ID: <20131110091533.463cabb2@skate>
+References: <87bo1tmibv.fsf@natisbad.org>
+	<527ECBDD.7050607@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1524b725cecd208ad63741f0b7214d0039608ac0.1383907685.git.b42378@freescale.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Guangyu Chen <guangyu.chen@freescale.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "timur@tabi.org" <timur@tabi.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <527ECBDD.7050607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Sebastian Hesselbarth,
 
+On Sun, 10 Nov 2013 00:57:17 +0100, Sebastian Hesselbarth wrote:
 
-> -----Original Message-----
-> From: Linuxppc-dev [mailto:linuxppc-dev-
-> bounces+bharat.bhushan=freescale.com@lists.ozlabs.org] On Behalf Of Nicolin Chen
-> Sent: Friday, November 08, 2013 4:20 PM
-> To: vinod.koul@intel.com; dan.j.williams@intel.com; s.hauer@pengutronix.de;
-> timur@tabi.org; shawn.guo@linaro.org; broonie@kernel.org
-> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org; alsa-devel@alsa-
-> project.org; pawel.moll@arm.com; linux-doc@vger.kernel.org;
-> swarren@wwwdotorg.org; linux-kernel@vger.kernel.org; rob.herring@calxeda.com;
-> dmaengine@vger.kernel.org; ijc+devicetree@hellion.org.uk; linuxppc-
-> dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org
-> Subject: [PATCH v4 1/4] dma: imx-sdma: Add sdma firmware version 2 support
+> >   arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 289 +++++++++++++++++++++++++
 > 
-> On i.MX5/6 series, SDMA is using new version firmware to support SSI dual FIFO
-> feature and HDMI Audio (i.MX6Q/DL only). Thus add it.
+> Arnaud,
 > 
-> Signed-off-by: Nicolin Chen <b42378@freescale.com>
-> ---
->  drivers/dma/imx-sdma.c                     | 15 ++++++++++++++-
->  include/linux/platform_data/dma-imx-sdma.h |  5 +++++
->  2 files changed, 19 insertions(+), 1 deletion(-)
+> thanks for providing this! I do have some comments below.
 > 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
-> fc43603..c7ece8d 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -323,6 +323,7 @@ struct sdma_engine {
->  	struct clk			*clk_ipg;
->  	struct clk			*clk_ahb;
->  	spinlock_t			channel_0_lock;
-> +	u32				script_number;
->  	struct sdma_script_start_addrs	*script_addrs;
->  	const struct sdma_driver_data	*drvdata;
->  };
-> @@ -1238,6 +1239,7 @@ static void sdma_issue_pending(struct dma_chan *chan)  }
+> we recently had a discussion about the naming of new DTS files, which
+> proposes to name those after vendor,board.dts (or vendor-board.dts).
 > 
->  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
-> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
-> 
->  static void sdma_add_scripts(struct sdma_engine *sdma,
->  		const struct sdma_script_start_addrs *addr) @@ -1246,7 +1248,7 @@
-> static void sdma_add_scripts(struct sdma_engine *sdma,
->  	s32 *saddr_arr = (u32 *)sdma->script_addrs;
->  	int i;
-> 
-> -	for (i = 0; i < SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1; i++)
-> +	for (i = 0; i < sdma->script_number; i++)
->  		if (addr_arr[i] > 0)
->  			saddr_arr[i] = addr_arr[i];
->  }
-> @@ -1272,6 +1274,17 @@ static void sdma_load_firmware(const struct firmware *fw,
-> void *context)
->  		goto err_firmware;
->  	if (header->ram_code_start + header->ram_code_size > fw->size)
->  		goto err_firmware;
-> +	switch (header->version_major) {
-> +		case 1:
-> +			sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
-> +			break;
-> +		case 2:
-> +			sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2;
-> +			break;
-> +		default:
-> +			dev_err(sdma->dev, "unknown firmware version\n");
-> +			return;
+> I personally prefer vendor,board.dts which would give
+> netgear,readynas-2120.dts based on your compatible below.
+> The final call for ',' vs '-' has not been made, so I  suggest Jason
+> makes a call here.
 
-Why return and not "goto err_firmware" ?
+Hum, do we really want that? The current naming scheme is really,
+really great, because whenever you want to grep through all Armada
+370/XP DTS, you just have to use armada-*, for all Kirkwood,
+kirkwood-*. I've found this very very convenient to verify the
+coherency between .dts/.dtsi for a given family of SoCs.
 
--Bharat
-
-> +	}
-> 
->  	addr = (void *)header + header->script_addrs_start;
->  	ram_code = (void *)header + header->ram_code_start; diff --git
-> a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-
-> imx-sdma.h
-> index 3a39428..eabac4e 100644
-> --- a/include/linux/platform_data/dma-imx-sdma.h
-> +++ b/include/linux/platform_data/dma-imx-sdma.h
-> @@ -43,6 +43,11 @@ struct sdma_script_start_addrs {
->  	s32 dptc_dvfs_addr;
->  	s32 utra_addr;
->  	s32 ram_code_start_addr;
-> +	/* End of v1 array */
-> +	s32 mcu_2_ssish_addr;
-> +	s32 ssish_2_mcu_addr;
-> +	s32 hdmi_dma_addr;
-> +	/* End of v2 array */
->  };
-> 
->  /**
-> --
-> 1.8.4
-> 
-> 
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
-
-
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
