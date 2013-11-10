@@ -1,47 +1,67 @@
 From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] hwmon: ntc_thermistor: Fix typo (pullup-uV -> pullup-uv)
-Date: Sun, 10 Nov 2013 19:18:11 +0100
-Message-ID: <1404489.sfyjHCEcVN@flatron>
-References: <1382492690-4056-1-git-send-email-cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
+Date: Sun, 10 Nov 2013 20:06:45 +0100
+Message-ID: <1646520.A0KuNSviNZ@flatron>
+References: <1383806575-28401-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1382492690-4056-1-git-send-email-cw00.choi@samsung.com>
+In-Reply-To: <1383806575-28401-1-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, kgene.kim@samsung.com, jic23@kernel.org, ch.naveen@samsung.com, dianders@chromium.org, lars@metafoo.de, sachin.kamat@linaro.org, kyungmin.park@samsung.com
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, Prathyush K <prathyush.k@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Sachin,
 
-On Wednesday 23 of October 2013 10:44:50 Chanwoo Choi wrote:
-> This patch fix typo of property name from 'pullup-uV' to 'pullup-uv'.
-> The ntc_thermistor.c use 'pullup-uv' when parsing dt data.
+On Thursday 07 of November 2013 12:12:55 Sachin Kamat wrote:
+> From: Prathyush K <prathyush.k@samsung.com>
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Different power domains of Exynos SOCs have different enable values.
+> E.g. Exynos5250:
+> ROTATOR_MEM_CONFIGURATION -> 0x3
+> GSCL_CONFIGURATION -> 0x7
+> Currently, there is no way to differentiate between these power domains
+> and we write default value of 0x7 to turn on all the power domains.
+> 
+> This patch adds a new 'enable' property to the power domain structure.
+> This enable value can be set from the device tree by adding a property
+> 'enable' in the device node. If no such property is found, the default
+> value of 0x7 is used as enable value.
+
+Is this patch really needed? Is there any problem with simply using 0x7?
+Patch description should always include rationale behind the change.
+
+> 
+> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > ---
->  Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/arm/exynos/power_domain.txt           |    5 +++++
+>  arch/arm/mach-exynos/pm_domains.c                  |   10 +++++++---
+>  2 files changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> index 47ada1d..5d49f2b 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> @@ -49,7 +49,7 @@ adc@12D10000 {
->  	/* NTC thermistor is a hwmon device */
->  	ncp15wb473@0 {
->  		compatible = "ntc,ncp15wb473";
-> -		pullup-uV = <1800000>;
-> +		pullup-uv = <1800000>;
->  		pullup-ohm = <47000>;
->  		pulldown-ohm = <0>;
->  		io-channels = <&adc 4>;
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> index 5216b419016a..6b24b234617c 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> @@ -9,6 +9,10 @@ Required Properties:
+>  - reg: physical base address of the controller and length of memory mapped
+>      region.
+>  
+> +Optional Properties:
+> +- enable: enable value of the register which is used to turn on the power
+> +    domain. If no enable is specificed, default value of 0x7 is used.
 
-Good catch.
+Vendor-specific properties should have vendor prefix added, so this one
+should be called samsung,enable instead. Also enable is not a very
+specific name.
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+So in the end, if it turns out that we really need such patch, I'd prefer
+something like:
+
+- samsung,enable-bit-mask: Mask of power control register bits that need
+    to be set to enable the power domain. If omitted, it defaults to 0x7.
 
 Best regards,
 Tomasz
