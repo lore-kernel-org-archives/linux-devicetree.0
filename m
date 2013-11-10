@@ -1,173 +1,159 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 0/32] Add additional sandbox features and infrastructure
-Date: Sun, 10 Nov 2013 10:26:46 -0700
-Message-ID: <1384104439-27026-1-git-send-email-sjg@chromium.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 1/4] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Sun, 10 Nov 2013 18:31:49 +0100
+Message-ID: <1386219.GXasjtEjtS@flatron>
+References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com> <1383811969-32712-2-git-send-email-v.tyrtov@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagannadha Sutradharudu Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vadim Bendebury <vbendeb-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jagannadha Sutradharudu Teki <jaganna-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383811969-32712-2-git-send-email-v.tyrtov@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-At present sandbox only supports a basic set of features. To help addre=
-ss
-this, a recent series added SPI and SPI flash support; this series expa=
-nds
-the coverage further.
+Hi,
 
-=46irstly SDL is used to provide LCD and audio support. Sandbox gains i=
-ts own
-LCD driver which can display images, host a command line, etc. The audi=
-o
-support is basic and needs additional work, but it is a starting point.
-SDL also provides a keyboard emulation (using the Chrome OS EC code as =
-a
-base).
+On Thursday 07 of November 2013 12:12:46 Vyacheslav Tyrtov wrote:
+> From: Tarek Dakhran <t.dakhran@samsung.com>
+> 
+> EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+> Add initial support for this SoC.
 
-Secondly a TPM emulation is added. This does not include all features (=
-the
-implementation is quite simplistic) but it is enough to do basic secure
-boot operations.
+In general the patch looks pretty good, however there are several things
+that I overlooked when reviewing previous revision. I have pointed them
+inline.
 
-=46inally, various pieces of useful infrastructure are adding, includin=
-g:
+> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+> ---
+>  arch/arm/mach-exynos/Kconfig             | 12 ++++++++++++
+>  arch/arm/mach-exynos/common.c            | 18 ++++++++++++++++++
+>  arch/arm/mach-exynos/include/mach/map.h  |  1 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c   |  1 +
+>  arch/arm/plat-samsung/include/plat/cpu.h |  8 ++++++++
+>  5 files changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 56fe819..9ea1799 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -84,6 +84,18 @@ config SOC_EXYNOS5250
+>  	help
+>  	  Enable EXYNOS5250 SoC support
+>  
+> +config SOC_EXYNOS5410
+> +	bool "SAMSUNG EXYNOS5410"
+> +	default y
+> +	depends on ARCH_EXYNOS5
+> +	select MCPM
 
-- loading and saving of the emulated SDRAM to permit test runs to carry
-over state
-- loading and saving of general sandbox state (for example a driver can
-save its stage and reload it on the next run)
-- support for using bootm to load a kernel
-- providing a device tree for use by sandbox
-- block device emulation using host files
-- a means to jump to another U-Boot while preserving state (useful for
-test environments which want to run a series of tests with
-script-selectable state)
-- allowing the console to be active on start-up so that errors are not
-silent supressed
+Please keep the selects sorted alphabetically.
 
-The block device emulation provides access to filesystems from sandbox
-which should make it possible to write comprehensive filesystem tests.
+> +	select ARM_CCI
+> +	select PM_GENERIC_DOMAINS if PM
 
-Major functions which still remain without sandbox support are I2C,
-networking and USB.
+Should be if PM_RUNTIME.
 
+> +	select S5P_PM if PM
+> +	select S5P_SLEEP if PM
 
-Che-Liang Chiou (1):
-  sandbox: tpm: Fix nvwrite command
+Both should be if PM_SLEEP.
 
-Henrik Nordstr=C3=B6m (1):
-  sandbox: block driver using host file/device as backing store
+> +	help
+> +	  Enable EXYNOS5410 SoC support
+> +
+>  config SOC_EXYNOS5420
+>  	bool "SAMSUNG EXYNOS5420"
+>  	default y
+> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+> index ba95e5d..187c0a4 100644
+> --- a/arch/arm/mach-exynos/common.c
+> +++ b/arch/arm/mach-exynos/common.c
+> @@ -53,6 +53,7 @@ static const char name_exynos4210[] = "EXYNOS4210";
+>  static const char name_exynos4212[] = "EXYNOS4212";
+>  static const char name_exynos4412[] = "EXYNOS4412";
+>  static const char name_exynos5250[] = "EXYNOS5250";
+> +static const char name_exynos5410[] = "EXYNOS5410";
+>  static const char name_exynos5420[] = "EXYNOS5420";
+>  static const char name_exynos5440[] = "EXYNOS5440";
+>  
+> @@ -86,6 +87,12 @@ static struct cpu_table cpu_ids[] __initdata = {
+>  		.init		= exynos_init,
+>  		.name		= name_exynos5250,
+>  	}, {
+> +		.idcode		= EXYNOS5410_SOC_ID,
+> +		.idmask		= EXYNOS5_SOC_MASK,
+> +		.map_io		= exynos5_map_io,
+> +		.init		= exynos_init,
+> +		.name		= name_exynos5410,
+> +	}, {
+>  		.idcode		= EXYNOS5420_SOC_ID,
+>  		.idmask		= EXYNOS5_SOC_MASK,
+>  		.map_io		= exynos5_map_io,
+> @@ -216,6 +223,15 @@ static struct map_desc exynos4x12_iodesc[] __initdata = {
+>  	},
+>  };
+>  
+> +static struct map_desc exynos5410_iodesc[] __initdata = {
+> +	{
+> +		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> +		.pfn		= __phys_to_pfn(EXYNOS5410_PA_SYSRAM_NS),
+> +		.length		= SZ_4K,
+> +		.type		= MT_DEVICE,
+> +	},
+> +};
+> +
+>  static struct map_desc exynos5250_iodesc[] __initdata = {
+>  	{
+>  		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> @@ -365,6 +381,8 @@ static void __init exynos5_map_io(void)
+>  
+>  	if (soc_is_exynos5250())
+>  		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
+> +	if (soc_is_exynos5410())
+> +		iotable_init(exynos5410_iodesc, ARRAY_SIZE(exynos5410_iodesc));
+>  }
+>  
+>  void __init exynos_init_time(void)
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index 7b046b5..894f431 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -29,6 +29,7 @@
+>  #define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
+>  #define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
+>  #define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
+> +#define EXYNOS5410_PA_SYSRAM_NS		0x02073000
+>  
+>  #define EXYNOS_PA_CHIPID		0x10000000
+>  
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index f874b77..9515186 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -52,6 +52,7 @@ static void __init exynos5_dt_machine_init(void)
+>  
+>  static char const *exynos5_dt_compat[] __initdata = {
+>  	"samsung,exynos5250",
+> +	"samsung,exynos5410",
+>  	"samsung,exynos5420",
+>  	"samsung,exynos5440",
+>  	NULL
+> diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
+> index 4fb1f03..aad7c40 100644
+> --- a/arch/arm/plat-samsung/include/plat/cpu.h
+> +++ b/arch/arm/plat-samsung/include/plat/cpu.h
+> @@ -46,6 +46,7 @@ extern unsigned long samsung_cpu_id;
+>  #define EXYNOS4_CPU_MASK	0xFFFE0000
+>  
+>  #define EXYNOS5250_SOC_ID	0x43520000
+> +#define EXYNOS5410_SOC_ID	0xE5410023
 
-Simon Glass (29):
-  Add crc8 routine
-  sandbox: Use system headers first for sandbox's os.c
-  sandbox: Use uint64_t instead of u64 for time
-  sandbox: Increase memory size to 32MB
-  sandbox: spi: Adjust 'sf test' to work on sandbox
-  sandbox: Build a device tree file for sandbox
-  sandbox: config: Don't use 64-bit physical memory
-  sandbox: Correct data sizes and printf() strings in fdtdec.c
-  sandbox: Use os functions to read host device tree
-  sandbox: Improve/augment memory allocation functions
-  sandbox: Correct help message <arg> garbling
-  sandbox: Allow return from board_init_f()
-  sandbox: Implement the bootm command for sandbox
-  sandbox: Allow the console to work earlier
-  sandbox: Add -i option to enter interactive mode
-  sandbox: Allow reading/writing of RAM buffer
-  sandbox: Add facility to save/restore sandbox state
-  sandbox: tpm: Add TPM emulation
-  sandbox: dts: Add display and keyboard to sandbox
-  sandbox: Add a prototype for cleanup_before_linux()
-  cros_ec: Add an enum for the number of flash regions
-  fdt: Add a function for reading a flash map entry
-  cros_ec: Add a function for decoding the Chrome OS EC flashmap
-  cros_ec: sandbox: Add Chrome OS EC emulation
-  sandbox: Add os_jump_to_image() to run another executable
-  sandbox: Add -j option to indicate a jump from a previous U-Boot
-  sandbox: Add SDL library for LCD, keyboard, audio
-  sandbox: Add a simple sound driver
-  sandbox: Add LCD driver
+Please mask out the revision bits, so they don't confuse potential readers
+of this code.
 
-Vadim Bendebury (1):
-  cros_ec: Move EC interface into common library
+Best regards,
+Tomasz
 
- Makefile                                      |   1 +
- arch/sandbox/config.mk                        |   7 +
- arch/sandbox/cpu/Makefile                     |  12 +-
- arch/sandbox/cpu/cpu.c                        |  21 +-
- arch/sandbox/cpu/os.c                         | 187 ++++++++-
- arch/sandbox/cpu/sdl.c                        | 334 +++++++++++++++
- arch/sandbox/cpu/start.c                      | 121 +++++-
- arch/sandbox/cpu/state.c                      | 353 ++++++++++++++++
- arch/sandbox/include/asm/arch-sandbox/sound.h |  14 +
- arch/sandbox/include/asm/global_data.h        |   2 +-
- arch/sandbox/include/asm/sdl.h                |  20 +
- arch/sandbox/include/asm/state.h              | 132 +++++-
- arch/sandbox/include/asm/types.h              |   4 +-
- arch/sandbox/include/asm/u-boot-sandbox.h     |   5 +
- board/samsung/smdk5250/exynos5-dt.c           |   5 -
- board/sandbox/dts/sandbox.dts                 |  91 +++++
- board/sandbox/sandbox/sandbox.c               |  19 +-
- common/Makefile                               |   1 +
- common/board_f.c                              |  63 ++-
- common/cmd_sandbox.c                          |  64 +++
- common/cmd_sf.c                               |  14 +-
- common/console.c                              |  16 +-
- common/cros_ec.c                              |  44 ++
- common/lcd.c                                  |  21 +-
- config.mk                                     |   9 +-
- disk/part.c                                   |  23 +-
- doc/device-tree-bindings/video/sandbox-fb.txt |  13 +
- drivers/block/Makefile                        |   1 +
- drivers/block/sandbox.c                       | 124 ++++++
- drivers/misc/Makefile                         |   1 +
- drivers/misc/cros_ec.c                        |  50 +++
- drivers/misc/cros_ec_sandbox.c                | 558 ++++++++++++++++++=
-++++++++
- drivers/serial/sandbox.c                      |   4 +
- drivers/sound/Makefile                        |   2 +
- drivers/sound/sandbox.c                       |  23 ++
- drivers/tpm/Makefile                          |   1 +
- drivers/tpm/tpm_tis_sandbox.c                 | 260 ++++++++++++
- drivers/video/Makefile                        |   1 +
- drivers/video/sandbox_sdl.c                   |  70 ++++
- include/config_fallbacks.h                    |   3 +-
- include/configs/sandbox.h                     |   9 +-
- include/cros_ec.h                             |  45 +++
- include/ec_commands.h                         |   4 +-
- include/fdtdec.h                              |  20 +
- include/lcd.h                                 |   3 +
- include/linux/crc8.h                          |  23 ++
- include/os.h                                  |  88 +++-
- include/part.h                                |   5 +
- include/sandboxblockdev.h                     |  18 +
- lib/Makefile                                  |   1 +
- lib/crc8.c                                    |  25 ++
- lib/fdtdec.c                                  |  34 +-
- 52 files changed, 2866 insertions(+), 103 deletions(-)
- create mode 100644 arch/sandbox/cpu/sdl.c
- create mode 100644 arch/sandbox/include/asm/arch-sandbox/sound.h
- create mode 100644 arch/sandbox/include/asm/sdl.h
- create mode 100644 board/sandbox/dts/sandbox.dts
- create mode 100644 common/cros_ec.c
- create mode 100644 doc/device-tree-bindings/video/sandbox-fb.txt
- create mode 100644 drivers/block/sandbox.c
- create mode 100644 drivers/misc/cros_ec_sandbox.c
- create mode 100644 drivers/sound/sandbox.c
- create mode 100644 drivers/tpm/tpm_tis_sandbox.c
- create mode 100644 drivers/video/sandbox_sdl.c
- create mode 100644 include/linux/crc8.h
- create mode 100644 include/sandboxblockdev.h
- create mode 100644 lib/crc8.c
-
---=20
-1.8.4.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
