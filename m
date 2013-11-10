@@ -1,106 +1,173 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH 20/32] sandbox: dts: Add display and keyboard to
-	sandbox
-Date: Sun, 10 Nov 2013 10:27:06 -0700
-Message-ID: <1384104439-27026-21-git-send-email-sjg@chromium.org>
-References: <1384104439-27026-1-git-send-email-sjg@chromium.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 4/4] ARM: dts: Add initial device tree support for EXYNOS5410
+Date: Sun, 10 Nov 2013 19:02:50 +0100
+Message-ID: <19495187.Nrl1zS8Kog@flatron>
+References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com> <1383811969-32712-5-git-send-email-v.tyrtov@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1384104439-27026-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree@vger.kernel.org>, u-boot-review@google.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1383811969-32712-5-git-send-email-v.tyrtov@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add an LCD display and keyboard to the sandbox device tree so that these
-features can be used.
+Hi,
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
- board/sandbox/dts/sandbox.dts | 62 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+Please see my comments inline.
 
-diff --git a/board/sandbox/dts/sandbox.dts b/board/sandbox/dts/sandbox.dts
-index 9d7700c..e380df2 100644
---- a/board/sandbox/dts/sandbox.dts
-+++ b/board/sandbox/dts/sandbox.dts
-@@ -26,4 +26,66 @@
- 		colour = "white";
- 		sides = <6>;
- 	};
-+
-+	lcd {
-+		compatible = "sandbox,lcd-sdl";
-+		xres = <800>;
-+		yres = <600>;
-+	};
-+
-+	cros-ec-keyb {
-+		compatible = "google,cros-ec-keyb";
-+		google,key-rows = <8>;
-+		google,key-columns = <13>;
-+		google,repeat-delay-ms = <240>;
-+		google,repeat-rate-ms = <30>;
-+		google,ghost-filter;
-+		/*
-+		 * Keymap entries take the form of 0xRRCCKKKK where
-+		 * RR=Row CC=Column KKKK=Key Code
-+		 * The values below are for a US keyboard layout and
-+		 * are taken from the Linux driver. Note that the
-+		 * 102ND key is not used for US keyboards.
-+		 */
-+		linux,keymap = <
-+			/* CAPSLCK F1         B          F10     */
-+			0x0001003a 0x0002003b 0x00030030 0x00040044
-+			/* N       =          R_ALT      ESC     */
-+			0x00060031 0x0008000d 0x000a0064 0x01010001
-+			/* F4      G          F7         H       */
-+			0x0102003e 0x01030022 0x01040041 0x01060023
-+			/* '       F9         BKSPACE    L_CTRL  */
-+			0x01080028 0x01090043 0x010b000e 0x0200001d
-+			/* TAB     F3         T          F6      */
-+			0x0201000f 0x0202003d 0x02030014 0x02040040
-+			/* ]       Y          102ND      [       */
-+			0x0205001b 0x02060015 0x02070056 0x0208001a
-+			/* F8      GRAVE      F2         5       */
-+			0x02090042 0x03010029 0x0302003c 0x03030006
-+			/* F5      6          -          \       */
-+			0x0304003f 0x03060007 0x0308000c 0x030b002b
-+			/* R_CTRL  A          D          F       */
-+			0x04000061 0x0401001e 0x04020020 0x04030021
-+			/* S       K          J          ;       */
-+			0x0404001f 0x04050025 0x04060024 0x04080027
-+			/* L       ENTER      Z          C       */
-+			0x04090026 0x040b001c 0x0501002c 0x0502002e
-+			/* V       X          ,          M       */
-+			0x0503002f 0x0504002d 0x05050033 0x05060032
-+			/* L_SHIFT /          .          SPACE   */
-+			0x0507002a 0x05080035 0x05090034 0x050B0039
-+			/* 1       3          4          2       */
-+			0x06010002 0x06020004 0x06030005 0x06040003
-+			/* 8       7          0          9       */
-+			0x06050009 0x06060008 0x0608000b 0x0609000a
-+			/* L_ALT   DOWN       RIGHT      Q       */
-+			0x060a0038 0x060b006c 0x060c006a 0x07010010
-+			/* E       R          W          I       */
-+			0x07020012 0x07030013 0x07040011 0x07050017
-+			/* U       R_SHIFT    P          O       */
-+			0x07060016 0x07070036 0x07080019 0x07090018
-+			/* UP      LEFT    */
-+			0x070b0067 0x070c0069>;
-+	};
-+
- };
--- 
-1.8.4.1
+On Thursday 07 of November 2013 12:12:49 Vyacheslav Tyrtov wrote:
+> From: Tarek Dakhran <t.dakhran@samsung.com>
+> 
+> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
+> 
+> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/exynos5410-smdk5410.dts |  65 ++++++++++
+>  arch/arm/boot/dts/exynos5410.dtsi         | 209 ++++++++++++++++++++++++++++++
+>  3 files changed, 275 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+>  create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+[snip]
+> diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+> new file mode 100644
+> index 0000000..06ae479
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+> @@ -0,0 +1,65 @@
+> +/*
+> + * SAMSUNG SMDK5410 board device tree source
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +/dts-v1/;
+> +#include "exynos5410.dtsi"
+> +/ {
+> +	model = "Samsung SMDK5410 board based on EXYNOS5410";
+> +	compatible = "samsung,smdk5410", "samsung,exynos5410";
+> +
+> +	memory {
+> +		reg = <0x40000000 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttySAC2,115200";
+> +	};
+> +
+> +	oscclk: oscclk {
+
+coding style: According to ePAPR recommendation, node name should
+represent hardware type, not particular instance of hardware.
+
+So instead, the preferred way would be to specify the clock using
+following layout:
+
+	clocks {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		oscclk: clock@0 {
+			compatible = "fixed-clock";
+			reg = <0>;
+			#clock-cells = <0>;
+			clock-frequency = <24000000>;
+			clock-output-names = "fin_pll";
+		};
+	};
+
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "fin_pll";
+> +	};
+[snip]
+> +
+> +};
+> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> new file mode 100644
+> index 0000000..9921b66
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> @@ -0,0 +1,209 @@
+> +/*
+> + * SAMSUNG EXYNOS5410 SoC device tree source
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * SAMSUNG EXYNOS5410 SoC device nodes are listed in this file.
+> + * EXYNOS5410 based board files can include this file and provide
+> + * values for board specfic bindings.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <dt-bindings/clock/exynos5410.h>
+> +#include "exynos5.dtsi"
+> +/ {
+[snip]
+> +	clock: clock-controller@10010000 {
+> +		compatible = "samsung,exynos5410-clock";
+> +		reg = <0x10010000 0x30000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	mct@101C0000 {
+
+A generic name would be: timer@101C0000
+
+> +		compatible = "samsung,exynos4210-mct";
+> +		reg = <0x101C0000 0xB00>;
+> +		interrupt-controller;
+> +		#interrups-cells = <1>;
+
+MCT is not an interrupt controller, so both interrupt-controller and
+#interrupt-cells properties are incorrect. I guess that's due to the
+broken example in the documentation, that I already posted patches to fix.
+
+> +		interrupt-parent = <&mct_map>;
+> +		interrupts = <0>, <1>, <2>, <3>,
+> +			<4>, <5>, <6>, <7>,
+> +			<8>, <9>, <10>, <11>;
+> +		clocks = <&oscclk>, <&clock CLK_MCT>;
+> +		clock-names = "fin_pll", "mct";
+> +
+> +		mct_map: mct-map {
+
+Again, interrupt-map would be a better name for this node.
+
+> +			#interrupt-cells = <1>;
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			interrupt-map = <0 &combiner 23 3>,
+> +					<1 &combiner 23 4>,
+> +					<2 &combiner 25 2>,
+> +					<3 &combiner 25 3>,
+> +					<4 &gic 0 120 0>,
+> +					<5 &gic 0 121 0>,
+> +					<6 &gic 0 122 0>,
+> +					<7 &gic 0 123 0>,
+> +					<8 &gic 0 128 0>,
+> +					<9 &gic 0 129 0>,
+> +					<10 &gic 0 130 0>,
+> +					<11 &gic 0 131 0>;
+> +		};
+> +	};
+
+Otherwise, the patch looks good.
+
+Best regards,
+Tomasz
+
