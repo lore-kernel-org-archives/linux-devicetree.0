@@ -1,100 +1,50 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] doc: devicetree: Add bindings documentation for
- omap-des driver
-Date: Mon, 11 Nov 2013 11:01:06 +0000
-Message-ID: <20131111110106.GC21201@e106331-lin.cambridge.arm.com>
-References: <1383871035-16608-1-git-send-email-joelf@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Mon, 11 Nov 2013 16:41:33 +0530
+Message-ID: <5280BB65.5040305@ti.com>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com> <1383205544-32244-2-git-send-email-gautam.vivek@samsung.com> <527744B2.4090303@ti.com> <030d01ced946$d6e23490$84a69db0$%debski@samsung.com> <52779D28.9000905@ti.com> <CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com> <00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com> <000001ceda17$f41c2030$dc546090$%han@samsung.com> <000101ceda1f$04ca6f20$0e5f4d60$%han@samsung.com> <CAFp+6iFAZab35F-MOOZHcHpzSEOL=51gWBK2KZbOJS+0731GJQ@mail.gmail.com> <000301ceda84$1d648bf0$582da3d0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383871035-16608-1-git-send-email-joelf@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <000301ceda84$1d648bf0$582da3d0$%han@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Vivek Gautam' <gautamvivek1987@gmail.com>, 'Kamil Debski' <k.debski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 'Greg KH' <gregkh@linuxfoundation.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Julius Werner' <jwerner@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
+Hi,
 
-I realise I'm a little late in replying to this, but there are a few
-things that would be nice to fix up.
-
-On Fri, Nov 08, 2013 at 12:37:09AM +0000, Joel Fernandes wrote:
-> Add documentation for the generic OMAP DES crypto module describing the device
-> tree bindings.
+On Wednesday 06 November 2013 05:37 AM, Jingoo Han wrote:
+> On Wednesday, November 06, 2013 2:58 AM, Vivek Gautam wrote:
+>> On Tue, Nov 5, 2013 at 5:33 PM, Jingoo Han <jg1.han@samsung.com> wrote:
 > 
-> Signed-off-by: Joel Fernandes <joelf@ti.com>
-> ---
->  .../devicetree/bindings/crypto/omap-des.txt        | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
+> [.....]
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> new file mode 100644
-> index 0000000..0637647
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> @@ -0,0 +1,28 @@
-> +OMAP SoC DES crypto Module
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "ti,omap4-des"
+>>> USB3.0 PHY consists of two blocks such as 3.0 block and 2.0 block.
+>>> This USB3.0 PHY can support UTMI+ and PIPE3 interface for 3.0 block
+>>> and 2.0 block, respectively.
+>>>
+>>> Conclusion:
+>>>
+>>>    1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
+>>>                        Base address: 0x1213 0000
+>>>
+>>>    2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
+>>>                        Base address: 0x1210 0000
+>>>                        2.0 block(UTMI+) & 3.0 block(PIPE3)
+>>
+>> And this is of course the PHY used by DWC3 controller, which works at
+>> both High speed as well as Super Speed.
+>> Right ?
+> 
+> Right.
+> 
+> While 3.0 block(PIPE3) can be used for Super Speed, 2.0 block(UTMI+)
+> can be used for High speed.
 
-Nit: s/Should be/Should contain/
+It should then come under *single IP muliple PHY* category similar to what
+Sylwester has done.
 
-> +- ti,hwmods: Name of the hwmod associated with the DES module
-> +- reg : Offset and length of the register set for the module
-> +- interrupts : the interrupt-specifier for the DES module
-
-Just to check: there's only one interrupt?
-
-> +- clocks : phandle to the functional clock node of the DES module
-> +- clock-names : Name of the functional clock
-
-What name is expected here? The intent of clock-names is to describe
-which clock input lines the clocks are wired to, so this should be
-well-defined.
-
->From the looks of the example, the clock input is called "fck". Is that
-correct?
-
-When you have clock-names, the nicest thing to do is to define clocks
-in terms of clock-names. Something like:
-
-- clocks: A phandle + clock-specifier pair for each entry in
-  clock-names.
-
-- clock-names: Should contain:
-  * "fck" for the functional clock
-
-Which implies that the correct way to find clocks is to look in
-clock-names first to find the clock's index, rather than grabbing the
-clock by index. This makes it far easier to add/remove/change clocks in
-future.
-
-> +
-> +Optional properties:
-> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> +	Documentation/devicetree/bindings/dma/dma.txt
-
-Similarly here it would be nice to have dmas refer to dma-names for
-the description of which dmas exist.
-
-> +- dma-names: DMA request names should include "tx" and "rx" if present
-> +
-> +Example:
-> +	/* DRA7xx SoC */
-> +	des: des@480a5000 {
-> +		compatible = "ti,omap4-des";
-> +		ti,hwmods = "des";
-> +		reg = <0x480a5000 0xa0>;
-> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +		dmas = <&sdma 117>, <&sdma 116>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&l3_iclk_div>;
-> +		clock-names = "fck";
-> +	};
-
-Cheers,
-Mark.
+Thanks
+Kishon
