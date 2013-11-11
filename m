@@ -1,145 +1,65 @@
-From: "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 05/12] mtd: nand: davinci: extend description of bindings
-Date: Mon, 11 Nov 2013 16:58:54 +0000
-Message-ID: <4F5844B3A985794BA902E12C070812375F8D14@DNCE04.ent.ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-6-git-send-email-ivan.khoronzhuk@ti.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
+Date: Mon, 11 Nov 2013 16:59:14 +0000
+Message-ID: <alpine.DEB.2.02.1311111658100.26077@kaball.uk.xensource.com>
+References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca> <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384187188-5776-6-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <alpine.DEB.2.02.1311061642270.26077-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend bindings for davinci_nand driver to be more clear.
+On Wed, 6 Nov 2013, Stefano Stabellini wrote:
+> On Sat, 2 Nov 2013, Grant Likely wrote:
+> > On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > > 
+> > > Platform devices created by DT code don't initialize dma_mask pointer to
+> > > anything. Set it to coherent_dma_mask by default if the architecture
+> > > code has not set it.
+> > > 
+> > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > I believe this is okay. I haven't done any testing to back up that
+> > opinion though.
+> 
+> Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/mtd/davinci-nand.txt       |   77 ++++++++++++=
-++------
- 1 file changed, 54 insertions(+), 23 deletions(-)
+BTW I hope you are planning on sending this upstream soon, because
+without it I can very easily corrupt my root fs by simply booting the system.
 
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/D=
-ocumentation/devicetree/bindings/mtd/davinci-nand.txt
-index 3545ea7..d2a3fc0 100644
---- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -1,36 +1,67 @@
--* Texas Instruments Davinci NAND
-+Device tree bindings for Texas instruments Davinci NAND controller
 
--This file provides information, what the device node for the
--davinci nand interface contain.
-+This file provides information, what the device node for the davinci N=
-AND
-+interface contains.
-+
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-
- Required properties:
--- compatible: "ti,davinci-nand";
--- reg : contain 2 offset/length values:
--        - offset and length for the access window
--        - offset and length for accessing the aemif control registers
--- ti,davinci-chipselect: Indicates on the davinci_nand driver which
--                         chipselect is used for accessing the nand.
-+
-+- compatible:                  "ti,davinci-nand"
-+
-+- reg:                         Contains 2 offset/length values:
-+                               - offset and length for the access wind=
-ow.
-+                               - offset and length for accessing the A=
-EMIF
-+                               control registers.
-+
-+- ti,davinci-chipselect:       number of chipselect. Indicates on the
-+                               davinci_nand driver which chipselect is=
- used
-+                               for accessing the nand.
-+                               Can be in the range [0-3].
-
- Recommended properties :
--- ti,davinci-mask-ale: mask for ale
--- ti,davinci-mask-cle: mask for cle
--- ti,davinci-mask-chipsel: mask for chipselect
--- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
--               - "none"
--               - "soft"
--               - "hw"
--- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
--- ti,davinci-nand-buswidth: buswidth 8 or 16
--- ti,davinci-nand-use-bbt: use flash based bad block table support.
--
--nand device bindings may contain additional sub-nodes describing
--partitions of the address space. See partition.txt for more detail.
-+
-+- ti,davinci-mask-ale:         mask for ALE. Needed for executing addr=
-ess
-+                               phase. These offset will be added to th=
-e base
-+                               address for the chip select space the N=
-AND Flash
-+                               device is connected to.
-+                               If not set equal to 0x08.
-+
-+- ti,davinci-mask-cle:         mask for CLE. Needed for executing comm=
-and
-+                               phase. These offset will be added to th=
-e base
-+                               address for the chip select space the N=
-AND Flash
-+                               device is connected to.
-+                               If not set equal to 0x10.
-+
-+- ti,davinci-mask-chipsel:     mask for chipselect address. Needed to =
-mask
-+                               addresses for given chipselect.
-+
-+- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. EC=
-C mode
-+                               valid values for davinci driver:
-+                               - "none"
-+                               - "soft"
-+                               - "hw"
-+
-+- ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or=
- 4.
-+
-+- ti,davinci-nand-buswidth:    buswidth 8 or 16.
-+
-+- ti,davinci-nand-use-bbt:     use flash based bad block table support=
-=2E OOB
-+                               identifier is saved in OOB area.
-+
-+Nand device bindings may contain additional sub-nodes describing parti=
-tions of
-+the address space. See partition.txt for more detail. The NAND Flash t=
-iming
-+values must be programmed in the chip select=92s node of AEMIF
-+memory-controller (see Documentation/devicetree/bindings/memory-contro=
-llers/
-+davinci-aemif.txt).
-
- Example(da850 EVM ):
-+
- nand_cs3@62000000 {
-        compatible =3D "ti,davinci-nand";
-        reg =3D <0x62000000 0x807ff
--               0x68000000 0x8000>;
-+              0x68000000 0x8000>;
-        ti,davinci-chipselect =3D <1>;
-        ti,davinci-mask-ale =3D <0>;
-        ti,davinci-mask-cle =3D <0>;
+> > > I think this is at least part of what is needed to fix dma_mask issue
+> > > raised by Stefano [1]. Things should work AFAICT with just this, but
+> > > I suppose the xgmac driver needs to set the mask as well (not relying
+> > > on the default), but some pointing the dma_mask to a valid value is
+> > > needed first.
+> > > 
+> > > Rob
+> > > 
+> > > [1] http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg528236.html
+> > > 
+> > >  drivers/of/platform.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > index f6dcde2..fce088e 100644
+> > > --- a/drivers/of/platform.c
+> > > +++ b/drivers/of/platform.c
+> > > @@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
+> > >  	dev->archdata.dma_mask = 0xffffffffUL;
+> > >  #endif
+> > >  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> > > +	if (!dev->dev.dma_mask)
+> > > +		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+> > >  	dev->dev.bus = &platform_bus_type;
+> > >  	dev->dev.platform_data = platform_data;
+> > >  
+> 
 --
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
