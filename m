@@ -1,172 +1,71 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings
- documentation
-Date: Mon, 11 Nov 2013 15:48:49 +0000
-Message-ID: <20131111154849.GJ21201@e106331-lin.cambridge.arm.com>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
- <36428164.RsQCj0nRsc@avalon>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 0/7] gpio: daVinci: cleanup and feature enhancement
+Date: Mon, 11 Nov 2013 17:52:02 +0200
+Message-ID: <5280FD22.8060107@ti.com>
+References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <36428164.RsQCj0nRsc@avalon>
-Sender: linux-serial-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, grant.likely@linaro.org
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1383905510-31760-1-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 01:26:11PM +0000, Laurent Pinchart wrote:
-> Hi Mark,
-> 
-> Thank you for the quick and detailed review.
-> 
-> On Monday 11 November 2013 09:40:39 Mark Rutland wrote:
-> > Hi Laurent,
-> > 
-> > I have a few comments.
-> > 
-> > On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
-> > > Document the device tree bindings for the sci serial port devices.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> > > ---
-> > > 
-> > >  .../bindings/serial/renesas,sci-serial.txt         | 42 +++++++++++++++++
-> > >  1 file changed, 42 insertions(+)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt> 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
-> > > file mode 100644
-> > > index 0000000..66d3bca
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > > @@ -0,0 +1,42 @@
-> > > +* Renesas SH-Mobile Serial Communication Interface
-> > > +
-> > > +Required properties:
-> > > +
-> > > +  - compatible: one of the following types (scif, scifa, scifb, hscif).
-> > 
-> > Minor nit, but would be nice to have "Should contain one of the
-> > following:". We might have future variants whereby the compatible string
-> > will actually be a string list.
-> 
-> Sure, I can do that.
-> 
-> > > +
-> > > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> > > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
-> > > UART. +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB
-> > > compatible UART. +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2)
-> > > HSCIF compatible UART. +    - "renesas,scif-generic" for generic SCIF
-> > > compatible UART.
-> > > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> > > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> > > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> > 
-> > Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
-> 
-> You're right, I'll remove the suffix.
-> 
-> > > +
-> > > +    When compatible with the generic version, nodes must also list the
-> > > +    SoC-specific version corresponding to the platform.
-> > 
-> > Presumably the SoC-specific version should come first; it would be nice
-> > to note that.
-> 
-> Indeed, I'll do so.
-> 
-> > > +
-> > > +  - reg: Base address and length of the memory resource used by the UART.
-> > 
-> > I assume by memory resource you mean the memory-mapped registers?
-> > Resource sounds like Linux-internal nomenclature leaking.
-> 
-> I'll fix it as well, although we could decide on a definition of "resource" 
-> that isn't Linux-specific :-)
+Hi Prabhakar Lad,
 
-We could, I guess. For the moment I'd prefer to point out that these are
-MMIO registers :)
+On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
+> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
+>
+> This patch series does the following
+> 1> Ports the driver to use irqdomain.
+> 2> Adds dt binding support for gpio-davinci.
+> 3> Adds DA850 dt support goio.
+>
+> Changes for v5:
+> 1: Fixed review comments pointed by Grygorii.
+> 2: Dropped the fixup patch
+>
+> This patch series is based on following fixup series
+> http://us.generation-nt.com/answer/patch-0-2-davinci-gpio-fixes-help-212978272.html
 
-> 
-> > > +
-> > > +  - interrupt-parent: Reference to the parent interrupt controller.
-> > 
-> > I don't think this is strictly necessary. It's implicit by default and
-> > can be added optionally when a system is wired in a complex way. As it's
-> > a completely standard optional property I'm not even sure it needs to be
-> > documented.
-> > 
-> > > +  - interrupts: Interrupt number.
-> > 
-> > Minor nit: "Should contain an interrupt-specifier for ..."
-> > 
-> > I saw the cover mentioned multiple interrupts. Which logical interrupt
-> > output of the device are you expecting here?
-> 
-> SCI devices come in several flavours, with individual interrupt sources wired 
-> up to different interrupt lines, or multiplexed all together. As the DT 
-> bindings support the later only at the moment, there's only a single interrupt 
-> to handle.
+Few comments to this series - the rest looks ok to me.
+  Hope it will pass review of bindings :P
 
-Ok. If the binding just covers the muxed interrupt for now that's fine.
-We can add interrupt-names later when we support multiple interrupts
-(and fall back to assuming muxed when no interrupt-names property is
-present).
-
-> 
-> Should we come up with a standard way of saying in the bindings that a device 
-> uses the interrupt bindings defined in interrupt-controller/interrupts.txt ? 
-> This will become even more important with the interrupts-extended property, we 
-> don't want every DT bindings document to detail all possible way to specify 
-> interrupts.
-
-It would certainly be nice to have a standard way of doing just that.
-I'd hope that with the schema work going on that would fall into place
-automatically, so perhaps it's not worth doing now.
-
-> 
-> > > +
-> > > +  - clocks: Reference to the SCIx UART interface clock.
-> > 
-> > Minor nit: s/Reference to/A phandle + clock-specifier pair for/
-> > 
-> > > +  - clock-names: Should be "sci_ick".
-> > 
-> > As we're using clock-names, it would be nicer still to define clocks in
-> > terms of clock-names so as to make it easier to update the document in
-> > future and make the expected use of clock-names clearer:
-> > 
-> > - clocks: Should
-> 
-> "Should", or "must" ?
-
-I don't expect the format of clocks and the relationship to clock-names
-to change, so "must" is likely more appropriate. I'm just too used to
-writing "should"...
-
-> 
-> > contain a phandle + clock-specifier pair for each entry
-> >   in clock-names.
-> > 
-> > - clock-names: Should contain "sci_ick".
-> 
-> Shouldn't that be
-> 
-> "Should contain "sci_ick" for the SCIx UART interface clock."
-> 
-> ? Otherwise the bindings wouldn't tell which clock the clocks property should 
-> reference.
-
-Yes, that sounds much better.
-
-Cheers,
-Mark.
+>
+> KV Sujith (3):
+>    gpio: davinci: add OF support
+>    ARM: davinci: da850: add GPIO DT node
+>    ARM: davinci: da850 evm: add GPIO pinumux entries DT node
+>
+> Lad, Prabhakar (4):
+>    gpio: davinci: remove unnecessary printk
+>    gpio: davinci: use readl/writel instead of __raw_*
+>    gpio: davinci: use irqdomain
+>    gpio: davinci: remove unused variable intc_irq_num
+>
+>   .../devicetree/bindings/gpio/gpio-davinci.txt      |   39 +++++
+>   arch/arm/boot/dts/da850-evm.dts                    |   20 +++
+>   arch/arm/boot/dts/da850.dtsi                       |   14 ++
+>   arch/arm/mach-davinci/da830.c                      |    1 -
+>   arch/arm/mach-davinci/da850.c                      |    1 -
+>   arch/arm/mach-davinci/dm355.c                      |    1 -
+>   arch/arm/mach-davinci/dm365.c                      |    1 -
+>   arch/arm/mach-davinci/dm644x.c                     |    1 -
+>   arch/arm/mach-davinci/dm646x.c                     |    1 -
+>   drivers/gpio/gpio-davinci.c                        |  170 +++++++++++++-------
+>   include/linux/platform_data/gpio-davinci.h         |    3 +-
+>   11 files changed, 185 insertions(+), 67 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>
+Regards,
+- grygorii
