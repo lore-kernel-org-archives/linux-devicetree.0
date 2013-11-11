@@ -1,57 +1,59 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/1] Documentation/pwm: Update supported SoC name for
- pwm-samsung
-Date: Mon, 11 Nov 2013 10:25:35 +0100
-Message-ID: <20131111092534.GG3884@ulmo.nvidia.com>
-References: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
+Subject: Re: [RFCv2][PATCHv5 0/4] Add Freescale FTM PWM driver.
+Date: Mon, 11 Nov 2013 10:30:11 +0100
+Message-ID: <20131111093008.GH3884@ulmo.nvidia.com>
+References: <1383114204-17264-1-git-send-email-Li.Xiubo@freescale.com>
+ <1DD289F6464F0949A2FCA5AA6DC23F82878657@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m0vRWufqUC70IDnR"
+	protocol="application/pgp-signature"; boundary="oyqLL/JqMvClXZi1"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1383107981-6638-1-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F82878657@039-SN2MPN1-013.039d.mgd.msft.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com
+To: Li Xiubo <Li.Xiubo@freescale.com>
+Cc: Shawn Guo <Shawn.Guo@freescale.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---m0vRWufqUC70IDnR
+--oyqLL/JqMvClXZi1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 30, 2013 at 10:09:41AM +0530, Sachin Kamat wrote:
-> Updated supported SoC name for pwm-samsung.
+On Thu, Nov 07, 2013 at 07:00:41AM +0000, Li Xiubo wrote:
+> Hi Thierry,
 >=20
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
->  .../devicetree/bindings/pwm/pwm-samsung.txt        |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The document binding patch of this patch series has been acked.
+> And other patches have been acked before.
+>=20
+> Should I send a V6 patch series ?
 
-Applied, thanks.
+Yes, it'd be great if you can collect the various Acked-by's and send
+them as part of v6.
 
+Thanks,
 Thierry
 
---m0vRWufqUC70IDnR
+--oyqLL/JqMvClXZi1
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSgKKOAAoJEN0jrNd/PrOhWPgP/ji9x1nG6a453brTYFw2UEPw
-KnOQ+4U6DXLB05ij/eFi0dufGpPGOqXyaviOwVjZuGDgMyvn6b1oE16/eH9Tgtyp
-YdSKgEc+XZ1iz8OJXIuChDZ6mkc0HvxeW/dQYvy2MxFBPl7E6uYKekKLOdufdxcx
-Jzc3KsocGSearAx95fVEfR9kDCUJ+1KSL/2pbkqhszH7nNhYfahfh+40E8+BTHu8
-Q8cLVN69lXW5oE4FKFit0gxytRPWi1dHCA2kVA8krT09jIREsljzaIcSfE+cZQZo
-M0UDR3uXat61KV69Orrv/b9LISJn9TCYbp0+IP+tQkDIeYbiI3kH9hCsovTlKuA5
-5FS8eGkJsQ/MFFQ1Sg23DxAIALKRoMAqK95Q2rvhlbXJVhbddK0vXjmhB7IZoqGi
-l3jN7EXR9zteLJ4bkqUbT1uneP1tg8ZpDY2ytXIwmNsgR4GhXodFfOoGVI0+SD40
-KfxB2hCF4LuS4ryEw/fxv0wQuXeUv1Go5ZAcdPpy641ZxR8Tt32Ju8SBJ46J2gU1
-WYEfKlEIPz5Smvas92DpCgkeqA8vfQK8CLJFrGY/4b+Mf/oZw1H6qpAGYM1CRMAZ
-BqVlz2/v/cHOCb9pKDSeDlw6Jh0bVta9FDPLt0XVsgUPYGmKr9nXaYLk6rCo+5vQ
-0JrHhW1UH3B+5ogNeh4C
-=oTUe
+iQIcBAEBAgAGBQJSgKOgAAoJEN0jrNd/PrOhkicQAI5nzusu7/A0797KN+UxXD3V
+ssvBtMKbpUaIGRmYB2+2BGTvA/d8TyVOERAzp8E6fnEvvmiVCpBggwlT+q+ExG0q
+tVMpMtyN4BUV/9D34fwAY5dCcrcj4ThyyOaezFtN/wurU1HgGGj2S+MdTSnvP7sQ
+Ov0ve7/aU6G/pGrF/uqI7dzWdTf/9jPGR78bPM1sts9Kr9gKEGaseDKVSPRCoHTO
+Ug9S4v/gea+CCk3A03eUQ/wgDEs1DujMIjq47Wan1IUKZ+5TV/wamKg8tdPzOByh
+2L6wkiPuwo2oeGNuqAMoG9KT0SPmw9MdsoZ99UP7C52dGAoFU41LqNpJxyofFtOb
+p7lKMwnN43s0r9vPht/Zt6dxRlwtWRp8yIKoneoZX98iGe01YWHSRGXvBGOy7VAS
+4jF0FyQy97Qi9pRAovhHyvQNDIRd5GZLWO9CmaLPI2607BEADmYSbLXfNQGHnrJJ
+201oc/tdUnxsNTvSyC980LkoUuFwwXyxLHENVZre1Jqi89ATxO72hakTrWbUh0LN
+lMLaXVa2t4dl7BuqBNmkNDfubkC0YodC5O+Fw2yusgq7uY9vTunvN4yC9KQaWHJu
+Pmpf5HCngMYphAi1F9hwRAKYNTNyxepNJvtRBzz9MYXe++/hBg0or80BlQycuw8H
+lZjxxIPrQuWJQ8ZvI2jn
+=okwO
 -----END PGP SIGNATURE-----
 
---m0vRWufqUC70IDnR--
+--oyqLL/JqMvClXZi1--
