@@ -1,31 +1,113 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
-Date: Mon, 11 Nov 2013 23:19:41 +0100
-Message-ID: <20131111221941.GB23331@amd.pavel.ucw.cz>
-References: <1383948866-32672-1-git-send-email-sre@debian.org>
- <1383948866-32672-2-git-send-email-sre@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383948866-32672-2-git-send-email-sre@debian.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
+Subject: [PATCH] powerpc/85xx: typo in dts: "interupt" (four devices)
+Date: Mon, 11 Nov 2013 22:52:07 +0100
+Message-ID: <1384206727-11880-1-git-send-email-kilobyte@angband.pl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+These lines were inoperative for four years, which puts some doubt into
+their importance, and it's possible the fixed version will regress, but
+at the very least they should be removed instead.
 
-> +	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
-> +		keypad_data->no_autorepeat = true;
+Signed-off-by: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
+---
+ arch/powerpc/boot/dts/xcalibur1501.dts | 4 ++--
+ arch/powerpc/boot/dts/xpedite5301.dts  | 4 ++--
+ arch/powerpc/boot/dts/xpedite5330.dts  | 4 ++--
+ arch/powerpc/boot/dts/xpedite5370.dts  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
->From 2/2:
-
-+Optional Properties specific to linux:
-+- linux,keypad-no-autorepeat: do not enable autorepeat feature.
-
-I'm confused now.
-
+diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
+index cc00f4d..f151426 100644
+--- a/arch/powerpc/boot/dts/xcalibur1501.dts
++++ b/arch/powerpc/boot/dts/xcalibur1501.dts
+@@ -637,14 +637,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2 >;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5301.dts b/arch/powerpc/boot/dts/xpedite5301.dts
+index 53c1c6a..d00fe16 100644
+--- a/arch/powerpc/boot/dts/xpedite5301.dts
++++ b/arch/powerpc/boot/dts/xpedite5301.dts
+@@ -547,14 +547,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2 >;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5330.dts b/arch/powerpc/boot/dts/xpedite5330.dts
+index 2152259..e506554 100644
+--- a/arch/powerpc/boot/dts/xpedite5330.dts
++++ b/arch/powerpc/boot/dts/xpedite5330.dts
+@@ -583,14 +583,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2 >;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5370.dts b/arch/powerpc/boot/dts/xpedite5370.dts
+index 11dbda1..9f1c608 100644
+--- a/arch/powerpc/boot/dts/xpedite5370.dts
++++ b/arch/powerpc/boot/dts/xpedite5370.dts
+@@ -545,14 +545,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2 >;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.8.5.rc0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
