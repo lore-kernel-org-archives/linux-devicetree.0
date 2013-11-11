@@ -1,90 +1,78 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v6 3/4] ASoC: fsl_ssi: Add dual fifo mode support
-Date: Mon, 11 Nov 2013 12:00:25 +0800
-Message-ID: <3beca16849e0b817117b667b8b2213859a51ed1c.1384136268.git.b42378@freescale.com>
-References: <cover.1384136268.git.b42378@freescale.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCHv7 1/3] ARM: imx: Add DMAMUX clock for Vybrid vf610 SoC
+Date: Mon, 11 Nov 2013 15:10:05 +0800
+Message-ID: <20131111071003.GB10085@S2101-09.ap.freescale.net>
+References: <1383904915-27634-1-git-send-email-b35083@freescale.com>
+ <1383904915-27634-2-git-send-email-b35083@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1384136268.git.b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1383904915-27634-2-git-send-email-b35083@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingchang Lu <b35083@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, swarren@wwwdotorg.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-By enabling dual fifo mode, it would allow SSI enter a better performance
-to transimit/receive data without occasional hardware underrun/overrun.
+On Fri, Nov 08, 2013 at 06:01:53PM +0800, Jingchang Lu wrote:
+> Signed-off-by: Jingchang Lu <b35083@freescale.com>
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- sound/soc/fsl/fsl_ssi.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Applied this one.
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 6b81d0c..af6640c 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -143,6 +143,7 @@ struct fsl_ssi_private {
- 	bool ssi_on_imx;
- 	bool imx_ac97;
- 	bool use_dma;
-+	bool use_dual_fifo;
- 	struct clk *clk;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
-@@ -413,6 +414,12 @@ static int fsl_ssi_setup(struct fsl_ssi_private *ssi_private)
- 		write_ssi(CCSR_SSI_SOR_WAIT(3), &ssi->sor);
- 	}
- 
-+	if (ssi_private->use_dual_fifo) {
-+		write_ssi_mask(&ssi->srcr, 0, CCSR_SSI_SRCR_RFEN1);
-+		write_ssi_mask(&ssi->stcr, 0, CCSR_SSI_STCR_TFEN1);
-+		write_ssi_mask(&ssi->scr, 0, CCSR_SSI_SCR_TCH_EN);
-+	}
-+
- 	return 0;
- }
- 
-@@ -487,6 +494,15 @@ static int fsl_ssi_startup(struct snd_pcm_substream *substream,
- 		ssi_private->second_stream = substream;
- 	}
- 
-+	/* When using dual fifo mode, it is safer to ensure an even period
-+	 * size. If appearing to an odd number while DMA always starts its
-+	 * task from fifo0, fifo1 would be neglected at the end of each
-+	 * period. But SSI would still access fifo1 with an invalid data.
-+	 */
-+	if (ssi_private->use_dual_fifo)
-+		snd_pcm_hw_constraint_step(substream->runtime, 0,
-+				SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 2);
-+
- 	return 0;
- }
- 
-@@ -954,7 +970,7 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 		ssi_private->fifo_depth = 8;
- 
- 	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx21-ssi")) {
--		u32 dma_events[2];
-+		u32 dma_events[2], dmas[4];
- 		ssi_private->ssi_on_imx = true;
- 
- 		ssi_private->clk = devm_clk_get(&pdev->dev, NULL);
-@@ -1008,6 +1024,15 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 			dma_events[0], shared ? IMX_DMATYPE_SSI_SP : IMX_DMATYPE_SSI);
- 		imx_pcm_dma_params_init_data(&ssi_private->filter_data_rx,
- 			dma_events[1], shared ? IMX_DMATYPE_SSI_SP : IMX_DMATYPE_SSI);
-+		if (!of_property_read_u32_array(pdev->dev.of_node, "dmas", dmas, 4)
-+				&& dmas[2] == IMX_DMATYPE_SSI_DUAL) {
-+			ssi_private->use_dual_fifo = true;
-+			/* When using dual fifo mode, we need to keep watermark
-+			 * as even numbers due to dma script limitation.
-+			 */
-+			ssi_private->dma_params_tx.maxburst &= ~0x1;
-+			ssi_private->dma_params_rx.maxburst &= ~0x1;
-+		}
- 	} else if (ssi_private->use_dma) {
- 		/* The 'name' should not have any slashes in it. */
- 		ret = devm_request_irq(&pdev->dev, ssi_private->irq,
--- 
-1.8.4
+Shawn
+
+> ---
+>  changes in v7:
+>  fix dmamux2 and dmamux3 register number.
+> 
+>  no changes in v2 ~ v6.
+> 
+>  arch/arm/mach-imx/clk-vf610.c           | 5 +++++
+>  include/dt-bindings/clock/vf610-clock.h | 6 +++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-imx/clk-vf610.c b/arch/arm/mach-imx/clk-vf610.c
+> index b169a39..ecd66d8 100644
+> --- a/arch/arm/mach-imx/clk-vf610.c
+> +++ b/arch/arm/mach-imx/clk-vf610.c
+> @@ -298,6 +298,11 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+>  	clk[VF610_CLK_FLEXCAN0] = imx_clk_gate2("flexcan0", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(0));
+>  	clk[VF610_CLK_FLEXCAN1] = imx_clk_gate2("flexcan1", "ipg_bus", CCM_CCGR9, CCM_CCGRx_CGn(4));
+>  
+> +	clk[VF610_CLK_DMAMUX0] = imx_clk_gate2("dmamux0", "platform_bus", CCM_CCGR0, CCM_CCGRx_CGn(4));
+> +	clk[VF610_CLK_DMAMUX1] = imx_clk_gate2("dmamux1", "platform_bus", CCM_CCGR0, CCM_CCGRx_CGn(5));
+> +	clk[VF610_CLK_DMAMUX2] = imx_clk_gate2("dmamux2", "platform_bus", CCM_CCGR6, CCM_CCGRx_CGn(1));
+> +	clk[VF610_CLK_DMAMUX3] = imx_clk_gate2("dmamux3", "platform_bus", CCM_CCGR6, CCM_CCGRx_CGn(2));
+> +
+>  	clk_set_parent(clk[VF610_CLK_QSPI0_SEL], clk[VF610_CLK_PLL1_PFD4]);
+>  	clk_set_rate(clk[VF610_CLK_QSPI0_X4_DIV], clk_get_rate(clk[VF610_CLK_QSPI0_SEL]) / 2);
+>  	clk_set_rate(clk[VF610_CLK_QSPI0_X2_DIV], clk_get_rate(clk[VF610_CLK_QSPI0_X4_DIV]) / 2);
+> diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
+> index 4aa2b48..a916029 100644
+> --- a/include/dt-bindings/clock/vf610-clock.h
+> +++ b/include/dt-bindings/clock/vf610-clock.h
+> @@ -160,6 +160,10 @@
+>  #define VF610_CLK_GPU2D			147
+>  #define VF610_CLK_ENET0			148
+>  #define VF610_CLK_ENET1			149
+> -#define VF610_CLK_END			150
+> +#define VF610_CLK_DMAMUX0		150
+> +#define VF610_CLK_DMAMUX1		151
+> +#define VF610_CLK_DMAMUX2		152
+> +#define VF610_CLK_DMAMUX3		153
+> +#define VF610_CLK_END			154
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_VF610_H */
+> -- 
+> 1.8.0
+> 
+> 
