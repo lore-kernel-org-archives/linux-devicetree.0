@@ -1,55 +1,199 @@
-From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 11 Nov 2013 19:28:37 +0100
-Message-ID: <528121D5.40403@keymile.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org> <3144247.j2q6H0KWZx@lem-wkst-02> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [RFC] ASoC: Add support for BCM2835
+Date: Mon, 11 Nov 2013 19:37:30 +0100
+Message-ID: <528123EA.6090609@metafoo.de>
+References: <527D5013.7080508@koalo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130909161924.GT29403-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <527D5013.7080508-oZ8rN/sblLk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon
+To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+On 11/08/2013 09:56 PM, Florian Meier wrote:
 
-[jumping in on an old discussion]
+Is the I2S clock part of a generic clocking module? If yes it might be
+better to implement this as a clock chip driver.
 
-On 09/09/2013 06:19 PM, Mark Brown wrote:
-> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
->> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
->
->>> The driver that tries to use the GPIO requested by this patch before HAS to
->>> fail. This is exactly the intention of this patch. We don't want the GPIO to
->>> be requested any more, if it is used as an interrupt pin.
->
->> That will break existing drivers. There are drivers that request the
->> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
->> that way.
->
-> Yes, plus input devices and audio jack detection among others.  This
-> pattern is very common if the GPIO is actually being used as a GPIO, an
-> edge triggered interrupt is used to flag when something happens and the
-> state is determined by reading the GPIO state (often with some
-> debounce).
+[...]
+> +static void bcm2835_i2s_stop(struct bcm2835_i2s_dev *dev,
+> +		struct snd_pcm_substream *substream)
+> +{
+> +	unsigned int still_running;
+> +
+> +	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+> +		regmap_update_bits(dev->i2s_regmap, BCM2835_I2S_CS_A_REG,
+> +				BCM2835_I2S_RXON, 0);
+> +	} else {
+> +		regmap_update_bits(dev->i2s_regmap, BCM2835_I2S_CS_A_REG,
+> +				BCM2835_I2S_TXON, 0);
+> +	}
+> +
+> +	regmap_read(dev->i2s_regmap, BCM2835_I2S_CS_A_REG, &still_running);
+> +	still_running &= BCM2835_I2S_TXON | BCM2835_I2S_RXON;
+> +
 
-I actually came across this thread while looking for an answer to the 
-following (apparently trivial) question:
+still_running can be replaced with dai->active, I think
 
-If you were to write a new driver & binding, what would be, in general, 
-the recommended DT binding for a cascade interrupt controller (or any 
-other peripheral, for that matter), which is connected through a GPIO 
-(to be used as IRQ)?
+> +	/* Stop also the clock when not SND_SOC_DAIFMT_CONT */
+> +	if (!still_running && !(dev->fmt & SND_SOC_DAIFMT_CONT))
+> +		bcm2835_i2s_stop_clock(dev);
+> +
+> +}
+> +
+> +static int bcm2835_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+> +			       struct snd_soc_dai *dai)
+> +{
+> +	struct bcm2835_i2s_dev *dev = snd_soc_dai_get_drvdata(dai);
+> +
+> +	switch (cmd) {
+> +	case SNDRV_PCM_TRIGGER_START:
+> +	case SNDRV_PCM_TRIGGER_RESUME:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+> +		bcm2835_i2s_start_clock(dev);
+> +
+> +		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+> +			regmap_update_bits(dev->i2s_regmap,
+> +					BCM2835_I2S_CS_A_REG,
+> +					BCM2835_I2S_RXON, BCM2835_I2S_RXON);
+> +		} else {
+> +			regmap_update_bits(dev->i2s_regmap,
+> +					BCM2835_I2S_CS_A_REG,
+> +					BCM2835_I2S_TXON, BCM2835_I2S_TXON);
+> +		}
 
-a) Through gpios = <&gpio0 N>
-b) through interrupt-parent = <&gpio0> & interrupts <N 
-IRQ_TYPE_LEVEL_LOW>, or
-c) both?
+Doing something like
 
-Thanks!
-Gerlando
+		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
+			mask = BCM2835_I2S_RXON;
+		else
+			mask = BCM2835_I2S_TXON;
+
+		regmap_update_bits(dev->i2s_regmap,
+			BCM2835_I2S_CS_A_REG, mask, mask);
+
+makes the code a bit shorter. Same for bcm2835_i2s_stop().
+> +		break;
+> +
+> +	case SNDRV_PCM_TRIGGER_STOP:
+> +	case SNDRV_PCM_TRIGGER_SUSPEND:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+> +		bcm2835_i2s_stop(dev, substream);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm2835_i2s_startup(struct snd_pcm_substream *substream,
+> +			       struct snd_soc_dai *dai)
+> +{
+> +	struct bcm2835_i2s_dev *dev = snd_soc_dai_get_drvdata(dai);
+> +
+> +	if (!dev->first_stream) {
+> +		dev->first_stream = substream;
+> +
+
+Since you use first_stream and second_stream for anything else I think you
+can just use dai->active here instead.
+
+> +		/* should this still be running stop it */
+> +		bcm2835_i2s_stop_clock(dev);
+> +
+> +		/* enable PCM block */
+> +		regmap_update_bits(dev->i2s_regmap, BCM2835_I2S_CS_A_REG,
+> +				BCM2835_I2S_EN, -1);
+> +
+> +		/*
+> +		 * Disable STBY
+> +		 * Requires at least 4 PCM clock cycles to take effect
+> +		 */
+> +		regmap_update_bits(dev->i2s_regmap, BCM2835_I2S_CS_A_REG,
+> +				BCM2835_I2S_STBY, -1);
+> +
+> +	} else {
+> +		dev->second_stream = substream;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+[...]
+> +static int bcm2835_i2s_dai_probe(struct snd_soc_dai *dai)
+> +{
+> +	struct bcm2835_i2s_dev *dev = snd_soc_dai_get_drvdata(dai);
+> +
+> +	/* Set the appropriate DMA parameters */
+> +	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].addr =
+> +		(dma_addr_t)BCM2835_I2S_FIFO_PHYSICAL_ADDR;
+> +	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].addr =
+> +		(dma_addr_t)BCM2835_I2S_FIFO_PHYSICAL_ADDR;
+
+The dma address for the FIFO should not be hardcoded but rather use an
+offset to the resource that get's pass to the driver.
+
+	dma_data->addr = mem->start + BCM2835_I2S_FIFO_A_REG;
+
+I think it should be fine to initialize dma_data already in the driver
+probe() function.
+
+> +
+> +	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].slave_id =
+> +		BCM2835_DMA_DREQ_PCM_TX;
+> +	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].slave_id =
+> +		BCM2835_DMA_DREQ_PCM_RX;
+> +
+> +	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].addr_width =
+> +		DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].addr_width =
+> +		DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +
+> +	/* TODO other burst parameters possible? */
+> +	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].maxburst = 2;
+> +	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].maxburst = 2;
+> +
+> +	dai->playback_dma_data = &dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK];
+> +	dai->capture_dma_data = &dev->dma_data[SNDRV_PCM_STREAM_CAPTURE];
+> +
+> +	return 0;
+> +}
+> +
+[...]
+> +
+> +static bool bcm2835_i2s_wr_rd_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case BCM2835_I2S_CS_A_REG:
+> +	case BCM2835_I2S_FIFO_A_REG:
+> +	case BCM2835_I2S_MODE_A_REG:
+> +	case BCM2835_I2S_RXC_A_REG:
+> +	case BCM2835_I2S_TXC_A_REG:
+> +	case BCM2835_I2S_DREQ_A_REG:
+> +	case BCM2835_I2S_INTEN_A_REG:
+> +	case BCM2835_I2S_INTSTC_A_REG:
+> +	case BCM2835_I2S_GRAY_REG:
+> +		return true;
+> +	default:
+> +		return false;
+> +	};
+> +}
+
+I think you use the default implementation of the here, which is basically
+(reg >= 0 && reg <= config->max_register). Just leave the writeable_reg and
+readable_reg fields of your config NULL.
+
+[...]
+> +
+> +static const struct regmap_config bcm2835_i2s_regmap_config = {
+> +};
+
+This one seems to be unused.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
