@@ -1,45 +1,61 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH RFC v5 2/5] dma: mpc512x: add support for peripheral
- transfers
-Date: Mon, 11 Nov 2013 21:10:24 +0100
-Message-ID: <20131111201024.GR17929@book.gsilab.sittig.org>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
- <1383290374-17484-3-git-send-email-a13xp0p0v88@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add RN104 SATA LEDs driven via NXP PCA9554
+ I2C to GPIO muxer
+Date: Mon, 11 Nov 2013 21:22:24 +0100
+Message-ID: <52813C80.70800@gmail.com>
+References: <877gchmggw.fsf@natisbad.org> <527ECC4C.8080207@gmail.com> <8738n2hfci.fsf@natisbad.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383290374-17484-3-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <8738n2hfci.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 11:19 +0400, Alexander Popov wrote:
-> 
-> Introduce support for slave s/g transfer preparation and the associated
-> device control callback in the MPC512x DMA controller driver, which adds
-> support for data transfers between memory and peripheral I/O to the
-> previously supported mem-to-mem transfers.
+On 11/11/2013 09:07 PM, Arnaud Ebalard wrote:
+> Hi Sebastian,
+>
+> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>>> @@ -154,6 +161,30 @@
+>>>    			gpios = <&gpio2 0 1>;    /* GPIO 64 Active Low */
+>>>    			linux,default-trigger = "keep";
+>>>    		};
+>>> +
+>>> +		sata1_led {
+>>> +			label = "rn104:blue:sata1";
+>>> +			gpios = <&pca9554 0 1>;  /* Active Low */
+>>
+>> Same comment as for ReadyNAS 2120 patch:
+>>
+>> #include <dt-bindings/gpio/gpio.h> and use GPIO_ACTIVE_HIGH/LOW.
+>
+> Unlike RN2120 .dts for which I was able to change all the high/low
+> values for macros in a single move, if I do the changes here for this
+> specific patch, the .dts file for the RN104 will contain both values and
+> macros.
+>
+> What about the following options?:
+>
+>   - send a preliminary patch to change all the values for macros in RN104
+>     .dts file once -rc1 is here and then resubmit the PCA9554 patch with
+>     macros?
+>   - have the patch applied as is and then convert the whole RN104 .dts w/
+>     another patch.
 
-Alexander, there is outstanding review feedback for a previous
-version of the series that you haven't addressed yet.  Can you
-please either look into those issues, or state that it's OK to
-leave them and why this is so?  It would be nice to get a
-response to the feedback that you are given.  It may be
-appropriate not to obey to the feedback, but at least it should
-get considered.
+I'd say, respin this with gpio.h and go for a round of cleanup later.
 
-Have you noticed the recent introduction of the dmaengine@vger
-ML?  Make sure to include it upon the next submission.
+> Anyway, once RN2120 is accepted, I intend to spend some time doing some
+> housekeeping on other readynas .dts file based on the comments you made
+> recently (macros, reg, addressing, phy info, etc), and also some minor
+> points (whitespaces).
+
+Great!
+
+Sebastian
 
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
