@@ -1,72 +1,92 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Mon, 11 Nov 2013 11:01:02 +0100
-Message-ID: <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w@mail.gmail.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
-	<051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
-	<CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
-	<201311050026.56321.heiko@sntech.de>
-	<527835FE.2030102@wwwdotorg.org>
-	<5279A319.5060701@broadcom.com>
-	<CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
-	<527C3080.5050202@broadcom.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt: binding: sound cs42l52 driver
+Date: Mon, 11 Nov 2013 10:16:22 +0000
+Message-ID: <20131111101621.GB21201@e106331-lin.cambridge.arm.com>
+References: <1383855737-8499-1-git-send-email-brian.austin@cirrus.com>
+ <1383855737-8499-2-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <527C3080.5050202@broadcom.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sherman Yin <syin@broadcom.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383855737-8499-2-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 8, 2013 at 1:29 AM, Sherman Yin <syin@broadcom.com> wrote:
-> [Me]
->> On Wed, Nov 6, 2013 at 3:02 AM, Sherman Yin <syin@broadcom.com> wrote:
+On Thu, Nov 07, 2013 at 08:22:17PM +0000, Brian Austin wrote:
+> Add Device Tree Binding for the CS42L52 Codec
+> 
+> Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/cs42l52.txt          | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cs42l52.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/cs42l52.txt b/Documentation/devicetree/bindings/sound/cs42l52.txt
+> new file mode 100644
+> index 0000000..7540198
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cs42l52.txt
+> @@ -0,0 +1,34 @@
+> +CS42L52 audio CODEC
+> +
+> +Required properties:
+> +
+> +  - compatible : "cirrus,cs42l52"
+> +
+> +  - reg : the I2C address of the device for I2C
+> +
+> +Optional properties:
+> +
+> +  - reset_gpio : a GPIO spec for the reset pin.
 
->> You would have to patch the OF core to do something like that:
->>
->> bias-pull-up = <true true false>;
->>
->> 1/0 isn't so good I think, what should the parser do with e.g. 2?
->> This is more to the point.
->
-> I would imagine that the platform-specific device tree bindings would need
-> to clearly explain what the valid values are, as they should.
+Nit: device tree convention is to use '-' rather than '_'. So this
+should be reset-gpio rather than reset_gpio.
 
-But this is not a platform-specific binding. These are the
-generic pin configuration bindings we're talking about.
+s/_/-/ for the later property names too.
 
-> If we're
-> using integers, we could either have a) !0 and 0, or b) just 1 and 0, and
-> everything else is an error.  Or c) the platform could decide that the value
-> provides addition info like pull-up-strength, so 0 = no pull up, >0 = pull
-> up enabled and the number is the pull up strength in Ohm (bindings should
-> indicate which values are valid), and everything else is an error.
+s/GPIO spec/phandle + gpio-specifier/
 
-That seems to make sense, I've just not seen any system (using
-device tree) that can actually set the pull up/down resistance.
+> +  - chgfreq    : Charge Pump Frequency values 0x00-0x0F
 
->> That said, if you can patch the OF core and the generic pin config
->> parser to do what you want with lists like that, it's your pick.
->> It may take some time though.
->
-> I don't mind patching the generic pin config, and I don't think the core
-> needs to change,
+In general, longer but more easily understood names are preferred (e.g.
+"clock-frequency"). This could be "charge-pump-frequency".
 
-If you want arrays of booleans that is a matter for the OF core
-parser I think.
+When you say "values 0x00-0x0F" you mean the value is in that range?
+Inclusive?
 
->> What about you patch include/linux/pinctrl/pinconf-generic.h
->> to add PIN_CONFIG_INPUT_DISABLE with this semantic
->> and also patch the generic pinconf parser in
->> drivers/pinctrl/pinconf-generic.c
->> to handle this?
->
-> Sure, I can add PIN_CONFIG_INPUT_DISABLE.  However I suspect people might be
-> confused by this and PIN_CONFIG_OUTPUT.
+Due to punctuation, upon first reading I read this as being an array of
+values.  It would be nice to have some clarification to prevent others
+maknig the smae mistake.
 
-Just make sure you put in good documentation in that file
-right there, it's using kerneldoc and for a good reason...
+> +  - mica_sel   : MIC A single ended input select MIC1/MIC2
+> +  - micb_sel   : MIC B single ended input select MIC1/MIC2
 
-Yours,
-Linus Walleij
+Is this a boolean? What values are expected?
+
+Could you elaborate on what this describes?
+
+> +  - mica_cfg   : MIC A single-ended or differential select
+> +  - micb_cfg   : MIC A single-ended or differential select
+
+Could you elaborate on what these describe, what values are expected,
+etc?
+
+> +  - micbias_lvl: Set the output voltage level on the MICBIAS Pin
+> +		 0x00 = 0.5 x VA
+> +		 0x01 = 0.6 x VA
+> +		 0x02 = 0.7 x VA
+> +		 0x03 = 0.8 x VA
+> +		 0x04 = 0.83 x VA
+> +		 0x05 = 0.91 x VA
+
+Is this not something we'd want to change at runtime instead? Why does
+this need to be in the dt?
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
