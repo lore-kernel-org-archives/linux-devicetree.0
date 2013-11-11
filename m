@@ -1,426 +1,443 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] OF: Introduce utility helper functions
-Date: Mon, 11 Nov 2013 16:37:43 +0000
-Message-ID: <20131111163743.D136CC42330@trevor.secretlab.ca>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-6-git-send-email-panto@antoniou-consulting.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dtc: Dynamic symbols & fixup support (v2)
+Date: Mon, 11 Nov 2013 17:56:04 +0000
+Message-ID: <20131111175604.ECF33C4233A@trevor.secretlab.ca>
+References: <1383073266-12017-1-git-send-email-panto@antoniou-consulting.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383673816-29293-6-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <1383073266-12017-1-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  5 Nov 2013 19:50:16 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> Introduce helper functions for working with the live DT tree.
+On Tue, 29 Oct 2013 21:01:06 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Enable the generation of symbol & fixup information for
+> usage with dynamic DT loading.
 > 
-> __of_free_property() frees a dynamically created property
-> __of_free_tree() recursively frees a device node tree
-> __of_copy_property() copies a property dynamically
-> __of_create_empty_node() creates an empty node
-> __of_find_node_by_full_name() finds the node with the full name
-> and
-> of_multi_prop_cmp() performs a multi property compare but without
-> having to take locks.
+> Passing the -@ option generates a __symbols__ node at the
+> root node of the resulting blob for any node labels used.
+> 
+> When using the /plugin/ tag all unresolved label references
+> be tracked in the __fixups__ node, while all local phandle
+> references will the tracked in the __local_fixups__ node.
+> 
+> This is sufficient to implement a dynamic DT object loader.
+> 
+> Changes since v1:
+> 
+> * Forward ported to 1.4 version
+> * Added manual entries for the -@ option
 > 
 > Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 
-So, this all looks like private stuff, or stuff that belongs in
-drivers/of/base.c. Can you move stuff around. I've made more comments
-below.
+Hi Pantelis,
 
-g.
+This looks pretty good on first look. Comments below.
 
 > ---
->  drivers/of/Makefile |   2 +-
->  drivers/of/util.c   | 253 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h  |  59 ++++++++++++
->  3 files changed, 313 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/of/util.c
+>  Documentation/dt-object-internal.txt | 295 +++++++++++++++++++++++++++++++++++
+>  Documentation/manual.txt             |  10 ++
+>  checks.c                             | 120 +++++++++++++-
+>  dtc-lexer.l                          |   5 +
+>  dtc-parser.y                         |  23 ++-
+>  dtc.c                                |   9 +-
+>  dtc.h                                |  38 +++++
+>  flattree.c                           | 139 +++++++++++++++++
+>  8 files changed, 630 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/dt-object-internal.txt
 > 
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index efd0510..9bc6d8c 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-y = base.o device.o platform.o
-> +obj-y = base.o device.o platform.o util.o
->  obj-$(CONFIG_OF_FLATTREE) += fdt.o
->  obj-$(CONFIG_OF_PROMTREE) += pdt.o
->  obj-$(CONFIG_OF_ADDRESS)  += address.o
-> diff --git a/drivers/of/util.c b/drivers/of/util.c
+> diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-object-internal.txt
 > new file mode 100644
-> index 0000000..5117e2b
+> index 0000000..eb5d4c0
 > --- /dev/null
-> +++ b/drivers/of/util.c
-> @@ -0,0 +1,253 @@
-> +/*
-> + * Utility functions for working with device tree(s)
-> + *
-> + * Copyright (C) 2012 Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-> + * Copyright (C) 2012 Texas Instruments Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + */
+> +++ b/Documentation/dt-object-internal.txt
+> @@ -0,0 +1,295 @@
+> +Device Tree Dynamic Object format internals
+> +-------------------------------------------
 > +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/string.h>
-> +#include <linux/ctype.h>
-> +#include <linux/errno.h>
-> +#include <linux/string.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
+> +The Device Tree for most platforms is a static representation of
+> +the hardware capabilities. This is insufficient for many platforms
+> +that need to dynamically insert device tree fragments to the
+> +running kernel's live tree.
 > +
-> +/**
-> + * __of_free_property - release the memory of an allocated property
-> + * @prop:	Property to release
-> + *
-> + * Release the memory of an allocated property only after checking
-> + * that the property has been marked as OF_DYNAMIC.
-> + * Only call on known allocated properties.
-> + */
-> +void __of_free_property(struct property *prop)
-> +{
-> +	if (prop == NULL)
-> +		return;
+> +This document explains the the device tree object format and the
+> +modifications made to the device tree compiler, which make it possible.
 > +
-> +	if (of_property_check_flag(prop, OF_DYNAMIC)) {
-> +		kfree(prop->value);
-> +		kfree(prop->name);
-> +		kfree(prop);
-> +	} else {
-> +		pr_warn("%s: property %p cannot be freed; memory is gone\n",
-> +				__func__, prop);
-> +	}
-> +}
+> +1. Simplified Problem Definition
+> +--------------------------------
 > +
-> +/**
-> + * __of_free_tree - release the memory of a device tree node and
-> + *		    of all it's children + properties.
-> + * @node:	Device Tree node to release
-> + *
-> + * Release the memory of a device tree node and of all it's children.
-> + * Also release the properties and the dead properties.
-> + * Only call on detached node trees, and you better be sure that
-> + * no pointer exist for any properties. Only safe to do if you 
-> + * absolutely control the life cycle of the node.
-> + * Also note that the node is not removed from the all_nodes list,
-> + * neither from the parent's child list; this should be handled before
-> + * calling this function.
-> + */
-> +void __of_free_tree(struct device_node *node)
-> +{
-> +	struct property *prop;
-> +	struct device_node *noden;
+> +Assume we have a platform which boots using following simplified device tree.
 > +
-> +	/* sanity check */
-> +	if (!node)
-> +		return;
+> +---- foo.dts -----------------------------------------------------------------
+> +	/* FOO platform */
+> +	/ {
+> +		compatible = "corp,foo";
 > +
-> +	/* free recursively any children */
-> +	while ((noden = node->child) != NULL) {
-> +		node->child = noden->sibling;
-> +		__of_free_tree(noden);
-> +	}
+> +		/* shared resources */
+> +		res: res {
+> +		};
 > +
-> +	/* free every property already allocated */
-> +	while ((prop = node->properties) != NULL) {
-> +		node->properties = prop->next;
-> +		__of_free_property(prop);
-> +	}
+> +		/* On chip peripherals */
+> +		ocp: ocp {
+> +			/* peripherals that are always instantiated */
+> +			peripheral1 { ... };
+> +		}
+> +	};
+> +---- foo.dts -----------------------------------------------------------------
 > +
-> +	/* free dead properties already allocated */
-> +	while ((prop = node->deadprops) != NULL) {
-> +		node->deadprops = prop->next;
-> +		__of_free_property(prop);
-> +	}
+> +We have a number of peripherals that after probing (using some undefined method)
+> +should result in different device tree configuration.
 > +
-> +	if (of_node_check_flag(node, OF_DYNAMIC)) {
-> +		kfree(node->type);
-> +		kfree(node->name);
-> +		kfree(node);
-> +	} else {
-> +		pr_warn("%s: node %p cannot be freed; memory is gone\n",
-> +				__func__, node);
-> +	}
-> +}
+> +We cannot boot with this static tree because due to the configuration of the
+> +foo platform there exist multiple conficting peripherals DT fragments.
+> +
+> +So for the bar peripheral we would have this:
+> +
+> +---- foo+bar.dts -------------------------------------------------------------
+> +	/* FOO platform + bar peripheral */
+> +	/ {
+> +		compatible = "corp,foo";
+> +
+> +		/* shared resources */
+> +		res: res {
+> +		};
+> +
+> +		/* On chip peripherals */
+> +		ocp: ocp {
+> +			/* peripherals that are always instantiated */
+> +			peripheral1 { ... };
+> +
+> +			/* bar peripheral */
+> +			bar {
+> +				compatible = "corp,bar";
+> +				... /* various properties and child nodes */
+> +			}
+> +		}
+> +	};
+> +---- foo+bar.dts -------------------------------------------------------------
+> +
+> +While for the baz peripheral we would have this:
+> +
+> +---- foo+baz.dts -------------------------------------------------------------
+> +	/* FOO platform + baz peripheral */
+> +	/ {
+> +		compatible = "corp,foo";
+> +
+> +		/* shared resources */
+> +		res: res {
+> +			/* baz resources */
+> +			baz_res: res_baz { ... };
+> +		};
+> +
+> +		/* On chip peripherals */
+> +		ocp: ocp {
+> +			/* peripherals that are always instantiated */
+> +			peripheral1 { ... };
+> +
+> +			/* baz peripheral */
+> +			baz {
+> +				compatible = "corp,baz";
+> +				/* reference to another point in the tree */
+> +				ref-to-res = <&baz_res>;
+> +				... /* various properties and child nodes */
+> +			}
+> +		}
+> +	};
+> +---- foo+baz.dts -------------------------------------------------------------
+> +
+> +We note that the baz case is more complicated, since the baz peripheral needs to
+> +reference another node in the DT tree.
+> +
+> +2. Device Tree Object Format Requirements
+> +-----------------------------------------
+> +
+> +Since the device tree is used for booting a number of very different hardware
+> +platforms it is imperative that we tread very carefully.
+> +
+> +2.a) No changes to the Device Tree binary format. We cannot modify the tree
+> +format at all and all the information we require should be encoded using device
+> +tree itself. We can add nodes that can be safely ignored by both bootloaders and
+> +the kernel.
 
-All of the above is potentially dangerous. There is no way to determine
-if anything still holds a reference to a node. The proper way to handle
-removal of properties is to have a release method when the last
-of_node_put is called.
+Not /entirely/ true. It would be completely fine to bump up the binary
+format version for the overlays since they will never be loaded
+standalone. If there are specific things that you would like to have in
+the marshalled format then go ahead and propose them. Then the overlay
+would use the new protocol version, but the base tree would use the
+existing one.
 
 > +
-> +/**
-> + * __of_copy_property - Copy a property dynamically.
-> + * @prop:	Property to copy
-> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
-> + *
-> + * Copy a property by dynamically allocating the memory of both the
-> + * property stucture and the property name & contents. The property's
-> + * flags have the OF_DYNAMIC bit set so that we can differentiate between
-> + * dynamically allocated properties and not.
-> + * Returns the newly allocated property or NULL on out of memory error.
-> + */
+> +2.b) Changes to the DTS source format should be absolutely minimal, and should
+> +only be needed for the DT fragment definitions, and not the base boot DT.
+> +
+> +2.c) An explicit option should be used to instruct DTC to generate the required
+> +information needed for object resolution. Platforms that don't use the
+> +dynamic object format can safely ignore it.
+> +
+> +2.d) Finally, DT syntax changes should be kept to a minimum. It should be
+> +possible to express everything using the existing DT syntax.
+> +
+> +3. Implementation
+> +-----------------
+> +
+> +The basic unit of addressing in Device Tree is the phandle. Turns out it's
+> +relatively simple to extend the way phandles are generated and referenced
+> +so that it's possible to dynamically convert symbolic references (labels)
+> +to phandle values.
+> +
+> +We can roughly divide the operation into two steps.
+> +
+> +3.a) Compilation of the base board DTS file using the '-@' option
+> +generates a valid DT blob with an added __symbols__ node at the root node,
+> +containing a list of all nodes that are marked with a label.
+> +
+> +Using the foo.dts file above the following node will be generated;
+> +
+> +$ dtc -@ -O dtb -o foo.dtb -b 0 foo.dts
+> +$ fdtdump foo.dtb
+> +...
+> +/ {
+> +	...
+> +	res {
+> +		...
+> +		linux,phandle = <0x00000001>;
+> +		phandle = <0x00000001>;
+> +		...
+> +	};
+> +	ocp {
+> +		...
+> +		linux,phandle = <0x00000002>;
+> +		phandle = <0x00000002>;
+> +		...
+> +	};
+> +	__symbols__ {
+> +		res="/res";
+> +		ocp="/ocp";
+> +	};
+> +};
+> +
+> +Notice that all the nodes that had a label have been recorded, and that
+> +phandles have been generated for them.
+> +
+> +This blob can be used to boot the board normally, the __symbols__ node will
+> +be safely ignored both by the bootloader and the kernel (the only loss will
+> +be a few bytes of memory and disk space).
+> +
+> +3.b) The Device Tree fragments must be compiled with the same option but they
+> +must also have a tag (/plugin/) that allows undefined references to labels
+> +that are not present at compilation time to be recorded so that the runtime
+> +loader can fix them.
+> +
+> +So the bar peripheral's DTS format would be of the form:
+> +
+> +/plugin/;	/* allow undefined label references and record them */
+> +/ {
+> +	....	/* various properties for loader use; i.e. part id etc. */
+> +	fragment@0 {
+> +		target = <&ocp>;
+> +		__overlay__ {
+> +			/* bar peripheral */
+> +			bar {
+> +				compatible = "corp,bar";
+> +				... /* various properties and child nodes */
+> +			}
+> +		};
+> +	};
+> +};
+> +
+> +Note that there's a target property that specifies the location where the
+> +contents of the overlay node will be placed, and it references the label
+> +in the foo.dts file.
+> +
+> +$ dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
+> +$ fdtdump bar.dtbo
+> +...
+> +/ {
+> +	... /* properties */
+> +	fragment@0 {
+> +		target = <0xdeadbeef>;
+> +		__overlay__ {
+> +			bar {
+> +				compatible = "corp,bar";
+> +				... /* various properties and child nodes */
+> +			}
+> +		};
+> +	};
+> +	__fixups__ {
+> +	    ocp = "/fragment@0:target:0";
+> +	};
+> +};
+> +
+> +No __symbols__ has been generated (no label in bar.dts).
+> +Note that the target's ocp label is undefined, so the phandle handle
+> +value is filled with the illegal value '0xdeadbeef', while a __fixups__
+> +node has been generated, which marks the location in the tree where
+> +the label lookup should store the runtime phandle value of the ocp node.
+> +
+> +The format of the __fixups__ node entry is
+> +
+> +	<label> = "<local-full-path>:<property-name>:<offset>";
+> +
+> +<label> 		Is the label we're referring
+> +<local-full-path>	Is the full path of the node the reference is
+> +<property-name>		Is the name of the property containing the
+> +			reference
+> +<offset>		The offset (in bytes) of where the property's
+> +			phandle value is located.
+> +
+> +Doing the same with the baz peripheral's DTS format is a little bit more
+> +involved, since baz contains references to local labels which require
+> +local fixups.
+> +
+> +/plugin/;	/* allow undefined label references and record them */
+> +/ {
+> +	....	/* various properties for loader use; i.e. part id etc. */
+> +	fragment@0 {
+> +		target = <&res>;
+> +		__overlay__ {
+> +			/* baz resources */
+> +			baz_res: res_baz { ... };
+> +		};
+> +	};
+> +	fragment@1 {
+> +		target = <&ocp>;
+> +		__overlay__ {
+> +			/* baz peripheral */
+> +			baz {
+> +				compatible = "corp,baz";
+> +				/* reference to another point in the tree */
+> +				ref-to-res = <&baz_res>;
+> +				... /* various properties and child nodes */
+> +			}
+> +		};
+> +	};
+> +};
+> +
+> +Note that &bar_res reference.
+> +
+> +$ dtc -@ -O dtb -o baz.dtbo -b 0 baz.dts
+> +$ fdtdump baz.dtbo
+> +...
+> +/ {
+> +	... /* properties */
+> +	fragment@0 {
+> +		target = <0xdeadbeef>;
+> +		__overlay__ {
+> +			res_baz {
+> +				....
+> +				linux,phandle = <0x00000001>;
+> +				phandle = <0x00000001>;
+> +			};
+> +		};
+> +	};
+> +	fragment@1 {
+> +		target = <0xdeadbeef>;
+> +		__overlay__ {
+> +			baz {
+> +				compatible = "corp,baz";
+> +				... /* various properties and child nodes */
+> +				res=<0x00000001>;
+> +			}
+> +		};
+> +	};
+> +	__fixups__ {
+> +		res = "/fragment@0:target:0";
+> +		ocp = "/fragment@1:target:0";
 
-What do you intend the use-case to be for this function? Will the
-duplicated property be immediately modified? If so, what happens if the
-property needs to be grown in size?
+What happens when multiple phandles in the overlay reference the same
+node? This could result in a lot of strings for fixup references.
 
-> +struct property *__of_copy_property(const struct property *prop, gfp_t flags)
-> +{
-> +	struct property *propn;
-> +
-> +	propn = kzalloc(sizeof(*prop), flags);
-> +	if (propn == NULL)
-> +		return NULL;
-> +
-> +	propn->name = kstrdup(prop->name, flags);
-> +	if (propn->name == NULL)
-> +		goto err_fail_name;
-> +
-> +	if (prop->length > 0) {
-> +		propn->value = kmalloc(prop->length, flags);
-> +		if (propn->value == NULL)
-> +			goto err_fail_value;
-> +		memcpy(propn->value, prop->value, prop->length);
-> +		propn->length = prop->length;
-> +	}
-> +
-> +	/* mark the property as dynamic */
-> +	of_property_set_flag(propn, OF_DYNAMIC);
-> +
-> +	return propn;
-> +
-> +err_fail_value:
-> +	kfree(propn->name);
-> +err_fail_name:
-> +	kfree(propn);
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * __of_create_empty_node - Create an empty device node dynamically.
-> + * @name:	Name of the new device node
-> + * @type:	Type of the new device node
-> + * @full_name:	Full name of the new device node
-> + * @phandle:	Phandle of the new device node
-> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
-> + *
-> + * Create an empty device tree node, suitable for further modification.
-> + * The node data are dynamically allocated and all the node flags
-> + * have the OF_DYNAMIC & OF_DETACHED bits set.
-> + * Returns the newly allocated node or NULL on out of memory error.
-> + */
-> +struct device_node *__of_create_empty_node(
-> +		const char *name, const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags)
+> +	};
+> +	__local_fixups__ {
+> +		fixup = </fragment@1/__overlay__/baz:res:0>;
 
-I would like to see a user of this function in the core DT paths that
-allocate nodes. It will make for less chance of breakage if the fdt and
-pdt paths change something, but this function isn't updated.
+Ditto here, I'm a little concerned that a ton of strings will end up in
+this node.
+
+> +	};
+
+Another way to do this would be to not fixup the tree at all but instead
+have a translation node and get Linux to keep track of which overlay a
+node is a part of. Each overlay would have it's own set of phandle
+translators. It /might/ result in simpler code on the OS implementation
+side, particularly since all phandle resolutions should go through
+of_find_node_by_phandle(). Doing so would mean all the above tree might
+look something like:
+
+/ {
+	... /* properties */
+	fragment@0 {
+		target = <0x3>;
+		__overlay__ {
+			res_baz {
+				....
+				linux,phandle = <0x00000001>;
+				phandle = <0x00000001>;
+			};
+		};
+	};
+	fragment@1 {
+		target = <0x4>;
+		__overlay__ {
+			baz {
+				compatible = "corp,baz";
+				... /* various properties and child nodes */
+				res=<0x00000001>;
+			}
+		};
+	};
+	__external_refs__ {
+		res = 0x3;
+		ocp = 0x4;
+	};
+};
+
+Where the phandles within the tree are entirely self-consistent, and
+external phandles are translated through the __external_refs__ node to
+decode the phandle in the parent tree.
+
+I'm not trying to force you down this path, but I'd like to know if you considered
+other approaches such as this.
+
+(Besides, there are a couple of unresolved items with my suggestion. It
+is potentially problematic for kexec or anything else that reads the
+tree from userspace. The phandle domains would need to be exposed via
+sysfs/procfs. It also wouldn't be suitable for merging the tree at
+runtime by firmware before passing to the kernel).
+
+> +};
+> +
+> +This is similar to the bar case, but the reference of a local label by the
+> +baz node generates a __local_fixups__ entry that records the place that the
+> +local reference is being made. Since phandles are allocated starting at 1
+> +the run time loader must apply an offset to each phandle in every dynamic
+> +DT object loaded. The __local_fixups__ node records the place of every
+> +local reference so that the loader can apply the offset.
+> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+> index 65c8540..9b4d329 100644
+> --- a/Documentation/manual.txt
+> +++ b/Documentation/manual.txt
+> @@ -121,6 +121,14 @@ Options:
+>  	Make space for <number> reserve map entries
+>  	Relevant for dtb and asm output only.
+>  
+> +    -@
+> +        Generates a __symbols__ node at the root node of the resulting blob
+> +	for any node labels used.
+> +
+> +	When using the /plugin/ tag all unresolved label references
+> +	be tracked in the __fixups__ node, while all local phandle
+> +	references will the tracked in the __local_fixups__ node.
+> +
+
+I'm just curious: why did you choose '@'?
+
+Overall the approach looks sane to me. I need to read through the
+kernel patches now. I'll probably think of other things when I do.
+
+Acked-in-principle-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 g.
-
-> +{
-> +	struct device_node *node;
-> +
-> +	node = kzalloc(sizeof(*node), flags);
-> +	if (node == NULL)
-> +		return NULL;
-> +
-> +	node->name = kstrdup(name, flags);
-> +	if (node->name == NULL)
-> +		goto err_return;
-> +
-> +	node->type = kstrdup(type, flags);
-> +	if (node->type == NULL)
-> +		goto err_return;
-> +
-> +	node->full_name = kstrdup(full_name, flags);
-> +	if (node->type == NULL)
-> +		goto err_return;
-
-Again, who do you expect the user of this function to be? If it is part
-of unflattening an overlay tree, is there a reason that the passed in
-names cannot be used directly instead of kmallocing them?
-
-> +
-> +	node->phandle = phandle;
-> +	kref_init(&node->kref);
-> +	of_node_set_flag(node, OF_DYNAMIC);
-> +	of_node_set_flag(node, OF_DETACHED);
-> +
-> +	return node;
-> +
-> +err_return:
-> +	__of_free_tree(node);
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * __of_find_node_by_full_name - Find a node with the full name recursively
-> + * @node:	Root of the tree to perform the search
-> + * @full_name:	Full name of the node to find.
-> + *
-> + * Find a node with the give full name by recursively following any of 
-> + * the child node links.
-> + * Returns the matching node, or NULL if not found.
-> + * Note that the devtree lock is not taken, so this function is only
-> + * safe to call on either detached trees, or when devtree lock is already
-> + * taken.
-> + */
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name)
-
-Sounds like something that should be in drivers/of/base.c
-
-> +{
-> +	struct device_node *child, *found;
-> +
-> +	if (node == NULL)
-> +		return NULL;
-> +
-> +	/* check */
-> +	if (of_node_cmp(node->full_name, full_name) == 0)
-> +		return node;
-> +
-> +	__for_each_child_of_node(node, child) {
-> +		found = __of_find_node_by_full_name(child, full_name);
-> +		if (found != NULL)
-> +			return found;
-> +	}
-
-I'm not a huge fan of recursive calls. Why doesn't a slightly modified
-of_fund_node_by_name() work here?
-
-I agree that of_find_node_by_name is not particularly elegant and it
-would be good to have something more efficient, but it works and
-following the same method would be consistent.
-
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * of_multi_prop_cmp - Check if a property matches a value
-> + * @prop:	Property to check
-> + * @value:	Value to check against
-> + *
-> + * Check whether a property matches a value, using the standard
-> + * of_compat_cmp() test on each string. It is similar to the test
-
-of_compat_cmp() is only for compatible strings, and it purely to paper
-over the way different OFW implementations work. Don't use the same
-function. Don't use it for any property other than compatible because
-that will just encourage bad behaviour.
-
-> + * of_device_is_compatible() makes, but it can be performed without
-> + * taking the devtree_lock, which is required in some cases.
-> + * Returns 0 on a match, -1 on no match.
-
-That's what __of_device_is_compatible() is for. It is a version of the
-function that doesn't take the lock.
-
-> + */
-> +int of_multi_prop_cmp(const struct property *prop, const char *value)
-> +{
-> +	const char *cp;
-> +	int cplen, vlen, l;
-> +
-> +	if (prop == NULL || value == NULL)
-> +		return -1;
-> +
-> +	cp = prop->value;
-> +	cplen = prop->length;
-> +	vlen = strlen(value);
-> +
-> +	while (cplen > 0) {
-> +		if (of_compat_cmp(cp, value, vlen) == 0)
-> +			return 0;
-> +		l = strlen(cp) + 1;
-> +		cp += l;
-> +		cplen -= l;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a56c450..9d69bd2 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -662,4 +662,63 @@ extern void proc_device_tree_update_prop(struct proc_dir_entry *pde,
->  					 struct property *oldprop);
->  #endif
->  
-> +/**
-> + * General utilities for working with live trees.
-> + *
-> + * All functions with two leading underscores operate
-> + * without taking node references, so you either have to
-> + * own the devtree lock or work on detached trees only.
-> + */
-> +
-> +#ifdef CONFIG_OF
-> +
-> +/* iterator for internal use; not references, neither affects devtree lock */
-> +#define __for_each_child_of_node(dn, chld) \
-> +	for (chld = (dn)->child; chld != NULL; chld = chld->sibling)
-> +
-> +void __of_free_property(struct property *prop);
-> +void __of_free_tree(struct device_node *node);
-> +struct property *__of_copy_property(const struct property *prop, gfp_t flags);
-> +struct device_node *__of_create_empty_node( const char *name,
-> +		const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags);
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name);
-> +int of_multi_prop_cmp(const struct property *prop, const char *value);
-> +
-> +#else /* !CONFIG_OF */
-> +
-> +#define __for_each_child_of_node(dn, chld) \
-> +	while (0)
-> +
-> +static inline void __of_free_property(struct property *prop) { }
-> +
-> +static inline void __of_free_tree(struct device_node *node) { }
-> +
-> +static inline struct property *__of_copy_property(const struct property *prop,
-> +		gfp_t flags)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *__of_create_empty_node( const char *name,
-> +		const char *type, const char *full_name,
-> +		phandle phandle, gfp_t flags)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +		const char *full_name)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int of_multi_prop_cmp(const struct property *prop, const char *value)
-> +{
-> +	return -1;
-> +}
-> +
-> +#endif	/* !CONFIG_OF */
-> +
->  #endif /* _LINUX_OF_H */
-> -- 
-> 1.7.12
-> 
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
