@@ -1,57 +1,162 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH 01/11] devicetree: bindings: Document cpu enable-method
- for ARM CPUs
-Date: Mon, 11 Nov 2013 14:35:32 +0000
-Message-ID: <20131111143532.GB3166@localhost.localdomain>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
+ indicates the presence of PHY's
+Date: Mon, 11 Nov 2013 20:06:12 +0530
+Message-ID: <5280EB5C.1040001@ti.com>
+References: <1381866857-3861-1-git-send-email-kishon@ti.com> <1381866857-3861-2-git-send-email-kishon@ti.com> <20131017163828.GH11611@gimli>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131017163828.GH11611@gimli>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 03:08:49PM -0700, Stephen Boyd wrote:
-> From: Rohit Vaswani <rvaswani@codeaurora.org>
+Hi Felipe,
+
+On Thursday 17 October 2013 10:08 PM, Felipe Balbi wrote:
+> Hi,
 > 
-> According to the ePAPR CPUs should have an enable method. On ARM
-> the enable-method property has not been used so far, so document
-> this property as an optional property and add the spin-table
-> method as one value
+> On Wed, Oct 16, 2013 at 01:24:11AM +0530, Kishon Vijay Abraham I wrote:
+>> There can be systems which does not have a external usb_phy, so get
+>> usb_phy only if dt data indicates the presence of PHY in the case of dt boot or
+>> if platform_data indicates the presence of PHY. Also remove checking if
+>> return value is -ENXIO since it's now changed to always enable usb_phy layer.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> [sboyd: Split off into separate patch]
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> I'm fine with this patch, but one comment below:
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index f32494d..37258f9 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -45,6 +45,14 @@ For the ARM architecture every CPU node must contain the following properties:
->  		"marvell,xsc3"
->  		"marvell,xscale"
->  
-> +And the following optional properties:
-> +
-> +- enable-method: Specifies the method used to enable or take the secondary cores
-> +		 out of reset. This allows different reset sequence for
-> +		 different types of cpus.
-> +		 This should be one of:
-> +		 "spin-table"
-> +
+>> @@ -387,16 +388,49 @@ static int dwc3_probe(struct platform_device *pdev)
+>>  	if (node) {
+>>  		dwc->maximum_speed = of_usb_get_maximum_speed(node);
+>>  
+>> -		dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+>> -		dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
+>> +		count = of_count_phandle_with_args(node, "usb-phy", NULL);
+>> +		switch (count) {
+>> +		case 2:
+>> +			dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
+>> +				"usb-phy", 1);
+>> +			if (IS_ERR(dwc->usb3_phy)) {
+>> +				dev_err(dev, "usb3 phy not found\n");
+>> +				return PTR_ERR(dwc->usb3_phy);
+>> +			}
+>> +		case 1:
+>> +			dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
+>> +				"usb-phy", 0);
+>> +			if (IS_ERR(dwc->usb2_phy)) {
+>> +				dev_err(dev, "usb2 phy not found\n");
+>> +				return PTR_ERR(dwc->usb2_phy);
+>> +			}
+>> +			break;
+>> +		default:
+>> +			dev_err(dev, "usb phy nodes not configured\n");
+>> +		}
+>>  
+>>  		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
+>>  		dwc->dr_mode = of_usb_get_dr_mode(node);
+>>  	} else if (pdata) {
+>>  		dwc->maximum_speed = pdata->maximum_speed;
+>>  
+>> -		dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+>> -		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+>> +		if (pdata->usb2_phy) {
+>> +			dwc->usb2_phy = devm_usb_get_phy(dev,
+>> +				USB_PHY_TYPE_USB2);
+>> +			if (IS_ERR(dwc->usb2_phy)) {
+>> +				dev_err(dev, "usb2 phy not found\n");
+>> +				return PTR_ERR(dwc->usb2_phy);
+>> +			}
+>> +		}
+>> +
+>> +		if (pdata->usb3_phy) {
+>> +			dwc->usb3_phy = devm_usb_get_phy(dev,
+>> +				USB_PHY_TYPE_USB3);
+>> +			if (IS_ERR(dwc->usb3_phy)) {
+>> +				dev_err(dev, "usb3 phy not found\n");
+>> +				return PTR_ERR(dwc->usb3_phy);
+>> +			}
+>> +		}
+>>  
+>>  		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
+>>  		dwc->dr_mode = pdata->dr_mode;
+>> @@ -409,36 +443,6 @@ static int dwc3_probe(struct platform_device *pdev)
+>>  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
+>>  		dwc->maximum_speed = USB_SPEED_SUPER;
+>>  
+>> -	if (IS_ERR(dwc->usb2_phy)) {
+>> -		ret = PTR_ERR(dwc->usb2_phy);
+>> -
+>> -		/*
+>> -		 * if -ENXIO is returned, it means PHY layer wasn't
+>> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
+>> -		 * in that case, since no PHY driver will ever probe.
+>> -		 */
+>> -		if (ret == -ENXIO)
+>> -			return ret;
+>> -
+>> -		dev_err(dev, "no usb2 phy configured\n");
+>> -		return -EPROBE_DEFER;
+>> -	}
+>> -
+>> -	if (IS_ERR(dwc->usb3_phy)) {
+>> -		ret = PTR_ERR(dwc->usb3_phy);
+>> -
+>> -		/*
+>> -		 * if -ENXIO is returned, it means PHY layer wasn't
+>> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
+>> -		 * in that case, since no PHY driver will ever probe.
+>> -		 */
+>> -		if (ret == -ENXIO)
+>> -			return ret;
+>> -
+>> -		dev_err(dev, "no usb3 phy configured\n");
+>> -		return -EPROBE_DEFER;
+>> -	}
+> 
+> the idea for doing the error checking here was actually to avoid
+> duplicating it in all previous cases, as you did. Please keep the error
+> checking here and you're good to go.
+> 
+>> -
+>>  	dwc->xhci_resources[0].start = res->start;
+>>  	dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>>  					DWC3_XHCI_REGS_END;
+>> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+>> index 7db34f0..49ffa6d 100644
+>> --- a/drivers/usb/dwc3/platform_data.h
+>> +++ b/drivers/usb/dwc3/platform_data.h
+>> @@ -24,4 +24,6 @@ struct dwc3_platform_data {
+>>  	enum usb_device_speed maximum_speed;
+>>  	enum usb_dr_mode dr_mode;
+>>  	bool tx_fifo_resize;
+>> +	bool usb2_phy;
+>> +	bool usb3_phy;
+> 
+> This would look better as a quirks flag, then we could:
+> 
+> unsigned long quirks;
+> #define DWC3_QUIRK_NO_USB3_PHY	BIT(0)
+> #define DWC3_QUIRK_NO_USB2_PHY	BIT(1)
 
-If you've not already done so, take a look at the changes to this
-documentation in linux-next.
+Should this quirk be used for dt also? Currently we find if it has usb3 phy or
+usb2 phy from the dt data only. But if we add a quirk, we'll have to add a
+property to populate the quirk no?
 
-There is some documentation about what the spin-table should actually
-mean for ARM in Documentation/arm64/booting.txt.
+Thanks
+Kishon
 
-We might need to add pointers from Documentation/arm/Booting?
+> 
+> ...
+> 
+> if (!test_bit(DWC3_QUIRK_NO_USB3_PHY), &dwc->quirks &&
+> 	dwc->has_usb3_phy) {
+> 	grab_usb3_phy();
+> }
+> 
+> cheers
+> 
 
-Cheers
----Dave
