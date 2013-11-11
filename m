@@ -1,82 +1,47 @@
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Documentation: Add MDIO bus node to PHY binding document
-Date: Mon, 11 Nov 2013 14:00:25 +0100
-Message-ID: <1384174825-14249-1-git-send-email-jonas.jensen@gmail.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V7 2/3] ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
+Date: Mon, 11 Nov 2013 05:06:00 -0800 (PST)
+Message-ID: <10330347.YPtX4Jly4T@flatron>
+References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com> <1384173897-16106-3-git-send-email-l.krishna@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384173897-16106-3-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add MDIO bus node segment and update the example,
-allowing trivial bindings to break out boilerplate.
+Hi Leela,
 
-Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+On Monday 11 of November 2013 18:14:56 Leela Krishna Amudala wrote:
+> In Exynos5 series SoCs, PMU has registers to enable/disable mask/unmask
+> watchdog timer which is not the case with s3c series SoCs so, there is a
+> need to have different compatible names for watchdog to handle these pmu
+> registers access.
+> 
+> Hence this patch removes watchdog node from Exynos5.dtsi common file and
+> make it separate by updating existing node in Exynos5250 and adding new node
+> to Exynos5420. This patch also makes the watchdog node enabled by default
+> 
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi    |    7 -------
+>  arch/arm/boot/dts/exynos5250.dtsi |    6 +++++-
+>  arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
+>  3 files changed, 14 insertions(+), 8 deletions(-)
 
-Notes:
-    Changes per reply from Grant [0]
-    
-    [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/208851.html
-    
-    Applies to next-20131111
+This patch should go as the last in this series, because otherwise it
+would change DTS files to use compatible values that are not yet
+supported.
 
- Documentation/devicetree/bindings/net/phy.txt | 37 +++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+The patch itself is fine, so
 
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-index 7cd18fb..4e58a5d 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -1,3 +1,13 @@
-+MDIO Bus Nodes
-+
-+MDIO bus nodes describe an MDIO bus. It is a container for PHY nodes as
-+described below.
-+
-+Required properties:
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+
-+
- PHY nodes
- 
- Required properties:
-@@ -23,13 +33,24 @@ Optional Properties:
-   assume clause 22. The compatible list may also contain other
-   elements.
- 
-+
- Example:
- 
--ethernet-phy@0 {
--	compatible = "ethernet-phy-ieee802.3-c22";
--	linux,phandle = <2452000>;
--	interrupt-parent = <40000>;
--	interrupts = <35 1>;
--	reg = <0>;
--	device_type = "ethernet-phy";
--};
-+mdio {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	ethernet-phy@0 {
-+		device_type = "ethernet-phy";
-+		compatible = "...", "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		interrupts = <24 0>;
-+	}
-+
-+	ethernet-phy@1 {
-+		device_type = "ethernet-phy";
-+		compatible = "...";
-+		reg = <1>;
-+		interrupts = <35 1>;
-+	}
-+}
--- 
-1.8.2.1
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Best regards,
+Tomasz
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
