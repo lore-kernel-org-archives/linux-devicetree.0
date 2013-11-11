@@ -1,7 +1,7 @@
 From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/4] usb: chipidea: msm: Add device tree binding information
-Date: Mon, 11 Nov 2013 15:35:34 +0200
-Message-ID: <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+Subject: [PATCH 2/4] usb: chipidea: msm: Add device tree support
+Date: Mon, 11 Nov 2013 15:35:35 +0200
+Message-ID: <1384176937-1658-3-git-send-email-iivanov@mm-sol.com>
 References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384176937-1658-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
@@ -12,37 +12,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
+Allows controller to be specified via device tree.
+Pass PHY phandle specified in DT to core driver.
+
 Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index 5ea26c6..0a85eba 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -15,3 +15,19 @@ Example EHCI controller device node:
- 		usb-phy = <&usb_otg>;
- 	};
+diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
+index 2d51d85..747d6c1 100644
+--- a/drivers/usb/chipidea/ci_hdrc_msm.c
++++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+@@ -57,9 +57,21 @@ static struct ci_hdrc_platform_data ci_hdrc_msm_platdata = {
+ static int ci_hdrc_msm_probe(struct platform_device *pdev)
+ {
+ 	struct platform_device *plat_ci;
++	struct usb_phy *phy;
  
-+CI13xxx (Chipidea) USB controllers
+ 	dev_dbg(&pdev->dev, "ci_hdrc_msm_probe\n");
+ 
++	/*
++	 * OTG(PHY) driver takes care of PHY initialization, clock management,
++	 * powering up VBUS, mapping of registers address space and power
++	 * management.
++	 */
++	phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
++	if (IS_ERR(phy))
++		return PTR_ERR(phy);
++	else
++		ci_hdrc_msm_platdata.phy = phy;
 +
-+Required properties:
-+- compatible: 	should contain "qcom,ci-hdrc"
-+- reg: 			offset and length of the register set in the memory map
-+- interrupts: 	interrupt-specifier for the controller interrupt.
-+- usb-phy:		phandle for the PHY device
-+- dr_mode: 		Sould be "peripheral"
+ 	plat_ci = ci_hdrc_add_device(&pdev->dev,
+ 				pdev->resource, pdev->num_resources,
+ 				&ci_hdrc_msm_platdata);
+@@ -86,10 +98,19 @@ static int ci_hdrc_msm_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id msm_ci_dt_match[] = {
++	{ .compatible = "qcom,ci-hdrc", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, msm_ci_dt_match);
 +
-+	gadget@f9a55000 {
-+		compatible = "qcom,ci-hdrc";
-+		reg = <0xf9a55000 0x400>;
-+		dr_mode = "peripheral";
-+		interrupts = <0 134 0>;
-+		usb-phy = <&usb_otg>;
-+	};
-\ No newline at end of file
+ static struct platform_driver ci_hdrc_msm_driver = {
+ 	.probe = ci_hdrc_msm_probe,
+ 	.remove = ci_hdrc_msm_remove,
+-	.driver = { .name = "msm_hsusb", },
++	.driver = {
++		.name = "msm_hsusb",
++		.of_match_table = msm_ci_dt_match,
++	},
+ };
+ 
+ module_platform_driver(ci_hdrc_msm_driver);
 -- 
 1.7.9.5
 
