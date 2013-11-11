@@ -1,59 +1,32 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 11 Nov 2013 11:53:38 -0700
-Message-ID: <528127B2.80109@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org> <3144247.j2q6H0KWZx@lem-wkst-02> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <528121D5.40403@keymile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <528121D5.40403@keymile.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gerlando Falauto <gerlando.falauto@keymile.com>, Mark Brown <broonie@kernel.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+From: afenkart@gmail.com
+Subject: [PATCH 0/3] mmc: omap_hsmmc: Enable SDIO IRQ.
+Date: Mon, 11 Nov 2013 19:52:56 +0100
+Message-ID: <52812826.cb710e0a.03c1.ffffb69f@mx.google.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 11:28 AM, Gerlando Falauto wrote:
-> Hi everyone,
-> 
-> [jumping in on an old discussion]
-> 
-> On 09/09/2013 06:19 PM, Mark Brown wrote:
->> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
->>> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
->>
->>>> The driver that tries to use the GPIO requested by this patch before
->>>> HAS to
->>>> fail. This is exactly the intention of this patch. We don't want the
->>>> GPIO to
->>>> be requested any more, if it is used as an interrupt pin.
->>
->>> That will break existing drivers. There are drivers that request the
->>> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
->>> that way.
->>
->> Yes, plus input devices and audio jack detection among others.  This
->> pattern is very common if the GPIO is actually being used as a GPIO, an
->> edge triggered interrupt is used to flag when something happens and the
->> state is determined by reading the GPIO state (often with some
->> debounce).
-> 
-> I actually came across this thread while looking for an answer to the
-> following (apparently trivial) question:
-> 
-> If you were to write a new driver & binding, what would be, in general,
-> the recommended DT binding for a cascade interrupt controller (or any
-> other peripheral, for that matter), which is connected through a GPIO
-> (to be used as IRQ)?
-> 
-> a) Through gpios = <&gpio0 N>
-> b) through interrupt-parent = <&gpio0> & interrupts <N
-> IRQ_TYPE_LEVEL_LOW>, or
-> c) both?
+From: Andreas Fenkart <afenkart@gmail.com>
 
-(b) alone.
+This a resend:
+- incorparated changes as suggested by reviewers
+- simplified workaround for am335x, gpio will now only wake
+  the module from runtime suspend, not handle the sdio irq
+  itself 
 
->From the perspective of the child interrupt controller, its output is
-purely an interrupt. The fact that the parent interrupt controller could
-use that pin as a GPIO in some other context (e.g. on a different board)
-isn't something that the child interrupt controller should know/care about.
+Andreas Fenkart (3):
+  mmc: omap_hsmmc: Enable SDIO IRQ.
+  mmc: omap_hsmmc: Pin remux workaround to support SDIO interrupt on
+    AM335x.
+  mmc: omap_hsmmc: Extend debugfs for SDIO IRQ, GPIO and pinmux.
+
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   42 +++
+ drivers/mmc/host/omap_hsmmc.c                      |  299 ++++++++++++++++++--
+ include/linux/platform_data/mmc-omap.h             |    4 +
+ 3 files changed, 325 insertions(+), 20 deletions(-)
+
+-- 
+1.7.10.4
+
