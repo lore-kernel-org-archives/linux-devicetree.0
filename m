@@ -1,45 +1,47 @@
-From: Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] DT: proc: Add runtime overlay interface in /proc
-Date: Mon, 11 Nov 2013 11:22:07 +0100
-Message-ID: <5280AFCF.8050208@nsn.com>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com> <1383923170-24914-4-git-send-email-panto@antoniou-consulting.com>
+From: <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH resend 0/3] DMA: Freescale: Add support for 8-channel DMA engine
+Date: Mon, 11 Nov 2013 18:26:04 +0800
+Message-ID: <1384165567-4883-1-git-send-email-hongbo.zhang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383923170-24914-4-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-On 08.11.2013 16:06, ext Pantelis Antoniou wrote:
-> Add a runtime interface to /proc to enable generic device tree overlay
-> usage.
-> 
+Hi Dan Williams and Vinod Koul,
 
-> +
-> +		/* start at 256K at first */
-> +		if (od->alloc == 0)
-> +			od->alloc = SZ_256K / 2;
-> +
+This time only resend all patches to the new dmaengine patchwork at
+dmaengine(at)vger.kernel.org as Dan Williams suggested.
 
-Same problem as Guenter reported. I have to include <linux/sizes.h> or otherwise
-the code will not build.
+Patch 1/3 and 2/3 have been Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+after several iterations of review.
 
-> +	rcu_read_lock();
-> +	idr_for_each_entry(&overlay_idr, od, id) {
-> +		seq_printf(m, "%d: %d bytes", id, od->size);
+Hongbo Zhang (3):
+  DMA: Freescale: revise device tree binding document
+  DMA: Freescale: Add new 8-channel DMA engine device tree nodes
+  DMA: Freescale: update driver to support 8-channel DMA engine
 
-For od->size we should use "%zu", otherwise there will be a compilation warning.
-At least I get one on mips64...
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |  138 ++++++++++++++------
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+ arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++
+ arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+ drivers/dma/Kconfig                                |    9 +-
+ drivers/dma/fsldma.c                               |    9 +-
+ drivers/dma/fsldma.h                               |    2 +-
+ 8 files changed, 281 insertions(+), 49 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
 
-Otherwise, I've tested this and it works fine for me also.
+-- 
+1.7.9.5
 
-Thanks,
-Ionut
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
