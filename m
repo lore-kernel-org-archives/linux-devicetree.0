@@ -1,56 +1,49 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/8] ARM: dts: imx27 pinctrl
-Date: Mon, 11 Nov 2013 11:29:15 +0100
-Message-ID: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com>
-References: <1382950843-26066-1-git-send-email-mpa@pengutronix.de>
-	<1382950843-26066-5-git-send-email-mpa@pengutronix.de>
-	<CAHCPf3sz6eOYrnNDfOTo5Z5dZP2U9+GtQMKYZEb-1WfuXepa6A@mail.gmail.com>
-	<CACRpkdazhujHpjVuOhee9UXfi=zV3Z7TjbxzQ_3H+gmFrgDmWA@mail.gmail.com>
-	<20131108135601.GA30263@pengutronix.de>
+From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Subject: IMX27: How to do 22k pull-up with the pinctrl ?
+Date: Mon, 11 Nov 2013 18:45:30 +0800
+Message-ID: <5280B54A.1050503@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131108135601.GA30263-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 8, 2013 at 2:56 PM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Fri, Nov 08, 2013 at 10:45:01AM +0100, Linus Walleij wrote:
+Hi,
 
->> If the I/O region is tightly coupled across two subsystems like
->> that we usually merge the driver into one combined
->> pinctrl+gpio driver and put it into drivers/pinctrl/*.
->
-> The gpio module does not necessarily include a pinctrl module. Most of
-> the imx SoCs have the same gpio function registers but without pinctrl.
-> They all use the same gpio driver.
+while I port the static code to the DT I step into the problem to
+set the PSCR for the sdhc2 ports to 22k pull-up
+I look for something like described in
+     pinctrl/fsl,imx-pinctrl.txt
 
-Yeah but I'm only saying you could make a combined driver,
-I didn't say you had to use both halves of it all the time.
+the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
 
-pinctrl/pinctrl-imx1.c can very well handle both and only
-supply GPIO functionality for some compatible-strings,
-that's OK.
 
-> There are 6 gpio modules in the memory region from 0x10015000 to
-> 0x100155ff. pinctrl is in the same memory region.
+pinctrl_sdhc2_1: sdhc2-1 {
+                         fsl,pins = <
+                                 MX27_PAD_SD2_D0__SD2_D0  0x1
+                                 MX27_PAD_SD2_D1__SD2_D1  0x1
+                                 MX27_PAD_SD2_D2__SD2_D2  0x1
+                                 MX27_PAD_SD2_D3__SD2_D3  0x1
+                                 MX27_PAD_SD2_CLK__SD2_CLK  0x1
+                                 MX27_PAD_SD2_CMD__SD2_CMD  0x1
+                         >;
+                 };
 
-OK I get it (I think).
+its setup in board specific c-file
 
-> I could change the bindings back to that from v1 [1]. One pinmux
-> controller over the full memory range (0x10015000 0x600) and the gpio
-> modules as subnodes using 0x100 each. This would preserve the currently
-> used references to the gpio nodes.
+/* 22k pull-up for sd2 pins  */
+         reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+         reg &= ~0xfff0;
+         reg |= 0xfff0;
+         __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
 
-Hm I don't really have opinions on this, better let the DT-folks
-say what they prefer. But that looks good to me.
 
-Can you do this with an incremental patch?
+Any successions?
 
-Yours,
-Linus Walleij
+Regards
+Chris
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
