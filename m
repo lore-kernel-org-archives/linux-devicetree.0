@@ -1,216 +1,253 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Mon, 11 Nov 2013 20:29:20 +0000
-Message-ID: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Mon, 11 Nov 2013 21:33:41 +0100
+Message-ID: <52813F25.40703@gmail.com>
+References: <87bo1qhfnf.fsf@natisbad.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87bo1qhfnf.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Consumers of the Linux kernel's build products are beginning to hardcode
-the filenames of the dtbs generated.  Since the dtb filenames are
-currently the dts filename s/dts/dtb/, this prevents the kernel
-community from renaming dts files as needed.
+On 11/11/2013 09:01 PM, Arnaud Ebalard wrote:
+> All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+> 2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+> USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+> serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+> controllers, G751 temperature sensor) except for:
+>
+>   - the Intersil ISL12057 I2C RTC Chip,
+>   - the Armada NAND controller.
+>
+> Support for both of those is currently work in progress and does not
+> prevent boot.
+>
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+[...]
+> diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> new file mode 100644
+> index 0000000..ba1e0de
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> @@ -0,0 +1,288 @@
+> +/*
+> + * Device Tree file for NETGEAR ReadyNAS 2120
+> + *
+> + * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-xp-mv78230.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
 
-Let's provide a consistent naming structure for consumers to script
-against.  Or at least, as consistent as the dts properties themselves.
+nit: order includes global before local, i.e. {gpio,input}.h before .dtsi
 
-With this patch, adding the '-L' option to the dtc commandline will
-cause dtc to create a symlink to the generated dtb, using the board
-compatible string as the filename, eg:
+> +/ {
+> +	model = "NETGEAR ReadyNAS 2120";
+> +	compatible = "netgear,readynas-2120", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
+> +	};
+> +
+[...]
+> +			serial@12000 {
+> +				clocks = <&coreclk 0>;
+> +				status = "okay";
+> +			};
 
-  globalscale,mirabox.dtb -> armada-370-mirabox.dtb
+For your possible cleanup later: move clocks = <&coreclk 0> to
+armada-370-xp.dtsi and remove this then.
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-All,
+Also for cleanup later: It would be great if most SoC nodes get
+a node label. That way you can just write:
 
-I'm sending this RFC to see if this is how we want to go about this.  If it's
-acceptable, I'll resend to the dtc maintainers
+uart0: { status = "okay" };
 
-thx,
+without replaying node hierarchy over and over again.
 
-Jason.
+> +			mdio {
+> +				phy0: ethernet-phy@0 {
+> +					compatible = "marvell,88e1318s";
+> +					reg = <0>;
+> +				};
+> +
+> +				phy1: ethernet-phy@1 {
+> +					compatible = "marvell,88e1318s";
+> +					reg = <1>;
+> +				};
+> +			};
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			ethernet@74000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			/* Front USB 2.0 port */
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				compatible = "marvell,mv78230-i2c";
+> +				clock-frequency = <400000>;
+> +				status = "okay";
+> +
+> +				/* Controller for rear fan #1 of 3 (Protechnic
+> +				 * MGT4012XB-O20, 8000RPM) near eSATA port */
+> +				g762_fan1: g762@3e {
+> +					compatible = "gmt,g762";
+> +					reg = <0x3e>;
+> +					clocks = <&g762_clk>; /* input clock */
+> +					fan_gear_mode = <0>;
+> +					fan_startv = <1>;
+> +					pwm_polarity = <0>;
 
- dtc.c      | 12 ++++++++++--
- dtc.h      |  1 +
- flattree.c | 30 ++++++++++++++++++++++++++++++
- srcpos.c   | 20 ++++++++++++++++++--
- srcpos.h   |  2 ++
- 5 files changed, 61 insertions(+), 4 deletions(-)
+I haven't looked at g762 dt-bindings, but above properties should have
+s/_/- and possibly also vendor prefix if device specific,
+e.g. gmt,fan-hear-mode. Depends on your g762 binding review.
 
-diff --git a/dtc.c b/dtc.c
-index e3c96536fd9d..cb2bb1b7ce1f 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -49,7 +49,7 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
- 
- /* Usage related data. */
- static const char usage_synopsis[] = "dtc [options] <input file>";
--static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv";
-+static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:Lhv";
- static struct option const usage_long_opts[] = {
- 	{"quiet",            no_argument, NULL, 'q'},
- 	{"in-format",         a_argument, NULL, 'I'},
-@@ -67,6 +67,7 @@ static struct option const usage_long_opts[] = {
- 	{"phandle",           a_argument, NULL, 'H'},
- 	{"warning",           a_argument, NULL, 'W'},
- 	{"error",             a_argument, NULL, 'E'},
-+	{"sym-link",         no_argument, NULL, 'L'},
- 	{"help",             no_argument, NULL, 'h'},
- 	{"version",          no_argument, NULL, 'v'},
- 	{NULL,               no_argument, NULL, 0x0},
-@@ -97,6 +98,7 @@ static const char * const usage_opts_help[] = {
- 	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
- 	"\n\tEnable/disable warnings (prefix with \"no-\")",
- 	"\n\tEnable/disable errors (prefix with \"no-\")",
-+	"\n\tCreate a symlink to the dtb named by board compatible string",
- 	"\n\tPrint this help and exit",
- 	"\n\tPrint version and exit",
- 	NULL,
-@@ -109,7 +111,7 @@ int main(int argc, char *argv[])
- 	const char *outform = "dts";
- 	const char *outname = "-";
- 	const char *depname = NULL;
--	int force = 0, sort = 0;
-+	int force = 0, sort = 0, mksymlink = 0;
- 	const char *arg;
- 	int opt;
- 	FILE *outf = NULL;
-@@ -184,6 +186,9 @@ int main(int argc, char *argv[])
- 		case 'E':
- 			parse_checks_option(false, true, optarg);
- 			break;
-+		case 'L':
-+			mksymlink = 1;
-+			break;
- 
- 		case 'h':
- 			usage(NULL);
-@@ -247,6 +252,9 @@ int main(int argc, char *argv[])
- 		dt_to_source(outf, bi);
- 	} else if (streq(outform, "dtb")) {
- 		dt_to_blob(outf, bi, outversion);
-+		if (mksymlink) {
-+			dt_to_symlink(bi, outname);
-+		}
- 	} else if (streq(outform, "asm")) {
- 		dt_to_asm(outf, bi, outversion);
- 	} else if (streq(outform, "null")) {
-diff --git a/dtc.h b/dtc.h
-index 264a20cf66a8..0cdb558fead1 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -254,6 +254,7 @@ void process_checks(int force, struct boot_info *bi);
- 
- void dt_to_blob(FILE *f, struct boot_info *bi, int version);
- void dt_to_asm(FILE *f, struct boot_info *bi, int version);
-+void dt_to_symlink(struct boot_info *bi, const char *outname);
- 
- struct boot_info *dt_from_blob(const char *fname);
- 
-diff --git a/flattree.c b/flattree.c
-index 665dad7bb465..e1720dec4389 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -577,6 +577,36 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
- 	data_free(strbuf);
- }
- 
-+void dt_to_symlink(struct boot_info *bi, const char *outname)
-+{
-+	struct property *prop;
-+	const char *board;
-+	int symlen;
-+	char *symname;
-+	char *dname;
-+	char *bname;
-+
-+	prop = get_property(bi->dt, "compatible");
-+	board = prop->val.val;
-+
-+	symlen = strlen(outname) + prop->val.len;
-+	symname = xmalloc(symlen);
-+
-+	dname = xdirname(outname);
-+	bname = xbasename(outname);
-+
-+	snprintf(symname, symlen, "%s/%s.dtb", dname, board);
-+
-+	/* create the symlink */
-+	if (symlink(bname, symname) == -1) {
-+		die("Couldn't create symlink %s: %s\n", symlink, strerror(errno));
-+	}
-+
-+	free(symname);
-+	free(dname);
-+	free(bname);
-+}
-+
- struct inbuf {
- 	char *base, *limit, *ptr;
- };
-diff --git a/srcpos.c b/srcpos.c
-index c20bc5315bc1..5f9e032330ea 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -34,7 +34,7 @@ struct search_path {
- static struct search_path *search_path_head, **search_path_tail;
- 
- 
--static char *dirname(const char *path)
-+char *xdirname(const char *path)
- {
- 	const char *slash = strrchr(path, '/');
- 
-@@ -49,6 +49,22 @@ static char *dirname(const char *path)
- 	return NULL;
- }
- 
-+char *xbasename(const char *path)
-+{
-+	const char *slash = strrchr(path, '/');
-+
-+	if (slash) {
-+		int len = strlen(path) - (slash - path);
-+		char *base = xmalloc(len + 1);
-+
-+		memcpy(base, slash + 1, len);
-+		base[len] = '\0';
-+		return base;
-+	}
-+
-+	return NULL;
-+}
-+
- FILE *depfile; /* = NULL */
- struct srcfile_state *current_srcfile; /* = NULL */
- 
-@@ -150,7 +166,7 @@ void srcfile_push(const char *fname)
- 	srcfile = xmalloc(sizeof(*srcfile));
- 
- 	srcfile->f = srcfile_relative_open(fname, &srcfile->name);
--	srcfile->dir = dirname(srcfile->name);
-+	srcfile->dir = xdirname(srcfile->name);
- 	srcfile->prev = current_srcfile;
- 
- 	srcfile->lineno = 1;
-diff --git a/srcpos.h b/srcpos.h
-index 93a27123c2e9..a6b6ad308d52 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -57,6 +57,8 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep);
- void srcfile_push(const char *fname);
- int srcfile_pop(void);
- 
-+char *xdirname(const char *path);
-+char *xbasename(const char *path);
- /**
-  * Add a new directory to the search path for input files
-  *
--- 
-1.8.4.2
+> +				};
+> +
+> +				/*  Controller for rear (center) fan #2 of 3 */
+> +				g762_fan2: g762@48 {
+> +					compatible = "gmt,g762";
+> +					reg = <0x48>;
+> +					clocks = <&g762_clk>; /* input clock */
+> +					fan_gear_mode = <0>;
+> +					fan_startv = <1>;
+> +					pwm_polarity = <0>;
+> +				};
+> +
+> +				/*  Controller for rear fan #3 of 3 */
+> +				g762_fan3: g762@49 {
+> +					compatible = "gmt,g762";
+> +					reg = <0x49>;
+> +					clocks = <&g762_clk>; /* input clock */
+> +					fan_gear_mode = <0>;
+> +					fan_startv = <1>;
+> +					pwm_polarity = <0>;
+> +				};
+> +
+> +				/* Temperature sensor */
+> +				g751: g751@4c {
+> +					compatible = "gmt,g751";
+> +					reg = <0x4c>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	clocks {
+> +	       g762_clk: g762_oscillator {
+
+While node labels have '_', node names usually have '-'.
+
+> +			 compatible = "fixed-clock";
+> +			 #clock-cells = <0>;
+> +			 clock-frequency = <32768>;
+> +	       };
+> +	};
+> +
+> +	gpio_leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
+> +			     &sata3_led_pin &sata4_led_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		red_sata1_led {
+
+ditto here and below.
+
+> +			label = "rn2120:red:sata1";
+> +			gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		red_sata2_led {
+> +			label = "rn2120:red:sata2";
+> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		red_sata3_led {
+> +			label = "rn2120:red:sata3";
+> +			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		red_sata4_led {
+> +			label = "rn2120:red:sata4";
+> +			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		red_err_led {
+> +			label = "rn2120:red:err";
+> +			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-0 = <&power_button_pin &reset_button_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		power_button {
+
+ditto here and below.
+
+> +			label = "Power Button";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		reset_button {
+> +			label = "Reset Button";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	gpio_poweroff {
+
+ditto.
+
+Besides the nits,
+
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> +		compatible = "gpio-poweroff";
+> +		pinctrl-0 = <&poweroff>;
+> +		pinctrl-names = "default";
+> +		gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
