@@ -1,106 +1,84 @@
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: Re: [PATCH 3/3] mmc: omap_hsmmc: Extend debugfs for SDIO IRQ, GPIO
- and pinmux.
-Date: Mon, 11 Nov 2013 20:30:29 +0100
-Message-ID: <CALtMJEA0P5qyFQw7v=sBYoxfLu=JawvCP=0ZZry_acnp3_1z=Q@mail.gmail.com>
-References: <5281287f.01d50e0a.1189.74ea@mx.google.com>
-	<CAOf5uw=DB-saAsKXQ12Mry8jC=PsbOkkzj8JQBjJxeJYrfHEeg@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 11 Nov 2013 12:33:20 -0700
+Message-ID: <52813100.1060500@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org> <3144247.j2q6H0KWZx@lem-wkst-02> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <528121D5.40403@keymile.com> <528127B2.80109@wwwdotorg.org> <52812D3A.2070107@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAOf5uw=DB-saAsKXQ12Mry8jC=PsbOkkzj8JQBjJxeJYrfHEeg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52812D3A.2070107@keymile.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gerlando Falauto <gerlando.falauto@keymile.com>
+Cc: Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11/11/2013 12:17 PM, Gerlando Falauto wrote:
+> Hi Stephan,
+> 
+> On 11/11/2013 07:53 PM, Stephen Warren wrote:
+>> On 11/11/2013 11:28 AM, Gerlando Falauto wrote:
+>>> Hi everyone,
+>>>
+>>> [jumping in on an old discussion]
+>>>
+>>> On 09/09/2013 06:19 PM, Mark Brown wrote:
+>>>> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
+>>>>> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
+>>>>
+>>>>>> The driver that tries to use the GPIO requested by this patch before
+>>>>>> HAS to
+>>>>>> fail. This is exactly the intention of this patch. We don't want the
+>>>>>> GPIO to
+>>>>>> be requested any more, if it is used as an interrupt pin.
+>>>>
+>>>>> That will break existing drivers. There are drivers that request the
+>>>>> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
+>>>>> that way.
+>>>>
+>>>> Yes, plus input devices and audio jack detection among others.  This
+>>>> pattern is very common if the GPIO is actually being used as a GPIO, an
+>>>> edge triggered interrupt is used to flag when something happens and the
+>>>> state is determined by reading the GPIO state (often with some
+>>>> debounce).
+>>>
+>>> I actually came across this thread while looking for an answer to the
+>>> following (apparently trivial) question:
+>>>
+>>> If you were to write a new driver & binding, what would be, in general,
+>>> the recommended DT binding for a cascade interrupt controller (or any
+>>> other peripheral, for that matter), which is connected through a GPIO
+>>> (to be used as IRQ)?
+>>>
+>>> a) Through gpios = <&gpio0 N>
+>>> b) through interrupt-parent = <&gpio0> & interrupts <N
+>>> IRQ_TYPE_LEVEL_LOW>, or
+>>> c) both?
+>>
+>> (b) alone.
+>>
+>>  From the perspective of the child interrupt controller, its output is
+>> purely an interrupt. The fact that the parent interrupt controller could
+>> use that pin as a GPIO in some other context (e.g. on a different board)
+>> isn't something that the child interrupt controller should know/care
+>> about.
+>>
+> 
+> Thanks for your answer. So it should be the parent driver to proactively
+> configure the GPIO as input, active high etc..., when an IRQ for its
+> GPIOs is requested, right?
 
-2013/11/11 Michael Trimarchi <michael@amarulasolutions.com>:
-> Hi
->
-> On Mon, Nov 11, 2013 at 7:52 PM,  <afenkart@gmail.com> wrote:
->> From: Andreas Fenkart <afenkart@gmail.com>
->>
->> Add SDIO IRQ entries to debugfs entry. Note that PSTATE shows current
->> state of data lines, incl. SDIO IRQ pending
->>
->> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
->> ---
->>  drivers/mmc/host/omap_hsmmc.c |   22 +++++++++++++++++++++-
->>  1 file changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
->> index e880b44..34e2ee0 100644
->> --- a/drivers/mmc/host/omap_hsmmc.c
->> +++ b/drivers/mmc/host/omap_hsmmc.c
->> @@ -81,6 +81,7 @@ static void apply_clk_hack(struct device *dev)
->>  #define OMAP_HSMMC_RSP54       0x0118
->>  #define OMAP_HSMMC_RSP76       0x011C
->>  #define OMAP_HSMMC_DATA                0x0120
->> +#define OMAP_HSMMC_PSTATE      0x0124
->>  #define OMAP_HSMMC_HCTL                0x0128
->>  #define OMAP_HSMMC_SYSCTL      0x012C
->>  #define OMAP_HSMMC_STAT                0x0130
->> @@ -1800,6 +1801,23 @@ static int omap_hsmmc_regs_show(struct seq_file *s, void *data)
->>  {
->>         struct mmc_host *mmc = s->private;
->>         struct omap_hsmmc_host *host = mmc_priv(mmc);
->> +       unsigned long flags;
->> +       bool suspended;
->> +
->> +       spin_lock_irqsave(&host->irq_lock, flags);
->
-> Why do you need a spin_lock_irqsave just to print out the status?
->
->> +       seq_puts(s, "\n");
->> +       seq_printf(s, "sdio irq\t%s\n", ((host->flags & HSMMC_SDIO_IRQ_ENABLED)
->> +                                        ? "enabled" : "disabled"));
+That was the conclusion of this thread, or a similar thread, yes.
 
-initially, because the flags field could be changed by an irq.
-It's atomic and since the code path doesn't change, it's safe to remove
-the spinlock, thx
+> Moving to a different target (actually Mark's original point), i.e. a
+> generic device which is connected through a GPIO, using the IRQ to
+> trigger an event, what would be the recommended way?
 
->> +       suspended = host->dev->power.runtime_status != RPM_ACTIVE;
->> +       if (host->flags & HSMMC_SWAKEUP_QUIRK) {
->> +               seq_printf(s, "pinmux config\t%s\n", (suspended ?
->> +                                                     "gpio" : "sdio"));
->> +               if (suspended)
->> +                       seq_printf(s, "sdio irq pin\t%s\n",
->> +                                  gpio_get_value(mmc_slot(host).gpio_cirq) ?
->> +                                  "high" : "low");
+Again, the device that's the interrupt source is simply emitting an
+interrupt signal, so that's all it should know about.
 
-This is more of an issue, the pinmux could have changed underneath, if we
-resumed meanwile. Reading the GPIO value read will not reflect the pin on the
-package.
-
-It has nothing to do with the spinlock though so will remove that.
-.
->> +       }
->> +       spin_unlock_irqrestore(&host->irq_lock, flags);
->>
->
-> Michael
->
->>         if (host->suspended) {
->>                 seq_printf(s, "host suspended, can't read registers\n");
->> @@ -1807,9 +1825,11 @@ static int omap_hsmmc_regs_show(struct seq_file *s, void *data)
->>         }
->>
->>         pm_runtime_get_sync(host->dev);
->> -
->> +       seq_puts(s, "\nregs:\n");
->>         seq_printf(s, "CON:\t\t0x%08x\n",
->>                         OMAP_HSMMC_READ(host->base, CON));
->> +       seq_printf(s, "PSTATE:\t\t0x%08x\n",
->> +                  OMAP_HSMMC_READ(host->base, PSTATE));
->>         seq_printf(s, "HCTL:\t\t0x%08x\n",
->>                         OMAP_HSMMC_READ(host->base, HCTL));
->>         seq_printf(s, "SYSCTL:\t\t0x%08x\n",
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now, if you're talking about a device that's emitting just some random
+data signal, where the driver wants to be notified of changes in the
+signal, then that should be modelled as a GPIO, which the driver can
+then convert internally to an IRQ and request. That's because from the
+HW perspective, the signal isn't an IRQ output.
