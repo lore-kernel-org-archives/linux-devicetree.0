@@ -1,65 +1,130 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
-Date: Mon, 11 Nov 2013 16:59:14 +0000
-Message-ID: <alpine.DEB.2.02.1311111658100.26077@kaball.uk.xensource.com>
-References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca> <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com>
+From: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>
+Subject: [PATCH 06/12] mtd: nand: davinci: adjust DT properties to MTD generic
+Date: Mon, 11 Nov 2013 17:01:03 +0000
+Message-ID: <4F5844B3A985794BA902E12C070812375F8D20@DNCE04.ent.ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-7-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1311061642270.26077-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1384187188-5776-7-git-send-email-ivan.khoronzhuk@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Nov 2013, Stefano Stabellini wrote:
-> On Sat, 2 Nov 2013, Grant Likely wrote:
-> > On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > > 
-> > > Platform devices created by DT code don't initialize dma_mask pointer to
-> > > anything. Set it to coherent_dma_mask by default if the architecture
-> > > code has not set it.
-> > > 
-> > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > I believe this is okay. I haven't done any testing to back up that
-> > opinion though.
-> 
-> Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+The properties davinci-ecc-mode, davinci-nand-use-bbt, davinci-nand-buswidth
+are MTD generic. Correct names for them are: nand-ecc-mode, nand-on-flash-bbt,
+nand-bus-width accordingly. So rename them in dts and documentation.
 
-BTW I hope you are planning on sending this upstream soon, because
-without it I can very easily corrupt my root fs by simply booting the system.
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ .../devicetree/bindings/mtd/davinci-nand.txt       |   25 ++++++++++++++++----
+ drivers/mtd/nand/davinci_nand.c                    |   11 ++++++---
+ 2 files changed, 28 insertions(+), 8 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+index d2a3fc0..befaa5b 100644
+--- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+@@ -37,7 +37,7 @@ Recommended properties :
+ - ti,davinci-mask-chipsel:     mask for chipselect address. Needed to mask
+                                addresses for given chipselect.
 
-> > > I think this is at least part of what is needed to fix dma_mask issue
-> > > raised by Stefano [1]. Things should work AFAICT with just this, but
-> > > I suppose the xgmac driver needs to set the mask as well (not relying
-> > > on the default), but some pointing the dma_mask to a valid value is
-> > > needed first.
-> > > 
-> > > Rob
-> > > 
-> > > [1] http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg528236.html
-> > > 
-> > >  drivers/of/platform.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > > index f6dcde2..fce088e 100644
-> > > --- a/drivers/of/platform.c
-> > > +++ b/drivers/of/platform.c
-> > > @@ -215,6 +215,8 @@ static struct platform_device *of_platform_device_create_pdata(
-> > >  	dev->archdata.dma_mask = 0xffffffffUL;
-> > >  #endif
-> > >  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> > > +	if (!dev->dev.dma_mask)
-> > > +		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-> > >  	dev->dev.bus = &platform_bus_type;
-> > >  	dev->dev.platform_data = platform_data;
-> > >  
-> 
+-- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. ECC mode
++- nand-ecc-mode:               operation mode of the NAND ecc mode. ECC mode
+                                valid values for davinci driver:
+                                - "none"
+                                - "soft"
+@@ -45,10 +45,25 @@ Recommended properties :
+
+ - ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or 4.
+
+-- ti,davinci-nand-buswidth:    buswidth 8 or 16.
++- nand-bus-width:              buswidth 8 or 16. If not present 8.
++
++- nand-on-flash-bbt:           use flash based bad block table support. OOB
++                               identifier is saved in OOB area. If not present
++                               false.
++
++Deprecated properties:
++
++- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. ECC mode
++                               valid values for davinci driver:
++                               - "none"
++                               - "soft"
++                               - "hw"
++
++- ti,davinci-nand-buswidth:    buswidth 8 or 16. If not present 8.
+
+ - ti,davinci-nand-use-bbt:     use flash based bad block table support. OOB
+-                               identifier is saved in OOB area.
++                               identifier is saved in OOB area. If not present
++                               false.
+
+ Nand device bindings may contain additional sub-nodes describing partitions of
+ the address space. See partition.txt for more detail. The NAND Flash timing
+@@ -66,9 +81,9 @@ nand_cs3@62000000 {
+        ti,davinci-mask-ale = <0>;
+        ti,davinci-mask-cle = <0>;
+        ti,davinci-mask-chipsel = <0>;
+-       ti,davinci-ecc-mode = "hw";
++       nand-ecc-mode = "hw";
+        ti,davinci-ecc-bits = <4>;
+-       ti,davinci-nand-use-bbt;
++       nand-on-flash-bbt;
+
+        partition@180000 {
+                label = "ubifs";
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index 9bcbaa9..78b8d66 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -534,7 +534,6 @@ static struct davinci_nand_pdata
+                struct davinci_nand_pdata *pdata;
+                const char *mode;
+                u32 prop;
+-               int len;
+
+                pdata =  devm_kzalloc(&pdev->dev,
+                                sizeof(struct davinci_nand_pdata),
+@@ -559,6 +558,8 @@ static struct davinci_nand_pdata
+                        "ti,davinci-mask-chipsel", &prop))
+                        pdata->mask_chipsel = prop;
+                if (!of_property_read_string(pdev->dev.of_node,
++                       "nand-ecc-mode", &mode) ||
++                   !of_property_read_string(pdev->dev.of_node,
+                        "ti,davinci-ecc-mode", &mode)) {
+                        if (!strncmp("none", mode, 4))
+                                pdata->ecc_mode = NAND_ECC_NONE;
+@@ -571,11 +572,15 @@ static struct davinci_nand_pdata
+                        "ti,davinci-ecc-bits", &prop))
+                        pdata->ecc_bits = prop;
+                if (!of_property_read_u32(pdev->dev.of_node,
++                       "nand-bus-width", &prop) ||
++                   !of_property_read_u32(pdev->dev.of_node,
+                        "ti,davinci-nand-buswidth", &prop))
+                        if (prop == 16)
+                                pdata->options |= NAND_BUSWIDTH_16;
+-               if (of_find_property(pdev->dev.of_node,
+-                       "ti,davinci-nand-use-bbt", &len))
++               if (of_property_read_bool(pdev->dev.of_node,
++                       "nand-on-flash-bbt") ||
++                   of_property_read_bool(pdev->dev.of_node,
++                       "ti,davinci-nand-use-bbt"))
+                        pdata->bbt_options = NAND_BBT_USE_FLASH;
+        }
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
