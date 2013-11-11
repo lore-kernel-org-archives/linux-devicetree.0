@@ -1,87 +1,106 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
-Date: Mon, 11 Nov 2013 22:26:41 +0800
-Message-ID: <20131111142639.GC11083@S2101-09.ap.freescale.net>
-References: <5280B54A.1050503@gtsys.com.hk>
- <20131111120357.GE21201@e106331-lin.cambridge.arm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
+Date: Mon, 11 Nov 2013 15:28:44 +0100
+Message-ID: <2964665.KKjuSDVdEA@flatron>
+References: <1B.DE.05666.EC070825@epcpsbgx2.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131111120357.GE21201-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1B.DE.05666.EC070825@epcpsbgx2.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: prathyush.k@samsung.com
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Copy Markus who is working on imx27 pinctrl driver.
+Hi Prathyush,
 
-On Mon, Nov 11, 2013 at 12:03:57PM +0000, Mark Rutland wrote:
-> On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
-> > Hi,
+Thanks for your reply. However, please do not use HTML messages to reply
+to mailing lists, as many of them filter out such.
+
+On Monday 11 of November 2013 05:53:18 Prathyush Kalashwaram wrote:
+> Hi Tomasz,
+>  
+> The enable values for some configuration registers are not 0x7.
+> Though there is no issue observed (so far) in using 0x7, it is better to use the correct enable values.
+> Thats the reason for this patch.
+
+Well, this means that the patch does not fix or improve anything, just
+introduces changes that are not needed for anything. This is especially
+bad, because it introduces a change in DT binding that is not needed yet
+and might turn out to be insufficient for future SoCs.
+
+This patch will be okay, if a need for explicit mask specification shows
+up in future, though.
+
+Best regards,
+Tomasz
+
+> And you're right. Using "samsung,enable-bit-mask" makes more sense. I will change and update with v2.
+>  
+> Regards,
+> Prathyush
+>  
+> ------- Original Message -------
+> Sender : Tomasz Figa<tomasz.figa@gmail.com>
+> Date : Nov 11, 2013 00:36 (GMT+05:30)
+> Title : Re: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
+>  
+> Hi Sachin,
 > 
-> Hi,
+> On Thursday 07 of November 2013 12:12:55 Sachin Kamat wrote:
+> > From: Prathyush K
+> >
+> > Different power domains of Exynos SOCs have different enable values.
+> > E.g. Exynos5250:
+> > ROTATOR_MEM_CONFIGURATION -> 0x3
+> > GSCL_CONFIGURATION -> 0x7
+> > Currently, there is no way to differentiate between these power domains
+> > and we write default value of 0x7 to turn on all the power domains.
+> >
+> > This patch adds a new 'enable' property to the power domain structure.
+> > This enable value can be set from the device tree by adding a property
+> > 'enable' in the device node. If no such property is found, the default
+> > value of 0x7 is used as enable value.
 > 
-> While this does involve device tree, it's not strictly a device tree
-> problem, and the people best placed to answer your question don't seem
-> to be on Cc. You'd get better responses if you used get_maintainer.pl,
-> or looked at the commit history of the driver or binding to find people
-> likely to be able to help.
+> Is this patch really needed? Is there any problem with simply using 0x7?
+> Patch description should always include rationale behind the change.
 > 
-> I've added Dong Aisheng, Shawn Guo, and Linus Walleij to Cc, as they had
-> signed-off-bys on the binding document.
-
-Thanks, Mark.
-
-<snip>
-
-> > while I port the static code to the DT I step into the problem to
-> > set the PSCR for the sdhc2 ports to 22k pull-up
-
-Is the code from mainline kernel or private tree?  I'm asking because I
-do not see non-DT imx27 iomux-v1 driver has interface for setting up
-DSCR or PSCR in SYSCTRL block.  That's probably why Markus did not
-support that in the imx27 pinctrl driver, I guess.
-
-Shawn
-
-> > I look for something like described in
-> >      pinctrl/fsl,imx-pinctrl.txt
-> > 
-> > the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
-> > 
-> > 
-> > pinctrl_sdhc2_1: sdhc2-1 {
-> >                          fsl,pins = <
-> >                                  MX27_PAD_SD2_D0__SD2_D0  0x1
-> >                                  MX27_PAD_SD2_D1__SD2_D1  0x1
-> >                                  MX27_PAD_SD2_D2__SD2_D2  0x1
-> >                                  MX27_PAD_SD2_D3__SD2_D3  0x1
-> >                                  MX27_PAD_SD2_CLK__SD2_CLK  0x1
-> >                                  MX27_PAD_SD2_CMD__SD2_CMD  0x1
-> >                          >;
-> >                  };
-> > 
-> > its setup in board specific c-file
-> > 
-> > /* 22k pull-up for sd2 pins  */
-> >          reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
-> >          reg &= ~0xfff0;
-> >          reg |= 0xfff0;
-> >          __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
-> > 
-> > 
-> > Any successions?
-> > 
-> > Regards
-> > Chris
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> > Signed-off-by: Prathyush K
+> > Signed-off-by: Sachin Kamat
+> > ---
+> >  .../bindings/arm/exynos/power_domain.txt           |    5 +++++
+> >  arch/arm/mach-exynos/pm_domains.c                  |   10 +++++++---
+> >  2 files changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > index 5216b419016a..6b24b234617c 100644
+> > --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > @@ -9,6 +9,10 @@ Required Properties:
+> >  - reg: physical base address of the controller and length of memory mapped
+> >      region.
+> >  
+> > +Optional Properties:
+> > +- enable: enable value of the register which is used to turn on the power
+> > +    domain. If no enable is specificed, default value of 0x7 is used.
+> 
+> Vendor-specific properties should have vendor prefix added, so this one
+> should be called samsung,enable instead. Also enable is not a very
+> specific name.
+> 
+> So in the end, if it turns out that we really need such patch, I'd prefer
+> something like:
+> 
+> - samsung,enable-bit-mask: Mask of power control register bits that need
+>     to be set to enable the power domain. If omitted, it defaults to 0x7.
+> 
+> Best regards,
+> Tomasz
+> 
+>  
+>  
+>  
+> 
+> 
