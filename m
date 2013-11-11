@@ -1,117 +1,100 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Mon, 11 Nov 2013 17:37:41 -0500 (EST)
-Message-ID: <alpine.LFD.2.10.1311111724480.9667@knanqh.ubzr>
-References: <20131108184036.GD2602@localhost.localdomain>
- <alpine.LFD.2.03.1311081356300.15571@syhkavp.arg>
- <52808E09.9060902@samsung.com> <5280FB9A.7030500@samsung.com>
- <alpine.LFD.2.10.1311111107040.9667@knanqh.ubzr>
- <20131111200152.GF3166@localhost.localdomain>
+From: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Tue, 12 Nov 2013 08:58:15 +1000
+Message-ID: <CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+	<1381869563-16083-10-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131111200152.GF3166@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381869563-16083-10-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2013, Dave Martin wrote:
+Hi Grant,
 
-> On Mon, Nov 11, 2013 at 11:27:46AM -0500, Nicolas Pitre wrote:
-> > It is preferable if the power_up and power_down don't wait.
-> 
-> I agree with this.
-> 
-> If a wait is needed anywhere, it is
-> 
->  a) in power_down_finish(), and
->  b) *before* the call to exynos_core_power_control() in
->         exynos_core_power_up() (see below for explanation)
-> 
-> Any waits should not be busy-waits either: we should use msleep or
-> similar.  This is fine that we only wait from contexts that can sleep --
-> I think this is OK for the power_up() and power_down_finish() paths
-> (which aren't executed on the target CPU), but not on the power_down()
-> path.
+On Wed, Oct 16, 2013 at 6:39 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The standard interrupts property in device tree can only handle
+> interrupts coming from a single interrupt parent. If a device is wired
+> to multiple interrupt controllers, then it needs to be attached to a
+> node with an interrupt-map property to demux the interrupt specifiers
+> which is confusing. It would be a lot easier if there was a form of the
+> interrupts property that allows for a separate interrupt phandle for
+> each interrupt specifier.
+>
+> This patch does exactly that by creating a new interrupts-extended
+> property which reuses the phandle+arguments pattern used by GPIOs and
+> other core bindings.
+>
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
+>  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
+>  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
+>  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
+>  drivers/of/irq.c                                   | 16 +++--
+>  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
+>  6 files changed, 122 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> index 72a06c0..1486497 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> @@ -4,16 +4,33 @@ Specifying interrupt information for devices
+>  1) Interrupt client nodes
+>  -------------------------
+>
+> -Nodes that describe devices which generate interrupts must contain an
+> -"interrupts" property. This property must contain a list of interrupt
+> -specifiers, one per output interrupt. The format of the interrupt specifier is
+> -determined by the interrupt controller to which the interrupts are routed; see
+> -section 2 below for details.
+> +Nodes that describe devices which generate interrupts must contain an either an
+> +"interrupts" property or an "interrupts-extended" property. These properties
+> +contain a list of interrupt specifiers, one per output interrupt. The format of
+> +the interrupt specifier is determined by the interrupt controller to which the
+> +interrupts are routed; see section 2 below for details.
+> +
+> +  Example:
+> +       interrupt-parent = <&intc1>;
+> +       interrupts = <5 0>, <6 0>;
+>
+>  The "interrupt-parent" property is used to specify the controller to which
+>  interrupts are routed and contains a single phandle referring to the interrupt
+>  controller node. This property is inherited, so it may be specified in an
+> -interrupt client node or in any of its parent nodes.
+> +interrupt client node or in any of its parent nodes. Interrupts listed in the
+> +"interrupts" property are always in reference to the node's interrupt parent.
+> +
+> +The "interrupts-extended" property is a special form for use when a node needs
+> +to reference multiple interrupt parents. Each entry in this property contains
+> +both the parent phandle and the interrupt specifier. "interrupts-extended"
+> +should only be used when a device has multiple interrupt parents.
+> +
+> +  Example:
+> +       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
+> +
 
-Beware.. exynos_core_power_up() is called with a lock held.
+A slightly different but related problem I am trying to solve with
+interrupt bindings, is to describe connection of a single device
+interrupt line to multiple interrupts controller, whereas this binding
+seems to be describing connection of different interrupt lines to
+different controllers. Can this syntax accommodate my case is any way?
 
-> Busy-waiting for 1ms every time we power a CPU down is not great for
-> power-saving...
-> 
-> In both cases, we should check the PMU status bits first, and only
-> wait if they are not already in the desired state.  The most likely
-> case will always by that the target CPU already caught up.
+Bascially I think I'm asking for multiple interrupt specifiers for a
+single IRQ output if that's possible.
 
-There is no need for the CPU going down to check the PMU status.  It can 
-only have one state at that point.
+Should I just be using the interrupt map syntax instead?
 
-> Nico currently disagrees with me on (b), so we need to explore that
-> (below).
-> 
-> > No need to wait for a power_up to be complete as the only CPU that can 
-> > do a power_down is the CPU being powered up itself.
-> 
-> To extend this argument further, there is no conceiveable situation
-> where we would need to wait for power_up to complete explicitly.
-> 
-> We will only ever need to wait for power_down to complete.
+interrupt-map-mask = < 0 0 63>;
+interrupt-map = < 0 0 25 &intc0 ... >, < 0 0 25 &intc1 ... >,
 
-Exact.
-
-> > 
-> > The exynos_core_power_down call is now appropriately located i.e. within 
-> > the lock protected area.  That's fine because we know power won't be cut 
-> > until the lock is released and WFI is executed.
-> > 
-> > Also, if exynos_core_power_up() is called from another CPU right after 
-> > the lock is released on the CPU trying to shut itself down but before it 
-> > actually executes WFI then the WFI will not be effective and the 
-> > power_down method is expected to return in that case.  So no problem 
-> > there either.
-> > 
-> > The only case where it is important to really wait for the power down to 
-> > be effective is for kexec.  This is why Dave introduced the 
-> > power_down_finish method (you may find this in linux-next at the 
-> > moment).  That would be the place where to use your controller_wait 
-> > code.
-> 
-> For (b), I think we're still missing some information here...
-> 
-> Suppose CPU0 is powering down.  The PMU has been told to power the CPU
-> down, and CPU0 has released edcs_lock.  Suppose soon afterwards, CPU1
-> wants to turn CPU0 back on again.
-> 
-> Now, unless CPU1 checks the power controller status, CPU1 has no way
-> to know whether the power-down request is still in progress before CPU1
-> issues a new power-up request for CPU0.
-
-Does it matter?  As you say ...
-
-> Now, what behaviour does the power controller guarantee when it is still
-> in this state, and a new power-up request is issued to it?
-> 
-> I worry that the power controller may not cope with a new request while
-> in this state, or may not guarantee predictable behaviour.  If so then
-> the new power-up request may just get lost
-
-This is not the case on TC2 it seems.  We never check if a power-down 
-sequence has completed before issuing a power-up request.  Given each 
-CPU has its own request bit then this might not matter.
-
-Where this matters is when you really want to ensure a given CPU is not 
-executing code anymore and therefore need to know when power-down has 
-effectively completed, hence the power_down_finish method.
-
-
-Nicolas
+Regards,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
