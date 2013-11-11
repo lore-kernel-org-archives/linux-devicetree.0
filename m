@@ -1,118 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Mon, 11 Nov 2013 03:39:39 +0100
-Message-ID: <9548219.n0XCC97cG3@avalon>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <527FCB54.404@cogentembedded.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v6 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Mon, 11 Nov 2013 12:00:22 +0800
+Message-ID: <cover.1384136268.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <527FCB54.404@cogentembedded.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+ * ! This series of patches has a direct dependency between them. When
+ * ! applying them, we need to apply to one single branch. Otherwise,
+ * ! it would break currect branches.
 
-On Sunday 10 November 2013 22:07:16 Sergei Shtylyov wrote:
-> On 10-11-2013 7:33, Laurent Pinchart wrote:
-> > Document the device tree bindings for the sci serial port devices.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> 
-> Hm, why are you not CCing a bunch of people responsible for the DT bindings
-> maintenance that scripts/get_maintainer.pl should yield?
+Changelog
+v6:
+ * PATCH-1: Use goto err_firmware instead of return directly.
+ *
+ * Nothing changes for the other three ack-ed patches
+v5:
+ * PATCH-3: Add period size constraint when using dual fifo mode
+ *
+ * Nothing changes for the other three patches
+v4:
+ * PATCH-3: Drop useless register configuration.
+ *
+ * Nothing changes for the other three patches
+v3:
+ * PATCH-1: Add comments to indicate the end of v1 and v2 array.
+ * PATCH-3: Use better way to keep watermark as even number.
+ *
+ * Nothing changes for PATCH-2 and PATCH-4
+v2:
+ * Instead of adding rogue scripts to current SDMA driver based on firmware
+ * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
+ * to two patches: The first is to add version check code to the SDMA driver;
+ * And the second is to add SSI dual FIFO DMATYPE.
+ *
+ * Nothing changes for the last two patches.
+v1:
+ * SSI can reduce hardware overrun/underrun possibility when using dual
+ * fifo mode. To support this mode, we need to first update sdma sciprt
+ * list, and then enable dual fifo BIT in SSI driver, and last update DT
+ * bindings of i.MX series.
 
-Because they're subscribed to the devicetree list, and they're already 
-overwhelmed with e-mails.
+Nicolin Chen (4):
+  dma: imx-sdma: Add sdma firmware version 2 support
+  dma: imx-sdma: Add new dma type for ssi dual fifo script
+  ASoC: fsl_ssi: Add dual fifo mode support
+  ARM: dts: imx: use dual-fifo sdma script for ssi
 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> > 
-> >   .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++
-> >   1 file changed, 42 insertions(+)
-> >   create mode 100644
-> >   Documentation/devicetree/bindings/serial/renesas,sci-serial.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
-> > file mode 100644
-> > index 0000000..66d3bca
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > @@ -0,0 +1,42 @@
-> > +* Renesas SH-Mobile Serial Communication Interface
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: one of the following types (scif, scifa, scifb, hscif).
-> > +
-> > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
-> > UART.
-> > +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible
-> > UART.
-> > +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible
-> > UART.
-> > +    - "renesas,scif-generic" for generic SCIF compatible UART.
-> > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> > +
-> > +    When compatible with the generic version, nodes must also list the
-> > +    SoC-specific version corresponding to the platform.
-> 
-> Which are not all specified here?
-
-The r8a7790-specific versions are. Other SoCs will be added later when ported 
-to SCIF DT.
-
-> > +
-> > +  - reg: Base address and length of the memory resource used by the UART.
-> > +
-> > +  - interrupt-parent: Reference to the parent interrupt controller.
-> 
->     This is not a required property. It can be specified in the parent node.
-
-But in practice it isn't for the SCIF devices.
-
-Given that we'll soon get a new way to specify interrupts, I think I'll just 
-reference the corresponding DT bindings document when it will be updated 
-instead of documenting all possibilities here.
-
-> > +  - interrupts: Interrupt number.
-> 
->     s/number/specifier/
-
-I'll fix that.
-
-> 
-> > +
-> > +  - clocks: Reference to the SCIx UART interface clock.
-> > +  - clock-names: Should be "sci_ick".
-> > +
-> > +Note: Each enabled SCIx UART should have an alias correctly numbered in
-> > the +"aliases" node.
-> > +
-> > +Example:
-> > +	aliases {
-> > +		serial0 = &scifa0;
-> > +	};
-> > +
-> > +	scifa0: serial@e6c40000 {
-> > +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-> > +		reg = <0 0xe6c40000 0 64>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 144 4>;
-> > +		clocks = <&mstp2_clks 4>;
-> > +		clock-names = "sci_ick";
-> > +	};
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx6qdl.dtsi                     | 12 +++++-----
+ arch/arm/boot/dts/imx6sl.dtsi                      | 12 +++++-----
+ drivers/dma/imx-sdma.c                             | 19 ++++++++++++++-
+ include/linux/platform_data/dma-imx-sdma.h         |  5 ++++
+ include/linux/platform_data/dma-imx.h              |  1 +
+ sound/soc/fsl/fsl_ssi.c                            | 27 +++++++++++++++++++++-
+ 9 files changed, 67 insertions(+), 18 deletions(-)
 
 -- 
-Regards,
+1.8.4
 
-Laurent Pinchart
 
