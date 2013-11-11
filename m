@@ -1,106 +1,168 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V7 3/3] watchdog: s3c2410_wdt: add device tree support and use syscon regmap interface to configure pmu register
-Date: Mon, 11 Nov 2013 14:23:14 +0100
-Message-ID: <1730902.jenppXSjOg@flatron>
-References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com> <1384173897-16106-4-git-send-email-l.krishna@samsung.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
+Date: Mon, 11 Nov 2013 14:26:11 +0100
+Message-ID: <36428164.RsQCj0nRsc@avalon>
+References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1384173897-16106-4-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be, t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+Hi Mark,
 
-Thanks for addressing my comments for previous version. However now this
-won't even build when CONFIG_OF is disabled. See my comments inline.
+Thank you for the quick and detailed review.
 
-On Monday 11 of November 2013 18:14:57 Leela Krishna Amudala wrote:
-> Add device tree support and use syscon regmap interface to configure
-> AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
-> to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
+On Monday 11 November 2013 09:40:39 Mark Rutland wrote:
+> Hi Laurent,
 > 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> ---
->  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
->  drivers/watchdog/Kconfig                           |    1 +
->  drivers/watchdog/s3c2410_wdt.c                     |  154 +++++++++++++++++++-
->  3 files changed, 167 insertions(+), 9 deletions(-)
-[snip]
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index 23aad7c..b57ccae 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-[snip]
-> @@ -94,8 +107,56 @@ struct s3c2410_wdt {
->  	unsigned long		wtdat_save;
->  	struct watchdog_device	wdt_device;
->  	struct notifier_block	freq_transition;
-> +	struct s3c2410_wdt_variant *pmu_config;
-> +	struct regmap *pmureg;
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +static const struct s3c2410_wdt_variant pmu_config_s3c2410 = {
-> +	.quirks = 0
-> +};
-> +
-> +static const struct s3c2410_wdt_variant pmu_config_5250  = {
-> +	.disable_reg = WDT_DISABLE_REG_OFFSET,
-> +	.mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
-> +	.mask_bit = 20,
-> +	.quirks = QUIRK_NEEDS_PMU_CONFIG
->  };
->  
-> +static const struct s3c2410_wdt_variant pmu_config_5420 = {
-> +	.disable_reg = WDT_DISABLE_REG_OFFSET,
-> +	.mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
-> +	.mask_bit = 0,
-> +	.quirks = QUIRK_NEEDS_PMU_CONFIG
-> +};
+> I have a few comments.
+> 
+> On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
+> > Document the device tree bindings for the sci serial port devices.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> > ---
+> > 
+> >  .../bindings/serial/renesas,sci-serial.txt         | 42 +++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
+> > file mode 100644
+> > index 0000000..66d3bca
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > @@ -0,0 +1,42 @@
+> > +* Renesas SH-Mobile Serial Communication Interface
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible: one of the following types (scif, scifa, scifb, hscif).
+> 
+> Minor nit, but would be nice to have "Should contain one of the
+> following:". We might have future variants whereby the compatible string
+> will actually be a string list.
 
-The three variant data structs above are under #ifdef CONFIG_OF, while
-they are always needed for the platform match table.
+Sure, I can do that.
 
-However, since Exynos supports only DT-based device instantation,
-I would move only the basic pmu_config_s3c2410 out of the ifdef and
-limit the platform match table only to this single variant.
+> > +
+> > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+> > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
+> > UART. +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB
+> > compatible UART. +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2)
+> > HSCIF compatible UART. +    - "renesas,scif-generic" for generic SCIF
+> > compatible UART.
+> > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
+> > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
+> > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
+> 
+> Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
 
-> +
-> +static const struct of_device_id s3c2410_wdt_match[] = {
-> +	{ .compatible = "samsung,s3c2410-wdt",
-> +	  .data = &pmu_config_s3c2410 },
-> +	{ .compatible = "samsung,exynos5250-wdt",
-> +	  .data = &pmu_config_5250 },
-> +	{ .compatible = "samsung,exynos5420-wdt",
-> +	  .data = &pmu_config_5420 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
-> +#endif
-> +
-> +static const struct platform_device_id s3c_wdt_driver_ids[] = {
+You're right, I'll remove the suffix.
 
-nit: For consistency with other names in this file, what about
-calling this s3c2410_wdt_ids[] instead?
+> > +
+> > +    When compatible with the generic version, nodes must also list the
+> > +    SoC-specific version corresponding to the platform.
+> 
+> Presumably the SoC-specific version should come first; it would be nice
+> to note that.
 
-> +	{
-> +		.name = "s3c2410-wdt",
-> +		.driver_data = (unsigned long)&pmu_config_s3c2410,
-> +	}, {
-> +		.name = "exynos5250-wdt",
-> +		.driver_data = (unsigned long)&pmu_config_5250,
-> +	}, {
-> +		.name = "exynos5420-wdt",
-> +		.driver_data = (unsigned long)&pmu_config_5420,
-> +	},
+Indeed, I'll do so.
 
-So, generally, you don't need the two Exynos variants above in this array.
+> > +
+> > +  - reg: Base address and length of the memory resource used by the UART.
+> 
+> I assume by memory resource you mean the memory-mapped registers?
+> Resource sounds like Linux-internal nomenclature leaking.
 
-Otherwise, the patch is fine.
+I'll fix it as well, although we could decide on a definition of "resource" 
+that isn't Linux-specific :-)
 
-Best regards,
-Tomasz
+> > +
+> > +  - interrupt-parent: Reference to the parent interrupt controller.
+> 
+> I don't think this is strictly necessary. It's implicit by default and
+> can be added optionally when a system is wired in a complex way. As it's
+> a completely standard optional property I'm not even sure it needs to be
+> documented.
+> 
+> > +  - interrupts: Interrupt number.
+> 
+> Minor nit: "Should contain an interrupt-specifier for ..."
+> 
+> I saw the cover mentioned multiple interrupts. Which logical interrupt
+> output of the device are you expecting here?
+
+SCI devices come in several flavours, with individual interrupt sources wired 
+up to different interrupt lines, or multiplexed all together. As the DT 
+bindings support the later only at the moment, there's only a single interrupt 
+to handle.
+
+Should we come up with a standard way of saying in the bindings that a device 
+uses the interrupt bindings defined in interrupt-controller/interrupts.txt ? 
+This will become even more important with the interrupts-extended property, we 
+don't want every DT bindings document to detail all possible way to specify 
+interrupts.
+
+> > +
+> > +  - clocks: Reference to the SCIx UART interface clock.
+> 
+> Minor nit: s/Reference to/A phandle + clock-specifier pair for/
+> 
+> > +  - clock-names: Should be "sci_ick".
+> 
+> As we're using clock-names, it would be nicer still to define clocks in
+> terms of clock-names so as to make it easier to update the document in
+> future and make the expected use of clock-names clearer:
+> 
+> - clocks: Should
+
+"Should", or "must" ?
+
+> contain a phandle + clock-specifier pair for each entry
+>   in clock-names.
+> 
+> - clock-names: Should contain "sci_ick".
+
+Shouldn't that be
+
+"Should contain "sci_ick" for the SCIx UART interface clock."
+
+? Otherwise the bindings wouldn't tell which clock the clocks property should 
+reference.
+
+> > +
+> > +Note: Each enabled SCIx UART should have an alias correctly numbered in
+> > the +"aliases" node.
+> > +
+> > +Example:
+> > +	aliases {
+> > +		serial0 = &scifa0;
+> > +	};
+> > +
+> > +	scifa0: serial@e6c40000 {
+> > +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
+> > +		reg = <0 0xe6c40000 0 64>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <0 144 4>;
+> > +		clocks = <&mstp2_clks 4>;
+> > +		clock-names = "sci_ick";
+> > +	};
+> 
+> Otherwise this looks good to me.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
