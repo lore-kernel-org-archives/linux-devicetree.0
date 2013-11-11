@@ -1,50 +1,100 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: IMX27: How to do 22k pull-up with the pinctrl ?
-Date: Mon, 11 Nov 2013 18:45:30 +0800
-Message-ID: <5280B54A.1050503@gtsys.com.hk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] doc: devicetree: Add bindings documentation for
+ omap-des driver
+Date: Mon, 11 Nov 2013 11:01:06 +0000
+Message-ID: <20131111110106.GC21201@e106331-lin.cambridge.arm.com>
+References: <1383871035-16608-1-git-send-email-joelf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383871035-16608-1-git-send-email-joelf@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joel Fernandes <joelf@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Joel,
 
-while I port the static code to the DT I step into the problem to
-set the PSCR for the sdhc2 ports to 22k pull-up
-I look for something like described in
-     pinctrl/fsl,imx-pinctrl.txt
+I realise I'm a little late in replying to this, but there are a few
+things that would be nice to fix up.
 
-the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
+On Fri, Nov 08, 2013 at 12:37:09AM +0000, Joel Fernandes wrote:
+> Add documentation for the generic OMAP DES crypto module describing the device
+> tree bindings.
+> 
+> Signed-off-by: Joel Fernandes <joelf@ti.com>
+> ---
+>  .../devicetree/bindings/crypto/omap-des.txt        | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
+> new file mode 100644
+> index 0000000..0637647
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
+> @@ -0,0 +1,28 @@
+> +OMAP SoC DES crypto Module
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "ti,omap4-des"
 
+Nit: s/Should be/Should contain/
 
-pinctrl_sdhc2_1: sdhc2-1 {
-                         fsl,pins = <
-                                 MX27_PAD_SD2_D0__SD2_D0  0x1
-                                 MX27_PAD_SD2_D1__SD2_D1  0x1
-                                 MX27_PAD_SD2_D2__SD2_D2  0x1
-                                 MX27_PAD_SD2_D3__SD2_D3  0x1
-                                 MX27_PAD_SD2_CLK__SD2_CLK  0x1
-                                 MX27_PAD_SD2_CMD__SD2_CMD  0x1
-                         >;
-                 };
+> +- ti,hwmods: Name of the hwmod associated with the DES module
+> +- reg : Offset and length of the register set for the module
+> +- interrupts : the interrupt-specifier for the DES module
 
-its setup in board specific c-file
+Just to check: there's only one interrupt?
 
-/* 22k pull-up for sd2 pins  */
-         reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
-         reg &= ~0xfff0;
-         reg |= 0xfff0;
-         __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+> +- clocks : phandle to the functional clock node of the DES module
+> +- clock-names : Name of the functional clock
 
+What name is expected here? The intent of clock-names is to describe
+which clock input lines the clocks are wired to, so this should be
+well-defined.
 
-Any successions?
+>From the looks of the example, the clock input is called "fck". Is that
+correct?
 
-Regards
-Chris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When you have clock-names, the nicest thing to do is to define clocks
+in terms of clock-names. Something like:
+
+- clocks: A phandle + clock-specifier pair for each entry in
+  clock-names.
+
+- clock-names: Should contain:
+  * "fck" for the functional clock
+
+Which implies that the correct way to find clocks is to look in
+clock-names first to find the clock's index, rather than grabbing the
+clock by index. This makes it far easier to add/remove/change clocks in
+future.
+
+> +
+> +Optional properties:
+> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+> +	Documentation/devicetree/bindings/dma/dma.txt
+
+Similarly here it would be nice to have dmas refer to dma-names for
+the description of which dmas exist.
+
+> +- dma-names: DMA request names should include "tx" and "rx" if present
+> +
+> +Example:
+> +	/* DRA7xx SoC */
+> +	des: des@480a5000 {
+> +		compatible = "ti,omap4-des";
+> +		ti,hwmods = "des";
+> +		reg = <0x480a5000 0xa0>;
+> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +		dmas = <&sdma 117>, <&sdma 116>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&l3_iclk_div>;
+> +		clock-names = "fck";
+> +	};
+
+Cheers,
+Mark.
