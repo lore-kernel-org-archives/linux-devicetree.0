@@ -1,436 +1,78 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH 2/3] mmc: omap_hsmmc: Pin remux workaround to support SDIO
- interrupt on AM335x.
-Date: Mon, 11 Nov 2013 20:06:06 +0100
-Message-ID: <CAOf5uwngWhnWiyYUohNKO8wJYqMGWWzpFnz25x+29cKs7XjSUg@mail.gmail.com>
-References: <52812867.84630e0a.29c3.ffff864f@mx.google.com>
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 11 Nov 2013 20:17:14 +0100
+Message-ID: <52812D3A.2070107@keymile.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org> <3144247.j2q6H0KWZx@lem-wkst-02> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <528121D5.40403@keymile.com> <528127B2.80109@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52812867.84630e0a.29c3.ffff864f@mx.google.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: afenkart@gmail.com
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528127B2.80109-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Stephan,
 
-On Mon, Nov 11, 2013 at 7:52 PM,  <afenkart@gmail.com> wrote:
-> From: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+On 11/11/2013 07:53 PM, Stephen Warren wrote:
+> On 11/11/2013 11:28 AM, Gerlando Falauto wrote:
+>> Hi everyone,
+>>
+>> [jumping in on an old discussion]
+>>
+>> On 09/09/2013 06:19 PM, Mark Brown wrote:
+>>> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
+>>>> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
+>>>
+>>>>> The driver that tries to use the GPIO requested by this patch before
+>>>>> HAS to
+>>>>> fail. This is exactly the intention of this patch. We don't want the
+>>>>> GPIO to
+>>>>> be requested any more, if it is used as an interrupt pin.
+>>>
+>>>> That will break existing drivers. There are drivers that request the
+>>>> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
+>>>> that way.
+>>>
+>>> Yes, plus input devices and audio jack detection among others.  This
+>>> pattern is very common if the GPIO is actually being used as a GPIO, an
+>>> edge triggered interrupt is used to flag when something happens and the
+>>> state is determined by reading the GPIO state (often with some
+>>> debounce).
+>>
+>> I actually came across this thread while looking for an answer to the
+>> following (apparently trivial) question:
+>>
+>> If you were to write a new driver & binding, what would be, in general,
+>> the recommended DT binding for a cascade interrupt controller (or any
+>> other peripheral, for that matter), which is connected through a GPIO
+>> (to be used as IRQ)?
+>>
+>> a) Through gpios = <&gpio0 N>
+>> b) through interrupt-parent = <&gpio0> & interrupts <N
+>> IRQ_TYPE_LEVEL_LOW>, or
+>> c) both?
 >
-> The am335x can't detect pending cirq in PM runtime suspend.
-> This patch reconfigures dat1 as a GPIO before going to suspend.
-> SDIO interrupts are detected with the GPIO, the GPIO will only wake
-> the module from suspend, SDIO irq detection will still happen through the
-> IP block.
+> (b) alone.
 >
-> Idea of remuxing the pins by Tony Lindgren as well as the implementation
-> of omap_hsmmc_pin_init.
+>  From the perspective of the child interrupt controller, its output is
+> purely an interrupt. The fact that the parent interrupt controller could
+> use that pin as a GPIO in some other context (e.g. on a different board)
+> isn't something that the child interrupt controller should know/care about.
 >
-> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
-> ---
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   28 ++-
->  drivers/mmc/host/omap_hsmmc.c                      |  195 ++++++++++++++++++--
->  include/linux/platform_data/mmc-omap.h             |    4 +
->  3 files changed, 213 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index 1136e6b..146f3ad 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -21,8 +21,11 @@ ti,non-removable: non-removable slot (like eMMC)
->  ti,needs-special-reset: Requires a special softreset sequence
->  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
->  ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
-> -SDIO irq while in suspend. Fallback to polling. Affected chips are
-> -am335x,
-> +SDIO irq while in suspend. The workaround is to reconfigure the dat1 line as a
-> +GPIO upon suspend. Beyond this option and the GPIO config, you also need to set
-> +named pinctrl states "default", "active" and "idle ", see example below.  The
-> +MMC driver will then then toggle between default and idle during the runtime
-> +Affected chips are am335x,
->
->                              ------
->                              | PRCM |
-> @@ -49,3 +52,24 @@ Example:
->                 vmmc-supply = <&vmmc>; /* phandle to regulator node */
->                 ti,non-removable;
->         };
-> +
-> +[am335x with with gpio for sdio irq]
-> +
-> +       mmc1_cirq_pin: pinmux_cirq_pin {
-> +               pinctrl-single,pins = <
-> +                       0x0f8 0x3f      /* MMC0_DAT1 as GPIO2_28 */
-> +               >;
-> +       };
-> +
-> +       mmc1: mmc@48060000 {
-> +               ti,non-removable;
-> +               bus-width = <4>;
-> +               vmmc-supply = <&ldo2_reg>;
-> +               vmmc_aux-supply = <&vmmc>;
-> +               ti,quirk-swakeup-missing;
-> +               pinctrl-names = "default", "active", "idle";
-> +               pinctrl-0 = <&mmc1_pins>;
-> +               pinctrl-1 = <&mmc1_pins>;
-> +               pinctrl-2 = <&mmc1_cirq_pin>;
-> +               ti,cirq-gpio = <&gpio3 28 0>;
-> +       };
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 6b0ec55..e880b44 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -36,6 +36,7 @@
->  #include <linux/mmc/core.h>
->  #include <linux/mmc/mmc.h>
->  #include <linux/io.h>
-> +#include <linux/irq.h>
->  #include <linux/gpio.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/pinctrl/consumer.h>
-> @@ -213,11 +214,30 @@ struct omap_hsmmc_host {
->         int                     req_in_progress;
->         int                     flags;
->  #define HSMMC_SDIO_IRQ_ENABLED (1 << 0)        /* SDIO irq enabled */
-> +#define HSMMC_SWAKEUP_QUIRK    (1 << 1)
-> +#define HSMMC_CIRQ_GPIO_FIRED  (1 << 2)
->
->         struct omap_hsmmc_next  next_data;
-> +       struct pinctrl          *pinctrl;
-> +       struct pinctrl_state    *fixed, *active, *idle;
->         struct  omap_mmc_platform_data  *pdata;
->  };
->
-> +static irqreturn_t omap_hsmmc_cirq(int irq, void *dev_id)
-> +{
-> +       struct omap_hsmmc_host *host = dev_id;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&host->irq_lock, flags);
-> +       host->flags |= HSMMC_CIRQ_GPIO_FIRED;
-> +       disable_irq_nosync(mmc_slot(host).sdio_irq);
-> +       spin_unlock_irqrestore(&host->irq_lock, flags);
-> +
-> +       pm_request_resume(host->dev); /* no use counter */
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
->  static int omap_hsmmc_card_detect(struct device *dev, int slot)
->  {
->         struct omap_hsmmc_host *host = dev_get_drvdata(dev);
-> @@ -452,10 +472,31 @@ static int omap_hsmmc_gpio_init(struct omap_mmc_platform_data *pdata)
->         } else
->                 pdata->slots[0].gpio_wp = -EINVAL;
->
-> +       if (pdata->slots[0].gpio_cirq > 0 &&
-> +           gpio_is_valid(pdata->slots[0].gpio_cirq)) {
 
-Is ok only gpio_is_valid?
+Thanks for your answer. So it should be the parent driver to proactively 
+configure the GPIO as input, active high etc..., when an IRQ for its 
+GPIOs is requested, right?
 
-> +               pdata->slots[0].sdio_irq =
-> +                               gpio_to_irq(pdata->slots[0].gpio_cirq);
-> +
-> +               ret = gpio_request(pdata->slots[0].gpio_cirq, "sdio_cirq");
-> +               if (ret)
-> +                       goto err_free_ro;
-> +               ret = gpio_direction_input(pdata->slots[0].gpio_cirq);
-> +               if (ret)
-> +                       goto err_free_cirq;
+Moving to a different target (actually Mark's original point), i.e. a 
+generic device which is connected through a GPIO, using the IRQ to 
+trigger an event, what would be the recommended way?
 
-Can you use gpio_request_one?
-
-
-Michael
-
-> +
-> +       } else {
-> +               pdata->slots[0].gpio_cirq = -EINVAL;
-> +       }
-> +
-> +
->         return 0;
->
-> +err_free_cirq:
-> +       gpio_free(pdata->slots[0].gpio_cirq);
-> +err_free_ro:
-> +       if (gpio_is_valid(pdata->slots[0].gpio_wp))
->  err_free_wp:
-> -       gpio_free(pdata->slots[0].gpio_wp);
-> +               gpio_free(pdata->slots[0].gpio_wp);
->  err_free_cd:
->         if (gpio_is_valid(pdata->slots[0].switch_pin))
->  err_free_sp:
-> @@ -469,6 +510,69 @@ static void omap_hsmmc_gpio_free(struct omap_mmc_platform_data *pdata)
->                 gpio_free(pdata->slots[0].gpio_wp);
->         if (gpio_is_valid(pdata->slots[0].switch_pin))
->                 gpio_free(pdata->slots[0].switch_pin);
-> +       if (gpio_is_valid(pdata->slots[0].gpio_cirq))
-> +               gpio_free(pdata->slots[0].gpio_cirq);
-> +}
-> +
-> +static int omap_hsmmc_pin_init(struct omap_hsmmc_host *host)
-> +{
-> +       int ret;
-> +
-> +       host->pinctrl = devm_pinctrl_get(host->dev);
-> +       if (IS_ERR(host->pinctrl)) {
-> +               dev_dbg(host->dev, "no pinctrl handle\n");
-> +               ret = 0;
-> +               goto out;
-> +       }
-> +
-> +       host->fixed = pinctrl_lookup_state(host->pinctrl,
-> +                                          PINCTRL_STATE_DEFAULT);
-> +       if (IS_ERR(host->fixed)) {
-> +               dev_dbg(host->dev,
-> +                        "pins are not configured from the driver\n");
-> +               host->fixed = NULL;
-> +               ret = 0;
-> +               goto out;
-> +       }
-> +
-> +       ret = pinctrl_select_state(host->pinctrl, host->fixed);
-> +       if (ret < 0)
-> +               goto err;
-> +
-> +       /* For most cases we don't have wake-ups, and exit after this */
-> +       host->active = pinctrl_lookup_state(host->pinctrl, "active");
-> +       if (IS_ERR(host->active)) {
-> +               ret = PTR_ERR(host->active);
-> +               host->active = NULL;
-> +               return 0;
-> +       }
-> +
-> +       host->idle = pinctrl_lookup_state(host->pinctrl,
-> +                                         PINCTRL_STATE_IDLE);
-> +       if (IS_ERR(host->idle)) {
-> +               ret = PTR_ERR(host->idle);
-> +               host->idle = NULL;
-> +               goto err;
-> +       }
-> +
-> +       /* Let's make sure the active and idle states work */
-> +       ret = pinctrl_select_state(host->pinctrl, host->idle);
-> +       if (ret < 0)
-> +               goto err;
-> +
-> +       ret = pinctrl_select_state(host->pinctrl, host->active);
-> +       if (ret < 0)
-> +               goto err;
-> +
-> +       dev_info(mmc_dev(host->mmc), "pins configured for wake-up events\n");
-> +
-> +       return 0;
-> +
-> +err:
-> +       dev_err(mmc_dev(host->mmc), "pins configuration error: %i\n", ret);
-> +
-> +out:
-> +       return ret;
->  }
->
->  /*
-> @@ -1791,6 +1895,7 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
->         pdata->nr_slots = 1;
->         pdata->slots[0].switch_pin = cd_gpio;
->         pdata->slots[0].gpio_wp = wp_gpio;
-> +       pdata->slots[0].gpio_cirq = of_get_named_gpio(np, "ti,cirq-gpio", 0);
->
->         if (of_find_property(np, "ti,non-removable", NULL)) {
->                 pdata->slots[0].nonremovable = true;
-> @@ -1837,7 +1942,6 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->         const struct of_device_id *match;
->         dma_cap_mask_t mask;
->         unsigned tx_req, rx_req;
-> -       struct pinctrl *pinctrl;
->
->         match = of_match_device(of_match_ptr(omap_mmc_of_match), &pdev->dev);
->         if (match) {
-> @@ -2068,10 +2172,22 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->
->         omap_hsmmc_disable_irq(host);
->
-> -       pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> -       if (IS_ERR(pinctrl))
-> -               dev_warn(&pdev->dev,
-> -                       "pins are not configured from the driver\n");
-> +       ret = omap_hsmmc_pin_init(host);
-> +       if (ret)
-> +               goto err_pinctrl_state;
-> +
-> +       if ((mmc_slot(host).sdio_irq)) {
-> +               /* prevent auto-enabling of IRQ */
-> +               irq_set_status_flags(mmc_slot(host).sdio_irq, IRQ_NOAUTOEN);
-> +               ret = request_irq(mmc_slot(host).sdio_irq, omap_hsmmc_cirq,
-> +                                 IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +                                 mmc_hostname(mmc), host);
-> +               if (ret) {
-> +                       dev_dbg(mmc_dev(host->mmc),
-> +                               "Unable to grab MMC SDIO IRQ\n");
-> +                       goto err_irq_sdio;
-> +               }
-> +       }
->
->         /*
->          * For now, only support SDIO interrupt if we are booted with
-> @@ -2084,8 +2200,14 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->                 mmc->caps |= MMC_CAP_SDIO_IRQ;
->                 if (of_find_property(host->dev->of_node,
->                                      "ti,quirk-swakeup-missing", NULL)) {
-> -                       /* no wakeup from deeper power states, use polling */
-> -                       mmc->caps &= ~MMC_CAP_SDIO_IRQ;
-> +                       /* use GPIO to wakeup from deeper power states */
-> +                       if (!host->idle || !mmc_slot(host).sdio_irq) {
-> +                               dev_err(mmc_dev(host->mmc),
-> +                                       "Missing GPIO config or pinctrl idle state\n");
-> +                               goto err_irq_sdio;
-> +                       }
-> +
-> +                       host->flags |= HSMMC_SWAKEUP_QUIRK;
->                 }
->         }
->
-> @@ -2113,7 +2235,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->
->  err_slot_name:
->         mmc_remove_host(mmc);
-> -       free_irq(mmc_slot(host).card_detect_irq, host);
-> +err_irq_sdio:
-> +       if ((mmc_slot(host).sdio_irq))
-> +               free_irq(mmc_slot(host).sdio_irq, host);
-> +err_pinctrl_state:
-> +       devm_pinctrl_put(host->pinctrl);
-> +       if ((mmc_slot(host).card_detect_irq))
-> +               free_irq(mmc_slot(host).card_detect_irq, host);
->  err_irq_cd:
->         if (host->use_reg)
->                 omap_hsmmc_reg_put(host);
-> @@ -2158,13 +2286,15 @@ static int omap_hsmmc_remove(struct platform_device *pdev)
->         if (host->pdata->cleanup)
->                 host->pdata->cleanup(&pdev->dev);
->         free_irq(host->irq, host);
-> +       if ((mmc_slot(host).sdio_irq))
-> +               free_irq(mmc_slot(host).sdio_irq, host);
->         if (mmc_slot(host).card_detect_irq)
->                 free_irq(mmc_slot(host).card_detect_irq, host);
-> -
->         if (host->tx_chan)
->                 dma_release_channel(host->tx_chan);
->         if (host->rx_chan)
->                 dma_release_channel(host->rx_chan);
-> +       devm_pinctrl_put(host->pinctrl);
->
->         pm_runtime_put_sync(host->dev);
->         pm_runtime_disable(host->dev);
-> @@ -2231,6 +2361,9 @@ static int omap_hsmmc_suspend(struct device *dev)
->                                 OMAP_HSMMC_READ(host->base, HCTL) & ~SDBP);
->         }
->
-> +       if (host->flags & HSMMC_SWAKEUP_QUIRK)
-> +               disable_irq(mmc_slot(host).sdio_irq);
-> +
->         if (host->dbclk)
->                 clk_disable_unprepare(host->dbclk);
->
-> @@ -2268,6 +2401,9 @@ static int omap_hsmmc_resume(struct device *dev)
->         if (ret == 0)
->                 host->suspended = 0;
->
-> +       if (host->flags & HSMMC_SWAKEUP_QUIRK)
-> +               enable_irq(mmc_slot(host).sdio_irq);
-> +
->         pm_runtime_mark_last_busy(host->dev);
->         pm_runtime_put_autosuspend(host->dev);
->
-> @@ -2285,23 +2421,58 @@ static int omap_hsmmc_resume(struct device *dev)
->  static int omap_hsmmc_runtime_suspend(struct device *dev)
->  {
->         struct omap_hsmmc_host *host;
-> +       unsigned long flags;
-> +       int ret = 0;
->
->         host = platform_get_drvdata(to_platform_device(dev));
->         omap_hsmmc_context_save(host);
->         dev_dbg(dev, "disabled\n");
->
-> -       return 0;
-> +       if (host->flags & HSMMC_SWAKEUP_QUIRK) {
-> +               OMAP_HSMMC_WRITE(host->base, ISE, 0);
-> +               OMAP_HSMMC_WRITE(host->base, IE, 0);
-> +               OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
-> +
-> +               ret = pinctrl_select_state(host->pinctrl, host->idle);
-> +               if (ret < 0)
-> +                       dev_warn(mmc_dev(host->mmc), "Unable to select idle pinmux\n");
-> +
-> +               spin_lock_irqsave(&host->irq_lock, flags);
-> +               if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
-> +                       enable_irq(mmc_slot(host).sdio_irq);
-> +               spin_unlock_irqrestore(&host->irq_lock, flags);
-> +       }
-> +
-> +       return ret;
->  }
->
->  static int omap_hsmmc_runtime_resume(struct device *dev)
->  {
->         struct omap_hsmmc_host *host;
-> +       unsigned long flags;
-> +       int ret = 0;
->
->         host = platform_get_drvdata(to_platform_device(dev));
->         omap_hsmmc_context_restore(host);
->         dev_dbg(dev, "enabled\n");
->
-> -       return 0;
-> +       if (host->flags & HSMMC_SWAKEUP_QUIRK) {
-> +               ret = pinctrl_select_state(host->pinctrl, host->active);
-> +               if (ret < 0)
-> +                       dev_warn(mmc_dev(host->mmc), "Unable to select active pinmux\n");
-> +
-> +               spin_lock_irqsave(&host->irq_lock, flags);
-> +               if (host->flags & HSMMC_SDIO_IRQ_ENABLED) {
-> +                       if (!(host->flags & HSMMC_CIRQ_GPIO_FIRED))
-> +                               disable_irq(mmc_slot(host).sdio_irq);
-> +                       host->flags &= ~HSMMC_CIRQ_GPIO_FIRED;
-> +                       OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
-> +                       OMAP_HSMMC_WRITE(host->base, ISE, CIRQ_EN);
-> +                       OMAP_HSMMC_WRITE(host->base, IE, CIRQ_EN);
-> +               }
-> +               spin_unlock_irqrestore(&host->irq_lock, flags);
-> +       }
-> +       return ret;
->  }
->
->  static struct dev_pm_ops omap_hsmmc_dev_pm_ops = {
-> diff --git a/include/linux/platform_data/mmc-omap.h b/include/linux/platform_data/mmc-omap.h
-> index 2bf1b30..fd5fff5 100644
-> --- a/include/linux/platform_data/mmc-omap.h
-> +++ b/include/linux/platform_data/mmc-omap.h
-> @@ -115,6 +115,7 @@ struct omap_mmc_platform_data {
->
->                 int switch_pin;                 /* gpio (card detect) */
->                 int gpio_wp;                    /* gpio (write protect) */
-> +               int gpio_cirq;                  /* gpio (card irq) */
->
->                 int (*set_bus_mode)(struct device *dev, int slot, int bus_mode);
->                 int (*set_power)(struct device *dev, int slot,
-> @@ -145,6 +146,9 @@ struct omap_mmc_platform_data {
->                 int card_detect_irq;
->                 int (*card_detect)(struct device *dev, int slot);
->
-> +               /* SDIO IRQs */
-> +               int sdio_irq;
-> +
->                 unsigned int ban_openended:1;
->
->         } slots[OMAP_MMC_MAX_SLOTS];
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks again!
+Gerlando
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
