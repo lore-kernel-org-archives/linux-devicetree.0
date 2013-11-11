@@ -1,50 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
-Date: Mon, 11 Nov 2013 10:50:18 +0100
-Message-ID: <CACRpkdbJLSHOoE9gNDnne+xwCxu4FzGreeRJfNpL7nC8ddD04w@mail.gmail.com>
-References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
-	<1383057139-25304-1-git-send-email-mpa@pengutronix.de>
-	<CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
-	<CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg@mail.gmail.com>
-	<20131107091212.GH15098@pengutronix.de>
-	<1383816481.4115.2.camel@weser.hi.pengutronix.de>
-	<20131107103859.GI15098@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Mon, 11 Nov 2013 11:01:02 +0100
+Message-ID: <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w@mail.gmail.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+	<051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+	<CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+	<201311050026.56321.heiko@sntech.de>
+	<527835FE.2030102@wwwdotorg.org>
+	<5279A319.5060701@broadcom.com>
+	<CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
+	<527C3080.5050202@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131107103859.GI15098-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527C3080.5050202@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Laxman Dewangan <ldewangan@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 7, 2013 at 11:38 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Thu, Nov 07, 2013 at 10:28:01AM +0100, Lucas Stach wrote:
+On Fri, Nov 8, 2013 at 1:29 AM, Sherman Yin <syin@broadcom.com> wrote:
+> [Me]
+>> On Wed, Nov 6, 2013 at 3:02 AM, Sherman Yin <syin@broadcom.com> wrote:
 
->> > The first version of this series [1] was designed to have a iomux node
->> > with 6 gpio subnodes.
+>> You would have to patch the OF core to do something like that:
 >>
->> Why was this changed? Having two different DT nodes requesting the same
->> IO region is certainly the wrong thing to do.
+>> bias-pull-up = <true true false>;
+>>
+>> 1/0 isn't so good I think, what should the parser do with e.g. 2?
+>> This is more to the point.
 >
-> It was suggested to map the same memory range from both drivers, so I
-> changed the layout completely. Perhaps it would have been better to keep
-> the DT node structure while not passing the memory to the gpio
-> subdevices.
+> I would imagine that the platform-specific device tree bindings would need
+> to clearly explain what the valid values are, as they should.
 
->From a pinctrl/GPIO point of view anything goes, it's a little bit like
-big-endian vs little-endian.
+But this is not a platform-specific binding. These are the
+generic pin configuration bindings we're talking about.
 
-I did merge the i.MX27 driver as it was ACKed by the subarch
-maintainers.
+> If we're
+> using integers, we could either have a) !0 and 0, or b) just 1 and 0, and
+> everything else is an error.  Or c) the platform could decide that the value
+> provides addition info like pull-up-strength, so 0 = no pull up, >0 = pull
+> up enabled and the number is the pull up strength in Ohm (bindings should
+> indicate which values are valid), and everything else is an error.
 
-So what do we do now, shall I revert this patch or can you refactor
-it in accordance with the comments so it should be kept as a
-base for the rewrite?
+That seems to make sense, I've just not seen any system (using
+device tree) that can actually set the pull up/down resistance.
+
+>> That said, if you can patch the OF core and the generic pin config
+>> parser to do what you want with lists like that, it's your pick.
+>> It may take some time though.
+>
+> I don't mind patching the generic pin config, and I don't think the core
+> needs to change,
+
+If you want arrays of booleans that is a matter for the OF core
+parser I think.
+
+>> What about you patch include/linux/pinctrl/pinconf-generic.h
+>> to add PIN_CONFIG_INPUT_DISABLE with this semantic
+>> and also patch the generic pinconf parser in
+>> drivers/pinctrl/pinconf-generic.c
+>> to handle this?
+>
+> Sure, I can add PIN_CONFIG_INPUT_DISABLE.  However I suspect people might be
+> confused by this and PIN_CONFIG_OUTPUT.
+
+Just make sure you put in good documentation in that file
+right there, it's using kerneldoc and for a good reason...
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
