@@ -1,46 +1,54 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] phy: Add MOXA RTL8201CP PHY support
-Date: Mon, 11 Nov 2013 15:30:02 +0000
-Message-ID: <20131111153002.722CCC4191F@trevor.secretlab.ca>
-References: <1383317673-14704-1-git-send-email-jonas.jensen@gmail.com>
- <CAGVrzcYfdChFNgkh=VAFZQfCRHyNTe_pZxx1Z6Sz1S8_1vzgtA@mail.gmail.com>
- <CACmBeS3aUq_yPVg_GaKmQRQMhAmO8RZVzUGY=T6Ghn7v0sP8Dw@mail.gmail.com>
- <CAGVrzcZW=CLWPZgRqkqR1wNh+S7dfwRZAzn1Uq7Ji6K0=iGYtg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGVrzcZW=CLWPZgRqkqR1wNh+S7dfwRZAzn1Uq7Ji6K0=iGYtg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Jonas Jensen <jonas.jensen@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/5] OF: Clear detach flag on attach
+Date: Mon, 11 Nov 2013 16:05:32 +0000
+Message-ID: <20131111160533.07E8BC42303@trevor.secretlab.ca>
+References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-2-git-send-email-panto@antoniou-consulting.com> <20131105194310.GB17929@book.gsilab.sittig.org> <033B1C12-1AD8-44E3-A9BE-C216AEBA45F2@antoniou-consulting.com> <527A01C9.2090306@nsn.com> <99B265B8-F5D0-4138-BA1E-0F09C95A60F4@antoniou-consulting.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <99B265B8-F5D0-4138-BA1E-0F09C95A60F4@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>, Alexander Sverdlin <alexander.sverdlin@nsn.com>
+Cc: Gerhard Sittig <gsi@denx.de>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 4 Nov 2013 09:51:24 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 2013/11/4 Jonas Jensen <jonas.jensen@gmail.com>:
-> > This is why I ended up setting PHY_IGNORE_INTERRUPT and the comment
-> > about its effectiveness. Polling works but the extra reads on the bus
-> > seem unnecessary.
-> > Ideas how they can be eliminated are appreciated.
+On Wed, 6 Nov 2013 10:49:44 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
+> On Nov 6, 2013, at 10:46 AM, Alexander Sverdlin wrote:
 > 
-> As of today, the only way to work around it is not to use
-> of_mdiobus_register() and use mdiobus_register() directly which will
-> allow you to properly describe such a configuration.
+> > Hello Pantelis,
+> > 
+> > On 05/11/13 21:03, ext Pantelis Antoniou wrote:
+> >> On Nov 5, 2013, at 9:43 PM, Gerhard Sittig wrote:
+> >>>> --- a/drivers/of/base.c
+> >>>> +++ b/drivers/of/base.c
+> >>>> @@ -1641,6 +1641,7 @@ int of_attach_node(struct device_node *np)
+> >>>> 	np->allnext = of_allnodes;
+> >>>> 	np->parent->child = np;
+> >>>> 	of_allnodes = np;
+> >>>> +	of_node_clear_flag(np, OF_DETACHED);
+> >>>> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >>>> 
+> >>>> 	of_add_proc_dt_entry(np);
+> >>> 
+> >>> Does this add a call to a routine which only gets introduced in a
+> >>> subsequent patch (2/5)?  If so, it would break builds during the
+> >>> series, and thus would hinder bisection.
+> >>> 
+> >> 
+> >> You're right, I'll re-order on the next series.
+> > 
+> > Is it necessary at all now, after these fixes:
+> > 9e401275 of: fdt: fix memory initialization for expanded DT
+> > 0640332e of: Fix missing memory initialization on FDT unflattening
+> > 92d31610 of/fdt: Remove duplicate memory clearing on FDT unflattening
+>
+> Hi Alexander,
+> 
+> I'm not exactly sure, but I think it is still needed.
+> Since at that point the tree is attached.
+> 
+> Grant?
 
-of_mdiobus_register() can be changed. One option: If the caller knows
-what it wants to happen in the case of no interrupt, then it can be
-added as an argument to of_mdiobus_register(). No need to work around
-this in an ugly way.
-
-Is setting the irq to PHY_POLL something that should be done for the
-entire bus, or only for a handful of PHYs?
+In one sense it is a little odd because it isn't something that any of
+the existing users (of which there are 2) would be affected by. It isn't
+a bad idea though. Merged patches 2 & 1.
 
 g.
