@@ -1,36 +1,82 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
-Date: Mon, 11 Nov 2013 14:00:40 +0100
-Message-ID: <10730719.0dfncB4RfV@flatron>
-References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com> <1384173897-16106-2-git-send-email-l.krishna@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Documentation: Add MDIO bus node to PHY binding document
+Date: Mon, 11 Nov 2013 14:00:25 +0100
+Message-ID: <1384174825-14249-1-git-send-email-jonas.jensen@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384173897-16106-2-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+Add MDIO bus node segment and update the example,
+allowing trivial bindings to break out boilerplate.
 
-On Monday 11 of November 2013 18:14:55 Leela Krishna Amudala wrote:
-> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
-> handle PMU register accesses in a centralized way using syscon driver
-> 
-> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/samsung/pmu.txt |   13 +++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
->  arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
->  3 files changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Notes:
+    Changes per reply from Grant [0]
+    
+    [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/208851.html
+    
+    Applies to next-20131111
 
-Best regards,
-Tomasz
+ Documentation/devicetree/bindings/net/phy.txt | 37 +++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index 7cd18fb..4e58a5d 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -1,3 +1,13 @@
++MDIO Bus Nodes
++
++MDIO bus nodes describe an MDIO bus. It is a container for PHY nodes as
++described below.
++
++Required properties:
++- #address-cells = <1>;
++- #size-cells = <0>;
++
++
+ PHY nodes
+ 
+ Required properties:
+@@ -23,13 +33,24 @@ Optional Properties:
+   assume clause 22. The compatible list may also contain other
+   elements.
+ 
++
+ Example:
+ 
+-ethernet-phy@0 {
+-	compatible = "ethernet-phy-ieee802.3-c22";
+-	linux,phandle = <2452000>;
+-	interrupt-parent = <40000>;
+-	interrupts = <35 1>;
+-	reg = <0>;
+-	device_type = "ethernet-phy";
+-};
++mdio {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	ethernet-phy@0 {
++		device_type = "ethernet-phy";
++		compatible = "...", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		interrupts = <24 0>;
++	}
++
++	ethernet-phy@1 {
++		device_type = "ethernet-phy";
++		compatible = "...";
++		reg = <1>;
++		interrupts = <35 1>;
++	}
++}
+-- 
+1.8.2.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
