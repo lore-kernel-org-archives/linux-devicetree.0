@@ -1,113 +1,117 @@
-From: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
-Subject: [PATCH] powerpc/85xx: typo in dts: "interupt" (four devices)
-Date: Mon, 11 Nov 2013 22:52:07 +0100
-Message-ID: <1384206727-11880-1-git-send-email-kilobyte@angband.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Mon, 11 Nov 2013 17:37:41 -0500 (EST)
+Message-ID: <alpine.LFD.2.10.1311111724480.9667@knanqh.ubzr>
+References: <20131108184036.GD2602@localhost.localdomain>
+ <alpine.LFD.2.03.1311081356300.15571@syhkavp.arg>
+ <52808E09.9060902@samsung.com> <5280FB9A.7030500@samsung.com>
+ <alpine.LFD.2.10.1311111107040.9667@knanqh.ubzr>
+ <20131111200152.GF3166@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131111200152.GF3166@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-These lines were inoperative for four years, which puts some doubt into
-their importance, and it's possible the fixed version will regress, but
-at the very least they should be removed instead.
+On Mon, 11 Nov 2013, Dave Martin wrote:
 
-Signed-off-by: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
----
- arch/powerpc/boot/dts/xcalibur1501.dts | 4 ++--
- arch/powerpc/boot/dts/xpedite5301.dts  | 4 ++--
- arch/powerpc/boot/dts/xpedite5330.dts  | 4 ++--
- arch/powerpc/boot/dts/xpedite5370.dts  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+> On Mon, Nov 11, 2013 at 11:27:46AM -0500, Nicolas Pitre wrote:
+> > It is preferable if the power_up and power_down don't wait.
+> 
+> I agree with this.
+> 
+> If a wait is needed anywhere, it is
+> 
+>  a) in power_down_finish(), and
+>  b) *before* the call to exynos_core_power_control() in
+>         exynos_core_power_up() (see below for explanation)
+> 
+> Any waits should not be busy-waits either: we should use msleep or
+> similar.  This is fine that we only wait from contexts that can sleep --
+> I think this is OK for the power_up() and power_down_finish() paths
+> (which aren't executed on the target CPU), but not on the power_down()
+> path.
 
-diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
-index cc00f4d..f151426 100644
---- a/arch/powerpc/boot/dts/xcalibur1501.dts
-+++ b/arch/powerpc/boot/dts/xcalibur1501.dts
-@@ -637,14 +637,14 @@
- 		tlu@2f000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x2f000 0x1000>;
--			interupts = <61 2 >;
-+			interrupts = <61 2 >;
- 			interrupt-parent = <&mpic>;
- 		};
- 
- 		tlu@15000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x15000 0x1000>;
--			interupts = <75 2>;
-+			interrupts = <75 2>;
- 			interrupt-parent = <&mpic>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/xpedite5301.dts b/arch/powerpc/boot/dts/xpedite5301.dts
-index 53c1c6a..d00fe16 100644
---- a/arch/powerpc/boot/dts/xpedite5301.dts
-+++ b/arch/powerpc/boot/dts/xpedite5301.dts
-@@ -547,14 +547,14 @@
- 		tlu@2f000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x2f000 0x1000>;
--			interupts = <61 2 >;
-+			interrupts = <61 2 >;
- 			interrupt-parent = <&mpic>;
- 		};
- 
- 		tlu@15000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x15000 0x1000>;
--			interupts = <75 2>;
-+			interrupts = <75 2>;
- 			interrupt-parent = <&mpic>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/xpedite5330.dts b/arch/powerpc/boot/dts/xpedite5330.dts
-index 2152259..e506554 100644
---- a/arch/powerpc/boot/dts/xpedite5330.dts
-+++ b/arch/powerpc/boot/dts/xpedite5330.dts
-@@ -583,14 +583,14 @@
- 		tlu@2f000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x2f000 0x1000>;
--			interupts = <61 2 >;
-+			interrupts = <61 2 >;
- 			interrupt-parent = <&mpic>;
- 		};
- 
- 		tlu@15000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x15000 0x1000>;
--			interupts = <75 2>;
-+			interrupts = <75 2>;
- 			interrupt-parent = <&mpic>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/xpedite5370.dts b/arch/powerpc/boot/dts/xpedite5370.dts
-index 11dbda1..9f1c608 100644
---- a/arch/powerpc/boot/dts/xpedite5370.dts
-+++ b/arch/powerpc/boot/dts/xpedite5370.dts
-@@ -545,14 +545,14 @@
- 		tlu@2f000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x2f000 0x1000>;
--			interupts = <61 2 >;
-+			interrupts = <61 2 >;
- 			interrupt-parent = <&mpic>;
- 		};
- 
- 		tlu@15000 {
- 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
- 			reg = <0x15000 0x1000>;
--			interupts = <75 2>;
-+			interrupts = <75 2>;
- 			interrupt-parent = <&mpic>;
- 		};
- 	};
--- 
-1.8.5.rc0
+Beware.. exynos_core_power_up() is called with a lock held.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Busy-waiting for 1ms every time we power a CPU down is not great for
+> power-saving...
+> 
+> In both cases, we should check the PMU status bits first, and only
+> wait if they are not already in the desired state.  The most likely
+> case will always by that the target CPU already caught up.
+
+There is no need for the CPU going down to check the PMU status.  It can 
+only have one state at that point.
+
+> Nico currently disagrees with me on (b), so we need to explore that
+> (below).
+> 
+> > No need to wait for a power_up to be complete as the only CPU that can 
+> > do a power_down is the CPU being powered up itself.
+> 
+> To extend this argument further, there is no conceiveable situation
+> where we would need to wait for power_up to complete explicitly.
+> 
+> We will only ever need to wait for power_down to complete.
+
+Exact.
+
+> > 
+> > The exynos_core_power_down call is now appropriately located i.e. within 
+> > the lock protected area.  That's fine because we know power won't be cut 
+> > until the lock is released and WFI is executed.
+> > 
+> > Also, if exynos_core_power_up() is called from another CPU right after 
+> > the lock is released on the CPU trying to shut itself down but before it 
+> > actually executes WFI then the WFI will not be effective and the 
+> > power_down method is expected to return in that case.  So no problem 
+> > there either.
+> > 
+> > The only case where it is important to really wait for the power down to 
+> > be effective is for kexec.  This is why Dave introduced the 
+> > power_down_finish method (you may find this in linux-next at the 
+> > moment).  That would be the place where to use your controller_wait 
+> > code.
+> 
+> For (b), I think we're still missing some information here...
+> 
+> Suppose CPU0 is powering down.  The PMU has been told to power the CPU
+> down, and CPU0 has released edcs_lock.  Suppose soon afterwards, CPU1
+> wants to turn CPU0 back on again.
+> 
+> Now, unless CPU1 checks the power controller status, CPU1 has no way
+> to know whether the power-down request is still in progress before CPU1
+> issues a new power-up request for CPU0.
+
+Does it matter?  As you say ...
+
+> Now, what behaviour does the power controller guarantee when it is still
+> in this state, and a new power-up request is issued to it?
+> 
+> I worry that the power controller may not cope with a new request while
+> in this state, or may not guarantee predictable behaviour.  If so then
+> the new power-up request may just get lost
+
+This is not the case on TC2 it seems.  We never check if a power-down 
+sequence has completed before issuing a power-up request.  Given each 
+CPU has its own request bit then this might not matter.
+
+Where this matters is when you really want to ensure a given CPU is not 
+executing code anymore and therefore need to know when power-down has 
+effectively completed, hence the power_down_finish method.
+
+
+Nicolas
