@@ -1,105 +1,243 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
-Date: Mon, 11 Nov 2013 02:09:08 +0100
-Message-ID: <52802E34.5020209@gmail.com>
-References: <87bo1tmibv.fsf@natisbad.org> <527ECBDD.7050607@gmail.com> <87hablulxu.fsf@natisbad.org> <527ED9E5.80800@gmail.com> <87fvr393ro.fsf@natisbad.org>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 22/32] drm/exynos: Move display implementation into dp
+Date: Mon, 11 Nov 2013 02:53:01 +0100
+Message-ID: <1826717.IzaikOO07J@flatron>
+References: <1383063198-10526-1-git-send-email-seanpaul@chromium.org> <1383063198-10526-23-git-send-email-seanpaul@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fvr393ro.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1383063198-10526-23-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 01:32 AM, Arnaud Ebalard wrote:
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->>>>> +				status = "okay";
->>>>> +			};
->>>>> +
->>>>> +			mdio {
->>>>> +				phy0: ethernet-phy@0 {
->>>>> +					reg = <0>;
->>>>
->>>> Can you evaluate PHYs compatible from u-boot or post vendor:prodid
->>>> from MDIO registers?
->>>
->>> Looking at the PCB, 88E1318-NNB2. I will dig into Documentation/ the
->>> associated compatible. Out of curiosity, how do you get the PHY model
->>> from u-boot or userland?
->>
->> If it is 88e1318 the compatible is "marvell,88e1318" then. I usually
->> look at u-boot messages which sometimes reveal the PHY used. If that
->> is not sufficient, you can read PHY ID 1/2 (SMI address 2 and 3)
->> registers and go looking for model numbers.
->
-> For the records, another solution is to look under /sys/:
->
-> root@thin:/sys/bus/mdio_bus/drivers# find -name '*mdio*'
-> ./Marvell 88E1318S/d0072004.mdio-mi:00
-> ./Marvell 88E1318S/d0072004.mdio-mi:01
+Hi Sean,
 
-Well, the compatible is "marvell,88e1318s" then.
+[CCing devicetree ML and some DT maintainers]
 
-> I guess the driver just looks at the PHY ID to detect the flavour.
->
-> Now regarding the compatible string you propose,  did some grep calls
-> and was unable to find a reference to marvell,88e1318 or even 88e138 and
-> was unable to find any. How does the kernel do something with it to
-> somehow inflect the selection of the right driver/flavour?
+On Tuesday 29 of October 2013 12:13:08 Sean Paul wrote:
+> This patch moves the exynos_drm_display implementation from fimd into
+> the dp driver. This will allow for tighter integration of the dp driver
+> into the exynos drm driver.
+> 
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> 
+> Changes in v2: None
+> Changes in v3: None
+> 
+>  .../devicetree/bindings/video/exynos_dp.txt        |  17 +++
+>  .../devicetree/bindings/video/samsung-fimd.txt     |   2 +
+>  drivers/gpu/drm/exynos/exynos_dp_core.c            | 137 ++++++++++++++++-----
+>  drivers/gpu/drm/exynos/exynos_dp_core.h            |   5 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |  14 +++
+>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |  78 +++---------
+>  7 files changed, 156 insertions(+), 98 deletions(-)
 
-You are right, it uses PHYID registers. The compatible is not used by
-the driver. Anyway, it is nice to have it in there.
+Technically the changes in code look fine, but how does it play with
+panels connected directly to FIMD (using RGB or i80 interface)?
 
->>>> Both properties above are not required, so please remove them.
->>>>
->>>>> +	       g762_clk: fixedclk {
->>>>
->>>> s/fixedclk/oscillator/ ?
->
-> In fact, if I change 'fixedclk' for 'oscillator', then I am unable to
-> boot: my SATA disk get unrecognized in a storm of insane
-> messages. Obviously, because I had modified the whole .dts to handle all
-> the points in your revieuw, I spent some time finding the root
-> cause. But that was interesting on many aspects and the continuation of
-> a debugging week end ;-)
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
+> index 84f10c1..a073e15 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
+> @@ -45,6 +45,8 @@ Required properties for dp-controller:
+>  	-samsung,lane-count:
+>  		number of lanes supported by the panel.
+>  			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
+> +	- display-timings: timings for the connected panel as described by
+> +		Documentation/devicetree/bindings/video/display-timing.txt
 
-Ah, sorry for that. You can try to make the node name unique by either
-choosing a different meaningful name or try to add @1 after the node
-name. G762 datasheet might have a good name for it, like clock-crystal
-or something.
+I'm afraid this is breaking compatibility with existing device trees.
+Unless we can guarantee that there are no existing devices shipped using
+the old binding, we should keep compatibility with it.
 
-> Can you confirm the following: g762_clk is a *label for the node*, which
-> is referenced via specific properties of g762@xx nodes, so that they get
-> a clock frequency (a property of g762_clk). And fixedclk is *the name of
-> the node*. In that specific case, fixedclk is ok because it does not
-> collide w/ any existing node. But 'oscillator' is already defined in
-> armada-xp.dtsi (included via armada-370-xp.dtsi):
->
-> 	clocks {
-> 		/* 25 MHz reference crystal */
-> 		refclk: oscillator {
-> 			compatible = "fixed-clock";
-> 			#clock-cells = <0>;
-> 			clock-frequency = <25000000>;
-> 		};
-> 	};
+Also, since this patch is changing a binding, it must go through the
+devicetree ML (now on CC) and be reviewed and acked by at least one of DT
+maintainers.
 
-Confirmed.
+Of course this new binding makes more sense, but that's another story.
 
-> So I guess the renaming I did from 'fixedclk' to 'oscillator' just
-> somehow overloaded the armada-xp.dtsi 25Mhz clock for a 32KHz one, hence
-> the inability to boot. If I am correct, I guess it would be nice to have
-> some checks from dtc when compiling the .dts to verify the uniqueness of
-> nodes in order to avoid such things.
+>  
+>  Optional properties for dp-controller:
+>  	-interlaced:
+> @@ -83,4 +85,19 @@ Board Specific portion:
+>  		samsung,color-depth = <1>;
+>  		samsung,link-rate = <0x0a>;
+>  		samsung,lane-count = <4>;
+> +
+> +		display-timings {
+> +			native-mode = <&lcd_timing>;
+> +			lcd_timing: 1366x768 {
+> +				clock-frequency = <70589280>;
+> +				hactive = <1366>;
+> +				vactive = <768>;
+> +				hfront-porch = <40>;
+> +				hback-porch = <40>;
+> +				hsync-len = <32>;
+> +				vback-porch = <10>;
+> +				vfront-porch = <12>;
+> +				vsync-len = <6>;
+> +			};
+> +		};
+>  	};
+> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> index 778838a..fa465c3 100644
+> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> @@ -39,6 +39,8 @@ Required properties:
+>  
+>  Optional Properties:
+>  - samsung,power-domain: a phandle to FIMD power domain node.
+> +- samsung,invert-vden: video enable signal is inverted
+> +- samsung,invert_vclk: video clock signal is inverted
 
-Hmm, that's difficult because dtc cannot know if you intentionally want
-to overwrite that node or I gave you the wrong name for it. The
-different node label could be a hint for the latter though.
+s/_/-/ in property names
 
-Sorry for the extra work that comment caused.
+>  
+>  Example:
+>  
+> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
+> index 089ae22..13ea8b7 100644
+> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
+> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
+[snip]
+> @@ -1142,45 +1241,17 @@ static int exynos_dp_remove(struct platform_device *pdev)
+>  #ifdef CONFIG_PM_SLEEP
+>  static int exynos_dp_suspend(struct device *dev)
+>  {
+> -	struct exynos_dp_platdata *pdata = dev->platform_data;
+>  	struct exynos_dp_device *dp = dev_get_drvdata(dev);
+>  
+> -	disable_irq(dp->irq);
+> -
+> -	flush_work(&dp->hotplug_work);
+> -
+> -	if (dev->of_node) {
+> -		if (dp->phy_addr)
+> -			exynos_dp_phy_exit(dp);
+> -	} else {
+> -		if (pdata->phy_exit)
+> -			pdata->phy_exit();
+> -	}
+> -
+> -	clk_disable_unprepare(dp->clock);
+> -
+> +	exynos_dp_poweroff(dp);
 
-Sebastian
+This change (moving this code to separate function) could be done in
+a separate patch.
+
+>  	return 0;
+>  }
+>  
+>  static int exynos_dp_resume(struct device *dev)
+>  {
+> -	struct exynos_dp_platdata *pdata = dev->platform_data;
+>  	struct exynos_dp_device *dp = dev_get_drvdata(dev);
+>  
+> -	if (dev->of_node) {
+> -		if (dp->phy_addr)
+> -			exynos_dp_phy_init(dp);
+> -	} else {
+> -		if (pdata->phy_init)
+> -			pdata->phy_init();
+> -	}
+> -
+> -	clk_prepare_enable(dp->clock);
+> -
+> -	exynos_dp_init_dp(dp);
+> -
+> -	enable_irq(dp->irq);
+> -
+> +	exynos_dp_poweron(dp);
+
+Along with this one.
+
+>  	return 0;
+>  }
+>  #endif
+[snip]
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> index 61124ca..c6a05f6 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+[snip]
+>  static void fimd_win_mode_set(struct exynos_drm_manager *mgr,
+>  			struct exynos_drm_overlay *overlay)
+>  {
+> @@ -611,6 +578,16 @@ static void fimd_mode_set(struct exynos_drm_manager *mgr,
+>  	mode->hfpd = hblank - mode->hsync_len - mode->hbpd;
+>  
+>  	mode->clkdiv = fimd_calc_clkdiv(ctx, in_mode);
+> +
+> +	if (in_mode->flags & DRM_MODE_FLAG_NVSYNC)
+> +		ctx->vidcon1 |= VIDCON1_INV_VSYNC;
+> +	else
+> +		ctx->vidcon1 &= ~VIDCON1_INV_VSYNC;
+> +
+> +	if (in_mode->flags & DRM_MODE_FLAG_NHSYNC)
+> +		ctx->vidcon1 |= VIDCON1_INV_HSYNC;
+> +	else
+> +		ctx->vidcon1 &= ~VIDCON1_INV_HSYNC;
+>  }
+>  
+>  static void fimd_commit(struct exynos_drm_manager *mgr)
+> @@ -888,30 +865,6 @@ static int fimd_activate(struct exynos_drm_manager *mgr, bool enable)
+>  	return 0;
+>  }
+>  
+> -static int fimd_get_platform_data(struct fimd_context *ctx, struct device *dev)
+> -{
+> -	struct videomode *vm;
+> -	int ret;
+> -
+> -	vm = &ctx->panel.vm;
+> -	ret = of_get_videomode(dev->of_node, vm, OF_USE_NATIVE_MODE);
+> -	if (ret) {
+> -		DRM_ERROR("failed: of_get_videomode() : %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	if (vm->flags & DISPLAY_FLAGS_VSYNC_LOW)
+> -		ctx->vidcon1 |= VIDCON1_INV_VSYNC;
+> -	if (vm->flags & DISPLAY_FLAGS_HSYNC_LOW)
+> -		ctx->vidcon1 |= VIDCON1_INV_HSYNC;
+> -	if (vm->flags & DISPLAY_FLAGS_DE_LOW)
+> -		ctx->vidcon1 |= VIDCON1_INV_VDEN;
+> -	if (vm->flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE)
+> -		ctx->vidcon1 |= VIDCON1_INV_VCLK;
+> -
+> -	return 0;
+> -}
+> -
+>  static int fimd_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -929,9 +882,10 @@ static int fimd_probe(struct platform_device *pdev)
+>  
+>  	ctx->dev = dev;
+>  
+> -	ret = fimd_get_platform_data(ctx, dev);
+> -	if (ret)
+> -		return ret;
+> +	if (of_property_read_bool(dev->of_node, "samsung,invert-vden"))
+> +		ctx->vidcon1 |= VIDCON1_INV_VDEN;
+> +	if (of_property_read_bool(dev->of_node, "samsung,invert-vclk"))
+> +		ctx->vidcon1 |= VIDCON1_INV_VCLK;
+
+This is a step backwards. Why add separate properties, when this can be
+retrieved from the display timings node?
+
+Anyway, you can't just break compatibility with the old way, since there
+might be devices shipped with DTB using it and they must be able to work
+on newer kernels.
+
+Best regards,
+Tomasz
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
