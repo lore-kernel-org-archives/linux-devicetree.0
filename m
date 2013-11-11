@@ -1,68 +1,145 @@
-From: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>
-Subject: [PATCH 02/12] mtd: nand: davinci: check required
- ti,davinci-chipselect property
-Date: Mon, 11 Nov 2013 16:53:17 +0000
-Message-ID: <4F5844B3A985794BA902E12C070812375F8CEF@DNCE04.ent.ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-3-git-send-email-ivan.khoronzhuk@ti.com>
+From: "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 05/12] mtd: nand: davinci: extend description of bindings
+Date: Mon, 11 Nov 2013 16:58:54 +0000
+Message-ID: <4F5844B3A985794BA902E12C070812375F8D14@DNCE04.ent.ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-6-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384187188-5776-3-git-send-email-ivan.khoronzhuk@ti.com>
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384187188-5776-6-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The property "ti,davinci-chipselect" is required. So we have to check
-if it is set.
+Extend bindings for davinci_nand driver to be more clear.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 ---
- drivers/mtd/nand/davinci_nand.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/mtd/davinci-nand.txt       |   77 ++++++++++++=
+++------
+ 1 file changed, 54 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index d87213f..8e1c88e 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -541,10 +541,14 @@ static struct davinci_nand_pdata
-                                GFP_KERNEL);
-                pdev->dev.platform_data = pdata;
-                if (!pdata)
--                       return NULL;
-+                       return ERR_PTR(-ENOMEM);
-+
-                if (!of_property_read_u32(pdev->dev.of_node,
-                        "ti,davinci-chipselect", &prop))
-                        pdev->id = prop;
-+               else
-+                       return ERR_PTR(-EINVAL);
-+
-                if (!of_property_read_u32(pdev->dev.of_node,
-                        "ti,davinci-mask-ale", &prop))
-                        pdata->mask_ale = prop;
-@@ -598,6 +602,10 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
-        nand_ecc_modes_t                ecc_mode;
+diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/D=
+ocumentation/devicetree/bindings/mtd/davinci-nand.txt
+index 3545ea7..d2a3fc0 100644
+--- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+@@ -1,36 +1,67 @@
+-* Texas Instruments Davinci NAND
++Device tree bindings for Texas instruments Davinci NAND controller
 
-        pdata = nand_davinci_get_pdata(pdev);
-+       if (IS_ERR(pdata)) {
-+               return PTR_ERR(pdata);
-+       }
+-This file provides information, what the device node for the
+-davinci nand interface contain.
++This file provides information, what the device node for the davinci N=
+AND
++interface contains.
 +
-        /* insist on board-specific configuration */
-        if (!pdata)
-                return -ENODEV;
++Documentation:
++Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+
+ Required properties:
+-- compatible: "ti,davinci-nand";
+-- reg : contain 2 offset/length values:
+-        - offset and length for the access window
+-        - offset and length for accessing the aemif control registers
+-- ti,davinci-chipselect: Indicates on the davinci_nand driver which
+-                         chipselect is used for accessing the nand.
++
++- compatible:                  "ti,davinci-nand"
++
++- reg:                         Contains 2 offset/length values:
++                               - offset and length for the access wind=
+ow.
++                               - offset and length for accessing the A=
+EMIF
++                               control registers.
++
++- ti,davinci-chipselect:       number of chipselect. Indicates on the
++                               davinci_nand driver which chipselect is=
+ used
++                               for accessing the nand.
++                               Can be in the range [0-3].
+
+ Recommended properties :
+-- ti,davinci-mask-ale: mask for ale
+-- ti,davinci-mask-cle: mask for cle
+-- ti,davinci-mask-chipsel: mask for chipselect
+-- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
+-               - "none"
+-               - "soft"
+-               - "hw"
+-- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
+-- ti,davinci-nand-buswidth: buswidth 8 or 16
+-- ti,davinci-nand-use-bbt: use flash based bad block table support.
+-
+-nand device bindings may contain additional sub-nodes describing
+-partitions of the address space. See partition.txt for more detail.
++
++- ti,davinci-mask-ale:         mask for ALE. Needed for executing addr=
+ess
++                               phase. These offset will be added to th=
+e base
++                               address for the chip select space the N=
+AND Flash
++                               device is connected to.
++                               If not set equal to 0x08.
++
++- ti,davinci-mask-cle:         mask for CLE. Needed for executing comm=
+and
++                               phase. These offset will be added to th=
+e base
++                               address for the chip select space the N=
+AND Flash
++                               device is connected to.
++                               If not set equal to 0x10.
++
++- ti,davinci-mask-chipsel:     mask for chipselect address. Needed to =
+mask
++                               addresses for given chipselect.
++
++- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. EC=
+C mode
++                               valid values for davinci driver:
++                               - "none"
++                               - "soft"
++                               - "hw"
++
++- ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or=
+ 4.
++
++- ti,davinci-nand-buswidth:    buswidth 8 or 16.
++
++- ti,davinci-nand-use-bbt:     use flash based bad block table support=
+=2E OOB
++                               identifier is saved in OOB area.
++
++Nand device bindings may contain additional sub-nodes describing parti=
+tions of
++the address space. See partition.txt for more detail. The NAND Flash t=
+iming
++values must be programmed in the chip select=92s node of AEMIF
++memory-controller (see Documentation/devicetree/bindings/memory-contro=
+llers/
++davinci-aemif.txt).
+
+ Example(da850 EVM ):
++
+ nand_cs3@62000000 {
+        compatible =3D "ti,davinci-nand";
+        reg =3D <0x62000000 0x807ff
+-               0x68000000 0x8000>;
++              0x68000000 0x8000>;
+        ti,davinci-chipselect =3D <1>;
+        ti,davinci-mask-ale =3D <0>;
+        ti,davinci-mask-cle =3D <0>;
 --
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
