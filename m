@@ -1,233 +1,37 @@
-From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
-Date: Mon, 11 Nov 2013 13:36:21 +0100
-Message-ID: <CABDT8WxMKDoBB8W5GMWusy3dvf8D6tz5zVVm11ZS+M1T6zno=Q@mail.gmail.com>
-References: <527D1DDA.2040004@koalo.de>
-	<20131108191117.GT16735@n2100.arm.linux.org.uk>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V7 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
+Date: Mon, 11 Nov 2013 14:00:40 +0100
+Message-ID: <10730719.0dfncB4RfV@flatron>
+References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com> <1384173897-16106-2-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131108191117.GT16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <1384173897-16106-2-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you for your helpful comments.
-I have applied them to my code and will upload a new version soon
-(hoping that I understand everything correctly).
+Hi Leela,
 
-2013/11/8 Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
-> On Fri, Nov 08, 2013 at 06:22:34PM +0100, Florian Meier wrote:
->
-> Hi Florian, some initial comments.
->
->> +#define BCM2835_DMA_DATA_TYPE_S8 1
->> +#define BCM2835_DMA_DATA_TYPE_S16 2
->> +#define BCM2835_DMA_DATA_TYPE_S32 4
->> +#define BCM2835_DMA_DATA_TYPE_S128 16
-> ...
->> +
->> +static const unsigned es_bytes[] = {
->> +     [BCM2835_DMA_DATA_TYPE_S8] = 1,
->> +     [BCM2835_DMA_DATA_TYPE_S16] = 2,
->> +     [BCM2835_DMA_DATA_TYPE_S32] = 4,
->> +     [BCM2835_DMA_DATA_TYPE_S128] = 16
->> +};
->
-> This looks rather fun - and the only place d->es is used is to convey
-> this as an index into this table for bcm2835_dma_desc_size().  I can't
-> quite see the point of this table existing.
->
->> +static void bcm2835_dma_start_sg(struct bcm2835_chan *c, struct bcm2835_desc *d,
->> +             unsigned idx)
->> +{
->> +     struct bcm2835_sg *sg = d->sg + idx;
->> +     int frame;
->> +     int frames = sg->fn;
->> +
->> +     /*
->> +      * Iterate over all frames and create a control block
->> +      * for each frame and link them together.
->> +      */
->> +     for (frame = 0; frame < frames; frame++) {
->> +             struct bcm2835_dma_cb *control_block =
->> +                     &d->control_block_base[frame];
->> +
->> +             /* Setup adresses */
->> +             if (d->dir == DMA_DEV_TO_MEM) {
->> +                     control_block->info = BCM2835_DMA_D_INC;
->> +                     control_block->src = d->dev_addr;
->> +                     control_block->dst = sg->addr+frame*sg->en;
->> +             } else {
->> +                     control_block->info = BCM2835_DMA_S_INC;
->> +                     control_block->src = sg->addr+frame*sg->en;
->> +                     control_block->dst = d->dev_addr;
->> +             }
->> +
->> +             /* Enable interrupt */
->> +             control_block->info |= BCM2835_DMA_INT_EN;
->> +
->> +             /* Setup synchronization */
->> +             if (d->sync_type != 0)
->> +                     control_block->info |= d->sync_type;
->> +
->> +             /* Setup DREQ channel */
->> +             if (d->sync_dreq != 0)
->> +                     control_block->info |=
->> +                             BCM2835_DMA_PER_MAP(d->sync_dreq);
->> +
->> +             /* Length of a frame */
->> +             control_block->length = sg->en;
->> +
->> +             /*
->> +              * Next block is the next frame.
->> +              * This DMA engine driver currently only supports cyclic DMA.
->> +              * Therefore, wrap around at number of frames.
->> +              */
->> +             control_block->next = d->control_block_base_phys +
->> +                     sizeof(struct bcm2835_dma_cb)*((frame+1)%(frames));
->> +
->> +             /* The following fields are not used here */
->> +             control_block->stride = 0;
->> +             control_block->pad[0] = 0;
->> +             control_block->pad[1] = 0;
->> +     }
->
-> Why not move the initialisation of this control block to the preparation
-> function?  I think doing that would simplify this code somewhat, as
-> you won't be converting the information passed to the preparation function
-> multiple times.
->
->> +static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
->> +{
->> +     struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
->> +     int ret;
->> +     struct bcm2835_dmadev *d = to_bcm2835_dma_dev(chan->device);
->> +     uint32_t chans = d->chans_available;
->> +     int chanID = 0;
->> +
->> +     dev_dbg(c->vc.chan.device->dev,
->> +                     "allocating channel for %u\n", c->dma_sig);
->> +
->> +     /* do not use the FIQ and BULK channels */
->> +     chans &= ~0xD;
->> +
->> +     if (chans) {
->> +             /* return the ordinal of the first channel in the bitmap */
->> +             while (chans != 0 && (chans & 1) == 0) {
->> +                     chans >>= 1;
->> +                     chanID++;
->> +             }
->> +
->> +             /* claim the channel */
->> +             d->chans_available &= ~(1 << chanID);
->> +
->> +             c->dma_chan_base = BCM2835_DMA_CHANIO(d->dma_base, chanID);
->> +
->> +             c->dma_irq_number = d->dma_irq_numbers[chanID];
->> +
->> +             c->dma_ch = chanID;
->> +     } else {
->> +             return -ENOMEM;
->> +     }
->> +
->> +     c->dma_irq_handler.name = "DMA engine IRQ handler";
->> +     c->dma_irq_handler.flags = 0;
->> +     c->dma_irq_handler.handler = bcm2835_dma_callback;
->> +
->> +     ret = request_any_context_irq(c->dma_irq_number,
->> +                     bcm2835_dma_callback, 0, "DMA IRQ", c);
->
-> Hmm.  Why "request_any_context_irq" ?  Looking at what your "dma callback"
-> is doing, it's operating entirely beneath a spinlock with IRQs disabled.
-> You might as well handle it in hard IRQ context.
->
->> +static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
->> +     struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
->> +     size_t period_len, enum dma_transfer_direction direction,
->> +     unsigned long flags, void *context)
->> +{
->> +     struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
->> +     enum dma_slave_buswidth dev_width;
->> +     struct bcm2835_desc *d;
->> +     dma_addr_t dev_addr;
->> +     unsigned int es, sync_type, sync_dreq;
->> +
->> +     /* Grab configuration */
->> +     if (direction == DMA_DEV_TO_MEM) {
->> +             dev_addr = c->cfg.src_addr;
->> +             dev_width = c->cfg.src_addr_width;
->> +             sync_type = BCM2835_DMA_S_DREQ;
->> +             sync_dreq = c->cfg.slave_id;
->> +     } else if (direction == DMA_MEM_TO_DEV) {
->> +             dev_addr = c->cfg.dst_addr;
->> +             dev_width = c->cfg.dst_addr_width;
->> +             sync_type = BCM2835_DMA_D_DREQ;
->> +             sync_dreq = c->cfg.slave_id;
->> +     } else {
->> +             dev_err(chan->device->dev, "%s: bad direction?\n", __func__);
->> +             return NULL;
->> +     }
->
-> Please move sync_dreq out of the if() statements; it doesn't appear to
-> depend on the direction (there's only one of them in that structure too.)
-> While there, you might as well assign it directly to d->sync_dreq below.
->
-> Even better, with the code in bcm2835_dma_start_sg() moved into this
-> function to generate the control block, you don't need to save a lot
-> of the information in your descriptor.
->
->> +
->> +     /* Bus width translates to the element size (ES) */
->> +     switch (dev_width) {
->> +     case DMA_SLAVE_BUSWIDTH_4_BYTES:
->> +             es = BCM2835_DMA_DATA_TYPE_S32;
->> +             break;
->> +     default:
->> +             return NULL;
->> +     }
->> +
->> +     /* Now allocate and setup the descriptor. */
->> +     d = kzalloc(sizeof(*d) + sizeof(d->sg[0]), GFP_ATOMIC);
->> +     if (!d)
->> +             return NULL;
->> +
->> +     d->dir = direction;
->> +     d->dev_addr = dev_addr;
->> +     d->es = es;
->> +     d->sync_type = sync_type;
->> +     d->sync_dreq = sync_dreq;
->> +     d->sg[0].addr = buf_addr;
->> +     d->sg[0].en = period_len;
->> +     d->sg[0].fn = buf_len / period_len;
->> +     d->sglen = 1;
->> +
->> +     /* Allocate memory for control blocks */
->> +     d->control_block_size = d->sg[0].fn*sizeof(struct bcm2835_dma_cb);
->> +     d->control_block_base = dma_alloc_coherent(chan->device->dev,
->> +                     d->control_block_size, &d->control_block_base_phys,
->> +                     GFP_KERNEL);
->> +
->> +     if (!d->control_block_base) {
->> +             dev_err(chan->device->dev,
->> +                             "%s: Memory allocation error\n", __func__);
->> +             return NULL;
->> +     }
->> +
->> +     memset(d->control_block_base, 0, d->control_block_size);
->> +
->> +     if (!c->cyclic) {
->> +             c->cyclic = true;
->> +             /* nothing else is implemented */
->> +     }
->
-> This is needlessly complex; please simplify this.
->
->> +
->> +     return vchan_tx_prep(&c->vc, &d->vd, DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
->
-> You should pass 'flags' as the 3rd argument here.
+On Monday 11 of November 2013 18:14:55 Leela Krishna Amudala wrote:
+> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
+> handle PMU register accesses in a centralized way using syscon driver
+> 
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/samsung/pmu.txt |   13 +++++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
+>  arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
+>  3 files changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Best regards,
+Tomasz
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
