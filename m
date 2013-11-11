@@ -1,105 +1,108 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS
- device tree bindings documentation
-Date: Mon, 11 Nov 2013 16:19:46 +0000
-Message-ID: <20131111161945.GL21201@e106331-lin.cambridge.arm.com>
-References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
- <1380279558-21651-3-git-send-email-arun.kk@samsung.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
+Date: Mon, 11 Nov 2013 17:21:39 +0100
+Message-ID: <20131111162138.GB30263@pengutronix.de>
+References: <5280B54A.1050503@gtsys.com.hk>
+ <20131111120357.GE21201@e106331-lin.cambridge.arm.com>
+ <20131111142639.GC11083@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380279558-21651-3-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "shaik.ameer@samsung.com" <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>, "arunkk.samsung@gmail.com" <arunkk.samsung@gmail.com>
+In-Reply-To: <20131111142639.GC11083-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 11:59:07AM +0100, Arun Kumar K wrote:
-> The patch adds the DT binding documentation for Samsung
-> Exynos5 SoC series imaging subsystem (FIMC-IS).
+On Mon, Nov 11, 2013 at 10:26:41PM +0800, Shawn Guo wrote:
+> Copy Markus who is working on imx27 pinctrl driver.
 > 
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   84 ++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> On Mon, Nov 11, 2013 at 12:03:57PM +0000, Mark Rutland wrote:
+> > On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
+> > > Hi,
+> > 
+> > Hi,
+> > 
+> > While this does involve device tree, it's not strictly a device tree
+> > problem, and the people best placed to answer your question don't seem
+> > to be on Cc. You'd get better responses if you used get_maintainer.pl,
+> > or looked at the commit history of the driver or binding to find people
+> > likely to be able to help.
+> > 
+> > I've added Dong Aisheng, Shawn Guo, and Linus Walleij to Cc, as they had
+> > signed-off-bys on the binding document.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-> new file mode 100644
-> index 0000000..0525417
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-> @@ -0,0 +1,84 @@
-> +Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
-> +------------------------------------------------------
-> +
-> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
-> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
-> +FIMC-LITE IPs but has a much improved version of FIMC-IS which can
-> +handle sensor controls and camera post-processing operations. The
-> +Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
-> +post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
-> +dedicated scalers (SCC and SCP).
-> +
-> +fimc-is node
-> +------------
-> +
-> +Required properties:
-> +
-> +- compatible        : must be "samsung,exynos5250-fimc-is"
+> Thanks, Mark.
+> 
+> <snip>
+> 
+> > > while I port the static code to the DT I step into the problem to
+> > > set the PSCR for the sdhc2 ports to 22k pull-up
+> 
+> Is the code from mainline kernel or private tree?  I'm asking because I
+> do not see non-DT imx27 iomux-v1 driver has interface for setting up
+> DSCR or PSCR in SYSCTRL block.  That's probably why Markus did not
+> support that in the imx27 pinctrl driver, I guess.
 
-s/must be/should contain/
+DSCR controls groups of pins, for example DS_SLOW10 (DSCR1) controls all
+pins of SDHC1 and CSPI3. I don't think a config option for a pin should
+influence the behaviour of other pins.
+PSCR could be managed by the imx27 pinctrl driver but it is not included
+in the GPIO/pinmux module. It is included in "System control module"
+which does not exist on imx21 for example.
 
-> +- reg               : physical base address and size of the memory mapped
-> +                      registers
-> +- interrupt-parent  : parent interrupt controller
+Regards,
 
-Is this actually necessary? Is it not implicit in most cases?
+Markus Pargmann
 
-> +- interrupts        : fimc-is interrupt to the parent interrupt controller
+> 
+> Shawn
+> 
+> > > I look for something like described in
+> > >      pinctrl/fsl,imx-pinctrl.txt
+> > > 
+> > > the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
+> > > 
+> > > 
+> > > pinctrl_sdhc2_1: sdhc2-1 {
+> > >                          fsl,pins = <
+> > >                                  MX27_PAD_SD2_D0__SD2_D0  0x1
+> > >                                  MX27_PAD_SD2_D1__SD2_D1  0x1
+> > >                                  MX27_PAD_SD2_D2__SD2_D2  0x1
+> > >                                  MX27_PAD_SD2_D3__SD2_D3  0x1
+> > >                                  MX27_PAD_SD2_CLK__SD2_CLK  0x1
+> > >                                  MX27_PAD_SD2_CMD__SD2_CMD  0x1
+> > >                          >;
+> > >                  };
+> > > 
+> > > its setup in board specific c-file
+> > > 
+> > > /* 22k pull-up for sd2 pins  */
+> > >          reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+> > >          reg &= ~0xfff0;
+> > >          reg |= 0xfff0;
+> > >          __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+> > > 
+> > > 
+> > > Any successions?
+> > > 
+> > > Regards
+> > > Chris
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > 
+> 
+> 
 
-- interrupts: interrupt-specifier for the sole interrupt generated by
-  the device.
-
-> +- clocks            : list of clock specifiers, corresponding to entries in
-> +                      clock-names property
-
-- clocks: A list of phandle + clock-specifier pairs corresponding to
-  entries in clock-names
-
-> +- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
-> +                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
-> +                      matching entries in the clocks property
-> +- samsung,pmu       : phandle to the Power Management Unit (PMU) node
-> +
-
-It may be worth point out that #address-cells, #size-cells, and ranges
-need to be present as approriate for mapping sub-nodes.
-
-> +i2c-isp (ISP I2C bus controller) nodes
-> +--------------------------------------
-> +The i2c-isp node is defined as the child node of fimc-is.
-> +
-> +Required properties:
-> +
-> +- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
-> +		  Exynos4412 and Exynos5250 SoCs
-
-s/should be/should contain/
-
-> +- reg		: physical base address and length of the registers set
-> +- clocks	: must contain gate clock specifier for this controller
-> +- clock-names	: must contain "i2c_isp" entry
-
-Please reword clocks to be in terms of clock-names, as above. e.g.
-
-- clocks: A list of phandle + clock-specifier pairs corresponding to
-  entries in clock-names
-- clock-names: Should contain "i2c_isp" fot the gate clock
-
-Otherwise, I think this looks ok.
-
-Cheers,
-Mark.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
