@@ -1,202 +1,100 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
 Subject: Re: [PATCH v5 5/7] gpio: davinci: add OF support
-Date: Mon, 11 Nov 2013 17:18:29 +0200
-Message-ID: <5280F545.3040406@ti.com>
+Date: Mon, 11 Nov 2013 21:07:04 +0530
+Message-ID: <CA+V-a8tW9dKsE+Ps_MSsr_BsDR2HVE7uEE9GN7yNga3YWoCGow@mail.gmail.com>
 References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1383905510-31760-6-git-send-email-prabhakar.csengg@gmail.com>
+ <1383905510-31760-6-git-send-email-prabhakar.csengg@gmail.com> <5280F545.3040406@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1383905510-31760-6-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5280F545.3040406@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
-> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
-> 
-> This patch adds OF parser support for davinci gpio
-> driver and also appropriate documentation in gpio-davinci.txt
-> located at Documentation/devicetree/bindings/gpio/.
-> 
-> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-> [prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: simplified the OF code, removed
-> 		unnecessary DT property and also simplified
-> 		the commit message]
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   .../devicetree/bindings/gpio/gpio-davinci.txt      |   39 ++++++++++++++
->   drivers/gpio/gpio-davinci.c                        |   54 ++++++++++++++++++--
->   2 files changed, 90 insertions(+), 3 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> new file mode 100644
-> index 0000000..d677bbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -0,0 +1,39 @@
-> +Davinci GPIO controller bindings
-> +
-> +Required Properties:
-> +- compatible: should be "ti,dm6441-gpio"
-> +
-> +- reg: Physical base address of the controller and the size of memory mapped
-> +       registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- interrupt-parent: phandle of the parent interrupt controller.
-> +
-> +- interrupts: Array of GPIO interrupt number. Only banked or unbanked IRQs are
-> +	      supported at a time.
-> +
-> +- ti,ngpio: The number of GPIO pins supported.
-> +
-> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an individual interrupt
-> +		             line to processor.
-> +
-> +The GPIO controller also acts as an interrupt controller. It uses the default
-> +two cells specifier as described in Documentation/devicetree/bindings/
-> +interrupt-controller/interrupts.txt.
-> +
-> +Example:
-> +
-> +gpio: gpio@1e26000 {
-> +	compatible = "ti,dm6441-gpio";
-> +	gpio-controller;
-> +	reg = <0x226000 0x1000>;
-> +	interrupt-parent = <&intc>;
-> +	interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
-> +		44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
-> +		46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
-> +		48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
-> +		50 IRQ_TYPE_EDGE_BOTH>;
-> +	ti,ngpio = <144>;
-> +	ti,davinci-gpio-unbanked = <0>;
-> +};
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index b149239..ed04835 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -17,6 +17,9 @@
->   #include <linux/io.h>
->   #include <linux/irq.h>
->   #include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/platform_device.h>
->   #include <linux/platform_data/gpio-davinci.h>
->   
-> @@ -134,6 +137,40 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
->   	writel((1 << offset), value ? &g->set_data : &g->clr_data);
->   }
->   
-> +static struct davinci_gpio_platform_data *
-> +davinci_gpio_get_pdata(struct platform_device *pdev)
+Hi Grygorii,
 
-Minor: usually such functions have "_of" in their names:
- davinci_gpio_of_get_pdata()
+Thanks for the review.
 
-> +{
-> +	struct device_node *dn = pdev->dev.of_node;
-> +	struct davinci_gpio_platform_data *pdata;
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
-> +		return pdev->dev.platform_data;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
-> +
-> +	ret = of_property_read_u32(dn, "ti,ngpio", &val);
-> +	if (ret)
-> +		goto of_err;
-> +
-> +	pdata->ngpio = val;
-> +
-> +	ret = of_property_read_u32(dn, "ti,davinci-gpio-unbanked", &val);
-> +	if (ret)
-> +		goto of_err;
-> +
-> +	pdata->gpio_unbanked = val;
-> +
-> +	return pdata;
-> +
-> +of_err:
-> +	dev_err(&pdev->dev, "Populating pdata from DT failed: err %d\n", ret);
-> +	return NULL;
-> +}
-> +
->   static int davinci_gpio_probe(struct platform_device *pdev)
->   {
->   	int i, base;
-> @@ -144,12 +181,14 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct resource *res;
->   
-> -	pdata = dev->platform_data;
-> +	pdata = davinci_gpio_get_pdata(pdev);
->   	if (!pdata) {
->   		dev_err(dev, "No platform data found\n");
->   		return -EINVAL;
->   	}
->   
-> +	dev->platform_data = pdata;
-> +
+On Mon, Nov 11, 2013 at 8:48 PM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
+[Snip]
+>> @@ -134,6 +137,40 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+>>       writel((1 << offset), value ? &g->set_data : &g->clr_data);
+>>   }
+>>
+>> +static struct davinci_gpio_platform_data *
+>> +davinci_gpio_get_pdata(struct platform_device *pdev)
+>
+> Minor: usually such functions have "_of" in their names:
+>  davinci_gpio_of_get_pdata()
+>
+Ahh but actual this function is intended to get pdata in both the
+cases DT and NON-DT, so kept it generic :)
 
-Pls, add following code to GPIO chip initialization:
-
-@@ -233,6 +245,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
-                chips[i].chip.ngpio = ngpio - base;
-                if (chips[i].chip.ngpio > 32)
-                        chips[i].chip.ngpio = 32;
-+#ifdef CONFIG_OF_GPIO
-+               chips[i].chip.of_node = dev->of_node;
-+#endif
-
-
-
->   	/*
->   	 * The gpio banks conceptually expose a segmented bitmap,
->   	 * and "ngpio" is one more than the largest zero-based
-> @@ -496,11 +535,20 @@ done:
->   	return 0;
->   }
->   
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id davinci_gpio_ids[] = {
-> +	{ .compatible = "ti,dm6441-gpio", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
+>> +{
+>> +     struct device_node *dn = pdev->dev.of_node;
+>> +     struct davinci_gpio_platform_data *pdata;
+>> +     int ret;
+>> +     u32 val;
+>> +
+>> +     if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+>> +             return pdev->dev.platform_data;
+>> +
+>> +     pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>> +     if (!pdata)
+>> +             return NULL;
+>> +
+>> +     ret = of_property_read_u32(dn, "ti,ngpio", &val);
+>> +     if (ret)
+>> +             goto of_err;
+>> +
+>> +     pdata->ngpio = val;
+>> +
+>> +     ret = of_property_read_u32(dn, "ti,davinci-gpio-unbanked", &val);
+>> +     if (ret)
+>> +             goto of_err;
+>> +
+>> +     pdata->gpio_unbanked = val;
+>> +
+>> +     return pdata;
+>> +
+>> +of_err:
+>> +     dev_err(&pdev->dev, "Populating pdata from DT failed: err %d\n", ret);
+>> +     return NULL;
+>> +}
+>> +
+>>   static int davinci_gpio_probe(struct platform_device *pdev)
+>>   {
+>>       int i, base;
+>> @@ -144,12 +181,14 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>       struct device *dev = &pdev->dev;
+>>       struct resource *res;
+>>
+>> -     pdata = dev->platform_data;
+>> +     pdata = davinci_gpio_get_pdata(pdev);
+>>       if (!pdata) {
+>>               dev_err(dev, "No platform data found\n");
+>>               return -EINVAL;
+>>       }
+>>
+>> +     dev->platform_data = pdata;
+>> +
+>
+> Pls, add following code to GPIO chip initialization:
+>
+> @@ -233,6 +245,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>                 chips[i].chip.ngpio = ngpio - base;
+>                 if (chips[i].chip.ngpio > 32)
+>                         chips[i].chip.ngpio = 32;
+> +#ifdef CONFIG_OF_GPIO
+> +               chips[i].chip.of_node = dev->of_node;
 > +#endif
-> +
->   static struct platform_driver davinci_gpio_driver = {
->   	.probe		= davinci_gpio_probe,
->   	.driver		= {
-> -		.name	= "davinci_gpio",
-> -		.owner	= THIS_MODULE,
-> +		.name		= "davinci_gpio",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(davinci_gpio_ids),
->   	},
->   };
->   
-> 
+>
+>
+OK
+
 Regards,
-- grygorii
+--Prabhakar Lad
