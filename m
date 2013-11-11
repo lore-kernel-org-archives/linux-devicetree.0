@@ -1,80 +1,64 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 11 Nov 2013 20:38:02 +0100
-Message-ID: <1867149.UUx9fK3YLD@flatron>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52812D3A.2070107@keymile.com> <52813100.1060500@wwwdotorg.org>
+From: Joel Fernandes <joelf@ti.com>
+Subject: [PATCH v2] doc: devicetree: Add bindings documentation for omap-des driver
+Date: Mon, 11 Nov 2013 13:49:41 -0600
+Message-ID: <1384199386-14504-1-git-send-email-joelf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52813100.1060500@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Gerlando Falauto <gerlando.falauto@keymile.com>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Rutland <mark.rutland@arm.com>, Joel Fernandes <joelf@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 of November 2013 12:33:20 Stephen Warren wrote:
-> On 11/11/2013 12:17 PM, Gerlando Falauto wrote:
-> > Hi Stephan,
-> > 
-> > On 11/11/2013 07:53 PM, Stephen Warren wrote:
-> >> On 11/11/2013 11:28 AM, Gerlando Falauto wrote:
-> >>> Hi everyone,
-> >>>
-> >>> [jumping in on an old discussion]
-> >>>
-> >>> On 09/09/2013 06:19 PM, Mark Brown wrote:
-> >>>> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
-> >>>>> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
-> >>>>
-> >>>>>> The driver that tries to use the GPIO requested by this patch before
-> >>>>>> HAS to
-> >>>>>> fail. This is exactly the intention of this patch. We don't want the
-> >>>>>> GPIO to
-> >>>>>> be requested any more, if it is used as an interrupt pin.
-> >>>>
-> >>>>> That will break existing drivers. There are drivers that request the
-> >>>>> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
-> >>>>> that way.
-> >>>>
-> >>>> Yes, plus input devices and audio jack detection among others.  This
-> >>>> pattern is very common if the GPIO is actually being used as a GPIO, an
-> >>>> edge triggered interrupt is used to flag when something happens and the
-> >>>> state is determined by reading the GPIO state (often with some
-> >>>> debounce).
-> >>>
-> >>> I actually came across this thread while looking for an answer to the
-> >>> following (apparently trivial) question:
-> >>>
-> >>> If you were to write a new driver & binding, what would be, in general,
-> >>> the recommended DT binding for a cascade interrupt controller (or any
-> >>> other peripheral, for that matter), which is connected through a GPIO
-> >>> (to be used as IRQ)?
-> >>>
-> >>> a) Through gpios = <&gpio0 N>
-> >>> b) through interrupt-parent = <&gpio0> & interrupts <N
-> >>> IRQ_TYPE_LEVEL_LOW>, or
-> >>> c) both?
-> >>
-> >> (b) alone.
-> >>
-> >>  From the perspective of the child interrupt controller, its output is
-> >> purely an interrupt. The fact that the parent interrupt controller could
-> >> use that pin as a GPIO in some other context (e.g. on a different board)
-> >> isn't something that the child interrupt controller should know/care
-> >> about.
-> >>
-> > 
-> > Thanks for your answer. So it should be the parent driver to proactively
-> > configure the GPIO as input, active high etc..., when an IRQ for its
-> > GPIOs is requested, right?
-> 
-> That was the conclusion of this thread, or a similar thread, yes.
+Add documentation for the generic OMAP DES crypto modul describing the device
+tree bindings.
 
-I would only add that settings, such as pull up/down control that depends
-on the chip that drives the interrupt pin (i.e. the child interrupt
-controller), are usually configured using pin control bindings.
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Joel Fernandes <joelf@ti.com>
+---
+v2 changes: Update documentation for clocks, clock-names and dma-names.
 
-Best regards,
-Tomasz
+ .../devicetree/bindings/crypto/omap-des.txt        | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
+new file mode 100644
+index 0000000..e8c63bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
+@@ -0,0 +1,30 @@
++OMAP SoC DES crypto Module
++
++Required properties:
++
++- compatible : Should contain "ti,omap4-des"
++- ti,hwmods: Name of the hwmod associated with the DES module
++- reg : Offset and length of the register set for the module
++- interrupts : the interrupt-specifier for the DES module
++- clocks : A phandle to the functional clock node of the DES module
++           corresponding to each entry in clock-names
++- clock-names : Name of the functional clock, should be "fck"
++
++Optional properties:
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++	Documentation/devicetree/bindings/dma/dma.txt
++	Each entry corresponds to an entry in dma-names
++- dma-names: DMA request names should include "tx" and "rx" if present
++
++Example:
++	/* DRA7xx SoC */
++	des: des@480a5000 {
++		compatible = "ti,omap4-des";
++		ti,hwmods = "des";
++		reg = <0x480a5000 0xa0>;
++		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++		dmas = <&sdma 117>, <&sdma 116>;
++		dma-names = "tx", "rx";
++		clocks = <&l3_iclk_div>;
++		clock-names = "fck";
++	};
+-- 
+1.8.1.2
 
