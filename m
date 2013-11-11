@@ -1,185 +1,112 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V2 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Mon, 11 Nov 2013 14:02:58 +0530
-Message-ID: <1384158778-27555-3-git-send-email-yuvaraj.cd@samsung.com>
-References: <1384158778-27555-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384158778-27555-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, swarren@wwwdotorg.org, mark.rutland@arm.com, sachin.kamat@linaro.org, b.zolnierkie@samsung.com, jg1.han@samsung.com, t.figa@samsung.com, christoffer.dall@linaro.org, aditya.ps@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v11 3/3] DMA: Freescale: update driver to support 8-channel
+ DMA engine
+Date: Mon, 11 Nov 2013 17:12:07 +0800
+Message-ID: <52809F67.20901@freescale.com>
+References: <1380188023-3936-1-git-send-email-hongbo.zhang@freescale.com> <1380188023-3936-4-git-send-email-hongbo.zhang@freescale.com> <525F7C18.3010409@freescale.com> <5278587F.7090500@freescale.com> <CAA9_cme3c7SjH3iio0oR3FHpfoMzgrBDO-2k_Yf68G-AgFNqfA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA9_cme3c7SjH3iio0oR3FHpfoMzgrBDO-2k_Yf68G-AgFNqfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt entry for ahci sata controller and its
-corresponding phy controller.phy node has been added w.r.t
-new generic phy framework.
+On 11/08/2013 10:45 AM, Dan Williams wrote:
+> On Mon, Nov 4, 2013 at 6:31 PM, Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> Hi Vinod Koul and Dan Williams,
+>> Ping?
+>>
+> Not much to review from the dmaengine side, just one question below.
+> It would be helpful if you can send these to the new dmaengine
+> patchwork at dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org with the Acks you have already
+> collected.
+>
 
-Changes since V1:
-	1.Minor changes to node name convention
-	2.Updated binding document.
+Sorry didn't notice this new mailing list.
+I will resend these patches to it again.
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- .../devicetree/bindings/ata/exynos-sata-phy.txt    |   19 +++++++++++++-----
- .../devicetree/bindings/ata/exynos-sata.txt        |   17 +++++++++++-----
- arch/arm/boot/dts/exynos5250-arndale.dts           |    9 ++++++++-
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++------
- arch/arm/boot/dts/exynos5250.dtsi                  |   21 ++++++++++++++++----
- 5 files changed, 53 insertions(+), 21 deletions(-)
+>>
+>> On 10/17/2013 01:56 PM, Hongbo Zhang wrote:
+>>> Hi Vinod,
+>>> I have gotten ACK from Mark for both the 1/3 and 2/3 patches.
+>>> Thanks.
+>>>
+>>>
+>>> On 09/26/2013 05:33 PM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+>>>> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>>>
+>>>> This patch adds support to 8-channel DMA engine, thus the driver works
+>>>> for both
+>>>> the new 8-channel and the legacy 4-channel DMA engines.
+>>>>
+>>>> Signed-off-by: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>>> ---
+>>>>    drivers/dma/Kconfig  |    9 +++++----
+>>>>    drivers/dma/fsldma.c |    9 ++++++---
+>>>>    drivers/dma/fsldma.h |    2 +-
+>>>>    3 files changed, 12 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>>>> index 6825957..3979c65 100644
+>>>> --- a/drivers/dma/Kconfig
+>>>> +++ b/drivers/dma/Kconfig
+>>>> @@ -89,14 +89,15 @@ config AT_HDMAC
+>>>>          Support the Atmel AHB DMA controller.
+>>>>      config FSL_DMA
+>>>> -    tristate "Freescale Elo and Elo Plus DMA support"
+>>>> +    tristate "Freescale Elo series DMA support"
+>>>>        depends on FSL_SOC
+>>>>        select DMA_ENGINE
+>>>>        select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+>>>>        ---help---
+>>>> -      Enable support for the Freescale Elo and Elo Plus DMA controllers.
+>>>> -      The Elo is the DMA controller on some 82xx and 83xx parts, and the
+>>>> -      Elo Plus is the DMA controller on 85xx and 86xx parts.
+>>>> +      Enable support for the Freescale Elo series DMA controllers.
+>>>> +      The Elo is the DMA controller on some mpc82xx and mpc83xx parts,
+>>>> the
+>>>> +      EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 is
+>>>> on
+>>>> +      some Txxx and Bxxx parts.
+>>>>      config MPC512X_DMA
+>>>>        tristate "Freescale MPC512x built-in DMA engine support"
+>>>> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+>>>> index 49e8fbd..16a9a48 100644
+>>>> --- a/drivers/dma/fsldma.c
+>>>> +++ b/drivers/dma/fsldma.c
+>>>> @@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct fsldma_device
+>>>> *fdev,
+>>>>        WARN_ON(fdev->feature != chan->feature);
+>>>>          chan->dev = fdev->dev;
+>>>> -    chan->id = ((res.start - 0x100) & 0xfff) >> 7;
+>>>> +    chan->id = (res.start & 0xfff) < 0x300 ?
+>>>> +           ((res.start - 0x100) & 0xfff) >> 7 :
+>>>> +           ((res.start - 0x200) & 0xfff) >> 7;
+>>>>        if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
+> Isn't it a bit fragile to have this based on the resource address?
+> Can't device tree tell you the channel id directly by an index into
+> the "dma0: dma@100300" node?
 
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-index 37824fa..a679e17 100644
---- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-+++ b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-@@ -4,11 +4,20 @@ SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
- Each SATA PHY controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
-+- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
- - reg               : <registers mapping>
- 
- Example:
--        sata@ffe07000 {
--                compatible = "samsung,exynos5-sata-phy";
--                reg = <0xffe07000 0x1000>;
--        };
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
-+		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		sataphy-pmu {
-+			reg = <0x10040724 0x4>;
-+			};
-+	};
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-index 0849f10..8ec7327 100644
---- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-+++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-@@ -8,10 +8,17 @@ Required properties:
- - interrupts        : <interrupt mapping for SATA IRQ>
- - reg               : <registers mapping>
- - samsung,sata-freq : <frequency in MHz>
-+- phys              : as mentioned in phy-bindings.txt
-+- phy-names         : as mentioned in phy-bindings.txt
- 
- Example:
--        sata@ffe08000 {
--                compatible = "samsung,exynos5-sata";
--                reg = <0xffe08000 0x1000>;
--                interrupts = <115>;
--        };
-+	sata@122F0000 {
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
-+		reg = <0x122F0000 0x1ff>;
-+		interrupts = <0 115 0>;
-+		clocks = <&clock 277>, <&clock 143>;
-+		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
-+	};
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index b77a37e..434e4f3 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -381,7 +381,14 @@
- 	};
- 
- 	i2c@121D0000 {
--		status = "disabled";
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <40000>;
-+		samsung,i2c-slave-addr = <0x38>;
-+
-+		sata-phy {
-+			compatible = "sata-phy-i2c";
-+			reg = <0x38>;
-+		};
- 	};
- 
- 	mmc_0: mmc@12200000 {
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 13746df..eeeeef9 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -90,16 +90,12 @@
- 		samsung,i2c-max-bus-freq = <40000>;
- 		samsung,i2c-slave-addr = <0x38>;
- 
--		sata-phy {
--			compatible = "samsung,sata-phy";
-+		sata-phy@38 {
-+			compatible = "sata-phy-i2c";
- 			reg = <0x38>;
- 		};
- 	};
- 
--	sata@122F0000 {
--		samsung,sata-freq = <66>;
--	};
--
- 	i2c@12C80000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-max-bus-freq = <66000>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 80b5df5..d24db31 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -46,6 +46,7 @@
- 		i2c6 = &i2c_6;
- 		i2c7 = &i2c_7;
- 		i2c8 = &i2c_8;
-+		i2c9 = &i2c_9;
- 		pinctrl0 = &pinctrl_0;
- 		pinctrl1 = &pinctrl_1;
- 		pinctrl2 = &pinctrl_2;
-@@ -216,16 +217,28 @@
- 	};
- 
- 	sata@122F0000 {
--		compatible = "samsung,exynos5-sata-ahci";
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
- 		reg = <0x122F0000 0x1ff>;
- 		interrupts = <0 115 0>;
- 		clocks = <&clock 277>, <&clock 143>;
- 		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
- 	};
- 
--	sata-phy@12170000 {
--		compatible = "samsung,exynos5-sata-phy";
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
- 		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		sataphy-pmu {
-+			reg = <0x10040724 0x4>;
-+			};
- 	};
- 
- 	i2c_0: i2c@12C60000 {
-@@ -334,7 +347,7 @@
- 		clock-names = "i2c";
- 	};
- 
--	i2c@121D0000 {
-+	i2c_9: i2c@121D0000 {
-                 compatible = "samsung,exynos5-sata-phy-i2c";
-                 reg = <0x121D0000 0x100>;
-                 #address-cells = <1>;
--- 
-1.7.9.5
+Yes, both this way and putting a "cell-index" into device tree work.
+This won't be fragile, because the resource address should always be 
+defined correctly, otherwise even if we can tell a channel id by 
+"cell-index" but with wrong resource address, nothing will work.
+This piece of code only doesn't seem as neat as using "cell-index", but 
+we prefer the style that let the device tree describes as true as what 
+hardware really has. This doesn't mean "cell-index" isn't acceptable, if 
+it is necessary and unavoidable, we can send another patch to add it, 
+but currently there is no need and we don't have to do this.
 
+> --
+> Dan
+>
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
