@@ -1,130 +1,127 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
-Date: Mon, 11 Nov 2013 10:39:57 +0100
-Message-ID: <20131111093956.GI3884@ulmo.nvidia.com>
-References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com>
- <20130910172130.GC22111@ulmo>
- <523056A6.5060000@newsguy.com>
- <524408BE.40402@ti.com>
- <20130926120248.GB1680@ulmo>
- <524427E5.50403@ti.com>
- <20130926125020.GA2141@ulmo>
- <524589A3.50700@newsguy.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings
+ documentation
+Date: Mon, 11 Nov 2013 09:40:39 +0000
+Message-ID: <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
+References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TKDEsImF70pdVIl+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <524589A3.50700@newsguy.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
+In-Reply-To: <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Content-Language: en-US
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
---TKDEsImF70pdVIl+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have a few comments.
 
-On Fri, Sep 27, 2013 at 06:35:31AM -0700, Mike Dunn wrote:
-> On 09/26/2013 05:50 AM, Thierry Reding wrote:
-> > On Thu, Sep 26, 2013 at 03:26:13PM +0300, Tomi Valkeinen wrote:
-> >> On 26/09/13 15:02, Thierry Reding wrote:
-> >>> On Thu, Sep 26, 2013 at 01:13:18PM +0300, Tomi Valkeinen wrote:
-> >>>> On 11/09/13 14:40, Mike Dunn wrote:
-> >>>>> On 09/10/2013 10:21 AM, Thierry Reding wrote:
-> >>>>
-> >>>>>> Do you have a real setup that actually needs multiple GPIOs? Usual=
-ly
-> >>>>>> such a setup requires some kind of timing or other additional cons=
-traint
-> >>>>>> which can't be represented by this simple binding.
-> >>>>>>
-> >>>>>> Looking at the Palm Treo code it seems like the reason why multiple
-> >>>>>> GPIOs are needed is because one is to enable the backlight, while =
-the
-> >>>>>> other is in fact used to enable the LCD panel.=20
-> >>>>>
-> >>>>>
-> >>>>> There are actually four GPIOs involved!  (There is an embarrasingly=
- horrible
-> >>>>> hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One=
- is almost
-> >>>>> certainly simply backlight power.  The other three are probably LCD=
- related.
-> >>>>
-> >>>> When you say "power", do you mean the gpio enables a regulator to fe=
-ed
-> >>>> power to the backlight? If so, wouldn't that be a regulator, not gpi=
-o,
-> >>>> from the bl driver's point of view?
-> >>>>
-> >>>> Generally speaking, this same problem appears in many places, but for
-> >>>> some reason especially in display. I'm a bit hesitant in adding "free
-> >>>> form" gpio/regulator support for drivers, as, as Thierry pointed out,
-> >>>> there are often timing requirements, or sometimes the gpios are
-> >>>> inverted, or sometimes the gpio is, in fact, a reset gpio, where you=
-'ll
-> >>>> assert the gpio for a short moment only.
-> >>>
-> >>> I sent out another series a few days ago that somewhat obsoletes this
-> >>> patch. What it does is basically add a single enable GPIO that can be
-> >>> used to turn the backlight on and off. In a separate patch, support is
-> >>> added for a power regulator. The combination of both should be able to
-> >>> cover the majority of use-cases.
-> >>
-> >> But Mike's case required 4 GPIOs? Or can that be reduced to one gpio a=
-nd
-> >> one regulator?
-> >=20
-> > Well, at least for the backlight it only seemed to involve a single
-> > GPIO. The other three were probably related to LCD and therefore not
-> > really suitable for a backlight driver. Traditionally it has been that
-> > the backlight driver handled these things as well (via the callbacks
-> > installed by board setup code). While really they should be handled by a
-> > separate driver (for the LCD).
->=20
->=20
-> Yes, this is currently my best guess.  This is reverse-engineered and
-> unfortunately I'm not yet able to accurately describe my particular use-c=
-ase.
-> Probably as wacky as anything you can imagine, Thierry :)
->=20
-> The gpio and regulator patches will probably suffice.  Thierry, can you p=
-lease
-> point me to those patches?  I don't see them in your gitorious tree.  If =
-they
-> were posted to linux-pwm, I missed them; sorry.
+On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
+> Document the device tree bindings for the sci serial port devices.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> new file mode 100644
+> index 0000000..66d3bca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -0,0 +1,42 @@
+> +* Renesas SH-Mobile Serial Communication Interface
+> +
+> +Required properties:
+> +
+> +  - compatible: one of the following types (scif, scifa, scifb, hscif).
 
-I've stumbled across this email and it's not marked as answered, so here
-goes: these patches will be part of my pull request for 3.13. They
-should now be in my tree, although that's now moved to kernel.org. You
-can find it here:
+Minor nit, but would be nice to have "Should contain one of the
+following:". We might have future variants whereby the compatible string
+will actually be a string list.
 
-	https://git.kernel.org/cgit/linux/kernel/git/thierry.reding/linux-pwm.git
+> +
+> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
+> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
+> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
+> +    - "renesas,scif-generic" for generic SCIF compatible UART.
+> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
+> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
+> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
 
-Thierry
+Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
 
---TKDEsImF70pdVIl+
-Content-Type: application/pgp-signature
+> +
+> +    When compatible with the generic version, nodes must also list the
+> +    SoC-specific version corresponding to the platform.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Presumably the SoC-specific version should come first; it would be nice
+to note that.
 
-iQIcBAEBAgAGBQJSgKXsAAoJEN0jrNd/PrOhHYMP/3F/glcpTv7m1AY8cAM7CLdT
-OnSK+tM+5pWDgEkrTQesLireAZhmSNRte3WoJW0yOs+GZTO2F3GyPfZFaZcWkYPU
-5qgNoe/1lVWYr3vUbBQ/cLh2rbLiNC33FHuac76XffEgxVV+sTeKmTlbMeB+uhfQ
-7HqT4AcROMz+KxdheuFSCMjwLlahWvItsTtmFIOeBY8JiIUeHaHRKLGLR6O20Vas
-OYk+rfBd7fv7f1YwVswpAUbayDrHki9KJD4c5IzZtZjzTedssKlk1pSJvRmArRd3
-Mox7qSrpQLm/ovRt9fLu2hMszNtf89OAfvZmPh/HpnVmK2k4VLifiDmObP90sOUz
-HBdRJJjVVTfVk4wjqWFftDa3CV+GMrHWtEH3hJGX8WNsqjU/Xw8yAt5BotwLFc4U
-cvVYOnFyWZu0DxN2k+bPhJMqChjsc+7Gk3iy/gZdSB6NIC9Fzsmr7bq5Fa4sC1Ps
-ptu0vN0qjLqf5C+8TKE4BbvSTfLIPQtO4xUlqEVlGvFPe13uGKMBgvpVcfOPnFz5
-Sc10s6f0q/UExWjoWPduMbsZzaKfpX5137+Sm/eGgRtD5asD/SrCjTcv1/iFiuBT
-fLbzHKdNqRkVUFHFWG/plCsQoLyuGuAMECX25fWZ7AppGLQwG1YLfN14TUfJfkDB
-EYRiI+dZ+eFnSNXHOSJc
-=WHTv
------END PGP SIGNATURE-----
+> +
+> +  - reg: Base address and length of the memory resource used by the UART.
 
---TKDEsImF70pdVIl+--
+I assume by memory resource you mean the memory-mapped registers?
+Resource sounds like Linux-internal nomenclature leaking.
+
+> +
+> +  - interrupt-parent: Reference to the parent interrupt controller.
+
+I don't think this is strictly necessary. It's implicit by default and
+can be added optionally when a system is wired in a complex way. As it's
+a completely standard optional property I'm not even sure it needs to be
+documented.
+
+> +  - interrupts: Interrupt number.
+
+Minor nit: "Should contain an interrupt-specifier for ..."
+
+I saw the cover mentioned multiple interrupts. Which logical interrupt
+output of the device are you expecting here?
+
+> +
+> +  - clocks: Reference to the SCIx UART interface clock.
+
+Minor nit: s/Reference to/A phandle + clock-specifier pair for/
+
+> +  - clock-names: Should be "sci_ick".
+
+As we're using clock-names, it would be nicer still to define clocks in
+terms of clock-names so as to make it easier to update the document in
+future and make the expected use of clock-names clearer:
+
+- clocks: Should contain a phandle + clock-specifier pair for each entry
+  in clock-names.
+
+- clock-names: Should contain "sci_ick".
+
+> +
+> +Note: Each enabled SCIx UART should have an alias correctly numbered in the
+> +"aliases" node.
+> +
+> +Example:
+> +	aliases {
+> +		serial0 = &scifa0;
+> +	};
+> +
+> +	scifa0: serial@e6c40000 {
+> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
+> +		reg = <0 0xe6c40000 0 64>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 144 4>;
+> +		clocks = <&mstp2_clks 4>;
+> +		clock-names = "sci_ick";
+> +	};
+
+Otherwise this looks good to me.
+
+Thanks,
+Mark.
