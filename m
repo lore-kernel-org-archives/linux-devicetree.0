@@ -1,106 +1,172 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v5 5/7] gpio: davinci: add OF support
-Date: Mon, 11 Nov 2013 17:44:12 +0200
-Message-ID: <5280FB4C.80404@ti.com>
-References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com> <1383905510-31760-6-git-send-email-prabhakar.csengg@gmail.com> <5280F545.3040406@ti.com> <CA+V-a8tW9dKsE+Ps_MSsr_BsDR2HVE7uEE9GN7yNga3YWoCGow@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings
+ documentation
+Date: Mon, 11 Nov 2013 15:48:49 +0000
+Message-ID: <20131111154849.GJ21201@e106331-lin.cambridge.arm.com>
+References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
+ <36428164.RsQCj0nRsc@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8tW9dKsE+Ps_MSsr_BsDR2HVE7uEE9GN7yNga3YWoCGow@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <36428164.RsQCj0nRsc@avalon>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, grant.likely@linaro.org
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 05:37 PM, Prabhakar Lad wrote:
-> Hi Grygorii,
->
-> Thanks for the review.
->
-> On Mon, Nov 11, 2013 at 8:48 PM, Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->> On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
-> [Snip]
->>> @@ -134,6 +137,40 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
->>>        writel((1 << offset), value ? &g->set_data : &g->clr_data);
->>>    }
->>>
->>> +static struct davinci_gpio_platform_data *
->>> +davinci_gpio_get_pdata(struct platform_device *pdev)
->>
->> Minor: usually such functions have "_of" in their names:
->>   davinci_gpio_of_get_pdata()
->>
-> Ahh but actual this function is intended to get pdata in both the
-> cases DT and NON-DT, so kept it generic :)
+On Mon, Nov 11, 2013 at 01:26:11PM +0000, Laurent Pinchart wrote:
+> Hi Mark,
+> 
+> Thank you for the quick and detailed review.
+> 
+> On Monday 11 November 2013 09:40:39 Mark Rutland wrote:
+> > Hi Laurent,
+> > 
+> > I have a few comments.
+> > 
+> > On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
+> > > Document the device tree bindings for the sci serial port devices.
+> > > 
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Laurent Pinchart
+> > > <laurent.pinchart+renesas@ideasonboard.com>
+> > > Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> > > ---
+> > > 
+> > >  .../bindings/serial/renesas,sci-serial.txt         | 42 +++++++++++++++++
+> > >  1 file changed, 42 insertions(+)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt> 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
+> > > file mode 100644
+> > > index 0000000..66d3bca
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > > @@ -0,0 +1,42 @@
+> > > +* Renesas SH-Mobile Serial Communication Interface
+> > > +
+> > > +Required properties:
+> > > +
+> > > +  - compatible: one of the following types (scif, scifa, scifb, hscif).
+> > 
+> > Minor nit, but would be nice to have "Should contain one of the
+> > following:". We might have future variants whereby the compatible string
+> > will actually be a string list.
+> 
+> Sure, I can do that.
+> 
+> > > +
+> > > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+> > > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
+> > > UART. +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB
+> > > compatible UART. +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2)
+> > > HSCIF compatible UART. +    - "renesas,scif-generic" for generic SCIF
+> > > compatible UART.
+> > > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
+> > > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
+> > > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
+> > 
+> > Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
+> 
+> You're right, I'll remove the suffix.
+> 
+> > > +
+> > > +    When compatible with the generic version, nodes must also list the
+> > > +    SoC-specific version corresponding to the platform.
+> > 
+> > Presumably the SoC-specific version should come first; it would be nice
+> > to note that.
+> 
+> Indeed, I'll do so.
+> 
+> > > +
+> > > +  - reg: Base address and length of the memory resource used by the UART.
+> > 
+> > I assume by memory resource you mean the memory-mapped registers?
+> > Resource sounds like Linux-internal nomenclature leaking.
+> 
+> I'll fix it as well, although we could decide on a definition of "resource" 
+> that isn't Linux-specific :-)
 
-np
+We could, I guess. For the moment I'd prefer to point out that these are
+MMIO registers :)
 
->
->>> +{
->>> +     struct device_node *dn = pdev->dev.of_node;
->>> +     struct davinci_gpio_platform_data *pdata;
->>> +     int ret;
->>> +     u32 val;
->>> +
->>> +     if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
->>> +             return pdev->dev.platform_data;
->>> +
->>> +     pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>> +     if (!pdata)
->>> +             return NULL;
->>> +
->>> +     ret = of_property_read_u32(dn, "ti,ngpio", &val);
->>> +     if (ret)
->>> +             goto of_err;
->>> +
->>> +     pdata->ngpio = val;
->>> +
->>> +     ret = of_property_read_u32(dn, "ti,davinci-gpio-unbanked", &val);
->>> +     if (ret)
->>> +             goto of_err;
->>> +
->>> +     pdata->gpio_unbanked = val;
->>> +
->>> +     return pdata;
->>> +
->>> +of_err:
->>> +     dev_err(&pdev->dev, "Populating pdata from DT failed: err %d\n", ret);
->>> +     return NULL;
->>> +}
->>> +
->>>    static int davinci_gpio_probe(struct platform_device *pdev)
->>>    {
->>>        int i, base;
->>> @@ -144,12 +181,14 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>>        struct device *dev = &pdev->dev;
->>>        struct resource *res;
->>>
->>> -     pdata = dev->platform_data;
->>> +     pdata = davinci_gpio_get_pdata(pdev);
->>>        if (!pdata) {
->>>                dev_err(dev, "No platform data found\n");
->>>                return -EINVAL;
->>>        }
->>>
->>> +     dev->platform_data = pdata;
->>> +
->>
->> Pls, add following code to GPIO chip initialization:
->>
->> @@ -233,6 +245,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>                  chips[i].chip.ngpio = ngpio - base;
->>                  if (chips[i].chip.ngpio > 32)
->>                          chips[i].chip.ngpio = 32;
->> +#ifdef CONFIG_OF_GPIO
->> +               chips[i].chip.of_node = dev->of_node;
->> +#endif
->>
->>
-> OK
->
-> Regards,
-> --Prabhakar Lad
->
+> 
+> > > +
+> > > +  - interrupt-parent: Reference to the parent interrupt controller.
+> > 
+> > I don't think this is strictly necessary. It's implicit by default and
+> > can be added optionally when a system is wired in a complex way. As it's
+> > a completely standard optional property I'm not even sure it needs to be
+> > documented.
+> > 
+> > > +  - interrupts: Interrupt number.
+> > 
+> > Minor nit: "Should contain an interrupt-specifier for ..."
+> > 
+> > I saw the cover mentioned multiple interrupts. Which logical interrupt
+> > output of the device are you expecting here?
+> 
+> SCI devices come in several flavours, with individual interrupt sources wired 
+> up to different interrupt lines, or multiplexed all together. As the DT 
+> bindings support the later only at the moment, there's only a single interrupt 
+> to handle.
 
+Ok. If the binding just covers the muxed interrupt for now that's fine.
+We can add interrupt-names later when we support multiple interrupts
+(and fall back to assuming muxed when no interrupt-names property is
+present).
+
+> 
+> Should we come up with a standard way of saying in the bindings that a device 
+> uses the interrupt bindings defined in interrupt-controller/interrupts.txt ? 
+> This will become even more important with the interrupts-extended property, we 
+> don't want every DT bindings document to detail all possible way to specify 
+> interrupts.
+
+It would certainly be nice to have a standard way of doing just that.
+I'd hope that with the schema work going on that would fall into place
+automatically, so perhaps it's not worth doing now.
+
+> 
+> > > +
+> > > +  - clocks: Reference to the SCIx UART interface clock.
+> > 
+> > Minor nit: s/Reference to/A phandle + clock-specifier pair for/
+> > 
+> > > +  - clock-names: Should be "sci_ick".
+> > 
+> > As we're using clock-names, it would be nicer still to define clocks in
+> > terms of clock-names so as to make it easier to update the document in
+> > future and make the expected use of clock-names clearer:
+> > 
+> > - clocks: Should
+> 
+> "Should", or "must" ?
+
+I don't expect the format of clocks and the relationship to clock-names
+to change, so "must" is likely more appropriate. I'm just too used to
+writing "should"...
+
+> 
+> > contain a phandle + clock-specifier pair for each entry
+> >   in clock-names.
+> > 
+> > - clock-names: Should contain "sci_ick".
+> 
+> Shouldn't that be
+> 
+> "Should contain "sci_ick" for the SCIx UART interface clock."
+> 
+> ? Otherwise the bindings wouldn't tell which clock the clocks property should 
+> reference.
+
+Yes, that sounds much better.
+
+Cheers,
+Mark.
