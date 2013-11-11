@@ -1,162 +1,405 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
- indicates the presence of PHY's
-Date: Mon, 11 Nov 2013 20:06:12 +0530
-Message-ID: <5280EB5C.1040001@ti.com>
-References: <1381866857-3861-1-git-send-email-kishon@ti.com> <1381866857-3861-2-git-send-email-kishon@ti.com> <20131017163828.GH11611@gimli>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Mon, 11 Nov 2013 09:47:46 -0500
+Message-ID: <20131111144746.GM10335@titan.lakedaemon.net>
+References: <87bo1tmibv.fsf@natisbad.org>
+ <527ECBDD.7050607@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131017163828.GH11611@gimli>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <527ECBDD.7050607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+On Sun, Nov 10, 2013 at 12:57:17AM +0100, Sebastian Hesselbarth wrote:
+> On 11/09/2013 09:27 PM, Arnaud Ebalard wrote:
+> >All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+> >2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+> >USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+> >serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+> >controllers, G751 temperature sensor) except for:
+> >
+> >  - the Intersil ISL12057 I2C RTC Chip,
+> >  - the Armada NAND controller.
+> >
+> >Support for both of those is currently work in progress and does not
+> >prevent boot.
+> >
+> >Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> >---
+> [...]
+> >  arch/arm/boot/dts/Makefile                     |   1 +
+> >  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 289 +++++++++++++++++++++++++
+> 
+> Arnaud,
+> 
+> thanks for providing this! I do have some comments below.
+> 
+> we recently had a discussion about the naming of new DTS files, which
+> proposes to name those after vendor,board.dts (or vendor-board.dts).
+> 
+> I personally prefer vendor,board.dts which would give
+> netgear,readynas-2120.dts based on your compatible below.
+> The final call for ',' vs '-' has not been made, so I  suggest Jason
+> makes a call here.
 
-On Thursday 17 October 2013 10:08 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Wed, Oct 16, 2013 at 01:24:11AM +0530, Kishon Vijay Abraham I wrote:
->> There can be systems which does not have a external usb_phy, so get
->> usb_phy only if dt data indicates the presence of PHY in the case of dt boot or
->> if platform_data indicates the presence of PHY. Also remove checking if
->> return value is -ENXIO since it's now changed to always enable usb_phy layer.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> I'm fine with this patch, but one comment below:
-> 
->> @@ -387,16 +388,49 @@ static int dwc3_probe(struct platform_device *pdev)
->>  	if (node) {
->>  		dwc->maximum_speed = of_usb_get_maximum_speed(node);
->>  
->> -		dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
->> -		dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
->> +		count = of_count_phandle_with_args(node, "usb-phy", NULL);
->> +		switch (count) {
->> +		case 2:
->> +			dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
->> +				"usb-phy", 1);
->> +			if (IS_ERR(dwc->usb3_phy)) {
->> +				dev_err(dev, "usb3 phy not found\n");
->> +				return PTR_ERR(dwc->usb3_phy);
->> +			}
->> +		case 1:
->> +			dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
->> +				"usb-phy", 0);
->> +			if (IS_ERR(dwc->usb2_phy)) {
->> +				dev_err(dev, "usb2 phy not found\n");
->> +				return PTR_ERR(dwc->usb2_phy);
->> +			}
->> +			break;
->> +		default:
->> +			dev_err(dev, "usb phy nodes not configured\n");
->> +		}
->>  
->>  		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
->>  		dwc->dr_mode = of_usb_get_dr_mode(node);
->>  	} else if (pdata) {
->>  		dwc->maximum_speed = pdata->maximum_speed;
->>  
->> -		dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
->> -		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
->> +		if (pdata->usb2_phy) {
->> +			dwc->usb2_phy = devm_usb_get_phy(dev,
->> +				USB_PHY_TYPE_USB2);
->> +			if (IS_ERR(dwc->usb2_phy)) {
->> +				dev_err(dev, "usb2 phy not found\n");
->> +				return PTR_ERR(dwc->usb2_phy);
->> +			}
->> +		}
->> +
->> +		if (pdata->usb3_phy) {
->> +			dwc->usb3_phy = devm_usb_get_phy(dev,
->> +				USB_PHY_TYPE_USB3);
->> +			if (IS_ERR(dwc->usb3_phy)) {
->> +				dev_err(dev, "usb3 phy not found\n");
->> +				return PTR_ERR(dwc->usb3_phy);
->> +			}
->> +		}
->>  
->>  		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
->>  		dwc->dr_mode = pdata->dr_mode;
->> @@ -409,36 +443,6 @@ static int dwc3_probe(struct platform_device *pdev)
->>  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
->>  		dwc->maximum_speed = USB_SPEED_SUPER;
->>  
->> -	if (IS_ERR(dwc->usb2_phy)) {
->> -		ret = PTR_ERR(dwc->usb2_phy);
->> -
->> -		/*
->> -		 * if -ENXIO is returned, it means PHY layer wasn't
->> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
->> -		 * in that case, since no PHY driver will ever probe.
->> -		 */
->> -		if (ret == -ENXIO)
->> -			return ret;
->> -
->> -		dev_err(dev, "no usb2 phy configured\n");
->> -		return -EPROBE_DEFER;
->> -	}
->> -
->> -	if (IS_ERR(dwc->usb3_phy)) {
->> -		ret = PTR_ERR(dwc->usb3_phy);
->> -
->> -		/*
->> -		 * if -ENXIO is returned, it means PHY layer wasn't
->> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
->> -		 * in that case, since no PHY driver will ever probe.
->> -		 */
->> -		if (ret == -ENXIO)
->> -			return ret;
->> -
->> -		dev_err(dev, "no usb3 phy configured\n");
->> -		return -EPROBE_DEFER;
->> -	}
-> 
-> the idea for doing the error checking here was actually to avoid
-> duplicating it in all previous cases, as you did. Please keep the error
-> checking here and you're good to go.
-> 
->> -
->>  	dwc->xhci_resources[0].start = res->start;
->>  	dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
->>  					DWC3_XHCI_REGS_END;
->> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
->> index 7db34f0..49ffa6d 100644
->> --- a/drivers/usb/dwc3/platform_data.h
->> +++ b/drivers/usb/dwc3/platform_data.h
->> @@ -24,4 +24,6 @@ struct dwc3_platform_data {
->>  	enum usb_device_speed maximum_speed;
->>  	enum usb_dr_mode dr_mode;
->>  	bool tx_fifo_resize;
->> +	bool usb2_phy;
->> +	bool usb3_phy;
-> 
-> This would look better as a quirks flag, then we could:
-> 
-> unsigned long quirks;
-> #define DWC3_QUIRK_NO_USB3_PHY	BIT(0)
-> #define DWC3_QUIRK_NO_USB2_PHY	BIT(1)
+It's my understanding that Olof's primary concern is for the naming of
+the dtbs.  I might have some time today to spin a patch against dtc to
+create the symlink target that we kicked around:
 
-Should this quirk be used for dt also? Currently we find if it has usb3 phy or
-usb2 phy from the dt data only. But if we add a quirk, we'll have to add a
-property to populate the quirk no?
+$ dtc -L -o kirkwood-dreamplug.dtb kirkwood-dreamplug.dts
+$ ls -l
+...
+globalscale,dreamplug-003-ds2001.dtb -> kirkwood-dreamplug.dtb
+...
+kirkwood-dreamplug.dtb
+kirkwood-dreamplug.dts
 
-Thanks
-Kishon
+Which would solve the problem neatly since the compatible string is
+globally unique, and refers to exactly one board.  The dts naming can
+then remain whatever works best for us in the kernel without affecting
+userspace installers accessing the build products.
+
+In short, Arnaud, it's fine for the moment.  Let's see if my patch gets
+shot down.  ;-)
+
+One more comment near the bottom.  I'm too lazy to trim today, sorry. :(
 
 > 
-> ...
+> [...]
+> >diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> >new file mode 100644
+> >index 0000000..2651ba3
+> >--- /dev/null
+> >+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+> >@@ -0,0 +1,289 @@
+> >+/*
+> >+ * Device Tree file for NETGEAR ReadyNAS 2120
+> >+ *
+> >+ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> >+ *
+> >+ * This program is free software; you can redistribute it and/or
+> >+ * modify it under the terms of the GNU General Public License
+> >+ * as published by the Free Software Foundation; either version
+> >+ * 2 of the License, or (at your option) any later version.
+> >+ */
+> >+
+> >+/dts-v1/;
+> >+
+> >+#include "armada-xp-mv78230.dtsi"
+> >+
+> >+/ {
+> >+	model = "NETGEAR ReadyNAS 2120";
+> >+	compatible = "netgear,readynas-2120", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
+> >+
+> >+	chosen {
+> >+		bootargs = "console=ttyS0,115200 earlyprintk";
+> >+	};
+> >+
+> >+	memory {
+> >+		device_type = "memory";
+> >+		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
+> >+	};
+> >+
+> >+	soc {
+> >+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+> >+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
+> >+
+> [...]
+> >+		internal-regs {
+> >+			pinctrl {
+> >+				poweroff: poweroff {
+> >+					marvell,pins = "mpp42";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				power_key_pin: power-key-pin {
+> >+					marvell,pins = "mpp27";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				reset_key_pin: reset-key-pin {
+> >+					marvell,pins = "mpp41";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata1_led_pin: sata1-led-pin {
+> >+					marvell,pins = "mpp31";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata2_led_pin: sata2-led-pin {
+> >+					marvell,pins = "mpp40";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata3_led_pin: sata3-led-pin {
+> >+					marvell,pins = "mpp44";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata4_led_pin: sata4-led-pin {
+> >+					marvell,pins = "mpp47";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata1_power_pin: sata1-power-pin {
+> >+					marvell,pins = "mpp24";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata2_power_pin: sata2-power-pin {
+> >+					marvell,pins = "mpp25";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata3_power_pin: sata3-power-pin {
+> >+					marvell,pins = "mpp26";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata4_power_pin: sata4-power-pin {
+> >+					marvell,pins = "mpp28";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata1_pres_pin: sata1-pres-pin {
+> >+					marvell,pins = "mpp32";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata2_pres_pin: sata2-pres-pin {
+> >+					marvell,pins = "mpp33";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata3_pres_pin: sata3-pres-pin {
+> >+					marvell,pins = "mpp34";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				sata4_pres_pin: sata4-pres-pin {
+> >+					marvell,pins = "mpp35";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+
+> >+				err_led_pin: err-led-pin {
+> >+					marvell,pins = "mpp45";
+> >+					marvell,function = "gpio";
+> >+				};
+> >+			};
+> >+
+> >+			serial@12000 {
+> >+				clock-frequency = <250000000>;
 > 
-> if (!test_bit(DWC3_QUIRK_NO_USB3_PHY), &dwc->quirks &&
-> 	dwc->has_usb3_phy) {
-> 	grab_usb3_phy();
-> }
+> Where does that 250MHz come from? If it is an internal clock
+> and we already have a DT clock provider for it, please use
+> clocks = <&provider num>;
 > 
-> cheers
+> If it is TCLK it can be optained from <&coreclk 0>.
 > 
+> >+				status = "okay";
+> >+			};
+> >+
+> >+			mdio {
+> >+				phy0: ethernet-phy@0 {
+> >+					reg = <0>;
+> 
+> Can you evaluate PHYs compatible from u-boot or post vendor:prodid
+> from MDIO registers?
+> 
+> >+				};
+> >+
+> >+				phy1: ethernet-phy@1 {
+> >+					reg = <1>;
+> >+				};
+> >+			};
+> >+
+> >+			ethernet@70000 {
+> >+				status = "okay";
+> >+				phy = <&phy0>;
+> >+				phy-mode = "rgmii-id";
+> >+			};
+> >+
+> >+			ethernet@74000 {
+> >+				status = "okay";
+> >+				phy = <&phy1>;
+> >+				phy-mode = "rgmii-id";
+> >+			};
+> >+
+> >+			/* Front USB 2.0 port */
+> >+			usb@50000 {
+> >+				status = "okay";
+> >+			};
+> >+
+> >+			i2c@11000 {
+> >+				compatible = "marvell,mv64xxx-i2c";
+> >+				clock-frequency = <400000>;
+> >+				status = "okay";
+> >+
+> >+				/* Rear fan #1 of 3 (Protechnic MGT4012XB-O20,
+> >+				 * 8000RPM) near eSATA port */
+> >+				g762_fan1: g762@3e {
+> >+					compatible = "gmt,g762";
+> >+					reg = <0x3e>;
+> >+					clocks = <&g762_clk>; /* input clock */
+> >+					fan_gear_mode = <0>;
+> >+					fan_startv = <1>;
+> >+					pwm_polarity = <0>;
+> >+				};
+> >+
+> >+				/* Rear fan #2 of 3 at the center */
+> >+				g762_fan2: g762@48 {
+> >+					compatible = "gmt,g762";
+> >+					reg = <0x48>;
+> >+					clocks = <&g762_clk>; /* input clock */
+> >+					fan_gear_mode = <0>;
+> >+					fan_startv = <1>;
+> >+					pwm_polarity = <0>;
+> >+				};
+> >+
+> >+				/* Rear fan #3 of 3 */
+> >+				g762_fan3: g762@49 {
+> >+					compatible = "gmt,g762";
+> >+					reg = <0x49>;
+> >+					clocks = <&g762_clk>; /* input clock */
+> >+					fan_gear_mode = <0>;
+> >+					fan_startv = <1>;
+> >+					pwm_polarity = <0>;
+> >+				};
+> >+
+> >+				g751: g751@4c {
+> >+					compatible = "gmt,g751";
+> >+					reg = <0x4c>;
+> >+				};
+> >+			};
+> >+		};
+> >+	};
+> >+
+> >+	clocks {
+> >+	       #address-cells = <1>;
+> >+	       #size-cells = <0>;
+> 
+> Your nodes below neither have a reg property nor can they be
+> addressed in any way. Both properties above are not required,
+> so please remove them.
+> 
+> >+	       g762_clk: fixedclk {
+> 
+> s/fixedclk/oscillator/ ?
+> 
+> >+			 compatible = "fixed-clock";
+> >+			 #clock-cells = <0>;
+> >+			 clock-frequency = <32768>;
+> >+	       };
+> >+	};
+> >+
+> >+	gpio_leds {
+> >+		compatible = "gpio-leds";
+> >+		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
+> >+			     &sata3_led_pin &sata4_led_pin>;
+> >+		pinctrl-names = "default";
+> >+
+> >+		red_sata1_led {
+> >+			label = "rn2120:red:sata1";
+> >+			gpios = <&gpio0 31 0>;   /* GPIO 31 Active High */
+> 
+> You can
+> 
+> #include <dt-bindings/gpio/gpio.h>
+> 
+> then use
+> 
+> gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>
+> 
+> and get rid of the comments.
+> 
+> >+			default-state = "off";
+> >+		};
+> >+
+> >+		red_sata2_led {
+> >+			label = "rn2120:red:sata2";
+> >+			gpios = <&gpio1 8 0>;   /* GPIO 40 Active High */
+> >+			default-state = "off";
+> >+		};
+> >+
+> >+		red_sata3_led {
+> >+			label = "rn2120:red:sata3";
+> >+			gpios = <&gpio1 12 0>;   /* GPIO 44 Active High */
+> >+			default-state = "off";
+> >+		};
+> >+
+> >+		red_sata4_led {
+> >+			label = "rn2120:red:sata4";
+> >+			gpios = <&gpio1 15 0>;   /* GPIO 47 Active High */
+> >+			default-state = "off";
+> >+		};
+> >+
+> >+		red_err_led {
+> >+			label = "rn2120:red:err";
+> >+			gpios = <&gpio1 13 1>;   /* GPIO 45 Active Low */
+> >+			default-state = "off";
+> >+		};
+> >+	};
+> >+
+> >+	gpio_keys {
+> >+		compatible = "gpio-keys";
+> >+		#address-cells = <1>;
+> >+		#size-cells = <0>;
+> 
+> Again, no addressing of those buttons possible.
+> 
+> >+		pinctrl-0 = <&power_key_pin
+> >+			     &reset_key_pin>;
+> >+		pinctrl-names = "default";
+> >+
+> >+		button@1 {
+> 
+> Instead of button@n you can name the nodes after their function,
+> e.g. power_button, reset_button, ...
+> 
+> I know both comments above are in the current binding documentation
+> (at least for gpio-keys-polled.txt, there is no gpio-keys.txt); but
+> IMHO both "bus-like" structure of gpio_keys and numbering of buttons
+> just looks so wrong.
+> 
+> Sebastian
+> 
+> >+			label = "Power Button";
+> >+			linux,code = <116>;     /* KEY_POWER */
 
+Similar to the gpio include that Sebastian mentioned, I think there was
+a patch to add the linux key codes as an include file for the same
+reason.  If it didn't make it in, don't sweat it, just figured while you
+were doing a V2...
+
+thx,
+
+Jason.
+
+> >+			gpios = <&gpio0 27 0>;
+> >+		};
+> >+
+> >+		button@2 {
+> >+			label = "Reset Button";
+> >+			linux,code = <0x198>;   /* KEY_RESTART */
+> >+			gpios = <&gpio1 9 1>;
+> >+		};
+> >+	};
+> >+
+> >+	gpio_poweroff {
+> >+		compatible = "gpio-poweroff";
+> >+		pinctrl-0 = <&poweroff>;
+> >+		pinctrl-names = "default";
+> >+		gpios = <&gpio1 10 1>;
+> >+	};
+> >+};
+> >
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
