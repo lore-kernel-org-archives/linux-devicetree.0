@@ -1,63 +1,84 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V2 2/2] ARM: dts: doc: Document missing binding for ti-sdma controller
-Date: Mon, 11 Nov 2013 21:36:16 +0530
-Message-ID: <1384185976-17822-2-git-send-email-r.sricharan@ti.com>
-References: <1384185976-17822-1-git-send-email-r.sricharan@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v9 01/13] [media] exynos5-is: Adding media device
+ driver for exynos5
+Date: Mon, 11 Nov 2013 16:12:13 +0000
+Message-ID: <20131111161213.GK21201@e106331-lin.cambridge.arm.com>
+References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com>
+ <1380279558-21651-2-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1384185976-17822-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: bcousson@baylibre.com, santosh.shilimkar@ti.com, r.sricharan@ti.com, robherring2@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380279558-21651-2-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "shaik.ameer@samsung.com" <shaik.ameer@samsung.com>, "kilyeon.im@samsung.com" <kilyeon.im@samsung.com>, "arunkk.samsung@gmail.com" <arunkk.samsung@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The binding and support for system DMA module present in OMAP2+ Socs
-and DRA7 with dma-engine is already present. So adding the missing
-documentation for the same.
+On Fri, Sep 27, 2013 at 11:59:06AM +0100, Arun Kumar K wrote:
+> From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> 
+> This patch adds support for media device for EXYNOS5 SoCs.
+> The current media device supports the following ips to connect
+> through the media controller framework.
+ 
+[...]
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
----
-[V2] Fixed comments from Rob Herring <robherring2@gmail.com>
+> diff --git a/Documentation/devicetree/bindings/media/exynos5250-camera.txt b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> new file mode 100644
+> index 0000000..09420ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> @@ -0,0 +1,126 @@
+> +Samsung EXYNOS5 SoC Camera Subsystem
+> +------------------------------------
+> +
+> +The Exynos5 SoC Camera subsystem comprises of multiple sub-devices
+> +represented by separate device tree nodes. Currently this includes: FIMC-LITE,
+> +MIPI CSIS and FIMC-IS.
+> +
+> +The sub-device nodes are referenced using phandles in the common 'camera' node
+> +which also includes common properties of the whole subsystem not really
+> +specific to any single sub-device, like common camera port pins or the common
+> +camera bus clocks.
+> +
+> +Common 'camera' node
+> +--------------------
+> +
+> +Required properties:
+> +
+> +- compatible           : must be "samsung,exynos5250-fimc"
+> +- clocks               : list of clock specifiers, corresponding to entries in
+> +                          the clock-names property
 
- Documentation/devicetree/bindings/dma/ti-sdma.txt |   28 +++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/ti-sdma.txt
+Minor nit: clocks are references by phandle + clock-specifier pairs, as
+the clock-specifier is separate from the phandle to the clock. 
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-sdma.txt b/Documentation/devicetree/bindings/dma/ti-sdma.txt
-new file mode 100644
-index 0000000..2e0a6d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/ti-sdma.txt
-@@ -0,0 +1,28 @@
-+TI SDMA
-+
-+Required Properties:
-+- compatible :	Should be "ti,omap2420-sdma", "ti,omap2430-sdma" for OMAP2
-+		Should be "ti,omap3430-sdma", "ti,omap3630-sdma" for OMAP3
-+		Should be "ti,omap4430-sdma" for OMAP4, OMAP5 and DRA7
-+- reg: Memory map for accessing module
-+- interrupts: Interrupt request number from the DMA controller to
-+	      interrupt controller
-+- #dma-cells: Should be set to <1>
-+- #dma-channels: Total number of logical DMA channels supported by the
-+		controller
-+- #dma-requests: Total number of DMA request signals supported by the
-+		controller
-+
-+Example:
-+
-+sdma: dma-controller@48056000 {
-+	compatible = "ti,omap4430-sdma";
-+	reg = <0x48056000 0x1000>;
-+	interrupts = <12>,
-+		     <13>,
-+		     <14>,
-+		     <15>;
-+	#dma-cells = <1>;
-+	#dma-channels = <32>;
-+	#dma-requests = <64>;
-+};
--- 
-1.7.9.5
+> +- clock-names          : must contain "sclk_bayer" entry
+> +- samsung,csis         : list of phandles to the mipi-csis device nodes
+> +- samsung,fimc-lite    : list of phandles to the fimc-lite device nodes
+> +- samsung,fimc-is      : phandle to the fimc-is device node
+> +
+> +The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+> +to define a required pinctrl state named "default".
+> +
+> +'parallel-ports' node
+> +---------------------
+> +
+> +This node should contain child 'port' nodes specifying active parallel video
+> +input ports. It includes camera A, camera B and RGB bay inputs.
+> +'reg' property in the port nodes specifies the input type:
+> + 1 - parallel camport A
+> + 2 - parallel camport B
+> + 5 - RGB camera bay
+> +
+> +3, 4 are for MIPI CSI-2 bus and are already described in samsung-mipi-csis.txt
 
+I believe the parallel ports node must have #address-cells and
+#size-cells defined for the child nodes' reg properties to be
+meaningful. Judging by the examples and code, it seems you expect
+#address-cells = <1> and #size-cells = <0>. It would be nice to have
+that described.
+
+Cheers,
+Mark.
