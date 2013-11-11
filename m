@@ -1,69 +1,46 @@
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: [PATCH 3/3] mmc: omap_hsmmc: Extend debugfs for SDIO IRQ, GPIO and pinmux.
-Date: Mon, 11 Nov 2013 21:06:45 +0100
-Message-ID: <1384200405-8402-4-git-send-email-afenkart@gmail.com>
-References: <1384200405-8402-1-git-send-email-afenkart@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384200405-8402-1-git-send-email-afenkart@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/5] dma: mpc512x: add support for peripheral
+ transfers
+Date: Mon, 11 Nov 2013 21:10:24 +0100
+Message-ID: <20131111201024.GR17929@book.gsilab.sittig.org>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1383290374-17484-3-git-send-email-a13xp0p0v88@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383290374-17484-3-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add SDIO IRQ entries to debugfs entry. Note that PSTATE shows current
-state of data lines, incl. SDIO IRQ pending
+On Fri, Nov 01, 2013 at 11:19 +0400, Alexander Popov wrote:
+> 
+> Introduce support for slave s/g transfer preparation and the associated
+> device control callback in the MPC512x DMA controller driver, which adds
+> support for data transfers between memory and peripheral I/O to the
+> previously supported mem-to-mem transfers.
 
-Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
----
- drivers/mmc/host/omap_hsmmc.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+Alexander, there is outstanding review feedback for a previous
+version of the series that you haven't addressed yet.  Can you
+please either look into those issues, or state that it's OK to
+leave them and why this is so?  It would be nice to get a
+response to the feedback that you are given.  It may be
+appropriate not to obey to the feedback, but at least it should
+get considered.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 5a7fb4b..c4f71d0 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -81,6 +81,7 @@ static void apply_clk_hack(struct device *dev)
- #define OMAP_HSMMC_RSP54	0x0118
- #define OMAP_HSMMC_RSP76	0x011C
- #define OMAP_HSMMC_DATA		0x0120
-+#define OMAP_HSMMC_PSTATE	0x0124
- #define OMAP_HSMMC_HCTL		0x0128
- #define OMAP_HSMMC_SYSCTL	0x012C
- #define OMAP_HSMMC_STAT		0x0130
-@@ -1794,6 +1795,20 @@ static int omap_hsmmc_regs_show(struct seq_file *s, void *data)
- {
- 	struct mmc_host *mmc = s->private;
- 	struct omap_hsmmc_host *host = mmc_priv(mmc);
-+	bool suspended;
-+
-+	seq_puts(s, "\n");
-+	seq_printf(s, "sdio irq\t%s\n", ((host->flags & HSMMC_SDIO_IRQ_ENABLED)
-+					 ? "enabled" : "disabled"));
-+	suspended = host->dev->power.runtime_status != RPM_ACTIVE;
-+	if (host->flags & HSMMC_SWAKEUP_QUIRK) {
-+		seq_printf(s, "pinmux config\t%s\n", (suspended ?
-+						      "gpio" : "sdio"));
-+		if (suspended)
-+			seq_printf(s, "sdio irq pin\t%s\n",
-+				   gpio_get_value(mmc_slot(host).gpio_cirq) ?
-+				   "high" : "low");
-+	}
- 
- 	if (host->suspended) {
- 		seq_printf(s, "host suspended, can't read registers\n");
-@@ -1801,9 +1816,11 @@ static int omap_hsmmc_regs_show(struct seq_file *s, void *data)
- 	}
- 
- 	pm_runtime_get_sync(host->dev);
--
-+	seq_puts(s, "\nregs:\n");
- 	seq_printf(s, "CON:\t\t0x%08x\n",
- 			OMAP_HSMMC_READ(host->base, CON));
-+	seq_printf(s, "PSTATE:\t\t0x%08x\n",
-+		   OMAP_HSMMC_READ(host->base, PSTATE));
- 	seq_printf(s, "HCTL:\t\t0x%08x\n",
- 			OMAP_HSMMC_READ(host->base, HCTL));
- 	seq_printf(s, "SYSCTL:\t\t0x%08x\n",
+Have you noticed the recent introduction of the dmaengine@vger
+ML?  Make sure to include it upon the next submission.
+
+
+virtually yours
+Gerhard Sittig
 -- 
-1.7.10.4
-
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
