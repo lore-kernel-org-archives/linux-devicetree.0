@@ -1,61 +1,57 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
-Date: Mon, 11 Nov 2013 15:29:05 +0100
-Message-ID: <CACRpkdatZfGDn-K-PRxCz53AKF+Q4CAwAbA+ufSKnXapZQkPyw@mail.gmail.com>
-References: <5280B54A.1050503@gtsys.com.hk>
-	<20131111120357.GE21201@e106331-lin.cambridge.arm.com>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH 01/11] devicetree: bindings: Document cpu enable-method
+ for ARM CPUs
+Date: Mon, 11 Nov 2013 14:35:32 +0000
+Message-ID: <20131111143532.GB3166@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131111120357.GE21201-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 1:03 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
+On Fri, Nov 01, 2013 at 03:08:49PM -0700, Stephen Boyd wrote:
+> From: Rohit Vaswani <rvaswani@codeaurora.org>
+> 
+> According to the ePAPR CPUs should have an enable method. On ARM
+> the enable-method property has not been used so far, so document
+> this property as an optional property and add the spin-table
+> method as one value
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+> [sboyd: Split off into separate patch]
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index f32494d..37258f9 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -45,6 +45,14 @@ For the ARM architecture every CPU node must contain the following properties:
+>  		"marvell,xsc3"
+>  		"marvell,xscale"
+>  
+> +And the following optional properties:
+> +
+> +- enable-method: Specifies the method used to enable or take the secondary cores
+> +		 out of reset. This allows different reset sequence for
+> +		 different types of cpus.
+> +		 This should be one of:
+> +		 "spin-table"
+> +
 
->> while I port the static code to the DT I step into the problem to
->> set the PSCR for the sdhc2 ports to 22k pull-up
->> I look for something like described in
->>      pinctrl/fsl,imx-pinctrl.txt
->>
->> the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
+If you've not already done so, take a look at the changes to this
+documentation in linux-next.
 
-So in the generic pin configuration, which we nowadays recommend new
-platforms to use, there is this (include/linux/pinctrl/pinconf-generic):
+There is some documentation about what the spin-table should actually
+mean for ARM in Documentation/arm64/booting.txt.
 
- * @PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
- *      impedance to VDD). If the argument is != 0 pull-up is enabled,
- *      if it is 0, pull-up is total, i.e. the pin is connected to VDD.
- * @PIN_CONFIG_BIAS_PULL_DOWN: the pin will be pulled down (usually with high
- *      impedance to GROUND). If the argument is != 0 pull-down is enabled,
- *      if it is 0, pull-down is total, i.e. the pin is connected to GROUND.
+We might need to add pointers from Documentation/arm/Booting?
 
-The idea was to extend that with an argument for the number of
-Ohms the day it was needed and supported by some platform.
-
-We would then use the bindings from
-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-by adding something like this:
-
-(...)
-bias-pull-up-ohms = <22000>;
-(...)
-
-So in the generic world it can be accomodated in a quite
-straight-forward way.
-
-When the i.MX pin control was added in v3.5 the generic
-pin config was available but it was opted to use another
-pattern. One way to solve this is to migrate i.MX to use the
-generic pin config, which is going to be hard work. But as
-a subsystem maintainer that is still what I would recommend.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+---Dave
