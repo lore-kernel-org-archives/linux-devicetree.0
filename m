@@ -1,145 +1,106 @@
-From: Tarek Dakhran <t.dakhran@samsung.com>
-Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Mon, 11 Nov 2013 19:45:30 +0400
-Message-ID: <5280FB9A.7030500@samsung.com>
-References: <20131108184036.GD2602@localhost.localdomain>
- <alpine.LFD.2.03.1311081356300.15571@syhkavp.arg>
- <52808E09.9060902@samsung.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v5 5/7] gpio: davinci: add OF support
+Date: Mon, 11 Nov 2013 17:44:12 +0200
+Message-ID: <5280FB4C.80404@ti.com>
+References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com> <1383905510-31760-6-git-send-email-prabhakar.csengg@gmail.com> <5280F545.3040406@ti.com> <CA+V-a8tW9dKsE+Ps_MSsr_BsDR2HVE7uEE9GN7yNga3YWoCGow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <52808E09.9060902@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <Dave.Martin@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8tW9dKsE+Ps_MSsr_BsDR2HVE7uEE9GN7yNga3YWoCGow@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11.11.2013 11:58, Tarek Dakhran wrote:
+On 11/11/2013 05:37 PM, Prabhakar Lad wrote:
+> Hi Grygorii,
 >
->> On Thu, Nov 07, 2013 at 11:51:49AM -0500, Nicolas Pitre wrote:
->> Samsung people: could you give us more info on the behavior of the power
->> controller please?
+> Thanks for the review.
+>
+> On Mon, Nov 11, 2013 at 8:48 PM, Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>> On 11/08/2013 12:11 PM, Prabhakar Lad wrote:
+> [Snip]
+>>> @@ -134,6 +137,40 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+>>>        writel((1 << offset), value ? &g->set_data : &g->clr_data);
+>>>    }
+>>>
+>>> +static struct davinci_gpio_platform_data *
+>>> +davinci_gpio_get_pdata(struct platform_device *pdev)
+>>
+>> Minor: usually such functions have "_of" in their names:
+>>   davinci_gpio_of_get_pdata()
+>>
+> Ahh but actual this function is intended to get pdata in both the
+> cases DT and NON-DT, so kept it generic :)
+
+np
+
+>
+>>> +{
+>>> +     struct device_node *dn = pdev->dev.of_node;
+>>> +     struct davinci_gpio_platform_data *pdata;
+>>> +     int ret;
+>>> +     u32 val;
+>>> +
+>>> +     if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+>>> +             return pdev->dev.platform_data;
+>>> +
+>>> +     pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>>> +     if (!pdata)
+>>> +             return NULL;
+>>> +
+>>> +     ret = of_property_read_u32(dn, "ti,ngpio", &val);
+>>> +     if (ret)
+>>> +             goto of_err;
+>>> +
+>>> +     pdata->ngpio = val;
+>>> +
+>>> +     ret = of_property_read_u32(dn, "ti,davinci-gpio-unbanked", &val);
+>>> +     if (ret)
+>>> +             goto of_err;
+>>> +
+>>> +     pdata->gpio_unbanked = val;
+>>> +
+>>> +     return pdata;
+>>> +
+>>> +of_err:
+>>> +     dev_err(&pdev->dev, "Populating pdata from DT failed: err %d\n", ret);
+>>> +     return NULL;
+>>> +}
+>>> +
+>>>    static int davinci_gpio_probe(struct platform_device *pdev)
+>>>    {
+>>>        int i, base;
+>>> @@ -144,12 +181,14 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>>        struct device *dev = &pdev->dev;
+>>>        struct resource *res;
+>>>
+>>> -     pdata = dev->platform_data;
+>>> +     pdata = davinci_gpio_get_pdata(pdev);
+>>>        if (!pdata) {
+>>>                dev_err(dev, "No platform data found\n");
+>>>                return -EINVAL;
+>>>        }
+>>>
+>>> +     dev->platform_data = pdata;
+>>> +
+>>
+>> Pls, add following code to GPIO chip initialization:
+>>
+>> @@ -233,6 +245,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>                  chips[i].chip.ngpio = ngpio - base;
+>>                  if (chips[i].chip.ngpio > 32)
+>>                          chips[i].chip.ngpio = 32;
+>> +#ifdef CONFIG_OF_GPIO
+>> +               chips[i].chip.of_node = dev->of_node;
+>> +#endif
 >>
 >>
->> Nicolas
->>
-> This is how the power controller works on exynos5410. For example for 
-> CORE0.
+> OK
 >
-> ARM_CORE0_STATUS register indicates the power state of Core 0 part of 
-> processor core.
-> 0x3 indicates that power to Core 0 is turned-on. 0x0 indicates that 
-> power to Core 0 is turned-off.
-> All other values indicate that the power On/Off sequence of Core 0 in 
-> progress.
+> Regards,
+> --Prabhakar Lad
 >
-> To turn Off the power of Core 0 power domain:
->
-> 1. Set the LOCAL_POWER_CFG field of ARM_CORE0_CONFIGURATION register 
-> to 0x3.
-> 2. After PMU detects a change in the LOCAL_POWER_CFG field, it waits 
-> for the execution of WFI.
-> 3. After Core 0 executes the WFI instruction, PMU starts the 
-> power-down sequence.
-> 4. The Status field of ARM_CORE0_STATUS register indicates the 
-> completion of the sequence.
->
-> That's why in the v1 of this patch exynos_core_power_control function 
-> was implemented as:
->
-> static int exynos_core_power_control(unsigned int cpu, unsigned int 
-> cluster,  int enable)
-> {
->        unsigned long timeout = jiffies + msecs_to_jiffies(10);
->        unsigned int offset = cluster * MAX_CPUS_PER_CLUSTER + cpu;
->        int value = enable ? S5P_CORE_LOCAL_PWR_EN : 0;
->
->        if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3) == value)
->                return 0;
->
->        __raw_writel(value, EXYNOS5410_CORE_CONFIGURATION(offset));
->        do {
->                if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3)
->                                == value)
->                        return 0;
->        } while (time_before(jiffies, timeout));
->
->        return -EDEADLK;
-> }
->
-> But, as i mentioned, this is no good using while here.
-> Now thinking about the problem.
->
-> Thank you,
->         Tarek Dakhran
 
-What do you think about this way of solving the problem with races?
-
-Add new edcs_power_controller_wait function.
-
-static void edcs_power_controller_wait(unsigned int cpu, unsigned int 
-cluster){
-
-         unsigned long timeout = jiffies + msecs_to_jiffies(10);
-         unsigned int offset = cluster * EDCS_CPUS_PER_CLUSTER + cpu;
-         void __iomem *status_reg = EDCS_CORE_STATUS(offset);
-
-         /* wait till core power controller finish the work */
-
-         do {
-                 if ((readl_relaxed(status_reg) & 3) == 
-edcs_use_count[cpu][cluster] ? 3 : 0)
-                         return;
-         } while (time_before(jiffies, timeout));
-
-         /* Should never get here */
-         BUG();
-}
-
-Use it in:
-
-static void exynos_core_power_up(unsigned int cpu, unsigned int cluster)
-{
-         exynos_core_power_control(cpu, cluster, true);
-         edcs_power_controller_wait(cpu, cluster);
-}
-
-and in:
-
-static void exynos_power_down(void)
-{
-         bool last_man = false, skip_wfi = false;
-         unsigned int mpidr = read_cpuid_mpidr();
-         unsigned int cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-         unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-
-
-         pr_debug("%s: CORE%d on CLUSTER %d\n", __func__, cpu, cluster);
-         BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER  || cluster >= EDCS_CLUSTERS);
-
-         __mcpm_cpu_going_down(cpu, cluster);
-
-         arch_spin_lock(&edcs_lock);
-         BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
-         edcs_use_count[cpu][cluster]--;
-         if (edcs_use_count[cpu][cluster] == 0) {
-                 exynos_core_power_down(cpu, cluster);
-                 --core_count[cluster];
-                 if (core_count[cluster] == 0)
-                         last_man = true;
-[snip]
-         __mcpm_cpu_down(cpu, cluster);
-
-         if (!skip_wfi){
-                 wfi();
-         }
-         edcs_power_controller_wait(cpu, cluster);
-}
-
-Comments appreciated. Thanks.
-
-Best regards,
-     Tarek Dakhran.
