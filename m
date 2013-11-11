@@ -1,59 +1,99 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH] ARM: dts: Add missing reg, interrupt and dma entries for
- omap3
-Date: Mon, 11 Nov 2013 00:47:17 +0100
-Message-ID: <20131110234717.GA29968@earth.universe>
-References: <20131017221522.GE15154@atomide.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCH] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Mon, 11 Nov 2013 01:32:43 +0100
+Message-ID: <87fvr393ro.fsf@natisbad.org>
+References: <87bo1tmibv.fsf@natisbad.org> <527ECBDD.7050607@gmail.com>
+	<87hablulxu.fsf@natisbad.org> <527ED9E5.80800@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131017221522.GE15154@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <527ED9E5.80800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Sebastian Hesselbarth's message of
+	"Sun, 10 Nov 2013 01:57:09 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I thought it would be a simple update but one of your comment gave me a
+run for my money ;-)
 
-Hi Tony,
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-On Thu, Oct 17, 2013 at 03:15:22PM -0700, Tony Lindgren wrote:
-> Looks like omap3 is still relying on hwmod data for some basic
-> device tree information. Let's add the information to omap3.dtsi
-> so we can remove the related hwmod data once omap3 is DT only.
+>>>> +				status = "okay";
+>>>> +			};
+>>>> +
+>>>> +			mdio {
+>>>> +				phy0: ethernet-phy@0 {
+>>>> +					reg = <0>;
+>>>
+>>> Can you evaluate PHYs compatible from u-boot or post vendor:prodid
+>>> from MDIO registers?
+>>
+>> Looking at the PCB, 88E1318-NNB2. I will dig into Documentation/ the
+>> associated compatible. Out of curiosity, how do you get the PHY model
+>> from u-boot or userland?
+>
+> If it is 88e1318 the compatible is "marvell,88e1318" then. I usually
+> look at u-boot messages which sometimes reveal the PHY used. If that
+> is not sufficient, you can read PHY ID 1/2 (SMI address 2 and 3)
+> registers and go looking for model numbers.
 
-This patch fixes a regression in omap3 DT boot introduced by
-commit 2a0b965cfb6efc667228831fc3a30308b4f94a87. This commit
-assumes, that interrupts are specified via DT data if booted
-via DT.
+For the records, another solution is to look under /sys/:
 
--- Sebastian
+root@thin:/sys/bus/mdio_bus/drivers# find -name '*mdio*'
+./Marvell 88E1318S/d0072004.mdio-mi:00
+./Marvell 88E1318S/d0072004.mdio-mi:01
 
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I guess the driver just looks at the PHY ID to detect the flavour.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Now regarding the compatible string you propose,  did some grep calls
+and was unable to find a reference to marvell,88e1318 or even 88e138 and
+was unable to find any. How does the kernel do something with it to
+somehow inflect the selection of the right driver/flavour?
 
-iQIcBAEBCAAGBQJSgBsFAAoJENju1/PIO/qacIQQAIGYr7/8K0Yd2z25iidX0AC5
-favt3P5EHULJCVJd8Iyj2RzsuzRIHnlU08xusGEo7zg+0horh7cxo9E/mTMlo9ce
-9/GF1oTGwAl8EWXdN7TzNmCtPUn8LTpNmlg7NJDgB+bY8rb8cRo9a+tnRoXvMG9j
-6O5Bz9P5t/I2LrIqcCusJgW6FdpcD9EPD/EWdZtjGPaHnMvPu+QESZrb2uFDVOag
-lFsI6ADldW603tOMJ1HzntlCjNWSnwD7X8Ih/DSfaTH5zF4NuXKbJnztEx9G9DqJ
-SwTOqNCPkdiXbN7d6GJQypzuw6VaW5ovKklptvuuVXmYVy7gnVdihDhzqnWKAiMb
-zOvGTIBOgfihw+qtFzBAo8HXynquAByQ1S6TwyyVUQqjcq9vQspzYhDMVEXodUeq
-Oq+yBQQwrKRDKO8RjWNXIHtiDs2wje97UwjIRn6ndL22QSjOzcsYfwY+Rrt4fw4I
-nnU7XV3Bfv+lhCAMGRtC+/Z1fWkd3Fubv8PgAPPneYbvcya9Q8FIboh8PJb97V8R
-zQrzJM2nYXBWEmpkdUeCQdsHEqbuQBp5blO5Sfqhp6o310uzMVooFgeGQFpxHVbY
-BpnTXRdiHXeMdPCFiHjPmQKyEOBRU06JLPMRlrcb1MyK6La7SHa0qWmSq6Vud+eK
-v6jgc9fMqWGb7HFfivqE
-=sFVN
------END PGP SIGNATURE-----
+>>> Both properties above are not required, so please remove them.
+>>>
+>>>> +	       g762_clk: fixedclk {
+>>>
+>>> s/fixedclk/oscillator/ ?
 
---tKW2IUtsqtDRztdT--
+In fact, if I change 'fixedclk' for 'oscillator', then I am unable to
+boot: my SATA disk get unrecognized in a storm of insane
+messages. Obviously, because I had modified the whole .dts to handle all
+the points in your revieuw, I spent some time finding the root
+cause. But that was interesting on many aspects and the continuation of
+a debugging week end ;-)
+
+Can you confirm the following: g762_clk is a *label for the node*, which
+is referenced via specific properties of g762@xx nodes, so that they get
+a clock frequency (a property of g762_clk). And fixedclk is *the name of
+the node*. In that specific case, fixedclk is ok because it does not
+collide w/ any existing node. But 'oscillator' is already defined in
+armada-xp.dtsi (included via armada-370-xp.dtsi):
+
+	clocks {
+		/* 25 MHz reference crystal */
+		refclk: oscillator {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <25000000>;
+		};
+	};
+
+So I guess the renaming I did from 'fixedclk' to 'oscillator' just
+somehow overloaded the armada-xp.dtsi 25Mhz clock for a 32KHz one, hence
+the inability to boot. If I am correct, I guess it would be nice to have
+some checks from dtc when compiling the .dts to verify the uniqueness of
+nodes in order to avoid such things.
+
+Comments welcome.
+
+Cheers,
+
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
