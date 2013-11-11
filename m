@@ -1,55 +1,30 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCH] ARM: mvebu: Add RN104 SATA LEDs driven via NXP PCA9554 I2C to GPIO muxer
-Date: Mon, 11 Nov 2013 21:07:41 +0100
-Message-ID: <8738n2hfci.fsf@natisbad.org>
-References: <877gchmggw.fsf@natisbad.org> <527ECC4C.8080207@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: [PATCH 0/3] mmc: omap_hsmmc: Enable SDIO IRQ.
+Date: Mon, 11 Nov 2013 21:06:42 +0100
+Message-ID: <1384200405-8402-1-git-send-email-afenkart@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+This a resend:
+- incorparated changes as suggested by reviewers
+- simplified workaround for am335x, gpio will now only wake
+  the module from runtime suspend, not handle the sdio irq
+  itself 
 
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Andreas Fenkart (3):
+  mmc: omap_hsmmc: Enable SDIO IRQ.
+  mmc: omap_hsmmc: Pin remux workaround to support SDIO interrupt on
+    AM335x.
+  mmc: omap_hsmmc: Extend debugfs for SDIO IRQ, GPIO and pinmux.
 
->> @@ -154,6 +161,30 @@
->>   			gpios = <&gpio2 0 1>;    /* GPIO 64 Active Low */
->>   			linux,default-trigger = "keep";
->>   		};
->> +
->> +		sata1_led {
->> +			label = "rn104:blue:sata1";
->> +			gpios = <&pca9554 0 1>;  /* Active Low */
->
-> Same comment as for ReadyNAS 2120 patch:
->
-> #include <dt-bindings/gpio/gpio.h> and use GPIO_ACTIVE_HIGH/LOW.
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   42 +++
+ drivers/mmc/host/omap_hsmmc.c                      |  299 ++++++++++++++++++--
+ include/linux/platform_data/mmc-omap.h             |    4 +
+ 3 files changed, 325 insertions(+), 20 deletions(-)
 
-Unlike RN2120 .dts for which I was able to change all the high/low
-values for macros in a single move, if I do the changes here for this
-specific patch, the .dts file for the RN104 will contain both values and
-macros.
+-- 
+1.7.10.4
 
-What about the following options?:
-
- - send a preliminary patch to change all the values for macros in RN104
-   .dts file once -rc1 is here and then resubmit the PCA9554 patch with
-   macros?
- - have the patch applied as is and then convert the whole RN104 .dts w/
-   another patch.
-
-Anyway, once RN2120 is accepted, I intend to spend some time doing some
-housekeeping on other readynas .dts file based on the comments you made
-recently (macros, reg, addressing, phy info, etc), and also some minor
-points (whitespaces).
-
-Cheers,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
