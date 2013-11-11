@@ -1,255 +1,235 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2] ARM: mvebu: Add Netgear ReadyNAS 2120 board
-Date: Mon, 11 Nov 2013 21:33:41 +0100
-Message-ID: <52813F25.40703@gmail.com>
-References: <87bo1qhfnf.fsf@natisbad.org>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Mon, 11 Nov 2013 20:01:52 +0000
+Message-ID: <20131111200152.GF3166@localhost.localdomain>
+References: <20131108184036.GD2602@localhost.localdomain>
+ <alpine.LFD.2.03.1311081356300.15571@syhkavp.arg>
+ <52808E09.9060902@samsung.com> <5280FB9A.7030500@samsung.com>
+ <alpine.LFD.2.10.1311111107040.9667@knanqh.ubzr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87bo1qhfnf.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.10.1311111107040.9667@knanqh.ubzr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 09:01 PM, Arnaud Ebalard wrote:
-> All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
-> 2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
-> USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
-> serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
-> controllers, G751 temperature sensor) except for:
->
->   - the Intersil ISL12057 I2C RTC Chip,
->   - the Armada NAND controller.
->
-> Support for both of those is currently work in progress and does not
-> prevent boot.
->
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
-[...]
-> diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> new file mode 100644
-> index 0000000..ba1e0de
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> @@ -0,0 +1,288 @@
-> +/*
-> + * Device Tree file for NETGEAR ReadyNAS 2120
-> + *
-> + * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "armada-xp-mv78230.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
+On Mon, Nov 11, 2013 at 11:27:46AM -0500, Nicolas Pitre wrote:
+> On Mon, 11 Nov 2013, Tarek Dakhran wrote:
+> 
+> > Hi,
+> > 
+> > On 11.11.2013 11:58, Tarek Dakhran wrote:
+> > > 
+> > > > On Thu, Nov 07, 2013 at 11:51:49AM -0500, Nicolas Pitre wrote:
+> > > > Samsung people: could you give us more info on the behavior of the power
+> > > > controller please?
+> > > > 
+> > > > 
+> > > > Nicolas
+> > > > 
+> > > This is how the power controller works on exynos5410. For example for CORE0.
+> > > 
+> > > ARM_CORE0_STATUS register indicates the power state of Core 0 part of
+> > > processor core.
+> > > 0x3 indicates that power to Core 0 is turned-on. 0x0 indicates that power to
+> > > Core 0 is turned-off.
+> > > All other values indicate that the power On/Off sequence of Core 0 in
+> > > progress.
+> > > 
+> > > To turn Off the power of Core 0 power domain:
+> > > 
+> > > 1. Set the LOCAL_POWER_CFG field of ARM_CORE0_CONFIGURATION register to 0x3.
+> > > 2. After PMU detects a change in the LOCAL_POWER_CFG field, it waits for the
+> > > execution of WFI.
+> > > 3. After Core 0 executes the WFI instruction, PMU starts the power-down
+> > > sequence.
+> > > 4. The Status field of ARM_CORE0_STATUS register indicates the completion of
+> > > the sequence.
+> > > 
+> > > That's why in the v1 of this patch exynos_core_power_control function was
+> > > implemented as:
+> > > 
+> > > static int exynos_core_power_control(unsigned int cpu, unsigned int cluster,
+> > > int enable)
+> > > {
+> > >        unsigned long timeout = jiffies + msecs_to_jiffies(10);
+> > >        unsigned int offset = cluster * MAX_CPUS_PER_CLUSTER + cpu;
+> > >        int value = enable ? S5P_CORE_LOCAL_PWR_EN : 0;
+> > > 
+> > >        if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3) == value)
+> > >                return 0;
+> > > 
+> > >        __raw_writel(value, EXYNOS5410_CORE_CONFIGURATION(offset));
+> > >        do {
+> > >                if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3)
+> > >                                == value)
+> > >                        return 0;
+> > >        } while (time_before(jiffies, timeout));
+> > > 
+> > >        return -EDEADLK;
+> > > }
+> > > 
+> > > But, as i mentioned, this is no good using while here.
+> > > Now thinking about the problem.
+> > > 
+> > > Thank you,
+> > >         Tarek Dakhran
+> > 
+> > What do you think about this way of solving the problem with races?
+> > 
+> > Add new edcs_power_controller_wait function.
+> > 
+> > static void edcs_power_controller_wait(unsigned int cpu, unsigned int
+> > cluster){
+> > 
+> >         unsigned long timeout = jiffies + msecs_to_jiffies(10);
+> >         unsigned int offset = cluster * EDCS_CPUS_PER_CLUSTER + cpu;
+> >         void __iomem *status_reg = EDCS_CORE_STATUS(offset);
+> > 
+> >         /* wait till core power controller finish the work */
+> > 
+> >         do {
+> >                 if ((readl_relaxed(status_reg) & 3) ==
+> > edcs_use_count[cpu][cluster] ? 3 : 0)
 
-nit: order includes global before local, i.e. {gpio,input}.h before .dtsi
+While we're making these changes, it would be good to take to opportunity
+to add a #define for these bits too.
 
-> +/ {
-> +	model = "NETGEAR ReadyNAS 2120";
-> +	compatible = "netgear,readynas-2120", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
-> +	};
-> +
-[...]
-> +			serial@12000 {
-> +				clocks = <&coreclk 0>;
-> +				status = "okay";
-> +			};
+The magic numbers here meant that I had to do some guesswork to
+understand the real behaviour here, and someone reading the code in the
+future is likely to have the same problem...
 
-For your possible cleanup later: move clocks = <&coreclk 0> to
-armada-370-xp.dtsi and remove this then.
+> >                         return;
+> >         } while (time_before(jiffies, timeout));
+> > 
+> >         /* Should never get here */
+> >         BUG();
+> > }
+> > 
+> > Use it in:
+> > 
+> > static void exynos_core_power_up(unsigned int cpu, unsigned int cluster)
+> > {
+> >         exynos_core_power_control(cpu, cluster, true);
+> >         edcs_power_controller_wait(cpu, cluster);
+> > }
+> > 
+> > and in:
+> > 
+> > static void exynos_power_down(void)
+> > {
+> >         bool last_man = false, skip_wfi = false;
+> >         unsigned int mpidr = read_cpuid_mpidr();
+> >         unsigned int cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+> >         unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+> > 
+> > 
+> >         pr_debug("%s: CORE%d on CLUSTER %d\n", __func__, cpu, cluster);
+> >         BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER  || cluster >= EDCS_CLUSTERS);
+> > 
+> >         __mcpm_cpu_going_down(cpu, cluster);
+> > 
+> >         arch_spin_lock(&edcs_lock);
+> >         BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
+> >         edcs_use_count[cpu][cluster]--;
+> >         if (edcs_use_count[cpu][cluster] == 0) {
+> >                 exynos_core_power_down(cpu, cluster);
+> >                 --core_count[cluster];
+> >                 if (core_count[cluster] == 0)
+> >                         last_man = true;
+> > [snip]
+> >         __mcpm_cpu_down(cpu, cluster);
+> > 
+> >         if (!skip_wfi){
+> >                 wfi();
+> >         }
+> >         edcs_power_controller_wait(cpu, cluster);
+> > }
+> 
+> It is preferable if the power_up and power_down don't wait.
 
-Also for cleanup later: It would be great if most SoC nodes get
-a node label. That way you can just write:
+I agree with this.
 
-uart0: { status = "okay" };
+If a wait is needed anywhere, it is
 
-without replaying node hierarchy over and over again.
+ a) in power_down_finish(), and
+ b) *before* the call to exynos_core_power_control() in
+        exynos_core_power_up() (see below for explanation)
 
-> +			mdio {
-> +				phy0: ethernet-phy@0 {
-> +					compatible = "marvell,88e1318s";
-> +					reg = <0>;
-> +				};
-> +
-> +				phy1: ethernet-phy@1 {
-> +					compatible = "marvell,88e1318s";
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy = <&phy0>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			ethernet@74000 {
-> +				status = "okay";
-> +				phy = <&phy1>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			/* Front USB 2.0 port */
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c@11000 {
-> +				compatible = "marvell,mv78230-i2c";
-> +				clock-frequency = <400000>;
-> +				status = "okay";
-> +
-> +				/* Controller for rear fan #1 of 3 (Protechnic
-> +				 * MGT4012XB-O20, 8000RPM) near eSATA port */
-> +				g762_fan1: g762@3e {
-> +					compatible = "gmt,g762";
-> +					reg = <0x3e>;
-> +					clocks = <&g762_clk>; /* input clock */
-> +					fan_gear_mode = <0>;
-> +					fan_startv = <1>;
-> +					pwm_polarity = <0>;
+Any waits should not be busy-waits either: we should use msleep or
+similar.  This is fine that we only wait from contexts that can sleep --
+I think this is OK for the power_up() and power_down_finish() paths
+(which aren't executed on the target CPU), but not on the power_down()
+path.
 
-I haven't looked at g762 dt-bindings, but above properties should have
-s/_/- and possibly also vendor prefix if device specific,
-e.g. gmt,fan-hear-mode. Depends on your g762 binding review.
+Busy-waiting for 1ms every time we power a CPU down is not great for
+power-saving...
 
-> +				};
-> +
-> +				/*  Controller for rear (center) fan #2 of 3 */
-> +				g762_fan2: g762@48 {
-> +					compatible = "gmt,g762";
-> +					reg = <0x48>;
-> +					clocks = <&g762_clk>; /* input clock */
-> +					fan_gear_mode = <0>;
-> +					fan_startv = <1>;
-> +					pwm_polarity = <0>;
-> +				};
-> +
-> +				/*  Controller for rear fan #3 of 3 */
-> +				g762_fan3: g762@49 {
-> +					compatible = "gmt,g762";
-> +					reg = <0x49>;
-> +					clocks = <&g762_clk>; /* input clock */
-> +					fan_gear_mode = <0>;
-> +					fan_startv = <1>;
-> +					pwm_polarity = <0>;
-> +				};
-> +
-> +				/* Temperature sensor */
-> +				g751: g751@4c {
-> +					compatible = "gmt,g751";
-> +					reg = <0x4c>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	clocks {
-> +	       g762_clk: g762_oscillator {
+In both cases, we should check the PMU status bits first, and only
+wait if they are not already in the desired state.  The most likely
+case will always by that the target CPU already caught up.
 
-While node labels have '_', node names usually have '-'.
 
-> +			 compatible = "fixed-clock";
-> +			 #clock-cells = <0>;
-> +			 clock-frequency = <32768>;
-> +	       };
-> +	};
-> +
-> +	gpio_leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
-> +			     &sata3_led_pin &sata4_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		red_sata1_led {
+Nico currently disagrees with me on (b), so we need to explore that
+(below).
 
-ditto here and below.
+> No need to wait for a power_up to be complete as the only CPU that can 
+> do a power_down is the CPU being powered up itself.
 
-> +			label = "rn2120:red:sata1";
-> +			gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		red_sata2_led {
-> +			label = "rn2120:red:sata2";
-> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		red_sata3_led {
-> +			label = "rn2120:red:sata3";
-> +			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		red_sata4_led {
-> +			label = "rn2120:red:sata4";
-> +			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		red_err_led {
-> +			label = "rn2120:red:err";
-> +			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-0 = <&power_button_pin &reset_button_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		power_button {
+To extend this argument further, there is no conceiveable situation
+where we would need to wait for power_up to complete explicitly.
 
-ditto here and below.
+We will only ever need to wait for power_down to complete.
 
-> +			label = "Power Button";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		reset_button {
-> +			label = "Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	gpio_poweroff {
+> 
+> The exynos_core_power_down call is now appropriately located i.e. within 
+> the lock protected area.  That's fine because we know power won't be cut 
+> until the lock is released and WFI is executed.
+> 
+> Also, if exynos_core_power_up() is called from another CPU right after 
+> the lock is released on the CPU trying to shut itself down but before it 
+> actually executes WFI then the WFI will not be effective and the 
+> power_down method is expected to return in that case.  So no problem 
+> there either.
+> 
+> The only case where it is important to really wait for the power down to 
+> be effective is for kexec.  This is why Dave introduced the 
+> power_down_finish method (you may find this in linux-next at the 
+> moment).  That would be the place where to use your controller_wait 
+> code.
 
-ditto.
+For (b), I think we're still missing some information here...
 
-Besides the nits,
+Suppose CPU0 is powering down.  The PMU has been told to power the CPU
+down, and CPU0 has released edcs_lock.  Suppose soon afterwards, CPU1
+wants to turn CPU0 back on again.
 
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Now, unless CPU1 checks the power controller status, CPU1 has no way
+to know whether the power-down request is still in progress before CPU1
+issues a new power-up request for CPU0.
 
-> +		compatible = "gpio-poweroff";
-> +		pinctrl-0 = <&poweroff>;
-> +		pinctrl-names = "default";
-> +		gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
->
+Now, what behaviour does the power controller guarantee when it is still
+in this state, and a new power-up request is issued to it?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I worry that the power controller may not cope with a new request while
+in this state, or may not guarantee predictable behaviour.  If so then
+the new power-up request may just get lost -- avoiding that problem
+requires power_up() to wait for a pending power_down() to finish before
+issuing a new command to the power controller.
+
+Only the hardware documentation can answer this question.
+
+Cheers
+---Dave
