@@ -1,168 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Mon, 11 Nov 2013 14:26:11 +0100
-Message-ID: <36428164.RsQCj0nRsc@avalon>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/4] usb: chipidea: msm: Add device tree binding information
+Date: Mon, 11 Nov 2013 15:35:34 +0200
+Message-ID: <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384176937-1658-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
-Thank you for the quick and detailed review.
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-On Monday 11 November 2013 09:40:39 Mark Rutland wrote:
-> Hi Laurent,
-> 
-> I have a few comments.
-> 
-> On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
-> > Document the device tree bindings for the sci serial port devices.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> > 
-> >  .../bindings/serial/renesas,sci-serial.txt         | 42 +++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
-> > file mode 100644
-> > index 0000000..66d3bca
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > @@ -0,0 +1,42 @@
-> > +* Renesas SH-Mobile Serial Communication Interface
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: one of the following types (scif, scifa, scifb, hscif).
-> 
-> Minor nit, but would be nice to have "Should contain one of the
-> following:". We might have future variants whereby the compatible string
-> will actually be a string list.
-
-Sure, I can do that.
-
-> > +
-> > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
-> > UART. +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB
-> > compatible UART. +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2)
-> > HSCIF compatible UART. +    - "renesas,scif-generic" for generic SCIF
-> > compatible UART.
-> > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> 
-> Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
-
-You're right, I'll remove the suffix.
-
-> > +
-> > +    When compatible with the generic version, nodes must also list the
-> > +    SoC-specific version corresponding to the platform.
-> 
-> Presumably the SoC-specific version should come first; it would be nice
-> to note that.
-
-Indeed, I'll do so.
-
-> > +
-> > +  - reg: Base address and length of the memory resource used by the UART.
-> 
-> I assume by memory resource you mean the memory-mapped registers?
-> Resource sounds like Linux-internal nomenclature leaking.
-
-I'll fix it as well, although we could decide on a definition of "resource" 
-that isn't Linux-specific :-)
-
-> > +
-> > +  - interrupt-parent: Reference to the parent interrupt controller.
-> 
-> I don't think this is strictly necessary. It's implicit by default and
-> can be added optionally when a system is wired in a complex way. As it's
-> a completely standard optional property I'm not even sure it needs to be
-> documented.
-> 
-> > +  - interrupts: Interrupt number.
-> 
-> Minor nit: "Should contain an interrupt-specifier for ..."
-> 
-> I saw the cover mentioned multiple interrupts. Which logical interrupt
-> output of the device are you expecting here?
-
-SCI devices come in several flavours, with individual interrupt sources wired 
-up to different interrupt lines, or multiplexed all together. As the DT 
-bindings support the later only at the moment, there's only a single interrupt 
-to handle.
-
-Should we come up with a standard way of saying in the bindings that a device 
-uses the interrupt bindings defined in interrupt-controller/interrupts.txt ? 
-This will become even more important with the interrupts-extended property, we 
-don't want every DT bindings document to detail all possible way to specify 
-interrupts.
-
-> > +
-> > +  - clocks: Reference to the SCIx UART interface clock.
-> 
-> Minor nit: s/Reference to/A phandle + clock-specifier pair for/
-> 
-> > +  - clock-names: Should be "sci_ick".
-> 
-> As we're using clock-names, it would be nicer still to define clocks in
-> terms of clock-names so as to make it easier to update the document in
-> future and make the expected use of clock-names clearer:
-> 
-> - clocks: Should
-
-"Should", or "must" ?
-
-> contain a phandle + clock-specifier pair for each entry
->   in clock-names.
-> 
-> - clock-names: Should contain "sci_ick".
-
-Shouldn't that be
-
-"Should contain "sci_ick" for the SCIx UART interface clock."
-
-? Otherwise the bindings wouldn't tell which clock the clocks property should 
-reference.
-
-> > +
-> > +Note: Each enabled SCIx UART should have an alias correctly numbered in
-> > the +"aliases" node.
-> > +
-> > +Example:
-> > +	aliases {
-> > +		serial0 = &scifa0;
-> > +	};
-> > +
-> > +	scifa0: serial@e6c40000 {
-> > +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-> > +		reg = <0 0xe6c40000 0 64>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 144 4>;
-> > +		clocks = <&mstp2_clks 4>;
-> > +		clock-names = "sci_ick";
-> > +	};
-> 
-> Otherwise this looks good to me.
-
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 5ea26c6..0a85eba 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -15,3 +15,19 @@ Example EHCI controller device node:
+ 		usb-phy = <&usb_otg>;
+ 	};
+ 
++CI13xxx (Chipidea) USB controllers
++
++Required properties:
++- compatible: 	should contain "qcom,ci-hdrc"
++- reg: 			offset and length of the register set in the memory map
++- interrupts: 	interrupt-specifier for the controller interrupt.
++- usb-phy:		phandle for the PHY device
++- dr_mode: 		Sould be "peripheral"
++
++	gadget@f9a55000 {
++		compatible = "qcom,ci-hdrc";
++		reg = <0xf9a55000 0x400>;
++		dr_mode = "peripheral";
++		interrupts = <0 134 0>;
++		usb-phy = <&usb_otg>;
++	};
+\ No newline at end of file
 -- 
-Regards,
+1.7.9.5
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
