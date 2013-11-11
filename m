@@ -1,107 +1,104 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] doc: devicetree: Add bindings documentation for
- omap-des driver
-Date: Mon, 11 Nov 2013 17:38:04 +0000
-Message-ID: <20131111173804.GN21201@e106331-lin.cambridge.arm.com>
-References: <1383871035-16608-1-git-send-email-joelf@ti.com>
- <20131111110106.GC21201@e106331-lin.cambridge.arm.com>
- <5281103F.8050407@ti.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: arm/arm64 UEFI boot protocol
+Date: Mon, 11 Nov 2013 18:43:21 +0100
+Message-ID: <20131111174321.GQ1557@rocoto.smurfnet.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5281103F.8050407@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, DOCUMENTATION <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olivier.martin-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 05:13:35PM +0000, Joel Fernandes wrote:
-> On 11/11/2013 05:01 AM, Mark Rutland wrote:
-> > Hi Joel,
-> > 
-> > I realise I'm a little late in replying to this, but there are a few
-> > things that would be nice to fix up.
-> > 
-> > On Fri, Nov 08, 2013 at 12:37:09AM +0000, Joel Fernandes wrote:
-> >> Add documentation for the generic OMAP DES crypto module describing the device
-> >> tree bindings.
-> >>
-> >> Signed-off-by: Joel Fernandes <joelf@ti.com>
-> >> ---
-> >>  .../devicetree/bindings/crypto/omap-des.txt        | 28 ++++++++++++++++++++++
-> >>  1 file changed, 28 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> >> new file mode 100644
-> >> index 0000000..0637647
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> >> @@ -0,0 +1,28 @@
-> >> +OMAP SoC DES crypto Module
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible : Should be "ti,omap4-des"
-> > 
-> > Nit: s/Should be/Should contain/
-> 
-> ok
-> 
-> > 
-> >> +- ti,hwmods: Name of the hwmod associated with the DES module
-> >> +- reg : Offset and length of the register set for the module
-> >> +- interrupts : the interrupt-specifier for the DES module
-> > 
-> > Just to check: there's only one interrupt?
-> 
-> Yes.
-> 
-> >> +- clocks : phandle to the functional clock node of the DES module
-> >> +- clock-names : Name of the functional clock
-> > 
-> > What name is expected here? The intent of clock-names is to describe
-> > which clock input lines the clocks are wired to, so this should be
-> > well-defined.
-> > 
-> > From the looks of the example, the clock input is called "fck". Is that
-> > correct?
-> 
-> Yes. The clock name is used by PM code to get the clock for the particular
-> device. Yes the code assumes it to be "fck", I can change doc to be so.
-> 
-> > When you have clock-names, the nicest thing to do is to define clocks
-> > in terms of clock-names. Something like:
-> > 
-> > - clocks: A phandle + clock-specifier pair for each entry in
-> >   clock-names.
-> > 
-> > - clock-names: Should contain:
-> >   * "fck" for the functional clock
-> > 
-> > Which implies that the correct way to find clocks is to look in
-> > clock-names first to find the clock's index, rather than grabbing the
-> > clock by index. This makes it far easier to add/remove/change clocks in
-> > future.
-> 
-> Ok. I'll reword documentation of clocks as above.
-> 
-> > 
-> >> +
-> >> +Optional properties:
-> >> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> >> +	Documentation/devicetree/bindings/dma/dma.txt
-> > 
-> > Similarly here it would be nice to have dmas refer to dma-names for
-> > the description of which dmas exist.
-> 
-> Ok, will make the above 3 changes and resubmit, if its ok will add your Reviewed-by.
+Hi all,
 
-That would be fine by me.
+We currently have a few sets of patches floating around, for UEFI
+runtime services, UEFI stub and GRUB support for Linux/UEFI on
+arm/arm64.
 
-With the changes:
+The last version of Documentation/arm/uefi.txt I sent out raised a few
+questions with regards to the boot protocol between UEFI and Linux, and
+there is also upcoming support for ACPI which could use a few
+clarifications in this area.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+So, rather than sending out complete sets of patches for all these until
+consensus is reached, below is my proposed suggestion for a
+Documentation/arm/uefi.txt, to be shared for arm and arm64. If noone has
+strong objections to this, we can quickly send updated (and hopefully
+final-ish) versions of these sets.
 
-Mark.
+/
+    Leif
+
+---
+
+UEFI, the Unified Extensible Firmware Interface is a specification
+governing the behaviours of compatible firmware interfaces.
+It is maintained by the UEFI Forum - http://www.uefi.org/.
+Support for the AArch32 (arm) architecture was added in version 2.3 of
+the specification, and support for AAaarch64 (arm64) was added in
+version 2.4.
+
+UEFI is an evolution of its predecessor 'EFI', so the terms EFI and
+EFI are used somewhat interchangeably in this document and associated
+source code. As a rule, anything new uses 'UEFI', whereas 'EFI' refers
+to legacy code or specifications.  
+
+UEFI support in Linux                                                           
+=====================                                                           
+Booting on a platform with firmware compliant with the UEFI
+specification makes it possible for the kernel to support additional
+features:
+- UEFI Runtime Services
+- Retrieving various configuration information through the standardised
+  interface of UEFI configuration tables. (ACPI, SMBIOS, ...)
+
+For actually enabling [U]EFI support, enable:
+- CONFIG_EFI=y
+- CONFIG_EFI_VARS=y or m
+
+UEFI stub
+=========
+The "stub" is a feature that turns the Image/zImage/bzImage into a valid
+UEFI PE/COFF executable, including a loader application that makes it
+possible to load the kernel directly from the UEFI shell, boot menu, or
+one of the lightweight bootloaders like Gummiboot or rEFInd. 
+The kernel image built with stub support remains a valid kernel image
+for booting in the legacy fashion.
+
+UEFI kernel support on ARM
+==========================
+The implementation depends on receiving information about the UEFI
+environment in a Flattened Device Tree (FDT) - so is only available with
+CONFIG_OF.
+
+UEFI support also depends on early_memremap().
+
+UEFI kernel support on the ARM architectures (arm and arm64) is only
+available when boot is performed through the stub.
+
+When booting in UEFI mode, the kernel ignores any memory nodes in the
+DT, and instead reads the UEFI memory map. To prevent confusion, the
+stub deletes any memory nodes from a provided DT.
+
+The stub populates the FDT /chosen node with, and the kernel scans for
+the following parameters:
+________________________________________________________________________________
+Name                      | Size   | Description
+================================================================================
+linux,uefi-system-table   | 64-bit | Physical address of the UEFI System Table.
+--------------------------------------------------------------------------------
+linux,uefi-mmap           | 64-bit | Physical address of the UEFI memory map,
+                          |        | populated by the UEFI GetMemoryMap() call.
+--------------------------------------------------------------------------------
+linux,uefi-mmap-size      | 32-bit | Size in bytes of the UEFI memory map
+                          |        | pointed to in previous entry.
+--------------------------------------------------------------------------------
+linux,uefi-mmap-desc-size | 32-bit | Size in bytes of each entry in the UEFI
+                          |        | memory map.
+--------------------------------------------------------------------------------
+linux,uefi-stub-kern-ver  | string | Copy of linux_banner from build.
+--------------------------------------------------------------------------------
+
+For verbose debug messages, specify 'uefi_debug' on the kernel command line.
