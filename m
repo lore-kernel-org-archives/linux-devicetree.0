@@ -1,61 +1,97 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] OF: Introduce device tree node flag helpers.
-Date: Mon, 11 Nov 2013 16:05:57 +0000
-Message-ID: <20131111160557.EA11BC42309@trevor.secretlab.ca>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-3-git-send-email-panto@antoniou-consulting.com>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Mon, 11 Nov 2013 15:50:50 +0000
+Message-ID: <20131111155050.96290C41ABB@trevor.secretlab.ca>
+References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate> <20131106182457.GA25879@obsidianresearch.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383673816-29293-3-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <20131106182457.GA25879-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  5 Nov 2013 19:50:13 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> Helper functions for working with device node flags.
+On Wed, 6 Nov 2013 11:24:57 -0700, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> On Wed, Nov 06, 2013 at 07:03:08PM +0100, Thomas Petazzoni wrote:
+> > Dear Jason Gunthorpe,
+> > 
+> > (Adding a bunch of mvebu people in Cc)
+> > 
+> > On Wed, 6 Nov 2013 10:36:49 -0700, Jason Gunthorpe wrote:
+> > 
+> > > Thomas: There is one buglet here that I haven't had time to do
+> > > anything about. Notice the DT is listing the PEX memory window in its
+> > > ranges. I've done this for two reasons
+> > >  - The bootloader sets this address range up, so it is correct to
+> > >    include in the DT
+> > 
+> > The fact that the bootloader sets this MBus window is more-or-less
+> > irrelevant because when the mvebu-mbus driver is initialized, it
+> > completely clears *all* existing MBus windows:
 > 
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> Yes, but it is not irrelevent. In my case this same DT is supporting
+> 3.10 and 3.12 kernels - 3.10 doesn't even have a MBUS driver or
+> dynamic PEX driver and it relies upon the ranges entry matching the
+> static bootloader configuration to work properly.
+> 
+> So the 'ranges matching bootloader' does have a use case.
+> 
+> > I indeed remember some objections, but I'm not sure what they were
+> > precisely. Maybe we didn't had a precise use case back at the time, to
+> > really make people objecting realize what the problem was?
+> 
+> That is about where I am at too..
+> 
+> > On the other hand, I think the of_*() API is quite limited when it
+> > comes to updating the DT. If I remember correctly, you can update some
+> > nodes, but you can never reclaim the memory that was used for the
+> > previous value of the node. So any change to the in-memory DT
+> > representation is basically a memory leak for the entire lifetime of
+> > the system (of course, I might be wrong on this, I haven't dived into
+> > all the hardcore details of DT manipulation in the kernel).
+> 
+> I'm not clear on that either, but it seems plausible..
+> 
+> > I'm not sure what would be the alternate mechanism to hook into the
+> > address translation. of_translate_one(), where all the translation
+> > through ranges takes place is really tied to the DT only, adding
+> > another mechanism to hook some custom address translation in there
+> > seems a bit weird, no?
+> 
+> I agree, some kind of callback scheme would really be needed.. Sort of
+> like the xlate callback we have for IRQs?
+> 
+> So the mbus would register an address xlate for its node that is
+> called instead of ranges parsing. For the example in my last message
+> the FPGA driver would register an xlate that made addresses relative
+> to its own BAR0 address.
 
-Merged, thanks
+There are already bus-specific transations available. Take a look at
+struct of_bus in drivers/of/address.c
 
 g.
 
-> ---
->  include/linux/of.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> > However, it just works by pure luck: nothing guarantees you that the
+> > PCIe 0 memory window will start at 0xe0000000. Of course, since you
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f95aee3..786c4f6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -114,6 +114,26 @@ static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
->  	set_bit(flag, &n->_flags);
->  }
->  
-> +static inline void of_node_clear_flag(struct device_node *n, unsigned long flag)
-> +{
-> +	clear_bit(flag, &n->_flags);
-> +}
-> +
-> +static inline int of_property_check_flag(struct property *p, unsigned long flag)
-> +{
-> +	return test_bit(flag, &p->_flags);
-> +}
-> +
-> +static inline void of_property_set_flag(struct property *p, unsigned long flag)
-> +{
-> +	set_bit(flag, &p->_flags);
-> +}
-> +
-> +static inline void of_property_clear_flag(struct property *p, unsigned long flag)
-> +{
-> +	clear_bit(flag, &p->_flags);
-> +}
-> +
->  extern struct device_node *of_find_all_nodes(struct device_node *prev);
->  
->  /*
-> -- 
-> 1.7.12
+> Right, the general case is totally borked here - the dynamic changes
+> to the address map by MBUS and PCI are not being reflected to the
+> of_address machinery, be they from MBUS or from PCI BAR assignment.
 > 
+> However, address assignment is very predicatble, so if you have a
+> constrained system it can work.
+
+Yes, the problem is that the DT probably can't have an accurate set of
+ranges for the devices under the PCIe bus since they are dynamically
+assigned. It would be really nice to wire this up properly so that the
+DT states the layout of stuff behind the bar, but leaves it to the OS to
+assign PCI regions.
+
+However, if firmware enumarates PCI and wants that to be passed through
+to the OS, then the DT really should be updated... even in that case
+though Linux should be able to pick up the PCI settings from the BAR
+registers and use those for dynamics translation.
+
+g.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
