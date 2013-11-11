@@ -1,57 +1,56 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [GIT PULL] pin control bulk changes for v3.13
-Date: Mon, 11 Nov 2013 11:39:54 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075155DCE@IN01WEMBXA.internal.synopsys.com>
-References: <CACRpkdYpuZec_JRAPYZHmB5qTYebKR6iBy5=RvBUUEXsuOu97Q@mail.gmail.com>
-	<52808D34.70309@synopsys.com>
-	<CACRpkdaRGKBWr+rtOD3tWBUA452yApF838ufZ6nPOhzMZGDzfg@mail.gmail.com>
-	<C2D7FE5348E1B147BCA15975FBA23075155D9F@IN01WEMBXA.internal.synopsys.com>
- <CACRpkdYPgNK=bODvTo8+KHG7Yz448rw10Mqov8AjRB5RGMcqhg@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
+Date: Mon, 11 Nov 2013 11:39:36 +0000
+Message-ID: <20131111113936.GH28302@mudshark.cambridge.arm.com>
+References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
+	<1384158718-4756-3-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, arnd Bergmann <arnd@arndb.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "christian.ruppert@abilis.com" <christian.ruppert@abilis.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384158718-4756-3-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 03:53 PM, Linus Walleij wrote:
-> On Mon, Nov 11, 2013 at 11:00 AM, Vineet Gupta
-> <Vineet.Gupta1@synopsys.com> wrote:
->> On 11/11/2013 03:03 PM, Linus Walleij wrote:
->>> Actually I think device tree changes - if you mean changes to this platform's
->>> DTS/DTSI files, should go through the ARC arch tree.
->> But current workflow is prone to broken bisectability - arch maintainers need to
->> make sure that the core/driver changes hit mainline before the actual dts/dtsi
->> files in arch/*
-> No. This is *not* a bisectability problem, as it has been established
-> that device trees and kernel code shall *not* be built and deployed
-> together.
+On Mon, Nov 11, 2013 at 08:31:53AM +0000, Hiroshi Doyu wrote:
+> An "IOMMU device" on the bus is poplulated first, "IOMMU'able devices"
+> are done later.
+> 
+> With CONFIG_OF_IOMMU, "#stream-id-cells" DT binding would be used to
+> identify whether a device is IOMMU'able or not. If a device is
+> IOMMU'able, we'll defer to populate that device till an iommu device
+> is populated. Once an iommu device is populated, "dev->bus->iommu_ops"
+> is set in the bus. Then, those defered IOMMU'able devices are
+> populated and configured as IOMMU'abled with help of the already
+> populated iommu device via iommu_ops->add_device().
+> 
+> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Update:
+> This is newly added, and the successor of the following RFC:
+>   [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
+>   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/006914.html
 
-Well that is a fine design *goal*. But in reality (at least his patch) is making a
-driver change and then enabling arch via DT to access it. I can't fathom what is
-the issue with having both the changes routed via the same tree - other than
-possible merge hassles - which can can PITA for arches such as ARM. So you can say
-that as a general *practice* subsys guys don't prefer what I'm asking for and I'm
-OK if you reason it that way. But saying that it is not a bisectability problem
-and is design goal etc is bogus IMO.
+This generally looks like the right idea to me, but it would be good to have
+the input from a DT maintainer on the use of "#stream-id-cells" as an indicator
+that a device is behind an IOMMU. (aside: I think "iommuable" is a horrible
+word!).
 
-> Consider:
->
-> - Just subsystem changes are merged: OK you can still take your
->   DTS from somewhere and boot this kernel with it.
->
-> - Just the arch/*/*.dts[i] changes are merged: OK these new DT
->   nodes remain unused, presumably the system survives anyway?
->
-> It only becomes a problem if you also start to apply patches deleting
-> functionality that has been moved over to the device tree in the same
-> merge window - don't do that. Take a sweep with the broomstick
-> next time instead.
+What happens if you do the deferring at the bus level? E.g. defer all device
+probes on a bus, until the IOMMU is probed for that bus. That might fit
+better with future work, where we will almost certainly need to expose more
+of the bus topology to Linux. Of course, I can see that falling down for
+monolithic virtual buses like the platform bus.
 
-Ya Ya I see, but the patch under consideration don't fall in either of those
-buckets. We have 1 change in each of arch and subsys.
-
--Vineet
+Will
