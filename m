@@ -1,37 +1,73 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 5/7] iommu/tegra: smmu: Support "mmu-masters" binding
-Date: Mon, 11 Nov 2013 13:03:52 +0100
-Message-ID: <20131111.140352.730622703500692694.hdoyu@nvidia.com>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com><1384158718-4756-6-git-send-email-hdoyu@nvidia.com><20131111113510.GG28302@mudshark.cambridge.arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
+Date: Mon, 11 Nov 2013 12:03:57 +0000
+Message-ID: <20131111120357.GE21201@e106331-lin.cambridge.arm.com>
+References: <5280B54A.1050503@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131111113510.GG28302-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "Mark.Rutland-5wv7dgnIgG8@public.gmane.org" <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org" <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5280B54A.1050503-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote @ Mon, 11 Nov 2013 12:35:10 +0100:
+On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
+> Hi,
 
-> This code looks familiar ;)
+Hi,
 
-;)
- 
-> If this approach makes it past the DT guys, I wonder if there's any scope
-> for factoring out some of the arm-smmu code so that basic client
-> parsing/searching/registration can be made into a library?
+While this does involve device tree, it's not strictly a device tree
+problem, and the people best placed to answer your question don't seem
+to be on Cc. You'd get better responses if you used get_maintainer.pl,
+or looked at the commit history of the driver or binding to find people
+likely to be able to help.
 
-That's what I thought too. I just didn't proceed further till I get
-some feedback on this design first. As you suggested, some of arm,smmu
-part can be enough generic so that some other of IOMMU drivers can
-make use of that as a library.
+I've added Dong Aisheng, Shawn Guo, and Linus Walleij to Cc, as they had
+signed-off-bys on the binding document.
+
+Mark.
+
+> 
+> while I port the static code to the DT I step into the problem to
+> set the PSCR for the sdhc2 ports to 22k pull-up
+> I look for something like described in
+>      pinctrl/fsl,imx-pinctrl.txt
+> 
+> the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
+> 
+> 
+> pinctrl_sdhc2_1: sdhc2-1 {
+>                          fsl,pins = <
+>                                  MX27_PAD_SD2_D0__SD2_D0  0x1
+>                                  MX27_PAD_SD2_D1__SD2_D1  0x1
+>                                  MX27_PAD_SD2_D2__SD2_D2  0x1
+>                                  MX27_PAD_SD2_D3__SD2_D3  0x1
+>                                  MX27_PAD_SD2_CLK__SD2_CLK  0x1
+>                                  MX27_PAD_SD2_CMD__SD2_CMD  0x1
+>                          >;
+>                  };
+> 
+> its setup in board specific c-file
+> 
+> /* 22k pull-up for sd2 pins  */
+>          reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+>          reg &= ~0xfff0;
+>          reg |= 0xfff0;
+>          __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
+> 
+> 
+> Any successions?
+> 
+> Regards
+> Chris
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
