@@ -1,127 +1,50 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings
- documentation
-Date: Mon, 11 Nov 2013 09:40:39 +0000
-Message-ID: <20131111094039.GA21201@e106331-lin.cambridge.arm.com>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7] pinctrl: imx27: imx27 pincontrol driver
+Date: Mon, 11 Nov 2013 10:50:18 +0100
+Message-ID: <CACRpkdbJLSHOoE9gNDnne+xwCxu4FzGreeRJfNpL7nC8ddD04w@mail.gmail.com>
+References: <1382950843-26066-3-git-send-email-mpa@pengutronix.de>
+	<1383057139-25304-1-git-send-email-mpa@pengutronix.de>
+	<CACRpkdYKgA5E4-APSTHsM=zVbb3X2R4v+V4EeK3+W1tKPR1FeA@mail.gmail.com>
+	<CAHCPf3v3dsTyk9Cd93GBLBKQLSQ+Mb0mpq134X7Ko4U8m-b-qg@mail.gmail.com>
+	<20131107091212.GH15098@pengutronix.de>
+	<1383816481.4115.2.camel@weser.hi.pengutronix.de>
+	<20131107103859.GI15098@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384054421-13357-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Content-Language: en-US
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131107103859.GI15098-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, Nov 7, 2013 at 11:38 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Thu, Nov 07, 2013 at 10:28:01AM +0100, Lucas Stach wrote:
 
-I have a few comments.
+>> > The first version of this series [1] was designed to have a iomux node
+>> > with 6 gpio subnodes.
+>>
+>> Why was this changed? Having two different DT nodes requesting the same
+>> IO region is certainly the wrong thing to do.
+>
+> It was suggested to map the same memory range from both drivers, so I
+> changed the layout completely. Perhaps it would have been better to keep
+> the DT node structure while not passing the memory to the gpio
+> subdevices.
 
-On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
-> Document the device tree bindings for the sci serial port devices.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  .../bindings/serial/renesas,sci-serial.txt         | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> new file mode 100644
-> index 0000000..66d3bca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -0,0 +1,42 @@
-> +* Renesas SH-Mobile Serial Communication Interface
-> +
-> +Required properties:
-> +
-> +  - compatible: one of the following types (scif, scifa, scifb, hscif).
+>From a pinctrl/GPIO point of view anything goes, it's a little bit like
+big-endian vs little-endian.
 
-Minor nit, but would be nice to have "Should contain one of the
-following:". We might have future variants whereby the compatible string
-will actually be a string list.
+I did merge the i.MX27 driver as it was ACKed by the subarch
+maintainers.
 
-> +
-> +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-> +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
-> +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
-> +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
-> +    - "renesas,scif-generic" for generic SCIF compatible UART.
-> +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
+So what do we do now, shall I revert this patch or can you refactor
+it in accordance with the comments so it should be kept as a
+base for the rewrite?
 
-Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
-
-> +
-> +    When compatible with the generic version, nodes must also list the
-> +    SoC-specific version corresponding to the platform.
-
-Presumably the SoC-specific version should come first; it would be nice
-to note that.
-
-> +
-> +  - reg: Base address and length of the memory resource used by the UART.
-
-I assume by memory resource you mean the memory-mapped registers?
-Resource sounds like Linux-internal nomenclature leaking.
-
-> +
-> +  - interrupt-parent: Reference to the parent interrupt controller.
-
-I don't think this is strictly necessary. It's implicit by default and
-can be added optionally when a system is wired in a complex way. As it's
-a completely standard optional property I'm not even sure it needs to be
-documented.
-
-> +  - interrupts: Interrupt number.
-
-Minor nit: "Should contain an interrupt-specifier for ..."
-
-I saw the cover mentioned multiple interrupts. Which logical interrupt
-output of the device are you expecting here?
-
-> +
-> +  - clocks: Reference to the SCIx UART interface clock.
-
-Minor nit: s/Reference to/A phandle + clock-specifier pair for/
-
-> +  - clock-names: Should be "sci_ick".
-
-As we're using clock-names, it would be nicer still to define clocks in
-terms of clock-names so as to make it easier to update the document in
-future and make the expected use of clock-names clearer:
-
-- clocks: Should contain a phandle + clock-specifier pair for each entry
-  in clock-names.
-
-- clock-names: Should contain "sci_ick".
-
-> +
-> +Note: Each enabled SCIx UART should have an alias correctly numbered in the
-> +"aliases" node.
-> +
-> +Example:
-> +	aliases {
-> +		serial0 = &scifa0;
-> +	};
-> +
-> +	scifa0: serial@e6c40000 {
-> +		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-> +		reg = <0 0xe6c40000 0 64>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 144 4>;
-> +		clocks = <&mstp2_clks 4>;
-> +		clock-names = "sci_ick";
-> +	};
-
-Otherwise this looks good to me.
-
-Thanks,
-Mark.
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
