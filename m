@@ -1,172 +1,24 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v3 3/4] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Mon, 11 Nov 2013 11:27:46 -0500 (EST)
-Message-ID: <alpine.LFD.2.10.1311111107040.9667@knanqh.ubzr>
-References: <20131108184036.GD2602@localhost.localdomain>
- <alpine.LFD.2.03.1311081356300.15571@syhkavp.arg>
- <52808E09.9060902@samsung.com> <5280FB9A.7030500@samsung.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 0/2] ARC: Add perf support for ARC700 cores
+Date: Mon, 11 Nov 2013 17:27:55 +0100
+Message-ID: <20131111162755.GC26898@twins.programming.kicks-ass.net>
+References: <1383832512-21130-1-git-send-email-mjonker@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5280FB9A.7030500@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tarek Dakhran <t.dakhran@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Naour Romain <romain.naour@openwide.fr>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Dave Martin <Dave.Martin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383832512-21130-1-git-send-email-mjonker@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mischa Jonker <Mischa.Jonker@synopsys.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet.Gupta1@synopsys.com, mingo@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2013, Tarek Dakhran wrote:
+On Thu, Nov 07, 2013 at 02:55:10PM +0100, Mischa Jonker wrote:
+> Hi all,
+> 
+> Please find v3 of my attempt to add support for perf for ARC700 PMU's. If
+> possible, it would be nice to get some feedback on the implementation from
+> non-ARC/Synopsys people familiar with the perf subsystem in Linux.
 
-> Hi,
-> 
-> On 11.11.2013 11:58, Tarek Dakhran wrote:
-> > 
-> > > On Thu, Nov 07, 2013 at 11:51:49AM -0500, Nicolas Pitre wrote:
-> > > Samsung people: could you give us more info on the behavior of the power
-> > > controller please?
-> > > 
-> > > 
-> > > Nicolas
-> > > 
-> > This is how the power controller works on exynos5410. For example for CORE0.
-> > 
-> > ARM_CORE0_STATUS register indicates the power state of Core 0 part of
-> > processor core.
-> > 0x3 indicates that power to Core 0 is turned-on. 0x0 indicates that power to
-> > Core 0 is turned-off.
-> > All other values indicate that the power On/Off sequence of Core 0 in
-> > progress.
-> > 
-> > To turn Off the power of Core 0 power domain:
-> > 
-> > 1. Set the LOCAL_POWER_CFG field of ARM_CORE0_CONFIGURATION register to 0x3.
-> > 2. After PMU detects a change in the LOCAL_POWER_CFG field, it waits for the
-> > execution of WFI.
-> > 3. After Core 0 executes the WFI instruction, PMU starts the power-down
-> > sequence.
-> > 4. The Status field of ARM_CORE0_STATUS register indicates the completion of
-> > the sequence.
-> > 
-> > That's why in the v1 of this patch exynos_core_power_control function was
-> > implemented as:
-> > 
-> > static int exynos_core_power_control(unsigned int cpu, unsigned int cluster,
-> > int enable)
-> > {
-> >        unsigned long timeout = jiffies + msecs_to_jiffies(10);
-> >        unsigned int offset = cluster * MAX_CPUS_PER_CLUSTER + cpu;
-> >        int value = enable ? S5P_CORE_LOCAL_PWR_EN : 0;
-> > 
-> >        if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3) == value)
-> >                return 0;
-> > 
-> >        __raw_writel(value, EXYNOS5410_CORE_CONFIGURATION(offset));
-> >        do {
-> >                if ((__raw_readl(EXYNOS5410_CORE_STATUS(offset)) & 0x3)
-> >                                == value)
-> >                        return 0;
-> >        } while (time_before(jiffies, timeout));
-> > 
-> >        return -EDEADLK;
-> > }
-> > 
-> > But, as i mentioned, this is no good using while here.
-> > Now thinking about the problem.
-> > 
-> > Thank you,
-> >         Tarek Dakhran
-> 
-> What do you think about this way of solving the problem with races?
-> 
-> Add new edcs_power_controller_wait function.
-> 
-> static void edcs_power_controller_wait(unsigned int cpu, unsigned int
-> cluster){
-> 
->         unsigned long timeout = jiffies + msecs_to_jiffies(10);
->         unsigned int offset = cluster * EDCS_CPUS_PER_CLUSTER + cpu;
->         void __iomem *status_reg = EDCS_CORE_STATUS(offset);
-> 
->         /* wait till core power controller finish the work */
-> 
->         do {
->                 if ((readl_relaxed(status_reg) & 3) ==
-> edcs_use_count[cpu][cluster] ? 3 : 0)
->                         return;
->         } while (time_before(jiffies, timeout));
-> 
->         /* Should never get here */
->         BUG();
-> }
-> 
-> Use it in:
-> 
-> static void exynos_core_power_up(unsigned int cpu, unsigned int cluster)
-> {
->         exynos_core_power_control(cpu, cluster, true);
->         edcs_power_controller_wait(cpu, cluster);
-> }
-> 
-> and in:
-> 
-> static void exynos_power_down(void)
-> {
->         bool last_man = false, skip_wfi = false;
->         unsigned int mpidr = read_cpuid_mpidr();
->         unsigned int cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
->         unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> 
-> 
->         pr_debug("%s: CORE%d on CLUSTER %d\n", __func__, cpu, cluster);
->         BUG_ON(cpu >= EDCS_CPUS_PER_CLUSTER  || cluster >= EDCS_CLUSTERS);
-> 
->         __mcpm_cpu_going_down(cpu, cluster);
-> 
->         arch_spin_lock(&edcs_lock);
->         BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
->         edcs_use_count[cpu][cluster]--;
->         if (edcs_use_count[cpu][cluster] == 0) {
->                 exynos_core_power_down(cpu, cluster);
->                 --core_count[cluster];
->                 if (core_count[cluster] == 0)
->                         last_man = true;
-> [snip]
->         __mcpm_cpu_down(cpu, cluster);
-> 
->         if (!skip_wfi){
->                 wfi();
->         }
->         edcs_power_controller_wait(cpu, cluster);
-> }
-
-It is preferable if the power_up and power_down don't wait.
-
-No need to wait for a power_up to be complete as the only CPU that can 
-do a power_down is the CPU being powered up itself.
-
-The exynos_core_power_down call is now appropriately located i.e. within 
-the lock protected area.  That's fine because we know power won't be cut 
-until the lock is released and WFI is executed.
-
-Also, if exynos_core_power_up() is called from another CPU right after 
-the lock is released on the CPU trying to shut itself down but before it 
-actually executes WFI then the WFI will not be effective and the 
-power_down method is expected to return in that case.  So no problem 
-there either.
-
-The only case where it is important to really wait for the power down to 
-be effective is for kexec.  This is why Dave introduced the 
-power_down_finish method (you may find this in linux-next at the 
-moment).  That would be the place where to use your controller_wait 
-code.
-
-
-Nicolas
+Anything in particular you wanted feedback on? It looks like a fairly
+straight fwd thingy.
