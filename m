@@ -1,111 +1,72 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH 1/3] mmc: omap_hsmmc: Enable SDIO IRQ.
-Date: Tue, 12 Nov 2013 22:52:38 +0530
-Message-ID: <528263DE.2030001@ti.com>
-References: <1384200405-8402-1-git-send-email-afenkart@gmail.com> <1384200405-8402-2-git-send-email-afenkart@gmail.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2] input: ti_am33x_tsc: make the documentation for the
+ ti,wire-config parameter clear
+Date: Tue, 12 Nov 2013 18:40:01 +0100
+Message-ID: <20131112174001.GA21881@linutronix.de>
+References: <1384273323-15329-1-git-send-email-bigeasy@linutronix.de>
+ <5C68A2CC-A8C8-4B56-A414-B9EBE438F767@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384200405-8402-2-git-send-email-afenkart@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, zonque@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5C68A2CC-A8C8-4B56-A414-B9EBE438F767@codeaurora.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, o2g.org.ru@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 November 2013 01:36 AM, Andreas Fenkart wrote:
-> For now, only support SDIO interrupt if we are booted with
-> DT. This is because some platforms need special quirks. And
-> we don't want to add new legacy mux platform init code
-> callbacks any longer as we are moving to DT based booting
-> anyways.
->
-> Broken hardware, missing the swakueup line, should fallback
-> to polling, by setting 'ti,quirk-swakup-missing' in the
-> device tree. Otherwise pending SDIO IRQ are not detected
-> while in suspend. This affects am33xx processors.
->
-> For the DT-Binding portion:
-> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-> Acked-by: Kumar Gala <galak@codeaurora.org>
-> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
-> ---
->   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   18 ++++
->   drivers/mmc/host/omap_hsmmc.c                      |   86 ++++++++++++++++++--
->   2 files changed, 95 insertions(+), 9 deletions(-)
->
+The document says "first four bits" and means the upper nibble. Most
+people would probably agree that the first four bits are bits 0=E2=80=A6=
+3 and
+that is the lower nibble.
+This patch updates the documentation so it is clear what is meant.
 
-> +static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> +{
-> +	struct omap_hsmmc_host *host = mmc_priv(mmc);
-> +	u32 irq_mask;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&host->irq_lock, flags);
-> +
-Hi Andreas,
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v1=E2=80=A6v2:
+	- use most/least significant instead of upper/ lower nibble
+	- add an example.
 
-Thanks for the patch,
-You don't check for runtime pm status here before read/write to HSMMC registers,
-can you please explain ?
+ .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt    | 13 +++++=
++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-> +	irq_mask = OMAP_HSMMC_READ(host->base, ISE);
-> +	if (enable) {
-> +		host->flags |= HSMMC_SDIO_IRQ_ENABLED;
-> +		irq_mask |= CIRQ_EN;
-> +	} else {
-> +		host->flags &= ~HSMMC_SDIO_IRQ_ENABLED;
-> +		irq_mask &= ~CIRQ_EN;
-> +	}
-> +	OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
-> +
-> +	/*
-> +	 * if enable, piggy back detection on current request
-> +	 * but always disable immediately
-> +	 */
-> +	if (!host->req_in_progress || !enable)
-> +		OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +
-> +	/* flush posted write */
-> +	OMAP_HSMMC_READ(host->base, IE);
-> +
-> +	spin_unlock_irqrestore(&host->irq_lock, flags);
-> +}
-> +
->   static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
->   {
->   	u32 hctl, capa, value;
-> @@ -1635,7 +1687,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
->   	.get_cd = omap_hsmmc_get_cd,
->   	.get_ro = omap_hsmmc_get_ro,
->   	.init_card = omap_hsmmc_init_card,
-> -	/* NYET -- enable_sdio_irq */
-> +	.enable_sdio_irq = omap_hsmmc_enable_sdio_irq,
->   };
->
->   #ifdef CONFIG_DEBUG_FS
-> @@ -2021,6 +2073,22 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->   		dev_warn(&pdev->dev,
->   			"pins are not configured from the driver\n");
->
-> +	/*
-> +	 * For now, only support SDIO interrupt if we are booted with
-> +	 * DT. This is because some platforms need special quirks. And
-> +	 * we don't want to add new legacy mux platform init code
-> +	 * callbacks any longer as we are moving to DT based booting
-> +	 * anyways.
-> +	 */
-> +	if (pdev->dev.of_node) {
-> +		mmc->caps |= MMC_CAP_SDIO_IRQ;
-> +		if (of_find_property(host->dev->of_node,
-> +				     "ti,quirk-swakeup-missing", NULL)) {
-> +			/* no wakeup from deeper power states, use polling */
-> +			mmc->caps &= ~MMC_CAP_SDIO_IRQ;
-> +		}
-> +	}
-> +
->   	omap_hsmmc_protect_card(host);
->
->   	mmc_add_host(mmc);
->
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc=
+-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-a=
+dc.txt
+index 491c97b..b25a2fe 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
++++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
+@@ -17,13 +17,16 @@
+ 				remaining 4 can be used by the ADC.
+ 	ti,wire-config: Different boards could have a different order for
+ 			connecting wires on touchscreen. We need to provide an
+-			8 bit number where in the 1st four bits represent the
+-			analog lines and the next 4 bits represent positive/
+-			negative terminal on that input line. Notations to
+-			represent the input lines and terminals resoectively
+-			is as follows:
++			8 bit number where the most significant nibble represent
++			the analog lines and the least significant nibble
++			represent positive/ negative terminal on that input
++			line. Notations to represent the input lines and
++			terminals resoectively is as follows:
+ 			AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
+ 			XP  =3D 0, XN =3D 1, YP =3D 2, YN =3D 3.
++
++			Example: ti,wire-config =3D <0x71>;
++			=3D> line AIN7, configuration XN
+ - child "adc"
+ 	ti,adc-channels: List of analog inputs available for ADC.
+ 			 AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
+--=20
+1.8.4.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
