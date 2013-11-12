@@ -1,192 +1,352 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Tue, 12 Nov 2013 14:56:19 +0100
-Message-ID: <2125485.bADiXuUshN@avalon>
-References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <36428164.RsQCj0nRsc@avalon> <20131111154849.GJ21201@e106331-lin.cambridge.arm.com>
+From: <srinivas.kandagatla@st.com>
+Subject: [PATCH RFC 01/10] drivers: reset: STi SoC system configuration reset controller support
+Date: Tue, 12 Nov 2013 13:52:18 +0000
+Message-ID: <1384264338-7353-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131111154849.GJ21201@e106331-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: grant.likely@linaro.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, stephen.gallimore@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+From: Stephen Gallimore <stephen.gallimore@st.com>
 
-On Monday 11 November 2013 15:48:49 Mark Rutland wrote:
-> On Mon, Nov 11, 2013 at 01:26:11PM +0000, Laurent Pinchart wrote:
-> > Hi Mark,
-> > 
-> > Thank you for the quick and detailed review.
-> > 
-> > On Monday 11 November 2013 09:40:39 Mark Rutland wrote:
-> > > Hi Laurent,
-> > > 
-> > > I have a few comments.
-> > > 
-> > > On Sun, Nov 10, 2013 at 03:33:40AM +0000, Laurent Pinchart wrote:
-> > > > Document the device tree bindings for the sci serial port devices.
-> > > > 
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Laurent Pinchart
-> > > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > > Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> > > > ---
-> > > > 
-> > > >  .../bindings/serial/renesas,sci-serial.txt         | 42 +++++++++++++
-> > > >  1 file changed, 42 insertions(+)
-> > > >  create mode 100644
-> > > >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt>
-> > > > 
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > > > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt new
-> > > > file mode 100644
-> > > > index 0000000..66d3bca
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > > > @@ -0,0 +1,42 @@
-> > > > +* Renesas SH-Mobile Serial Communication Interface
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > +  - compatible: one of the following types (scif, scifa, scifb,
-> > > > hscif).
-> > > 
-> > > Minor nit, but would be nice to have "Should contain one of the
-> > > following:". We might have future variants whereby the compatible string
-> > > will actually be a string list.
-> > 
-> > Sure, I can do that.
-> > 
-> > > > +
-> > > > +    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible
-> > > > UART.
-> > > > +    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible
-> > > > UART. +    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB
-> > > > compatible UART. +    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2)
-> > > > HSCIF compatible UART. +    - "renesas,scif-generic" for generic SCIF
-> > > > compatible UART.
-> > > > +    - "renesas,scifa-generic" for generic SCIFA compatible UART.
-> > > > +    - "renesas,scifb-generic" for generic SCIFB compatible UART.
-> > > > +    - "renesas,hscif-generic" for generic HSCIF compatible UART.
-> > > 
-> > > Is the "-generic" suffix necessary? Why not just "renesas,scif" etc?
-> > 
-> > You're right, I'll remove the suffix.
-> > 
-> > > > +
-> > > > +    When compatible with the generic version, nodes must also list
-> > > > the
-> > > > +    SoC-specific version corresponding to the platform.
-> > > 
-> > > Presumably the SoC-specific version should come first; it would be nice
-> > > to note that.
-> > 
-> > Indeed, I'll do so.
-> > 
-> > > > +
-> > > > +  - reg: Base address and length of the memory resource used by the
-> > > > UART.
-> > > 
-> > > I assume by memory resource you mean the memory-mapped registers?
-> > > Resource sounds like Linux-internal nomenclature leaking.
-> > 
-> > I'll fix it as well, although we could decide on a definition of
-> > "resource" that isn't Linux-specific :-)
-> 
-> We could, I guess. For the moment I'd prefer to point out that these are
-> MMIO registers :)
-> 
-> > > > +
-> > > > +  - interrupt-parent: Reference to the parent interrupt controller.
-> > > 
-> > > I don't think this is strictly necessary. It's implicit by default and
-> > > can be added optionally when a system is wired in a complex way. As it's
-> > > a completely standard optional property I'm not even sure it needs to be
-> > > documented.
-> > > 
-> > > > +  - interrupts: Interrupt number.
-> > > 
-> > > Minor nit: "Should contain an interrupt-specifier for ..."
-> > > 
-> > > I saw the cover mentioned multiple interrupts. Which logical interrupt
-> > > output of the device are you expecting here?
-> > 
-> > SCI devices come in several flavours, with individual interrupt sources
-> > wired up to different interrupt lines, or multiplexed all together. As
-> > the DT bindings support the later only at the moment, there's only a
-> > single interrupt to handle.
-> 
-> Ok. If the binding just covers the muxed interrupt for now that's fine.
-> We can add interrupt-names later when we support multiple interrupts
-> (and fall back to assuming muxed when no interrupt-names property is
-> present).
+This patch adds a reset controller implementation for STMicroelectronics
+STi family SoCs; it allows a group of related reset like controls found
+in multiple system configuration registers to be represented by a single
+controller device. System configuration registers are accessed through
+the regmap framework and the mfd/syscon driver.
 
-That was my plan, good.
+The implementation optionally supports waiting for the reset action to
+be acknowledged in a separate status register and supports both
+active high and active low reset lines. These properties are common across
+all the reset channels in a specific reset controller instance, hence
+all channels in a paritcular controller are expected to behave in the
+same way.
 
-> > Should we come up with a standard way of saying in the bindings that a
-> > device uses the interrupt bindings defined in
-> > interrupt-controller/interrupts.txt ? This will become even more
-> > important with the interrupts-extended property, we don't want every DT
-> > bindings document to detail all possible way to specify interrupts.
-> 
-> It would certainly be nice to have a standard way of doing just that.
-> I'd hope that with the schema work going on that would fall into place
-> automatically, so perhaps it's not worth doing now.
+Signed-off-by: Stephen Gallimore <stephen.gallimore@st.com>
+---
+ drivers/reset/Kconfig            |    2 +
+ drivers/reset/Makefile           |    3 +
+ drivers/reset/sti/Kconfig        |    7 ++
+ drivers/reset/sti/Makefile       |    1 +
+ drivers/reset/sti/reset-syscfg.c |  186 ++++++++++++++++++++++++++++++++++++++
+ drivers/reset/sti/reset-syscfg.h |   69 ++++++++++++++
+ 6 files changed, 268 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/reset/sti/Kconfig
+ create mode 100644 drivers/reset/sti/Makefile
+ create mode 100644 drivers/reset/sti/reset-syscfg.c
+ create mode 100644 drivers/reset/sti/reset-syscfg.h
 
-Fine with me.
-
-> > > > +
-> > > > +  - clocks: Reference to the SCIx UART interface clock.
-> > > 
-> > > Minor nit: s/Reference to/A phandle + clock-specifier pair for/
-> > > 
-> > > > +  - clock-names: Should be "sci_ick".
-> > > 
-> > > As we're using clock-names, it would be nicer still to define clocks in
-> > > terms of clock-names so as to make it easier to update the document in
-> > > future and make the expected use of clock-names clearer:
-> > > 
-> > > - clocks: Should
-> > 
-> > "Should", or "must" ?
-> 
-> I don't expect the format of clocks and the relationship to clock-names
-> to change, so "must" is likely more appropriate. I'm just too used to
-> writing "should"...
-
-Are "Should" and "Must" to be interpreted as described in 
-http://tools.ietf.org/html/rfc2119 ?
-
-1. MUST   This word, or the terms "REQUIRED" or "SHALL", mean that the
-   definition is an absolute requirement of the specification.
-
-3. SHOULD   This word, or the adjective "RECOMMENDED", mean that there
-   may exist valid reasons in particular circumstances to ignore a
-   particular item, but the full implications must be understood and
-   carefully weighed before choosing a different course.
-
-If so, shouldn't we use "Must" in most places ?
-
-> > > contain a phandle + clock-specifier pair for each entry
-> > > 
-> > >   in clock-names.
-> > > 
-> > > - clock-names: Should contain "sci_ick".
-> > 
-> > Shouldn't that be
-> > 
-> > "Should contain "sci_ick" for the SCIx UART interface clock."
-> > 
-> > ? Otherwise the bindings wouldn't tell which clock the clocks property
-> > should reference.
-> 
-> Yes, that sounds much better.
-
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index c9d04f7..0615f50 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -11,3 +11,5 @@ menuconfig RESET_CONTROLLER
+ 	  via GPIOs or SoC-internal reset controller modules.
+ 
+ 	  If unsure, say no.
++
++source "drivers/reset/sti/Kconfig"
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 1e2d83f..2b2a57c 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1 +1,4 @@
+ obj-$(CONFIG_RESET_CONTROLLER) += core.o
++
++# SoC specific
++obj-$(CONFIG_ARCH_STI) += sti/
+diff --git a/drivers/reset/sti/Kconfig b/drivers/reset/sti/Kconfig
+new file mode 100644
+index 0000000..ba13796
+--- /dev/null
++++ b/drivers/reset/sti/Kconfig
+@@ -0,0 +1,7 @@
++if ARCH_STI
++
++config STI_RESET_SYSCFG
++	bool
++	select RESET_CONTROLLER
++
++endif
+diff --git a/drivers/reset/sti/Makefile b/drivers/reset/sti/Makefile
+new file mode 100644
+index 0000000..c4a51d9
+--- /dev/null
++++ b/drivers/reset/sti/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_STI_RESET_SYSCFG) += reset-syscfg.o
+diff --git a/drivers/reset/sti/reset-syscfg.c b/drivers/reset/sti/reset-syscfg.c
+new file mode 100644
+index 0000000..a145cc0
+--- /dev/null
++++ b/drivers/reset/sti/reset-syscfg.c
+@@ -0,0 +1,186 @@
++/*
++ * Copyright (C) 2013 STMicroelectronics Limited
++ * Author: Stephen Gallimore <stephen.gallimore@st.com>
++ *
++ * Inspired by mach-imx/src.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/types.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#include "reset-syscfg.h"
++
++/**
++ * Reset channel regmap configuration
++ *
++ * @reset: regmap field for the channel's reset bit.
++ * @ack: regmap field for the channel's ack bit (optional).
++ */
++struct syscfg_reset_channel {
++	struct regmap_field *reset;
++	struct regmap_field *ack;
++};
++
++/**
++ * A reset controller which groups together a set of related reset bits, which
++ * may be located in different system configuration registers.
++ *
++ * @rst: base reset controller structure.
++ * @active_low: are the resets in this controller active low, i.e. clearing
++ *              the reset bit puts the hardware into reset.
++ * @channels: An array of reset channels for this controller.
++ */
++struct syscfg_reset_controller {
++	struct reset_controller_dev rst;
++	bool active_low;
++	struct syscfg_reset_channel *channels;
++};
++
++#define to_syscfg_reset_controller(_rst) \
++	container_of(_rst, struct syscfg_reset_controller, rst)
++
++static int syscfg_reset_program_hw(struct reset_controller_dev *rcdev,
++				   unsigned long idx, int assert)
++{
++	struct syscfg_reset_controller *rst = to_syscfg_reset_controller(rcdev);
++	const struct syscfg_reset_channel *ch;
++	u32 ctrl_val = rst->active_low ? !assert : !!assert;
++	int err;
++
++	if (idx >= rcdev->nr_resets)
++		return -EINVAL;
++
++	ch = &rst->channels[idx];
++
++	err = regmap_field_write(ch->reset, ctrl_val);
++	if (err)
++		return err;
++
++	if (ch->ack) {
++		unsigned long timeout = jiffies + msecs_to_jiffies(1000);
++		u32 ack_val;
++
++		while (true) {
++			err = regmap_field_read(ch->ack, &ack_val);
++			if (err)
++				return err;
++
++			if (ack_val == ctrl_val)
++				break;
++
++			if (time_after(jiffies, timeout))
++				return -ETIME;
++
++			cpu_relax();
++		}
++	}
++
++	return 0;
++}
++
++static int syscfg_reset_assert(struct reset_controller_dev *rcdev,
++			       unsigned long idx)
++{
++	return syscfg_reset_program_hw(rcdev, idx, true);
++}
++
++static int syscfg_reset_deassert(struct reset_controller_dev *rcdev,
++				 unsigned long idx)
++{
++	return syscfg_reset_program_hw(rcdev, idx, false);
++}
++
++static int syscfg_reset_dev(struct reset_controller_dev *rcdev,
++			    unsigned long idx)
++{
++	int err = syscfg_reset_assert(rcdev, idx);
++	if (err)
++		return err;
++
++	return syscfg_reset_deassert(rcdev, idx);
++}
++
++static struct reset_control_ops syscfg_reset_ops = {
++	.reset    = syscfg_reset_dev,
++	.assert   = syscfg_reset_assert,
++	.deassert = syscfg_reset_deassert,
++};
++
++static int syscfg_reset_controller_register(struct device *dev,
++				const struct syscfg_reset_controller_data *data)
++{
++	struct syscfg_reset_controller *rc;
++	size_t size;
++	int i, err;
++
++	rc = devm_kzalloc(dev, sizeof(*rc), GFP_KERNEL);
++	if (!rc)
++		return -ENOMEM;
++
++	size = sizeof(struct syscfg_reset_channel) * data->nr_channels;
++
++	rc->channels = devm_kzalloc(dev, size, GFP_KERNEL);
++	if (!rc->channels)
++		return -ENOMEM;
++
++	rc->rst.ops = &syscfg_reset_ops,
++	rc->rst.of_node = dev->of_node;
++	rc->rst.nr_resets = data->nr_channels;
++	rc->active_low = data->active_low;
++
++	for (i = 0; i < data->nr_channels; i++) {
++		struct regmap *map;
++		struct regmap_field *f;
++		const char *compatible = data->channels[i].compatible;
++
++		map = syscon_regmap_lookup_by_compatible(compatible);
++		if (IS_ERR(map))
++			return PTR_ERR(map);
++
++		f = devm_regmap_field_alloc(dev, map, data->channels[i].reset);
++		if (IS_ERR(f))
++			return PTR_ERR(f);
++
++		rc->channels[i].reset = f;
++
++		if (!data->wait_for_ack)
++			continue;
++
++		f = devm_regmap_field_alloc(dev, map, data->channels[i].ack);
++		if (IS_ERR(f))
++			return PTR_ERR(f);
++
++		rc->channels[i].ack = f;
++	}
++
++	err = reset_controller_register(&rc->rst);
++	if (!err)
++		dev_info(dev, "registered\n");
++
++	return err;
++}
++
++int syscfg_reset_probe(struct platform_device *pdev)
++{
++	struct device *dev = pdev ? &pdev->dev : NULL;
++	const struct of_device_id *match;
++
++	if (!dev || !dev->driver)
++		return -ENODEV;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++	if (!match || !match->data)
++		return -EINVAL;
++
++	return syscfg_reset_controller_register(dev, match->data);
++}
+diff --git a/drivers/reset/sti/reset-syscfg.h b/drivers/reset/sti/reset-syscfg.h
+new file mode 100644
+index 0000000..2cc2283
+--- /dev/null
++++ b/drivers/reset/sti/reset-syscfg.h
+@@ -0,0 +1,69 @@
++/*
++ * Copyright (C) 2013 STMicroelectronics (R&D) Limited
++ * Author: Stephen Gallimore <stephen.gallimore@st.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __STI_RESET_SYSCFG_H
++#define __STI_RESET_SYSCFG_H
++
++#include <linux/device.h>
++#include <linux/regmap.h>
++#include <linux/reset-controller.h>
++
++/**
++ * Reset channel description for a system configuration register based
++ * reset controller.
++ *
++ * @compatible: Compatible string of the syscon regmap containing this
++ *              channel's control and ack (status) bits.
++ * @reset: Regmap field description of the channel's reset bit.
++ * @ack: Regmap field description of the channel's acknowledge bit.
++ */
++struct syscfg_reset_channel_data {
++	const char *compatible;
++	struct reg_field reset;
++	struct reg_field ack;
++};
++
++#define _SYSCFG_RST_CH(_c, _rr, _rb, _ar, _ab)		\
++	{ .compatible	= _c,				\
++	  .reset	= REG_FIELD(_rr, _rb, _rb),	\
++	  .ack		= REG_FIELD(_ar, _ab, _ab), }
++
++#define _SYSCFG_RST_CH_NO_ACK(_c, _rr, _rb)		\
++	{ .compatible	= _c,			\
++	  .reset	= REG_FIELD(_rr, _rb, _rb), }
++
++/**
++ * Description of a system configuration register based reset controller.
++ *
++ * @wait_for_ack: The controller will wait for reset assert and de-assert to
++ *                be "ack'd" in a channel's ack field.
++ * @active_low: Are the resets in this controller active low, i.e. clearing
++ *              the reset bit puts the hardware into reset.
++ * @nr_channels: The number of reset channels in this controller.
++ * @channels: An array of reset channel descriptions.
++ */
++struct syscfg_reset_controller_data {
++	bool wait_for_ack;
++	bool active_low;
++	int nr_channels;
++	const struct syscfg_reset_channel_data *channels;
++};
++
++/**
++ * syscfg_reset_probe(): platform device probe function used by syscfg
++ *                       reset controller drivers. This registers a reset
++ *                       controller configured by the OF match data for
++ *                       the compatible device which should be of type
++ *                       "struct syscfg_reset_controller_data".
++ *
++ * @pdev: platform device
++ */
++int syscfg_reset_probe(struct platform_device *pdev);
++
++#endif /* __STI_RESET_SYSCFG_H */
 -- 
-Regards,
+1.7.6.5
 
-Laurent Pinchart
