@@ -1,41 +1,48 @@
-From: =?iso-8859-15?q?J=FCrgen_Beisert?= <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] DT: Add binding for Altera FPGAs in passive-serial mode
-Date: Tue, 12 Nov 2013 15:51:15 +0100
-Message-ID: <201311121551.15343.jbe@pengutronix.de>
-References: <1384266701-12608-1-git-send-email-s.hauer@pengutronix.de> <1384266701-12608-4-git-send-email-s.hauer@pengutronix.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Tue, 12 Nov 2013 09:51:08 -0500
+Message-ID: <20131112145108.GQ10335@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <52814AFB.3070600@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384266701-12608-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <52814AFB.3070600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 November 2013 15:31:40 Sascha Hauer wrote:
-> [...]
-> +Required properties:
-> +- compatible: shall be "altr,passive-serial"
-> +- reg: SPI chip select
-> +- nstat-gpio: Specify GPIO for controlling the nstat pin
-> +- confd-gpio: Specify GPIO for controlling the confd pin
-> +- nconfig-gpio: Specify GPIO for controlling the nconfig pin
+On Mon, Nov 11, 2013 at 02:24:11PM -0700, Stephen Warren wrote:
+> On 11/11/2013 01:29 PM, Jason Cooper wrote:
+> > Consumers of the Linux kernel's build products are beginning to hardcode
+> > the filenames of the dtbs generated.  Since the dtb filenames are
+> > currently the dts filename s/dts/dtb/, this prevents the kernel
+> > community from renaming dts files as needed.
+> 
+> My take is that the DTB filenames are part of the ABI, and therefore the
+> DTS filenames are also part of the ABI. Why would we want to rename them?
 
-A suggestion was to use the genuine signal names at the FPGA side:
+This idea originated from a conversation with Olof about starting to
+pre-pend the manufacturer name to the dts files:
 
- "nstatus", "config-done" and "nconfig" (all with the trailing "-gpio")
+  https://lkml.org/lkml/2013/11/8/378
 
-jbe
+imho, at some point there is going to be an ABI breakage wrt dtb names
+when the devicetree moves to a separate repository.  All users will have
+to rework their scripts at that point.
 
---=20
-Pengutronix e.K. =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| Juergen Beisert =A0 =A0 =A0 =A0 =A0 =A0 |
-Linux Solutions for Science and Industry =A0 =A0 =A0| http://www.pengut=
-ronix.de/  |
+If that assumption is correct, why not put in place a _good_ ABI that
+allows us to be flexible as needed and specific for end users?  If you're
+still with me on this idea, shouldn't we put this in place now (as
+symlinks, thus retaining old names) so that we can switch over more
+easily later?
+
+thx,
+
+Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
