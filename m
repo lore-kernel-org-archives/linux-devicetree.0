@@ -1,122 +1,122 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 4/8] staging: imx-drm: Add RGB666 support for parallel display.
-Date: Tue, 12 Nov 2013 17:49:21 +0100
-Message-ID: <1384274965-30549-4-git-send-email-denis@eukrea.com>
-References: <1384274965-30549-1-git-send-email-denis@eukrea.com>
+From: Adam Borowski <kilobyte@angband.pl>
+Subject: [PATCH] powerpc/85xx: typo in dts: "interupt" (four devices)
+Date: Tue, 12 Nov 2013 17:56:51 +0100
+Message-ID: <1384275411-18314-1-git-send-email-kilobyte@angband.pl>
+References: <20131112091128.GA2976@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384274965-30549-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20131112091128.GA2976@e106331-lin.cambridge.arm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Mark Rutland <mark.rutland@arm.com>, rob.herring@calxeda.com, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Adam Borowski <kilobyte@angband.pl>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v2->v3:
-- Added some interested people in the Cc list.
-- Removed the commit message long desciption that was just a copy of th=
-e short
-  description.
-- Rebased the patch.
-- Fixed a copy-paste error in the ipu_dc_map_clear parameter.
----
- .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    2 +-
- drivers/staging/imx-drm/ipu-v3/ipu-dc.c            |    9 +++++++++
- drivers/staging/imx-drm/parallel-display.c         |    2 ++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+These lines were inoperative for four years, which puts some doubt into
+their importance, and it's possible the fixed version will regress, but
+at the very least they should be removed instead.
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-=
-drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm=
-=2Etxt
-index b876d49..2d24425 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-@@ -29,7 +29,7 @@ Required properties:
- - crtc: the crtc this display is connected to, see below
- Optional properties:
- - interface_pix_fmt: How this display is connected to the
--  crtc. Currently supported types: "rgb24", "rgb565", "bgr666"
-+  crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb66=
-6"
- - edid: verbatim EDID data block describing attached display.
- - ddc: phandle describing the i2c bus handling the display data
-   channel
-diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/staging/=
-imx-drm/ipu-v3/ipu-dc.c
-index d0e3bc3..bcc7680 100644
---- a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-+++ b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-@@ -92,6 +92,7 @@ enum ipu_dc_map {
- 	IPU_DC_MAP_GBR24, /* TVEv2 */
- 	IPU_DC_MAP_BGR666,
- 	IPU_DC_MAP_BGR24,
-+	IPU_DC_MAP_RGB666,
- };
-=20
- struct ipu_dc {
-@@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
- 		return IPU_DC_MAP_BGR666;
- 	case V4L2_PIX_FMT_BGR24:
- 		return IPU_DC_MAP_BGR24;
-+	case V4L2_PIX_FMT_RGB666:
-+		return IPU_DC_MAP_RGB666;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -404,6 +407,12 @@ int ipu_dc_init(struct ipu_soc *ipu, struct device=
- *dev,
- 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 1, 15, 0xff); /* green */
- 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 0, 23, 0xff); /* blue */
-=20
-+	/* rgb666 */
-+	ipu_dc_map_clear(priv, IPU_DC_MAP_RGB666);
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 2, 17, 0xfc); /* red */
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 1, 11, 0xfc); /* green */
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 0, 5, 0xfc); /* blue */
-+
- 	return 0;
- }
-=20
-diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/stagi=
-ng/imx-drm/parallel-display.c
-index 24aa9be..bb71d6d 100644
---- a/drivers/staging/imx-drm/parallel-display.c
-+++ b/drivers/staging/imx-drm/parallel-display.c
-@@ -222,6 +222,8 @@ static int imx_pd_probe(struct platform_device *pde=
-v)
- 			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_RGB565;
- 		else if (!strcmp(fmt, "bgr666"))
- 			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_BGR666;
-+		else if (!strcmp(fmt, "rgb666"))
-+			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_RGB666;
- 	}
-=20
- 	imxpd->dev =3D &pdev->dev;
---=20
-1.7.9.5
+Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+---
+ arch/powerpc/boot/dts/xcalibur1501.dts | 4 ++--
+ arch/powerpc/boot/dts/xpedite5301.dts  | 4 ++--
+ arch/powerpc/boot/dts/xpedite5330.dts  | 4 ++--
+ arch/powerpc/boot/dts/xpedite5370.dts  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
+index cc00f4d..c409cba 100644
+--- a/arch/powerpc/boot/dts/xcalibur1501.dts
++++ b/arch/powerpc/boot/dts/xcalibur1501.dts
+@@ -637,14 +637,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5301.dts b/arch/powerpc/boot/dts/xpedite5301.dts
+index 53c1c6a..04cb410 100644
+--- a/arch/powerpc/boot/dts/xpedite5301.dts
++++ b/arch/powerpc/boot/dts/xpedite5301.dts
+@@ -547,14 +547,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5330.dts b/arch/powerpc/boot/dts/xpedite5330.dts
+index 2152259..73f8620 100644
+--- a/arch/powerpc/boot/dts/xpedite5330.dts
++++ b/arch/powerpc/boot/dts/xpedite5330.dts
+@@ -583,14 +583,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/xpedite5370.dts b/arch/powerpc/boot/dts/xpedite5370.dts
+index 11dbda1..cd0ea2b 100644
+--- a/arch/powerpc/boot/dts/xpedite5370.dts
++++ b/arch/powerpc/boot/dts/xpedite5370.dts
+@@ -545,14 +545,14 @@
+ 		tlu@2f000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x2f000 0x1000>;
+-			interupts = <61 2 >;
++			interrupts = <61 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+ 		tlu@15000 {
+ 			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
+ 			reg = <0x15000 0x1000>;
+-			interupts = <75 2>;
++			interrupts = <75 2>;
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 	};
+-- 
+1.8.5.rc0
