@@ -1,61 +1,64 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Input: Add new driver for GPIO beeper
-Date: Tue, 12 Nov 2013 10:15:44 +0000
-Message-ID: <20131112101544.GD2976@e106331-lin.cambridge.arm.com>
-References: <1384250833-4600-1-git-send-email-shc_work@mail.ru>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH 2/2] ARM: dts: Update display clock frequency for
+ Origen-4412
+Date: Tue, 12 Nov 2013 19:17:45 +0900
+Message-ID: <085801cedf90$6e2a6580$4a7f3080$@org>
+References: <1380171018-24229-1-git-send-email-sachin.kamat@linaro.org>
+ <1380171018-24229-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384250833-4600-1-git-send-email-shc_work@mail.ru>
-Sender: linux-input-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1380171018-24229-2-git-send-email-sachin.kamat@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: tushar.behera@linaro.org, patches@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 10:07:13AM +0000, Alexander Shiyan wrote:
-> This patch adds a new driver for the beeper controlled via GPIO pin.
-> The driver does not depend on the architecture and is positioned as
-> a replacement for the specific drivers that are used for this function.
+Sachin Kamat wrote:
 > 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
++ dt ml.
+
+> As per the timing information for supported panel, the value should
+> be between 47.2 MHz to 47.9 MHz for 60Hz refresh rate.
+> 
+> Total horizontal pixels = 1024 (x-res) + 80 (margin) + 48 (hsync) = 1152
+> Total vertical pixels = 600 (y-res) + 80 (margin) + 3 (vsync) = 653
+
+Should be 683?
+
+> 
+> Target pixel clock rate for refresh rate @60 Hz
+> 	= 1152 * 653 * 60 = 47208960 Hz ~ 47.5 MHz
+> 
+Same here.
+
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > ---
->  .../devicetree/bindings/input/gpio-beeper.txt      |  15 +++
->  drivers/input/misc/Kconfig                         |   9 ++
->  drivers/input/misc/Makefile                        |   1 +
->  drivers/input/misc/gpio-beeper.c                   | 129 +++++++++++++++++++++
->  4 files changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/gpio-beeper.txt
->  create mode 100644 drivers/input/misc/gpio-beeper.c
+>  arch/arm/boot/dts/exynos4412-origen.dts |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/input/gpio-beeper.txt b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> new file mode 100644
-> index 0000000..8081605
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> @@ -0,0 +1,15 @@
-> +* GPIO beeper device tree bindings
-> +
-> +Registers a beeper connected to GPIO pin.
-> +
-> +Required properties:
-> +- compatible:	should be "gpio-beeper".
-> +- gpios:	From common gpio binding; gpio connection to beeper enable pin.
-> +
-> +Example:
-> +
-> +beeper: input@0 {
-> +	compatible = "gpio-beeper";
-> +	reg = <0>;
-> +	gpios = <&gpio3 23 0>;
-> +};
+> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts
+> b/arch/arm/boot/dts/exynos4412-origen.dts
+> index 8768b03..923bcd7 100644
+> --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> @@ -152,7 +152,7 @@
+>  	display-timings {
+>  		native-mode = <&timing0>;
+>  		timing0: timing {
+> -			clock-frequency = <50000>;
+> +			clock-frequency = <47500000>;
+>  			hactive = <1024>;
+>  			vactive = <600>;
+>  			hfront-porch = <64>;
+> --
+> 1.7.9.5
 
-What are the reg / unit-address for?
+Please make sure it works fine on both origen boards with your two fixes.
 
-Also, a beeper doesn't strike me as an input device, regardless of how
-the kernel sees it internally. I'd expect the node to just be named
-"beeper" or something along those lines.
+If so, let me pick them up into Samsung tree after squash into one patch.
 
-Otherwise I believe this looks sane.
-
-Mark.
+Thanks,
+Kukjin
