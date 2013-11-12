@@ -1,111 +1,237 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH] ARM: dts: Add SPI nodes to the exynos5420 device tree file
-Date: Tue, 12 Nov 2013 20:16:44 +0900
-Message-ID: <086701cedf98$ab9d9f60$02d8de20$@org>
-References: <1377856637-7595-1-git-send-email-l.krishna@samsung.com>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 1/3] mmc: omap_hsmmc: Enable SDIO IRQ.
+Date: Tue, 12 Nov 2013 12:23:28 +0100
+Message-ID: <CAOf5uwm9s2S4YxsAAa3h0fG3RyZgd4f9pqMu=thra1Wdzm8BNA@mail.gmail.com>
+References: <1384200405-8402-1-git-send-email-afenkart@gmail.com>
+	<1384200405-8402-2-git-send-email-afenkart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1377856637-7595-1-git-send-email-l.krishna@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Leela Krishna Amudala' <l.krishna@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, dianders@chromium.org, abrestic@chromium.org, t.figa@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384200405-8402-2-git-send-email-afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Leela Krishna Amudala  wrote:
-> 
-> Add SPI device tree nodes to Exynos5420 SoC
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+Hi Andreas
+
+On Mon, Nov 11, 2013 at 9:06 PM, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> For now, only support SDIO interrupt if we are booted with
+> DT. This is because some platforms need special quirks. And
+> we don't want to add new legacy mux platform init code
+> callbacks any longer as we are moving to DT based booting
+> anyways.
+>
+> Broken hardware, missing the swakueup line, should fallback
+> to polling, by setting 'ti,quirk-swakup-missing' in the
+> device tree. Otherwise pending SDIO IRQ are not detected
+> while in suspend. This affects am33xx processors.
+>
+> For the DT-Binding portion:
+> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Note: This patch is rebased on Kgene's for-next branch and is dependent on
-> [V3] ARM: dts: Add DMA controller node info on Exynos5420.
-> https://patchwork.kernel.org/patch/2851790/
-> 
->  arch/arm/boot/dts/exynos5420.dtsi |   51
-> +++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
-> b/arch/arm/boot/dts/exynos5420.dtsi
-> index 15465f8..8d9e980 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -27,6 +27,9 @@
->  		pinctrl2 = &pinctrl_2;
->  		pinctrl3 = &pinctrl_3;
->  		pinctrl4 = &pinctrl_4;
-> +		spi0 = &spi_0;
-> +		spi1 = &spi_1;
-> +		spi2 = &spi_2;
->  	};
-> 
->  	cpus {
-> @@ -238,6 +241,54 @@
->  		};
->  	};
-> 
-> +	spi_0: spi@12d20000 {
-> +		compatible = "samsung,exynos4210-spi";
-> +		reg = <0x12d20000 0x100>;
-> +		interrupts = <0 66 0>;
-> +		dmas = <&pdma0 5
-> +			&pdma0 4>;
-> +		dma-names = "tx", "rx";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spi0_bus>;
-> +		clocks = <&clock 271>, <&clock 135>;
-> +		clock-names = "spi", "spi_busclk0";
-> +		status = "disabled";
-> +	};
+
+I think that you should add patch revision, change log description.
+
+Michael
+
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   18 ++++
+>  drivers/mmc/host/omap_hsmmc.c                      |   86 ++++++++++++++++++--
+>  2 files changed, 95 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index ed271fc..1136e6b 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -20,6 +20,24 @@ ti,dual-volt: boolean, supports dual voltage cards
+>  ti,non-removable: non-removable slot (like eMMC)
+>  ti,needs-special-reset: Requires a special softreset sequence
+>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+> +ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
+> +SDIO irq while in suspend. Fallback to polling. Affected chips are
+> +am335x,
 > +
-> +	spi_1: spi@12d30000 {
-> +		compatible = "samsung,exynos4210-spi";
-> +		reg = <0x12d30000 0x100>;
-> +		interrupts = <0 67 0>;
-> +		dmas = <&pdma1 5
-> +			&pdma1 4>;
-> +		dma-names = "tx", "rx";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spi1_bus>;
-> +		clocks = <&clock 272>, <&clock 136>;
-> +		clock-names = "spi", "spi_busclk0";
-> +		status = "disabled";
-> +	};
+> +                            ------
+> +                            | PRCM |
+> +                             ------
+> +                              ^ |
+> +                      swakeup | | fclk
+> +                              | v
+> +      ------                -------               -----
+> +     | card | -- CIRQ -->  | hsmmc | -- IRQ -->  | CPU |
+> +      ------                -------               -----
 > +
-> +	spi_2: spi@12d40000 {
-> +		compatible = "samsung,exynos4210-spi";
-> +		reg = <0x12d40000 0x100>;
-> +		interrupts = <0 68 0>;
-> +		dmas = <&pdma0 7
-> +			&pdma0 6>;
-> +		dma-names = "tx", "rx";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spi2_bus>;
-> +		clocks = <&clock 273>, <&clock 137>;
-> +		clock-names = "spi", "spi_busclk0";
-> +		status = "disabled";
-> +	};
+> +In suspend the fclk is off and the module is disfunctional. Even
+> +register reads will fail. A small logic in the host will request fclk
+> +restore, when an external event is detected. Once the clock is
+> +restored, the host detects the event normally.
+>
+>  Example:
+>         mmc1: mmc@0x4809c000 {
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index b392130..6b0ec55 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -130,6 +130,7 @@ static void apply_clk_hack(struct device *dev)
+>  #define TC_EN                  (1 << 1)
+>  #define BWR_EN                 (1 << 4)
+>  #define BRR_EN                 (1 << 5)
+> +#define CIRQ_EN                        (1 << 8)
+>  #define ERR_EN                 (1 << 15)
+>  #define CTO_EN                 (1 << 16)
+>  #define CCRC_EN                        (1 << 17)
+> @@ -210,6 +211,9 @@ struct omap_hsmmc_host {
+>         int                     reqs_blocked;
+>         int                     use_reg;
+>         int                     req_in_progress;
+> +       int                     flags;
+> +#define HSMMC_SDIO_IRQ_ENABLED (1 << 0)        /* SDIO irq enabled */
 > +
->  	serial@12C00000 {
->  		clocks = <&clock 257>, <&clock 128>;
->  		clock-names = "uart", "clk_uart_baud0";
+>         struct omap_hsmmc_next  next_data;
+>         struct  omap_mmc_platform_data  *pdata;
+>  };
+> @@ -490,27 +494,40 @@ static void omap_hsmmc_stop_clock(struct omap_hsmmc_host *host)
+>  static void omap_hsmmc_enable_irq(struct omap_hsmmc_host *host,
+>                                   struct mmc_command *cmd)
+>  {
+> -       unsigned int irq_mask;
+> +       u32 irq_mask = INT_EN_MASK;
+> +       unsigned long flags;
+>
+>         if (host->use_dma)
+> -               irq_mask = INT_EN_MASK & ~(BRR_EN | BWR_EN);
+> -       else
+> -               irq_mask = INT_EN_MASK;
+> +               irq_mask &= ~(BRR_EN | BWR_EN);
+>
+>         /* Disable timeout for erases */
+>         if (cmd->opcode == MMC_ERASE)
+>                 irq_mask &= ~DTO_EN;
+>
+> +       spin_lock_irqsave(&host->irq_lock, flags);
+>         OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
+>         OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
+> +
+> +       /* latch pending CIRQ, but don't signal */
+> +       if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
+> +               irq_mask |= CIRQ_EN;
+>         OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
+> +       spin_unlock_irqrestore(&host->irq_lock, flags);
+>  }
+>
+>  static void omap_hsmmc_disable_irq(struct omap_hsmmc_host *host)
+>  {
+> -       OMAP_HSMMC_WRITE(host->base, ISE, 0);
+> -       OMAP_HSMMC_WRITE(host->base, IE, 0);
+> +       u32 irq_mask = 0;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&host->irq_lock, flags);
+> +       /* no transfer running, need to signal cirq if enabled */
+> +       if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
+> +               irq_mask |= CIRQ_EN;
+> +       OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
+> +       OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
+>         OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
+> +       spin_unlock_irqrestore(&host->irq_lock, flags);
+>  }
+>
+>  /* Calculate divisor for the given clock frequency */
+> @@ -1067,8 +1084,12 @@ static irqreturn_t omap_hsmmc_irq(int irq, void *dev_id)
+>         int status;
+>
+>         status = OMAP_HSMMC_READ(host->base, STAT);
+> -       while (status & INT_EN_MASK && host->req_in_progress) {
+> -               omap_hsmmc_do_irq(host, status);
+> +       while (status & (INT_EN_MASK | CIRQ_EN)) {
+> +               if (host->req_in_progress)
+> +                       omap_hsmmc_do_irq(host, status);
+> +
+> +               if (status & CIRQ_EN)
+> +                       mmc_signal_sdio_irq(host->mmc);
+>
+>                 /* Flush posted write */
+>                 status = OMAP_HSMMC_READ(host->base, STAT);
+> @@ -1583,6 +1604,37 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+>                 mmc_slot(host).init_card(card);
+>  }
+>
+> +static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+> +{
+> +       struct omap_hsmmc_host *host = mmc_priv(mmc);
+> +       u32 irq_mask;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&host->irq_lock, flags);
+> +
+> +       irq_mask = OMAP_HSMMC_READ(host->base, ISE);
+> +       if (enable) {
+> +               host->flags |= HSMMC_SDIO_IRQ_ENABLED;
+> +               irq_mask |= CIRQ_EN;
+> +       } else {
+> +               host->flags &= ~HSMMC_SDIO_IRQ_ENABLED;
+> +               irq_mask &= ~CIRQ_EN;
+> +       }
+> +       OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
+> +
+> +       /*
+> +        * if enable, piggy back detection on current request
+> +        * but always disable immediately
+> +        */
+> +       if (!host->req_in_progress || !enable)
+> +               OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
+> +
+> +       /* flush posted write */
+> +       OMAP_HSMMC_READ(host->base, IE);
+> +
+> +       spin_unlock_irqrestore(&host->irq_lock, flags);
+> +}
+> +
+>  static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
+>  {
+>         u32 hctl, capa, value;
+> @@ -1635,7 +1687,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
+>         .get_cd = omap_hsmmc_get_cd,
+>         .get_ro = omap_hsmmc_get_ro,
+>         .init_card = omap_hsmmc_init_card,
+> -       /* NYET -- enable_sdio_irq */
+> +       .enable_sdio_irq = omap_hsmmc_enable_sdio_irq,
+>  };
+>
+>  #ifdef CONFIG_DEBUG_FS
+> @@ -2021,6 +2073,22 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>                 dev_warn(&pdev->dev,
+>                         "pins are not configured from the driver\n");
+>
+> +       /*
+> +        * For now, only support SDIO interrupt if we are booted with
+> +        * DT. This is because some platforms need special quirks. And
+> +        * we don't want to add new legacy mux platform init code
+> +        * callbacks any longer as we are moving to DT based booting
+> +        * anyways.
+> +        */
+> +       if (pdev->dev.of_node) {
+> +               mmc->caps |= MMC_CAP_SDIO_IRQ;
+> +               if (of_find_property(host->dev->of_node,
+> +                                    "ti,quirk-swakeup-missing", NULL)) {
+> +                       /* no wakeup from deeper power states, use polling */
+> +                       mmc->caps &= ~MMC_CAP_SDIO_IRQ;
+> +               }
+> +       }
+> +
+>         omap_hsmmc_protect_card(host);
+>
+>         mmc_add_host(mmc);
 > --
 > 1.7.10.4
-
-Leela, do you still want to keep the status 'disabled' for SPIs?
-
-Others look good to me.
-
-Thanks,
-Kukjin
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
