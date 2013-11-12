@@ -1,73 +1,40 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH] ARM: dts: Add missing GPIO entries for sd_bus in
-Date: Tue, 12 Nov 2013 19:23:56 +0900
-Message-ID: <085901cedf91$4b24d4c0$e16e7e40$@org>
-References: <1382700168-12527-1-git-send-email-sachin.kamat@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 12 Nov 2013 11:29:36 +0100
+Message-ID: <CACRpkdZpwwoM3h5_rXOwbN7cC72ruvTio6Z1hzMhLCDzh5VeKQ@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<1521079.WSLhhfqBXl@lem-wkst-02>
+	<52261BF0.4090106@wwwdotorg.org>
+	<3144247.j2q6H0KWZx@lem-wkst-02>
+	<52279524.8090006@wwwdotorg.org>
+	<20130909161924.GT29403@sirena.org.uk>
+	<528121D5.40403@keymile.com>
+	<528127B2.80109@wwwdotorg.org>
+	<52812D3A.2070107@keymile.com>
+	<52813100.1060500@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1382700168-12527-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: tushar.behera@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52813100.1060500@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Gerlando Falauto <gerlando.falauto@keymile.com>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
+On Mon, Nov 11, 2013 at 8:33 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/11/2013 12:17 PM, Gerlando Falauto wrote:
 
-Following is more clear?
+>> Thanks for your answer. So it should be the parent driver to proactively
+>> configure the GPIO as input, active high etc..., when an IRQ for its
+>> GPIOs is requested, right?
+>
+> That was the conclusion of this thread, or a similar thread, yes.
 
-"ARM: dts: Add missing GPIO entries for sd_bus_width4 in exynos5420-pinctrl"
+Yepps second that.
 
-> Adds missing GPIO entries for sd_bus nodes in exynos5420-pinctrl.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5420-pinctrl.dtsi |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> index e695aba..fcb8206 100644
-> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> @@ -181,7 +181,7 @@
->  		};
-> 
->  		sd0_bus4: sd0-bus-width4 {
-> -			samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
-> +			samsung,pins = "gpc0-3", "gpc0-4", "gpc0-5",
-"gpc0-6";
->  			samsung,pin-function = <2>;
->  			samsung,pin-pud = <3>;
->  			samsung,pin-drv = <3>;
-> @@ -230,7 +230,7 @@
->  		};
-> 
->  		sd1_bus4: sd1-bus-width4 {
-> -			samsung,pins = "gpc1-4", "gpc1-5", "gpc1-6";
-> +			samsung,pins = "gpc1-3", "gpc1-4", "gpc1-5",
-"gpc1-6";
->  			samsung,pin-function = <2>;
->  			samsung,pin-pud = <3>;
->  			samsung,pin-drv = <3>;
-> @@ -272,7 +272,7 @@
->  		};
-> 
->  		sd2_bus4: sd2-bus-width4 {
-> -			samsung,pins = "gpc2-4", "gpc2-5", "gpc2-6";
-> +			samsung,pins = "gpc2-3", "gpc2-4", "gpc2-5",
-"gpc2-6";
->  			samsung,pin-function = <2>;
->  			samsung,pin-pud = <3>;
->  			samsung,pin-drv = <3>;
-> --
-> 1.7.9.5
+And we added an API to that you can flag a GPIO as being
+in use by an IRQ using gpio_lock_as_irq() from your
+irq_chip callbacks.
 
-Looks ok to me, applied with updating title.
-
-Thanks,
-Kukjin
+Yours,
+Linus Walleij
