@@ -1,14 +1,14 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: Fwd: [PATCH 4/8] watchdog: davinci: add GET_STATUS option support
-Date: Tue, 12 Nov 2013 10:38:27 -0500
-Message-ID: <52824B73.6040704@ti.com>
-References: <1383680783-12114-5-git-send-email-ivan.khoronzhuk@ti.com>
- <527A28CE.2070802@ti.com>
+Subject: Re: Fwd: [PATCH 5/8] watchdog: davinci: add "timeout-sec" property
+Date: Tue, 12 Nov 2013 10:38:59 -0500
+Message-ID: <52824B93.2090201@ti.com>
+References: <1383680783-12114-6-git-send-email-ivan.khoronzhuk@ti.com>
+ <527A28D8.9040901@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <527A28CE.2070802@ti.com>
+In-Reply-To: <527A28D8.9040901@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,8 +23,8 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
 On Wednesday 06 November 2013 06:32 AM, ivan.khoronzhuk wrote:
-> When watchdog timer is expired we can know about it thought
-> GET_STATUS ioctl option.
+> Since Davinci WDT has been switched to use WDT core, it became able
+> to support timeout-sec property, so add it to it's binding description.
 > 
 > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > ---
