@@ -1,323 +1,66 @@
-From: <srinivas.kandagatla@st.com>
-Subject: [PATCH RFC 09/10] ARM: STi: Add STiH415 ethernet support.
-Date: Tue, 12 Nov 2013 13:53:09 +0000
-Message-ID: <1384264389-7697-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] ARM: dts: AM437x GP EVM support
+Date: Tue, 12 Nov 2013 08:22:06 -0600
+Message-ID: <20131112142206.GD31721@saruman.home>
+References: <1384255468-2453-1-git-send-email-afzal@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, stephen.gallimore@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jL2BoiuKMElzg3CS"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384255468-2453-1-git-send-email-afzal@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+--jL2BoiuKMElzg3CS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds support to STiH415 SOC, which has two ethernet
-snps,dwmac controllers version 3.610. With this patch B2000 and B2020
-boards can boot with ethernet in MII and RGMII modes.
+Hi,
 
-Tested on both B2020 and B2000.
+On Tue, Nov 12, 2013 at 04:54:26PM +0530, Afzal Mohammed wrote:
+> From: Lokesh Vutla <lokeshvutla@ti.com>
+>=20
+> AM437x GP EVM DTS with pinmux information to make I2C on EVM usable.
+>=20
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> Signed-off-by: Afzal Mohammed <afzal@ti.com>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- arch/arm/boot/dts/stih415-clock.dtsi   |   14 +++++
- arch/arm/boot/dts/stih415-pinctrl.dtsi |   82 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stih415.dtsi         |   56 ++++++++++++++++++++++
- arch/arm/boot/dts/stih41x-b2000.dtsi   |   32 ++++++++++++
- arch/arm/boot/dts/stih41x-b2020.dtsi   |   33 +++++++++++++
- 5 files changed, 217 insertions(+), 0 deletions(-)
+could you instead send the much more complete version we already have
+at [1] ? It's pointless to repatch all of that in this file if we *know*
+those are already working.
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index 174c799..d047dbc 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -34,5 +34,19 @@
- 			compatible = "fixed-clock";
- 			clock-frequency = <100000000>;
- 		};
-+
-+		CLKS_GMAC0_PHY: clockgenA1@7 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+			clock-output-names = "CLKS_GMAC0_PHY";
-+		};
-+
-+		CLKS_ETH1_PHY: clockgenA0@7 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+			clock-output-names = "CLKS_ETH1_PHY";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih415-pinctrl.dtsi b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-index 1d322b2..c087af8 100644
---- a/arch/arm/boot/dts/stih415-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-@@ -86,6 +86,57 @@
- 					};
- 				};
- 			};
-+
-+			gmac1 {
-+				pinctrl_mii1: mii1 {
-+						st,pins {
-+						 txd0   = <&PIO0 0 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txd1   = <&PIO0 1 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txd2   = <&PIO0 2 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txd3   = <&PIO0 3 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txer   = <&PIO0 4 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txen   = <&PIO0 5 ALT1 OUT  SE_NICLK_IO	0	CLK_A>;
-+						 txclk  = <&PIO0 6 ALT1 IN   NICLK	0	CLK_A>;
-+						 col    = <&PIO0 7 ALT1 IN   BYPASS	1000>;
-+						 mdio   = <&PIO1 0 ALT1 OUT  BYPASS	0>;
-+						 mdc    = <&PIO1 1 ALT1 OUT  NICLK	0	CLK_A>;
-+						 crs    = <&PIO1 2 ALT1 IN   BYPASS	1000>;
-+						 mdint  = <&PIO1 3 ALT1 IN   BYPASS	0>;
-+						 rxd0   = <&PIO1 4 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rxd1   = <&PIO1 5 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rxd2   = <&PIO1 6 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rxd3   = <&PIO1 7 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rxdv   = <&PIO2 0 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rx_er  = <&PIO2 1 ALT1 IN   SE_NICLK_IO	0	CLK_A>;
-+						 rxclk  = <&PIO2 2 ALT1 IN   NICLK	0	CLK_A>;
-+						 phyclk = <&PIO2 3 ALT1 IN   NICLK	1000	CLK_A>;
-+					};
-+				};
-+
-+				pinctrl_rgmii1: rgmii1-0 {
-+					st,pins {
-+						 txd0 =	 <&PIO0 0 ALT1 OUT DE_IO	1000	CLK_A>;
-+						 txd1 =	 <&PIO0 1 ALT1 OUT DE_IO	1000	CLK_A>;
-+						 txd2 =	 <&PIO0 2 ALT1 OUT DE_IO	1000	CLK_A>;
-+						 txd3 =	 <&PIO0 3 ALT1 OUT DE_IO	1000	CLK_A>;
-+						 txen =	 <&PIO0 5 ALT1 OUT DE_IO	0	CLK_A>;
-+						 txclk = <&PIO0 6 ALT1 IN	NICLK	0	CLK_A>;
-+						 mdio =	 <&PIO1 0 ALT1 OUT	BYPASS	0>;
-+						 mdc =	 <&PIO1 1 ALT1 OUT	NICLK	0	CLK_A>;
-+						 rxd0 =	 <&PIO1 4 ALT1 IN DE_IO	0	CLK_A>;
-+						 rxd1 =	 <&PIO1 5 ALT1 IN DE_IO	0	CLK_A>;
-+						 rxd2 =	 <&PIO1 6 ALT1 IN DE_IO	0	CLK_A>;
-+						 rxd3 =	 <&PIO1 7 ALT1 IN DE_IO	0	CLK_A>;
-+
-+						 rxdv =	  <&PIO2 0 ALT1 IN DE_IO	500	CLK_A>;
-+						 rxclk =  <&PIO2 2 ALT1 IN	NICLK	0	CLK_A>;
-+						 phyclk = <&PIO2 3 ALT4 OUT	NICLK	0	CLK_B>;
-+
-+						 clk125= <&PIO3 7 ALT4 IN 	NICLK	0	CLK_A>;
-+					};
-+				};
-+			};
-+
- 		};
- 
- 		pin-controller-front {
-@@ -197,6 +248,37 @@
- 					};
- 				};
- 			};
-+
-+			gmac0{
-+				pinctrl_mii0: mii0 {
-+					st,pins {
-+					 mdint =	<&PIO13 6 ALT2	IN	BYPASS		0>;
-+					 txen =		<&PIO13 7 ALT2	OUT	SE_NICLK_IO	0	CLK_A>;
-+
-+					 txd0 =		<&PIO14 0 ALT2	OUT	SE_NICLK_IO	0	CLK_A>;
-+					 txd1 =		<&PIO14 1 ALT2	OUT	SE_NICLK_IO	0	CLK_A>;
-+					 txd2 =		<&PIO14 2 ALT2	OUT	SE_NICLK_IO	0	CLK_B>;
-+					 txd3 =		<&PIO14 3 ALT2	OUT	SE_NICLK_IO	0	CLK_B>;
-+
-+					 txclk =	<&PIO15 0 ALT2	IN	NICLK		0	CLK_A>;
-+					 txer =		<&PIO15 1 ALT2	OUT	SE_NICLK_IO	0	CLK_A>;
-+					 crs =		<&PIO15 2 ALT2	IN	BYPASS		1000>;
-+					 col =		<&PIO15 3 ALT2	IN	BYPASS		1000>;
-+					 mdio  =        <&PIO15 4 ALT2	OUT	BYPASS 	3000>;
-+					 mdc   =        <&PIO15 5 ALT2	OUT     NICLK  	0    	CLK_B>;
-+
-+					 rxd0 =		<&PIO16 0 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rxd1 =		<&PIO16 1 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rxd2 =		<&PIO16 2 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rxd3 =		<&PIO16 3 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rxdv =		<&PIO15 6 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rx_er =	<&PIO15 7 ALT2	IN	SE_NICLK_IO	0	CLK_A>;
-+					 rxclk =	<&PIO17 0 ALT2	IN	NICLK		0	CLK_A>;
-+					 phyclk =	<&PIO13 5 ALT2	OUT	NICLK	1000	CLK_A>;
-+
-+					};
-+				};
-+			};
- 		};
- 
- 		pin-controller-left {
-diff --git a/arch/arm/boot/dts/stih415.dtsi b/arch/arm/boot/dts/stih415.dtsi
-index 0c0776e..c2b18c8 100644
---- a/arch/arm/boot/dts/stih415.dtsi
-+++ b/arch/arm/boot/dts/stih415.dtsi
-@@ -94,5 +94,61 @@
- 			pinctrl-names 	= "default";
- 			pinctrl-0	= <&pinctrl_sbc_serial1>;
- 		};
-+
-+		ethernet0: ethernet0{
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			status 		= "disabled";
-+			compatible		= "st,stih415-dwmac";
-+			reg			= <0x148 0x4>;
-+			st,syscon	= <&syscfg_rear>;
-+			resets			= <&softreset STIH415_ETH0_SOFTRESET>;
-+			ranges;
-+
-+			dwmac0:dwmac@fe810000 {
-+				device_type 	= "network";
-+				compatible	= "snps,dwmac", "snps,dwmac-3.610";
-+				status 		= "disabled";
-+				reg 		= <0xfe810000 0x8000>;
-+				interrupts 	= <0 147 0>, <0 148 0>, <0 149 0>;
-+				interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-+
-+				snps,pbl 	= <32>;
-+				snps,mixed-burst;
-+
-+				pinctrl-names 	= "default";
-+				pinctrl-0	= <&pinctrl_mii0>;
-+				clock-names	= "stmmaceth";
-+				clocks		= <&CLKS_GMAC0_PHY>;
-+			};
-+		};
-+
-+		ethernet1: ethernet1 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			status 		= "disabled";
-+			compatible		= "st,stih415-dwmac";
-+			reg			= <0x74 0x4>;
-+			st,syscon		= <&syscfg_sbc>;
-+			resets			= <&softreset STIH415_ETH1_SOFTRESET>;
-+			ranges;
-+
-+			dwmac1: dwmac@fef08000 {
-+				device_type = "network";
-+				compatible	= "snps,dwmac", "snps,dwmac-3.610";
-+				status 		= "disabled";
-+				reg		= <0xfef08000 0x8000>;
-+				interrupts 	= <0 150 0>, <0 151 0>, <0 152 0>;
-+				interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-+
-+				snps,pbl	= <32>;
-+				snps,mixed-burst;
-+
-+				pinctrl-names 	= "default";
-+				pinctrl-0	= <&pinctrl_mii1>;
-+				clock-names	= "stmmaceth";
-+				clocks		= <&CLKS_ETH1_PHY>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih41x-b2000.dtsi b/arch/arm/boot/dts/stih41x-b2000.dtsi
-index 8e694d2..9ae9ca9 100644
---- a/arch/arm/boot/dts/stih41x-b2000.dtsi
-+++ b/arch/arm/boot/dts/stih41x-b2000.dtsi
-@@ -20,6 +20,8 @@
- 
- 	aliases {
- 		ttyAS0 = &serial2;
-+		ethernet0 = &dwmac0;
-+		ethernet1 = &dwmac1;
- 	};
- 
- 	soc {
-@@ -37,5 +39,35 @@
- 			};
- 		};
- 
-+		ethernet0: ethernet0{
-+			status 		= "okay";
-+			st,tx-retime-src	= "txclk";
-+
-+			dwmac0:dwmac@fe810000 {
-+				status			= "okay";
-+				phy-mode		= "mii";
-+				snps,phy-addr 		= <0x1>;
-+
-+				snps,reset-gpio 	= <&PIO106 2>;
-+				snps,reset-active-low;
-+				snps,reset-delays-us 	= <0 10000 10000>;
-+			};
-+		};
-+
-+		ethernet1: ethernet1 {
-+			status 		= "okay";
-+			st,tx-retime-src	= "txclk";
-+
-+			dwmac1: dwmac@fef08000 {
-+				status			= "okay";
-+				phy-mode		= "mii";
-+				snps,phy-addr 		= <0x1>;
-+
-+				snps,reset-gpio 	= <&PIO4 7>;
-+				snps,reset-active-low;
-+				snps,reset-delays-us 	= <0 10000 10000>;
-+			};
-+		};
-+
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih41x-b2020.dtsi b/arch/arm/boot/dts/stih41x-b2020.dtsi
-index 133e181..7ce1380 100644
---- a/arch/arm/boot/dts/stih41x-b2020.dtsi
-+++ b/arch/arm/boot/dts/stih41x-b2020.dtsi
-@@ -19,6 +19,7 @@
- 
- 	aliases {
- 		ttyAS0 = &sbc_serial1;
-+		ethernet1 = &dwmac1;
- 	};
- 	soc {
- 		sbc_serial1: serial@fe531000 {
-@@ -38,5 +39,37 @@
- 				default-state = "off";
- 			};
- 		};
-+
-+		/**
-+		* ethernet clk routing:
-+		* for
-+		* 	max-speed = <1000>;
-+		* set
-+		* 	st,tx-retime-src	= "clk_125";
-+		*
-+		* for
-+		*	max-speed = <100>;
-+		* set
-+		*	st,tx-retime-src	= "clkgen";
-+		*/
-+
-+		ethernet1: ethernet1 {
-+			status 		= "okay";
-+			st,tx-retime-src	= "clkgen";
-+
-+			dwmac1: dwmac@fef08000 {
-+				status			= "okay";
-+				phy-mode		= "rgmii-id";
-+				max-speed		= <100>;
-+				snps,phy-addr 		= <0x1>;
-+
-+				snps,reset-gpio 	= <&PIO3 0>;
-+				snps,reset-active-low;
-+				snps,reset-delays-us 	= <0 10000 10000>;
-+
-+				pinctrl-0	= <&pinctrl_rgmii1>;
-+			};
-+		};
-+
- 	};
- };
--- 
-1.7.6.5
+[1] http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/tre=
+e/arch/arm/boot/dts/am437x-gp-evm.dts?h=3Dti-linux-3.12.y
 
+--=20
+balbi
+
+--jL2BoiuKMElzg3CS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSgjmNAAoJEIaOsuA1yqREYDoQAJGp6UQRvmkH79nCmNoMgCai
+ql5c6nUBlfSKakJtvOMmx+AzcGXQroOGDnSVDwxyA+ChRKMYqD/vWQdtvxpbS233
+RoiWaafzVL824DQSULgsKzsY7muOYKPf7czW+JFwgNmQIqRKt23DrP3TdqM7SnbM
+gs3X7oLZPwg+iiiM78WmYcRkaLjqNTayT5YLd2K6WBsfcnrZ86Ao0GK9pno32LBN
+j/Lc4G2frfA7KEOpSQRcyd9aPxp7YiGz4N6EX35t6oaqNbbZDF9kXmOontRgs3UU
+cHhOPC8Q9idF1PJSoFUNdmVXN57yOb86pqhAxveCpA2rqyaTPdpXc6cycz1YtIUS
+1Xo2+RWj5qEym27f7HcB6wdF4i/Z2IjddkvSX5Dxydmyh3XuKjScpML38OEio97r
+TnM1ihbP9p7/eYe5QbzugHkz73QzxLL5WZizML68R75k7XdW2yDxQVAwCrDEn7BW
+g5cRAHVdkLck911gHF1C2dL6V7gYMnLRmr/umG7TtCOa4TaDFEo1bZqFuvCK1EDF
+G3/W15LJwzQtgYE6zXiumh0lXXMXHxTJKowJAIqNjuOEaTt+VymGsB9ZW93Fm4/t
+McjxrU8blwxyTOXowkcKfSpmazVWOfGBhy/+e33XI5goKuONXAce9m4p/K/BY//Q
+wJ4kky1ZbSdCNzy65k/a
+=thjn
+-----END PGP SIGNATURE-----
+
+--jL2BoiuKMElzg3CS--
