@@ -1,41 +1,59 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
-Date: Tue, 12 Nov 2013 13:52:40 +0800
-Message-ID: <5281C228.3000404@nvidia.com>
-References: <1383203126-3243-1-git-send-email-wni@nvidia.com>
- <20131031162029.GF2493@sirena.org.uk> <527737C5.5080901@nvidia.com>
- <20131104161828.GK2493@sirena.org.uk> <5278B4CB.9050305@nvidia.com>
- <20131106085100.GB11602@sirena.org.uk> <527A1C47.6050405@nvidia.com>
- <20131106110154.GG11602@sirena.org.uk>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V7 2/3] ARM: dts: update watchdog device nodes for
+ Exynos5250 and Exynos5420
+Date: Tue, 12 Nov 2013 11:27:59 +0530
+Message-ID: <CAL1wa8fe+eRsJ8VsqmCCtsp_ipLK84wNYZ0d0PBJyHUW3zSriA@mail.gmail.com>
+References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com>
+ <1384173897-16106-3-git-send-email-l.krishna@samsung.com> <10330347.YPtX4Jly4T@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131106110154.GG11602-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <10330347.YPtX4Jly4T@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2013 07:01 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
-> 
-> On Wed, Nov 06, 2013 at 06:39:03PM +0800, Wei Ni wrote:
-> 
->> I still can't find a good place to set full_constraints, could you
->> please show me some reference codes where we can set it?
-> 
-> The places where we unflatten the device tree for example, or start
-> instantiating devices from DT.
+Hi Tomasz,
 
-Hi, Mark
-Sorry, I really don't familiar with the DT, could you please take this
-by youself?
+On Mon, Nov 11, 2013 at 6:36 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Leela,
+>
+> On Monday 11 of November 2013 18:14:56 Leela Krishna Amudala wrote:
+>> In Exynos5 series SoCs, PMU has registers to enable/disable mask/unmask
+>> watchdog timer which is not the case with s3c series SoCs so, there is a
+>> need to have different compatible names for watchdog to handle these pmu
+>> registers access.
+>>
+>> Hence this patch removes watchdog node from Exynos5.dtsi common file and
+>> make it separate by updating existing node in Exynos5250 and adding new node
+>> to Exynos5420. This patch also makes the watchdog node enabled by default
+>>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5.dtsi    |    7 -------
+>>  arch/arm/boot/dts/exynos5250.dtsi |    6 +++++-
+>>  arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
+>>  3 files changed, 14 insertions(+), 8 deletions(-)
+>
+> This patch should go as the last in this series, because otherwise it
+> would change DTS files to use compatible values that are not yet
+> supported.
+>
 
-Thanks.
-Wei.
+Okay, will make it as last patch in the series
 
-> 
-> * Unknown Key
-> * 0x7EA229BD
-> 
+Best Wishes,
+Leela Krishna
+
+> The patch itself is fine, so
+>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>
+> Best regards,
+> Tomasz
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
