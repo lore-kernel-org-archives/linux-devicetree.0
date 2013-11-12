@@ -1,142 +1,75 @@
-From: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Tue, 12 Nov 2013 17:49:37 +1000
-Message-ID: <CAEgOgz6j8YsvFgq8ZbE20ocHPA0C-eUGBb7F1gNiVBvJXLa8_g@mail.gmail.com>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-	<1381869563-16083-10-git-send-email-grant.likely@linaro.org>
-	<CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com>
-	<20131112065405.C75E8C42024@trevor.secretlab.ca>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
+ Interface driver.
+Date: Tue, 12 Nov 2013 08:59:29 +0100
+Message-ID: <5281DFE1.3040904@metafoo.de>
+References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
+ <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
+ <526021B0.6050206@metafoo.de>
+ <1DD289F6464F0949A2FCA5AA6DC23F8286A385@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20131112050226.GK8834@intel.com>
+ <1DD289F6464F0949A2FCA5AA6DC23F8287E87B@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131112065405.C75E8C42024-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F8287E87B@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Li Xiubo <Li.Xiubo@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Shawn Guo <Shawn.Guo@freescale.com>, "djbw@fb.com" <djbw@fb.com>, rob.her
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Tue, Nov 12, 2013 at 4:54 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 12 Nov 2013 08:58:15 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi Grant,
+On 11/12/2013 08:35 AM, Li Xiubo wrote:
+>>>>> +static int fsl_sai_probe(struct platform_device *pdev) {
+>>>> [...]
+>>>>> +
+>>>>> +	sai->dma_params_rx.addr = res->start + SAI_RDR;
+>>>>> +	sai->dma_params_rx.maxburst = 6;
+>>>>> +	index = of_property_match_string(np, "dma-names", "rx");
+>>>>> +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells",
+>> index,
+>>>>> +				&dma_args);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +	sai->dma_params_rx.slave_id = dma_args.args[1];
+>>>>> +
+>>>>> +	sai->dma_params_tx.addr = res->start + SAI_TDR;
+>>>>> +	sai->dma_params_tx.maxburst = 6;
+>>>>> +	index = of_property_match_string(np, "dma-names", "tx");
+>>>>> +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells",
+>> index,
+>>>>> +				&dma_args);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +	sai->dma_params_tx.slave_id = dma_args.args[1];
+>>>>
+>>>> The driver should not have to manually parse the dma devicetree
+>>>> properties, this is something that should be handled by the dma
+>>>> engine driver.
+>>>>
+>>>
+>>> What do you think about the DMA slave_id ?
+>>> I have been noticed by one colleague that this should be parsed here,
+>>> which is from your opinions ?
+>> Sure slave_id can be parsed here, but IMO it should be programmed via the
+>> dma_slave_confog into the respective channel
 >>
->> On Wed, Oct 16, 2013 at 6:39 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > The standard interrupts property in device tree can only handle
->> > interrupts coming from a single interrupt parent. If a device is wired
->> > to multiple interrupt controllers, then it needs to be attached to a
->> > node with an interrupt-map property to demux the interrupt specifiers
->> > which is confusing. It would be a lot easier if there was a form of the
->> > interrupts property that allows for a separate interrupt phandle for
->> > each interrupt specifier.
->> >
->> > This patch does exactly that by creating a new interrupts-extended
->> > property which reuses the phandle+arguments pattern used by GPIOs and
->> > other core bindings.
->> >
->> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> > ---
->> >  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
->> >  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
->> >  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
->> >  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
->> >  drivers/of/irq.c                                   | 16 +++--
->> >  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
->> >  6 files changed, 122 insertions(+), 13 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> > index 72a06c0..1486497 100644
->> > --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> > +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> > @@ -4,16 +4,33 @@ Specifying interrupt information for devices
->> >  1) Interrupt client nodes
->> >  -------------------------
->> >
->> > -Nodes that describe devices which generate interrupts must contain an
->> > -"interrupts" property. This property must contain a list of interrupt
->> > -specifiers, one per output interrupt. The format of the interrupt specifier is
->> > -determined by the interrupt controller to which the interrupts are routed; see
->> > -section 2 below for details.
->> > +Nodes that describe devices which generate interrupts must contain an either an
->> > +"interrupts" property or an "interrupts-extended" property. These properties
->> > +contain a list of interrupt specifiers, one per output interrupt. The format of
->> > +the interrupt specifier is determined by the interrupt controller to which the
->> > +interrupts are routed; see section 2 below for details.
->> > +
->> > +  Example:
->> > +       interrupt-parent = <&intc1>;
->> > +       interrupts = <5 0>, <6 0>;
->> >
->> >  The "interrupt-parent" property is used to specify the controller to which
->> >  interrupts are routed and contains a single phandle referring to the interrupt
->> >  controller node. This property is inherited, so it may be specified in an
->> > -interrupt client node or in any of its parent nodes.
->> > +interrupt client node or in any of its parent nodes. Interrupts listed in the
->> > +"interrupts" property are always in reference to the node's interrupt parent.
->> > +
->> > +The "interrupts-extended" property is a special form for use when a node needs
->> > +to reference multiple interrupt parents. Each entry in this property contains
->> > +both the parent phandle and the interrupt specifier. "interrupts-extended"
->> > +should only be used when a device has multiple interrupt parents.
->> > +
->> > +  Example:
->> > +       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
->> > +
->>
->> A slightly different but related problem I am trying to solve with
->> interrupt bindings, is to describe connection of a single device
->> interrupt line to multiple interrupts controller, whereas this binding
->> seems to be describing connection of different interrupt lines to
->> different controllers. Can this syntax accommodate my case is any way?
->>
->> Bascially I think I'm asking for multiple interrupt specifiers for a
->> single IRQ output if that's possible.
->>
->> Should I just be using the interrupt map syntax instead?
->>
->> interrupt-map-mask = < 0 0 63>;
->> interrupt-map = < 0 0 25 &intc0 ... >, < 0 0 25 &intc1 ... >,
 >
-> Interrupt map doesn't actually help you here either since the core code
-> doesn't know what to do with it. It will probably only match and return
-> one of the options.
+> Actually, these are parsed for cpu_dai->playback_dma_data and cpu_dai->capture_dma_data dynamically, whose type is struct dma_slave_config.
 >
+> And now I must parse them here, because the platform eDMA driver's newest version will check and use the slave_ids to select and configure the eDMA channels via dma_device->device_control().
 
-Yes I noticed that. Although we are a fair way off Linux patches for
-this just yet and all I want to solve near-term is the hardware
-description problem (what core Linux IRQ code is actually supposed to
-do when given such a wiring setup is probably an open question).
+Parsing them here is a layering violation. The format of the DMA specifier 
+depends on the DMA controller. A DMA slave should not make any assumptions 
+about how the specifier looks like, it should not even look at them. You should 
+fix the DMA controller driver to work without slave_id in the devicetree case.
 
-> What I would do is describe both in your interrupts property and make
-> the driver know that the extra interrupt specifier is for the same
-> interrupt output.
->
-
-So this is a little annoying, as ideally device drivers should not be
-aware of their external connections. I'm trying to describe board (or
-SoC) level wiring in hopefully a way that doesn't require individual
-driver awareness. It also gets very messy when you have multiple
-interrupt outputs that are each in themselves connected to multiple
-interrupt controllers (which happens to be my situation). The meaning
-of multiple tuples becomes ambiguous.
-
-Is the interrupt-map system I proposed acceptable long-term from just
-a pure binding acceptability standpoint? The driver side solution is
-also a large change pattern as I'm using this with Xilinx Zynq which
-has a large number of peripherals, any of which could be
-multiply-connected to both A9GIC and soft intc's in FPGA fabric.
-
-Thanks and Regards,
-Peter
-
-> g.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Lars
