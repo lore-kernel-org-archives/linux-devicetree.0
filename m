@@ -1,95 +1,45 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 4/4 v3] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Tue, 12 Nov 2013 12:07:48 +0530
-Message-ID: <1384238268-24671-1-git-send-email-ch.naveen@samsung.com>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
+Date: Tue, 12 Nov 2013 07:01:14 +0000
+Message-ID: <20131112070114.73AE3C421A6@trevor.secretlab.ca>
+References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca> <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com> <alpine.DEB.2.02.1311111658100.26077@kaball.uk.xensource.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1311111658100.26077-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos5420 SoC has per core thermal management unit.
-5 TMU channels 4 for CPUs and 5th for GPU.
+On Mon, 11 Nov 2013 16:59:14 +0000, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org> wrote:
+> On Wed, 6 Nov 2013, Stefano Stabellini wrote:
+> > On Sat, 2 Nov 2013, Grant Likely wrote:
+> > > On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > > > 
+> > > > Platform devices created by DT code don't initialize dma_mask pointer to
+> > > > anything. Set it to coherent_dma_mask by default if the architecture
+> > > > code has not set it.
+> > > > 
+> > > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > > 
+> > > I believe this is okay. I haven't done any testing to back up that
+> > > opinion though.
+> > 
+> > Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> 
+> BTW I hope you are planning on sending this upstream soon, because
+> without it I can very easily corrupt my root fs by simply booting the system.
 
-This patch adds the device tree nodes to the DT device list.
+Gah! That's pretty nasty. It is in Rob's for-next branch, but it hasn't
+been marked for backporting to stable. Best thing to do here is for
+either you or Rob to repost the patch to stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and
+include the commit id from Rob's tree. It's not upstream yet, but it
+will be soon.
 
-Nodes carry the misplaced second base address and the second
-clock to access the misplaced base address.
+How far back in kernel releases do you want the patch backported to?
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes since v2:
-3. uses the new compatible strings introduced along with adding
-   support for Exynso5420.
-
-Changes since v1:
-1. Nodes carry the misplaced second base address and the second
-   clock to access the misplaced base address.
-2. Correct the clock number for the TMU4
-
- arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 6ffefd1..d736b40 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -369,4 +369,52 @@
- 		clock-names = "gscl";
- 		samsung,power-domain = <&gsc_pd>;
- 	};
-+
-+	/* tmu for CPU0 */
-+	tmu@10060000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10060000 0x100>;
-+		interrupts = <0 65 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU1 */
-+	tmu@10064000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10064000 0x100>;
-+		interrupts = <0 183 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU2 */
-+	tmu@10068000 {
-+		compatible = "samsung,exynos5420-tmu-triminfo";
-+		/* 2nd reg is for the misplaced TRIMINFO register */
-+		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
-+		interrupts = <0 184 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	/* tmu for CPU3 */
-+	tmu@1006c000 {
-+		compatible = "samsung,exynos5420-tmu-triminfo-clk";
-+		/* 2nd reg is for the misplaced TRIMINFO register */
-+		reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
-+		interrupts = <0 185 0>;
-+		clocks = <&clock 318>, <&clock 319>;
-+		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-+	};
-+
-+	/* tmu for GPU */
-+	tmu@100a0000 {
-+		compatible = "samsung,exynos5420-tmu-triminfo-clk";
-+		/* 2nd reg is for the misplaced TRIMINFO register */
-+		reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-+		interrupts = <0 215 0>;
-+		clocks = <&clock 319>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-+	};
- };
--- 
-1.7.10.4
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
