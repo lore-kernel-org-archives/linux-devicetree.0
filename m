@@ -1,132 +1,300 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: tegra124: add pinctrl driver for NVIDIA's
- Tegra124 SoC
-Date: Tue, 12 Nov 2013 09:19:23 +0000
-Message-ID: <20131112091923.GB2976@e106331-lin.cambridge.arm.com>
-References: <1384191718-16817-1-git-send-email-aghuge@nvidia.com>
- <20131111180124.GA27735@e106331-lin.cambridge.arm.com>
- <528120EF.1030000@wwwdotorg.org>
-Mime-Version: 1.0
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
+Date: Tue, 12 Nov 2013 10:30:37 +0100
+Message-ID: <ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com>
+References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com> <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com> <20131111184245.D569DC4234A@trevor.secretlab.ca>
+Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528120EF.1030000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131111184245.D569DC4234A-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 06:24:47PM +0000, Stephen Warren wrote:
-> On 11/11/2013 11:01 AM, Mark Rutland wrote:
-> > On Mon, Nov 11, 2013 at 05:41:58PM +0000, Ashwini Ghuge wrote:
-> >> The driver uses the common Tegra pinctrl driver utility functions to
-> >> implement the majority of the driver. It is based on the similar Tegra114
-> >> pinctrl
-> 
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinctrl.txt
-> 
-> >> @@ -0,0 +1,120 @@
-> >> +NVIDIA Tegra124 pinmux controller
-> >> +
-> >> +The Tegra124 pinctrl binding is very similar to the Tegra114
-> >> +pinctrl binding, as described in nvidia,tegra114-pinmux.txt. In fact, this
-> >> +document assumes that binding as a baseline, and only documents the
-> >> +differences between the two bindings.
-> >> +
-> >> +Required properties:
-> >> +- compatible: "nvidia,tegra124-pinmux"
-> >> +- reg: Should contain the register physical address and length for each of
-> >> +  the pad control and mux registers. The first bank of address must be the
-> >> +  driver strength pad control register address and second bank address must
-> >> +  be pinmux register address.
-> > 
-> > It might be worth using reg-names here, in case a future hardware
-> > variant builds atop of this.
-> 
-> This binding is essentially identical to the existing Tegra20/30/114
-> bindings, it'd just that the HW has different sets of valid values for
-> pin/group/function names. I'd rather keep it consistent with the other
-> bindings.
-> 
-> It's quite unlikely some future binding will build on top of this; if
-> the HW changes at all, we'll almost certainly have a completely new
-> binding definition to cater for the differing pin/group/function names.
+Hi Grant,
 
-Ok.
+On Nov 11, 2013, at 7:42 PM, Grant Likely wrote:
 
+> On Fri,  8 Nov 2013 17:06:09 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>> Introduce DT overlay support.
+>> Using this functionality it is possible to dynamically overlay a part of
+>> the kernel's tree with another tree that's been dynamically loaded.
+>> It is also possible to remove node and properties.
+>> 
+>> Note that the I2C client devices are 'special', as in they're not platform
+>> devices. They need to be registered with an I2C specific method.
+>> 
+>> In general I2C is just no good platform device citizen and needs
+>> special casing.
+>> 
+>> PCI is another special case where PCI device insertion and removal
+>> is implemented in the PCI subsystem.
 > 
-> >> +Tegra124 has the following optional properties for pin configuration subnodes:
-> >> +- nvidia,enable-input: Integer. Enable the pin's input path. 0: no, 1: yes.
-> > 
-> > Why are the properties representing boolean values not empty / boolean
-> > properties (as can be handled in the kernel with of_property_read_bool)?
-> 
-> They aren't Boolean, they're tri-state: Set off, set on, don't change
-> the setting. The "pinctrl state" nodes each list a set of changes to
-> make to the HW to enter/set-up that state, and those sets of changes may
-> not need to alter all values, hence it's important to be able to
-> differentiate between not changing a value, and the value to change it to.
-
-Sorry, I had missed that.
-
-> 
-> >> +- nvidia,open-drain: Integer. Enable open drain mode. 0: no, 1: yes.
-> >> +- nvidia,lock: Integer. Lock the pin configuration against further changes
-> >> +    until reset. 0: no, 1: yes.
-> >> +- nvidia,io-reset: Integer. Reset the IO path. 0: no, 1: yes.
-> >> +- nvidia,rcv-sel: Integer. Select VIL/VIH receivers. 0: normal, 1: high.
-> > 
-> > Why not just have nvidia,rcv-high as a boolean property, and default to
-> > normal?
-> 
-> Same argument.
-> 
-> >> +- nvidia,drive-type: Integer. Valid range 0...3.
-> > 
-> > What do these values mean?
-> 
-> They're the raw HW values. We probably should add something like, "See
-> the TRM's definition of field XXX for further details".
-
-That would be helpful :)
-
-> 
-> >> +As with Tegra114, see the Tegra TRM for complete details regarding which
-> >> +groups support which functionality.
-> > 
-> > Where can I find this TRM?
-> 
-> The TRM for earlier Tegras is available at e.g.:
-> https://developer.nvidia.com/tegra-3-technical-reference-manual
-> 
-> We probably haven't published the Tegra124 TRM yet:-( However, the
-> overall structure of the Tegra124 pinmux is the same as for the Tegra30
-> pinmux documented at that link. The difference is the set of
-> pins/groups/functions.
-
-Ok.
-
-> 
-> > [...]
-> > 
-> >> +Example:
-> >> +
-> >> +       pinmux: pinmux {
-> >> +               compatible = "nvidia,tegra124-pinmux";
-> >> +               reg = <0x70000868 0x148         /* Pad control registers */
-> >> +                       0x70003000 0x40c>;      /* PinMux registers */
-> > 
-> > For consistency, please bracket entries in lists individually:
-> > 
-> > reg = <0x70000868 0x148>,      /* Pad control registers */
-> >       <0x70003000 0x40c>;      /* PinMux registers */
-> 
-> I had pointed this out to Ashwini in internal review, along with a few
-> other minor formatting/wording issues elsewhere. Hopefully that'll all
-> be rolled into v2...
+> Actually. I2C isn't special in this regard; SPI, MDIO, PCI, USB are all
+> in the same boat. platform_device just happens to be able to make a few
+> assumptions. If anything, platform_device is the 'special' one. :-)
 > 
 
-Sounds good.
+I'm of the opinion that 'platform_device' shouldn't exist at all btw :)
+Most of it's functionality can pretty easily be subsumed by device proper
+and the world would be a better place :)
+ 
+> In all cases it must be the underlying subsystem that should be
+> responsible for creation/removal of devices described in the overlay.
+> Sometimes that will extend right down into the individual bus device
+> drivers, but it is better if that can be avoided.
+> 
 
-Cheers,
-Mark.
+Yes, that's the right way to handle this, but we're talking about 
+serious modification in almost every kind of device core.
+
+Just getting the basic concept of overlays in is hard without having
+to tackle something like this.
+
+In the future, I'd be ecstatic if we could get a per device class
+filter, but it's nothing we can fix right now.
+
+IMHO of course.
+
+>> 
+>> Bug fixes & PCI support by Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+>> 
+
+[snip]
+
+>> +so a bar platform device will be registered and if a matching device driver
+>> +is loaded the device will be created as expected.
+>> +
+>> +Overlay in-kernel API
+>> +---------------------
+>> +
+>> +The steps typically required to get an overlay to work are as follows:
+>> +
+>> +1. Use of_build_overlay_info() to create an array of initialized and
+>> +ready to use of_overlay_info structures.
+>> +2. Call of_overlay() to apply the overlays declared in the array.
+>> +3. If the overlay needs to be removed, call of_overlay_revert().
+>> +4. Finally release the memory taken by the overlay info array by
+>> +of_free_overlay_info().
+> 
+> Make of_overlay_info a kobject and use a release method to free it when
+> all users go away. Freeing directly is a dangerous thing to do.
+> 
+
+It's more dangerous than even that. We also have the mess with the way
+unflattening works (properties point directly to binary blob area
+with no way to free per property data). In general freeing/releasing
+device tree nodes is tricky on a good day.
+
+I agree we have to move to a kobject model eventually. 
+
+>> +
+>> +/**
+>> + * of_build_overlay_info	- Build an overlay info array
+>> + * @tree:	Device node containing all the overlays
+>> + * @cntp:	Pointer to where the overlay info count will be help
+>> + * @ovinfop:	Pointer to the pointer of an overlay info structure.
+>> + *
+>> + * Helper function that given a tree containing overlay information,
+>> + * allocates and builds an overlay info array containing it, ready
+>> + * for use using of_overlay.
+>> + *
+>> + * Returns 0 on success with the @cntp @ovinfop pointers valid,
+>> + * while on error a negative error value is returned.
+>> + */
+>> +int of_build_overlay_info(struct device_node *tree,
+>> +		int *cntp, struct of_overlay_info **ovinfop);
+>> +
+>> +/**
+>> + * of_free_overlay_info	- Free an overlay info array
+>> + * @count:	Number of of_overlay_info's
+>> + * @ovinfo_tab:	Array of overlay_info's to free
+>> + *
+>> + * Releases the memory of a previously allocate ovinfo array
+>> + * by of_build_overlay_info.
+>> + * Returns 0, or an error if the arguments are bogus.
+>> + */
+>> +int of_free_overlay_info(int count, struct of_overlay_info *ovinfo_tab);
+>> +
+>> +/**
+>> + * of_overlay	- Apply @count overlays pointed at by @ovinfo_tab
+>> + * @count:	Number of of_overlay_info's
+>> + * @ovinfo_tab:	Array of overlay_info's to apply
+>> + *
+>> + * Applies the overlays given, while handling all error conditions
+>> + * appropriately. Either the operation succeeds, or if it fails the
+>> + * live tree is reverted to the state before the attempt.
+>> + * Returns 0, or an error if the overlay attempt failed.
+>> + */
+>> +int of_overlay(int count, struct of_overlay_info *ovinfo_tab);
+>> +
+>> +/**
+>> + * of_overlay_revert	- Revert a previously applied overlay
+>> + * @count:	Number of of_overlay_info's
+>> + * @ovinfo_tab:	Array of overlay_info's to apply
+>> + *
+>> + * Revert a previous overlay. The state of the live tree
+>> + * is reverted to the one before the overlay.
+>> + * Returns 0, or an error if the overlay table is not given.
+>> + */
+>> +int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab);
+>> +
+>> +Overlay DTS Format
+>> +------------------
+>> +
+>> +The DTS of an overlay should have the following format:
+>> +
+>> +{
+>> +	/* ignored properties by the overlay */
+>> +
+>> +	fragment@0 {	/* first child node */
+>> +		target=<phandle>;	/* target of the overlay */
+>> +		__overlay__ {
+>> +			property-a;	/* add property-a to the target */
+>> +			-property-b;	/* remove property-b from target */
+>> +			node-a {	/* add to an existing, or create a node-a */
+>> +				...
+>> +			};
+>> +			-node-b {	/* remove an existing node-b */
+>> +				...
+>> +			};
+> 
+> Are the node & property removals reversable? What about property
+> modifications? If they are not, then it would be better to not support
+> removals at all for now. Otherwise we'll end up with overlays that
+> cannot be removed and I don't want to inadvertently put users into that
+> situation.
+
+Yes, everything is reversible. Doesn't mean that the drivers/driver core
+can handle it. Using overlays is an excellent way to trigger bugs in
+device removal as I've found out :)
+
+> 
+>> +		};
+>> +	}
+>> +	fragment@1 {	/* second child node */
+>> +		...
+>> +	};
+>> +	/* more fragments follow */
+>> +}
+
+[snip]
+
+>> +
+>> +static int of_overlay_device_entry_change(struct of_overlay_info *ovinfo,
+>> +		struct of_overlay_device_entry *de, int revert)
+>> +{
+> 
+> I've got big problems here. This is entirely the wrong place to create
+> and delete devices. Each subsystem needs to create and remove its own
+> device types. To begin with, only the subsystem knows which busses are
+> appropriate for creating child devices.
+> 
+
+It was the best I could under the circumstances, without having to touch
+every subsystem.
+
+
+> Second, it is incorrect to create a platform_device for every single
+> node by default. Some nodes aren't devices at all. Just looking for a
+> compatible property isn't sufficient either.
+> 
+
+Yep. 
+
+> The solution here is for each subsystem to have it's own notifier, and
+> only create a child device if the changed node has a parent the
+> subsystem already knows about (because it's already populated device
+> tree devices from that parent). This is also true for platform_devices.
+> 
+> Finally, sometimes the tips of the tree will get populated, but not
+> until after some parent nodes have been delt with. In that case the
+> creation of devices needs to be deferred back to the driver for the
+> parent bus.
+> 
+
+Well, any solution that requires each and every subsystem to do dynamic
+child insertions/removal is going to be hard sell.
+
+What about something more gentle?
+
+For example, I know that most of the cases fall into a couple of set
+patterns for my case
+
+a) Target is the ocp node (on chip peripheral node) and results in
+the creation of platform devices under that node.
+
+b) Target is one of the disabled devices under the ocp node
+and the status property is modified, plus optional nodes are
+added that result in the creation of more devices under the bus this
+node controls. This is the case of enabled an I2C/SPI bus and inserting
+children devices.
+
+Perhaps the trick is having hooks about what to do in case certain
+nodes are modified in a certain way, i.e. a notifier on the ocp node
+would 'catch' those. The problem is a having a way to present this
+information to the notifier in a way that's easy to be handled.
+
+What do you think?
+
+>> +
+>> +/**
+>> + * Revert one overlay
+>> + * Either due to an error, or due to normal overlay removal.
+>> + * Using the log entries, we revert any change to the live tree.
+>> + * In the same manner, using the device entries we enable/disable
+>> + * the platform devices appropriately.
+>> + */
+>> +static void of_overlay_revert_one(struct of_overlay_info *ovinfo)
+>> +{
+>> +	struct of_overlay_device_entry *de, *den;
+>> +	struct of_overlay_log_entry *le, *len;
+>> +	struct property *prop, **propp;
+>> +	int ret;
+>> +	unsigned long flags;
+>> +
+>> +	if (!ovinfo || !ovinfo->target || !ovinfo->overlay)
+>> +		return;
+>> +
+>> +	pr_debug("%s: Reverting overlay on '%s'\n", __func__,
+>> +			ovinfo->target->full_name);
+>> +
+>> +	/* overlay applied correctly, now create/destroy pdevs */
+>> +	list_for_each_entry_safe_reverse(de, den, &ovinfo->de_list, node) {
+>> +		of_overlay_device_entry_change(ovinfo, de, 1);
+>> +		of_node_put(de->np);
+>> +		list_del(&de->node);
+>> +		kfree(de);
+>> +	}
+> 
+> Can overlays interact in bad ways? If overlay 1 is installed before
+> overlay 2, what happens if overlay 1 is removed?
+> 
+
+Yes, they can. It is not something easily fixed; the proper way would
+be to calculate overlay intersection points and refuse to unload.
+
+> Okay, my brain is tired. It's a complicated series and I don't see any
+> obvious bits that can be split off and be independently useful. I would
+> *really* like to see some test cases for this functionality. It's
+> complicated enough to make me quite nervous.... in fact I would really
+> like to see drivers/of/selftest.c become an early user of overlays. That
+> would make the DT selftests executable on any platform.
+> 
+
+OK, I see your point. My brain is tired too, and I'm on travel too for
+this week and the next. I'll see what I can come up with.
+
+> g.
+> 
+
+Regards
+
+-- Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
