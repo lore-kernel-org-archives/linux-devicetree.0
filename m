@@ -1,139 +1,124 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: arm/arm64 UEFI boot protocol
-Date: Tue, 12 Nov 2013 16:42:41 +0000
-Message-ID: <20131112164241.GD25953@mudshark.cambridge.arm.com>
-References: <20131111174321.GQ1557@rocoto.smurfnet.nu>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [PATCHv3 2/8] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel format.
+Date: Tue, 12 Nov 2013 17:49:19 +0100
+Message-ID: <1384274965-30549-2-git-send-email-denis@eukrea.com>
+References: <1384274965-30549-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131111174321.GQ1557-GZEopFhza0F985/tl1ce8aaDwS/vmuI7@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1384274965-30549-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leif,
-
-On Mon, Nov 11, 2013 at 05:43:21PM +0000, Leif Lindholm wrote:
-> We currently have a few sets of patches floating around, for UEFI
-> runtime services, UEFI stub and GRUB support for Linux/UEFI on
-> arm/arm64.
-> 
-> The last version of Documentation/arm/uefi.txt I sent out raised a few
-> questions with regards to the boot protocol between UEFI and Linux, and
-> there is also upcoming support for ACPI which could use a few
-> clarifications in this area.
-> 
-> So, rather than sending out complete sets of patches for all these until
-> consensus is reached, below is my proposed suggestion for a
-> Documentation/arm/uefi.txt, to be shared for arm and arm64. If noone has
-> strong objections to this, we can quickly send updated (and hopefully
-> final-ish) versions of these sets.
-
-In the absence of code, I'll play English teacher then :)
-
-> UEFI, the Unified Extensible Firmware Interface is a specification
-
-Interface, is
-
-> governing the behaviours of compatible firmware interfaces.
-> It is maintained by the UEFI Forum - http://www.uefi.org/.
-> Support for the AArch32 (arm) architecture was added in version 2.3 of
-> the specification, and support for AAaarch64 (arm64) was added in
-> version 2.4.
-
-AArch64
-
-> UEFI is an evolution of its predecessor 'EFI', so the terms EFI and
-> EFI are used somewhat interchangeably in this document and associated
-
-UEFI
-
-> source code. As a rule, anything new uses 'UEFI', whereas 'EFI' refers
-> to legacy code or specifications.  
-> 
-> UEFI support in Linux                                                           
-> =====================                                                           
-> Booting on a platform with firmware compliant with the UEFI
-> specification makes it possible for the kernel to support additional
-> features:
-> - UEFI Runtime Services
-> - Retrieving various configuration information through the standardised
->   interface of UEFI configuration tables. (ACPI, SMBIOS, ...)
-> 
-> For actually enabling [U]EFI support, enable:
-> - CONFIG_EFI=y
-> - CONFIG_EFI_VARS=y or m
-> 
-> UEFI stub
-> =========
-> The "stub" is a feature that turns the Image/zImage/bzImage into a valid
-
-We don't support bzImage for arm or arm64.
-
-> UEFI PE/COFF executable, including a loader application that makes it
-> possible to load the kernel directly from the UEFI shell, boot menu, or
-> one of the lightweight bootloaders like Gummiboot or rEFInd. 
-> The kernel image built with stub support remains a valid kernel image
-> for booting in the legacy fashion.
-
-By legacy, you mean non-UEFI rather than EFI? I consider UEFI as a choice
-rather than the future ;p
-
-> UEFI kernel support on ARM
-> ==========================
-
-Wait, isn't this all under Documentation/arm/? You could probably combine
-some of these sections together, since the scope is really tied to ARM here.
-
-> The implementation depends on receiving information about the UEFI
-> environment in a Flattened Device Tree (FDT) - so is only available with
-> CONFIG_OF.
-
-You could mention this in your earlier list of dependencies.
-
-> UEFI support also depends on early_memremap().
-
-Why is that worthy of note? Can a user even turn that off?
-
-> UEFI kernel support on the ARM architectures (arm and arm64) is only
-> available when boot is performed through the stub.
-> 
-> When booting in UEFI mode, the kernel ignores any memory nodes in the
-> DT, and instead reads the UEFI memory map. To prevent confusion, the
-> stub deletes any memory nodes from a provided DT.
-> 
-> The stub populates the FDT /chosen node with, and the kernel scans for
-> the following parameters:
-
-Sentence doesn't read very well. Maybe stick some brackets around (and the
-kernel scans for)?
-
-> ______________________________________________________________________________
-> Name                      | Size   | Description
-> ================================================================================
-> linux,uefi-system-table   | 64-bit | Physical address of the UEFI System Table.
-> --------------------------------------------------------------------------------
-> linux,uefi-mmap           | 64-bit | Physical address of the UEFI memory map,
->                           |        | populated by the UEFI GetMemoryMap() call.
-> --------------------------------------------------------------------------------
-> linux,uefi-mmap-size      | 32-bit | Size in bytes of the UEFI memory map
->                           |        | pointed to in previous entry.
-> --------------------------------------------------------------------------------
-> linux,uefi-mmap-desc-size | 32-bit | Size in bytes of each entry in the UEFI
->                           |        | memory map.
-
-Do we actually need to define these sizes here, or can they be dealt with
-using the usual #address-cells property? Also, I think you should describe
-the binding in a separate document somewhere under Documentation/devicetree,
-then cross-reference it from here.
-
-> --------------------------------------------------------------------------------
-> linux,uefi-stub-kern-ver  | string | Copy of linux_banner from build.
-> --------------------------------------------------------------------------------
-
-Are you sure you want to refer to kernel symbols here? If somebody renames
-that variable, they're not going to fix this file.
-
-Will
+VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
+Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
+YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
+IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
+QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
+SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
+dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
+Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
+Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
+a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9y
+Zz4KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogRXJpYyBCw6lu
+YXJkIDxlcmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlz
+QGV1a3JlYS5jb20+CkFja2VkLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG0uY2hlaGFiQHNh
+bXN1bmcuY29tPgotLS0KQ2hhbmdlTG9nIHYyLT52MzoKLSBBZGRlZCBzb21lIGludGVyZXN0ZWQg
+cGVvcGxlIGluIHRoZSBDYyBsaXN0LgotIEFkZGVkIE1hdXJvIENhcnZhbGhvIENoZWhhYidzIEFj
+ay4KLSBBZGRlZCBkb2N1bWVudGF0aW9uLgotLS0KIC4uLi9Eb2NCb29rL21lZGlhL3Y0bC9waXhm
+bXQtcGFja2VkLXJnYi54bWwgICAgICAgIHwgICA3OCArKysrKysrKysrKysrKysrKysrKwogaW5j
+bHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsK
+IDIgZmlsZXMgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vRG9jQm9vay9tZWRpYS92NGwvcGl4Zm10LXBhY2tlZC1yZ2IueG1sIGIvRG9jdW1lbnRh
+dGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9waXhmbXQtcGFja2VkLXJnYi54bWwKaW5kZXggMTY2Yzhk
+Ni4uZjZhM2U4NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9w
+aXhmbXQtcGFja2VkLXJnYi54bWwKKysrIGIvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0
+bC9waXhmbXQtcGFja2VkLXJnYi54bWwKQEAgLTI3OSw2ICsyNzksNDUgQEAgY29sb3JzcGFjZSA8
+Y29uc3RhbnQ+VjRMMl9DT0xPUlNQQUNFX1NSR0I8L2NvbnN0YW50Pi48L3BhcmE+CiAJICAgIDxl
+bnRyeT48L2VudHJ5PgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgIDwvcm93PgorCSAgPHJvdyBp
+ZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiI+CisJICAgIDxlbnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhf
+Rk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PidSR0JIJzwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2Ny
+aXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRy
+eT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8
+ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1
+YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8
+L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0
+PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4K
+KwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4zPC9zdWJzY3Jp
+cHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5
+PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxl
+bnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vi
+c2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwv
+c3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5iPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+
+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlw
+dD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8
+ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5
+PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93PgogCSAgPHJvdyBpZD0iVjRMMi1QSVgt
+Rk1ULUJHUjI0Ij4KIAkgICAgPGVudHJ5Pjxjb25zdGFudD5WNEwyX1BJWF9GTVRfQkdSMjQ8L2Nv
+bnN0YW50PjwvZW50cnk+CiAJICAgIDxlbnRyeT4nQkdSMyc8L2VudHJ5PgpAQCAtNzgxLDYgKzgy
+MCw0NSBAQCBkZWZpbmVkIGluIGVycm9yLiBEcml2ZXJzIG1heSBpbnRlcnByZXQgdGhlbSBhcyBp
+biA8eHJlZgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgICAgPGVudHJ5PjwvZW50cnk+CiAJICA8
+L3Jvdz4KKwkgIDxyb3c+PCEtLSBpZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiIgLS0+CisJICAgIDxl
+bnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhfRk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PidSR0JIJzwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNj
+cmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1
+YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0Pjwv
+ZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+
+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlw
+dD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRy
+eT5nPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2Ny
+aXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vi
+c2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAg
+ICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5i
+PHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0
+PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3Jp
+cHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48
+L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAg
+IDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50
+cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93
+PgogCSAgPHJvdz48IS0tIGlkPSJWNEwyLVBJWC1GTVQtQkdSMjQiIC0tPgogCSAgICA8ZW50cnk+
+PGNvbnN0YW50PlY0TDJfUElYX0ZNVF9CR1IyNDwvY29uc3RhbnQ+PC9lbnRyeT4KIAkgICAgPGVu
+dHJ5PidCR1IzJzwvZW50cnk+CmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9k
+ZXYyLmggYi9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKaW5kZXggNDM3ZjFiMC4uZThm
+ZjQxMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oCisrKyBiL2lu
+Y2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaApAQCAtMjk0LDYgKzI5NCw3IEBAIHN0cnVjdCB2
+NGwyX3BpeF9mb3JtYXQgewogI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNTU1WCB2NGwyX2ZvdXJj
+YygnUicsICdHJywgJ0InLCAnUScpIC8qIDE2ICBSR0ItNS01LTUgQkUgICovCiAjZGVmaW5lIFY0
+TDJfUElYX0ZNVF9SR0I1NjVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdSJykgLyogMTYg
+IFJHQi01LTYtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjY2NiAgdjRsMl9mb3Vy
+Y2MoJ0InLCAnRycsICdSJywgJ0gnKSAvKiAxOCAgQkdSLTYtNi02CSAgKi8KKyNkZWZpbmUgVjRM
+Ml9QSVhfRk1UX1JHQjY2NiAgdjRsMl9mb3VyY2MoJ1InLCAnRycsICdCJywgJ0gnKSAvKiAxOCAg
+UkdCLTYtNi02CSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjI0ICAgdjRsMl9mb3VyY2Mo
+J0InLCAnRycsICdSJywgJzMnKSAvKiAyNCAgQkdSLTgtOC04ICAgICAqLwogI2RlZmluZSBWNEwy
+X1BJWF9GTVRfUkdCMjQgICB2NGwyX2ZvdXJjYygnUicsICdHJywgJ0InLCAnMycpIC8qIDI0ICBS
+R0ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9CR1IzMiAgIHY0bDJfZm91cmNj
+KCdCJywgJ0cnLCAnUicsICc0JykgLyogMzIgIEJHUi04LTgtOC04ICAgKi8KLS0gCjEuNy45LjUK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
+aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
+bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
