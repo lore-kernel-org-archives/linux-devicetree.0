@@ -1,167 +1,144 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Tue, 12 Nov 2013 14:30:12 -0500
-Message-ID: <20131112193012.GR10335@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <52814AFB.3070600@wwwdotorg.org>
- <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
- <528275B7.6050209@wwwdotorg.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
+Date: Tue, 12 Nov 2013 20:42:25 +0100
+Message-ID: <1384285347-13506-16-git-send-email-geert@linux-m68k.org>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528275B7.6050209-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <microblaze-linux-bounces-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
+In-Reply-To: <1384285347-13506-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+List-Unsubscribe: <https://lists.eait.uq.edu.au/mailman/options/microblaze-linux>,
+ <mailto:microblaze-linux-request-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.eait.uq.edu.au/pipermail/microblaze-linux>
+List-Post: <mailto:microblaze-linux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org>
+List-Help: <mailto:microblaze-linux-request-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.eait.uq.edu.au/mailman/listinfo/microblaze-linux>,
+ <mailto:microblaze-linux-request-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org?subject=subscribe>
+Errors-To: microblaze-linux-bounces-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen,
+Kill the microblaze-specific __fdt_blob section, and start using
+.dtb.init.rodata from <asm-generic/sections.h> for built-in DTBs, like
+most other DT enabled architectures.
 
-On Tue, Nov 12, 2013 at 11:38:47AM -0700, Stephen Warren wrote:
-> On 11/12/2013 08:29 AM, Rob Herring wrote:
-> > On Mon, Nov 11, 2013 at 3:24 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> >> On 11/11/2013 01:29 PM, Jason Cooper wrote:
-> >>> Consumers of the Linux kernel's build products are beginning to hardcode
-> >>> the filenames of the dtbs generated.  Since the dtb filenames are
-> >>> currently the dts filename s/dts/dtb/, this prevents the kernel
-> >>> community from renaming dts files as needed.
-> >>
-> >> My take is that the DTB filenames are part of the ABI, and therefore the
-> >> DTS filenames are also part of the ABI. Why would we want to rename them?
-> > 
-> > I agree with the ABI part, but for long term I think compatible
-> > strings are a better choice for the ABI than filenames. A link
-> > provides for a way to transition.
-> 
-> But this change isn't making the compatible value be the ABI, it's still
-> keeping the filename as the ABI, but creating a different way of
-> choosing the filename.
+Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+Untested, but the resulting vmlinux after "make simpleImage.system" looks
+sane.
 
-Right, which provides a path towards a slightly more sane ABI.  If we
-choose to implement this, or another variant, we get to shape a
-migration path towards an ABI we designed.  As opposed to locked in to
-one we didn't even see coming.
+QUESTION: The padding of the DTB is gone, is this OK?
 
-> In other words, if the compatible value is the ABI, then the algorithm is:
-> 
-> * Search for all available DTBs
-> * Parse each DTB to find one with a matching compatible value
-> 
-> Whereas if the filename is the ABI, the algorithm is:
-> 
-> * Calculate the filename
-> * Load that one specific file, without looking at its content
-> 
-> Some additional thoughts:
-> 
-> * The filename is only relevant to the bootloader (or whatever
-> locates/selects a DTB). The kernel/OS just gets a single DTB passed to
-> it and uses it, without any naming metadata[1].
+TODO: Start using the DTB logic in scripts/Makefile.lib instead of
+      arch/microblaze/boot/dts/linked_dtb.S
 
-As I see it (and perhaps this suffers from my limited view of the
-embedded space, eg fairly marvell-specific), there are two scenarios:
+ arch/microblaze/boot/Makefile          |    2 +-
+ arch/microblaze/boot/dts/linked_dtb.S  |    2 +-
+ arch/microblaze/include/asm/sections.h |    4 +---
+ arch/microblaze/kernel/head.S          |    2 +-
+ arch/microblaze/kernel/setup.c         |    4 ++--
+ arch/microblaze/kernel/vmlinux.lds.S   |    8 --------
+ 6 files changed, 6 insertions(+), 16 deletions(-)
 
-1) The end goal:  bootloaders load a single DTB from a chunk of flash
-and pass it off to the kernel/next stage, whatever.  Either there is no
-filename, just a flash partition, or the vendor has chosen some dtb
-naming scheme suitable for their needs, eg OMAP SoCs pulling the
-bootloader from an SD card would need to name the dtb contained on the
-same SD card. board.dtb?  I'm assuming here that the SD card files are
-board specific (x-loader, uboot, env, dtb)
+diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
+index 8e211cc28dac..e4a99a22dab8 100644
+--- a/arch/microblaze/boot/Makefile
++++ b/arch/microblaze/boot/Makefile
+@@ -23,7 +23,7 @@ quiet_cmd_cp = CP      $< $@$2
+ 
+ quiet_cmd_strip = STRIP   $@
+ 	cmd_strip = $(STRIP) -K microblaze_start -K _end -K __log_buf \
+-				-K _fdt_start vmlinux -o $@
++				-K __dtb_start vmlinux -o $@
+ 
+ UIMAGE_LOADADDR = $(CONFIG_KERNEL_BASE_ADDR)
+ 
+diff --git a/arch/microblaze/boot/dts/linked_dtb.S b/arch/microblaze/boot/dts/linked_dtb.S
+index 23345af3721f..bfc53b5795aa 100644
+--- a/arch/microblaze/boot/dts/linked_dtb.S
++++ b/arch/microblaze/boot/dts/linked_dtb.S
+@@ -1,2 +1,2 @@
+-.section __fdt_blob,"a"
++.section .dtb.init.rodata,"a"
+ .incbin "arch/microblaze/boot/dts/system.dtb"
+diff --git a/arch/microblaze/include/asm/sections.h b/arch/microblaze/include/asm/sections.h
+index 1b281d3ea734..fb8ab0ba03fc 100644
+--- a/arch/microblaze/include/asm/sections.h
++++ b/arch/microblaze/include/asm/sections.h
+@@ -16,8 +16,6 @@
+ # ifndef __ASSEMBLY__
+ extern char _ssbss[], _esbss[];
+ extern unsigned long __ivt_start[], __ivt_end[];
+-
+-extern u32 _fdt_start[], _fdt_end[];
+-
+ # endif /* !__ASSEMBLY__ */
++
+ #endif /* _ASM_MICROBLAZE_SECTIONS_H */
+diff --git a/arch/microblaze/kernel/head.S b/arch/microblaze/kernel/head.S
+index 817b7eec95b6..6108889f0025 100644
+--- a/arch/microblaze/kernel/head.S
++++ b/arch/microblaze/kernel/head.S
+@@ -94,7 +94,7 @@ big_endian:
+ 	bnei	r11, no_fdt_arg			/* No - get out of here */
+ _prepare_copy_fdt:
+ 	or	r11, r0, r0 /* incremment */
+-	ori	r4, r0, TOPHYS(_fdt_start)
++	ori	r4, r0, TOPHYS(__dtb_start)
+ 	ori	r3, r0, (0x8000 - 4)
+ _copy_fdt:
+ 	lw	r12, r7, r11 /* r12 = r7 + r11 */
+diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
+index 603e22fec6d5..a4534f584be0 100644
+--- a/arch/microblaze/kernel/setup.c
++++ b/arch/microblaze/kernel/setup.c
+@@ -136,7 +136,7 @@ void __init machine_early_init(const char *cmdline, unsigned int ram,
+ 	lockdep_init();
+ 
+ /* initialize device tree for usage in early_printk */
+-	early_init_devtree(_fdt_start);
++	early_init_devtree(&__dtb_start);
+ 
+ #ifdef CONFIG_EARLY_PRINTK
+ 	setup_early_printk(NULL);
+@@ -152,7 +152,7 @@ void __init machine_early_init(const char *cmdline, unsigned int ram,
+ 	if (fdt)
+ 		pr_info("FDT at 0x%08x\n", fdt);
+ 	else
+-		pr_info("Compiled-in FDT at %p\n", _fdt_start);
++		pr_info("Compiled-in FDT at %p\n", &__dtb_start);
+ 
+ #ifdef CONFIG_MTD_UCLINUX
+ 	pr_info("Found romfs @ 0x%08x (0x%08x)\n",
+diff --git a/arch/microblaze/kernel/vmlinux.lds.S b/arch/microblaze/kernel/vmlinux.lds.S
+index 936d01a689d7..2659e70984a3 100644
+--- a/arch/microblaze/kernel/vmlinux.lds.S
++++ b/arch/microblaze/kernel/vmlinux.lds.S
+@@ -40,14 +40,6 @@ SECTIONS {
+ 		_etext = . ;
+ 	}
+ 
+-	. = ALIGN (4) ;
+-	__fdt_blob : AT(ADDR(__fdt_blob) - LOAD_OFFSET) {
+-		_fdt_start = . ;		/* place for fdt blob */
+-		*(__fdt_blob) ;			/* Any link-placed DTB */
+-	        . = _fdt_start + 0x8000;	/* Pad up to 32kbyte */
+-		_fdt_end = . ;
+-	}
+-
+ 	. = ALIGN(16);
+ 	RODATA
+ 	EXCEPTION_TABLE(16)
+-- 
+1.7.9.5
 
-2) right now: distributions are creating utilities, such a flash-kernel
-in Debian, that pick from a slew of dtbs, append it to the zImage, and
-create the uImage.  The bootloaders in these installs don't have support
-for fdt.
-
-Our problem (as I see it) is that #2 is creating an ABI out of something
-we never realized would become an ABI, the filenames created by 'make
-dtbs'.
-
-And since the dtb name is derived directly from the dts name, we're
-getting locked into a bunch of filenames that are less than ideal
-because we didn't know what we didn't know when we started this two+
-years ago.
-
-> * Perhaps different bootloaders work different ways. For example, I've
-> set up U-Boot on all Tegra devices so that if U-Boot expands the string
-> "${soc}-${board}.dtb" using its environment, it'll generate the correct
-> DTB filename.
-
-Why does the bootloader have to choose?  Is this a development scenario or
-a deployed scenario?
-
-> * Other boot-loaders might like "${compatible_parsed_from_the_dtb}" to
-> be the filename; that's Jason's proposal.
-> 
-> * Other SW (which I mention in [1]) might want to locate DTBs based on
-> ARM machine ID rather than compatible value.
-
-fyi:  https://github.com/zonque/pxa-impedance-matcher.git
-
-> * As such, we're really talking about an indexing process when
-> installing/packaging/searching DTBs. Shouldn't this file renaming happen
-> as part of that process, not the build process?
-
-I agree, but it's not.  Hence the patch.
-
-> * When we create symlinks or any kind of index, I think we want to
-> create links for all entries in the compatible property (or other index
-> source). 
-
-We can't, you'll get collisions.  In my globalscale,mirabox.dtb example,
-the next string is 'marvell,armada370'.  That matches many boards which
-_aren't_ compatible with the globalscale,mirabox.dtb.
-
-> Consider if we have two boards:
-> 
-> Cardhu revision A02
-> Cardhu revision A04
-> 
-> Initially we think they're the same because we didn't read the
-> schematics well enough, but then later we split them. That means we'll
-> start out with one file:
-> 
-> nvidia,tegra30-cardhu.dtb
-
-We've seen this as well with a couple of boards.
-
-> then later have instead:
-> 
-> nvidia,tegra30-cardhu-a02.dtb
-> nvidia,tegra30-cardhu-a04.dtb
-> 
-> Similarly, perhaps one DTB is (initially thought to be?) suitable for
-> multiple ARM machine IDs, etc.
-> 
-> So, bootloaders would have to search for $vendor,$soc-$board-$rev.dtb
-> then fall back to $vendor,$soc-$board.dtb (both those values are in the
-> compatible properties in those DTBs).
-
-I disagree here.  I don't think this decision/discovery process should
-be done by the bootloader.  It should be done by the distribution
-installer/firmware upgrade utility.  The risk of breaking boot is too
-high.
-
-> But then "nvidia,tegra30" is in the compatible property for many boards.
-> I wonder how we resolve that?
-
-At least during installer/upgrade the distro has the opportunity to
-query the user, "Hey, this used to have nvidia,tegra30-cardhu.dtb, but
-now I need to choose between nvidia,tegra30-cardhu-a02.dtb and
-nvidia,tegra30-cardhu-a04.dtb.  Please see
-http://wiki.mydistro.org/devicetree/upgrade/nvidia,tegra30-cardhu for
-howto determine which variant matches your board."
-
-Ideally, there would be programmatic way for the upgrader to determine
-which variant it is on, but failing that, it could fall back to the
-above.
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+_______________________________________________
+microblaze-linux mailing list
+microblaze-linux-FR6EJeJVuqfA6Z3fQjNZrN9u6TNh0Fb7@public.gmane.org
+https://lists.eait.uq.edu.au/mailman/listinfo/microblaze-linux
