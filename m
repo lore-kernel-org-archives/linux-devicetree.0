@@ -1,62 +1,59 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv4 1/7] ARM: tegra: Create a DT header defining SWGROUP ID
-Date: Tue, 12 Nov 2013 15:48:22 -0700
-Message-ID: <5282B036.9090604@wwwdotorg.org>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
-	<1384158718-4756-2-git-send-email-hdoyu@nvidia.com>
+From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 5/6] ARM: hi3xxx: add smp support
+Date: Tue, 12 Nov 2013 14:53:31 -0800
+Message-ID: <8738n1nses.fsf@linaro.org>
+References: <1383813691-31587-1-git-send-email-haojian.zhuang@linaro.org>
+	<1383813691-31587-6-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1384158718-4756-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383813691-31587-6-git-send-email-haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+	(Haojian Zhuang's message of "Thu, 7 Nov 2013 16:41:30 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
-> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
-> binding. "swgroup" is a group of H/W clients which a Tegra SoC
-> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
-> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
-> register bit. This will allow the same header to be used by both
-> device tree files, and drivers implementing this binding, which
-> guarantees that the two stay in sync. This also makes device trees
-> more readable by using names instead of magic numbers. For HOTRESET
-> bit shifting we need another conversion table, which will come later.
+Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+> From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Enable SMP support on hi3xxx platform
+>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Zhang Mingjun <zhang.mingjun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Li Xin <li.xin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/arm/hisilicon/hisilicon.txt           | 30 ++++++--
+>  arch/arm/boot/dts/hi3620.dtsi                      | 38 ++++++++++
+>  arch/arm/mach-hi3xxx/Kconfig                       |  3 +
+>  arch/arm/mach-hi3xxx/Makefile                      |  1 +
+>  arch/arm/mach-hi3xxx/core.h                        | 11 +++
+>  arch/arm/mach-hi3xxx/hi3xxx.c                      | 34 +++++++++
+>  arch/arm/mach-hi3xxx/platsmp.c                     | 84 ++++++++++++++++++++++
+>  7 files changed, 197 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/arm/mach-hi3xxx/core.h
+>  create mode 100644 arch/arm/mach-hi3xxx/platsmp.c
+>
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 3be60c8..8c7a465 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -1,10 +1,32 @@
+>  Hisilicon Platforms Device Tree Bindings
+>  ----------------------------------------------------
+>  
+> -Hi3716 Development Board
+> -Required root node properties:
+> -	- compatible = "hisilicon,hi3716-dkb";
+> -
 
-> +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
-> +
-> +#define TEGRA_SWGROUP_MAX	64
-> +
-> +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+This was added in patch 1/6, then removed here.  If it's not
+needed/used, just drop it from patch 1 please.
 
-If I put the following into a DT and compile it:
-
-#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
-#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
-/ {
-	test-prop = <(TEGRA_SWGROUP_BIT(PPCS2))>;
-};
-
-I get:
-
-Error: arch/arm/boot/dts/tegra20.dtsi:11.28-29 integer value out of
-range 0000000000000020 (32 bits)
-FATAL ERROR: Syntax error parsing input tree
-
-Is TEGRA_SWGROUP_BIT() not meant to be used in DT files? If it is, the
-definition is broken. If it is not, it should be defined in the driver
-not the header, since DT files have no use for it.
-
-Note: I mentioned this issue last time I reviewed this patch:-(
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
