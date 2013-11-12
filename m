@@ -1,136 +1,105 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 01/19] [HACK] of: dev_node has struct device pointer
-Date: Tue, 12 Nov 2013 07:17:44 +0000
-Message-ID: <20131112071744.D8134C421EC@trevor.secretlab.ca>
-References: <20131025075652.GB19622@ulmo.nvidia.com>
-	<20131025.112549.2040849946958069337.hdoyu@nvidia.com>
-	<20131025091104.GG19622@ulmo.nvidia.com>
-	<20131025.124905.1154427805530939055.hdoyu@nvidia.com>
-	<20131025104937.GA25080@ulmo.nvidia.com>
-	<20131025190136.D55F5C403A7@trevor.secretlab.ca>
-	<20131028073133.GA6629@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131028073133.GA6629-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Tue, 12 Nov 2013 06:54:05 +0000
+Message-ID: <20131112065405.C75E8C42024@trevor.secretlab.ca>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> <1381869563-16083-10-git-send-email-grant.likely@linaro.org> <CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Oct 2013 08:31:34 +0100, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Oct 25, 2013 at 08:01:36PM +0100, Grant Likely wrote:
-> > On Fri, 25 Oct 2013 12:49:38 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > On Fri, Oct 25, 2013 at 11:49:05AM +0200, Hiroshi Doyu wrote:
-> > > > Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Fri, 25 Oct 2013 11:11:05 +0200:
-> > > > 
-> > > > > > > This is actually "the other problem that I'm aware of that could benefit
-> > > > > > > from [interrupt resolution at probe time]". My idea was that once we had
-> > > > > > > a way within the driver core to resolve interrupt references at probe
-> > > > > > > time it could be used for potentially many other resources as well. Some
-> > > > > > > of the resources like GPIOs and regulators are obviously not something
-> > > > > > > that the core can or should be requesting, but mostly resources that you
-> > > > > > > don't actually need to control after probing (such as interrupts) would
-> > > > > > > be a good fit because otherwise people would write the same boilerplate
-> > > > > > > over and over again.
-> > > > > > > 
-> > > > > > > IOMMUs seem to me to be in that same category. As far as I can tell, an
-> > > > > > > IOMMU driver registers the IOMMU for a given bus, upon which every
-> > > > > > > device can simply be used (mostly transparently) with that IOMMU. While
-> > > > > > > I haven't figured out how exactly, I'm pretty sure we can take advantage
-> > > > > > > of the resolution of resources at probe time within the core to both
-> > > > > > > keep drivers from having to do anything in particular and at the same
-> > > > > > > time have code to determine if the IOMMU driver hasn't been probed yet
-> > > > > > > and return -EPROBE_DEFER appropriately.
-> > > > > > 
-> > > > > > Can you explain the above a bit more?
-> > > > > > 
-> > > > > > Originally I thought that what Grant suggested would work ok with this
-> > > > > > patch.
-> > > > > 
-> > > > > I think the objection to these patches is that they special case the
-> > > > > instantiation of some devices. It's not a proper solution because it
-> > > > > implies various things. For example merely instantiating the IOMMU
-> > > > > device earlier than others is only going to work *if* the driver is
-> > > > > actually probed before the drivers of other devices. If you want to
-> > > > > build the driver as a module for example, probe order becomes entirely
-> > > > > non-deterministic.
-> > > > 
-> > > > I understand the above limitation. What I thought for the solution is
-> > > > that I can make use of iommu_bus even before IOMMU is
-> > > > instanciated. iommu_bus has its notifier which calls
-> > > > iommu_ops()->add_device(). This could return -EPROBE_DEFER when IOMMU
-> > > > isn't ready. Only the problem is the current "bus_notifier" doesn't
-> > > > have the ability to return error. I'll see if it can be modified. Even
-> > > > with this, at least IOMMU *driver* needs to be init'ed enough earlier
-> > > > to prevent devices from being registered without IOMMU.
-> > > 
-> > > The way notifiers work is that they run completely hidden from whatever
-> > > triggers them. For instance you register the IOMMU bus notifier from the
-> > > IOMMU driver (by calling bus_set_iommu()). That registers a function to
-> > > be called when some event happens on that bus. When a device's driver is
-> > > probed successfully, the driver core will notify the bus, which causes
-> > > the IOMMU callback to be run.
-> > > 
-> > > Some of this code runs before the driver has successfully been probed,
-> > > so I imagine it would be possible to use it to abort probing. But that's
-> > > not possible at least with the current code.
-> > > 
-> > > > > Instead of handling such dependencies implicitly by making sure all
-> > > > > resource providers are probed earlier than any of their consumers, the
-> > > > > dependencies are handled more explicitly, which turns out to simplify
-> > > > > things a lot. There's some additional work required in the core, but if
-> > > > > done consistently no driver needs to care about the dependencies and it
-> > > > > no longer matters where the resources come from. The problem is reduced
-> > > > > to essentially this:
-> > > > > 
-> > > > > 	while (!resource_available())
-> > > > > 		load_more_drivers();
-> > > > > 
-> > > > > So my proposed solution for the IOMMU case is to treat it the same as
-> > > > > any other resources. Perhaps resource isn't the right word, but at the
-> > > > > core the issue is the same. A device requires the services of an IOMMU
-> > > > > so that it can be put into the correct address space. If the IOMMU is
-> > > > > not available yet it cannot do that, so we simply return -EPROBE_DEFER
-> > > > > and cause the probe to be retried later.
-> > > > 
-> > > > This looks somewhat similar to the above iommu_bus notifier.
-> > > > 
-> > > > Is there any way to implement the same mechanism rather than using
-> > > > bus?
-> > > 
-> > > Yes, I think it should be possible to get this to work without using the
-> > > bus notifier at all. I can try to code something up but wanted to wait
-> > > for feedback from Grant first.
-> > 
-> > I've lost track. What feedback are you waiting for from me? I've not dug
-> > into this entire series so I may not provide clueful feedback.
+On Tue, 12 Nov 2013 08:58:15 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Grant,
 > 
-> I think the context was lost. Here's a link to the relevant message:
+> On Wed, Oct 16, 2013 at 6:39 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > The standard interrupts property in device tree can only handle
+> > interrupts coming from a single interrupt parent. If a device is wired
+> > to multiple interrupt controllers, then it needs to be attached to a
+> > node with an interrupt-map property to demux the interrupt specifiers
+> > which is confusing. It would be a lot easier if there was a form of the
+> > interrupts property that allows for a separate interrupt phandle for
+> > each interrupt specifier.
+> >
+> > This patch does exactly that by creating a new interrupts-extended
+> > property which reuses the phandle+arguments pattern used by GPIOs and
+> > other core bindings.
+> >
+> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
+> >  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
+> >  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
+> >  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
+> >  drivers/of/irq.c                                   | 16 +++--
+> >  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
+> >  6 files changed, 122 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > index 72a06c0..1486497 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > @@ -4,16 +4,33 @@ Specifying interrupt information for devices
+> >  1) Interrupt client nodes
+> >  -------------------------
+> >
+> > -Nodes that describe devices which generate interrupts must contain an
+> > -"interrupts" property. This property must contain a list of interrupt
+> > -specifiers, one per output interrupt. The format of the interrupt specifier is
+> > -determined by the interrupt controller to which the interrupts are routed; see
+> > -section 2 below for details.
+> > +Nodes that describe devices which generate interrupts must contain an either an
+> > +"interrupts" property or an "interrupts-extended" property. These properties
+> > +contain a list of interrupt specifiers, one per output interrupt. The format of
+> > +the interrupt specifier is determined by the interrupt controller to which the
+> > +interrupts are routed; see section 2 below for details.
+> > +
+> > +  Example:
+> > +       interrupt-parent = <&intc1>;
+> > +       interrupts = <5 0>, <6 0>;
+> >
+> >  The "interrupt-parent" property is used to specify the controller to which
+> >  interrupts are routed and contains a single phandle referring to the interrupt
+> >  controller node. This property is inherited, so it may be specified in an
+> > -interrupt client node or in any of its parent nodes.
+> > +interrupt client node or in any of its parent nodes. Interrupts listed in the
+> > +"interrupts" property are always in reference to the node's interrupt parent.
+> > +
+> > +The "interrupts-extended" property is a special form for use when a node needs
+> > +to reference multiple interrupt parents. Each entry in this property contains
+> > +both the parent phandle and the interrupt specifier. "interrupts-extended"
+> > +should only be used when a device has multiple interrupt parents.
+> > +
+> > +  Example:
+> > +       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
+> > +
 > 
-> 	http://www.spinics.net/lists/devicetree/msg09709.html
+> A slightly different but related problem I am trying to solve with
+> interrupt bindings, is to describe connection of a single device
+> interrupt line to multiple interrupts controller, whereas this binding
+> seems to be describing connection of different interrupt lines to
+> different controllers. Can this syntax accommodate my case is any way?
 > 
-> The message ID is:
+> Bascially I think I'm asking for multiple interrupt specifiers for a
+> single IRQ output if that's possible.
 > 
-> 	20131025075652.GB19622-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org
+> Should I just be using the interrupt map syntax instead?
+> 
+> interrupt-map-mask = < 0 0 63>;
+> interrupt-map = < 0 0 25 &intc0 ... >, < 0 0 25 &intc1 ... >,
 
-I think getting the interrupts resolved at probe time would be the
-better thing to do first. That problem is well understood.
+Interrupt map doesn't actually help you here either since the core code
+doesn't know what to do with it. It will probably only match and return
+one of the options.
 
-I unfortunately don't know enough about IOMMU configuration to comment
-intelligently about how the binding should be set up. My gut instinct is
-that device nodes should have references to the IOMMU so that all the
-information is easily at hand when a driver attempts to probe. Having
-references from the IOMMU node to the devices /seems/ backwards. Will
-Deacon I think would be a better person to talk about it with.
+What I would do is describe both in your interrupts property and make
+the driver know that the extra interrupt specifier is for the same
+interrupt output.
 
 g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
