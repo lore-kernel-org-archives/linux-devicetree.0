@@ -1,44 +1,44 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
-Date: Tue, 12 Nov 2013 07:01:14 +0000
-Message-ID: <20131112070114.73AE3C421A6@trevor.secretlab.ca>
-References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca> <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com> <alpine.DEB.2.02.1311111658100.26077@kaball.uk.xensource.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Tue, 12 Nov 2013 08:05:12 +0100
+Message-ID: <20131112080512.3992b2e4@skate>
+References: <527A1983.6020603@keymile.com>
+	<20131106173649.GA25515@obsidianresearch.com>
+	<20131106190308.01f7a4a9@skate>
+	<20131106182457.GA25879@obsidianresearch.com>
+	<20131111155050.96290C41ABB@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1311111658100.26077-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
+In-Reply-To: <20131111155050.96290C41ABB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2013 16:59:14 +0000, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org> wrote:
-> On Wed, 6 Nov 2013, Stefano Stabellini wrote:
-> > On Sat, 2 Nov 2013, Grant Likely wrote:
-> > > On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > > > 
-> > > > Platform devices created by DT code don't initialize dma_mask pointer to
-> > > > anything. Set it to coherent_dma_mask by default if the architecture
-> > > > code has not set it.
-> > > > 
-> > > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > > 
-> > > I believe this is okay. I haven't done any testing to back up that
-> > > opinion though.
-> > 
-> > Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Dear Grant Likely,
+
+On Mon, 11 Nov 2013 15:50:50 +0000, Grant Likely wrote:
+
+> > So the mbus would register an address xlate for its node that is
+> > called instead of ranges parsing. For the example in my last message
+> > the FPGA driver would register an xlate that made addresses relative
+> > to its own BAR0 address.
 > 
-> BTW I hope you are planning on sending this upstream soon, because
-> without it I can very easily corrupt my root fs by simply booting the system.
+> There are already bus-specific transations available. Take a look at
+> struct of_bus in drivers/of/address.c
 
-Gah! That's pretty nasty. It is in Rob's for-next branch, but it hasn't
-been marked for backporting to stable. Best thing to do here is for
-either you or Rob to repost the patch to stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and
-include the commit id from Rob's tree. It's not upstream yet, but it
-will be soon.
+Hum, right, but unless I'm wrong the of_busses[] array of struct of_bus
+is fixed in drivers/of/address.c, and as it is, there is no way for a
+specific bus driver to provide its own struct of_bus. So that would
+need to be extended, right?
 
-How far back in kernel releases do you want the patch backported to?
-
-g.
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
