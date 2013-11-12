@@ -1,7 +1,7 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v7 3/7] ARM: dts: imx27 pinctrl
-Date: Tue, 12 Nov 2013 09:50:06 +0100
-Message-ID: <1384246210-9257-4-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH v7 7/7] ARM: imx27: enable pinctrl
+Date: Tue, 12 Nov 2013 09:50:10 +0100
+Message-ID: <1384246210-9257-8-git-send-email-mpa@pengutronix.de>
 References: <1384246210-9257-1-git-send-email-mpa@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384246210-9257-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,156 +10,26 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Pinctrl driver node and pin group definitions for other driver nodes.
-
 Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/imx27.dtsi | 125 +++++++++++++++++++++++--------------------
- 1 file changed, 67 insertions(+), 58 deletions(-)
+ arch/arm/mach-imx/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index b7a1c6d..f119296 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -10,6 +10,7 @@
-  */
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 29a8af6..58726d5 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -121,6 +121,8 @@ config SOC_IMX27
+ 	select IMX_HAVE_IOMUX_V1
+ 	select MACH_MX27
+ 	select MXC_AVIC
++	select PINCTRL
++	select PINCTRL_IMX27
  
- #include "skeleton.dtsi"
-+#include "imx27-pingrp.h"
- 
- / {
- 	aliases {
-@@ -235,64 +236,72 @@
- 				status = "disabled";
- 			};
- 
--			gpio1: gpio@10015000 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015000 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--			};
--
--			gpio2: gpio@10015100 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015100 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--			};
--
--			gpio3: gpio@10015200 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015200 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--			};
--
--			gpio4: gpio@10015300 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015300 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--			};
--
--			gpio5: gpio@10015400 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015400 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--			};
--
--			gpio6: gpio@10015500 {
--				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
--				reg = <0x10015500 0x100>;
--				interrupts = <8>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
-+			iomuxc: iomuxc@10015000 {
-+				compatible = "fsl,imx27-iomuxc";
-+				reg = <0x10015000 0x600>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges;
-+
-+				gpio1: gpio@10015000 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015000 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
-+
-+				gpio2: gpio@10015100 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015100 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
-+
-+				gpio3: gpio@10015200 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015200 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
-+
-+				gpio4: gpio@10015300 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015300 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
-+
-+				gpio5: gpio@10015400 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015400 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
-+
-+				gpio6: gpio@10015500 {
-+					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-+					reg = <0x10015500 0x100>;
-+					interrupts = <8>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+				};
- 			};
- 
- 			audmux: audmux@10016000 {
+ config SOC_IMX31
+ 	bool
 -- 
 1.8.4.2
 
