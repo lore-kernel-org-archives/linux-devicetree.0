@@ -1,88 +1,123 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
-Date: Tue, 12 Nov 2013 21:37:46 +0900
-Message-ID: <20131112123746.EAEF0C42283@trevor.secretlab.ca>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com> <20130918042923.5D845C42CF7@trevor.secretlab.ca> <20130918181112.56c10dde@skate> <1811694.J4B6oUpKxP@lenovo>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
+Date: Tue, 12 Nov 2013 14:21:38 +0100
+Message-ID: <2066181.Dnml2sjdAl@amdc1032>
+References: <1B.DE.05666.EC070825@epcpsbgx2.samsung.com>
+ <2964665.KKjuSDVdEA@flatron>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1811694.J4B6oUpKxP@lenovo>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <2964665.KKjuSDVdEA@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: prathyush.k@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Oct 2013 05:40:57 +0100, Florian Fainelli <florian@openwrt.o=
-rg> wrote:
-> Le mercredi 18 septembre 2013, 18:11:12 Thomas Petazzoni a =C3=A9crit=
- :
-> > Dear Grant Likely,
-> >=20
-> > On Tue, 17 Sep 2013 23:29:23 -0500, Grant Likely wrote:
-> > > I understand what you're trying to do here, but it causes a troub=
-lesome
-> > > leakage of implementation detail into the binding, making the who=
-le
-> > > thing look very odd. This binding tries to make a fixed link look
-> > > exactly like a real PHY even to the point of including a phandle =
-to the
-> > > phy. But having a phandle to a node which is *always* a direct ch=
-ild of
-> > > the MAC node is redundant and a rather looney. Yes, doing it that=
- way
-> > > makes it easy for of_phy_find_device() to be transparent for fixe=
-d link,
-> > > but that should *not* drive bindings, especially when that makes =
-the
-> > > binding really rather weird.
-> > >=20
-> > > Second, this new binding doesn't provide anything over and above =
-the
-> > > existing fixed-link binding. It may not be pretty, but it is
-> > > estabilshed.
-> >=20
-> > Have you followed the past discussions about this patch set? Basica=
-lly
-> > the *only* feedback I received on RFCv1 is that the fixed-link prop=
-erty
-> > sucks, and everybody (including the known Device Tree binding
-> > maintainer Mark Rutland) suggested to not use the fixed-link mechan=
-ism.
-> > See http://article.gmane.org/gmane.linux.network/276932, where Mark
-> > said:
-> >=20
-> > ""
-> > I'm not sure grouping these values together is the best way of hand=
-ling
-> > this. It's rather opaque, and inflexible for future extension.
-> > ""
-> >=20
-> > So, please DT maintainers, tell me what you want. I honestly don't =
-care
-> > whether fixed-link or a separate node is chosen. However, I do care
-> > about being dragged around between two solutions just because the
-> > former DT maintainer and the new DT maintainers do not agree.
 
-I've been sleepy on this issue, which limits how much I can push. I'll
-say one more thing on the issue (below) and then leave the decision up
-to Mark. I trust him and he knows what he is doing.
+Hi,
 
-> Since I would like to move forward so I can one day use that binding =
-in a=20
-> real-life product, I am going to go for Mark's side which happens to =
-be how I=20
-> want the binding to look like.
->=20
-> Do we all agree that the new binding is just way better than the old =
-one? In=20
-> light of the recent unstable DT ABI discussion, we can still continue=
- parsing=20
-> the old one for the sake of compatibility.
+On Monday, November 11, 2013 03:28:44 PM Tomasz Figa wrote:
+> Hi Prathyush,
+> 
+> Thanks for your reply. However, please do not use HTML messages to reply
+> to mailing lists, as many of them filter out such.
+> 
+> On Monday 11 of November 2013 05:53:18 Prathyush Kalashwaram wrote:
+> > Hi Tomasz,
+> >  
+> > The enable values for some configuration registers are not 0x7.
+> > Though there is no issue observed (so far) in using 0x7, it is better to use the correct enable values.
+> > Thats the reason for this patch.
+> 
+> Well, this means that the patch does not fix or improve anything, just
+> introduces changes that are not needed for anything. This is especially
 
-Regardless of what you want it to look like, does the old binding work
-for your purposes? If yes then use it. The only valid reason for
-creating a new binding is if the old one doesn't work for a specific
-(not theoretical) use case.
+Writing reserved bits of hardware registers is not a good practice and
+such behavior should be fixed.  However in this particular case of power
+domains I don't see a need for fixing anything.  After looking at the
+documentation and the code I see no improper use of currently supported
+power domains.
 
-g.
+Prathyush, could you please confirm that there are no currently supported
+power domains (defined in exynos*.dtsi device tree files) that need fixing?
+
+> bad, because it introduces a change in DT binding that is not needed yet
+> and might turn out to be insufficient for future SoCs.
+> 
+> This patch will be okay, if a need for explicit mask specification shows
+> up in future, though.
+
+Agreed.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> Best regards,
+> Tomasz
+> 
+> > And you're right. Using "samsung,enable-bit-mask" makes more sense. I will change and update with v2.
+> >  
+> > Regards,
+> > Prathyush
+> >  
+> > ------- Original Message -------
+> > Sender : Tomasz Figa<tomasz.figa@gmail.com>
+> > Date : Nov 11, 2013 00:36 (GMT+05:30)
+> > Title : Re: [PATCH 1/1] ARM: EXYNOS: Add enable property to power domains
+> >  
+> > Hi Sachin,
+> > 
+> > On Thursday 07 of November 2013 12:12:55 Sachin Kamat wrote:
+> > > From: Prathyush K
+> > >
+> > > Different power domains of Exynos SOCs have different enable values.
+> > > E.g. Exynos5250:
+> > > ROTATOR_MEM_CONFIGURATION -> 0x3
+> > > GSCL_CONFIGURATION -> 0x7
+> > > Currently, there is no way to differentiate between these power domains
+> > > and we write default value of 0x7 to turn on all the power domains.
+> > >
+> > > This patch adds a new 'enable' property to the power domain structure.
+> > > This enable value can be set from the device tree by adding a property
+> > > 'enable' in the device node. If no such property is found, the default
+> > > value of 0x7 is used as enable value.
+> > 
+> > Is this patch really needed? Is there any problem with simply using 0x7?
+> > Patch description should always include rationale behind the change.
+> > 
+> > >
+> > > Signed-off-by: Prathyush K
+> > > Signed-off-by: Sachin Kamat
+> > > ---
+> > >  .../bindings/arm/exynos/power_domain.txt           |    5 +++++
+> > >  arch/arm/mach-exynos/pm_domains.c                  |   10 +++++++---
+> > >  2 files changed, 12 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > > index 5216b419016a..6b24b234617c 100644
+> > > --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> > > @@ -9,6 +9,10 @@ Required Properties:
+> > >  - reg: physical base address of the controller and length of memory mapped
+> > >      region.
+> > >  
+> > > +Optional Properties:
+> > > +- enable: enable value of the register which is used to turn on the power
+> > > +    domain. If no enable is specificed, default value of 0x7 is used.
+> > 
+> > Vendor-specific properties should have vendor prefix added, so this one
+> > should be called samsung,enable instead. Also enable is not a very
+> > specific name.
+> > 
+> > So in the end, if it turns out that we really need such patch, I'd prefer
+> > something like:
+> > 
+> > - samsung,enable-bit-mask: Mask of power control register bits that need
+> >     to be set to enable the power domain. If omitted, it defaults to 0x7.
+> > 
+> > Best regards,
+> > Tomasz
