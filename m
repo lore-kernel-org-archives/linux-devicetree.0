@@ -1,99 +1,84 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Mon, 11 Nov 2013 15:50:50 +0000
-Message-ID: <20131111155050.96290C41ABB@trevor.secretlab.ca>
-References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate> <20131106182457.GA25879@obsidianresearch.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131106182457.GA25879-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
+Date: Tue, 12 Nov 2013 04:25:09 +0100
+Message-ID: <20131112032506.GA30028@earth.universe>
+References: <1383948866-32672-1-git-send-email-sre@debian.org>
+ <1383948866-32672-2-git-send-email-sre@debian.org>
+ <20131111221941.GB23331@amd.pavel.ucw.cz>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131111221941.GB23331@amd.pavel.ucw.cz>
+Sender: linux-input-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Nov 2013 11:24:57 -0700, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> On Wed, Nov 06, 2013 at 07:03:08PM +0100, Thomas Petazzoni wrote:
-> > Dear Jason Gunthorpe,
-> > 
-> > (Adding a bunch of mvebu people in Cc)
-> > 
-> > On Wed, 6 Nov 2013 10:36:49 -0700, Jason Gunthorpe wrote:
-> > 
-> > > Thomas: There is one buglet here that I haven't had time to do
-> > > anything about. Notice the DT is listing the PEX memory window in its
-> > > ranges. I've done this for two reasons
-> > >  - The bootloader sets this address range up, so it is correct to
-> > >    include in the DT
-> > 
-> > The fact that the bootloader sets this MBus window is more-or-less
-> > irrelevant because when the mvebu-mbus driver is initialized, it
-> > completely clears *all* existing MBus windows:
-> 
-> Yes, but it is not irrelevent. In my case this same DT is supporting
-> 3.10 and 3.12 kernels - 3.10 doesn't even have a MBUS driver or
-> dynamic PEX driver and it relies upon the ranges entry matching the
-> static bootloader configuration to work properly.
-> 
-> So the 'ranges matching bootloader' does have a use case.
-> 
-> > I indeed remember some objections, but I'm not sure what they were
-> > precisely. Maybe we didn't had a precise use case back at the time, to
-> > really make people objecting realize what the problem was?
-> 
-> That is about where I am at too..
-> 
-> > On the other hand, I think the of_*() API is quite limited when it
-> > comes to updating the DT. If I remember correctly, you can update some
-> > nodes, but you can never reclaim the memory that was used for the
-> > previous value of the node. So any change to the in-memory DT
-> > representation is basically a memory leak for the entire lifetime of
-> > the system (of course, I might be wrong on this, I haven't dived into
-> > all the hardcore details of DT manipulation in the kernel).
-> 
-> I'm not clear on that either, but it seems plausible..
-> 
-> > I'm not sure what would be the alternate mechanism to hook into the
-> > address translation. of_translate_one(), where all the translation
-> > through ranges takes place is really tied to the DT only, adding
-> > another mechanism to hook some custom address translation in there
-> > seems a bit weird, no?
-> 
-> I agree, some kind of callback scheme would really be needed.. Sort of
-> like the xlate callback we have for IRQs?
-> 
-> So the mbus would register an address xlate for its node that is
-> called instead of ranges parsing. For the example in my last message
-> the FPGA driver would register an xlate that made addresses relative
-> to its own BAR0 address.
 
-There are already bus-specific transations available. Take a look at
-struct of_bus in drivers/of/address.c
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+Hi,
 
-> > However, it just works by pure luck: nothing guarantees you that the
-> > PCIe 0 memory window will start at 0xe0000000. Of course, since you
-> 
-> Right, the general case is totally borked here - the dynamic changes
-> to the address map by MBUS and PCI are not being reflected to the
-> of_address machinery, be they from MBUS or from PCI BAR assignment.
-> 
-> However, address assignment is very predicatble, so if you have a
-> constrained system it can work.
+On Mon, Nov 11, 2013 at 11:19:41PM +0100, Pavel Machek wrote:
+> > +	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
+> > +		keypad_data->no_autorepeat =3D true;
+>=20
+> From 2/2:
+>=20
+> +Optional Properties specific to linux:
+> +- linux,keypad-no-autorepeat: do not enable autorepeat feature.
+>=20
+> I'm confused now.
 
-Yes, the problem is that the DT probably can't have an accurate set of
-ranges for the devices under the PCIe bus since they are dynamically
-assigned. It would be really nice to wire this up properly so that the
-DT states the layout of stuff behind the bar, but leaves it to the OS to
-assign PCI regions.
+good catch! That happens when one tries to mimic other drivers :/
 
-However, if firmware enumarates PCI and wants that to be passed through
-to the OS, then the DT really should be updated... even in that case
-though Linux should be able to pick up the PCI settings from the BAR
-registers and use those for dynamics translation.
+I just checked all DT input drivers for autorepeat keyword:
 
-g.
+DRIVER              CODE                        DOCUMENTATION
+twl4030-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
+omap4-keypad        linux,input-no-autorepeat   linux,keypad-no-autorepeat
+samsung-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
+stmpe-keypad        st,no-autorepeat            st,no-autorepeat
+spear-keyboard      autorepeat                  autorepeat
+tca8418-keypad      keypad,autorepeat           --- not documented ---
+gpio-matrix-keypad  linux,no-autorepeat         linux,no-autorepeat
+gpio-keys-polled    autorepeat                  autorepeat
+gpio-keys           autorepeat                  --- no documentation ---
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any suggestions how to continue fixing this mess? I guess first of
+all the documentation of omap4-keypad, samsung-keypad and of course
+the new twl4030-keypad driver should be fixed.
+
+Next it would be nice to choose one standard property name for this
+and use it for twl4030-keypad. I suggest to use "linux,input-no-autorepeat".
+
+-- Sebastian
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSgZ+SAAoJENju1/PIO/qa50wQAJPVoA4kDTM/usZdzCF5AJPO
+rwMTrILKtlDtR2kwaMDe8ihnmwRE4zdZonD7WYTPDgAzvwc6eIQx+XI//dtd8osz
+phzXSAugaBrvERGIYemFv+gIrkYQqFOmEbSakFmnNlGzvD/ArkHjKqfzcMx8Zb/y
+CQ6mAVpMzya80PWL5/omC09O9GIx8B7LIP/MYnB8G/S9r9n8AxS7DFKv3Fs5FAWF
+qRjKuzN9O/VD0BP3DkeR8dmQTMc3QjFfl9bvPTGGwaaU5RaCsGQt2JkvgvyR/lfi
+TnNpyh3QIt1OAZd1nm1BTw5dhGo0grHRdxtvYIHNIoXRksMIqsMQW9BPqigkHgwR
+Lj/hyOcy2tBXYroUMRX9+yEi6DhjbWin+2fFTGcNpZfKj+ljz4HdeDEFiB3oICep
+JMlDq2R4QVQsek3eYE8FtmbD6psF951uTiGjVEojqgxP4qL8m/VkTP9xv7/5TCNj
+rZfKUwnivHOa6TCu+RcklUgsC4rt7Z2wY3Hb0m6VbWJPrQWovwRoqe6Tu4FmQc2J
+Op1tBkVgaR19tt+qWUgDZvOFh6hP4dchR38GMa/cK+ZYW9o3CkUWxxsuIQGXss1o
+GKEFxLDkV+Y4ZPp/OwuncSVDYqWzJAxj1KTf9UOhB4WyNqAXgSirKMXW06Qk9ZbZ
+3D197nmfh91PeI33FXoV
+=nJlz
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
