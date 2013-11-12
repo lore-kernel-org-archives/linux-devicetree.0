@@ -1,266 +1,107 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv8][ 4/5] ARM: dts: Add support for the cpuimx35 board from Eukrea and its baseboard.
-Date: Tue, 12 Nov 2013 12:24:18 +0100
-Message-ID: <1384255459-15134-4-git-send-email-denis@eukrea.com>
-References: <1384255459-15134-1-git-send-email-denis@eukrea.com>
+From: Afzal Mohammed <afzal@ti.com>
+Subject: [PATCH] ARM: dts: AM437x GP EVM support
+Date: Tue, 12 Nov 2013 16:54:26 +0530
+Message-ID: <1384255468-2453-1-git-send-email-afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384255459-15134-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The following devices/functionalities were added:
- * Main and secondary UARTs.
- * i2c and the pcf8563 device.
- * Ethernet.
- * NAND.
- * The BP1 button.
- * The LED.
- * Watchdog
- * SD.
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+AM437x GP EVM DTS with pinmux information to make I2C on EVM usable.
+
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+Signed-off-by: Afzal Mohammed <afzal@ti.com>
 ---
-ChangeLog v7->v8:
-- The commit message was improved.
-- The board specific iomuxc pins group configuration that were in imx35=
-=2Edtsi were moved here.
-- The rest of the patch was updated accordingly.
+ .../devicetree/bindings/arm/omap/omap.txt          |  3 ++
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/am437x-gp-evm.dts                | 47 ++++++++++++++++++++++
+ 3 files changed, 51 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am437x-gp-evm.dts
 
-ChangeLog v6->v7:
-- Added Grant Likely in the Cc list.
-- Shortened the license.
-- The tsc2007 pads were moved in another patch.
-
-ChangeLog v5->v6:
-- Shawn Guo was added in the Cc.
----
- arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   58 +++++++++
- .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  124 ++++++++++++=
-++++++++
- 2 files changed, 182 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
- create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.=
-dts
-
-diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/bo=
-ot/dts/imx35-eukrea-cpuimx35.dtsi
+diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+index 808c154..be5f365 100644
+--- a/Documentation/devicetree/bindings/arm/omap/omap.txt
++++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+@@ -61,5 +61,8 @@ Boards:
+ - AM43x EPOS EVM
+   compatible = "ti,am43x-epos-evm", "ti,am4372", "ti,am43"
+ 
++- AM437x GP EVM
++  compatible = "ti,am437x-gp-evm", "ti,am4372", "ti,am43"
++
+ - DRA7 EVM:  Software Developement Board for DRA7XX
+   compatible = "ti,dra7-evm", "ti,dra7"
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..85626e4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -203,6 +203,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	am3517-evm.dtb \
+ 	am3517_mt_ventoux.dtb \
+ 	am43x-epos-evm.dtb \
++	am437x-gp-evm.dtb \
+ 	dra7-evm.dtb
+ dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
 new file mode 100644
-index 0000000..3260678
+index 0000000..11d93ba
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-@@ -0,0 +1,58 @@
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -0,0 +1,47 @@
 +/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include "imx35.dtsi"
-+
-+/ {
-+	model =3D "Eukrea CPUIMX35";
-+	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
-+
-+	memory {
-+		reg =3D <0x80000000 0x8000000>; /* 128M */
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec>;
-+	status =3D "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1>;
-+	status =3D "okay";
-+	pcf8563@51 {
-+		compatible =3D "nxp,pcf8563";
-+		reg =3D <0x51>;
-+	};
-+};
-+
-+&iomuxc {
-+	imx35-eukrea {
-+		pinctrl_fec: fecgrp {
-+			fsl,pins =3D <MX35_FEC_PINGRP1>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-+		};
-+	};
-+};
-+
-+&nfc {
-+	nand-bus-width =3D <8>;
-+	nand-ecc-mode =3D "hw";
-+	nand-on-flash-bbt;
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
-rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-new file mode 100644
-index 0000000..fe0f3fa
---- /dev/null
-+++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-@@ -0,0 +1,124 @@
-+/*
-+ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++/* AM437x GP EVM */
 +
 +/dts-v1/;
-+#include "imx35-eukrea-cpuimx35.dtsi"
++
++#include "am4372.dtsi"
++#include <dt-bindings/pinctrl/am43xx.h>
 +
 +/ {
-+	model =3D "Eukrea CPUIMX35";
-+	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fsl,=
-imx35";
++	model = "TI AM437x GP EVM";
++	compatible = "ti,am437x-gp-evm","ti,am4372","ti,am43";
++};
 +
-+	gpio_keys {
-+		compatible =3D "gpio-keys";
-+
-+		bp1 {
-+			label =3D "BP1";
-+			gpios =3D <&gpio3 25 1>;
-+			linux,code =3D <256>;
-+			gpio-key,wakeup;
-+			linux,input-type =3D <1>;
-+		};
++&am43xx_pinmux {
++	i2c0_pins: i2c0_pins {
++		pinctrl-single,pins = <
++			0x188 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)  /* i2c0_sda.i2c0_sda */
++			0x18c (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)  /* i2c0_scl.i2c0_scl */
++		>;
 +	};
 +
-+	leds {
-+		compatible =3D "gpio-leds";
-+
-+		led1 {
-+			label =3D "led1";
-+			gpios =3D <&gpio3 29 1>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
++	i2c1_pins: i2c1_pins {
++		pinctrl-single,pins = <
++			0x15c (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE2)  /* spi0_cs0.i2c1_scl */
++			0x158 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE2)  /* spi0_d1.i2c1_sda  */
++		>;
 +	};
 +};
 +
-+&audmux {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_audmux>;
-+	status =3D "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_esdhc1>;
-+	cd-gpios =3D <&gpio3 24 0>;
-+	status =3D "okay";
++&i2c0 {
++        status = "okay";
++        pinctrl-names = "default";
++        pinctrl-0 = <&i2c0_pins>;
 +};
 +
 +&i2c1 {
-+	tlv320aic23: codec@1a {
-+		compatible =3D "ti,tlv320aic23";
-+		reg =3D <0x1a>;
-+	};
++        status = "okay";
++        pinctrl-names = "default";
++        pinctrl-0 = <&i2c1_pins>;
 +};
-+
-+&iomuxc {
-+        pinctrl-names =3D "default";
-+        pinctrl-0 =3D <&pinctrl_hog>;
-+
-+	imx35-eukrea {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins =3D <
-+				MX35_PAD_LD18__GPIO3_24  0x80000000
-+				MX35_PAD_LD19__GPIO3_25  0x80000000
-+				MX35_PAD_LD23__GPIO3_29  0x80000000
-+			>;
-+		};
-+
-+		pinctrl_audmux: audmuxgrp {
-+			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
-+		};
-+
-+		pinctrl_esdhc1: esdhc1grp {
-+			fsl,pins =3D <MX35_ESDHC1_PINGRP1>;
-+		};
-+
-+		pinctrl_fec: fecgrp {
-+			fsl,pins =3D <MX35_FEC_PINGRP1>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-+		};
-+
-+		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-+			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins =3D <MX35_UART1_PINGRP1>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins =3D <MX35_UART2_PINGRP1>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	fsl,mode =3D "i2s-slave";
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2>;
-+	fsl,uart-has-rtscts;
-+	status =3D "okay";
-+};
---=20
-1.7.9.5
+-- 
+1.8.3.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
