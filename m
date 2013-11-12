@@ -1,58 +1,71 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
- device tree
-Date: Tue, 12 Nov 2013 16:30:57 +0100
-Message-ID: <20131112153057.GA9683@earth.universe>
-References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT
+ core
+Date: Tue, 12 Nov 2013 10:31:58 -0500
+Message-ID: <528249EE.6080109@ti.com>
+References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com> <527A287C.2090401@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <527A287C.2090401-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 06 November 2013 06:31 AM, ivan.khoronzhuk wrote:
+> To reduce code duplicate and increase code readability use WDT core
+> code to handle WDT interface.
+> 
+> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+> Remove wdt_state as the WDT core track state with its own variable.
+> 
+> The watchdog_init_timeout() can read timeout value from timeout-sec
+> property if the passed value is out of bounds. So set initial
+> heartbeat value more than max value in order to initialize heartbeat
+> in next way. If heartbeat is not set thought module parameter, try
+> to read it's value from WDT node timeout-sec property. If node has
+> no one, use default value.
+> 
+> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+> order to set timeout period.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig       |    1 +
+>  drivers/watchdog/davinci_wdt.c |  150 ++++++++++------------------------------
+>  2 files changed, 38 insertions(+), 113 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index d1d53f3..2c954b5 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -271,6 +271,7 @@ config IOP_WATCHDOG
+>  config DAVINCI_WATCHDOG
+>  	tristate "DaVinci watchdog"
+>  	depends on ARCH_DAVINCI
+> +	select WATCHDOG_CORE
+>  	help
+>  	  Say Y here if to include support for the watchdog timer
+>  	  in the DaVinci DM644x/DM646x processors.
+> diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
+> index bead774..a6eef71 100644
+> --- a/drivers/watchdog/davinci_wdt.c
+> +++ b/drivers/watchdog/davinci_wdt.c
+> @@ -3,7 +3,7 @@
+>   *
+>   * Watchdog driver for DaVinci DM644x/DM646x processors
+>   *
+> - * Copyright (C) 2006 Texas Instruments.
+> + * Copyright (C) 2013 Texas Instruments.
+s/2013/2006-2013
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Apart from the minor nit, this is really nice clean-up and
+more aligned with wdt coer leayer.
 
-Hi,
-
-On Tue, Nov 12, 2013 at 03:13:38PM +0100, Linus Walleij wrote:
-> +	plat->no_autorepeat = of_property_read_bool(np, "linux,no-autorepeat");
-> +	plat->enable_wakeup = of_property_read_bool(np, "linux,wakeup");
-
-There is currently discussion going on for the property name of
-autorepeat:
-
-https://lkml.org/lkml/2013/11/11/680
-
--- Sebastian
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSgkmwAAoJENju1/PIO/qa5MkQAJ0tXLRMZ+AnZ7K7NDkK7cQa
-De6wGZJzA7wu07NqrZ4nwXR5uuDP54jASK8lLkIqV/sL4gUvCEj+54JcB2UB5jYC
-TS87JOAhafrvd9E8gxv4kIZ1aTMRMUs+yr7Fo1WDRaaVfEzu7Ktvtia+AyqrI8zZ
-eFqk4OqdEDxZKW/LM0ywPvxTNWpPiEP2zpCqVXTgyZ9gB1ATfXq9+FZHemHl4h8n
-s4kyuJdtUlq0m43zvQQvrCyLeP0/oguKKNeAyeMFMIK7GMU/ruI0dKWPWV/mGh9x
-XpQQMTt0fT4dhJmLoOk/IutZtyzoZ++BSPyrEm0PRON7yf60lbMjozDcLl0wen85
-Ypg6P++zUslArSBptlXP1IZojNnOKBJYa3oDQwbvXnnYl9muKEVdRb20omvdENsK
-ga85OYQfsiETLcyfNsvAw+lA0f388Rnfghc89239krDGJZRibr50aVBtwwWMXfLg
-APofa0YT6jdAFKaP9g1n3afVzfJmlEvdJQZAvpFqduFadMhsNp5YPwfzDiqNfNJH
-E3K1DWdJ45JDBXAufcxPUIXpNIEisG9SBWxFWGjbR8v8KNbSgz6ndjfXheh3c09J
-8hdEV4z8exkJU9dPuBDHF1vBS8EC2SXbxScoi7DgM9s1Pi/Mt9OTnEC05BC6tGju
-Fac0okK4pFQrUHLlLRtD
-=Fpzk
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+FWIW, Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
