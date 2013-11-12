@@ -1,37 +1,64 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Tue, 12 Nov 2013 09:29:11 -0600
-Message-ID: <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
-	<52814AFB.3070600@wwwdotorg.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/7] arm: dt: zynq: Remove 'clock-ranges' from TTC nodes
+Date: Tue, 12 Nov 2013 16:29:53 +0100
+Message-ID: <52824971.5060203@linaro.org>
+References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com> <1383945677-29674-2-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52814AFB.3070600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383945677-29674-2-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 3:24 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 11/11/2013 01:29 PM, Jason Cooper wrote:
->> Consumers of the Linux kernel's build products are beginning to hardcode
->> the filenames of the dtbs generated.  Since the dtb filenames are
->> currently the dts filename s/dts/dtb/, this prevents the kernel
->> community from renaming dts files as needed.
+On 11/08/2013 10:21 PM, Soren Brinkmann wrote:
+> The bindings for the TTC changed in commit 'arm: zynq: Use standard
+> timer binding' (e932900a3279b5dbb6d8f43c7b369003620e137c). That chang=
+e
+> removed possible subnodes from this driver rendering the 'clock-range=
+s'
+> property invalid for this node.
 >
-> My take is that the DTB filenames are part of the ABI, and therefore the
-> DTS filenames are also part of the ABI. Why would we want to rename them?
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
 
-I agree with the ABI part, but for long term I think compatible
-strings are a better choice for the ABI than filenames. A link
-provides for a way to transition.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Whether a platform can tolerate a filename change is really up to the
-platform maintainer like other ABI changes.
+> ---
+>   arch/arm/boot/dts/zynq-7000.dtsi | 2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
+q-7000.dtsi
+> index e32b92b949d2..27ebc1ba9671 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -98,7 +98,6 @@
+>   			compatible =3D "cdns,ttc";
+>   			clocks =3D <&clkc 6>;
+>   			reg =3D <0xF8001000 0x1000>;
+> -			clock-ranges;
+>   		};
+>
+>   		ttc1: ttc1@f8002000 {
+> @@ -107,7 +106,6 @@
+>   			compatible =3D "cdns,ttc";
+>   			clocks =3D <&clkc 6>;
+>   			reg =3D <0xF8002000 0x1000>;
+> -			clock-ranges;
+>   		};
+>   		scutimer: scutimer@f8f00600 {
+>   			interrupt-parent =3D <&intc>;
+>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
