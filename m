@@ -1,99 +1,63 @@
-From: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Tue, 12 Nov 2013 08:58:15 +1000
-Message-ID: <CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-	<1381869563-16083-10-git-send-email-grant.likely@linaro.org>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 3/3] DMA: Freescale: update driver to support
+ 8-channel DMA engine
+Date: Mon, 11 Nov 2013 16:09:53 -0800
+Message-ID: <CAPcyv4h00zGc2=ZLwnCpP3WTQ8JbFteV-torU+qCo98YXrfq5A@mail.gmail.com>
+References: <1380188023-3936-1-git-send-email-hongbo.zhang@freescale.com>
+	<1380188023-3936-4-git-send-email-hongbo.zhang@freescale.com>
+	<525F7C18.3010409@freescale.com>
+	<5278587F.7090500@freescale.com>
+	<CAA9_cme3c7SjH3iio0oR3FHpfoMzgrBDO-2k_Yf68G-AgFNqfA@mail.gmail.com>
+	<52809F67.20901@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381869563-16083-10-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <52809F67.20901-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Wed, Oct 16, 2013 at 6:39 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The standard interrupts property in device tree can only handle
-> interrupts coming from a single interrupt parent. If a device is wired
-> to multiple interrupt controllers, then it needs to be attached to a
-> node with an interrupt-map property to demux the interrupt specifiers
-> which is confusing. It would be a lot easier if there was a form of the
-> interrupts property that allows for a separate interrupt phandle for
-> each interrupt specifier.
+On Mon, Nov 11, 2013 at 1:12 AM, Hongbo Zhang
+<hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>>>>> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+>>>>> index 49e8fbd..16a9a48 100644
+>>>>> --- a/drivers/dma/fsldma.c
+>>>>> +++ b/drivers/dma/fsldma.c
+>>>>> @@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct
+>>>>> fsldma_device
+>>>>> *fdev,
+>>>>>        WARN_ON(fdev->feature != chan->feature);
+>>>>>          chan->dev = fdev->dev;
+>>>>> -    chan->id = ((res.start - 0x100) & 0xfff) >> 7;
+>>>>> +    chan->id = (res.start & 0xfff) < 0x300 ?
+>>>>> +           ((res.start - 0x100) & 0xfff) >> 7 :
+>>>>> +           ((res.start - 0x200) & 0xfff) >> 7;
+>>>>>        if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
+>>
+>> Isn't it a bit fragile to have this based on the resource address?
+>> Can't device tree tell you the channel id directly by an index into
+>> the "dma0: dma@100300" node?
 >
-> This patch does exactly that by creating a new interrupts-extended
-> property which reuses the phandle+arguments pattern used by GPIOs and
-> other core bindings.
 >
-> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
->  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
->  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
->  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
->  drivers/of/irq.c                                   | 16 +++--
->  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
->  6 files changed, 122 insertions(+), 13 deletions(-)
+> Yes, both this way and putting a "cell-index" into device tree work.
+> This won't be fragile, because the resource address should always be defined
+> correctly, otherwise even if we can tell a channel id by "cell-index" but
+> with wrong resource address, nothing will work.
+> This piece of code only doesn't seem as neat as using "cell-index", but we
+> prefer the style that let the device tree describes as true as what hardware
+> really has. This doesn't mean "cell-index" isn't acceptable, if it is
+> necessary and unavoidable, we can send another patch to add it, but
+> currently there is no need and we don't have to do this.
 >
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> index 72a06c0..1486497 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -4,16 +4,33 @@ Specifying interrupt information for devices
->  1) Interrupt client nodes
->  -------------------------
->
-> -Nodes that describe devices which generate interrupts must contain an
-> -"interrupts" property. This property must contain a list of interrupt
-> -specifiers, one per output interrupt. The format of the interrupt specifier is
-> -determined by the interrupt controller to which the interrupts are routed; see
-> -section 2 below for details.
-> +Nodes that describe devices which generate interrupts must contain an either an
-> +"interrupts" property or an "interrupts-extended" property. These properties
-> +contain a list of interrupt specifiers, one per output interrupt. The format of
-> +the interrupt specifier is determined by the interrupt controller to which the
-> +interrupts are routed; see section 2 below for details.
-> +
-> +  Example:
-> +       interrupt-parent = <&intc1>;
-> +       interrupts = <5 0>, <6 0>;
->
->  The "interrupt-parent" property is used to specify the controller to which
->  interrupts are routed and contains a single phandle referring to the interrupt
->  controller node. This property is inherited, so it may be specified in an
-> -interrupt client node or in any of its parent nodes.
-> +interrupt client node or in any of its parent nodes. Interrupts listed in the
-> +"interrupts" property are always in reference to the node's interrupt parent.
-> +
-> +The "interrupts-extended" property is a special form for use when a node needs
-> +to reference multiple interrupt parents. Each entry in this property contains
-> +both the parent phandle and the interrupt specifier. "interrupts-extended"
-> +should only be used when a device has multiple interrupt parents.
-> +
-> +  Example:
-> +       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
-> +
 
-A slightly different but related problem I am trying to solve with
-interrupt bindings, is to describe connection of a single device
-interrupt line to multiple interrupts controller, whereas this binding
-seems to be describing connection of different interrupt lines to
-different controllers. Can this syntax accommodate my case is any way?
+I'm pointing it out because we just had a bug fix to another driver
+motivated by the fact that resource addresses may move from one
+implementation to another, whereas the cell index provided by device
+tree is static.  Just a note, no need to fix it now.
 
-Bascially I think I'm asking for multiple interrupt specifiers for a
-single IRQ output if that's possible.
-
-Should I just be using the interrupt map syntax instead?
-
-interrupt-map-mask = < 0 0 63>;
-interrupt-map = < 0 0 25 &intc0 ... >, < 0 0 25 &intc1 ... >,
-
-Regards,
-Peter
+--
+Dan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
