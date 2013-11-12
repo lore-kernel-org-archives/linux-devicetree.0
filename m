@@ -1,132 +1,79 @@
 From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V7 3/3] watchdog: s3c2410_wdt: add device tree support and
- use syscon regmap interface to configure pmu register
-Date: Tue, 12 Nov 2013 11:30:58 +0530
-Message-ID: <CAL1wa8dM0aPVyAwkhQAnLpY6DM5Akv=8JxhvZE=b7sLxjQ-7Og@mail.gmail.com>
-References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com>
- <1384173897-16106-4-git-send-email-l.krishna@samsung.com> <1730902.jenppXSjOg@flatron>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Subject: [PATCH V8 0/3] Add watchdog DT nodes and use syscon regmap interfac to
+ configure pmu registers
+Date: Tue, 12 Nov 2013 12:04:45 +0530
+Message-ID: <1384238088-9862-1-git-send-email-l.krishna@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1730902.jenppXSjOg@flatron>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>
+To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, wim@iguana.be
+Cc: t.figa@samsung.com, devicetree@vger.kernel.org, dianders@chromium.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+This patchset does the following things
+	- Adds pmusysreg device node to exynos5.dtsi file
+	- Adds watchdog DT nodes to Exynos5250 and 5420
+	- Uses syscon regmap interface to configure pmu registers
+	  to mask/unmask enable/disable of watchdog.
+	
+This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
 
-Thanks for reviewing the patch
+changes since V7:
+	- re-ordered the patches in the series
+	- moved pmu_config_s3c2410 structure out of ifdef CONFIG_OF
+	  and limited only this structure to platform match table
+	- renamed structure name from s3c_wdt_driver_ids to s3c2410_wdt_ids
+	- removed exynos variants from platform match table
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
 
-On Mon, Nov 11, 2013 at 6:53 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Leela,
->
-> Thanks for addressing my comments for previous version. However now this
-> won't even build when CONFIG_OF is disabled. See my comments inline.
->
+changes since V6:
+	- added SoC-specific compatible value to syscon node and documented it
+	- given more patch description for below patch
+	  ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
+	- added platform_device_id array for watchdog devices
+	- selected MFD_SYSCON in Kconfig entry for watchdog
 
-Yes, you are right, I didn't compile it disabling CONFIG_OF
+Changes since V5:
+	- removed status property in DT nodes
+	- changed the return type for the function s3c2410wdt_mask_and_disable_reset()
+	  and handled error cases
+	- Handled to get driver data in non-DT cases
+	- Addressed comments given by Tomasz Figa <t.figa@samsung.com>
 
-> On Monday 11 of November 2013 18:14:57 Leela Krishna Amudala wrote:
->> Add device tree support and use syscon regmap interface to configure
->> AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
->> to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
->>
->> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->> ---
->>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
->>  drivers/watchdog/Kconfig                           |    1 +
->>  drivers/watchdog/s3c2410_wdt.c                     |  154 +++++++++++++++++++-
->>  3 files changed, 167 insertions(+), 9 deletions(-)
-> [snip]
->> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
->> index 23aad7c..b57ccae 100644
->> --- a/drivers/watchdog/s3c2410_wdt.c
->> +++ b/drivers/watchdog/s3c2410_wdt.c
-> [snip]
->> @@ -94,8 +107,56 @@ struct s3c2410_wdt {
->>       unsigned long           wtdat_save;
->>       struct watchdog_device  wdt_device;
->>       struct notifier_block   freq_transition;
->> +     struct s3c2410_wdt_variant *pmu_config;
->> +     struct regmap *pmureg;
->> +};
->> +
->> +#ifdef CONFIG_OF
->> +static const struct s3c2410_wdt_variant pmu_config_s3c2410 = {
->> +     .quirks = 0
->> +};
->> +
->> +static const struct s3c2410_wdt_variant pmu_config_5250  = {
->> +     .disable_reg = WDT_DISABLE_REG_OFFSET,
->> +     .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
->> +     .mask_bit = 20,
->> +     .quirks = QUIRK_NEEDS_PMU_CONFIG
->>  };
->>
->> +static const struct s3c2410_wdt_variant pmu_config_5420 = {
->> +     .disable_reg = WDT_DISABLE_REG_OFFSET,
->> +     .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
->> +     .mask_bit = 0,
->> +     .quirks = QUIRK_NEEDS_PMU_CONFIG
->> +};
->
-> The three variant data structs above are under #ifdef CONFIG_OF, while
-> they are always needed for the platform match table.
->
-> However, since Exynos supports only DT-based device instantation,
-> I would move only the basic pmu_config_s3c2410 out of the ifdef and
-> limit the platform match table only to this single variant.
->
+Changes since V4:
+	- changed the node name from pmusysreg to syscon and node label from pmu_sys_reg to pmu_syscon
+	- changed the property name from samsung,pmusysreg to samsung,syscon-phandle
+	- used regmap_update_bits instead of remap_read/regmap_write
+	- Addressed other comments given by Tomasz Figa <t.figa@samsung.com>
 
-Okay, Taken care
+Changes since V3:
+	- changed the compatible strings for watchdog node
+	- splitted up adding pmusysreg node and made it separate patch
+	- Addressed comments given by Sachin Kamat <sachin.kamat@linaro.org>
 
->> +
->> +static const struct of_device_id s3c2410_wdt_match[] = {
->> +     { .compatible = "samsung,s3c2410-wdt",
->> +       .data = &pmu_config_s3c2410 },
->> +     { .compatible = "samsung,exynos5250-wdt",
->> +       .data = &pmu_config_5250 },
->> +     { .compatible = "samsung,exynos5420-wdt",
->> +       .data = &pmu_config_5420 },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
->> +#endif
->> +
->> +static const struct platform_device_id s3c_wdt_driver_ids[] = {
->
-> nit: For consistency with other names in this file, what about
-> calling this s3c2410_wdt_ids[] instead?
->
+Changes since V2:
+	- used syscon regmap interface to configure pmu registers in WDT driver
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
 
-Okay, modified
+Changes since V1:
+        - Added new compatible string for Exynos5 SoCs
+        - Introduced quirk mechanism to program PMU registers
+        - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
 
->> +     {
->> +             .name = "s3c2410-wdt",
->> +             .driver_data = (unsigned long)&pmu_config_s3c2410,
->> +     }, {
->> +             .name = "exynos5250-wdt",
->> +             .driver_data = (unsigned long)&pmu_config_5250,
->> +     }, {
->> +             .name = "exynos5420-wdt",
->> +             .driver_data = (unsigned long)&pmu_config_5420,
->> +     },
->
-> So, generally, you don't need the two Exynos variants above in this array.
->
+Leela Krishna Amudala (3):
+  ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
+  watchdog: s3c2410_wdt: add device tree support and use syscon regmap
+    interface to configure pmu register
+  ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
 
-Yes, removed from the array
+ .../devicetree/bindings/arm/samsung/pmu.txt        |   13 ++
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
+ arch/arm/boot/dts/exynos5.dtsi                     |    7 -
+ arch/arm/boot/dts/exynos5250.dtsi                  |   11 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   14 ++
+ drivers/watchdog/Kconfig                           |    1 +
+ drivers/watchdog/s3c2410_wdt.c                     |  148 ++++++++++++++++++--
+ 7 files changed, 198 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
 
-Best Wishes,
-Leela Krishna
-
-> Otherwise, the patch is fine.
->
-> Best regards,
-> Tomasz
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.10.4
