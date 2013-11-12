@@ -1,32 +1,76 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v3 1/2] ARC: Add perf support for ARC700 cores
-Date: Tue, 12 Nov 2013 04:36:45 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075155E99@IN01WEMBXA.internal.synopsys.com>
-References: <1383832512-21130-1-git-send-email-mjonker@synopsys.com>
- <1383832512-21130-2-git-send-email-mjonker@synopsys.com>
- <20131111162715.GB26898@twins.programming.kicks-ass.net>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the datasheet's
+ minimum required ECC
+Date: Tue, 12 Nov 2013 13:26:06 +0800
+Message-ID: <5281BBEE.7000502@freescale.com>
+References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Mischa Jonker <Mischa.Jonker@synopsys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1383818858-5410-1-git-send-email-b32955@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: devicetree@vger.kernel.org, dedekind1@gmail.com, t.figa@samsung.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 09:57 PM, Peter Zijlstra wrote:
-> On Thu, Nov 07, 2013 at 02:55:11PM +0100, Mischa Jonker wrote:
->> This adds basic perf support for ARC700 cores. Most PERF_COUNT_HW* events
->> are supported now.
-> I don't see anything particularly weird, but then I don't know/have the
-> hardware so I suppose you know what you're doing :-)
->
-> Acked-by: Peter Zijlstra <peterz@infradead.org>
-
-Thanks Peter.
-
-This is now queued for next batch for arc 3.13-rc1 changes since we've been using
-this internally for quite some time now.
-
--Vineet
+5LqOIDIwMTPlubQxMeaciDA35pelIDE4OjA3LCBIdWFuZyBTaGlqaWUg5YaZ6YGTOgo+IEluIGRl
+ZmF1bHQgd2F5LCB3ZSB1c2UgdGhlIGVjY19zdHJlbmd0aC9lY2Nfc3RlcCBzaXplIGNhbGN1bGF0
+ZWQgYnkgb3Vyc2VsdmVzCj4gYW5kIHVzZSBhbGwgdGhlIE9PQiBhcmVhLgo+Cj4gVGhpcyBwYXRj
+aCBhZGRzIGEgbmV3IHByb3BlcnR5IDogImZzbCx1c2UtbWluaW11bS1lY2MiCj4KPiBJZiB3ZSBl
+bmFibGUgaXQsIHdlIHdpbGwgZmlyc3RseSB0cnkgdG8gdXNlIHRoZSBkYXRhc2hlZXQncyBtaW5p
+bXVtIHJlcXVpcmVkCj4gRUNDIHByb3ZpZGVkIGJ5IHRoZSBNVEQgbGF5ZXIgKHRoZSBlY2Nfc3Ry
+ZW5ndGhfZHMvZWNjX3N0ZXBfZHMgZmllbGRzCj4gaW4gdGhlIG5hbmRfY2hpcHt9KS4gU28gd2Ug
+bWF5IGhhdmUgZnJlZSBzcGFjZSBpbiB0aGUgT09CIGFyZWEgYnkgdXNpbmcgdGhlCj4gbWluaW11
+bSBFQ0MsIGFuZCB3ZSBtYXkgc3VwcG9ydCBKRkZTMiB3aXRoIHNvbWUgU0xDIE5BTkRzLCBzdWNo
+IGFzIE1pY3JvbidzCj4gU0xDIE5BTkQuCj4KPiBJZiB3ZSBmYWlsIHRvIHVzZSB0aGUgbWluaW11
+bSBFQ0MsIHdlIHdpbGwgdXNlIHRoZSBsZWdhY3kgbWV0aG9kIHRvIGNhbGN1bGF0ZQo+IHRoZSBl
+Y2Nfc3RyZW5ndGggYW5kIGVjY19zdGVwIHNpemUuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIdWFuZyBT
+aGlqaWU8YjMyOTU1QGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4gdjEgLS0+ICB2MjogcmViYXNlIHRo
+aXMgcGF0Y2ggb24gdGhlIGxhdGVzdCBsMi1tdGQuCj4gdjIgLS0+ICB2MzogY2hhbmdlIHRoZSBk
+ZXNjcmlwdGlvbnMuCj4gLS0tCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1u
+YW5kLnR4dCAgICAgICAgICB8ICAgIDggKysrKysrKysKPiAgIGRyaXZlcnMvbXRkL25hbmQvZ3Bt
+aS1uYW5kL2dwbWktbmFuZC5jICAgICAgICAgICAgIHwgICAgMyArKysKPiAgIDIgZmlsZXMgY2hh
+bmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQKPiBpbmRleCA1
+NTFiMmExLi40NThkNTk2IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+IEBAIC0xNyw2ICsxNywxNCBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgo+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgICAgLSBuYW5kLW9uLWZs
+YXNoLWJidDogYm9vbGVhbiB0byBlbmFibGUgb24gZmxhc2ggYmJ0IG9wdGlvbiBpZiBub3QKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcHJlc2VudCBmYWxzZQo+ICsgIC0gZnNsLHVzZS1taW5p
+bXVtLWVjYzogUHJvdGVjdCB0aGlzIE5BTkQgZmxhc2ggd2l0aCB0aGUgbWluaW11bSBFQ0MKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBzdHJlbmd0aCByZXF1aXJlZC4gVGhlIHJlcXVpcmVkIEVD
+QyBzdHJlbmd0aCBpcwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGF1dG9tYXRpY2FsbHkgZGlz
+Y292ZXJhYmxlIGZvciBzb21lIGZsYXNoCj4gKyAgICAgICAgICAgICAgICAgICAgICAgKGUuZy4s
+IGFjY29yZGluZyB0byB0aGUgT05GSSBzdGFuZGFyZCkuCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgSG93ZXZlciwgbm90ZSB0aGF0IGlmIHRoaXMgc3RyZW5ndGggaXMgbm90Cj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgZGlzY292ZXJhYmxlIG9yIHRoaXMgcHJvcGVydHkgaXMgbm90IGVuYWJs
+ZWQsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgdGhlIHNvZnR3YXJlIG1heSBjaG9vc2VzIGFu
+IGltcGxlbWVudGF0aW9uLWRlZmluZWQKPiArICAgICAgICAgICAgICAgICAgICAgICBFQ0Mgc2No
+ZW1lLgo+Cj4gICBUaGUgZGV2aWNlIHRyZWUgbWF5IG9wdGlvbmFsbHkgY29udGFpbiBzdWItbm9k
+ZXMgZGVzY3JpYmluZyBwYXJ0aXRpb25zIG9mIHRoZQo+ICAgYWRkcmVzcyBzcGFjZS4gU2VlIHBh
+cnRpdGlvbi50eHQgZm9yIG1vcmUgZGV0YWlsLgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9u
+YW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyBiL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dw
+bWktbmFuZC5jCj4gaW5kZXggOGY0ZTViMS4uYjg0OWI5MiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJz
+L210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQv
+Z3BtaS1uYW5kL2dwbWktbmFuZC5jCj4gQEAgLTM1Myw2ICszNTMsOSBAQCBzdGF0aWMgaW50IGxl
+Z2FjeV9zZXRfZ2VvbWV0cnkoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+Cj4gICBpbnQg
+Y29tbW9uX25mY19zZXRfZ2VvbWV0cnkoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+ICAg
+ewo+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbCh0aGlzLT5kZXYtPm9mX25vZGUsICJmc2ws
+dXNlLW1pbmltdW0tZWNjIikKPiArCQkmJiAgc2V0X2dlb21ldHJ5X2J5X2VjY19pbmZvKHRoaXMp
+KQo+ICsJCXJldHVybiAwOwo+ICAgCXJldHVybiBsZWdhY3lfc2V0X2dlb21ldHJ5KHRoaXMpOwo+
+ICAgfQo+CkhpIEJyaWFuOgpJcyB0aGlzIHBhdGNoIG9rIG5vdz8gSSBob3BlIGl0IGNhbiBiZSBh
+Y2NlcHRlZCBhdCB0aGlzIG1lcmdlLXdpbmRvdy4KCgp0aGFua3MKSHVhbmcgU2hpamllCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
+IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
