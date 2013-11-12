@@ -1,237 +1,332 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/3] mmc: omap_hsmmc: Enable SDIO IRQ.
-Date: Tue, 12 Nov 2013 12:23:28 +0100
-Message-ID: <CAOf5uwm9s2S4YxsAAa3h0fG3RyZgd4f9pqMu=thra1Wdzm8BNA@mail.gmail.com>
-References: <1384200405-8402-1-git-send-email-afenkart@gmail.com>
-	<1384200405-8402-2-git-send-email-afenkart@gmail.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv8][ 1/5] ARM i.MX35: Add devicetree support.
+Date: Tue, 12 Nov 2013 12:24:15 +0100
+Message-ID: <1384255459-15134-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384200405-8402-2-git-send-email-afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas
+=46rom: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Mon, Nov 11, 2013 at 9:06 PM, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> For now, only support SDIO interrupt if we are booted with
-> DT. This is because some platforms need special quirks. And
-> we don't want to add new legacy mux platform init code
-> callbacks any longer as we are moving to DT based booting
-> anyways.
->
-> Broken hardware, missing the swakueup line, should fallback
-> to polling, by setting 'ti,quirk-swakup-missing' in the
-> device tree. Otherwise pending SDIO IRQ are not detected
-> while in suspend. This affects am33xx processors.
->
-> For the DT-Binding portion:
-> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v7->v8:
+- Splitted out the dts part.
+- The commit message was updated accordingly.
+- clk_max was removed from the documentation.
+- status =3D "disabled"; was removed from the dts examples in the docum=
+entation.
+- The imx35 pinctrl driver selection in Kconfig was splitted out.
+- Some unused variables were removed from mx35_clocks_init_dt in clk-im=
+x35.c
 
-I think that you should add patch revision, change log description.
+ChangeLog v6->v7:
+- Added Grant Likely in the Cc list.
+- Added imx35-pingrp.h, and converted the rest of the patch to use it.
+- lcdc pads were moved from the dtsi into another commit.
+- A whitespace issue in the dtsi was removed.
 
-Michael
+ChangeLog v5->v6:
+- The dependency on pdata clocks has been removed,
+  and the dtsi adapted accordinly.
+- Adaptation to the for-next branch of Shawn Guo at
+  git://git.linaro.org/people/shawnguo/linux-2.6.git for-next
+- imx35-dt.c: very small whitespace cleanup.
+- Kconfig: The selection of IMX_HAVE_PLATFORM_* has been removed.
+- dtsi: The nodes were reordered alphabetically.
+- dtsi: The aliases have been reordered alphabetically.
+- Shawn Guo was added in the Cc.
+---
+ .../devicetree/bindings/clock/imx35-clock.txt      |  113 ++++++++++++=
+++++++++
+ arch/arm/mach-imx/Kconfig                          |    7 ++
+ arch/arm/mach-imx/Makefile                         |    1 +
+ arch/arm/mach-imx/clk-imx35.c                      |   16 +++
+ arch/arm/mach-imx/common.h                         |    1 +
+ arch/arm/mach-imx/imx35-dt.c                       |   48 +++++++++
+ 6 files changed, 186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx35-clock=
+=2Etxt
+ create mode 100644 arch/arm/mach-imx/imx35-dt.c
 
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   18 ++++
->  drivers/mmc/host/omap_hsmmc.c                      |   86 ++++++++++++++++++--
->  2 files changed, 95 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index ed271fc..1136e6b 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -20,6 +20,24 @@ ti,dual-volt: boolean, supports dual voltage cards
->  ti,non-removable: non-removable slot (like eMMC)
->  ti,needs-special-reset: Requires a special softreset sequence
->  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
-> +ti,quirk-swakup-missing: SOC missing the swakeup line, will not detect
-> +SDIO irq while in suspend. Fallback to polling. Affected chips are
-> +am335x,
-> +
-> +                            ------
-> +                            | PRCM |
-> +                             ------
-> +                              ^ |
-> +                      swakeup | | fclk
-> +                              | v
-> +      ------                -------               -----
-> +     | card | -- CIRQ -->  | hsmmc | -- IRQ -->  | CPU |
-> +      ------                -------               -----
-> +
-> +In suspend the fclk is off and the module is disfunctional. Even
-> +register reads will fail. A small logic in the host will request fclk
-> +restore, when an external event is detected. Once the clock is
-> +restored, the host detects the event normally.
->
->  Example:
->         mmc1: mmc@0x4809c000 {
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index b392130..6b0ec55 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -130,6 +130,7 @@ static void apply_clk_hack(struct device *dev)
->  #define TC_EN                  (1 << 1)
->  #define BWR_EN                 (1 << 4)
->  #define BRR_EN                 (1 << 5)
-> +#define CIRQ_EN                        (1 << 8)
->  #define ERR_EN                 (1 << 15)
->  #define CTO_EN                 (1 << 16)
->  #define CCRC_EN                        (1 << 17)
-> @@ -210,6 +211,9 @@ struct omap_hsmmc_host {
->         int                     reqs_blocked;
->         int                     use_reg;
->         int                     req_in_progress;
-> +       int                     flags;
-> +#define HSMMC_SDIO_IRQ_ENABLED (1 << 0)        /* SDIO irq enabled */
-> +
->         struct omap_hsmmc_next  next_data;
->         struct  omap_mmc_platform_data  *pdata;
->  };
-> @@ -490,27 +494,40 @@ static void omap_hsmmc_stop_clock(struct omap_hsmmc_host *host)
->  static void omap_hsmmc_enable_irq(struct omap_hsmmc_host *host,
->                                   struct mmc_command *cmd)
->  {
-> -       unsigned int irq_mask;
-> +       u32 irq_mask = INT_EN_MASK;
-> +       unsigned long flags;
->
->         if (host->use_dma)
-> -               irq_mask = INT_EN_MASK & ~(BRR_EN | BWR_EN);
-> -       else
-> -               irq_mask = INT_EN_MASK;
-> +               irq_mask &= ~(BRR_EN | BWR_EN);
->
->         /* Disable timeout for erases */
->         if (cmd->opcode == MMC_ERASE)
->                 irq_mask &= ~DTO_EN;
->
-> +       spin_lock_irqsave(&host->irq_lock, flags);
->         OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
->         OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +
-> +       /* latch pending CIRQ, but don't signal */
-> +       if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
-> +               irq_mask |= CIRQ_EN;
->         OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
-> +       spin_unlock_irqrestore(&host->irq_lock, flags);
->  }
->
->  static void omap_hsmmc_disable_irq(struct omap_hsmmc_host *host)
->  {
-> -       OMAP_HSMMC_WRITE(host->base, ISE, 0);
-> -       OMAP_HSMMC_WRITE(host->base, IE, 0);
-> +       u32 irq_mask = 0;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&host->irq_lock, flags);
-> +       /* no transfer running, need to signal cirq if enabled */
-> +       if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
-> +               irq_mask |= CIRQ_EN;
-> +       OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +       OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
->         OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
-> +       spin_unlock_irqrestore(&host->irq_lock, flags);
->  }
->
->  /* Calculate divisor for the given clock frequency */
-> @@ -1067,8 +1084,12 @@ static irqreturn_t omap_hsmmc_irq(int irq, void *dev_id)
->         int status;
->
->         status = OMAP_HSMMC_READ(host->base, STAT);
-> -       while (status & INT_EN_MASK && host->req_in_progress) {
-> -               omap_hsmmc_do_irq(host, status);
-> +       while (status & (INT_EN_MASK | CIRQ_EN)) {
-> +               if (host->req_in_progress)
-> +                       omap_hsmmc_do_irq(host, status);
-> +
-> +               if (status & CIRQ_EN)
-> +                       mmc_signal_sdio_irq(host->mmc);
->
->                 /* Flush posted write */
->                 status = OMAP_HSMMC_READ(host->base, STAT);
-> @@ -1583,6 +1604,37 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
->                 mmc_slot(host).init_card(card);
->  }
->
-> +static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> +{
-> +       struct omap_hsmmc_host *host = mmc_priv(mmc);
-> +       u32 irq_mask;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&host->irq_lock, flags);
-> +
-> +       irq_mask = OMAP_HSMMC_READ(host->base, ISE);
-> +       if (enable) {
-> +               host->flags |= HSMMC_SDIO_IRQ_ENABLED;
-> +               irq_mask |= CIRQ_EN;
-> +       } else {
-> +               host->flags &= ~HSMMC_SDIO_IRQ_ENABLED;
-> +               irq_mask &= ~CIRQ_EN;
-> +       }
-> +       OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
-> +
-> +       /*
-> +        * if enable, piggy back detection on current request
-> +        * but always disable immediately
-> +        */
-> +       if (!host->req_in_progress || !enable)
-> +               OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +
-> +       /* flush posted write */
-> +       OMAP_HSMMC_READ(host->base, IE);
-> +
-> +       spin_unlock_irqrestore(&host->irq_lock, flags);
-> +}
-> +
->  static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
->  {
->         u32 hctl, capa, value;
-> @@ -1635,7 +1687,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
->         .get_cd = omap_hsmmc_get_cd,
->         .get_ro = omap_hsmmc_get_ro,
->         .init_card = omap_hsmmc_init_card,
-> -       /* NYET -- enable_sdio_irq */
-> +       .enable_sdio_irq = omap_hsmmc_enable_sdio_irq,
->  };
->
->  #ifdef CONFIG_DEBUG_FS
-> @@ -2021,6 +2073,22 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->                 dev_warn(&pdev->dev,
->                         "pins are not configured from the driver\n");
->
-> +       /*
-> +        * For now, only support SDIO interrupt if we are booted with
-> +        * DT. This is because some platforms need special quirks. And
-> +        * we don't want to add new legacy mux platform init code
-> +        * callbacks any longer as we are moving to DT based booting
-> +        * anyways.
-> +        */
-> +       if (pdev->dev.of_node) {
-> +               mmc->caps |= MMC_CAP_SDIO_IRQ;
-> +               if (of_find_property(host->dev->of_node,
-> +                                    "ti,quirk-swakeup-missing", NULL)) {
-> +                       /* no wakeup from deeper power states, use polling */
-> +                       mmc->caps &= ~MMC_CAP_SDIO_IRQ;
-> +               }
-> +       }
-> +
->         omap_hsmmc_protect_card(host);
->
->         mmc_add_host(mmc);
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt b/=
+Documentation/devicetree/bindings/clock/imx35-clock.txt
+new file mode 100644
+index 0000000..a703564
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
+@@ -0,0 +1,113 @@
++* Clock bindings for Freescale i.MX35
++
++Required properties:
++- compatible: Should be "fsl,imx35-ccm"
++- reg: Address and length of the register set
++- interrupts: Should contain CCM interrupt
++- #clock-cells: Should be <1>
++
++The clock consumer should specify the desired clock by having the cloc=
+k
++ID in its "clocks" phandle cell.  The following is a full list of i.MX=
+35
++clocks and IDs.
++
++	Clock			ID
++	---------------------------
++	ckih			0
++	mpll			1
++	ppll			2
++	mpll_075		3
++	arm			4
++	hsp			5
++	hsp_div			6
++	hsp_sel			7
++	ahb			8
++	ipg			9
++	arm_per_div		10
++	ahb_per_div		11
++	ipg_per			12
++	uart_sel		13
++	uart_div		14
++	esdhc_sel		15
++	esdhc1_div		16
++	esdhc2_div		17
++	esdhc3_div		18
++	spdif_sel		19
++	spdif_div_pre		20
++	spdif_div_post		21
++	ssi_sel			22
++	ssi1_div_pre		23
++	ssi1_div_post		24
++	ssi2_div_pre		25
++	ssi2_div_post		26
++	usb_sel			27
++	usb_div			28
++	nfc_div			29
++	asrc_gate		30
++	pata_gate		31
++	audmux_gate		32
++	can1_gate		33
++	can2_gate		34
++	cspi1_gate		35
++	cspi2_gate		36
++	ect_gate		37
++	edio_gate		38
++	emi_gate		39
++	epit1_gate		40
++	epit2_gate		41
++	esai_gate		42
++	esdhc1_gate		43
++	esdhc2_gate		44
++	esdhc3_gate		45
++	fec_gate		46
++	gpio1_gate		47
++	gpio2_gate		48
++	gpio3_gate		49
++	gpt_gate		50
++	i2c1_gate		51
++	i2c2_gate		52
++	i2c3_gate		53
++	iomuxc_gate		54
++	ipu_gate		55
++	kpp_gate		56
++	mlb_gate		57
++	mshc_gate		58
++	owire_gate		59
++	pwm_gate		60
++	rngc_gate		61
++	rtc_gate		62
++	rtic_gate		63
++	scc_gate		64
++	sdma_gate		65
++	spba_gate		66
++	spdif_gate		67
++	ssi1_gate		68
++	ssi2_gate		69
++	uart1_gate		70
++	uart2_gate		71
++	uart3_gate		72
++	usbotg_gate		73
++	wdog_gate		74
++	max_gate		75
++	admux_gate		76
++	csi_gate		77
++	csi_div			78
++	csi_sel			79
++	iim_gate		80
++	gpu2d_gate		81
++
++Examples:
++
++clks: ccm@53f80000 {
++	compatible =3D "fsl,imx35-ccm";
++	reg =3D <0x53f80000 0x4000>;
++	interrupts =3D <31>;
++	#clock-cells =3D <1>;
++};
++
++esdhc1: esdhc@53fb4000 {
++	compatible =3D "fsl,imx35-esdhc";
++	reg =3D <0x53fb4000 0x4000>;
++	interrupts =3D <7>;
++	clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
++	clock-names =3D "ipg", "ahb", "per";
++};
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 8f6ce05..36014e2 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -611,6 +611,13 @@ config MACH_IMX31_DT
+=20
+ comment "MX35 platforms:"
+=20
++config MACH_IMX35_DT
++	bool "Support i.MX35 platforms from device tree"
++	select SOC_IMX35
++	help
++	  Include support for Freescale i.MX35 based platforms
++	  using the device tree for discovery.
++
+ config MACH_PCM043
+ 	bool "Support Phytec pcm043 (i.MX35) platforms"
+ 	select IMX_HAVE_PLATFORM_FLEXCAN
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 0db1697..befcaf5 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_MACH_MX35_3DS) +=3D mach-mx35_3ds.o
+ obj-$(CONFIG_MACH_EUKREA_CPUIMX35SD) +=3D mach-cpuimx35.o
+ obj-$(CONFIG_MACH_EUKREA_MBIMXSD35_BASEBOARD) +=3D eukrea_mbimxsd35-ba=
+seboard.o
+ obj-$(CONFIG_MACH_VPR200) +=3D mach-vpr200.o
++obj-$(CONFIG_MACH_IMX35_DT) +=3D imx35-dt.o
+=20
+ obj-$(CONFIG_HAVE_IMX_ANATOP) +=3D anatop.o
+ obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
+diff --git a/arch/arm/mach-imx/clk-imx35.c b/arch/arm/mach-imx/clk-imx3=
+5.c
+index 2193c83..9ef3c55 100644
+--- a/arch/arm/mach-imx/clk-imx35.c
++++ b/arch/arm/mach-imx/clk-imx35.c
+@@ -45,6 +45,8 @@ static struct arm_ahb_div clk_consumer[] =3D {
+ static char hsp_div_532[] =3D { 4, 8, 3, 0 };
+ static char hsp_div_400[] =3D { 3, 6, 3, 0 };
+=20
++static struct clk_onecell_data clk_data;
++
+ static const char *std_sel[] =3D {"ppll", "arm"};
+ static const char *ipg_per_sel[] =3D {"ahb_per_div", "arm_per_div"};
+=20
+@@ -286,3 +288,17 @@ int __init mx35_clocks_init(void)
+=20
+ 	return 0;
+ }
++
++int __init mx35_clocks_init_dt(void)
++{
++	struct device_node *np;
++
++	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx35-ccm");
++	clk_data.clks =3D clk;
++	clk_data.clk_num =3D ARRAY_SIZE(clk);
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++
++	mx35_clocks_init();
++
++	return 0;
++}
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 59c3b9b..6919b7d 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -65,6 +65,7 @@ int mx35_clocks_init(void);
+ int mx51_clocks_init(unsigned long ckil, unsigned long osc,
+ 			unsigned long ckih1, unsigned long ckih2);
+ int mx25_clocks_init_dt(void);
++int mx35_clocks_init_dt(void);
+ int mx27_clocks_init_dt(void);
+ int mx31_clocks_init_dt(void);
+ struct platform_device *mxc_register_gpio(char *name, int id,
+diff --git a/arch/arm/mach-imx/imx35-dt.c b/arch/arm/mach-imx/imx35-dt.=
+c
+new file mode 100644
+index 0000000..e3def45
+--- /dev/null
++++ b/arch/arm/mach-imx/imx35-dt.c
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2012 Steffen Trumtrar, Pengutronix
++ *
++ * based on imx27-dt.c
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y it under
++ * the terms of the GNU General Public License version 2 as published =
+by the
++ * Free Software Foundation.
++ */
++
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/time.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "common.h"
++#include "mx35.h"
++
++static void __init imx35_dt_init(void)
++{
++	mxc_arch_reset_init_dt();
++
++	of_platform_populate(NULL, of_default_bus_match_table,
++			     NULL, NULL);
++}
++
++static void __init imx35_timer_init(void)
++{
++	mx35_clocks_init_dt();
++}
++
++static const char *imx35_dt_board_compat[] __initdata =3D {
++	"fsl,imx35",
++	NULL
++};
++
++DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
++	.map_io		=3D mx35_map_io,
++	.init_early	=3D imx35_init_early,
++	.init_irq	=3D mx35_init_irq,
++	.handle_irq	=3D imx35_handle_irq,
++	.init_time	=3D imx35_timer_init,
++	.init_machine	=3D imx35_dt_init,
++	.dt_compat	=3D imx35_dt_board_compat,
++	.restart	=3D mxc_restart,
++MACHINE_END
+--=20
+1.7.9.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
