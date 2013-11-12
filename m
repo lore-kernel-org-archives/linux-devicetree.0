@@ -1,161 +1,85 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
-Date: Tue, 12 Nov 2013 09:40:53 -0800
-Message-ID: <CAGVrzcaSoJ8XXYj=D8R4Vw+yaRqfd-wU4EgigjefRxbg=pufhw@mail.gmail.com>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130918042923.5D845C42CF7@trevor.secretlab.ca> <20130918181112.56c10dde@skate>
- <1811694.J4B6oUpKxP@lenovo> <20131112123746.EAEF0C42283@trevor.secretlab.ca> <20131112162914.GE4237@e106331-lin.cambridge.arm.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the
+ datasheet's minimum required ECC
+Date: Tue, 12 Nov 2013 09:47:13 -0800
+Message-ID: <CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ@mail.gmail.com>
+References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
+ <5281BBEE.7000502@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20131112162914.GE4237@e106331-lin.cambridge.arm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5281BBEE.7000502@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Artem Bityutskiy <dedekind1@gmail.com>, t.figa@samsung.com, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/11/12 Mark Rutland <mark.rutland@arm.com>:
-> Hi Florian, Grant,
->
-> On Tue, Nov 12, 2013 at 12:37:46PM +0000, Grant Likely wrote:
->> On Fri, 25 Oct 2013 05:40:57 +0100, Florian Fainelli <florian@openwr=
-t.org> wrote:
->> > Le mercredi 18 septembre 2013, 18:11:12 Thomas Petazzoni a =C3=83=C2=
-=A9crit :
->> > > Dear Grant Likely,
->> > >
->> > > On Tue, 17 Sep 2013 23:29:23 -0500, Grant Likely wrote:
->> > > > I understand what you're trying to do here, but it causes a tr=
-oublesome
->> > > > leakage of implementation detail into the binding, making the =
-whole
->> > > > thing look very odd. This binding tries to make a fixed link l=
-ook
->> > > > exactly like a real PHY even to the point of including a phand=
-le to the
->> > > > phy. But having a phandle to a node which is *always* a direct=
- child of
->> > > > the MAC node is redundant and a rather looney. Yes, doing it t=
-hat way
->> > > > makes it easy for of_phy_find_device() to be transparent for f=
-ixed link,
->> > > > but that should *not* drive bindings, especially when that mak=
-es the
->> > > > binding really rather weird.
->> > > >
->> > > > Second, this new binding doesn't provide anything over and abo=
-ve the
->> > > > existing fixed-link binding. It may not be pretty, but it is
->> > > > estabilshed.
->> > >
->> > > Have you followed the past discussions about this patch set? Bas=
-ically
->> > > the *only* feedback I received on RFCv1 is that the fixed-link p=
-roperty
->> > > sucks, and everybody (including the known Device Tree binding
->> > > maintainer Mark Rutland) suggested to not use the fixed-link mec=
-hanism.
->> > > See http://article.gmane.org/gmane.linux.network/276932, where M=
-ark
->> > > said:
->> > >
->> > > ""
->> > > I'm not sure grouping these values together is the best way of h=
-andling
->> > > this. It's rather opaque, and inflexible for future extension.
->> > > ""
->> > >
->> > > So, please DT maintainers, tell me what you want. I honestly don=
-'t care
->> > > whether fixed-link or a separate node is chosen. However, I do c=
-are
->> > > about being dragged around between two solutions just because th=
-e
->> > > former DT maintainer and the new DT maintainers do not agree.
->>
->> I've been sleepy on this issue, which limits how much I can push. I'=
-ll
->> say one more thing on the issue (below) and then leave the decision =
-up
->> to Mark. I trust him and he knows what he is doing.
->>
->> > Since I would like to move forward so I can one day use that bindi=
-ng in a
->> > real-life product, I am going to go for Mark's side which happens =
-to be how I
->> > want the binding to look like.
->> >
->> > Do we all agree that the new binding is just way better than the o=
-ld one? In
->> > light of the recent unstable DT ABI discussion, we can still conti=
-nue parsing
->> > the old one for the sake of compatibility.
->>
->> Regardless of what you want it to look like, does the old binding wo=
-rk
->> for your purposes? If yes then use it. The only valid reason for
->> creating a new binding is if the old one doesn't work for a specific
->> (not theoretical) use case.
->
-> I think the issue here was that I am not versed in the history of all=
- of
-> the existing bindings. While I'm not keen on the existing fixed-link
-> property and I think it should be done differently were it being crea=
-ted
-> from scratch today, as Grant has pointed out we're already supporting=
- it
-> today, and adding a new binding is going to make the code handling it
-> more complex.
->
-> If fixed-link works for your use case today, then use fixed-link.
-
-Like I said in an earlier response to Thomas yesterday, it does not
-cover everything, most importantly, the existing "fixed-link" property
-does not allow the representation of direct MAC to MAC connections
-where you still need to specify the MII connection type for it to work
-properly. This is something that can be easily provided by the new
-fixed PHY binding, but less easily by the existing "fixed-link"
-property. We cannot extend "fixed-link" to contain a 6th integer
-because "phy-mode" or "phy-connection-type"  is a string. My options
-here are pretty simple:
-
-- use the existing "fixed-link" property even though it is not nice,
-it does the job
-- add a supplemental "connection-type" property and parse it in my
-driver, which is where it is going to be used
-- go on with the new proposed Device Tree binding
-
->
-> If we have a valid reason to create a new binding, we should. At the
-> moment I think the only egregious portion of the binding is the globa=
-lly
-> unique fake PHY id, and if that causes issues we should be able to
-> assign IDs within Linux ignoring the values in the DT, or reorganise
-> things such that the arbitrary ID doesn't matter.
-
-I think we all agreed that the PHY ID (the term should be clarified as
-it tends to either mean PHY address or PHY OUI) had to be gone, and
-this is what Thomas did in this serie. Whichever binding we choose, it
-should be fairly easy to keep the "PHY ID" integer in the "fixed-link"
-property but make the code ignore it (with possibly a big fat warning
-for a transition period).
-
->
-> If there are configurations we need to support that the fixed-link
-> property cannot encode, then I think we should go ahead with the bind=
-ing
-> style that you are proposing today. However, we don't need to go with=
- it
-> right away, and we can continue to support fixed-link regardless.
-
-Well, yes, the lack of "connection-type" representation is a blocker
-for some hardware configurations where two Ethernet MACs are connected
-one to each other. Whether this deserves a new incarnation of the
-"fixed PHY" Device Tree binding is left for discussion.
-
->
-> I apologise for the lack of consistency here, and I'm sorry that I've
-> delayed this series for so long.
---=20
-=46lorian
+KyBEVCBtYWludGFpbmVycywgc2luY2UgdGhleSBoYXZlbid0IHJlc3BvbmRlZAoKT24gTW9uLCBO
+b3YgMTEsIDIwMTMgYXQgOToyNiBQTSwgSHVhbmcgU2hpamllIDxiMzI5NTVAZnJlZXNjYWxlLmNv
+bT4gd3JvdGU6Cj4g09ogMjAxM8TqMTHUwjA3yNUgMTg6MDcsIEh1YW5nIFNoaWppZSDQtLXAOgo+
+Cj4+IEluIGRlZmF1bHQgd2F5LCB3ZSB1c2UgdGhlIGVjY19zdHJlbmd0aC9lY2Nfc3RlcCBzaXpl
+IGNhbGN1bGF0ZWQgYnkKPj4gb3Vyc2VsdmVzCj4+IGFuZCB1c2UgYWxsIHRoZSBPT0IgYXJlYS4K
+Pj4KPj4gVGhpcyBwYXRjaCBhZGRzIGEgbmV3IHByb3BlcnR5IDogImZzbCx1c2UtbWluaW11bS1l
+Y2MiCj4+Cj4+IElmIHdlIGVuYWJsZSBpdCwgd2Ugd2lsbCBmaXJzdGx5IHRyeSB0byB1c2UgdGhl
+IGRhdGFzaGVldCdzIG1pbmltdW0KPj4gcmVxdWlyZWQKPj4gRUNDIHByb3ZpZGVkIGJ5IHRoZSBN
+VEQgbGF5ZXIgKHRoZSBlY2Nfc3RyZW5ndGhfZHMvZWNjX3N0ZXBfZHMgZmllbGRzCj4+IGluIHRo
+ZSBuYW5kX2NoaXB7fSkuIFNvIHdlIG1heSBoYXZlIGZyZWUgc3BhY2UgaW4gdGhlIE9PQiBhcmVh
+IGJ5IHVzaW5nCj4+IHRoZQo+PiBtaW5pbXVtIEVDQywgYW5kIHdlIG1heSBzdXBwb3J0IEpGRlMy
+IHdpdGggc29tZSBTTEMgTkFORHMsIHN1Y2ggYXMKPj4gTWljcm9uJ3MKPj4gU0xDIE5BTkQuCj4+
+Cj4+IElmIHdlIGZhaWwgdG8gdXNlIHRoZSBtaW5pbXVtIEVDQywgd2Ugd2lsbCB1c2UgdGhlIGxl
+Z2FjeSBtZXRob2QgdG8KPj4gY2FsY3VsYXRlCj4+IHRoZSBlY2Nfc3RyZW5ndGggYW5kIGVjY19z
+dGVwIHNpemUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEh1YW5nIFNoaWppZTxiMzI5NTVAZnJlZXNj
+YWxlLmNvbT4KPj4gLS0tCj4+IHYxIC0tPiAgdjI6IHJlYmFzZSB0aGlzIHBhdGNoIG9uIHRoZSBs
+YXRlc3QgbDItbXRkLgo+PiB2MiAtLT4gIHYzOiBjaGFuZ2UgdGhlIGRlc2NyaXB0aW9ucy4KPj4g
+LS0tCj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQgICAgICAg
+ICAgfCAgICA4ICsrKysrKysrCj4+ICAgZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1u
+YW5kLmMgICAgICAgICAgICAgfCAgICAzICsrKwo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5z
+ZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+PiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+PiBpbmRleCA1NTFiMmEx
+Li40NThkNTk2IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbXRkL2dwbWktbmFuZC50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL210ZC9ncG1pLW5hbmQudHh0Cj4+IEBAIC0xNyw2ICsxNywxNCBAQCBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+PiAgIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICAgICAtIG5hbmQtb24tZmxh
+c2gtYmJ0OiBib29sZWFuIHRvIGVuYWJsZSBvbiBmbGFzaCBiYnQgb3B0aW9uIGlmIG5vdAo+PiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcHJlc2VudCBmYWxzZQo+PiArICAtIGZzbCx1c2UtbWlu
+aW11bS1lY2M6IFByb3RlY3QgdGhpcyBOQU5EIGZsYXNoIHdpdGggdGhlIG1pbmltdW0gRUNDCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cmVuZ3RoIHJlcXVpcmVkLiBUaGUgcmVxdWlyZWQg
+RUNDIHN0cmVuZ3RoIGlzCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGF1dG9tYXRpY2FsbHkg
+ZGlzY292ZXJhYmxlIGZvciBzb21lIGZsYXNoCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIChl
+LmcuLCBhY2NvcmRpbmcgdG8gdGhlIE9ORkkgc3RhbmRhcmQpLgo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICBIb3dldmVyLCBub3RlIHRoYXQgaWYgdGhpcyBzdHJlbmd0aCBpcyBub3QKPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgZGlzY292ZXJhYmxlIG9yIHRoaXMgcHJvcGVydHkgaXMgbm90
+IGVuYWJsZWQsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHRoZSBzb2Z0d2FyZSBtYXkgY2hv
+b3NlcyBhbiBpbXBsZW1lbnRhdGlvbi1kZWZpbmVkCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+IEVDQyBzY2hlbWUuCj4+Cj4+ICAgVGhlIGRldmljZSB0cmVlIG1heSBvcHRpb25hbGx5IGNvbnRh
+aW4gc3ViLW5vZGVzIGRlc2NyaWJpbmcgcGFydGl0aW9ucwo+PiBvZiB0aGUKPj4gICBhZGRyZXNz
+IHNwYWNlLiBTZWUgcGFydGl0aW9uLnR4dCBmb3IgbW9yZSBkZXRhaWwuCj4+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+PiBiL2RyaXZlcnMvbXRk
+L25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+IGluZGV4IDhmNGU1YjEuLmI4NDliOTIgMTAw
+NjQ0Cj4+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+ICsr
+KyBiL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+IEBAIC0zNTMsNiAr
+MzUzLDkgQEAgc3RhdGljIGludCBsZWdhY3lfc2V0X2dlb21ldHJ5KHN0cnVjdCBncG1pX25hbmRf
+ZGF0YQo+PiAqdGhpcykKPj4KPj4gICBpbnQgY29tbW9uX25mY19zZXRfZ2VvbWV0cnkoc3RydWN0
+IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+PiAgIHsKPj4gKyAgICAgICBpZiAob2ZfcHJvcGVydHlf
+cmVhZF9ib29sKHRoaXMtPmRldi0+b2Zfbm9kZSwKPj4gImZzbCx1c2UtbWluaW11bS1lY2MiKQo+
+PiArICAgICAgICAgICAgICAgJiYgIHNldF9nZW9tZXRyeV9ieV9lY2NfaW5mbyh0aGlzKSkKPj4g
+KyAgICAgICAgICAgICAgIHJldHVybiAwOwo+PiAgICAgICAgIHJldHVybiBsZWdhY3lfc2V0X2dl
+b21ldHJ5KHRoaXMpOwo+PiAgIH0KPj4KPiBIaSBCcmlhbjoKPiBJcyB0aGlzIHBhdGNoIG9rIG5v
+dz8gSSBob3BlIGl0IGNhbiBiZSBhY2NlcHRlZCBhdCB0aGlzIG1lcmdlLXdpbmRvdy4KClRoZSBw
+YXRjaCBpcyBPSyB0byBtZSwgYnV0IHdlIGhhdmVuJ3QgZ290dGVuIGFueSBEVCByZXZpZXcuIElm
+IHdlCmRvbid0IGdldCBhbnkgcmVzcG9uc2UgaW4gYSBmZXcgZGF5cywgSSdsbCB0YWtlIGl0IGFu
+eXdheS4KCkknbSBub3Qgc3VyZSBhYm91dCB0YWtpbmcgaXQgaW4gMy4xMyB2cy4gMy4xNCwgYXMg
+dGhpcyBpcwp0cmFkaXRpb25hbGx5IGEgbGF0ZSBtZXJnZSBmb3IgMy4xMy4KCkJyaWFuCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
+TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
