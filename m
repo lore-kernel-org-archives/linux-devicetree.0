@@ -1,82 +1,132 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [alsa-devel] [PATCHv1 1/8] ALSA: Add SAI SoC Digital Audio
- Interface driver.
-Date: Tue, 12 Nov 2013 10:32:26 +0530
-Message-ID: <20131112050226.GK8834@intel.com>
-References: <1382000477-17304-1-git-send-email-Li.Xiubo@freescale.com>
- <1382000477-17304-2-git-send-email-Li.Xiubo@freescale.com>
- <526021B0.6050206@metafoo.de>
- <1DD289F6464F0949A2FCA5AA6DC23F8286A385@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V7 3/3] watchdog: s3c2410_wdt: add device tree support and
+ use syscon regmap interface to configure pmu register
+Date: Tue, 12 Nov 2013 11:30:58 +0530
+Message-ID: <CAL1wa8dM0aPVyAwkhQAnLpY6DM5Akv=8JxhvZE=b7sLxjQ-7Og@mail.gmail.com>
+References: <1384173897-16106-1-git-send-email-l.krishna@samsung.com>
+ <1384173897-16106-4-git-send-email-l.krishna@samsung.com> <1730902.jenppXSjOg@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F8286A385@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Xiubo Li-B47053 <B47053@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, Wang Huan-B18965 <B18965@freescale.com>, "timur@tabi.org" <timur@tabi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, Lars-Peter Clausen <lars@metafoo.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Chen Guangyu-B42378 <B42378@freescale.com>, "oskar@scara.com" <oskar@scara.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, rob.herring@calxeda.co
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1730902.jenppXSjOg@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2013 at 05:58:42AM +0000, Xiubo Li-B47053 wrote:
-> Hi Dan, Vinod,
-> 
-> 
-> > > +static int fsl_sai_probe(struct platform_device *pdev) {
-> > [...]
-> > > +
-> > > +	sai->dma_params_rx.addr = res->start + SAI_RDR;
-> > > +	sai->dma_params_rx.maxburst = 6;
-> > > +	index = of_property_match_string(np, "dma-names", "rx");
-> > > +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
-> > > +				&dma_args);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +	sai->dma_params_rx.slave_id = dma_args.args[1];
-> > > +
-> > > +	sai->dma_params_tx.addr = res->start + SAI_TDR;
-> > > +	sai->dma_params_tx.maxburst = 6;
-> > > +	index = of_property_match_string(np, "dma-names", "tx");
-> > > +	ret = of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
-> > > +				&dma_args);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +	sai->dma_params_tx.slave_id = dma_args.args[1];
-> > 
-> > The driver should not have to manually parse the dma devicetree
-> > properties, this is something that should be handled by the dma engine
-> > driver.
-> > 
-> 
-> What do you think about the DMA slave_id ?
-> I have been noticed by one colleague that this should be parsed here, which
-> is from your opinions ?
-Sure slave_id can be parsed here, but IMO it should be programmed via the
-dma_slave_confog into the respective channel
+Hi Tomasz,
 
---
-~Vinod
-> 
-> 
-> > > +
-> > > +	ret = snd_soc_register_component(&pdev->dev, &fsl_component,
-> > > +			&fsl_sai_dai, 1);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = fsl_pcm_dma_init(pdev);
-> > > +	if (ret)
-> > > +		goto out;
-> 
-> 
+Thanks for reviewing the patch
 
--- 
+On Mon, Nov 11, 2013 at 6:53 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Leela,
+>
+> Thanks for addressing my comments for previous version. However now this
+> won't even build when CONFIG_OF is disabled. See my comments inline.
+>
+
+Yes, you are right, I didn't compile it disabling CONFIG_OF
+
+> On Monday 11 of November 2013 18:14:57 Leela Krishna Amudala wrote:
+>> Add device tree support and use syscon regmap interface to configure
+>> AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
+>> to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
+>>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
+>>  drivers/watchdog/Kconfig                           |    1 +
+>>  drivers/watchdog/s3c2410_wdt.c                     |  154 +++++++++++++++++++-
+>>  3 files changed, 167 insertions(+), 9 deletions(-)
+> [snip]
+>> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
+>> index 23aad7c..b57ccae 100644
+>> --- a/drivers/watchdog/s3c2410_wdt.c
+>> +++ b/drivers/watchdog/s3c2410_wdt.c
+> [snip]
+>> @@ -94,8 +107,56 @@ struct s3c2410_wdt {
+>>       unsigned long           wtdat_save;
+>>       struct watchdog_device  wdt_device;
+>>       struct notifier_block   freq_transition;
+>> +     struct s3c2410_wdt_variant *pmu_config;
+>> +     struct regmap *pmureg;
+>> +};
+>> +
+>> +#ifdef CONFIG_OF
+>> +static const struct s3c2410_wdt_variant pmu_config_s3c2410 = {
+>> +     .quirks = 0
+>> +};
+>> +
+>> +static const struct s3c2410_wdt_variant pmu_config_5250  = {
+>> +     .disable_reg = WDT_DISABLE_REG_OFFSET,
+>> +     .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
+>> +     .mask_bit = 20,
+>> +     .quirks = QUIRK_NEEDS_PMU_CONFIG
+>>  };
+>>
+>> +static const struct s3c2410_wdt_variant pmu_config_5420 = {
+>> +     .disable_reg = WDT_DISABLE_REG_OFFSET,
+>> +     .mask_reset_reg = WDT_MASK_RESET_REG_OFFSET,
+>> +     .mask_bit = 0,
+>> +     .quirks = QUIRK_NEEDS_PMU_CONFIG
+>> +};
+>
+> The three variant data structs above are under #ifdef CONFIG_OF, while
+> they are always needed for the platform match table.
+>
+> However, since Exynos supports only DT-based device instantation,
+> I would move only the basic pmu_config_s3c2410 out of the ifdef and
+> limit the platform match table only to this single variant.
+>
+
+Okay, Taken care
+
+>> +
+>> +static const struct of_device_id s3c2410_wdt_match[] = {
+>> +     { .compatible = "samsung,s3c2410-wdt",
+>> +       .data = &pmu_config_s3c2410 },
+>> +     { .compatible = "samsung,exynos5250-wdt",
+>> +       .data = &pmu_config_5250 },
+>> +     { .compatible = "samsung,exynos5420-wdt",
+>> +       .data = &pmu_config_5420 },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
+>> +#endif
+>> +
+>> +static const struct platform_device_id s3c_wdt_driver_ids[] = {
+>
+> nit: For consistency with other names in this file, what about
+> calling this s3c2410_wdt_ids[] instead?
+>
+
+Okay, modified
+
+>> +     {
+>> +             .name = "s3c2410-wdt",
+>> +             .driver_data = (unsigned long)&pmu_config_s3c2410,
+>> +     }, {
+>> +             .name = "exynos5250-wdt",
+>> +             .driver_data = (unsigned long)&pmu_config_5250,
+>> +     }, {
+>> +             .name = "exynos5420-wdt",
+>> +             .driver_data = (unsigned long)&pmu_config_5420,
+>> +     },
+>
+> So, generally, you don't need the two Exynos variants above in this array.
+>
+
+Yes, removed from the array
+
+Best Wishes,
+Leela Krishna
+
+> Otherwise, the patch is fine.
+>
+> Best regards,
+> Tomasz
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
