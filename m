@@ -1,110 +1,71 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 12/12] arm: dts: keystone: add AEMIF/NAND device entry
-Date: Tue, 12 Nov 2013 11:19:55 -0500
-Message-ID: <5282552B.4000801@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-13-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D71@DNCE04.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F5844B3A985794BA902E12C070812375F8D71@DNCE04.ent.ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] DT: Add binding for Altera FPGAs in passive-serial mode
+Date: Tue, 12 Nov 2013 10:21:02 -0600
+Message-ID: <C90E2E36-D168-4374-B420-38B2BB1914BD@codeaurora.org>
+References: <1384266701-12608-1-git-send-email-s.hauer@pengutronix.de> <1384266701-12608-4-git-send-email-s.hauer@pengutronix.de>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384266701-12608-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 November 2013 12:13 PM, Khoronzhuk, Ivan wrote:
-> Add AEMIF/NAND device entry.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+
+On Nov 12, 2013, at 8:31 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrot=
+e:
+
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  arch/arm/boot/dts/keystone.dts |   63 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/keystone.dts b/arch/arm/boot/dts/keystone.dts
-> index 100bdf5..998da98 100644
-> --- a/arch/arm/boot/dts/keystone.dts
-> +++ b/arch/arm/boot/dts/keystone.dts
-> @@ -179,5 +179,68 @@
->                         interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
->                         clocks = <&clkspi>;
->                 };
+> .../devicetree/bindings/firmware/altr,passive-serial.txt    | 13 ++++=
++++++++++
+> 1 file changed, 13 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/firmware/altr,pa=
+ssive-serial.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/firmware/altr,passive-=
+serial.txt b/Documentation/devicetree/bindings/firmware/altr,passive-se=
+rial.txt
+> new file mode 100644
+> index 0000000..6d40c91
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/altr,passive-serial.=
+txt
+> @@ -0,0 +1,13 @@
+> +Altera FPGAs in passive serial mode
+> +-----------------------------------
 > +
-> +               aemif@021000A00 {
-> +                       compatible = "ti,keystone-aemif";
-> +                       #address-cells = <2>;
-> +                       #size-cells = <1>;
-> +                       clocks = <&clkaemif>;
-> +                       clock-names = "aemif";
-> +                       clock-ranges;
+> +This binding defines the control interface to Altera FPGAs in
+> +passive serial mode. This is used to upload the firmware and
+> +to start the FPGA.
 > +
-> +                       reg = <0x2100A00 0x00000100>;
-> +                       ranges = <0 0 0x30000000 0x10000000
-> +                                 1 0 0x21000A00 0x00000100>;
-> +
-> +                       nand:cs0 {
-> +                               compatible = "ti,davinci-cs";
-> +                               #address-cells = <2>;
-> +                               #size-cells = <1>;
-> +                               clock-ranges;
-> +                               ranges;
-> +
-> +                               /* all timings in nanoseconds */
-> +                               ti,davinci-cs-ta = <12>;
-> +                               ti,davinci-cs-rhold = <6>;
-> +                               ti,davinci-cs-rstrobe = <23>;
-> +                               ti,davinci-cs-rsetup = <9>;
-> +                               ti,davinci-cs-whold = <8>;
-> +                               ti,davinci-cs-wstrobe = <23>;
-> +                               ti,davinci-cs-wsetup = <8>;
-> +
-> +                               nand@0,0 {
-> +                                       compatible = "ti,keystone-nand";
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <1>;
-> +                                       reg = <0 0 0x4000000
-> +                                              1 0 0x0000100>;
-> +
-> +                                       ti,davinci-chipselect = <0>;
-> +                                       ti,davinci-mask-ale = <0x2000>;
-> +                                       ti,davinci-mask-cle = <0x4000>;
-> +                                       ti,davinci-mask-chipsel = <0>;
-> +                                       nand-ecc-mode = "hw";
-> +                                       ti,davinci-ecc-bits = <4>;
-> +                                       nand-on-flash-bbt;
-> +
-> +                                       partition@0 {
-> +                                               label = "u-boot";
-> +                                               reg = <0x0 0x100000>;
-> +                                               read-only;
-> +                                       };
-> +
-> +                                       partition@100000 {
-> +                                               label = "params";
-> +                                               reg = <0x100000 0x80000>;
-> +                                               read-only;
-> +                                       };
-> +
-> +                                       partition@180000 {
-> +                                               label = "ubifs";
-> +                                               reg = <0x180000 0x7E80000>;
-> +                                       };
-Lets create now board specific k2hk-evm.dts and rename keystone.dts
-to keystone.dtsi and include that in boards. That way you can add the
-board specific stuff in board files and common soc stuff in keystone.dtsi.
+> +Required properties:
+> +- compatible: shall be "altr,passive-serial=94
 
-You can update that once the bindings are blessed by DT folks.
+This doesn=92t seem quite descriptive enough, easy to confuse with a se=
+rial port.
 
-Regards,
-Santosh
+> +- reg: SPI chip select
+
+Is this a SPI device than?
+
+> +- nstat-gpio: Specify GPIO for controlling the nstat pin
+> +- confd-gpio: Specify GPIO for controlling the confd pin
+> +- nconfig-gpio: Specify GPIO for controlling the nconfig pin
+> --=20
+> 1.8.4.2
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
