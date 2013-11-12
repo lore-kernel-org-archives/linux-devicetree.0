@@ -1,85 +1,140 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the
- datasheet's minimum required ECC
-Date: Tue, 12 Nov 2013 09:47:13 -0800
-Message-ID: <CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ@mail.gmail.com>
-References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
- <5281BBEE.7000502@freescale.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: arm/arm64 UEFI boot protocol
+Date: Tue, 12 Nov 2013 19:00:51 +0100
+Message-ID: <20131112180050.GR1557@rocoto.smurfnet.nu>
+References: <20131111174321.GQ1557@rocoto.smurfnet.nu>
+ <20131112164241.GD25953@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <5281BBEE.7000502@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Artem Bityutskiy <dedekind1@gmail.com>, t.figa@samsung.com, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131112164241.GD25953-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KyBEVCBtYWludGFpbmVycywgc2luY2UgdGhleSBoYXZlbid0IHJlc3BvbmRlZAoKT24gTW9uLCBO
-b3YgMTEsIDIwMTMgYXQgOToyNiBQTSwgSHVhbmcgU2hpamllIDxiMzI5NTVAZnJlZXNjYWxlLmNv
-bT4gd3JvdGU6Cj4g09ogMjAxM8TqMTHUwjA3yNUgMTg6MDcsIEh1YW5nIFNoaWppZSDQtLXAOgo+
-Cj4+IEluIGRlZmF1bHQgd2F5LCB3ZSB1c2UgdGhlIGVjY19zdHJlbmd0aC9lY2Nfc3RlcCBzaXpl
-IGNhbGN1bGF0ZWQgYnkKPj4gb3Vyc2VsdmVzCj4+IGFuZCB1c2UgYWxsIHRoZSBPT0IgYXJlYS4K
-Pj4KPj4gVGhpcyBwYXRjaCBhZGRzIGEgbmV3IHByb3BlcnR5IDogImZzbCx1c2UtbWluaW11bS1l
-Y2MiCj4+Cj4+IElmIHdlIGVuYWJsZSBpdCwgd2Ugd2lsbCBmaXJzdGx5IHRyeSB0byB1c2UgdGhl
-IGRhdGFzaGVldCdzIG1pbmltdW0KPj4gcmVxdWlyZWQKPj4gRUNDIHByb3ZpZGVkIGJ5IHRoZSBN
-VEQgbGF5ZXIgKHRoZSBlY2Nfc3RyZW5ndGhfZHMvZWNjX3N0ZXBfZHMgZmllbGRzCj4+IGluIHRo
-ZSBuYW5kX2NoaXB7fSkuIFNvIHdlIG1heSBoYXZlIGZyZWUgc3BhY2UgaW4gdGhlIE9PQiBhcmVh
-IGJ5IHVzaW5nCj4+IHRoZQo+PiBtaW5pbXVtIEVDQywgYW5kIHdlIG1heSBzdXBwb3J0IEpGRlMy
-IHdpdGggc29tZSBTTEMgTkFORHMsIHN1Y2ggYXMKPj4gTWljcm9uJ3MKPj4gU0xDIE5BTkQuCj4+
-Cj4+IElmIHdlIGZhaWwgdG8gdXNlIHRoZSBtaW5pbXVtIEVDQywgd2Ugd2lsbCB1c2UgdGhlIGxl
-Z2FjeSBtZXRob2QgdG8KPj4gY2FsY3VsYXRlCj4+IHRoZSBlY2Nfc3RyZW5ndGggYW5kIGVjY19z
-dGVwIHNpemUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEh1YW5nIFNoaWppZTxiMzI5NTVAZnJlZXNj
-YWxlLmNvbT4KPj4gLS0tCj4+IHYxIC0tPiAgdjI6IHJlYmFzZSB0aGlzIHBhdGNoIG9uIHRoZSBs
-YXRlc3QgbDItbXRkLgo+PiB2MiAtLT4gIHYzOiBjaGFuZ2UgdGhlIGRlc2NyaXB0aW9ucy4KPj4g
-LS0tCj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQgICAgICAg
-ICAgfCAgICA4ICsrKysrKysrCj4+ICAgZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1u
-YW5kLmMgICAgICAgICAgICAgfCAgICAzICsrKwo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5z
-ZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+PiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+PiBpbmRleCA1NTFiMmEx
-Li40NThkNTk2IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL2dwbWktbmFuZC50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL210ZC9ncG1pLW5hbmQudHh0Cj4+IEBAIC0xNyw2ICsxNywxNCBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+PiAgIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICAgICAtIG5hbmQtb24tZmxh
-c2gtYmJ0OiBib29sZWFuIHRvIGVuYWJsZSBvbiBmbGFzaCBiYnQgb3B0aW9uIGlmIG5vdAo+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcHJlc2VudCBmYWxzZQo+PiArICAtIGZzbCx1c2UtbWlu
-aW11bS1lY2M6IFByb3RlY3QgdGhpcyBOQU5EIGZsYXNoIHdpdGggdGhlIG1pbmltdW0gRUNDCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cmVuZ3RoIHJlcXVpcmVkLiBUaGUgcmVxdWlyZWQg
-RUNDIHN0cmVuZ3RoIGlzCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGF1dG9tYXRpY2FsbHkg
-ZGlzY292ZXJhYmxlIGZvciBzb21lIGZsYXNoCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIChl
-LmcuLCBhY2NvcmRpbmcgdG8gdGhlIE9ORkkgc3RhbmRhcmQpLgo+PiArICAgICAgICAgICAgICAg
-ICAgICAgICBIb3dldmVyLCBub3RlIHRoYXQgaWYgdGhpcyBzdHJlbmd0aCBpcyBub3QKPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgZGlzY292ZXJhYmxlIG9yIHRoaXMgcHJvcGVydHkgaXMgbm90
-IGVuYWJsZWQsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHRoZSBzb2Z0d2FyZSBtYXkgY2hv
-b3NlcyBhbiBpbXBsZW1lbnRhdGlvbi1kZWZpbmVkCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-IEVDQyBzY2hlbWUuCj4+Cj4+ICAgVGhlIGRldmljZSB0cmVlIG1heSBvcHRpb25hbGx5IGNvbnRh
-aW4gc3ViLW5vZGVzIGRlc2NyaWJpbmcgcGFydGl0aW9ucwo+PiBvZiB0aGUKPj4gICBhZGRyZXNz
-IHNwYWNlLiBTZWUgcGFydGl0aW9uLnR4dCBmb3IgbW9yZSBkZXRhaWwuCj4+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+PiBiL2RyaXZlcnMvbXRk
-L25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+IGluZGV4IDhmNGU1YjEuLmI4NDliOTIgMTAw
-NjQ0Cj4+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+ICsr
-KyBiL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4+IEBAIC0zNTMsNiAr
-MzUzLDkgQEAgc3RhdGljIGludCBsZWdhY3lfc2V0X2dlb21ldHJ5KHN0cnVjdCBncG1pX25hbmRf
-ZGF0YQo+PiAqdGhpcykKPj4KPj4gICBpbnQgY29tbW9uX25mY19zZXRfZ2VvbWV0cnkoc3RydWN0
-IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+PiAgIHsKPj4gKyAgICAgICBpZiAob2ZfcHJvcGVydHlf
-cmVhZF9ib29sKHRoaXMtPmRldi0+b2Zfbm9kZSwKPj4gImZzbCx1c2UtbWluaW11bS1lY2MiKQo+
-PiArICAgICAgICAgICAgICAgJiYgIHNldF9nZW9tZXRyeV9ieV9lY2NfaW5mbyh0aGlzKSkKPj4g
-KyAgICAgICAgICAgICAgIHJldHVybiAwOwo+PiAgICAgICAgIHJldHVybiBsZWdhY3lfc2V0X2dl
-b21ldHJ5KHRoaXMpOwo+PiAgIH0KPj4KPiBIaSBCcmlhbjoKPiBJcyB0aGlzIHBhdGNoIG9rIG5v
-dz8gSSBob3BlIGl0IGNhbiBiZSBhY2NlcHRlZCBhdCB0aGlzIG1lcmdlLXdpbmRvdy4KClRoZSBw
-YXRjaCBpcyBPSyB0byBtZSwgYnV0IHdlIGhhdmVuJ3QgZ290dGVuIGFueSBEVCByZXZpZXcuIElm
-IHdlCmRvbid0IGdldCBhbnkgcmVzcG9uc2UgaW4gYSBmZXcgZGF5cywgSSdsbCB0YWtlIGl0IGFu
-eXdheS4KCkknbSBub3Qgc3VyZSBhYm91dCB0YWtpbmcgaXQgaW4gMy4xMyB2cy4gMy4xNCwgYXMg
-dGhpcyBpcwp0cmFkaXRpb25hbGx5IGEgbGF0ZSBtZXJnZSBmb3IgMy4xMy4KCkJyaWFuCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
-TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+On Tue, Nov 12, 2013 at 04:42:41PM +0000, Will Deacon wrote:
+> > So, rather than sending out complete sets of patches for all these until
+> > consensus is reached, below is my proposed suggestion for a
+> > Documentation/arm/uefi.txt, to be shared for arm and arm64. If noone has
+> > strong objections to this, we can quickly send updated (and hopefully
+> > final-ish) versions of these sets.
+> 
+> In the absence of code, I'll play English teacher then :)
+
+Yey - a reply!
+
+> > UEFI, the Unified Extensible Firmware Interface is a specification
+> 
+> Interface, is
+
+ok
+ 
+> > governing the behaviours of compatible firmware interfaces.
+> > It is maintained by the UEFI Forum - http://www.uefi.org/.
+> > Support for the AArch32 (arm) architecture was added in version 2.3 of
+> > the specification, and support for AAaarch64 (arm64) was added in
+> > version 2.4.
+> 
+> AArch64
+ 
+ok
+
+> > UEFI is an evolution of its predecessor 'EFI', so the terms EFI and
+> > EFI are used somewhat interchangeably in this document and associated
+> 
+> UEFI
+ 
+ok
+
+> > UEFI stub
+> > =========
+> > The "stub" is a feature that turns the Image/zImage/bzImage into a valid
+> 
+> We don't support bzImage for arm or arm64.
+ 
+Well, it works the same on x86, and the feature is called the same.
+Once we get the basic support in, I'm planning to write a
+Documentation/uefi.txt and move all of the non architecture-specific to.
+
+> > UEFI PE/COFF executable, including a loader application that makes it
+> > possible to load the kernel directly from the UEFI shell, boot menu, or
+> > one of the lightweight bootloaders like Gummiboot or rEFInd. 
+> > The kernel image built with stub support remains a valid kernel image
+> > for booting in the legacy fashion.
+> 
+> By legacy, you mean non-UEFI rather than EFI? I consider UEFI as a choice
+> rather than the future ;p
+
+So, "historical"? "Traditional"? Or just "non-UEFI"?
+ 
+> > UEFI kernel support on ARM
+> > ==========================
+> 
+> Wait, isn't this all under Documentation/arm/? You could probably combine
+> some of these sections together, since the scope is really tied to ARM here.
+ 
+Same reason as above, but I could squash for now.
+
+> > The implementation depends on receiving information about the UEFI
+> > environment in a Flattened Device Tree (FDT) - so is only available with
+> > CONFIG_OF.
+> 
+> You could mention this in your earlier list of dependencies.
+ 
+Ditto.
+
+> > UEFI support also depends on early_memremap().
+> 
+> Why is that worthy of note? Can a user even turn that off?
+ 
+Not really.
+
+> > The stub populates the FDT /chosen node with, and the kernel scans for
+> > the following parameters:
+> 
+> Sentence doesn't read very well. Maybe stick some brackets around (and the
+> kernel scans for)?
+ 
+ok
+
+> > ______________________________________________________________________________
+> > Name                      | Size   | Description
+> > ================================================================================
+> > linux,uefi-system-table   | 64-bit | Physical address of the UEFI System Table.
+> > --------------------------------------------------------------------------------
+> > linux,uefi-mmap           | 64-bit | Physical address of the UEFI memory map,
+> >                           |        | populated by the UEFI GetMemoryMap() call.
+> > --------------------------------------------------------------------------------
+> > linux,uefi-mmap-size      | 32-bit | Size in bytes of the UEFI memory map
+> >                           |        | pointed to in previous entry.
+> > --------------------------------------------------------------------------------
+> > linux,uefi-mmap-desc-size | 32-bit | Size in bytes of each entry in the UEFI
+> >                           |        | memory map.
+> 
+> Do we actually need to define these sizes here, or can they be dealt with
+> using the usual #address-cells property? Also, I think you should describe
+> the binding in a separate document somewhere under Documentation/devicetree,
+> then cross-reference it from here.
+ 
+This is not a generic ABI, so I don't think it belongs in there (it will
+never be in a .dtb, and the only way it can be generated by something
+that isn't the stub is by lying).
+But I don't really care either way - as long as some general agreement
+can be had.
+
+> > --------------------------------------------------------------------------------
+> > linux,uefi-stub-kern-ver  | string | Copy of linux_banner from build.
+> > --------------------------------------------------------------------------------
+> 
+> Are you sure you want to refer to kernel symbols here? If somebody renames
+> that variable, they're not going to fix this file.
+
+There is a comment above the definition of linux_banner that says:
+/* FIXED STRINGS! Don't touch! */
+
+Sounded reliable enough to me :)
+
+/
+    Leif
