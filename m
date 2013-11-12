@@ -1,33 +1,153 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH RFC 07/10] PM / wakeup : Introduce device_child_may_wakeup
-Date: Tue, 12 Nov 2013 14:09:01 +0000
-Message-ID: <5282367D.1090705@st.com>
-References: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com> <1384264377-7609-1-git-send-email-srinivas.kandagatla@st.com> <4093206.klj58BXQv3@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4093206.klj58BXQv3@vostro.rjw.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, stephen.gallimore@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/4 v3] mfd: tc3589x: Add device tree bindings
+Date: Tue, 12 Nov 2013 15:12:38 +0100
+Message-ID: <1384265558-10521-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/13 14:20, Rafael J. Wysocki wrote:
->>  
->> > +/* callback for device_child_may_wakeup */
->> > +static int __device_child_may_wakeup(struct device *dev, void *c)
->> > +{
->> > +	return device_may_wakeup(dev);
->> > +}
-> This doesn't have anything to do with children in principle, so please call
-> it differently.  Something like device_may_wakeup_cb() would work for me (and
-> then you may not need the comment even).
+This defines the device tree bindings for the Toshiba TC3589x
+series of multi-purpose expanders. Only the stuff I can test
+is defined: GPIO and keypad. Others may implement more
+subdevices further down the road.
 
-Thanks Rafael, I will fix this in next version.
-> 
-> Thanks!
-> 
->> > +
->> > +/**
+This is to complement
+commit a435ae1d51e2f18414f2a87219fdbe068231e692
+"mfd: Enable the tc3589x for Device Tree" which left off
+the definition of the device tree bindings.
 
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v2->v3:
+- Fix the keys/rows bindings to be u32 rather than
+  /bits/ 8, inconsistency noted by Mark Rutland.
+ChangeLog v1->v2:
+- Include a verbose example in the DT bindings.
+- Explain why this is a stand-alone bindings patch.
+---
+ Documentation/devicetree/bindings/mfd/tc3589x.txt | 107 ++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tc3589x.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/tc3589x.txt b/Documentation/devicetree/bindings/mfd/tc3589x.txt
+new file mode 100644
+index 000000000000..c6ac5bd2ce51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/tc3589x.txt
+@@ -0,0 +1,107 @@
++* Toshiba TC3589x multi-purpose expander
++
++The Toshiba TC3589x series are I2C-based MFD devices which may expose the
++following built-in devices: gpio, keypad, rotator (vibrator), PWM (for
++e.g. LEDs or vibrators) The included models are:
++
++- TC35890
++- TC35892
++- TC35893
++- TC35894
++- TC35895
++- TC35896
++
++Required properties:
++ - compatible : must be "toshiba,tc35890", "toshiba,tc35892", "toshiba,tc35893",
++   "toshiba,tc35894", "toshiba,tc35895" or "toshiba,tc35896"
++ - reg : I2C address of the device
++ - interrupt-parent : specifies which IRQ controller we're connected to
++ - interrupts : the interrupt on the parent the controller is connected to
++ - interrupt-controller : marks the device node as an interrupt controller
++ - #interrupt-cells : should be <1>, the first cell is the IRQ offset on this
++   TC3589x interrupt controller.
++
++Optional nodes:
++
++- GPIO
++  This GPIO module inside the TC3589x has 24 (TC35890, TC35892) or 20
++  (other models) GPIO lines.
++ - compatible : must be "toshiba,tc3589x-gpio"
++ - interrupts : interrupt on the parent, which must be the tc3589x MFD device
++ - interrupt-controller : marks the device node as an interrupt controller
++ - #interrupt-cells : should be <2>, the first cell is the IRQ offset on this
++   TC3589x GPIO interrupt controller, the second cell is the interrupt flags
++   in accordance with <dt-bindings/interrupt-controller/irq.h>. The following
++   flags are valid:
++   - IRQ_TYPE_LEVEL_LOW
++   - IRQ_TYPE_LEVEL_HIGH
++   - IRQ_TYPE_EDGE_RISING
++   - IRQ_TYPE_EDGE_FALLING
++   - IRQ_TYPE_EDGE_BOTH
++ - gpio-controller : marks the device node as a GPIO controller
++ - #gpio-cells : should be <2>, the first cell is the GPIO offset on this
++   GPIO controller, the second cell is the flags.
++
++- Keypad
++  This keypad is the same on all variants, supporting up to 96 different
++  keys. The linux-specific properties are modeled on those already existing
++  in other input drivers.
++ - compatible : must be "toshiba,tc3589x-keypad"
++ - debounce-delay-ms : debounce interval in milliseconds
++ - keypad,num-rows : number of rows in the matrix, see
++   bindings/input/matrix-keymap.txt
++ - keypad,num-columns : number of columns in the matrix, see
++   bindings/input/matrix-keymap.txt
++ - linux,keymap: the definition can be found in
++   bindings/input/matrix-keymap.txt
++ - linux,no-autorepeat: do no enable autorepeat feature.
++ - linux,wakeup: use any event on keypad as wakeup event.
++
++Example:
++
++tc35893@44 {
++	compatible = "toshiba,tc35893";
++	reg = <0x44>;
++	interrupt-parent = <&gpio6>;
++	interrupts = <26 IRQ_TYPE_EDGE_RISING>;
++
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	tc3589x_gpio {
++		compatible = "toshiba,tc3589x-gpio";
++		interrupts = <0>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++	tc3589x_keypad {
++		compatible = "toshiba,tc3589x-keypad";
++		interrupts = <6>;
++		debounce-delay-ms = <4>;
++		keypad,num-columns = <8>;
++		keypad,num-rows = <8>;
++		linux,no-autorepeat;
++		linux,wakeup;
++		linux,keymap = <0x0301006b
++			        0x04010066
++				0x06040072
++				0x040200d7
++				0x0303006a
++				0x0205000e
++				0x0607008b
++				0x0500001c
++				0x0403000b
++				0x03040034
++				0x05020067
++				0x0305006c
++				0x040500e7
++				0x0005009e
++				0x06020073
++				0x01030039
++				0x07060069
++				0x050500d9>;
++	};
++};
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
