@@ -1,273 +1,72 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v5 05/17] clk: at91: add PMC main clock
-Date: Tue, 12 Nov 2013 22:54:02 +0100
-Message-ID: <1384293242-4310-1-git-send-email-b.brezillon@overkiz.com>
-References: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/7] arm: dt: zynq: Add 'cpus' node
+Date: Tue, 12 Nov 2013 13:58:17 -0800
+Message-ID: <d439357d-2451-405d-acf5-8514c50c779a@AM1EHSMHS002.ehs.local>
+References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1383945677-29674-3-git-send-email-soren.brinkmann@xilinx.com>
+ <528128A8.9060400@arm.com>
+ <91c27955-2d9f-4e85-8d9e-b8a178b76cdb@CO9EHSMHS026.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <91c27955-2d9f-4e85-8d9e-b8a178b76cdb-QhSrsHip19vVOT3FKhN2rLjjLBE8jN/0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new at91 main oscillator clock implementation using common
-clk framework.
+On Tue, Nov 12, 2013 at 10:06:05AM -0800, S=C3=B6ren Brinkmann wrote:
+> On Mon, Nov 11, 2013 at 06:57:44PM +0000, Sudeep KarkadaNagesha wrote=
+:
+> > On 08/11/13 21:21, Soren Brinkmann wrote:
+> > > Add a 'cpus' node to describe the CPU cores of Zynq.
+> > >=20
+> > > Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > > Acked-by: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/zynq-7000.dtsi | 27 ++++++++++++++++++++++++++=
++
+> > >  1 file changed, 27 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts=
+/zynq-7000.dtsi
+> > > index 27ebc1ba9671..37fc04525142 100644
+> > > --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> > > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> > > @@ -15,6 +15,33 @@
+> > >  / {
+> > >  	compatible =3D "xlnx,zynq-7000";
+> > > =20
+> > > +	cpus {
+> > > +		#address-cells =3D <1>;
+> > > +		#size-cells =3D <0>;
+> > > +
+> > > +		cpu@0 {
+> > > +			compatible =3D "arm,cortex-a9";
+> > > +			device_type =3D "cpu";
+> > > +			reg =3D <0>;
+> > > +			clocks =3D <&clkc 3>;
+> > > +			i-cache-size =3D <0x8000>;
+> > > +			i-cache-line-size =3D <0x20>;
+> > > +			d-cache-size =3D <0x8000>;
+> > > +			d-cache-line-size =3D <0x20>;
+> >=20
+> > These cache properties can be identified through CCSIDR(Cache Size =
+ID Registers)
+> > on ARMv7 Cortex implementations. It's better not to have these in D=
+T if they can
+> > be identified runtime.
+> Sounds good to me. I'll go ahead an remove them.
+BTW: Documentation/devicetree/booting-without-of.txt lists those
+properties at least as recommended. That should probably be updated.
 
-If rate is not provided during clock registration it is calculated using
-the slow clock (main clk parent in this case) rate and MCFR register.
+	S=C3=B6ren
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/clk/at91/Makefile   |    1 +
- drivers/clk/at91/clk-main.c |  189 +++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/at91/pmc.c      |    5 ++
- drivers/clk/at91/pmc.h      |    3 +
- 4 files changed, 198 insertions(+)
- create mode 100644 drivers/clk/at91/clk-main.c
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 1d4fb21..44105bd 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -3,3 +3,4 @@
- #
- 
- obj-y += pmc.o
-+obj-y += clk-main.o
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-new file mode 100644
-index 0000000..905ceff
---- /dev/null
-+++ b/drivers/clk/at91/clk-main.c
-@@ -0,0 +1,189 @@
-+/*
-+ * drivers/clk/at91/clk-main.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91_pmc.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/sched.h>
-+#include <linux/wait.h>
-+
-+#include "pmc.h"
-+
-+#define SLOW_CLOCK_FREQ		32768
-+#define MAINF_DIV		16
-+#define MAINFRDY_TIMEOUT	(((MAINF_DIV + 1) * USEC_PER_SEC) / \
-+				 SLOW_CLOCK_FREQ)
-+#define MAINF_LOOP_MIN_WAIT	(USEC_PER_SEC / SLOW_CLOCK_FREQ)
-+#define MAINF_LOOP_MAX_WAIT	MAINFRDY_TIMEOUT
-+
-+struct clk_main {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+	unsigned long rate;
-+	unsigned int irq;
-+	wait_queue_head_t wait;
-+};
-+
-+#define to_clk_main(hw) container_of(hw, struct clk_main, hw)
-+
-+static irqreturn_t clk_main_irq_handler(int irq, void *dev_id)
-+{
-+	struct clk_main *clkmain = (struct clk_main *)dev_id;
-+
-+	wake_up(&clkmain->wait);
-+	disable_irq_nosync(clkmain->irq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int clk_main_prepare(struct clk_hw *hw)
-+{
-+	struct clk_main *clkmain = to_clk_main(hw);
-+	struct at91_pmc *pmc = clkmain->pmc;
-+	unsigned long halt_time, timeout;
-+	u32 tmp;
-+
-+	while (!(pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_MOSCS)) {
-+		enable_irq(clkmain->irq);
-+		wait_event(clkmain->wait,
-+			   pmc_read(pmc, AT91_PMC_SR) & AT91_PMC_MOSCS);
-+	}
-+
-+	if (clkmain->rate)
-+		return 0;
-+
-+	timeout = jiffies + usecs_to_jiffies(MAINFRDY_TIMEOUT);
-+	do {
-+		halt_time = jiffies;
-+		tmp = pmc_read(pmc, AT91_CKGR_MCFR);
-+		if (tmp & AT91_PMC_MAINRDY)
-+			return 0;
-+		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-+	} while (time_before(halt_time, timeout));
-+
-+	return 0;
-+}
-+
-+static int clk_main_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_main *clkmain = to_clk_main(hw);
-+
-+	return !!(pmc_read(clkmain->pmc, AT91_PMC_SR) & AT91_PMC_MOSCS);
-+}
-+
-+static unsigned long clk_main_recalc_rate(struct clk_hw *hw,
-+					  unsigned long parent_rate)
-+{
-+	u32 tmp;
-+	struct clk_main *clkmain = to_clk_main(hw);
-+	struct at91_pmc *pmc = clkmain->pmc;
-+
-+	if (clkmain->rate)
-+		return clkmain->rate;
-+
-+	tmp = pmc_read(pmc, AT91_CKGR_MCFR) & AT91_PMC_MAINF;
-+	clkmain->rate = (tmp * parent_rate) / MAINF_DIV;
-+
-+	return clkmain->rate;
-+}
-+
-+static const struct clk_ops main_ops = {
-+	.prepare = clk_main_prepare,
-+	.is_prepared = clk_main_is_prepared,
-+	.recalc_rate = clk_main_recalc_rate,
-+};
-+
-+static struct clk * __init
-+at91_clk_register_main(struct at91_pmc *pmc,
-+		       unsigned int irq,
-+		       const char *name,
-+		       const char *parent_name,
-+		       unsigned long rate)
-+{
-+	int ret;
-+	struct clk_main *clkmain;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	if (!pmc || !irq || !name)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (!rate && !parent_name)
-+		return ERR_PTR(-EINVAL);
-+
-+	clkmain = kzalloc(sizeof(*clkmain), GFP_KERNEL);
-+	if (!clkmain)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &main_ops;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	init.num_parents = parent_name ? 1 : 0;
-+	init.flags = parent_name ? 0 : CLK_IS_ROOT;
-+
-+	clkmain->hw.init = &init;
-+	clkmain->rate = rate;
-+	clkmain->pmc = pmc;
-+	clkmain->irq = irq;
-+	init_waitqueue_head(&clkmain->wait);
-+	irq_set_status_flags(clkmain->irq, IRQ_NOAUTOEN);
-+	ret = request_irq(clkmain->irq, clk_main_irq_handler,
-+			  IRQF_TRIGGER_HIGH, "clk-main", clkmain);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	clk = clk_register(NULL, &clkmain->hw);
-+	if (IS_ERR(clk)) {
-+		free_irq(clkmain->irq, clkmain);
-+		kfree(clkmain);
-+	}
-+
-+	return clk;
-+}
-+
-+
-+
-+static void __init
-+of_at91_clk_main_setup(struct device_node *np, struct at91_pmc *pmc)
-+{
-+	struct clk *clk;
-+	unsigned int irq;
-+	const char *parent_name;
-+	const char *name = np->name;
-+	u32 rate = 0;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	of_property_read_string(np, "clock-output-names", &name);
-+	of_property_read_u32(np, "clock-frequency", &rate);
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (!irq)
-+		return;
-+
-+	clk = at91_clk_register_main(pmc, irq, name, parent_name, rate);
-+	if (IS_ERR(clk))
-+		return;
-+
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+}
-+
-+void __init of_at91rm9200_clk_main_setup(struct device_node *np,
-+					 struct at91_pmc *pmc)
-+{
-+	of_at91_clk_main_setup(np, pmc);
-+}
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index c8a9a63..9b4719b 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -231,6 +231,11 @@ out_free_pmc:
- }
- 
- static const struct of_device_id pmc_clk_ids[] __initdata = {
-+	/* Main clock */
-+	{
-+		.compatible = "atmel,at91rm9200-clk-main",
-+		.data = of_at91rm9200_clk_main_setup
-+	},
- 	{ /*sentinel*/ }
- };
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index d92b946..729aa46 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -58,4 +58,7 @@ static inline void pmc_write(struct at91_pmc *pmc, int offset, u32 value)
- int of_at91_get_clk_range(struct device_node *np, const char *propname,
- 			  struct clk_range *range);
- 
-+extern void __init of_at91rm9200_clk_main_setup(struct device_node *np,
-+						struct at91_pmc *pmc);
-+
- #endif /* __PMC_H_ */
--- 
-1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
