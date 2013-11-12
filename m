@@ -1,53 +1,31 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH v3 1/2] ARM: dts: Fix sysreg node name in exynos4.dtsi
-Date: Tue, 12 Nov 2013 19:40:54 +0900
-Message-ID: <086301cedf93$a9f6bf70$fde43e50$@org>
-References: <1383632302-23535-1-git-send-email-sachin.kamat@linaro.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gSW5wdXQ6IEFkZCBuZXcgZHJpdmVyIGZvciBHUElPIGJl?=
+ =?UTF-8?B?ZXBlcg==?=
+Date: Tue, 12 Nov 2013 14:47:57 +0400
+Message-ID: <1384253277.731839001@f27.i.mail.ru>
+References: <1384250833-4600-1-git-send-email-shc_work@mail.ru>
+ <20131112101544.GD2976@e106331-lin.cambridge.arm.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1383632302-23535-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, t.figa@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131112101544.GD2976@e106331-lin.cambridge.arm.com>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>
+Cc: =?UTF-8?B?bGludXgtaW5wdXRAdmdlci5rZXJuZWwub3Jn?= <linux-input@vger.kernel.org>, =?UTF-8?B?RG1pdHJ5IFRvcm9raG92?= <dmitry.torokhov@gmail.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?cm9iLmhlcnJpbmdAY2FseGVkYS5jb20=?= <rob.herring@calxeda.com>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <Pawel.Moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
-> Fix the name as per DT node naming convention.
-> - rename the node to syscon which is a more generic name.
-> - append the register value to the node name.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> ---
-> Changes since v2:
-> None.
-> ---
->  arch/arm/boot/dts/exynos4.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi
-> b/arch/arm/boot/dts/exynos4.dtsi
-> index cb0f70cc552b..b7378154c0a1 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -99,7 +99,7 @@
->  		reg = <0x10440000 0x1000>;
->  	};
-> 
-> -	sys_reg: sysreg {
-> +	sys_reg: syscon@10010000 {
->  		compatible = "samsung,exynos4-sysreg", "syscon";
->  		reg = <0x10010000 0x400>;
->  	};
-> --
-> 1.7.9.5
-
-Looks good to me, thanks for this patch and reviews from Sylwester and
-Tomasz.
-
-Applied.
-- Kukjin
+SGVsbG8uCgo+IE9uIFR1ZSwgTm92IDEyLCAyMDEzIGF0IDEwOjA3OjEzQU0gKzAwMDAsIEFsZXhh
+bmRlciBTaGl5YW4gd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgYSBuZXcgZHJpdmVyIGZvciB0
+aGUgYmVlcGVyIGNvbnRyb2xsZWQgdmlhIEdQSU8gcGluLgo+ID4gVGhlIGRyaXZlciBkb2VzIG5v
+dCBkZXBlbmQgb24gdGhlIGFyY2hpdGVjdHVyZSBhbmQgaXMgcG9zaXRpb25lZCBhcwo+ID4gYSBy
+ZXBsYWNlbWVudCBmb3IgdGhlIHNwZWNpZmljIGRyaXZlcnMgdGhhdCBhcmUgdXNlZCBmb3IgdGhp
+cyBmdW5jdGlvbi4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFNoaXlhbiA8c2hj
+X3dvcmtAbWFpbC5ydT4KLi4uCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2lucHV0L2dwaW8tYmVlcGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9pbnB1dC9ncGlvLWJlZXBlci50eHQKLi4uCj4gPiArRXhhbXBsZToKPiA+
+ICsKPiA+ICtiZWVwZXI6IGlucHV0QDAgewo+ID4gKwljb21wYXRpYmxlID0gImdwaW8tYmVlcGVy
+IjsKPiA+ICsJcmVnID0gPDA+Owo+ID4gKwlncGlvcyA9IDwmZ3BpbzMgMjMgMD47Cj4gPiArfTsK
+PiAKPiBXaGF0IGFyZSB0aGUgcmVnIC8gdW5pdC1hZGRyZXNzIGZvcj8KCkp1c3QgYW4gZXhhbXBs
+ZSBmcm9tICJzaW1wbGUtYnVzIiBjb250YWluZXIuCgotLS0K
