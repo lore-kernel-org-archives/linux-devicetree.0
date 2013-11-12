@@ -1,103 +1,51 @@
-From: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv3 0/8]  omap hwspinlock dt support
-Date: Tue, 12 Nov 2013 12:16:42 -0600
-Message-ID: <5282708A.30601@ti.com>
-References: <1381439735-52888-1-git-send-email-s-anna@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Tue, 12 Nov 2013 11:20:44 -0700
+Message-ID: <5282717C.3050502@wwwdotorg.org>
+References: <1383203126-3243-1-git-send-email-wni@nvidia.com> <20131031162029.GF2493@sirena.org.uk> <527737C5.5080901@nvidia.com> <20131104161828.GK2493@sirena.org.uk> <5278B4CB.9050305@nvidia.com> <20131106085100.GB11602@sirena.org.uk> <527A1C47.6050405@nvidia.com> <20131106110154.GG11602@sirena.org.uk> <5281C228.3000404@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381439735-52888-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5281C228.3000404-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/11/2013 10:52 PM, Wei Ni wrote:
+> On 11/06/2013 07:01 PM, Mark Brown wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Wed, Nov 06, 2013 at 06:39:03PM +0800, Wei Ni wrote:
+>>
+>>> I still can't find a good place to set full_constraints, could you
+>>> please show me some reference codes where we can set it?
+>>
+>> The places where we unflatten the device tree for example, or start
+>> instantiating devices from DT.
+> 
+> Hi, Mark
+> Sorry, I really don't familiar with the DT, could you please take this
+> by youself?
 
-> Hi,
->
-> This is an updated series addressing the review comments from the
-> v2 series. The hwmod patches have been dropped from the repost
-> as per Paul's request, they have already been queued.
+I think if you want a feature implemented or a patch created, it's up to
+you to do so.
 
-Mark,
+Isn't this as simple as moving the following code:
 
-Any comments on this series? Tony has picked up the OMAP DTS patches for 
-3.13, and so
-the "ti,omap4-hwspinlock" compatible string is showing up as 
-undocumented in linux-next.
-How do you want me to proceed here? I will be separating out the 
-bindings into separate patches
-in the future.
+> 	/*
+> 	 * Since DT doesn't provide an idiomatic mechanism for
+> 	 * enabling full constraints and since it's much more natural
+> 	 * with DT to provide them just assume that a DT enabled
+> 	 * system has full constraints.
+> 	 */
+> 	if (of_have_populated_dt())
+> 		has_full_constraints = true;
 
-regards
-Suman
+... out of regulator_init_complete() and into regulator_init()?
 
->
-> The series is tested on top of v3.12-rc4 + Benoit's 3.13 DTS branch and
-> Tero's clock series, along with the queued hwmod patches.
->
-> Changes in v3:
-> - Removed the DT property hwlock-base-id and associated OF helper
-> - Added changes in core to support requesting a specific hwlock using
->    phandle + args approach
-> - Revised both the common and OMAP DT bindings document
-> - OMAP AM335 support patches are unchanged from v2.
-> - OMAP DTS patches are unchanged from v2.
->
-> v2
-> - Added a new common DT binding documentation and OF helpers (Patch1),
->    addressing the review comments from v1 [2]. The MSM support [1] needs
->    to be reworked on top of this common patch.
-> - Revised OMAP DT parse support to use the new OF helper (Patch2)
-> - OMAP5 hwspinlock support including the hwmod entry and DT node (Patches 4, 5)
-> - Add AM335x support to OMAP hwspinlock driver, including a fix
->    needed in driver given that AM335 spinlock module requires s/w wakeup
->    (Patches 6, 7)
-> - AM335 DT node for spinlock, and a hwmod change to enable smart-idle
->    for AM335 (Patches 8, 9). The sysc patch is not essential for AM335
->    spinlock functionality, but is needed for smart-idling the IP when
->    the module is enabled.
-> - OMAP4 DT node patch is unchanged (Patch 3)
-> http://marc.info/?l=linux-omap&m=137944644112727&w=2
->
-> v1:
-> - Add DT parse support to OMAP hwspinlock driver
-> - Add OMAP4 DT node and bindings information
-> http://marc.info/?l=linux-omap&m=137823082308009&w=2
->
-> [1] https://lkml.org/lkml/2013/8/14/528
-> [2] http://marc.info/?t=137823090300005&r=1&w=2
->
-> Suman Anna (8):
->    hwspinlock/core: maintain a list of registered hwspinlock banks
->    hwspinlock/core: add common dt bindings and OF helpers
->    hwspinlock/omap: add support for dt nodes
->    hwspinlock/omap: enable module before reading SYSSTATUS register
->    hwspinlock/omap: support AM33xx
->    ARM: dts: OMAP4: Add hwspinlock node
->    ARM: dts: OMAP5: Add hwspinlock node
->    ARM: dts: AM33XX: Add hwspinlock node
->
->   .../devicetree/bindings/hwlock/hwlock.txt          |  49 ++++++++
->   .../devicetree/bindings/hwlock/omap-hwspinlock.txt |  19 +++
->   arch/arm/boot/dts/am33xx.dtsi                      |   6 +
->   arch/arm/boot/dts/omap4.dtsi                       |   6 +
->   arch/arm/boot/dts/omap5.dtsi                       |   6 +
->   arch/arm/mach-omap2/Makefile                       |   3 -
->   arch/arm/mach-omap2/hwspinlock.c                   |  60 ----------
->   drivers/hwspinlock/Kconfig                         |   2 +-
->   drivers/hwspinlock/hwspinlock_core.c               | 133 ++++++++++++++++++++-
->   drivers/hwspinlock/hwspinlock_internal.h           |   2 +
->   drivers/hwspinlock/omap_hwspinlock.c               |  38 ++++--
->   include/linux/hwspinlock.h                         |  19 ++-
->   12 files changed, 263 insertions(+), 80 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
->   create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->   delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The only issue you may have to watch out for is: When is
+regulator_init() called (i.e. when does core_initcall happen) relative
+to when driver probe()s can be called? If it's earlier, then
+core_initcall is early enough I suspect.
