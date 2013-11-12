@@ -1,149 +1,129 @@
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v4 15/15] usb: phy: msm: Vote for corner of VDD CX instead of voltage of VDD CX
-Date: Tue, 12 Nov 2013 16:51:50 +0200
-Message-ID: <1384267910-32066-16-git-send-email-iivanov@mm-sol.com>
+Subject: [PATCH v4 11/15] usb: phy: msm: Use reset framework for LINK and PHY resets
+Date: Tue, 12 Nov 2013 16:51:46 +0200
+Message-ID: <1384267910-32066-12-git-send-email-iivanov@mm-sol.com>
 References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: balbi@ti.com
-Cc: gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Mayank Rana <mrana@codeaurora.org>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-New platform uses RBCPR hardware feature, with that voting for
-absolute voltage of VDD CX is not required. Hence vote for corner of
-VDD CX which uses nominal corner voltage on VDD CX.
-
 Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Cc: Mayank Rana <mrana@codeaurora.org>
 Cc: devicetree@vger.kernel.org
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |    6 ++++
- drivers/usb/phy/phy-msm-usb.c                      |   35 +++++++++++++++-----
- include/linux/usb/msm_hsusb.h                      |    1 +
+ .../devicetree/bindings/usb/msm-hsusb.txt          |    9 ++++++
+ drivers/usb/phy/phy-msm-usb.c                      |   30 ++++++++++++++------
+ include/linux/usb/msm_hsusb.h                      |    3 ++
  3 files changed, 34 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index d105ba9..7b46395 100644
+index f1045e3..3f21204 100644
 --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
 +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -78,6 +78,11 @@ Optional properties:
- 				Some platforms may have configuration to allow USB
- 				controller work with any of the two HSPHYs present.
+@@ -57,6 +57,12 @@ Required properties:
+ - v1p8-supply:	phandle to the regulator for the 1.8V supply
+ - v3p3-supply:	phandle to the regulator for the 3.3V supply
  
-+- qcom,vdd-levels: This property must be a list of three integer
-+				values (no, min, max) where each value represents
-+				either a voltage in microvolts or a value corresponding
-+				to voltage corner.
++- resets:		A list of phandle + reset-specifier pairs for the
++				resets listed in reset-names
++- reset-names:	Should contain the following:
++  "phy"			USB PHY controller reset
++  "link"		USB LINK controller reset
 +
- Example HSUSB OTG controller device node:
+ - qcom,otg-control: OTG control (VBUS and ID notifications) can be one of
+ 				1 - PHY control
+ 				2 - PMIC control
+@@ -83,6 +89,9 @@ Example HSUSB OTG controller device node:
+ 		v1p8-supply = <&pm8941_l6>;
+ 		v3p3-supply = <&pm8941_l24>;
  
- 	usb@f9a55000 {
-@@ -100,4 +105,5 @@ Example HSUSB OTG controller device node:
- 
++		resets = <&gcc GCC_USB2A_PHY_BCR>, <&gcc GCC_USB_HS_BCR>;
++		reset-names = "phy", "link";
++
  		qcom,otg-control = <1>;
  		qcom,phy-init-sequence = <0x01 0x90 0xffffffff>;
-+		qcom,vdd-levels = <1 5 7>;
  	};
 diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 970f96b..b6e18b6 100644
+index cc230c8..53fc645 100644
 --- a/drivers/usb/phy/phy-msm-usb.c
 +++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -62,6 +62,13 @@
+@@ -32,6 +32,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/reset.h>
  
- #define USB_PHY_VDD_DIG_VOL_MIN	1000000 /* uV */
- #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
-+#define USB_PHY_SUSP_DIG_VOL	500000  /* uV */
-+
-+enum vdd_levels {
-+	VDD_LEVEL_NONE = 0,
-+	VDD_LEVEL_MIN,
-+	VDD_LEVEL_MAX,
-+};
+ #include <linux/usb.h>
+ #include <linux/usb/otg.h>
+@@ -260,12 +261,16 @@ static void ulpi_init(struct msm_otg *motg)
  
- static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ static int msm_otg_link_clk_reset(struct msm_otg *motg, bool assert)
  {
-@@ -69,8 +76,8 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+-	int ret = 0;
++	int ret;
  
- 	if (init) {
- 		ret = regulator_set_voltage(motg->vddcx,
--				USB_PHY_VDD_DIG_VOL_MIN,
--				USB_PHY_VDD_DIG_VOL_MAX);
-+				motg->vdd_levels[VDD_LEVEL_MIN],
-+				motg->vdd_levels[VDD_LEVEL_MAX]);
- 		if (ret) {
- 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
- 			return ret;
-@@ -81,7 +88,7 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
- 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
- 	} else {
- 		ret = regulator_set_voltage(motg->vddcx, 0,
--			USB_PHY_VDD_DIG_VOL_MAX);
-+				motg->vdd_levels[VDD_LEVEL_MAX]);
- 		if (ret)
- 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
- 		ret = regulator_disable(motg->vddcx);
-@@ -131,17 +138,16 @@ exit:
- }
+-	if (!motg->pdata->link_clk_reset)
+-		return ret;
++	if (motg->pdata->link_clk_reset)
++		ret = motg->pdata->link_clk_reset(motg->clk, assert);
++	else
++		if (assert)
++			ret = reset_control_assert(motg->link_rst);
++		else
++			ret = reset_control_deassert(motg->link_rst);
  
- #ifdef CONFIG_PM_SLEEP
--#define USB_PHY_SUSP_DIG_VOL  500000
- static int msm_hsusb_config_vddcx(struct msm_otg *motg, int high)
+-	ret = motg->pdata->link_clk_reset(motg->clk, assert);
+ 	if (ret)
+ 		dev_err(motg->phy.dev, "usb link clk reset %s failed\n",
+ 			assert ? "assert" : "deassert");
+@@ -275,12 +280,13 @@ static int msm_otg_link_clk_reset(struct msm_otg *motg, bool assert)
+ 
+ static int msm_otg_phy_clk_reset(struct msm_otg *motg)
  {
--	int max_vol = USB_PHY_VDD_DIG_VOL_MAX;
-+	int max_vol = motg->vdd_levels[VDD_LEVEL_MAX];
- 	int min_vol;
- 	int ret;
+-	int ret = 0;
++	int ret;
  
- 	if (high)
--		min_vol = USB_PHY_VDD_DIG_VOL_MIN;
-+		min_vol = motg->vdd_levels[VDD_LEVEL_MIN];
- 	else
--		min_vol = USB_PHY_SUSP_DIG_VOL;
-+		min_vol = motg->vdd_levels[VDD_LEVEL_NONE];
+-	if (!motg->pdata->phy_clk_reset)
+-		return ret;
++	if (motg->pdata->phy_clk_reset)
++		ret = motg->pdata->phy_clk_reset(motg->phy_reset_clk);
++	else
++		ret = reset_control_reset(motg->phy_rst);
  
- 	ret = regulator_set_voltage(motg->vddcx, min_vol, max_vol);
- 	if (ret) {
-@@ -1437,7 +1443,7 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 	const struct of_device_id *id;
- 	struct device_node *node = pdev->dev.of_node;
- 	int len = 0;
--	u32 val;
-+	u32 val, tmp[3];
+-	ret = motg->pdata->phy_clk_reset(motg->phy_reset_clk);
+ 	if (ret)
+ 		dev_err(motg->phy.dev, "usb phy clk reset failed\n");
  
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
-@@ -1467,6 +1473,19 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 	if (!of_property_read_u32(node, "qcom,phy-num", &val))
- 		motg->phy_number = val;
+@@ -1373,6 +1379,14 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 	id = of_match_device(msm_otg_dt_match, &pdev->dev);
+ 	pdata->phy_type = (int) id->data;
  
-+	motg->vdd_levels[VDD_LEVEL_NONE] = USB_PHY_SUSP_DIG_VOL;
-+	motg->vdd_levels[VDD_LEVEL_MIN] = USB_PHY_VDD_DIG_VOL_MIN;
-+	motg->vdd_levels[VDD_LEVEL_MAX] = USB_PHY_VDD_DIG_VOL_MAX;
++	motg->link_rst = devm_reset_control_get(&pdev->dev, "link");
++	if (IS_ERR(motg->link_rst))
++		return PTR_ERR(motg->link_rst);
 +
-+	if (of_get_property(node, "qcom,vdd-levels", &len) &&
-+	    len == sizeof(tmp)) {
-+		of_property_read_u32_array(node, "qcom,vdd-levels",
-+					   tmp, len / sizeof(*tmp));
-+		motg->vdd_levels[VDD_LEVEL_NONE] = tmp[VDD_LEVEL_NONE];
-+		motg->vdd_levels[VDD_LEVEL_MIN] = tmp[VDD_LEVEL_MIN];
-+		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
-+	}
++	motg->phy_rst = devm_reset_control_get(&pdev->dev, "phy");
++	if (IS_ERR(motg->phy_rst))
++		return PTR_ERR(motg->phy_rst);
 +
- 	if (!of_get_property(node, "qcom,phy-init-sequence", &len) || !len)
- 		return 0;
- 
+ 	pdata->mode = of_usb_get_dr_mode(node);
+ 	if (pdata->mode == USB_DR_MODE_UNKNOWN)
+ 		pdata->mode = USB_DR_MODE_OTG;
 diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index da3a974..f612cb9 100644
+index 262ed80..9bf8943 100644
 --- a/include/linux/usb/msm_hsusb.h
 +++ b/include/linux/usb/msm_hsusb.h
-@@ -167,6 +167,7 @@ struct msm_otg {
- 
- 	struct reset_control *phy_rst;
- 	struct reset_control *link_rst;
-+	int vdd_levels[3];
+@@ -163,6 +163,9 @@ struct msm_otg {
+ 	struct regulator *v3p3;
+ 	struct regulator *v1p8;
+ 	struct regulator *vddcx;
++
++	struct reset_control *phy_rst;
++	struct reset_control *link_rst;
  };
  
  #endif
