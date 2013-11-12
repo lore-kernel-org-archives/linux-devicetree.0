@@ -1,64 +1,49 @@
-From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 3/3] DMA: Freescale: update driver to support
- 8-channel DMA engine
-Date: Mon, 11 Nov 2013 16:09:53 -0800
-Message-ID: <CAPcyv4h00zGc2=ZLwnCpP3WTQ8JbFteV-torU+qCo98YXrfq5A@mail.gmail.com>
-References: <1380188023-3936-1-git-send-email-hongbo.zhang@freescale.com>
-	<1380188023-3936-4-git-send-email-hongbo.zhang@freescale.com>
-	<525F7C18.3010409@freescale.com>
-	<5278587F.7090500@freescale.com>
-	<CAA9_cme3c7SjH3iio0oR3FHpfoMzgrBDO-2k_Yf68G-AgFNqfA@mail.gmail.com>
-	<52809F67.20901@freescale.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
+Date: Mon, 11 Nov 2013 17:43:26 -0800
+Message-ID: <CAGVrzcYji=tmNzvu8cUSU_P27BrGZBvFowC3NdnM2UvRpRsvmQ@mail.gmail.com>
+References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52809F67.20901-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 1:12 AM, Hongbo Zhang
-<hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->>>>> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
->>>>> index 49e8fbd..16a9a48 100644
->>>>> --- a/drivers/dma/fsldma.c
->>>>> +++ b/drivers/dma/fsldma.c
->>>>> @@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct
->>>>> fsldma_device
->>>>> *fdev,
->>>>>        WARN_ON(fdev->feature != chan->feature);
->>>>>          chan->dev = fdev->dev;
->>>>> -    chan->id = ((res.start - 0x100) & 0xfff) >> 7;
->>>>> +    chan->id = (res.start & 0xfff) < 0x300 ?
->>>>> +           ((res.start - 0x100) & 0xfff) >> 7 :
->>>>> +           ((res.start - 0x200) & 0xfff) >> 7;
->>>>>        if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
->>
->> Isn't it a bit fragile to have this based on the resource address?
->> Can't device tree tell you the channel id directly by an index into
->> the "dma0: dma@100300" node?
->
->
-> Yes, both this way and putting a "cell-index" into device tree work.
-> This won't be fragile, because the resource address should always be defined
-> correctly, otherwise even if we can tell a channel id by "cell-index" but
-> with wrong resource address, nothing will work.
-> This piece of code only doesn't seem as neat as using "cell-index", but we
-> prefer the style that let the device tree describes as true as what hardware
-> really has. This doesn't mean "cell-index" isn't acceptable, if it is
-> necessary and unavoidable, we can send another patch to add it, but
-> currently there is no need and we don't have to do this.
->
+Hello Thomas,
 
-I'm pointing it out because we just had a bug fix to another driver
-motivated by the fact that resource addresses may move from one
-implementation to another, whereas the cell index provided by device
-tree is static.  Just a note, no need to fix it now.
+2013/9/6 Thomas Petazzoni <thomas.petazzoni@free-electrons.com>:
 
---
-Dan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Some Ethernet MACs have a "fixed link", and are not connected to a
+> +normal MDIO-managed PHY device. For those situations, a Device Tree
+> +binding allows to describe a "fixed link".
+> +
+> +Such a fixed link situation is described by creating a PHY node as a
+> +sub-node of an Ethernet device, with the following properties:
+> +
+> +* 'fixed-link' (boolean, mandatory), to indicate that this PHY is a
+> +  fixed link PHY.
+> +* 'speed' (integer, mandatory), to indicate the link speed. Accepted
+> +  values are 10, 100 and 1000
+
+'max-speed' might be better here to match ePAPR v1.1 (if we do care,
+'speed') works for me too.
+
+> +* 'full-duplex' (boolean, optional), to indicate that full duplex is
+> +  used. When absent, half duplex is assumed.
+> +* 'pause' (boolean, optional), to indicate that pause should be
+> +  enabled.
+> +* 'asym-pause' (boolean, optional), to indicate that asym_pause should
+> +  be enabled.
+
+We also need to add a property: 'connection-type' which can be any of
+'mii', 'rgmii' etc... When operating Ethernet devices with Ethernet
+devices connected back to back, it might be required to configure the
+Ethernet MAC with an appropriate connection type.
+
+Note that I picked 'connection-type' here because this the ePAPR v1.1
+terminology. Now the good thing is that it is a new "feature" wrt. the
+old binding.
