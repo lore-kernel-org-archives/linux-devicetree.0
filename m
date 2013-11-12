@@ -1,67 +1,44 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: arm/arm64 UEFI boot protocol
-Date: Wed, 13 Nov 2013 07:14:28 +0900
-Message-ID: <CACxGe6uCMjNiSm7qN4fTBN=WgzdJriod9d7qKOr-P-UaiWhULQ@mail.gmail.com>
-References: <20131111174321.GQ1557@rocoto.smurfnet.nu> <20131112164241.GD25953@mudshark.cambridge.arm.com>
- <20131112180050.GR1557@rocoto.smurfnet.nu>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv4 0/7] Unifying SMMU driver among Tegra SoCs
+Date: Tue, 12 Nov 2013 15:40:21 -0700
+Message-ID: <5282AE55.1040701@wwwdotorg.org>
+References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131112180050.GR1557-GZEopFhza0F985/tl1ce8aaDwS/vmuI7@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1384158718-4756-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 3:00 AM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Nov 12, 2013 at 04:42:41PM +0000, Will Deacon wrote:
->> > ______________________________________________________________________________
->> > Name                      | Size   | Description
->> > ================================================================================
->> > linux,uefi-system-table   | 64-bit | Physical address of the UEFI System Table.
->> > --------------------------------------------------------------------------------
->> > linux,uefi-mmap           | 64-bit | Physical address of the UEFI memory map,
->> >                           |        | populated by the UEFI GetMemoryMap() call.
->> > --------------------------------------------------------------------------------
->> > linux,uefi-mmap-size      | 32-bit | Size in bytes of the UEFI memory map
->> >                           |        | pointed to in previous entry.
->> > --------------------------------------------------------------------------------
->> > linux,uefi-mmap-desc-size | 32-bit | Size in bytes of each entry in the UEFI
->> >                           |        | memory map.
->>
->> Do we actually need to define these sizes here, or can they be dealt with
->> using the usual #address-cells property? Also, I think you should describe
->> the binding in a separate document somewhere under Documentation/devicetree,
->> then cross-reference it from here.
->
-> This is not a generic ABI, so I don't think it belongs in there (it will
-> never be in a .dtb, and the only way it can be generated by something
-> that isn't the stub is by lying).
-> But I don't really care either way - as long as some general agreement
-> can be had.
+On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
+> Hi,
+> 
+> This series provides:
+> 
+> (1) Unified SMMU driver among Tegra SoCs
+> (2) Multiple Address Space support(MASID) in IOMMU(SMMMU)
+> (3) Tegra IOMMU'able devices, most of platform devices are IOMMU'able.
+> 
+> There's been some discussion[1] about device population order, and I
+> added a IOMMU hook in driver core:
+> 
+>   [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
+> 
+> which is based on the following RFC patch:
+> 
+>   [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
+>   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/006914.html
 
-There is precedence with inserting the initrd location into the kernel
-with similar properties. I think the binding does the right thing
-here.
-
-In the interest of bike shedding, I would name the properties
-"linux,uefi-mmap-start" and "linux,uefi-mmap-size", but otherwise it
-is fine by me. Should you have a property for the descriptor version
-as returned by GetMemoryMap()?
-
->
->> > --------------------------------------------------------------------------------
->> > linux,uefi-stub-kern-ver  | string | Copy of linux_banner from build.
->> > --------------------------------------------------------------------------------
->>
->> Are you sure you want to refer to kernel symbols here? If somebody renames
->> that variable, they're not going to fix this file.
->
-> There is a comment above the definition of linux_banner that says:
-> /* FIXED STRINGS! Don't touch! */
->
-> Sounded reliable enough to me :)
-
-I think this is just fine.
-
-g.
+I assume that "based on" means "is a new version of", so I don't need to
+look at the "PATCHv3+" patch, since this series replaces it?
