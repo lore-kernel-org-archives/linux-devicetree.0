@@ -1,125 +1,51 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add SPI nodes to the exynos5420 device tree file
-Date: Tue, 12 Nov 2013 17:32:25 +0530
-Message-ID: <CAL1wa8cP_nrHxdF-abpL-M-arb5SdVCAmgqipVAgZEGzXpbrDw@mail.gmail.com>
-References: <1377856637-7595-1-git-send-email-l.krishna@samsung.com> <086701cedf98$ab9d9f60$02d8de20$@org>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/5] dma: mpc512x: add support for peripheral transfers
+Date: Tue, 12 Nov 2013 16:23:20 +0400
+Message-ID: <CAF0T0X5mCEiS88YGGjSS6oGU5RaQ=2PEQFL533OjpQzmc398rA@mail.gmail.com>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+	<1383290374-17484-3-git-send-email-a13xp0p0v88@gmail.com>
+	<20131111201024.GR17929@book.gsilab.sittig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <086701cedf98$ab9d9f60$02d8de20$@org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, abrestic@chromium.org, Tomasz Figa <t.figa@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131111201024.GR17929-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Hello, Gerhard!
 
-Thanks for reviewing the patch.
+2013/11/12 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> Alexander, there is outstanding review feedback for a previous
+> version of the series that you haven't addressed yet.  Can you
+> please either look into those issues, or state that it's OK to
+> leave them and why this is so?
+Excuse me for misunderstanding, Gerhard.
+I have thoroughly worked on your feedback to RFCv4
+and agreed to your points. So I've just wrote RFCv5.
+And all the improvements and known issues based on your feedback
+are listed in the cover letter [PATCH RFC v5 0/5].
 
-On Tue, Nov 12, 2013 at 4:46 PM, Kukjin Kim <kgene@kernel.org> wrote:
-> Leela Krishna Amudala  wrote:
->>
->> Add SPI device tree nodes to Exynos5420 SoC
->>
->> Signed-off-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
->> ---
->> Note: This patch is rebased on Kgene's for-next branch and is dependent on
->> [V3] ARM: dts: Add DMA controller node info on Exynos5420.
->> https://patchwork.kernel.org/patch/2851790/
->>
->>  arch/arm/boot/dts/exynos5420.dtsi |   51
->> +++++++++++++++++++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
->> b/arch/arm/boot/dts/exynos5420.dtsi
->> index 15465f8..8d9e980 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -27,6 +27,9 @@
->>               pinctrl2 = &pinctrl_2;
->>               pinctrl3 = &pinctrl_3;
->>               pinctrl4 = &pinctrl_4;
->> +             spi0 = &spi_0;
->> +             spi1 = &spi_1;
->> +             spi2 = &spi_2;
->>       };
->>
->>       cpus {
->> @@ -238,6 +241,54 @@
->>               };
->>       };
->>
->> +     spi_0: spi@12d20000 {
->> +             compatible = "samsung,exynos4210-spi";
->> +             reg = <0x12d20000 0x100>;
->> +             interrupts = <0 66 0>;
->> +             dmas = <&pdma0 5
->> +                     &pdma0 4>;
->> +             dma-names = "tx", "rx";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&spi0_bus>;
->> +             clocks = <&clock 271>, <&clock 135>;
->> +             clock-names = "spi", "spi_busclk0";
->> +             status = "disabled";
->> +     };
->> +
->> +     spi_1: spi@12d30000 {
->> +             compatible = "samsung,exynos4210-spi";
->> +             reg = <0x12d30000 0x100>;
->> +             interrupts = <0 67 0>;
->> +             dmas = <&pdma1 5
->> +                     &pdma1 4>;
->> +             dma-names = "tx", "rx";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&spi1_bus>;
->> +             clocks = <&clock 272>, <&clock 136>;
->> +             clock-names = "spi", "spi_busclk0";
->> +             status = "disabled";
->> +     };
->> +
->> +     spi_2: spi@12d40000 {
->> +             compatible = "samsung,exynos4210-spi";
->> +             reg = <0x12d40000 0x100>;
->> +             interrupts = <0 68 0>;
->> +             dmas = <&pdma0 7
->> +                     &pdma0 6>;
->> +             dma-names = "tx", "rx";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&spi2_bus>;
->> +             clocks = <&clock 273>, <&clock 137>;
->> +             clock-names = "spi", "spi_busclk0";
->> +             status = "disabled";
->> +     };
->> +
->>       serial@12C00000 {
->>               clocks = <&clock 257>, <&clock 128>;
->>               clock-names = "uart", "clk_uart_baud0";
->> --
->> 1.7.10.4
->
-> Leela, do you still want to keep the status 'disabled' for SPIs?
->
+> It would be nice to get a
+> response to the feedback that you are given.  It may be
+> appropriate not to obey to the feedback, but at least it should
+> get considered.
+Yes, I see. My implicit response by RFCv5 was not efficient, sorry.
+Now should I write a detailed answer in the thread with your feedback
+for improving readability of the discussion?
 
-Yes, the SPI client nodes will make status = "okay" in board file.
+> Have you noticed the recent introduction of the dmaengine@vger
+> ML?
+No, I didn't.
 
-Best Wishes,
-Leela Krishna.
+>Make sure to include it upon the next submission.
+Ok, I will.
 
-> Others look good to me.
->
-> Thanks,
-> Kukjin
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+
+Best regards,
+Alexander.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
