@@ -1,40 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 12 Nov 2013 11:29:36 +0100
-Message-ID: <CACRpkdZpwwoM3h5_rXOwbN7cC72ruvTio6Z1hzMhLCDzh5VeKQ@mail.gmail.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<1521079.WSLhhfqBXl@lem-wkst-02>
-	<52261BF0.4090106@wwwdotorg.org>
-	<3144247.j2q6H0KWZx@lem-wkst-02>
-	<52279524.8090006@wwwdotorg.org>
-	<20130909161924.GT29403@sirena.org.uk>
-	<528121D5.40403@keymile.com>
-	<528127B2.80109@wwwdotorg.org>
-	<52812D3A.2070107@keymile.com>
-	<52813100.1060500@wwwdotorg.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH v3 2/2] ARM: dts: Update Samsung sysreg binding document
+Date: Tue, 12 Nov 2013 19:39:14 +0900
+Message-ID: <086201cedf93$6e344930$4a9cdb90$@org>
+References: <1383632302-23535-1-git-send-email-sachin.kamat@linaro.org>
+ <1383632302-23535-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52813100.1060500@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Gerlando Falauto <gerlando.falauto@keymile.com>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1383632302-23535-2-git-send-email-sachin.kamat@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 8:33 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 11/11/2013 12:17 PM, Gerlando Falauto wrote:
+Sachin Kamat wrote:
+> 
+> Added a binding example for reference and updated the
+> node name. While at it also removed the name description
+> as it is not necessary.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+> Changes since v2:
+> * Removed node name description as suggested by Tomasz Figa.
+> ---
+>  .../devicetree/bindings/arm/samsung/sysreg.txt     |    7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> index 5039c0a12f55..0ab3251a6ec2 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> @@ -1,7 +1,12 @@
+>  SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+> 
+>  Properties:
+> - - name : should be 'sysreg';
+>   - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
+>     For Exynos4 SoC series it should be "samsung,exynos4-sysreg",
+"syscon";
+>   - reg : offset and length of the register set.
+> +
+> +Example:
+> +	syscon@10010000 {
+> +		compatible = "samsung,exynos4-sysreg", "syscon";
+> +		reg = <0x10010000 0x400>;
+> +	};
+> --
+> 1.7.9.5
 
->> Thanks for your answer. So it should be the parent driver to proactively
->> configure the GPIO as input, active high etc..., when an IRQ for its
->> GPIOs is requested, right?
->
-> That was the conclusion of this thread, or a similar thread, yes.
+Looks OK to me.
 
-Yepps second that.
+DT guys, shall I pick this into Samsung tree or not?
 
-And we added an API to that you can flag a GPIO as being
-in use by an IRQ using gpio_lock_as_irq() from your
-irq_chip callbacks.
-
-Yours,
-Linus Walleij
+Thanks,
+Kukjin
