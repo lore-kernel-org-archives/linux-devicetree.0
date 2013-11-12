@@ -1,84 +1,90 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
-Date: Tue, 12 Nov 2013 04:25:09 +0100
-Message-ID: <20131112032506.GA30028@earth.universe>
-References: <1383948866-32672-1-git-send-email-sre@debian.org>
- <1383948866-32672-2-git-send-email-sre@debian.org>
- <20131111221941.GB23331@amd.pavel.ucw.cz>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
+Date: Tue, 12 Nov 2013 12:42:58 +0900
+Message-ID: <20131112034257.GJ9863@verge.net.au>
+References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <527CCA76.5060706@cogentembedded.com>
+ <527CD08D.80004@cogentembedded.com>
+ <1485806.0A3W2702o2@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131111221941.GB23331@amd.pavel.ucw.cz>
-Sender: linux-input-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1485806.0A3W2702o2@avalon>
+Sender: linux-ide-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Valentine <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 08, 2013 at 04:31:03PM +0100, Laurent Pinchart wrote:
+> Hi Valentine,
+> 
+> On Friday 08 November 2013 15:52:45 Valentine wrote:
+> > On 11/08/2013 03:26 PM, Valentine wrote:
+> > > On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
+> > >> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
+> > >>> These bindings can be used to register SATA devices found on R-Car SoC.
+> > >>> 
+> > >>> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> > >>> Acked-by: Kumar Gala <galak@codeaurora.org>
+> > >>> ---
+> > >>> 
+> > >>>   Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 +++++++++++++
+> > >>> 
+> > >>> 1 file changed, 18 insertions(+)
+> > >>> 
+> > >>>   create mode 100644 Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > >>> 
+> > >>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > >>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode
+> > >>> 100644
+> > >>> index 0000000..d6b20a6
+> > >>> --- /dev/null
+> > >>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > >>> @@ -0,0 +1,18 @@
+> > >>> +* Renesas R-Car SATA
+> > >>> +
+> > >>> +Required properties:
+> > >>> +- compatible        : should contain one of the following:
+> > >>> +              - "renesas,sata-r8a7779" for R-Car H1
+> > >>> +              - "renesas,sata-r8a7790" for R-Car H2
+> > >>> +              - "renesas,sata-r8a7791" for R-Car M2
+> > >>> +- reg            : offset and length of the SATA registers;
+> > >> 
+> > >> Maybe address instead of offset ?
+> > > 
+> > > OK.
+> > > 
+> > >>> +- interrupts        : must consist of one interrupt specifier.
+> > >>> +
+> > >>> +Example:
+> > >>> +
+> > >>> +sata: sata@fc600000 {
+> > >>> +    compatible = "renesas,sata-r8a7779";
+> > >>> +    reg = <0xfc600000 0x2000>;
+> > >>> +    interrupt-parent = <&gic>;
+> > >>> +    interrupts = <0 100 0x4>;
+> > >> 
+> > >> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
+> > > 
+> > > OK, I'll do that.
+> > > 
+> > > Please, note that all the Renesas dts[i] files do not include
+> > > <dt-bindings/interrupt-controller/irq.h> Thus, blindly following this
+> > > bindings documentation when adding new SATA nodes to the existing
+> > > r8a7790.dtsi, for example, will cause DT compilation error.
+> > 
+> > BTW, we'll also have to switch to #include instead of /include/ to make it
+> > work.
+> 
+> Sure, of course.
+> 
+> I was actually thinking about sending a patch to convert our DT sources to use 
+> the IRQ_* macros. Morimoto-san, are you working on that already ? If not I'll 
+> do it.
+> 
+> Simon, would you like one patch per SoC or would a single patch do ? Only 
+> .dts(i) files will be touched.
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Nov 11, 2013 at 11:19:41PM +0100, Pavel Machek wrote:
-> > +	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
-> > +		keypad_data->no_autorepeat =3D true;
->=20
-> From 2/2:
->=20
-> +Optional Properties specific to linux:
-> +- linux,keypad-no-autorepeat: do not enable autorepeat feature.
->=20
-> I'm confused now.
-
-good catch! That happens when one tries to mimic other drivers :/
-
-I just checked all DT input drivers for autorepeat keyword:
-
-DRIVER              CODE                        DOCUMENTATION
-twl4030-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-omap4-keypad        linux,input-no-autorepeat   linux,keypad-no-autorepeat
-samsung-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-stmpe-keypad        st,no-autorepeat            st,no-autorepeat
-spear-keyboard      autorepeat                  autorepeat
-tca8418-keypad      keypad,autorepeat           --- not documented ---
-gpio-matrix-keypad  linux,no-autorepeat         linux,no-autorepeat
-gpio-keys-polled    autorepeat                  autorepeat
-gpio-keys           autorepeat                  --- no documentation ---
-
-Any suggestions how to continue fixing this mess? I guess first of
-all the documentation of omap4-keypad, samsung-keypad and of course
-the new twl4030-keypad driver should be fixed.
-
-Next it would be nice to choose one standard property name for this
-and use it for twl4030-keypad. I suggest to use "linux,input-no-autorepeat".
-
--- Sebastian
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSgZ+SAAoJENju1/PIO/qa50wQAJPVoA4kDTM/usZdzCF5AJPO
-rwMTrILKtlDtR2kwaMDe8ihnmwRE4zdZonD7WYTPDgAzvwc6eIQx+XI//dtd8osz
-phzXSAugaBrvERGIYemFv+gIrkYQqFOmEbSakFmnNlGzvD/ArkHjKqfzcMx8Zb/y
-CQ6mAVpMzya80PWL5/omC09O9GIx8B7LIP/MYnB8G/S9r9n8AxS7DFKv3Fs5FAWF
-qRjKuzN9O/VD0BP3DkeR8dmQTMc3QjFfl9bvPTGGwaaU5RaCsGQt2JkvgvyR/lfi
-TnNpyh3QIt1OAZd1nm1BTw5dhGo0grHRdxtvYIHNIoXRksMIqsMQW9BPqigkHgwR
-Lj/hyOcy2tBXYroUMRX9+yEi6DhjbWin+2fFTGcNpZfKj+ljz4HdeDEFiB3oICep
-JMlDq2R4QVQsek3eYE8FtmbD6psF951uTiGjVEojqgxP4qL8m/VkTP9xv7/5TCNj
-rZfKUwnivHOa6TCu+RcklUgsC4rt7Z2wY3Hb0m6VbWJPrQWovwRoqe6Tu4FmQc2J
-Op1tBkVgaR19tt+qWUgDZvOFh6hP4dchR38GMa/cK+ZYW9o3CkUWxxsuIQGXss1o
-GKEFxLDkV+Y4ZPp/OwuncSVDYqWzJAxj1KTf9UOhB4WyNqAXgSirKMXW06Qk9ZbZ
-3D197nmfh91PeI33FXoV
-=nJlz
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+I would prefer one patch per SoC.
+The reason is that in general that approach makes backporting easier.
