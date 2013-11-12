@@ -1,49 +1,33 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] powerpc/85xx: typo in dts: "interupt" (four devices)
-Date: Tue, 12 Nov 2013 09:11:29 +0000
-Message-ID: <20131112091128.GA2976@e106331-lin.cambridge.arm.com>
-References: <1384206727-11880-1-git-send-email-kilobyte@angband.pl>
+From: Mischa Jonker <Mischa.Jonker@synopsys.com>
+Subject: RE: [PATCH v3 0/2] ARC: Add perf support for ARC700 cores
+Date: Tue, 12 Nov 2013 09:15:12 +0000
+Message-ID: <E6BF041E97966E4DB955F0DF883AD2D685F17276@de02wembxa.internal.synopsys.com>
+References: <1383832512-21130-1-git-send-email-mjonker@synopsys.com>
+ <20131111162755.GC26898@twins.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1384206727-11880-1-git-send-email-kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131111162755.GC26898@twins.programming.kicks-ass.net>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Mischa Jonker <Mischa.Jonker@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "mingo@redhat.com" <mingo@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 09:52:07PM +0000, Adam Borowski wrote:
-> These lines were inoperative for four years, which puts some doubt into
-> their importance, and it's possible the fixed version will regress, but
-> at the very least they should be removed instead.
-> 
-> Signed-off-by: Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/xcalibur1501.dts | 4 ++--
->  arch/powerpc/boot/dts/xpedite5301.dts  | 4 ++--
->  arch/powerpc/boot/dts/xpedite5330.dts  | 4 ++--
->  arch/powerpc/boot/dts/xpedite5370.dts  | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
-> index cc00f4d..f151426 100644
-> --- a/arch/powerpc/boot/dts/xcalibur1501.dts
-> +++ b/arch/powerpc/boot/dts/xcalibur1501.dts
-> @@ -637,14 +637,14 @@
->  		tlu@2f000 {
->  			compatible = "fsl,mpc8572-tlu", "fsl_tlu";
->  			reg = <0x2f000 0x1000>;
-> -			interupts = <61 2 >;
-> +			interrupts = <61 2 >;
+Hi Peter,
 
-While you're fixing the typo, could you get rid of the extraneous space
-before the closing bracket? It seems to be duplicated across the other 3
-dts fragments you fix up also.
+> > Please find v3 of my attempt to add support for perf for ARC700 PMU's.
+> > If possible, it would be nice to get some feedback on the
+> > implementation from non-ARC/Synopsys people familiar with the perf
+> subsystem in Linux.
+> 
+> Anything in particular you wanted feedback on? It looks like a fairly
+> straight fwd thingy.
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This may just be my lack of experience with kernel etiquette; the patch
+works OK for us, but it would be a bit strange if Vineet would just apply
+it without any discussion on the mailing list. So thanks for having taken
+the time to look at it!
+
+Mischa
