@@ -1,68 +1,41 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V3 7/7] ARM: DRA: Enable Crossbar IP support for DRA7XX
-Date: Tue, 12 Nov 2013 11:17:21 +0530
-Message-ID: <5281C0E9.8020104@ti.com>
-References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com> <1383657257-3458-8-git-send-email-r.sricharan@ti.com> <5281BF70.4050708@ti.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Tue, 12 Nov 2013 13:52:40 +0800
+Message-ID: <5281C228.3000404@nvidia.com>
+References: <1383203126-3243-1-git-send-email-wni@nvidia.com>
+ <20131031162029.GF2493@sirena.org.uk> <527737C5.5080901@nvidia.com>
+ <20131104161828.GK2493@sirena.org.uk> <5278B4CB.9050305@nvidia.com>
+ <20131106085100.GB11602@sirena.org.uk> <527A1C47.6050405@nvidia.com>
+ <20131106110154.GG11602@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5281BF70.4050708@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, santosh.shilimkar@ti.com, galak@codeaurora.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131106110154.GG11602-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajendra,
+On 11/06/2013 07:01 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+> 
+> On Wed, Nov 06, 2013 at 06:39:03PM +0800, Wei Ni wrote:
+> 
+>> I still can't find a good place to set full_constraints, could you
+>> please show me some reference codes where we can set it?
+> 
+> The places where we unflatten the device tree for example, or start
+> instantiating devices from DT.
 
-On Tuesday 12 November 2013 11:11 AM, Rajendra Nayak wrote:
-> On Tuesday 05 November 2013 06:44 PM, Sricharan R wrote:
->> Enable the crossbar IP support for DRA7xx soc.
->>
->> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Cc: Rajendra Nayak <rnayak@ti.com>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Signed-off-by: Sricharan R <r.sricharan@ti.com>
->> ---
->>  arch/arm/mach-omap2/Kconfig        |    1 +
->>  arch/arm/mach-omap2/omap4-common.c |    4 ++++
->>  2 files changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
->> index b5fb5f7..2086c65 100644
->> --- a/arch/arm/mach-omap2/Kconfig
->> +++ b/arch/arm/mach-omap2/Kconfig
->> @@ -141,6 +141,7 @@ config SOC_DRA7XX
->>  	select ARM_GIC
->>  	select HAVE_SMP
->>  	select COMMON_CLK
->> +	select IRQ_CROSSBAR
->>  
->>  comment "OMAP Core Type"
->>  	depends on ARCH_OMAP2
->> diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
->> index 5791143..274cbfa 100644
->> --- a/arch/arm/mach-omap2/omap4-common.c
->> +++ b/arch/arm/mach-omap2/omap4-common.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/of_platform.h>
->>  #include <linux/export.h>
->>  #include <linux/irqchip/arm-gic.h>
->> +#include <linux/irqchip/irq-crossbar.h>
->>  #include <linux/of_address.h>
->>  #include <linux/reboot.h>
->>  
->> @@ -282,9 +283,12 @@ void __init omap_gic_of_init(void)
->>  
->>  skip_errata_init:
->>  	omap_wakeupgen_init();
->> +	if (soc_is_dra7xx())
->> +		crossbar_init();
-> Its good if this is called irqcrossbar_init() to avoid confusion
-> with the dma crossbar which also exists in dra7 devices.
->
- Ya makes sense. Will change this.
+Hi, Mark
+Sorry, I really don't familiar with the DT, could you please take this
+by youself?
 
-Regards,
- Sricharan
+Thanks.
+Wei.
 
+> 
+> * Unknown Key
+> * 0x7EA229BD
+> 
