@@ -1,60 +1,103 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 2/7] arm: dt: zynq: Add 'cpus' node
-Date: Tue, 12 Nov 2013 10:06:05 -0800
-Message-ID: <91c27955-2d9f-4e85-8d9e-b8a178b76cdb@CO9EHSMHS026.ehs.local>
-References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
- <1383945677-29674-3-git-send-email-soren.brinkmann@xilinx.com>
- <528128A8.9060400@arm.com>
+From: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv3 0/8]  omap hwspinlock dt support
+Date: Tue, 12 Nov 2013 12:16:42 -0600
+Message-ID: <5282708A.30601@ti.com>
+References: <1381439735-52888-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <528128A8.9060400@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381439735-52888-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 06:57:44PM +0000, Sudeep KarkadaNagesha wrote:
-> On 08/11/13 21:21, Soren Brinkmann wrote:
-> > Add a 'cpus' node to describe the CPU cores of Zynq.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-> > ---
-> >  arch/arm/boot/dts/zynq-7000.dtsi | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
-ynq-7000.dtsi
-> > index 27ebc1ba9671..37fc04525142 100644
-> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> > @@ -15,6 +15,33 @@
-> >  / {
-> >  	compatible =3D "xlnx,zynq-7000";
-> > =20
-> > +	cpus {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		cpu@0 {
-> > +			compatible =3D "arm,cortex-a9";
-> > +			device_type =3D "cpu";
-> > +			reg =3D <0>;
-> > +			clocks =3D <&clkc 3>;
-> > +			i-cache-size =3D <0x8000>;
-> > +			i-cache-line-size =3D <0x20>;
-> > +			d-cache-size =3D <0x8000>;
-> > +			d-cache-line-size =3D <0x20>;
->=20
-> These cache properties can be identified through CCSIDR(Cache Size ID=
- Registers)
-> on ARMv7 Cortex implementations. It's better not to have these in DT =
-if they can
-> be identified runtime.
-Sounds good to me. I'll go ahead an remove them.
 
-	Thanks,
-	S=C3=B6ren
+> Hi,
+>
+> This is an updated series addressing the review comments from the
+> v2 series. The hwmod patches have been dropped from the repost
+> as per Paul's request, they have already been queued.
+
+Mark,
+
+Any comments on this series? Tony has picked up the OMAP DTS patches for 
+3.13, and so
+the "ti,omap4-hwspinlock" compatible string is showing up as 
+undocumented in linux-next.
+How do you want me to proceed here? I will be separating out the 
+bindings into separate patches
+in the future.
+
+regards
+Suman
+
+>
+> The series is tested on top of v3.12-rc4 + Benoit's 3.13 DTS branch and
+> Tero's clock series, along with the queued hwmod patches.
+>
+> Changes in v3:
+> - Removed the DT property hwlock-base-id and associated OF helper
+> - Added changes in core to support requesting a specific hwlock using
+>    phandle + args approach
+> - Revised both the common and OMAP DT bindings document
+> - OMAP AM335 support patches are unchanged from v2.
+> - OMAP DTS patches are unchanged from v2.
+>
+> v2
+> - Added a new common DT binding documentation and OF helpers (Patch1),
+>    addressing the review comments from v1 [2]. The MSM support [1] needs
+>    to be reworked on top of this common patch.
+> - Revised OMAP DT parse support to use the new OF helper (Patch2)
+> - OMAP5 hwspinlock support including the hwmod entry and DT node (Patches 4, 5)
+> - Add AM335x support to OMAP hwspinlock driver, including a fix
+>    needed in driver given that AM335 spinlock module requires s/w wakeup
+>    (Patches 6, 7)
+> - AM335 DT node for spinlock, and a hwmod change to enable smart-idle
+>    for AM335 (Patches 8, 9). The sysc patch is not essential for AM335
+>    spinlock functionality, but is needed for smart-idling the IP when
+>    the module is enabled.
+> - OMAP4 DT node patch is unchanged (Patch 3)
+> http://marc.info/?l=linux-omap&m=137944644112727&w=2
+>
+> v1:
+> - Add DT parse support to OMAP hwspinlock driver
+> - Add OMAP4 DT node and bindings information
+> http://marc.info/?l=linux-omap&m=137823082308009&w=2
+>
+> [1] https://lkml.org/lkml/2013/8/14/528
+> [2] http://marc.info/?t=137823090300005&r=1&w=2
+>
+> Suman Anna (8):
+>    hwspinlock/core: maintain a list of registered hwspinlock banks
+>    hwspinlock/core: add common dt bindings and OF helpers
+>    hwspinlock/omap: add support for dt nodes
+>    hwspinlock/omap: enable module before reading SYSSTATUS register
+>    hwspinlock/omap: support AM33xx
+>    ARM: dts: OMAP4: Add hwspinlock node
+>    ARM: dts: OMAP5: Add hwspinlock node
+>    ARM: dts: AM33XX: Add hwspinlock node
+>
+>   .../devicetree/bindings/hwlock/hwlock.txt          |  49 ++++++++
+>   .../devicetree/bindings/hwlock/omap-hwspinlock.txt |  19 +++
+>   arch/arm/boot/dts/am33xx.dtsi                      |   6 +
+>   arch/arm/boot/dts/omap4.dtsi                       |   6 +
+>   arch/arm/boot/dts/omap5.dtsi                       |   6 +
+>   arch/arm/mach-omap2/Makefile                       |   3 -
+>   arch/arm/mach-omap2/hwspinlock.c                   |  60 ----------
+>   drivers/hwspinlock/Kconfig                         |   2 +-
+>   drivers/hwspinlock/hwspinlock_core.c               | 133 ++++++++++++++++++++-
+>   drivers/hwspinlock/hwspinlock_internal.h           |   2 +
+>   drivers/hwspinlock/omap_hwspinlock.c               |  38 ++++--
+>   include/linux/hwspinlock.h                         |  19 ++-
+>   12 files changed, 263 insertions(+), 80 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+>   create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>   delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
