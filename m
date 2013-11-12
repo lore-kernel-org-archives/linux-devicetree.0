@@ -1,50 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
-Date: Tue, 12 Nov 2013 16:34:20 -0700
-Message-ID: <5282BAFC.8070405@wwwdotorg.org>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com> <1384158718-4756-3-git-send-email-hdoyu@nvidia.com>
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RFC 16/17] c6x: Convert from _fdt_start to __dtb_start
+Date: Tue, 12 Nov 2013 18:38:51 -0500
+Message-ID: <1384299531.24631.14.camel@deneb.redhat.com>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>
+	 <1384285347-13506-17-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384158718-4756-3-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384285347-13506-17-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
-> An "IOMMU device" on the bus is poplulated first, "IOMMU'able devices"
-> are done later.
+On Tue, 2013-11-12 at 20:42 +0100, Geert Uytterhoeven wrote:
+> Kill the c6x-specific __fdt_blob section, and start
+> using .dtb.init.rodata
+> from <asm-generic/sections.h> for built-in DTBs, like most other DT
+> enabled
+> architectures.
 > 
-> With CONFIG_OF_IOMMU, "#stream-id-cells" DT binding would be used to
-> identify whether a device is IOMMU'able or not. If a device is
-> IOMMU'able, we'll defer to populate that device till an iommu device
-> is populated. Once an iommu device is populated, "dev->bus->iommu_ops"
-> is set in the bus. Then, those defered IOMMU'able devices are
-> populated and configured as IOMMU'abled with help of the already
-> populated iommu device via iommu_ops->add_device().
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Untested due to lack of cross-compiler, but the changes are similar to
+> microblaze.
+> 
+> QUESTION: The padding of the DTB is gone, is this OK?
 
-This looks fairly neat and clean.
+Yes, that's fine.
 
-I'm still worried about using #stream-id-cells in DT nodes though. While
-I do understand that the *Linux* device model currently only allows each
-struct device to be affected by a single IOMMU, I worry that encoding
-that same restriction into DT is a mistake. I'd far rather see a
-property like:
+Acked-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-SMMU:
-    smmu: smmu@xxxxxx {
-        #smmu-cells = <1>;
-    }
 
-Affected device:
-    smmus = <&smmu 1>;
-    (perhaps with smmu-names too)
-
-That would allow the DT to represent basically arbitrary HW configurations.
-
-The implementation of this patch would then be almost as trivial; you'd
-just need to walk the smmus property to find each phandle in turn, just
-like any other phandle+specifier property, and validate that the SMMU
-driver was already probe()d for each.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
