@@ -1,71 +1,52 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] DT: Add binding for Altera FPGAs in passive-serial mode
-Date: Tue, 12 Nov 2013 10:21:02 -0600
-Message-ID: <C90E2E36-D168-4374-B420-38B2BB1914BD@codeaurora.org>
-References: <1384266701-12608-1-git-send-email-s.hauer@pengutronix.de> <1384266701-12608-4-git-send-email-s.hauer@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=windows-1252
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] input: ti_am33x_tsc: make the documentation for the ti,wire-config parameter clear
+Date: Tue, 12 Nov 2013 17:22:03 +0100
+Message-ID: <1384273323-15329-1-git-send-email-bigeasy@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384266701-12608-4-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+The document says "first four bits" and means the upper nibble. Most
+people would probably agree that the first four bits are bits 0=E2=80=A6=
+3 and
+that is the lower nibble.
+This patch updates the documentation so it is clear what is meant.
 
-On Nov 12, 2013, at 8:31 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrot=
-e:
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt | 4=
+ ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> .../devicetree/bindings/firmware/altr,passive-serial.txt    | 13 ++++=
-+++++++++
-> 1 file changed, 13 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/firmware/altr,pa=
-ssive-serial.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/firmware/altr,passive-=
-serial.txt b/Documentation/devicetree/bindings/firmware/altr,passive-se=
-rial.txt
-> new file mode 100644
-> index 0000000..6d40c91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/altr,passive-serial.=
-txt
-> @@ -0,0 +1,13 @@
-> +Altera FPGAs in passive serial mode
-> +-----------------------------------
-> +
-> +This binding defines the control interface to Altera FPGAs in
-> +passive serial mode. This is used to upload the firmware and
-> +to start the FPGA.
-> +
-> +Required properties:
-> +- compatible: shall be "altr,passive-serial=94
-
-This doesn=92t seem quite descriptive enough, easy to confuse with a se=
-rial port.
-
-> +- reg: SPI chip select
-
-Is this a SPI device than?
-
-> +- nstat-gpio: Specify GPIO for controlling the nstat pin
-> +- confd-gpio: Specify GPIO for controlling the confd pin
-> +- nconfig-gpio: Specify GPIO for controlling the nconfig pin
-> --=20
-> 1.8.4.2
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc=
+-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-a=
+dc.txt
+index 491c97b..0fcd430 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
++++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
+@@ -17,8 +17,8 @@
+ 				remaining 4 can be used by the ADC.
+ 	ti,wire-config: Different boards could have a different order for
+ 			connecting wires on touchscreen. We need to provide an
+-			8 bit number where in the 1st four bits represent the
+-			analog lines and the next 4 bits represent positive/
++			8 bit number where the upper nibble represent the
++			analog lines and the lower nibble represent positive/
+ 			negative terminal on that input line. Notations to
+ 			represent the input lines and terminals resoectively
+ 			is as follows:
+--=20
+1.8.4.2
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
