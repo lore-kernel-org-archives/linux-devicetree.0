@@ -1,98 +1,69 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 0/3 - V2] Introducing Device Tree Overlays
-Date: Tue, 12 Nov 2013 09:16:39 +0100
-Message-ID: <89F4284F-DB71-41ED-9B53-663539446128@antoniou-consulting.com>
-References: <1383676898-29819-1-git-send-email-panto@antoniou-consulting.com> <20131106190152.GA8662@breakpoint.cc> <20131106193041.GA26796@roeck-us.net> <20131106203821.GC8662@breakpoint.cc> <20131106211754.GA29300@roeck-us.net> <20131107192558.GA11453@breakpoint.cc> <4F47D5F8-F3C7-45CA-9D88-2D814BDC1BC7@antoniou-consulting.com> <20131107204626.GA11746@breakpoint.cc> <20131111170453.4D999C42336@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: address translation for PCIe-to-localbus bridge
+Date: Tue, 12 Nov 2013 09:26:02 +0100
+Message-ID: <5281E61A.2070809@keymile.com>
+References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate> <20131106182457.GA25879@obsidianresearch.com> <20131111155050.96290C41ABB@trevor.secretlab.ca> <20131112080512.3992b2e4@skate>	<5281E2B5.3080701@keymile.com> <20131112091608.161f1347@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131111170453.4D999C42336-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20131112091608.161f1347@skate>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi,
+On 11/12/2013 09:16 AM, Thomas Petazzoni wrote:
+> Dear Gerlando Falauto,
+>
+> On Tue, 12 Nov 2013 09:11:33 +0100, Gerlando Falauto wrote:
+>
+>>> Hum, right, but unless I'm wrong the of_busses[] array of struct of_bus
+>>> is fixed in drivers/of/address.c, and as it is, there is no way for a
+>>> specific bus driver to provide its own struct of_bus.
+>>
+>> That was exactly my understanding as well, and that's where I was
+>> expecting some trickery to happen.
+>>
+>>> So that would need to be extended, right?
+>>
+>> The other approach I was foreseeing was to implement a way of
+>> dynamically updating the DT when the PCI subsystem enumerates the
+>> devices and assigns memory areas (namely, I would expect the ranges
+>> property to reflect that). But this would imply a standard way of
+>> defining the ranges property (I would expect something like <bar#
+>> start_addr length>, with an arguable number of cells). And I could
+>> not find any such definition in the PCI bus binding document, so I'm
+>> probably completely off-track here. Aren't I?
+>>
+>> After all, we should expect a driver to behave (and expect) the same of
+>> the DT, regardless of whether enumeration was performed by firmware or
+>> by the OS itself. Or am I wrong on this too?
+>
+> Well, in the context of the mvebu platforms (including Kirkwood), the
+> problem is not so much the ranges in the pcie-controller node, but the
+> ranges in the main soc { ... } node which encloses the description of
+> the MBus. It is those ranges that need to be updated when a new window
+> is created, or a window is removed. So the problem is not PCI related,
+> but MBus related in this case, no?
 
-On Nov 11, 2013, at 6:04 PM, Grant Likely wrote:
+I was actually referring to ranges within the PCI *device* (~leaf node).
+So not thinking about mvebu, but rather about general PCI devices.
 
-> On Thu, 7 Nov 2013 21:46:26 +0100, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org> wrote:
->> On 07.11.13, Pantelis Antoniou wrote:
->>> Hi Sebastian,
->> Hi Pantelis,
->> 
->>> FWIW DT has been ported to x86. And is present on arm/powerpc/mips/arc and possibly
->>> others.
->> 
->> Yes, I know. I am the one that did the work for CE4100, the first one
->> that boots with DT on x86.
->> 
->>> So what are we talking about again? If you care about the non-DT case, why
->>> don't you make a patch about how you could support Guenter's use case on
->>> the x86.
->> 
->> I am only saying that this "hot-plug a device at a non hot-plugagle bus at
->> runtime" is not limited to DT but this solution is. X86 + ACPI is not
->> the only limitation. ARM is (forced) going to ACPI as well as far I
->> know. And this solution is limited to DT. This is what I am pointing
->> out.
-> 
-> I'm going to nip this in the bud before it spreads...  No.
-> 
-> ARM is not going wholesale to ACPI.  ACPI will be implemented on ARMv8
-> servers. Don't expect the rest of the ARM world to go there anytime
-> soon, if at all.
-> 
-> As for being limited to DT, that is correct currently, just as SSDT is
-> an ACPI specific way of doing mostly the same thing. However, I'm not sure
-> it needs to be a limitation. As long as there is well definied
-> segregation between the base tree and the overlay (ie. it would be
-> useful to filter which nodes can be attached to, there are security
-> implications here too) then it would be fine for a DT overlay to pull in
-> additional devices on top of an ACPI base tree.
-> 
+I see drivers/of/address.c implements some:
 
-Well, this can be pretty radical, but what about converting the ACPI base tree
-in DT format and then take it from there.
+extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+			       u64 *size, unsigned int *flags);
+extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+				      struct resource *r);
 
-I'm sure the state of DT encompasses most of what ACPI does ATM, modulo the
-whole craziness of calling in firmware/interpreting bytecode to do stuff like
-turn on a GPIO.
+Which are not hooked to any ranges (of_bus) mechanisms nor any DT-aware 
+PCI device driver and that's where I got completely lost.
+But I'm probably looking at it from a wrong perspective.
 
-I might be in the minority, but it took us so many years on not having to rely
-on weird firmware to get our systems to work, and ACPI seems to be heading back
-into the old ways on having to rely on firmware quirks to patch firmware we 
-are dependent on.
-
-DT way of describing only, may be not to the liking of everyone, but I certainly
-prefer it.
-
->>> His use case is not uncommon, believe it or not, and x86 would benefit from
->>> something this flexible.
->> 
->> I *think* a more flexible solution would be something like bus_type which is
->> exposed via configfs. It would be attached behind a certain device/bus where
->> the "physical" hotplug interface is. The user would then be able to read the
->> configuration based on whatever information he has and could then create
->> devices he likes at runtime. This wouldn't depend much on the firmware that is
->> used but would require a little more work I think.
-> 
-> I'm certainly fine with investigating the above (modulo security
-> concerns of creating arbitrary devices). However, that is only one
-> use-case. There still needs to be the mechanism of passing the kernel a
-> blob all at once and say, "Here is the layout of this new hunk of
-> hardware".  For instance, you don't want to have to build up a set of
-> devices from scratch every time a new device is passed in. Xilinx for
-> instance has a tool which creates a FDT for an FPGA bitstream right from
-> the FPGA tools.
-> 
-> g.
-
-Regards
-
--- Pantelis
-
+Thanks,
+Gerlando
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
