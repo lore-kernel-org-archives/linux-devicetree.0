@@ -1,94 +1,52 @@
-From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
- device tree
-Date: Tue, 12 Nov 2013 21:05:14 +0100
-Message-ID: <20131112200514.GA15413@earth.universe>
-References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
- <20131112153057.GA9683@earth.universe>
- <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Tue, 12 Nov 2013 15:08:07 -0500
+Message-ID: <20131112200807.GS10335@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <52814AFB.3070600@wwwdotorg.org>
+ <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
+ <528275B7.6050209@wwwdotorg.org>
+ <20131112193012.GR10335@titan.lakedaemon.net>
+ <20131112194009.GA13577@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20131112194009.GA13577-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 12, 2013 at 08:40:09PM +0100, Andrew Lunn wrote:
+> > 2) right now: distributions are creating utilities, such a flash-kernel
+> > in Debian, that pick from a slew of dtbs, append it to the zImage, and
+> > create the uImage.  The bootloaders in these installs don't have support
+> > for fdt.
+> > 
+> > Our problem (as I see it) is that #2 is creating an ABI out of something
+> > we never realized would become an ABI, the filenames created by 'make
+> > dtbs'.
+> 
+> Well, flash-kernel could be taught how to parse .dtb files to get the
+> compatibility strings out of them, rather than use filenames.
+> 
+> It might still be early enough to give distributions some guidelines
+> about what DT folks consider ABI and what is not. How they should find
+> a fitting .dtb file and how they should not.
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+True, but this isn't a 'search /boot/config-X for CONFIG_Y so we can
+configure for Z' *cough* *grub* *cough*.  flash-kernel currently doesn't
+have any more correct way to select dtbs than by filename.
 
-On Tue, Nov 12, 2013 at 06:06:49PM +0100, Linus Walleij wrote:
-> On Tue, Nov 12, 2013 at 4:30 PM, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> wrote:
-> > On Tue, Nov 12, 2013 at 03:13:38PM +0100, Linus Walleij wrote:
->=20
-> >> +     plat->no_autorepeat =3D of_property_read_bool(np, "linux,no-auto=
-repeat");
-> >> +     plat->enable_wakeup =3D of_property_read_bool(np, "linux,wakeup"=
-);
-> >
-> > There is currently discussion going on for the property name of
-> > autorepeat:
-> >
-> > https://lkml.org/lkml/2013/11/11/680
->=20
-> So this binding is documented for GPIO keys in:
-> Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
->=20
-> This is probably the most used binding as GPIO matrixes are
-> not uncommon. But I don't know, yes it is a mess. (As usual.)
+It's normal to look for arch/<arch>/boot/zImage after a build.  Module
+names are not 1-1 with object files or source files, they are unique,
+and static.  Our failure was not providing a similar ABI for the dtbs.
+imho, we messed up, so we should fix it.
 
-I could find two boards using "gpio-matrix-keypad" in the mainline
-kernel and not a single instance of "linux,no-autorepeat":
+thx,
 
-arch $ grep "gpio-matrix-keypad" **/*.dts **/*.dtsi
-arm/boot/dts/am335x-evm.dts:               compatible =3D "gpio-matrix-keyp=
-ad";
-powerpc/boot/dts/ac14xx.dts:               compatible =3D "gpio-matrix-keyp=
-ad";
-
-arch $ grep "autorepeat" **/*.dts **/*.dtsi
-arch/arm/boot/dts/am335x-evm.dts:          autorepeat;
-arch/arm/boot/dts/ea3250.dts:              autorepeat;
-arch/arm/boot/dts/exynos4210-smdkv310.dts: linux,keypad-no-autorepeat;
-arch/arm/boot/dts/exynos4412-origen.dts:   linux,keypad-no-autorepeat;
-arch/arm/boot/dts/exynos4412-smdk4412.dts: linux,keypad-no-autorepeat;
-arch/arm/boot/dts/omap4-sdp.dts:           linux,input-no-autorepeat;
-arch/arm/boot/dts/spear1310-evb.dts:       autorepeat;
-arch/arm/boot/dts/spear1340-evb.dts:       autorepeat;
-arch/arm/boot/dts/spear300-evb.dts:        autorepeat;
-arch/arm/boot/dts/ste-stuib.dtsi:          st,no-autorepeat;
-
--- Sebastian
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSgon6AAoJENju1/PIO/qay38P/RnuZZd7bzikUgj/fEQdfRc9
-Keb+fbiB8iWTTtTBVHl1fbA4ATxznNISNWfzAeUJkakSA/lH6iiaL6cOYsvWQHwY
-7HHLRT33yntSMq55eKSGZI4YDzNT86KinMzvuyq2y8/QsaPwSS3AmxPFVwiwQvaa
-bcoz3fEgul6Na2vkuEr98DfZ7/0glGAWsfFoz0viYSua1evBnDMgybo163UpYMAs
-VaoSQeaBY+zj5tDTctn9vy44lnqhzCuhMszyuaUzpq8SXIwEsij/yW8ghOXXtOrH
-h2cvMVwfJiNWPpV126q94v1BDWuNE4sr9+J1FlX/wyDAG9ZSBFZrdEOD0VtXbT4C
-1id+GYgpyUX281WrJyWz11kquPT/BhZtXEIaXZ3pyp9KkIzmmcMnoZdEm35X58I4
-D/Xi6R0TKVABeaTHktg/O19PX/X3DXFF7qxwCAvlxekOZ/VRVMH56mLHNrInkK5G
-kecPW+JZk5Zz8kzKPADrwIiFMrHki2C+bo4xi3KwKZHG1Dd5ivUGSW4yOMU0obZX
-7trmfPwaggs8PnR3ouHQ9o+KPedKainptwQlvjLoo0taitiW/C3jNnU/4bAb9Dv3
-dFua01FEogeHNkuj/2j+cWxkDKi2ht64TY6pLPLFWbdB3wk3XykVNfryxcUmo3iv
-wL6D9w1EDC1YHHfSxmUT
-=x9ZB
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
