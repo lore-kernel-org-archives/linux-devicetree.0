@@ -1,39 +1,33 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 3/5] OF: export of_property_notify
-Date: Tue, 12 Nov 2013 10:31:56 +0100
-Message-ID: <EDFD21AC-2C43-477E-8F0A-DDCC6C339EC2@antoniou-consulting.com>
-References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-4-git-send-email-panto@antoniou-consulting.com> <20131111160649.58E70C4230C@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
+From: Mischa Jonker <Mischa.Jonker@synopsys.com>
+Subject: RE: [PATCH v3 0/2] ARC: Add perf support for ARC700 cores
+Date: Tue, 12 Nov 2013 09:44:34 +0000
+Message-ID: <E6BF041E97966E4DB955F0DF883AD2D685F17293@de02wembxa.internal.synopsys.com>
+References: <1383832512-21130-1-git-send-email-mjonker@synopsys.com>
+ <20131111162755.GC26898@twins.programming.kicks-ass.net>
+ <20131111163042.GA10977@twins.programming.kicks-ass.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131111160649.58E70C4230C-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131111163042.GA10977@twins.programming.kicks-ass.net>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Mischa Jonker <Mischa.Jonker@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "mingo@redhat.com" <mingo@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+> Ah, so its one of those that cannot sample; you might want to fail when we
+> try and create a sampling event.
 
-On Nov 11, 2013, at 5:06 PM, Grant Likely wrote:
+Good suggestion, I'll create a separate patch for that!
 
-> On Tue,  5 Nov 2013 19:50:14 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->> of_property_notify can be utilized by other users too, export it.
-> 
-> Please keep this patch in the series with the patch that actually uses
-> it.
-> 
+> Also, you could consider running an (hr)timer to periodically update the
+> events so that you don't miss a hardware counter wrap around -- if that is a
+> distinct possibility.
 
-OK.
+It's a theoretical possibility: the counters are 48 bits. Unlikely to happen
+during application development/performance analysis on an embedded core.
 
-> g.
-> 
+Thanks,
 
-Regards
-
--- Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mischa
