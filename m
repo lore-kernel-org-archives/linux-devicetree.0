@@ -1,71 +1,90 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT
- core
-Date: Tue, 12 Nov 2013 10:31:58 -0500
-Message-ID: <528249EE.6080109@ti.com>
-References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com> <527A287C.2090401@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: Fwd: [PATCH 2/8] watchdog: davinci: use davinci_wdt_device
+ structure to hold device data
+Date: Tue, 12 Nov 2013 10:37:04 -0500
+Message-ID: <52824B20.9080002@ti.com>
+References: <1383680783-12114-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <527A2888.5030604@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <527A287C.2090401-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <527A2888.5030604@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On Wednesday 06 November 2013 06:31 AM, ivan.khoronzhuk wrote:
-> To reduce code duplicate and increase code readability use WDT core
-> code to handle WDT interface.
+> Some SoCs, like Keystone 2, can support more than one WDT and each
+> watchdog device has to use it's own base address, clock source,
+> wdd device, so add new davinci_wdt_device structure to hold device
+In commit avoid struct names ;)
+s/wdd/watchdog device
+> data.
 > 
-> Remove io_lock as the WDT core uses mutex to lock each wdt device.
-> Remove wdt_state as the WDT core track state with its own variable.
-> 
-> The watchdog_init_timeout() can read timeout value from timeout-sec
-> property if the passed value is out of bounds. So set initial
-> heartbeat value more than max value in order to initialize heartbeat
-> in next way. If heartbeat is not set thought module parameter, try
-> to read it's value from WDT node timeout-sec property. If node has
-> no one, use default value.
-> 
-> The heartbeat is hold in wdd->timeout by WDT core, so use it in
-> order to set timeout period.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > ---
->  drivers/watchdog/Kconfig       |    1 +
->  drivers/watchdog/davinci_wdt.c |  150 ++++++++++------------------------------
->  2 files changed, 38 insertions(+), 113 deletions(-)
+>  drivers/watchdog/davinci_wdt.c |   74 ++++++++++++++++++++++++++--------------
+>  1 file changed, 48 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index d1d53f3..2c954b5 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -271,6 +271,7 @@ config IOP_WATCHDOG
->  config DAVINCI_WATCHDOG
->  	tristate "DaVinci watchdog"
->  	depends on ARCH_DAVINCI
-> +	select WATCHDOG_CORE
->  	help
->  	  Say Y here if to include support for the watchdog timer
->  	  in the DaVinci DM644x/DM646x processors.
 > diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-> index bead774..a6eef71 100644
+> index a6eef71..1fc2093 100644
 > --- a/drivers/watchdog/davinci_wdt.c
 > +++ b/drivers/watchdog/davinci_wdt.c
-> @@ -3,7 +3,7 @@
->   *
->   * Watchdog driver for DaVinci DM644x/DM646x processors
->   *
-> - * Copyright (C) 2006 Texas Instruments.
-> + * Copyright (C) 2013 Texas Instruments.
-s/2013/2006-2013
 
-Apart from the minor nit, this is really nice clean-up and
-more aligned with wdt coer leayer.
+[...]
 
-FWIW, Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -123,14 +135,21 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct resource  *wdt_mem;
+>  	struct watchdog_device *wdd;
+> +	struct davinci_wdt_device *davinci_wdt;
+> +
+> +	davinci_wdt = devm_kzalloc(dev, sizeof(*davinci_wdt), GFP_KERNEL);
+> +	if (!davinci_wdt)
+> +		return -ENOMEM;
+>  
+> -	wdt_clk = devm_clk_get(dev, NULL);
+> -	if (WARN_ON(IS_ERR(wdt_clk)))
+> -		return PTR_ERR(wdt_clk);
+> +	davinci_wdt->clk = devm_clk_get(dev, NULL);
+> +	if (WARN_ON(IS_ERR(davinci_wdt->clk)))
+> +		return PTR_ERR(davinci_wdt->clk);
+>  
+> -	clk_prepare_enable(wdt_clk);
+> +	clk_prepare_enable(davinci_wdt->clk);
+>  
+> -	wdd			= &wdt_wdd;
+> +	platform_set_drvdata(pdev, davinci_wdt);
+> +
+> +	wdd			= &davinci_wdt->wdd;
+>  	wdd->info		= &davinci_wdt_info;
+>  	wdd->ops		= &davinci_wdt_ops;
+>  	wdd->min_timeout 	= 1;
+> @@ -142,12 +161,13 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+>  
+>  	dev_info(dev, "heartbeat %d sec\n", wdd->timeout);
+>  
+> +	watchdog_set_drvdata(wdd, davinci_wdt);
+>  	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+>  
+>  	wdt_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	wdt_base = devm_ioremap_resource(dev, wdt_mem);
+> -	if (IS_ERR(wdt_base))
+> -		return PTR_ERR(wdt_base);
+> +	davinci_wdt->base = devm_ioremap_resource(dev, wdt_mem);
+> +	if (IS_ERR(davinci_wdt->base))
+> +		return PTR_ERR(davinci_wdt->base);
+You should free up davinci_wdt memory before returning, right ?
+
+Other than that patch looks fine to me. With above fixed,
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
