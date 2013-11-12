@@ -1,76 +1,78 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the datasheet's
- minimum required ECC
-Date: Tue, 12 Nov 2013 13:26:06 +0800
-Message-ID: <5281BBEE.7000502@freescale.com>
-References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH V3 7/7] ARM: DRA: Enable Crossbar IP support for DRA7XX
+Date: Tue, 12 Nov 2013 11:11:04 +0530
+Message-ID: <5281BF70.4050708@ti.com>
+References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com>
+ <1383657257-3458-8-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1383818858-5410-1-git-send-email-b32955@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: devicetree@vger.kernel.org, dedekind1@gmail.com, t.figa@samsung.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1383657257-3458-8-git-send-email-r.sricharan@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, galak@codeaurora.org, grant.likely@linaro.org, santosh.shilimkar@ti.com, tglx@linutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-5LqOIDIwMTPlubQxMeaciDA35pelIDE4OjA3LCBIdWFuZyBTaGlqaWUg5YaZ6YGTOgo+IEluIGRl
-ZmF1bHQgd2F5LCB3ZSB1c2UgdGhlIGVjY19zdHJlbmd0aC9lY2Nfc3RlcCBzaXplIGNhbGN1bGF0
-ZWQgYnkgb3Vyc2VsdmVzCj4gYW5kIHVzZSBhbGwgdGhlIE9PQiBhcmVhLgo+Cj4gVGhpcyBwYXRj
-aCBhZGRzIGEgbmV3IHByb3BlcnR5IDogImZzbCx1c2UtbWluaW11bS1lY2MiCj4KPiBJZiB3ZSBl
-bmFibGUgaXQsIHdlIHdpbGwgZmlyc3RseSB0cnkgdG8gdXNlIHRoZSBkYXRhc2hlZXQncyBtaW5p
-bXVtIHJlcXVpcmVkCj4gRUNDIHByb3ZpZGVkIGJ5IHRoZSBNVEQgbGF5ZXIgKHRoZSBlY2Nfc3Ry
-ZW5ndGhfZHMvZWNjX3N0ZXBfZHMgZmllbGRzCj4gaW4gdGhlIG5hbmRfY2hpcHt9KS4gU28gd2Ug
-bWF5IGhhdmUgZnJlZSBzcGFjZSBpbiB0aGUgT09CIGFyZWEgYnkgdXNpbmcgdGhlCj4gbWluaW11
-bSBFQ0MsIGFuZCB3ZSBtYXkgc3VwcG9ydCBKRkZTMiB3aXRoIHNvbWUgU0xDIE5BTkRzLCBzdWNo
-IGFzIE1pY3JvbidzCj4gU0xDIE5BTkQuCj4KPiBJZiB3ZSBmYWlsIHRvIHVzZSB0aGUgbWluaW11
-bSBFQ0MsIHdlIHdpbGwgdXNlIHRoZSBsZWdhY3kgbWV0aG9kIHRvIGNhbGN1bGF0ZQo+IHRoZSBl
-Y2Nfc3RyZW5ndGggYW5kIGVjY19zdGVwIHNpemUuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIdWFuZyBT
-aGlqaWU8YjMyOTU1QGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4gdjEgLS0+ICB2MjogcmViYXNlIHRo
-aXMgcGF0Y2ggb24gdGhlIGxhdGVzdCBsMi1tdGQuCj4gdjIgLS0+ICB2MzogY2hhbmdlIHRoZSBk
-ZXNjcmlwdGlvbnMuCj4gLS0tCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1u
-YW5kLnR4dCAgICAgICAgICB8ICAgIDggKysrKysrKysKPiAgIGRyaXZlcnMvbXRkL25hbmQvZ3Bt
-aS1uYW5kL2dwbWktbmFuZC5jICAgICAgICAgICAgIHwgICAgMyArKysKPiAgIDIgZmlsZXMgY2hh
-bmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQKPiBpbmRleCA1
-NTFiMmExLi40NThkNTk2IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAo+IEBAIC0xNyw2ICsxNywxNCBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgICAgLSBuYW5kLW9uLWZs
-YXNoLWJidDogYm9vbGVhbiB0byBlbmFibGUgb24gZmxhc2ggYmJ0IG9wdGlvbiBpZiBub3QKPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcHJlc2VudCBmYWxzZQo+ICsgIC0gZnNsLHVzZS1taW5p
-bXVtLWVjYzogUHJvdGVjdCB0aGlzIE5BTkQgZmxhc2ggd2l0aCB0aGUgbWluaW11bSBFQ0MKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBzdHJlbmd0aCByZXF1aXJlZC4gVGhlIHJlcXVpcmVkIEVD
-QyBzdHJlbmd0aCBpcwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGF1dG9tYXRpY2FsbHkgZGlz
-Y292ZXJhYmxlIGZvciBzb21lIGZsYXNoCj4gKyAgICAgICAgICAgICAgICAgICAgICAgKGUuZy4s
-IGFjY29yZGluZyB0byB0aGUgT05GSSBzdGFuZGFyZCkuCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgSG93ZXZlciwgbm90ZSB0aGF0IGlmIHRoaXMgc3RyZW5ndGggaXMgbm90Cj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgZGlzY292ZXJhYmxlIG9yIHRoaXMgcHJvcGVydHkgaXMgbm90IGVuYWJs
-ZWQsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgdGhlIHNvZnR3YXJlIG1heSBjaG9vc2VzIGFu
-IGltcGxlbWVudGF0aW9uLWRlZmluZWQKPiArICAgICAgICAgICAgICAgICAgICAgICBFQ0Mgc2No
-ZW1lLgo+Cj4gICBUaGUgZGV2aWNlIHRyZWUgbWF5IG9wdGlvbmFsbHkgY29udGFpbiBzdWItbm9k
-ZXMgZGVzY3JpYmluZyBwYXJ0aXRpb25zIG9mIHRoZQo+ICAgYWRkcmVzcyBzcGFjZS4gU2VlIHBh
-cnRpdGlvbi50eHQgZm9yIG1vcmUgZGV0YWlsLgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9u
-YW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyBiL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dw
-bWktbmFuZC5jCj4gaW5kZXggOGY0ZTViMS4uYjg0OWI5MiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJz
-L210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQv
-Z3BtaS1uYW5kL2dwbWktbmFuZC5jCj4gQEAgLTM1Myw2ICszNTMsOSBAQCBzdGF0aWMgaW50IGxl
-Z2FjeV9zZXRfZ2VvbWV0cnkoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+Cj4gICBpbnQg
-Y29tbW9uX25mY19zZXRfZ2VvbWV0cnkoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQo+ICAg
-ewo+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbCh0aGlzLT5kZXYtPm9mX25vZGUsICJmc2ws
-dXNlLW1pbmltdW0tZWNjIikKPiArCQkmJiAgc2V0X2dlb21ldHJ5X2J5X2VjY19pbmZvKHRoaXMp
-KQo+ICsJCXJldHVybiAwOwo+ICAgCXJldHVybiBsZWdhY3lfc2V0X2dlb21ldHJ5KHRoaXMpOwo+
-ICAgfQo+CkhpIEJyaWFuOgpJcyB0aGlzIHBhdGNoIG9rIG5vdz8gSSBob3BlIGl0IGNhbiBiZSBh
-Y2NlcHRlZCBhdCB0aGlzIG1lcmdlLXdpbmRvdy4KCgp0aGFua3MKSHVhbmcgU2hpamllCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
-IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+On Tuesday 05 November 2013 06:44 PM, Sricharan R wrote:
+> Enable the crossbar IP support for DRA7xx soc.
+> 
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> ---
+>  arch/arm/mach-omap2/Kconfig        |    1 +
+>  arch/arm/mach-omap2/omap4-common.c |    4 ++++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+> index b5fb5f7..2086c65 100644
+> --- a/arch/arm/mach-omap2/Kconfig
+> +++ b/arch/arm/mach-omap2/Kconfig
+> @@ -141,6 +141,7 @@ config SOC_DRA7XX
+>  	select ARM_GIC
+>  	select HAVE_SMP
+>  	select COMMON_CLK
+> +	select IRQ_CROSSBAR
+>  
+>  comment "OMAP Core Type"
+>  	depends on ARCH_OMAP2
+> diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
+> index 5791143..274cbfa 100644
+> --- a/arch/arm/mach-omap2/omap4-common.c
+> +++ b/arch/arm/mach-omap2/omap4-common.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/export.h>
+>  #include <linux/irqchip/arm-gic.h>
+> +#include <linux/irqchip/irq-crossbar.h>
+>  #include <linux/of_address.h>
+>  #include <linux/reboot.h>
+>  
+> @@ -282,9 +283,12 @@ void __init omap_gic_of_init(void)
+>  
+>  skip_errata_init:
+>  	omap_wakeupgen_init();
+> +	if (soc_is_dra7xx())
+> +		crossbar_init();
+
+Its good if this is called irqcrossbar_init() to avoid confusion
+with the dma crossbar which also exists in dra7 devices.
+
+>  	irqchip_init();
+>  }
+>  
+> +
+>  #if defined(CONFIG_MMC_OMAP_HS) || defined(CONFIG_MMC_OMAP_HS_MODULE)
+>  static int omap4_twl6030_hsmmc_late_init(struct device *dev)
+>  {
+> 
