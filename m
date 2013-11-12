@@ -1,48 +1,102 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] of: set dma_mask to point to coherent_dma_mask
-Date: Tue, 12 Nov 2013 13:21:44 +0000
-Message-ID: <alpine.DEB.2.02.1311121315460.26077@kaball.uk.xensource.com>
-References: <1383109522-6879-1-git-send-email-robherring2@gmail.com> <20131102180724.D8FC5C40F02@trevor.secretlab.ca> <alpine.DEB.2.02.1311061642270.26077@kaball.uk.xensource.com> <alpine.DEB.2.02.1311111658100.26077@kaball.uk.xensource.com>
- <20131112101955.GF16735@n2100.arm.linux.org.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V2 2/2] dt: Document sata_rcar bindings
+Date: Tue, 12 Nov 2013 14:46:27 +0100
+Message-ID: <3011649.85RRC0MaMA@avalon>
+References: <1383854642-21660-1-git-send-email-valentine.barshak@cogentembedded.com> <1485806.0A3W2702o2@avalon> <20131112034257.GJ9863@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131112101955.GF16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131112034257.GJ9863@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Valentine <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2013, Russell King - ARM Linux wrote:
-> On Mon, Nov 11, 2013 at 04:59:14PM +0000, Stefano Stabellini wrote:
-> > On Wed, 6 Nov 2013, Stefano Stabellini wrote:
-> > > On Sat, 2 Nov 2013, Grant Likely wrote:
-> > > > On Wed, 30 Oct 2013 00:05:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > > > > 
-> > > > > Platform devices created by DT code don't initialize dma_mask pointer to
-> > > > > anything. Set it to coherent_dma_mask by default if the architecture
-> > > > > code has not set it.
-> > > > > 
-> > > > > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > > > 
-> > > > I believe this is okay. I haven't done any testing to back up that
-> > > > opinion though.
-> > > 
-> > > Tested-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-> > 
-> > BTW I hope you are planning on sending this upstream soon, because
-> > without it I can very easily corrupt my root fs by simply booting the system.
-> 
-> What's the mechanism for that corruption?  Having the DMA mask not set
-> should not cause DMA corruption - that hints at something else being
-> wrong, and that needs to be investigated.
+Hi Simon,
 
-Russell, you are right.
-I went through the swiotlb-xen code and I realized that I missed a
-map_page call on one of the (usually unused) fallback paths.
-Thanks!!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tuesday 12 November 2013 12:42:58 Simon Horman wrote:
+> On Fri, Nov 08, 2013 at 04:31:03PM +0100, Laurent Pinchart wrote:
+> > On Friday 08 November 2013 15:52:45 Valentine wrote:
+> > > On 11/08/2013 03:26 PM, Valentine wrote:
+> > > > On 11/08/2013 05:02 AM, Laurent Pinchart wrote:
+> > > >> On Friday 08 November 2013 00:04:02 Valentine Barshak wrote:
+> > > >>> These bindings can be used to register SATA devices found on R-Car
+> > > >>> SoC.
+> > > >>> 
+> > > >>> Signed-off-by: Valentine Barshak
+> > > >>> <valentine.barshak@cogentembedded.com>
+> > > >>> Acked-by: Kumar Gala <galak@codeaurora.org>
+> > > >>> ---
+> > > >>> 
+> > > >>> Documentation/devicetree/bindings/ata/sata_rcar.txt | 18 +++++++++++
+> > > >>> 1 file changed, 18 insertions(+)
+> > > >>> 
+> > > >>>   create mode 100644
+> > > >>>   Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > >>> 
+> > > >>> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > >>> b/Documentation/devicetree/bindings/ata/sata_rcar.txt new file mode
+> > > >>> 100644
+> > > >>> index 0000000..d6b20a6
+> > > >>> --- /dev/null
+> > > >>> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > >>> @@ -0,0 +1,18 @@
+> > > >>> +* Renesas R-Car SATA
+> > > >>> +
+> > > >>> +Required properties:
+> > > >>> +- compatible        : should contain one of the following:
+> > > >>> +              - "renesas,sata-r8a7779" for R-Car H1
+> > > >>> +              - "renesas,sata-r8a7790" for R-Car H2
+> > > >>> +              - "renesas,sata-r8a7791" for R-Car M2
+> > > >>> +- reg            : offset and length of the SATA registers;
+> > > >> 
+> > > >> Maybe address instead of offset ?
+> > > > 
+> > > > OK.
+> > > > 
+> > > >>> +- interrupts        : must consist of one interrupt specifier.
+> > > >>> +
+> > > >>> +Example:
+> > > >>> +
+> > > >>> +sata: sata@fc600000 {
+> > > >>> +    compatible = "renesas,sata-r8a7779";
+> > > >>> +    reg = <0xfc600000 0x2000>;
+> > > >>> +    interrupt-parent = <&gic>;
+> > > >>> +    interrupts = <0 100 0x4>;
+> > > >> 
+> > > >> Please use IRQ_TYPE_LEVEL_HIGH instead of 0x4.
+> > > > 
+> > > > OK, I'll do that.
+> > > > 
+> > > > Please, note that all the Renesas dts[i] files do not include
+> > > > <dt-bindings/interrupt-controller/irq.h> Thus, blindly following this
+> > > > bindings documentation when adding new SATA nodes to the existing
+> > > > r8a7790.dtsi, for example, will cause DT compilation error.
+> > > 
+> > > BTW, we'll also have to switch to #include instead of /include/ to make
+> > > it work.
+> > 
+> > Sure, of course.
+> > 
+> > I was actually thinking about sending a patch to convert our DT sources to
+> > use the IRQ_* macros. Morimoto-san, are you working on that already ? If
+> > not I'll do it.
+> > 
+> > Simon, would you like one patch per SoC or would a single patch do ? Only
+> > .dts(i) files will be touched.
+> 
+> I would prefer one patch per SoC.
+> The reason is that in general that approach makes backporting easier.
+
+I've already posted the series on Saturday, it's called "[PATCH 0/7] ARM: 
+shmobile: Use interrupt macros in DT files". Could you please have a look ? I 
+can split patches 1/7 to 3/7 in 28 patches and repost if you would like me to, 
+but that sounds like a really high number of patches for something so simple, 
+especially for patch 1/7.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
