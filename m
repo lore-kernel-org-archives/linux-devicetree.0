@@ -1,58 +1,47 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Input: Add new driver for GPIO beeper
-Date: Tue, 12 Nov 2013 10:59:31 +0000
-Message-ID: <20131112105930.GE2976@e106331-lin.cambridge.arm.com>
-References: <1384250833-4600-1-git-send-email-shc_work@mail.ru>
- <20131112101544.GD2976@e106331-lin.cambridge.arm.com>
- <1384253277.731839001@f27.i.mail.ru>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
+Date: Tue, 12 Nov 2013 20:01:44 +0900
+Message-ID: <086401cedf96$933b0450$b9b10cf0$@org>
+References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384253277.731839001@f27.i.mail.ru>
-Sender: linux-input-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 10:47:57AM +0000, Alexander Shiyan wrote:
-> Hello.
+Sachin Kamat wrote:
 > 
-> > On Tue, Nov 12, 2013 at 10:07:13AM +0000, Alexander Shiyan wrote:
-> > > This patch adds a new driver for the beeper controlled via GPIO pin.
-> > > The driver does not depend on the architecture and is positioned as
-> > > a replacement for the specific drivers that are used for this function.
-> > > 
-> > > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> ...
-> > > diff --git a/Documentation/devicetree/bindings/input/gpio-beeper.txt b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> ...
-> > > +Example:
-> > > +
-> > > +beeper: input@0 {
-> > > +	compatible = "gpio-beeper";
-> > > +	reg = <0>;
-> > > +	gpios = <&gpio3 23 0>;
-> > > +};
-> > 
-> > What are the reg / unit-address for?
+> Since there are no board specific properties for the RTC node,
+> keep it enabled in the dtsi file.
 > 
-> Just an example from "simple-bus" container.
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> b/arch/arm/boot/dts/exynos4.dtsi
+> index a73eeb5..e262946 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -205,7 +205,6 @@
+>  		interrupts = <0 44 0>, <0 45 0>;
+>  		clocks = <&clock 346>;
+>  		clock-names = "rtc";
+> -		status = "disabled";
+>  	};
+> 
+>  	keypad@100A0000 {
+> --
+> 1.7.9.5
 
-If they have no meaning, they should go. They're unnecessary and make
-things more confusing.
-
-I'd expect the example to be:
-
-beeper: beeper {
-	compatible = "gpio-beeper";
-	gpios - <&gpio3 23 0>;
-};
-
-And if we have multiple beepers, something like:
-
-beeper0: beeper0 { ... };
-beeper1: beeper1 { ... };
+Well, I don't think every exynos4 boards want to make the default
+enabled...so I don't want to take this. If any opinions, please let me know.
 
 Thanks,
-Mark.
+Kukjin
