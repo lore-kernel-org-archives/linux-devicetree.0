@@ -1,101 +1,208 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] DT: proc: Add runtime overlay interface in /proc
-Date: Tue, 12 Nov 2013 09:40:38 +0100
-Message-ID: <86657251-2872-4FB2-B71A-519A685B458A@antoniou-consulting.com>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com> <1383923170-24914-4-git-send-email-panto@antoniou-consulting.com> <20131111184736.3DE20C4234E@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 1/6] ARM: hi3xxx: add board support with device tree
+Date: Tue, 12 Nov 2013 16:42:49 +0800
+Message-ID: <CAD6h2NQU8GCHK5yxXj7HAU5hKX4Jbdz7b+AqmiWJWstYu8A96g@mail.gmail.com>
+References: <1383813691-31587-1-git-send-email-haojian.zhuang@linaro.org>
+	<1383813691-31587-2-git-send-email-haojian.zhuang@linaro.org>
+	<527B6266.9020107@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131111184736.3DE20C4234E-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <527B6266.9020107-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Shaojie Sun <shaojie.sun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On 7 November 2013 17:50, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> On 11/7/13 2:41 AM, Haojian Zhuang wrote:
+>> Add board support with device tree for Hisilicon Hi3620 SoC platform.
+>>
+>> Changelog:
+>> v11:
+>> 1. Add comments for iotable.
+>>
+>> v10:
+>> 1. Add .map_io() & debug_ll_io_init() back. Since debug_ll_io_init() is
+>> only called if .map_io() isn't assigned. Use .map_io() to setup static
+>> IO mapping that is used in clock driver.
+>>
+>> v3:
+>> 1. Remove .map_io() in DT machine descriptor. Since debug_ll_io_init()
+>> is called by default.
+>> 2. Remove .init_machine() in DT machine descriptor. Since
+>> of_platform_populate() is called by default in DT mode.
+>>
+>> v2:
+>> 1. Remove .init_irq() in DT machine descriptor. Since irqchip_init()
+>> is called by default in DT mode.
+>>
+>> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../bindings/arm/hisilicon/hisilicon.txt           | 10 ++++
+>>  arch/arm/Kconfig                                   |  2 +
+>>  arch/arm/Makefile                                  |  1 +
+>>  arch/arm/mach-hi3xxx/Kconfig                       | 12 +++++
+>>  arch/arm/mach-hi3xxx/Makefile                      |  5 ++
+>>  arch/arm/mach-hi3xxx/hi3xxx.c                      | 60 ++++++++++++++++++++++
+>>  6 files changed, 90 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>>  create mode 100644 arch/arm/mach-hi3xxx/Kconfig
+>>  create mode 100644 arch/arm/mach-hi3xxx/Makefile
+>>  create mode 100644 arch/arm/mach-hi3xxx/hi3xxx.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>> new file mode 100644
+>> index 0000000..3be60c8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>> @@ -0,0 +1,10 @@
+>> +Hisilicon Platforms Device Tree Bindings
+>> +----------------------------------------------------
+>> +
+>> +Hi3716 Development Board
+>> +Required root node properties:
+>> +     - compatible = "hisilicon,hi3716-dkb";
+>> +
+>> +Hi4511 Board
+>> +Required root node properties:
+>> +     - compatible = "hisilicon,hi3620-hi4511";
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 3f7714d..0118443 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -946,6 +946,8 @@ source "arch/arm/mach-footbridge/Kconfig"
+>>
+>>  source "arch/arm/mach-gemini/Kconfig"
+>>
+>> +source "arch/arm/mach-hi3xxx/Kconfig"
+>> +
+>>  source "arch/arm/mach-highbank/Kconfig"
+>>
+>>  source "arch/arm/mach-integrator/Kconfig"
+>> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+>> index a37a50f..23fb0b0 100644
+>> --- a/arch/arm/Makefile
+>> +++ b/arch/arm/Makefile
+>> @@ -155,6 +155,7 @@ machine-$(CONFIG_ARCH_EBSA110)            += ebsa110
+>>  machine-$(CONFIG_ARCH_EP93XX)                += ep93xx
+>>  machine-$(CONFIG_ARCH_EXYNOS)                += exynos
+>>  machine-$(CONFIG_ARCH_GEMINI)                += gemini
+>> +machine-$(CONFIG_ARCH_HI3xxx)                += hi3xxx
+>>  machine-$(CONFIG_ARCH_HIGHBANK)              += highbank
+>>  machine-$(CONFIG_ARCH_INTEGRATOR)    += integrator
+>>  machine-$(CONFIG_ARCH_IOP13XX)               += iop13xx
+>> diff --git a/arch/arm/mach-hi3xxx/Kconfig b/arch/arm/mach-hi3xxx/Kconfig
+>> new file mode 100644
+>> index 0000000..68bd26c
+>> --- /dev/null
+>> +++ b/arch/arm/mach-hi3xxx/Kconfig
+>> @@ -0,0 +1,12 @@
+>> +config ARCH_HI3xxx
+>> +     bool "Hisilicon Hi36xx/Hi37xx family" if ARCH_MULTI_V7
+>> +     select ARM_AMBA
+>> +     select ARM_GIC
+>> +     select ARM_TIMER_SP804
+>> +     select CACHE_L2X0
+>> +     select CLKSRC_OF
+> I think you need COMMON_CLK here.
 
-On Nov 11, 2013, at 7:47 PM, Grant Likely wrote:
+Why? COMMON_CLK will be selected if ARCH_MULTIPLATFORM is enabled. Why
+do I need to choose it again?
 
-> On Fri,  8 Nov 2013 17:06:10 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->> Add a runtime interface to /proc to enable generic device tree overlay
->> usage.
->> 
->> Two new /proc files are added:
->> 
->> /proc/device-tree-overlay & /proc/device-tree-overlay-status
->> 
->> /proc/device-tree-overlay accepts a stream of a device tree objects and
->> applies it to the running kernel's device tree.
->> 
->> 	$ cat ~/BB-UART2-00A0.dtbo >device-tree-overlay
->> 	overlay_proc_release: Applied #2 overlay segments @0
->> 
->> /proc/device-tree-overlay-status displays the the overlays added using
->> the /proc interface
->> 
->> 	$ cat device-tree-overlay-status
->> 	0: 861 bytes BB-UART2:00A0
->> 
->> The format of the status line is
->> 	<ID>: <SIZE> bytes <part-number>:<version>
->> 
->> <ID> is the id of the overlay
->> <SIZE> is the size of the overlay in bytes
->> <part-number>, <version> are (optional) root level properties of the DTBO
->> 
->> You can remove an overlay by echoing the <ID> number of the overlay
->> precedded with a '-'
->> 
->> So
->> 	$ echo "-0" >device-tree-overlay-status
->> 
->> Removes the overlay.
->> 
->> Note that this seldom works on most platforms since platform_device
->> removal is something that almost never works without extra patches.
->> 
->> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-> 
-> Why /proc? Did you consider using the firmware loading mechanism? While
-> I expressed concerned about the capebus approach, the loading of
-> overlays needs to remain under the control of either a driver or the
-> platform. By default it should not be possible to drop an arbitrary
-> overlay into /proc/device-tree-overlay and have things change in the
-> base tree. Along the same lines, I would expect for the device driver or
-> platform to be able to filter or limit the parts of the tree that are
-> allowed to be modified.
-> 
+>> +     select GENERIC_CLOCKEVENTS
+>> +     select PINCTRL
+>> +     select PINCTRL_SINGLE
+>> +     help
+>> +       Support for Hisilicon Hi36xx/Hi37xx processor family
+>> diff --git a/arch/arm/mach-hi3xxx/Makefile b/arch/arm/mach-hi3xxx/Makefile
+>> new file mode 100644
+>> index 0000000..d68ebb3
+>> --- /dev/null
+>> +++ b/arch/arm/mach-hi3xxx/Makefile
+>> @@ -0,0 +1,5 @@
+>> +#
+>> +# Makefile for Hisilicon Hi36xx/Hi37xx processors line
+>> +#
+>> +
+>> +obj-y        += hi3xxx.o
+>> diff --git a/arch/arm/mach-hi3xxx/hi3xxx.c b/arch/arm/mach-hi3xxx/hi3xxx.c
+>> new file mode 100644
+>> index 0000000..925af13
+>> --- /dev/null
+>> +++ b/arch/arm/mach-hi3xxx/hi3xxx.c
+>> @@ -0,0 +1,60 @@
+>> +/*
+>> + * (Hisilicon's Hi36xx/Hi37xx SoC based) flattened device tree enabled machine
+>> + *
+>> + * Copyright (c) 2012-2013 Hisilicon Ltd.
+>> + * Copyright (c) 2012-2013 Linaro Ltd.
+>> + *
+>> + * Author: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> +*/
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clocksource.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/of_platform.h>
+>> +
+>> +#include <asm/mach/arch.h>
+>> +#include <asm/mach/map.h>
+>> +
+>> +/*
+>> + * This table is only for optimization. Since ioremap() could always share
+>> + * the same mapping if it's defined as static IO mapping.
+>> + *
+>> + * Without this table, system could also work. The cost is some virtual address
+>> + * spaces wasted since ioremap() may be called multi times for the same
+>> + * IO space.
+>> + */
+>> +static struct map_desc hi3620_io_desc[] __initdata = {
+>> +     {
+>> +             .pfn            = __phys_to_pfn(0xfc802000),
+>> +             .virtual        = 0xfe802000,
+>> +             .length         = 0x1000,
+>> +             .type           = MT_DEVICE,
+>> +     },
+>> +};
+>> +
+>> +static void __init hi3620_map_io(void)
+>> +{
+>> +     debug_ll_io_init();
+>> +     iotable_init(hi3620_io_desc, ARRAY_SIZE(hi3620_io_desc));
+>> +}
+>> +
+>> +static void __init hi3xxx_timer_init(void)
+>> +{
+>> +     of_clk_init(NULL);
+>> +     clocksource_of_init();
+>> +}
+> Once you have COMMON_CLK, then this function can go away.
 
-The firmware loading mechanism is the preferred way to handle it, and is
-in fact what is used in practice by the whole cape manager mechanism.
-But that's part of specific board support, and this is more like a general
-way to use overlays, in any kind of DT enabled system.
+On v3.12-rcx, of_clk_init() must be called by platform driver. Now v3.13-rcx
+doesn't announce yet. This function will be removed in additional patch, not
+in this patch.
 
-I agree this is a) completely dangerous and b) /proc is a bad place to put
-it. I put it here in order to get the ball rolling, about the proper place
-to put device tree related interfaces.
-
-The good thing about this interface is that it's always available, and
-it is good for debugging (especially loading/unloading debugging).
- 
-
-> A side benefit of the firmware loader is that the kernel can obtain the
-> overlay on its own if needed at boot time without userspace involvement.
-> 
-
-Yes, that is correct, and it is the way we use it on the beaglebone.
-The root fs device is present on a overlay, which is built into the kernel's
-firmware.
-
-
-> g.
-> 
-
-Regards
-
--- Pantelis
-
+>> +
+>> +static const char *hi3xxx_compat[] __initdata = {
+>> +     "hisilicon,hi3620-hi4511",
+>> +     NULL,
+>> +};
+>> +
+>> +DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
+>> +     .map_io         = hi3620_map_io,
+>> +     .init_time      = hi3xxx_timer_init,
+> .init_time can go away if you have COMMON_CLK.
+>
+> Dinh
+>> +     .dt_compat      = hi3xxx_compat,
+>> +MACHINE_END
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
