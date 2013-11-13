@@ -1,58 +1,54 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
-Date: Wed, 13 Nov 2013 19:24:04 +0100
-Message-ID: <1799362.QSDMu6GHtU@flatron>
-References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com> <1783157.vhfWvslFgW@flatron> <20131113181622.GZ878@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 14/17] dt: Consolidate __dtb_start declarations in <linux/of_fdt.h>
+Date: Wed, 13 Nov 2013 19:40:08 +0100
+Message-ID: <CAMuHMdWG+cVGzWeivm43r_AaemoHk=YmQ_vc+t+B28KG27TaVg@mail.gmail.com>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>
+	<1384285347-13506-15-git-send-email-geert@linux-m68k.org>
+	<5283A000.8090007@gmail.com>
+	<CAMuHMdU6Lqup-MuAOH0iTg16b-SHw4D52WsoPXMsumOxQWbJrg@mail.gmail.com>
+	<5283B83A.8030206@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131113181622.GZ878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5283B83A.8030206@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <vgupta@synopsys.com>, James Hogan <james.hogan@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Chris Zankel <chris@zankel.net>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 of November 2013 18:16:22 Mark Brown wrote:
-> On Wed, Nov 13, 2013 at 05:47:07PM +0100, Tomasz Figa wrote:
-> > On Wednesday 13 of November 2013 16:43:28 Mark Brown wrote:
-> 
-> > > The best practice on this one seems to vary somewhat randomly -
-> > > sometimes it's a requirement, sometimes it isn't.
-> 
-> > AFAIR we decided on ARM Mini Summit to mandate this, but maybe my memory
-> > is misleading me.
-> 
-> OK, I hadn't heard that - it's good that folks made their mind up.
-> 
-> > > Is this a constructive thing from a style point of view?  We're not
-> > > allowed to actually do anything useful with the value at runtime so
-> > > people may as well choose what they like.
-> 
-> > This is what ePAPR says and I believe this is reasonable, because looking
-> > at device tree sources you don't need to think what kind of hardware
-> > a cs42l52 is. The information that it's a cs42l52 is still contained
-> > inside compatible string.
-> 
-> Given that a meaningful name was already specified for the handle it's
-> really not going to help anything - it's just going to duplicate that
-> most likely.  Given that it can't be actually used for anything it seems
-> better to just let people write whatever they feel like in there (even
-> if it's just a single letter to keep the parser happy) rather than
-> nitpick over their choices.
+On Wed, Nov 13, 2013 at 6:34 PM, Rob Herring <robherring2@gmail.com> wrote:
+>>> +       if (!initial_boot_params ||
+>>> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER))
+>>> +               initial_boot_params = &__dtb_start;
+>>> +
+>>>         /* check device tree validity */
+>>> -       if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+>>> +       if (!initial_boot_params ||
+>>
+>> initial_boot_params cannot be NULL here, so no need to check.
+>
+> What about the case of no built-in dtb like on arm?
 
-Well, the label is just for the parser and it does not get into the DTB.
-This is where the DTS author can make things up just for their own
-convenience (like main_codec, aux_codec or even cs42l52). 
+Even then the symbol exists, as all architectures put INIT_DATA or
+INIT_DATA_SECTION in their vmlinux.lds.S.
+But the section will be empty, cfr. the case __dtb_end == __dtb_start below.
 
-I know this is really more bikeshedding than anything useful, but I'd
-rather try to follow the written rules in ePAPR, instead of nothing at
-all. At least just to make things more consistent.
+>>
+>>> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER)) {
+>>
+>> However, if __dtb_end == __dtb_start, you may be reading random
+>> data here from the next section. The OF_DT_HEADER check should cover
+>> this, but better safe than sorry?
+>
+> Then we should also check that (__dtb_end != __dtb_start).
 
-Best regards,
-Tomasz
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
