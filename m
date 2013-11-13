@@ -1,201 +1,125 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 3/3] can: mcp251x: Add device tree support
-Date: Wed, 13 Nov 2013 10:16:43 +0100
-Message-ID: <5283437B.3010309@pengutronix.de>
-References: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [PATCHv4][ 1/7] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel
+ format.
+Date: Wed, 13 Nov 2013 10:23:17 +0100
+Message-ID: <1384334603-14208-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
-Sender: linux-can-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Denis Carikli <denis@eukrea.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 11/13/2013 09:45 AM, Alexander Shiyan wrote:
-> This patch adds Device Tree support to the Microchip MCP251X driver.
->=20
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> ---
->  .../bindings/net/can/microchip,mcp251x.txt         | 25 ++++++++++
->  drivers/net/can/mcp251x.c                          | 57 ++++++++++++++=
-++------
->  2 files changed, 66 insertions(+), 16 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/microchip=
-,mcp251x.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251=
-x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-> new file mode 100644
-> index 0000000..06d95ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-> @@ -0,0 +1,25 @@
-> +* Microchip MCP251X device tree bindings
-> +
-> +Registers a Microchip MCP251X stand-alone CAN controller connected to =
-SPI bus.
-> +
-> +Required properties:
-> + - compatible: Should be one of the following:
-> +   - "microchip,mcp2510" for MCP2510.
-> +   - "microchip,mcp2515" for MCP2515.
-> + - reg: SPI chip select.
-> + - clocks: The clock feeding the CAN controller.
-> + - interrupt-parent: The parent interrupt controller.
-> + - interrupts: Should contain IRQ line for the CAN controller.
-> +
-> +Optional properties:
-> + - vdd-supply: Regulator that powers the CAN controller.
-> + - xceiver-supply: Regulator that powers the CAN transceiver.
-> +
-> +Example:
-> +	can0: can@1 {
-> +		compatible =3D "microchip,mcp2515";
-> +		reg =3D <1>;
-> +		clocks =3D <&clk24m>;
-> +		interrupt-parent =3D <&gpio4>;
-> +		interrupts =3D <13 0x2>;
-> +	};
-> diff --git a/drivers/net/can/mcp251x.c b/drivers/net/can/mcp251x.c
-> index 8e133aa..9aa2822 100644
-> --- a/drivers/net/can/mcp251x.c
-> +++ b/drivers/net/can/mcp251x.c
-> @@ -60,6 +60,8 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/netdevice.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/spi/spi.h>
-> @@ -987,10 +989,38 @@ static const struct net_device_ops mcp251x_netdev=
-_ops =3D {
->  	.ndo_start_xmit =3D mcp251x_hard_start_xmit,
->  };
-> =20
-> +static struct of_device_id mcp251x_of_match[] =3D {
-> +	{
-> +		.compatible	=3D "microchip,mcp2510",
-> +		.data		=3D (void *)CAN_MCP251X_MCP2510,
-> +	},
-> +	{
-> +		.compatible	=3D "microchip,mcp2515",
-> +		.data		=3D (void *)CAN_MCP251X_MCP2515,
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mcp251x_of_match);
-> +
-> +static const struct spi_device_id mcp251x_id_table[] =3D {
-> +	{
-> +		.name		=3D "mcp2510",
-> +		.driver_data	=3D (kernel_ulong_t)CAN_MCP251X_MCP2510,
-> +	},
-> +	{
-> +		.name		=3D "mcp2515",
-> +		.driver_data	=3D (kernel_ulong_t)CAN_MCP251X_MCP2515,
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
-> +
->  static int mcp251x_can_probe(struct spi_device *spi)
->  {
->  	struct net_device *net;
->  	struct mcp251x_priv *priv;
-> +	const struct of_device_id *of_id =3D of_match_device(mcp251x_of_match=
-,
-> +							   &spi->dev);
->  	int ret;
-> =20
->  	/* Allocate can/net device */
-> @@ -1017,7 +1047,10 @@ static int mcp251x_can_probe(struct spi_device *=
-spi)
->  	priv->can.clock.freq =3D clk_get_rate(priv->clk) / 2;
->  	priv->can.ctrlmode_supported =3D CAN_CTRLMODE_3_SAMPLES |
->  		CAN_CTRLMODE_LOOPBACK | CAN_CTRLMODE_LISTENONLY;
-> -	priv->model =3D spi_get_device_id(spi)->driver_data;
-> +	if (of_id)
-> +		priv->model =3D (enum mcp251x_model)of_id->data;
-> +	else
-> +		priv->model =3D spi_get_device_id(spi)->driver_data;
->  	priv->net =3D net;
-> =20
->  	priv->power =3D devm_regulator_get(&spi->dev, "vdd");
-> @@ -1198,24 +1231,16 @@ static int mcp251x_can_resume(struct device *de=
-v)
->  static SIMPLE_DEV_PM_OPS(mcp251x_can_pm_ops, mcp251x_can_suspend,
->  	mcp251x_can_resume);
-> =20
-> -static const struct spi_device_id mcp251x_id_table[] =3D {
-> -	{ "mcp2510",	CAN_MCP251X_MCP2510 },
-> -	{ "mcp2515",	CAN_MCP251X_MCP2515 },
-> -	{ },
-> -};
-> -
-> -MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
-> -
->  static struct spi_driver mcp251x_can_driver =3D {
->  	.driver =3D {
-> -		.name =3D DEVICE_NAME,
-> -		.owner =3D THIS_MODULE,
-> -		.pm =3D &mcp251x_can_pm_ops,
-> +		.name		=3D DEVICE_NAME,
-> +		.owner		=3D THIS_MODULE,
-> +		.of_match_table	=3D of_match_ptr(mcp251x_of_match),
-> +		.pm		=3D &mcp251x_can_pm_ops,
->  	},
-> -
-> -	.id_table =3D mcp251x_id_table,
-> -	.probe =3D mcp251x_can_probe,
-> -	.remove =3D mcp251x_can_remove,
-> +	.id_table	=3D mcp251x_id_table,
-> +	.probe		=3D mcp251x_can_probe,
-> +	.remove		=3D mcp251x_can_remove,
-
-Please don't reformat this. I personally don't like alignment here, as
-it tends to be to short if another member is added to the struct.
-
-Looks good otherwise, please add my:
-
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-
-Marc
-
->  };
->  module_spi_driver(mcp251x_can_driver);
-> =20
->=20
-
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlKDQ3sACgkQjTAFq1RaXHMKJACfcbugTbCbWLfYwA/UrRGxm2oh
-bL4An1KB0TvzuaTY11TCFhkcioo2VupY
-=R436
------END PGP SIGNATURE-----
-
---Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN--
+VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
+Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
+YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
+IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
+QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
+SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
+dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
+Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
+Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
+a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9y
+Zz4KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogRXJpYyBCw6lu
+YXJkIDxlcmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlz
+QGV1a3JlYS5jb20+CkFja2VkLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG0uY2hlaGFiQHNh
+bXN1bmcuY29tPgpBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
+ZGVhc29uYm9hcmQuY29tPgotLS0KQ2hhbmdlTG9nIHYzLT52NDoKLSBBZGRlZCBMYXVyZW50IFBp
+bmNoYXJ0J3MgQWNrLgoKQ2hhbmdlTG9nIHYyLT52MzoKLSBBZGRlZCBzb21lIGludGVyZXN0ZWQg
+cGVvcGxlIGluIHRoZSBDYyBsaXN0LgotIEFkZGVkIE1hdXJvIENhcnZhbGhvIENoZWhhYidzIEFj
+ay4KLSBBZGRlZCBkb2N1bWVudGF0aW9uLgotLS0KIC4uLi9Eb2NCb29rL21lZGlhL3Y0bC9waXhm
+bXQtcGFja2VkLXJnYi54bWwgICAgICAgIHwgICA3OCArKysrKysrKysrKysrKysrKysrKwogaW5j
+bHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsK
+IDIgZmlsZXMgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vRG9jQm9vay9tZWRpYS92NGwvcGl4Zm10LXBhY2tlZC1yZ2IueG1sIGIvRG9jdW1lbnRh
+dGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9waXhmbXQtcGFja2VkLXJnYi54bWwKaW5kZXggMTY2Yzhk
+Ni4uZjZhM2U4NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9w
+aXhmbXQtcGFja2VkLXJnYi54bWwKKysrIGIvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0
+bC9waXhmbXQtcGFja2VkLXJnYi54bWwKQEAgLTI3OSw2ICsyNzksNDUgQEAgY29sb3JzcGFjZSA8
+Y29uc3RhbnQ+VjRMMl9DT0xPUlNQQUNFX1NSR0I8L2NvbnN0YW50Pi48L3BhcmE+CiAJICAgIDxl
+bnRyeT48L2VudHJ5PgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgIDwvcm93PgorCSAgPHJvdyBp
+ZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiI+CisJICAgIDxlbnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhf
+Rk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PidSR0JIJzwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2Ny
+aXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRy
+eT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8
+ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1
+YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8
+L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0
+PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4K
+KwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4zPC9zdWJzY3Jp
+cHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5
+PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxl
+bnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vi
+c2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwv
+c3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5iPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+
+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlw
+dD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8
+ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5
+PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93PgogCSAgPHJvdyBpZD0iVjRMMi1QSVgt
+Rk1ULUJHUjI0Ij4KIAkgICAgPGVudHJ5Pjxjb25zdGFudD5WNEwyX1BJWF9GTVRfQkdSMjQ8L2Nv
+bnN0YW50PjwvZW50cnk+CiAJICAgIDxlbnRyeT4nQkdSMyc8L2VudHJ5PgpAQCAtNzgxLDYgKzgy
+MCw0NSBAQCBkZWZpbmVkIGluIGVycm9yLiBEcml2ZXJzIG1heSBpbnRlcnByZXQgdGhlbSBhcyBp
+biA8eHJlZgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgICAgPGVudHJ5PjwvZW50cnk+CiAJICA8
+L3Jvdz4KKwkgIDxyb3c+PCEtLSBpZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiIgLS0+CisJICAgIDxl
+bnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhfRk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PidSR0JIJzwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNj
+cmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1
+YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0Pjwv
+ZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+
+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlw
+dD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRy
+eT5nPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2Ny
+aXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vi
+c2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAg
+ICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5i
+PHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0
+PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3Jp
+cHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48
+L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAg
+IDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50
+cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93
+PgogCSAgPHJvdz48IS0tIGlkPSJWNEwyLVBJWC1GTVQtQkdSMjQiIC0tPgogCSAgICA8ZW50cnk+
+PGNvbnN0YW50PlY0TDJfUElYX0ZNVF9CR1IyNDwvY29uc3RhbnQ+PC9lbnRyeT4KIAkgICAgPGVu
+dHJ5PidCR1IzJzwvZW50cnk+CmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9k
+ZXYyLmggYi9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKaW5kZXggNDM3ZjFiMC4uZThm
+ZjQxMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oCisrKyBiL2lu
+Y2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaApAQCAtMjk0LDYgKzI5NCw3IEBAIHN0cnVjdCB2
+NGwyX3BpeF9mb3JtYXQgewogI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNTU1WCB2NGwyX2ZvdXJj
+YygnUicsICdHJywgJ0InLCAnUScpIC8qIDE2ICBSR0ItNS01LTUgQkUgICovCiAjZGVmaW5lIFY0
+TDJfUElYX0ZNVF9SR0I1NjVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdSJykgLyogMTYg
+IFJHQi01LTYtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjY2NiAgdjRsMl9mb3Vy
+Y2MoJ0InLCAnRycsICdSJywgJ0gnKSAvKiAxOCAgQkdSLTYtNi02CSAgKi8KKyNkZWZpbmUgVjRM
+Ml9QSVhfRk1UX1JHQjY2NiAgdjRsMl9mb3VyY2MoJ1InLCAnRycsICdCJywgJ0gnKSAvKiAxOCAg
+UkdCLTYtNi02CSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjI0ICAgdjRsMl9mb3VyY2Mo
+J0InLCAnRycsICdSJywgJzMnKSAvKiAyNCAgQkdSLTgtOC04ICAgICAqLwogI2RlZmluZSBWNEwy
+X1BJWF9GTVRfUkdCMjQgICB2NGwyX2ZvdXJjYygnUicsICdHJywgJ0InLCAnMycpIC8qIDI0ICBS
+R0ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9CR1IzMiAgIHY0bDJfZm91cmNj
+KCdCJywgJ0cnLCAnUicsICc0JykgLyogMzIgIEJHUi04LTgtOC04ICAgKi8KLS0gCjEuNy45LjUK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
+aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
+bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
