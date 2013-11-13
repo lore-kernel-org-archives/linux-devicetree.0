@@ -1,114 +1,74 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
-Date: Wed, 13 Nov 2013 09:23:54 +0200
-Message-ID: <20131113092354.5b65f29bacc4f37083f81e2e@nvidia.com>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
-	<1384158718-4756-3-git-send-email-hdoyu@nvidia.com>
-	<5282BAFC.8070405@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5282BAFC.8070405-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/4] mfd: max14577: Add max14577 MFD drivers
+Date: Wed, 13 Nov 2013 08:40:53 +0100
+Message-ID: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2013 00:34:20 +0100
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Hi,
 
-> On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
-> > An "IOMMU device" on the bus is poplulated first, "IOMMU'able devices"
-> > are done later.
-> > 
-> > With CONFIG_OF_IOMMU, "#stream-id-cells" DT binding would be used to
-> > identify whether a device is IOMMU'able or not. If a device is
-> > IOMMU'able, we'll defer to populate that device till an iommu device
-> > is populated. Once an iommu device is populated, "dev->bus->iommu_ops"
-> > is set in the bus. Then, those defered IOMMU'able devices are
-> > populated and configured as IOMMU'abled with help of the already
-> > populated iommu device via iommu_ops->add_device().
-> 
-> This looks fairly neat and clean.
-> 
-> I'm still worried about using #stream-id-cells in DT nodes though. While
-> I do understand that the *Linux* device model currently only allows each
-> struct device to be affected by a single IOMMU, I worry that encoding
-> that same restriction into DT is a mistake. I'd far rather see a
-> property like:
-> 
-> SMMU:
->     smmu: smmu@xxxxxx {
->         #smmu-cells = <1>;
->     }
-> 
-> Affected device:
->     smmus = <&smmu 1>;
->     (perhaps with smmu-names too)
-> 
-> That would allow the DT to represent basically arbitrary HW configurations.
+This patchset adds drivers for MAXIM 14577 chip. The chip contains Micro-USB
+Interface Circuit and Li+ Battery Charger. It contains accessory and USB
+charger detection logic. It supports USB 2.0 Hi-Speed, UART and stereo
+audio signals over Micro-USB connector.
 
-True, and also can solve multi IOMMU problem as well.
+The battery charger is compliant with the USB Battery Charging Specification
+Revision 1.1. It has also SFOUT LDO output for powering USB devices.
 
-> The implementation of this patch would then be almost as trivial; you'd
-> just need to walk the smmus property to find each phandle in turn, just
-> like any other phandle+specifier property, and validate that the SMMU
-> driver was already probe()d for each.
+The patchset consists of following drivers:
+1. MFD core driver.
+2. Extcon driver for the MUIC (Micro USB Interface Controller).
+3. Charger driver using power supply class.
+4. Regulator driver for SFOUT and charger.
 
-This seems to be almost same as the previous v3 DT bindings, and if we
-introduce 64 bitmap newly, this DT bindings would be something like
-below:
+The patchset is rebased on latest Linus' tree (v3.12-4849-g10d0c97) however
+testing was mostly done on 3.10. Except minor change in extcon_dev_register()
+function the patchset cleanly applies to 3.10 and 3.12.
 
-   smmu: iommu@xxxxxx {
-       #smmu-cells = <2>;
-       ......
-   };
 
-   host1x {
-           compatible = "nvidia,tegra30-host1x", "simple-bus";
-           nvidia,memory-clients = <&smmu 0x??????? 0x???????>;
-           ....
-           gr3d {
-                   compatible = "nvidia,tegra30-gr3d";
-                   nvidia,memory-clients = <&smmu 0x??????? 0x???????>;
-           }
+Best regards,
+Krzysztof Kozlowski
 
-If a device is attached to multiple IOMMU H/Ws,
 
-           gr3d {
-                   compatible = "nvidia,tegra30-gr3d";
-                   nvidia,memory-clients = <&smmu 0x??????? 0x??????? &gart 0x???????>;
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Chanwoo Choi (2):
+  mfd: max14577: Add max14577 MFD driver core
+  extcon: max77693: Add extcon-max14577 driver to support MUIC device
 
-Then, the problem is the binding "name" and its "scope". This original
-patch works with "#stream-id-cells" in driver core because I assumed
-that "#stream-id-cells" can indicate globally that a device can be an
-IOMMU master.
+Krzysztof Kozlowski (2):
+  charger: max14577: Add charger support for Maxim 14577
+  regulator: max14577: Add regulator driver for Maxim 14577
 
-We may be able to have some kind of callback function which checks
-"#stream-id-cells" *in* SMMU driver, but at least this function needs to
-be registered in the bus at very early stage, iommu_ops->is_iommu_master().
-But this cannot be done with bus->iommu_ops since bus->iommu_ops is set
-after IOMMU is populated. A kind of Chikin or the egg problem.
+ drivers/extcon/Kconfig               |   10 +
+ drivers/extcon/Makefile              |    1 +
+ drivers/extcon/extcon-max14577.c     |  806 ++++++++++++++++++++++++++++++++++
+ drivers/mfd/Kconfig                  |   13 +
+ drivers/mfd/Makefile                 |    1 +
+ drivers/mfd/max14577-irq.c           |  283 ++++++++++++
+ drivers/mfd/max14577.c               |  268 +++++++++++
+ drivers/power/Kconfig                |    7 +
+ drivers/power/Makefile               |    1 +
+ drivers/power/max14577_charger.c     |  327 ++++++++++++++
+ drivers/regulator/Kconfig            |    8 +
+ drivers/regulator/Makefile           |    1 +
+ drivers/regulator/max14577.c         |  365 +++++++++++++++
+ include/linux/mfd/max14577-private.h |  291 ++++++++++++
+ include/linux/mfd/max14577.h         |   76 ++++
+ 15 files changed, 2458 insertions(+)
+ create mode 100644 drivers/extcon/extcon-max14577.c
+ create mode 100644 drivers/mfd/max14577-irq.c
+ create mode 100644 drivers/mfd/max14577.c
+ create mode 100644 drivers/power/max14577_charger.c
+ create mode 100644 drivers/regulator/max14577.c
+ create mode 100644 include/linux/mfd/max14577-private.h
+ create mode 100644 include/linux/mfd/max14577.h
 
-Having a global bindings which indicates a device's IOMMU
-master'ability is quite convenient. For example, "iommu" and
-"#iommu-cells" without refering any local data. Then the above
-DT would be:
+-- 
+1.7.9.5
 
-   smmu: iommu@xxxxxx {
-       #iommu-cells = <2>;
-       ^^^^^^^^^^^^^^^^^^
-   };
-
-   host1x {
-           compatible = "nvidia,tegra30-host1x", "simple-bus";
-           iommu = <&smmu 0x??????? 0x???????>;
-	   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-           gr3d {
-                   compatible = "nvidia,tegra30-gr3d";
-                   iommu = <&smmu 0x??????? 0x???????>;
-           }
-
-What do you think to have a global IOMMU DT bindings?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
