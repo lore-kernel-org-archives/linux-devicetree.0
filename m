@@ -1,32 +1,85 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: Fwd: fdtdump and libfdt SEGV with corrupt file
-Date: Wed, 13 Nov 2013 07:25:28 -0600
-Message-ID: <E1VgaRk-0002fP-1X@jdl.com>
-References: <CAFOYHZDmxB-EN9qG0B_tNK6XyQdLS_3G=_TGoo1psPKFi-Ht-A@mail.gmail.com> <CAFOYHZAVAWpaQnKMVD+EqV+FkvxzHbu-UxNqqQ6PExKd0a2Pyg@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAFOYHZAVAWpaQnKMVD+EqV+FkvxzHbu-UxNqqQ6PExKd0a2Pyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <judge.packham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
+Date: Wed, 13 Nov 2013 14:40:28 +0100
+Message-ID: <5283814C.6040904@monstr.eu>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org> <1384285347-13506-16-git-send-email-geert@linux-m68k.org> <5283524F.8030902@monstr.eu>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="4IiqVjTX2HIoOtKcUO1NaDwNEIuJkA7CP"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5283524F.8030902@monstr.eu>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> P.S. Is there a tarball release for v1.4.0?
-> http://www.jdl.com/software/ only goes up to v1.3.0.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4IiqVjTX2HIoOtKcUO1NaDwNEIuJkA7CP
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Chris,
+On 11/13/2013 11:19 AM, Michal Simek wrote:
+> On 11/12/2013 08:42 PM, Geert Uytterhoeven wrote:
+>> Kill the microblaze-specific __fdt_blob section, and start using
+>> .dtb.init.rodata from <asm-generic/sections.h> for built-in DTBs, like=
 
-No pre-made tar file was made for 1.4.0.  However, you
-may readily create your own by grabbing the Git repository
-and using "git archive" on the tag.  Uh, the second
-example on the man page, perhaps:
+>> most other DT enabled architectures.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: Michal Simek <monstr@monstr.eu>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: microblaze-uclinux@itee.uq.edu.au
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>> Untested, but the resulting vmlinux after "make simpleImage.system" lo=
+oks
+>> sane.
+>>
+>> QUESTION: The padding of the DTB is gone, is this OK?
+>=20
+> Removing this kernel padding should be fine. I can't remember
+> why it was there from the beginning.
 
-    $ git archive --format=tar --prefix=dtc-1.4.0/ v1.4.0 | gzip > dtc-1.4.0.tgz
+I know why is this here. The reason is process how dtb is passed
+to the kernel via command line. head.S code just copy that dtb to
+the same location where compiled-in dts is expected and kernel
+doesn't need to care about position of dtb because this copy is
+done without MMU. And the full kernel is covered by 2 tlbs and
+we don't need to use another TLB for dtb mapping.
 
-HTH,
-jdl
+It means pad matters a lot. Because u-boot ITS format doesn't use
+simpleImage target but the kernel need to have a space for copying
+dtb to this kernel location.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Let me think about if there is an easy way to handle dtbs
+which are passed from bootloader.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--4IiqVjTX2HIoOtKcUO1NaDwNEIuJkA7CP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlKDgU0ACgkQykllyylKDCFfmQCgmiporcUeFQV4wtSrDYnXPPJv
+mUEAnjIcvATuJeWyBzrT/IIH/3dLq4iw
+=QGBC
+-----END PGP SIGNATURE-----
+
+--4IiqVjTX2HIoOtKcUO1NaDwNEIuJkA7CP--
