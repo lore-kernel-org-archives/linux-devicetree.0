@@ -1,36 +1,55 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
-Date: Wed, 13 Nov 2013 13:13:06 -0700
-Message-ID: <5283DD52.5050903@wwwdotorg.org>
-References: <527737C5.5080901@nvidia.com> <20131104161828.GK2493@sirena.org.uk> <5278B4CB.9050305@nvidia.com> <20131106085100.GB11602@sirena.org.uk> <527A1C47.6050405@nvidia.com> <20131106110154.GG11602@sirena.org.uk> <5281C228.3000404@nvidia.com> <5282717C.3050502@wwwdotorg.org> <20131113122329.GC878@sirena.org.uk> <5283B6E3.9070206@wwwdotorg.org> <20131113190745.GD878@sirena.org.uk>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
+Date: Wed, 13 Nov 2013 21:13:38 +0100
+Message-ID: <3836312.jpzaMFU2re@flatron>
+References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com> <1799362.QSDMu6GHtU@flatron> <20131113194915.GF878@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131113190745.GD878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131113194915.GF878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2013 12:07 PM, Mark Brown wrote:
-> On Wed, Nov 13, 2013 at 10:29:07AM -0700, Stephen Warren wrote:
+On Wednesday 13 of November 2013 19:49:15 Mark Brown wrote:
+> On Wed, Nov 13, 2013 at 07:24:04PM +0100, Tomasz Figa wrote:
 > 
->> It seems slightly odd to tightly link the drivers/of and 
->> drivers/regulator code like that, but I guess with the
->> appropriate ifdefs it'll work out OK.
+> > Well, the label is just for the parser and it does not get into the DTB.
+> > This is where the DTS author can make things up just for their own
+> > convenience (like main_codec, aux_codec or even cs42l52). 
 > 
-> This isn't really regulator specific - it's something that applies
-> in general to things implementing deferred probing - so we ought to
-> have a generic "we know if devices can appear later or not" flag
-> that subsystems can check.
+> If only we could have comments :)
 
-I guess I misunderstand then, since given that modules exist, wouldn't
-that flag always be true?
+Comments in DTB? That would be at least interesting. ;)
 
-IIUC, the issue being discussed here isn't about deferred probe at
-all. You always must defer probe if an object is specified as existing
-yet the provider isn't available yet. The issue here is when a
-regulator isn't specified as existing, yet something asks for that
-regulator, should the regulator subsystem automatically provide a
-dummy regulator instead, rather than erroring out.
+> 
+> > I know this is really more bikeshedding than anything useful, but I'd
+> > rather try to follow the written rules in ePAPR, instead of nothing at
+> > all. At least just to make things more consistent.
+> 
+> My feeling here is that we should be looking more critically at ePAPR -
+> if we're picking people up for having what's essentially a comment
+> that's too specific we're probably doing something wrong especially
+> since the corrected example would look something like:
+> 
+> 	codec: codec@12 {
+> 
+> which is a bit redundant.
+
+Still, this is not a comment, because it's also available in the
+resulting binary representation.
+
+Well, maybe I'm a bit too strict. I wouldn't probably notice this if
+I didn't have other comments, so let's say that was just a nitpick of
+mine, fixing of which doesn't cost anything, since another version will
+have to be spinned anyway.
+
+Best regards,
+Tomasz
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
