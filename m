@@ -1,98 +1,73 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
- device tree
-Date: Wed, 13 Nov 2013 14:24:06 +0000
-Message-ID: <20131113142406.GH21713@e106331-lin.cambridge.arm.com>
-References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
- <20131112153057.GA9683@earth.universe>
- <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
- <20131112200514.GA15413@earth.universe>
- <CACRpkdaAaLjm_b+OLj3tobxBN8YGUcTPnXJ=qtBqd02=FTxhjQ@mail.gmail.com>
- <20131112204013.GA17674@earth.universe>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
+Date: Wed, 13 Nov 2013 19:05:36 +0530
+Message-ID: <20131113133536.GZ8834@intel.com>
+References: <527D1DDA.2040004@koalo.de>
+ <20131108181743.GR2493@sirena.org.uk>
+ <20131113050017.GO8834@intel.com>
+ <20131113125111.GE878@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131112204013.GA17674@earth.universe>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20131113125111.GE878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 08:40:14PM +0000, Sebastian Reichel wrote:
-> On Tue, Nov 12, 2013 at 09:11:40PM +0100, Linus Walleij wrote:
-> > > I could find two boards using "gpio-matrix-keypad" in the mainline
-> > > kernel and not a single instance of "linux,no-autorepeat":
-> > 
-> > In things connected to GPIO, I don't expect the in-kernel
-> > device trees to be a good way so survey the usage of these
-> > bindings. Anyone doing device trees on any system with a
-> > few GPIOs can be using this.
-> > 
-> > But maybe we're lucky and won't break anyone's setup if
-> > we change this?
-> 
-> AFAIK Device Tree property names are considered as ABI, so existing
-> property names must not be removed.
 
-To an extent. We shouldn't pointlessly break existing bindings, and we
-can typically support newer / "better" bindings without breaking support
-for existing bindings.
+--IrhDeMKUP4DT/M7F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There may be cases where we have to remove support for bindings (i.e.
-when a binding is so badly used in practice that relying on it means
-we're likely to damage hardware, or where it's so ambiguous that it
-provides no useful information), but I don't think we've hit any of
-those yet.
+On Wed, Nov 13, 2013 at 12:51:11PM +0000, Mark Brown wrote:
+> On Wed, Nov 13, 2013 at 10:30:17AM +0530, Vinod Koul wrote:
+> > On Fri, Nov 08, 2013 at 06:17:43PM +0000, Mark Brown wrote:
+>=20
+> > > Adding in Martin Sperl who's been looking at DMA with regard to the S=
+PI
+> > > controller (which will want non-cyclic mode but I guess there's a lot=
+ of
+> > > shared code).
+>=20
+> > Is there a plan to add a library in SPI for dma ops, on lines of what
+> > is done in sound?
+>=20
+> I'm probably going to be looking at that at some point, though perhaps
+> Martin will get to it since he seems to be looking at this.
+Okay sounds good. This will also help in streamline the implementations..
 
-If a portions of a binding are no longer used in practice, then I see no
-problem in removing support from them. However I'd expect them to remain
-documented as deprecated / unsupported by Linux, and for those names to
-not be re-used.
+--
+~Vinod
 
-> 
-> But I guess we can add the standardized property name in addition
-> to the deprecated one. New drivers can use the standardized property
-> name from the beginning.
+--IrhDeMKUP4DT/M7F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-This is precisely how I'd expect bindings to evolve. New properties can
-be added, or existing properties can be extended, as long as those
-modifications don't impair existing device trees which are in use.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-If we need to change things substantially, then we can allocate a new
-compatible string for the new binding. That doesn't seem to be necessary
-here.
+iQIcBAEBAgAGBQJSg4AoAAoJEHwUBw8lI4NHxJwP/iL+nkFcKmg18yC6Vav+mtc1
+mqEMa2wU7W/moUxuckpzPhnuPo2OjP6QYyt7NboQHtOTH5xCJXOtD1s5P6QJvFow
+dziG2YW9uFbLlDOeGTdRTJeOVZtbFg2V+mC0/prVwvAPhYmJQu7ScMpRagpe1//5
+d+/g0ZEbrxfap0S4oMJVL/tsRWT0UtlPCja0kCwFgqtF4lk8A9PIg9Il6WbVaVKu
+hDSlgapGU7VpvWE0rPA9qc5AGxJcILGUFM0Rt+nj0+8wqLhr9XmNNr8Ppb3euzc2
+tjLrHGhreuntGkD2nU/t82OZ0e/nODYIZRoSuwaA2xKIPPo6OCUIMFM9jrye2tz0
+qSsPB6h2oXtjq3k4ffxRtdT/6GaSe5u58OSPRim0lXjm8YhPypIbvAz3yoA/ThyC
+rnC3PwspK7MZY4r3uP6IBQZeJgR9yjMaiYaOwfMqQ9zRodpZLuKlrkiynRleeUR9
+q/SP9bp0GVdrXsKjbR07QJLe8I8JkNk0tk1Qfcs/UHiinc0grY9qmJdwYPIIvqB2
+wcnQX3dXRj6Jm97kU2B7amryy+WRuCCvNwF5kJrRR1/Nna6xPa4dtd2iOherMSJ5
+1307zGfAGokY3nM5L/20C4/SCXg37FpPdWIBdkqiQvbXXi/25ZSdG2wqkaFeJ7i3
+SVC8cFBvO9+CXRg2UuWi
+=FCN3
+-----END PGP SIGNATURE-----
 
-> 
-> Thus I guess we should not use the name, which has the most adopters
-> in kernel (or out of kernel). Instead the most fitting name should
-> be used. Current suggestions (taken from kernel) are:
-> 
-> * <<vendor>>,no-autorepeat
-> * keypad,autorepeat
-> * linux,keypad-no-autorepeat
-> * linux,input-no-autorepeat
-> * linux,no-autorepeat
-> * autorepeat
-> 
-> I do not really care, which one is chosen, except for two things:
-> 
-> * <<vendor>> seems wrong. This is not vendor specific.
-> * I would prefer "input-" over "keypad-", since then the same name
->   can be used for single keys, buttons, etc.
-
-Both of those sound valid to me, but I think it may make sense to keep
-the "linux," prefix. As I understand it this is really telling the Linux
-input subsystem to react to a device acting in a certain way, rather
-than describing or configuring the device in a certain way.
-
-Thanks,
-Mark.
+--IrhDeMKUP4DT/M7F--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
