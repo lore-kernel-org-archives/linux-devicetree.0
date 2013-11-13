@@ -1,67 +1,89 @@
-From: "Florian Fainelli" <f.fainelli@gmail.com>
-Subject: [PATCH] of: make of_get_phy_mode parse 'phy-connection-type'
-Date: Wed, 13 Nov 2013 15:42:27 -0800
-Message-ID: <1384386147-13817-1-git-send-email-f.fainelli@gmail.com>
+From: "Sherman Yin" <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Wed, 13 Nov 2013 15:43:11 -0800
+Message-ID: <52840E8F.3060803@broadcom.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+ <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
+ <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
+ <201311050026.56321.heiko@sntech.de> <527835FE.2030102@wwwdotorg.org>
+ <5279A319.5060701@broadcom.com>
+ <CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
+ <527C3080.5050202@broadcom.com>
+ <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: rob.herring@calxeda.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCb?= =?ISO-8859-1?Q?ner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Per the ePAPR v1.1 specification, 'phy-connection-type' is the canonical
-property name for describing an Ethernet to PHY connection type. Make
-sure that of_get_phy_mode() also attempts to parse that property and
-update the comments mentioninng 'phy-mode' to also include
-'phy-connection-type'.
+On 13-11-11 02:01 AM, Linus Walleij wrote:
+>> I would imagine that the platform-specific device tree bindings would need
+>> to clearly explain what the valid values are, as they should.
+>
+> But this is not a platform-specific binding. These are the
+> generic pin configuration bindings we're talking about.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/of/of_net.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Yes, the properties are generic, but I was under the impression that the 
+values can be "custom", such as these:
 
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index 8f9be2e..101a34c 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -13,8 +13,8 @@
- 
- /**
-  * It maps 'enum phy_interface_t' found in include/linux/phy.h
-- * into the device tree binding of 'phy-mode', so that Ethernet
-- * device driver can get phy interface from device tree.
-+ * into the device tree binding of 'phy-mode' or 'phy-connection-type',
-+ * so that Ethernet device driver can get phy interface from device tree.
-  */
- static const char *phy_modes[] = {
- 	[PHY_INTERFACE_MODE_NA]		= "",
-@@ -36,8 +36,9 @@ static const char *phy_modes[] = {
-  * of_get_phy_mode - Get phy mode for given device_node
-  * @np:	Pointer to the given device_node
-  *
-- * The function gets phy interface string from property 'phy-mode',
-- * and return its index in phy_modes table, or errno in error case.
-+ * The function gets phy interface string from property 'phy-mode' or
-+ * 'phy-connection-type', and return its index in phy_modes table, or errno in
-+ * error case.
-  */
- int of_get_phy_mode(struct device_node *np)
- {
-@@ -45,8 +46,11 @@ int of_get_phy_mode(struct device_node *np)
- 	int err, i;
- 
- 	err = of_property_read_string(np, "phy-mode", &pm);
--	if (err < 0)
--		return err;
-+	if (err < 0) {
-+		err = of_property_read_string(np, "phy-connection-type", &pm);
-+		if (err < 0)
-+			return err;
-+	}
- 
- 	for (i = 0; i < ARRAY_SIZE(phy_modes); i++)
- 		if (!strcasecmp(pm, phy_modes[i]))
--- 
-1.8.3.2
+  * @PIN_CONFIG_INPUT_SCHMITT: this will configure an input pin to run in
+  *	schmitt-trigger mode. If the schmitt-trigger has adjustable hysteresis,
+  *	the threshold value is given on a custom format as argument when
+  *	setting pins to this mode.
+
+and
+
+  * @PIN_CONFIG_SLEW_RATE: if the pin can select slew rate, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+  *	slew rate to use.
+
+>
+>> If we're
+>> using integers, we could either have a) !0 and 0, or b) just 1 and 0, and
+>> everything else is an error.  Or c) the platform could decide that the value
+>> provides addition info like pull-up-strength, so 0 = no pull up, >0 = pull
+>> up enabled and the number is the pull up strength in Ohm (bindings should
+>> indicate which values are valid), and everything else is an error.
+>
+> That seems to make sense, I've just not seen any system (using
+> device tree) that can actually set the pull up/down resistance.
+>
+>>> That said, if you can patch the OF core and the generic pin config
+>>> parser to do what you want with lists like that, it's your pick.
+>>> It may take some time though.
+>>
+>> I don't mind patching the generic pin config, and I don't think the core
+>> needs to change,
+>
+> If you want arrays of booleans that is a matter for the OF core
+> parser I think.
+
+I was thinking of just using integers and accepting only 1 and 0, 
+everything else is error.
+
+>>> What about you patch include/linux/pinctrl/pinconf-generic.h
+>>> to add PIN_CONFIG_INPUT_DISABLE with this semantic
+>>> and also patch the generic pinconf parser in
+>>> drivers/pinctrl/pinconf-generic.c
+>>> to handle this?
+>>
+>> Sure, I can add PIN_CONFIG_INPUT_DISABLE.  However I suspect people might be
+>> confused by this and PIN_CONFIG_OUTPUT.
+>
+> Just make sure you put in good documentation in that file
+> right there, it's using kerneldoc and for a good reason...
+
+
+Thanks,
+Sherman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
