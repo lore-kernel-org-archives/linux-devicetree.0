@@ -1,68 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
-Date: Wed, 13 Nov 2013 15:02:49 +0100
-Message-ID: <CAMuHMdWOCdEcDMpJgQ5tOMJ=ygqapvjy2NzGkc9Esk5gZZ57fw@mail.gmail.com>
-References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>
-	<1384285347-13506-16-git-send-email-geert@linux-m68k.org>
-	<5283524F.8030902@monstr.eu>
-	<5283814C.6040904@monstr.eu>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv12][ 4/8] pinctrl: pinctrl-imx: add imx25 pinctrl driver
+Date: Wed, 13 Nov 2013 22:06:51 +0800
+Message-ID: <20131113140647.GA17819@S2101-09.ap.freescale.net>
+References: <1383727939-4190-1-git-send-email-denis@eukrea.com>
+ <1383727939-4190-4-git-send-email-denis@eukrea.com>
+ <20131107081721.GC6500@S2101-09.ap.freescale.net>
+ <5283538D.8060807@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5283814C.6040904@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5283538D.8060807-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 2:40 PM, Michal Simek <monstr@monstr.eu> wrote:
->>> QUESTION: The padding of the DTB is gone, is this OK?
->>
->> Removing this kernel padding should be fine. I can't remember
->> why it was there from the beginning.
->
-> I know why is this here. The reason is process how dtb is passed
-> to the kernel via command line. head.S code just copy that dtb to
-> the same location where compiled-in dts is expected and kernel
-> doesn't need to care about position of dtb because this copy is
-> done without MMU. And the full kernel is covered by 2 tlbs and
-> we don't need to use another TLB for dtb mapping.
->
-> It means pad matters a lot. Because u-boot ITS format doesn't use
-> simpleImage target but the kernel need to have a space for copying
-> dtb to this kernel location.
->
-> Let me think about if there is an easy way to handle dtbs
-> which are passed from bootloader.
+On Wed, Nov 13, 2013 at 11:25:17AM +0100, Denis Carikli wrote:
+> On 11/07/2013 09:17 AM, Shawn Guo wrote:
+> >Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Thanks,
+> 
+> In linux-next's master of 20131113 [1], I saw that this patch made it:
+> 7887424 ARM i.MX25: build in pinctrl support.
+> 
+> However that other patch seems not to be in linux-next's master or
+> in your for-next tree:
+> cd435c4 pinctrl: pinctrl-imx: add imx25 pinctrl driver
 
-You can add to asm-generic/sections.h:
+As stated in the message [1], I only applied #5, #6 and #7.  The first 3
+should be applied by FB maintainer while #4 should be applied by pinctrl
+maintainer.  As the last one patch has some DT bindings introduced in
+#2, I cannot apply it until patch #2 gets accepted.
 
-#ifndef ARCH_DTB_PADDING
-#define ARCH_DTB_PADDING
-#endif
+Shawn
 
-and change KERNEL_DTB() to:
+[1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/278078/focus=51080
 
-#define KERNEL_DTB()                                                    \
-       STRUCT_ALIGN();                                                 \
-       VMLINUX_SYMBOL(__dtb_start) = .;                                \
-       *(.dtb.init.rodata)                                             \
-       ARCH_DTB_PADDING                                \
-       VMLINUX_SYMBOL(__dtb_end) = .;
-
-Then microblaze can predefine ARCH_DTB_PADDING in its
-<asm/sections.h>.
-
-Still, it will crash badly if the external DTB is larger than
-ARCH_DTB_PADDING.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
+> References:
+> [1] 84ea88b Add linux-next specific files for 20131113
+> 
+> Denis.
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
