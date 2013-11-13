@@ -1,378 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH dtc] C-based DT schema checker integrated into dtc
-Date: Wed, 13 Nov 2013 11:33:20 +1100
-Message-ID: <20131113003320.GD12860@voom.fritz.box>
-References: <1382651488-9696-1-git-send-email-swarren@wwwdotorg.org>
- <20131025232951.GD17659@voom.redhat.com>
- <5272C773.2030901@wwwdotorg.org>
- <20131110110043.GB21328@voom.fritz.box>
- <5282A64B.3020706@wwwdotorg.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/3] powerpc/p1010rdb:add P1010RDB-PB platform support
+Date: Tue, 12 Nov 2013 19:50:59 -0600
+Message-ID: <1384307459.1403.120.camel@snotra.buserror.net>
+References: <1383791369-29324-1-git-send-email-B45475@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E7i4zwmWs5DOuDSH"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5282A64B.3020706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1383791369-29324-1-git-send-email-B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2013-11-07 at 10:29 +0800, Zhao Qiang wrote:
+> The P1010RDB-PB is similar to P1010RDB(P1010RDB-PA).
+> So, P1010RDB-PB use the same platform file as P1010RDB.
+> Then Add support for P1010RDB-PB platform.
+> 
+> Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/powerpc/platforms/85xx/p1010rdb.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/powerpc/platforms/85xx/p1010rdb.c b/arch/powerpc/platforms/85xx/p1010rdb.c
+> index 0252961..d6a3dd3 100644
+> --- a/arch/powerpc/platforms/85xx/p1010rdb.c
+> +++ b/arch/powerpc/platforms/85xx/p1010rdb.c
+> @@ -66,6 +66,8 @@ static int __init p1010_rdb_probe(void)
+>  
+>  	if (of_flat_dt_is_compatible(root, "fsl,P1010RDB"))
+>  		return 1;
+> +	if (of_flat_dt_is_compatible(root, "fsl,P1010RDB-PB"))
+> +		return 1;
+>  	return 0;
+>  }
+>  
 
---E7i4zwmWs5DOuDSH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This had already been merged into Ben's tree when you reposted it
+(without any indication that it was a repost/respin), and is now in
+Linus's tree.
 
-On Tue, Nov 12, 2013 at 03:06:03PM -0700, Stephen Warren wrote:
-> On 11/10/2013 04:00 AM, David Gibson wrote:
-> > On Thu, Oct 31, 2013 at 03:11:15PM -0600, Stephen Warren wrote:
-> >> On 10/25/2013 05:29 PM, David Gibson wrote:
-> >>> On Thu, Oct 24, 2013 at 10:51:28PM +0100, Stephen Warren
-> >>> wrote:
-> >>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>>>=20
-> >>>> This is a very quick proof-of-concept re: how a DT schema
-> >>>> checker might look if written in C, and integrated into dtc.
-> >>=20
-> >>>> diff --git a/schemas/schema.c b/schemas/schema.c
-> >>=20
-> >>>> +int schema_check_node(struct node *node)
-> >> ...
-> >>>> +	if (!best_checker) { +		printf("WARNING: no schema for
-> >>>> node %s\n", node->fullpath); +		return 0; +	} + +
-> >>>> printf("INFO: Node %s selected checker %s\n", node->fullpath,
-> >>>> + best_checker->name); + +	best_checker->checkfn(node);
-> >>>=20
-> >>> IMO, thinking in terms of "the" schema for a node is a mistake.
-> >>>  Instead, think in terms of a bunch of schemas, which "known"
-> >>> what nodes they're relevant for.  Often that will be determined
-> >>> by compatible, but it could also be determined by other things=20
-> >>> (presence of 'interrupts', parent node, explicitly implied by=20
-> >>> another schema).
-> >>=20
-> >> I don't agree here.
-> >>=20
-> >> Each node represents a single specific type of object, and the=20
-> >> representation uses a single specific overall schema.
-> >>=20
-> >> I'll admit that sometimes that schema is picked via the
-> >> compatible value (most cases), and other times via the node
-> >> name/path (e.g. /chosen, /memory).
-> >>=20
-> >> In particular, I don't think it's correct to say that e.g. both
-> >> a "Tegra I2C controller" schema and an "interrupt" schema apply
-> >> equally to a "Tegra I2C DT node".
-> >=20
-> > Why not?  Both are mandatory.
->=20
-> No. The interrupt schema isn't mandatory unless the Tegra I2C schema
-> actively opts in to interrupt usage.
+-Scott
 
-It really is.  What I'm thinking of as the "interrupt schema"
-specifies (in part) what the interrupts and related properties need to
-look like if they exist.  Those constraints must *always* be met,
-regardless of whether the device schema additionally specifies the
-number of interrupts or other constraints on interrupt format.
 
-> >> Instead, I think that the "interrupt" schema only applies because
-> >> the "Tegra I2C controller" schema happens to inherit from, or
-> >> aggregate, the "interrupt" schema.
-> >=20
-> > So, explicit inheritence makes sense in many cases, but I don't
-> > like seeing these universal rules as inheritence based.  They
-> > should be just that - universal - not opt-in for any particular
-> > device binding.
->=20
-> There isn't /an/ interrupt schema, there's a framework for interrupt
-> schemas, where the specific "final" schema parameterizes the interrupt
-> schema.
 
-That all depends on how broad your notion of "schema" is.
-
-And if you assume there's a "final" schema, then yes, you need to have
-something defining the "final" schema, but that's a circular argument.
-
-> It's impossible to fully evaluate whether an interrupts
-> property conforms to the requirements unless you evaluate it in the
-> context of a particular "final" schema.
-
-So?
-
-> Also, while it would be silly, I've never seen a rule specifically
-> stated that common properties such as interrupts, reg, *-gpios,
-> *-supply, pinctrl-* are absolutely reserved for their typical meaning,
-> and that no binding can ever use them for other local purposes. It
-> would make sense to explicitly state this though.
-
-Yes it would.  And as I said enforcing best practice, not just minimal
-constraints makes sense for a schema checker.
-
-> In practical terms, what this means is that, without any knowledge of
-> the final binding, you can check that an interrupts property conforms
-> to some general rules such as: it's a list of phandle + specifier, and
-> the specifier length must match the interrupt parent, and the number
-> of entries in interrupts an interrupt-names (if present) must match.
-
-Yes.  And..?  Those things can still be checked by the device schema.
-
-> However, you can't check any of the following without specific
-> knowledge of the final binding:
->=20
-> * Some bindings don't use interrupts, and hence
-> interrupts/interrupt-names/interrupt-parent must /not/ be present in
-> the node.
->=20
-> * The specific (range of) number of entries that must be present in
-> interrupts.
->=20
-> * The specific set of entries that must exist in interrupt-names.
->=20
-> * Any ordering requirements on the names in interrupt-names (say the
-> binding was first defined to use interrupts by index, then later
-> extended to look up additional entries by name via interrupt-names).
->=20
-> I don't think it makes sense to check the base interrupts syntax
-> alone, then those other rules later.
-
-Why not?
-
-> Instead, it makes sense to check
-> all the interrupt-related rules at once, when you have enough
-> knowledge of all the requirements.
-
-Knowledge of the requirements is distributed.  What's wrong with
-checking those distributedly?
-
-> Also, interrupts is an easy case because the property name is static.
-> What about GPIOs or regulators. Do the base GPIO/regulator schema
-> checkers search for all properties name *-gpios and *-supply and check
-> those? How would one avoid collisions with other bindings that happen
-> to use those same property names. Explicitly disallowing property name
-> collisions for single property names like interrupts seems reasonable.
-> Disallowing whole patterns of property names seems a bit harder, and
-> less reasonable.
-
-Sure.  And for those properties, I'd agree with you.  But there are
-universal properties with universal constraints which can and should
-be checked universally.
-
-> >> I see two important results from this distinction:
-> >>=20
-> >> 1) We should only allow properties from the "interrupt" schema
-> >> to exist within a node /if/ the top-level schema for the node
-> >> actually does make use of the "interrupt" schema". This is
-> >> important since it disallows e.g.:
-> >>=20
-> >> battery: smart-battery@b { compatible =3D "ti,bq20z45",
-> >> "sbs,sbs-battery"; reg =3D <0xb>; interrupt-parent =3D <&gpio>;=20
-> >> interrupts =3D <5 4>; };
-> >>=20
-> >> ... since the ti,bq20z45/sbs,sbs-battery don't actually have an=20
-> >> interrupt output (assuming that the current binding doc for that=20
-> >> compatible value accurately reflects the HW here anyway).
-> >>=20
-> >> If we allowed the "interrupt" schema to match the node simply
-> >> because it saw an "interrupts" property there, that'd allow this
-> >> unused property to exist in the DT, whereas we really do want to
-> >> throw an error here, so the DT author is aware they made a
-> >> mistake.
-> >=20
-> > So.  To clarify my proposal of multiple applied schemas: in order
-> > for the node to "pass" the checks, it must satisfy all constraints
-> > of all applicable schemas - they don't override each other.
-> > Furthermore, I'm not seeing any specific property as being owned by
-> > a particular schema - multiple schemas applying to a node can place
-> > overlapping constraints on the same property.
-> >=20
-> > So in this case, the interrupt schema describes what the
-> > interrupts property needs to look like if it exists, but the device
-> > schema says that there should be no interrupts.  The only way to
-> > satisfy both is to have no interrupts property, which is the right
-> > answer.
->=20
-> A big issue here is that if a node actually has an interrupts
-> property, but the final schema says it shouldn't, the only way to
-> check for that is for every schema that doesn't use interrupts to
-> specifically check that no interrupts property is present. That
-> explicit negative check has to be added for every common/generic/base
-> schema. That doesn't seem scalable.
-
-Um.. but your proposal is that every node which does use interrupts
-(i.e. most devices) must explicitly say that interrupts are present.
-How's that any more scalable?
-
-> Going back to the GPIOs/regulators case, if a base GPIO/regulator
-> schema has "blessed" property xxx-gpios as being OK, how does the
-> final schema for a node undo that; must it explicitly enumerate every
-> property that's present in the node and check it against the list of
-> valid properties? I had envisaged something more like:
-
-So as I've said, I think a scheme like yours makes more sense for
-GPIOs, because of the more complex binding with multiple possible
-properties.
-
-> for each node:
->     mark each property as invalid
->     run all the schema checks
->       (marking properties as valid as they're checked)
-
-So.. here I think is the central point of our disagreement.  You're
-thinking of "valid" as an absolute, boolean attribute of a property.
-I'm only thinking in terms of "valid w.r.t. schema X".  Valid overall
-just means valid w.r.t. every schema we know about - a set which will
-grow over time.
-
->     for all properties in node:
->         if property is not marked valid, error out
-
-Right, so my proposed flow is instead:
-
-for each schema:
-    for each node:
-        if schema is applicable:
-            if schema fails:
-                print error for this node and schema
-                mark node as failing this schema
-
-I think this approach allows a broader concept of schemas with more
-flexible constraints e.g.:
- * Node must have property-X OR property-Y
- * If machine type X has node /foo/bar, it must also have node
-   /baz/qux
-
-> If we run the various schema checkers at unrelated times, because
-> they're separate checks, then we end up with either:
->=20
-> for each node:
->     run lots of sub-checkers
->     mark each property as invalid
->     run just the final schema checker
->       (marking properties as valid as they're checked)
->     for all properties in node:
->         if property is not marked valid, error out
->=20
-> I don't like the special case for the final checker there.
-
-Yeah, no.  I have no concept of "final" checker.
-
-> If the schema checkers start to run on the same node in parallel, or
-> in any undefined order, then things start getting worse.
-
-Why?  We'd need some order dependencies between schemas - the check
-structure in dtc already supports this.
-
-> > Actually, rather than a global "interrupts" schema here, more
-> > useful would be a schema provided by the interrupt controller (and
-> > so selected by the interrupt-parent property) which could validate
-> > the internal format of the interrupt descriptors.  But, again,
-> > this doesn't prevent the device schema from validating the number
-> > of interrupt descriptors for this device.
->=20
-> interrupts is a bit special here because there's historically only
-> been one parent. However, not all "base" schemas have this benefit,
-> and even with interrupts, the interrupts-extend property breaks this
-> assumption. This means that n different "parent" (provider/supplier)
-> nodes end up defining the format of a single property in a consumer
-> node, which feels a bit messy.
-
-Only if you think of them as "defining" the property.  I'm just
-thinking of them as constraining the property.
-
-> Having a single "check the entire
-> interrupts property" function/schema, which goes and gets a little
-> information from the provider/supplier (i.e. #interrupt-cells) feels a
-> lot cleaner.
-
-Not to me.
-
-> >> 2) Some inheritance or aggregation of schemas is parameterized,
-> >> e.g. on property name. For example, GPIO properties are named
-> >> ${xxx}-gpios. However, I don't believe there's any hard rule that
-> >> absolutely mandates that an /unrelated/ property cannot exist
-> >> that matches the same naming rule. Admittedly, it would be
-> >> suboptimal if such a conflicting property name were used, but if
-> >> there's no hard rule against it, I don't think we should design
-> >> our schema checker to assume that.
-> >=20
-> > The schema checker, no.  The schemas themselves, maybe.  At least
-> > for really well established things, like interrupts, I think it's=20
-> > reasonable that the schemas enforce best practice, not merely
-> > minimal correctness.
->=20
-> True. It sounds like we want a schema checker for the schemas, so that
-> schema X can't (re-)define a property that schema Y defines the global
-> meaning of!
-
-Again, thinking of schemas as constraining, rather than defining,
-makes things much more flexible.  Schemas which heavily constrain, and
-may also have semantic information attached - like nearly all device
-schemas - can be thought of informally as "defining", but that doesn't
-make a difference for the mechanics of the validation.
-
-> >> If the GPIO schema checker simply searched for any properties
-> >> named according to that pattern, it might end up attempting to
-> >> check properties that weren't actually generic GPIO specifiers.
-> >> Instead, I'd prefer the node's top-level schema to explicitly
-> >> state which properties should be checked according to which
-> >> inherited schema(s).
-> >=20
-> > So, in the case of GPIOs, I tend to agree.  For the case of=20
-> > interrupts, not so much.
->=20
-> Surely we want to deal with everything in a uniform way though, rather
-> than having some techniques that work for interrupts, and a different
-> set of techniques that work for GPIOs.
-
-Only if what we were checking itself was uniform, which it's not.
-Different bindings impose different constraints for which different
-techniques are appropriate.
-
-> >> In particular, perhaps this conflict could occur in a slightly
-> >> generic binding for a series of similar I2C GPIO expander chips,
-> >> some of which have 4 GPIOs and others 8. Someone might choose a
-> >> "count-gpios" or "number-of-gpios" property to represent that
-> >> aspect of the HW.
-> >>=20
-> >> So overall, I believe it's actually very important to first
-> >> determine *the* exact schema for a node, then apply that one
-> >> top-level checker, with it then invoking various (potentially
-> >> parameterized) sub-checkers for any inherited/aggregated
-> >> schemas.
-> >=20
-> > So, I certainly think we want explicitly invoked subcheckers.  But
-> > I think we want multiple independently applied schemas for a single
-> > node too.
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---E7i4zwmWs5DOuDSH
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSgsjQAAoJEGw4ysog2bOSPt4QAINkCTrVjTYeotD6pJ/2+CWd
-srVdfr/47PSmf+3D63iGUnfWu1tt7xxPHS0qj2u2mqgWmuIAJvNKQAcOGkxRTzKI
-sEeUgkkMXE6LdTNIs75MXJ21SJGGhAV3O6W6GyWsF/llo2swNCjPjsJosOMKzaAL
-zElmhcPGev6BW8j11zq7Y3bd7NtbqQlWdYeqVGgopWmQ0UJ4Up/CzTeLV31zDOAe
-5TRXsI1aVaKhmjpDx7w4dBJav++/lGUmy41PVT9FPhWliaD114QijK8WUWLg6vn9
-UeBq+61CFjV+6XJJGBIEzKd/szeMP9Dd919wxW9E7EDcf4M/iqaPR0eChbEvuck0
-qVWjdvIiEY36tWvTYMj1Vx6Y2zPk5THwrm3EvP+poEUbm5867NBh54qjiiMeaM+k
-MI3uwjiTDmcK01/DuA0KdF8kuDH3NRskS7CvRt3tDjmBqG46B1f+Dfp03QNSNBU8
-BaRvPSjIvsLMlIivhghvoEDPhMZgkzAy3ycnMoyGbzSmZpWGydWuW5T3QDd770ap
-jK4rvtZVwEuu7CiiLwnKs4LG5MJVW5+X9EuNyRjfxnbYDcgPjQPu4nzLJVpIlE+O
-9JXxieybvkjsIBuxjqkuF3mslhM7LhNIIk/cWN3FUExYiTXZqGrLhTgWGfo2WNsL
-FsuKWM2CCwksctJKxPxV
-=APJD
------END PGP SIGNATURE-----
-
---E7i4zwmWs5DOuDSH--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
