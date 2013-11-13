@@ -1,103 +1,63 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] ARM: dts: AM437x GP EVM support
-Date: Wed, 13 Nov 2013 06:44:23 -0600
-Message-ID: <20131113124423.GA28192@saruman.home>
-References: <1384255468-2453-1-git-send-email-afzal@ti.com>
- <20131112142206.GD31721@saruman.home> <5283247D.7010106@ti.com>
-Reply-To: balbi@ti.com
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
+Date: Wed, 13 Nov 2013 12:51:11 +0000
+Message-ID: <20131113125111.GE878@sirena.org.uk>
+References: <527D1DDA.2040004@koalo.de>
+ <20131108181743.GR2493@sirena.org.uk>
+ <20131113050017.GO8834@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1129387236546886123=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5283247D.7010106@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Afzal Mohammed <afzal@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rajendra Nayak <rnayak@ti.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, balbi@ti.com, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131113050017.GO8834-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1129387236546886123==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
 
---+QahgC5+KEYLbs62
+--T6xhMxlHU34Bk0ad
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 13, 2013 at 12:34:29PM +0530, Afzal Mohammed wrote:
-> Hi Felipe,
->=20
-> On Tuesday 12 November 2013 07:52 PM, Felipe Balbi wrote:
-> > On Tue, Nov 12, 2013 at 04:54:26PM +0530, Afzal Mohammed wrote:
-> >> From: Lokesh Vutla <lokeshvutla@ti.com>
->=20
-> >> AM437x GP EVM DTS with pinmux information to make I2C on EVM usable.
-> >>
-> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> >> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> >> Signed-off-by: Afzal Mohammed <afzal@ti.com>
->=20
-> > could you instead send the much more complete version we already have
-> > at [1] ? It's pointless to repatch all of that in this file if we *know*
-> > those are already working.
->=20
-> By taking those changes and testing on mainline, I couldn't get mmc
-> working and was not confident about ethernet changes, I2C changes were
-> verified and boot test was done (with DT clock series). I posted only
-> the changes that I felt confident.
->=20
-> Basic DT file and I2C are dependency for others, it was necessary to
-> remove dependencies at the earliest.
+On Wed, Nov 13, 2013 at 10:30:17AM +0530, Vinod Koul wrote:
+> On Fri, Nov 08, 2013 at 06:17:43PM +0000, Mark Brown wrote:
 
-fair enough, still sounds weird not to send the full DTS considering
-it won't cause regressions, it just exposes an existing failure WRT
-AM437x support upstream.
+> > Adding in Martin Sperl who's been looking at DMA with regard to the SPI
+> > controller (which will want non-cyclic mode but I guess there's a lot of
+> > shared code).
 
---=20
-balbi
+> Is there a plan to add a library in SPI for dma ops, on lines of what
+> is done in sound?
 
---+QahgC5+KEYLbs62
+I'm probably going to be looking at that at some point, though perhaps
+Martin will get to it since he seems to be looking at this.
+
+--T6xhMxlHU34Bk0ad
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSg3QnAAoJEIaOsuA1yqREiUMQAKPxc2/8SpAHQCG2uOn+ACyC
-UZkvYfkzE8hf4n/GkL1S8m/q1ytuQUm+nFw86WCID2hT+Jtlf1hRXtbNzpm92vwP
-KlJXT16A5OHvr2jA4OwXVg7TklJQLCaymWUed0lKdRLy2Q4esSbdmJJ2IEjsAd0S
-95TsCfX49CnXE11BG4kcnDr2M6RbUr3Xdu2CwW/NThBu0B0r7yrDfjxP9AJkXSjx
-uce3arVk1df4p00RXhT75Hd8J8hGx9zrcKDU7unQViFKyJKfzYu/zmwMLCm6ttBz
-qER8pzH2zV4PjfjlyKxSCxs8NCvGKumdW7Bm3JThTD9lEbJ75Z3Cvrpb/ZEoq+An
-JpVtD+82uquNOyoLRmTC5GazP+5zP4RcnD8FF+q/J/d58ffvnC0sBPQleFjyoSXd
-TMpSRM74hjCzY8VeX+06/TqYMcCU+bwrzxkRIdhWGiKniTOSuJjBzyjENoxVEtFf
-v6aCshI8itaiXpEQbnF0GYUV+sBMT6D9d7NPjLqXTuctMjsxnbEqabieF8E8Fcye
-36axIyf4WnmFmHQPg1I6pSJSmKMd/56dYx7/YdIaIgu9YcH0yb2FXv8M8bixNt7a
-QRJx23qgcYpIi1FiVPpOiNJjm2Wjpfb1HfrkCHnE8qPDajlaLPv5EvH+TVvN78bt
-6BlYS7dKpFON6ORoFBV4
-=k3JU
+iQIcBAEBAgAGBQJSg3W8AAoJELSic+t+oim9lAIP/i2DqKmTzrViDNzR93jn6mvc
+yk4mHQ8T7rHUOhGCAgFhIahzj+oNnxem4IjfXPOdzKEHBAE8VaKrAFV7qRlWbCbU
+4PloFqW65C5HjAidUgZQaWnKsk0HrfJhjKlN48LoBqQCKqwunL7fJ5EnL2dki0db
+lmRND/wiZ9W3/6rIxxXYGWWZFQ0zdtdbeKV/h27fYZAv3OgVZabd8DdFlb9vUniP
+bRJbLwBfBXZX8e/p1XrZQJ/5eP6yTFLqNGSZVM+/8vWwLEhOZriU6KTlxF4TtE2Y
+0EmesN4Wzc+B7PIqIziu9BtV+YiyoaUypKs/Z6r60np6j1Wo5E8aXG+APwDTHfgM
+eSPy5oqglsYNxxjR32AgXWpDORuZBqH3SobWvZjBrk1phFPMLzqYbRwWpY0x/U8i
+nTvo/yEkhwsdt623Csl10u67UAG044fyBoSr+/pHgkuBdKuVs5HGnik8bTsfoa2a
+1iBFJdUXHVJ8ip9AKO4oidekpjgV9gg4JD7qXBWbLWbhWKPvNUdTmuPeT1626nor
+qZdgUa90tNZewLuJh+8GwdYGo+ep/lrnsA2ZDI3a5v3QWj/MJH0E9s5dKwqMRVzd
+zfocxUDLM50cMtqAtHlUwcMdW7u0sAYcgWAEghWAh68jTYJ/D31YY6VqXvU+DlK+
+Us6gLYk4U+Z158P8Wub3
+=4s61
 -----END PGP SIGNATURE-----
 
---+QahgC5+KEYLbs62--
-
-
---===============1129387236546886123==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1129387236546886123==--
+--T6xhMxlHU34Bk0ad--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
