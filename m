@@ -1,73 +1,67 @@
 From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v3 1/6] ARM: at91: prepare sama5 dt boards transition to common clk
-Date: Wed, 13 Nov 2013 09:32:07 +0100
-Message-ID: <1384331532-2951-2-git-send-email-b.brezillon@overkiz.com>
+Subject: [PATCH v3 2/6] ARM: at91: prepare common clk transition for sama5d3
+ SoC
+Date: Wed, 13 Nov 2013 09:32:08 +0100
+Message-ID: <1384331532-2951-3-git-send-email-b.brezillon@overkiz.com>
 References: <1384331532-2951-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1384331532-2951-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch prepare the transition to common clk for sama5 dt boards by
-replacing the timer init callback.
-
-Clocks registration cannot be done in early init callback (as formerly done
-by the old clk implementation) because it requires dynamic allocation
-which is not ready yet during early init.
-
-In the other hand, at91 clocks must be registered before
-at91sam926x_pit_init is called because PIT (Periodic Interval Timer) driver
-request the master clk (mck).
-
-A new function (at91sama5_dt_timer_init) is created to fullfil these needs.
-This function registers all at91 clks using the dt definition before
-calling the PIT init function.
-The device tree clock registration is enabled only if common clk is
-selected. Else the old clk registration is been done during
-at91_dt_initialize call.
+This patch encloses sama5d3 old clk registration in
+"#if defined(CONFIG_OLD_CLK_AT91) #endif" sections.
 
 Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- arch/arm/mach-at91/board-dt-sama5.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm/mach-at91/sama5d3.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/board-dt-sama5.c b/arch/arm/mach-at91/board-dt-sama5.c
-index bf00d15..075ec05 100644
---- a/arch/arm/mach-at91/board-dt-sama5.c
-+++ b/arch/arm/mach-at91/board-dt-sama5.c
-@@ -16,6 +16,7 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/phy.h>
-+#include <linux/clk-provider.h>
+diff --git a/arch/arm/mach-at91/sama5d3.c b/arch/arm/mach-at91/sama5d3.c
+index 0003949..3426098 100644
+--- a/arch/arm/mach-at91/sama5d3.c
++++ b/arch/arm/mach-at91/sama5d3.c
+@@ -19,9 +19,10 @@
  
- #include <asm/setup.h>
- #include <asm/irq.h>
-@@ -26,6 +27,13 @@
- #include "at91_aic.h"
+ #include "soc.h"
  #include "generic.h"
+-#include "clock.h"
+ #include "sam9_smc.h"
  
-+static void __init sama5_dt_timer_init(void)
-+{
-+#if defined(CONFIG_COMMON_CLK)
-+	of_clk_init(NULL);
++#if defined(CONFIG_OLD_CLK_AT91)
++#include "clock.h"
+ /* --------------------------------------------------------------------
+  *  Clocks
+  * -------------------------------------------------------------------- */
+@@ -361,6 +362,7 @@ static void __init sama5d3_register_clocks(void)
+ 	clk_register(&pck1);
+ 	clk_register(&pck2);
+ }
 +#endif
-+	at91sam926x_pit_init();
-+}
  
- static const struct of_device_id irq_of_match[] __initconst = {
+ /* --------------------------------------------------------------------
+  *  AT91SAM9x5 processor initialization
+@@ -373,5 +375,7 @@ static void __init sama5d3_map_io(void)
  
-@@ -72,7 +80,7 @@ static const char *sama5_dt_board_compat[] __initdata = {
- 
- DT_MACHINE_START(sama5_dt, "Atmel SAMA5 (Device Tree)")
- 	/* Maintainer: Atmel */
--	.init_time	= at91sam926x_pit_init,
-+	.init_time	= sama5_dt_timer_init,
- 	.map_io		= at91_map_io,
- 	.handle_irq	= at91_aic5_handle_irq,
- 	.init_early	= at91_dt_initialize,
+ AT91_SOC_START(sama5d3)
+ 	.map_io = sama5d3_map_io,
++#if defined(CONFIG_OLD_CLK_AT91)
+ 	.register_clocks = sama5d3_register_clocks,
++#endif
+ AT91_SOC_END
 -- 
 1.7.9.5
