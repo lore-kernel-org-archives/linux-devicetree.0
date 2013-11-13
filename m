@@ -1,173 +1,97 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
-Date: Wed, 13 Nov 2013 19:43:13 +0100
-Message-ID: <3722902.ByNK8Ptc5Y@flatron>
-References: <5283BC93.1090801@koalo.de>
+From: Troy Kisky <troy.kisky@boundarydevices.com>
+Subject: Re: [PATCHv4][ 3/7] staging: imx-drm: Add RGB666 support for parallel
+ display.
+Date: Wed, 13 Nov 2013 11:43:44 -0700
+Message-ID: <5283C860.3020103@boundarydevices.com>
+References: <1384334603-14208-1-git-send-email-denis@eukrea.com>
+ <1384334603-14208-3-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5283BC93.1090801-oZ8rN/sblLk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1384334603-14208-3-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Denis Carikli <denis@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-Seems like I accidentally replied to some old version of this patch.
-Not sure how many of those comments were still relevant for V3, but
-let me look at this version and see whether we can still improve things
-a bit. Please see my comments inline.
-
-On Wednesday 13 of November 2013 18:53:23 Florian Meier wrote:
-> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
-> Currently it only supports cyclic DMA.
-> 
-> Signed-off-by: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-> ---
-> 
-> Besides of many minor improvements (thanks to your helpful comments),
-> this fourth version does the assignment of the virtual to the hardware
-> channel already in probe. This simplifies things a lot
-> (first of all the complex alloc_chan_resources is now gone).
-> 
-> Regarding the maximum segment size: 0x3FFFFFFF is the maximum possible
-> DMA transfer length value and I have no evidence that the maximum
-> segment size is smaller.
-> 
->  .../devicetree/bindings/dma/bcm2835-dma.txt        |   59 ++
->  drivers/dma/Kconfig                                |    6 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/bcm2835-dma.c                          |  750 ++++++++++++++++++++
->  4 files changed, 816 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/bcm2835-dma.txt
->  create mode 100644 drivers/dma/bcm2835-dma.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> new file mode 100644
-> index 0000000..bca5e84
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> @@ -0,0 +1,59 @@
-> +* BCM2835 DMA controller
+On 11/13/2013 2:23 AM, Denis Carikli wrote:
+>   
+> +	/* rgb666 */
+> +	ipu_dc_map_clear(priv, IPU_DC_MAP_RGB666);
+> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 2, 17, 0xfc); /* red */
+> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 1, 11, 0xfc); /* green */
+> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 0, 5, 0xfc); /* blue */
 > +
-> +Required properties:
-> +- compatible: Should be "brcm,bcm2835-dma".
-> +- reg: Should contain DMA registers location and length.
-> +- interrupts: Should contain the DMA interrupts associated
-> +		to the DMA channels in ascending order.
-> +		First cell is the IRQ bank.
-> +		Second cell is the IRQ number.
-> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
-> +		the dmas property of client devices.
-> +- dma-channels: Maximum number of DMA channels available.
-> +- dma-requests: Number of DMA Requests.
+>   	return 0;
+>   }
+>   
+>
 
-The two properties above do not seem to be used anywhere in the driver.
+Since,  rgb24 and bgr24 reverse the byte numbers
+/* rgb24 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_RGB24);
+         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 0, 7, 0xff); /* blue */
+         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 1, 15, 0xff); /* green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 2, 23, 0xff); /* red */
 
-> +- brcm,dma-channel-mask: Bit mask representing the channels available.
+/* bgr24 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR24);
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 2, 7, 0xff); /* red */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 1, 15, 0xff); /* green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 0, 23, 0xff); /* blue */
 
-What does the value of this property depend on? Could you describe the
-structure of this DMA controller?
 
-> +
-> +Example:
-> +
-> +dma: dma@7e007000 {
-> +	compatible = "brcm,bcm2835-dma";
-> +	reg = <0x7e007000 0xf00>;
-> +	interrupts = <1 16
-> +		      1 17
-> +		      1 18
-> +		      1 19
-> +		      1 20
-> +		      1 21
-> +		      1 22
-> +		      1 23
-> +		      1 24
-> +		      1 25
-> +		      1 26
-> +		      1 27
-> +		      1 28>;
+Shouldn't rgb666 and bgr666 do the same?
+Currently we have,
 
-There are 13 interrupts specified here, but...
+/* bgr666 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR666);
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 0, 5, 0xfc); /* blue */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 1, 11, 0xfc); /* 
+green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 2, 17, 0xfc); /* red */
 
-> +
-> +	#dma-cells = <1>;
-> +	dma-channels = <16>;
+Where I'd expect to see
+/* bgr666 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR666);
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 0, 17, 0xfc); /* blue */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 1, 11, 0xfc); /* 
+green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 2, 5, 0xfc); /* red */
 
-...16 channels here...
 
-> +	dma-requests = <32>;
-> +	brcm,dma-channel-mask = <0x7f35>;
+So, it looks like you are adding a duplicate of bgr666 because bgr666 is 
+wrong.
+Also, I'd prefer to keep the entries in 0,1,2 byte number order(blue, 
+green, red,
+assuming byte 0 is always blue) so that duplicates are easier to spot.
 
-...and 11 set bits here. May I ask you to explain this to me, please?
+Not related to this patch, but the comments on gbr24 appear wrong as well.
 
-[snip]
-> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> new file mode 100644
-> index 0000000..baf072e
-> --- /dev/null
-> +++ b/drivers/dma/bcm2835-dma.c
-[snip]
-> +static int bcm2835_dma_probe(struct platform_device *pdev)
-> +{
-> +	struct bcm2835_dmadev *od;
-> +	struct resource *dma_res = NULL;
-> +	void __iomem *dma_base = NULL;
-> +	int rc = 0;
-> +	int i = 0;
-> +	int irq;
-> +	uint32_t chans_available;
-[snip]
-> +	if (pdev->dev.of_node) {
+/* gbr24 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_GBR24);
+         ipu_dc_map_config(priv, IPU_DC_MAP_GBR24, 2, 15, 0xff); /* green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_GBR24, 1, 7, 0xff); /* blue */
+         ipu_dc_map_config(priv, IPU_DC_MAP_GBR24, 0, 23, 0xff); /* red */
 
-Is this driver supposed to support non-DT based instantation (aka board
-files)? If not, maybe it would be cleaner to simply check for
-!pdev->dev.of_node at the beginning of probe and return an error?
+Should be
+/* brg24 */
+         ipu_dc_map_clear(priv, IPU_DC_MAP_BRG24);
+         ipu_dc_map_config(priv, IPU_DC_MAP_BRG24, 0, 23, 0xff); /* blue*/
+         ipu_dc_map_config(priv, IPU_DC_MAP_BRG24, 1, 7, 0xff); /* green */
+         ipu_dc_map_config(priv, IPU_DC_MAP_BRG24, 2, 15, 0xff); /* red */
 
-> +		const void *chan_mask;
-> +
-> +		/* Device-tree DMA controller registration */
-> +		rc = of_dma_controller_register(pdev->dev.of_node,
-> +				bcm2835_dma_xlate, od);
-> +		if (rc) {
-> +			dev_err(&pdev->dev, "Failed to register DMA controller\n");
-> +			dma_async_device_unregister(&od->ddev);
-> +			bcm2835_dma_free(od);
-> +			return rc;
-> +		}
-> +
-> +		/* Request DMA channel mask from device tree */
-> +		chan_mask = of_get_property(pdev->dev.of_node,
-> +				"brcm,dma-channel-mask", NULL);
-> +
-> +		if (!chan_mask) {
-> +			dev_err(&pdev->dev, "Failed to get channel mask\n");
-> +			dma_async_device_unregister(&od->ddev);
-> +			bcm2835_dma_free(od);
-> +			return -EINVAL;
-> +		}
-> +
-> +		chans_available = be32_to_cpup(chan_mask);
+Of course, my understanding may be totally wrong. If so, please show me 
+the light!
 
-You can use of_property_read_u32(), which will do both of_get_property()
-and be32_to_cpup() for you.
 
-> +
-> +		/* do not use the FIQ and BULK channels */
-> +		chans_available &= ~0xD;
-
-I'm clearly lacking the information about hardware here, but it would be
-nice to hear what these channels are.
-
-Otherwise, the driver looks pretty good.
-
-Best regards,
-Tomasz
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Troy
