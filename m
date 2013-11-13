@@ -1,73 +1,65 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
-Date: Wed, 13 Nov 2013 13:50:24 +0800
-Message-ID: <52831320.8000903@gtsys.com.hk>
-References: <5280B54A.1050503@gtsys.com.hk>	<20131111120357.GE21201@e106331-lin.cambridge.arm.com> <CACRpkdatZfGDn-K-PRxCz53AKF+Q4CAwAbA+ufSKnXapZQkPyw@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
+Date: Wed, 13 Nov 2013 10:30:17 +0530
+Message-ID: <20131113050017.GO8834@intel.com>
+References: <527D1DDA.2040004@koalo.de>
+ <20131108181743.GR2493@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdatZfGDn-K-PRxCz53AKF+Q4CAwAbA+ufSKnXapZQkPyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131108181743.GR2493-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Monday, November 11, 2013 10:29 PM, Linus Walleij wrote:
-> On Mon, Nov 11, 2013 at 1:03 PM, Mark Rutland<mark.rutland-5wv7dgnIgG8@public.gmane.org>  wrote:
->> On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
->
->>> while I port the static code to the DT I step into the problem to
->>> set the PSCR for the sdhc2 ports to 22k pull-up
->>> I look for something like described in
->>>       pinctrl/fsl,imx-pinctrl.txt
->>>
->>> the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
->
-> So in the generic pin configuration, which we nowadays recommend new
-> platforms to use, there is this (include/linux/pinctrl/pinconf-generic):
->
->   * @PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
->   *      impedance to VDD). If the argument is != 0 pull-up is enabled,
->   *      if it is 0, pull-up is total, i.e. the pin is connected to VDD.
->   * @PIN_CONFIG_BIAS_PULL_DOWN: the pin will be pulled down (usually with high
->   *      impedance to GROUND). If the argument is != 0 pull-down is enabled,
->   *      if it is 0, pull-down is total, i.e. the pin is connected to GROUND.
->
-> The idea was to extend that with an argument for the number of
-> Ohms the day it was needed and supported by some platform.
->
-> We would then use the bindings from
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> by adding something like this:
->
-> (...)
-> bias-pull-up-ohms =<22000>;
-> (...)
->
-> So in the generic world it can be accomodated in a quite
-> straight-forward way.
->
-> When the i.MX pin control was added in v3.5 the generic
-> pin config was available but it was opted to use another
-> pattern. One way to solve this is to migrate i.MX to use the
-> generic pin config, which is going to be hard work. But as
-> a subsystem maintainer that is still what I would recommend.
->
-> Yours,
-> Linus Walleij
+On Fri, Nov 08, 2013 at 06:17:43PM +0000, Mark Brown wrote:
+> On Fri, Nov 08, 2013 at 06:22:34PM +0100, Florian Meier wrote:
+> > Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
+> > Currently it only supports cyclic DMA for serving the I2S driver.
+>=20
+> Adding in Martin Sperl who's been looking at DMA with regard to the SPI
+> controller (which will want non-cyclic mode but I guess there's a lot of
+> shared code).
+Is there a plan to add a library in SPI for dma ops, on lines of what is do=
+ne in
+sound?
 
-Hi Linus,
-Thank you for that very interesting comment!
+--
+~Vinod
 
-I agree with your idea to move the IMX code to that more generic solution, there 
-are already different ways to setup the DT for imx27 vs. imx3x or imx6 etc. and 
-its not going to be better, my guess!
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-Chris
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
+iQIcBAEBAgAGBQJSgwdgAAoJEHwUBw8lI4NHrV4P/iBW7SdKykUvv5lB6ZJzQHSd
+jVSeXWxhazFdnDCdL7ZuBCcyw/ntuXjvd8/qDTGv0b8DzIuGj4aulNH8AeETnkqs
+5vVrdydONihL762FcFjFCpBEvRwOfvTaO2Omp0v5z4oiaE2ijTB7BtX5MLWA3YZp
+llbTauhmSJbjynOju3PBcbBPFXGua9KKQeL3eYS82PUIOMW/vI6XDO4V0hvSLkpv
+qqySDcai22jBlcEkexw71hgf89BAY9W8x1sJGTkJLK8z4ekB5sqrHe+kBJJRzzLr
+X2MAjxbMl4NaEbKuGSLRAei/LA75qrBfVxEIHPzBJG6jcsNWyjhxeDvZI47Rphnq
+8vKhZapjfWbl6/zUMVZ2flmOdIIzgjfgF9KEhb/EzANalScNYy68xIy11aa5bIs3
+L3yEEl7wMo/dvqa1i8R4eh95rlkcgGWedJGYWyjqUGlab1RKLwtQlwr+WVHh+ouy
+d/Yb+PY3nCp7S/xjlMoGoumxeya6DsC2vclD3TZP07d7OekgwiwyrWhsAeCsqPDV
+5rm+qoJgiuny4HfGDi55njmk+GHm/SJyvypDB4zDcuWGHqxI90XgAWwOtSG0JqHH
+iXu7ZsTpq+0maF9/J4tMKYnY5EXDHn+i3upNO5ttl8GQrQjd0hKG4BSJpmF7uKSJ
+yCfB8iZLqEePCJXXNpQF
+=WRDa
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
