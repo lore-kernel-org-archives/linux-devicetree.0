@@ -1,128 +1,71 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv5 20/20] MAINTAINERS: add maintainer entry for thermal
- bindings
-Date: Wed, 13 Nov 2013 10:46:25 -0400
-Message-ID: <528390C1.2060902@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-21-git-send-email-eduardo.valentin@ti.com> <CAOesGMiCh-nGPqJQd4NPz9st7mBT0JkZ9nEK1gfyF2RmnrXZog@mail.gmail.com> <52828C31.2050604@ti.com> <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v7 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Wed, 13 Nov 2013 22:55:23 +0800
+Message-ID: <cover.1384352281.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="slmGsk2f3aKAX9TOXKTg41uE9VJimV0Lc"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
---slmGsk2f3aKAX9TOXKTg41uE9VJimV0Lc
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+ * ! This series of patches has a direct dependency between them. When
+ * ! applying them, we need to apply to one single branch. Otherwise,
+ * ! it would break currect branches.
 
-On 13-11-2013 05:42, Mark Rutland wrote:
-> Hi,
->=20
-> On Tue, Nov 12, 2013 at 08:14:41PM +0000, Eduardo Valentin wrote:
->> On 12-11-2013 15:59, Olof Johansson wrote:
->>> On Tue, Nov 12, 2013 at 11:46 AM, Eduardo Valentin
->>> <eduardo.valentin@ti.com> wrote:
->>>> After discussion and agreement of thermal device tree bindings,
->>>> it is desirable to properly maintain thermal bindings for
->>>> existing and upcoming devices.
->>>>
->>>> As original author of thermal device tree bindings, I am
->>>> volunteering to maintain them.
->>>>
->>>> Cc: Rob Herring <rob.herring@calxeda.com>
->>>> Cc: Pawel Moll <pawel.moll@arm.com>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Stephen Warren <swarren@wwwdotorg.org>
->>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->>>> ---
->>>>  MAINTAINERS | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index 3438384..94bfc46 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -6178,6 +6178,7 @@ M:        Pawel Moll <pawel.moll@arm.com>
->>>>  M:     Mark Rutland <mark.rutland@arm.com>
->>>>  M:     Stephen Warren <swarren@wwwdotorg.org>
->>>>  M:     Ian Campbell <ijc+devicetree@hellion.org.uk>
->>>> +M:     Eduardo Valentin <eduardo.valentin@ti.com>
->>>>  L:     devicetree@vger.kernel.org
->>>>  S:     Maintained
->>>>  F:     Documentation/devicetree/
->>>
->>> The number of device-tree maintainers is getting to be somewhat silly=
-=2E
->>> You don't have to be a maintainer to be a reviewer, and the number is=
+Changelog
+v7:
+ * Appended missing Acked-by to all four patches.
+ * Sorry that I didn't add them at the first place.
+v6:
+ * PATCH-1: Use goto err_firmware instead of return directly.
+ *
+ * Nothing changes for the other three ack-ed patches
+v5:
+ * PATCH-3: Add period size constraint when using dual fifo mode
+ *
+ * Nothing changes for the other three patches
+v4:
+ * PATCH-3: Drop useless register configuration.
+ *
+ * Nothing changes for the other three patches
+v3:
+ * PATCH-1: Add comments to indicate the end of v1 and v2 array.
+ * PATCH-3: Use better way to keep watermark as even number.
+ *
+ * Nothing changes for PATCH-2 and PATCH-4
+v2:
+ * Instead of adding rogue scripts to current SDMA driver based on firmware
+ * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
+ * to two patches: The first is to add version check code to the SDMA driver;
+ * And the second is to add SSI dual FIFO DMATYPE.
+ *
+ * Nothing changes for the last two patches.
+v1:
+ * SSI can reduce hardware overrun/underrun possibility when using dual
+ * fifo mode. To support this mode, we need to first update sdma sciprt
+ * list, and then enable dual fifo BIT in SSI driver, and last update DT
+ * bindings of i.MX series.
 
->>> getting large enough that it might get hard for one maintainer to kno=
-w
->>> what another is doing.
->>>
->>> So, soft nack, but it's really up to the DT guys.
->>
->> Hello Olof,
->>
->> No issues on my side. As I stated in the patch description, I am
->> volunteering. The motivation comes from the fact that it's been hard t=
-o
->> get DT maintainers attention, so I am assuming they are not having
->> enough bandwidth to pay attention to an extra class of bindings.
->>
->> I agree with you, this is up to the DT folks.
->=20
-> When we discussed this in #devicetree, I was under the impression you
-> meant adding a line like:
->=20
-> F:      Documentation/devicetree/bindings/thermal/
+Nicolin Chen (4):
+  dma: imx-sdma: Add sdma firmware version 2 support
+  dma: imx-sdma: Add new dma type for ssi dual fifo script
+  ASoC: fsl_ssi: Add dual fifo mode support
+  ARM: dts: imx: use dual-fifo sdma script for ssi
 
-This would work for me too. How about adding this to thermal subsys
-entry in MAINTAINERS file?
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
+ arch/arm/boot/dts/imx6qdl.dtsi                     | 12 +++++-----
+ arch/arm/boot/dts/imx6sl.dtsi                      | 12 +++++-----
+ drivers/dma/imx-sdma.c                             | 19 ++++++++++++++-
+ include/linux/platform_data/dma-imx-sdma.h         |  5 ++++
+ include/linux/platform_data/dma-imx.h              |  1 +
+ sound/soc/fsl/fsl_ssi.c                            | 27 +++++++++++++++++++++-
+ 9 files changed, 67 insertions(+), 18 deletions(-)
 
->=20
-> To your MAINTAINERS entry, rather than adding yourself to the general
-> devicetree bindings MAINTAINERS entry. Sorry for the confusion regardin=
-g
-> this.
->=20
-> Given we have enough difficulty organising ourselves at present, I agre=
-e
-> with Olof that it doesn't make much sense to throw more people into the=
-
-> general devicetree bindings maintainer pile.
->=20
-> However, we would certainly appreciate any review you'd be willing to
-> provide.
->=20
-> Thanks,
-> Mark.
->=20
->=20
+-- 
+1.8.4
 
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---slmGsk2f3aKAX9TOXKTg41uE9VJimV0Lc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlKDkMEACgkQCXcVR3XQvP1MgQEA4A3me8OJdzA42F/3En97fxl8
-+BMg42OFMOItYPRaNTABAJPGu4RiWaQFdYyCqzH50zMuushR8yN/BSnBnE6gu3d0
-=VWEh
------END PGP SIGNATURE-----
-
---slmGsk2f3aKAX9TOXKTg41uE9VJimV0Lc--
