@@ -1,266 +1,201 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCHv3] dmaengine: Add support for BCM2835
-Date: Wed, 13 Nov 2013 13:48:19 +0530
-Message-ID: <20131113081819.GP8834@intel.com>
-References: <528154A1.1050303@koalo.de>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 3/3] can: mcp251x: Add device tree support
+Date: Wed, 13 Nov 2013 10:16:43 +0100
+Message-ID: <5283437B.3010309@pengutronix.de>
+References: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <528154A1.1050303@koalo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Florian Meier <florian.meier@koalo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
+Sender: linux-can-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 11:05:21PM +0100, Florian Meier wrote:
-> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
-> Currently it only supports cyclic DMA.
-> 
-> Signed-off-by: Florian Meier <florian.meier@koalo.de>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 11/13/2013 09:45 AM, Alexander Shiyan wrote:
+> This patch adds Device Tree support to the Microchip MCP251X driver.
+>=20
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 > ---
-> 
-> Thank you for your comments!
-> I hope I have now removed all leftovers of the sg struct.
-> Regarding the endian-ness: I have not found any hint about that in the datasheet. Therefore, I chose uint32_t. If you think fixed le32 is more likely I will change it.
-> The PAD fields do not seem to be used, but the datasheet states they should be set to 0.
-can you pls reflow this to 80chars...
+>  .../bindings/net/can/microchip,mcp251x.txt         | 25 ++++++++++
+>  drivers/net/can/mcp251x.c                          | 57 ++++++++++++++=
+++------
+>  2 files changed, 66 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/microchip=
+,mcp251x.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251=
+x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+> new file mode 100644
+> index 0000000..06d95ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+> @@ -0,0 +1,25 @@
+> +* Microchip MCP251X device tree bindings
+> +
+> +Registers a Microchip MCP251X stand-alone CAN controller connected to =
+SPI bus.
+> +
+> +Required properties:
+> + - compatible: Should be one of the following:
+> +   - "microchip,mcp2510" for MCP2510.
+> +   - "microchip,mcp2515" for MCP2515.
+> + - reg: SPI chip select.
+> + - clocks: The clock feeding the CAN controller.
+> + - interrupt-parent: The parent interrupt controller.
+> + - interrupts: Should contain IRQ line for the CAN controller.
+> +
+> +Optional properties:
+> + - vdd-supply: Regulator that powers the CAN controller.
+> + - xceiver-supply: Regulator that powers the CAN transceiver.
+> +
+> +Example:
+> +	can0: can@1 {
+> +		compatible =3D "microchip,mcp2515";
+> +		reg =3D <1>;
+> +		clocks =3D <&clk24m>;
+> +		interrupt-parent =3D <&gpio4>;
+> +		interrupts =3D <13 0x2>;
+> +	};
+> diff --git a/drivers/net/can/mcp251x.c b/drivers/net/can/mcp251x.c
+> index 8e133aa..9aa2822 100644
+> --- a/drivers/net/can/mcp251x.c
+> +++ b/drivers/net/can/mcp251x.c
+> @@ -60,6 +60,8 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/spi/spi.h>
+> @@ -987,10 +989,38 @@ static const struct net_device_ops mcp251x_netdev=
+_ops =3D {
+>  	.ndo_start_xmit =3D mcp251x_hard_start_xmit,
+>  };
+> =20
+> +static struct of_device_id mcp251x_of_match[] =3D {
+> +	{
+> +		.compatible	=3D "microchip,mcp2510",
+> +		.data		=3D (void *)CAN_MCP251X_MCP2510,
+> +	},
+> +	{
+> +		.compatible	=3D "microchip,mcp2515",
+> +		.data		=3D (void *)CAN_MCP251X_MCP2515,
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mcp251x_of_match);
+> +
+> +static const struct spi_device_id mcp251x_id_table[] =3D {
+> +	{
+> +		.name		=3D "mcp2510",
+> +		.driver_data	=3D (kernel_ulong_t)CAN_MCP251X_MCP2510,
+> +	},
+> +	{
+> +		.name		=3D "mcp2515",
+> +		.driver_data	=3D (kernel_ulong_t)CAN_MCP251X_MCP2515,
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
+> +
+>  static int mcp251x_can_probe(struct spi_device *spi)
+>  {
+>  	struct net_device *net;
+>  	struct mcp251x_priv *priv;
+> +	const struct of_device_id *of_id =3D of_match_device(mcp251x_of_match=
+,
+> +							   &spi->dev);
+>  	int ret;
+> =20
+>  	/* Allocate can/net device */
+> @@ -1017,7 +1047,10 @@ static int mcp251x_can_probe(struct spi_device *=
+spi)
+>  	priv->can.clock.freq =3D clk_get_rate(priv->clk) / 2;
+>  	priv->can.ctrlmode_supported =3D CAN_CTRLMODE_3_SAMPLES |
+>  		CAN_CTRLMODE_LOOPBACK | CAN_CTRLMODE_LISTENONLY;
+> -	priv->model =3D spi_get_device_id(spi)->driver_data;
+> +	if (of_id)
+> +		priv->model =3D (enum mcp251x_model)of_id->data;
+> +	else
+> +		priv->model =3D spi_get_device_id(spi)->driver_data;
+>  	priv->net =3D net;
+> =20
+>  	priv->power =3D devm_regulator_get(&spi->dev, "vdd");
+> @@ -1198,24 +1231,16 @@ static int mcp251x_can_resume(struct device *de=
+v)
+>  static SIMPLE_DEV_PM_OPS(mcp251x_can_pm_ops, mcp251x_can_suspend,
+>  	mcp251x_can_resume);
+> =20
+> -static const struct spi_device_id mcp251x_id_table[] =3D {
+> -	{ "mcp2510",	CAN_MCP251X_MCP2510 },
+> -	{ "mcp2515",	CAN_MCP251X_MCP2515 },
+> -	{ },
+> -};
+> -
+> -MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
+> -
+>  static struct spi_driver mcp251x_can_driver =3D {
+>  	.driver =3D {
+> -		.name =3D DEVICE_NAME,
+> -		.owner =3D THIS_MODULE,
+> -		.pm =3D &mcp251x_can_pm_ops,
+> +		.name		=3D DEVICE_NAME,
+> +		.owner		=3D THIS_MODULE,
+> +		.of_match_table	=3D of_match_ptr(mcp251x_of_match),
+> +		.pm		=3D &mcp251x_can_pm_ops,
+>  	},
+> -
+> -	.id_table =3D mcp251x_id_table,
+> -	.probe =3D mcp251x_can_probe,
+> -	.remove =3D mcp251x_can_remove,
+> +	.id_table	=3D mcp251x_id_table,
+> +	.probe		=3D mcp251x_can_probe,
+> +	.remove		=3D mcp251x_can_remove,
 
-Also going thru driver I suspect you have not run checkpatch, pls do run this
-scriprt to check for coding style 
-> +static irqreturn_t bcm2835_dma_callback(int irq, void *data)
-> +{
-> +	struct bcm2835_chan *c = data;
-> +	struct bcm2835_desc *d;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&c->vc.lock, flags);
-> +
-> +	/* acknowledge interrupt */
-> +	writel(BCM2835_DMA_INT, c->dma_chan_base + BCM2835_DMA_CS);
-> +
-> +	d = c->desc;
-> +
-> +	if (d) {
-> +		if (!c->cyclic) {
-> +			bcm2835_dma_start_desc(c);
-> +			vchan_cookie_complete(&d->vd);
-I dont see callback being invoked for this case?
+Please don't reformat this. I personally don't like alignment here, as
+it tends to be to short if another member is added to the struct.
 
-> +		} else {
-> +			vchan_cyclic_callback(&d->vd);
-> +		}
-> +	}
-> +
-> +	/* keep the DMA engine running */
-> +	dsb(); /* ARM synchronization barrier */
-> +	writel(BCM2835_DMA_ACTIVE, c->dma_chan_base + BCM2835_DMA_CS);
-> +
-> +	spin_unlock_irqrestore(&c->vc.lock, flags);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-> +	int ret;
-> +	struct bcm2835_dmadev *d = to_bcm2835_dma_dev(chan->device);
-> +	uint32_t chans = d->chans_available;
-> +	int chanID = 0;
-Pls avoid camel case
+Looks good otherwise, please add my:
 
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&d->lock, flags);
-> +
-> +	chans = d->chans_available;
-> +
-> +	dev_dbg(c->vc.chan.device->dev,
-> +			"allocating channel for %u\n", c->dma_sig);
-> +
-> +	/* do not use the FIQ and BULK channels */
-> +	chans &= ~0xD;
-> +
-> +	if (!chans) {
-> +		spin_unlock_irqrestore(&d->lock, flags);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* return the ordinal of the first channel in the bitmap */
-> +	chanID = __ffs(chans);
-> +
-> +	/* claim the channel */
-> +	d->chans_available &= ~(1 << chanID);
-> +
-> +	c->dma_chan_base = BCM2835_DMA_CHANIO(d->dma_base, chanID);
-> +	c->dma_irq_number = d->dma_irq_numbers[chanID];
-> +	c->dma_ch = chanID;
-> +
-> +	ret = request_irq(c->dma_irq_number,
-> +			bcm2835_dma_callback, 0, "DMA IRQ", c);
-> +
-> +	spin_unlock_irqrestore(&d->lock, flags);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-unconditional return ret; will do same!
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-> +static size_t bcm2835_dma_desc_size(struct bcm2835_desc *d)
-> +{
-> +	unsigned i;
-> +	size_t size;
-> +
-> +	for (size = i = 0; i < d->frames; i++) {
-> +		struct bcm2835_dma_cb *control_block =
-> +			&d->control_block_base[i];
-> +
-> +		size += control_block->length;
-> +	}
-> +
-> +	return size;
-you may want to store this in descritpor which creating that, so you can
-avoid computation at query
+Marc
 
-> +static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
-> +	struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
-> +	size_t period_len, enum dma_transfer_direction direction,
-> +	unsigned long flags, void *context)
-> +{
-> +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-> +	enum dma_slave_buswidth dev_width;
-> +	struct bcm2835_desc *d;
-> +	dma_addr_t dev_addr;
-> +	unsigned es, sync_type;
-> +	unsigned frame;
-> +
-> +	/* Grab configuration */
-> +	if (direction == DMA_DEV_TO_MEM) {
-> +		dev_addr = c->cfg.src_addr;
-> +		dev_width = c->cfg.src_addr_width;
-> +		sync_type = BCM2835_DMA_S_DREQ;
-> +	} else if (direction == DMA_MEM_TO_DEV) {
-> +		dev_addr = c->cfg.dst_addr;
-> +		dev_width = c->cfg.dst_addr_width;
-> +		sync_type = BCM2835_DMA_D_DREQ;
-> +	} else {
-> +		dev_err(chan->device->dev, "%s: bad direction?\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	/* Bus width translates to the element size (ES) */
-> +	switch (dev_width) {
-> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> +		es = BCM2835_DMA_DATA_TYPE_S32;
-> +		break;
-> +	default:
-> +		return NULL;
-> +	}
-> +
-> +	/* Now allocate and setup the descriptor. */
-> +	d = kzalloc(sizeof(*d), GFP_ATOMIC);
-GFP_NOWAIT is recommendation for DMA drivers
+>  };
+>  module_spi_driver(mcp251x_can_driver);
+> =20
+>=20
 
-> +	if (!d)
-> +		return NULL;
-> +
-> +	d->dir = direction;
-> +	d->dev_addr = dev_addr;
-> +	d->frames = buf_len / period_len;
-> +
-> +	/* Allocate memory for control blocks */
-> +	d->control_block_size = d->frames * sizeof(struct bcm2835_dma_cb);
-> +	d->control_block_base = dma_alloc_coherent(chan->device->dev,
-> +			d->control_block_size, &d->control_block_base_phys,
-> +			GFP_KERNEL);
-ditto
 
-> +
-> +	if (!d->control_block_base) {
-> +		dev_err(chan->device->dev,
-> +				"%s: Memory allocation error\n", __func__);
-> +		return NULL;
-you need to free "d" allocated above..
-> +	}
-> +
-> +	memset(d->control_block_base, 0, d->control_block_size);
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-> +static int bcm2835_dma_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-> +	unsigned long arg)
-> +{
-> +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-> +	int ret;
-> +
-> +	switch (cmd) {
-> +	case DMA_SLAVE_CONFIG:
-> +		return bcm2835_dma_slave_config(c,
-> +				(struct dma_slave_config *)arg);
-> +
-> +	case DMA_TERMINATE_ALL:
-> +		bcm2835_dma_terminate_all(c);
-> +		break;
-> +
-> +	case DMA_PAUSE:
-> +		ret = -EINVAL;
-> +		break;
-> +
-> +	case DMA_RESUME:
-> +		ret = -EINVAL;
-> +		break;
-> +
-> +	default:
-> +		ret = -ENXIO;
-> +		break;
-you should do same for PAUSE/RESUME, actually no need to add code for those and
-fall thru default!
 
-Also since you are going to use for audio pls do implement the capablity APIs in
-the driver so that thing like what you support and parametsr and automatically
-discovered and need not be hard coded
+--Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> +static int bcm2835_dma_probe(struct platform_device *pdev)
-> +{
-> +	struct bcm2835_dmadev *od;
-> +	struct resource *dma_res = NULL;
-> +	void __iomem *dma_base = NULL;
-> +	int rc = 0;
-> +	int i;
-> +	struct resource *irq;
-> +	int irq_resources;
-> +
-> +	if (!pdev->dev.dma_mask)
-> +		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-> +
-> +	rc = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
-> +	if (rc)
-> +		return rc;
-> +	dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-> +
-> +	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
-> +	if (!od)
-> +		return -ENOMEM;
-> +
-> +	pdev->dev.dma_parms = &od->dma_parms;
-> +	dma_set_max_seg_size(&pdev->dev, 0x3FFFFFFF);
-Can you support such a large txn or you want to do this thur SW?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-> +module_platform_driver(bcm2835_dma_driver);
-> +
-> +MODULE_AUTHOR("Florian Meier");
-> +MODULE_DESCRIPTION("BCM2835 DMA engine driver");
-> +MODULE_LICENSE("GPL");
-MODULE_ALIAS too pls
+iEYEARECAAYFAlKDQ3sACgkQjTAFq1RaXHMKJACfcbugTbCbWLfYwA/UrRGxm2oh
+bL4An1KB0TvzuaTY11TCFhkcioo2VupY
+=R436
+-----END PGP SIGNATURE-----
 
---
-~Vinod
+--Sn3KamJA7DWVC7vNtH7rnPrnLeUplxJVN--
