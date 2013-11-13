@@ -1,134 +1,141 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
-Date: Wed, 13 Nov 2013 13:13:28 +0000
-Message-ID: <20131113131328.GF878@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] regulator: max14577: Add regulator driver for Maxim
+ 14577
+Date: Wed, 13 Nov 2013 13:23:38 +0000
+Message-ID: <20131113132338.GG878@sirena.org.uk>
 References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
- <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+ <1384328457-5147-5-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="XaUbO9McV5wPQijU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+In-Reply-To: <1384328457-5147-5-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---3yNHWXBV/QO9xKNm
+--XaUbO9McV5wPQijU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
+On Wed, Nov 13, 2013 at 08:40:57AM +0100, Krzysztof Kozlowski wrote:
 
-> +/**
-> + * After resuming from suspend it may happen that IRQ is signalled but
-> + * IRQ GPIO is not high. Also the interrupt registers won't have any data
-> + * (all of them equal to 0x00).
-> + *
-> + * In such case retry few times reading the interrupt registers.
-> + */
-> +#define IRQ_READ_REG_RETRY_CNT		5
+> +static inline int max14577_reg_set_safeout(struct regmap *rmap, int on)
+> +{
+> +	u8 reg_data = (on ? 0x1 << CTRL2_SFOUTORD_SHIFT : 0x0);
 
-What is the cause here?  This smells like an unreliable workaround for
-some other behaviour.  In general this all looks very like standard
-regmap code.
+The ternery operator is rarely helpful for legibility.
 
-> +	for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
-> +		u8 mask_reg = max14577_mask_reg[i];
+> +	case MAX14577_SAFEOUT:
+> +		max14577_read_reg(rmap, MAX14577_REG_CONTROL2, &reg_data);
+> +		return (reg_data & CTRL2_SFOUTORD_MASK) != 0;
+
+regulator_is_enabled_regmap() and the other helpers should be used for
+this regulator.
+
+> +static int max14577_reg_disable(struct regulator_dev *rdev)
+> +{
+> +	int rid = rdev_get_id(rdev);
 > +
-> +		if (mask_reg == MAX14577_REG_INVALID ||
-> +				IS_ERR_OR_NULL(max14577->regmap))
-> +			continue;
-
-Why would this code even be running if you don't have a register map?
-
-> +		dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
-> +			irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
-> +			irq_reg[MAX14577_IRQ_INT3]);
-
-This is far too noisy, dev_dbg() at most.
-
-> +		gpio_val = gpio_get_value(pdata->irq_gpio);
-> +
-> +		if (gpio_get_value(pdata->irq_gpio) == 0)
-> +			dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
-> +	} while (gpio_val == 0 && --retry > 0);
-
-This looks very strange...
-
-> +	max14577->irq = gpio_to_irq(pdata->irq_gpio);
-> +	ret = gpio_request(pdata->irq_gpio, "max14577_irq");
-> +	if (ret) {
-> +		dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
-> +				pdata->irq_gpio, ret);
-> +		goto err;
+> +	switch (rid) {
+> +	case MAX14577_CHARGER:
+> +		return max14577_reg_set_charging(rdev->regmap, 0);
+> +	case MAX14577_SAFEOUT:
+> +		return max14577_reg_set_safeout(rdev->regmap, 0);
+> +	default:
+> +		return -EINVAL;
 > +	}
-> +	gpio_direction_input(pdata->irq_gpio);
-> +	gpio_free(pdata->irq_gpio);
-
-This means the GPIO handling code that was present in the handling is
-broken, it's trying to use the GPIO after it was freed.
-
-> +	ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
-> +				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +				   "max14577-irq", max14577);
-
-Are you *positive* this is a falling triggered IRQ?  All the code to do
-with spinning reading the GPIO state during handling makes it look like
-this is in fact an active low interrupt and a lot of the code in here is
-working around trying to handle that as the wrong kind of IRQ.
-
-> +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
-> +{
-> +	return regmap_bulk_write(map, reg, buf, count);
 > +}
-> +EXPORT_SYMBOL_GPL(max14577_bulk_write);
 
-Given that these are basically all trivial wrappers around regmap they
-probably ought to be static inlines in the header.
+This sort of indirection isn't adding anything, just make the ops
+directly callable (and in the case of SAFEOUT use the helpers).
 
-> +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
+> +static int max14577_reg_get_current_limit(struct regulator_dev *rdev)
 > +{
+> +	if (rdev_get_id(rdev) != MAX14577_CHARGER)
+> +		return -EINVAL;
+> +
+> +	return max14577_reg_calc_charge_current(rdev->regmap);
 
-There's no DT binding document?
+Just inline the function, it's only called once.
 
-> +const struct dev_pm_ops max14577_pm = {
-> +	.suspend = max14577_suspend,
-> +	.resume = max14577_resume,
-> +};
+> +	if (rdev_get_id(rdev) != MAX14577_CHARGER)
+> +		return -EINVAL;
+> +
+> +	dev_info(max14577->dev, "Requested current <%d, %d>\n", min_uA, max_uA);
 
-SET_SYSTEM_SLEEP_PM_OPS().
+Don't spam the logs like this, there's problems like this throughout the
+rest of the code.
 
-> +static int __init max14577_i2c_init(void)
+> +static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev,
+> +					struct max14577_platform_data *pdata)
+
+No DT binding document.
+
+> +static int max14577_regulator_probe(struct platform_device *pdev)
 > +{
-> +	return i2c_add_driver(&max14577_i2c_driver);
-> +}
-> +subsys_initcall(max14577_i2c_init);
+> +	struct max14577_regulator *max14577_reg;
+> +	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
+> +	struct max14577_platform_data *pdata = dev_get_platdata(max14577->dev);
+> +	int i, ret, size;
+> +	struct regulator_config config = {};
+> +
+> +	if (!pdata) {
+> +		dev_err(&pdev->dev, "No platform data found.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (max14577->dev->of_node) {
+> +		ret = max14577_regulator_dt_parse_pdata(pdev, pdata);
+> +		if (ret)
+> +			return ret;
+> +	}
 
-Why not module_i2c_driver?
+The driver insists on platform data but then requires DT...
 
---3yNHWXBV/QO9xKNm
+> +	size = sizeof(struct regulator_dev *) * pdata->num_regulators;
+> +	max14577_reg->regulators = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
+
+You shouldn't be getting the number of regulators from platform data,
+the number of regulators physically present in the silicon isn't going
+to vary.
+
+> +		max14577_reg->regulators[i] =
+> +			regulator_register(&supported_regulators[id], &config);
+
+devm_regulator_register().
+
+> +subsys_initcall(max14577_regulator_init);
+
+Why is this subsys_initcall()?
+
+--XaUbO9McV5wPQijU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSg3r1AAoJELSic+t+oim9RMAP/iqgT1ugPF9VXLjnuqbGpcGn
-ilpJrGYrBzsdNzrlGjsAcPPpAYdk4+9JzV+iK92qo6cdbLarz2r3V5uQY77s5SZS
-rqothoS1KdeL3fSY0kIzGUljQOWRnkStGUw89SoJbQJxK2HscQY3jWSzhmA7fDGz
-WA8MEuB0yy80pczrju2/RpTUenFE3S9jjuE29h4K5nO2yFjTuTvFqjU3qJoBDFZ3
-f0g4rFSqhrrK2JSbw/Yd+thTb/jKoYOTBUe19BnbIKu83Uuq+1et56nD2jtDL6gJ
-gKeMslvOoLiiup/yeGbDEE1uCD8hl2xFPXmNMxkvhdOwnTgpStfTvDmV6Ih72mmi
-875bah6KdNlBesPKHv8WTdEacX455VUtLoCLdeeN4AbDKuW5KKfsYDvhQfseZYM1
-U/TV9Rh8VHdMAtjtGXFrDuVVxC9FfL2lXs7vLHdel7EIu2FQd2nBk54I1dai0Naa
-X+5RaAIQ07okTnTxTU8xF0uZ0+fuUhG8mLS/UY31t95pKucDEVYeErU8R1g91QQs
-ZFDLF3aVV3M6OiCFtT9NDcWdLlFnfFpM4cKX1r9etxhbEKr+Iq37d+SMHw133+6K
-th4Ql20SX/8EHWYndrNHyIMnsL1bmo9WCFlBxAzcJq28YhVF5l+5x1FICshA7C2W
-hxirPq5lhpS8YPxj6CEl
-=F8NS
+iQIcBAEBAgAGBQJSg31XAAoJELSic+t+oim9mQMP/iaIE+XFVm4IMPX20hKTygkW
+IEbdwZjeXO04mc1jBV5CtQ9YSCO8sV0DtwumVlBAfGZOcZXThZ21VmO2Xcd+95+e
+W9db39JS4cY5hPfrU7IFg+WOMhLt5VHGWj2F8YgU72oQ3xsYzaFLr/IHGngVhyen
+eFibDIHG/2WSKDpeUvcWARgSDkuKBqg5ZpHSU07cxPQV9IY/iFRCSuXfnZ0L/GRb
+HkIHqY0z5sfNXigCCFhxPao88IgVshvy5qrOYyglmoioaELQOA8Vr38yC2ynLz+X
+wbzKU3hXQjW7FRa4cZF+mkBSPwSpS5D8eXDoe3UPU9+uTATGtHd6jE+ST5MbCmcS
+kB7SmQC6oiFR4Njm9w4dUl47cVSZVgJeziakRwqqC8b5ll7b+BJiXq24SJ16+6oG
+9jqmhlNnWfntBTZbO/usJUOrXOGV63+AepdfHnE36R5xCfrzBM/IwIUFOu9RSSfd
+wT/FfyBGL+VBbPdSydWOD+e8x9IOIgiO8jmeKeUWQGQBhJ1KFHO+aP6rPaEZ5Oyw
+4LkLKqF3cRrxniOh2nHCI0FFSbAFFCJmmPQxCl1AlzXdLmiBcNudHNUjv9ewu+z1
+PGBLsCZhYlSM921aIQ2vpb7JZaIu+ZcfhhZ6YzaqCjqwJ9WgCzfaPxZfMpQjm/pj
+3RVhXm3ZTzlFYVcIxCvQ
+=p7gt
 -----END PGP SIGNATURE-----
 
---3yNHWXBV/QO9xKNm--
+--XaUbO9McV5wPQijU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
