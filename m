@@ -1,127 +1,110 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv5 20/20] MAINTAINERS: add maintainer entry for thermal
- bindings
-Date: Wed, 13 Nov 2013 08:17:12 -0400
-Message-ID: <52836DC8.8080702@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-21-git-send-email-eduardo.valentin@ti.com> <CAOesGMiCh-nGPqJQd4NPz9st7mBT0JkZ9nEK1gfyF2RmnrXZog@mail.gmail.com> <52828C31.2050604@ti.com> <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
+Date: Wed, 13 Nov 2013 13:21:53 +0100
+Message-ID: <2781292.vINFB8v7mM@flatron>
+References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org> <528353F7.4050004@samsung.com> <1764307.sx88zLt93L@amdc1032>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1764307.sx88zLt93L@amdc1032>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
---xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Wednesday 13 of November 2013 12:52:05 Bartlomiej Zolnierkiewicz wrote:
 
-On 13-11-2013 05:42, Mark Rutland wrote:
+[+ DT maintainers]
+
+> 
 > Hi,
->=20
-> On Tue, Nov 12, 2013 at 08:14:41PM +0000, Eduardo Valentin wrote:
->> On 12-11-2013 15:59, Olof Johansson wrote:
->>> On Tue, Nov 12, 2013 at 11:46 AM, Eduardo Valentin
->>> <eduardo.valentin@ti.com> wrote:
->>>> After discussion and agreement of thermal device tree bindings,
->>>> it is desirable to properly maintain thermal bindings for
->>>> existing and upcoming devices.
->>>>
->>>> As original author of thermal device tree bindings, I am
->>>> volunteering to maintain them.
->>>>
->>>> Cc: Rob Herring <rob.herring@calxeda.com>
->>>> Cc: Pawel Moll <pawel.moll@arm.com>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Stephen Warren <swarren@wwwdotorg.org>
->>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->>>> ---
->>>>  MAINTAINERS | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index 3438384..94bfc46 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -6178,6 +6178,7 @@ M:        Pawel Moll <pawel.moll@arm.com>
->>>>  M:     Mark Rutland <mark.rutland@arm.com>
->>>>  M:     Stephen Warren <swarren@wwwdotorg.org>
->>>>  M:     Ian Campbell <ijc+devicetree@hellion.org.uk>
->>>> +M:     Eduardo Valentin <eduardo.valentin@ti.com>
->>>>  L:     devicetree@vger.kernel.org
->>>>  S:     Maintained
->>>>  F:     Documentation/devicetree/
->>>
->>> The number of device-tree maintainers is getting to be somewhat silly=
-=2E
->>> You don't have to be a maintainer to be a reviewer, and the number is=
+> 
+> On Wednesday, November 13, 2013 11:27:03 AM Sylwester Nawrocki wrote:
+> > On 13/11/13 09:08, Tomasz Figa wrote:
+> > >> As was discussed earlier too, status field of DT node is not supposed
+> > >> > to be used for
+> > >> > keeping an IP enabled or disabled. That should be done via the kernel
+> > >> > config. The DT status
+> > >> > is mostly to indicate the hardware status of the IP on the SoC/board.
+> > >> > If the node fully defines the hardware,
+> > >> > then it should be kept enabled by default unless such enabling causes
+> > >> > some issues with other IPs due to
+> > >> > pin sharing conflicts, etc. In the above case the node completely
+> > >> > defines the hardware and hence there is no
+> > >> > reason to keep it disabled.
+> > >
+> > > That's correct. (Unless I'm missing some board specific dependency of RTC.
+> > > If so, please correct me.)
 
->>> getting large enough that it might get hard for one maintainer to kno=
-w
->>> what another is doing.
->>>
->>> So, soft nack, but it's really up to the DT guys.
->>
->> Hello Olof,
->>
->> No issues on my side. As I stated in the patch description, I am
->> volunteering. The motivation comes from the fact that it's been hard t=
-o
->> get DT maintainers attention, so I am assuming they are not having
->> enough bandwidth to pay attention to an extra class of bindings.
->>
->> I agree with you, this is up to the DT folks.
->=20
-> When we discussed this in #devicetree, I was under the impression you
-> meant adding a line like:
->=20
-> F:      Documentation/devicetree/bindings/thermal/
->=20
-> To your MAINTAINERS entry, rather than adding yourself to the general
-> devicetree bindings MAINTAINERS entry. Sorry for the confusion regardin=
-g
-> this.
->=20
-> Given we have enough difficulty organising ourselves at present, I agre=
-e
-> with Olof that it doesn't make much sense to throw more people into the=
+Well, I was missing one indeed. RTC requires an external 32.768KHz clock,
+which must be provided by an oscillator or any other clock source on the
+board. However...
 
-> general devicetree bindings maintainer pile.
->=20
-> However, we would certainly appreciate any review you'd be willing to
-> provide.
+> > 
+> > I don't really like this argument. Why not allow the firmware to decide
+> > which devices are relevant and should be handled by the kernel ?
+> > And since we are aiming at single kernel config, if I understand things
+> > correctly, I can't see anything else than dts that could hold the machine
+> > *configuration*.
+> > 
+> > So let's not make all stuff enabled by default, that's not something we
+> > want on those mobile device SoCs. We should not be making fine system
+> > tuning more difficult than necessary.
+> > 
+> > I'm with Kukjin on this matter and would prefer patches like the $subject
+> > patch not be merged.
+> 
+> I generally agree with Sylwester and Kukjin that devices should not be
+> enabled by default in dtsi files.  However in a particular case of RTC
+> support there should be an exception from the generic rule and RTC
+> should be enabled for all EXYNOS boards (we have RTC driver config
+> option already enabled in our exynos_defconfig and we are also already
+> enabling RTC device explicitly in EXYNOS5250 dtsi file).
 
-No issues then folks. :-)
+I believe the rule is clear and we already went through enough discussion
+about this. To clarify again:
 
->=20
-> Thanks,
-> Mark.
->=20
->=20
+Device Tree should not restrict possible use cases of particular hardware
+that are allowed by particular integration of such hardware on particular
+board. This means that if there are no technical reasons to mark such
+hardware as disabled on particular board, this should not be done. Let
+me show you this on several examples:
 
+1. SoC X has an MMC controller, which needs N pins of the SoC to be
+routed to an MMC slot. Our board X1 does _not_ have necessary traces on
+its PCB. In this case the MMC controller must be marked as disabled.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+2. SoC X has an MMC controller, which needs N pins of the SoC to be
+routed to an MMC slot. Our board X2 _does_ have necessary traces on its
+PCB, so when user inserts an MMC card into the slot he expects that the
+system detects it. In this case the MMC controller must _not_ be marked
+as disabled.
 
-Eduardo Valentin
+3. SoC X has a built-in 2D graphics accelerator. It does not have any
+output pads nor any requirements with respect to the board - it's purely
+a mem-to-mem device. A user might want to run a rootfs that uses it to
+accelerate his applications, so this device must _not_ be marked as
+disabled.
 
+4. SoC X has a image processing block, consisting of two functions:
+ - a camera interface, that requires SoC pads to be connected to a camera
+   sensor,
+ - general-purpose image scaler and format converter, that can operate
+   either on input of camera interface or on images stored in memory.
+This case is more interesting. Even if board does not have a physical
+camera interface, the binding should be designed in a way that allows
+enabling only the memory-to-memory scaler. Then such IP must be marked
+okay regardless of board support, because the camera interface will be
+used only if relevant board-specific properties are provided.
 
---xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+To sum up, I would not interpret the "disabled" value of "status" property
+as the opposite of "enabled", but rather as "disabled" in "disabled
+person".
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Anyway, I'd like to get a confirmation (or denial) from other Device Tree
+maintainers and if what I've written above is correct, maybe we should
+put this somewhere in kernel documentation.
 
-iF4EAREIAAYFAlKDbcgACgkQCXcVR3XQvP3gAAEApfSAfk67eq22FJy/dY46cxCZ
-1DhuZiTeUNPQYuLMkF8A/AkgSQAHK3nAzd3hGOmLOhbfElBIW4F8h0PU34gqqpZr
-=xlBF
------END PGP SIGNATURE-----
-
---xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA--
+Best regards,
+Tomasz
