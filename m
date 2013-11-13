@@ -1,72 +1,265 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Update display clock frequency for Origen-4412
-Date: Wed, 13 Nov 2013 09:17:34 +0530
-Message-ID: <CAHbNUh2gW3KV_T2iJ=m5a9qe0nsNUzXuHS=fHYDeoXMn9H-Leg@mail.gmail.com>
-References: <1380171018-24229-1-git-send-email-sachin.kamat@linaro.org>
-	<1380171018-24229-2-git-send-email-sachin.kamat@linaro.org>
-	<085801cedf90$6e2a6580$4a7f3080$@org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <085801cedf90$6e2a6580$4a7f3080$@org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Patch Tracking <patches@linaro.org>, devicetree <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] OF: Introduce utility helper functions
+Date: Wed, 13 Nov 2013 10:34:59 +0900
+Message-ID: <20131113013459.D3886C40F49@trevor.secretlab.ca>
+References: <1383673816-29293-1-git-send-email-panto@antoniou-consulting.com> <1383673816-29293-6-git-send-email-panto@antoniou-consulting.com> <20131111163743.D136CC42330@trevor.secretlab.ca> <89491720-464B-47EC-A888-9CDE29B035F5@antoniou-consulting.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <89491720-464B-47EC-A888-9CDE29B035F5-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 November 2013 15:47, Kukjin Kim <kgene@kernel.org> wrote:
-> Sachin Kamat wrote:
->>
-> + dt ml.
->
->> As per the timing information for supported panel, the value should
->> be between 47.2 MHz to 47.9 MHz for 60Hz refresh rate.
->>
->> Total horizontal pixels = 1024 (x-res) + 80 (margin) + 48 (hsync) = 1152
->> Total vertical pixels = 600 (y-res) + 80 (margin) + 3 (vsync) = 653
->
-> Should be 683?
->
->>
->> Target pixel clock rate for refresh rate @60 Hz
->>       = 1152 * 653 * 60 = 47208960 Hz ~ 47.5 MHz
->>
-> Same here.
->
+On Tue, 12 Nov 2013 11:39:08 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Hi Grant,
+> 
+> On Nov 11, 2013, at 5:37 PM, Grant Likely wrote:
+> 
+> > On Tue,  5 Nov 2013 19:50:16 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> >> Introduce helper functions for working with the live DT tree.
+> >> 
+> >> __of_free_property() frees a dynamically created property
+> >> __of_free_tree() recursively frees a device node tree
+> >> __of_copy_property() copies a property dynamically
+> >> __of_create_empty_node() creates an empty node
+> >> __of_find_node_by_full_name() finds the node with the full name
+> >> and
+> >> of_multi_prop_cmp() performs a multi property compare but without
+> >> having to take locks.
+> >> 
+> >> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> > 
+> > So, this all looks like private stuff, or stuff that belongs in
+> > drivers/of/base.c. Can you move stuff around. I've made more comments
+> > below.
+> > 
+> 
+> Placement is no big issue;
+> 
+> > g.
+> > 
+> 
+> [snip]
+> 
+> >> +	} else {
+> >> +		pr_warn("%s: node %p cannot be freed; memory is gone\n",
+> >> +				__func__, node);
+> >> +	}
+> >> +}
+> > 
+> > All of the above is potentially dangerous. There is no way to determine
+> > if anything still holds a reference to a node. The proper way to handle
+> > removal of properties is to have a release method when the last
+> > of_node_put is called.
+> > 
+> 
+> This is safe, and expected to be called only on a dynamically created tree,
+> that's what all the checks against OF_DYNAMIC guard against.
+> 
+> It is not ever meant to be called on an arbitrary tree, created by unflattening
+> a blob.
 
-Yes, typo in both the cases, however the calculation is right. The
-same typo in patch 1/2 also. You may please fix them while applying.
+I am talking about when being used on a dynamic tree. The problem is
+when a driver or other code holds a reference to a dynamic nodes, but
+doesn't release it correctly. The memory must not be freed until all of
+the references are relased. OF_DYNAMIC doesn't actually help in that
+case, and it is the reason for of_node_get()/of_node_put()
 
->> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->> ---
->>  arch/arm/boot/dts/exynos4412-origen.dts |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts
->> b/arch/arm/boot/dts/exynos4412-origen.dts
->> index 8768b03..923bcd7 100644
->> --- a/arch/arm/boot/dts/exynos4412-origen.dts
->> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
->> @@ -152,7 +152,7 @@
->>       display-timings {
->>               native-mode = <&timing0>;
->>               timing0: timing {
->> -                     clock-frequency = <50000>;
->> +                     clock-frequency = <47500000>;
->>                       hactive = <1024>;
->>                       vactive = <600>;
->>                       hfront-porch = <64>;
->> --
->> 1.7.9.5
->
-> Please make sure it works fine on both origen boards with your two fixes.
->
-> If so, let me pick them up into Samsung tree after squash into one patch.
->
-> Thanks,
-> Kukjin
->
+> Perhaps we could have a switch to control whether an unflattened tree is 
+> created dynamically and then freeing/releasing will work.
+> 
+> kobject-ifcation will require it anyway, don't you agree? 
 
-Thanks.
--- 
-Tushar Behera
+Yes. Kobjectifcation will also take care of the release method.
+
+> 
+> >> +
+> >> +/**
+> >> + * __of_copy_property - Copy a property dynamically.
+> >> + * @prop:	Property to copy
+> >> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
+> >> + *
+> >> + * Copy a property by dynamically allocating the memory of both the
+> >> + * property stucture and the property name & contents. The property's
+> >> + * flags have the OF_DYNAMIC bit set so that we can differentiate between
+> >> + * dynamically allocated properties and not.
+> >> + * Returns the newly allocated property or NULL on out of memory error.
+> >> + */
+> > 
+> > What do you intend the use-case to be for this function? Will the
+> > duplicated property be immediately modified? If so, what happens if the
+> > property needs to be grown in size?
+> > 
+> 
+> No, the property will no be modified. If it needs to grow it will be moved to 
+> deadprops (since we don't track refs to props) and a new one will be allocated.
+> 
+> >> +struct property *__of_copy_property(const struct property *prop, gfp_t flags)
+> >> +{
+> >> +	struct property *propn;
+> >> +
+> >> +	propn = kzalloc(sizeof(*prop), flags);
+> >> +	if (propn == NULL)
+> >> +		return NULL;
+> >> +
+> >> +	propn->name = kstrdup(prop->name, flags);
+> >> +	if (propn->name == NULL)
+> >> +		goto err_fail_name;
+> >> +
+> >> +	if (prop->length > 0) {
+> >> +		propn->value = kmalloc(prop->length, flags);
+> >> +		if (propn->value == NULL)
+> >> +			goto err_fail_value;
+> >> +		memcpy(propn->value, prop->value, prop->length);
+> >> +		propn->length = prop->length;
+> >> +	}
+> >> +
+> >> +	/* mark the property as dynamic */
+> >> +	of_property_set_flag(propn, OF_DYNAMIC);
+> >> +
+> >> +	return propn;
+> >> +
+> >> +err_fail_value:
+> >> +	kfree(propn->name);
+> >> +err_fail_name:
+> >> +	kfree(propn);
+> >> +	return NULL;
+> >> +}
+> >> +
+> >> +/**
+> >> + * __of_create_empty_node - Create an empty device node dynamically.
+> >> + * @name:	Name of the new device node
+> >> + * @type:	Type of the new device node
+> >> + * @full_name:	Full name of the new device node
+> >> + * @phandle:	Phandle of the new device node
+> >> + * @flags:	Allocation flags (typically pass GFP_KERNEL)
+> >> + *
+> >> + * Create an empty device tree node, suitable for further modification.
+> >> + * The node data are dynamically allocated and all the node flags
+> >> + * have the OF_DYNAMIC & OF_DETACHED bits set.
+> >> + * Returns the newly allocated node or NULL on out of memory error.
+> >> + */
+> >> +struct device_node *__of_create_empty_node(
+> >> +		const char *name, const char *type, const char *full_name,
+> >> +		phandle phandle, gfp_t flags)
+> > 
+> > I would like to see a user of this function in the core DT paths that
+> > allocate nodes. It will make for less chance of breakage if the fdt and
+> > pdt paths change something, but this function isn't updated.
+> > 
+> 
+> Hmm, where do you think it can be used? Perhaps the unflatten parts?
+
+Yes. In unflattening the tree, fdt.c and in extracting the trea from
+real OFW (pdt.c).
+
+> 
+> > g.
+> > 
+> >> +{
+> >> +	struct device_node *node;
+> >> +
+> >> +	node = kzalloc(sizeof(*node), flags);
+> >> +	if (node == NULL)
+> >> +		return NULL;
+> >> +
+> >> +	node->name = kstrdup(name, flags);
+> >> +	if (node->name == NULL)
+> >> +		goto err_return;
+> >> +
+> >> +	node->type = kstrdup(type, flags);
+> >> +	if (node->type == NULL)
+> >> +		goto err_return;
+> >> +
+> >> +	node->full_name = kstrdup(full_name, flags);
+> >> +	if (node->type == NULL)
+> >> +		goto err_return;
+> > 
+> > Again, who do you expect the user of this function to be? If it is part
+> > of unflattening an overlay tree, is there a reason that the passed in
+> > names cannot be used directly instead of kmallocing them?
+> > 
+> 
+> I want to be able to get rid of the blob eventually; I don't need to keep
+> dragging it around.
+
+Why? It really doesn't hurt and it means data does not need to be
+copied.
+
+> 
+> >> +
+> >> +	node->phandle = phandle;
+> >> +	kref_init(&node->kref);
+> >> +	of_node_set_flag(node, OF_DYNAMIC);
+> >> +	of_node_set_flag(node, OF_DETACHED);
+> >> +
+> >> +	return node;
+> >> +
+> >> +err_return:
+> >> +	__of_free_tree(node);
+> >> +	return NULL;
+> >> +}
+> >> +
+> >> +/**
+> >> + * __of_find_node_by_full_name - Find a node with the full name recursively
+> >> + * @node:	Root of the tree to perform the search
+> >> + * @full_name:	Full name of the node to find.
+> >> + *
+> >> + * Find a node with the give full name by recursively following any of 
+> >> + * the child node links.
+> >> + * Returns the matching node, or NULL if not found.
+> >> + * Note that the devtree lock is not taken, so this function is only
+> >> + * safe to call on either detached trees, or when devtree lock is already
+> >> + * taken.
+> >> + */
+> >> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> >> +		const char *full_name)
+> > 
+> > Sounds like something that should be in drivers/of/base.c
+> > 
+> 
+> Yes.
+> 
+> >> +{
+> >> +	struct device_node *child, *found;
+> >> +
+> >> +	if (node == NULL)
+> >> +		return NULL;
+> >> +
+> >> +	/* check */
+> >> +	if (of_node_cmp(node->full_name, full_name) == 0)
+> >> +		return node;
+> >> +
+> >> +	__for_each_child_of_node(node, child) {
+> >> +		found = __of_find_node_by_full_name(child, full_name);
+> >> +		if (found != NULL)
+> >> +			return found;
+> >> +	}
+> > 
+> > I'm not a huge fan of recursive calls. Why doesn't a slightly modified
+> > of_fund_node_by_name() work here?
+> > 
+> > I agree that of_find_node_by_name is not particularly elegant and it
+> > would be good to have something more efficient, but it works and
+> > following the same method would be consistent.
+> > 
+> 
+> of_find_node_by_name is not iterating on the passed tree and it's subnodes,
+> it is a global search starting from:
+> 
+> 	np = from ? from->allnext : of_allnodes;
+> 
+> This is just broken, since it depends on unflattening creating nodes in the
+> allnodes list in sequence. I.e. that child nodes are after the parent node.
+> This assumption breaks down when doing dynamic insertions of nodes.
+> A detached tree in not linked on of_allnodes anyway.
+
+It would be good to have a root-of-tree structure for both the core tree
+and the overlay trees so that a common iterator can be implemented.
+
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
