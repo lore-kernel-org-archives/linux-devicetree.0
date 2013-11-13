@@ -1,30 +1,66 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/7] clocksource/cadence_ttc: Overhaul clocksource
- frequency adjustment
-Date: Wed, 13 Nov 2013 13:33:52 +0530
-Message-ID: <CAKohpo=KaM97jJ2MnZxSeBz=Mf9cSmzk_EFQTL=EVPPvSH=Wag@mail.gmail.com>
-References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
-	<1383945677-29674-6-git-send-email-soren.brinkmann@xilinx.com>
-	<52827B11.5040308@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
+Date: Wed, 13 Nov 2013 09:08:51 +0100
+Message-ID: <1895231.F4mtKgSWc9@flatron>
+References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org> <086401cedf96$933b0450$b9b10cf0$@org> <CAK9yfHzj+bA1mbZP3KJsU=XiAm+6GaXryDKphPX=UKaaOkXpNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52827B11.5040308-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHzj+bA1mbZP3KJsU=XiAm+6GaXryDKphPX=UKaaOkXpNw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 November 2013 00:31, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hmm, it could be interesting if Viresh can give its opinion on this patch
-> [cc'ed].
+On Wednesday 13 of November 2013 09:01:36 Sachin Kamat wrote:
+> Hi Kukjin,
+> 
+> On 12 November 2013 16:31, Kukjin Kim <kgene@kernel.org> wrote:
+> > Sachin Kamat wrote:
+> >>
+> >> Since there are no board specific properties for the RTC node,
+> >> keep it enabled in the dtsi file.
+> >>
+> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> >> ---
+> >>  arch/arm/boot/dts/exynos4.dtsi |    1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> >> b/arch/arm/boot/dts/exynos4.dtsi
+> >> index a73eeb5..e262946 100644
+> >> --- a/arch/arm/boot/dts/exynos4.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> >> @@ -205,7 +205,6 @@
+> >>               interrupts = <0 44 0>, <0 45 0>;
+> >>               clocks = <&clock 346>;
+> >>               clock-names = "rtc";
+> >> -             status = "disabled";
+> >>       };
+> >>
+> >>       keypad@100A0000 {
+> >> --
+> >> 1.7.9.5
+> >
+> > Well, I don't think every exynos4 boards want to make the default
+> > enabled...so I don't want to take this. If any opinions, please let me know.
+> >
+> 
+> As was discussed earlier too, status field of DT node is not supposed
+> to be used for
+> keeping an IP enabled or disabled. That should be done via the kernel
+> config. The DT status
+> is mostly to indicate the hardware status of the IP on the SoC/board.
+> If the node fully defines the hardware,
+> then it should be kept enabled by default unless such enabling causes
+> some issues with other IPs due to
+> pin sharing conflicts, etc. In the above case the node completely
+> defines the hardware and hence there is no
+> reason to keep it disabled.
 
-I am not sure if I understood the problem completely, but if this is about
-not allowing frequency transitions from cpufreq when we have started to
-suspend our system, then you must have a look at this thread:
+That's correct. (Unless I'm missing some board specific dependency of RTC.
+If so, please correct me.)
 
-https://lkml.org/lkml/2013/10/24/369
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
