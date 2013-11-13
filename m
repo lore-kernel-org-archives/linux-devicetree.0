@@ -1,43 +1,84 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/2] dmaengine: add msm bam dma driver
-Date: Wed, 13 Nov 2013 23:07:19 +0100
-Message-ID: <3732966.zLLfiChgvH@flatron>
-References: <1382732643-8184-1-git-send-email-agross@codeaurora.org> <20131029175603.GF21983@codeaurora.org> <20131030203105.GA14525@agross>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Wed, 13 Nov 2013 22:29:53 +0000
+Message-ID: <20131113222953.GA26614@sirena.org.uk>
+References: <527A1C47.6050405@nvidia.com>
+ <20131106110154.GG11602@sirena.org.uk>
+ <5281C228.3000404@nvidia.com>
+ <5282717C.3050502@wwwdotorg.org>
+ <20131113122329.GC878@sirena.org.uk>
+ <5283B6E3.9070206@wwwdotorg.org>
+ <20131113190745.GD878@sirena.org.uk>
+ <5283DD52.5050903@wwwdotorg.org>
+ <20131113204923.GG878@sirena.org.uk>
+ <5283F625.403@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131030203105.GA14525@agross>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5283F625.403-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-On Wednesday 30 of October 2013 15:31:05 Andy Gross wrote:
-> On Tue, Oct 29, 2013 at 10:56:03AM -0700, Stephen Boyd wrote:
-> > On 10/25, Andy Gross wrote:
-> > > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > > index f238cfd..a71b415 100644
-> > > --- a/drivers/dma/Kconfig
-> > > +++ b/drivers/dma/Kconfig
-> > > @@ -364,4 +364,13 @@ config DMATEST
-> > >  	  Simple DMA test client. Say N unless you're debugging a
-> > >  	  DMA Device driver.
-> > >  
-> > > +
-> > > +config MSM_BAM_DMA
-> > > +	tristate "MSM BAM DMA support"
-> > > +	depends on ARCH_MSM
-> > 
-> > It would be nice if we didn't have to rely on ARCH_MSM here so we
-> > get more build coverage.
->  
-> I can remove that.  There is nothing that forces this depend option.
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Instead of removing, please add "|| COMPILE_TEST". This is the right way
-to allow drivers not supposed to be run on given platform to build on it.
+On Wed, Nov 13, 2013 at 02:59:01PM -0700, Stephen Warren wrote:
+> On 11/13/2013 01:49 PM, Mark Brown wrote:
 
-Best regards,
-Tomasz
+> > No, with DT you can say that if there is no DT binding configuring
+> > a given thing (clock, regulator, GPIO or whatever) then no amount
+> > of module loading will ever cause it to appear - this is what the
+> > flag in question controls.
+
+> But we do have a binding for regulators, so wouldn't that flag always
+> be true?
+
+In theory.  In practice people often add bindings for devices without
+including the regulators and then someone comes along and adds the
+regulators later, perhaps not even using a system with DT, and renders
+all existing DTs buggy.  This is generally miserable for everyone so
+it's better if we're liberal in what we accept.
+
+> Perhaps you can suggest a name for the flag, and a specific set of
+> conditions when it will have specific values. That might help me
+> understand what you mean.
+
+Well, of_have_populated_dt() is essentially doing the same thing
+(probably, I don't know if it's set at quite the right time) - it's
+saying we have a DT.  We could even change the users to check that as
+well if it's doing the right thing.
+
+> Are you confusing having a binding (schema definition) with having DT
+> content ("foo-supply" property)?
+
+No.
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSg/1eAAoJELSic+t+oim9ex4QAIXgGSC2u6yG9b8urC8rfch6
+DzbYkm7jjnAoawyzFtSrSmw+TZ3MY27sHTIdE9GA7WjiY43bHRLw8Zw85S+0bARx
+TA584U9Hd1CKmAnQ/BzrvkL2+W8UNeuXGyCnQ9i/5QsB+WW5s+5E6Vmgfg4QTn2o
+lSQ1le7mtddGg7WV9oaLDZrArS8z0cRC0ovBjwdQqkeQgcxzkArqt8kmHvMjPFhe
+dBCia5P/HysEfBpweFUSRnOU2Z8n01D6WWzcChi0sRc+lLWQqyHZwk/e/7BRPT0r
+dFf5YZbaEs6soug3TvTmUc+l2MPJfNgAmfPNDkOHsO5c94OfwANpbKjoS5+qZ//C
+HaOymUMP5q63HHT5aMp81EKycZc+L794xRrN3Yau/4eETd5pEoGE0sc+NWgDdZkX
+7qQcDnrP2cBH3l/kI12FYNjLslwQhfOTsbEkTm268MNq7+qiIzCtdI6J6Kha64XZ
+5t8a/tl3lmzJXFEiO+u8faa0a43/aGzs5U5uOiBHWnD564TPWpU350pPXXyKPpTN
+LJNuuqYNIu4mV3jiMhNujtlV0oHC5dB3wLuUO18J/eaDjnvZwlYPKDZqAoNI3K4N
+fl8PC8Q+xweptCUxTE4j9JaFPxtqStlDxVVILAagV13KA+SAmB9aaQsCBYgnkcUz
+VYUMqW6bhKsYOYboOB1X
+=ZR+B
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
