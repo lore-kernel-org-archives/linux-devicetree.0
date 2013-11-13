@@ -1,167 +1,72 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
-Date: Wed, 13 Nov 2013 21:39:10 +0100
-Message-ID: <2049375.GR9Xb2zuek@flatron>
-References: <5283BC93.1090801@koalo.de> <3722902.ByNK8Ptc5Y@flatron>
- <5283D47A.7060503@koalo.de>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the
+ datasheet's minimum required ECC
+Date: Wed, 13 Nov 2013 12:46:40 -0800
+Message-ID: <CAN8TOE8aew_Jhc7L4isgo5fZPSnP+nsuhdiFoYGPZZ3AsyY9kg@mail.gmail.com>
+References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
+	<5281BBEE.7000502@freescale.com>
+	<CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5283D47A.7060503@koalo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Florian Meier <florian.meier@koalo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
-> On 13.11.2013 19:43, Tomasz Figa wrote:
-> > Hi Florian,
-> > 
-> > Seems like I accidentally replied to some old version of this patch.
-> > Not sure how many of those comments were still relevant for V3, but
-> > let me look at this version and see whether we can still improve things
-> > a bit. Please see my comments inline.
-> 
-> Some were still helpful (especially the idea to use the chan_init
-> function for setting the irq), thanks.
+On Tue, Nov 12, 2013 at 9:47 AM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> + DT maintainers, since they haven't responded
+>
+> On Mon, Nov 11, 2013 at 9:26 PM, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> 于 2013年11月07日 18:07, Huang Shijie 写道:
+>>
+>>> In default way, we use the ecc_strength/ecc_step size calculated by
+>>> ourselves
+>>> and use all the OOB area.
+>>>
+>>> This patch adds a new property : "fsl,use-minimum-ecc"
+>>>
+>>> If we enable it, we will firstly try to use the datasheet's minimum
+>>> required
+>>> ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
+>>> in the nand_chip{}). So we may have free space in the OOB area by using
+>>> the
+>>> minimum ECC, and we may support JFFS2 with some SLC NANDs, such as
+>>> Micron's
+>>> SLC NAND.
+>>>
+>>> If we fail to use the minimum ECC, we will use the legacy method to
+>>> calculate
+>>> the ecc_strength and ecc_step size.
+>>>
+>>> Signed-off-by: Huang Shijie<b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> ---
+>>> v1 -->  v2: rebase this patch on the latest l2-mtd.
+>>> v2 -->  v3: change the descriptions.
+>>> ---
+>>>   .../devicetree/bindings/mtd/gpmi-nand.txt          |    8 ++++++++
+>>>   drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
+>>>   2 files changed, 11 insertions(+), 0 deletions(-)
+>>
+>> Is this patch ok now? I hope it can be accepted at this merge-window.
+>
+> The patch is OK to me, but we haven't gotten any DT review. If we
+> don't get any response in a few days, I'll take it anyway.
 
-Good. You're welcome.
+I pushed this to l2-mtd.git/next and will get it into linux-next after
+the merge window closes. Let me know if there are further comments.
 
-> 
-> >> ....
-> >> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> >> new file mode 100644
-> >> index 0000000..bca5e84
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> >> @@ -0,0 +1,59 @@
-> >> +* BCM2835 DMA controller
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "brcm,bcm2835-dma".
-> >> +- reg: Should contain DMA registers location and length.
-> >> +- interrupts: Should contain the DMA interrupts associated
-> >> +		to the DMA channels in ascending order.
-> >> +		First cell is the IRQ bank.
-> >> +		Second cell is the IRQ number.
-> >> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
-> >> +		the dmas property of client devices.
-> >> +- dma-channels: Maximum number of DMA channels available.
-> >> +- dma-requests: Number of DMA Requests.
-> > 
-> > The two properties above do not seem to be used anywhere in the driver.
-> 
-> Aren't they necessary for the DMA engine core?
+> I'm not sure about taking it in 3.13 vs. 3.14, as this is
+> traditionally a late merge for 3.13.
 
-Honestly, looking at the DMA bindings documentation, these two are quite
-a mystery for me. They don't seem to be used in DMA engine core, but
-instead several drivers use them for private purposes.
+Queued for 3.14.
 
-So, since they are optional and you don't seem to need them, I wouldn't
-list them.
-
-> 
-> >> +- brcm,dma-channel-mask: Bit mask representing the channels available.
-> > 
-> > What does the value of this property depend on? Could you describe the
-> > structure of this DMA controller?
-> > 
-> >> +
-> >> +Example:
-> >> +
-> >> +dma: dma@7e007000 {
-> >> +	compatible = "brcm,bcm2835-dma";
-> >> +	reg = <0x7e007000 0xf00>;
-> >> +	interrupts = <1 16
-> >> +		      1 17
-> >> +		      1 18
-> >> +		      1 19
-> >> +		      1 20
-> >> +		      1 21
-> >> +		      1 22
-> >> +		      1 23
-> >> +		      1 24
-> >> +		      1 25
-> >> +		      1 26
-> >> +		      1 27
-> >> +		      1 28>;
-> > 
-> > There are 13 interrupts specified here, but...
-> > 
-> >> +
-> >> +	#dma-cells = <1>;
-> >> +	dma-channels = <16>;
-> > 
-> > ...16 channels here...
-> > 
-> >> +	dma-requests = <32>;
-> >> +	brcm,dma-channel-mask = <0x7f35>;
-> > 
-> > ...and 11 set bits here. May I ask you to explain this to me, please?
-> 
-> How I understand this DMA controller:
-> There are 16 DMA channels in the DMA controller, but only 13 interrupts
-> are available at the IRQ controller. Therefore, the upper DMA channels
-> can just not be used. Maybe because there are to many other IRQs and
-> they didn't want to implement another IRQ bank.
-> Furthermore, some of the DMA channels are already used by the
-> VideoCore/GPU/firmware. This is what dma-channel-mask indicates. This
-> should be automatically set by the firmware in the future.
-> Finally, there are some channels with special functionality that should
-> not be used by DMA engine, too. Therefore, these lines:
-> 		/* do not use the FIQ and BULK channels */
-> 		chans_available &= ~0xD;
-
-OK, this makes it much more clear.
-
-So, my only comment remaining here is that you shouldn't include the
-channels without interrupt signal in the mask. This would allow you
-to define it as a mask of channels that are operable and then just
-iterate over all set bits in the driver, instead of using tricks with
-interrupt resources. What do you think?
-
-> 
-> > [snip]
-> >> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> >> new file mode 100644
-> >> index 0000000..baf072e
-> >> --- /dev/null
-> >> +++ b/drivers/dma/bcm2835-dma.c
-> > [snip]
-> >> +static int bcm2835_dma_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct bcm2835_dmadev *od;
-> >> +	struct resource *dma_res = NULL;
-> >> +	void __iomem *dma_base = NULL;
-> >> +	int rc = 0;
-> >> +	int i = 0;
-> >> +	int irq;
-> >> +	uint32_t chans_available;
-> > [snip]
-> >> +	if (pdev->dev.of_node) {
-> > 
-> > Is this driver supposed to support non-DT based instantation (aka board
-> > files)? If not, maybe it would be cleaner to simply check for
-> > !pdev->dev.of_node at the beginning of probe and return an error?
-> 
-> I would like to maintain the possibility for board file based
-> instatiation, because the Raspberry Pi downstream kernel still doesn't
-> support device tree. If this is a no-go, I will accept that.
-
-Sure, you are free to do so.
-
-What I meant is that your probe won't call bcm2835_dma_chan_init() at all
-if there is no pdev->dev.of_node, because the loop iterating over channels
-is under the if clause.
-
-Best regards,
-Tomasz
+Thanks,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
