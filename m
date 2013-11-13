@@ -1,64 +1,109 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
-Date: Wed, 13 Nov 2013 19:07:45 +0000
-Message-ID: <20131113190745.GD878@sirena.org.uk>
-References: <527737C5.5080901@nvidia.com>
- <20131104161828.GK2493@sirena.org.uk>
- <5278B4CB.9050305@nvidia.com>
- <20131106085100.GB11602@sirena.org.uk>
- <527A1C47.6050405@nvidia.com>
- <20131106110154.GG11602@sirena.org.uk>
- <5281C228.3000404@nvidia.com>
- <5282717C.3050502@wwwdotorg.org>
- <20131113122329.GC878@sirena.org.uk>
- <5283B6E3.9070206@wwwdotorg.org>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
+Date: Wed, 13 Nov 2013 13:10:51 -0600
+Message-ID: <alpine.DEB.2.10.1311131306150.28828@heelrod.ad.cirrus.com>
+References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com> <1485256.GGQxcSNhvH@flatron> <alpine.DEB.2.10.1311131248290.28828@heelrod.ad.cirrus.com> <2417485.xV8Ic1G59x@flatron>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MEatx1zidE5asLAI"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5283B6E3.9070206-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2417485.xV8Ic1G59x@flatron>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 13 Nov 2013, Tomasz Figa wrote:
 
---MEatx1zidE5asLAI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>>> +		 0x00 through 0x0F.
+>>>> +		 Frequency = (64xFs)/(N+2)
+>>>
+>>> I suppose N means the value of chgfreq property here, but this should be
+>>> clearly stated. Same for Fs - I suppose it is sampling frequency, but
+>>> is it default, minimum, maximum or maybe something else?
+>>>
+>> Frequency = (64xFs)/(N+2)
+>> N = chgfreq value
+>> Fs = sample rate
+>
+> As I mentioned in second part of my comment, is it default, minimum,
+> maximum or what kind of sample rate? Or is the sample rate fixed?
+>
+ah! Sorry, the rate is fixed for the stream. So it varies for what rate is 
+being used.
 
-On Wed, Nov 13, 2013 at 10:29:07AM -0700, Stephen Warren wrote:
 
-> It seems slightly odd to tightly link the drivers/of and
-> drivers/regulator code like that, but I guess with the appropriate
-> ifdefs it'll work out OK.
+>>
+>>
+>>> Personally I don't like this kind of raw values being passed using Device
+>>> Tree, but this one can't be really represented reasonably in a generic
+>>> way (such as in Hz units) without too much effort to calculate original
+>>> value in the driver, then it's fine.
+>>>
+>>>> +  - mica-cfg   : MIC A single-ended or differential select.
+>>>> +		 0x00 = Single-Ended
+>>>> +		 0x01 = Differential
+>>>
+>>> I'd rather make it boolean and call it cirrus,mic-a-differential.
+>>>
+>>>> +  - micb-cfg   : MIC B single-ended or differential select.
+>>>> +		 0x00 = Single-Ended
+>>>> +		 0x01 = Differential
+>>>
+>>> Ditto.
+>>>
+>>
+>> I can do that as well. Thanks
+>>
+>>>> +  - mica-sel   : MIC A single ended input select.  For Single-Ended
+>>>> +		 configuration, select which MIC to use.
+>>>> +		 0x00 = MIC1
+>>>> +		 0x01 = MIC2
+>>>> +  - micb-sel   : MIC B single ended input select.  For Single-Ended
+>>>> +		 configuration, select which MIC to use.
+>>>> +		 0x00 = MIC1
+>>>> +		 0x01 = MIC2
+>>>
+>>> Could you explain what are MIC A, MIC B, MIC1 and MIC2?
+>>>
+>> I can add a little more but it is best explained in the datasheet. I can
+>> add a little more explaination and reference the datasheet section. I feel
+>> this file might be the wrong place to go into too much depth of the pieces
+>> of the device when the datasheet could be referenced. Would a reference be
+>> OK?
+>>
+>
+> I meant just explaining to me, for the purpose of this review. However it
+> seems like the datasheet is publicly available, so let me just check this
+> there.
+>
+Sorry about that.
 
-This isn't really regulator specific - it's something that applies in
-general to things implementing deferred probing - so we ought to have a
-generic "we know if devices can appear later or not" flag that
-subsystems can check.
+The CS42L52 has multiple input selections for microphones. Single-ended 
+and differential inputs are allowed for both Left Channel (MICA) and Right 
+Channel (MICB). The +- pins can be used for stereo or mono mics.
 
---MEatx1zidE5asLAI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>>>> +Example:
+>>>> +
+>>>> +codec: cs42l52@4a {
+>>>
+>>> coding style: Node name should be generic, i.e. codec@4a.
+>>
+>> I can change this as well.  While we are talking about coding style, is
+>> there a new format document somewhere with the style that was agreed to at
+>> the conference just recently?
+>
+> I believe that the latest document is in the works, but as for style
+> guidelines, most of recommendations are to be taken from ePAPR[1].
+>
+> [1] https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
+>
+Thank you very much. I will take a look at this now.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Thanks again,
+Brian
 
-iQIcBAEBAgAGBQJSg839AAoJELSic+t+oim9gycP/in1+8UswgJli94TmQE7TMwG
-DAL/BlYs/mfFmafYuw+dU8wALuxaUGXPH3o60byzbEShZjOHnSEIIhSa81jj7abh
-pF7OVtyVCuF73S02P+z/qwmeZDJrEtIuoxCw1K/Sv0ZMRrvIMRzyBA/d37TAQC/1
-2BLGogoAwEFjHAIZopGJ7vc1WxiSqRTTJRwo+zidQz+70GCSit8I9xKlQ1mzgqFF
-zYZzznPbwcZ1mkn+9TmiRiiTNmZ9hPK0aZKpALhu7IYZu7xUMyUv/fS3PeyzRlbc
-cQNxwoRq+knK/2bdqFJlt2FLTwE8oHNxTkJ+HNK3FFo0vyJjjpSa5unc0cMg9oV8
-71LO6XMluNoK2u//zepP6MFORxSB90DKw4VJtDytD2RB/Fczds8ND3qBVL/lAmFW
-XqfZ6dRQewaCkb+qZ4xC7D6PqyrdN/x75E7t9XM/1vi8d2903HG1hUarRqw0BlRY
-P6gqtUKTlFkcmOtze8eqlDIDnEp0SPR/9eVd319GULsFyOH9bnutkfRxs2mF1wxV
-dX8Oitm7vf01IGmCMlsFdteYZWnpQe3Sj9rsDP6FD7e6aTJKiO7nfulYvdGFgO9z
-+LVJ2N7LgsZOb7+dTF8lh3j8tG2z3AVSx6cdjVbOaP9uP3tpH9SjTebAtHm/wjQF
-nNgaNJ5S2ENeBCLYi2OX
-=zEjY
------END PGP SIGNATURE-----
 
---MEatx1zidE5asLAI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
