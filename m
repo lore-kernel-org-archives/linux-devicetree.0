@@ -1,81 +1,69 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv8][ 1/5] ARM i.MX35: Add devicetree support.
-Date: Wed, 13 Nov 2013 23:26:51 +0800
-Message-ID: <20131113152622.GE17816@S2101-09.ap.freescale.net>
-References: <1384255459-15134-1-git-send-email-denis@eukrea.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
+Date: Wed, 13 Nov 2013 20:01:01 +0530
+Message-ID: <20131113143101.GD8834@intel.com>
+References: <527D1DDA.2040004@koalo.de>
+ <20131108181743.GR2493@sirena.org.uk>
+ <20131113050017.GO8834@intel.com>
+ <20131113125111.GE878@sirena.org.uk>
+ <20131113133536.GZ8834@intel.com>
+ <20131113145441.GQ878@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1384255459-15134-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20131113145441.GQ878@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Florian Meier <florian.meier@koalo.de>, Stephen Warren <swarren@wwwdotorg.org>, Dan Williams <dan.j.williams@intel.com>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, Martin Sperl <martin@sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 12:24:15PM +0100, Denis Carikli wrote:
-> --- /dev/null
-> +++ b/arch/arm/mach-imx/imx35-dt.c
-> @@ -0,0 +1,48 @@
-> +/*
-> + * Copyright 2012 Steffen Trumtrar, Pengutronix
-> + *
-> + * based on imx27-dt.c
-> + *
-> + * This program is free software; you can redistribute it and/or modify it under
-> + * the terms of the GNU General Public License version 2 as published by the
-> + * Free Software Foundation.
-> + */
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/time.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +#include "common.h"
-> +#include "mx35.h"
-> +
-> +static void __init imx35_dt_init(void)
-> +{
-> +	mxc_arch_reset_init_dt();
-> +
-> +	of_platform_populate(NULL, of_default_bus_match_table,
-> +			     NULL, NULL);
-> +}
-> +
-> +static void __init imx35_timer_init(void)
-> +{
-> +	mx35_clocks_init_dt();
-> +}
-> +
-> +static const char *imx35_dt_board_compat[] __initdata = {
-> +	"fsl,imx35",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
-> +	.map_io		= mx35_map_io,
-> +	.init_early	= imx35_init_early,
-> +	.init_irq	= mx35_init_irq,
-> +	.handle_irq	= imx35_handle_irq,
-> +	.init_time	= imx35_timer_init,
 
-Please use CLK_OF_DECLARE() to save this hook.  You can look at imx51
-clock driver for example.
+--gr/z0/N6AeWAPJVB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
-
-> +	.init_machine	= imx35_dt_init,
-> +	.dt_compat	= imx35_dt_board_compat,
-> +	.restart	= mxc_restart,
-> +MACHINE_END
-> -- 
-> 1.7.9.5
-> 
+On Wed, Nov 13, 2013 at 02:54:41PM +0000, Mark Brown wrote:
+> On Wed, Nov 13, 2013 at 07:05:36PM +0530, Vinod Koul wrote:
+> > On Wed, Nov 13, 2013 at 12:51:11PM +0000, Mark Brown wrote:
+>=20
+> > > I'm probably going to be looking at that at some point, though perhaps
+> > > Martin will get to it since he seems to be looking at this.
+>=20
+> > Okay sounds good. This will also help in streamline the implementations=
+=2E.
+>=20
+> Yes, though I think some of the stuff Martin was talking about will need
+> changes to the dmaengine APIs.  He was wanting to reuse DMA lists which
+> currently dmaengine needs to have built up each time.
+Can you elobrate a bit more on what you guys want to do here?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
+
+--gr/z0/N6AeWAPJVB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSg40kAAoJEHwUBw8lI4NH/LcQAKJW7QeAHamIiq7jqWWlBkXl
+NIOetfjVqPJwMRjH2vcLm62EFARE9x4Q/V88Suz+vd+j6iIcB+jgQK3MpGU2Xl4U
+lg+tl6XUyA0aA6AVKOApyQQhm6jpkGDrZNX5tSYXpMYKa0/fkKozmtrCSXDilmle
+fezBaRO7WJ8rZyEV/N57pxb/724bKPfkdBIslNM2lCnkm7DJWjnI2HjtetXpXETY
+DEIfsSADBWu/jizmK1BWa+Tknx/vUV5vnCzESSavFEkEGHhLjBUYNlaBltgAzE3F
+1S0RrlUM5nqdEN0cf2Cl0Xjn4CFX5RrATTg/+XlnH/Q+OdmJ6/h89VLRR+BKDv7B
+SwYaaBfFbBfvcDkvfl42Bwy4gHEpjW4PRbv1WuG5kjGLXkN0TVEnzsuLenuCSTz3
+Ba/V0pu1EueDf4BmgbjZ5Fsg1JpwNha5Ri8Ez5kKaFG699GWCADr0ZLWmn1hwh1n
+OM2WxbtQqbY747qUqdiGv0/63kgix/4C9IeOPRyoDoxeNuGIpRcerI1r7EaTIHuT
+TNc8PXrCi4rDzvA0KhciIBVabEafCMJkxNQ6mXuG7DMm369xq3SeNozcN8zKaTol
+p+/LVRzgcOcnX8C0E18mlcamP0Vhi7FcHINyvKrk/hCSX2MwyRLkxpoXE/Ojx86l
+yZpJCrd1qxloExr7idgJ
+=/PA/
+-----END PGP SIGNATURE-----
+
+--gr/z0/N6AeWAPJVB--
