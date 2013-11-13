@@ -1,93 +1,100 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv4 5/7] iommu/tegra: smmu: Support "mmu-masters" binding
-Date: Wed, 13 Nov 2013 05:15:04 -0600
-Message-ID: <A52C6E6B-9776-4408-83C5-066551D76896@codeaurora.org>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
-	<1384158718-4756-6-git-send-email-hdoyu@nvidia.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1384158718-4756-6-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
+Date: Wed, 13 Nov 2013 11:50:18 +0000
+Message-ID: <20131113115018.GE21713@e106331-lin.cambridge.arm.com>
+References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+ <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384328457-5147-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Nov 11, 2013, at 2:31 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-
-> Follow arm,smmu's "mmu-masters" binding.
+On Wed, Nov 13, 2013 at 07:40:54AM +0000, Krzysztof Kozlowski wrote:
+> From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> This patch adds max14577 core/irq driver to support MUIC(Micro USB IC)
+> device and charger device and support irq domain method to control
+> internal interrupt of max14577 device. Also, this patch supports DT
+> binding with max14577_i2c_parse_dt().
+> 
+> The MAXIM 14577 chip contains Micro-USB Interface Circuit and Li+ Battery
+> Charger. It contains accessory and USB charger detection logic. It supports
+> USB 2.0 Hi-Speed, UART and stereo audio signals over Micro-USB connector.
+> 
+> The battery charger is compliant with the USB Battery Charging Specification
+> Revision 1.1. It has also SFOUT LDO output for powering USB devices.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
-> Update:
-> Newly added for v4. In v3, I used "nvidia,swgroups" and
-> "nvidia,memory-clients" bindings.
-> ---
-> .../bindings/iommu/nvidia,tegra30-smmu.txt         |  28 ++++-
-> drivers/iommu/tegra-smmu.c                         | 138 +++++++++++++++++----
-> 2 files changed, 141 insertions(+), 25 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> index 89fb543..51884e9 100644
-> --- a/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/nvidia,tegra30-smmu.txt
-> @@ -8,9 +8,16 @@ Required properties:
-> - nvidia,#asids : # of ASIDs
-> - dma-window : IOVA start address and length.
-> - nvidia,ahb : phandle to the ahb bus connected to SMMU.
-> +- mmu-masters   : A list of phandles to device nodes representing bus
-> +                  masters for which the SMMU can provide a translation
-> +                  and their corresponding StreamIDs (see example below).
-> +                  Each device node linked from this list must have a
-> +                  "#stream-id-cells" property, indicating the number of
-> +                  StreamIDs(swgroup ID) associated with it, which is defined
-> +		  in "include/dt-bindings/memory/tegra-swgroup.h".
-> 
-> Example:
-> -	smmu {
-> +	iommu {
-> 		compatible = "nvidia,tegra30-smmu";
-> 		reg = <0x7000f010 0x02c
-> 		       0x7000f1f0 0x010
-> @@ -18,4 +25,23 @@ Example:
-> 		nvidia,#asids = <4>;		/* # of ASIDs */
-> 		dma-window = <0 0x40000000>;	/* IOVA start & length */
-> 		nvidia,ahb = <&ahb>;
+>  drivers/mfd/Kconfig                  |   13 ++
+>  drivers/mfd/Makefile                 |    1 +
+>  drivers/mfd/max14577-irq.c           |  283 +++++++++++++++++++++++++++++++++
+>  drivers/mfd/max14577.c               |  268 +++++++++++++++++++++++++++++++
+>  include/linux/mfd/max14577-private.h |  291 ++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max14577.h         |   76 +++++++++
+>  6 files changed, 932 insertions(+)
+>  create mode 100644 drivers/mfd/max14577-irq.c
+>  create mode 100644 drivers/mfd/max14577.c
+>  create mode 100644 include/linux/mfd/max14577-private.h
+>  create mode 100644 include/linux/mfd/max14577.h
+
+I see some of_* calls in the code, but no documentation of the binding.
+As this has more than just a compatible, interrupts, and reg, it needs
+its own binding document.
+
+[...]
+
+> +static struct mfd_cell max14577_devs[] = {
+> +       { .name = "max14577-muic",
+> +               .of_compatible = "maxim,max14577-muic", },
+
+The compatible string looks fine to me, but should be documented.
+
+[...]
+
+> +#ifdef CONFIG_OF
+> +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
+> +{
+> +       struct max14577_platform_data *pdata;
+> +       struct device_node *np = dev->of_node;
 > +
-> +		mmu-masters = <&host1x TEGRA_SWGROUP_HC>,
-> +			      <&mpe TEGRA_SWGROUP_MPE>,
-> +			      <&vi TEGRA_SWGROUP_VI>,
-> +			      <&epp TEGRA_SWGROUP_EPP>,
-> +			      <&isp TEGRA_SWGROUP_ISP>,
-> +			      <&gr2d TEGRA_SWGROUP_G2>,
-> +			      <&gr3d TEGRA_SWGROUP_NV TEGRA_SWGROUP_NV2>,
-> +			      <&dc TEGRA_SWGROUP_DC>,
-> +			      <&dcb TEGRA_SWGROUP_DCB>,
-> +			      <&uarta TEGRA_SWGROUP_PPCS>,
-> +			      <&uartb TEGRA_SWGROUP_PPCS>,
-> +			      <&uartc TEGRA_SWGROUP_PPCS>,
-> +			      <&uartd TEGRA_SWGROUP_PPCS>,
-> +			      <&uarte TEGRA_SWGROUP_PPCS>,
-> +			      <&sdhci0 TEGRA_SWGROUP_PPCS>,
-> +			      <&sdhci1 TEGRA_SWGROUP_PPCS>,
-> +			      <&sdhci2 TEGRA_SWGROUP_PPCS>,
-> +			      <&sdhci3 TEGRA_SWGROUP_PPCS>;
-> 	};
+> +       pdata = devm_kzalloc(dev, sizeof(struct max14577_platform_data),
+> +                            GFP_KERNEL);
+> +       if (!pdata)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       pdata->irq_gpio = of_get_named_gpio(np, "irq_gpio", 0);
 
-At first glance this seems backward from all other cases we have in which we usually have the device have a property that points back, like interrupt-parent.
+In general, '-' is preferred to '_' in property names. This should be
+irq-gpio.
 
-- k
+What exactly is this used for? I know that others have strong opinions
+about how gpio/irq interaction should be handled.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> +       if (!gpio_is_valid(pdata->irq_gpio)) {
+> +               dev_err(dev, "Invalid irq_gpio in DT\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       if (of_property_read_bool(np, "wakeup"))
+> +               pdata->wakeup = true;
+
+What does this mean? It seems like a remarkably generic name for
+something that I'd guess is _very_ specific to this particular binding.
+
+It might be worth prefixing it, and is certainly worth having a more
+precise name.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
