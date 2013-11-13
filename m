@@ -1,63 +1,134 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
-Date: Wed, 13 Nov 2013 12:51:11 +0000
-Message-ID: <20131113125111.GE878@sirena.org.uk>
-References: <527D1DDA.2040004@koalo.de>
- <20131108181743.GR2493@sirena.org.uk>
- <20131113050017.GO8834@intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
+Date: Wed, 13 Nov 2013 13:13:28 +0000
+Message-ID: <20131113131328.GF878@sirena.org.uk>
+References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+ <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131113050017.GO8834-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---T6xhMxlHU34Bk0ad
+--3yNHWXBV/QO9xKNm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Nov 13, 2013 at 10:30:17AM +0530, Vinod Koul wrote:
-> On Fri, Nov 08, 2013 at 06:17:43PM +0000, Mark Brown wrote:
+On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
 
-> > Adding in Martin Sperl who's been looking at DMA with regard to the SPI
-> > controller (which will want non-cyclic mode but I guess there's a lot of
-> > shared code).
+> +/**
+> + * After resuming from suspend it may happen that IRQ is signalled but
+> + * IRQ GPIO is not high. Also the interrupt registers won't have any data
+> + * (all of them equal to 0x00).
+> + *
+> + * In such case retry few times reading the interrupt registers.
+> + */
+> +#define IRQ_READ_REG_RETRY_CNT		5
 
-> Is there a plan to add a library in SPI for dma ops, on lines of what
-> is done in sound?
+What is the cause here?  This smells like an unreliable workaround for
+some other behaviour.  In general this all looks very like standard
+regmap code.
 
-I'm probably going to be looking at that at some point, though perhaps
-Martin will get to it since he seems to be looking at this.
+> +	for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
+> +		u8 mask_reg = max14577_mask_reg[i];
+> +
+> +		if (mask_reg == MAX14577_REG_INVALID ||
+> +				IS_ERR_OR_NULL(max14577->regmap))
+> +			continue;
 
---T6xhMxlHU34Bk0ad
+Why would this code even be running if you don't have a register map?
+
+> +		dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
+> +			irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
+> +			irq_reg[MAX14577_IRQ_INT3]);
+
+This is far too noisy, dev_dbg() at most.
+
+> +		gpio_val = gpio_get_value(pdata->irq_gpio);
+> +
+> +		if (gpio_get_value(pdata->irq_gpio) == 0)
+> +			dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
+> +	} while (gpio_val == 0 && --retry > 0);
+
+This looks very strange...
+
+> +	max14577->irq = gpio_to_irq(pdata->irq_gpio);
+> +	ret = gpio_request(pdata->irq_gpio, "max14577_irq");
+> +	if (ret) {
+> +		dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
+> +				pdata->irq_gpio, ret);
+> +		goto err;
+> +	}
+> +	gpio_direction_input(pdata->irq_gpio);
+> +	gpio_free(pdata->irq_gpio);
+
+This means the GPIO handling code that was present in the handling is
+broken, it's trying to use the GPIO after it was freed.
+
+> +	ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
+> +				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +				   "max14577-irq", max14577);
+
+Are you *positive* this is a falling triggered IRQ?  All the code to do
+with spinning reading the GPIO state during handling makes it look like
+this is in fact an active low interrupt and a lot of the code in here is
+working around trying to handle that as the wrong kind of IRQ.
+
+> +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
+> +{
+> +	return regmap_bulk_write(map, reg, buf, count);
+> +}
+> +EXPORT_SYMBOL_GPL(max14577_bulk_write);
+
+Given that these are basically all trivial wrappers around regmap they
+probably ought to be static inlines in the header.
+
+> +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
+> +{
+
+There's no DT binding document?
+
+> +const struct dev_pm_ops max14577_pm = {
+> +	.suspend = max14577_suspend,
+> +	.resume = max14577_resume,
+> +};
+
+SET_SYSTEM_SLEEP_PM_OPS().
+
+> +static int __init max14577_i2c_init(void)
+> +{
+> +	return i2c_add_driver(&max14577_i2c_driver);
+> +}
+> +subsys_initcall(max14577_i2c_init);
+
+Why not module_i2c_driver?
+
+--3yNHWXBV/QO9xKNm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSg3W8AAoJELSic+t+oim9lAIP/i2DqKmTzrViDNzR93jn6mvc
-yk4mHQ8T7rHUOhGCAgFhIahzj+oNnxem4IjfXPOdzKEHBAE8VaKrAFV7qRlWbCbU
-4PloFqW65C5HjAidUgZQaWnKsk0HrfJhjKlN48LoBqQCKqwunL7fJ5EnL2dki0db
-lmRND/wiZ9W3/6rIxxXYGWWZFQ0zdtdbeKV/h27fYZAv3OgVZabd8DdFlb9vUniP
-bRJbLwBfBXZX8e/p1XrZQJ/5eP6yTFLqNGSZVM+/8vWwLEhOZriU6KTlxF4TtE2Y
-0EmesN4Wzc+B7PIqIziu9BtV+YiyoaUypKs/Z6r60np6j1Wo5E8aXG+APwDTHfgM
-eSPy5oqglsYNxxjR32AgXWpDORuZBqH3SobWvZjBrk1phFPMLzqYbRwWpY0x/U8i
-nTvo/yEkhwsdt623Csl10u67UAG044fyBoSr+/pHgkuBdKuVs5HGnik8bTsfoa2a
-1iBFJdUXHVJ8ip9AKO4oidekpjgV9gg4JD7qXBWbLWbhWKPvNUdTmuPeT1626nor
-qZdgUa90tNZewLuJh+8GwdYGo+ep/lrnsA2ZDI3a5v3QWj/MJH0E9s5dKwqMRVzd
-zfocxUDLM50cMtqAtHlUwcMdW7u0sAYcgWAEghWAh68jTYJ/D31YY6VqXvU+DlK+
-Us6gLYk4U+Z158P8Wub3
-=4s61
+iQIcBAEBAgAGBQJSg3r1AAoJELSic+t+oim9RMAP/iqgT1ugPF9VXLjnuqbGpcGn
+ilpJrGYrBzsdNzrlGjsAcPPpAYdk4+9JzV+iK92qo6cdbLarz2r3V5uQY77s5SZS
+rqothoS1KdeL3fSY0kIzGUljQOWRnkStGUw89SoJbQJxK2HscQY3jWSzhmA7fDGz
+WA8MEuB0yy80pczrju2/RpTUenFE3S9jjuE29h4K5nO2yFjTuTvFqjU3qJoBDFZ3
+f0g4rFSqhrrK2JSbw/Yd+thTb/jKoYOTBUe19BnbIKu83Uuq+1et56nD2jtDL6gJ
+gKeMslvOoLiiup/yeGbDEE1uCD8hl2xFPXmNMxkvhdOwnTgpStfTvDmV6Ih72mmi
+875bah6KdNlBesPKHv8WTdEacX455VUtLoCLdeeN4AbDKuW5KKfsYDvhQfseZYM1
+U/TV9Rh8VHdMAtjtGXFrDuVVxC9FfL2lXs7vLHdel7EIu2FQd2nBk54I1dai0Naa
+X+5RaAIQ07okTnTxTU8xF0uZ0+fuUhG8mLS/UY31t95pKucDEVYeErU8R1g91QQs
+ZFDLF3aVV3M6OiCFtT9NDcWdLlFnfFpM4cKX1r9etxhbEKr+Iq37d+SMHw133+6K
+th4Ql20SX/8EHWYndrNHyIMnsL1bmo9WCFlBxAzcJq28YhVF5l+5x1FICshA7C2W
+hxirPq5lhpS8YPxj6CEl
+=F8NS
 -----END PGP SIGNATURE-----
 
---T6xhMxlHU34Bk0ad--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--3yNHWXBV/QO9xKNm--
