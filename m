@@ -1,80 +1,121 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V3 7/7] ARM: DRA: Enable Crossbar IP support for DRA7XX
-Date: Wed, 13 Nov 2013 21:05:13 +0530
-Message-ID: <52839C31.7070709@ti.com>
-References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com> <1383657257-3458-8-git-send-email-r.sricharan@ti.com> <5281BF70.4050708@ti.com> <5281C0E9.8020104@ti.com> <52839B9C.8090707@ti.com>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] ASoC: cs42l52: Add DeviceTree Support for CS42L52
+Date: Wed, 13 Nov 2013 09:44:33 -0600
+Message-ID: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52839B9C.8090707@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, santosh.shilimkar@ti.com, galak@codeaurora.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 November 2013 09:02 PM, Nishanth Menon wrote:
-> On 11/11/2013 11:47 PM, Sricharan R wrote:
->> Hi Rajendra,
->>
->> On Tuesday 12 November 2013 11:11 AM, Rajendra Nayak wrote:
->>> On Tuesday 05 November 2013 06:44 PM, Sricharan R wrote:
->>>> Enable the crossbar IP support for DRA7xx soc.
->>>>
->>>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>> Cc: Rajendra Nayak <rnayak@ti.com>
->>>> Cc: Tony Lindgren <tony@atomide.com>
->>>> Signed-off-by: Sricharan R <r.sricharan@ti.com>
->>>> ---
->>>>  arch/arm/mach-omap2/Kconfig        |    1 +
->>>>  arch/arm/mach-omap2/omap4-common.c |    4 ++++
->>>>  2 files changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
->>>> index b5fb5f7..2086c65 100644
->>>> --- a/arch/arm/mach-omap2/Kconfig
->>>> +++ b/arch/arm/mach-omap2/Kconfig
->>>> @@ -141,6 +141,7 @@ config SOC_DRA7XX
->>>>  	select ARM_GIC
->>>>  	select HAVE_SMP
->>>>  	select COMMON_CLK
->>>> +	select IRQ_CROSSBAR
->>>>  
->>>>  comment "OMAP Core Type"
->>>>  	depends on ARCH_OMAP2
->>>> diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
->>>> index 5791143..274cbfa 100644
->>>> --- a/arch/arm/mach-omap2/omap4-common.c
->>>> +++ b/arch/arm/mach-omap2/omap4-common.c
->>>> @@ -22,6 +22,7 @@
->>>>  #include <linux/of_platform.h>
->>>>  #include <linux/export.h>
->>>>  #include <linux/irqchip/arm-gic.h>
->>>> +#include <linux/irqchip/irq-crossbar.h>
->>>>  #include <linux/of_address.h>
->>>>  #include <linux/reboot.h>
->>>>  
->>>> @@ -282,9 +283,12 @@ void __init omap_gic_of_init(void)
->>>>  
->>>>  skip_errata_init:
->>>>  	omap_wakeupgen_init();
->>>> +	if (soc_is_dra7xx())
->>>> +		crossbar_init();
->>> Its good if this is called irqcrossbar_init() to avoid confusion
->>> with the dma crossbar which also exists in dra7 devices.
->>>
->>  Ya makes sense. Will change this.
-> Also why not call it without explicit soc check? there is already
-> parse for of_find_matching_node(NULL, crossbar_match); to see if we
-> have a match in the crossbar_init. OR call it from dra7 init without
-> SoC check dependency?
->
-> Rationale - with more TI SoCs trending towards crossbar, we dont need
-> to keep adding to the soc_is checks, further, we intend to remove
-> soc_is checks in it's entirety..
->
->
-Oh yes. I missed this. Thanks for pointing. Will correct.
+This patch adds device tree support for the CS42L52 CODEC
 
-Regards,
- Sricharan
+v2 changes dt bindings to use '-' instead of '_'.
+reset_gpio = reset-gpio. Pdata variables are not changed.
+
+Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ sound/soc/codecs/cs42l52.c | 51 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/cs42l52.c b/sound/soc/codecs/cs42l52.c
+index 8b427c9..ea55ee5 100644
+--- a/sound/soc/codecs/cs42l52.c
++++ b/sound/soc/codecs/cs42l52.c
+@@ -17,7 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm.h>
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+@@ -1174,6 +1174,7 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client,
+ 	struct cs42l52_private *cs42l52;
+ 	struct cs42l52_platform_data *pdata = dev_get_platdata(&i2c_client->dev);
+ 	int ret;
++	u32 val32;
+ 	unsigned int devid = 0;
+ 	unsigned int reg;
+ 
+@@ -1190,8 +1191,47 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client,
+ 		return ret;
+ 	}
+ 
+-	if (pdata)
++	if (pdata) {
+ 		cs42l52->pdata = *pdata;
++	} else {
++		pdata = devm_kzalloc(&i2c_client->dev,
++				     sizeof(struct cs42l52_platform_data),
++				GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&i2c_client->dev, "could not allocate pdata\n");
++			return -ENOMEM;
++		}
++		if (i2c_client->dev.of_node) {
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"mica-cfg", &val32) >= 0)
++				pdata->mica_cfg = val32;
++
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"micb-cfg", &val32) >= 0)
++				pdata->micb_cfg = val32;
++
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"mica-sel", &val32) >= 0)
++				pdata->mica_sel = val32;
++
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"micb-sel", &val32) >= 0)
++				pdata->micb_sel = val32;
++
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"micbias-lvl", &val32) >= 0)
++				pdata->micbias_lvl = val32;
++
++			if (of_property_read_u32(i2c_client->dev.of_node,
++				"chgfreq", &val32) >= 0)
++				pdata->chgfreq = val32;
++
++			pdata->reset_gpio =
++				of_get_named_gpio(i2c_client->dev.of_node,
++						"reset-gpio", 0);
++		}
++		cs42l52->pdata = *pdata;
++	}
+ 
+ 	if (cs42l52->pdata.reset_gpio) {
+ 		ret = gpio_request_one(cs42l52->pdata.reset_gpio,
+@@ -1274,6 +1314,12 @@ static int cs42l52_i2c_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++static const struct of_device_id cs42l52_of_match[] = {
++	{ .compatible = "cirrus,cs42l52", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cs42l52_of_match);
++
+ static const struct i2c_device_id cs42l52_id[] = {
+ 	{ "cs42l52", 0 },
+ 	{ }
+@@ -1284,6 +1330,7 @@ static struct i2c_driver cs42l52_i2c_driver = {
+ 	.driver = {
+ 		.name = "cs42l52",
+ 		.owner = THIS_MODULE,
++		.of_match_table = cs42l52_of_match,
+ 	},
+ 	.id_table = cs42l52_id,
+ 	.probe =    cs42l52_i2c_probe,
+-- 
+1.8.4.rc3
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
