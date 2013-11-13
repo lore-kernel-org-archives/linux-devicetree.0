@@ -1,102 +1,89 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCHv4][ 3/7] staging: imx-drm: Add RGB666 support for parallel display.
-Date: Wed, 13 Nov 2013 20:48:20 +0100
-Message-ID: <21976620.UIvc2kPlHX@avalon>
-References: <1384334603-14208-1-git-send-email-denis@eukrea.com> <5283C860.3020103@boundarydevices.com> <20131113191230.GU16735@n2100.arm.linux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
+Date: Wed, 13 Nov 2013 19:49:15 +0000
+Message-ID: <20131113194915.GF878@sirena.org.uk>
+References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com>
+ <1783157.vhfWvslFgW@flatron> <20131113181622.GZ878@sirena.org.uk>
+ <1799362.QSDMu6GHtU@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20131113191230.GU16735@n2100.arm.linux.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Troy Kisky <troy.kisky@boundarydevices.com>, Denis Carikli <denis@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Eric =?ISO-8859-1?Q?B=E9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: multipart/mixed; boundary="===============0078566276078532656=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1799362.QSDMu6GHtU@flatron>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, rob.herring@calxeda.com, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
 
-On Wednesday 13 November 2013 19:12:30 Russell King - ARM Linux wrote:
-> On Wed, Nov 13, 2013 at 11:43:44AM -0700, Troy Kisky wrote:
-> > On 11/13/2013 2:23 AM, Denis Carikli wrote:
-> >>   +	/* rgb666 */
-> >> 
-> >> +	ipu_dc_map_clear(priv, IPU_DC_MAP_RGB666);
-> >> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 2, 17, 0xfc); /* red */
-> >> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 1, 11, 0xfc); /* green */
-> >> +	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 0, 5, 0xfc); /* blue */
-> >> +
-> >>   	return 0;
-> >>   }
-> > 
-> > Since,  rgb24 and bgr24 reverse the byte numbers
-> > /* rgb24 */
-> >         ipu_dc_map_clear(priv, IPU_DC_MAP_RGB24);
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 0, 7, 0xff); /* blue */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 1, 15, 0xff); /* green
-> >         */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_RGB24, 2, 23, 0xff); /* red */
-> > 
-> > /* bgr24 */
-> >         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR24);
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 2, 7, 0xff); /* red */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 1, 15, 0xff); /* green
-> >         */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 0, 23, 0xff); /* blue */
-> > 
-> > Shouldn't rgb666 and bgr666 do the same?
-> > Currently we have,
-> > 
-> > /* bgr666 */
-> >         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR666);
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 0, 5, 0xfc); /* blue */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 1, 11, 0xfc); /*
-> > green */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 2, 17, 0xfc); /* red */
-> 
-> Yes, I concur - this doesn't make sense to me.  BGR666 would mean in
-> memory:
-> 
->         1    11
->         7    21    65    0
->         BBBBBBGGGGGGRRRRRR
-> 
-> which reflects the same order for "RGB24" above.
+--===============0078566276078532656==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="czsrKamv0OtYjSMr"
+Content-Disposition: inline
 
-Beside component order and number of bits per component, an in-memory RGB 
-format also defines the memory endianness and, for formats that don't span an 
-interger number of bytes, the left or right alignment.
 
-BGR666 is currently defined in V4L2 as
+--czsrKamv0OtYjSMr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Byte 0                         1                        2
-Bit  7  6  5  4  3  2  1  0    7  6  5  4  3  2  1  0   7  6  5  4  3  2  1  0
+On Wed, Nov 13, 2013 at 07:24:04PM +0100, Tomasz Figa wrote:
 
-     b5 b4 b3 b2 b1 b0 g5 g4  g3 g2 g1 g0 r5 r4 r3 r2  r1 r0  -  -  -  -  -  -
+> Well, the label is just for the parser and it does not get into the DTB.
+> This is where the DTS author can make things up just for their own
+> convenience (like main_codec, aux_codec or even cs42l52).=20
 
-(see the *second* table in http://linuxtv.org/downloads/v4l-dvb-apis/packed-rgb.html)
+If only we could have comments :)
 
-I would thus expect RGB666 to be
+> I know this is really more bikeshedding than anything useful, but I'd
+> rather try to follow the written rules in ePAPR, instead of nothing at
+> all. At least just to make things more consistent.
 
-Byte 0                         1                        2
-Bit  7  6  5  4  3  2  1  0    7  6  5  4  3  2  1  0   7  6  5  4  3  2  1  0
+My feeling here is that we should be looking more critically at ePAPR -
+if we're picking people up for having what's essentially a comment
+that's too specific we're probably doing something wrong especially
+since the corrected example would look something like:
 
-     r5 r4 r3 r2 r1 r0 g5 g4  g3 g2 g1 g0 b5 b4 b3 b2  b1 b0  -  -  -  -  -  -
+	codec: codec@12 {
 
-We can also define right-aligned formats if needed.
+which is a bit redundant.
 
-> > Where I'd expect to see
-> > /* bgr666 */
-> > 
-> >         ipu_dc_map_clear(priv, IPU_DC_MAP_BGR666);
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 0, 17, 0xfc); /* blue
-> >         */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 1, 11, 0xfc); /*
-> > green */
-> >         ipu_dc_map_config(priv, IPU_DC_MAP_BGR666, 2, 5, 0xfc); /* red */
-> 
-> So this makes sense to me.
+--czsrKamv0OtYjSMr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Laurent Pinchart
+iQIcBAEBAgAGBQJSg9e4AAoJELSic+t+oim95BYP/iY/IhQOQcn1BaCcOWbxo7R2
+16qfIGKflNtpY3wQfeR/Rnaz6NEKbnHEXhl+BnUVpoluqX0BmJRYOsu1hpjB0tJD
+bjbPSdELdCVIl+/tmnpp0lyNnDERU6XkdGUl4wZxgrOf7EBVhTrMA9jSr9d1AqbX
+/WGskc34HAzyzaTkw8C2VTIY9sXfA9O4XvfmrwYqeCKyt1CM+Z4k3WzPhznM7DK5
+cxE7HZrf+IT8fXMhovV8e2+Ie1GSKlbotmuOob8hhRRfWuci/R9fy0cY7qNTbeI8
+vhXFKon0hCPCJ5Yhwdeucuf1lwNwLG/7zSgYJZafTw9xItja2PMmAR+qEhKksPD1
+jWJbPPU2QsuNyY4uDG/wmXHz1e79NfJ8ef17IqyqMKrFWldHY9L19RDslRQVQ5UF
+Vt3ZU+P1YV6ZSSIrQb9PI+6vytJAX/1HrZLFGg5E37Co+74L4P7vsJaCd/4RuR5r
+CJ0GfkfcHH0Gmgo39/VsK3sZdP+FVh3MzhIjldbtoaGIgmlc7m75ENB3k0LIivi7
+YKmGFoWvKcZRGpeqg9jFytRXM30FzqNdZfe3yqaoEl9/sxqt09PKBjsyua2vmF5a
+p2EipuTHB/Rf2n/VbVh1YYpBLKv4RNZYXROIhMqayE0qCzpBHCPHTSFW8eoF/oOk
+njfuFk//Z3JojUQMH5Nx
+=1QEd
+-----END PGP SIGNATURE-----
+
+--czsrKamv0OtYjSMr--
+
+--===============0078566276078532656==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0078566276078532656==--
