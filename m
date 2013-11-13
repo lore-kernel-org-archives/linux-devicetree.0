@@ -1,91 +1,106 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: IMX27: How to do 22k pull-up with the pinctrl ?
-Date: Wed, 13 Nov 2013 12:38:13 +0800
-Message-ID: <52830235.3030008@gtsys.com.hk>
-References: <5280B54A.1050503@gtsys.com.hk> <20131111120357.GE21201@e106331-lin.cambridge.arm.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH] ARM: dts: Add missing GPIO entries for sd_bus in
+Date: Wed, 13 Nov 2013 10:08:32 +0530
+Message-ID: <CAK9yfHyRu3WSkQOZKYMgsaWKcvVfNySptQhd91kX2eAdd-A+2Q@mail.gmail.com>
+References: <1382700168-12527-1-git-send-email-sachin.kamat@linaro.org>
+	<085901cedf91$4b24d4c0$e16e7e40$@org>
+	<CAL1wa8fnu-xUu3SZ+e1SMB0ci5n8wenDgbr4L9TGS+NH8qpS2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131111120357.GE21201-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL1wa8fnu-xUu3SZ+e1SMB0ci5n8wenDgbr4L9TGS+NH8qpS2w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tushar Behera <tushar.behera@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Leela,
+
+Thanks for the detailed explanation.
+
+On 12 November 2013 17:20, Leela Krishna Amudala
+<leelakrishna.a@gmail.com> wrote:
+> Hi Sachin,
+>
+> On Tue, Nov 12, 2013 at 3:53 PM, Kukjin Kim <kgene@kernel.org> wrote:
+>> Sachin Kamat wrote:
+>>>
+>>
+>> Following is more clear?
+>>
+>> "ARM: dts: Add missing GPIO entries for sd_bus_width4 in exynos5420-pinctrl"
+>>
+>>> Adds missing GPIO entries for sd_bus nodes in exynos5420-pinctrl.
+>>>
+>
+> This is not a missing stuff, I did this purposefully.
+> Myself and Doug anderson discussed on this and the objective of doing this is to
+> eliminate the gpio pin configuration multiple times.
+>
+> Please see the below explanation
+>
+> The current code in main line kernel shows like
+>                sd0_bus1: sd0-bus-width1 {
+>                        samsung,pins = "gpc0-3";
+>                  };
+>
+>                sd0_bus4: sd0-bus-width4 {
+>                        samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
+>                };
+>
+>                sd0_bus8: sd0-bus-width8 {
+>                        samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
+>                };
+>
+> and lets mmc wants to use 8 bit width then node should be like below
+>
+> dwmmc0@12200000 {
+>                 [snip]
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
+>
+> Here it will configure all the 8 pins ("gpc0-3", "gpc0-4", "gpc0-5",
+> "gpc0-6", "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3")
+>
+>                 slot@0 {
+>                         reg = <0>;
+>                         bus-width = <8>;
+>                 };
+>         };
+>
+> Similarly for using 1 bit width the property value should be like below
+>                pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1>;
+>
+> and if other mmc wants to use 4 bit width the property value should be
+> like below
+>                pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4>;
+>
+> But with the changes you made and if one mmc wants to use 1 bit width
+> and other wants to use 4 bit width
+> the pin "gpc0-3" will be configured twice which is wrong.
+
+I think this is the case with current code too.
+
+>From your above example, for 2 slots:
+For 1 bit width: pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1>;
+"gpc0-3"
+
+For 4 bit width: pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4>;
+"gpc0-3", "gpc0-4", "gpc0-5", "gpc0-6"
 
 
-On Monday, November 11, 2013 08:03 PM, Mark Rutland wrote:
-> On Mon, Nov 11, 2013 at 10:45:30AM +0000, Chris Ruehl wrote:
->> Hi,
->
-> Hi,
->
-> While this does involve device tree, it's not strictly a device tree
-> problem, and the people best placed to answer your question don't seem
-> to be on Cc. You'd get better responses if you used get_maintainer.pl,
-> or looked at the commit history of the driver or binding to find people
-> likely to be able to help.
->
-> I've added Dong Aisheng, Shawn Guo, and Linus Walleij to Cc, as they had
-> signed-off-bys on the binding document.
->
-> Mark.
+> So, I strongly feel it is better to change the existing mmc node
+> instead of changing the "sd0_bus" entries
 
-Dear Mark
-Thanks.
-I'm late with my answer, my data-center support change switches and forget to 
-told the users about this.. I had no email for a while. Welcome to Hong Kong!
+I think this is already taken care of in the mmc nodes.
+For slot with bus-width of 8,
+pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
 
+Similarly for slot with bus width of 4,
+pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
 
->
->>
->> while I port the static code to the DT I step into the problem to
->> set the PSCR for the sdhc2 ports to 22k pull-up
->> I look for something like described in
->>       pinctrl/fsl,imx-pinctrl.txt
->>
->> the fsl,imx27-pinctrl only say 0/1 dis/enable pull up but not the strength.
->>
->>
->> pinctrl_sdhc2_1: sdhc2-1 {
->>                           fsl,pins =<
->>                                   MX27_PAD_SD2_D0__SD2_D0  0x1
->>                                   MX27_PAD_SD2_D1__SD2_D1  0x1
->>                                   MX27_PAD_SD2_D2__SD2_D2  0x1
->>                                   MX27_PAD_SD2_D3__SD2_D3  0x1
->>                                   MX27_PAD_SD2_CLK__SD2_CLK  0x1
->>                                   MX27_PAD_SD2_CMD__SD2_CMD  0x1
->>                           >;
->>                   };
->>
->> its setup in board specific c-file
->>
->> /* 22k pull-up for sd2 pins  */
->>           reg = __raw_readw(MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
->>           reg&= ~0xfff0;
->>           reg |= 0xfff0;
->>           __raw_writew(reg, MX27_IO_ADDRESS(MX27_SYSCTRL_BASE_ADDR + MX27_SYS_PSCR));
->>
->>
->> Any successions?
->>
->> Regards
->> Chris
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
+Do you still see the problem here?
 
 -- 
-GTSYS Limited RFID Technology
-A01 24/F Gold King Industrial Bld
-35-41 Tai Lin Pai Road, Kwai Chung, Hong Kong
-Fax (852) 8167 4060 - Tel (852) 3598 9488
-
-Disclaimer: http://www.gtsys.com.hk/email/classified.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With warm regards,
+Sachin
