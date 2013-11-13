@@ -1,65 +1,103 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
-Date: Wed, 13 Nov 2013 12:23:29 +0000
-Message-ID: <20131113122329.GC878@sirena.org.uk>
-References: <1383203126-3243-1-git-send-email-wni@nvidia.com>
- <20131031162029.GF2493@sirena.org.uk>
- <527737C5.5080901@nvidia.com>
- <20131104161828.GK2493@sirena.org.uk>
- <5278B4CB.9050305@nvidia.com>
- <20131106085100.GB11602@sirena.org.uk>
- <527A1C47.6050405@nvidia.com>
- <20131106110154.GG11602@sirena.org.uk>
- <5281C228.3000404@nvidia.com>
- <5282717C.3050502@wwwdotorg.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] ARM: dts: AM437x GP EVM support
+Date: Wed, 13 Nov 2013 06:44:23 -0600
+Message-ID: <20131113124423.GA28192@saruman.home>
+References: <1384255468-2453-1-git-send-email-afzal@ti.com>
+ <20131112142206.GD31721@saruman.home> <5283247D.7010106@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FsscpQKzF/jJk6ya"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5282717C.3050502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1129387236546886123=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5283247D.7010106@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rajendra Nayak <rnayak@ti.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, balbi@ti.com, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---FsscpQKzF/jJk6ya
-Content-Type: text/plain; charset=us-ascii
+--===============1129387236546886123==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
 Content-Disposition: inline
 
-On Tue, Nov 12, 2013 at 11:20:44AM -0700, Stephen Warren wrote:
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The only issue you may have to watch out for is: When is
-> regulator_init() called (i.e. when does core_initcall happen) relative
-> to when driver probe()s can be called? If it's earlier, then
-> core_initcall is early enough I suspect.
+On Wed, Nov 13, 2013 at 12:34:29PM +0530, Afzal Mohammed wrote:
+> Hi Felipe,
+>=20
+> On Tuesday 12 November 2013 07:52 PM, Felipe Balbi wrote:
+> > On Tue, Nov 12, 2013 at 04:54:26PM +0530, Afzal Mohammed wrote:
+> >> From: Lokesh Vutla <lokeshvutla@ti.com>
+>=20
+> >> AM437x GP EVM DTS with pinmux information to make I2C on EVM usable.
+> >>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> >> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> >> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+>=20
+> > could you instead send the much more complete version we already have
+> > at [1] ? It's pointless to repatch all of that in this file if we *know*
+> > those are already working.
+>=20
+> By taking those changes and testing on mainline, I couldn't get mmc
+> working and was not confident about ethernet changes, I2C changes were
+> verified and boot test was done (with DT clock series). I posted only
+> the changes that I felt confident.
+>=20
+> Basic DT file and I2C are dependency for others, it was necessary to
+> remove dependencies at the earliest.
 
-What I said was to set this up when we hand the DT over to the DT code
-to be parsed so that we don't need to worry about any gaps like that,
-it seems like a more direct solution than worrying about initcall
-ordering.
+fair enough, still sounds weird not to send the full DTS considering
+it won't cause regressions, it just exposes an existing failure WRT
+AM437x support upstream.
 
---FsscpQKzF/jJk6ya
+--=20
+balbi
+
+--+QahgC5+KEYLbs62
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSg285AAoJELSic+t+oim9oCYP/iF5TEs9BBI4JdKSWFccG1Wf
-OZBzqLD0phzaLYmCzuETh7NTXBL/SAQs4UoTp8zYOaB11sfdlaff+WwbM21vh9gv
-HHu/nZpokbLXIIYt5djefj973cqzLtKVZlMev6TK4m4s27Bzao5kToaueuVH8mJF
-KepYfMgTTx9zLujsc6GcD9xPz/TiJvspJjT+nKiCnc3ESLIZ6LMuXXjDs4Ryz5TD
-6OfeiwD+kzCSIsX3rKKdUXe7R6rq4iqFHJTbHZ+LGaaFfjqfwRXqKio3XLcFmtfB
-0RqUB3QXiYs7aTljBOhXL3dOy3NO0yF4aYeBDxr3s0AUFfaUsEzfzUy+LgcUhseH
-wkuqGgOdKRnOpuML/EJX6WUw3vAo8ZzahSi/Vwxl4SpAbDvsDGvuiL4l4FKR7TAU
-IYBq5z3OgnwwP581g+Zqxq2sXHYqRRtaNPkjZyqhqFwkW797mfie568cRA6desFO
-UDibdmplzGVbS/PqzkUZilQL8OJhpl/XisSGBlHT0jHAAn7rUZcy6DY/9FxBaf7T
-RSt4Gsg5Zi0ilT5jfiCczJ424JQ8EmI5uwxUAqXxKUVcC5wd6WpNcdmMGf4+Vly4
-+t29LSC4iQIks+u/UmLDQwHap6wfd8yU/noJZKU/AIkUNHJpm07yNnWKJuUYuV+Z
-FGybMqYpGiEJMJb+ecNG
-=li8B
+iQIcBAEBAgAGBQJSg3QnAAoJEIaOsuA1yqREiUMQAKPxc2/8SpAHQCG2uOn+ACyC
+UZkvYfkzE8hf4n/GkL1S8m/q1ytuQUm+nFw86WCID2hT+Jtlf1hRXtbNzpm92vwP
+KlJXT16A5OHvr2jA4OwXVg7TklJQLCaymWUed0lKdRLy2Q4esSbdmJJ2IEjsAd0S
+95TsCfX49CnXE11BG4kcnDr2M6RbUr3Xdu2CwW/NThBu0B0r7yrDfjxP9AJkXSjx
+uce3arVk1df4p00RXhT75Hd8J8hGx9zrcKDU7unQViFKyJKfzYu/zmwMLCm6ttBz
+qER8pzH2zV4PjfjlyKxSCxs8NCvGKumdW7Bm3JThTD9lEbJ75Z3Cvrpb/ZEoq+An
+JpVtD+82uquNOyoLRmTC5GazP+5zP4RcnD8FF+q/J/d58ffvnC0sBPQleFjyoSXd
+TMpSRM74hjCzY8VeX+06/TqYMcCU+bwrzxkRIdhWGiKniTOSuJjBzyjENoxVEtFf
+v6aCshI8itaiXpEQbnF0GYUV+sBMT6D9d7NPjLqXTuctMjsxnbEqabieF8E8Fcye
+36axIyf4WnmFmHQPg1I6pSJSmKMd/56dYx7/YdIaIgu9YcH0yb2FXv8M8bixNt7a
+QRJx23qgcYpIi1FiVPpOiNJjm2Wjpfb1HfrkCHnE8qPDajlaLPv5EvH+TVvN78bt
+6BlYS7dKpFON6ORoFBV4
+=k3JU
 -----END PGP SIGNATURE-----
 
---FsscpQKzF/jJk6ya--
+--+QahgC5+KEYLbs62--
+
+
+--===============1129387236546886123==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1129387236546886123==--
