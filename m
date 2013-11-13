@@ -1,72 +1,81 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] mtd: gpmi: add a new DT property to use the
- datasheet's minimum required ECC
-Date: Wed, 13 Nov 2013 12:46:40 -0800
-Message-ID: <CAN8TOE8aew_Jhc7L4isgo5fZPSnP+nsuhdiFoYGPZZ3AsyY9kg@mail.gmail.com>
-References: <1383818858-5410-1-git-send-email-b32955@freescale.com>
-	<5281BBEE.7000502@freescale.com>
-	<CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Wed, 13 Nov 2013 20:49:23 +0000
+Message-ID: <20131113204923.GG878@sirena.org.uk>
+References: <5278B4CB.9050305@nvidia.com>
+ <20131106085100.GB11602@sirena.org.uk>
+ <527A1C47.6050405@nvidia.com>
+ <20131106110154.GG11602@sirena.org.uk>
+ <5281C228.3000404@nvidia.com>
+ <5282717C.3050502@wwwdotorg.org>
+ <20131113122329.GC878@sirena.org.uk>
+ <5283B6E3.9070206@wwwdotorg.org>
+ <20131113190745.GD878@sirena.org.uk>
+ <5283DD52.5050903@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN8TOE_-O_gxM+c4k6NXvvo=7Ozp1J187=XtK9gxfLa4LGQAWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YhYebsMuj/FQeBW/"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5283DD52.5050903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 9:47 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> + DT maintainers, since they haven't responded
->
-> On Mon, Nov 11, 2013 at 9:26 PM, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> 于 2013年11月07日 18:07, Huang Shijie 写道:
->>
->>> In default way, we use the ecc_strength/ecc_step size calculated by
->>> ourselves
->>> and use all the OOB area.
->>>
->>> This patch adds a new property : "fsl,use-minimum-ecc"
->>>
->>> If we enable it, we will firstly try to use the datasheet's minimum
->>> required
->>> ECC provided by the MTD layer (the ecc_strength_ds/ecc_step_ds fields
->>> in the nand_chip{}). So we may have free space in the OOB area by using
->>> the
->>> minimum ECC, and we may support JFFS2 with some SLC NANDs, such as
->>> Micron's
->>> SLC NAND.
->>>
->>> If we fail to use the minimum ECC, we will use the legacy method to
->>> calculate
->>> the ecc_strength and ecc_step size.
->>>
->>> Signed-off-by: Huang Shijie<b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>> ---
->>> v1 -->  v2: rebase this patch on the latest l2-mtd.
->>> v2 -->  v3: change the descriptions.
->>> ---
->>>   .../devicetree/bindings/mtd/gpmi-nand.txt          |    8 ++++++++
->>>   drivers/mtd/nand/gpmi-nand/gpmi-nand.c             |    3 +++
->>>   2 files changed, 11 insertions(+), 0 deletions(-)
->>
->> Is this patch ok now? I hope it can be accepted at this merge-window.
->
-> The patch is OK to me, but we haven't gotten any DT review. If we
-> don't get any response in a few days, I'll take it anyway.
 
-I pushed this to l2-mtd.git/next and will get it into linux-next after
-the merge window closes. Let me know if there are further comments.
+--YhYebsMuj/FQeBW/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I'm not sure about taking it in 3.13 vs. 3.14, as this is
-> traditionally a late merge for 3.13.
+On Wed, Nov 13, 2013 at 01:13:06PM -0700, Stephen Warren wrote:
+> On 11/13/2013 12:07 PM, Mark Brown wrote:
 
-Queued for 3.14.
+> > This isn't really regulator specific - it's something that applies
+> > in general to things implementing deferred probing - so we ought to
+> > have a generic "we know if devices can appear later or not" flag
+> > that subsystems can check.
 
-Thanks,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I guess I misunderstand then, since given that modules exist, wouldn't
+> that flag always be true?
+
+No, with DT you can say that if there is no DT binding configuring a
+given thing (clock, regulator, GPIO or whatever) then no amount of
+module loading will ever cause it to appear - this is what the flag in
+question controls.
+
+> IIUC, the issue being discussed here isn't about deferred probe at
+> all. You always must defer probe if an object is specified as existing
+> yet the provider isn't available yet. The issue here is when a
+> regulator isn't specified as existing, yet something asks for that
+> regulator, should the regulator subsystem automatically provide a
+> dummy regulator instead, rather than erroring out.
+
+No, it's a deferred probing thing - one of the effects here is that
+we're choosing between deferring waiting for the resource we know is
+bound to appear and substituting a dummy for something we know exists
+physically and we know can never be provided by software.
+
+--YhYebsMuj/FQeBW/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSg+XMAAoJELSic+t+oim9nWUP/iWjfEDl2b1vyi6uPpWCvl/o
+yCYVUHYVJELXOXNO3kxhXx2FDDunXfmuPGl8syJR2t6GviYqPUN6GsbPz0iNHX5t
+R6LKUe3EycKdIh1VpHf5AFTEqMwXzdgHOJOXHKpLQf4bF9RFcpyCz6hLqequZQqw
+nsmuhYE7yToRnuVO4QDFmLzejLgE8glZz19BAKnOEElViue2xrJNeBh+kfXBhbvH
+U/FeAqYi7XXA7ZO9JhiOtxlLxxEy/JGoAX/yr4kuEWYKFqDow8gynUK+APnyahhV
+FbENAf7GE9qPp+vA8UPFRuMHYySpU0DCl+WqNzSGWDFOMZ9NAipoqHYBkxDKZBBS
+5HDDLc6LWDv0ud0qQ2YSpmdcmlB50IQCpnINtu+ulhLEL5f2PL9+ivRWo7mNtlfH
+7rVAPRtG8tO/FhgJM9wTK6C0b/0x8FNW5gwoAb1hoJfaypC246I8wc8+uQmbvkB/
+wp7fc+F4qhQsoXin2B5iTM+41yAnCmV0K8D7NMIViYHaqh9h/vRAx4YpWeV3Iu3w
+fW3gaKORfc8DdSdajtlaJp2KRNVhEwvgJLFURgMPFpkdRWkozIc/cAvsodDi0MK6
+HBPj8V0Ls3RFkl8j79mbv4wZ1BrP5Du/MG4pBkHcUnbs9iqvT9VnAfQsblxW3Jku
+ba+oQs/R0+a+Q8aIfSiK
+=QDTL
+-----END PGP SIGNATURE-----
+
+--YhYebsMuj/FQeBW/--
