@@ -1,82 +1,185 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
-Date: Wed, 13 Nov 2013 14:38:04 +0000
-Message-ID: <20131113143804.GA11928@mudshark.cambridge.arm.com>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>
-	<1384158718-4756-3-git-send-email-hdoyu@nvidia.com>
-	<5282BAFC.8070405@wwwdotorg.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v7 3/7] ARM: dts: imx27 pinctrl
+Date: Wed, 13 Nov 2013 22:41:41 +0800
+Message-ID: <20131113144139.GB17816@S2101-09.ap.freescale.net>
+References: <1384246210-9257-1-git-send-email-mpa@pengutronix.de>
+ <1384246210-9257-4-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <5282BAFC.8070405-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1384246210-9257-4-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 11:34:20PM +0000, Stephen Warren wrote:
-> On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
-> > An "IOMMU device" on the bus is poplulated first, "IOMMU'able devices"
-> > are done later.
-> > 
-> > With CONFIG_OF_IOMMU, "#stream-id-cells" DT binding would be used to
-> > identify whether a device is IOMMU'able or not. If a device is
-> > IOMMU'able, we'll defer to populate that device till an iommu device
-> > is populated. Once an iommu device is populated, "dev->bus->iommu_ops"
-> > is set in the bus. Then, those defered IOMMU'able devices are
-> > populated and configured as IOMMU'abled with help of the already
-> > populated iommu device via iommu_ops->add_device().
-> 
-> This looks fairly neat and clean.
-> 
-> I'm still worried about using #stream-id-cells in DT nodes though. While
-> I do understand that the *Linux* device model currently only allows each
-> struct device to be affected by a single IOMMU, I worry that encoding
-> that same restriction into DT is a mistake. I'd far rather see a
-> property like:
-> 
-> SMMU:
->     smmu: smmu@xxxxxx {
->         #smmu-cells = <1>;
->     }
-> 
-> Affected device:
->     smmus = <&smmu 1>;
->     (perhaps with smmu-names too)
-> 
-> That would allow the DT to represent basically arbitrary HW configurations.
-> 
-> The implementation of this patch would then be almost as trivial; you'd
-> just need to walk the smmus property to find each phandle in turn, just
-> like any other phandle+specifier property, and validate that the SMMU
-> driver was already probe()d for each.
+On Tue, Nov 12, 2013 at 09:50:06AM +0100, Markus Pargmann wrote:
+> Pinctrl driver node and pin group definitions for other driver nodes.
 
-There are a few problems with that:
+Neither patch subject nor commit log is telling anything useful, like
+what is the change and why the changes.
 
-  1.) It assumes all devices sharing an SMMU have the same number of
-      "smmu cells"
+Shawn
 
-  2.) It moves SMMU-specific data out to the device, which makes it
-      impossible to describe more complicated topologies where IDs can be
-      remapped/remastered, potentially by multiple SMMUs and/or bus bridges.
-
-When writing the binding for the ARM SMMU driver, I originally started with
-something similar to what you're suggesting, but was later forced down a
-different route when I realised what sort of systems were being built.
-
-We will have similar problems for PCIe RIDs and GIC DIDs (I spoke about this
-at the ARM mini-summit). They are not fixed across the system: they
-originate from a device, but can change as they traverse the system
-topology.
-
-Will
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx27.dtsi | 125 +++++++++++++++++++++++--------------------
+>  1 file changed, 67 insertions(+), 58 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+> index b7a1c6d..f119296 100644
+> --- a/arch/arm/boot/dts/imx27.dtsi
+> +++ b/arch/arm/boot/dts/imx27.dtsi
+> @@ -10,6 +10,7 @@
+>   */
+>  
+>  #include "skeleton.dtsi"
+> +#include "imx27-pingrp.h"
+>  
+>  / {
+>  	aliases {
+> @@ -235,64 +236,72 @@
+>  				status = "disabled";
+>  			};
+>  
+> -			gpio1: gpio@10015000 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015000 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> -			};
+> -
+> -			gpio2: gpio@10015100 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015100 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> -			};
+> -
+> -			gpio3: gpio@10015200 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015200 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> -			};
+> -
+> -			gpio4: gpio@10015300 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015300 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> -			};
+> -
+> -			gpio5: gpio@10015400 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015400 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> -			};
+> -
+> -			gpio6: gpio@10015500 {
+> -				compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> -				reg = <0x10015500 0x100>;
+> -				interrupts = <8>;
+> -				gpio-controller;
+> -				#gpio-cells = <2>;
+> -				interrupt-controller;
+> -				#interrupt-cells = <2>;
+> +			iomuxc: iomuxc@10015000 {
+> +				compatible = "fsl,imx27-iomuxc";
+> +				reg = <0x10015000 0x600>;
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges;
+> +
+> +				gpio1: gpio@10015000 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015000 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+> +
+> +				gpio2: gpio@10015100 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015100 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+> +
+> +				gpio3: gpio@10015200 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015200 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+> +
+> +				gpio4: gpio@10015300 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015300 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+> +
+> +				gpio5: gpio@10015400 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015400 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+> +
+> +				gpio6: gpio@10015500 {
+> +					compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+> +					reg = <0x10015500 0x100>;
+> +					interrupts = <8>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					interrupt-controller;
+> +					#interrupt-cells = <2>;
+> +				};
+>  			};
+>  
+>  			audmux: audmux@10016000 {
+> -- 
+> 1.8.4.2
+> 
