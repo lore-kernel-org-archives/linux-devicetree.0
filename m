@@ -1,70 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: address translation for PCIe-to-localbus bridge
-Date: Wed, 13 Nov 2013 15:26:28 +0900
-Message-ID: <20131113062628.18272C41F54@trevor.secretlab.ca>
-References: <527A1983.6020603@keymile.com> <20131106173649.GA25515@obsidianresearch.com> <20131106190308.01f7a4a9@skate> <20131106182457.GA25879@obsidianresearch.com> <20131111155050.96290C41ABB@trevor.secretlab.ca> <20131112080512.3992b2e4@skate> <5281E2B5.3080701@keymile.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5281E2B5.3080701-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Cl??ment <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v3 0/6] ARM: at91: use new at91 clks for samad3 SoCs
+Date: Wed, 13 Nov 2013 09:32:06 +0100
+Message-ID: <1384331532-2951-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2013 09:11:33 +0100, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org> wrote:
-> On 11/12/2013 08:05 AM, Thomas Petazzoni wrote:
-> > Dear Grant Likely,
-> >
-> > On Mon, 11 Nov 2013 15:50:50 +0000, Grant Likely wrote:
-> >
-> >>> So the mbus would register an address xlate for its node that is
-> >>> called instead of ranges parsing. For the example in my last message
-> >>> the FPGA driver would register an xlate that made addresses relative
-> >>> to its own BAR0 address.
-> >>
-> >> There are already bus-specific transations available. Take a look at
-> >> struct of_bus in drivers/of/address.c
-> >
-> > Hum, right, but unless I'm wrong the of_busses[] array of struct of_bus
-> > is fixed in drivers/of/address.c, and as it is, there is no way for a
-> > specific bus driver to provide its own struct of_bus.
-> 
-> That was exactly my understanding as well, and that's where I was 
-> expecting some trickery to happen.
-> 
-> > So that would need to be extended, right?
-> 
-> The other approach I was foreseeing was to implement a way of 
-> dynamically updating the DT when the PCI subsystem enumerates the 
-> devices and assigns memory areas (namely, I would expect the ranges 
-> property to reflect that). But this would imply a standard way of 
-> defining the ranges property (I would expect something like <bar# 
-> start_addr length>, with an arguable number of cells). And I could
-> not find any such definition in the PCI bus binding document, so I'm 
-> probably completely off-track here. Aren't I?
+Hello,
 
-The ranges property is pretty well defined already. The format is
-<parent-addr-specifier> <child-addr-specifier> <size-specifier>, and
-then use assigned-addresses for each BAR to encode the address it is
-assigned to in the PCI address space.
+This patch series moves sama5d3 SoCs and boards to the new at91 clk framework
+(based on common clk framework).
 
-Ranges provides the windows into the parent bus, and assigned-address
-is used to map the child into the parent. Using it should make the
-of_bus translations work without changes.
+This patch series depends on following patch series:
+1) "ARM: at91/dt: split sama5d3 definition" (v1)
+3) "ARM: at91: move to common clk framework" (v5)
 
-Grep the source tree for assigned-addresses to get examples.
+Best Regards,
 
-> After all, we should expect a driver to behave (and expect) the same of 
-> the DT, regardless of whether enumeration was performed by firmware or
-> by the OS itself. Or am I wrong on this too?
+Boris
 
-Yes, that is a reasonable expectation and it is a limitation of the
-current implementation. We've got two choices here.  Modify the DT at
-boot time, or extend the DT translation code to ask the PCI device for
-BAR settings. I'm not going to make a call on which is better until I
-see some prototype code.
+Changes since v2:
+ - rework dt bindings:
+   * replace "atmel,clk-id" property by the standard "reg" property
+   * reference system, peripheral and programmable clks using the direct
+     clk node instead of the parent node plus a clk id
+ - add usb_clk to usb ehci controller node
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v1:
+ - remove references to peripheral id macros
+ - remove old clk definitions after moving to new clk framework
+
+Boris BREZILLON (6):
+  ARM: at91: prepare sama5 dt boards transition to common clk
+  ARM: at91: prepare common clk transition for sama5d3 SoC
+  ARM: at91/dt: define sama5d3 clocks
+  ARM: at91/dt: define sama5d3xek's main clk frequency
+  ARM: at91: move sama5d3 SoC to common clk
+  ARM: at91/dt: remove old clk material
+
+ arch/arm/boot/dts/sama5d3.dtsi      |  379 ++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/sama5d3_can.dtsi  |   20 ++
+ arch/arm/boot/dts/sama5d3_emac.dtsi |   11 +
+ arch/arm/boot/dts/sama5d3_gmac.dtsi |   11 +
+ arch/arm/boot/dts/sama5d3_lcd.dtsi  |   17 ++
+ arch/arm/boot/dts/sama5d3_mci2.dtsi |   12 ++
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi |   12 ++
+ arch/arm/boot/dts/sama5d3_uart.dtsi |   21 ++
+ arch/arm/boot/dts/sama5d3xcm.dtsi   |   17 +-
+ arch/arm/mach-at91/Kconfig          |    1 -
+ arch/arm/mach-at91/board-dt-sama5.c |   10 +-
+ arch/arm/mach-at91/sama5d3.c        |  342 -------------------------------
+ 12 files changed, 497 insertions(+), 356 deletions(-)
+
+-- 
+1.7.9.5
