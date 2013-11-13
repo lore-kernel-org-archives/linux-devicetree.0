@@ -1,104 +1,98 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
-Date: Wed, 13 Nov 2013 15:21:12 +0100
-Message-ID: <52838AD8.8070404@monstr.eu>
-References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org> <1384285347-13506-16-git-send-email-geert@linux-m68k.org> <5283524F.8030902@monstr.eu> <5283814C.6040904@monstr.eu> <CAMuHMdWOCdEcDMpJgQ5tOMJ=ygqapvjy2NzGkc9Esk5gZZ57fw@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
+ device tree
+Date: Wed, 13 Nov 2013 14:24:06 +0000
+Message-ID: <20131113142406.GH21713@e106331-lin.cambridge.arm.com>
+References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
+ <20131112153057.GA9683@earth.universe>
+ <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
+ <20131112200514.GA15413@earth.universe>
+ <CACRpkdaAaLjm_b+OLj3tobxBN8YGUcTPnXJ=qtBqd02=FTxhjQ@mail.gmail.com>
+ <20131112204013.GA17674@earth.universe>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="WpQLd4huC47g7cxADrL5j8evdptmLognG"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWOCdEcDMpJgQ5tOMJ=ygqapvjy2NzGkc9Esk5gZZ57fw@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20131112204013.GA17674@earth.universe>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---WpQLd4huC47g7cxADrL5j8evdptmLognG
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Nov 12, 2013 at 08:40:14PM +0000, Sebastian Reichel wrote:
+> On Tue, Nov 12, 2013 at 09:11:40PM +0100, Linus Walleij wrote:
+> > > I could find two boards using "gpio-matrix-keypad" in the mainline
+> > > kernel and not a single instance of "linux,no-autorepeat":
+> > 
+> > In things connected to GPIO, I don't expect the in-kernel
+> > device trees to be a good way so survey the usage of these
+> > bindings. Anyone doing device trees on any system with a
+> > few GPIOs can be using this.
+> > 
+> > But maybe we're lucky and won't break anyone's setup if
+> > we change this?
+> 
+> AFAIK Device Tree property names are considered as ABI, so existing
+> property names must not be removed.
 
-On 11/13/2013 03:02 PM, Geert Uytterhoeven wrote:
-> On Wed, Nov 13, 2013 at 2:40 PM, Michal Simek <monstr@monstr.eu> wrote:=
+To an extent. We shouldn't pointlessly break existing bindings, and we
+can typically support newer / "better" bindings without breaking support
+for existing bindings.
 
->>>> QUESTION: The padding of the DTB is gone, is this OK?
->>>
->>> Removing this kernel padding should be fine. I can't remember
->>> why it was there from the beginning.
->>
->> I know why is this here. The reason is process how dtb is passed
->> to the kernel via command line. head.S code just copy that dtb to
->> the same location where compiled-in dts is expected and kernel
->> doesn't need to care about position of dtb because this copy is
->> done without MMU. And the full kernel is covered by 2 tlbs and
->> we don't need to use another TLB for dtb mapping.
->>
->> It means pad matters a lot. Because u-boot ITS format doesn't use
->> simpleImage target but the kernel need to have a space for copying
->> dtb to this kernel location.
->>
->> Let me think about if there is an easy way to handle dtbs
->> which are passed from bootloader.
->=20
-> You can add to asm-generic/sections.h:
->=20
-> #ifndef ARCH_DTB_PADDING
-> #define ARCH_DTB_PADDING
-> #endif
->=20
-> and change KERNEL_DTB() to:
->=20
-> #define KERNEL_DTB()                                                   =
- \
->        STRUCT_ALIGN();                                                 =
-\
->        VMLINUX_SYMBOL(__dtb_start) =3D .;                              =
-  \
->        *(.dtb.init.rodata)                                             =
-\
->        ARCH_DTB_PADDING                                \
->        VMLINUX_SYMBOL(__dtb_end) =3D .;
->=20
-> Then microblaze can predefine ARCH_DTB_PADDING in its
-> <asm/sections.h>.
->=20
-> Still, it will crash badly if the external DTB is larger than
-> ARCH_DTB_PADDING.
+There may be cases where we have to remove support for bindings (i.e.
+when a binding is so badly used in practice that relying on it means
+we're likely to damage hardware, or where it's so ambiguous that it
+provides no useful information), but I don't think we've hit any of
+those yet.
 
-yes but the question is if our bootflow is correct or not.
-Because the problem is still with ARCH_DTB_PADDING value.
-In past we have extended this padding from 16k to 32k.
+If a portions of a binding are no longer used in practice, then I see no
+problem in removing support from them. However I'd expect them to remain
+documented as deprecated / unsupported by Linux, and for those names to
+not be re-used.
 
-We are setting up one tlb for early console and we can just do the same
-for dtb and fix kernel for this cases. Then we don't need to waste
-of memory for allocating space for dtb.
+> 
+> But I guess we can add the standardized property name in addition
+> to the deprecated one. New drivers can use the standardized property
+> name from the beginning.
+
+This is precisely how I'd expect bindings to evolve. New properties can
+be added, or existing properties can be extended, as long as those
+modifications don't impair existing device trees which are in use.
+
+If we need to change things substantially, then we can allocate a new
+compatible string for the new binding. That doesn't seem to be necessary
+here.
+
+> 
+> Thus I guess we should not use the name, which has the most adopters
+> in kernel (or out of kernel). Instead the most fitting name should
+> be used. Current suggestions (taken from kernel) are:
+> 
+> * <<vendor>>,no-autorepeat
+> * keypad,autorepeat
+> * linux,keypad-no-autorepeat
+> * linux,input-no-autorepeat
+> * linux,no-autorepeat
+> * autorepeat
+> 
+> I do not really care, which one is chosen, except for two things:
+> 
+> * <<vendor>> seems wrong. This is not vendor specific.
+> * I would prefer "input-" over "keypad-", since then the same name
+>   can be used for single keys, buttons, etc.
+
+Both of those sound valid to me, but I think it may make sense to keep
+the "linux," prefix. As I understand it this is really telling the Linux
+input subsystem to react to a device acting in a certain way, rather
+than describing or configuring the device in a certain way.
 
 Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---WpQLd4huC47g7cxADrL5j8evdptmLognG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlKDitgACgkQykllyylKDCF6eQCcC7s/qEvdog7zPURzdu0XOzRP
-nKwAnAli6/4A2SfZcUkHDKSSecm+QxPz
-=G4mX
------END PGP SIGNATURE-----
-
---WpQLd4huC47g7cxADrL5j8evdptmLognG--
+Mark.
