@@ -1,44 +1,80 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V3 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
- irqs
-Date: Wed, 13 Nov 2013 10:24:34 -0500
-Message-ID: <528399B2.8010308@ti.com>
-References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com> <1383657257-3458-2-git-send-email-r.sricharan@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv8][ 1/5] ARM i.MX35: Add devicetree support.
+Date: Wed, 13 Nov 2013 23:26:51 +0800
+Message-ID: <20131113152622.GE17816@S2101-09.ap.freescale.net>
+References: <1384255459-15134-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383657257-3458-2-git-send-email-r.sricharan-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384255459-15134-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 November 2013 08:14 AM, Sricharan R wrote:
-> In some socs the gic can be preceded by a crossbar IP which
-> routes the peripheral interrupts to the gic inputs. The peripheral
-> interrupts are associated with a fixed crossbar input line and the
-> crossbar routes that to one of the free gic input line.
+On Tue, Nov 12, 2013 at 12:24:15PM +0100, Denis Carikli wrote:
+> --- /dev/null
+> +++ b/arch/arm/mach-imx/imx35-dt.c
+> @@ -0,0 +1,48 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar, Pengutronix
+> + *
+> + * based on imx27-dt.c
+> + *
+> + * This program is free software; you can redistribute it and/or modify it under
+> + * the terms of the GNU General Public License version 2 as published by the
+> + * Free Software Foundation.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/time.h>
+> +#include <asm/hardware/cache-l2x0.h>
+> +#include "common.h"
+> +#include "mx35.h"
+> +
+> +static void __init imx35_dt_init(void)
+> +{
+> +	mxc_arch_reset_init_dt();
+> +
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +			     NULL, NULL);
+> +}
+> +
+> +static void __init imx35_timer_init(void)
+> +{
+> +	mx35_clocks_init_dt();
+> +}
+> +
+> +static const char *imx35_dt_board_compat[] __initdata = {
+> +	"fsl,imx35",
+> +	NULL
+> +};
+> +
+> +DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
+> +	.map_io		= mx35_map_io,
+> +	.init_early	= imx35_init_early,
+> +	.init_irq	= mx35_init_irq,
+> +	.handle_irq	= imx35_handle_irq,
+> +	.init_time	= imx35_timer_init,
+
+Please use CLK_OF_DECLARE() to save this hook.  You can look at imx51
+clock driver for example.
+
+Shawn
+
+> +	.init_machine	= imx35_dt_init,
+> +	.dt_compat	= imx35_dt_board_compat,
+> +	.restart	= mxc_restart,
+> +MACHINE_END
+> -- 
+> 1.7.9.5
 > 
-> The DT entries for peripherals provides the fixed crossbar input line
-> as its interrupt number and the mapping code should associate this with
-> a free gic input line. This patch adds the support inside the gic irqchip
-> to handle such routable irqs. The routable irqs are registered in a linear
-> domain. The registered routable domain's callback should be implemented
-> to get a free irq and to configure the IP to route it.
-> 
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-> ---
-Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
