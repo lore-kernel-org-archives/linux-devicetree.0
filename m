@@ -1,51 +1,111 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 5/7] clocksource/cadence_ttc: Overhaul clocksource
- frequency adjustment
-Date: Wed, 13 Nov 2013 09:14:59 -0800
-Message-ID: <2c13b204-2022-4091-95be-1749e8cc60b0@CH1EHSMHS026.ehs.local>
-References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
- <1383945677-29674-6-git-send-email-soren.brinkmann@xilinx.com>
- <52827B11.5040308@linaro.org>
- <CAKohpo=KaM97jJ2MnZxSeBz=Mf9cSmzk_EFQTL=EVPPvSH=Wag@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 14/17] dt: Consolidate __dtb_start declarations in <linux/of_fdt.h>
+Date: Wed, 13 Nov 2013 18:20:21 +0100
+Message-ID: <CAMuHMdU6Lqup-MuAOH0iTg16b-SHw4D52WsoPXMsumOxQWbJrg@mail.gmail.com>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>
+	<1384285347-13506-15-git-send-email-geert@linux-m68k.org>
+	<5283A000.8090007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpo=KaM97jJ2MnZxSeBz=Mf9cSmzk_EFQTL=EVPPvSH=Wag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5283A000.8090007@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <vgupta@synopsys.com>, James Hogan <james.hogan@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Chris Zankel <chris@zankel.net>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 01:33:52PM +0530, Viresh Kumar wrote:
-> On 13 November 2013 00:31, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
- wrote:
-> > Hmm, it could be interesting if Viresh can give its opinion on this=
- patch
-> > [cc'ed].
->=20
-> I am not sure if I understood the problem completely, but if this is =
-about
-> not allowing frequency transitions from cpufreq when we have started =
-to
-> suspend our system, then you must have a look at this thread:
->=20
-> https://lkml.org/lkml/2013/10/24/369
+On Wed, Nov 13, 2013 at 4:51 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Nov 12, 2013 at 1:42 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> The different architectures used their own (and different) declarations:
+>>
+>>     extern struct boot_param_header __dtb_start;
+>>     extern u32 __dtb_start[];
+>>     extern char __dtb_start[];
+>>
+>> Consolidate them using the first variant in <linux/of_fdt.h>.
+>> This requires adding a few "address of" operators on architectures where
+>> __dtb_start was an array before.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: Vineet Gupta <vgupta@synopsys.com>
+>> Cc: James Hogan <james.hogan@imgtec.com>
+>> Cc: Ralf Baechle <ralf@linux-mips.org>
+>> Cc: Jonas Bonn <jonas@southpole.se>
+>> CC: Chris Zankel <chris@zankel.net>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  arch/arc/include/asm/sections.h             |    1 -
+>>  arch/arc/kernel/setup.c                     |    2 +-
+>>  arch/metag/kernel/setup.c                   |    6 +-----
+>>  arch/mips/include/asm/mips-boards/generic.h |    4 ----
+>>  arch/mips/lantiq/prom.h                     |    2 --
+>>  arch/mips/netlogic/xlp/dt.c                 |    4 ++--
+>>  arch/mips/ralink/of.c                       |    2 --
+>>  arch/openrisc/kernel/setup.c                |    2 +-
+>>  arch/openrisc/kernel/vmlinux.h              |    2 --
+>>  arch/xtensa/kernel/setup.c                  |    3 +--
+>>  include/linux/of_fdt.h                      |    3 +++
+>>  11 files changed, 9 insertions(+), 22 deletions(-)
+>
+> This is great, but I would like to see this taken one step further and
+> move the selection logic into the core code. We can try to use the
+> built-in dtb if early_init_dt_scan is passed a NULL or invalid dtb. This
+> should work for most arches I think and still allows an arch to do a
+> different selection algorithm if desired.
 
-Thanks for the link. I had problems in that direction at some point too=
-=2E
-But the current issue, is not cpufreq changing the frequency, but our
-suspend code in prepare_late() causes a frequency change of this timer
-when the PLLs are powered down (it's done through a CCF clk_set_parent(=
-)
-operation).
+Yes, that makes sense.
 
-	S=C3=B6ren
+> Are the DT related patches dependent on the rest of the series?
 
+Not really. There may be small rejects if you apply it out-of-order,
+but nothing serious.
+
+> Something like this is what I have in mind:
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 5c47910..723f854d 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -869,14 +869,16 @@ void * __init __weak
+> early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>
+>  bool __init early_init_dt_scan(void *params)
+>  {
+> -       if (!params)
+> -               return false;
+> -
+>         /* Setup flat device-tree pointer */
+>         initial_boot_params = params;
+>
+> +       if (!initial_boot_params ||
+> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER))
+> +               initial_boot_params = &__dtb_start;
+> +
+>         /* check device tree validity */
+> -       if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+> +       if (!initial_boot_params ||
+
+initial_boot_params cannot be NULL here, so no need to check.
+
+> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER)) {
+
+However, if __dtb_end == __dtb_start, you may be reading random
+data here from the next section. The OF_DT_HEADER check should cover
+this, but better safe than sorry?
+
+>                 initial_boot_params = NULL;
+>                 return false;
+>         }
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
