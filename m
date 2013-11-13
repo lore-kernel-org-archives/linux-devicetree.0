@@ -1,91 +1,98 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv4 5/7] iommu/tegra: smmu: Support "mmu-masters" binding
-Date: Wed, 13 Nov 2013 10:58:23 -0700
-Message-ID: <5283BDBF.9020509@wwwdotorg.org>
-References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>	<1384158718-4756-6-git-send-email-hdoyu@nvidia.com>	<5282C512.5090900@wwwdotorg.org>
-	<20131113094517.4608edf4302b61e3c4402a25@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
+Date: Wed, 13 Nov 2013 18:16:22 +0000
+Message-ID: <20131113181622.GZ878@sirena.org.uk>
+References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com>
+ <1485256.GGQxcSNhvH@flatron> <20131113164328.GW878@sirena.org.uk>
+ <1783157.vhfWvslFgW@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131113094517.4608edf4302b61e3c4402a25-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2427103298150034790=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1783157.vhfWvslFgW@flatron>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, rob.herring@calxeda.com, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2013 12:45 AM, Hiroshi Doyu wrote:
-> On Wed, 13 Nov 2013 01:17:22 +0100
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> 
->>> +		mmu-masters = <&host1x TEGRA_SWGROUP_HC>,
->>> +			      <&mpe TEGRA_SWGROUP_MPE>,
->>> +			      <&vi TEGRA_SWGROUP_VI>,
->>> +			      <&epp TEGRA_SWGROUP_EPP>,
->>> +			      <&isp TEGRA_SWGROUP_ISP>,
->>> +			      <&gr2d TEGRA_SWGROUP_G2>,
->>> +			      <&gr3d TEGRA_SWGROUP_NV TEGRA_SWGROUP_NV2>,
->>
->> So right now, the driver is statically assigning clients to a couple of
->> specific ASIDs. What if we want to configure that mapping from DT; does
->> that make sense? Instead of mmu-masters being a list of <phandle
->> streamid*>, should it be <phandle ASID streamid*> or <phandle (streamid
->> ASID)*>?
-> 
-> That's possible.
-> 
-> Here, swgroup ID == stream ID, and a device is statically bind to a
-> specific swgroup ID(hard coded). ASID is dynamically assigned to
-> swgroup(devices). So assigning ASID belongs to a policy, but we can
-> consider this assigning as board specifc policy since it's hard to
-> change after kernel boots up in general. So assigning ASID in a board
-> DT makes sense. The format would be:
-> 
->   <phandle "swgroup ID" "asid">,
-> 
-> ex:
->   <&host1x TEGRA_SWGROUP_HC 0>,
-> 
-> The above depends on the discussion of the standard IOMMU bindings,
-> but the number of argument can be set by each IOMMU driver.
-> 
-> If we take the the other way,
-> 
->  smmu: iommu@xxxxxx {
->        #iommu-cells = <3>;
->        ^^^^^^^^^^^^^^^^^^
->    };
-> 
->    host1x {
->            compatible = "nvidia,tegra30-host1x", "simple-bus";
->            iommu = <&smmu 0x??????? 0x??????? "asid">;
-> 	   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#######
->            gr3d {
->                    compatible = "nvidia,tegra30-gr3d";
->                    iommu = <&smmu 0x??????? 0x???????>;
->            }
-> 
-> I think that this "asid" part can be set 0 in tegra??.dtsi and the
-> actual value can be overwritten in tegra??-<boardname>.dts file.
 
-The one issue here is that we can only override entire properties, so
-it's not possible for a board file to *just* replace the ASID, it'd have
-to duplicate the entire property, just to change the one value.
+--===============2427103298150034790==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2+IDmuKgu0wSQZlt"
+Content-Disposition: inline
 
-Is the ASID mapping really likely to be board-specific though? To my
-naive thinking, it seems that the chip design (e.g. number of
-peripherals, number of available ASIDs) would tend to imply the
-device->ASID mapping, since it would have been considered as part of
-chip design. Hence, wouldn't soc.dtsi typically specify the expected
-ASID mapping, and boards rarely if ever override it?
 
-If the ASID mapping really is likely to vary per board, perhaps it makes
-sense to put it into a separate property somehow so it's easier to override?
+--2+IDmuKgu0wSQZlt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Nov 13, 2013 at 05:47:07PM +0100, Tomasz Figa wrote:
+> On Wednesday 13 of November 2013 16:43:28 Mark Brown wrote:
+
+> > The best practice on this one seems to vary somewhat randomly -
+> > sometimes it's a requirement, sometimes it isn't.
+
+> AFAIR we decided on ARM Mini Summit to mandate this, but maybe my memory
+> is misleading me.
+
+OK, I hadn't heard that - it's good that folks made their mind up.
+
+> > Is this a constructive thing from a style point of view?  We're not
+> > allowed to actually do anything useful with the value at runtime so
+> > people may as well choose what they like.
+
+> This is what ePAPR says and I believe this is reasonable, because looking
+> at device tree sources you don't need to think what kind of hardware
+> a cs42l52 is. The information that it's a cs42l52 is still contained
+> inside compatible string.
+
+Given that a meaningful name was already specified for the handle it's
+really not going to help anything - it's just going to duplicate that
+most likely.  Given that it can't be actually used for anything it seems
+better to just let people write whatever they feel like in there (even
+if it's just a single letter to keep the parser happy) rather than
+nitpick over their choices.
+
+Really it looks like one of those silly things standards makers do where
+they start specifying a feature (in this case device classes) but don't
+define any useful behaviour for it.
+
+--2+IDmuKgu0wSQZlt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSg8HuAAoJELSic+t+oim9gSMP+gPoEBGquJuKG+teTLTJJwPf
+9obX0Xl9Kskx/D52l4NL5EWINnN6KWauV41BT4k5p8OYEeaGZ7ypqEp3bAvaZcK+
+s1drK3JredTRbEcRZUJB/qB5aHUY1+no/AmalxpX589nN0lrO4ykBDPb0Ncg1Edt
+XrOymDkvOgrnoeAoRspxBdM/VNWbo4/LckP3COFmOo5llhdD2kdDhZmeGWyeuhdx
+JpB1wss1vpbbZNHzKo9NSTeisSZKsWMLThgAgNBLkj4va/34QjKSvDvhHn0e6qwl
+l9LZLLoQqa/xpQTwPL53FZrN+UM8M5/hvNSUZH3OWho37rCMzf9eLTcdB0OyeTXq
+qFCJN8CyzLs9uOlDllnyhC33uFD+O+iHbuJvw6dtMlxW76jeESawUrziedbaVFmP
+ISc3ib+qxY/BqaY+eeppY1gIQmmzq6PGfZM693tzQoaiRLb55V7/c9A4vWgF0/Ir
+WAC+ziwh4msDe75cDkn2Oa1Knq5VafWj/FYM44V6TPECQcydNR8HAiUIx3NIITp6
+wgm1VPdx2VGnHsVSN0vtt7FTJ61w3E5+Hfw/hsWuleDO9Rdb0RdQ46F11AzbAOKg
+EM4MdWKojANAA/6drbRR9RMEj8AM1Mnr/e6r9y4Ul12UGNDLZbvv5jvTS/6LK2Su
+FtHt+w8N2gV7s0X7wnbq
+=eNrW
+-----END PGP SIGNATURE-----
+
+--2+IDmuKgu0wSQZlt--
+
+--===============2427103298150034790==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2427103298150034790==--
