@@ -1,49 +1,127 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH v6] of: add vendor prefix for GMT
-Date: Wed, 13 Nov 2013 13:13:32 +0100
-Message-ID: <20131113131332.63068fb1@endymion.delvare>
-References: <1384340349-8626-1-git-send-email-wni@nvidia.com>
-	<52835C42.6070806@nvidia.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv5 20/20] MAINTAINERS: add maintainer entry for thermal
+ bindings
+Date: Wed, 13 Nov 2013 08:17:12 -0400
+Message-ID: <52836DC8.8080702@ti.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-21-git-send-email-eduardo.valentin@ti.com> <CAOesGMiCh-nGPqJQd4NPz9st7mBT0JkZ9nEK1gfyF2RmnrXZog@mail.gmail.com> <52828C31.2050604@ti.com> <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52835C42.6070806@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, swarren@nvidia.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131113094232.GB21713@e106331-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2013 19:02:26 +0800, Wei Ni wrote:
-> Previous versions are:
-> [v5]: http://patchwork.ozlabs.org/patch/281017/
-> [v4]: http://lkml.indiana.edu/hypermail/linux/kernel/1309.1/02812.html
-> 
-> On 11/13/2013 06:59 PM, Wei Ni wrote:
-> > Adding Global Mixed-mode Technology Inc. to the list
-> > of devicetree vendor prefixes.
-> > 
-> > Signed-off-by: Wei Ni <wni@nvidia.com>
-> > Acked-by: Stephen Warren <swarren@nvidia.com>
-> > ---
-> >  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 2956800..64471a8 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -28,6 +28,7 @@ est	ESTeem Wireless Modems
-> >  fsl	Freescale Semiconductor
-> >  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-> >  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-> > +gmt	Global Mixed-mode Technology, Inc.
-> >  hisilicon	Hisilicon Limited.
-> >  hp	Hewlett Packard
-> >  ibm	International Business Machines (IBM)
-> > 
+--xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jean Delvare <khali@linux-fr.org>
+On 13-11-2013 05:42, Mark Rutland wrote:
+> Hi,
+>=20
+> On Tue, Nov 12, 2013 at 08:14:41PM +0000, Eduardo Valentin wrote:
+>> On 12-11-2013 15:59, Olof Johansson wrote:
+>>> On Tue, Nov 12, 2013 at 11:46 AM, Eduardo Valentin
+>>> <eduardo.valentin@ti.com> wrote:
+>>>> After discussion and agreement of thermal device tree bindings,
+>>>> it is desirable to properly maintain thermal bindings for
+>>>> existing and upcoming devices.
+>>>>
+>>>> As original author of thermal device tree bindings, I am
+>>>> volunteering to maintain them.
+>>>>
+>>>> Cc: Rob Herring <rob.herring@calxeda.com>
+>>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>>>> ---
+>>>>  MAINTAINERS | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>> index 3438384..94bfc46 100644
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -6178,6 +6178,7 @@ M:        Pawel Moll <pawel.moll@arm.com>
+>>>>  M:     Mark Rutland <mark.rutland@arm.com>
+>>>>  M:     Stephen Warren <swarren@wwwdotorg.org>
+>>>>  M:     Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>>> +M:     Eduardo Valentin <eduardo.valentin@ti.com>
+>>>>  L:     devicetree@vger.kernel.org
+>>>>  S:     Maintained
+>>>>  F:     Documentation/devicetree/
+>>>
+>>> The number of device-tree maintainers is getting to be somewhat silly=
+=2E
+>>> You don't have to be a maintainer to be a reviewer, and the number is=
 
--- 
-Jean Delvare
+>>> getting large enough that it might get hard for one maintainer to kno=
+w
+>>> what another is doing.
+>>>
+>>> So, soft nack, but it's really up to the DT guys.
+>>
+>> Hello Olof,
+>>
+>> No issues on my side. As I stated in the patch description, I am
+>> volunteering. The motivation comes from the fact that it's been hard t=
+o
+>> get DT maintainers attention, so I am assuming they are not having
+>> enough bandwidth to pay attention to an extra class of bindings.
+>>
+>> I agree with you, this is up to the DT folks.
+>=20
+> When we discussed this in #devicetree, I was under the impression you
+> meant adding a line like:
+>=20
+> F:      Documentation/devicetree/bindings/thermal/
+>=20
+> To your MAINTAINERS entry, rather than adding yourself to the general
+> devicetree bindings MAINTAINERS entry. Sorry for the confusion regardin=
+g
+> this.
+>=20
+> Given we have enough difficulty organising ourselves at present, I agre=
+e
+> with Olof that it doesn't make much sense to throw more people into the=
+
+> general devicetree bindings maintainer pile.
+>=20
+> However, we would certainly appreciate any review you'd be willing to
+> provide.
+
+No issues then folks. :-)
+
+>=20
+> Thanks,
+> Mark.
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlKDbcgACgkQCXcVR3XQvP3gAAEApfSAfk67eq22FJy/dY46cxCZ
+1DhuZiTeUNPQYuLMkF8A/AkgSQAHK3nAzd3hGOmLOhbfElBIW4F8h0PU34gqqpZr
+=xlBF
+-----END PGP SIGNATURE-----
+
+--xj7vtLu5XQTwRUPwdGgl6qRw5hxGB2OUA--
