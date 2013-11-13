@@ -1,84 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
-Date: Wed, 13 Nov 2013 22:29:53 +0000
-Message-ID: <20131113222953.GA26614@sirena.org.uk>
-References: <527A1C47.6050405@nvidia.com>
- <20131106110154.GG11602@sirena.org.uk>
- <5281C228.3000404@nvidia.com>
- <5282717C.3050502@wwwdotorg.org>
- <20131113122329.GC878@sirena.org.uk>
- <5283B6E3.9070206@wwwdotorg.org>
- <20131113190745.GD878@sirena.org.uk>
- <5283DD52.5050903@wwwdotorg.org>
- <20131113204923.GG878@sirena.org.uk>
- <5283F625.403@wwwdotorg.org>
+From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
+Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
+ device tree
+Date: Thu, 14 Nov 2013 00:29:24 +0100
+Message-ID: <20131113232923.GB13669@earth.universe>
+References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
+ <20131112153057.GA9683@earth.universe>
+ <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
+ <20131112200514.GA15413@earth.universe>
+ <CACRpkdaAaLjm_b+OLj3tobxBN8YGUcTPnXJ=qtBqd02=FTxhjQ@mail.gmail.com>
+ <20131112204013.GA17674@earth.universe>
+ <20131113142406.GH21713@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5283F625.403-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131113142406.GH21713-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---oyUTqETQ0mS9luUI
+--DKU6Jbt7q3WqK7+M
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 13, 2013 at 02:59:01PM -0700, Stephen Warren wrote:
-> On 11/13/2013 01:49 PM, Mark Brown wrote:
+Hi,
 
-> > No, with DT you can say that if there is no DT binding configuring
-> > a given thing (clock, regulator, GPIO or whatever) then no amount
-> > of module loading will ever cause it to appear - this is what the
-> > flag in question controls.
+On Wed, Nov 13, 2013 at 02:24:06PM +0000, Mark Rutland wrote:
+> > Current suggestions (taken from kernel) are:
+> >=20
+> > * <<vendor>>,no-autorepeat
+> > * keypad,autorepeat
+> > * linux,keypad-no-autorepeat
+> > * linux,input-no-autorepeat
+> > * linux,no-autorepeat
+> > * autorepeat
+> >=20
+> > I do not really care, which one is chosen, except for two things:
+> >=20
+> > * <<vendor>> seems wrong. This is not vendor specific.
+> > * I would prefer "input-" over "keypad-", since then the same name
+> >   can be used for single keys, buttons, etc.
+>=20
+> Both of those sound valid to me, but I think it may make sense to keep
+> the "linux," prefix. As I understand it this is really telling the Linux
+> input subsystem to react to a device acting in a certain way, rather
+> than describing or configuring the device in a certain way.
 
-> But we do have a binding for regulators, so wouldn't that flag always
-> be true?
+That leaves the following two options:
 
-In theory.  In practice people often add bindings for devices without
-including the regulators and then someone comes along and adds the
-regulators later, perhaps not even using a system with DT, and renders
-all existing DTs buggy.  This is generally miserable for everyone so
-it's better if we're liberal in what we accept.
+* linux,input-no-autorepeat
+* linux,no-autorepeat
 
-> Perhaps you can suggest a name for the flag, and a specific set of
-> conditions when it will have specific values. That might help me
-> understand what you mean.
+Any suggestions for those?
 
-Well, of_have_populated_dt() is essentially doing the same thing
-(probably, I don't know if it's set at quite the right time) - it's
-saying we have a DT.  We could even change the users to check that as
-well if it's doing the right thing.
+-- Sebastian
 
-> Are you confusing having a binding (schema definition) with having DT
-> content ("foo-supply" property)?
-
-No.
-
---oyUTqETQ0mS9luUI
+--DKU6Jbt7q3WqK7+M
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSg/1eAAoJELSic+t+oim9ex4QAIXgGSC2u6yG9b8urC8rfch6
-DzbYkm7jjnAoawyzFtSrSmw+TZ3MY27sHTIdE9GA7WjiY43bHRLw8Zw85S+0bARx
-TA584U9Hd1CKmAnQ/BzrvkL2+W8UNeuXGyCnQ9i/5QsB+WW5s+5E6Vmgfg4QTn2o
-lSQ1le7mtddGg7WV9oaLDZrArS8z0cRC0ovBjwdQqkeQgcxzkArqt8kmHvMjPFhe
-dBCia5P/HysEfBpweFUSRnOU2Z8n01D6WWzcChi0sRc+lLWQqyHZwk/e/7BRPT0r
-dFf5YZbaEs6soug3TvTmUc+l2MPJfNgAmfPNDkOHsO5c94OfwANpbKjoS5+qZ//C
-HaOymUMP5q63HHT5aMp81EKycZc+L794xRrN3Yau/4eETd5pEoGE0sc+NWgDdZkX
-7qQcDnrP2cBH3l/kI12FYNjLslwQhfOTsbEkTm268MNq7+qiIzCtdI6J6Kha64XZ
-5t8a/tl3lmzJXFEiO+u8faa0a43/aGzs5U5uOiBHWnD564TPWpU350pPXXyKPpTN
-LJNuuqYNIu4mV3jiMhNujtlV0oHC5dB3wLuUO18J/eaDjnvZwlYPKDZqAoNI3K4N
-fl8PC8Q+xweptCUxTE4j9JaFPxtqStlDxVVILAagV13KA+SAmB9aaQsCBYgnkcUz
-VYUMqW6bhKsYOYboOB1X
-=ZR+B
+iQIcBAEBCAAGBQJShAtTAAoJENju1/PIO/qapIIP/1nOGTKGR/ITDpzrdQBJ7vnG
+1607bRwWnJvSOulQXp7XtqeEMz0brrZgamE2d/CHUxxQSQtrJTCZTDB4VDFxVUAq
+vzVAZpH54czpN+vA+zS7KJo47VJ83o9lk0G07F4FVVPLr4mCd6CdLVGzeo009gG2
+bfXwxvgObOEHsPa7mZoYseSl4fJctTcbrqJmsNLyZ6yO6eowFLX3RR+MJhuhleCm
+C1BnbN4WVnqSAnmPAbXGGZx8C7dzZGGjg3qR5osQIgD4gRkJ04ylHhTkgSgfgM6G
+Kp14tE8exYm592B5HH3uI/GKvgOsfeUA5o7Af2AP4ol1/BFE3jjYzwbeNYoEu0dN
+NbsmD2Hf3QxjGRwhklxXrX/mmYdSHxRWyEtK4uH2h3qdyGx446ZRjq3NqqqBJEj3
+ANhAeNJWobFqC9KHO6rJW/a0IUg8v/wUr33P47zetqTDVFppk/AEyMh9iV/mNXCr
+e2Fjbmb0wxRhdBcCnv6mFHv0hoYEeaybl+nKvsQ0ELw8wPo6p/B20pQNJJOaSmBb
+QYbybQ8XJNQx0L4dMDq4gH6HbOVb+7VAymsM+Xf4Wvq59k3NPlr+W58plA57xDRB
+UqBWKHEaWggfeyqizg4Fr8qhqB1ySg2xrk0HvCovr1qlkQgscg6FbnVmwGPH2fnE
+/9zrq8KgGJRsQN1LUnzP
+=iEj7
 -----END PGP SIGNATURE-----
 
---oyUTqETQ0mS9luUI--
+--DKU6Jbt7q3WqK7+M--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
