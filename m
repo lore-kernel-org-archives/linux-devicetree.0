@@ -1,92 +1,135 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCHv4][ 3/7] staging: imx-drm: Add RGB666 support for parallel
- display.
-Date: Wed, 13 Nov 2013 10:23:19 +0100
-Message-ID: <1384334603-14208-3-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv4][ 4/7] staging: imx-drm: parallel display: add regulator support.
+Date: Wed, 13 Nov 2013 10:23:20 +0100
+Message-ID: <1384334603-14208-4-git-send-email-denis@eukrea.com>
 References: <1384334603-14208-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1384334603-14208-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Denis Carikli <denis@eukrea.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384334603-14208-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2VsIE1vbGwg
-PHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
-b20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzogSWFuIENh
-bXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKQ2M6IERh
-dmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3VuZy5jb20+
-CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+
-CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8a2VybmVs
-QHBlbmd1dHJvbml4LmRlPgpDYzogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KQ2M6
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogRXJpYyBCw6luYXJkIDxl
-cmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlzQGV1a3Jl
-YS5jb20+Ci0tLQpDaGFuZ2VMb2cgdjItPnYzOgotIEFkZGVkIHNvbWUgaW50ZXJlc3RlZCBwZW9w
-bGUgaW4gdGhlIENjIGxpc3QuCi0gUmVtb3ZlZCB0aGUgY29tbWl0IG1lc3NhZ2UgbG9uZyBkZXNj
-aXB0aW9uIHRoYXQgd2FzIGp1c3QgYSBjb3B5IG9mIHRoZSBzaG9ydAogIGRlc2NyaXB0aW9uLgot
-IFJlYmFzZWQgdGhlIHBhdGNoLgotIEZpeGVkIGEgY29weS1wYXN0ZSBlcnJvciBpbiB0aGUgaXB1
-X2RjX21hcF9jbGVhciBwYXJhbWV0ZXIuCi0tLQogLi4uL2JpbmRpbmdzL3N0YWdpbmcvaW14LWRy
-bS9mc2wtaW14LWRybS50eHQgICAgICAgfCAgICAyICstCiBkcml2ZXJzL3N0YWdpbmcvaW14LWRy
-bS9pcHUtdjMvaXB1LWRjLmMgICAgICAgICAgICB8ICAgIDkgKysrKysrKysrCiBkcml2ZXJzL3N0
-YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMgICAgICAgICB8ICAgIDIgKysKIDMgZmls
-ZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdGFnaW5nL2lteC1kcm0vZnNsLWlt
-eC1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcvaW14
-LWRybS9mc2wtaW14LWRybS50eHQKaW5kZXggYjg3NmQ0OS4uMmQyNDQyNSAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcvaW14LWRybS9mc2wtaW14
-LWRybS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N0YWdpbmcv
-aW14LWRybS9mc2wtaW14LWRybS50eHQKQEAgLTI5LDcgKzI5LDcgQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoKIC0gY3J0YzogdGhlIGNydGMgdGhpcyBkaXNwbGF5IGlzIGNvbm5lY3RlZCB0bywgc2Vl
-IGJlbG93CiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBpbnRlcmZhY2VfcGl4X2ZtdDogSG93IHRo
-aXMgZGlzcGxheSBpcyBjb25uZWN0ZWQgdG8gdGhlCi0gIGNydGMuIEN1cnJlbnRseSBzdXBwb3J0
-ZWQgdHlwZXM6ICJyZ2IyNCIsICJyZ2I1NjUiLCAiYmdyNjY2IgorICBjcnRjLiBDdXJyZW50bHkg
-c3VwcG9ydGVkIHR5cGVzOiAicmdiMjQiLCAicmdiNTY1IiwgImJncjY2NiIsICJyZ2I2NjYiCiAt
-IGVkaWQ6IHZlcmJhdGltIEVESUQgZGF0YSBibG9jayBkZXNjcmliaW5nIGF0dGFjaGVkIGRpc3Bs
-YXkuCiAtIGRkYzogcGhhbmRsZSBkZXNjcmliaW5nIHRoZSBpMmMgYnVzIGhhbmRsaW5nIHRoZSBk
-aXNwbGF5IGRhdGEKICAgY2hhbm5lbApkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lteC1k
-cm0vaXB1LXYzL2lwdS1kYy5jIGIvZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaXB1LXYzL2lwdS1k
-Yy5jCmluZGV4IGQwZTNiYzMuLmJjYzc2ODAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy9p
-bXgtZHJtL2lwdS12My9pcHUtZGMuYworKysgYi9kcml2ZXJzL3N0YWdpbmcvaW14LWRybS9pcHUt
-djMvaXB1LWRjLmMKQEAgLTkyLDYgKzkyLDcgQEAgZW51bSBpcHVfZGNfbWFwIHsKIAlJUFVfRENf
-TUFQX0dCUjI0LCAvKiBUVkV2MiAqLwogCUlQVV9EQ19NQVBfQkdSNjY2LAogCUlQVV9EQ19NQVBf
-QkdSMjQsCisJSVBVX0RDX01BUF9SR0I2NjYsCiB9OwogCiBzdHJ1Y3QgaXB1X2RjIHsKQEAgLTE1
-NSw2ICsxNTYsOCBAQCBzdGF0aWMgaW50IGlwdV9waXhmbXRfdG9fbWFwKHUzMiBmbXQpCiAJCXJl
-dHVybiBJUFVfRENfTUFQX0JHUjY2NjsKIAljYXNlIFY0TDJfUElYX0ZNVF9CR1IyNDoKIAkJcmV0
-dXJuIElQVV9EQ19NQVBfQkdSMjQ7CisJY2FzZSBWNEwyX1BJWF9GTVRfUkdCNjY2OgorCQlyZXR1
-cm4gSVBVX0RDX01BUF9SR0I2NjY7CiAJZGVmYXVsdDoKIAkJcmV0dXJuIC1FSU5WQUw7CiAJfQpA
-QCAtNDA0LDYgKzQwNywxMiBAQCBpbnQgaXB1X2RjX2luaXQoc3RydWN0IGlwdV9zb2MgKmlwdSwg
-c3RydWN0IGRldmljZSAqZGV2LAogCWlwdV9kY19tYXBfY29uZmlnKHByaXYsIElQVV9EQ19NQVBf
-QkdSMjQsIDEsIDE1LCAweGZmKTsgLyogZ3JlZW4gKi8KIAlpcHVfZGNfbWFwX2NvbmZpZyhwcml2
-LCBJUFVfRENfTUFQX0JHUjI0LCAwLCAyMywgMHhmZik7IC8qIGJsdWUgKi8KIAorCS8qIHJnYjY2
-NiAqLworCWlwdV9kY19tYXBfY2xlYXIocHJpdiwgSVBVX0RDX01BUF9SR0I2NjYpOworCWlwdV9k
-Y19tYXBfY29uZmlnKHByaXYsIElQVV9EQ19NQVBfUkdCNjY2LCAyLCAxNywgMHhmYyk7IC8qIHJl
-ZCAqLworCWlwdV9kY19tYXBfY29uZmlnKHByaXYsIElQVV9EQ19NQVBfUkdCNjY2LCAxLCAxMSwg
-MHhmYyk7IC8qIGdyZWVuICovCisJaXB1X2RjX21hcF9jb25maWcocHJpdiwgSVBVX0RDX01BUF9S
-R0I2NjYsIDAsIDUsIDB4ZmMpOyAvKiBibHVlICovCisKIAlyZXR1cm4gMDsKIH0KIApkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jIGIvZHJpdmVy
-cy9zdGFnaW5nL2lteC1kcm0vcGFyYWxsZWwtZGlzcGxheS5jCmluZGV4IGIzNGYzYTMuLjQ2YjZm
-Y2UgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL3BhcmFsbGVsLWRpc3BsYXku
-YworKysgYi9kcml2ZXJzL3N0YWdpbmcvaW14LWRybS9wYXJhbGxlbC1kaXNwbGF5LmMKQEAgLTI0
-OCw2ICsyNDgsOCBAQCBzdGF0aWMgaW50IGlteF9wZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQogCQkJaW14cGQtPmludGVyZmFjZV9waXhfZm10ID0gVjRMMl9QSVhfRk1UX1JH
-QjU2NTsKIAkJZWxzZSBpZiAoIXN0cmNtcChmbXQsICJiZ3I2NjYiKSkKIAkJCWlteHBkLT5pbnRl
-cmZhY2VfcGl4X2ZtdCA9IFY0TDJfUElYX0ZNVF9CR1I2NjY7CisJCWVsc2UgaWYgKCFzdHJjbXAo
-Zm10LCAicmdiNjY2IikpCisJCQlpbXhwZC0+aW50ZXJmYWNlX3BpeF9mbXQgPSBWNEwyX1BJWF9G
-TVRfUkdCNjY2OwogCX0KIAogCWlteHBkLT5kZXYgPSAmcGRldi0+ZGV2OwotLSAKMS43LjkuNQoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFp
-bGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5s
-aW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v2->v3:
+- Added some interested people in the Cc list.
+- the lcd-supply is now called display-supply (not all display are LCD)=
+=2E
+- The code and documentation was updated accordingly.
+- regulator_is_enabled now guard the regulator enables/disables because
+  regulator_disable does not check the regulator state.
+---
+ .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    1 +
+ drivers/staging/imx-drm/parallel-display.c         |   22 ++++++++++++=
+++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-=
+drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm=
+=2Etxt
+index 2d24425..4dd7ce5 100644
+--- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
++++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
+@@ -28,6 +28,7 @@ Required properties:
+ - compatible: Should be "fsl,imx-parallel-display"
+ - crtc: the crtc this display is connected to, see below
+ Optional properties:
++- display-supply : phandle to the regulator device tree node if needed=
+=2E
+ - interface_pix_fmt: How this display is connected to the
+   crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb66=
+6"
+ - edid: verbatim EDID data block describing attached display.
+diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/stagi=
+ng/imx-drm/parallel-display.c
+index 46b6fce..195ec60 100644
+--- a/drivers/staging/imx-drm/parallel-display.c
++++ b/drivers/staging/imx-drm/parallel-display.c
+@@ -22,6 +22,7 @@
+ #include <drm/drmP.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_crtc_helper.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/videodev2.h>
+=20
+ #include "imx-drm.h"
+@@ -35,6 +36,7 @@ struct imx_parallel_display {
+ 	struct drm_encoder encoder;
+ 	struct imx_drm_encoder *imx_drm_encoder;
+ 	struct device *dev;
++	struct regulator *disp_reg;
+ 	void *edid;
+ 	int edid_len;
+ 	u32 interface_pix_fmt;
+@@ -139,6 +141,12 @@ static void imx_pd_encoder_prepare(struct drm_enco=
+der *encoder)
+ {
+ 	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
+=20
++	if (imxpd->disp_reg && !regulator_is_enabled(imxpd->disp_reg)) {
++		if (regulator_enable(imxpd->disp_reg))
++			dev_err(imxpd->dev,
++				"Failed to enable regulator.\n");
++	}
++
+ 	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_NONE,
+ 			imxpd->interface_pix_fmt);
+ }
+@@ -155,6 +163,12 @@ static void imx_pd_encoder_mode_set(struct drm_enc=
+oder *encoder,
+=20
+ static void imx_pd_encoder_disable(struct drm_encoder *encoder)
+ {
++	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
++
++	if (imxpd->disp_reg && regulator_is_enabled(imxpd->disp_reg)) {
++		if (regulator_disable(imxpd->disp_reg))
++			dev_err(imxpd->dev, "Failed to disable regulator.\n");
++	}
+ }
+=20
+ static void imx_pd_encoder_destroy(struct drm_encoder *encoder)
+@@ -258,6 +272,14 @@ static int imx_pd_probe(struct platform_device *pd=
+ev)
+ 	if (ret)
+ 		return ret;
+=20
++	imxpd->disp_reg =3D devm_regulator_get(&pdev->dev, "display");
++	if (IS_ERR(imxpd->disp_reg)) {
++		dev_warn(&pdev->dev, "Operating without display regulator.\n");
++		imxpd->disp_reg =3D NULL;
++	} else {
++		dev_info(&pdev->dev, "Using display regulator.\n");
++	}
++
+ 	ret =3D imx_drm_encoder_add_possible_crtcs(imxpd->imx_drm_encoder, np=
+);
+=20
+ 	platform_set_drvdata(pdev, imxpd);
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
