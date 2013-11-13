@@ -1,110 +1,65 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
-Date: Wed, 13 Nov 2013 13:21:53 +0100
-Message-ID: <2781292.vINFB8v7mM@flatron>
-References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org> <528353F7.4050004@samsung.com> <1764307.sx88zLt93L@amdc1032>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: tegra: set regulator full constraints
+Date: Wed, 13 Nov 2013 12:23:29 +0000
+Message-ID: <20131113122329.GC878@sirena.org.uk>
+References: <1383203126-3243-1-git-send-email-wni@nvidia.com>
+ <20131031162029.GF2493@sirena.org.uk>
+ <527737C5.5080901@nvidia.com>
+ <20131104161828.GK2493@sirena.org.uk>
+ <5278B4CB.9050305@nvidia.com>
+ <20131106085100.GB11602@sirena.org.uk>
+ <527A1C47.6050405@nvidia.com>
+ <20131106110154.GG11602@sirena.org.uk>
+ <5281C228.3000404@nvidia.com>
+ <5282717C.3050502@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1764307.sx88zLt93L@amdc1032>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FsscpQKzF/jJk6ya"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5282717C.3050502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 of November 2013 12:52:05 Bartlomiej Zolnierkiewicz wrote:
 
-[+ DT maintainers]
+--FsscpQKzF/jJk6ya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Hi,
-> 
-> On Wednesday, November 13, 2013 11:27:03 AM Sylwester Nawrocki wrote:
-> > On 13/11/13 09:08, Tomasz Figa wrote:
-> > >> As was discussed earlier too, status field of DT node is not supposed
-> > >> > to be used for
-> > >> > keeping an IP enabled or disabled. That should be done via the kernel
-> > >> > config. The DT status
-> > >> > is mostly to indicate the hardware status of the IP on the SoC/board.
-> > >> > If the node fully defines the hardware,
-> > >> > then it should be kept enabled by default unless such enabling causes
-> > >> > some issues with other IPs due to
-> > >> > pin sharing conflicts, etc. In the above case the node completely
-> > >> > defines the hardware and hence there is no
-> > >> > reason to keep it disabled.
-> > >
-> > > That's correct. (Unless I'm missing some board specific dependency of RTC.
-> > > If so, please correct me.)
+On Tue, Nov 12, 2013 at 11:20:44AM -0700, Stephen Warren wrote:
 
-Well, I was missing one indeed. RTC requires an external 32.768KHz clock,
-which must be provided by an oscillator or any other clock source on the
-board. However...
+> The only issue you may have to watch out for is: When is
+> regulator_init() called (i.e. when does core_initcall happen) relative
+> to when driver probe()s can be called? If it's earlier, then
+> core_initcall is early enough I suspect.
 
-> > 
-> > I don't really like this argument. Why not allow the firmware to decide
-> > which devices are relevant and should be handled by the kernel ?
-> > And since we are aiming at single kernel config, if I understand things
-> > correctly, I can't see anything else than dts that could hold the machine
-> > *configuration*.
-> > 
-> > So let's not make all stuff enabled by default, that's not something we
-> > want on those mobile device SoCs. We should not be making fine system
-> > tuning more difficult than necessary.
-> > 
-> > I'm with Kukjin on this matter and would prefer patches like the $subject
-> > patch not be merged.
-> 
-> I generally agree with Sylwester and Kukjin that devices should not be
-> enabled by default in dtsi files.  However in a particular case of RTC
-> support there should be an exception from the generic rule and RTC
-> should be enabled for all EXYNOS boards (we have RTC driver config
-> option already enabled in our exynos_defconfig and we are also already
-> enabling RTC device explicitly in EXYNOS5250 dtsi file).
+What I said was to set this up when we hand the DT over to the DT code
+to be parsed so that we don't need to worry about any gaps like that,
+it seems like a more direct solution than worrying about initcall
+ordering.
 
-I believe the rule is clear and we already went through enough discussion
-about this. To clarify again:
+--FsscpQKzF/jJk6ya
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Device Tree should not restrict possible use cases of particular hardware
-that are allowed by particular integration of such hardware on particular
-board. This means that if there are no technical reasons to mark such
-hardware as disabled on particular board, this should not be done. Let
-me show you this on several examples:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-1. SoC X has an MMC controller, which needs N pins of the SoC to be
-routed to an MMC slot. Our board X1 does _not_ have necessary traces on
-its PCB. In this case the MMC controller must be marked as disabled.
+iQIcBAEBAgAGBQJSg285AAoJELSic+t+oim9oCYP/iF5TEs9BBI4JdKSWFccG1Wf
+OZBzqLD0phzaLYmCzuETh7NTXBL/SAQs4UoTp8zYOaB11sfdlaff+WwbM21vh9gv
+HHu/nZpokbLXIIYt5djefj973cqzLtKVZlMev6TK4m4s27Bzao5kToaueuVH8mJF
+KepYfMgTTx9zLujsc6GcD9xPz/TiJvspJjT+nKiCnc3ESLIZ6LMuXXjDs4Ryz5TD
+6OfeiwD+kzCSIsX3rKKdUXe7R6rq4iqFHJTbHZ+LGaaFfjqfwRXqKio3XLcFmtfB
+0RqUB3QXiYs7aTljBOhXL3dOy3NO0yF4aYeBDxr3s0AUFfaUsEzfzUy+LgcUhseH
+wkuqGgOdKRnOpuML/EJX6WUw3vAo8ZzahSi/Vwxl4SpAbDvsDGvuiL4l4FKR7TAU
+IYBq5z3OgnwwP581g+Zqxq2sXHYqRRtaNPkjZyqhqFwkW797mfie568cRA6desFO
+UDibdmplzGVbS/PqzkUZilQL8OJhpl/XisSGBlHT0jHAAn7rUZcy6DY/9FxBaf7T
+RSt4Gsg5Zi0ilT5jfiCczJ424JQ8EmI5uwxUAqXxKUVcC5wd6WpNcdmMGf4+Vly4
++t29LSC4iQIks+u/UmLDQwHap6wfd8yU/noJZKU/AIkUNHJpm07yNnWKJuUYuV+Z
+FGybMqYpGiEJMJb+ecNG
+=li8B
+-----END PGP SIGNATURE-----
 
-2. SoC X has an MMC controller, which needs N pins of the SoC to be
-routed to an MMC slot. Our board X2 _does_ have necessary traces on its
-PCB, so when user inserts an MMC card into the slot he expects that the
-system detects it. In this case the MMC controller must _not_ be marked
-as disabled.
-
-3. SoC X has a built-in 2D graphics accelerator. It does not have any
-output pads nor any requirements with respect to the board - it's purely
-a mem-to-mem device. A user might want to run a rootfs that uses it to
-accelerate his applications, so this device must _not_ be marked as
-disabled.
-
-4. SoC X has a image processing block, consisting of two functions:
- - a camera interface, that requires SoC pads to be connected to a camera
-   sensor,
- - general-purpose image scaler and format converter, that can operate
-   either on input of camera interface or on images stored in memory.
-This case is more interesting. Even if board does not have a physical
-camera interface, the binding should be designed in a way that allows
-enabling only the memory-to-memory scaler. Then such IP must be marked
-okay regardless of board support, because the camera interface will be
-used only if relevant board-specific properties are provided.
-
-To sum up, I would not interpret the "disabled" value of "status" property
-as the opposite of "enabled", but rather as "disabled" in "disabled
-person".
-
-Anyway, I'd like to get a confirmation (or denial) from other Device Tree
-maintainers and if what I've written above is correct, maybe we should
-put this somewhere in kernel documentation.
-
-Best regards,
-Tomasz
+--FsscpQKzF/jJk6ya--
