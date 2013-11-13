@@ -1,50 +1,48 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
-Date: Wed, 13 Nov 2013 11:27:03 +0100
-Message-ID: <528353F7.4050004@samsung.com>
-References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org>
- <086401cedf96$933b0450$b9b10cf0$@org>
- <CAK9yfHzj+bA1mbZP3KJsU=XiAm+6GaXryDKphPX=UKaaOkXpNw@mail.gmail.com>
- <1895231.F4mtKgSWc9@flatron>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/7] clocksource/cadence_ttc: Overhaul clocksource frequency
+ adjustment
+Date: Wed, 13 Nov 2013 11:29:30 +0100
+Message-ID: <5283548A.8050903@linaro.org>
+References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>	<1383945677-29674-6-git-send-email-soren.brinkmann@xilinx.com>	<52827B11.5040308@linaro.org> <CAKohpo=KaM97jJ2MnZxSeBz=Mf9cSmzk_EFQTL=EVPPvSH=Wag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1895231.F4mtKgSWc9@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKohpo=KaM97jJ2MnZxSeBz=Mf9cSmzk_EFQTL=EVPPvSH=Wag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/11/13 09:08, Tomasz Figa wrote:
->> As was discussed earlier too, status field of DT node is not supposed
->> > to be used for
->> > keeping an IP enabled or disabled. That should be done via the kernel
->> > config. The DT status
->> > is mostly to indicate the hardware status of the IP on the SoC/board.
->> > If the node fully defines the hardware,
->> > then it should be kept enabled by default unless such enabling causes
->> > some issues with other IPs due to
->> > pin sharing conflicts, etc. In the above case the node completely
->> > defines the hardware and hence there is no
->> > reason to keep it disabled.
+On 11/13/2013 09:03 AM, Viresh Kumar wrote:
+> On 13 November 2013 00:31, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
+ wrote:
+>> Hmm, it could be interesting if Viresh can give its opinion on this =
+patch
+>> [cc'ed].
 >
-> That's correct. (Unless I'm missing some board specific dependency of RTC.
-> If so, please correct me.)
+> I am not sure if I understood the problem completely, but if this is =
+about
+> not allowing frequency transitions from cpufreq when we have started =
+to
+> suspend our system, then you must have a look at this thread:
+>
+> https://lkml.org/lkml/2013/10/24/369
 
-I don't really like this argument. Why not allow the firmware to decide
-which devices are relevant and should be handled by the kernel ?
-And since we are aiming at single kernel config, if I understand things
-correctly, I can't see anything else than dts that could hold the machine
-*configuration*.
+Thanks Viresh for the pointer.
 
-So let's not make all stuff enabled by default, that's not something we
-want on those mobile device SoCs. We should not be making fine system
-tuning more difficult than necessary.
 
-I'm with Kukjin on this matter and would prefer patches like the $subject
-patch not be merged.
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
