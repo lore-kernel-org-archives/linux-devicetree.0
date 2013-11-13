@@ -1,47 +1,80 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] PWM: atmel-pwm: add device tree binding document
-Date: Wed, 13 Nov 2013 04:48:40 -0600
-Message-ID: <1B703716-8202-4A87-8604-12B200EBF886@codeaurora.org>
-References: <1383292811-11343-1-git-send-email-voice.shen@atmel.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 3/3] can: mcp251x: Add device tree support
+Date: Wed, 13 Nov 2013 04:53:02 -0600
+Message-ID: <7E7A9748-D946-4FDD-A764-6C7ECA44B890@codeaurora.org>
+References: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383292811-11343-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1384332341-15363-1-git-send-email-shc_work@mail.ru>
+Sender: linux-can-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
 
-On Nov 1, 2013, at 3:00 AM, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+On Nov 13, 2013, at 2:45 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
 
-> Add atmel pwm driver device tree binding document
-> 
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
+> This patch adds Device Tree support to the Microchip MCP251X driver.
+>=20
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 > ---
-> Changes in v6:
->  - New, split binding document as a separate patch
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
-> .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 ++++++++++++++++++++
-> 1 file changed, 41 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+> .../bindings/net/can/microchip,mcp251x.txt         | 25 ++++++++++
+> drivers/net/can/mcp251x.c                          | 57 +++++++++++++=
++++------
+> 2 files changed, 66 insertions(+), 16 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/net/can/microchi=
+p,mcp251x.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp2=
+51x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.t=
+xt
+> new file mode 100644
+> index 0000000..06d95ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+> @@ -0,0 +1,25 @@
+> +* Microchip MCP251X device tree bindings
+> +
+> +Registers a Microchip MCP251X stand-alone CAN controller connected t=
+o SPI bus.
 
-Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+=93Register a=94 doesn=92t seem like it should be in a binding spec.
+
+> +
+> +Required properties:
+> + - compatible: Should be one of the following:
+> +   - "microchip,mcp2510" for MCP2510.
+> +   - "microchip,mcp2515" for MCP2515.
+> + - reg: SPI chip select.
+> + - clocks: The clock feeding the CAN controller.
+> + - interrupt-parent: The parent interrupt controller.
+> + - interrupts: Should contain IRQ line for the CAN controller.
+> +
+> +Optional properties:
+> + - vdd-supply: Regulator that powers the CAN controller.
+> + - xceiver-supply: Regulator that powers the CAN transceiver.
+> +
+> +Example:
+> +	can0: can@1 {
+> +		compatible =3D "microchip,mcp2515";
+> +		reg =3D <1>;
+> +		clocks =3D <&clk24m>;
+> +		interrupt-parent =3D <&gpio4>;
+> +		interrupts =3D <13 0x2>;
+
+Usually good to have example show all properties used (even optional on=
+es)
+
+> +	};
+
+Other than the nits, binding looks good.
 
 - k
 
--- 
+--=20
 Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
