@@ -1,81 +1,120 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv4 2/7] driver/core: Populate IOMMU'able devices in order
-Date: Wed, 13 Nov 2013 17:31:42 +0000
-Message-ID: <20131113173142.GF11928@mudshark.cambridge.arm.com>
-References: <1384158718-4756-3-git-send-email-hdoyu@nvidia.com>
-	<5282BAFC.8070405@wwwdotorg.org>
-	<20131113143804.GA11928@mudshark.cambridge.arm.com>
-	<20131113.180610.823304139654159769.hdoyu@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 14/17] dt: Consolidate __dtb_start declarations in <linux/of_fdt.h>
+Date: Wed, 13 Nov 2013 11:34:50 -0600
+Message-ID: <5283B83A.8030206@gmail.com>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org>	<1384285347-13506-15-git-send-email-geert@linux-m68k.org>	<5283A000.8090007@gmail.com> <CAMuHMdU6Lqup-MuAOH0iTg16b-SHw4D52WsoPXMsumOxQWbJrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131113.180610.823304139654159769.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU6Lqup-MuAOH0iTg16b-SHw4D52WsoPXMsumOxQWbJrg@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <vgupta@synopsys.com>, James Hogan <james.hogan@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Chris Zankel <chris@zankel.net>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 04:06:10PM +0000, Hiroshi Doyu wrote:
-> Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote @ Wed, 13 Nov 2013 15:38:04 +0100:
+On 11/13/2013 11:20 AM, Geert Uytterhoeven wrote:
+> On Wed, Nov 13, 2013 at 4:51 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On Tue, Nov 12, 2013 at 1:42 PM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>>> The different architectures used their own (and different) declarations:
+>>>
+>>>     extern struct boot_param_header __dtb_start;
+>>>     extern u32 __dtb_start[];
+>>>     extern char __dtb_start[];
+>>>
+>>> Consolidate them using the first variant in <linux/of_fdt.h>.
+>>> This requires adding a few "address of" operators on architectures where
+>>> __dtb_start was an array before.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> Cc: Vineet Gupta <vgupta@synopsys.com>
+>>> Cc: James Hogan <james.hogan@imgtec.com>
+>>> Cc: Ralf Baechle <ralf@linux-mips.org>
+>>> Cc: Jonas Bonn <jonas@southpole.se>
+>>> CC: Chris Zankel <chris@zankel.net>
+>>> Cc: Rob Herring <rob.herring@calxeda.com>
+>>> Cc: devicetree@vger.kernel.org
+>>> ---
+>>>  arch/arc/include/asm/sections.h             |    1 -
+>>>  arch/arc/kernel/setup.c                     |    2 +-
+>>>  arch/metag/kernel/setup.c                   |    6 +-----
+>>>  arch/mips/include/asm/mips-boards/generic.h |    4 ----
+>>>  arch/mips/lantiq/prom.h                     |    2 --
+>>>  arch/mips/netlogic/xlp/dt.c                 |    4 ++--
+>>>  arch/mips/ralink/of.c                       |    2 --
+>>>  arch/openrisc/kernel/setup.c                |    2 +-
+>>>  arch/openrisc/kernel/vmlinux.h              |    2 --
+>>>  arch/xtensa/kernel/setup.c                  |    3 +--
+>>>  include/linux/of_fdt.h                      |    3 +++
+>>>  11 files changed, 9 insertions(+), 22 deletions(-)
+>>
+>> This is great, but I would like to see this taken one step further and
+>> move the selection logic into the core code. We can try to use the
+>> built-in dtb if early_init_dt_scan is passed a NULL or invalid dtb. This
+>> should work for most arches I think and still allows an arch to do a
+>> different selection algorithm if desired.
 > 
-> > On Tue, Nov 12, 2013 at 11:34:20PM +0000, Stephen Warren wrote:
-> > > SMMU:
-> > >     smmu: smmu@xxxxxx {
-> > >         #smmu-cells = <1>;
-> > >     }
-> > > 
-> > > Affected device:
-> > >     smmus = <&smmu 1>;
-> > >     (perhaps with smmu-names too)
-> > > 
-> > > That would allow the DT to represent basically arbitrary HW configurations.
-> > > 
-> > > The implementation of this patch would then be almost as trivial; you'd
-> > > just need to walk the smmus property to find each phandle in turn, just
-> > > like any other phandle+specifier property, and validate that the SMMU
-> > > driver was already probe()d for each.
-> > 
-> > There are a few problems with that:
-> > 
-> >   1.) It assumes all devices sharing an SMMU have the same number of
-> >       "smmu cells"
+> Yes, that makes sense.
 > 
-> This can be solved with introducing the fixed size of bitmap. The size
-> of bitmap can be fixed even per SoC. In tegra we used 64(2 cells)
-> which I expect at most.
-
-That really doesn't sound like a good idea where you have bridges (like a
-PCIe host controller) which could have a significant chunk of StreamID
-space. You'd also need to pad everything out with some dummy IDs for parsing
-purposes. Yuck!
-
-> >   2.) It moves SMMU-specific data out to the device, which makes it
-> >       impossible to describe more complicated topologies where IDs can be
-> >       remapped/remastered, potentially by multiple SMMUs and/or bus bridges.
-> > 
-> > When writing the binding for the ARM SMMU driver, I originally started with
-> > something similar to what you're suggesting, but was later forced down a
-> > different route when I realised what sort of systems were being built.
-> > 
-> > We will have similar problems for PCIe RIDs and GIC DIDs (I spoke about this
-> > at the ARM mini-summit). They are not fixed across the system: they
-> > originate from a device, but can change as they traverse the system
-> > topology.
+>> Are the DT related patches dependent on the rest of the series?
 > 
-> Is there any chance to overwrite SMMU driver specific params during
-> setting up topologies?
+> Not really. There may be small rejects if you apply it out-of-order,
+> but nothing serious.
+> 
+>> Something like this is what I have in mind:
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 5c47910..723f854d 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -869,14 +869,16 @@ void * __init __weak
+>> early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>>
+>>  bool __init early_init_dt_scan(void *params)
+>>  {
+>> -       if (!params)
+>> -               return false;
+>> -
+>>         /* Setup flat device-tree pointer */
+>>         initial_boot_params = params;
+>>
+>> +       if (!initial_boot_params ||
+>> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER))
+>> +               initial_boot_params = &__dtb_start;
+>> +
+>>         /* check device tree validity */
+>> -       if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+>> +       if (!initial_boot_params ||
+> 
+> initial_boot_params cannot be NULL here, so no need to check.
 
-Not sure I understand what you're getting at here. Could you elaborate
-please?
+What about the case of no built-in dtb like on arm?
 
-Will
+> 
+>> +           (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER)) {
+> 
+> However, if __dtb_end == __dtb_start, you may be reading random
+> data here from the next section. The OF_DT_HEADER check should cover
+> this, but better safe than sorry?
+
+Then we should also check that (__dtb_end != __dtb_start).
+
+Rob
+
+> 
+>>                 initial_boot_params = NULL;
+>>                 return false;
+>>         }
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
