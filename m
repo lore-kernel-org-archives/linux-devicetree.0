@@ -1,285 +1,45 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv8][ 4/5] ARM: dts: Add support for the cpuimx35 board
- from Eukrea and its baseboard.
-Date: Wed, 13 Nov 2013 23:23:07 +0800
-Message-ID: <20131113152305.GD17816@S2101-09.ap.freescale.net>
-References: <1384255459-15134-1-git-send-email-denis@eukrea.com>
- <1384255459-15134-4-git-send-email-denis@eukrea.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V3 1/7] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
+ irqs
+Date: Wed, 13 Nov 2013 10:24:34 -0500
+Message-ID: <528399B2.8010308@ti.com>
+References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com> <1383657257-3458-2-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1384255459-15134-4-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1383657257-3458-2-git-send-email-r.sricharan-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 12:24:18PM +0100, Denis Carikli wrote:
-> The following devices/functionalities were added:
->  * Main and secondary UARTs.
->  * i2c and the pcf8563 device.
->  * Ethernet.
->  * NAND.
->  * The BP1 button.
->  * The LED.
->  * Watchdog
->  * SD.
->=20
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+On Tuesday 05 November 2013 08:14 AM, Sricharan R wrote:
+> In some socs the gic can be preceded by a crossbar IP which
+> routes the peripheral interrupts to the gic inputs. The peripheral
+> interrupts are associated with a fixed crossbar input line and the
+> crossbar routes that to one of the free gic input line.
+> 
+> The DT entries for peripherals provides the fixed crossbar input line
+> as its interrupt number and the mapping code should associate this with
+> a free gic input line. This patch adds the support inside the gic irqchip
+> to handle such routable irqs. The routable irqs are registered in a linear
+> domain. The registered routable domain's callback should be implemented
+> to get a free irq and to configure the IP to route it.
+> 
+> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
 > ---
-> ChangeLog v7->v8:
-> - The commit message was improved.
-> - The board specific iomuxc pins group configuration that were in imx=
-35.dtsi were moved here.
-> - The rest of the patch was updated accordingly.
->=20
-> ChangeLog v6->v7:
-> - Added Grant Likely in the Cc list.
-> - Shortened the license.
-> - The tsc2007 pads were moved in another patch.
->=20
-> ChangeLog v5->v6:
-> - Shawn Guo was added in the Cc.
-> ---
->  arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   58 +++++++++
->  .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  124 ++++++++++=
-++++++++++
->  2 files changed, 182 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
->  create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboar=
-d.dts
-
-Please add the dtb target into arch/arm/boot/dts/Makefile.
-
->=20
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/=
-boot/dts/imx35-eukrea-cpuimx35.dtsi
-> new file mode 100644
-> index 0000000..3260678
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include "imx35.dtsi"
-> +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
-> +
-> +	memory {
-> +		reg =3D <0x80000000 0x8000000>; /* 128M */
-> +	};
-> +};
-> +
-> +&fec {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_fec>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c1>;
-> +	status =3D "okay";
-
-Nit: have a blank line here.
-
-> +	pcf8563@51 {
-> +		compatible =3D "nxp,pcf8563";
-> +		reg =3D <0x51>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	imx35-eukrea {
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
-> +	};
-> +};
-> +
-> +&nfc {
-> +	nand-bus-width =3D <8>;
-> +	nand-ecc-mode =3D "hw";
-> +	nand-on-flash-bbt;
-> +	status =3D "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b=
-/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> new file mode 100644
-> index 0000000..fe0f3fa
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> @@ -0,0 +1,124 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx35-eukrea-cpuimx35.dtsi"
-> +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fs=
-l,imx35";
-> +
-> +	gpio_keys {
-> +		compatible =3D "gpio-keys";
-> +
-> +		bp1 {
-> +			label =3D "BP1";
-> +			gpios =3D <&gpio3 25 1>;
-> +			linux,code =3D <256>;
-> +			gpio-key,wakeup;
-> +			linux,input-type =3D <1>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		led1 {
-> +			label =3D "led1";
-> +			gpios =3D <&gpio3 29 1>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&audmux {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_audmux>;
-> +	status =3D "okay";
-> +};
-> +
-> +&esdhc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_esdhc1>;
-> +	cd-gpios =3D <&gpio3 24 0>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	tlv320aic23: codec@1a {
-> +		compatible =3D "ti,tlv320aic23";
-> +		reg =3D <0x1a>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +        pinctrl-names =3D "default";
-> +        pinctrl-0 =3D <&pinctrl_hog>;
-
-Use tab instead of spaces.
-
-> +
-> +	imx35-eukrea {
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins =3D <
-> +				MX35_PAD_LD18__GPIO3_24  0x80000000
-> +				MX35_PAD_LD19__GPIO3_25  0x80000000
-> +				MX35_PAD_LD23__GPIO3_29  0x80000000
-> +			>;
-> +		};
-> +
-> +		pinctrl_audmux: audmuxgrp {
-> +			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,pins =3D <MX35_ESDHC1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_reg_lcd_3v3: reg_lcd_3v3 {
-
-'_' is used in label while '-' should be used in node name.
-
-Shawn
-
-> +			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins =3D <MX35_UART1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins =3D <MX35_UART2_PINGRP1>;
-> +		};
-> +	};
-> +};
-> +
-> +&ssi1 {
-> +	fsl,mode =3D "i2s-slave";
-> +	status =3D "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart2>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> --=20
-> 1.7.9.5
->=20
-
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
