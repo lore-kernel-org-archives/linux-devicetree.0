@@ -1,53 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
-Date: Wed, 13 Nov 2013 10:14:43 -0600
-Message-ID: <5283A573.6020403@gmail.com>
-References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org> <1384285347-13506-16-git-send-email-geert@linux-m68k.org> <5283524F.8030902@monstr.eu> <5283814C.6040904@monstr.eu>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt: binding: sound cs42l52 driver
+Date: Wed, 13 Nov 2013 10:21:10 -0600
+Message-ID: <alpine.DEB.2.10.1311131019180.28828@heelrod.ad.cirrus.com>
+References: <1384357474-28653-1-git-send-email-brian.austin@cirrus.com> <1384357474-28653-2-git-send-email-brian.austin@cirrus.com> <9097292C-9233-49B3-995D-27574D544237@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <5283814C.6040904@monstr.eu>
-Sender: linux-arch-owner@vger.kernel.org
-To: monstr@monstr.eu, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9097292C-9233-49B3-995D-27574D544237-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2013 07:40 AM, Michal Simek wrote:
-> On 11/13/2013 11:19 AM, Michal Simek wrote:
->> On 11/12/2013 08:42 PM, Geert Uytterhoeven wrote:
->>> Kill the microblaze-specific __fdt_blob section, and start
->>> using .dtb.init.rodata from <asm-generic/sections.h> for
->>> built-in DTBs, like most other DT enabled architectures.
->>> 
->>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org> Cc:
->>> Michal Simek <monstr@monstr.eu> Cc: Rob Herring
->>> <rob.herring@calxeda.com> Cc:
->>> microblaze-uclinux@itee.uq.edu.au Cc:
->>> devicetree@vger.kernel.org --- Untested, but the resulting
->>> vmlinux after "make simpleImage.system" looks sane.
->>> 
->>> QUESTION: The padding of the DTB is gone, is this OK?
->> 
->> Removing this kernel padding should be fine. I can't remember why
->> it was there from the beginning.
-> 
-> I know why is this here. The reason is process how dtb is passed to
-> the kernel via command line. head.S code just copy that dtb to the
-> same location where compiled-in dts is expected and kernel doesn't
-> need to care about position of dtb because this copy is done
-> without MMU. And the full kernel is covered by 2 tlbs and we don't
-> need to use another TLB for dtb mapping.
-> 
-> It means pad matters a lot. Because u-boot ITS format doesn't use 
-> simpleImage target but the kernel need to have a space for copying 
-> dtb to this kernel location.
-> 
-> Let me think about if there is an easy way to handle dtbs which are
-> passed from bootloader.
+>> +Required properties:
+>> +
+>> +  - compatible : "cirrus,cs42l52"
+>> +
+>> +  - reg : the I2C address of the device for I2C
+>> +
+>> +Optional properties:
+>> +
+>> +  - reset-gpio : GPIO controller's phandle and the number
+>> +		 of the GPIO used to reset the codec.
+>> +  - chgfreq    : Charge Pump Frequency values. Allowable values of
+>> +		 0x00 through 0x0F.
+>> +		 Frequency = (64xFs)/(N+2)
+>> +  - mica-cfg   : MIC A single-ended or differential select.
+>> +		 0x00 = Single-Ended
+>> +		 0x01 = Differential
+>> +  - micb-cfg   : MIC B single-ended or differential select.
+>> +		 0x00 = Single-Ended
+>> +		 0x01 = Differential
+>> +  - mica-sel   : MIC A single ended input select.  For Single-Ended
+>> +		 configuration, select which MIC to use.
+>> +		 0x00 = MIC1
+>> +		 0x01 = MIC2
+>> +  - micb-sel   : MIC B single ended input select.  For Single-Ended
+>> +		 configuration, select which MIC to use.
+>> +		 0x00 = MIC1
+>> +		 0x01 = MIC2
+>> +  - micbias-lvl: Set the output voltage level on the MICBIAS Pin
+>> +		 0x00 = 0.5 x VA
+>> +		 0x01 = 0.6 x VA
+>> +		 0x02 = 0.7 x VA
+>> +		 0x03 = 0.8 x VA
+>> +		 0x04 = 0.83 x VA
+>> +		 0x05 = 0.91 x VA
+>
+> these properties should be cirrus, prefixed.
+>
 
-Isn't the built-in dtb in a RO init section? Seems like a bad idea to
-write to it. Also, it will be a double copy because a built-in dtb has
-to be copied out of init section.
+This is for a Cirrus CODEC, not related to the Cirrus ARM9. I didn't think 
+we would prefix for a binding on a codec. I thought that was only for 
+SOC/Platforms
 
-Rob
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
