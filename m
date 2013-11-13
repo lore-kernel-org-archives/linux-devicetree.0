@@ -1,63 +1,72 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH] clk: add specified-rate clock
-Date: Wed, 13 Nov 2013 14:31:25 +0000
-Message-ID: <52838D3D.6060007@imgtec.com>
-References: <1368189862-17119-1-git-send-email-james.hogan@imgtec.com> <20130529173938.6058.96646@quantum> <52838834.4010104@imgtec.com> <5867382.IN2EZ2ivg4@flatron>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/7] pinctrl: imx27: imx27 pincontrol driver
+Date: Wed, 13 Nov 2013 22:36:00 +0800
+Message-ID: <20131113143557.GA17816@S2101-09.ap.freescale.net>
+References: <1384246210-9257-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5867382.IN2EZ2ivg4@flatron>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, linux-metag <linux-metag@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384246210-9257-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/11/13 14:18, Tomasz Figa wrote:
-> Hi James, Mike,
+On Tue, Nov 12, 2013 at 09:50:03AM +0100, Markus Pargmann wrote:
+> Hi,
 > 
-> On Wednesday 13 of November 2013 14:09:56 James Hogan wrote:
->> On 29/05/13 18:39, Mike Turquette wrote:
->>> Quoting James Hogan (2013-05-10 05:44:22)
->>>> The frequency of some SoC's external oscillators (for example TZ1090's
->>>> XTAL1) are configured by the board using pull-ups/pull-downs of
->>>> configuration pins, the logic values of which are automatically latched
->>>> on reset and available in an SoC register. Add a generic clock component
->>>> and DT bindings to handle this.
->>>>
->>>> It behaves similar to a fixed rate clock (read-only), except it needs
->>>> information about a register field (reg, shift, width), and the
->>>> clock-frequency is a mapping from register field values to clock
->>>> frequencies.
->>>>
->>>
->>> James,
->>>
->>> Thanks for sending this!  It looks mostly good and is a useful clock
->>> type to support.  Comments below.
->>
->> Hi Mike,
->>
->> Sorry for slight delay getting back to you. I had another think about
->> this stuff yesterday...
->>
+> This series contains only DTS changes for imx27-pinctrl. It depends on the
+> incremental driver patch which allows iomux subdevices [1].
+
+Applied patches #1, #2 and #7.
+
+Unless LinusW create a topic branch for that dependency, I cannot apply
+the rest.
+
+Shawn
+
 > 
-> Just a random idea that came to my mind while reading this thread:
+> Regards,
 > 
-> What about modelling this as a set of fixed rate clocks fed into
-> a read-only mux?
+> Markus Pargmann
+> 
+> 
+> [1] [PATCH] pinctrl: imx1-core populate subdevices
+>     <1384193987-20740-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>     http://thread.gmane.org/gmane.linux.drivers.devicetree/51584
+> 
+> Changes in v7:
+>  - Added patch for imx27-pingrp.h
+>  - Pin nodes moved to board dts files
+>  - gpio nodes in imx27.dtsi moved to iomux node
+> 
+> Markus Pargmann (7):
+>   ARM: dts: imx27 pin functions
+>   ARM: dts: imx27 pingroups
+>   ARM: dts: imx27 pinctrl
+>   ARM: dts: imx27 phyCARD-S pinctrl
+>   ARM: dts: imx27 phycore move uart1 to rdk
+>   ARM: dts: imx27 phycore pinctrl
+>   ARM: imx27: enable pinctrl
+> 
+>  arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |  43 ++
+>  arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts |  16 +
+>  arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts   |  23 +
+>  arch/arm/boot/dts/imx27-phytec-phycore-som.dts   |  20 +-
+>  arch/arm/boot/dts/imx27-pinfunc.h                | 526 +++++++++++++++++++++++
+>  arch/arm/boot/dts/imx27-pingrp.h                 |  71 +++
+>  arch/arm/boot/dts/imx27.dtsi                     | 125 +++---
+>  arch/arm/mach-imx/Kconfig                        |   2 +
+>  8 files changed, 764 insertions(+), 62 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx27-pinfunc.h
+>  create mode 100644 arch/arm/boot/dts/imx27-pingrp.h
+> 
+> -- 
+> 1.8.4.2
+> 
 
-Yes, that had occurred to me too. I suppose the arguments against would be:
-* it doesn't describe the hardware, there is no mux, just a fixed rate
-clock with a discoverable frequency.
-* it would sort of work for my small case of only having 9 possible
-frequencies (although it would be a bit verbose), but wouldn't scale
-nicely or be extendible to if the frequency was encoded more
-continuously in the register value. E.g. if the frequency was 1MHz *
-(the register value - 1) or something crazy like that. Of course that's
-conjecture and SoC designers probably aren't going to want to use more
-pins for bootstrap config than necessary.
-
-Cheers
-James
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
