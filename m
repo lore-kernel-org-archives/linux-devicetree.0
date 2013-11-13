@@ -1,69 +1,56 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: Add support for BCM2835.
-Date: Wed, 13 Nov 2013 20:01:01 +0530
-Message-ID: <20131113143101.GD8834@intel.com>
-References: <527D1DDA.2040004@koalo.de>
- <20131108181743.GR2493@sirena.org.uk>
- <20131113050017.GO8834@intel.com>
- <20131113125111.GE878@sirena.org.uk>
- <20131113133536.GZ8834@intel.com>
- <20131113145441.GQ878@sirena.org.uk>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH V3 2/7] DRIVERS: IRQCHIP: CROSSBAR: Add support for
+ Crossbar IP
+Date: Wed, 13 Nov 2013 10:27:08 -0500
+Message-ID: <52839A4C.9080601@ti.com>
+References: <1383657257-3458-1-git-send-email-r.sricharan@ti.com>
+ <1383657257-3458-3-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131113145441.GQ878@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Florian Meier <florian.meier@koalo.de>, Stephen Warren <swarren@wwwdotorg.org>, Dan Williams <dan.j.williams@intel.com>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, Martin Sperl <martin@sperl.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1383657257-3458-3-git-send-email-r.sricharan@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org, rnayak@ti.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, marc.zyngier@arm.com, galak@codeaurora.org, grant.likely@linaro.org, tglx@linutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 05 November 2013 08:14 AM, Sricharan R wrote:
+> Some socs have a large number of interrupts requests to service
+> the needs of its many peripherals and subsystems. All of the
+> interrupt lines from the subsystems are not needed at the same
+> time, so they have to be muxed to the irq-controller appropriately.
+> In such places a interrupt controllers are preceded by an CROSSBAR
+> that provides flexibility in muxing the device requests to the controller
+> inputs.
+> 
+> This driver takes care a allocating a free irq and then configuring the
+> crossbar IP as a part of the mpu's irqchip callbacks. crossbar_init should
+> be called right before the irqchip_init, so that it is setup to handle the
+> irqchip callbacks.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> Acked-by: Kumar Gala <galak@codeaurora.org> (for DT binding portion)
+> ---
+As someone commented already, lets call the driver as irq-crossbar
+since there might need of something similar for DMA and IO's.
 
---gr/z0/N6AeWAPJVB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Nov 13, 2013 at 02:54:41PM +0000, Mark Brown wrote:
-> On Wed, Nov 13, 2013 at 07:05:36PM +0530, Vinod Koul wrote:
-> > On Wed, Nov 13, 2013 at 12:51:11PM +0000, Mark Brown wrote:
->=20
-> > > I'm probably going to be looking at that at some point, though perhaps
-> > > Martin will get to it since he seems to be looking at this.
->=20
-> > Okay sounds good. This will also help in streamline the implementations=
-=2E.
->=20
-> Yes, though I think some of the stuff Martin was talking about will need
-> changes to the dmaengine APIs.  He was wanting to reuse DMA lists which
-> currently dmaengine needs to have built up each time.
-Can you elobrate a bit more on what you guys want to do here?
-
---
-~Vinod
-
---gr/z0/N6AeWAPJVB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSg40kAAoJEHwUBw8lI4NH/LcQAKJW7QeAHamIiq7jqWWlBkXl
-NIOetfjVqPJwMRjH2vcLm62EFARE9x4Q/V88Suz+vd+j6iIcB+jgQK3MpGU2Xl4U
-lg+tl6XUyA0aA6AVKOApyQQhm6jpkGDrZNX5tSYXpMYKa0/fkKozmtrCSXDilmle
-fezBaRO7WJ8rZyEV/N57pxb/724bKPfkdBIslNM2lCnkm7DJWjnI2HjtetXpXETY
-DEIfsSADBWu/jizmK1BWa+Tknx/vUV5vnCzESSavFEkEGHhLjBUYNlaBltgAzE3F
-1S0RrlUM5nqdEN0cf2Cl0Xjn4CFX5RrATTg/+XlnH/Q+OdmJ6/h89VLRR+BKDv7B
-SwYaaBfFbBfvcDkvfl42Bwy4gHEpjW4PRbv1WuG5kjGLXkN0TVEnzsuLenuCSTz3
-Ba/V0pu1EueDf4BmgbjZ5Fsg1JpwNha5Ri8Ez5kKaFG699GWCADr0ZLWmn1hwh1n
-OM2WxbtQqbY747qUqdiGv0/63kgix/4C9IeOPRyoDoxeNuGIpRcerI1r7EaTIHuT
-TNc8PXrCi4rDzvA0KhciIBVabEafCMJkxNQ6mXuG7DMm369xq3SeNozcN8zKaTol
-p+/LVRzgcOcnX8C0E18mlcamP0Vhi7FcHINyvKrk/hCSX2MwyRLkxpoXE/Ojx86l
-yZpJCrd1qxloExr7idgJ
-=/PA/
------END PGP SIGNATURE-----
-
---gr/z0/N6AeWAPJVB--
+So rename the code accordingly. Other than that,
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
