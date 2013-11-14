@@ -1,78 +1,121 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
-Date: Thu, 14 Nov 2013 10:20:19 +0900
-Message-ID: <52842553.2080807@nvidia.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com> <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com> <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
+From: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
+Date: Thu, 14 Nov 2013 10:33:22 +0900
+Message-ID: <CAH9JG2U9VDnRW9JZ7j7OyRmVhSXWJ5Yp_gNqUPK=xCST7SY=xg@mail.gmail.com>
+References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+	<1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+	<20131113131328.GF878@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131113131328.GF878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2013 02:57 AM, Olof Johansson wrote:
-> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 11/13/2013 05:38 AM, Olof Johansson wrote:
->>>
->>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>> wrote:
->>>>
->>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
->>>>>
->>>>> Just a set of small fixes to address the concerns expressed on v9 with
->>>>> the
->>>>> non-prefixed version DT properties. I hope there won't be a need for an
->>>>> eleventh (!) version. :P
->>>>
->>>>
->>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
->>>> him. I'm just waiting to hear back from Olof/Russell whether I should
->>>> merge this through the Tegra tree, or whether the first 1-3 patches
->>>> should go through Russell's tree.
->>>
->>>
->>> I pinged Russell, and he brought up the fact that there were earlier
->>> requests to move it to drivers/firmware. It would make sense to try to
->>> get that done before merging, especially if you anticipate someone
->>> using TF on 64-bit platforms.
->>
->>
->> IIRC when we discussed this point your last comment was as follows:
+On Wed, Nov 13, 2013 at 10:13 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
 >
-> Touche. :) Thanks for the reminder.
+>> +/**
+>> + * After resuming from suspend it may happen that IRQ is signalled but
+>> + * IRQ GPIO is not high. Also the interrupt registers won't have any data
+>> + * (all of them equal to 0x00).
+>> + *
+>> + * In such case retry few times reading the interrupt registers.
+>> + */
+>> +#define IRQ_READ_REG_RETRY_CNT               5
 >
->> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> I think we can probably merge this under arch/arm now, and when we
->>> figure out what needs to be common with ARM64 we can move it out to a
->>> good location. It might be that mostly just a header file with ABI
->>> conventions needs to be shared, not actual implementation, for
->>> example.
->>
->> So I thought we agreed on that. If in the end we prefer to move the ARM
->> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
->> also confirmed he would be ok with it) but I wonder if that would not be
->> somehow premature.
->>
->> Another worry of mine is that this might delay this patchset some more.
->> Support for TF is one of the last remaining step towards making NVIDIA
->> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
->> upstream directly. I missed 3.13, I'd like to make sure I won't miss 3.14.
->> Would it be acceptable if we move the ARM firmware interface to a common
->> place after this patchset is merged?
+> What is the cause here?  This smells like an unreliable workaround for
+> some other behaviour.  In general this all looks very like standard
+> regmap code.
 >
-> Well, as I already said I'm ok with things going into arch/arm to
-> start with, as long as Russell is. Once we see 64-bit needs for the
-> same we'll move it out -- it's not like it's a whole lot of code to
-> start with. But Russell has veto on the topic. :-)
+>> +     for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
+>> +             u8 mask_reg = max14577_mask_reg[i];
+>> +
+>> +             if (mask_reg == MAX14577_REG_INVALID ||
+>> +                             IS_ERR_OR_NULL(max14577->regmap))
+>> +                     continue;
+>
+> Why would this code even be running if you don't have a register map?
+>
+>> +             dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
+>> +                     irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
+>> +                     irq_reg[MAX14577_IRQ_INT3]);
+>
+> This is far too noisy, dev_dbg() at most.
+>
+>> +             gpio_val = gpio_get_value(pdata->irq_gpio);
+>> +
+>> +             if (gpio_get_value(pdata->irq_gpio) == 0)
+>> +                     dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
+>> +     } while (gpio_val == 0 && --retry > 0);
+>
+> This looks very strange...
+>
+>> +     max14577->irq = gpio_to_irq(pdata->irq_gpio);
+>> +     ret = gpio_request(pdata->irq_gpio, "max14577_irq");
+>> +     if (ret) {
+>> +             dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
+>> +                             pdata->irq_gpio, ret);
+>> +             goto err;
+>> +     }
+>> +     gpio_direction_input(pdata->irq_gpio);
+>> +     gpio_free(pdata->irq_gpio);
+>
+> This means the GPIO handling code that was present in the handling is
+> broken, it's trying to use the GPIO after it was freed.
+>
+>> +     ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
+>> +                                IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>> +                                "max14577-irq", max14577);
+>
+> Are you *positive* this is a falling triggered IRQ?  All the code to do
+> with spinning reading the GPIO state during handling makes it look like
+> this is in fact an active low interrupt and a lot of the code in here is
+> working around trying to handle that as the wrong kind of IRQ.
 
-Thanks Olof. Russell, are you ok with the patchset in its current form? 
-I can start moving the firmware interface out of arch/arm if that's what 
-you want (there is no user outside of ARM at the moment, but as Olof 
-pointed out that's not too much code) but I'd really like to see this 
-series secured for 3.14.
+It's not work with level triggering. as wm8994, it requires edge
+triggering. previous time I send RFC patch to handle edge triggering
+at regmap.
 
-Thanks,
-Alex.
+>
+>> +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
+>> +{
+>> +     return regmap_bulk_write(map, reg, buf, count);
+>> +}
+>> +EXPORT_SYMBOL_GPL(max14577_bulk_write);
+>
+> Given that these are basically all trivial wrappers around regmap they
+> probably ought to be static inlines in the header.
+>
+>> +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
+>> +{
+>
+> There's no DT binding document?
+>
+>> +const struct dev_pm_ops max14577_pm = {
+>> +     .suspend = max14577_suspend,
+>> +     .resume = max14577_resume,
+>> +};
+>
+> SET_SYSTEM_SLEEP_PM_OPS().
+>
+>> +static int __init max14577_i2c_init(void)
+>> +{
+>> +     return i2c_add_driver(&max14577_i2c_driver);
+>> +}
+>> +subsys_initcall(max14577_i2c_init);
+>
+> Why not module_i2c_driver?
+
+there's ordering issue, it should provide regulator which is used
+others before USB probe. if not, it failed to use USB.
+Other PMICs use also subsys_initcall for this reason.
+
+Thank you,
+Kyungmin Park
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
