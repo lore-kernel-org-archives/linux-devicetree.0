@@ -1,61 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
- device tree
-Date: Thu, 14 Nov 2013 11:12:45 +0000
-Message-ID: <20131114111245.GF16396@e106331-lin.cambridge.arm.com>
-References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
- <20131112153057.GA9683@earth.universe>
- <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
- <20131112200514.GA15413@earth.universe>
- <CACRpkdaAaLjm_b+OLj3tobxBN8YGUcTPnXJ=qtBqd02=FTxhjQ@mail.gmail.com>
- <20131112204013.GA17674@earth.universe>
- <20131113142406.GH21713@e106331-lin.cambridge.arm.com>
- <20131113232923.GB13669@earth.universe>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in
+ TSC/ADC DT binding
+Date: Thu, 14 Nov 2013 11:19:59 +0000
+Message-ID: <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
+References: <1382386404-6659-1-git-send-email-balbi@ti.com>
+ <1382386404-6659-2-git-send-email-balbi@ti.com>
+ <52663A58.9070706@linutronix.de>
+ <20131022120253.GD9340@gimli>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131113232923.GB13669-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20131022120253.GD9340@gimli>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 11:29:24PM +0000, Sebastian Reichel wrote:
+On Tue, Oct 22, 2013 at 01:02:53PM +0100, Felipe Balbi wrote:
 > Hi,
 > 
-> On Wed, Nov 13, 2013 at 02:24:06PM +0000, Mark Rutland wrote:
-> > > Current suggestions (taken from kernel) are:
-> > > 
-> > > * <<vendor>>,no-autorepeat
-> > > * keypad,autorepeat
-> > > * linux,keypad-no-autorepeat
-> > > * linux,input-no-autorepeat
-> > > * linux,no-autorepeat
-> > > * autorepeat
-> > > 
-> > > I do not really care, which one is chosen, except for two things:
-> > > 
-> > > * <<vendor>> seems wrong. This is not vendor specific.
-> > > * I would prefer "input-" over "keypad-", since then the same name
-> > >   can be used for single keys, buttons, etc.
+> On Tue, Oct 22, 2013 at 10:42:00AM +0200, Sebastian Andrzej Siewior wrote:
+> > On 10/21/2013 10:13 PM, Felipe Balbi wrote:
+> > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > index e1c5300..b61df9d 100644
+> > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct platform_device *pdev,
+> > >  	if (err < 0)
+> > >  		return err;
+> > >  
+> > > -	err = of_property_read_u32(node, "ti,coordiante-readouts",
+> > > +	/*
+> > > +	 * try with new binding first. If it fails, still try with
+> > > +	 * bogus, miss-spelled version.
+> > > +	 */
+> > > +	err = of_property_read_u32(node, "ti,coordinate-readouts",
+> > >  			&ts_dev->coordinate_readouts);
+> > >  	if (err < 0)
+> > > +		err = of_property_read_u32(node, "ti,coordiante-readouts",
+> > > +				&ts_dev->coordinate_readouts);
+> > > +	if (err < 0)
+> > >  		return err;
 > > 
-> > Both of those sound valid to me, but I think it may make sense to keep
-> > the "linux," prefix. As I understand it this is really telling the Linux
-> > input subsystem to react to a device acting in a certain way, rather
-> > than describing or configuring the device in a certain way.
+> > Thanks, very good. Do we keep this fallback for ever or just for a year
+> > or two?
 > 
-> That leaves the following two options:
-> 
-> * linux,input-no-autorepeat
-> * linux,no-autorepeat
-> 
-> Any suggestions for those?
+> That's for DT maintainers to decide but considering DT is an ABI, I
+> guess we need to keep for 30 years or so :-p
 
-I'd go for "linux,input-no-autorepeat", it leaves less ambiguity as to
-its purpose.
+We keep it as long as we have to. If no-one's relying on the typo by the
+next merge window, I see no reason we'd have to keep support for the
+typo beyond that. If someone's shipped a device with a dtb with the typo
+hard-coded into some ROM, that's another matter...
+
+It might be worth printing a warning in the case of the typo'd version,
+suggesting correcting the DT. That will encourage anyone with a broken
+dt to get a fixed one.
 
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
