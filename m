@@ -1,87 +1,105 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Thu, 14 Nov 2013 11:28:59 -0500
-Message-ID: <20131114162859.GX10335@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <52814AFB.3070600@wwwdotorg.org>
- <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
- <528275B7.6050209@wwwdotorg.org>
- <20131112193012.GR10335@titan.lakedaemon.net>
- <52828C77.20001@wwwdotorg.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
+Date: Thu, 14 Nov 2013 17:29:41 +0100
+Message-ID: <5284FA75.4040601@monstr.eu>
+References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org> <1384285347-13506-16-git-send-email-geert@linux-m68k.org> <5283524F.8030902@monstr.eu> <5283814C.6040904@monstr.eu> <5283A573.6020403@gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52828C77.20001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5283A573.6020403@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 01:15:51PM -0700, Stephen Warren wrote:
-> On 11/12/2013 12:30 PM, Jason Cooper wrote:
-> > On Tue, Nov 12, 2013 at 11:38:47AM -0700, Stephen Warren wrote:
-> >> On 11/12/2013 08:29 AM, Rob Herring wrote:
-> >>> On Mon, Nov 11, 2013 at 3:24 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> >>>> On 11/11/2013 01:29 PM, Jason Cooper wrote:
-> >>>>> Consumers of the Linux kernel's build products are beginning to hardcode
-> >>>>> the filenames of the dtbs generated.  Since the dtb filenames are
-> >>>>> currently the dts filename s/dts/dtb/, this prevents the kernel
-> >>>>> community from renaming dts files as needed.
-> >>>>
-> >>>> My take is that the DTB filenames are part of the ABI, and therefore the
-> >>>> DTS filenames are also part of the ABI. Why would we want to rename them?
-> >>>
-> >>> I agree with the ABI part, but for long term I think compatible
-> >>> strings are a better choice for the ABI than filenames. A link
-> >>> provides for a way to transition.
-> >>
-> >> But this change isn't making the compatible value be the ABI, it's still
-> >> keeping the filename as the ABI, but creating a different way of
-> >> choosing the filename.
-> > 
-> > Right, which provides a path towards a slightly more sane ABI.  If we
-> > choose to implement this, or another variant, we get to shape a
-> > migration path towards an ABI we designed.  As opposed to locked in to
-> > one we didn't even see coming.
-> 
-> I don't really agree here; I specifically named all the Tegra DTB/.dts
-> files in a sane fashion precisely so that U-Boot could easily determine
-> which one to load. It's hard to see how this wasn't a predictable issue.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-This is the difference between a commercial effort and a hobbyist
-effort.  I think I have a plan for how we can both get what we want.  I
-could change the argument to 'dtc ... -L arch/arm/boot ...'.  Thus:
+On 11/13/2013 05:14 PM, Rob Herring wrote:
+> On 11/13/2013 07:40 AM, Michal Simek wrote:
+>> On 11/13/2013 11:19 AM, Michal Simek wrote:
+>>> On 11/12/2013 08:42 PM, Geert Uytterhoeven wrote:
+>>>> Kill the microblaze-specific __fdt_blob section, and start
+>>>> using .dtb.init.rodata from <asm-generic/sections.h> for
+>>>> built-in DTBs, like most other DT enabled architectures.
+>>>>
+>>>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org> Cc:
+>>>> Michal Simek <monstr@monstr.eu> Cc: Rob Herring
+>>>> <rob.herring@calxeda.com> Cc:
+>>>> microblaze-uclinux@itee.uq.edu.au Cc:
+>>>> devicetree@vger.kernel.org --- Untested, but the resulting
+>>>> vmlinux after "make simpleImage.system" looks sane.
+>>>>
+>>>> QUESTION: The padding of the DTB is gone, is this OK?
+>>>
+>>> Removing this kernel padding should be fine. I can't remember why
+>>> it was there from the beginning.
+>>
+>> I know why is this here. The reason is process how dtb is passed to
+>> the kernel via command line. head.S code just copy that dtb to the
+>> same location where compiled-in dts is expected and kernel doesn't
+>> need to care about position of dtb because this copy is done
+>> without MMU. And the full kernel is covered by 2 tlbs and we don't
+>> need to use another TLB for dtb mapping.
+>>
+>> It means pad matters a lot. Because u-boot ITS format doesn't use=20
+>> simpleImage target but the kernel need to have a space for copying=20
+>> dtb to this kernel location.
+>>
+>> Let me think about if there is an easy way to handle dtbs which are
+>> passed from bootloader.
+>=20
+> Isn't the built-in dtb in a RO init section? Seems like a bad idea to
+> write to it. Also, it will be a double copy because a built-in dtb has
+> to be copied out of init section.
 
-$ cd arch/arm/boot
-$ ls -l *.dtb        # minus a few columns
-...
-globalscale,mirabox.dtb -> dts/armada-370-mirabox.dtb
-...
+Microblaze has it currently out of RO section.
+This patch is adding it there.
+
+I have looked at powerpc flow which is probably the closest to our versio=
+n.
+
+head.S
+Saving dtb pointer to r31 then initial_mmu which setups 16MB tlb for kern=
+el
+then some exception and calling machine_init()->early_init_devtree()
+->move_device_tree() where also change initial_boot_params location
+for unflatten_device_tree() in setup_arch().
+
+Ben: I didn't find any TLB entry for DTB itself.
+Does it mean that I missed it or that powerpc can access in machine_init(=
+)
+the whole memory space?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
-This way, aftermarket users (debian installers, etc) could go to the
-same place they go for zImages, and find a standard named dtb.  They
-wouldn't need to parse the dtbs, just look at the current compatible
-string for the board they are installing on and find the matching file.
-For commercial efforts, nothing changes, the well-thought out *.dtb
-filenames are still in the same place they always were.  A self-imposed
-vendor ABI, if you will.
 
-Then, in situations where dts filenames need to change, that can happen
-(typically per vendor) because the ABI, from the kernel maintainers pov,
-is the symlinks in arch/arm/boot/.
+--PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-As for the migration, there wouldn't need to be one beyond this first
-step of providing symlinks.  That way, vendor-preferred filenames stay
-as they are.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Would that work better for you?
+iEYEARECAAYFAlKE+nsACgkQykllyylKDCHnKgCdFzhDnKZrwD7RCx5D1S1nT3dT
+39EAn3O7U8yvIzBvowJyzZf9xOuJ3kFZ
+=hnEu
+-----END PGP SIGNATURE-----
 
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV--
