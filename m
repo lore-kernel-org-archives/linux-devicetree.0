@@ -1,78 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] doc: devicetree: Add bindings documentation for
- omap-des driver
-Date: Thu, 14 Nov 2013 11:01:51 -0800
-Message-ID: <20131114190150.GT10317@atomide.com>
-References: <1384199386-14504-1-git-send-email-joelf@ti.com>
+From: "Tim Kryger" <tim.kryger@linaro.org>
+Subject: [PATCH v3 5/8] mmc: sdhci-bcm-kona: Add basic use of clocks
+Date: Thu, 14 Nov 2013 11:10:40 -0800
+Message-ID: <1384456243-27053-6-git-send-email-tim.kryger@linaro.org>
+References: <1384456243-27053-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384199386-14504-1-git-send-email-joelf@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1384456243-27053-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Joel Fernandes <joelf@ti.com> [131111 11:50]:
-> Add documentation for the generic OMAP DES crypto modul describing the device
-> tree bindings.
-> 
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: Joel Fernandes <joelf@ti.com>
+Enable the external clock needed by the host controller during the
+probe and disable it during the remove.
 
-Thanks applying into omap-for-v3.13/fixes.
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+Reviewed-by: Matt Porter <matt.porter@linaro.org>
+---
+ drivers/mmc/host/sdhci-bcm-kona.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-Tony
+diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
+index 85472d3..bffbb40 100644
+--- a/drivers/mmc/host/sdhci-bcm-kona.c
++++ b/drivers/mmc/host/sdhci-bcm-kona.c
+@@ -54,6 +54,7 @@
+ 
+ struct sdhci_bcm_kona_dev {
+ 	struct mutex	write_lock; /* protect back to back writes */
++	struct clk	*external_clk;
+ };
+ 
+ 
+@@ -257,6 +258,24 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
+ 
++	/* Get and enable the external clock */
++	kona_dev->external_clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(kona_dev->external_clk)) {
++		dev_err(dev, "Failed to get external clock\n");
++		ret = PTR_ERR(kona_dev->external_clk);
++		goto err_pltfm_free;
++	}
++
++	if (clk_set_rate(kona_dev->external_clk, host->mmc->f_max) != 0) {
++		dev_err(dev, "Failed to set rate external clock\n");
++		goto err_pltfm_free;
++	}
++
++	if (clk_prepare_enable(kona_dev->external_clk) != 0) {
++		dev_err(dev, "Failed to enable external clock\n");
++		goto err_pltfm_free;
++	}
++
+ 	dev_dbg(dev, "non-removable=%c\n",
+ 		(host->mmc->caps & MMC_CAP_NONREMOVABLE) ? 'Y' : 'N');
+ 	dev_dbg(dev, "cd_gpio %c, wp_gpio %c\n",
+@@ -271,7 +290,7 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
+ 
+ 	ret = sdhci_bcm_kona_sd_reset(host);
+ 	if (ret)
+-		goto err_pltfm_free;
++		goto err_clk_disable;
+ 
+ 	sdhci_bcm_kona_sd_init(host);
+ 
+@@ -307,6 +326,9 @@ err_remove_host:
+ err_reset:
+ 	sdhci_bcm_kona_sd_reset(host);
+ 
++err_clk_disable:
++	clk_disable_unprepare(kona_dev->external_clk);
++
+ err_pltfm_free:
+ 	sdhci_pltfm_free(pdev);
+ 
+@@ -317,6 +339,8 @@ err_pltfm_free:
+ static int __exit sdhci_bcm_kona_remove(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host = platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
++	struct sdhci_bcm_kona_dev *kona_dev = sdhci_pltfm_priv(pltfm_priv);
+ 	int dead;
+ 	u32 scratch;
+ 
+@@ -326,6 +350,8 @@ static int __exit sdhci_bcm_kona_remove(struct platform_device *pdev)
+ 		dead = 1;
+ 	sdhci_remove_host(host, dead);
+ 
++	clk_disable_unprepare(kona_dev->external_clk);
++
+ 	sdhci_free_host(host);
+ 
+ 	return 0;
+-- 
+1.8.0.1
 
-> ---
-> v2 changes: Update documentation for clocks, clock-names and dma-names.
-> 
->  .../devicetree/bindings/crypto/omap-des.txt        | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> new file mode 100644
-> index 0000000..e8c63bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/omap-des.txt
-> @@ -0,0 +1,30 @@
-> +OMAP SoC DES crypto Module
-> +
-> +Required properties:
-> +
-> +- compatible : Should contain "ti,omap4-des"
-> +- ti,hwmods: Name of the hwmod associated with the DES module
-> +- reg : Offset and length of the register set for the module
-> +- interrupts : the interrupt-specifier for the DES module
-> +- clocks : A phandle to the functional clock node of the DES module
-> +           corresponding to each entry in clock-names
-> +- clock-names : Name of the functional clock, should be "fck"
-> +
-> +Optional properties:
-> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> +	Documentation/devicetree/bindings/dma/dma.txt
-> +	Each entry corresponds to an entry in dma-names
-> +- dma-names: DMA request names should include "tx" and "rx" if present
-> +
-> +Example:
-> +	/* DRA7xx SoC */
-> +	des: des@480a5000 {
-> +		compatible = "ti,omap4-des";
-> +		ti,hwmods = "des";
-> +		reg = <0x480a5000 0xa0>;
-> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +		dmas = <&sdma 117>, <&sdma 116>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&l3_iclk_div>;
-> +		clock-names = "fck";
-> +	};
-> -- 
-> 1.8.1.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
