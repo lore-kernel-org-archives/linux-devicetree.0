@@ -1,64 +1,45 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
-Date: Fri, 15 Nov 2013 06:22:06 +0900
-Message-ID: <20131114212206.EAD1BC402B4@trevor.secretlab.ca>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com > <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com> < 20131111184245.D569DC4234A@trevor.secretlab.ca> < ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com> < 20131114013124.7DD0AC404DF@trevor.secretlab.ca> < E4922A5F-11B3-4167-91EF-C0D5F3F77D40@antoniou-consulting.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Thu, 14 Nov 2013 14:37:48 -0700
+Message-ID: <528542AC.4080405@wwwdotorg.org>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <52814AFB.3070600@wwwdotorg.org> <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com> <528275B7.6050209@wwwdotorg.org> <20131112193012.GR10335@titan.lakedaemon.net> <52828C77.20001@wwwdotorg.org> <20131114162859.GX10335@titan.lakedaemon.net> <52851DC8.203@wwwdotorg.org> <20131114191622.GC21549@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E4922A5F-11B3-4167-91EF-C0D5F3F77D40-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <20131114191622.GC21549-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Nov 2013 11:01:35 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> On Nov 14, 2013, at 2:31 AM, Grant Likely wrote:
-> > On Tue, 12 Nov 2013 10:30:37 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> >> On Nov 11, 2013, at 7:42 PM, Grant Likely wrote:
-> >>> On Fri,  8 Nov 2013 17:06:09 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> >> I'm of the opinion that 'platform_device' shouldn't exist at all btw :)
-> >> Most of it's functionality can pretty easily be subsumed by device proper
-> >> and the world would be a better place :)
-> > 
-> > I'm fine for merging some/all of the platform_device fields into struct
-> > device. There are a few things, like resources, which would probably be
-> > useful to have common on all struct device variants. However,
-> > platform_device is far more about matching drivers to devices. Even if
-> > all of platform_device went into struct device, there would still need
-> > to be the platform_bus_type as the collection point for the device
-> > drivers.
-> > 
+On 11/14/2013 12:16 PM, Jason Gunthorpe wrote:
+> On Thu, Nov 14, 2013 at 12:00:24PM -0700, Stephen Warren wrote:
 > 
-> We don't really need the resources structures on OF. That information is
-> present in OF format, which we can use to generate transient resources for
-> usage with the standard kernel interfaces.
+>> I don't think a distro should need to know the DTB filename at all.
+>> Rather, the/a bootloader should know which platform it's running on, and
+>> provide a variable/... to the boot script/... that defines the DTB
+>> filename. That would completely remove all the knowledge of DTB
+>> filenames from distros.
 > 
-> BTW, last time I checked resource handling was broken on release.
-> There are a few patches I sent out fixing it but they were probably ignored.
-
-Please send them again. They probably got lost.
-
-> >>> Can overlays interact in bad ways? If overlay 1 is installed before
-> >>> overlay 2, what happens if overlay 1 is removed?
-> >>> 
-> >> 
-> >> Yes, they can. It is not something easily fixed; the proper way would
-> >> be to calculate overlay intersection points and refuse to unload.
-> > 
-> > I think this is important. If it cannot be solved immediately, then the
-> > kernel should enforce overlays always get removed in the reverse order
-> > that they were added. There may be use-cases that don't like it, but it
-> > is safe.
+> At some point the distro has to install a dtb into some cannonical
+> place so the bootloader can find it..
 > 
-> OK, that makes sense.
-> 
-> We are not talking about a global overlay stack though, we're talking about
-> an overlay stack for overlays that overlap.
+> Are you thinking that distros will have to ship a /boot/dtbs/*.dtb
+> with every dtb from the kernel build?
 
-I'm actually talking about a global overlay stack. Otherwise you've
-still got the ever-increasing-phandles problem again.
+Yes. How else would the distro support booting the install on arbitrary
+boards?
 
-Cheers,
-g.
+> What happens when you install two different versions of the kernel?
+
+/boot/zImage-$version
+/boot/dtbs-$version/*.dtb
+
+> What about boot schemes that can load a kernel version dependent dtb?
+
+I think that's solved by installing the DTB files in a
+kernel-version-specific directory.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
