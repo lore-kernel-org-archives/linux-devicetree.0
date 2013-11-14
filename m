@@ -1,57 +1,47 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 0/3] devicetree includes for i.MX5 clocks
-Date: Thu, 14 Nov 2013 11:13:13 +0800
-Message-ID: <20131114031309.GB17819@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: imx5: introduce DT includes for clock provider
+Date: Thu, 14 Nov 2013 11:19:06 +0800
+Message-ID: <20131114031902.GC17819@S2101-09.ap.freescale.net>
 References: <1384369879-11878-1-git-send-email-l.stach@pengutronix.de>
+ <1384369879-11878-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384369879-11878-1-git-send-email-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1384369879-11878-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 08:11:16PM +0100, Lucas Stach wrote:
-> This series introduces devicetree includes for the i.MX5
-> SoC clocks. It makes devicetrees easier to read for humans and
-> less error prone.
-> 
-> The series is spun against Shawns for-next branch, as there are
-> already some clock related patches in there. I would like to
-> see those patches sitting in -next for a while.
-> 
-> Lucas Stach (3):
->   clk: imx5: introduce DT includes for clock provider
->   ARM: imx53: use clock defines in DTS files
->   ARM: imx51: use clock defines in DTS files
+On Wed, Nov 13, 2013 at 08:11:17PM +0100, Lucas Stach wrote:
+<snip>
 
-You need one more patch to cover imx50 now.
+> +#define IMX5_CLK_SPDIF0_COM_SEL		181
+> +#define IMX5_CLK_SPDIF1_COM_SEL		182
+> +#define IMX5_CLK_SPDIF0_GATE		183
+> +#define IMX5_CLK_SPDIF1_GATE		184
+> +#define IMX5_CLK_SPDIF_IPG_GATE		185
+> +#define IMX5_CLK_OCRAM			186
+> +#define IMX5_SAHARA_IPG_GATE		187
+
+s/IMX5_SAHARA_IPG_GATE/IMX5_CLK_SAHARA_IPG_GATE
+
+> +#define IMX5_CLK_CLK_END		188
+
+I know this is from include/dt-bindings/clock/imx6sl-clock.h.  Please
+use IMX5_CLK_END to align with pattern used in vf610-clock.h.  I will
+send a patch to change imx6sl-clock.h.
 
 Shawn
 
-> 
->  .../devicetree/bindings/clock/imx5-clock.txt       | 196 +----
->  arch/arm/boot/dts/imx51.dtsi                       |  98 ++-
->  arch/arm/boot/dts/imx53-m53evk.dts                 |   2 +-
->  arch/arm/boot/dts/imx53-mba53.dts                  |   2 +-
->  arch/arm/boot/dts/imx53-qsb.dts                    |   2 +-
->  arch/arm/boot/dts/imx53.dtsi                       | 122 ++--
->  arch/arm/mach-imx/clk-imx51-imx53.c                | 786 ++++++++++-----------
->  include/dt-bindings/clock/imx5-clock.h             | 202 ++++++
->  8 files changed, 718 insertions(+), 692 deletions(-)
->  create mode 100644 include/dt-bindings/clock/imx5-clock.h
-> 
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_IMX5_H */
 > -- 
 > 1.8.4.2
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
