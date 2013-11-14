@@ -1,301 +1,57 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 8/8] ARM: dts: Fix omap2 specific dtsi files by adding the missing entries
-Date: Wed, 13 Nov 2013 18:35:37 -0800
-Message-ID: <1384396537-3486-9-git-send-email-tony@atomide.com>
-References: <1384396537-3486-1-git-send-email-tony@atomide.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 0/3] devicetree includes for i.MX5 clocks
+Date: Thu, 14 Nov 2013 11:13:13 +0800
+Message-ID: <20131114031309.GB17819@S2101-09.ap.freescale.net>
+References: <1384369879-11878-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1384396537-3486-1-git-send-email-tony@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1384369879-11878-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Looks like we're missing few entries for omap2 and the drivers
-have only worked because of the omap hwmod building the devices
-for the missing entries.
+On Wed, Nov 13, 2013 at 08:11:16PM +0100, Lucas Stach wrote:
+> This series introduces devicetree includes for the i.MX5
+> SoC clocks. It makes devicetrees easier to read for humans and
+> less error prone.
+> 
+> The series is spun against Shawns for-next branch, as there are
+> already some clock related patches in there. I would like to
+> see those patches sitting in -next for a while.
+> 
+> Lucas Stach (3):
+>   clk: imx5: introduce DT includes for clock provider
+>   ARM: imx53: use clock defines in DTS files
+>   ARM: imx51: use clock defines in DTS files
 
-Let's fix the missing entries so we don't need to rely on hwmod
-for the basic data and can then later on remove the duplicate
-data from hwmod. Otherwise device tree only drivers will not
-work properly.
+You need one more patch to cover imx50 now.
 
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap2.dtsi    | 96 +++++++++++++++++++++++++++++++++=
-++++++++
- arch/arm/boot/dts/omap2420.dtsi | 23 ++++++++++
- arch/arm/boot/dts/omap2430.dtsi | 49 +++++++++++++++++++++
- 3 files changed, 168 insertions(+)
+Shawn
 
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dts=
-i
-index a2bfcde..d0c5b37 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -9,6 +9,7 @@
-  */
-=20
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/omap.h>
-=20
- #include "skeleton.dtsi"
-@@ -21,6 +22,8 @@
- 		serial0 =3D &uart1;
- 		serial1 =3D &uart2;
- 		serial2 =3D &uart3;
-+		i2c0 =3D &i2c1;
-+		i2c1 =3D &i2c2;
- 	};
-=20
- 	cpus {
-@@ -53,6 +56,28 @@
- 		ranges;
- 		ti,hwmods =3D "l3_main";
-=20
-+		aes: aes@480a6000 {
-+			compatible =3D "ti,omap2-aes";
-+			ti,hwmods =3D "aes";
-+			reg =3D <0x480a6000 0x50>;
-+			dmas =3D <&sdma 9 &sdma 10>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
-+		hdq1w: 1w@480b2000 {
-+			compatible =3D "ti,omap2420-1w";
-+			ti,hwmods =3D "hdq1w";
-+			reg =3D <0x480b2000 0x1000>;
-+			interrupts =3D <58>;
-+		};
-+
-+		mailbox: mailbox@48094000 {
-+			compatible =3D "ti,omap2-mailbox";
-+			ti,hwmods =3D "mailbox";
-+			reg =3D <0x48094000 0x200>;
-+			interrupts =3D <26>;
-+		};
-+
- 		intc: interrupt-controller@1 {
- 			compatible =3D "ti,omap2-intc";
- 			interrupt-controller;
-@@ -63,6 +88,7 @@
-=20
- 		sdma: dma-controller@48056000 {
- 			compatible =3D "ti,omap2430-sdma", "ti,omap2420-sdma";
-+			ti,hwmods =3D "dma";
- 			reg =3D <0x48056000 0x1000>;
- 			interrupts =3D <12>,
- 				     <13>,
-@@ -73,21 +99,91 @@
- 			#dma-requests =3D <64>;
- 		};
-=20
-+		i2c1: i2c@48070000 {
-+			compatible =3D "ti,omap2-i2c";
-+			ti,hwmods =3D "i2c1";
-+			reg =3D <0x48070000 0x80>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			interrupts =3D <56>;
-+			dmas =3D <&sdma 27 &sdma 28>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
-+		i2c2: i2c@48072000 {
-+			compatible =3D "ti,omap2-i2c";
-+			ti,hwmods =3D "i2c2";
-+			reg =3D <0x48072000 0x80>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			interrupts =3D <57>;
-+			dmas =3D <&sdma 29 &sdma 30>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
-+		mcspi1: mcspi@48098000 {
-+			compatible =3D "ti,omap2-mcspi";
-+			ti,hwmods =3D "mcspi1";
-+			reg =3D <0x48098000 0x100>;
-+			interrupts =3D <65>;
-+			dmas =3D <&sdma 35 &sdma 36 &sdma 37 &sdma 38
-+				&sdma 39 &sdma 40 &sdma 41 &sdma 42>;
-+			dma-names =3D "tx0", "rx0", "tx1", "rx1",
-+				    "tx2", "rx2", "tx3", "rx3";
-+		};
-+
-+		mcspi2: mcspi@4809a000 {
-+			compatible =3D "ti,omap2-mcspi";
-+			ti,hwmods =3D "mcspi2";
-+			reg =3D <0x4809a000 0x100>;
-+			interrupts =3D <66>;
-+			dmas =3D <&sdma 43 &sdma 44 &sdma 45 &sdma 46>;
-+			dma-names =3D "tx0", "rx0", "tx1", "rx1";
-+		};
-+
-+		rng: rng@480a0000 {
-+			compatible =3D "ti,omap2-rng";
-+			ti,hwmods =3D "rng";
-+			reg =3D <0x480a0000 0x50>;
-+			interrupts =3D <36>;
-+		};
-+
-+		sham: sham@480a4000 {
-+			compatible =3D "ti,omap2-sham";
-+			ti,hwmods =3D "sham";
-+			reg =3D <0x480a4000 0x64>;
-+			interrupts =3D <51>;
-+			dmas =3D <&sdma 13>;
-+			dma-names =3D "rx";
-+		};
-+
- 		uart1: serial@4806a000 {
- 			compatible =3D "ti,omap2-uart";
- 			ti,hwmods =3D "uart1";
-+			reg =3D <0x4806a000 0x2000>;
-+			interrupts =3D <72>;
-+			dmas =3D <&sdma 49 &sdma 50>;
-+			dma-names =3D "tx", "rx";
- 			clock-frequency =3D <48000000>;
- 		};
-=20
- 		uart2: serial@4806c000 {
- 			compatible =3D "ti,omap2-uart";
- 			ti,hwmods =3D "uart2";
-+			reg =3D <0x4806c000 0x400>;
-+			interrupts =3D <73>;
-+			dmas =3D <&sdma 51 &sdma 52>;
-+			dma-names =3D "tx", "rx";
- 			clock-frequency =3D <48000000>;
- 		};
-=20
- 		uart3: serial@4806e000 {
- 			compatible =3D "ti,omap2-uart";
- 			ti,hwmods =3D "uart3";
-+			reg =3D <0x4806e000 0x400>;
-+			interrupts =3D <74>;
-+			dmas =3D <&sdma 53 &sdma 54>;
-+			dma-names =3D "tx", "rx";
- 			clock-frequency =3D <48000000>;
- 		};
-=20
-diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap24=
-20.dtsi
-index c8f9c55..60c605d 100644
---- a/arch/arm/boot/dts/omap2420.dtsi
-+++ b/arch/arm/boot/dts/omap2420.dtsi
-@@ -114,6 +114,15 @@
- 			dma-names =3D "tx", "rx";
- 		};
-=20
-+		msdi1: mmc@4809c000 {
-+			compatible =3D "ti,omap2420-mmc";
-+			ti,hwmods =3D "msdi1";
-+			reg =3D <0x4809c000 0x80>;
-+			interrupts =3D <83>;
-+			dmas =3D <&sdma 61 &sdma 62>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
- 		timer1: timer@48028000 {
- 			compatible =3D "ti,omap2420-timer";
- 			reg =3D <0x48028000 0x400>;
-@@ -121,5 +130,19 @@
- 			ti,hwmods =3D "timer1";
- 			ti,timer-alwon;
- 		};
-+
-+		wd_timer2: wdt@48022000 {
-+			compatible =3D "ti,omap2-wdt";
-+			ti,hwmods =3D "wd_timer2";
-+			reg =3D <0x48022000 0x80>;
-+		};
- 	};
- };
-+
-+&i2c1 {
-+	compatible =3D "ti,omap2420-i2c";
-+};
-+
-+&i2c2 {
-+	compatible =3D "ti,omap2420-i2c";
-+};
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap24=
-30.dtsi
-index c535a5a..d624345 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -175,6 +175,25 @@
- 			dma-names =3D "tx", "rx";
- 		};
-=20
-+		mmc1: mmc@4809c000 {
-+			compatible =3D "ti,omap2-hsmmc";
-+			reg =3D <0x4809c000 0x200>;
-+			interrupts =3D <83>;
-+			ti,hwmods =3D "mmc1";
-+			ti,dual-volt;
-+			dmas =3D <&sdma 61>, <&sdma 62>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
-+		mmc2: mmc@480b4000 {
-+			compatible =3D "ti,omap2-hsmmc";
-+			reg =3D <0x480b4000 0x200>;
-+			interrupts =3D <86>;
-+			ti,hwmods =3D "mmc2";
-+			dmas =3D <&sdma 47>, <&sdma 48>;
-+			dma-names =3D "tx", "rx";
-+		};
-+
- 		timer1: timer@49018000 {
- 			compatible =3D "ti,omap2420-timer";
- 			reg =3D <0x49018000 0x400>;
-@@ -182,5 +201,35 @@
- 			ti,hwmods =3D "timer1";
- 			ti,timer-alwon;
- 		};
-+
-+		mcspi3: mcspi@480b8000 {
-+			compatible =3D "ti,omap2-mcspi";
-+			ti,hwmods =3D "mcspi3";
-+			reg =3D <0x480b8000 0x100>;
-+			interrupts =3D <91>;
-+			dmas =3D <&sdma 15 &sdma 16 &sdma 23 &sdma 24>;
-+			dma-names =3D "tx0", "rx0", "tx1", "rx1";
-+		};
-+
-+		usb_otg_hs: usb_otg_hs@480ac000 {
-+			compatible =3D "ti,omap2-musb";
-+			ti,hwmods =3D "usb_otg_hs";
-+			reg =3D <0x480ac000 0x1000>;
-+			interrupts =3D <93>;
-+		};
-+
-+		wd_timer2: wdt@49016000 {
-+			compatible =3D "ti,omap2-wdt";
-+			ti,hwmods =3D "wd_timer2";
-+			reg =3D <0x49016000 0x80>;
-+		};
- 	};
- };
-+
-+&i2c1 {
-+	compatible =3D "ti,omap2430-i2c";
-+};
-+
-+&i2c2 {
-+	compatible =3D "ti,omap2430-i2c";
-+};
---=20
-1.8.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>  .../devicetree/bindings/clock/imx5-clock.txt       | 196 +----
+>  arch/arm/boot/dts/imx51.dtsi                       |  98 ++-
+>  arch/arm/boot/dts/imx53-m53evk.dts                 |   2 +-
+>  arch/arm/boot/dts/imx53-mba53.dts                  |   2 +-
+>  arch/arm/boot/dts/imx53-qsb.dts                    |   2 +-
+>  arch/arm/boot/dts/imx53.dtsi                       | 122 ++--
+>  arch/arm/mach-imx/clk-imx51-imx53.c                | 786 ++++++++++-----------
+>  include/dt-bindings/clock/imx5-clock.h             | 202 ++++++
+>  8 files changed, 718 insertions(+), 692 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/imx5-clock.h
+> 
+> -- 
+> 1.8.4.2
+> 
