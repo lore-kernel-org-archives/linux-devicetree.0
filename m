@@ -1,89 +1,78 @@
-From: "Sherman Yin" <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Wed, 13 Nov 2013 15:43:11 -0800
-Message-ID: <52840E8F.3060803@broadcom.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
- <051069C10411E24D9749790C498526FA1BE0B7D7@SJEXCHMB12.corp.ad.broadcom.com>
- <CACRpkdYSLxp2M4HghcUdjEYGh-UQ+DaiCGp6yee+Qds6DR9poA@mail.gmail.com>
- <201311050026.56321.heiko@sntech.de> <527835FE.2030102@wwwdotorg.org>
- <5279A319.5060701@broadcom.com>
- <CACRpkdaxPv6CLMjab_4umyUvbBVYcazjmwx_LGRK76vxT4VUqA@mail.gmail.com>
- <527C3080.5050202@broadcom.com>
- <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w@mail.gmail.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
+Date: Thu, 14 Nov 2013 10:20:19 +0900
+Message-ID: <52842553.2080807@nvidia.com>
+References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com> <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com> <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=iso-8859-1;
- format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaf9dVqpE5uFQ5L64n+wXO0AYr5-e1WvYc4rWjVTsTg1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCb?= =?ISO-8859-1?Q?ner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-11-11 02:01 AM, Linus Walleij wrote:
->> I would imagine that the platform-specific device tree bindings would need
->> to clearly explain what the valid values are, as they should.
->
-> But this is not a platform-specific binding. These are the
-> generic pin configuration bindings we're talking about.
-
-Yes, the properties are generic, but I was under the impression that the 
-values can be "custom", such as these:
-
-  * @PIN_CONFIG_INPUT_SCHMITT: this will configure an input pin to run in
-  *	schmitt-trigger mode. If the schmitt-trigger has adjustable hysteresis,
-  *	the threshold value is given on a custom format as argument when
-  *	setting pins to this mode.
-
-and
-
-  * @PIN_CONFIG_SLEW_RATE: if the pin can select slew rate, the argument to
-  *	this parameter (on a custom format) tells the driver which alternative
-  *	slew rate to use.
-
->
->> If we're
->> using integers, we could either have a) !0 and 0, or b) just 1 and 0, and
->> everything else is an error.  Or c) the platform could decide that the value
->> provides addition info like pull-up-strength, so 0 = no pull up, >0 = pull
->> up enabled and the number is the pull up strength in Ohm (bindings should
->> indicate which values are valid), and everything else is an error.
->
-> That seems to make sense, I've just not seen any system (using
-> device tree) that can actually set the pull up/down resistance.
->
->>> That said, if you can patch the OF core and the generic pin config
->>> parser to do what you want with lists like that, it's your pick.
->>> It may take some time though.
+On 11/14/2013 02:57 AM, Olof Johansson wrote:
+> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
+>>>
+>>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
+>>>>>
+>>>>> Just a set of small fixes to address the concerns expressed on v9 with
+>>>>> the
+>>>>> non-prefixed version DT properties. I hope there won't be a need for an
+>>>>> eleventh (!) version. :P
+>>>>
+>>>>
+>>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
+>>>> him. I'm just waiting to hear back from Olof/Russell whether I should
+>>>> merge this through the Tegra tree, or whether the first 1-3 patches
+>>>> should go through Russell's tree.
+>>>
+>>>
+>>> I pinged Russell, and he brought up the fact that there were earlier
+>>> requests to move it to drivers/firmware. It would make sense to try to
+>>> get that done before merging, especially if you anticipate someone
+>>> using TF on 64-bit platforms.
 >>
->> I don't mind patching the generic pin config, and I don't think the core
->> needs to change,
->
-> If you want arrays of booleans that is a matter for the OF core
-> parser I think.
-
-I was thinking of just using integers and accepting only 1 and 0, 
-everything else is error.
-
->>> What about you patch include/linux/pinctrl/pinconf-generic.h
->>> to add PIN_CONFIG_INPUT_DISABLE with this semantic
->>> and also patch the generic pinconf parser in
->>> drivers/pinctrl/pinconf-generic.c
->>> to handle this?
 >>
->> Sure, I can add PIN_CONFIG_INPUT_DISABLE.  However I suspect people might be
->> confused by this and PIN_CONFIG_OUTPUT.
+>> IIRC when we discussed this point your last comment was as follows:
 >
-> Just make sure you put in good documentation in that file
-> right there, it's using kerneldoc and for a good reason...
+> Touche. :) Thanks for the reminder.
+>
+>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> I think we can probably merge this under arch/arm now, and when we
+>>> figure out what needs to be common with ARM64 we can move it out to a
+>>> good location. It might be that mostly just a header file with ABI
+>>> conventions needs to be shared, not actual implementation, for
+>>> example.
+>>
+>> So I thought we agreed on that. If in the end we prefer to move the ARM
+>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
+>> also confirmed he would be ok with it) but I wonder if that would not be
+>> somehow premature.
+>>
+>> Another worry of mine is that this might delay this patchset some more.
+>> Support for TF is one of the last remaining step towards making NVIDIA
+>> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
+>> upstream directly. I missed 3.13, I'd like to make sure I won't miss 3.14.
+>> Would it be acceptable if we move the ARM firmware interface to a common
+>> place after this patchset is merged?
+>
+> Well, as I already said I'm ok with things going into arch/arm to
+> start with, as long as Russell is. Once we see 64-bit needs for the
+> same we'll move it out -- it's not like it's a whole lot of code to
+> start with. But Russell has veto on the topic. :-)
 
+Thanks Olof. Russell, are you ok with the patchset in its current form? 
+I can start moving the firmware interface out of arch/arm if that's what 
+you want (there is no user outside of ARM at the moment, but as Olof 
+pointed out that's not too much code) but I'd really like to see this 
+series secured for 3.14.
 
 Thanks,
-Sherman
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alex.
