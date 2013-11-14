@@ -1,63 +1,37 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/8] net: smc91x: Fix device tree based configuration
- so it's usable
-Date: Thu, 14 Nov 2013 11:03:24 +0000
-Message-ID: <20131114110324.GC16396@e106331-lin.cambridge.arm.com>
-References: <1384396537-3486-1-git-send-email-tony@atomide.com>
- <1384396537-3486-2-git-send-email-tony@atomide.com>
+From: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/2] Add monaural audio support for fsl_ssi.c
+Date: Thu, 14 Nov 2013 19:07:08 +0800
+Message-ID: <1384427230-979-1-git-send-email-b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384396537-3486-2-git-send-email-tony@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Nicolas Pitre <nico@fluxnic.net>, "David S. Miller" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: timur-N01EOCouUvQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 02:35:30AM +0000, Tony Lindgren wrote:
-> Commit 89ce376c6bdc (drivers/net: Use of_match_ptr() macro in smc91x.c)
-> added minimal device tree support to smc91x, but it's not working on
-> many platforms because of the lack of some key configuration bits.
-> 
-> Fix the issue by parsing the necessary configuration like the
-> smc911x driver is doing.
-> 
-> Cc: Nicolas Pitre <nico@fluxnic.net>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> If this looks OK, I'd like to merge this as a fix via arm-soc tree
-> along with the other patches in this series as my later patches
-> depend on patches in this series.
-> 
-> ---
->  .../devicetree/bindings/net/smsc-lan91c111.txt     |  4 ++
->  drivers/net/ethernet/smsc/smc91x.c                 | 52 +++++++++++++++++-----
->  2 files changed, 46 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-> index 953049b..53d69e3 100644
-> --- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-> +++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-> @@ -8,3 +8,7 @@ Required properties:
->  Optional properties:
->  - phy-device : phandle to Ethernet phy
->  - local-mac-address : Ethernet mac address to use
-> +- reg-io-width : Specify the size (in bytes) of the IO accesses that
-> +  should be performed on the device.  Valid value for SMSC LAN is
-> +  1, 2 or 4.  If it's omitted or invalid, the size would be 2.
+This series of patches need to be applied into one single tree because
+the second patch depends on the first one. Without it, SSI would playback
+constant noise to the right channel when playback monaural audio files on
+i.MX6 Series board.
 
-In the driver the supported access sizes are not mutually exclusive.  It
-would be nice for the binding to have the same property.
+We might also need to apply the iomux change to the other i.MX platforms,
+just currently I don't have those boards so I drop their changes for now.
 
-> +- smsc,nowait : Setup for fast register access with no waits
+Nicolin Chen (2):
+  ARM: dts: imx: specify the value of audmux pinctrl instead of
+    0x80000000
+  ASoC: fsl_ssi: Add monaural audio support for non-ac97 interface
 
-I'm confused by what this means. When would this be selected, and when
-wouldn't it be?
+ arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
+ sound/soc/fsl/fsl_ssi.c        | 22 +++++++++++++++++++---
+ 2 files changed, 30 insertions(+), 14 deletions(-)
 
-Thanks,
-Mark.
+-- 
+1.8.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
