@@ -1,60 +1,58 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH 3/3] arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
-Date: Thu, 14 Nov 2013 12:31:59 -0700
-Message-ID: <1384457519-21335-4-git-send-email-lho@apm.com>
-References: <1384457519-21335-1-git-send-email-lho@apm.com>
- <1384457519-21335-2-git-send-email-lho@apm.com>
- <1384457519-21335-3-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1384457519-21335-3-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Thu, 14 Nov 2013 19:34:20 +0000
+Message-ID: <20131114193420.GF16735@n2100.arm.linux.org.uk>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <52814AFB.3070600@wwwdotorg.org> <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com> <528275B7.6050209@wwwdotorg.org> <20131112193012.GR10335@titan.lakedaemon.net> <52828C77.20001@wwwdotorg.org> <20131114162859.GX10335@titan.lakedaemon.net> <52851DC8.203@wwwdotorg.org> <20131114191622.GC21549@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131114191622.GC21549-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries.
+On Thu, Nov 14, 2013 at 12:16:22PM -0700, Jason Gunthorpe wrote:
+> On Thu, Nov 14, 2013 at 12:00:24PM -0700, Stephen Warren wrote:
+> 
+> > I don't think a distro should need to know the DTB filename at all.
+> > Rather, the/a bootloader should know which platform it's running on, and
+> > provide a variable/... to the boot script/... that defines the DTB
+> > filename. That would completely remove all the knowledge of DTB
+> > filenames from distros.
+> 
+> At some point the distro has to install a dtb into some cannonical
+> place so the bootloader can find it..
+> 
+> Are you thinking that distros will have to ship a /boot/dtbs/*.dtb
+> with every dtb from the kernel build?
 
-This patch adds the DTS entries for the APM X-Gene SoC 6.0Gbps SATA PHY 
-driver. The PHY for controller 0 and 1 are enabled by default.
----
- arch/arm64/boot/dts/apm-storm.dtsi |   25 +++++++++++++++++++++++++
- 1 files changed, 25 insertions(+), 0 deletions(-)
+Why are we even having this discussion?  Where distros want to install
+dtbs is their policy.  What we should do is make it _possible_ for them
+to have policy, not define the policy for them.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 359d7b6..b29b465 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -193,5 +193,30 @@
- 			reg = <0x0 0x17000014 0x0 0x100>;
- 			mask = <0x1>;
- 		};
-+
-+		sataphy0: sataphy@1f210000 {
-+			compatible = "apm,xgene-ahci-phy";
-+			id = <0>;
-+			reg = <0x0 0x1f210000 0x0 0x10000>;
-+			#phy-cells = <0>;
-+			status = "na";
-+		};
-+
-+		sataphy1: sataphy@1f220000 {
-+			compatible = "apm,xgene-ahci-phy";
-+			id = <1>;
-+			reg = <0x0 0x1f220000 0x0 0x10000>;
-+			#phy-cells = <0>;
-+			status = "ok";
-+		};
-+
-+		sataphy2: sataphy@1f230000 {
-+			compatible = "apm,xgene-ahci-phy";
-+			id = <2>;
-+			reg = <0x0 0x1f230000 0x0 0x10000
-+			       0x0 0x1f2d0000 0x0 0x10000 >;
-+			#phy-cells = <0>;
-+			status = "ok";
-+		};
- 	};
- };
--- 
-1.5.5
+The problem here is this.  Consider how often these files change, and
+how often there's differences in them.  Sensible distros allow you to
+have several kernels installed so that you can switch to other
+versions if, for example, you run into problems.
 
+Distros have two main choices - either to ship the DTBs separately
+assuming that they'll always be compatible and correct, or ship them
+with the kernel itself (in which case we've lost the plot about what
+DT is supposed to give us.)
+
+That's where the problem lies: what if a distro wants to have installed
+more than one set of DTBs corresponding to $old_kernel and $new_kernel.
+
+This really isn't something for us kernel developers to decide.  It's
+a distro question and it needs distro people to think about it and put
+proposals forward for what they'd like to see.
+
+In my experience, that won't happen - they like hiding away and sorting
+out their own problems.  The communication between distros and kernel
+folk has always tended to be extremely poor.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
