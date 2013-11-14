@@ -1,87 +1,69 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v4 06/31] mtd: nand: pxa3xx: Add documentation about the
- controller
-Date: Thu, 14 Nov 2013 16:49:07 -0300
-Message-ID: <20131114194906.GD9912@localhost>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131114190004.GP9468@ld-irv-0074.broadcom.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/5] dma: mpc512x: add support for peripheral
+ transfers
+Date: Thu, 14 Nov 2013 21:58:10 +0100
+Message-ID: <20131114205810.GH17929@book.gsilab.sittig.org>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1383290374-17484-3-git-send-email-a13xp0p0v88@gmail.com>
+ <20131111201024.GR17929@book.gsilab.sittig.org>
+ <CAF0T0X5mCEiS88YGGjSS6oGU5RaQ=2PEQFL533OjpQzmc398rA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131114190004.GP9468@ld-irv-0074.broadcom.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Huang Shijie <b32955@freescale.com>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org
+In-Reply-To: <CAF0T0X5mCEiS88YGGjSS6oGU5RaQ=2PEQFL533OjpQzmc398rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 11:00:04AM -0800, Brian Norris wrote:
-> On Thu, Nov 07, 2013 at 12:17:10PM -0300, Ezequiel Garcia wrote:
-> > Given there's no public specification to this date, and in order
-> > to capture some important details and singularities about the
-> > controller let's document them once and for good.
->=20
-> Made a few small tweaks for spelling and such (see the following diff=
-)
-> and pushed patches 5 through 14 to l2-mtd.git/next.
->=20
+On Tue, Nov 12, 2013 at 16:23 +0400, Alexander Popov wrote:
+> 
+> 2013/11/12 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> > 
+> > It would be nice to get a response to the feedback that you
+> > are given.  It may be appropriate not to obey to the
+> > feedback, but at least it should get considered.
+> 
+> Yes, I see. My implicit response by RFCv5 was not efficient,
+> sorry.  Now should I write a detailed answer in the thread with
+> your feedback for improving readability of the discussion?
 
-The below diff looks ok. I had to rework a few patches after the
-completion patch rework, and I'm running some tests.
+Don't you have a checklist of which feedback you got and which of
+it you did address and which you didn't?  Reviewers don't usually
+do the tracking for those who do the submissions.
 
-I'll submit the series as soon as the tests are done.
+I think that you may list "pending issues" or "non-issues" either
+with new submissions or at the previous version's feedback,
+whatever is more appropriate.  Maybe "pending" is useful with the
+new announcement, while "won't, need not" is better kept with the
+reviews.
 
-> Thanks,
-> Brian
->=20
-> diff --git a/Documentation/mtd/nand/pxa3xx-nand.txt b/Documentation/m=
-td/nand/pxa3xx-nand.txt
-> index 00e601c..840fd41 100644
-> --- a/Documentation/mtd/nand/pxa3xx-nand.txt
-> +++ b/Documentation/mtd/nand/pxa3xx-nand.txt
-> @@ -36,7 +36,7 @@ OOB, one per chunk read.
->  So, in order to achieve reading (for instance), we issue several REA=
-D0 commands
->  (with some additional controller-specific magic) and read two chunks=
- of 2080B
->  (2048 data + 32 spare) each.
-> -The driver accomodates this data to expose the NAND core a contiguou=
-s buffer
-> +The driver accommodates this data to expose the NAND core a contiguo=
-us buffer
->  (4096 data + spare) or (4096 + spare + ECC + spare + ECC).
-> =20
->  ECC
-> @@ -81,7 +81,7 @@ an *entire* page.
->  Factory bad blocks handling
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> =20
-> -Given the ECC BCH requires to layout the device's pages in a splitte=
-d
-> +Given the ECC BCH requires to layout the device's pages in a split
->  data/OOB/data/OOB way, the controller has a view of the flash page t=
-hat's
->  different from the specified (aka the manufacturer's) view. In other=
- words,
-> =20
-> @@ -109,5 +109,5 @@ disabled by using the NAND_BBT_NO_OOB_BBM option =
-in the driver. The rationale
->  for this is that there's no point in marking a block as bad, because=
- good
->  blocks are also 'marked as bad' (in the OOB BBM sense) under normal =
-usage.
-> =20
-> -Instead, the drive relies in the bad block table alone, and should o=
-nly perform
-> +Instead, the driver relies on the bad block table alone, and should =
-only perform
->  the bad block scan on the very first time (when the device hasn't be=
-en used).
+As for the not yet addressed feedback:  From the top of my head I
+can think of the execute comment which contradicts the code
+(which suggests that at least one of them is wrong), and the data
+type mismatch in the config routine (where code just happens to
+work by coincidence).  And in bypassing I noticed that your
+recent submission has coding style issues (braces, indentation),
+which should no longer happen after several iterations as you
+should know how to prepare and check the next version.
 
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+Again:  It may be OK to not follow the advice (especially if you
+get multiple responses of differrent direction, or when you are
+more familiar with the subject than an observer).  But you should
+state when you don't agree and why.  Without feedback, reviewers
+may see several submissions which suffer from the same issues,
+and expect more to show up and thus feel that their feedback is
+getting ignored.  Which quickly becomes tiring.
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
