@@ -1,116 +1,86 @@
 From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
-Date: Thu, 14 Nov 2013 09:15:37 +0100
-Message-ID: <1384416937.5901.6.camel@AMDC1943>
+Date: Thu, 14 Nov 2013 09:32:40 +0100
+Message-ID: <1384417960.5901.14.camel@AMDC1943>
 References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
  <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
- <20131113131328.GF878@sirena.org.uk>
+ <20131113115018.GE21713@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20131113131328.GF878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-reply-to: <20131113115018.GE21713-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Wed, 2013-11-13 at 13:13 +0000, Mark Brown wrote:
-> On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
+
+On Wed, 2013-11-13 at 11:50 +0000, Mark Rutland wrote:
+> I see some of_* calls in the code, but no documentation of the binding.
+> As this has more than just a compatible, interrupts, and reg, it needs
+> its own binding document.
 > 
-> > +/**
-> > + * After resuming from suspend it may happen that IRQ is signalled but
-> > + * IRQ GPIO is not high. Also the interrupt registers won't have any data
-> > + * (all of them equal to 0x00).
-> > + *
-> > + * In such case retry few times reading the interrupt registers.
-> > + */
-> > +#define IRQ_READ_REG_RETRY_CNT		5
+> [...]
 > 
-> What is the cause here?  This smells like an unreliable workaround for
-> some other behaviour.  In general this all looks very like standard
-> regmap code.
+> > +static struct mfd_cell max14577_devs[] = {
+> > +       { .name = "max14577-muic",
+> > +               .of_compatible = "maxim,max14577-muic", },
 > 
-> > +	for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
-> > +		u8 mask_reg = max14577_mask_reg[i];
-> > +
-> > +		if (mask_reg == MAX14577_REG_INVALID ||
-> > +				IS_ERR_OR_NULL(max14577->regmap))
-> > +			continue;
+> The compatible string looks fine to me, but should be documented.
+
+Sure, I will add documentation.
+
+> [...]
 > 
-> Why would this code even be running if you don't have a register map?
-> 
-> > +		dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
-> > +			irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
-> > +			irq_reg[MAX14577_IRQ_INT3]);
-> 
-> This is far too noisy, dev_dbg() at most.
-> 
-> > +		gpio_val = gpio_get_value(pdata->irq_gpio);
-> > +
-> > +		if (gpio_get_value(pdata->irq_gpio) == 0)
-> > +			dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
-> > +	} while (gpio_val == 0 && --retry > 0);
-> 
-> This looks very strange...
-> 
-> > +	max14577->irq = gpio_to_irq(pdata->irq_gpio);
-> > +	ret = gpio_request(pdata->irq_gpio, "max14577_irq");
-> > +	if (ret) {
-> > +		dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
-> > +				pdata->irq_gpio, ret);
-> > +		goto err;
-> > +	}
-> > +	gpio_direction_input(pdata->irq_gpio);
-> > +	gpio_free(pdata->irq_gpio);
-> 
-> This means the GPIO handling code that was present in the handling is
-> broken, it's trying to use the GPIO after it was freed.
-> 
-> > +	ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
-> > +				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> > +				   "max14577-irq", max14577);
-> 
-> Are you *positive* this is a falling triggered IRQ?  All the code to do
-> with spinning reading the GPIO state during handling makes it look like
-> this is in fact an active low interrupt and a lot of the code in here is
-> working around trying to handle that as the wrong kind of IRQ.
-> 
-> > +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
-> > +{
-> > +	return regmap_bulk_write(map, reg, buf, count);
-> > +}
-> > +EXPORT_SYMBOL_GPL(max14577_bulk_write);
-> 
-> Given that these are basically all trivial wrappers around regmap they
-> probably ought to be static inlines in the header.
-> 
+> > +#ifdef CONFIG_OF
 > > +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
 > > +{
+> > +       struct max14577_platform_data *pdata;
+> > +       struct device_node *np = dev->of_node;
+> > +
+> > +       pdata = devm_kzalloc(dev, sizeof(struct max14577_platform_data),
+> > +                            GFP_KERNEL);
+> > +       if (!pdata)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       pdata->irq_gpio = of_get_named_gpio(np, "irq_gpio", 0);
 > 
-> There's no DT binding document?
-> 
-> > +const struct dev_pm_ops max14577_pm = {
-> > +	.suspend = max14577_suspend,
-> > +	.resume = max14577_resume,
-> > +};
-> 
-> SET_SYSTEM_SLEEP_PM_OPS().
-> 
-> > +static int __init max14577_i2c_init(void)
-> > +{
-> > +	return i2c_add_driver(&max14577_i2c_driver);
-> > +}
-> > +subsys_initcall(max14577_i2c_init);
-> 
-> Why not module_i2c_driver?
+> In general, '-' is preferred to '_' in property names. This should be
+> irq-gpio.
 
-Thanks for review. I'll the fix issues and send later new version of
-patch.
+OK.
 
-Best regards,
+
+> What exactly is this used for? I know that others have strong opinions
+> about how gpio/irq interaction should be handled.
+
+Later also Mark Brown raised this. I'll leave this to discussion with
+Kyungmin Park as I'm not entirely the author of the code.
+
+
+> 
+> > +       if (!gpio_is_valid(pdata->irq_gpio)) {
+> > +               dev_err(dev, "Invalid irq_gpio in DT\n");
+> > +               return ERR_PTR(-EINVAL);
+> > +       }
+> > +
+> > +       if (of_property_read_bool(np, "wakeup"))
+> > +               pdata->wakeup = true;
+> 
+> What does this mean? It seems like a remarkably generic name for
+> something that I'd guess is _very_ specific to this particular binding.
+> 
+> It might be worth prefixing it, and is certainly worth having a more
+> precise name.
+
+It is used for marking device as wake up source. This is same code as in
+other max drivers used on Exynos boards (max77693 and max77686).
+
+
+Thanks for review,
 Krzysztof
 
 --
