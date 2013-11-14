@@ -1,116 +1,29 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v4 4/4] arm64: Add APM X-Gene SoC SATA DTS entries
-Date: Thu, 14 Nov 2013 14:39:13 -0700
-Message-ID: <1384465153-29902-5-git-send-email-lho@apm.com>
-References: <1384465153-29902-1-git-send-email-lho@apm.com>
- <1384465153-29902-2-git-send-email-lho@apm.com>
- <1384465153-29902-3-git-send-email-lho@apm.com>
- <1384465153-29902-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1384465153-29902-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH 0/3] Add EOC handling for bmp085 + DT and platform data updates
+Date: Thu, 14 Nov 2013 22:46:46 +0100
+Message-ID: <1384465609-26485-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: neilb@suse.de, hns@goldelico.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC SATA host controller and clock DTS entries
+This series add support for using EOC gpio line of bmp085 to detect when conversion
+is finished. First patch add that functionality. Second patch add DT bindings for gpio
+and irq parameters. Third patch add missing platform data which are already in DT bindings
+to have possibility to used them on non-DT archs.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Olof Johansson <olof@lixom.net>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   70 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 70 insertions(+), 0 deletions(-)
+Marek Belisko (3):
+  misc: bmp085: Clean up and enable use of interrupt for completion.
+  misc: bmp085: Add DT bindings for EOC gpio line and direct irq.
+  misc: bmp085: Add missing platform data.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index b29b465..14f3d5b 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -176,6 +176,36 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "eth8clk";
- 			};
-+
-+			eth01clk: eth01clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "eth01clk";
-+	                        reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "eth01clk";
-+			};
-+
-+			eth23clk: eth23clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "eth23clk";
-+	                        reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "eth23clk";
-+			};
-+
-+			sata45clk: sata45clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata45clk";
-+	                        reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata45clk";
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -218,5 +248,45 @@
- 			#phy-cells = <0>;
- 			status = "ok";
- 		};
-+
-+		sata0: sata@1a000000 {
-+			compatible = "apm,xgene-ahci";
-+			id = <0>;
-+			reg =  <0x0 0x1a000000 0x0 0x100000
-+				0x0 0x1f210000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x86 0x4>;
-+		        clocks = <&eth01clk 0>;
-+			status = "na";
-+			phys = <&sataphy0>;
-+			phy-names = "sataphy0";
-+		};
-+
-+		sata1: sata@1a400000 {
-+			compatible = "apm,xgene-ahci";
-+			id = <1>;
-+			reg =  <0x0 0x1a400000 0x0 0x100000
-+				0x0 0x1f220000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x87 0x4>;
-+		        clocks = <&eth23clk 0>;
-+			status = "ok";
-+			phys = <&sataphy1>;
-+			phy-names = "sataphy1";
-+		};
-+
-+		sata2: sata@1a800000 {
-+			compatible = "apm,xgene-ahci";
-+			id = <2>;
-+			reg =  <0x0 0x1a800000 0x0 0x100000
-+				0x0 0x1f230000 0x0 0x10000
-+				0x0 0x1f2d0000 0x0 0x10000 >;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x88 0x4>;
-+		        clocks = <&sata45clk 0>;
-+			status = "ok";
-+			phys = <&sataphy2>;
-+			phy-names = "sataphy2";
-+		};
- 	};
- };
+ Documentation/devicetree/bindings/misc/bmp085.txt |   8 ++
+ drivers/misc/bmp085.c                             | 138 +++++++++++++++++++---
+ include/linux/i2c/bmp085.h                        |  24 ++++
+ 3 files changed, 155 insertions(+), 15 deletions(-)
+ create mode 100644 include/linux/i2c/bmp085.h
+
 -- 
-1.5.5
+1.8.1.2
 
