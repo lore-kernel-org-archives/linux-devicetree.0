@@ -1,49 +1,39 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 0/7] Renesas R8A7790 Common Clock Framework support
-Date: Thu, 14 Nov 2013 16:23:05 +0100
-Message-ID: <9051092.bb2GyTMq0G@avalon>
-References: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CANqRtoRfBb_mZ3erk_iSmmjuFJAWetN3THjGQcBhEjVE__2wWg@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 26/31] mtd: nand: pxa3xx: Introduce multiple page I/O
+ support
+Date: Thu, 14 Nov 2013 12:40:27 -0300
+Message-ID: <20131114154026.GD7076@localhost>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1383837455-30721-27-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20131107234459.GB2467@localhost>
+ <20131108004600.GZ20061@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoRfBb_mZ3erk_iSmmjuFJAWetN3THjGQcBhEjVE__2wWg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131108004600.GZ20061-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+On Thu, Nov 07, 2013 at 04:46:00PM -0800, Brian Norris wrote:
+>=20
+> I haven't taken a look at all your changes yet, but I'll get this
 
-On Thursday 14 November 2013 19:16:05 Magnus Damm wrote:
-> Hi Laurent,
-> 
-> Thanks for V2, it is looking better and better. Great that r8a7791 and
-> r8a7790 can share the CPG code. I have now finally got my r8a7791 board
-> replaced so I intend to try your code out on Lager and then see if I can
-> cook something up on Koelsch.
+Any comments on the v4?
 
-I was actually planning to test the code on the Koelsch board. I don't want to 
-step on anyone's toes, so please let me know if someone is already working on 
-CCF patches for M2, otherwise I'll send them.
+I don't think there are any open issues to reply, but maybe my memory
+is failing, so feel free to refresh it :-)
 
-> I have one question related to the CPG. What is your plan regarding CPU
-> Frequency scaling? I'd like to see "z_clk" and "z2_clk" implemented together
-> with some way to let CPUFreq scale "z_clk". Can you please spend some time
-> on that?
-
-Z2 is a fixed factor clock, I'll just add it to DT.
-
-Z is a bit more tricky. It's the output of a pure multiplier (PLL0) followed 
-by a pure divisor (SYS-CPU divider 1). I can easily model the two as separate 
-clock devices, but I'm unsure about what should be done at runtime when 
-setting the Z clock frequency. Would it be enough to have a fixed PLL0 
-frequency and configure the SYS-CPU divider 1 only (from 1/1 to 1/32), or 
-would we need to configure the PLL0 multiplier as well for a more fine-grained 
-Z frequency configuration ?
-
--- 
-Regards,
-
-Laurent Pinchart
-
+I'll re-submit the series as soon as v3.13-rc1 is out.
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
