@@ -1,281 +1,69 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-Date: Thu, 14 Nov 2013 10:46:20 +0000
-Message-ID: <20131114104620.GB16396@e106331-lin.cambridge.arm.com>
-References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
+Date: Thu, 14 Nov 2013 11:53:51 +0100
+Message-ID: <5284ABBF.3080802@samsung.com>
+References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+ <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+ <20131113131328.GF878@sirena.org.uk>
+ <CAH9JG2U9VDnRW9JZ7j7OyRmVhSXWJ5Yp_gNqUPK=xCST7SY=xg@mail.gmail.com>
+ <20131114102419.GE26614@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1379498279-16096-1-git-send-email-b35083@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jingchang Lu <b35083@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Alison Wang <b18965@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20131114102419.GE26614-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2013 at 10:57:59AM +0100, Jingchang Lu wrote:
-> Add Freescale enhanced direct memory(eDMA) controller support.
-> The eDMA controller deploys DMAMUXs routing DMA request sources(slot)
-> to eDMA channels.
-> This module can be found on Vybrid and LS-1 SoCs.
-> 
-> Signed-off-by: Alison Wang <b18965@freescale.com>
-> Signed-off-by: Jingchang Lu <b35083@freescale.com>
-> ---
-> changes in v6:
->   holding lock in dma_control to prevent race.
-> 
-> changes in v5:
->   config slave_id when dmaengine_slave_config intead of channel request.
->   adding residue calculation and dma pause/resume device control.
-> 
-> changes in v4:
->   using exact compatible string in binding document.
-> 
-> changes in v3:
->   handle all pending interrupt one time.
->   add protect lock on dma transfer complete handling.
->   change desc and tcd alloc flag to GFP_NOWAIT.
->   add sanity check and error messages.
-> 
-> changes in v2:
->   using generic dma-channels property instead of fsl,dma-channel.
->   rename the binding document to fsl-edma.txt.
-> 
-> 
->  Documentation/devicetree/bindings/dma/fsl-edma.txt |  84 ++
->  drivers/dma/Kconfig                                |  10 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/fsl-edma.c                             | 944 +++++++++++++++++++++
->  4 files changed, 1039 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/fsl-edma.txt
->  create mode 100644 drivers/dma/fsl-edma.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-> new file mode 100644
-> index 0000000..60a8cb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-> @@ -0,0 +1,84 @@
-> +* Freescale enhanced Direct Memory Access(eDMA) Controller
-> +
-> +The eDMA engine deploys DMAMUXs routing request sources(slot) to
-> +eDMA controller channels.
-> +
-> +* eDMA Controller
-> +Required properties:
-> +- compatible :
-> +  - "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
-> +- reg : Should contain eDMA registers location and length
-> +- interrupts : Should contain eDMA interrupt
+Hello,
 
-- interrupts: A list of interrupt-specifiers, one for each entry in
-  interrupt-names.
+On 2013-11-14 11:24, Mark Brown wrote:
+> On Thu, Nov 14, 2013 at 10:33:22AM +0900, Kyungmin Park wrote:
+> > On Wed, Nov 13, 2013 at 10:13 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+> > > Are you *positive* this is a falling triggered IRQ?  All the code to do
+> > > with spinning reading the GPIO state during handling makes it look like
+> > > this is in fact an active low interrupt and a lot of the code in here is
+> > > working around trying to handle that as the wrong kind of IRQ.
+>
+> > It's not work with level triggering. as wm8994, it requires edge
+> > triggering. previous time I send RFC patch to handle edge triggering
+> > at regmap.
+>
+> No, wm8994 is level triggered only - the edge triggering stuff there is
+> to work around some SoCs that could only support edge triggering and not
+> level triggering.  Is this a similar issue or is there something else
+> going on, what's the differeence with a level triggered scheme?
+>
+> > >> +static int __init max14577_i2c_init(void)
+> > >> +{
+> > >> +     return i2c_add_driver(&max14577_i2c_driver);
+> > >> +}
+> > >> +subsys_initcall(max14577_i2c_init);
+>
+> > > Why not module_i2c_driver?
+>
+> > there's ordering issue, it should provide regulator which is used
+> > others before USB probe. if not, it failed to use USB.
+> > Other PMICs use also subsys_initcall for this reason.
+>
+> Modern systems should be able to use deferred probing to resolve these
+> dependencies, subsys_initcall() is mostly there for legacy reasons and
+> new systems ought to be able to move away from it.
 
-> +- interrupt-names : Should be "edma-tx" for tx interrupt and
-> +  "edma-err" for err interrupt
-> +- #dma-cells : Must be <2>.
-> +  The first cell specifies the DMAMUX ID. Specific request source
-> +  can only be routed by specific DMAMUXs.
-> +  the second cell specifies the request source(slot) ID.
-> +  See include/dt-bindings/dma/<soc>-edma.h for all the supported
-> +  request source IDs.
-> +- dma-channels : Number of channels supported by the controller
-> +- fsl,dma-mux : Phandle of the DMAMUXs deployed by the controller
-> +
-> +
-> +* DMAMUX
-> +Required properties:
+The main problem here is usb gadget subsystem, which simply doesn't support
+deferred probe yet. UDC driver (which uses those regulators) need to be
+initialized before usb gadget driver (i.e. mass storage or cdc ethernet)
+has been registered.
 
-No compatible?
+Best regards
+-- 
+Marek Szyprowski
+Samsung R&D Institute Poland
 
-Where are DMAMUX nodes expected to live?
-
-How to they relate to the eDMA controller in HW? Are they a
-subcomponent, or a logically separate unit that happens to be connected?
-
-> +- reg : Should contain DMAMUX registers location and length
-> +- fsl,dmamux-id : DMAMUX ID. DMAMUX IDs are unique in each eDMA controller.
-> +  inside one eDMA controller, specific request source can only be routed by
-> +  one of its DMAMUXs.
-> +  However Specific request source may be routed to different eDMA controller,
-> +  thus all the DMAMUXs sharing a the same request sources have the same ID.
-> +- clocks : Phandle of the clock used by the DMAMUX
-> +- clock-names : The clock names
-
-_which_ clock names do you expect? From the looks of the example, you
-expect "dmamux".
-
->From the view of the DMAMUX, what is its clock input called? "dmamux"
-doesn't look like what I'd expect for a clock name, but if the
-documentation for the eDMA doesn't provide a name for it, "dmamux" is
-fine.
-
-If you're not using clock-names, it's useless. You _must_ define the set
-of names you expect or it's unusable. If you do define a set of names,
-then you should request clocks by name in the driver.
-
-> +
-> +Below is the eDMA controller and DMAMUX association, and DMAMUX IDs assignment
-> +On Vybrid vf610 SoC, DMAMUX0 and DMAMU3 share the same request source group,
-> +and DMAMUX1 and DMAMU2 share the same request source group.
-> +
-> +eDMA controller                DMAMUXs         DMAMUX ID
-> +-------------------------------------------------
-> +eDMA0                  DMAMUX0         0
-> +                       DMAMUX1         1
-> +
-> +eDMA1                  DMAMUX2         1
-> +                       DMAMUX3         0
-> +
-> +Examples:
-> +
-> +edma0: dma-controller@40018000 {
-> +       #dma-cells = <2>;
-> +       compatible = "fsl,vf610-edma";
-> +       reg = <0x40018000 0x2000>;
-> +       interrupts = <0 8 0x04>, <0 9 0x04>;
-> +       interrupt-names = "edma-tx", "edma-err";
-> +       dma-channels = <32>;
-> +       fsl,edma-mux = <&dmamux0>, <&dmamux1>;
-> +};
-> +
-> +dmamux0: dmamux@40024000 {
-> +       reg = <0x40024000 0x1000>;
-> +       fsl,dmamux-id = <0>;
-> +       clocks = <&clks VF610_CLK_DMAMUX0>;
-> +       clock-names = "dmamux";
-> +};
-> +
-> +
-> +* DMA clients
-> +DMA client drivers that uses the DMA function must use the format described
-> +in the dma.txt file, using a three-cell specifier for each channel: a phandle
-> +plus two integer cells as described above.
-
-Nit: the phandle isn't part of the specifier. The cells after the
-phandle are the specifier associated with the phandle.
-
-[...]
-
-> +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *mux_id)
-> +{
-> +       struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-> +
-> +       if (fsl_chan->edmamux->mux_id != (u32)mux_id)
-> +               return false;
-> +
-> +       return true;
-
-Why not:
-
-return fsl_chan->edmamux->mux_id == (u32)mux_id;
-
-[...]
-
-> +static int
-> +fsl_init_edmamux(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct fsl_edma_dmamux *fsl_edmamux;
-> +       struct device_node *phandle;
-
-That's confusing, a node is not a phandle. Why not mux_np?
-
-> +       const void *prop;
-> +       struct resource res;
-> +       int len, n_muxes, chans_per_mux, ch_off;
-> +       int i, j;
-> +       int ret;
-> +
-> +       prop = of_get_property(np, "fsl,dma-mux", &len);
-> +       if (!prop) {
-> +               dev_err(&pdev->dev, "Can't get DMAMUX.\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       n_muxes = len / sizeof(u32);
-
-It would be nicer if we had a variant of of_count_phandle_with_args that
-cound handle a fixed count of 0 args for this sort of thing.
-
-> +       chans_per_mux = fsl_edma->n_chans / n_muxes;
-> +       fsl_edmamux = devm_kzalloc(&pdev->dev,
-> +                       sizeof(struct fsl_edma_dmamux) * n_muxes, GFP_KERNEL);
-> +       if (!fsl_edmamux)
-> +               return -ENOMEM;
-> +
-> +       fsl_edma->n_muxes = 0;
-> +       fsl_edma->edmamux = fsl_edmamux;
-> +       for (i = 0; i < n_muxes; i++) {
-> +               phandle = of_parse_phandle(np, "fsl,dma-mux", i);
-> +               ret = of_address_to_resource(phandle, 0, &res);
-> +               if (ret)
-> +                       return ret;
-> +               fsl_edmamux->membase = devm_ioremap_resource(&pdev->dev, &res);
-> +               if (IS_ERR(fsl_edmamux->membase))
-> +                       return PTR_ERR(fsl_edmamux->membase);
-> +
-> +               fsl_edmamux->clk = of_clk_get(phandle, 0);
-> +               if (IS_ERR(fsl_edmamux->clk)) {
-> +                       dev_err(&pdev->dev, "Missing DMAMUX clock.\n");
-> +                       return PTR_ERR(fsl_edmamux->clk);
-> +               }
-
-Please acquire the clock by name:
-
-fsl_edmamux->clk = of_clk_get_byname(phandle, "dmamux");
-
-> +
-> +               ret = clk_prepare_enable(fsl_edmamux->clk);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "DMAMUX clk enable failed.\n");
-> +                       return ret;
-> +               }
-> +
-> +               ret = of_property_read_u32_index(phandle, "fsl,dmamux-id", 0,
-> +                               &fsl_edmamux->mux_id);
-
-Why not just of_property_read_u32?
-
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "Can't get dmamux-id.\n");
-> +                       return ret;
-> +               }
-> +
-> +               ch_off = fsl_edma->n_muxes * chans_per_mux;
-> +               for (j = 0; j < chans_per_mux; j++)
-> +                       fsl_edma->chans[ch_off + j].edmamux = fsl_edmamux;
-> +
-> +               fsl_edmamux++;
-> +               fsl_edma->n_muxes++;
-> +       }
-> +       return 0;
-> +}
-
-[...]
-
-> +static int fsl_edma_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct fsl_edma_engine *fsl_edma;
-> +       struct fsl_edma_chan *fsl_chan;
-> +       struct resource *res;
-> +       int len, chans;
-> +       int ret, i;
-> +
-> +       ret = of_property_read_u32_index(np, "dma-channels", 0, &chans);
-
-Use of_property_read_u32.
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
