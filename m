@@ -1,92 +1,160 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 3/3] misc: bmp085: Add missing platform data.
-Date: Thu, 14 Nov 2013 22:46:49 +0100
-Message-ID: <1384465609-26485-4-git-send-email-marek@goldelico.com>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384465609-26485-1-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: neilb@suse.de, hns@goldelico.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCHv5 05/20] cpufreq: cpufreq-cpu0: add dt node parsing for cooling device properties
+Date: Thu, 14 Nov 2013 23:04:44 +0100
+Message-ID: <2269244.zUpqHC68eo@vostro.rjw.lan>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com> <5284CD61.3000302@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <5284CD61.3000302@ti.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-DT bindings contains more parameters to set so add them to platform data also
-to have possibility to use on arch where DT isn't available yet.
+On Thursday, November 14, 2013 09:17:21 AM Eduardo Valentin wrote:
+> On 12-11-2013 15:46, Eduardo Valentin wrote:
+> > This patch changes the cpufreq-cpu0 driver to consider if
+> > a cpu needs cooling (with cpufreq). In case the cooling is needed,
+> > the cpu0 device tree node needs to be properly configured
+> > with cooling device properties.
+> > 
+> > In case these properties are present,, the driver will
+> > load a cpufreq cooling device in the system. The cpufreq-cpu0
+> > driver is not interested in determining how the system should
+> > be using the cooling device. The driver is responsible
+> > only of loading the cooling device.
+> > 
+> > Describing how the cooling device will be used can be
+> > accomplished by setting up a thermal zone that references
+> > and is composed by the cpufreq cooling device.
+> > 
+> > Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> 
+> Rafael, Can I still assume you are OK with this patch and add your
+> acked-by [1]?
+> http://www.spinics.net/lists/lm-sensors/msg39136.html
+> 
+> It has changed a few bits from V1 to here. The idea is still same though.
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- drivers/misc/bmp085.c      | 21 +++++++++++++++++----
- include/linux/i2c/bmp085.h |  7 +++++++
- 2 files changed, 24 insertions(+), 4 deletions(-)
+Well, this is fine by me, personally, but I'd like someone from the ARM camp to
+ACK this to be honest.
 
-diff --git a/drivers/misc/bmp085.c b/drivers/misc/bmp085.c
-index 9792ce2..530b4a1 100644
---- a/drivers/misc/bmp085.c
-+++ b/drivers/misc/bmp085.c
-@@ -408,13 +408,15 @@ static void bmp085_get_of_properties(struct bmp085_data *data,
- 		return;
- 
- 	if (!of_property_read_u32(np, "chip-id", &prop))
--		data->chip_id = prop & 0xff;
-+		pdata->chip_id = prop & 0xff;
- 
- 	if (!of_property_read_u32(np, "temp-measurement-period", &prop))
--		data->temp_measurement_period = (prop/100)*HZ;
-+		pdata->temp_measurement_period = (prop/100)*HZ;
- 
- 	if (!of_property_read_u32(np, "default-oversampling", &prop))
--		data->oversampling_setting = prop & 0xff;
-+		pdata->default_oversampling = prop & 0xff;
-+	else
-+		pdata->default_oversampling = -1;
- 
- 	pdata->gpio = of_get_named_gpio(np, "gpio", 0);
- 	of_property_read_u32(np, "irq", &pdata->irq);
-@@ -443,9 +445,20 @@ static int bmp085_init_client(struct device *dev, struct bmp085_data *data)
- 					GFP_KERNEL);
- 		if (!pdata)
- 			return -ENOMEM;
-+
-+		bmp085_get_of_properties(data, pdata);
- 	}
- 
--	bmp085_get_of_properties(data, pdata);
-+	if (pdata->chip_id)
-+		data->chip_id = pdata->chip_id;
-+
-+	if (pdata->temp_measurement_period > 0)
-+		data->temp_measurement_period =
-+			(pdata->temp_measurement_period/100)*HZ;
-+
-+	if (pdata->default_oversampling >= 0 &&
-+		pdata->default_oversampling <= 3)
-+		data->oversampling_setting = pdata->default_oversampling;
- 
- 	if (gpio_is_valid(pdata->gpio)) {
- 		err = devm_gpio_request(dev, pdata->gpio, "bmp085_eoc_irq");
-diff --git a/include/linux/i2c/bmp085.h b/include/linux/i2c/bmp085.h
-index b66cb98..addb972 100644
---- a/include/linux/i2c/bmp085.h
-+++ b/include/linux/i2c/bmp085.h
-@@ -5,11 +5,18 @@
- 
- /*
-  * bmp085 platform data
-+ * @chip_id: configurable chip id for non-default chip revisions
-+ * @temp_measurement_period: in milliseconds
-+ * @default_oversampling: used at startup, range is 0-3 with rising sensitivity
-+ * set it to -1 when don't want to change default value (3)
-  * @gpio: if is set it is the End Of Conversion line which is high when
-  * conversion is finished
-  * @irq: if gpio < 0 and irq > 0, then it is an interrupt with no gpio
-  */
- struct bmp085_platform_data {
-+	int	chip_id;
-+	int	temp_measurement_period;
-+	int	default_oversampling;
- 	int	gpio;
- 	int	irq;
- };
+Thanks!
+
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > Cc: Rob Herring <rob.herring@calxeda.com>
+> > Cc: cpufreq@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> > Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> > ---
+> >  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt         |  7 +++++++
+> >  drivers/cpufreq/Kconfig                                  |  2 +-
+> >  drivers/cpufreq/cpufreq-cpu0.c                           | 16 ++++++++++++++++
+> >  3 files changed, 24 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> > index 051f764..f055515 100644
+> > --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> > @@ -15,6 +15,10 @@ Optional properties:
+> >  - clock-latency: Specify the possible maximum transition latency for clock,
+> >    in unit of nanoseconds.
+> >  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+> > +- #cooling-cells:
+> > +- cooling-min-level:
+> > +- cooling-max-level:
+> > +     Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
+> >  
+> >  Examples:
+> >  
+> > @@ -33,6 +37,9 @@ cpus {
+> >  			198000  850000
+> >  		>;
+> >  		clock-latency = <61036>; /* two CLK32 periods */
+> > +		#cooling-cells = <2>;
+> > +		cooling-min-level = <0>;
+> > +		cooling-max-level = <2>;
+> >  	};
+> >  
+> >  	cpu@1 {
+> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> > index 534fcb8..fc1e9a5 100644
+> > --- a/drivers/cpufreq/Kconfig
+> > +++ b/drivers/cpufreq/Kconfig
+> > @@ -186,7 +186,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
+> >  
+> >  config GENERIC_CPUFREQ_CPU0
+> >  	tristate "Generic CPU0 cpufreq driver"
+> > -	depends on HAVE_CLK && REGULATOR && PM_OPP && OF
+> > +	depends on HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL && CPU_THERMAL
+> >  	select CPU_FREQ_TABLE
+> >  	help
+> >  	  This adds a generic cpufreq driver for CPU0 frequency management.
+> > diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+> > index c522a95..568aaf3 100644
+> > --- a/drivers/cpufreq/cpufreq-cpu0.c
+> > +++ b/drivers/cpufreq/cpufreq-cpu0.c
+> > @@ -13,7 +13,9 @@
+> >  
+> >  #include <linux/clk.h>
+> >  #include <linux/cpu.h>
+> > +#include <linux/cpu_cooling.h>
+> >  #include <linux/cpufreq.h>
+> > +#include <linux/cpumask.h>
+> >  #include <linux/err.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> > @@ -21,6 +23,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/thermal.h>
+> >  
+> >  static unsigned int transition_latency;
+> >  static unsigned int voltage_tolerance; /* in percentage */
+> > @@ -29,6 +32,7 @@ static struct device *cpu_dev;
+> >  static struct clk *cpu_clk;
+> >  static struct regulator *cpu_reg;
+> >  static struct cpufreq_frequency_table *freq_table;
+> > +static struct thermal_cooling_device *cdev;
+> >  
+> >  static int cpu0_verify_speed(struct cpufreq_policy *policy)
+> >  {
+> > @@ -260,6 +264,17 @@ static int cpu0_cpufreq_probe(struct platform_device *pdev)
+> >  		goto out_free_table;
+> >  	}
+> >  
+> > +	/*
+> > +	 * For now, just loading the cooling device;
+> > +	 * thermal DT code takes care of matching them.
+> > +	 */
+> > +	if (of_find_property(np, "#cooling-cells", NULL)) {
+> > +		cdev = of_cpufreq_cooling_register(np, cpu_present_mask);
+> > +		if (IS_ERR(cdev))
+> > +			pr_err("running cpufreq without cooling device: %ld\n",
+> > +			       PTR_ERR(cdev));
+> > +	}
+> > +
+> >  	of_node_put(np);
+> >  	return 0;
+> >  
+> > @@ -272,6 +287,7 @@ out_put_node:
+> >  
+> >  static int cpu0_cpufreq_remove(struct platform_device *pdev)
+> >  {
+> > +	cpufreq_cooling_unregister(cdev);
+> >  	cpufreq_unregister_driver(&cpu0_cpufreq_driver);
+> >  	opp_free_cpufreq_table(cpu_dev, &freq_table);
+> >  
+> > 
+> 
+> 
+> 
 -- 
-1.8.1.2
-
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
