@@ -1,44 +1,49 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gbWZkOiBzeXNjb246IEFsbG93IHRvIHVzaW5nIHN1YmRl?=
- =?UTF-8?B?dmljZXM=?=
-Date: Thu, 14 Nov 2013 18:58:46 +0400
-Message-ID: <1384441126.564885163@f359.i.mail.ru>
-References: <1384433523-30602-1-git-send-email-shc_work@mail.ru>
- <20131114144559.GC28328@e106331-lin.cambridge.arm.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 0/7] Renesas R8A7790 Common Clock Framework support
+Date: Thu, 14 Nov 2013 16:23:05 +0100
+Message-ID: <9051092.bb2GyTMq0G@avalon>
+References: <1384052977-30616-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CANqRtoRfBb_mZ3erk_iSmmjuFJAWetN3THjGQcBhEjVE__2wWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131114144559.GC28328-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: =?UTF-8?B?bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw==?= <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2FtdWVsIE9ydGl6?= <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, =?UTF-8?B?TGVlIEpvbmVz?= <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?cm9iLmhlcnJpbmdAY2FseGVkYS5jb20=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoRfBb_mZ3erk_iSmmjuFJAWetN3THjGQcBhEjVE__2wWg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgo+IE9uIFRodSwgTm92IDE0LCAyMDEzIGF0IDEyOjUyOjAzUE0gKzAwMDAsIEFsZXhh
-bmRlciBTaGl5YW4gd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdXNpbmcg
-c3ViZGV2aWNlcyB3aXRoaW4gc3lzY29uIG5vZGUuCj4gPiBQcmltYXJ5IHVzYWdlIG9mIHRoaXMg
-aXMgZGVzY3JpYmUgYWxsIGRldmljZXMgd2l0aCBzYW1lIG1lbW9yeQo+ID4gcmVnaW9uIGluIG9u
-ZSBjb250YWluZXIuCj4gCj4gSSB0aGluayBpZiB5b3UgbmVlZCB0byBkbyB0aGlzLCB5b3Ugc2hv
-dWxkIG5vdCBiZSB1c2luZyBzeXNjb24uIFdoYXQKPiBleGFjdGx5IGlzIHlvdXIgdXNlLWNhc2U/
-Cj4gCj4gSSBkb24ndCBsaWtlIHRoZSBpZGVhIG9mIHRyZWF0aW5nIHN5c2NvbiBsaWtlIGEgYnVz
-IG9yIGNvbnRhaW5lciBpbiB0aGlzCj4gZmFzaGlvbi4KCkxldCBtZSBmaXJzdCBzaG93IHRoZSBu
-ZXcgc3lzY29uLWJhc2VkIGRyaXZlci4gQWZ0ZXIgYSB3aGlsZSwgSSdtIGdvaW5nCnRvIHByb3Zp
-ZGUgaXQuIEl0IHdpbGwgdXNlIHRoZSBjdXJyZW50IHdheSBvZiBnZXR0aW5nIHN5c2NvbiwgaS5l
-LiB0aHJvdWdoCnN5c2Nvbl9yZWdtYXBfbG9va3VwX2J5X3BoYW5kbGUoKS4KCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWlsLnJ1Pgo+ID4gLS0tCj4gPiAg
-ZHJpdmVycy9tZmQvc3lzY29uLmMgfCAzICsrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2Vy
-dGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3N5c2Nvbi5jIGIvZHJp
-dmVycy9tZmQvc3lzY29uLmMKPiA+IGluZGV4IDcxODQxZjkuLjZlOTI0NGEgMTAwNjQ0Cj4gPiAt
-LS0gYS9kcml2ZXJzL21mZC9zeXNjb24uYwo+ID4gKysrIGIvZHJpdmVycy9tZmQvc3lzY29uLmMK
-PiA+IEBAIC0xNTIsNiArMTUyLDkgQEAgc3RhdGljIGludCBzeXNjb25fcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAKPiA+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRl
-diwgc3lzY29uKTsKPiA+ICAKPiA+ICsJaWYgKG9mX3BsYXRmb3JtX3BvcHVsYXRlKGRldi0+b2Zf
-bm9kZSwgTlVMTCwgTlVMTCwgZGV2KSkKPiA+ICsJCWRldl93YXJuKGRldiwgIkZhaWwgdG8gY3Jl
-YXRlIHN1YmRldmljZXNcbiIpOwo+ID4gKwo+ID4gIAlkZXZfaW5mbyhkZXYsICJyZWdtYXAgJXBS
-IHJlZ2lzdGVyZWRcbiIsIHJlcyk7Cj4gPiAgCj4gPiAgCXJldHVybiAwOwo+ID4gLS0gCgotLS0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Magnus,
+
+On Thursday 14 November 2013 19:16:05 Magnus Damm wrote:
+> Hi Laurent,
+> 
+> Thanks for V2, it is looking better and better. Great that r8a7791 and
+> r8a7790 can share the CPG code. I have now finally got my r8a7791 board
+> replaced so I intend to try your code out on Lager and then see if I can
+> cook something up on Koelsch.
+
+I was actually planning to test the code on the Koelsch board. I don't want to 
+step on anyone's toes, so please let me know if someone is already working on 
+CCF patches for M2, otherwise I'll send them.
+
+> I have one question related to the CPG. What is your plan regarding CPU
+> Frequency scaling? I'd like to see "z_clk" and "z2_clk" implemented together
+> with some way to let CPUFreq scale "z_clk". Can you please spend some time
+> on that?
+
+Z2 is a fixed factor clock, I'll just add it to DT.
+
+Z is a bit more tricky. It's the output of a pure multiplier (PLL0) followed 
+by a pure divisor (SYS-CPU divider 1). I can easily model the two as separate 
+clock devices, but I'm unsure about what should be done at runtime when 
+setting the Z clock frequency. Would it be enough to have a fixed PLL0 
+frequency and configure the SYS-CPU divider 1 only (from 1/1 to 1/32), or 
+would we need to configure the PLL0 multiplier as well for a more fine-grained 
+Z frequency configuration ?
+
+-- 
+Regards,
+
+Laurent Pinchart
+
