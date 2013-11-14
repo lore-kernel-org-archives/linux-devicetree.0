@@ -1,82 +1,61 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH 2/2] ASoC: fsl_ssi: Add monaural audio support for non-ac97 interface
-Date: Thu, 14 Nov 2013 19:07:10 +0800
-Message-ID: <1384427230-979-3-git-send-email-b42378@freescale.com>
-References: <1384427230-979-1-git-send-email-b42378@freescale.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/5 v2] input: tc3589x-keypad: support probing from
+ device tree
+Date: Thu, 14 Nov 2013 11:12:45 +0000
+Message-ID: <20131114111245.GF16396@e106331-lin.cambridge.arm.com>
+References: <1384265618-10590-1-git-send-email-linus.walleij@linaro.org>
+ <20131112153057.GA9683@earth.universe>
+ <CACRpkdb_bryGJo7CKGP5tj3RFGv=Gh+Q5m9ucVKqJ068tjPC2g@mail.gmail.com>
+ <20131112200514.GA15413@earth.universe>
+ <CACRpkdaAaLjm_b+OLj3tobxBN8YGUcTPnXJ=qtBqd02=FTxhjQ@mail.gmail.com>
+ <20131112204013.GA17674@earth.universe>
+ <20131113142406.GH21713@e106331-lin.cambridge.arm.com>
+ <20131113232923.GB13669@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384427230-979-1-git-send-email-b42378@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, linux@arm.linux.org.uk, ijc+devicetree@hellion.org.uk, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, lgirdwood@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131113232923.GB13669-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The normal mode of SSI allows it to send/receive data to/from the first
-slot of each period. So we can use this normal mode to trick I2S signal
-by puting/getting data to/from the first slot only (the left channel)
-so as to support monaural audio playback and recording.
+On Wed, Nov 13, 2013 at 11:29:24PM +0000, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Nov 13, 2013 at 02:24:06PM +0000, Mark Rutland wrote:
+> > > Current suggestions (taken from kernel) are:
+> > > 
+> > > * <<vendor>>,no-autorepeat
+> > > * keypad,autorepeat
+> > > * linux,keypad-no-autorepeat
+> > > * linux,input-no-autorepeat
+> > > * linux,no-autorepeat
+> > > * autorepeat
+> > > 
+> > > I do not really care, which one is chosen, except for two things:
+> > > 
+> > > * <<vendor>> seems wrong. This is not vendor specific.
+> > > * I would prefer "input-" over "keypad-", since then the same name
+> > >   can be used for single keys, buttons, etc.
+> > 
+> > Both of those sound valid to me, but I think it may make sense to keep
+> > the "linux," prefix. As I understand it this is really telling the Linux
+> > input subsystem to react to a device acting in a certain way, rather
+> > than describing or configuring the device in a certain way.
+> 
+> That leaves the following two options:
+> 
+> * linux,input-no-autorepeat
+> * linux,no-autorepeat
+> 
+> Any suggestions for those?
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- sound/soc/fsl/fsl_ssi.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+I'd go for "linux,input-no-autorepeat", it leaves less ambiguity as to
+its purpose.
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index f43be6d..ccf1d38 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -517,10 +517,12 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct fsl_ssi_private *ssi_private = snd_soc_dai_get_drvdata(cpu_dai);
- 	struct ccsr_ssi __iomem *ssi = ssi_private->ssi;
-+	unsigned int channels = params_channels(hw_params);
- 	unsigned int sample_size =
- 		snd_pcm_format_width(params_format(hw_params));
- 	u32 wl = CCSR_SSI_SxCCR_WL(sample_size);
- 	int enabled = read_ssi(&ssi->scr) & CCSR_SSI_SCR_SSIEN;
-+	static u8 i2s_mode;
- 
- 	/*
- 	 * If we're in synchronous mode, and the SSI is already enabled,
-@@ -546,6 +548,21 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 	else
- 		write_ssi_mask(&ssi->srccr, CCSR_SSI_SxCCR_WL_MASK, wl);
- 
-+	if (ssi_private->imx_ac97)
-+		return 0;
-+
-+	/* Save i2s mode configuration so that we can restore it later */
-+	switch (read_ssi(&ssi->scr) & CCSR_SSI_SCR_I2S_MODE_MASK) {
-+	case CCSR_SSI_SCR_I2S_MODE_SLAVE:
-+	case CCSR_SSI_SCR_I2S_MODE_MASTER:
-+		i2s_mode = read_ssi(&ssi->scr) & CCSR_SSI_SCR_I2S_MODE_MASK;
-+	default:
-+		break;
-+	}
-+
-+	write_ssi_mask(&ssi->scr, CCSR_SSI_SCR_NET | CCSR_SSI_SCR_I2S_MODE_MASK,
-+			channels == 1 ? 0 : CCSR_SSI_SCR_NET | i2s_mode);
-+
- 	return 0;
- }
- 
-@@ -658,14 +675,13 @@ static const struct snd_soc_dai_ops fsl_ssi_dai_ops = {
- static struct snd_soc_dai_driver fsl_ssi_dai_template = {
- 	.probe = fsl_ssi_dai_probe,
- 	.playback = {
--		/* The SSI does not support monaural audio. */
--		.channels_min = 2,
-+		.channels_min = 1,
- 		.channels_max = 2,
- 		.rates = FSLSSI_I2S_RATES,
- 		.formats = FSLSSI_I2S_FORMATS,
- 	},
- 	.capture = {
--		.channels_min = 2,
-+		.channels_min = 1,
- 		.channels_max = 2,
- 		.rates = FSLSSI_I2S_RATES,
- 		.formats = FSLSSI_I2S_FORMATS,
--- 
-1.8.4
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
