@@ -1,105 +1,47 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH RFC 15/17] microblaze: Convert from _fdt_start to __dtb_start
-Date: Thu, 14 Nov 2013 17:29:41 +0100
-Message-ID: <5284FA75.4040601@monstr.eu>
-References: <1384285347-13506-1-git-send-email-geert@linux-m68k.org> <1384285347-13506-16-git-send-email-geert@linux-m68k.org> <5283524F.8030902@monstr.eu> <5283814C.6040904@monstr.eu> <5283A573.6020403@gmail.com>
-Reply-To: monstr@monstr.eu
+From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
+Date: Thu, 14 Nov 2013 17:32:53 +0100
+Message-ID: <CABDT8Wxy-aA5CbZUSXRtod3i_9rBhXqGyGi+tBYGkYtygQmmpw@mail.gmail.com>
+References: <5283BC93.1090801@koalo.de>
+	<2385512.qcT1vt8HYp@flatron>
+	<CABDT8WyUK6tDneDEm0G3o0zJHXaVTZp8JAMxOp5LRKQYG-7Umw@mail.gmail.com>
+	<11018682.0TjgocUWod@flatron>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <5283A573.6020403@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11018682.0TjgocUWod@flatron>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 11/13/2013 05:14 PM, Rob Herring wrote:
-> On 11/13/2013 07:40 AM, Michal Simek wrote:
->> On 11/13/2013 11:19 AM, Michal Simek wrote:
->>> On 11/12/2013 08:42 PM, Geert Uytterhoeven wrote:
->>>> Kill the microblaze-specific __fdt_blob section, and start
->>>> using .dtb.init.rodata from <asm-generic/sections.h> for
->>>> built-in DTBs, like most other DT enabled architectures.
->>>>
->>>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org> Cc:
->>>> Michal Simek <monstr@monstr.eu> Cc: Rob Herring
->>>> <rob.herring@calxeda.com> Cc:
->>>> microblaze-uclinux@itee.uq.edu.au Cc:
->>>> devicetree@vger.kernel.org --- Untested, but the resulting
->>>> vmlinux after "make simpleImage.system" looks sane.
->>>>
->>>> QUESTION: The padding of the DTB is gone, is this OK?
->>>
->>> Removing this kernel padding should be fine. I can't remember why
->>> it was there from the beginning.
+2013/11/14 Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> On Thursday 14 of November 2013 17:14:31 Florian Meier wrote:
+>> >> >> I am becoming desperate anyway that this migration will ever fully
+>> >> >> take place....
+>> >> >
+>> >> > Why not? It's just a matter of people like you working on this (and
+>> >> > addressing some review comments ;)).
+>> >>
+>> >> The most common comment about this is that people will not put effort in
+>> >> the upstream kernel as long as there is no comfortable way for debugging
+>> >> in the upstream kernel (i.e. at least USB support).......
+>> >
+>> > Right, you need USB to have ethernet working. Still, IMHO UART (for
+>> > console) + ethernet (for file transfer or NFS root) is the reasonable
+>> > setup allowing you to debug further drivers in a comfortable way.
 >>
->> I know why is this here. The reason is process how dtb is passed to
->> the kernel via command line. head.S code just copy that dtb to the
->> same location where compiled-in dts is expected and kernel doesn't
->> need to care about position of dtb because this copy is done
->> without MMU. And the full kernel is covered by 2 tlbs and we don't
->> need to use another TLB for dtb mapping.
->>
->> It means pad matters a lot. Because u-boot ITS format doesn't use=20
->> simpleImage target but the kernel need to have a space for copying=20
->> dtb to this kernel location.
->>
->> Let me think about if there is an easy way to handle dtbs which are
->> passed from bootloader.
->=20
-> Isn't the built-in dtb in a RO init section? Seems like a bad idea to
-> write to it. Also, it will be a double copy because a built-in dtb has
-> to be copied out of init section.
+>> I am fine with UART and switching SD cards :-)
+>> But apparently this is not generally accepted.
+>
+> Still, isn't some work on USB support for RPi already going on? I believe
+> Matt Porter (now on Cc) has been working on unifying dwc2 host-mode
+> driver with Samsung s3c-hsotg device-mode driver (for the same IP) to
+> get full OTG support on all applicable platforms.
 
-Microblaze has it currently out of RO section.
-This patch is adding it there.
-
-I have looked at powerpc flow which is probably the closest to our versio=
-n.
-
-head.S
-Saving dtb pointer to r31 then initial_mmu which setups 16MB tlb for kern=
-el
-then some exception and calling machine_init()->early_init_devtree()
-->move_device_tree() where also change initial_boot_params location
-for unflatten_device_tree() in setup_arch().
-
-Ben: I didn't find any TLB entry for DTB itself.
-Does it mean that I missed it or that powerpc can access in machine_init(=
-)
-the whole memory space?
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlKE+nsACgkQykllyylKDCHnKgCdFzhDnKZrwD7RCx5D1S1nT3dT
-39EAn3O7U8yvIzBvowJyzZf9xOuJ3kFZ
-=hnEu
------END PGP SIGNATURE-----
-
---PqGQeILfHAdb3iIoJpgcaA3RufafL7qtV--
+That sounds great! I never heard about that.
+Maybe some day it really happens that Raspbian uses the upstream kernel :-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
