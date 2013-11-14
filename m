@@ -1,355 +1,144 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
-Date: Thu, 14 Nov 2013 10:31:24 +0900
-Message-ID: <20131114013124.7DD0AC404DF@trevor.secretlab.ca>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com> <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com> <20131111184245.D569DC4234A@trevor.secretlab.ca> <ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/8] net: smc91x: Fix device tree based configuration so it's usable
+Date: Wed, 13 Nov 2013 18:35:30 -0800
+Message-ID: <1384396537-3486-2-git-send-email-tony@atomide.com>
+References: <1384396537-3486-1-git-send-email-tony@atomide.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1384396537-3486-1-git-send-email-tony@atomide.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Cc: Nicolas Pitre <nico@fluxnic.net>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2013 10:30:37 +0100, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
-> Hi Grant,
-> 
-> On Nov 11, 2013, at 7:42 PM, Grant Likely wrote:
-> 
-> > On Fri,  8 Nov 2013 17:06:09 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
-> >> Introduce DT overlay support.
-> >> Using this functionality it is possible to dynamically overlay a part of
-> >> the kernel's tree with another tree that's been dynamically loaded.
-> >> It is also possible to remove node and properties.
-> >> 
-> >> Note that the I2C client devices are 'special', as in they're not platform
-> >> devices. They need to be registered with an I2C specific method.
-> >> 
-> >> In general I2C is just no good platform device citizen and needs
-> >> special casing.
-> >> 
-> >> PCI is another special case where PCI device insertion and removal
-> >> is implemented in the PCI subsystem.
-> > 
-> > Actually. I2C isn't special in this regard; SPI, MDIO, PCI, USB are all
-> > in the same boat. platform_device just happens to be able to make a few
-> > assumptions. If anything, platform_device is the 'special' one. :-)
-> > 
-> 
-> I'm of the opinion that 'platform_device' shouldn't exist at all btw :)
-> Most of it's functionality can pretty easily be subsumed by device proper
-> and the world would be a better place :)
+Commit 89ce376c6bdc (drivers/net: Use of_match_ptr() macro in smc91x.c)
+added minimal device tree support to smc91x, but it's not working on
+many platforms because of the lack of some key configuration bits.
 
-I'm fine for merging some/all of the platform_device fields into struct
-device. There are a few things, like resources, which would probably be
-useful to have common on all struct device variants. However,
-platform_device is far more about matching drivers to devices. Even if
-all of platform_device went into struct device, there would still need
-to be the platform_bus_type as the collection point for the device
-drivers.
+Fix the issue by parsing the necessary configuration like the
+smc911x driver is doing.
 
-> > In all cases it must be the underlying subsystem that should be
-> > responsible for creation/removal of devices described in the overlay.
-> > Sometimes that will extend right down into the individual bus device
-> > drivers, but it is better if that can be avoided.
-> > 
-> 
-> Yes, that's the right way to handle this, but we're talking about 
-> serious modification in almost every kind of device core.
-> 
-> Just getting the basic concept of overlays in is hard without having
-> to tackle something like this.
-> 
-> In the future, I'd be ecstatic if we could get a per device class
-> filter, but it's nothing we can fix right now.
-> 
-> IMHO of course.
+Cc: Nicolas Pitre <nico@fluxnic.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
 
-It's fine to limit yourself to only platform_devices and i2c for now,
-but that doesn't give license to do the wrong thing with the
-implementation. The subsystem modifications really shouldn't be very
-invasive. It will need a per-subsystem notifier callback to deal with
-the add/remove events, and it will require the subsystem to maintain a
-list of parent bus nodes that it cares about and should create children
-for.
+If this looks OK, I'd like to merge this as a fix via arm-soc tree
+along with the other patches in this series as my later patches
+depend on patches in this series.
 
-Doing it with a central function like this patch does is not a good
-approach at all.
+---
+ .../devicetree/bindings/net/smsc-lan91c111.txt     |  4 ++
+ drivers/net/ethernet/smsc/smc91x.c                 | 52 +++++++++++++++++-----
+ 2 files changed, 46 insertions(+), 10 deletions(-)
 
-> 
-> >> 
-> >> Bug fixes & PCI support by Guenter Roeck <groeck@juniper.net>
-> >> 
-> 
-> [snip]
-> 
-> >> +so a bar platform device will be registered and if a matching device driver
-> >> +is loaded the device will be created as expected.
-> >> +
-> >> +Overlay in-kernel API
-> >> +---------------------
-> >> +
-> >> +The steps typically required to get an overlay to work are as follows:
-> >> +
-> >> +1. Use of_build_overlay_info() to create an array of initialized and
-> >> +ready to use of_overlay_info structures.
-> >> +2. Call of_overlay() to apply the overlays declared in the array.
-> >> +3. If the overlay needs to be removed, call of_overlay_revert().
-> >> +4. Finally release the memory taken by the overlay info array by
-> >> +of_free_overlay_info().
-> > 
-> > Make of_overlay_info a kobject and use a release method to free it when
-> > all users go away. Freeing directly is a dangerous thing to do.
-> > 
-> 
-> It's more dangerous than even that. We also have the mess with the way
-> unflattening works (properties point directly to binary blob area
-> with no way to free per property data). In general freeing/releasing
-> device tree nodes is tricky on a good day.
-
-Repeating from my comment on the previous email, don't throw away the
-blob. There is no need and it makes your job harder.
-
-> 
-> I agree we have to move to a kobject model eventually. 
-> 
-> >> +
-> >> +/**
-> >> + * of_build_overlay_info	- Build an overlay info array
-> >> + * @tree:	Device node containing all the overlays
-> >> + * @cntp:	Pointer to where the overlay info count will be help
-> >> + * @ovinfop:	Pointer to the pointer of an overlay info structure.
-> >> + *
-> >> + * Helper function that given a tree containing overlay information,
-> >> + * allocates and builds an overlay info array containing it, ready
-> >> + * for use using of_overlay.
-> >> + *
-> >> + * Returns 0 on success with the @cntp @ovinfop pointers valid,
-> >> + * while on error a negative error value is returned.
-> >> + */
-> >> +int of_build_overlay_info(struct device_node *tree,
-> >> +		int *cntp, struct of_overlay_info **ovinfop);
-> >> +
-> >> +/**
-> >> + * of_free_overlay_info	- Free an overlay info array
-> >> + * @count:	Number of of_overlay_info's
-> >> + * @ovinfo_tab:	Array of overlay_info's to free
-> >> + *
-> >> + * Releases the memory of a previously allocate ovinfo array
-> >> + * by of_build_overlay_info.
-> >> + * Returns 0, or an error if the arguments are bogus.
-> >> + */
-> >> +int of_free_overlay_info(int count, struct of_overlay_info *ovinfo_tab);
-> >> +
-> >> +/**
-> >> + * of_overlay	- Apply @count overlays pointed at by @ovinfo_tab
-> >> + * @count:	Number of of_overlay_info's
-> >> + * @ovinfo_tab:	Array of overlay_info's to apply
-> >> + *
-> >> + * Applies the overlays given, while handling all error conditions
-> >> + * appropriately. Either the operation succeeds, or if it fails the
-> >> + * live tree is reverted to the state before the attempt.
-> >> + * Returns 0, or an error if the overlay attempt failed.
-> >> + */
-> >> +int of_overlay(int count, struct of_overlay_info *ovinfo_tab);
-> >> +
-> >> +/**
-> >> + * of_overlay_revert	- Revert a previously applied overlay
-> >> + * @count:	Number of of_overlay_info's
-> >> + * @ovinfo_tab:	Array of overlay_info's to apply
-> >> + *
-> >> + * Revert a previous overlay. The state of the live tree
-> >> + * is reverted to the one before the overlay.
-> >> + * Returns 0, or an error if the overlay table is not given.
-> >> + */
-> >> +int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab);
-> >> +
-> >> +Overlay DTS Format
-> >> +------------------
-> >> +
-> >> +The DTS of an overlay should have the following format:
-> >> +
-> >> +{
-> >> +	/* ignored properties by the overlay */
-> >> +
-> >> +	fragment@0 {	/* first child node */
-> >> +		target=<phandle>;	/* target of the overlay */
-> >> +		__overlay__ {
-> >> +			property-a;	/* add property-a to the target */
-> >> +			-property-b;	/* remove property-b from target */
-> >> +			node-a {	/* add to an existing, or create a node-a */
-> >> +				...
-> >> +			};
-> >> +			-node-b {	/* remove an existing node-b */
-> >> +				...
-> >> +			};
-> > 
-> > Are the node & property removals reversable? What about property
-> > modifications? If they are not, then it would be better to not support
-> > removals at all for now. Otherwise we'll end up with overlays that
-> > cannot be removed and I don't want to inadvertently put users into that
-> > situation.
-> 
-> Yes, everything is reversible. Doesn't mean that the drivers/driver core
-> can handle it. Using overlays is an excellent way to trigger bugs in
-> device removal as I've found out :)
-
-:)
-
-> 
-> > 
-> >> +		};
-> >> +	}
-> >> +	fragment@1 {	/* second child node */
-> >> +		...
-> >> +	};
-> >> +	/* more fragments follow */
-> >> +}
-> 
-> [snip]
-> 
-> >> +
-> >> +static int of_overlay_device_entry_change(struct of_overlay_info *ovinfo,
-> >> +		struct of_overlay_device_entry *de, int revert)
-> >> +{
-> > 
-> > I've got big problems here. This is entirely the wrong place to create
-> > and delete devices. Each subsystem needs to create and remove its own
-> > device types. To begin with, only the subsystem knows which busses are
-> > appropriate for creating child devices.
-> > 
-> 
-> It was the best I could under the circumstances, without having to touch
-> every subsystem.
-> 
-> 
-> > Second, it is incorrect to create a platform_device for every single
-> > node by default. Some nodes aren't devices at all. Just looking for a
-> > compatible property isn't sufficient either.
-> > 
-> 
-> Yep. 
-> 
-> > The solution here is for each subsystem to have it's own notifier, and
-> > only create a child device if the changed node has a parent the
-> > subsystem already knows about (because it's already populated device
-> > tree devices from that parent). This is also true for platform_devices.
-> > 
-> > Finally, sometimes the tips of the tree will get populated, but not
-> > until after some parent nodes have been delt with. In that case the
-> > creation of devices needs to be deferred back to the driver for the
-> > parent bus.
-> > 
-> 
-> Well, any solution that requires each and every subsystem to do dynamic
-> child insertions/removal is going to be hard sell.
-
-They have to do it /anyway/! How many subsystems are we talking about?
-SPI, I2C, platform_device (and amba_device). Maybe MDIO. To get to a
-useful subset it isn't very many targets. SPI and I2C will probably be
-receptive, so no problem there. The maintainer of drivers/of/platform.c
-is friendly too. :-) Haven't asked about MDIO.
-
-> 
-> What about something more gentle?
-> 
-> For example, I know that most of the cases fall into a couple of set
-> patterns for my case
-> 
-> a) Target is the ocp node (on chip peripheral node) and results in
-> the creation of platform devices under that node.
-
-No, I'm going to be hard-line on this. The code needs to be very
-explicit about which nodes cause devices to be created for nodes. It
-cannot be based on some arbitrary heuristics.
-
-I'm not asking you to do something hard though. For the platform devices
-I'd be fine with of_platform_populate() marking some kind of flag on
-struct device_node that says children of it should be used to create
-more platform_devices.
-
-> b) Target is one of the disabled devices under the ocp node
-> and the status property is modified, plus optional nodes are
-> added that result in the creation of more devices under the bus this
-> node controls. This is the case of enabled an I2C/SPI bus and inserting
-> children devices.
-
-Close, but again it has to match with what I've said above. The various
-subsystems need to keep track of which nodes describe a subsystem bus
-and only create devices on those nodes. It would be valuable to have a
-simple library for keeping track of that information which is usable by
-all subsystems, but it still needs to be under the control of the
-subsystem.
-
-> 
-> Perhaps the trick is having hooks about what to do in case certain
-> nodes are modified in a certain way, i.e. a notifier on the ocp node
-> would 'catch' those. The problem is a having a way to present this
-> information to the notifier in a way that's easy to be handled.
-> 
-> What do you think?
-
-It would probably work to have a single notifier for each entire
-subsystem instead of a separate notifier for each and every bus node.
-Once a subsystem marks a node as interesting, it is quite simple for a
-generic subsystem notifier callback to decide whether to create devices
-based on it. If done right, it should work without any changes to the
-SPI/I2C/etc bus drivers.
-
-> 
-> >> +
-> >> +/**
-> >> + * Revert one overlay
-> >> + * Either due to an error, or due to normal overlay removal.
-> >> + * Using the log entries, we revert any change to the live tree.
-> >> + * In the same manner, using the device entries we enable/disable
-> >> + * the platform devices appropriately.
-> >> + */
-> >> +static void of_overlay_revert_one(struct of_overlay_info *ovinfo)
-> >> +{
-> >> +	struct of_overlay_device_entry *de, *den;
-> >> +	struct of_overlay_log_entry *le, *len;
-> >> +	struct property *prop, **propp;
-> >> +	int ret;
-> >> +	unsigned long flags;
-> >> +
-> >> +	if (!ovinfo || !ovinfo->target || !ovinfo->overlay)
-> >> +		return;
-> >> +
-> >> +	pr_debug("%s: Reverting overlay on '%s'\n", __func__,
-> >> +			ovinfo->target->full_name);
-> >> +
-> >> +	/* overlay applied correctly, now create/destroy pdevs */
-> >> +	list_for_each_entry_safe_reverse(de, den, &ovinfo->de_list, node) {
-> >> +		of_overlay_device_entry_change(ovinfo, de, 1);
-> >> +		of_node_put(de->np);
-> >> +		list_del(&de->node);
-> >> +		kfree(de);
-> >> +	}
-> > 
-> > Can overlays interact in bad ways? If overlay 1 is installed before
-> > overlay 2, what happens if overlay 1 is removed?
-> > 
-> 
-> Yes, they can. It is not something easily fixed; the proper way would
-> be to calculate overlay intersection points and refuse to unload.
-
-I think this is important. If it cannot be solved immediately, then the
-kernel should enforce overlays always get removed in the reverse order
-that they were added. There may be use-cases that don't like it, but it
-is safe.
-
-> 
-> > Okay, my brain is tired. It's a complicated series and I don't see any
-> > obvious bits that can be split off and be independently useful. I would
-> > *really* like to see some test cases for this functionality. It's
-> > complicated enough to make me quite nervous.... in fact I would really
-> > like to see drivers/of/selftest.c become an early user of overlays. That
-> > would make the DT selftests executable on any platform.
-> > 
-> 
-> OK, I see your point. My brain is tired too, and I'm on travel too for
-> this week and the next. I'll see what I can come up with.
-
-Enjoy your trip.
-
-g.
+diff --git a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
+index 953049b..53d69e3 100644
+--- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
++++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
+@@ -8,3 +8,7 @@ Required properties:
+ Optional properties:
+ - phy-device : phandle to Ethernet phy
+ - local-mac-address : Ethernet mac address to use
++- reg-io-width : Specify the size (in bytes) of the IO accesses that
++  should be performed on the device.  Valid value for SMSC LAN is
++  1, 2 or 4.  If it's omitted or invalid, the size would be 2.
++- smsc,nowait : Setup for fast register access with no waits
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 73be7f3..93d4b7d 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -82,6 +82,7 @@ static const char version[] =
+ #include <linux/mii.h>
+ #include <linux/workqueue.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+@@ -2189,6 +2190,15 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
+ 	}
+ }
+ 
++#if IS_BUILTIN(CONFIG_OF)
++static const struct of_device_id smc91x_match[] = {
++	{ .compatible = "smsc,lan91c94", },
++	{ .compatible = "smsc,lan91c111", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, smc91x_match);
++#endif
++
+ /*
+  * smc_init(void)
+  *   Input parameters:
+@@ -2203,6 +2213,8 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
+ static int smc_drv_probe(struct platform_device *pdev)
+ {
+ 	struct smc91x_platdata *pd = dev_get_platdata(&pdev->dev);
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *match = NULL;
+ 	struct smc_local *lp;
+ 	struct net_device *ndev;
+ 	struct resource *res, *ires;
+@@ -2222,11 +2234,40 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 	 */
+ 
+ 	lp = netdev_priv(ndev);
++	lp->cfg.flags = 0;
+ 
+ 	if (pd) {
+ 		memcpy(&lp->cfg, pd, sizeof(lp->cfg));
+ 		lp->io_shift = SMC91X_IO_SHIFT(lp->cfg.flags);
+-	} else {
++	}
++
++#if IS_BUILTIN(CONFIG_OF)
++	match = of_match_device(of_match_ptr(smc91x_match), &pdev->dev);
++	if (match) {
++		u32 val;
++
++		of_property_read_u32(np, "reg-io-width", &val);
++		switch (val) {
++		case 1:
++			lp->cfg.flags |= SMC91X_USE_8BIT;
++			break;
++		case 2:
++			lp->cfg.flags |= SMC91X_USE_16BIT;
++			break;
++		case 4:
++			lp->cfg.flags |= SMC91X_USE_32BIT;
++			break;
++		default:
++			lp->cfg.flags |= SMC91X_USE_16BIT;
++			break;
++		}
++
++		if (of_get_property(np, "smsc,nowait", NULL))
++			lp->cfg.flags |= SMC91X_NOWAIT;
++	}
++#endif
++
++	if (!pd && !match) {
+ 		lp->cfg.flags |= (SMC_CAN_USE_8BIT)  ? SMC91X_USE_8BIT  : 0;
+ 		lp->cfg.flags |= (SMC_CAN_USE_16BIT) ? SMC91X_USE_16BIT : 0;
+ 		lp->cfg.flags |= (SMC_CAN_USE_32BIT) ? SMC91X_USE_32BIT : 0;
+@@ -2375,15 +2416,6 @@ static int smc_drv_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_OF
+-static const struct of_device_id smc91x_match[] = {
+-	{ .compatible = "smsc,lan91c94", },
+-	{ .compatible = "smsc,lan91c111", },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, smc91x_match);
+-#endif
+-
+ static struct dev_pm_ops smc_drv_pm_ops = {
+ 	.suspend	= smc_drv_suspend,
+ 	.resume		= smc_drv_resume,
+-- 
+1.8.1.1
