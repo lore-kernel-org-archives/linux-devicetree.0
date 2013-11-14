@@ -1,85 +1,51 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 15/31] mtd: nand: pxa3xx: Use a completion to signal
- device ready
-Date: Thu, 14 Nov 2013 15:53:57 -0300
-Message-ID: <20131114185356.GA9912@localhost>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-16-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131114183923.GO9468@ld-irv-0074.broadcom.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: doc: Document missing compatible property
+ for omap-sham driver
+Date: Thu, 14 Nov 2013 10:59:16 -0800
+Message-ID: <20131114185916.GS10317@atomide.com>
+References: <1383889056-17336-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131114183923.GO9468-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <1383889056-17336-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: devicetree@vger.kernel.org, santosh.shilimkar@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, bcousson@baylibre.com, linux-doc@vger.kernel.org, joelf@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Brian,
+* Lokesh Vutla <lokeshvutla@ti.com> [131107 21:38]:
+> A new compatible property "ti,omap5-sham" is added to the omap-sham driver
+> recently to support SHA/MD5 for OMAP5,DRA7 and AM43XX. Documenting the
+> same.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-On Thu, Nov 14, 2013 at 10:39:23AM -0800, Brian Norris wrote:
-> On Thu, Nov 07, 2013 at 12:17:19PM -0300, Ezequiel Garcia wrote:
-> > --- a/drivers/mtd/nand/pxa3xx_nand.c
-> > +++ b/drivers/mtd/nand/pxa3xx_nand.c
-> > @@ -863,21 +867,28 @@ static int pxa3xx_nand_waitfunc(struct mtd_in=
-fo *mtd, struct nand_chip *this)
-> >  {
-> >  	struct pxa3xx_nand_host *host =3D mtd->priv;
-> >  	struct pxa3xx_nand_info *info =3D host->info_data;
-> > +	int ret;
-> > +
-> > +	/* Need to wait? */
-> > +	if (!info->is_ready) {
-> > +		ret =3D wait_for_completion_timeout(&info->dev_ready,
-> > +				CHIP_DELAY_TIMEOUT);
-> > +		if (!ret) {
-> > +			dev_err(&info->pdev->dev, "Ready time out!!!\n");
-> > +			return NAND_STATUS_FAIL;
-> > +		}
-> > +		info->is_ready =3D 1;
->=20
-> Shouldn't the is_ready=3D1 line to be above the if (!ret) condition? =
-I
-> think you want to set is_ready=3D1 in either case (success or timeout=
-).
-> With this code, any timeout will cause subsequent waitfunc()'s to blo=
-ck,
-> even if they are never going to catch an interrupt.
->=20
+Thanks applying into omap-for-v3.13/fixes.
 
-Yes, good catch!
+Tony
 
-> I think this kind of mistake is easier to make now, since the 'is_rea=
-dy'
-> field isn't properly descriptive any more. It doesn't represent "is t=
-he
-> device ready"; it represents "is there a pending command on which I n=
-eed
-> to wait". (I don't care if you change the name; I'm just pointing thi=
-s
-> out.)
->=20
-
-Yes, I agree. Maybe, "need_wait" or something like that would fit
-better. Let me submit a new patch for this one.
-
-> > +	}
-> > =20
->=20
-> I think all the other patches up to this one are good. I may push the=
-m
-> to l2-mtd.git now, unless you object.
->=20
-
-Great, thanks a lot for reviewing and for all the feedback!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  .../devicetree/bindings/crypto/omap-sham.txt       |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/omap-sham.txt b/Documentation/devicetree/bindings/crypto/omap-sham.txt
+> index f839acd..ad91155 100644
+> --- a/Documentation/devicetree/bindings/crypto/omap-sham.txt
+> +++ b/Documentation/devicetree/bindings/crypto/omap-sham.txt
+> @@ -6,7 +6,7 @@ Required properties:
+>    SHAM versions:
+>    - "ti,omap2-sham" for OMAP2 & OMAP3.
+>    - "ti,omap4-sham" for OMAP4 and AM33XX.
+> -  Note that these two versions are incompatible.
+> +  - "ti,omap5-sham" for OMAP5, DRA7 and AM43XX.
+>  - ti,hwmods: Name of the hwmod associated with the SHAM module
+>  - reg : Offset and length of the register set for the module
+>  - interrupts : the interrupt-specifier for the SHAM module.
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
