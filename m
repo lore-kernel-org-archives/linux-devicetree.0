@@ -1,58 +1,87 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Thu, 14 Nov 2013 19:34:20 +0000
-Message-ID: <20131114193420.GF16735@n2100.arm.linux.org.uk>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <52814AFB.3070600@wwwdotorg.org> <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com> <528275B7.6050209@wwwdotorg.org> <20131112193012.GR10335@titan.lakedaemon.net> <52828C77.20001@wwwdotorg.org> <20131114162859.GX10335@titan.lakedaemon.net> <52851DC8.203@wwwdotorg.org> <20131114191622.GC21549@obsidianresearch.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v4 06/31] mtd: nand: pxa3xx: Add documentation about the
+ controller
+Date: Thu, 14 Nov 2013 16:49:07 -0300
+Message-ID: <20131114194906.GD9912@localhost>
+References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1383837455-30721-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20131114190004.GP9468@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131114191622.GC21549-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20131114190004.GP9468@ld-irv-0074.broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Huang Shijie <b32955@freescale.com>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 12:16:22PM -0700, Jason Gunthorpe wrote:
-> On Thu, Nov 14, 2013 at 12:00:24PM -0700, Stephen Warren wrote:
-> 
-> > I don't think a distro should need to know the DTB filename at all.
-> > Rather, the/a bootloader should know which platform it's running on, and
-> > provide a variable/... to the boot script/... that defines the DTB
-> > filename. That would completely remove all the knowledge of DTB
-> > filenames from distros.
-> 
-> At some point the distro has to install a dtb into some cannonical
-> place so the bootloader can find it..
-> 
-> Are you thinking that distros will have to ship a /boot/dtbs/*.dtb
-> with every dtb from the kernel build?
+On Thu, Nov 14, 2013 at 11:00:04AM -0800, Brian Norris wrote:
+> On Thu, Nov 07, 2013 at 12:17:10PM -0300, Ezequiel Garcia wrote:
+> > Given there's no public specification to this date, and in order
+> > to capture some important details and singularities about the
+> > controller let's document them once and for good.
+>=20
+> Made a few small tweaks for spelling and such (see the following diff=
+)
+> and pushed patches 5 through 14 to l2-mtd.git/next.
+>=20
 
-Why are we even having this discussion?  Where distros want to install
-dtbs is their policy.  What we should do is make it _possible_ for them
-to have policy, not define the policy for them.
+The below diff looks ok. I had to rework a few patches after the
+completion patch rework, and I'm running some tests.
 
-The problem here is this.  Consider how often these files change, and
-how often there's differences in them.  Sensible distros allow you to
-have several kernels installed so that you can switch to other
-versions if, for example, you run into problems.
+I'll submit the series as soon as the tests are done.
 
-Distros have two main choices - either to ship the DTBs separately
-assuming that they'll always be compatible and correct, or ship them
-with the kernel itself (in which case we've lost the plot about what
-DT is supposed to give us.)
+> Thanks,
+> Brian
+>=20
+> diff --git a/Documentation/mtd/nand/pxa3xx-nand.txt b/Documentation/m=
+td/nand/pxa3xx-nand.txt
+> index 00e601c..840fd41 100644
+> --- a/Documentation/mtd/nand/pxa3xx-nand.txt
+> +++ b/Documentation/mtd/nand/pxa3xx-nand.txt
+> @@ -36,7 +36,7 @@ OOB, one per chunk read.
+>  So, in order to achieve reading (for instance), we issue several REA=
+D0 commands
+>  (with some additional controller-specific magic) and read two chunks=
+ of 2080B
+>  (2048 data + 32 spare) each.
+> -The driver accomodates this data to expose the NAND core a contiguou=
+s buffer
+> +The driver accommodates this data to expose the NAND core a contiguo=
+us buffer
+>  (4096 data + spare) or (4096 + spare + ECC + spare + ECC).
+> =20
+>  ECC
+> @@ -81,7 +81,7 @@ an *entire* page.
+>  Factory bad blocks handling
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> =20
+> -Given the ECC BCH requires to layout the device's pages in a splitte=
+d
+> +Given the ECC BCH requires to layout the device's pages in a split
+>  data/OOB/data/OOB way, the controller has a view of the flash page t=
+hat's
+>  different from the specified (aka the manufacturer's) view. In other=
+ words,
+> =20
+> @@ -109,5 +109,5 @@ disabled by using the NAND_BBT_NO_OOB_BBM option =
+in the driver. The rationale
+>  for this is that there's no point in marking a block as bad, because=
+ good
+>  blocks are also 'marked as bad' (in the OOB BBM sense) under normal =
+usage.
+> =20
+> -Instead, the drive relies in the bad block table alone, and should o=
+nly perform
+> +Instead, the driver relies on the bad block table alone, and should =
+only perform
+>  the bad block scan on the very first time (when the device hasn't be=
+en used).
 
-That's where the problem lies: what if a distro wants to have installed
-more than one set of DTBs corresponding to $old_kernel and $new_kernel.
-
-This really isn't something for us kernel developers to decide.  It's
-a distro question and it needs distro people to think about it and put
-proposals forward for what they'd like to see.
-
-In my experience, that won't happen - they like hiding away and sorting
-out their own problems.  The communication between distros and kernel
-folk has always tended to be extremely poor.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
