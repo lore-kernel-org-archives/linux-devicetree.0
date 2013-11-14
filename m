@@ -1,399 +1,302 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
-Date: Thu, 14 Nov 2013 11:01:35 +0100
-Message-ID: <E4922A5F-11B3-4167-91EF-C0D5F3F77D40@antoniou-consulting.com>
-References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com> <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com> <20131111184245.D569DC4234A@trevor.secretlab.ca> <ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com> <20131114013124.7DD0AC404DF@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM: imx50: use clock defines in DTS files
+Date: Thu, 14 Nov 2013 11:10:16 +0100
+Message-ID: <1384423816-10834-4-git-send-email-l.stach@pengutronix.de>
+References: <1384423816-10834-1-git-send-email-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131114013124.7DD0AC404DF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1384423816-10834-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+For better readablitity and no need to look up numbers
+in the documentation anymore.
 
-On Nov 14, 2013, at 2:31 AM, Grant Likely wrote:
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx50.dtsi | 78 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 28 deletions(-)
 
-> On Tue, 12 Nov 2013 10:30:37 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->> Hi Grant,
->> 
->> On Nov 11, 2013, at 7:42 PM, Grant Likely wrote:
->> 
->>> On Fri,  8 Nov 2013 17:06:09 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->>>> Introduce DT overlay support.
->>>> Using this functionality it is possible to dynamically overlay a part of
->>>> the kernel's tree with another tree that's been dynamically loaded.
->>>> It is also possible to remove node and properties.
->>>> 
->>>> Note that the I2C client devices are 'special', as in they're not platform
->>>> devices. They need to be registered with an I2C specific method.
->>>> 
->>>> In general I2C is just no good platform device citizen and needs
->>>> special casing.
->>>> 
->>>> PCI is another special case where PCI device insertion and removal
->>>> is implemented in the PCI subsystem.
->>> 
->>> Actually. I2C isn't special in this regard; SPI, MDIO, PCI, USB are all
->>> in the same boat. platform_device just happens to be able to make a few
->>> assumptions. If anything, platform_device is the 'special' one. :-)
->>> 
->> 
->> I'm of the opinion that 'platform_device' shouldn't exist at all btw :)
->> Most of it's functionality can pretty easily be subsumed by device proper
->> and the world would be a better place :)
-> 
-> I'm fine for merging some/all of the platform_device fields into struct
-> device. There are a few things, like resources, which would probably be
-> useful to have common on all struct device variants. However,
-> platform_device is far more about matching drivers to devices. Even if
-> all of platform_device went into struct device, there would still need
-> to be the platform_bus_type as the collection point for the device
-> drivers.
-> 
-
-We don't really need the resources structures on OF. That information is
-present in OF format, which we can use to generate transient resources for
-usage with the standard kernel interfaces.
-
-BTW, last time I checked resource handling was broken on release.
-There are a few patches I sent out fixing it but they were probably ignored.
-
->>> In all cases it must be the underlying subsystem that should be
->>> responsible for creation/removal of devices described in the overlay.
->>> Sometimes that will extend right down into the individual bus device
->>> drivers, but it is better if that can be avoided.
->>> 
->> 
->> Yes, that's the right way to handle this, but we're talking about 
->> serious modification in almost every kind of device core.
->> 
->> Just getting the basic concept of overlays in is hard without having
->> to tackle something like this.
->> 
->> In the future, I'd be ecstatic if we could get a per device class
->> filter, but it's nothing we can fix right now.
->> 
->> IMHO of course.
-> 
-> It's fine to limit yourself to only platform_devices and i2c for now,
-> but that doesn't give license to do the wrong thing with the
-> implementation. The subsystem modifications really shouldn't be very
-> invasive. It will need a per-subsystem notifier callback to deal with
-> the add/remove events, and it will require the subsystem to maintain a
-> list of parent bus nodes that it cares about and should create children
-> for.
-> 
-> Doing it with a central function like this patch does is not a good
-> approach at all.
-> 
-
-This is indeed the cleaner approach... I'll take a look at what it takes
-to do it; hope the changes needed are not anything major.
-
->> 
->>>> 
->>>> Bug fixes & PCI support by Guenter Roeck <groeck-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
->>>> 
->> 
->> [snip]
->> 
->>>> +so a bar platform device will be registered and if a matching device driver
->>>> +is loaded the device will be created as expected.
->>>> +
->>>> +Overlay in-kernel API
->>>> +---------------------
->>>> +
->>>> +The steps typically required to get an overlay to work are as follows:
->>>> +
->>>> +1. Use of_build_overlay_info() to create an array of initialized and
->>>> +ready to use of_overlay_info structures.
->>>> +2. Call of_overlay() to apply the overlays declared in the array.
->>>> +3. If the overlay needs to be removed, call of_overlay_revert().
->>>> +4. Finally release the memory taken by the overlay info array by
->>>> +of_free_overlay_info().
->>> 
->>> Make of_overlay_info a kobject and use a release method to free it when
->>> all users go away. Freeing directly is a dangerous thing to do.
->>> 
->> 
->> It's more dangerous than even that. We also have the mess with the way
->> unflattening works (properties point directly to binary blob area
->> with no way to free per property data). In general freeing/releasing
->> device tree nodes is tricky on a good day.
-> 
-> Repeating from my comment on the previous email, don't throw away the
-> blob. There is no need and it makes your job harder.
-> 
-
-OK.
-
->> 
->> I agree we have to move to a kobject model eventually. 
->> 
->>>> +
->>>> +/**
->>>> + * of_build_overlay_info	- Build an overlay info array
->>>> + * @tree:	Device node containing all the overlays
->>>> + * @cntp:	Pointer to where the overlay info count will be help
->>>> + * @ovinfop:	Pointer to the pointer of an overlay info structure.
->>>> + *
->>>> + * Helper function that given a tree containing overlay information,
->>>> + * allocates and builds an overlay info array containing it, ready
->>>> + * for use using of_overlay.
->>>> + *
->>>> + * Returns 0 on success with the @cntp @ovinfop pointers valid,
->>>> + * while on error a negative error value is returned.
->>>> + */
->>>> +int of_build_overlay_info(struct device_node *tree,
->>>> +		int *cntp, struct of_overlay_info **ovinfop);
->>>> +
->>>> +/**
->>>> + * of_free_overlay_info	- Free an overlay info array
->>>> + * @count:	Number of of_overlay_info's
->>>> + * @ovinfo_tab:	Array of overlay_info's to free
->>>> + *
->>>> + * Releases the memory of a previously allocate ovinfo array
->>>> + * by of_build_overlay_info.
->>>> + * Returns 0, or an error if the arguments are bogus.
->>>> + */
->>>> +int of_free_overlay_info(int count, struct of_overlay_info *ovinfo_tab);
->>>> +
->>>> +/**
->>>> + * of_overlay	- Apply @count overlays pointed at by @ovinfo_tab
->>>> + * @count:	Number of of_overlay_info's
->>>> + * @ovinfo_tab:	Array of overlay_info's to apply
->>>> + *
->>>> + * Applies the overlays given, while handling all error conditions
->>>> + * appropriately. Either the operation succeeds, or if it fails the
->>>> + * live tree is reverted to the state before the attempt.
->>>> + * Returns 0, or an error if the overlay attempt failed.
->>>> + */
->>>> +int of_overlay(int count, struct of_overlay_info *ovinfo_tab);
->>>> +
->>>> +/**
->>>> + * of_overlay_revert	- Revert a previously applied overlay
->>>> + * @count:	Number of of_overlay_info's
->>>> + * @ovinfo_tab:	Array of overlay_info's to apply
->>>> + *
->>>> + * Revert a previous overlay. The state of the live tree
->>>> + * is reverted to the one before the overlay.
->>>> + * Returns 0, or an error if the overlay table is not given.
->>>> + */
->>>> +int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab);
->>>> +
->>>> +Overlay DTS Format
->>>> +------------------
->>>> +
->>>> +The DTS of an overlay should have the following format:
->>>> +
->>>> +{
->>>> +	/* ignored properties by the overlay */
->>>> +
->>>> +	fragment@0 {	/* first child node */
->>>> +		target=<phandle>;	/* target of the overlay */
->>>> +		__overlay__ {
->>>> +			property-a;	/* add property-a to the target */
->>>> +			-property-b;	/* remove property-b from target */
->>>> +			node-a {	/* add to an existing, or create a node-a */
->>>> +				...
->>>> +			};
->>>> +			-node-b {	/* remove an existing node-b */
->>>> +				...
->>>> +			};
->>> 
->>> Are the node & property removals reversable? What about property
->>> modifications? If they are not, then it would be better to not support
->>> removals at all for now. Otherwise we'll end up with overlays that
->>> cannot be removed and I don't want to inadvertently put users into that
->>> situation.
->> 
->> Yes, everything is reversible. Doesn't mean that the drivers/driver core
->> can handle it. Using overlays is an excellent way to trigger bugs in
->> device removal as I've found out :)
-> 
-> :)
-> 
->> 
->>> 
->>>> +		};
->>>> +	}
->>>> +	fragment@1 {	/* second child node */
->>>> +		...
->>>> +	};
->>>> +	/* more fragments follow */
->>>> +}
->> 
->> [snip]
->> 
->>>> +
->>>> +static int of_overlay_device_entry_change(struct of_overlay_info *ovinfo,
->>>> +		struct of_overlay_device_entry *de, int revert)
->>>> +{
->>> 
->>> I've got big problems here. This is entirely the wrong place to create
->>> and delete devices. Each subsystem needs to create and remove its own
->>> device types. To begin with, only the subsystem knows which busses are
->>> appropriate for creating child devices.
->>> 
->> 
->> It was the best I could under the circumstances, without having to touch
->> every subsystem.
->> 
->> 
->>> Second, it is incorrect to create a platform_device for every single
->>> node by default. Some nodes aren't devices at all. Just looking for a
->>> compatible property isn't sufficient either.
->>> 
->> 
->> Yep. 
->> 
->>> The solution here is for each subsystem to have it's own notifier, and
->>> only create a child device if the changed node has a parent the
->>> subsystem already knows about (because it's already populated device
->>> tree devices from that parent). This is also true for platform_devices.
->>> 
->>> Finally, sometimes the tips of the tree will get populated, but not
->>> until after some parent nodes have been delt with. In that case the
->>> creation of devices needs to be deferred back to the driver for the
->>> parent bus.
->>> 
->> 
->> Well, any solution that requires each and every subsystem to do dynamic
->> child insertions/removal is going to be hard sell.
-> 
-> They have to do it /anyway/! How many subsystems are we talking about?
-> SPI, I2C, platform_device (and amba_device). Maybe MDIO. To get to a
-> useful subset it isn't very many targets. SPI and I2C will probably be
-> receptive, so no problem there. The maintainer of drivers/of/platform.c
-> is friendly too. :-) Haven't asked about MDIO.
-> 
-
-Famous last words :)
-
->> 
->> What about something more gentle?
->> 
->> For example, I know that most of the cases fall into a couple of set
->> patterns for my case
->> 
->> a) Target is the ocp node (on chip peripheral node) and results in
->> the creation of platform devices under that node.
-> 
-> No, I'm going to be hard-line on this. The code needs to be very
-> explicit about which nodes cause devices to be created for nodes. It
-> cannot be based on some arbitrary heuristics.
-> 
-> I'm not asking you to do something hard though. For the platform devices
-> I'd be fine with of_platform_populate() marking some kind of flag on
-> struct device_node that says children of it should be used to create
-> more platform_devices.
-> 
->> b) Target is one of the disabled devices under the ocp node
->> and the status property is modified, plus optional nodes are
->> added that result in the creation of more devices under the bus this
->> node controls. This is the case of enabled an I2C/SPI bus and inserting
->> children devices.
-> 
-> Close, but again it has to match with what I've said above. The various
-> subsystems need to keep track of which nodes describe a subsystem bus
-> and only create devices on those nodes. It would be valuable to have a
-> simple library for keeping track of that information which is usable by
-> all subsystems, but it still needs to be under the control of the
-> subsystem.
-> 
->> 
->> Perhaps the trick is having hooks about what to do in case certain
->> nodes are modified in a certain way, i.e. a notifier on the ocp node
->> would 'catch' those. The problem is a having a way to present this
->> information to the notifier in a way that's easy to be handled.
->> 
->> What do you think?
-> 
-> It would probably work to have a single notifier for each entire
-> subsystem instead of a separate notifier for each and every bus node.
-> Once a subsystem marks a node as interesting, it is quite simple for a
-> generic subsystem notifier callback to decide whether to create devices
-> based on it. If done right, it should work without any changes to the
-> SPI/I2C/etc bus drivers.
-> 
-
-The proof is going to be in the code.
-
->> 
->>>> +
->>>> +/**
->>>> + * Revert one overlay
->>>> + * Either due to an error, or due to normal overlay removal.
->>>> + * Using the log entries, we revert any change to the live tree.
->>>> + * In the same manner, using the device entries we enable/disable
->>>> + * the platform devices appropriately.
->>>> + */
->>>> +static void of_overlay_revert_one(struct of_overlay_info *ovinfo)
->>>> +{
->>>> +	struct of_overlay_device_entry *de, *den;
->>>> +	struct of_overlay_log_entry *le, *len;
->>>> +	struct property *prop, **propp;
->>>> +	int ret;
->>>> +	unsigned long flags;
->>>> +
->>>> +	if (!ovinfo || !ovinfo->target || !ovinfo->overlay)
->>>> +		return;
->>>> +
->>>> +	pr_debug("%s: Reverting overlay on '%s'\n", __func__,
->>>> +			ovinfo->target->full_name);
->>>> +
->>>> +	/* overlay applied correctly, now create/destroy pdevs */
->>>> +	list_for_each_entry_safe_reverse(de, den, &ovinfo->de_list, node) {
->>>> +		of_overlay_device_entry_change(ovinfo, de, 1);
->>>> +		of_node_put(de->np);
->>>> +		list_del(&de->node);
->>>> +		kfree(de);
->>>> +	}
->>> 
->>> Can overlays interact in bad ways? If overlay 1 is installed before
->>> overlay 2, what happens if overlay 1 is removed?
->>> 
->> 
->> Yes, they can. It is not something easily fixed; the proper way would
->> be to calculate overlay intersection points and refuse to unload.
-> 
-> I think this is important. If it cannot be solved immediately, then the
-> kernel should enforce overlays always get removed in the reverse order
-> that they were added. There may be use-cases that don't like it, but it
-> is safe.
-
-OK, that makes sense.
-
-We are not talking about a global overlay stack though, we're talking about
-an overlay stack for overlays that overlap.
-
-> 
->> 
->>> Okay, my brain is tired. It's a complicated series and I don't see any
->>> obvious bits that can be split off and be independently useful. I would
->>> *really* like to see some test cases for this functionality. It's
->>> complicated enough to make me quite nervous.... in fact I would really
->>> like to see drivers/of/selftest.c become an early user of overlays. That
->>> would make the DT selftests executable on any platform.
->>> 
->> 
->> OK, I see your point. My brain is tired too, and I'm on travel too for
->> this week and the next. I'll see what I can come up with.
-> 
-> Enjoy your trip.
-> 
-
-Thanks, although it's a work trip :)
-
-> g.
-
-Regards
-
--- Pantelis
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index c547e29b8e87..4de61a5edb35 100644
+--- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -97,7 +97,9 @@
+ 					compatible = "fsl,imx50-esdhc";
+ 					reg = <0x50004000 0x4000>;
+ 					interrupts = <1>;
+-					clocks = <&clks 44>, <&clks 0>, <&clks 71>;
++					clocks = <&clks IMX5_CLK_ESDHC1_IPG_GATE>,
++					         <&clks IMX5_CLK_DUMMY>,
++					         <&clks IMX5_CLK_ESDHC1_PER_GATE>;
+ 					clock-names = "ipg", "ahb", "per";
+ 					bus-width = <4>;
+ 					status = "disabled";
+@@ -107,7 +109,9 @@
+ 					compatible = "fsl,imx50-esdhc";
+ 					reg = <0x50008000 0x4000>;
+ 					interrupts = <2>;
+-					clocks = <&clks 45>, <&clks 0>, <&clks 72>;
++					clocks = <&clks IMX5_CLK_ESDHC2_IPG_GATE>,
++					         <&clks IMX5_CLK_DUMMY>,
++					         <&clks IMX5_CLK_ESDHC2_PER_GATE>;
+ 					clock-names = "ipg", "ahb", "per";
+ 					bus-width = <4>;
+ 					status = "disabled";
+@@ -117,7 +121,8 @@
+ 					compatible = "fsl,imx50-uart", "fsl,imx21-uart";
+ 					reg = <0x5000c000 0x4000>;
+ 					interrupts = <33>;
+-					clocks = <&clks 32>, <&clks 33>;
++					clocks = <&clks IMX5_CLK_UART3_IPG_GATE>,
++					         <&clks IMX5_CLK_UART3_PER_GATE>;
+ 					clock-names = "ipg", "per";
+ 					status = "disabled";
+ 				};
+@@ -128,7 +133,8 @@
+ 					compatible = "fsl,imx50-ecspi", "fsl,imx51-ecspi";
+ 					reg = <0x50010000 0x4000>;
+ 					interrupts = <36>;
+-					clocks = <&clks 51>, <&clks 52>;
++					clocks = <&clks IMX5_CLK_ECSPI1_IPG_GATE>,
++					         <&clks IMX5_CLK_ECSPI1_PER_GATE>;
+ 					clock-names = "ipg", "per";
+ 					status = "disabled";
+ 				};
+@@ -137,7 +143,7 @@
+ 					compatible = "fsl,imx50-ssi", "fsl,imx21-ssi";
+ 					reg = <0x50014000 0x4000>;
+ 					interrupts = <30>;
+-					clocks = <&clks 49>;
++					clocks = <&clks IMX5_CLK_SSI2_IPG_GATE>;
+ 					fsl,fifo-depth = <15>;
+ 					fsl,ssi-dma-events = <25 24 23 22>; /* TX0 RX0 TX1 RX1 */
+ 					status = "disabled";
+@@ -147,7 +153,9 @@
+ 					compatible = "fsl,imx50-esdhc";
+ 					reg = <0x50020000 0x4000>;
+ 					interrupts = <3>;
+-					clocks = <&clks 46>, <&clks 0>, <&clks 73>;
++					clocks = <&clks IMX5_CLK_ESDHC3_IPG_GATE>,
++					         <&clks IMX5_CLK_DUMMY>,
++					         <&clks IMX5_CLK_ESDHC3_PER_GATE>;
+ 					clock-names = "ipg", "ahb", "per";
+ 					bus-width = <4>;
+ 					status = "disabled";
+@@ -157,7 +165,9 @@
+ 					compatible = "fsl,imx50-esdhc";
+ 					reg = <0x50024000 0x4000>;
+ 					interrupts = <4>;
+-					clocks = <&clks 47>, <&clks 0>, <&clks 74>;
++					clocks = <&clks IMX5_CLK_ESDHC4_IPG_GATE>,
++					         <&clks IMX5_CLK_DUMMY>,
++					         <&clks IMX5_CLK_ESDHC4_PER_GATE>;
+ 					clock-names = "ipg", "ahb", "per";
+ 					bus-width = <4>;
+ 					status = "disabled";
+@@ -168,7 +178,7 @@
+ 				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
+ 				reg = <0x53f80000 0x0200>;
+ 				interrupts = <18>;
+-				clocks = <&clks 124>;
++				clocks = <&clks IMX5_CLK_USB_PHY1_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -176,7 +186,7 @@
+ 				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
+ 				reg = <0x53f80200 0x0200>;
+ 				interrupts = <14>;
+-				clocks = <&clks 125>;
++				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -184,7 +194,7 @@
+ 				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
+ 				reg = <0x53f80400 0x0200>;
+ 				interrupts = <16>;
+-				clocks = <&clks 108>;
++				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -192,7 +202,7 @@
+ 				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
+ 				reg = <0x53f80600 0x0200>;
+ 				interrupts = <17>;
+-				clocks = <&clks 108>;
++				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -240,14 +250,15 @@
+ 				compatible = "fsl,imx50-wdt", "fsl,imx21-wdt";
+ 				reg = <0x53f98000 0x4000>;
+ 				interrupts = <58>;
+-				clocks = <&clks 0>;
++				clocks = <&clks IMX5_CLK_DUMMY>;
+ 			};
+ 
+ 			gpt: timer@53fa0000 {
+ 				compatible = "fsl,imx50-gpt", "fsl,imx31-gpt";
+ 				reg = <0x53fa0000 0x4000>;
+ 				interrupts = <39>;
+-				clocks = <&clks 36>, <&clks 41>;
++				clocks = <&clks IMX5_CLK_GPT_IPG_GATE>,
++				         <&clks IMX5_CLK_GPT_HF_GATE>;
+ 				clock-names = "ipg", "per";
+ 			};
+ 
+@@ -265,7 +276,8 @@
+ 				#pwm-cells = <2>;
+ 				compatible = "fsl,imx50-pwm", "fsl,imx27-pwm";
+ 				reg = <0x53fb4000 0x4000>;
+-				clocks = <&clks 37>, <&clks 38>;
++				clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
++				         <&clks IMX5_CLK_PWM1_HF_GATE>;
+ 				clock-names = "ipg", "per";
+ 				interrupts = <61>;
+ 			};
+@@ -274,7 +286,8 @@
+ 				#pwm-cells = <2>;
+ 				compatible = "fsl,imx50-pwm", "fsl,imx27-pwm";
+ 				reg = <0x53fb8000 0x4000>;
+-				clocks = <&clks 39>, <&clks 40>;
++				clocks = <&clks IMX5_CLK_PWM2_IPG_GATE>,
++				         <&clks IMX5_CLK_PWM2_HF_GATE>;
+ 				clock-names = "ipg", "per";
+ 				interrupts = <94>;
+ 			};
+@@ -283,7 +296,8 @@
+ 				compatible = "fsl,imx50-uart", "fsl,imx21-uart";
+ 				reg = <0x53fbc000 0x4000>;
+ 				interrupts = <31>;
+-				clocks = <&clks 28>, <&clks 29>;
++				clocks = <&clks IMX5_CLK_UART1_IPG_GATE>,
++				         <&clks IMX5_CLK_UART1_PER_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -292,7 +306,8 @@
+ 				compatible = "fsl,imx50-uart", "fsl,imx21-uart";
+ 				reg = <0x53fc0000 0x4000>;
+ 				interrupts = <32>;
+-				clocks = <&clks 30>, <&clks 31>;
++				clocks = <&clks IMX5_CLK_UART2_IPG_GATE>,
++				         <&clks IMX5_CLK_UART2_PER_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -336,7 +351,7 @@
+ 				compatible = "fsl,imx50-i2c", "fsl,imx21-i2c";
+ 				reg = <0x53fec000 0x4000>;
+ 				interrupts = <64>;
+-				clocks = <&clks 88>;
++				clocks = <&clks IMX5_CLK_I2C3_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -344,7 +359,8 @@
+ 				compatible = "fsl,imx50-uart", "fsl,imx21-uart";
+ 				reg = <0x53ff0000 0x4000>;
+ 				interrupts = <13>;
+-				clocks = <&clks 65>, <&clks 66>;
++				clocks = <&clks IMX5_CLK_UART4_IPG_GATE>,
++				         <&clks IMX5_CLK_UART4_PER_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -361,7 +377,8 @@
+ 				compatible = "fsl,imx50-uart", "fsl,imx21-uart";
+ 				reg = <0x63f90000 0x4000>;
+ 				interrupts = <86>;
+-				clocks = <&clks 67>, <&clks 68>;
++				clocks = <&clks IMX5_CLK_UART5_IPG_GATE>,
++				         <&clks IMX5_CLK_UART5_PER_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -369,7 +386,7 @@
+ 			owire: owire@63fa4000 {
+ 				compatible = "fsl,imx50-owire", "fsl,imx21-owire";
+ 				reg = <0x63fa4000 0x4000>;
+-				clocks = <&clks 159>;
++				clocks = <&clks IMX5_CLK_OWIRE_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -379,7 +396,8 @@
+ 				compatible = "fsl,imx50-ecspi", "fsl,imx51-ecspi";
+ 				reg = <0x63fac000 0x4000>;
+ 				interrupts = <37>;
+-				clocks = <&clks 53>, <&clks 54>;
++				clocks = <&clks IMX5_CLK_ECSPI2_IPG_GATE>,
++				         <&clks IMX5_CLK_ECSPI2_PER_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -388,7 +406,8 @@
+ 				compatible = "fsl,imx50-sdma", "fsl,imx35-sdma";
+ 				reg = <0x63fb0000 0x4000>;
+ 				interrupts = <6>;
+-				clocks = <&clks 56>, <&clks 56>;
++				clocks = <&clks IMX5_CLK_SDMA_GATE>,
++				         <&clks IMX5_CLK_SDMA_GATE>;
+ 				clock-names = "ipg", "ahb";
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx50.bin";
+ 			};
+@@ -399,7 +418,8 @@
+ 				compatible = "fsl,imx50-cspi", "fsl,imx35-cspi";
+ 				reg = <0x63fc0000 0x4000>;
+ 				interrupts = <38>;
+-				clocks = <&clks 55>, <&clks 55>;
++				clocks = <&clks IMX5_CLK_CSPI_IPG_GATE>,
++				         <&clks IMX5_CLK_CSPI_IPG_GATE>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+ 			};
+@@ -410,7 +430,7 @@
+ 				compatible = "fsl,imx50-i2c", "fsl,imx21-i2c";
+ 				reg = <0x63fc4000 0x4000>;
+ 				interrupts = <63>;
+-				clocks = <&clks 35>;
++				clocks = <&clks IMX5_CLK_I2C2_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -420,7 +440,7 @@
+ 				compatible = "fsl,imx50-i2c", "fsl,imx21-i2c";
+ 				reg = <0x63fc8000 0x4000>;
+ 				interrupts = <62>;
+-				clocks = <&clks 34>;
++				clocks = <&clks IMX5_CLK_I2C1_GATE>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -428,7 +448,7 @@
+ 				compatible = "fsl,imx50-ssi", "fsl,imx21-ssi";
+ 				reg = <0x63fcc000 0x4000>;
+ 				interrupts = <29>;
+-				clocks = <&clks 48>;
++				clocks = <&clks IMX5_CLK_SSI1_IPG_GATE>;
+ 				fsl,fifo-depth = <15>;
+ 				fsl,ssi-dma-events = <29 28 27 26>; /* TX0 RX0 TX1 RX1 */
+ 				status = "disabled";
+@@ -444,7 +464,9 @@
+ 				compatible = "fsl,imx53-fec", "fsl,imx25-fec";
+ 				reg = <0x63fec000 0x4000>;
+ 				interrupts = <87>;
+-				clocks = <&clks 42>, <&clks 42>, <&clks 42>;
++				clocks = <&clks IMX5_CLK_FEC_GATE>,
++				         <&clks IMX5_CLK_FEC_GATE>,
++				         <&clks IMX5_CLK_FEC_GATE>;
+ 				clock-names = "ipg", "ahb", "ptp";
+ 				status = "disabled";
+ 			};
+-- 
+1.8.4.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
