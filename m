@@ -1,53 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH RFC] net: of_mdio: Scan PHYs which have device_type set to ethernet-phy
-Date: Thu, 14 Nov 2013 15:05:56 +0000
-Message-ID: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gbWZkOiBzeXNjb246IEFsbG93IHRvIHVzaW5nIHN1YmRl?=
+ =?UTF-8?B?dmljZXM=?=
+Date: Thu, 14 Nov 2013 18:58:46 +0400
+Message-ID: <1384441126.564885163@f359.i.mail.ru>
+References: <1384433523-30602-1-git-send-email-shc_work@mail.ru>
+ <20131114144559.GC28328@e106331-lin.cambridge.arm.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131114144559.GC28328-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: =?UTF-8?B?bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw==?= <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2FtdWVsIE9ydGl6?= <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, =?UTF-8?B?TGVlIEpvbmVz?= <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?cm9iLmhlcnJpbmdAY2FseGVkYS5jb20=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to Documentation/devicetree/bindings/net/phy.txt device_type
-property of PHY nodes is mandatory, which should be set to
-"ethernet-phy". This patch adds check in scanning phys and only scans
-node which have device-type set to "ethernet-phy".
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
- drivers/of/of_mdio.c |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index d5a57a9..78c53c7 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -57,6 +57,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 
- 	/* Loop over the child nodes and register a phy_device for each one */
- 	for_each_available_child_of_node(np, child) {
-+		/* A PHY must have device_type set to "ethernet-phy" */
-+		if (of_node_cmp(child->type, "ethernet-phy"))
-+			continue;
- 		/* A PHY must have a reg property in the range [0-31] */
- 		paddr = of_get_property(child, "reg", &len);
- 		if (!paddr || len < sizeof(*paddr)) {
-@@ -112,6 +115,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 
- 	/* auto scan for PHYs with empty reg property */
- 	for_each_available_child_of_node(np, child) {
-+		/* A PHY must have device_type set to "ethernet-phy" */
-+		if (of_node_cmp(child->type, "ethernet-phy"))
-+			continue;
-+
- 		/* Skip PHYs with reg property set */
- 		paddr = of_get_property(child, "reg", &len);
- 		if (paddr)
--- 
-1.7.6.5
-
+SGVsbG8uCgo+IE9uIFRodSwgTm92IDE0LCAyMDEzIGF0IDEyOjUyOjAzUE0gKzAwMDAsIEFsZXhh
+bmRlciBTaGl5YW4gd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdXNpbmcg
+c3ViZGV2aWNlcyB3aXRoaW4gc3lzY29uIG5vZGUuCj4gPiBQcmltYXJ5IHVzYWdlIG9mIHRoaXMg
+aXMgZGVzY3JpYmUgYWxsIGRldmljZXMgd2l0aCBzYW1lIG1lbW9yeQo+ID4gcmVnaW9uIGluIG9u
+ZSBjb250YWluZXIuCj4gCj4gSSB0aGluayBpZiB5b3UgbmVlZCB0byBkbyB0aGlzLCB5b3Ugc2hv
+dWxkIG5vdCBiZSB1c2luZyBzeXNjb24uIFdoYXQKPiBleGFjdGx5IGlzIHlvdXIgdXNlLWNhc2U/
+Cj4gCj4gSSBkb24ndCBsaWtlIHRoZSBpZGVhIG9mIHRyZWF0aW5nIHN5c2NvbiBsaWtlIGEgYnVz
+IG9yIGNvbnRhaW5lciBpbiB0aGlzCj4gZmFzaGlvbi4KCkxldCBtZSBmaXJzdCBzaG93IHRoZSBu
+ZXcgc3lzY29uLWJhc2VkIGRyaXZlci4gQWZ0ZXIgYSB3aGlsZSwgSSdtIGdvaW5nCnRvIHByb3Zp
+ZGUgaXQuIEl0IHdpbGwgdXNlIHRoZSBjdXJyZW50IHdheSBvZiBnZXR0aW5nIHN5c2NvbiwgaS5l
+LiB0aHJvdWdoCnN5c2Nvbl9yZWdtYXBfbG9va3VwX2J5X3BoYW5kbGUoKS4KCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWlsLnJ1Pgo+ID4gLS0tCj4gPiAg
+ZHJpdmVycy9tZmQvc3lzY29uLmMgfCAzICsrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2Vy
+dGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3N5c2Nvbi5jIGIvZHJp
+dmVycy9tZmQvc3lzY29uLmMKPiA+IGluZGV4IDcxODQxZjkuLjZlOTI0NGEgMTAwNjQ0Cj4gPiAt
+LS0gYS9kcml2ZXJzL21mZC9zeXNjb24uYwo+ID4gKysrIGIvZHJpdmVycy9tZmQvc3lzY29uLmMK
+PiA+IEBAIC0xNTIsNiArMTUyLDkgQEAgc3RhdGljIGludCBzeXNjb25fcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAKPiA+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRl
+diwgc3lzY29uKTsKPiA+ICAKPiA+ICsJaWYgKG9mX3BsYXRmb3JtX3BvcHVsYXRlKGRldi0+b2Zf
+bm9kZSwgTlVMTCwgTlVMTCwgZGV2KSkKPiA+ICsJCWRldl93YXJuKGRldiwgIkZhaWwgdG8gY3Jl
+YXRlIHN1YmRldmljZXNcbiIpOwo+ID4gKwo+ID4gIAlkZXZfaW5mbyhkZXYsICJyZWdtYXAgJXBS
+IHJlZ2lzdGVyZWRcbiIsIHJlcyk7Cj4gPiAgCj4gPiAgCXJldHVybiAwOwo+ID4gLS0gCgotLS0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
