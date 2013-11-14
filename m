@@ -1,56 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] mfd: syscon: Allow to using subdevices
-Date: Thu, 14 Nov 2013 14:46:00 +0000
-Message-ID: <20131114144559.GC28328@e106331-lin.cambridge.arm.com>
-References: <1384433523-30602-1-git-send-email-shc_work@mail.ru>
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Subject: [PATCH] ARM: orion5x: Fix typo in device_type property of phy node
+Date: Thu, 14 Nov 2013 14:53:08 +0000
+Message-ID: <1384440788-3529-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384433523-30602-1-git-send-email-shc_work@mail.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, srinivas.kandagatla@st.com, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 12:52:03PM +0000, Alexander Shiyan wrote:
-> This patch adds support for using subdevices within syscon node.
-> Primary usage of this is describe all devices with same memory
-> region in one container.
+This patch fixes a typo for device_type property of phy node.
+This can work as of today but once a checks are added in generic code
+this typo will stop phy from working.
 
-I think if you need to do this, you should not be using syscon. What
-exactly is your use-case?
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+ .../dts/orion5x-lacie-ethernet-disk-mini-v2.dts    |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-I don't like the idea of treating syscon like a bus or container in this
-fashion.
-
-Mark.
-
-> 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> ---
->  drivers/mfd/syscon.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 71841f9..6e9244a 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -152,6 +152,9 @@ static int syscon_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, syscon);
->  
-> +	if (of_platform_populate(dev->of_node, NULL, NULL, dev))
-> +		dev_warn(dev, "Fail to create subdevices\n");
-> +
->  	dev_info(dev, "regmap %pR registered\n", res);
->  
->  	return 0;
-> -- 
-> 1.8.1.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+diff --git a/arch/arm/boot/dts/orion5x-lacie-ethernet-disk-mini-v2.dts b/arch/arm/boot/dts/orion5x-lacie-ethernet-disk-mini-v2.dts
+index aed83de..fcc5bb6 100644
+--- a/arch/arm/boot/dts/orion5x-lacie-ethernet-disk-mini-v2.dts
++++ b/arch/arm/boot/dts/orion5x-lacie-ethernet-disk-mini-v2.dts
+@@ -58,7 +58,7 @@
+ 	status = "okay";
+ 
+ 	ethphy: ethernet-phy {
+-		device-type = "ethernet-phy";
++		device_type = "ethernet-phy";
+ 		reg = <8>;
+ 	};
+ };
+-- 
+1.7.6.5
