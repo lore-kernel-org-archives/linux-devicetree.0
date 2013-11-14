@@ -1,83 +1,257 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
-Date: Thu, 14 Nov 2013 10:24:19 +0000
-Message-ID: <20131114102419.GE26614@sirena.org.uk>
-References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
- <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
- <20131113131328.GF878@sirena.org.uk>
- <CAH9JG2U9VDnRW9JZ7j7OyRmVhSXWJ5Yp_gNqUPK=xCST7SY=xg@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2 v2] irqchip: mmp: add dt support for wakeup
+Date: Thu, 14 Nov 2013 18:28:53 +0800
+Message-ID: <CAN1soZwPVCNO5V33mP4yn-n=fye2LX-3XCYYG+Z1zw0Q6VVm4g@mail.gmail.com>
+References: <1381479838-7794-1-git-send-email-zhangwm@marvell.com>
+	<1381479838-7794-3-git-send-email-zhangwm@marvell.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EgVrEAR5UttbsTXg"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAH9JG2U9VDnRW9JZ7j7OyRmVhSXWJ5Yp_gNqUPK=xCST7SY=xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1381479838-7794-3-git-send-email-zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 11, 2013 at 4:23 PM, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> Some of the Marvell SoCs use GIC as its interrupt controller,and ICU
+> only used as wakeup logic. When AP subsystem is powered off, GIC will
+> lose its context, the PMU will need ICU to wakeup the AP subsystem.
+> So add wakeup entry for such kind of usage.
+>
+> Signed-off-by: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/mrvl/intc.txt          |   14 ++-
+>  drivers/irqchip/irq-mmp.c                          |  124 ++++++++++++++++++++
+>  include/linux/irqchip/mmp.h                        |   13 ++
+>  3 files changed, 150 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> index 8b53273..4180928 100644
+> --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> @@ -2,7 +2,7 @@
+>
+>  Required properties:
+>  - compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+> -  "mrvl,mmp2-mux-intc"
+> +  "mrvl,mmp2-mux-intc", "mrvl,mmp-intc-wakeupgen"
+>  - reg : Address and length of the register set of the interrupt controller.
+>    If the interrupt controller is intc, address and length means the range
+>    of the whold interrupt controller. If the interrupt controller is mux-intc,
+> @@ -15,6 +15,9 @@ Required properties:
+>  - interrupt-controller : Identifies the node as an interrupt controller.
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>    interrupt source.
+> +- mrvl,intc-gbl-mask : Specifies the address and value for global mask in the
+> +  interrupt controller.
 
---EgVrEAR5UttbsTXg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+As my understanding, we should avoid to write register settings in DTS file.
 
-On Thu, Nov 14, 2013 at 10:33:22AM +0900, Kyungmin Park wrote:
-> On Wed, Nov 13, 2013 at 10:13 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Loop devicetree guys.
 
-> > Are you *positive* this is a falling triggered IRQ?  All the code to do
-> > with spinning reading the GPIO state during handling makes it look like
-> > this is in fact an active low interrupt and a lot of the code in here is
-> > working around trying to handle that as the wrong kind of IRQ.
-
-> It's not work with level triggering. as wm8994, it requires edge
-> triggering. previous time I send RFC patch to handle edge triggering
-> at regmap.
-
-No, wm8994 is level triggered only - the edge triggering stuff there is
-to work around some SoCs that could only support edge triggering and not
-level triggering.  Is this a similar issue or is there something else
-going on, what's the differeence with a level triggered scheme?
-
-> >> +static int __init max14577_i2c_init(void)
-> >> +{
-> >> +     return i2c_add_driver(&max14577_i2c_driver);
-> >> +}
-> >> +subsys_initcall(max14577_i2c_init);
-
-> > Why not module_i2c_driver?
-
-> there's ordering issue, it should provide regulator which is used
-> others before USB probe. if not, it failed to use USB.
-> Other PMICs use also subsys_initcall for this reason.
-
-Modern systems should be able to use deferred probing to resolve these
-dependencies, subsys_initcall() is mostly there for legacy reasons and
-new systems ought to be able to move away from it.
-
---EgVrEAR5UttbsTXg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJShKTQAAoJELSic+t+oim9sXwP/3Ciaj6wWtzmt1TEQMOaI4iV
-XkCLNoGLC4+sr+75gTI/BwP4K3l0c1D+r4awlcrV3UTDul7EXhPm1IGtm7dVH2LJ
-cBH+VS8NgkDhJjT/SKHv+Yjd/yBY9SGxMf4bkE/FbZdA+znHpI5tS/Pirv9ftnvi
-IZCnC2lygoiqJxjLWLO7l/nqkDUiBIYv6OaY0iNbghg2QUFE4M+uA+I+lqfVSvEO
-6pYCzVxe2akjly3Yxb0lFmTncTATSWQ+pHBmHc0yHAetMzqohWS27/4kzMEgtbkM
-Qd2mkN5t9wudu0X1/WIqhXCFNvkgJzFJuG2Le+AXTgzN1NPuPzBTpoIT9oUXWVd4
-CSbZ9Sn2eHG5KrGMIULt6XoG+jOlHC/6LiBYB9isSCfzzj+7BH5VjtbyBUX85bI8
-Cfy2o2Gpiolhrn1pEFUHDoKHRiLOno2I1zlr236BdLQ3SKBNdm5TpKlprJvh0yy2
-dg0JMw9HkA67l3oU4m7MG2ZTUUnaptQd3TEp8gJy5rHlNUGRB/dLKc7xS9abagy2
-ObkM2Q05ss+2pfAEx/uKVt6iLTuG63E90atA5mqQNwMr5kyP1az6dC1yviUjMbec
-e/gBYqjlcHD5NS4ez9RrmQybNbN43txvJZfAvrsSy6JhQpRruh4BcduEvaERL9BJ
-9fs58/uLl5R4bn/BxBeb
-=dgL7
------END PGP SIGNATURE-----
-
---EgVrEAR5UttbsTXg--
+> +- mrvl,intc-for-cp : Specifies the irqs that will be routed to cp
+>  - mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
+>    controller.
+>  - mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
+> @@ -39,6 +42,15 @@ Example:
+>                 mrvl,intc-nr-irqs = <2>;
+>         };
+>
+> +     intc: wakeupgen@d4282000 {
+> +               compatible = "mrvl,mmp-intc-wakeupgen";
+> +               reg = <0xd4282000 0x1000>;
+> +               mrvl,intc-nr-irqs = <64>;
+> +               mrvl,intc-gbl-mask = <0x114 0x3
+> +                                     0x144 0x3>;
+> +               mrvl,intc-for-cp = <0 31 32>;
+> +     };
+> +
+>  * Marvell Orion Interrupt controller
+>
+>  Required properties
+> diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> index 470c5de..445a00c 100644
+> --- a/drivers/irqchip/irq-mmp.c
+> +++ b/drivers/irqchip/irq-mmp.c
+> @@ -16,6 +16,8 @@
+>  #include <linux/init.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/irqchip/mmp.h>
+> +#include <linux/irqchip/arm-gic.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+>  #include <linux/of_address.h>
+> @@ -58,6 +60,8 @@ struct mmp_intc_conf {
+>  static void __iomem *mmp_icu_base;
+>  static struct icu_chip_data icu_data[MAX_ICU_NR];
+>  static int max_icu_nr;
+> +static u32 irq_for_cp[64];
+> +static u32 irq_for_cp_nr;      /* How many irqs will be routed to cp */
+>
+>  extern void mmp2_clear_pmic_int(void);
+>
+> @@ -123,6 +127,50 @@ static void icu_unmask_irq(struct irq_data *d)
+>         }
+>  }
+>
+> +static int irq_ignore_wakeup(struct icu_chip_data *data, int hwirq)
+> +{
+> +       int i;
+> +
+> +       if (hwirq < 0 || hwirq >= data->nr_irqs)
+> +               return 1;
+> +
+> +       for (i = 0; i < irq_for_cp_nr; i++)
+> +               if (irq_for_cp[i] == hwirq)
+> +                       return 1;
+> +
+> +       return 0;
+> +}
+> +
+> +static void icu_mask_irq_wakeup(struct irq_data *d)
+> +{
+> +       struct icu_chip_data *data = &icu_data[0];
+> +       int hwirq = d->hwirq - data->virq_base;
+> +       u32 r;
+> +
+> +       if (irq_ignore_wakeup(data, hwirq))
+> +               return;
+> +
+> +       r = readl_relaxed(mmp_icu_base + (hwirq << 2));
+> +       r &= ~data->conf_mask;
+> +       r |= data->conf_disable;
+> +       writel_relaxed(r, mmp_icu_base + (hwirq << 2));
+> +}
+> +
+> +static void icu_unmask_irq_wakeup(struct irq_data *d)
+> +{
+> +       struct icu_chip_data *data = &icu_data[0];
+> +       int hwirq = d->irq - data->virq_base;
+> +       u32 r;
+> +
+> +       if (irq_ignore_wakeup(data, hwirq))
+> +               return;
+> +
+> +       r = readl_relaxed(mmp_icu_base + (hwirq << 2));
+> +       r &= ~data->conf_mask;
+> +       r |= data->conf_enable;
+> +       writel_relaxed(r, mmp_icu_base + (hwirq << 2));
+> +}
+> +
+>  struct irq_chip icu_irq_chip = {
+>         .name           = "icu_irq",
+>         .irq_mask       = icu_mask_irq,
+> @@ -491,5 +539,81 @@ err:
+>         irq_domain_remove(icu_data[i].domain);
+>         return -EINVAL;
+>  }
+> +
+> +void __init mmp_of_wakeup_init(void)
+> +{
+> +       struct device_node *node;
+> +       const __be32 *wakeup_reg;
+> +       const __be32 *cp_irq_reg;
+> +       int ret, nr_irqs;
+> +       int size, i = 0;
+> +       int irq;
+> +
+> +       node = of_find_compatible_node(NULL, NULL, "mrvl,mmp-intc-wakeupgen");
+> +       if (!node) {
+> +               pr_err("Failed to find interrupt controller in arch-mmp\n");
+> +               return;
+> +       }
+> +
+> +       mmp_icu_base = of_iomap(node, 0);
+> +       if (!mmp_icu_base) {
+> +               pr_err("Failed to get interrupt controller register\n");
+> +               return;
+> +       }
+> +
+> +       ret = of_property_read_u32(node, "mrvl,intc-nr-irqs", &nr_irqs);
+> +       if (ret) {
+> +               pr_err("Not found mrvl,intc-nr-irqs property\n");
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * Config all the interrupt source be able to interrupt the cpu 0,
+> +        * in IRQ mode, with priority 0 as masked by default.
+> +        */
+> +       for (irq = 0; irq < nr_irqs; irq++)
+> +               __raw_writel(ICU_IRQ_CPU0_MASKED, mmp_icu_base + (irq << 2));
+> +
+> +       /* ICU is only used as wake up logic
+> +         * disable the global irq/fiq in icu for all cores.
+> +         */
+> +       wakeup_reg = of_get_property(node, "mrvl,intc-gbl-mask", &size);
+> +       if (!wakeup_reg) {
+> +               pr_err("Not found mrvl,intc-gbl-mask property\n");
+> +               return;
+> +       }
+> +
+> +       size /= sizeof(*wakeup_reg);
+> +       while (i < size) {
+> +               unsigned offset, val;
+> +
+> +               offset = be32_to_cpup(wakeup_reg + i++);
+> +               val = be32_to_cpup(wakeup_reg + i++);
+> +               writel_relaxed(val, mmp_icu_base + offset);
+> +       }
+> +
+> +       /* Get the irq lines and ignore irqs */
+> +       cp_irq_reg = of_get_property(node, "mrvl,intc-for-cp", &size);
+> +       if (!cp_irq_reg)
+> +               return;
+> +
+> +       irq_for_cp_nr = size / sizeof(*cp_irq_reg);
+> +       for (i = 0; i < irq_for_cp_nr; i++) {
+> +               irq_for_cp[i] = be32_to_cpup(cp_irq_reg + i);
+> +               __raw_writel(ICU_CONF_SEAGULL, mmp_icu_base + (irq_for_cp[i] << 2));
+> +       }
+> +
+> +       icu_data[0].conf_enable = mmp_conf.conf_enable;
+> +       icu_data[0].conf_disable = mmp_conf.conf_disable;
+> +       icu_data[0].conf_mask = mmp_conf.conf_mask;
+> +       icu_data[0].nr_irqs = nr_irqs;
+> +       icu_data[0].virq_base = 32;
+> +
+> +       gic_arch_extn.irq_mask = icu_mask_irq_wakeup;
+> +       gic_arch_extn.irq_unmask = icu_unmask_irq_wakeup;
+> +
+> +       return;
+> +}
+> +
+>  IRQCHIP_DECLARE(mmp2_mux_intc, "mrvl,mmp2-mux-intc", mmp2_mux_of_init);
+>  #endif
+> diff --git a/include/linux/irqchip/mmp.h b/include/linux/irqchip/mmp.h
+> index c78a892..93b05ad 100644
+> --- a/include/linux/irqchip/mmp.h
+> +++ b/include/linux/irqchip/mmp.h
+> @@ -1,6 +1,19 @@
+>  #ifndef        __IRQCHIP_MMP_H
+>  #define        __IRQCHIP_MMP_H
+>
+> +#define ICU_CONF_CPU3      (1 << 9)
+> +#define ICU_CONF_CPU2      (1 << 8)
+> +#define ICU_CONF_CPU1      (1 << 7)
+> +#define ICU_CONF_CPU0      (1 << 6)
+> +#define ICU_CONF_AP(n)     (1 << (6 + (n & 0x3)))
+> +#define ICU_CONF_AP_MASK   (0xF << 6)
+> +#define ICU_CONF_SEAGULL   (1 << 5)
+> +#define ICU_CONF_IRQ_FIQ   (1 << 4)
+> +#define ICU_CONF_PRIO(n)   (n & 0xF)
+> +
+> +#define ICU_IRQ_CPU0_MASKED    (ICU_CONF_IRQ_FIQ | ICU_CONF_CPU0)
+> +
+>  extern struct irq_chip icu_irq_chip;
+>
+> +extern void __init mmp_of_wakeup_init(void);
+>  #endif /* __IRQCHIP_MMP_H */
+> --
+> 1.7.9.5
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
