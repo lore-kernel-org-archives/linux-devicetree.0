@@ -1,69 +1,54 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/2] isp1704_charger: Add DT support
-Date: Thu, 14 Nov 2013 19:05:06 +0100
-Message-ID: <201311141905.11046@pali>
-References: <1384432734-1490-1-git-send-email-sre@debian.org>
+From: "Tim Kryger" <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
+Date: Thu, 14 Nov 2013 10:07:30 -0800
+Message-ID: <1384452450-26308-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart16505307.8pWyuiL9Yo";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384432734-1490-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Tony Lindgren <tony@atomide.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Arm Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart16505307.8pWyuiL9Yo
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The board schematic states that the "SD_CARD_DET_N gets pulled to GND
+when card is inserted" so the polarity has been updated to active low.
 
-On Thursday 14 November 2013 13:38:53 Sebastian Reichel wrote:
-> diff --git a/drivers/power/isp1704_charger.c
-> b/drivers/power/isp1704_charger.c index fc04d19..db96778
-> 100644
-> --- a/drivers/power/isp1704_charger.c
-> +++ b/drivers/power/isp1704_charger.c
-> @@ -28,6 +28,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/power_supply.h>
->  #include <linux/delay.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->=20
->  #include <linux/usb/otg.h>
->  #include <linux/usb/ulpi.h>
-> @@ -89,8 +91,8 @@ static void isp1704_charger_set_power(struct
-> isp1704_charger *isp, bool on) {
->  	struct isp1704_charger_data	*board =3D
-> isp->dev->platform_data;
->=20
-> -	if (board && board->set_power)
-> -		board->set_power(on);
-> +	if (board)
-> +		gpio_set_value(board->enable_gpio, on);
->  }
->=20
+Polarity is now specified with a GPIO define instead of a magic number.
 
-You need to check if enable_gpio in board data was defined or not.
+Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+index 08e47c2..27dd110 100644
+--- a/arch/arm/boot/dts/bcm28155-ap.dts
++++ b/arch/arm/boot/dts/bcm28155-ap.dts
+@@ -13,6 +13,8 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ #include "bcm11351.dtsi"
+ 
+ / {
+@@ -40,7 +42,7 @@
+ 
+ 	sdio4: sdio@3f1b0000 {
+ 		max-frequency = <48000000>;
+-		cd-gpios = <&gpio 14 0>;
++		cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+ 		status = "okay";
+ 	};
+ };
+-- 
+1.8.0.1
 
---nextPart16505307.8pWyuiL9Yo
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlKFENYACgkQi/DJPQPkQ1IBGwCeMCZVuzZCxHs5GD3ezENwZ1Tl
-SF8AoL0CrsPvU74izZLBc/KLI/238TBw
-=Zruq
------END PGP SIGNATURE-----
-
---nextPart16505307.8pWyuiL9Yo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
