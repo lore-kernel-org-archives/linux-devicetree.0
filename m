@@ -1,92 +1,157 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 5/7] iommu/tegra: smmu: Support "mmu-masters" binding
-Date: Thu, 14 Nov 2013 07:41:45 +0100
-Message-ID: <20131114.084145.998129499909471378.hdoyu@nvidia.com>
-References: <5282C512.5090900@wwwdotorg.org><20131113094517.4608edf4302b61e3c4402a25@nvidia.com><5283BDBF.9020509@wwwdotorg.org>
+From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
+Date: Thu, 14 Nov 2013 08:12:46 +0100
+Message-ID: <528477EE.4060407@koalo.de>
+References: <5283BC93.1090801@koalo.de> <3722902.ByNK8Ptc5Y@flatron> <5283D47A.7060503@koalo.de> <2049375.GR9Xb2zuek@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5283BDBF.9020509-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2049375.GR9Xb2zuek@flatron>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 13 Nov 2013 18:58:23 +0100:
-
-> >  smmu: iommu@xxxxxx {
-> >        #iommu-cells = <3>;
-> >        ^^^^^^^^^^^^^^^^^^
-> >    };
-> > 
-> >    host1x {
-> >            compatible = "nvidia,tegra30-host1x", "simple-bus";
-> >            iommu = <&smmu 0x??????? 0x??????? "asid">;
-> > 	   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#######
-> >            gr3d {
-> >                    compatible = "nvidia,tegra30-gr3d";
-> >                    iommu = <&smmu 0x??????? 0x???????>;
-> >            }
-> > 
-> > I think that this "asid" part can be set 0 in tegra??.dtsi and the
-> > actual value can be overwritten in tegra??-<boardname>.dts file.
+On 13.11.2013 21:39, Tomasz Figa wrote:
+> On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
+>> On 13.11.2013 19:43, Tomasz Figa wrote:
+>>>> ....
+>>>> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+>>>> new file mode 100644
+>>>> index 0000000..bca5e84
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+>>>> @@ -0,0 +1,59 @@
+>>>> +* BCM2835 DMA controller
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be "brcm,bcm2835-dma".
+>>>> +- reg: Should contain DMA registers location and length.
+>>>> +- interrupts: Should contain the DMA interrupts associated
+>>>> +		to the DMA channels in ascending order.
+>>>> +		First cell is the IRQ bank.
+>>>> +		Second cell is the IRQ number.
+>>>> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
+>>>> +		the dmas property of client devices.
+>>>> +- dma-channels: Maximum number of DMA channels available.
+>>>> +- dma-requests: Number of DMA Requests.
+>>>
+>>> The two properties above do not seem to be used anywhere in the driver.
+>>
+>> Aren't they necessary for the DMA engine core?
 > 
-> The one issue here is that we can only override entire properties, so
-> it's not possible for a board file to *just* replace the ASID, it'd have
-> to duplicate the entire property, just to change the one value.
+> Honestly, looking at the DMA bindings documentation, these two are quite
+> a mystery for me. They don't seem to be used in DMA engine core, but
+> instead several drivers use them for private purposes.
 > 
-> Is the ASID mapping really likely to be board-specific though? To my
-> naive thinking, it seems that the chip design (e.g. number of
-> peripherals, number of available ASIDs) would tend to imply the
-> device->ASID mapping, since it would have been considered as part of
-> chip design. Hence, wouldn't soc.dtsi typically specify the expected
-> ASID mapping, and boards rarely if ever override it?
+> So, since they are optional and you don't seem to need them, I wouldn't
+> list them.
+
+Ok
+
+>>>> +- brcm,dma-channel-mask: Bit mask representing the channels available.
+>>>
+>>> What does the value of this property depend on? Could you describe the
+>>> structure of this DMA controller?
+>>>
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +dma: dma@7e007000 {
+>>>> +	compatible = "brcm,bcm2835-dma";
+>>>> +	reg = <0x7e007000 0xf00>;
+>>>> +	interrupts = <1 16
+>>>> +		      1 17
+>>>> +		      1 18
+>>>> +		      1 19
+>>>> +		      1 20
+>>>> +		      1 21
+>>>> +		      1 22
+>>>> +		      1 23
+>>>> +		      1 24
+>>>> +		      1 25
+>>>> +		      1 26
+>>>> +		      1 27
+>>>> +		      1 28>;
+>>>
+>>> There are 13 interrupts specified here, but...
+>>>
+>>>> +
+>>>> +	#dma-cells = <1>;
+>>>> +	dma-channels = <16>;
+>>>
+>>> ...16 channels here...
+>>>
+>>>> +	dma-requests = <32>;
+>>>> +	brcm,dma-channel-mask = <0x7f35>;
+>>>
+>>> ...and 11 set bits here. May I ask you to explain this to me, please?
+>>
+>> How I understand this DMA controller:
+>> There are 16 DMA channels in the DMA controller, but only 13 interrupts
+>> are available at the IRQ controller. Therefore, the upper DMA channels
+>> can just not be used. Maybe because there are to many other IRQs and
+>> they didn't want to implement another IRQ bank.
+>> Furthermore, some of the DMA channels are already used by the
+>> VideoCore/GPU/firmware. This is what dma-channel-mask indicates. This
+>> should be automatically set by the firmware in the future.
+>> Finally, there are some channels with special functionality that should
+>> not be used by DMA engine, too. Therefore, these lines:
+>> 		/* do not use the FIQ and BULK channels */
+>> 		chans_available &= ~0xD;
 > 
-> If the ASID mapping really is likely to vary per board, perhaps it makes
-> sense to put it into a separate property somehow so it's easier to override?
+> OK, this makes it much more clear.
+> 
+> So, my only comment remaining here is that you shouldn't include the
+> channels without interrupt signal in the mask. This would allow you
+> to define it as a mask of channels that are operable and then just
+> iterate over all set bits in the driver, instead of using tricks with
+> interrupt resources. What do you think?
 
-  Older Tegra like T30: swgroups > asid(==4)
-  Newer Tegra         : swgroups < asid
+Since the mask will come directly from the firmware, this would require
+patching the firmware. I think that is not worth the effort.
 
-At newer Tegra, each swgroup should have one asid. In older Tegra,
-there aren't many options how to assign ASID since # of AS is 4, and
-we know which one should be isolated/protected first. Even we can fix
-this assignment for a SoC, not for a board.
+>>> [snip]
+>>>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+>>>> new file mode 100644
+>>>> index 0000000..baf072e
+>>>> --- /dev/null
+>>>> +++ b/drivers/dma/bcm2835-dma.c
+>>> [snip]
+>>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct bcm2835_dmadev *od;
+>>>> +	struct resource *dma_res = NULL;
+>>>> +	void __iomem *dma_base = NULL;
+>>>> +	int rc = 0;
+>>>> +	int i = 0;
+>>>> +	int irq;
+>>>> +	uint32_t chans_available;
+>>> [snip]
+>>>> +	if (pdev->dev.of_node) {
+>>>
+>>> Is this driver supposed to support non-DT based instantation (aka board
+>>> files)? If not, maybe it would be cleaner to simply check for
+>>> !pdev->dev.of_node at the beginning of probe and return an error?
+>>
+>> I would like to maintain the possibility for board file based
+>> instatiation, because the Raspberry Pi downstream kernel still doesn't
+>> support device tree. If this is a no-go, I will accept that.
+> 
+> Sure, you are free to do so.
+> 
+> What I meant is that your probe won't call bcm2835_dma_chan_init() at all
+> if there is no pdev->dev.of_node, because the loop iterating over channels
+> is under the if clause.
 
-Also I think that a newer tegra won't care this mapping since all will
-have an own AS. So maybe the binding between "swgroup" and "asid"
-should be another one, since this info is only needed for the older
-Tegra. For example:
+Yes you are right, but I think it will make the patching easier, later.
+Currently, nothing bad happens without device tree - it just allocates
+no channels.
 
-  smmu: iommu@xxxxxx {
-        #iommu-cells = <2>;
-
-	/*
-	 * This as <-> swgroups mapping is only needed for older tegra.
-	 */
-	as-swgroups = <0x??????? 0x???????,  /* AS[0]: assigned swgroups bits */
-		       0x??????? 0x???????,  /* AS[1]: assigned swgroups bits */
-		       0x??????? 0x???????,  /* AS[2]: assigned swgroups bits */
-		       0x??????? 0x???????>; /* AS[3]: assigned swgroups bits */
-    };
- 
-    host1x {
-            compatible = "nvidia,tegra30-host1x", "simple-bus";
-            iommus = <&smmu 0x??????? 0x???????>;
-            gr3d {
-                    compatible = "nvidia,tegra30-gr3d";
-                    iommus = <&smmu 0x??????? 0x???????>;
-            }
-   };
-
-Then we would push this mapping info into DT only for older
-Tegra. Newer Tegra won't care where each swgroup will get its own.
+Greetings,
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
