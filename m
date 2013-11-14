@@ -1,54 +1,44 @@
-From: "Tim Kryger" <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
-Date: Thu, 14 Nov 2013 10:07:30 -0800
-Message-ID: <1384452450-26308-1-git-send-email-tim.kryger@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: OMAP: devicetree: fix SPI node compatible
+ property syntax items
+Date: Thu, 14 Nov 2013 10:36:09 -0800
+Message-ID: <20131114183609.GM10317@atomide.com>
+References: <1382090468-6011-1-git-send-email-ewitcher@mindspring.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Arm Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1382090468-6011-1-git-send-email-ewitcher@mindspring.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Eric Witcher <ewitcher@mindspring.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The board schematic states that the "SD_CARD_DET_N gets pulled to GND
-when card is inserted" so the polarity has been updated to active low.
+* Eric Witcher <ewitcher@mindspring.com> [131022 21:14]:
+> Correct the SPI node compatible property items to match example code and
+> match current DTS usage.
+> 
+> Signed-off-by: Eric Witcher <ewitcher@mindspring.com>
+> ---
+>  Documentation/devicetree/bindings/spi/omap-spi.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
+> index 4c85c4c..2ba5f9c 100644
+> --- a/Documentation/devicetree/bindings/spi/omap-spi.txt
+> +++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
+> @@ -2,8 +2,8 @@ OMAP2+ McSPI device
+>  
+>  Required properties:
+>  - compatible :
+> -  - "ti,omap2-spi" for OMAP2 & OMAP3.
+> -  - "ti,omap4-spi" for OMAP4+.
+> +  - "ti,omap2-mcspi" for OMAP2 & OMAP3.
+> +  - "ti,omap4-mcspi" for OMAP4+.
+>  - ti,spi-num-cs : Number of chipselect supported  by the instance.
+>  - ti,hwmods: Name of the hwmod associated to the McSPI
+>  - ti,pindir-d0-out-d1-in: Select the D0 pin as output and D1 as
 
-Polarity is now specified with a GPIO define instead of a magic number.
+Applying into omap-for-v3.13/fixes thanks.
 
-Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
-index 08e47c2..27dd110 100644
---- a/arch/arm/boot/dts/bcm28155-ap.dts
-+++ b/arch/arm/boot/dts/bcm28155-ap.dts
-@@ -13,6 +13,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- #include "bcm11351.dtsi"
- 
- / {
-@@ -40,7 +42,7 @@
- 
- 	sdio4: sdio@3f1b0000 {
- 		max-frequency = <48000000>;
--		cd-gpios = <&gpio 14 0>;
-+		cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
- 		status = "okay";
- 	};
- };
--- 
-1.8.0.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
