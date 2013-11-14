@@ -1,101 +1,36 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Thu, 14 Nov 2013 19:26:29 +0000
-Message-ID: <20131114192629.GE16735@n2100.arm.linux.org.uk>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <52814AFB.3070600@wwwdotorg.org>
- <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
- <528275B7.6050209@wwwdotorg.org>
- <20131112193012.GR10335@titan.lakedaemon.net> <52828C77.20001@wwwdotorg.org>
- <20131114162859.GX10335@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20131114162859.GX10335@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH 0/3] ata: Add APM X-Gene SoC 6.0Gbps SATA PHY support
+Date: Thu, 14 Nov 2013 12:31:56 -0700
+Message-ID: <1384457519-21335-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 11:28:59AM -0500, Jason Cooper wrote:
-> This is the difference between a commercial effort and a hobbyist
-> effort.  I think I have a plan for how we can both get what we want.  I
-> could change the argument to 'dtc ... -L arch/arm/boot ...'.  Thus:
-> 
-> $ cd arch/arm/boot
-> $ ls -l *.dtb        # minus a few columns
-> ...
-> globalscale,mirabox.dtb -> dts/armada-370-mirabox.dtb
-> ...
-> 
-> 
-> This way, aftermarket users (debian installers, etc) could go to the
-> same place they go for zImages, and find a standard named dtb.  They
-> wouldn't need to parse the dtbs, just look at the current compatible
-> string for the board they are installing on and find the matching file.
+ata: Add APM X-Gene SoC 6.0Gbps SATA PHY support
 
-There's little point saying that they should be in arch/arm/boot.
-Unless the distro is installing from a kernel source tree on every
-platform, the location of the dtbs really doesn't matter.
+This patch adds support for APM X-Gene SoC 6.0Gbps SATA PHY. This is the
+physical layer interface for the corresponding SATA host controller. This
+driver uses the new PHY generic framework posted by Kishon Vijay Abrahm.
 
-Let's look at the typical distro build process:
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Olof Johansson <olof@lixom.net> 
+---
+Loc Ho (3):
+  Documentation: Add APM X-Gene SATA PHY driver binding documentation
+  ata: Add APM X-Gene SoC 6.0Gbps SATA PHY driver
+  arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries.
 
-- take the source
-- patch it
-- build it
-- install it, relatively placing files according to their ultimate
-  destination
-- packaging the result up, adding metadata and scripts to aid installation
+ .../devicetree/bindings/ata/apm-xgene.txt          |   69 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   25 +
+ drivers/ata/Kconfig                                |    6 +
+ drivers/ata/Makefile                               |    1 +
+ drivers/ata/sata_xgene_phy.c                       | 2142 ++++++++++++++++++++
+ 5 files changed, 2243 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
+ create mode 100644 drivers/ata/sata_xgene_phy.c
 
-So, how does affecting where things are in the build tree help after all
-that process?  What matters for DT files are:
-
-(a) their names
-(b) their location after installation
-
-Where it appears in the build tree is neither here nor there, and IMHO
-should not be of concern to any distro - just the same as picking the
-zImage/uImage/whatever out of arch/arm/boot is none of their business.
-
-We have ways and means to deal with the installation of kernel images
-and modules.  There's well defined makefile targets for this, and
-make variables which control where and how these get put.  For the
-kernel image, you can specify the script to be run (which is called
-with the location of the *Image file) for copying.  Pulling it manually
-out of arch/arm/boot is really a failure of the distro packaging people
-to get their process right.
-
-The same goes for the DT files: if we don't provide a method for the
-kernel build system to install these in a sane way, then that's our
-failing.  However, distros should be asking for this, and not picking
-the files out of arch/arm/boot/dts.
-
-As for the commercial vs hobbist, there's very little difference here.
-If you're a hobbist, building natively, that's where having the right
-/sbin/installkernel present is a godsend, especially if you're running
-some distro.  If you don't, most likely you understand what's required
-to install a kernel.
-
-Last point - on the Carrier-1, I have a fully automated setup which I
-can fire off a build, walk away, and it will build a kernel including
-modules, install it locally on my x86 PC in ~/systems/imx6 - including
-appending the DT file, tar up the appropriate files, automatically copy
-the tar file over, unpack it, update the initramfs for ubuntu 12.04,
-update the vfat /boot filesystem appropriately, and reboot the platform.
-
-Yes, I know the target system with that.  That's not my point.  The point
-I'm making is that that level of automation is possible without excessive
-amounts of messing about with kernel build internals - that all runs with
-standard unmodified kbuild.
-
-So, maintain a sense of perspective and separation of stages please.
