@@ -1,121 +1,52 @@
-From: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
-Date: Thu, 14 Nov 2013 10:33:22 +0900
-Message-ID: <CAH9JG2U9VDnRW9JZ7j7OyRmVhSXWJ5Yp_gNqUPK=xCST7SY=xg@mail.gmail.com>
-References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
-	<1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
-	<20131113131328.GF878@sirena.org.uk>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2] input: ti_am33x_tsc: make the documentation for the ti,wire-config parameter clear
+Date: Thu, 14 Nov 2013 10:56:15 +0900
+Message-ID: <20131114015615.4A46BC4061A@trevor.secretlab.ca>
+References: <1384273323-15329-1-git-send-email-bigeasy@linutronix.de> <5C68A2CC-A8C8-4B56-A414-B9EBE438F767@codeaurora.org> <20131112174001.GA21881@linutronix.de> <15DA7589-35BD-4B24-B8A1-D44429ACC888@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131113131328.GF878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <15DA7589-35BD-4B24-B8A1-D44429ACC888@codeaurora.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, o2g.org.ru@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 10:13 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
->
->> +/**
->> + * After resuming from suspend it may happen that IRQ is signalled but
->> + * IRQ GPIO is not high. Also the interrupt registers won't have any data
->> + * (all of them equal to 0x00).
->> + *
->> + * In such case retry few times reading the interrupt registers.
->> + */
->> +#define IRQ_READ_REG_RETRY_CNT               5
->
-> What is the cause here?  This smells like an unreliable workaround for
-> some other behaviour.  In general this all looks very like standard
-> regmap code.
->
->> +     for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
->> +             u8 mask_reg = max14577_mask_reg[i];
->> +
->> +             if (mask_reg == MAX14577_REG_INVALID ||
->> +                             IS_ERR_OR_NULL(max14577->regmap))
->> +                     continue;
->
-> Why would this code even be running if you don't have a register map?
->
->> +             dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
->> +                     irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
->> +                     irq_reg[MAX14577_IRQ_INT3]);
->
-> This is far too noisy, dev_dbg() at most.
->
->> +             gpio_val = gpio_get_value(pdata->irq_gpio);
->> +
->> +             if (gpio_get_value(pdata->irq_gpio) == 0)
->> +                     dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
->> +     } while (gpio_val == 0 && --retry > 0);
->
-> This looks very strange...
->
->> +     max14577->irq = gpio_to_irq(pdata->irq_gpio);
->> +     ret = gpio_request(pdata->irq_gpio, "max14577_irq");
->> +     if (ret) {
->> +             dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
->> +                             pdata->irq_gpio, ret);
->> +             goto err;
->> +     }
->> +     gpio_direction_input(pdata->irq_gpio);
->> +     gpio_free(pdata->irq_gpio);
->
-> This means the GPIO handling code that was present in the handling is
-> broken, it's trying to use the GPIO after it was freed.
->
->> +     ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
->> +                                IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->> +                                "max14577-irq", max14577);
->
-> Are you *positive* this is a falling triggered IRQ?  All the code to do
-> with spinning reading the GPIO state during handling makes it look like
-> this is in fact an active low interrupt and a lot of the code in here is
-> working around trying to handle that as the wrong kind of IRQ.
+On Tue, 12 Nov 2013 12:26:14 -0600, Kumar Gala <galak@codeaurora.org> w=
+rote:
+>=20
+> On Nov 12, 2013, at 11:40 AM, Sebastian Andrzej Siewior <bigeasy@linu=
+tronix.de> wrote:
+>=20
+> > The document says "first four bits" and means the upper nibble. Mos=
+t
+> > people would probably agree that the first four bits are bits 0=E2=80=
+=A63 and
+> > that is the lower nibble.
+> > This patch updates the documentation so it is clear what is meant.
+> >=20
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> > v1=E2=80=A6v2:
+> > 	- use most/least significant instead of upper/ lower nibble
+> > 	- add an example.
+> >=20
+> > .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt    | 13 ++=
+++++++-----
+> > 1 file changed, 8 insertions(+), 5 deletions(-)
+>=20
+> Thanks
+>=20
+> Acked-by: Kumar Gala <galak@codeaurora.org>
 
-It's not work with level triggering. as wm8994, it requires edge
-triggering. previous time I send RFC patch to handle edge triggering
-at regmap.
+Kumar, for patches like this, do you want to put them into a git tree
+instead of acking? It will help spread the load.
 
->
->> +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
->> +{
->> +     return regmap_bulk_write(map, reg, buf, count);
->> +}
->> +EXPORT_SYMBOL_GPL(max14577_bulk_write);
->
-> Given that these are basically all trivial wrappers around regmap they
-> probably ought to be static inlines in the header.
->
->> +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
->> +{
->
-> There's no DT binding document?
->
->> +const struct dev_pm_ops max14577_pm = {
->> +     .suspend = max14577_suspend,
->> +     .resume = max14577_resume,
->> +};
->
-> SET_SYSTEM_SLEEP_PM_OPS().
->
->> +static int __init max14577_i2c_init(void)
->> +{
->> +     return i2c_add_driver(&max14577_i2c_driver);
->> +}
->> +subsys_initcall(max14577_i2c_init);
->
-> Why not module_i2c_driver?
+g.
 
-there's ordering issue, it should provide regulator which is used
-others before USB probe. if not, it failed to use USB.
-Other PMICs use also subsys_initcall for this reason.
-
-Thank you,
-Kyungmin Park
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
