@@ -1,95 +1,158 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in TSC/ADC
- DT binding
-Date: Thu, 14 Nov 2013 09:54:04 -0600
-Message-ID: <20131114155404.GE15835@saruman.home>
-References: <1382386404-6659-1-git-send-email-balbi@ti.com>
- <1382386404-6659-2-git-send-email-balbi@ti.com>
- <52663A58.9070706@linutronix.de>
- <20131022120253.GD9340@gimli>
- <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
-Reply-To: <balbi@ti.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
+Date: Thu, 14 Nov 2013 17:01:35 +0100
+Message-ID: <2385512.qcT1vt8HYp@flatron>
+References: <5283BC93.1090801@koalo.de> <4043887.oz5IYRs5go@flatron> <CABDT8WyUH=z67_bOy-DF9NQn6R0eKsGJPDWSwijrhLRyNLvaSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABDT8WyUH=z67_bOy-DF9NQn6R0eKsGJPDWSwijrhLRyNLvaSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---WBsA/oQW3eTA3LlM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thursday 14 of November 2013 16:41:56 Florian Meier wrote:
+> 2013/11/14 Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > On Thursday 14 of November 2013 15:44:05 Florian Meier wrote:
+> >> 2013/11/14 Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> >> > On Thursday 14 of November 2013 08:12:46 Florian Meier wrote:
+> >> >> On 13.11.2013 21:39, Tomasz Figa wrote:
+> >> >> > On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
+> >> >> >>>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> >> >> >>>> new file mode 100644
+> >> >> >>>> index 0000000..baf072e
+> >> >> >>>> --- /dev/null
+> >> >> >>>> +++ b/drivers/dma/bcm2835-dma.c
+> >> >> >>> [snip]
+> >> >> >>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
+> >> >> >>>> +{
+> >> >> >>>> +        struct bcm2835_dmadev *od;
+> >> >> >>>> +        struct resource *dma_res = NULL;
+> >> >> >>>> +        void __iomem *dma_base = NULL;
+> >> >> >>>> +        int rc = 0;
+> >> >> >>>> +        int i = 0;
+> >> >> >>>> +        int irq;
+> >> >> >>>> +        uint32_t chans_available;
+> >> >> >>> [snip]
+> >> >> >>>> +        if (pdev->dev.of_node) {
+> >> >> >>>
+> >> >> >>> Is this driver supposed to support non-DT based instantation (aka board
+> >> >> >>> files)? If not, maybe it would be cleaner to simply check for
+> >> >> >>> !pdev->dev.of_node at the beginning of probe and return an error?
+> >> >> >>
+> >> >> >> I would like to maintain the possibility for board file based
+> >> >> >> instatiation, because the Raspberry Pi downstream kernel still doesn't
+> >> >> >> support device tree. If this is a no-go, I will accept that.
+> >> >> >
+> >> >> > Sure, you are free to do so.
+> >> >> >
+> >> >> > What I meant is that your probe won't call bcm2835_dma_chan_init() at all
+> >> >> > if there is no pdev->dev.of_node, because the loop iterating over channels
+> >> >> > is under the if clause.
+> >> >>
+> >> >> Yes you are right, but I think it will make the patching easier, later.
+> >> >> Currently, nothing bad happens without device tree - it just allocates
+> >> >> no channels.
+> >> >
+> >> > But isn't it really an error condition, if no channels are allocated?
+> >>
+> >> A fridge is still a working fridge, even if no beer is inside ;-)
+> >> Ok, bad example, but you will get an error message anyway when you try
+> >> to get a channel.
+> >>
+> >> > Anyway, back to my point about leaving non-DT support in a driver, the
+> >> > point is still valid only for drivers, not for platforms/boards. So if
+> >> > there are no boards supported using board files in mainline that could
+> >> > benefit from this driver, then this driver can be safely made DT-only,
+> >> > because no new non-DT platforms/boards can be added.
+> >>
+> >> I don't have a telling argument against this, but just thought writing
+> >> it this way will
+> >> make the migration of the downstream kernel to upstream easier, but if you say I
+> >> should change it, I will of course do that.
+> >
+> > I'm just presenting you the possible options. You are still free to have
+> > non-DT support in the driver, but if you don't need it (because you can't
+> > have any new non-DT platforms in mainline) then you can simplify some
+> > code.
+> >
+> > However the driver shouldn't be left with illusionary support for non-DT
+> > platforms until you decide to implement that. Instead, if you don't want
+> > to add non-DT support now, just make the driver DT-only, while keeping
+> > its design in a way allowing you to add non-DT support in future.
+> 
+> This statement hits the nail on the head. Thank you!
+> 
+> > In other words, a driver should not be able to probe using board files
+> > if support for such probing method is not available in it yet.
+> 
+> That is meaningful. So would the following be ok?
+> 
+> + .....
+> +       if (pdev->dev.of_node) {
+> + .....
+> +       } else {
+> +               dev_err(&pdev->dev,
+> +                       "Failed to initialize channels, because device
+> tree not available: %d\n", rc);
+> +               bcm2835_dma_free(od);
+> +               return rc;
+> +      }
+> +
+> +       dev_dbg(&pdev->dev, "Initialized %i DMA channels\n", i);
+> +
+> + .....
+> 
 
-HI,
+I mean, something closer to:
 
-On Thu, Nov 14, 2013 at 11:19:59AM +0000, Mark Rutland wrote:
-> > On Tue, Oct 22, 2013 at 10:42:00AM +0200, Sebastian Andrzej Siewior wro=
-te:
-> > > On 10/21/2013 10:13 PM, Felipe Balbi wrote:
-> > > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/in=
-put/touchscreen/ti_am335x_tsc.c
-> > > > index e1c5300..b61df9d 100644
-> > > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > > @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct platform_devi=
-ce *pdev,
-> > > >  	if (err < 0)
-> > > >  		return err;
-> > > > =20
-> > > > -	err =3D of_property_read_u32(node, "ti,coordiante-readouts",
-> > > > +	/*
-> > > > +	 * try with new binding first. If it fails, still try with
-> > > > +	 * bogus, miss-spelled version.
-> > > > +	 */
-> > > > +	err =3D of_property_read_u32(node, "ti,coordinate-readouts",
-> > > >  			&ts_dev->coordinate_readouts);
-> > > >  	if (err < 0)
-> > > > +		err =3D of_property_read_u32(node, "ti,coordiante-readouts",
-> > > > +				&ts_dev->coordinate_readouts);
-> > > > +	if (err < 0)
-> > > >  		return err;
-> > >=20
-> > > Thanks, very good. Do we keep this fallback for ever or just for a ye=
-ar
-> > > or two?
-> >=20
-> > That's for DT maintainers to decide but considering DT is an ABI, I
-> > guess we need to keep for 30 years or so :-p
->=20
-> We keep it as long as we have to. If no-one's relying on the typo by the
-> next merge window, I see no reason we'd have to keep support for the
+static int bcm2835_dma_probe(struct platform_device *pdev)
+{
+	uint32_t chan_mask;
+	// ...
 
-and how could you know that ? considering it's an ABI, how could you
-ever know that ?
+	if (pdev->dev.of_node) {
+		rc = of_property_read_u32(..., &chan_mask);
+		if (rc) {
+			// Error out
+		}
+	} else {
+		// Error message
+		return -EINVAL;
+	}
 
---=20
-balbi
+	// ...
+	// Channel registration loop (independent of any OF functions)
+	// ...
 
---WBsA/oQW3eTA3LlM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+	if (pdev->dev.of_node) {
+		rc = of_dma_controller_register(...);
+		// ...
+	}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+	// ...
+}
 
-iQIcBAEBAgAGBQJShPIcAAoJEIaOsuA1yqREB9sP/1MPk+MC4xlmxzCLOg9tUjYw
-wOeCmLX4UR/iJOMG/GZ/tOJlq7fs/J66lLOdQTs+Ytg/Oi8kRnJdMXWlGnCdmb1f
-lrYZHCpyBQ0bfjcFGt3s9LWywMHrHvVXg0bOt96VRC46l5O7BY4kKNtnsH6UwPuG
-bbVGftI3w14qZiBOn5OYpYtluQLwZ2Oqi3j803VttITXKx+QekOjP/z/7SZWi6iV
-/UFmdUDTeNxhdhMjKETCJ+DO6stJrM0yxrOgfBkMCmrGDJ5PTZ6G44h2KuYCFsGO
-wbBPn9wwak49/ljdHzYVAuWUXz/+l6Y1jPPCv7sn8PwgiFZiOJzd7Ulpnx73PYBl
-ULvUw66hOrRoBXFXCHHUgbwDHZeByqtltUT1hN4YfoqFn31UEKx4O+lYh8+NZe/x
-XpiWzQsys2ko8NnEtZLa6kZdIhHCRzRRz3G+gFq2MGiYknrqqPmHfeJBghMqsG5j
-fb0ny9CnpUBubSuNcQMbOk49JGpHgArM+3QlLxBwjAd44qnKmW4KgKJOO1BIKfIn
-TrybWupSxuZxW5WKzaKX4E6PaRaM6HHqqRxDkzjFn19m95L/yGAqG7Omde6a3mne
-U1qkd9eJpga5w1hg+cazep4sbMPKW6+EGxbKk3heaKCr4/JQPVdCN3+Z7/Sms6AU
-ZsnmrioLprUpTqiDiqc5
-=Cstf
------END PGP SIGNATURE-----
+> >> I am becoming desperate anyway that this migration will ever fully
+> >> take place....
+> >
+> > Why not? It's just a matter of people like you working on this (and
+> > addressing some review comments ;)).
+> 
+> The most common comment about this is that people will not put effort in
+> the upstream kernel as long as there is no comfortable way for debugging
+> in the upstream kernel (i.e. at least USB support).......
 
---WBsA/oQW3eTA3LlM--
+Right, you need USB to have ethernet working. Still, IMHO UART (for
+console) + ethernet (for file transfer or NFS root) is the reasonable
+setup allowing you to debug further drivers in a comfortable way.
+
+Best regards,
+Tomasz
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
