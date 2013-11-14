@@ -1,50 +1,101 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Thu, 14 Nov 2013 12:16:22 -0700
-Message-ID: <20131114191622.GC21549@obsidianresearch.com>
+Date: Thu, 14 Nov 2013 19:26:29 +0000
+Message-ID: <20131114192629.GE16735@n2100.arm.linux.org.uk>
 References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
  <52814AFB.3070600@wwwdotorg.org>
  <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
  <528275B7.6050209@wwwdotorg.org>
- <20131112193012.GR10335@titan.lakedaemon.net>
- <52828C77.20001@wwwdotorg.org>
+ <20131112193012.GR10335@titan.lakedaemon.net> <52828C77.20001@wwwdotorg.org>
  <20131114162859.GX10335@titan.lakedaemon.net>
- <52851DC8.203@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <52851DC8.203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20131114162859.GX10335@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 12:00:24PM -0700, Stephen Warren wrote:
+On Thu, Nov 14, 2013 at 11:28:59AM -0500, Jason Cooper wrote:
+> This is the difference between a commercial effort and a hobbyist
+> effort.  I think I have a plan for how we can both get what we want.  I
+> could change the argument to 'dtc ... -L arch/arm/boot ...'.  Thus:
+> 
+> $ cd arch/arm/boot
+> $ ls -l *.dtb        # minus a few columns
+> ...
+> globalscale,mirabox.dtb -> dts/armada-370-mirabox.dtb
+> ...
+> 
+> 
+> This way, aftermarket users (debian installers, etc) could go to the
+> same place they go for zImages, and find a standard named dtb.  They
+> wouldn't need to parse the dtbs, just look at the current compatible
+> string for the board they are installing on and find the matching file.
 
-> I don't think a distro should need to know the DTB filename at all.
-> Rather, the/a bootloader should know which platform it's running on, and
-> provide a variable/... to the boot script/... that defines the DTB
-> filename. That would completely remove all the knowledge of DTB
-> filenames from distros.
+There's little point saying that they should be in arch/arm/boot.
+Unless the distro is installing from a kernel source tree on every
+platform, the location of the dtbs really doesn't matter.
 
-At some point the distro has to install a dtb into some cannonical
-place so the bootloader can find it..
+Let's look at the typical distro build process:
 
-Are you thinking that distros will have to ship a /boot/dtbs/*.dtb
-with every dtb from the kernel build?
+- take the source
+- patch it
+- build it
+- install it, relatively placing files according to their ultimate
+  destination
+- packaging the result up, adding metadata and scripts to aid installation
 
-What happens when you install two different versions of the kernel?
+So, how does affecting where things are in the build tree help after all
+that process?  What matters for DT files are:
 
-What about boot schemes that can load a kernel version dependent dtb?
+(a) their names
+(b) their location after installation
 
-I've said this before - I really think the kernel community will do
-itself a big favor if it encourages boot schemes that can handle a
-kernel version dependent dtb, rather that design schemes that
-absolutely can't allow for that.
+Where it appears in the build tree is neither here nor there, and IMHO
+should not be of concern to any distro - just the same as picking the
+zImage/uImage/whatever out of arch/arm/boot is none of their business.
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We have ways and means to deal with the installation of kernel images
+and modules.  There's well defined makefile targets for this, and
+make variables which control where and how these get put.  For the
+kernel image, you can specify the script to be run (which is called
+with the location of the *Image file) for copying.  Pulling it manually
+out of arch/arm/boot is really a failure of the distro packaging people
+to get their process right.
+
+The same goes for the DT files: if we don't provide a method for the
+kernel build system to install these in a sane way, then that's our
+failing.  However, distros should be asking for this, and not picking
+the files out of arch/arm/boot/dts.
+
+As for the commercial vs hobbist, there's very little difference here.
+If you're a hobbist, building natively, that's where having the right
+/sbin/installkernel present is a godsend, especially if you're running
+some distro.  If you don't, most likely you understand what's required
+to install a kernel.
+
+Last point - on the Carrier-1, I have a fully automated setup which I
+can fire off a build, walk away, and it will build a kernel including
+modules, install it locally on my x86 PC in ~/systems/imx6 - including
+appending the DT file, tar up the appropriate files, automatically copy
+the tar file over, unpack it, update the initramfs for ubuntu 12.04,
+update the vfat /boot filesystem appropriately, and reboot the platform.
+
+Yes, I know the target system with that.  That's not my point.  The point
+I'm making is that that level of automation is possible without excessive
+amounts of messing about with kernel build internals - that all runs with
+standard unmodified kbuild.
+
+So, maintain a sense of perspective and separation of stages please.
