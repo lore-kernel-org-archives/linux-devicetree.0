@@ -1,223 +1,175 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Thu, 14 Nov 2013 14:40:12 +0100
-Message-ID: <25668725.sMcoUCgCKk@flatron>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <2523089.oKCvZdz31U@flatron> <5284B478.8090503@ti.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
+Date: Thu, 14 Nov 2013 14:48:10 +0100
+Message-ID: <5235663.VIm8z9qphx@flatron>
+References: <5283BC93.1090801@koalo.de> <2049375.GR9Xb2zuek@flatron> <528477EE.4060407@koalo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5284B478.8090503@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528477EE.4060407-oZ8rN/sblLk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 of November 2013 07:31:04 Eduardo Valentin wrote:
-> On 13-11-2013 12:57, Tomasz Figa wrote:
-> > Hi Eduardo,
+On Thursday 14 of November 2013 08:12:46 Florian Meier wrote:
+> On 13.11.2013 21:39, Tomasz Figa wrote:
+> > On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
+> >> On 13.11.2013 19:43, Tomasz Figa wrote:
+> >>>> ....
+> >>>> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..bca5e84
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+> >>>> @@ -0,0 +1,59 @@
+> >>>> +* BCM2835 DMA controller
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- compatible: Should be "brcm,bcm2835-dma".
+> >>>> +- reg: Should contain DMA registers location and length.
+> >>>> +- interrupts: Should contain the DMA interrupts associated
+> >>>> +		to the DMA channels in ascending order.
+> >>>> +		First cell is the IRQ bank.
+> >>>> +		Second cell is the IRQ number.
+> >>>> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
+> >>>> +		the dmas property of client devices.
+> >>>> +- dma-channels: Maximum number of DMA channels available.
+> >>>> +- dma-requests: Number of DMA Requests.
+> >>>
+> >>> The two properties above do not seem to be used anywhere in the driver.
+> >>
+> >> Aren't they necessary for the DMA engine core?
 > > 
-> 
-> Hello Tomaz
-> 
-> > On Tuesday 12 of November 2013 15:46:04 Eduardo Valentin wrote:
-> >> This patch introduces a device tree bindings for
-> >> describing the hardware thermal behavior and limits.
-> >> Also a parser to read and interpret the data and feed
-> >> it in the thermal framework is presented.
-> > [snip]
-> >> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> >> new file mode 100644
-> >> index 0000000..59f5bd2
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> >> @@ -0,0 +1,586 @@
-> > [snip]
-> >> +* Cooling device nodes
-> >> +
-> >> +Cooling devices are nodes providing control on power dissipation. There
-> >> +are essentially two ways to provide control on power dissipation. First
-> >> +is by means of regulating device performance, which is known as passive
-> >> +cooling. A typical passive cooling is a CPU that has dynamic voltage and
-> >> +frequency scaling (DVFS), and uses lower frequencies as cooling states.
-> >> +Second is by means of activating devices in order to remove
-> >> +the dissipated heat, which is known as active cooling, e.g. regulating
-> >> +fan speeds. In both cases, cooling devices shall have a way to determine
-> >> +the state of cooling in which the device is.
-> >> +
-> >> +Required properties:
-> >> +- cooling-min-state:	An integer indicating the smallest
-> >> +  Type: unsigned	cooling state accepted. Typically 0.
-> >> +  Size: one cell
+> > Honestly, looking at the DMA bindings documentation, these two are quite
+> > a mystery for me. They don't seem to be used in DMA engine core, but
+> > instead several drivers use them for private purposes.
 > > 
-> > Could you explain (just in a reply) what a cooling state is and what are
-> > the min and max values used for?
+> > So, since they are optional and you don't seem to need them, I wouldn't
+> > list them.
 > 
-> Cooling state is an unsigned integer which represents heat control that
-> a cooling device implies.
-
-OK. So you have a cooling device and it can have multiple cooling states,
-like a cooling fan that has multiple speed levels. Did I understand this
-correctly?
-
-IMHO this should be also explained in the documentation above, possibly
-with one or two examples.
-
+> Ok
 > 
+> >>>> +- brcm,dma-channel-mask: Bit mask representing the channels available.
+> >>>
+> >>> What does the value of this property depend on? Could you describe the
+> >>> structure of this DMA controller?
+> >>>
+> >>>> +
+> >>>> +Example:
+> >>>> +
+> >>>> +dma: dma@7e007000 {
+> >>>> +	compatible = "brcm,bcm2835-dma";
+> >>>> +	reg = <0x7e007000 0xf00>;
+> >>>> +	interrupts = <1 16
+> >>>> +		      1 17
+> >>>> +		      1 18
+> >>>> +		      1 19
+> >>>> +		      1 20
+> >>>> +		      1 21
+> >>>> +		      1 22
+> >>>> +		      1 23
+> >>>> +		      1 24
+> >>>> +		      1 25
+> >>>> +		      1 26
+> >>>> +		      1 27
+> >>>> +		      1 28>;
+> >>>
+> >>> There are 13 interrupts specified here, but...
+> >>>
+> >>>> +
+> >>>> +	#dma-cells = <1>;
+> >>>> +	dma-channels = <16>;
+> >>>
+> >>> ...16 channels here...
+> >>>
+> >>>> +	dma-requests = <32>;
+> >>>> +	brcm,dma-channel-mask = <0x7f35>;
+> >>>
+> >>> ...and 11 set bits here. May I ask you to explain this to me, please?
+> >>
+> >> How I understand this DMA controller:
+> >> There are 16 DMA channels in the DMA controller, but only 13 interrupts
+> >> are available at the IRQ controller. Therefore, the upper DMA channels
+> >> can just not be used. Maybe because there are to many other IRQs and
+> >> they didn't want to implement another IRQ bank.
+> >> Furthermore, some of the DMA channels are already used by the
+> >> VideoCore/GPU/firmware. This is what dma-channel-mask indicates. This
+> >> should be automatically set by the firmware in the future.
+> >> Finally, there are some channels with special functionality that should
+> >> not be used by DMA engine, too. Therefore, these lines:
+> >> 		/* do not use the FIQ and BULK channels */
+> >> 		chans_available &= ~0xD;
 > > 
-> >> +
-> >> +- cooling-max-state:	An integer indicating the largest
-> >> +  Type: unsigned	cooling state accepted.
-> >> +  Size: one cell
-> >> +
-> >> +- #cooling-cells:	Used to provide cooling device specific information
-> >> +  Type: unsigned	while referring to it. Must be at least 2, in order
-> >> +  Size: one cell      	to specify minimum and maximum cooling state used
-> >> +			in the reference. The first cell is the minimum
-> >> +			cooling state requested and the second cell is
-> >> +			the maximum cooling state requested in the reference.
-> >> +			See Cooling device maps section below for more details
-> >> +			on how consumers refer to cooling devices.
-> >> +
-> >> +* Trip points
-> >> +
-> >> +The trip node is a node to describe a point in the temperature domain
-> >> +in which the system takes an action. This node describes just the point,
-> >> +not the action.
-> >> +
-> >> +Required properties:
-> >> +- temperature:		An integer indicating the trip temperature level,
-> >> +  Type: signed		in millicelsius.
-> >> +  Size: one cell
-> >> +
-> >> +- hysteresis:		A low hysteresis value on temperature property (above).
-> >> +  Type: unsigned	This is a relative value, in millicelsius.
-> >> +  Size: one cell
+> > OK, this makes it much more clear.
 > > 
-> > What about replacing temperature and hysteresis with a single temperature
-> > property that can be either one cell for 0 hysteresis or two cells to
-> > specify lower and upper range of temperatures?
+> > So, my only comment remaining here is that you shouldn't include the
+> > channels without interrupt signal in the mask. This would allow you
+> > to define it as a mask of channels that are operable and then just
+> > iterate over all set bits in the driver, instead of using tricks with
+> > interrupt resources. What do you think?
 > 
-> What is the problem with using two properties? I think we loose
-> representation by gluing two properties into one just because one cell.
+> Since the mask will come directly from the firmware, this would require
+> patching the firmware. I think that is not worth the effort.
 
-Ranges is the representation widely used in other bindings. In addition
-I believe a range is more representative - when reading a DTS you don't
-need to think whether the hysteresis is in temperature units, percents or
-something else and also is less ambiguous, because you have clearly
-defined lower and upper bounds in one place.
+Now I'm slightly confused. Do you already have code in your firmware that
+adds this property to your device tree?
+
+Otherwise in what circumstances such patching would take place? On given
+hardware (unless it's an FPGA) the configuration of available DMA channels
+that have interrupt signals should not change.
 
 > 
+> >>> [snip]
+> >>>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> >>>> new file mode 100644
+> >>>> index 0000000..baf072e
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/dma/bcm2835-dma.c
+> >>> [snip]
+> >>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
+> >>>> +{
+> >>>> +	struct bcm2835_dmadev *od;
+> >>>> +	struct resource *dma_res = NULL;
+> >>>> +	void __iomem *dma_base = NULL;
+> >>>> +	int rc = 0;
+> >>>> +	int i = 0;
+> >>>> +	int irq;
+> >>>> +	uint32_t chans_available;
+> >>> [snip]
+> >>>> +	if (pdev->dev.of_node) {
+> >>>
+> >>> Is this driver supposed to support non-DT based instantation (aka board
+> >>> files)? If not, maybe it would be cleaner to simply check for
+> >>> !pdev->dev.of_node at the beginning of probe and return an error?
+> >>
+> >> I would like to maintain the possibility for board file based
+> >> instatiation, because the Raspberry Pi downstream kernel still doesn't
+> >> support device tree. If this is a no-go, I will accept that.
 > > 
-> >> +
-> >> +- type:			a string containing the trip type. Supported values are:
-> >> +	"active":	A trip point to enable active cooling
-> >> +	"passive":	A trip point to enable passive cooling
+> > Sure, you are free to do so.
 > > 
-> > The two above seem to be implying action, as opposed to the general
-> > comment about trip points.
+> > What I meant is that your probe won't call bcm2835_dma_chan_init() at all
+> > if there is no pdev->dev.of_node, because the loop iterating over channels
+> > is under the if clause.
 > 
-> They do not imply action, they specify type of trip.
+> Yes you are right, but I think it will make the patching easier, later.
+> Currently, nothing bad happens without device tree - it just allocates
+> no channels.
 
-For me "A trip point to enable active cooling" means that when this trip
-point is crossed, active cooling must be enabled. What is it if not
-implying action?
+But isn't it really an error condition, if no channels are allocated?
 
-> 
-> > 
-> >> +	"hot":		A trip point to notify emergency
-> >> +	"critical":	Hardware not reliable.
-> >> +  Type: string
-> >> +
-> > [snip]
-> >> +* Examples
-> >> +
-> >> +Below are several examples on how to use thermal data descriptors
-> >> +using device tree bindings:
-> >> +
-> >> +(a) - CPU thermal zone
-> >> +
-> >> +The CPU thermal zone example below describes how to setup one thermal zone
-> >> +using one single sensor as temperature source and many cooling devices and
-> >> +power dissipation control sources.
-> >> +
-> >> +#include <dt-bindings/thermal/thermal.h>
-> >> +
-> >> +cpus {
-> >> +	/*
-> >> +	 * Here is an example of describing a cooling device for a DVFS
-> >> +	 * capable CPU. The CPU node describes its four OPPs.
-> >> +	 * The cooling states possible are 0..3, and they are
-> >> +	 * used as OPP indexes. The minimum cooling state is 0, which means
-> >> +	 * all four OPPs can be available to the system. The maximum
-> >> +	 * cooling state is 3, which means only the lowest OPPs (198MHz@0.85V)
-> >> +	 * can be available in the system.
-> >> +	 */
-> >> +	cpu0: cpu@0 {
-> >> +		...
-> >> +		operating-points = <
-> >> +			/* kHz    uV */
-> >> +			970000  1200000
-> >> +			792000  1100000
-> >> +			396000  950000
-> >> +			198000  850000
-> >> +		>;
-> >> +		cooling-min-state = <0>;
-> >> +		cooling-max-state = <3>;
-> >> +		#cooling-cells = <2>; /* min followed by max */
-> > 
-> > I believe you don't need the min- and max-state properties here then. Your
-> > thermal core can simply query the cpufreq driver (which would be a cooling
-> > device here) about the range of states it supports
-> 
-> This binding is not supposed to be aware of cpufreq, which is Linux
-> specific implementation.
-
-I didn't say anything about making the binding aware of cpufreq, but
-instead about getting rid of redundancy of data, that can be provided
-by respective drivers anyway.
-
-> 
-> Besides, the cpufreq layer is populated by data already specified in DT.
-> .
-> > 
-> >> +	};
-> >> +	...
-> >> +};
-> >> +
-> >> +&i2c1 {
-> >> +	...
-> >> +	/*
-> >> +	 * A simple fan controller which supports 10 speeds of operation
-> >> +	 * (represented as 0-9).
-> >> +	 */
-> >> +	fan0: fan@0x48 {
-> >> +		...
-> >> +		cooling-min-state = <0>;
-> >> +		cooling-max-state = <9>;
-> > 
-> > This is similar. The fan driver will probaby know about available
-> > fan speed levels and be able to report the range of states to thermal
-> > core.
-> 
-> Then we loose also the flexibility to assign cooling states to trip
-> points, as described in this binding.
-
-I don't think you got my point correctly.
-
-Let's say you have a CPU, which has 4 operating points. You don't need
-to specify that min state is 0 and max state is 4, because it is implied
-by the list of operating points.
-
-Same goes for a fan controller that has, let's say, an 8-bit PWM duty
-cycle register, which in turn allows 256 different speed states. This
-implies that min state for it is 0 and max state 255 and you don't need
-to specify this in DT.
-
-Now, both a CPU and fan controller will have their thermal drivers, which
-can report to the thermal core what ranges of cooling states they support,
-which again makes it wrong to specify such data in DT.
+Anyway, back to my point about leaving non-DT support in a driver, the
+point is still valid only for drivers, not for platforms/boards. So if
+there are no boards supported using board files in mainline that could
+benefit from this driver, then this driver can be safely made DT-only,
+because no new non-DT platforms/boards can be added.
 
 Best regards,
 Tomasz
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
