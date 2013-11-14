@@ -1,156 +1,118 @@
-From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
-Date: Thu, 14 Nov 2013 08:12:46 +0100
-Message-ID: <528477EE.4060407@koalo.de>
-References: <5283BC93.1090801@koalo.de> <3722902.ByNK8Ptc5Y@flatron> <5283D47A.7060503@koalo.de> <2049375.GR9Xb2zuek@flatron>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: max14577: Add max14577 MFD driver core
+Date: Thu, 14 Nov 2013 09:15:37 +0100
+Message-ID: <1384416937.5901.6.camel@AMDC1943>
+References: <1384328457-5147-1-git-send-email-k.kozlowski@samsung.com>
+ <1384328457-5147-2-git-send-email-k.kozlowski@samsung.com>
+ <20131113131328.GF878@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2049375.GR9Xb2zuek@flatron>
+In-reply-to: <20131113131328.GF878-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13.11.2013 21:39, Tomasz Figa wrote:
-> On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
->> On 13.11.2013 19:43, Tomasz Figa wrote:
->>>> ....
->>>> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
->>>> new file mode 100644
->>>> index 0000000..bca5e84
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
->>>> @@ -0,0 +1,59 @@
->>>> +* BCM2835 DMA controller
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should be "brcm,bcm2835-dma".
->>>> +- reg: Should contain DMA registers location and length.
->>>> +- interrupts: Should contain the DMA interrupts associated
->>>> +		to the DMA channels in ascending order.
->>>> +		First cell is the IRQ bank.
->>>> +		Second cell is the IRQ number.
->>>> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
->>>> +		the dmas property of client devices.
->>>> +- dma-channels: Maximum number of DMA channels available.
->>>> +- dma-requests: Number of DMA Requests.
->>>
->>> The two properties above do not seem to be used anywhere in the driver.
->>
->> Aren't they necessary for the DMA engine core?
-> 
-> Honestly, looking at the DMA bindings documentation, these two are quite
-> a mystery for me. They don't seem to be used in DMA engine core, but
-> instead several drivers use them for private purposes.
-> 
-> So, since they are optional and you don't seem to need them, I wouldn't
-> list them.
+Hi,
 
-Ok
-
->>>> +- brcm,dma-channel-mask: Bit mask representing the channels available.
->>>
->>> What does the value of this property depend on? Could you describe the
->>> structure of this DMA controller?
->>>
->>>> +
->>>> +Example:
->>>> +
->>>> +dma: dma@7e007000 {
->>>> +	compatible = "brcm,bcm2835-dma";
->>>> +	reg = <0x7e007000 0xf00>;
->>>> +	interrupts = <1 16
->>>> +		      1 17
->>>> +		      1 18
->>>> +		      1 19
->>>> +		      1 20
->>>> +		      1 21
->>>> +		      1 22
->>>> +		      1 23
->>>> +		      1 24
->>>> +		      1 25
->>>> +		      1 26
->>>> +		      1 27
->>>> +		      1 28>;
->>>
->>> There are 13 interrupts specified here, but...
->>>
->>>> +
->>>> +	#dma-cells = <1>;
->>>> +	dma-channels = <16>;
->>>
->>> ...16 channels here...
->>>
->>>> +	dma-requests = <32>;
->>>> +	brcm,dma-channel-mask = <0x7f35>;
->>>
->>> ...and 11 set bits here. May I ask you to explain this to me, please?
->>
->> How I understand this DMA controller:
->> There are 16 DMA channels in the DMA controller, but only 13 interrupts
->> are available at the IRQ controller. Therefore, the upper DMA channels
->> can just not be used. Maybe because there are to many other IRQs and
->> they didn't want to implement another IRQ bank.
->> Furthermore, some of the DMA channels are already used by the
->> VideoCore/GPU/firmware. This is what dma-channel-mask indicates. This
->> should be automatically set by the firmware in the future.
->> Finally, there are some channels with special functionality that should
->> not be used by DMA engine, too. Therefore, these lines:
->> 		/* do not use the FIQ and BULK channels */
->> 		chans_available &= ~0xD;
+On Wed, 2013-11-13 at 13:13 +0000, Mark Brown wrote:
+> On Wed, Nov 13, 2013 at 08:40:54AM +0100, Krzysztof Kozlowski wrote:
 > 
-> OK, this makes it much more clear.
+> > +/**
+> > + * After resuming from suspend it may happen that IRQ is signalled but
+> > + * IRQ GPIO is not high. Also the interrupt registers won't have any data
+> > + * (all of them equal to 0x00).
+> > + *
+> > + * In such case retry few times reading the interrupt registers.
+> > + */
+> > +#define IRQ_READ_REG_RETRY_CNT		5
 > 
-> So, my only comment remaining here is that you shouldn't include the
-> channels without interrupt signal in the mask. This would allow you
-> to define it as a mask of channels that are operable and then just
-> iterate over all set bits in the driver, instead of using tricks with
-> interrupt resources. What do you think?
-
-Since the mask will come directly from the firmware, this would require
-patching the firmware. I think that is not worth the effort.
-
->>> [snip]
->>>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
->>>> new file mode 100644
->>>> index 0000000..baf072e
->>>> --- /dev/null
->>>> +++ b/drivers/dma/bcm2835-dma.c
->>> [snip]
->>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct bcm2835_dmadev *od;
->>>> +	struct resource *dma_res = NULL;
->>>> +	void __iomem *dma_base = NULL;
->>>> +	int rc = 0;
->>>> +	int i = 0;
->>>> +	int irq;
->>>> +	uint32_t chans_available;
->>> [snip]
->>>> +	if (pdev->dev.of_node) {
->>>
->>> Is this driver supposed to support non-DT based instantation (aka board
->>> files)? If not, maybe it would be cleaner to simply check for
->>> !pdev->dev.of_node at the beginning of probe and return an error?
->>
->> I would like to maintain the possibility for board file based
->> instatiation, because the Raspberry Pi downstream kernel still doesn't
->> support device tree. If this is a no-go, I will accept that.
+> What is the cause here?  This smells like an unreliable workaround for
+> some other behaviour.  In general this all looks very like standard
+> regmap code.
 > 
-> Sure, you are free to do so.
+> > +	for (i = 0; i < MAX14577_IRQ_REGS_NUM; i++) {
+> > +		u8 mask_reg = max14577_mask_reg[i];
+> > +
+> > +		if (mask_reg == MAX14577_REG_INVALID ||
+> > +				IS_ERR_OR_NULL(max14577->regmap))
+> > +			continue;
 > 
-> What I meant is that your probe won't call bcm2835_dma_chan_init() at all
-> if there is no pdev->dev.of_node, because the loop iterating over channels
-> is under the if clause.
+> Why would this code even be running if you don't have a register map?
+> 
+> > +		dev_info(max14577->dev, "Got interrupts [1:0x%02x, 2:0x%02x, 3:0x%02x]\n",
+> > +			irq_reg[MAX14577_IRQ_INT1], irq_reg[MAX14577_IRQ_INT2],
+> > +			irq_reg[MAX14577_IRQ_INT3]);
+> 
+> This is far too noisy, dev_dbg() at most.
+> 
+> > +		gpio_val = gpio_get_value(pdata->irq_gpio);
+> > +
+> > +		if (gpio_get_value(pdata->irq_gpio) == 0)
+> > +			dev_warn(max14577->dev, "IRQ GPIO is not high, retry reading interrupt registers\n");
+> > +	} while (gpio_val == 0 && --retry > 0);
+> 
+> This looks very strange...
+> 
+> > +	max14577->irq = gpio_to_irq(pdata->irq_gpio);
+> > +	ret = gpio_request(pdata->irq_gpio, "max14577_irq");
+> > +	if (ret) {
+> > +		dev_err(max14577->dev, "Failed requesting GPIO %d: %d\n",
+> > +				pdata->irq_gpio, ret);
+> > +		goto err;
+> > +	}
+> > +	gpio_direction_input(pdata->irq_gpio);
+> > +	gpio_free(pdata->irq_gpio);
+> 
+> This means the GPIO handling code that was present in the handling is
+> broken, it's trying to use the GPIO after it was freed.
+> 
+> > +	ret = request_threaded_irq(max14577->irq, NULL, max14577_irq_thread,
+> > +				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> > +				   "max14577-irq", max14577);
+> 
+> Are you *positive* this is a falling triggered IRQ?  All the code to do
+> with spinning reading the GPIO state during handling makes it look like
+> this is in fact an active low interrupt and a lot of the code in here is
+> working around trying to handle that as the wrong kind of IRQ.
+> 
+> > +int max14577_bulk_write(struct regmap *map, u8 reg, u8 *buf, int count)
+> > +{
+> > +	return regmap_bulk_write(map, reg, buf, count);
+> > +}
+> > +EXPORT_SYMBOL_GPL(max14577_bulk_write);
+> 
+> Given that these are basically all trivial wrappers around regmap they
+> probably ought to be static inlines in the header.
+> 
+> > +static struct max14577_platform_data *max14577_i2c_parse_dt(struct device *dev)
+> > +{
+> 
+> There's no DT binding document?
+> 
+> > +const struct dev_pm_ops max14577_pm = {
+> > +	.suspend = max14577_suspend,
+> > +	.resume = max14577_resume,
+> > +};
+> 
+> SET_SYSTEM_SLEEP_PM_OPS().
+> 
+> > +static int __init max14577_i2c_init(void)
+> > +{
+> > +	return i2c_add_driver(&max14577_i2c_driver);
+> > +}
+> > +subsys_initcall(max14577_i2c_init);
+> 
+> Why not module_i2c_driver?
 
-Yes you are right, but I think it will make the patching easier, later.
-Currently, nothing bad happens without device tree - it just allocates
-no channels.
+Thanks for review. I'll the fix issues and send later new version of
+patch.
 
-Greetings,
-Florian
+Best regards,
+Krzysztof
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
