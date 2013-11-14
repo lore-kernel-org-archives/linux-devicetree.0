@@ -1,183 +1,52 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] dmaengine: Add support for BCM2835
-Date: Thu, 14 Nov 2013 16:01:10 +0100
-Message-ID: <4043887.oz5IYRs5go@flatron>
-References: <5283BC93.1090801@koalo.de> <5235663.VIm8z9qphx@flatron> <CABDT8Wz4r0iN-Ady41tpdZgPF1wC=Qap5_jNGmKbSYQmRdPAHg@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH RFC] net: of_mdio: Scan PHYs which have device_type set to ethernet-phy
+Date: Thu, 14 Nov 2013 15:05:56 +0000
+Message-ID: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABDT8Wz4r0iN-Ady41tpdZgPF1wC=Qap5_jNGmKbSYQmRdPAHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 of November 2013 15:44:05 Florian Meier wrote:
-> 2013/11/14 Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > On Thursday 14 of November 2013 08:12:46 Florian Meier wrote:
-> >> On 13.11.2013 21:39, Tomasz Figa wrote:
-> >> > On Wednesday 13 of November 2013 20:35:22 Florian Meier wrote:
-> >> >>>> +- brcm,dma-channel-mask: Bit mask representing the channels available.
-> >> >>>
-> >> >>> What does the value of this property depend on? Could you describe the
-> >> >>> structure of this DMA controller?
-> >> >>>
-> >> >>>> +
-> >> >>>> +Example:
-> >> >>>> +
-> >> >>>> +dma: dma@7e007000 {
-> >> >>>> +        compatible = "brcm,bcm2835-dma";
-> >> >>>> +        reg = <0x7e007000 0xf00>;
-> >> >>>> +        interrupts = <1 16
-> >> >>>> +                      1 17
-> >> >>>> +                      1 18
-> >> >>>> +                      1 19
-> >> >>>> +                      1 20
-> >> >>>> +                      1 21
-> >> >>>> +                      1 22
-> >> >>>> +                      1 23
-> >> >>>> +                      1 24
-> >> >>>> +                      1 25
-> >> >>>> +                      1 26
-> >> >>>> +                      1 27
-> >> >>>> +                      1 28>;
-> >> >>>
-> >> >>> There are 13 interrupts specified here, but...
-> >> >>>
-> >> >>>> +
-> >> >>>> +        #dma-cells = <1>;
-> >> >>>> +        dma-channels = <16>;
-> >> >>>
-> >> >>> ...16 channels here...
-> >> >>>
-> >> >>>> +        dma-requests = <32>;
-> >> >>>> +        brcm,dma-channel-mask = <0x7f35>;
-> >> >>>
-> >> >>> ...and 11 set bits here. May I ask you to explain this to me, please?
-> >> >>
-> >> >> How I understand this DMA controller:
-> >> >> There are 16 DMA channels in the DMA controller, but only 13 interrupts
-> >> >> are available at the IRQ controller. Therefore, the upper DMA channels
-> >> >> can just not be used. Maybe because there are to many other IRQs and
-> >> >> they didn't want to implement another IRQ bank.
-> >> >> Furthermore, some of the DMA channels are already used by the
-> >> >> VideoCore/GPU/firmware. This is what dma-channel-mask indicates. This
-> >> >> should be automatically set by the firmware in the future.
-> >> >> Finally, there are some channels with special functionality that should
-> >> >> not be used by DMA engine, too. Therefore, these lines:
-> >> >>            /* do not use the FIQ and BULK channels */
-> >> >>            chans_available &= ~0xD;
-> >> >
-> >> > OK, this makes it much more clear.
-> >> >
-> >> > So, my only comment remaining here is that you shouldn't include the
-> >> > channels without interrupt signal in the mask. This would allow you
-> >> > to define it as a mask of channels that are operable and then just
-> >> > iterate over all set bits in the driver, instead of using tricks with
-> >> > interrupt resources. What do you think?
-> >>
-> >> Since the mask will come directly from the firmware, this would require
-> >> patching the firmware. I think that is not worth the effort.
-> >
-> > Now I'm slightly confused. Do you already have code in your firmware that
-> > adds this property to your device tree?
-> >
-> > Otherwise in what circumstances such patching would take place? On given
-> > hardware (unless it's an FPGA) the configuration of available DMA channels
-> > that have interrupt signals should not change.
-> 
-> It is very confusing. I agree.
-> There is already a DMA driver with a proprietary API in the downstream
-> kernel. The firmware already creates this mask and passes it to this
-> proprietary driver.
-> There was already a discussion about this in the first version thread
-> that (as long as I understand it) resulted in "we should pass this
-> mask on to the driver via device tree". So I did that. I have no idea
-> about how this firmware->devicetree interface will take place, but
-> since I didn't want to run in circles I hardcoded it in the device
-> tree.
-> 
+According to Documentation/devicetree/bindings/net/phy.txt device_type
+property of PHY nodes is mandatory, which should be set to
+"ethernet-phy". This patch adds check in scanning phys and only scans
+node which have device-type set to "ethernet-phy".
 
-OK. So the firmware defines what set and clear bits in the mask mean.
-It's fine then.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/of/of_mdio.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-> 
-> >> >>> [snip]
-> >> >>>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> >> >>>> new file mode 100644
-> >> >>>> index 0000000..baf072e
-> >> >>>> --- /dev/null
-> >> >>>> +++ b/drivers/dma/bcm2835-dma.c
-> >> >>> [snip]
-> >> >>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
-> >> >>>> +{
-> >> >>>> +        struct bcm2835_dmadev *od;
-> >> >>>> +        struct resource *dma_res = NULL;
-> >> >>>> +        void __iomem *dma_base = NULL;
-> >> >>>> +        int rc = 0;
-> >> >>>> +        int i = 0;
-> >> >>>> +        int irq;
-> >> >>>> +        uint32_t chans_available;
-> >> >>> [snip]
-> >> >>>> +        if (pdev->dev.of_node) {
-> >> >>>
-> >> >>> Is this driver supposed to support non-DT based instantation (aka board
-> >> >>> files)? If not, maybe it would be cleaner to simply check for
-> >> >>> !pdev->dev.of_node at the beginning of probe and return an error?
-> >> >>
-> >> >> I would like to maintain the possibility for board file based
-> >> >> instatiation, because the Raspberry Pi downstream kernel still doesn't
-> >> >> support device tree. If this is a no-go, I will accept that.
-> >> >
-> >> > Sure, you are free to do so.
-> >> >
-> >> > What I meant is that your probe won't call bcm2835_dma_chan_init() at all
-> >> > if there is no pdev->dev.of_node, because the loop iterating over channels
-> >> > is under the if clause.
-> >>
-> >> Yes you are right, but I think it will make the patching easier, later.
-> >> Currently, nothing bad happens without device tree - it just allocates
-> >> no channels.
-> >
-> > But isn't it really an error condition, if no channels are allocated?
-> 
-> A fridge is still a working fridge, even if no beer is inside ;-)
-> Ok, bad example, but you will get an error message anyway when you try
-> to get a channel.
-> 
-> > Anyway, back to my point about leaving non-DT support in a driver, the
-> > point is still valid only for drivers, not for platforms/boards. So if
-> > there are no boards supported using board files in mainline that could
-> > benefit from this driver, then this driver can be safely made DT-only,
-> > because no new non-DT platforms/boards can be added.
-> 
-> I don't have a telling argument against this, but just thought writing
-> it this way will
-> make the migration of the downstream kernel to upstream easier, but if you say I
-> should change it, I will of course do that.
-
-I'm just presenting you the possible options. You are still free to have
-non-DT support in the driver, but if you don't need it (because you can't
-have any new non-DT platforms in mainline) then you can simplify some
-code.
-
-However the driver shouldn't be left with illusionary support for non-DT
-platforms until you decide to implement that. Instead, if you don't want
-to add non-DT support now, just make the driver DT-only, while keeping
-its design in a way allowing you to add non-DT support in future.
-
-In other words, a driver should not be able to probe using board files
-if support for such probing method is not available in it yet.
-
-> I am becoming desperate anyway that this migration will ever fully
-> take place....
-
-Why not? It's just a matter of people like you working on this (and
-addressing some review comments ;)).
-
-Best regards,
-Tomasz
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index d5a57a9..78c53c7 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -57,6 +57,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 
+ 	/* Loop over the child nodes and register a phy_device for each one */
+ 	for_each_available_child_of_node(np, child) {
++		/* A PHY must have device_type set to "ethernet-phy" */
++		if (of_node_cmp(child->type, "ethernet-phy"))
++			continue;
+ 		/* A PHY must have a reg property in the range [0-31] */
+ 		paddr = of_get_property(child, "reg", &len);
+ 		if (!paddr || len < sizeof(*paddr)) {
+@@ -112,6 +115,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 
+ 	/* auto scan for PHYs with empty reg property */
+ 	for_each_available_child_of_node(np, child) {
++		/* A PHY must have device_type set to "ethernet-phy" */
++		if (of_node_cmp(child->type, "ethernet-phy"))
++			continue;
++
+ 		/* Skip PHYs with reg property set */
+ 		paddr = of_get_property(child, "reg", &len);
+ 		if (paddr)
+-- 
+1.7.6.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
