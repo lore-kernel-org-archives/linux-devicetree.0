@@ -1,83 +1,63 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Fri, 15 Nov 2013 13:44:17 -0800
-Message-ID: <CAOesGMhkCn2zeJj_ZZAZu_wJya-4evWEqNHpVJEpjxzWHVWY3A@mail.gmail.com>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
-	<201311152158.32644.arnd@arndb.de>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 0/5] Add-Broadcom-Kona-I2C-Support
+Date: Fri, 15 Nov 2013 23:52:34 +0100
+Message-ID: <20131115225234.GC2672@katana>
+References: <1384462936-7906-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201311152158.32644.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384462936-7906-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 12:58 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 15 November 2013, Olof Johansson wrote:
->> So, I'm strongly urging that whatever the server guys try to do, it
->> will in the end result in the ACPI data being translated into DT
->> equivalents, such that the kernel only needs to handle data via DT.
->
-> I don't think that a translation layer is the answer, I see the problem
-> more in things that cannot be translated automatically. The parts that
-> are similar enough to allow translation could also just be handled by
-> a thin abstraction layer in the kernel, which I think we will see
-> on embedded x86 with DT-in-ACPI-syntax.
 
-I'm not so sure that converting everything yet again to another
-abstraction layer is a good solution. We've got one level of
-abstraction today -- DT. And we've got the un-abstracted layer of
-platform devices. Churning all drivers yet again seems like the wrong
-way to do this. For things that we can pre-populate instead of adding
-runtime abstraction, we should.
+--gr/z0/N6AeWAPJVB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I think we can still treat ACPI on ARM64 as a beginner's mistake and
-> provide hand-written DT blobs for the few systems that start shipping
-> with that.
+On Thu, Nov 14, 2013 at 01:02:11PM -0800, Tim Kryger wrote:
+> This series adds support for the Kona I2C bus found on Broadcom mobile
+> SoCs like the bcm11351 (aka bcm281xx) and enables it on the bcm28155-ap
+> board.
+>=20
+> It depends upon the following commit:
+>   http://lkml.indiana.edu/hypermail/linux/kernel/1311.1/03583.html
 
-I think we can do better -- we can ask those vendors to not ship ACPI
-at all, and ship DT themselves (together with us for review, etc).
-Especially since doing a broken ACPI implementation today _just for
-us_ will just distract them. If they need one for RT, fine. As I
-mentioned elsewhere, shipping a flashed DTB is no different from
-shipping ACPI from a future-proof point of view; we'll end up
-overriding either at some point once we figure out things better.
+Fixed Kconfig sorting, squashed broken out patches 1-3 into one and
+applied to for-next, thanks! Let me know if I should take patches 4-5
+also, but usually they go via arm-soc. Also, please provide a "Changes
+since V1" log which will speed up reviewing.
 
-> The main reason for doing it in the first place was the
-> expected number of Windows RT servers, but WinRT isn't doing well
-> at the moment, so it's not unreasonable to assume it's going the same
-> way as WinRT tablets.
+Thanks,
 
-It's sort of impossible to tell today. Since there are no ARM64
-servers on the market, there's no market for RT on them. Nor are there
-any machines that can be acquired to look at how they implemented
-stuff. And the silicon vendors who have started doing some of this
-work are mostly doing it in secret on their own.
-
-> During the kernel summit, Grant (as one of the proponents of doing
-> ACPI on ARM) already mentioned that he only sees this as viable
-> on PC-like systems. My feeling is that when (if?) AMD or someone else
-> comes out with a server system where they basically replace the
-> x86 core with an ARM one but keep the system design, there won't
-> be much to describe in terms of internal components anyway, and also
-> no need to translate a lot of device information -- everything is
-> already a PCI device in that case and does not get handled through
-> the platform bus.
-
-i2c devices and several other things are not probable, either are ECs
-on LPC, etc. All of those mostly fall into the category of
-simple-to-describe-in-any-format though.
-
-> However, until we see code or system-level specs
-> for such a system, I'd rather keep ACPI out of the ARM kernel so we
-> don't give people the wrong ideas.
-
-Strong agreement from me.
+   Wolfram
 
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gr/z0/N6AeWAPJVB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJShqWyAAoJEBQN5MwUoCm29OgQAIaT+x3Kn4hRankq0+PVqnjB
+PAiCLkq1zJMq5ne6mZ8YQzg0cDnHmN3o9liVMV+kZKgiveizSpEhrWTlH1XzOUxE
+EkRUnVQWWrjZnKzmY8pEIYWn0MMG+ThkjN9PydG7T3ZFoNjlQXeoBUl2Y1r6wRJx
+xGYgB1ZmZRrBx+RIjrCiVQ8RmSCae7bFODCZC1ADMRi5N46mANSf1XazifbuUasd
+Rm6u00JAFHoPDOPhPj5B6NTy0piJmC2zvZcqUHLq2rdCCjBI8TZsfwoI/CgVMo12
+e+v/VZQlxFC4Jr9QNqb+cSpMmIcGj4ahCaHk2jOraXuuhBzF8lIzF3BILDWfQnay
+htTGFqId38gLaXx8W/vxEh9o+p3BRzzU+sjVDazFRqCFi+jw9Q6yzwN45hoDnCiQ
+EcWA8Jyf/ry/0zbt1OaepNet5uq6kyzNUkfLxw0ztn/1W/cwE6LQeotI3yZthdSQ
+GE0Twov3LV11Jpo5PmUY8uvNLRw4voaqvUIah+4bbo+w/i/hwYlMfL6L4t0djjqU
+3nTOEx6ODRv18CxGEA6KmgsdPqSmp5x/BGV7/yMFaX2qNTLpHF7ioQj3L342xBuC
+FQL36DeBfqCPxJLfuz4MP1jPZlteoh6IMxuegHealNlXtYd3ei8zogqLAT+MGnzG
+VetCw+10ADyinFSqDWBq
+=3CHQ
+-----END PGP SIGNATURE-----
+
+--gr/z0/N6AeWAPJVB--
