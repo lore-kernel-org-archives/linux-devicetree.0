@@ -1,235 +1,78 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4] ASoC: simple-card: add Device Tree
-	support
-Date: Fri, 15 Nov 2013 15:50:28 +0000
-Message-ID: <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
-References: <87eh97sqw7.wl%kuninori.morimoto.gx@renesas.com>
- <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
- <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
- <20131003104248.GI27287@sirena.org.uk>
- <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
- <20131024171758.GA2461@kartoffel>
- <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in
+ TSC/ADC DT binding
+Date: Fri, 15 Nov 2013 15:55:40 +0000
+Message-ID: <20131115155540.GF24831@e106331-lin.cambridge.arm.com>
+References: <1382386404-6659-1-git-send-email-balbi@ti.com>
+ <1382386404-6659-2-git-send-email-balbi@ti.com>
+ <52663A58.9070706@linutronix.de>
+ <20131022120253.GD9340@gimli>
+ <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
+ <20131114155404.GE15835@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <Pawel.Moll@arm.com>, Simon <horms@verge.net.au>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <20131114155404.GE15835@saruman.home>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2013 at 03:14:20AM +0100, Kuninori Morimoto wrote:
-> Support for loading the simple-card module via DeviceTree.
-> It requests CPU/CODEC information.
+On Thu, Nov 14, 2013 at 03:54:04PM +0000, Felipe Balbi wrote:
+> HI,
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
-> v3 -> v4
+> On Thu, Nov 14, 2013 at 11:19:59AM +0000, Mark Rutland wrote:
+> > > On Tue, Oct 22, 2013 at 10:42:00AM +0200, Sebastian Andrzej Siewior wrote:
+> > > > On 10/21/2013 10:13 PM, Felipe Balbi wrote:
+> > > > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > index e1c5300..b61df9d 100644
+> > > > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct platform_device *pdev,
+> > > > >  	if (err < 0)
+> > > > >  		return err;
+> > > > >  
+> > > > > -	err = of_property_read_u32(node, "ti,coordiante-readouts",
+> > > > > +	/*
+> > > > > +	 * try with new binding first. If it fails, still try with
+> > > > > +	 * bogus, miss-spelled version.
+> > > > > +	 */
+> > > > > +	err = of_property_read_u32(node, "ti,coordinate-readouts",
+> > > > >  			&ts_dev->coordinate_readouts);
+> > > > >  	if (err < 0)
+> > > > > +		err = of_property_read_u32(node, "ti,coordiante-readouts",
+> > > > > +				&ts_dev->coordinate_readouts);
+> > > > > +	if (err < 0)
+> > > > >  		return err;
+> > > > 
+> > > > Thanks, very good. Do we keep this fallback for ever or just for a year
+> > > > or two?
+> > > 
+> > > That's for DT maintainers to decide but considering DT is an ABI, I
+> > > guess we need to keep for 30 years or so :-p
+> > 
+> > We keep it as long as we have to. If no-one's relying on the typo by the
+> > next merge window, I see no reason we'd have to keep support for the
 > 
->  - explain detail of each properties on simple-card.txt
->  - fixup odd examples on simple-card.txt
->  - remove "simple-card,card-name". create it from cpu/codec name
->  - use of_get_child_by_name()
->  - remove odd pointer info from dev_dbg()
->  - remove subnode format which are no longer needed
-> 
-> This is based on asoc/topic/simple branch
-> 
->  .../devicetree/bindings/sound/simple-card.txt      |   73 +++++++++
->  sound/soc/generic/simple-card.c                    |  156 +++++++++++++++++++-
->  2 files changed, 223 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-> new file mode 100644
-> index 0000000..4871e91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-> @@ -0,0 +1,73 @@
-> +Simple-Card:
-> +
-> +Simple-Card specifies audio DAI connection of SoC <-> codec.
-> +
-> +Required properties:
-> +
-> +- compatible				: "simple-audio"
-> +
-> +Optional properties:
-> +
-> +- simple-audio,format			: CPU/CODEC common audio format.
-> +					"i2s", "right_j", "left_j" , "dsp_a"
-> +					"dsp_b", "ac97", "pdm", "msb", "lsb"
-> +Required subnodes:
-> +
-> +- simple-audio,cpu			: CPU   sub-node
-> +- simple-audio,codec			: CODEC sub-node
-> +
-> +Required CPU/CODEC subnodes properties:
-> +
-> +- sound-dai				: phandle and port of CPU/CODEC
+> and how could you know that ? considering it's an ABI, how could you
+> ever know that ?
 
-Is there a class binding for audio devices this derives from?
+If you know that the only user of a binding is a dts for a particular
+product that you're in charge of, then you'd know the set of kernel +
+dtb combinations out there, and can judge.
 
-> +
-> +Optional CPU/CODEC subnodes properties:
+If a bug is found in a driver such that it hasn't worked for a number of
+releases, and no-one's complained, the binding is clearly not in use and
+thus support for it can be removed.
 
-Do these all apply to both sub-nodes?
+If maintaining compatibility becomes too hard, and all users are happy
+to migrate to a newer dtb, then it's not necessary to maintain
+compatiblity for the old binding.
 
-> +- frame-master				: bool property. add this if subnode was frame master
-> +- bitclock-master			: bool property. add this if subnode was bitclock master
-
-s/was/is/
-
-> +- bitclock-inversion			: bool property. add this if subnode has clock inversion
-> +- frame-inversion			: bool property. add this if subnode has frame inversion
-> +- clocks / system-clock-frequency	: specify subnode's clock if needed.
-> +					  it can be specified via "clocks" if system has clock node,
-> +                                          or "system-clock-frequency" if system doesn't have it.
-
-What does "if system doesn't have it" mean? If it doesn't have a clock,
-how does said non-existent clock have a frequency?
-
-It would be possible to use a fixed-clock in place of
-system-clock-frequency, which would make the binding more consistent and
-the driver simpler, at the cost of making the dt marginally more
-complex.
-
-> +
-> +Example:
-> +
-> +clock {
-
-Why is this container here? It's confusing and unnecessary.
-
-> +	osc: oscillator {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <11289600>;
-> +	};
-> +};
-
-[...]
-
-> +static int
-> +asoc_simple_card_sub_parse_of(struct device_node *np,
-> +			      struct asoc_simple_dai *dai,
-> +			      struct device_node **node)
-> +{
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	/*
-> +	 * get node via "sound-dai = <&phandle port>"
-> +	 * it will be used as xxx_of_node on soc_bind_dai_link()
-> +	 */
-> +	*node = of_parse_phandle(np, "sound-dai", 0);
-> +	if (!*node)
-> +		return -ENODEV;
-> +
-> +	/* get dai->name */
-> +	ret = snd_soc_of_get_dai_name(np, &dai->name);
-> +	if (ret < 0)
-> +		goto parse_error;
-> +
-> +	/*
-> +	 * bitclock-inversion, frame-inversion
-> +	 * bitclock-master,    frame-master
-> +	 * and specific "format" if it has
-> +	 */
-
-This comment looks confusing to me. I'm not sure it's all that helpful.
-
-> +	dai->fmt = snd_soc_of_parse_daifmt(np, NULL);
-
-As a general note, I'm surprised there isn't a helper that does all of
-the above, from of_parse_phandle to here.
-
-> +
-> +	/*
-> +	 * dai->sysclk come from
-> +	 *  "clolks = <&xxx>" or "system-clock-frequency = <xxx>"
-
-s/clolks/clocks/
-
-> +	 */
-> +	clk = of_clk_get(np, 0);
-> +	if (IS_ERR(clk))
-> +		of_property_read_u32(np,
-> +				     "system-clock-frequency",
-> +				     &dai->sysclk);
-
-What it this isn't present?
-
-> +	else
-> +		dai->sysclk = clk_get_rate(clk);
-> +
-> +	ret = 0;
-> +
-> +parse_error:
-> +	of_node_put(*node);
-> +
-> +	return ret;
-> +}
-> +
-> +static int asoc_simple_card_parse_of(struct device_node *node,
-> +				     struct asoc_simple_card_info *info,
-> +				     struct device *dev,
-> +				     struct device_node **of_cpu,
-> +				     struct device_node **of_codec,
-> +				     struct device_node **of_platform)
-> +{
-> +	struct device_node *np;
-> +	char *name;
-> +	int ret = 0;
-> +
-> +	/* get CPU/CODEC common format via simple-audio,format */
-> +	info->daifmt = snd_soc_of_parse_daifmt(node, "simple-audio,") &
-> +		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
-> +
-> +	/* CPU sub-node */
-> +	ret = -EINVAL;
-> +	np = of_get_child_by_name(node, "simple-audio,cpu");
-> +	if (np)
-> +		ret = asoc_simple_card_sub_parse_of(np,
-> +						  &info->cpu_dai,
-> +						  of_cpu);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* CODEC sub-node */
-> +	ret = -EINVAL;
-> +	np = of_get_child_by_name(node, "simple-audio,codec");
-> +	if (np)
-> +		ret = asoc_simple_card_sub_parse_of(np,
-> +						  &info->codec_dai,
-> +						  of_codec);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* card name is created from CPU/CODEC dai name */
-> +	of_property_read_string(node, "simple-audio,card-name", &info->card);
-> +	name = devm_kzalloc(dev,
-> +			    strlen(info->cpu_dai.name)   +
-> +			    strlen(info->codec_dai.name) + 2,
-> +			    GFP_KERNEL);
-> +	sprintf(name, "%s-%s", info->cpu_dai.name, info->codec_dai.name);
-> +	info->name = info->card = name;
-> +
-> +	/* simple-card assumes platform == cpu */
-> +	*of_platform = *of_cpu;
-
-Why? What does this imply?
+While we can't always remove existing bindings, there are cases where
+it's possible and appropriate. However, we should strive for
+compatibility for as long a term as possible.
 
 Thanks,
 Mark.
