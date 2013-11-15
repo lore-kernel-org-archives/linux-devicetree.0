@@ -1,194 +1,343 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH 00/31] ARM: tegra: use common reset and DMA bindings
-Date: Fri, 15 Nov 2013 13:53:55 -0700
-Message-ID: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: swarren@wwwdotorg.org
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, linux-usb@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, Marc Dietrich <marvin24@gmx.de>, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, ac100@lists.launchpad.net, devel@driverdev.osuosl.org, Stephen Warren <swarren@nvidia.com>, Alan Stern <stern@rowland.harvard.edu>, linux-serial@vger.kernel.org, linux-input@vger.kernel.org, =?UTF-8?q?Terje=20Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julian Andres Klode <jak@jak-linux.org>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mike Turquette <mturquette@linaro.org>, Dan Williams <dan.j.willi>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 29/31] ARM: tegra: remove legacy DMA entries from DT
+Date: Fri, 15 Nov 2013 13:54:24 -0700
+Message-ID: <1384548866-13141-30-git-send-email-swarren@wwwdotorg.org>
+References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384548866-13141-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5AbnZpZGlhLmNvbT4KClRoaXMgc2VyaWVzIGlt
-cGxlbWVudHMgYSBjb21tb24gcmVzZXQgZnJhbWV3b3JrIGRyaXZlciBmb3IgVGVncmEsIGFuZAp1
-cGRhdGVzIGFsbCByZWxldmFudCBUZWdyYSBkcml2ZXJzIHRvIHVzZSBpdC4gSXQgYWxzbyByZW1v
-dmVzIHRoZSBjdXN0b20KRE1BIGJpbmRpbmdzIGFuZCByZXBsYWNlZCB0aGVtIHdpdGggdGhlIHN0
-YW5kYXJkIERNQSBEVCBiaW5kaW5ncy4KCkhpc3RvcmljYWxseSwgdGhlIFRlZ3JhIGNsb2NrIGRy
-aXZlciBoYXMgZXhwb3J0ZWQgYSBjdXN0b20gQVBJIGZvciBtb2R1bGUKcmVzZXQuIFRoaXMgc2Vy
-aWVzIHJlbW92ZXMgdGhhdCBBUEksIGFuZCB0cmFuc2l0aW9ucyBEVCBhbmQgZHJpdmVycyB0bwp0
-aGUgbmV3IHJlc2V0IGZyYW1ld29yay4KClRoZSBjdXN0b20gQVBJIHVzZWQgYSAic3RydWN0IGNs
-ayIgdG8gaWRlbnRpZnkgd2hpY2ggbW9kdWxlIHRvIHJlc2V0LCBhbmQKY29uc2VxdWVudGx5IHNv
-bWUgRFQgYmluZGluZ3MgYW5kIGRyaXZlcnMgcmVxdWlyZWQgY2xvY2tzIHRvIGJlIHByb3ZpZGVk
-CndoZXJlIHRoZXkgcmVhbGx5IG5lZWRlZCBqdXN0IGEgcmVzZXQgaWRlbnRpZmllciBpbnN0ZWFk
-LiBEdWUgdG8gdGhpcwprbm93biBkZWZpY2llbmN5LCBJIGhhdmUgYWx3YXlzIGNvbnNpZGVyZWQg
-bW9zdCBUZWdyYSBiaW5kaW5ncyB0byBiZQp1bnN0YWJsZS4gVGhpcyBzZXJpZXMgcmVtb3ZlcyB0
-aGlzIGV4Y3VzZSBmb3IgaW5zdGFiaWxpdHksIGFsdGhvdWdoIEkKc3RpbGwgY29uc2lkZXIgc29t
-ZSBUZWdyYSBiaW5kaW5ncyB1bnN0YWJsZSBkdWUgdG8gdGhlIG5lZWQgdG8gY29udmVydCB0bwp0
-aGUgY29tbW9uIERNQSBiaW5kaW5ncy4KCkhpc3RvcmljYWxseSwgVGVncmEgRE1BIGNoYW5uZWxz
-IGhhdmUgYmVlbiByZXByZXNlbnRlZCBpbiBEVCB1c2luZyBhCmN1c3RvbSBudmlkaWEsZG1hLXJl
-cXVlc3Qtc2VsZWN0b3IgcHJvcGVydHkuIE5vdyB0aGF0IHN0YW5kYXJkIERNQSBEVApiaW5kaW5n
-cyBleGlzdCwgY29udmVydCBhbGwgVGVncmEgYmluZGluZ3MsIERUcywgYW5kIGRyaXZlcnMgdG8g
-dXNlIHRoZQpzdGFuZGFyZCBpbnN0ZWFkLgoKVGhpcyBzZXJpZXMgbWFrZXMgYSBEVC1BQkktaW5j
-b21wYXRpYmxlIGNoYW5nZSB0bzoKLSBSZXF1aXJlIHJlc2V0IHNwZWNpZmllcnMgaW4gRFQgd2hl
-cmUgcmVsZXZhbnQuCi0gUmVxdWlyZSBzdGFuZGFyZCBETUEgc3BlY2lmaWVycy4KLSBSZW1vdmUg
-Y2xvY2sgc3BlY2lmaWVycyBmcm9tIERUIHdoZXJlIHRoZXkgd2VyZSBvbmx5IG5lZWRlZCBmb3Ig
-cmVzZXQuCi0gUmVtb3ZlIGxlZ2FjeSBETUEgc3BlY2lmaWVyIHByb3BlcnRpZXMuCgpJIGFudGlj
-aXBhdGUgbWVyZ2luZyB0aGlzIHdob2xlIHNlcmllcyBpbnRvIHRoZSBUZWdyYSBhbmQgYXJtLXNv
-YyB0cmVlcwphcyBpdHMgb3duIGJyYW5jaCwgZHVlIHRvIGludGVybmFsIGRlcGVuZGVuY2llcy4g
-VGhpcyBicmFuY2ggd2lsbCBiZQpzdGFibGUgYW5kIGNhbiB0aGVuIGJlIG1lcmdlZCBpbnRvIGFu
-eSBvdGhlciBzdWJzeXN0ZW0gdHJlZXMgc2hvdWxkIGFueQpjb25mbGljdHMgYXJpc2UuCgpUaGlz
-IHNlcmllcyBkZXBlbmRzIG9uIFBldGVyJ3MgVGVncmEgY2xvY2sgZHJpdmVyIHJld29yaywgYXZh
-aWxhYmxlIGF0CmdpdDovL252LXRlZ3JhLm52aWRpYS5jb20vdXNlci9wZGVzY2hyaWp2ZXIvbGlu
-dXggdGVncmEtY2xrLXRlZ3JhMTI0LTAKKG9yIHdoYXRldmVyIHZlcnNpb24gb2YgdGhhdCBnZXRz
-IGluY2x1ZGVkIGluIDMuMTQpCgpDYzogYWMxMDBAbGlzdHMubGF1bmNocGFkLm5ldApDYzogQWxh
-biBTdGVybiA8c3Rlcm5Acm93bGFuZC5oYXJ2YXJkLmVkdT4KQ2M6IGFsc2EtZGV2ZWxAYWxzYS1w
-cm9qZWN0Lm9yZwpDYzogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KQ2M6IERh
-biBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPgpDYzogRGF2aWQgQWlybGllIDxh
-aXJsaWVkQGxpbnV4LmllPgpDYzogZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmcKQ2M6IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiBEbWl0cnkgVG9yb2tob3YgPGRtaXRyeS50b3Jva2hv
-dkBnbWFpbC5jb20+CkNjOiBEbWl0cnkgVG9yb2tob3YgPGR0b3JAbWFpbC5ydT4KQ2M6IGRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKQ2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc+CkNjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhl
-bGxpb24ub3JnLnVrPgpDYzogSnVsaWFuIEFuZHJlcyBLbG9kZSA8amFrQGphay1saW51eC5vcmc+
-CkNjOiBMaWFtIEdpcmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPgpDYzogbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCkNjOiBsaW51eC1pMmNAdmdlci5rZXJuZWwub3JnCkNj
-OiBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5v
-cmcKQ2M6IGxpbnV4LXNlcmlhbEB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4LXNwaUB2Z2VyLmtl
-cm5lbC5vcmcKQ2M6IGxpbnV4LXRlZ3JhQHZnZXIua2VybmVsLm9yZwpDYzogbGludXgtdXNiQHZn
-ZXIua2VybmVsLm9yZwpDYzogTWFyYyBEaWV0cmljaCA8bWFydmluMjRAZ214LmRlPgpDYzogTWFy
-ayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxh
-bmRAYXJtLmNvbT4KQ2M6IE1pa2UgVHVycXVldHRlIDxtdHVycXVldHRlQGxpbmFyby5vcmc+CkNj
-OiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+CkNjOiBwZGVzY2hyaWp2ZXJAbnZpZGlh
-LmNvbQpDYzogUm9iIEhlcnJpbmcgPHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tPgpDYzogVGVyamUg
-QmVyZ3N0csO2bSA8dGJlcmdzdHJvbUBudmlkaWEuY29tPgpDYzogdHJlZGluZ0BudmlkaWEuY29t
-CkNjOiBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1zLmRlPgoKU3RlcGhlbiBXYXJyZW4gKDMx
-KToKICBBUk06IHRlZ3JhOiBhZGQgbWlzc2luZyBjbG9jayBkb2N1bWVudGF0aW9uIHRvIERUIGJp
-bmRpbmdzCiAgQVJNOiB0ZWdyYTogZG9jdW1lbnQgcmVzZXQgcHJvcGVydGllcyBpbiBEVCBiaW5k
-aW5ncwogIEFSTTogdGVncmE6IGRvY3VtZW50IHVzZSBvZiBzdGFuZGFyZCBETUEgRFQgYmluZGlu
-Z3MKICBBUk06IHRlZ3JhOiB1cGRhdGUgRFQgZmlsZXMgdG8gYWRkIHJlc2V0IHByb3BlcnRpZXMK
-ICBBUk06IHRlZ3JhOiB1cGRhdGUgRFQgZmlsZXMgdG8gYWRkIERNQSBwcm9wZXJ0aWVzCiAgQVJN
-OiB0ZWdyYTogc2VsZWN0IHRoZSByZXNldCBmcmFtZXdvcmsKICBjbGs6IHRlZ3JhOiBpbXBsZW1l
-bnQgYSByZXNldCBkcml2ZXIKICBwY2k6IHRlZ3JhOiB1c2UgcmVzZXQgZnJhbWV3b3JrCiAgZHJt
-L3RlZ3JhOiB1c2UgcmVzZXQgZnJhbWV3b3JrCiAgQVJNOiB0ZWdyYTogcGFzcyByZXNldCB0byB0
-ZWdyYV9wb3dlcmdhdGVfc2VxdWVuY2VfcG93ZXJfdXAoKQogIGRtYTogYWRkIGNoYW5uZWwgcmVx
-dWVzdCBBUEkgdGhhdCBzdXBwb3J0cyBkZWZlcnJlZCBwcm9iZQogIGRtYTogdGVncmE6IHVzZSBy
-ZXNldCBmcmFtZXdvcmsKICBkbWE6IHRlZ3JhOiByZWdpc3RlciBhcyBhbiBPRiBETUEgY29udHJv
-bGxlcgogIEFTb0M6IGRtYWVuZ2luZTogc3VwcG9ydCBkZWZlcnJlZCBwcm9iZSBmb3IgRE1BIGNo
-YW5uZWxzCiAgQVNvQzogZG1hZW5naW5lOiBhZGQgY3VzdG9tIERNQSBjb25maWcgdG8gc25kX2Rt
-YWVuZ2luZV9wY21fY29uZmlnCiAgQVNvQzogdGVncmE6IHVzZSByZXNldCBmcmFtZXdvcmsKICBB
-U29DOiB0ZWdyYTogY2FsbCBwbV9ydW50aW1lIEFQSXMgYXJvdW5kIHJlZ2lzdGVyIGFjY2Vzc2Vz
-CiAgQVNvQzogdGVncmE6IGFsbG9jYXRlIEFIVUIgRklGTyBkdXJpbmcgcHJvYmUoKSBub3Qgc3Rh
-cnR1cCgpCiAgQVNvQzogdGVncmE6IGNvbnZlcnQgdG8gc3RhbmRhcmQgRE1BIERUIGJpbmRpbmdz
-CiAgaTJjOiB0ZWdyYTogdXNlIHJlc2V0IGZyYW1ld29yawogIHN0YWdpbmc6IG52ZWM6IHVzZSBy
-ZXNldCBmcmFtZXdvcmsKICBzcGk6IHRlZ3JhOiB1c2UgcmVzZXQgZnJhbWV3b3JrCiAgc3BpOiB0
-ZWdyYTogY29udmVydCB0byBzdGFuZGFyZCBETUEgRFQgYmluZGluZ3MKICBzZXJpYWw6IHRlZ3Jh
-OiB1c2UgcmVzZXQgZnJhbWV3b3JrCiAgc2VyaWFsOiB0ZWdyYTogY29udmVydCB0byBzdGFuZGFy
-ZCBETUEgRFQgYmluZGluZ3MKICBJbnB1dDogdGVncmEta2JjIC0gdXNlIHJlc2V0IGZyYW1ld29y
-awogIFVTQjogRUhDSTogdGVncmE6IHVzZSByZXNldCBmcmFtZXdvcmsKICBBUk06IHRlZ3JhOiBy
-ZW1vdmUgbGVnYWN5IGNsb2NrIGVudHJpZXMgZnJvbSBEVAogIEFSTTogdGVncmE6IHJlbW92ZSBs
-ZWdhY3kgRE1BIGVudHJpZXMgZnJvbSBEVAogIGNsazogdGVncmE6IHJlbW92ZSBsZWdhY3kgcmVz
-ZXQgQVBJcwogIGNsazogdGVncmE6IHJlbW92ZSBib2d1cyBQQ0lFX1hDTEsKCiAuLi4vYmluZGlu
-Z3MvYXJtL3RlZ3JhL252aWRpYSx0ZWdyYTIwLXBtYy50eHQgICAgICB8ICAgMSArCiAuLi4vYmlu
-ZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3JhMTE0LWNhci50eHQgICAgICAgICB8ICAgNCArCiAuLi4v
-YmluZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3JhMTI0LWNhci50eHQgICAgICAgICB8ICAgNCArCiAu
-Li4vYmluZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3JhMjAtY2FyLnR4dCAgICAgICAgICB8ICAgNCAr
-CiAuLi4vYmluZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3JhMzAtY2FyLnR4dCAgICAgICAgICB8ICAg
-NCArCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvdGVncmEyMC1hcGJkbWEudHh0ICAgICB8
-ICAgOSArKwogLi4uL2JpbmRpbmdzL2dwdS9udmlkaWEsdGVncmEyMC1ob3N0MXgudHh0ICAgICAg
-ICAgfCAxMjQgKysrKysrKysrKysrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvbnZp
-ZGlhLHRlZ3JhMjAtaTJjLnR4dCB8ICAyNyArKystCiAuLi4vYmluZGluZ3MvaW5wdXQvbnZpZGlh
-LHRlZ3JhMjAta2JjLnR4dCAgICAgICAgICB8ICAgOSArKwogLi4uL2JpbmRpbmdzL21tYy9udmlk
-aWEsdGVncmEyMC1zZGhjaS50eHQgICAgICAgICAgfCAgIDkgKysKIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL252ZWMvbnZpZGlhLG52ZWMudHh0ICAgICAgIHwgIDEyICsrCiAuLi4vYmluZGluZ3Mv
-cGNpL252aWRpYSx0ZWdyYTIwLXBjaWUudHh0ICAgICAgICAgICB8ICAyOCArKy0tCiAuLi4vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wd20vbnZpZGlhLHRlZ3JhMjAtcHdtLnR4dCB8ICAgOSArKwogLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvcnRjL252aWRpYSx0ZWdyYTIwLXJ0Yy50eHQgfCAgIDMgKwog
-Li4uL2JpbmRpbmdzL3NlcmlhbC9udmlkaWEsdGVncmEyMC1oc3VhcnQudHh0ICAgICAgfCAgMTkg
-KystCiAuLi4vYmluZGluZ3Mvc291bmQvbnZpZGlhLHRlZ3JhLWF1ZGlvLWFsYzU2MzIudHh0ICB8
-ICAgNyArLQogLi4uL2JpbmRpbmdzL3NvdW5kL252aWRpYSx0ZWdyYS1hdWRpby1ydDU2NDAudHh0
-ICAgfCAgIDcgKy0KIC4uLi9iaW5kaW5ncy9zb3VuZC9udmlkaWEsdGVncmEtYXVkaW8td204NzUz
-LnR4dCAgIHwgICA3ICstCiAuLi4vYmluZGluZ3Mvc291bmQvbnZpZGlhLHRlZ3JhLWF1ZGlvLXdt
-ODkwMy50eHQgICB8ICAgNyArLQogLi4uL2JpbmRpbmdzL3NvdW5kL252aWRpYSx0ZWdyYS1hdWRp
-by13bTk3MTIudHh0ICAgfCAgIDcgKy0KIC4uLi9iaW5kaW5ncy9zb3VuZC9udmlkaWEsdGVncmEy
-MC1hYzk3LnR4dCAgICAgICAgIHwgIDIwICsrLQogLi4uL2JpbmRpbmdzL3NvdW5kL252aWRpYSx0
-ZWdyYTIwLWkycy50eHQgICAgICAgICAgfCAgMTkgKystCiAuLi4vYmluZGluZ3Mvc291bmQvbnZp
-ZGlhLHRlZ3JhMzAtYWh1Yi50eHQgICAgICAgICB8ICA1NCArKysrKy0tCiAuLi4vYmluZGluZ3Mv
-c291bmQvbnZpZGlhLHRlZ3JhMzAtaTJzLnR4dCAgICAgICAgICB8ICAxMSArLQogLi4uL2JpbmRp
-bmdzL3NwaS9udmlkaWEsdGVncmExMTQtc3BpLnR4dCAgICAgICAgICAgfCAgMjQgKystCiAuLi4v
-YmluZGluZ3Mvc3BpL252aWRpYSx0ZWdyYTIwLXNmbGFzaC50eHQgICAgICAgICB8ICAyMCArKy0K
-IC4uLi9iaW5kaW5ncy9zcGkvbnZpZGlhLHRlZ3JhMjAtc2xpbmsudHh0ICAgICAgICAgIHwgIDIw
-ICsrLQogLi4uL2JpbmRpbmdzL3RpbWVyL252aWRpYSx0ZWdyYTIwLXRpbWVyLnR4dCAgICAgICAg
-fCAgIDMgKwogLi4uL2JpbmRpbmdzL3RpbWVyL252aWRpYSx0ZWdyYTMwLXRpbWVyLnR4dCAgICAg
-ICAgfCAgIDMgKwogLi4uL2JpbmRpbmdzL3VzYi9udmlkaWEsdGVncmEyMC1laGNpLnR4dCAgICAg
-ICAgICAgfCAgIDcgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTE0LmR0c2kgICAgICAgICAg
-ICAgICAgICAgIHwgMTQyICsrKysrKysrKysrKysrLS0tCiBhcmNoL2FybS9ib290L2R0cy90ZWdy
-YTIwLXBhejAwLmR0cyAgICAgICAgICAgICAgICB8ICAgMiArCiBhcmNoL2FybS9ib290L2R0cy90
-ZWdyYTIwLmR0c2kgICAgICAgICAgICAgICAgICAgICB8IDEzMiArKysrKysrKysrKysrKy0tCiBh
-cmNoL2FybS9ib290L2R0cy90ZWdyYTMwLmR0c2kgICAgICAgICAgICAgICAgICAgICB8IDE3MSAr
-KysrKysrKysrKysrKysrKy0tLS0KIGFyY2gvYXJtL21hY2gtdGVncmEvS2NvbmZpZyAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAyICsKIGFyY2gvYXJtL21hY2gtdGVncmEvcG93ZXJnYXRlLmMg
-ICAgICAgICAgICAgICAgICAgIHwgICA4ICstCiBkcml2ZXJzL2Nsay90ZWdyYS9jbGstcGVyaXBo
-LWdhdGUuYyAgICAgICAgICAgICAgICB8ICAyMiAtLS0KIGRyaXZlcnMvY2xrL3RlZ3JhL2Nsay1w
-ZXJpcGguYyAgICAgICAgICAgICAgICAgICAgIHwgIDQwIC0tLS0tCiBkcml2ZXJzL2Nsay90ZWdy
-YS9jbGstdGVncmExMTQuYyAgICAgICAgICAgICAgICAgICB8ICAgMyArLQogZHJpdmVycy9jbGsv
-dGVncmEvY2xrLXRlZ3JhMTI0LmMgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KIGRyaXZlcnMv
-Y2xrL3RlZ3JhL2Nsay10ZWdyYTIwLmMgICAgICAgICAgICAgICAgICAgIHwgICA5ICstCiBkcml2
-ZXJzL2Nsay90ZWdyYS9jbGstdGVncmEzMC5jICAgICAgICAgICAgICAgICAgICB8ICAxMCArLQog
-ZHJpdmVycy9jbGsvdGVncmEvY2xrLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNTUg
-KysrKysrLQogZHJpdmVycy9jbGsvdGVncmEvY2xrLmggICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDMgKy0KIGRyaXZlcnMvZG1hL2FjcGktZG1hLmMgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgIDEyICstCiBkcml2ZXJzL2RtYS9kbWFlbmdpbmUuYyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICA0NCArKysrKy0KIGRyaXZlcnMvZG1hL29mLWRtYS5jICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDEyICstCiBkcml2ZXJzL2RtYS90ZWdyYTIwLWFwYi1kbWEu
-YyAgICAgICAgICAgICAgICAgICAgICB8ICA0OSArKysrKy0KIGRyaXZlcnMvZ3B1L2RybS90ZWdy
-YS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS90
-ZWdyYS9kYy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICstCiBkcml2ZXJzL2dwdS9k
-cm0vdGVncmEvZHJtLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dw
-dS9kcm0vdGVncmEvZ3IzZC5jICAgICAgICAgICAgICAgICAgICAgICB8ICAyMiArKy0KIGRyaXZl
-cnMvZ3B1L2RybS90ZWdyYS9oZG1pLmMgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0ICstCiBk
-cml2ZXJzL2kyYy9idXNzZXMvaTJjLXRlZ3JhLmMgICAgICAgICAgICAgICAgICAgICB8ICAxMyAr
-LQogZHJpdmVycy9pbnB1dC9rZXlib2FyZC90ZWdyYS1rYmMuYyAgICAgICAgICAgICAgICAgfCAg
-MTMgKy0KIGRyaXZlcnMvcGNpL2hvc3QvcGNpLXRlZ3JhLmMgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDUyICsrKysrLS0KIGRyaXZlcnMvc3BpL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAzICsKIGRyaXZlcnMvc3BpL3NwaS10ZWdyYTExNC5jICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgIDY2ICsrKystLS0tCiBkcml2ZXJzL3NwaS9zcGktdGVncmEyMC1zZmxh
-c2guYyAgICAgICAgICAgICAgICAgICB8ICAxOCArKy0KIGRyaXZlcnMvc3BpL3NwaS10ZWdyYTIw
-LXNsaW5rLmMgICAgICAgICAgICAgICAgICAgIHwgIDY2ICsrKystLS0tCiBkcml2ZXJzL3N0YWdp
-bmcvbnZlYy9udmVjLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArLQogZHJpdmVycy9z
-dGFnaW5nL252ZWMvbnZlYy5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKy0KIGRyaXZl
-cnMvdHR5L3NlcmlhbC9zZXJpYWwtdGVncmEuYyAgICAgICAgICAgICAgICAgIHwgIDg2ICsrKysr
-LS0tLS0tCiBkcml2ZXJzL3VzYi9ob3N0L2VoY2ktdGVncmEuYyAgICAgICAgICAgICAgICAgICAg
-ICB8ICAxNCArLQogaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay90ZWdyYTIwLWNhci5oICAgICAg
-ICAgICAgfCAgIDIgKy0KIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svdGVncmEzMC1jYXIuaCAg
-ICAgICAgICAgIHwgICAyICstCiBpbmNsdWRlL2xpbnV4L2Nsay90ZWdyYS5oICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgNyAtCiBpbmNsdWRlL2xpbnV4L2RtYWVuZ2luZS5oICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgNyArCiBpbmNsdWRlL2xpbnV4L29mX2RtYS5oICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgOSArLQogaW5jbHVkZS9saW51eC90ZWdyYS1wb3dlcmdh
-dGUuaCAgICAgICAgICAgICAgICAgICAgfCAgIDQgKy0KIGluY2x1ZGUvc291bmQvZG1hZW5naW5l
-X3BjbS5oICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsKIHNvdW5kL3NvYy9zb2MtZ2VuZXJp
-Yy1kbWFlbmdpbmUtcGNtLmMgICAgICAgICAgICAgIHwgIDgyICsrKysrKystLS0KIHNvdW5kL3Nv
-Yy90ZWdyYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIHNvdW5k
-L3NvYy90ZWdyYS90ZWdyYTIwX2FjOTcuYyAgICAgICAgICAgICAgICAgICAgIHwgIDExIC0tCiBz
-b3VuZC9zb2MvdGVncmEvdGVncmEyMF9pMnMuYyAgICAgICAgICAgICAgICAgICAgICB8ICAyMCAr
-LS0KIHNvdW5kL3NvYy90ZWdyYS90ZWdyYTMwX2FodWIuYyAgICAgICAgICAgICAgICAgICAgIHwg
-MTI1ICsrKysrKysrKy0tLS0tLQogc291bmQvc29jL3RlZ3JhL3RlZ3JhMzBfYWh1Yi5oICAgICAg
-ICAgICAgICAgICAgICAgfCAgMTEgKy0KIHNvdW5kL3NvYy90ZWdyYS90ZWdyYTMwX2kycy5jICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDk3ICsrKysrKy0tLS0tLQogc291bmQvc29jL3RlZ3JhL3Rl
-Z3JhMzBfaTJzLmggICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKwogc291bmQvc29jL3RlZ3Jh
-L3RlZ3JhX3BjbS5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTcgKy0KIHNvdW5kL3NvYy90
-ZWdyYS90ZWdyYV9wY20uaCAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsKIDgxIGZpbGVz
-IGNoYW5nZWQsIDE0NDggaW5zZXJ0aW9ucygrKSwgNTU4IGRlbGV0aW9ucygtKQoKLS0gCjEuOC4x
-LjUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Now that all Tegra drivers have been converted to use DMA APIs which
+retrieve DMA channel information from standard DMA DT properties, we can
+remove all the legacy DT DMA-related properties.
+
+Cc: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra114.dtsi | 14 --------------
+ arch/arm/boot/dts/tegra20.dtsi  | 13 -------------
+ arch/arm/boot/dts/tegra30.dtsi  | 12 ------------
+ 3 files changed, 39 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+index b4f2e62909a7..6d4858b2c701 100644
+--- a/arch/arm/boot/dts/tegra114.dtsi
++++ b/arch/arm/boot/dts/tegra114.dtsi
+@@ -128,7 +128,6 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 8>;
+ 		clocks = <&tegra_car TEGRA114_CLK_UARTA>;
+ 		resets = <&tegra_car 6>;
+ 		reset-names = "serial";
+@@ -142,7 +141,6 @@
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 9>;
+ 		clocks = <&tegra_car TEGRA114_CLK_UARTB>;
+ 		resets = <&tegra_car 7>;
+ 		reset-names = "serial";
+@@ -156,7 +154,6 @@
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 10>;
+ 		clocks = <&tegra_car TEGRA114_CLK_UARTC>;
+ 		resets = <&tegra_car 55>;
+ 		reset-names = "serial";
+@@ -170,7 +167,6 @@
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 19>;
+ 		clocks = <&tegra_car TEGRA114_CLK_UARTD>;
+ 		resets = <&tegra_car 65>;
+ 		reset-names = "serial";
+@@ -268,7 +264,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000d400 0x200>;
+ 		interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 15>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC1>;
+@@ -284,7 +279,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000d600 0x200>;
+ 		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 16>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC2>;
+@@ -300,7 +294,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000d800 0x200>;
+ 		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 17>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC3>;
+@@ -316,7 +309,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000da00 0x200>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 18>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC4>;
+@@ -332,7 +324,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000dc00 0x200>;
+ 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 27>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC5>;
+@@ -348,7 +339,6 @@
+ 		compatible = "nvidia,tegra114-spi";
+ 		reg = <0x7000de00 0x200>;
+ 		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 28>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA114_CLK_SBC6>;
+@@ -401,10 +391,6 @@
+ 		      <0x70080200 0x100>,
+ 		      <0x70081000 0x200>;
+ 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 1>, <&apbdma 2>,
+-			<&apbdma 3>, <&apbdma 4>, <&apbdma 6>, <&apbdma 7>,
+-			<&apbdma 12>, <&apbdma 13>, <&apbdma 14>,
+-			<&apbdma 29>;
+ 		clocks = <&tegra_car TEGRA114_CLK_D_AUDIO>,
+ 			 <&tegra_car TEGRA114_CLK_APBIF>,
+ 			 <&tegra_car TEGRA114_CLK_I2S0>,
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 61d2f3868f4f..f780f7bed7bf 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -248,7 +248,6 @@
+ 		compatible = "nvidia,tegra20-ac97";
+ 		reg = <0x70002000 0x200>;
+ 		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 12>;
+ 		clocks = <&tegra_car TEGRA20_CLK_AC97>;
+ 		resets = <&tegra_car 3>;
+ 		reset-names = "ac97";
+@@ -261,7 +260,6 @@
+ 		compatible = "nvidia,tegra20-i2s";
+ 		reg = <0x70002800 0x200>;
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 2>;
+ 		clocks = <&tegra_car TEGRA20_CLK_I2S1>;
+ 		resets = <&tegra_car 11>;
+ 		reset-names = "i2s";
+@@ -274,7 +272,6 @@
+ 		compatible = "nvidia,tegra20-i2s";
+ 		reg = <0x70002a00 0x200>;
+ 		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 1>;
+ 		clocks = <&tegra_car TEGRA20_CLK_I2S2>;
+ 		resets = <&tegra_car 18>;
+ 		reset-names = "i2s";
+@@ -295,7 +292,6 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 8>;
+ 		clocks = <&tegra_car TEGRA20_CLK_UARTA>;
+ 		resets = <&tegra_car 6>;
+ 		reset-names = "serial";
+@@ -309,7 +305,6 @@
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 9>;
+ 		clocks = <&tegra_car TEGRA20_CLK_UARTB>;
+ 		resets = <&tegra_car 7>;
+ 		reset-names = "serial";
+@@ -323,7 +318,6 @@
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 10>;
+ 		clocks = <&tegra_car TEGRA20_CLK_UARTC>;
+ 		resets = <&tegra_car 55>;
+ 		reset-names = "serial";
+@@ -337,7 +331,6 @@
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 19>;
+ 		clocks = <&tegra_car TEGRA20_CLK_UARTD>;
+ 		resets = <&tegra_car 65>;
+ 		reset-names = "serial";
+@@ -351,7 +344,6 @@
+ 		reg = <0x70006400 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 20>;
+ 		clocks = <&tegra_car TEGRA20_CLK_UARTE>;
+ 		resets = <&tegra_car 66>;
+ 		reset-names = "serial";
+@@ -397,7 +389,6 @@
+ 		compatible = "nvidia,tegra20-sflash";
+ 		reg = <0x7000c380 0x80>;
+ 		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 11>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA20_CLK_SPI>;
+@@ -460,7 +451,6 @@
+ 		compatible = "nvidia,tegra20-slink";
+ 		reg = <0x7000d400 0x200>;
+ 		interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 15>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA20_CLK_SBC1>;
+@@ -475,7 +465,6 @@
+ 		compatible = "nvidia,tegra20-slink";
+ 		reg = <0x7000d600 0x200>;
+ 		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 16>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA20_CLK_SBC2>;
+@@ -490,7 +479,6 @@
+ 		compatible = "nvidia,tegra20-slink";
+ 		reg = <0x7000d800 0x200>;
+ 		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 17>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA20_CLK_SBC3>;
+@@ -505,7 +493,6 @@
+ 		compatible = "nvidia,tegra20-slink";
+ 		reg = <0x7000da00 0x200>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 18>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA20_CLK_SBC4>;
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index 348b0f07f675..03ec194e832f 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -345,7 +345,6 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 8>;
+ 		clocks = <&tegra_car TEGRA30_CLK_UARTA>;
+ 		resets = <&tegra_car 6>;
+ 		reset-names = "serial";
+@@ -359,7 +358,6 @@
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 9>;
+ 		clocks = <&tegra_car TEGRA30_CLK_UARTB>;
+ 		resets = <&tegra_car 7>;
+ 		reset-names = "serial";
+@@ -373,7 +371,6 @@
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 10>;
+ 		clocks = <&tegra_car TEGRA30_CLK_UARTC>;
+ 		resets = <&tegra_car 55>;
+ 		reset-names = "serial";
+@@ -387,7 +384,6 @@
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 19>;
+ 		clocks = <&tegra_car TEGRA30_CLK_UARTD>;
+ 		resets = <&tegra_car 65>;
+ 		reset-names = "serial";
+@@ -401,7 +397,6 @@
+ 		reg = <0x70006400 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 20>;
+ 		clocks = <&tegra_car TEGRA30_CLK_UARTE>;
+ 		resets = <&tegra_car 66>;
+ 		reset-names = "serial";
+@@ -511,7 +506,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000d400 0x200>;
+ 		interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 15>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC1>;
+@@ -526,7 +520,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000d600 0x200>;
+ 		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 16>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC2>;
+@@ -541,7 +534,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000d800 0x200>;
+ 		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 17>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC3>;
+@@ -556,7 +548,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000da00 0x200>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 18>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC4>;
+@@ -571,7 +562,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000dc00 0x200>;
+ 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 27>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC5>;
+@@ -586,7 +576,6 @@
+ 		compatible = "nvidia,tegra30-slink", "nvidia,tegra20-slink";
+ 		reg = <0x7000de00 0x200>;
+ 		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 28>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clocks = <&tegra_car TEGRA30_CLK_SBC6>;
+@@ -638,7 +627,6 @@
+ 		reg = <0x70080000 0x200
+ 		       0x70080200 0x100>;
+ 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+-		nvidia,dma-request-selector = <&apbdma 1>;
+ 		clocks = <&tegra_car TEGRA30_CLK_D_AUDIO>,
+ 			 <&tegra_car TEGRA30_CLK_APBIF>;
+ 		clock-names = "d_audio", "apbif";
+-- 
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
