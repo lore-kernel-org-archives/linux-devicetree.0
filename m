@@ -1,60 +1,37 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Fri, 15 Nov 2013 23:21:09 +0000
-Message-ID: <20131115232109.GT16735@n2100.arm.linux.org.uk>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <20131115175241.GB27174@quad.lixom.net> <20131115180832.GR16735@n2100.arm.linux.org.uk> <201311152056.47846.arnd@arndb.de>
+From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Add-Broadcom-Kona-I2C-Support
+Date: Fri, 15 Nov 2013 15:30:06 -0800
+Message-ID: <CAAYSxhrk6qgfy3TUdme3ge98d8Db7e=aW3LG8VfsJgjfuHAS3A@mail.gmail.com>
+References: <1384462936-7906-1-git-send-email-tim.kryger@linaro.org>
+	<20131115225234.GC2672@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201311152056.47846.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131115225234.GC2672@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Doc List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linaro Patches List <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
-> On Friday 15 November 2013, Russell King - ARM Linux wrote:
-> > On Fri, Nov 15, 2013 at 09:52:41AM -0800, Olof Johansson wrote:
-> > > If we knew exactly what we wanted, it'd be a different story. _We
-> > > don't_. We're into year FOUR of the device tree conversion and we're just
-> > > now reaching a point where we think we know what a good solution looks
-> > > like. The first two years were easy -- they were the trivial devices we're
-> > > now talking about on ACPI. After that it got harder. Going through all
-> > > of that again with ACPI? No. No way. Microsoft gets to do it and while
-> > > they're busy sorting it out, we'll boot with device tree.
-> > 
-> > However, there's a very big danger here.  I disagree with the stance
-> > you're taking.
-> > 
-> > It seems that under ACPI and DT, we refer to properties by string names.
-> > That's good, but do we really want to have different string names for the
-> > same property.
-> 
-> For all I know, doing this in ACPI is something that is only now being
-> discussed as Intel wants to be able to reuse the existing features from
-> DT enabled drivers in the kernel and share the implementation between
-> embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
-> isn't as crazy.
-> 
-> The existing ACPI usage however is basically all binary and cannot be
-> shared with DT, in particular it won't help for the orthogonal problem of
-> using ACPI to get "enterprise server" features on ARM64.
+On Fri, Nov 15, 2013 at 2:52 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
 
-That's strange, because the patches I've seen from people who want to
-add ACPI support to AMBA are all based around very similar strings to
-those in DT to lookup the same data in ACPI.
+> Fixed Kconfig sorting, squashed broken out patches 1-3 into one and
+> applied to for-next, thanks! Let me know if I should take patches 4-5
+> also, but usually they go via arm-soc. Also, please provide a "Changes
+> since V1" log which will speed up reviewing.
 
-What's been done there is the function which reads from DT has been
-duplicated, and instead of reading the information from DT, it reads it
-from ACPI instead using string names without the vendor prefix.
+Thanks.  It appears that when I updated the dependencies, I
+accidentally removed the change list I had planned to send.  This is
+what should have appeared in my cover letter:
 
-That tells me that what I've stated in my previous email to which you
-replied is _definitely_ possible to do.  That means it's certainly
-possible to do this without reinventing the wheel, and without having
-to rewrite lots of parsing code, precisely along the lines I set out
-in my original email.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v2:
+  - Binding documentation is in its own patch
+  - Minor cosmetic changes
+  - Fixed bug related to improper signedness
+  - Removed superflous mutex
+  - Simplified probe function
+
+I think it would be best for the DTS changes (patches 4 and 5) to go
+through Christian's tree.
+
+-Tim
