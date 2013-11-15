@@ -1,36 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 2/4] Documentation: Add documentation for APM X-Gene SATA controllor DTS binding
-Date: Fri, 15 Nov 2013 14:28:24 +0100
-Message-ID: <201311151428.25204.arnd@arndb.de>
-References: <1384465153-29902-1-git-send-email-lho@apm.com> <1384465153-29902-2-git-send-email-lho@apm.com> <1384465153-29902-3-git-send-email-lho@apm.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] ARM: at91/dt: binding: add missing compatibility string
+ in SDRAM/DDR documentation
+Date: Fri, 15 Nov 2013 14:41:14 +0100
+Message-ID: <20131115134114.GL28304@ns203013.ovh.net>
+References: <1384510235-16083-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1384465153-29902-3-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384510235-16083-1-git-send-email-nicolas.ferre@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 November 2013, Loc Ho wrote:
-> +Required properties:
-> +- compatible           : Shall be "apm,xgene-ahci"
-> +- reg                  : First memory resource shall be the AHCI memory
-> +                         resource.
-> +                         Second memory resource shall be the host controller
-> +                         memory resource.
-> +- id                   : Controller ID (0 = first, 1 = second, 2 = third)
+On 11:10 Fri 15 Nov     , Nicolas Ferre wrote:
+> The "atmel,at91rm9200-sdramc" was missing from binding documentation.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 
-As in the PHY patch, it's probably best to drop the "id" property here and
-describe the actual differences between the instances directly, either by
-having distinct "compatible" properties for each model, or by adding binary
-flags to tell about a capability that only some instances have.
-
-Also, I think you should have a separate file for the sata binding, especially
-since the PHY binding is not actually specific to SATA at all.
-
-Aside from these, the binding looks good to me now.
-
-	Arnd
+Best Regards,
+J.
+> ---
+>  Documentation/devicetree/bindings/arm/atmel-at91.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> index 1196290..d2170e7 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> @@ -50,7 +50,8 @@ Example:
+>  	};
+>  
+>  RAMC SDRAM/DDR Controller required properties:
+> -- compatible: Should be "atmel,at91sam9260-sdramc",
+> +- compatible: Should be "atmel,at91rm9200-sdramc",
+> +			"atmel,at91sam9260-sdramc",
+>  			"atmel,at91sam9g45-ddramc",
+>  - reg: Should contain registers location and length
+>    For at91sam9263 and at91sam9g45 you must specify 2 entries.
+> -- 
+> 1.8.2.2
+> 
