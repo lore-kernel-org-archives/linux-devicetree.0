@@ -1,40 +1,80 @@
-From: Jonas Bonn <jonas@southpole.se>
-Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
-Date: Fri, 15 Nov 2013 10:52:25 +0100
-Message-ID: <5285EED9.6090401@southpole.se>
-References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
-	<20131110055145.GA7947@chokladfabriken.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
-In-Reply-To: <20131110055145.GA7947@chokladfabriken.org>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
-To: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: Kevin Mehall <contact@kevinmehall.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@lists.openrisc.net
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v7 2/2] PWM: atmel-pwm: add device tree binding document
+Date: Fri, 15 Nov 2013 17:53:28 +0800
+Message-ID: <1384509208-10762-2-git-send-email-voice.shen@atmel.com>
+References: <1384509208-10762-1-git-send-email-voice.shen@atmel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384509208-10762-1-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2013 06:51 AM, Stefan Kristiansson wrote:
-> On Sat, Nov 09, 2013 at 09:37:31PM +0100, Geert Uytterhoeven wrote:
->> Notable changes:
->>    - Change flash0 to spansion,s25sl064p, due to kernel message
->>      m25p80 spi32766.0: found s25sl064p, expected m25p10
->
-> This is due to Altera changing the EPCS chip on newer revisions
-> of that board, older versions are "relabeled" m25p10 and
-> newer once s25sl064p.
-> The change is fine though, you have to pick one.
+Add atmel pwm driver device tree binding document
 
-Actually, you want two DTS's: one for each version of the board with a 
-'compatible' property to help select the right one.  What do the 
-revision numbers for these boards look like?
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Acked-by: Kumar Gala <galak@codeaurora.org>
+---
+Changes in v7: None
+Changes in v6:
+  - New, split binding document as a separate patch
 
-/Jonas
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+
+diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+new file mode 100644
+index 0000000..1c1a5fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+@@ -0,0 +1,41 @@
++Atmel PWM controller
++
++Required properties:
++  - compatible: should be one of:
++    - "atmel,at91sam9rl-pwm"
++    - "atmel,sama5d3-pwm"
++  - reg: physical base address and length of the controller's registers
++  - #pwm-cells: Should be 3. See pwm.txt in this directory for a
++    description of the cells format
++
++Example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++The following the pwm led based example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++	pwdleds {
++		compatible = "pwm-leds";
++
++		d1 {
++			label = "d1";
++			pwms = <&pwm0 3 5000 0>
++			max-brightness = <255>;
++		};
++
++		d2 {
++			label = "d2";
++			pwms = <&pwm0 1 5000 1>
++			max-brightness = <255>;
++		};
++	};
+-- 
+1.7.9.5
