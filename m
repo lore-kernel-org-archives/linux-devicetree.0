@@ -1,76 +1,42 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: Strange location and name for platform  devices when device-tree is used.
-Date: Fri, 15 Nov 2013 16:44:16 +0900
-Message-ID: <20131115074416.4DA8DC40828@trevor.secretlab.ca>
-References: <20131101145925.66e22f73@notabene.brown> <1383279744.28909.26. camel@pasglop> <1383280054.28909.30.camel@pasglop> <20131101160329.37f3707b @notabene.brown> <1383282516.28909.36.camel@pasglop> <20131101204749. GA19662@kroah.com> <1383347425.28909.63.camel@pasglop> <20131102104505. 34105cbb@notabene.brown>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131102104505.34105cbb@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Fri, 15 Nov 2013 15:07:45 +0000
+Message-ID: <20131115150745.GB24831@e106331-lin.cambridge.arm.com>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+ <5285EE5A.1070202@southpole.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5285EE5A.1070202-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-73nT9ZVIoz3k1uMJSBkQmQ@public.gmane.org" <linux-73nT9ZVIoz3k1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Mehall <contact-U/VwWUtD1TkEIRV9q1A9vg@public.gmane.org>, Marek Czerski <ma.czerski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2 Nov 2013 10:45:05 +1100, NeilBrown <neilb@suse.de> wrote:
-> On Sat, 02 Nov 2013 10:10:25 +1100 Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> 
-> > On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
-> > 
-> > > > > On my device I seem to have some platform devices registered through
-> > > > > device-tree, and some registered through platform_device_add (e.g.
-> > > > > 'alarmtimer').  Guaranteeing they remain disjoint sets if the kernel is
-> > > > > allowed to evolve independently of the devicetree might be tricky....
-> > > > > Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform" ??
-> > > > 
-> > > > No, I think device-tree created platform devices should go
-> > > > to /sys/devices/platform like the "classic" ones.
-> > > > 
-> > > > The problem is really how to deal with potential name duplication. We
-> > > > could try to register, if we get -EEXIST (assuming sysfs returns the
-> > > > right stuff), try again with ".1" etc...
-> > > 
-> > > How can there be device name collisions?  All platform devices _should_
-> > > be named uniquely, if not, you have bigger problems...
-> > 
-> > The problem is how to create a unique name for a platform device created
-> > from a device-tree node.
-> > 
-> > Device tree nodes aren't necessarily uniquely named. They are unique
-> > under a given parent but that hierarchy isn't preserved when creating
-> > corresponding platform devices (and it would be very tricky to do so).
-> > 
-> > Currently, we simply append a number to the name when creating them,
-> > which is obtained from a global counter.
-> > 
-> > Neil is unhappy about that because on his specific hardware, the device
-> > has a unique name and thus we introduce a naming difference between
-> > device-tree usage and old-style "hard coded" board file usage.
-> 
-> It occurs to me that a different approach could solve my problem.
-> 
-> My problem stems from the fact that the name of the device on the
-> platform-bus is used as the name of the device in the "backlight" class.
-> 
-> As Greg writes elsewhere, depending on names with /sys/devices is not
-> supported - we need to accept that bus-names might change.
-> However names in class devices tend to be a lot more stable.
-> Several devices allow these to be explicitly set.
->  leds have 'label'
->  regulators has "regulator-name"
->  gpio-keys has 'label'.
-> 
-> I could just teach pwm_bl to allow a 'label' property which would be used in
-> place of the platform-bus device name when creating the class/backlight
-> device.
-> 
-> The maxim "you cannot trust names to remain stable in /sys/devices" can
-> justify both the movement of platform devices into /sys/devices/platform, and
-> the use of "label" rather than the device-name for creating the class device.
-> 
-> Does that sound convincing?
+On Fri, Nov 15, 2013 at 09:50:18AM +0000, Jonas Bonn wrote:
+[...]
 
-The problem with a property in the node in this case is that there is no
-guarantee of uniqueness. An alternative however would be to look for an
-alias in /aliases. Those are unique.
+> > +	gpio0: gpio@91000000 {
+> > +		compatible = "opencores,jbtrivial";
+> 
+> There's no project called 'jbtrivial' at OpenCores.  Should this be 
+> "linux,jbtrivial" to indicate that this refers to a Linux driver?
 
-g.
+I would prefer not. Having driver names in bindings is an antipattern;
+drivers should be free to change independently of the hardware or
+bindings, and we should be able to create new drivers that handle
+existing bindings.
+
+Either a new compatible string should be allcoated, or one of the
+generic bindings should be used. While we do have drivers for the
+generic cases, the *-generic bindings are treated as a specification
+that hardware can meet, and are not intended to change. They are also
+there fore independent of Linux.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
