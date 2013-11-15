@@ -1,100 +1,48 @@
-From: Andrew Glen <andrewtaneglen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Query regarding shared memory addresses defined for d_can devices in /arch/arm/boot/dts/am33xx.dtsi
-Date: Fri, 15 Nov 2013 14:18:04 +1300
-Message-ID: <CAHKgOt6v5Xdrtak9_uFsauQ0nDwQomn-kenjSyFxQThU9n_=4w@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: ACPI vs DT at runtime
+Date: Thu, 14 Nov 2013 17:44:10 -0800
+Message-ID: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Using the new 3.12 mainline kernel I've been able to get both CAN
-devices working reliably on an AM335x platform (the Beaglbone Black).
+The more I start to see early UEFI/ACPI code, the more I am certain
+that we want none of that crap in the kernel. It's making things
+considerably messier, while we're already very busy trying to convert
+everything over and enable DT -- we'll be preempting that effort just
+to add even more boilerplate everywhere and total progress will be
+hurt.
 
-However, I get a warning when the device boots:
+The server guys really want UEFI for their boot protocols,
+installation managers, etc, etc. That's fine, let them do that, but
+that doesn't mean we need to bring the same APIs all the way into the
+kernel.
 
-c_can_platform 481d0000.d_can: can't request region for resource [mem
-0x44e10644-0x44e10647]
+So, I'm strongly urging that whatever the server guys try to do, it
+will in the end result in the ACPI data being translated into DT
+equivalents, such that the kernel _only_ needs to handle data via DT.
 
-What this is referring to is the fact that in definitions for each of
-the two can devices in 'am33xx.dtsi', the same register address is
-being requested. They are defined as follows:
+Just like PowerPC scrapes the OpenFirmware client interface to build a
+flat device tree, we should add a pre-boot stage that scrapes
+ACPI/UEFI data and constructs an appropriate device-tree. We can still
+bring over ACPI methods and represent those in the DT, but we should
+_not_ have two native interfaces.
 
-        dcan0: d_can@481cc000 {
-            compatible = "bosch,d_can";
-            ti,hwmods = "d_can0";
-            reg = <0x481cc000 0x2000
-                0x44e10644 0x4>;
-            interrupts = <52>;
-            status = "disabled";
-        };
-
-        dcan1: d_can@481d0000 {
-            compatible = "bosch,d_can";
-            ti,hwmods = "d_can1";
-            reg = <0x481d0000 0x2000
-                0x44e10644 0x4>;
-            interrupts = <55>;
-            status = "disabled";
-        };
-
-For both items the address '0x44e10644 0x4', referring to the register
-'dcan_raminit' (Pg 793 of spruh73h.pdf), is being reserved for use.
-The devicetree interpreter considers any overlap between device 'reg'
-mappings as a problem, hence the message seen on boot.
-
-The register 'dcan_raminit' is in fact used by both can devices, so it
-does make sense for both to have access to it. It appears however,
-this register is only used in the d_can driver, which is not in use
-with this latest kernel release, and both devices work flawlessly (as
-far as I can tell) regardless of the error message.
-
-I thought I'd have a go at tidying this part of the 'am33xx.dtsi'
-devicetree file up a bit in order to get rid of this message - and
-this is where my question comes in. I thought I could make a single
-parent node for d_can with this shared register defined at the top
-level, and then add the two can devices as child nodes. I came up
-variations of the following:
-
-        dcan {
-            #address-cells = <1>;
-            #size-cells = <1>;
-            reg = <0x44e10644 0x4>;
-
-            dcan0: d_can@481cc000 {
-                compatible = "bosch,d_can";
-                ti,hwmods = "d_can0";
-                reg = <0x481cc000 0x2000>;
-                interrupts = <52>;
-                status = "disabled";
-            };
-
-            dcan1: d_can@481d0000 {
-                compatible = "bosch,d_can";
-                ti,hwmods = "d_can1";
-                reg = <0x481d0000 0x2000>;
-                interrupts = <55>;
-                status = "disabled";
-            };
-        };
-
-I tried various iterations along this line (and modified the
-am335x-boneblack.dts file with the corresponding 'status = 'okay'
-entries for these devices), all of which would compile fine, and the
-device would then boot with no error messages, but for whatever reason
-the devices would never show up as they had previously, albeit with
-the earlier error message.
-
-I was wondering if anyone with a better understanding of devicetree
-syntax could suggest the correct structure for these parent/child
-nodes I am trying to create - or suggest a different/better solution.
-
-Any help or suggestions would be greatly appreciated.
+It might be done via having a skeleton/framework DT for the vendor
+platform that is updated via UEFI/ACPI data, or it might be
+constructed entirely out of tables coming from firmware. I don't care
+about the methods for how it is done, but I do feel strongly that we
+should _not_ introduce a second API for everything. I can't think of a
+single good reason to do it.
 
 
-Regards,
-Andrew Glen.
+[There, commence centithread]
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
