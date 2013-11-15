@@ -1,140 +1,156 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
-Date: Fri, 15 Nov 2013 07:43:04 +0000
-Message-ID: <B56CDBE15CE27145A4B77D2D24263E852409CE@039-SN1MPN1-003.039d.mgd.msft.net>
-References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
- <20131114104620.GB16396@e106331-lin.cambridge.arm.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCHv5 06/20] hwmon: lm75: expose to thermal fw via DT nodes
+Date: Fri, 15 Nov 2013 08:43:54 +0100
+Message-ID: <20131115084354.656452b9@endymion.delvare>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+	<1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131114104620.GB16396@e106331-lin.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "vinod.koul@intel.com" <vinod.koul@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyayBSdXRsYW5kIFtt
-YWlsdG86bWFyay5ydXRsYW5kQGFybS5jb21dDQo+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAx
-NCwgMjAxMyA2OjQ2IFBNDQo+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+IENjOiB2aW5vZC5r
-b3VsQGludGVsLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFdhbmcgSHVhbi1CMTg5
-NjU7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHNoYXduLmd1b0BsaW5hcm8ub3Jn
-OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjYgMy8zXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdpbmUgZHJpdmVyIHN1
-cHBvcnQNCj4gDQo+IE9uIFdlZCwgU2VwIDE4LCAyMDEzIGF0IDEwOjU3OjU5QU0gKzAxMDAsIEpp
-bmdjaGFuZyBMdSB3cm90ZToNCj4gPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2VkIGRpcmVjdCBtZW1v
-cnkoZURNQSkgY29udHJvbGxlciBzdXBwb3J0Lg0KPiA+IFRoZSBlRE1BIGNvbnRyb2xsZXIgZGVw
-bG95cyBETUFNVVhzIHJvdXRpbmcgRE1BIHJlcXVlc3Qgc291cmNlcyhzbG90KQ0KPiA+IHRvIGVE
-TUEgY2hhbm5lbHMuDQo+ID4gVGhpcyBtb2R1bGUgY2FuIGJlIGZvdW5kIG9uIFZ5YnJpZCBhbmQg
-TFMtMSBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBm
-cmVlc2NhbGUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZy
-ZWVzY2FsZS5jb20+DQpbLi4uXSANCj4gPiArKiBETUFNVVgNCj4gPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoNCj4gDQo+IE5vIGNvbXBhdGlibGU/DQo+IA0KPiBXaGVyZSBhcmUgRE1BTVVYIG5vZGVz
-IGV4cGVjdGVkIHRvIGxpdmU/DQo+IA0KPiBIb3cgdG8gdGhleSByZWxhdGUgdG8gdGhlIGVETUEg
-Y29udHJvbGxlciBpbiBIVz8gQXJlIHRoZXkgYQ0KPiBzdWJjb21wb25lbnQsIG9yIGEgbG9naWNh
-bGx5IHNlcGFyYXRlIHVuaXQgdGhhdCBoYXBwZW5zIHRvIGJlIGNvbm5lY3RlZD8NCltMdSBKaW5n
-Y2hhbmctYjM1MDgzXSANCkRNQU1VWCBpcyBhIG11bHRpcGxleGVyIGJldHdlZW4gZG1hIGNvbnRy
-b2xsZXIgY2hhbm5lbHMgYW5kIHBlcmlwaGVyYWwgZGVpdmNlcywNCmVhY2ggRE1BTVVYIHByb3Zp
-ZGVzIDE2IGluZGVwZW5kZW50bHkgc2VsZWN0YWJsZSBETUEgY2hhbm5lbCByb3V0ZXJzLCBhbmQg
-ZWFjaCANCmNoYW5uZWwgcm91dGVyIGNhbiBiZSBhc3NpZ25lZCB0byBvbmUgb2YgdGhlIHBvc3Np
-YmxlIHBlcmlwaGVyYWwgRE1BIHNsb3RzLg0KU28gaXQncyBub3QgYSBzdGFuZGFsb25lIGRldmlj
-ZSwgaXQncyBqdXN0IHJlcXVpcmVkIGJ5IHRoZSBETUEgY29udHJvbGxlciB0bw0KY29ubmVjdCB0
-aGUgY2hhbm5lbHMgYW5kIHNsYXZlcywgU28gaXQncyBnb3QgYnkgRE1BIGNvbnRyb2xsZXIncyAi
-ZnNsLGRtYS1tdXgiIHByb3BlcnR5Lg0KVGhhbmtzIQ0KPiANCj4gPiArLSByZWcgOiBTaG91bGQg
-Y29udGFpbiBETUFNVVggcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5ndGgNCj4gPiArLSBmc2ws
-ZG1hbXV4LWlkIDogRE1BTVVYIElELiBETUFNVVggSURzIGFyZSB1bmlxdWUgaW4gZWFjaCBlRE1B
-DQo+IGNvbnRyb2xsZXIuDQo+ID4gKyAgaW5zaWRlIG9uZSBlRE1BIGNvbnRyb2xsZXIsIHNwZWNp
-ZmljIHJlcXVlc3Qgc291cmNlIGNhbiBvbmx5IGJlDQo+IHJvdXRlZCBieQ0KPiA+ICsgIG9uZSBv
-ZiBpdHMgRE1BTVVYcy4NCj4gPiArICBIb3dldmVyIFNwZWNpZmljIHJlcXVlc3Qgc291cmNlIG1h
-eSBiZSByb3V0ZWQgdG8gZGlmZmVyZW50IGVETUENCj4gY29udHJvbGxlciwNCj4gPiArICB0aHVz
-IGFsbCB0aGUgRE1BTVVYcyBzaGFyaW5nIGEgdGhlIHNhbWUgcmVxdWVzdCBzb3VyY2VzIGhhdmUg
-dGhlDQo+IHNhbWUgSUQuDQo+ID4gKy0gY2xvY2tzIDogUGhhbmRsZSBvZiB0aGUgY2xvY2sgdXNl
-ZCBieSB0aGUgRE1BTVVYDQo+ID4gKy0gY2xvY2stbmFtZXMgOiBUaGUgY2xvY2sgbmFtZXMNCj4g
-DQo+IF93aGljaF8gY2xvY2sgbmFtZXMgZG8geW91IGV4cGVjdD8gRnJvbSB0aGUgbG9va3Mgb2Yg
-dGhlIGV4YW1wbGUsIHlvdQ0KPiBleHBlY3QgImRtYW11eCIuDQo+IA0KPiBGcm9tIHRoZSB2aWV3
-IG9mIHRoZSBETUFNVVgsIHdoYXQgaXMgaXRzIGNsb2NrIGlucHV0IGNhbGxlZD8gImRtYW11eCIN
-Cj4gZG9lc24ndCBsb29rIGxpa2Ugd2hhdCBJJ2QgZXhwZWN0IGZvciBhIGNsb2NrIG5hbWUsIGJ1
-dCBpZiB0aGUNCj4gZG9jdW1lbnRhdGlvbiBmb3IgdGhlIGVETUEgZG9lc24ndCBwcm92aWRlIGEg
-bmFtZSBmb3IgaXQsICJkbWFtdXgiIGlzDQo+IGZpbmUuDQo+IA0KPiBJZiB5b3UncmUgbm90IHVz
-aW5nIGNsb2NrLW5hbWVzLCBpdCdzIHVzZWxlc3MuIFlvdSBfbXVzdF8gZGVmaW5lIHRoZSBzZXQN
-Cj4gb2YgbmFtZXMgeW91IGV4cGVjdCBvciBpdCdzIHVudXNhYmxlLiBJZiB5b3UgZG8gZGVmaW5l
-IGEgc2V0IG9mIG5hbWVzLA0KPiB0aGVuIHlvdSBzaG91bGQgcmVxdWVzdCBjbG9ja3MgYnkgbmFt
-ZSBpbiB0aGUgZHJpdmVyLg0KPiANCltMdSBKaW5nY2hhbmctYjM1MDgzXSBbTHUgSmluZ2NoYW5n
-LWIzNTA4M10gDQpUaGUgY2xvY2sgaGVyZSBpcyBmcm9tIHRoZSBwbGF0Zm9ybSBidXMgY2xvY2ss
-IEkgd2lsbCByZW1vdmUgdGhpcyBwcm9wZXJ0eSBmb3INCmNvbXBhdGlibGUgYmV0d2VlbiBTb0Nz
-LiBUaGFua3MhDQo+ID4gKw0KDQpbLi4uXSANCg0KPiA+ICsqIERNQSBjbGllbnRzDQo+ID4gK0RN
-QSBjbGllbnQgZHJpdmVycyB0aGF0IHVzZXMgdGhlIERNQSBmdW5jdGlvbiBtdXN0IHVzZSB0aGUg
-Zm9ybWF0DQo+IGRlc2NyaWJlZA0KPiA+ICtpbiB0aGUgZG1hLnR4dCBmaWxlLCB1c2luZyBhIHRo
-cmVlLWNlbGwgc3BlY2lmaWVyIGZvciBlYWNoIGNoYW5uZWw6IGENCj4gcGhhbmRsZQ0KPiA+ICtw
-bHVzIHR3byBpbnRlZ2VyIGNlbGxzIGFzIGRlc2NyaWJlZCBhYm92ZS4NCj4gDQo+IE5pdDogdGhl
-IHBoYW5kbGUgaXNuJ3QgcGFydCBvZiB0aGUgc3BlY2lmaWVyLiBUaGUgY2VsbHMgYWZ0ZXIgdGhl
-DQo+IHBoYW5kbGUgYXJlIHRoZSBzcGVjaWZpZXIgYXNzb2NpYXRlZCB3aXRoIHRoZSBwaGFuZGxl
-Lg0KPiANCltMdSBKaW5nY2hhbmctYjM1MDgzXSANCkkgd2lsbCBmaXggdGhpcywgdGhhbmtzIQ0K
-PiBbLi4uXQ0KPiANCj4gPiArc3RhdGljIGJvb2wgZnNsX2VkbWFfZmlsdGVyX2ZuKHN0cnVjdCBk
-bWFfY2hhbiAqY2hhbiwgdm9pZCAqbXV4X2lkKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3Qg
-ZnNsX2VkbWFfY2hhbiAqZnNsX2NoYW4gPSB0b19mc2xfZWRtYV9jaGFuKGNoYW4pOw0KPiA+ICsN
-Cj4gPiArICAgICAgIGlmIChmc2xfY2hhbi0+ZWRtYW11eC0+bXV4X2lkICE9ICh1MzIpbXV4X2lk
-KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+ID4gKw0KPiA+ICsgICAgICAg
-cmV0dXJuIHRydWU7DQo+IA0KPiBXaHkgbm90Og0KPiANCj4gcmV0dXJuIGZzbF9jaGFuLT5lZG1h
-bXV4LT5tdXhfaWQgPT0gKHUzMiltdXhfaWQ7DQo+IA0KW0x1IEppbmdjaGFuZy1iMzUwODNdIA0K
-SSB3aWxsIHJlcGxhY2UgaXQsIHRoYW5rcyENCj4gWy4uLl0NCj4gDQo+ID4gK3N0YXRpYyBpbnQN
-Cj4gPiArZnNsX2luaXRfZWRtYW11eChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1
-Y3QgZnNsX2VkbWFfZW5naW5lDQo+ICpmc2xfZWRtYSkNCj4gPiArew0KPiA+ICsgICAgICAgc3Ry
-dWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+ICsgICAgICAgc3Ry
-dWN0IGZzbF9lZG1hX2RtYW11eCAqZnNsX2VkbWFtdXg7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKnBoYW5kbGU7DQo+IA0KPiBUaGF0J3MgY29uZnVzaW5nLCBhIG5vZGUgaXMgbm90
-IGEgcGhhbmRsZS4gV2h5IG5vdCBtdXhfbnA/DQpbTHUgSmluZ2NoYW5nLWIzNTA4M10gDQpPaywg
-SSB3aWxsIGVsaW1pbmF0ZSB0aGUgY29uZnVzaW5nLCB0aGFua3MhDQo+IA0KPiA+ICsgICAgICAg
-Y29uc3Qgdm9pZCAqcHJvcDsNCj4gPiArICAgICAgIHN0cnVjdCByZXNvdXJjZSByZXM7DQo+ID4g
-KyAgICAgICBpbnQgbGVuLCBuX211eGVzLCBjaGFuc19wZXJfbXV4LCBjaF9vZmY7DQo+ID4gKyAg
-ICAgICBpbnQgaSwgajsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAg
-cHJvcCA9IG9mX2dldF9wcm9wZXJ0eShucCwgImZzbCxkbWEtbXV4IiwgJmxlbik7DQo+ID4gKyAg
-ICAgICBpZiAoIXByb3ApIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2
-LCAiQ2FuJ3QgZ2V0IERNQU1VWC5cbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJ
-TlZBTDsNCj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICBuX211eGVzID0gbGVuIC8g
-c2l6ZW9mKHUzMik7DQo+IA0KPiBJdCB3b3VsZCBiZSBuaWNlciBpZiB3ZSBoYWQgYSB2YXJpYW50
-IG9mIG9mX2NvdW50X3BoYW5kbGVfd2l0aF9hcmdzIHRoYXQNCj4gY291bmQgaGFuZGxlIGEgZml4
-ZWQgY291bnQgb2YgMCBhcmdzIGZvciB0aGlzIHNvcnQgb2YgdGhpbmcuDQpbTHUgSmluZ2NoYW5n
-LWIzNTA4M10gDQpZZXMsIEkgd2lsbCBkbyBpdCwgdGhhbmtzIQ0KPiANCj4gPiArICAgICAgIGNo
-YW5zX3Blcl9tdXggPSBmc2xfZWRtYS0+bl9jaGFucyAvIG5fbXV4ZXM7DQo+ID4gKyAgICAgICBm
-c2xfZWRtYW11eCA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHNpemVvZihzdHJ1Y3QgZnNsX2VkbWFfZG1hbXV4KSAqIG5fbXV4ZXMsDQo+IEdG
-UF9LRVJORUwpOw0KPiA+ICsgICAgICAgaWYgKCFmc2xfZWRtYW11eCkNCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsgICAgICAgZnNsX2VkbWEtPm5fbXV4
-ZXMgPSAwOw0KPiA+ICsgICAgICAgZnNsX2VkbWEtPmVkbWFtdXggPSBmc2xfZWRtYW11eDsNCj4g
-PiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBuX211eGVzOyBpKyspIHsNCj4gPiArICAgICAgICAg
-ICAgICAgcGhhbmRsZSA9IG9mX3BhcnNlX3BoYW5kbGUobnAsICJmc2wsZG1hLW11eCIsIGkpOw0K
-PiA+ICsgICAgICAgICAgICAgICByZXQgPSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKHBoYW5kbGUs
-IDAsICZyZXMpOw0KPiA+ICsgICAgICAgICAgICAgICBpZiAocmV0KQ0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICAgICAgICAgIGZzbF9lZG1hbXV4
-LT5tZW1iYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsDQo+ICZyZXMpOw0K
-PiA+ICsgICAgICAgICAgICAgICBpZiAoSVNfRVJSKGZzbF9lZG1hbXV4LT5tZW1iYXNlKSkNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihmc2xfZWRtYW11eC0+bWVt
-YmFzZSk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBmc2xfZWRtYW11eC0+Y2xrID0gb2Zf
-Y2xrX2dldChwaGFuZGxlLCAwKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKElTX0VSUihmc2xf
-ZWRtYW11eC0+Y2xrKSkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoJnBk
-ZXYtPmRldiwgIk1pc3NpbmcgRE1BTVVYIGNsb2NrLlxuIik7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcmV0dXJuIFBUUl9FUlIoZnNsX2VkbWFtdXgtPmNsayk7DQo+ID4gKyAgICAgICAg
-ICAgICAgIH0NCj4gDQo+IFBsZWFzZSBhY3F1aXJlIHRoZSBjbG9jayBieSBuYW1lOg0KW0x1IEpp
-bmdjaGFuZy1iMzUwODNdIA0KSSB3aWxsIHJlbW92ZSB0aGUgbm9kZSBuYW1lIHByb3BlcnR5IGZv
-ciByZXVzZSB0aGUgZHJpdmVyIGJldHdlZW4gU29DcywNCmZvciB0aGV5IG1heSBoYXZlIGRpZmZl
-cmVudCBjbG9jayBuYW1lcy4gVGhhbmtzIQ0KPiANCj4gZnNsX2VkbWFtdXgtPmNsayA9IG9mX2Ns
-a19nZXRfYnluYW1lKHBoYW5kbGUsICJkbWFtdXgiKTsNCj4gDQo+ID4gKw0KPiA+ICsgICAgICAg
-ICAgICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZnNsX2VkbWFtdXgtPmNsayk7DQo+ID4g
-KyAgICAgICAgICAgICAgIGlmIChyZXQpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBk
-ZXZfZXJyKCZwZGV2LT5kZXYsICJETUFNVVggY2xrIGVuYWJsZQ0KPiBmYWlsZWQuXG4iKTsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgICAgICAgICAg
-ICB9DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3Uz
-Ml9pbmRleChwaGFuZGxlLCAiZnNsLGRtYW11eC0NCj4gaWQiLCAwLA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJmZzbF9lZG1hbXV4LT5tdXhfaWQpOw0KPiANCj4gV2h5IG5v
-dCBqdXN0IG9mX3Byb3BlcnR5X3JlYWRfdTMyPw0KDQpbLi4uXQ0KPiANCj4gPiArc3RhdGljIGlu
-dCBmc2xfZWRtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+
-ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+
-ID4gKyAgICAgICBzdHJ1Y3QgZnNsX2VkbWFfZW5naW5lICpmc2xfZWRtYTsNCj4gPiArICAgICAg
-IHN0cnVjdCBmc2xfZWRtYV9jaGFuICpmc2xfY2hhbjsNCj4gPiArICAgICAgIHN0cnVjdCByZXNv
-dXJjZSAqcmVzOw0KPiA+ICsgICAgICAgaW50IGxlbiwgY2hhbnM7DQo+ID4gKyAgICAgICBpbnQg
-cmV0LCBpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2lu
-ZGV4KG5wLCAiZG1hLWNoYW5uZWxzIiwgMCwgJmNoYW5zKTsNCj4gDQo+IFVzZSBvZl9wcm9wZXJ0
-eV9yZWFkX3UzMi4NCltMdSBKaW5nY2hhbmctYjM1MDgzXSANClRoYW5rcywgSSB3aWxsIGRvIHRo
-aXMuDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5nDQo=
+Hi Eduardo,
+
+Sorry for joining the discussion a little late, I could never find the
+time to look into this patch series so far.
+
+On Tue, 12 Nov 2013 15:46:08 -0400, Eduardo Valentin wrote:
+> This patch adds to lm75 temperature sensor the possibility
+> to expose itself as thermal zone device, registered on the
+> thermal framework.
+> 
+> The thermal zone is built only if a device tree node
+> describing a thermal zone for this sensor is present
+> inside the lm75 DT node. Otherwise, the driver behavior
+> will be the same.
+> 
+> Cc: Jean Delvare <khali@linux-fr.org>
+> Cc: lm-sensors@lm-sensors.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> ---
+>  drivers/hwmon/lm75.c | 35 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 30 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+> index c03b490..1d3600a 100644
+> --- a/drivers/hwmon/lm75.c
+> +++ b/drivers/hwmon/lm75.c
+> @@ -27,6 +27,8 @@
+>  #include <linux/hwmon-sysfs.h>
+>  #include <linux/err.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/thermal.h>
+>  #include "lm75.h"
+>  
+>  
+> @@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
+>  /* Each client has this additional data */
+>  struct lm75_data {
+>  	struct device		*hwmon_dev;
+> +	struct thermal_zone_device	*tz;
+>  	struct mutex		update_lock;
+>  	u8			orig_conf;
+>  	u8			resolution;	/* In bits, between 9 and 12 */
+> @@ -90,22 +93,36 @@ static struct lm75_data *lm75_update_device(struct device *dev);
+>  
+>  /*-----------------------------------------------------------------------*/
+>  
+> +static inline long lm75_reg_to_mc(s16 temp, u8 resolution)
+> +{
+> +	return ((temp >> (16 - resolution)) * 1000) >> (resolution - 8);
+> +}
+> +
+>  /* sysfs attributes for hwmon */
+>  
+> +static int lm75_read_temp(void *dev, long *temp)
+> +{
+> +	struct lm75_data *data = lm75_update_device(dev);
+> +
+> +	if (IS_ERR(data))
+> +		return PTR_ERR(data);
+> +
+> +	*temp = lm75_reg_to_mc(data->temp[0], data->resolution);
+> +
+> +	return 0;
+> +}
+> +
+>  static ssize_t show_temp(struct device *dev, struct device_attribute *da,
+>  			 char *buf)
+>  {
+>  	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+>  	struct lm75_data *data = lm75_update_device(dev);
+> -	long temp;
+>  
+>  	if (IS_ERR(data))
+>  		return PTR_ERR(data);
+>  
+> -	temp = ((data->temp[attr->index] >> (16 - data->resolution)) * 1000)
+> -	       >> (data->resolution - 8);
+> -
+> -	return sprintf(buf, "%ld\n", temp);
+> +	return sprintf(buf, "%ld\n", lm75_reg_to_mc(data->temp[attr->index],
+> +						    data->resolution));
+>  }
+
+I am a bit worried by this. I did expect that you'd have to split a
+piece of show_temp() into one separate function, not two. Here you have
+quite some redundancy between lm75_read_temp and show_temp. Sure these
+are small functions so the duplicate code is limited, but if you
+multiply by the number of hwmon drivers which are candidates for this
+change, this all adds up.
+
+>  
+>  static ssize_t set_temp(struct device *dev, struct device_attribute *da,
+> @@ -271,6 +288,13 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  		goto exit_remove;
+>  	}
+>  
+> +	data->tz = thermal_zone_of_sensor_register(&client->dev,
+> +						   0,
+> +						   &client->dev,
+> +						   lm75_read_temp, NULL);
+
+I am also worried by this interface. Basically a separate callback
+function (here lm75_read_temp) is needed for every thermal input. Some
+hwmon drivers have many of these! This will result in duplicate code
+again. If you could just pass a sensor ID as an extra parameter to
+lm75_read_temp, you could use the same callback for all sensors. This
+would maybe also let you refactor the code above, as I believe
+show_temp would then be able to call lm75_read_temp(dev, &temp, 0)
+instead of reimplementing most of it.
+
+I also note the lack of support for limits. Thermal zones can have
+limits, and the various hwmon drivers do support that, yet your
+interface offers no possibility to expose them. Wouldn't that be useful?
+
+> +	if (IS_ERR(data->tz))
+> +		data->tz = NULL;
+
+If you are doing that in all drivers, I would question the point of
+having thermal_zone_of_sensor_register() return a PTR_ERR in the first
+place.
+
+> +
+>  	dev_info(&client->dev, "%s: sensor '%s'\n",
+>  		 dev_name(data->hwmon_dev), client->name);
+>  
+> @@ -285,6 +309,7 @@ static int lm75_remove(struct i2c_client *client)
+>  {
+>  	struct lm75_data *data = i2c_get_clientdata(client);
+>  
+> +	thermal_zone_of_sensor_unregister(&client->dev, data->tz);
+>  	hwmon_device_unregister(data->hwmon_dev);
+>  	sysfs_remove_group(&client->dev.kobj, &lm75_group);
+>  	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
+
+
+-- 
+Jean Delvare
