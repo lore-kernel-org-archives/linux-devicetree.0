@@ -1,28 +1,135 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3] Documentation: Add APM X-Gene SoC 6.0Gbps SATA PHY driver binding documentation
-Date: Fri, 15 Nov 2013 13:52:33 +0100
-Message-ID: <201311151352.33803.arnd@arndb.de>
-References: <1384457519-21335-1-git-send-email-lho@apm.com> <1384457519-21335-2-git-send-email-lho@apm.com> <201311151335.09577.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <201311151335.09577.arnd@arndb.de>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Alex Ling <kasimling@gmail.com>
+Subject: [PATCH] ARM: dts: add board dts file for EXYNOS4412 based TINY4412 board
+Date: Fri, 15 Nov 2013 21:09:29 +0800
+Message-ID: <1384520969-2450-1-git-send-email-kasimling@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: rob.herring@calxeda.com, mark.rutland@arm.com, linux@arm.linux.org.uk, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, kgene.kim@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Alex Ling <kasimling@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 November 2013, Arnd Bergmann wrote:
-> On Thursday 14 November 2013, Loc Ho wrote:
-> > +- id                   : PHY ID (0 = first, 1 = second, 2 = third)
-> > +- #phy-cells           : Shall be 0
-> 
-> Hmm, it seems like this would make more sense if you have #phy-cells=<1>
-> and have the PHY ID in user node as the argument.
+Add a minimal board dts file for EXYNOS4412 based FriendlyARM's
+TINY4412 board. This patch including adds the node to support
+peripherals like UART, SD card on SDMMC2 port, and this patch
+adds GPIO connected LEDS and configure its properties like
+following:
+LED1: use 'heartbeat' trigger, blinking while the board is running.
+LED4: use 'mmc0' trigger, on when mmc0 is accessing.
+LED2 and LED3 can be controlled from userspace.
 
-Ignore this comment. After reading patch 2, I concluded that your choice of
-#phy-cells=0 is probably more appropriate here.
+Signed-off-by: Alex Ling <kasimling@gmail.com>
+---
+ arch/arm/boot/dts/Makefile                |    1 +
+ arch/arm/boot/dts/exynos4412-tiny4412.dts |   89 +++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos4412-tiny4412.dts
 
-	Arnd
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 802720e..91671a2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -59,6 +59,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+ 	exynos4412-odroidx.dtb \
+ 	exynos4412-origen.dtb \
+ 	exynos4412-smdk4412.dtb \
++	exynos4412-tiny4412.dtb \
+ 	exynos4412-trats2.dtb \
+ 	exynos5250-arndale.dtb \
+ 	exynos5250-smdk5250.dtb \
+diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+new file mode 100644
+index 0000000..78ace14
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+@@ -0,0 +1,89 @@
++/*
++ * FriendlyARM's Exynos4412 based TINY4412 board device tree source
++ *
++ * Copyright (c) 2013 Alex Ling <kasimling@gmail.com>
++ *
++ * Device tree source file for FriendlyARM's TINY4412 board which is based on
++ * Samsung's Exynos4412 SoC.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++/dts-v1/;
++#include "exynos4412.dtsi"
++
++/ {
++	model = "FriendlyARM TINY4412 board based on Exynos4412";
++	compatible = "friendlyarm,tiny4412", "samsung,exynos4412";
++
++	memory {
++		reg = <0x40000000 0x40000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		led1 {
++			label = "led1:heart";
++			gpios = <&gpm4 0 1>;
++			default-state = "off";
++			linux,default-trigger = "heartbeat";
++		};
++		led2 {
++			label = "led2";
++			gpios = <&gpm4 1 1>;
++			default-state = "off";
++		};
++		led3 {
++			label = "led3";
++			gpios = <&gpm4 2 1>;
++			default-state = "off";
++		};
++		led4 {
++			label = "led4:mmc0";
++			gpios = <&gpm4 3 1>;
++			default-state = "off";
++			linux,default-trigger = "mmc0";
++		};
++	};
++
++	rtc@10070000 {
++		status = "okay";
++	};
++
++	sdhci@12530000 {
++		bus-width = <4>;
++		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
++		pinctrl-names = "default";
++		status = "okay";
++	};
++
++	serial@13800000 {
++		status = "okay";
++	};
++
++	serial@13810000 {
++		status = "okay";
++	};
++
++	serial@13820000 {
++		status = "okay";
++	};
++
++	serial@13830000 {
++		status = "okay";
++	};
++
++	fixed-rate-clocks {
++		xxti {
++			compatible = "samsung,clock-xxti";
++			clock-frequency = <0>;
++		};
++
++		xusbxti {
++			compatible = "samsung,clock-xusbxti";
++			clock-frequency = <24000000>;
++		};
++	};
++};
+-- 
+1.7.9.5
