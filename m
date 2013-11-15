@@ -1,217 +1,138 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v7 1/2] PWM: atmel-pwm: add PWM controller driver
-Date: Fri, 15 Nov 2013 14:46:46 +0100
-Message-ID: <20131115134646.GO28304@ns203013.ovh.net>
-References: <1384509208-10762-1-git-send-email-voice.shen@atmel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/4] ata: Add APM X-Gene SoC SATA host controller driver
+Date: Fri, 15 Nov 2013 14:48:15 +0100
+Message-ID: <201311151448.16279.arnd@arndb.de>
+References: <1384465153-29902-1-git-send-email-lho@apm.com>
+ <1384465153-29902-3-git-send-email-lho@apm.com>
+ <1384465153-29902-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384509208-10762-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1384465153-29902-4-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, jcm@redhat.com, tj@kernel.org, olof@lixom.net, Tuan Phan <tphan@apm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17:53 Fri 15 Nov     , Bo Shen wrote:
-> Add Atmel PWM controller driver based on PWM framework.
-> 
-> This is the basic function implementation of Atmel PWM controller.
-> It can work with PWM based led and backlight.
-> 
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> ---
-> Changes in v7:
->   - fix issue for none device tree issues.
-> 
-> Changes in v6:
->   - using relaxed version for writel and readl
->   - add none device tree support
->   - change some define from lower case to upper case
->   - split device tree binding document as a separate patch
-> 
-> Changes in v5:
->   - call clk_disable directly, if so, it won't cause more than one channel
->     enabled, the clock can not be disabled.
-> 
-> Changes in v4:
->   - check the return value of clk_prepare()
->   - change channel register size as constant
-> 
-> Changes in v3:
->   - change compatible string from "atmel,sama5-pwm" to "atmel,sama5d3-pwm"
->   - Add PWM led example in binding documentation
->   - Using micro replace hard code
-> 
-> Changes in v2:
->   - Address the comments from Thierry Reding
-> 
->  drivers/pwm/Kconfig     |    9 ++
->  drivers/pwm/Makefile    |    1 +
->  drivers/pwm/pwm-atmel.c |  380 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 390 insertions(+)
->  create mode 100644 drivers/pwm/pwm-atmel.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index eece329..5043572 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -41,6 +41,15 @@ config PWM_AB8500
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-ab8500.
+On Thursday 14 November 2013, Loc Ho wrote:
 >  
-> +config PWM_ATMEL
-> +	tristate "Atmel PWM support"
-> +	depends on ARCH_AT91
-> +	help
-> +	  Generic PWM framework driver for Atmel SoC.
+> +config SATA_XGENE
+> +	tristate "APM X-Gene 6.0Gbps SATA host controller support"
+> +	depends on SATA_AHCI_PLATFORM
+> +	default y if ARM64
+> +	select SATA_XGENE_PHY
+
+I don't think the "default y" is appropriate here, since there are going to
+be lots of ARM64 platforms in the long run that don't have this. Also,
+there is a trend towards using CONFIG_COMPILE_TEST to limit the
+visibility.
+
+I'd suggest something like
+
+config SATA_XGENE
+	tristate "APM X-Gene 6.0Gbps SATA host controller support"
+	depends on ARM64 || COMPILE_TEST
+	...
+
+> +/* Enable for dumping CSR read/write access */
+> +#undef XGENE_DBG_CSR
+
+This should be removed now as well, along with the debug macro you already removed.
+
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-atmel.
+> +/* Temporary function until the PHY parameter API */
+> +extern void xgene_ahci_phy_set_pq(struct phy *phy, int chan, int data);
+> +extern void xgene_ahci_phy_set_spd(struct phy *phy, int chan, int gen);
+
+Ah, that should have been mentioned in the changeset text. Do you think you
+can remove these for the final version?
+
+> +static void xgene_rd(void *addr, u32 *val)
+> +{
+> +	*val = readl(addr);
+> +#if defined(XGENE_DBG_CSR)
+> +	printk(KERN_DEBUG "SATAPHY CSR RD: 0x%p value: 0x%08x\n", addr, *val);
+> +#endif
+> +}
+
+The interface you are looking for is pr_debug() or dev_dbg(), which get
+built-in only if the DEBUG macro is set.
+
+In a lot of cases, it's actually best to remove debug output like this from
+the driver once you have it working  -- whoever is debugging problems in 
+the driver next might need completely different debugging information or
+can add them back easily if needed.
+
+It's your choice if you want to use pr_debug() or remove that output
+entirely. If you remove it, best remove the helper functions entirely
+and use readl/writel directly.
+
+> +/* Flush the IOB to ensure all SATA controller writes completed before
+> +   servicing the completed command. */
+> +static int xgene_ahci_iob_flush(struct xgene_ahci_context *ctx)
+> +{
+> +	if (ctx->ahbc_io_base == NULL) {
+> +		void *ahbc_base;
+> +		u32 val;
 > +
->  config PWM_ATMEL_TCB
->  	tristate "Atmel TC Block PWM support"
->  	depends on ATMEL_TCLIB && OF
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 8b754e4..1b99cfb 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -1,6 +1,7 @@
->  obj-$(CONFIG_PWM)		+= core.o
->  obj-$(CONFIG_PWM_SYSFS)		+= sysfs.o
->  obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
-> +obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
->  obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
->  obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
->  obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> +		/* The AHBC address is fixed in X-Gene */
+> +		ahbc_base = devm_ioremap(ctx->dev, 0x1F2A0000, 0x80000);
+> +		if (!ahbc_base) {
+> +			dev_err(ctx->dev, "can't map AHBC resource\n");
+> +			return -ENODEV;
+> +		}
+
+I had an important comment about the misuse of hardcoded I/O addresses
+here. Please never just post a new version with the same issue. In general,
+your options are:
+
+* rewrite the code in a more appropriate way
+* reply to the comment, arguing why you think your code is correct
+* ask for clarification if you don't know how to improve the code
+* mark the code as TODO and mention in the patch description why you
+  are still working on this and that the current version should not
+  be seen as final.
+
+If you don't do any of these, reviewers will get annoyed because you
+are wasting their time.
+> +
+> +static int xgene_ahci_get_u32_param(struct platform_device *pdev,
+> +				    const char *of_name, char *acpi_name,
+> +				    u32 *param)
+> +{
+> +#ifdef CONFIG_ACPI
+> +	if (efi_enabled(EFI_BOOT)) {
+> +		unsigned long long value;
+> +		acpi_status status;
+> +		if (acpi_name == NULL)
+> +			return -ENODEV;
+> +		status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
+> +					       acpi_name, NULL, &value);
+> +		if (ACPI_FAILURE(status))
+> +			return -ENODEV;
+> +		*param = value;
+> +		return 0;
+> +	}
+> +#endif
+
+There are more previous comments that you have not addressed yet.
+
+> diff --git a/drivers/ata/sata_xgene.h b/drivers/ata/sata_xgene.h
 > new file mode 100644
-> index 0000000..d012538
+> index 0000000..51e73f6
 > --- /dev/null
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -0,0 +1,380 @@
-> +/*
-> + * Driver for Atmel Pulse Width Modulation Controller
-> + *
-> + * Copyright (C) 2013 Atmel Corporation
-> + *		 Bo Shen <voice.shen@atmel.com>
-> + *
-> + * Licensed under GPLv2.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +
-> +/* The following is global registers for PWM controller */
-> +#define PWM_ENA			0x04
-> +#define PWM_DIS			0x08
-> +#define PWM_SR			0x0C
-> +/* Bit field in SR */
-> +#define PWM_SR_ALL_CH_ON	0x0F
-> +
-> +/* The following register is PWM channel related registers */
-> +#define PWM_CH_REG_OFFSET	0x200
-> +#define PWM_CH_REG_SIZE		0x20
-> +
-> +#define PWM_CMR			0x0
-> +/* Bit field in CMR */
-> +#define PWM_CMR_CPOL		(1 << 9)
-> +#define PWM_CMR_UPD_CDTY	(1 << 10)
-> +
-> +/* The following registers for PWM v1 */
-> +#define PWMV1_CDTY		0x04
-> +#define PWMV1_CPRD		0x08
-> +#define PWMV1_CUPD		0x10
-> +
-> +/* The following registers for PWM v2 */
-> +#define PWMV2_CDTY		0x04
-> +#define PWMV2_CDTYUPD		0x08
-> +#define PWMV2_CPRD		0x0C
-> +#define PWMV2_CPRDUPD		0x10
-> +
-> +/* Max value for duty and period
-> + *
-> + * Although the duty and period register is 32 bit,
-> + * however only the LSB 16 bits are significant.
-> + */
-> +#define PWM_MAX_DTY		0xFFFF
-> +#define PWM_MAX_PRD		0xFFFF
-> +#define PRD_MAX_PRES		10
-> +
-> +struct atmel_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +
-> +	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		       int dty, int prd);
-> +};
-> +
-> +static inline struct atmel_pwm_chip *to_atmel_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct atmel_pwm_chip, chip);
-> +}
-> +
-> +static inline u32 atmel_pwm_readl(struct atmel_pwm_chip *chip,
-> +				  unsigned long offset)
-> +{
-> +	return readl_relaxed(chip->base + offset);
-> +}
-> +
-> +static inline void atmel_pwm_writel(struct atmel_pwm_chip *chip,
-> +				    unsigned long offset, unsigned long val)
-> +{
-> +	writel_relaxed(val, chip->base + offset);
-> +}
-> +
-> +static inline u32 atmel_pwm_ch_readl(struct atmel_pwm_chip *chip,
-> +				     unsigned int ch, unsigned long offset)
-> +{
-> +	return readl_relaxed(chip->base + PWM_CH_REG_OFFSET +
-> +			ch * PWM_CH_REG_SIZE + offset);
-> +}
-> +
-> +static inline void atmel_pwm_ch_writel(struct atmel_pwm_chip *chip,
-> +				       unsigned int ch, unsigned long offset,
-> +				       unsigned long val)
-> +{
-> +	writel_relaxed(val, chip->base + PWM_CH_REG_OFFSET +
-> +			ch * PWM_CH_REG_SIZE + offset);
-> +}
-> +
-> +static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		int duty_ns, int period_ns)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	unsigned long clk_rate, prd, dty;
-> +	unsigned long long div;
-> +	int ret, pres = 0;
-> +
-> +	clk_rate = clk_get_rate(atmel_pwm->clk);
-> +	div = clk_rate;
-> +
-> +	/* Calculate the period cycles */
-> +	while (div > PWM_MAX_PRD) {
-> +		div = clk_rate / (1 << pres);
-> +		div = div * period_ns;
-> +		/* 1/Hz = 100000000 ns */
-> +		do_div(div, 1000000000);
-> +
-> +		if (pres++ > PRD_MAX_PRES) {
-> +			pr_err("PRES is bigger than maximum pre-scaler\n");
-if we have more than 1 pwm with pr_err we can known which is it use dev_xxx
-instead of all pr_xx
+> +++ b/drivers/ata/sata_xgene.h
 
+This file should probably just be folded into the driver, since it contains no
+interfaces between  modules, just internal definitions.
 
-with this Ack
-
-Best Regards,
-J.
+	Arnd
