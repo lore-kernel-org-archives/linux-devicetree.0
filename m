@@ -1,56 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
-Date: Fri, 15 Nov 2013 11:47:12 +0100
-Message-ID: <CAMuHMdV=u04Y2saVygB=FSPTDgqSf+0YNUb0q3=aVZ9oTORs+Q@mail.gmail.com>
-References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
-	<5285EE5A.1070202@southpole.se>
-	<CAMuHMdWA-9ax=NG_d0tyfzY3+42Ka7_r+jTeF-m5oW0eV8t1=g@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] ASoC: simple-card: add Device Tree support
+Date: Fri, 15 Nov 2013 10:47:35 +0000
+Message-ID: <20131115104735.GD26614@sirena.org.uk>
+References: <87eh97sqw7.wl%kuninori.morimoto.gx@renesas.com>
+ <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
+ <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
+ <20131003104248.GI27287@sirena.org.uk>
+ <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
+ <20131024171758.GA2461@kartoffel>
+ <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
+ <87zjp6memo.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
-In-Reply-To: <CAMuHMdWA-9ax=NG_d0tyfzY3+42Ka7_r+jTeF-m5oW0eV8t1=g@mail.gmail.com>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
-To: Jonas Bonn <jonas@southpole.se>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Mehall <contact@kevinmehall.net>, linux@lists.openrisc.net
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8Bkcj4NmnZ79d4W7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87zjp6memo.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 11:22 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> The supplied schematics filename is de0-nano-c4-rev-c\(release_cd_rom\).pdf,
-> and the drawings mention "Rev C".
-> The block diagram on page 2 still says "EPCS16 (16 Mb), but on page 8 it
-> mentions "EPCS64", which is what's on my board.
 
-I found the Rev B schematics on the web. It lacks the EPCS drawing
-on page 8.
+--8Bkcj4NmnZ79d4W7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-According to
-http://forums.parallax.com/showthread.php/132578-Getting-started-with-FPGAs/page7
-there are also versions with a 64 Mbit Altera EPCS64.
+On Thu, Nov 14, 2013 at 09:13:24PM -0800, Kuninori Morimoto wrote:
 
-So my guess is:
-  Rev A: EPCS16
-  Rev B: Altera EPCS64
-  Rev C: Spansian EPCS64
+> I would like to know the current status of this patch
 
-Unless Andrew and I have Rev Fs, as there's no "C" on our boards.
+I'm still hoping that some of the DT maintainers will review things.
 
-Gr{oetje,eeting}s,
+--8Bkcj4NmnZ79d4W7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
+iQIcBAEBAgAGBQJShfvEAAoJELSic+t+oim9lg4P/2x/7HiP2CZnVLgHexkQAMtc
+E5r/eBdHK56VxqV1N2lNmbAFvUVBlSrzOI0AFnebr6Vg9E6tPYtJ43YwdGUutN8p
+KdU7rKsgmGZecdTC/denWYI9nDb7upuShckR9K0JjGBooCU+eYk0B2BRzXBlBfaa
+wpQXVqbwDQZE8DVP5ESvfo9+1Cf8eq32cAk5Ot0zTkAEIjqejRWAmpNAqfJUW0FA
+EnhtomR33to/BC9zdnyjUWyV0Unpu0jV431BnBLdGC/gfI6o/WFnkS3B/tiunyLO
+Sj4Lip4Ks68rYQT16U/wYLY+3fepQigEDy/DRXxMyAlDbPWxjjokfjPrPypoxaHh
+iZR9/PDZCMDb0ZIKzC0vGxB3KaqTsPPAUBKHvT2iUyxM0sndVr1R9EVoTMa2Hw95
+Fh/CBLenMd3AaxgFCLVYzsgOyIZSB8M8YPzAw4keRp8j93Iv+B95IXw2hXzhZX2T
+AdLRJ8JqxktvLbCvXYDI08D5b44UZ40LTd/qvrmavFXNz7zdYrfPnMZ6yH6Yj7Rv
+4gmhl7bA99FwoyVwWB1nfy9uYmxWene3CpQ0bTPSOCmPxHucTKTlw7iDsUc9Lr0p
+g4tVojkvmd4oC2Y3Qy/mGN7KepvGjeMF7PRjwH6hD2ynSaOMw04sJox3R85qukS/
+QVrtV8IShbHsFsAlU7j8
+=Ew/t
+-----END PGP SIGNATURE-----
+
+--8Bkcj4NmnZ79d4W7--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
