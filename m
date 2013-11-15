@@ -1,112 +1,61 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 2/3] of/selftest: Add self tests for manipulation of properties
-Date: Fri, 15 Nov 2013 17:46:43 +0000
-Message-ID: <1384537604-5032-3-git-send-email-grant.likely@linaro.org>
-References: <1384537604-5032-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384537604-5032-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Fri, 15 Nov 2013 16:14:30 +0000
+Message-ID: <20131115161430.E5938C408A5@trevor.secretlab.ca>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <
+ 52814AFB.3070600@wwwdotorg.org> <
+ CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com> <
+ 528275B7.6050209@wwwdotorg.org> <20131112193012.GR10335@titan.lakedaemon.
+ net> <52828C77.20001@wwwdotorg.org> <20131114162859.GX10335@titan.
+ lakedaemon.net> <52851DC8.203@wwwdotorg.org> <20131114191622.GC21549@
+ obsidianresearch.com> <528542AC.4080405@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <528542AC.4080405@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a few simple test cases to ensure that addition, update and removal
-of device tree node properties works correctly.
+On Thu, 14 Nov 2013 14:37:48 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/14/2013 12:16 PM, Jason Gunthorpe wrote:
+> > On Thu, Nov 14, 2013 at 12:00:24PM -0700, Stephen Warren wrote:
+> > 
+> >> I don't think a distro should need to know the DTB filename at all.
+> >> Rather, the/a bootloader should know which platform it's running on, and
+> >> provide a variable/... to the boot script/... that defines the DTB
+> >> filename. That would completely remove all the knowledge of DTB
+> >> filenames from distros.
+> > 
+> > At some point the distro has to install a dtb into some cannonical
+> > place so the bootloader can find it..
+> > 
+> > Are you thinking that distros will have to ship a /boot/dtbs/*.dtb
+> > with every dtb from the kernel build?
+> 
+> Yes. How else would the distro support booting the install on arbitrary
+> boards?
+> 
+> > What happens when you install two different versions of the kernel?
+> 
+> /boot/zImage-$version
+> /boot/dtbs-$version/*.dtb
+> 
+> > What about boot schemes that can load a kernel version dependent dtb?
+> 
+> I think that's solved by installing the DTB files in a
+> kernel-version-specific directory.
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
----
- drivers/of/selftest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+That's certainly the way I would solve it.
 
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index e21012bde639..cb8d3e722f76 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -30,6 +30,67 @@ static struct selftest_results {
- 	} \
- }
- 
-+static void __init of_selftest_dynamic(void)
-+{
-+	struct device_node *np;
-+	struct property *prop;
-+
-+	np = of_find_node_by_path("/testcase-data");
-+	if (!np) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
-+
-+	/* Array of 4 properties for the purpose of testing */
-+	prop = kzalloc(sizeof(*prop) * 4, GFP_KERNEL);
-+	if (!prop) {
-+		selftest(0, "kzalloc() failed\n");
-+		return;
-+	}
-+
-+	/* Add a new property - should pass*/
-+	prop->name = "new-property";
-+	prop->value = "new-property-data";
-+	prop->length = strlen(prop->value);
-+	selftest(of_add_property(np, prop) == 0, "Adding a new property failed\n");
-+
-+	/* Try to add an existing property - should fail */
-+	prop++;
-+	prop->name = "new-property";
-+	prop->value = "new-property-data-should-fail";
-+	prop->length = strlen(prop->value);
-+	selftest(of_add_property(np, prop) != 0,
-+		 "Adding an existing property should have failed\n");
-+
-+	/* Try to modify an existing property - should pass */
-+	prop->value = "modify-property-data-should-pass";
-+	prop->length = strlen(prop->value);
-+	selftest(of_update_property(np, prop) == 0,
-+		 "Updating an existing property should have passed\n");
-+
-+	/* Try to modify non-existent property - should pass*/
-+	prop++;
-+	prop->name = "modify-property";
-+	prop->value = "modify-missing-property-data-should-pass";
-+	prop->length = strlen(prop->value);
-+	selftest(of_update_property(np, prop) == 0,
-+		 "Updating a missing property should have passed\n");
-+
-+	/* Remove property - should pass */
-+	selftest(of_remove_property(np, prop) == 0,
-+		 "Removing a property should have passed\n");
-+
-+	/* Adding very large property - should pass */
-+	prop++;
-+	prop->name = "large-property-PAGE_SIZEx8";
-+	prop->length = PAGE_SIZE * 8;
-+	prop->value = kzalloc(prop->length, GFP_KERNEL);
-+	selftest(prop->value != NULL, "Unable to allocate large buffer\n");
-+	if (prop->value)
-+		selftest(of_add_property(np, prop) == 0,
-+			 "Adding a large property should have passed\n");
-+}
-+
- static void __init of_selftest_parse_phandle_with_args(void)
- {
- 	struct device_node *np;
-@@ -312,6 +373,7 @@ static int __init of_selftest(void)
- 	of_node_put(np);
- 
- 	pr_info("start of selftest - you will see error messages\n");
-+	of_selftest_dynamic();
- 	of_selftest_parse_phandle_with_args();
- 	of_selftest_property_match_string();
- 	of_selftest_parse_interrupts();
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
