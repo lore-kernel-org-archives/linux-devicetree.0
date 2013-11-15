@@ -1,70 +1,92 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
-Date: Fri, 15 Nov 2013 06:23:32 +0000
-Message-ID: <1384496612-28392-1-git-send-email-f.fainelli@gmail.com>
-References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx: specify the value of audmux pinctrl
+ instead of 0x80000000
+Date: Fri, 15 Nov 2013 14:42:01 +0800
+Message-ID: <20131115064159.GG11014@S2101-09.ap.freescale.net>
+References: <1384427230-979-1-git-send-email-b42378@freescale.com>
+ <1384427230-979-2-git-send-email-b42378@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131114074711.9A8C5C402E1-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384427230-979-2-git-send-email-b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: timur-N01EOCouUvQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Per the ePAPR v1.1 specification, 'phy-connection-type' is the canonical
-property name for describing an Ethernet to PHY connection type. Make
-sure that of_get_phy_mode() also attempts to parse that property and
-update the comments mentioning 'phy-mode' to also include
-'phy-connection-type'.
+On Thu, Nov 14, 2013 at 07:07:09PM +0800, Nicolin Chen wrote:
+> We must specify the value of audmux pinctrl if we want to use pinctrl_pm().
+> Thus change bypass value 0x80000000 to what we exactly need.
+> 
+> This patch also seperately unset PUE bit for TXD so that IOMUX won't pull
+> up/down the pin after turning into tristate. When we use SSI normal mode to
+> playback monaural audio via I2S signal, there'd be a pulled curve occur to
+> its signal at the second slot if setting PUE bit for TXD. And it will make
+> the second channel to play a constant noise. So by keeping the signal level
+> in the second slot, we can get a constant high level signal (-1) or a low
+> level one (0).
+> 
+> Signed-off-by: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes since v2:
-- reworked the error condition to look nicer per Grant's suggestion
-- added Grant's Acked-by tag
-- fixed a typo in the commit message on "mentioning"
+We have moved all pin groups settings into
+arch/arm/boot/dts/imx6qdl-pingrp.h.  I just rebased and applied the
+patch.  Please check my imx/dt branch and ensure I applied the changes
+correctly.
 
- drivers/of/of_net.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Shawn
 
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index 8f9be2e..651e249 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -13,8 +13,8 @@
- 
- /**
-  * It maps 'enum phy_interface_t' found in include/linux/phy.h
-- * into the device tree binding of 'phy-mode', so that Ethernet
-- * device driver can get phy interface from device tree.
-+ * into the device tree binding of 'phy-mode' or 'phy-connection-type',
-+ * so that Ethernet device driver can get phy interface from device tree.
-  */
- static const char *phy_modes[] = {
- 	[PHY_INTERFACE_MODE_NA]		= "",
-@@ -36,8 +36,9 @@ static const char *phy_modes[] = {
-  * of_get_phy_mode - Get phy mode for given device_node
-  * @np:	Pointer to the given device_node
-  *
-- * The function gets phy interface string from property 'phy-mode',
-- * and return its index in phy_modes table, or errno in error case.
-+ * The function gets phy interface string from property 'phy-mode' or
-+ * 'phy-connection-type', and return its index in phy_modes table, or errno in
-+ * error case.
-  */
- int of_get_phy_mode(struct device_node *np)
- {
-@@ -46,6 +47,8 @@ int of_get_phy_mode(struct device_node *np)
- 
- 	err = of_property_read_string(np, "phy-mode", &pm);
- 	if (err < 0)
-+		err = of_property_read_string(np, "phy-connection-type", &pm);
-+	if (err < 0)
- 		return err;
- 
- 	for (i = 0; i < ARRAY_SIZE(phy_modes); i++)
--- 
-1.8.3.2
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 6e096ca..6b76e55 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -601,27 +601,27 @@
+>  				audmux {
+>  					pinctrl_audmux_1: audmux-1 {
+>  						fsl,pins = <
+> -							MX6QDL_PAD_SD2_DAT0__AUD4_RXD  0x80000000
+> -							MX6QDL_PAD_SD2_DAT3__AUD4_TXC  0x80000000
+> -							MX6QDL_PAD_SD2_DAT2__AUD4_TXD  0x80000000
+> -							MX6QDL_PAD_SD2_DAT1__AUD4_TXFS 0x80000000
+> +							MX6QDL_PAD_SD2_DAT0__AUD4_RXD  0x130b0
+> +							MX6QDL_PAD_SD2_DAT3__AUD4_TXC  0x130b0
+> +							MX6QDL_PAD_SD2_DAT2__AUD4_TXD  0x110b0
+> +							MX6QDL_PAD_SD2_DAT1__AUD4_TXFS 0x130b0
+>  						>;
+>  					};
+>  
+>  					pinctrl_audmux_2: audmux-2 {
+>  						fsl,pins = <
+> -							MX6QDL_PAD_CSI0_DAT7__AUD3_RXD  0x80000000
+> -							MX6QDL_PAD_CSI0_DAT4__AUD3_TXC  0x80000000
+> -							MX6QDL_PAD_CSI0_DAT5__AUD3_TXD  0x80000000
+> -							MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS 0x80000000
+> +							MX6QDL_PAD_CSI0_DAT7__AUD3_RXD  0x130b0
+> +							MX6QDL_PAD_CSI0_DAT4__AUD3_TXC  0x130b0
+> +							MX6QDL_PAD_CSI0_DAT5__AUD3_TXD  0x110b0
+> +							MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS 0x130b0
+>  						>;
+>  					};
+>  
+>  					pinctrl_audmux_3: audmux-3 {
+>  						fsl,pins = <
+> -							MX6QDL_PAD_DISP0_DAT16__AUD5_TXC  0x80000000
+> -							MX6QDL_PAD_DISP0_DAT18__AUD5_TXFS 0x80000000
+> -							MX6QDL_PAD_DISP0_DAT19__AUD5_RXD  0x80000000
+> +							MX6QDL_PAD_DISP0_DAT16__AUD5_TXC  0x130b0
+> +							MX6QDL_PAD_DISP0_DAT18__AUD5_TXFS 0x130b0
+> +							MX6QDL_PAD_DISP0_DAT19__AUD5_RXD  0x130b0
+>  						>;
+>  					};
+>  				};
+> -- 
+> 1.8.4
+> 
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
