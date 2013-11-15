@@ -1,47 +1,165 @@
-From: "John W. Linville" <linville@tuxdriver.com>
-Subject: Re: [PATCH 1/4] wl1251: split wl251 platform data to a separate
- structure
-Date: Fri, 15 Nov 2013 09:32:55 -0500
-Message-ID: <20131115143254.GA7079@tuxdriver.com>
-References: <1382890469-25286-1-git-send-email-sre@debian.org>
- <1382890469-25286-2-git-send-email-sre@debian.org>
- <20131114185132.GQ10317@atomide.com>
- <20131114230330.GB6383@earth.universe>
- <20131114232217.GV10317@atomide.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
+Date: Fri, 15 Nov 2013 14:48:47 +0000
+Message-ID: <alpine.DEB.2.02.1311151447590.4714@kaball.uk.xensource.com>
+References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131114232217.GV10317@atomide.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Luciano Coelho <luca@coelho.fi>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Luciano Coelho <coelho@ti.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379625868-5395-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 03:22:18PM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@debian.org> [131114 15:04]:
-> > On Thu, Nov 14, 2013 at 10:51:33AM -0800, Tony Lindgren wrote:
-> > > [...]
-> > >
-> > > If this is not going into v3.13, these will cause conflicts
-> > > with the mach-omap2/board-*.c files for v3.14.
-> > > 
-> > > So it might be best to do a minimal header patch first that
-> > > can be merged in by both linux-omap and wireless trees.
-> > 
-> > I guess this patch is pretty minimal. It also seems to be acked by
-> > the involved Maintainers, so maybe just merge Patch 1 without the
-> > other patches?
-> > 
-> > This does not solve the problem with the struct modification from
-> > the second patch, but I guess it's the more intrusive patch.
+On Thu, 19 Sep 2013, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Once at least the first two patches are ready, how about I queue
-> them after -rc1 and set up an immutable branch that can be merged
-> in by linux-omap tree and the wireless tree?
+> The PSCI spec from ARM has been updated to 0.2 version. Update the
+> binding document to reflect the spec changes. For the binding, the
+> major changes are the addition of psci_version, affinity_info,
+> migrate_info_type, migrate_info_up_cpu, system_reset and system_off
+> functions. The recommended function ID numbering has also changed.
+> 
+> This update also defines 32 and 64 bit calling conventions. The calling
+> convention is defined on a per function ID basis.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+> Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>,
+> Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>
+> Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-That sounds reasonable to me.
+Rob,
+I noticed that this patch hasn't gone upstream yet. Is the interface
+still under discussion?
+I am thinking of implementing the Xen side of it.
 
--- 
-John W. Linville		Someday the world will need a hero, and you
-linville@tuxdriver.com			might be all we have.  Be ready.
+
+
+> v4: Reword last paragraph concerning calling convention used for
+> functions without -32 or -64 suffix.
+> 
+> v3: This version implements Mark's suggested binding with -32 and -64
+>  suffixes.
+> 
+>  Documentation/devicetree/bindings/arm/psci.txt | 64 +++++++++++++++++++-------
+>  1 file changed, 48 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+> index 433afe9..8675ec2 100644
+> --- a/Documentation/devicetree/bindings/arm/psci.txt
+> +++ b/Documentation/devicetree/bindings/arm/psci.txt
+> @@ -1,16 +1,17 @@
+>  * Power State Coordination Interface (PSCI)
+>  
+>  Firmware implementing the PSCI functions described in ARM document number
+> -ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
+> +ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
+>  processors") can be used by Linux to initiate various CPU-centric power
+>  operations.
+>  
+> -Issue A of the specification describes functions for CPU suspend, hotplug
+> -and migration of secure software.
+> +Issue B of the specification describes functions for CPU suspend, hotplug,
+> +migration of secure software, and system level reset and powerdown.
+>  
+>  Functions are invoked by trapping to the privilege level of the PSCI
+>  firmware (specified as part of the binding below) and passing arguments
+> -in a manner similar to that specified by AAPCS:
+> +as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
+> +similar to that specified by AAPCS:
+>  
+>  	 r0		=> 32-bit Function ID / return value
+>  	{r1 - r3}	=> Parameters
+> @@ -21,10 +22,10 @@ to #0.
+>  
+>  Main node required properties:
+>  
+> - - compatible    : Must be "arm,psci"
+> + - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
+>  
+> - - method        : The method of calling the PSCI firmware. Permitted
+> -                   values are:
+> + - method        : The method defines the calling convention for the PSCI
+> +                   firmware. Permitted values are:
+>  
+>                     "smc" : SMC #0, with the register assignments specified
+>  		           in this binding.
+> @@ -32,24 +33,55 @@ Main node required properties:
+>                     "hvc" : HVC #0, with the register assignments specified
+>  		           in this binding.
+>  
+> + - psci_version  : Function ID for PSCI_VERSION operation. Required for
+> +                   "arm,psci-0.2" compatible version or later.
+> +
+>  Main node optional properties:
+>  
+> - - cpu_suspend   : Function ID for CPU_SUSPEND operation
+> + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
+> +
+> + - cpu_off                : Function ID for CPU_OFF operation
+> +
+> + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
+> +
+> + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
+>  
+> - - cpu_off       : Function ID for CPU_OFF operation
+> + - migrate[-<32|64]       : Function ID for MIGRATE operation
+>  
+> - - cpu_on        : Function ID for CPU_ON operation
+> + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
+>  
+> - - migrate       : Function ID for MIGRATE operation
+> + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
+>  
+> + - system_reset           : Function ID for SYSTEM_RESET operation
+> +
+> + - system_off             : Function ID for SYSTEM_OFF operation
+> +
+> +Some functions have have separate IDs for 32-bit and 64-bit calling
+> +conventions. These separate function IDs are described with function names with
+> +"-64" and "-32" suffixes (e.g. cpu_on-64). Where a function name does not have
+> +a suffix, the ID may be used with either calling convention depending on the
+> +CPU state -- AArch32 callers should use the 32-bit calling convention, and
+> +AArch64 callers should use the 64-bit calling convention.
+>  
+>  Example:
+>  
+>  	psci {
+> -		compatible	= "arm,psci";
+> +		compatible	= "arm,psci-0.2";
+>  		method		= "smc";
+> -		cpu_suspend	= <0x95c10000>;
+> -		cpu_off		= <0x95c10001>;
+> -		cpu_on		= <0x95c10002>;
+> -		migrate		= <0x95c10003>;
+> +		psci_version	= <0x84000000>;
+> +		cpu_suspend-32	= <0x84000001>;
+> +		cpu_suspend-64	= <0xc4000001>;
+> +		cpu_off		= <0x84000002>;
+> +		cpu_on-32	= <0x84000003>;
+> +		cpu_on-64	= <0xc4000003>;
+> +		affinity_info-32 = <0x84000004>;
+> +		affinity_info-64 = <0xc4000004>;
+> +		migrate-32	= <0x84000005>;
+> +		migrate-64	= <0xc4000005>;
+> +		migrate_info_type = <0x84000006>;
+> +		migrate_info_up_cpu-32 = <0x84000007>;
+> +		migrate_info_up_cpu-64 = <0xc4000007>;
+> +		system_off	= <0x84000008>;
+> +		system_reset	= <0x84000009>;
+>  	};
+> +
+> -- 
+> 1.8.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
