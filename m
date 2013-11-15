@@ -1,111 +1,88 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [lm-sensors] [PATCHv9 02/20] thermal: introduce device tree
- parser
-Date: Fri, 15 Nov 2013 09:07:36 +0100
-Message-ID: <20131115090736.4f360dc8@endymion.delvare>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, grant.likely@linaro.org
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] OF: Introduce DT overlay support.
+Date: Fri, 15 Nov 2013 09:34:21 +0100
+Message-ID: <D048F1EA-B78C-4B10-9A6D-726A17036B42@antoniou-consulting.com>
+References: <1383923170-24914-1-git-send-email-panto@antoniou-consulting.com > <1383923170-24914-3-git-send-email-panto@antoniou-consulting.com> < 20131111184245.D569DC4234A@trevor.secretlab.ca> < ED51965C-6EC8-48AE-A59C-CD09FFD57731@antoniou-consulting.com> < 20131114013124.7DD0AC404DF@trevor.secretlab.ca> < E4922A5F-11B3-4167-91EF-C0D5F3F77D40@antoniou-consulting.com> <20131114212206.EAD1BC402B4@trevor.secretlab.ca>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131114212206.EAD1BC402B4-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+Hi Grant,
 
-On Tue, 12 Nov 2013 15:46:04 -0400, Eduardo Valentin wrote:
-> This patch introduces a device tree bindings for
-> describing the hardware thermal behavior and limits.
-> Also a parser to read and interpret the data and feed
-> it in the thermal framework is presented.
->=20
-> This patch introduces a thermal data parser for device
-> tree. The parsed data is used to build thermal zones
-> and thermal binding parameters. The output data
-> can then be used to deploy thermal policies.
->=20
-> This patch adds also documentation regarding this
-> API and how to define tree nodes to use
-> this infrastructure.
->=20
-> Note that, in order to be able to have control
-> on the sensor registration on the DT thermal zone,
-> it was required to allow changing the thermal zone
-> .get_temp callback. For this reason, this patch
-> also removes the 'const' modifier from the .ops
-> field of thermal zone devices.
->=20
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> ---
-> (...)
-> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int =
-trip,
-> +				enum thermal_trend *trend)
-> +{
-> +	struct __thermal_zone *data =3D tz->devdata;
-> +	long dev_trend;
-> +	int r;
-> +
-> +	if (!data->get_trend)
-> +		return -EINVAL;
-> +
-> +	r =3D data->get_trend(data->sensor_data, &dev_trend);
-> +	if (r)
-> +		return r;
-> +
-> +	/* TODO: These intervals might have some thresholds, but in core co=
-de */
-> +	if (dev_trend > 0)
-> +		*trend =3D THERMAL_TREND_RAISING;
-> +	else if (dev_trend < 0)
-> +		*trend =3D THERMAL_TREND_DROPPING;
-> +	else
-> +		*trend =3D THERMAL_TREND_STABLE;
-> +
-> +	return 0;
-> +}
+On Nov 14, 2013, at 10:22 PM, Grant Likely wrote:
 
-I don't like the whole trend thing.
+> On Thu, 14 Nov 2013 11:01:35 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>> On Nov 14, 2013, at 2:31 AM, Grant Likely wrote:
+>>> On Tue, 12 Nov 2013 10:30:37 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>>> On Nov 11, 2013, at 7:42 PM, Grant Likely wrote:
+>>>>> On Fri,  8 Nov 2013 17:06:09 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>>> I'm of the opinion that 'platform_device' shouldn't exist at all btw :)
+>>>> Most of it's functionality can pretty easily be subsumed by device proper
+>>>> and the world would be a better place :)
+>>> 
+>>> I'm fine for merging some/all of the platform_device fields into struct
+>>> device. There are a few things, like resources, which would probably be
+>>> useful to have common on all struct device variants. However,
+>>> platform_device is far more about matching drivers to devices. Even if
+>>> all of platform_device went into struct device, there would still need
+>>> to be the platform_bus_type as the collection point for the device
+>>> drivers.
+>>> 
+>> 
+>> We don't really need the resources structures on OF. That information is
+>> present in OF format, which we can use to generate transient resources for
+>> usage with the standard kernel interfaces.
+>> 
+>> BTW, last time I checked resource handling was broken on release.
+>> There are a few patches I sent out fixing it but they were probably ignored.
+> 
+> Please send them again. They probably got lost.
+> 
+>>>>> Can overlays interact in bad ways? If overlay 1 is installed before
+>>>>> overlay 2, what happens if overlay 1 is removed?
+>>>>> 
+>>>> 
+>>>> Yes, they can. It is not something easily fixed; the proper way would
+>>>> be to calculate overlay intersection points and refuse to unload.
+>>> 
+>>> I think this is important. If it cannot be solved immediately, then the
+>>> kernel should enforce overlays always get removed in the reverse order
+>>> that they were added. There may be use-cases that don't like it, but it
+>>> is safe.
+>> 
+>> OK, that makes sense.
+>> 
+>> We are not talking about a global overlay stack though, we're talking about
+>> an overlay stack for overlays that overlap.
+> 
+> I'm actually talking about a global overlay stack. Otherwise you've
+> still got the ever-increasing-phandles problem again.
+> 
 
-I've been writing hwmon drivers for the past decade and I've never seen
-a thermal sensor device being able to report trends. And as a rule of
-thumb, if the hardware can't do it then the (hardware-specific) drivers
-should not report it.
+A global overlay stack is easiest. Let's do that first.
 
-Hwmon devices (and drivers) report temperature values, and sometimes
-historical min/max. They can do that because these are facts that need
-no interpretation.
+There are use cases for multiple overlay stacks though. Take for instance the
+case where you have multiple plugin connectors.
 
-Defining a trend, however, requires care and, more importantly,
-decisions. For example, consider a thermal sensor which reports 50=B0C =
-at
-time t, then 47=B0C at time t+3s, then 48=B0C at time t+6s. At t+7s som=
-eone
-asks for the trend, what should the driver reply? If you consider only
-the last 5 seconds, temperature is raising. If you consider the last 10
-seconds instead, temperature is dropping. How would the driver know
-what time frame the caller is interested in?
+Each one can lead to creating a new platform device under ocp, but there is
+no overlap.
 
-Another example: "small" temperature variations. If temperatures varies
-by 1=B0C in my kitchen's oven, I'd call it stable. If my body temperatu=
-re
-varies by 1=B0C, I'd call it non-stable, and my doctor for an appointme=
-nt
-also ;-)
+Of course stackable expansion boards work just fine with a global overlay stack :)
 
-My point is that only the caller, and not the driver, knows how to
-convert a series of measurements into a trend. So I don't think drivers
-should implement anything like get_trend(). Whatever piece of code
-needs to establish a trend should call get_temp() repeatedly, store the
-results and do its own analysis of the data.
+> Cheers,
+> g.
 
---=20
-Jean Delvare
+Regards
+
+-- Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
