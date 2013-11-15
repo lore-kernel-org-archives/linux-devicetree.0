@@ -1,79 +1,76 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dtc: Dynamic symbols & fixup support (v2)
-Date: Fri, 15 Nov 2013 16:01:31 +0900
-Message-ID: <20131115070131.78139C40785@trevor.secretlab.ca>
-References: <1383073266-12017-1-git-send-email-panto@antoniou-consulting.com > <20131111175604.ECF33C4233A@trevor.secretlab.ca> < DABC2A65-BC07-4481-B80C-A62777BD8732@antoniou-consulting.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DABC2A65-BC07-4481-B80C-A62777BD8732-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: Strange location and name for platform  devices when device-tree is used.
+Date: Fri, 15 Nov 2013 16:44:16 +0900
+Message-ID: <20131115074416.4DA8DC40828@trevor.secretlab.ca>
+References: <20131101145925.66e22f73@notabene.brown> <1383279744.28909.26. camel@pasglop> <1383280054.28909.30.camel@pasglop> <20131101160329.37f3707b @notabene.brown> <1383282516.28909.36.camel@pasglop> <20131101204749. GA19662@kroah.com> <1383347425.28909.63.camel@pasglop> <20131102104505. 34105cbb@notabene.brown>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131102104505.34105cbb@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2013 11:20:04 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> Hi Grant,
+On Sat, 2 Nov 2013 10:45:05 +1100, NeilBrown <neilb@suse.de> wrote:
+> On Sat, 02 Nov 2013 10:10:25 +1100 Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
 > 
-> On Nov 11, 2013, at 6:56 PM, Grant Likely wrote:
-> 
-> > On Tue, 29 Oct 2013 21:01:06 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> >> Enable the generation of symbol & fixup information for
-> >> usage with dynamic DT loading.
-> >> 
-> >> Passing the -@ option generates a __symbols__ node at the
-> >> root node of the resulting blob for any node labels used.
-> >> 
-> >> When using the /plugin/ tag all unresolved label references
-> >> be tracked in the __fixups__ node, while all local phandle
-> >> references will the tracked in the __local_fixups__ node.
-> >> 
-> >> This is sufficient to implement a dynamic DT object loader.
-> >> 
-> >> Changes since v1:
-> >> 
-> >> * Forward ported to 1.4 version
-> >> * Added manual entries for the -@ option
-> >> 
-> >> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> > On Fri, 2013-11-01 at 13:47 -0700, Greg Kroah-Hartman wrote:
 > > 
-> > Hi Pantelis,
+> > > > > On my device I seem to have some platform devices registered through
+> > > > > device-tree, and some registered through platform_device_add (e.g.
+> > > > > 'alarmtimer').  Guaranteeing they remain disjoint sets if the kernel is
+> > > > > allowed to evolve independently of the devicetree might be tricky....
+> > > > > Maybe we need "/sys/devices/platform" and "/sys/devices/dt_platform" ??
+> > > > 
+> > > > No, I think device-tree created platform devices should go
+> > > > to /sys/devices/platform like the "classic" ones.
+> > > > 
+> > > > The problem is really how to deal with potential name duplication. We
+> > > > could try to register, if we get -EEXIST (assuming sysfs returns the
+> > > > right stuff), try again with ".1" etc...
+> > > 
+> > > How can there be device name collisions?  All platform devices _should_
+> > > be named uniquely, if not, you have bigger problems...
 > > 
-> > This looks pretty good on first look. Comments below.
+> > The problem is how to create a unique name for a platform device created
+> > from a device-tree node.
 > > 
-> >> ---
-> >> Documentation/dt-object-internal.txt | 295 +++++++++++++++++++++++++++++++++++
-> >> Documentation/manual.txt             |  10 ++
-> 
-> [snip]
-> 
-> >> +-----------------------------------------
-> >> +
-> >> +Since the device tree is used for booting a number of very different hardware
-> >> +platforms it is imperative that we tread very carefully.
-> >> +
-> >> +2.a) No changes to the Device Tree binary format. We cannot modify the tree
-> >> +format at all and all the information we require should be encoded using device
-> >> +tree itself. We can add nodes that can be safely ignored by both bootloaders and
-> >> +the kernel.
+> > Device tree nodes aren't necessarily uniquely named. They are unique
+> > under a given parent but that hierarchy isn't preserved when creating
+> > corresponding platform devices (and it would be very tricky to do so).
 > > 
-> > Not /entirely/ true. It would be completely fine to bump up the binary
-> > format version for the overlays since they will never be loaded
-> > standalone. If there are specific things that you would like to have in
-> > the marshalled format then go ahead and propose them. Then the overlay
-> > would use the new protocol version, but the base tree would use the
-> > existing one.
+> > Currently, we simply append a number to the name when creating them,
+> > which is obtained from a global counter.
+> > 
+> > Neil is unhappy about that because on his specific hardware, the device
+> > has a unique name and thus we introduce a naming difference between
+> > device-tree usage and old-style "hard coded" board file usage.
 > 
-> OK, I see. I am very hesitant to bump the format version, because both the
-> base DTS and the overlay need to be compiled with symbol support.
-> We can bump the version format for the overlay fragment, but bumping the
-> version for the base DTS will affect bootloaders badly.
+> It occurs to me that a different approach could solve my problem.
+> 
+> My problem stems from the fact that the name of the device on the
+> platform-bus is used as the name of the device in the "backlight" class.
+> 
+> As Greg writes elsewhere, depending on names with /sys/devices is not
+> supported - we need to accept that bus-names might change.
+> However names in class devices tend to be a lot more stable.
+> Several devices allow these to be explicitly set.
+>  leds have 'label'
+>  regulators has "regulator-name"
+>  gpio-keys has 'label'.
+> 
+> I could just teach pwm_bl to allow a 'label' property which would be used in
+> place of the platform-bus device name when creating the class/backlight
+> device.
+> 
+> The maxim "you cannot trust names to remain stable in /sys/devices" can
+> justify both the movement of platform devices into /sys/devices/platform, and
+> the use of "label" rather than the device-name for creating the class device.
+> 
+> Does that sound convincing?
 
-Hmmm, I missed that detail. Why does the base tree require symbol
-support? It looked to me like the overlay had all the resolution
-information needed.
+The problem with a property in the node in this case is that there is no
+guarantee of uniqueness. An alternative however would be to look for an
+alias in /aliases. Those are unique.
 
 g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
