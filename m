@@ -1,85 +1,51 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/2] isp1704_charger: Add DT support
-Date: Fri, 15 Nov 2013 07:45:16 +0100
-Message-ID: <201311150745.18408@pali>
-References: <1384432734-1490-1-git-send-email-sre@debian.org> <201311141905.11046@pali> <20131114223416.GA6383@earth.universe>
+From: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx: specify the value of audmux pinctrl
+ instead of 0x80000000
+Date: Fri, 15 Nov 2013 14:40:09 +0800
+Message-ID: <20131115064009.GD745@MrMyself>
+References: <1384427230-979-1-git-send-email-b42378@freescale.com>
+ <1384427230-979-2-git-send-email-b42378@freescale.com>
+ <20131115064159.GG11014@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1397715.gDSUgNYlmo";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131114223416.GA6383@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Tony Lindgren <tony@atomide.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131115064159.GG11014-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: timur-N01EOCouUvQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1397715.gDSUgNYlmo
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 15, 2013 at 02:42:01PM +0800, Shawn Guo wrote:
+> On Thu, Nov 14, 2013 at 07:07:09PM +0800, Nicolin Chen wrote:
+> > We must specify the value of audmux pinctrl if we want to use pinctrl_pm().
+> > Thus change bypass value 0x80000000 to what we exactly need.
+> > 
+> > This patch also seperately unset PUE bit for TXD so that IOMUX won't pull
+> > up/down the pin after turning into tristate. When we use SSI normal mode to
+> > playback monaural audio via I2S signal, there'd be a pulled curve occur to
+> > its signal at the second slot if setting PUE bit for TXD. And it will make
+> > the second channel to play a constant noise. So by keeping the signal level
+> > in the second slot, we can get a constant high level signal (-1) or a low
+> > level one (0).
+> > 
+> > Signed-off-by: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> We have moved all pin groups settings into
+> arch/arm/boot/dts/imx6qdl-pingrp.h.  I just rebased and applied the
+> patch.  Please check my imx/dt branch and ensure I applied the changes
+> correctly.
 
-On Thursday 14 November 2013 23:34:19 Sebastian Reichel wrote:
-> On Thu, Nov 14, 2013 at 07:05:06PM +0100, Pali Roh=C3=A1r wrote:
-> > On Thursday 14 November 2013 13:38:53 Sebastian Reichel=20
-wrote:
-> > > diff --git a/drivers/power/isp1704_charger.c
-> > > b/drivers/power/isp1704_charger.c index fc04d19..db96778
-> > > 100644
-> > > --- a/drivers/power/isp1704_charger.c
-> > > +++ b/drivers/power/isp1704_charger.c
-> > > @@ -28,6 +28,8 @@
-> > >=20
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/power_supply.h>
-> > >  #include <linux/delay.h>
-> > >=20
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_gpio.h>
-> > >=20
-> > >  #include <linux/usb/otg.h>
-> > >  #include <linux/usb/ulpi.h>
-> > >=20
-> > > @@ -89,8 +91,8 @@ static void
-> > > isp1704_charger_set_power(struct isp1704_charger *isp,
-> > > bool on) {
-> > >=20
-> > >  	struct isp1704_charger_data	*board =3D
-> > >=20
-> > > isp->dev->platform_data;
-> > >=20
-> > > -	if (board && board->set_power)
-> > > -		board->set_power(on);
-> > > +	if (board)
-> > > +		gpio_set_value(board->enable_gpio, on);
-> > >=20
-> > >  }
-> >=20
-> > You need to check if enable_gpio in board data was defined
-> > or not.
->=20
-> The device is not successful probed without valid enable_gpio.
->=20
-> -- Sebastian
+Simply perfect. Thank you.
+Nicolin
 
-Then, OK.
+---
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
 
---nextPart1397715.gDSUgNYlmo
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlKFwv4ACgkQi/DJPQPkQ1JKvwCfftQMP0wzZ0b7Y9hoA5FRDhxg
-HYcAnA8cdZf1SD+3XcWHIEDh6WpP+DNZ
-=aF0P
------END PGP SIGNATURE-----
-
---nextPart1397715.gDSUgNYlmo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
