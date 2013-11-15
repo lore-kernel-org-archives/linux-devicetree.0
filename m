@@ -1,63 +1,60 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 0/5] Add-Broadcom-Kona-I2C-Support
-Date: Fri, 15 Nov 2013 23:52:34 +0100
-Message-ID: <20131115225234.GC2672@katana>
-References: <1384462936-7906-1-git-send-email-tim.kryger@linaro.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Fri, 15 Nov 2013 23:21:09 +0000
+Message-ID: <20131115232109.GT16735@n2100.arm.linux.org.uk>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <20131115175241.GB27174@quad.lixom.net> <20131115180832.GR16735@n2100.arm.linux.org.uk> <201311152056.47846.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384462936-7906-1-git-send-email-tim.kryger@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
+In-Reply-To: <201311152056.47846.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
+> On Friday 15 November 2013, Russell King - ARM Linux wrote:
+> > On Fri, Nov 15, 2013 at 09:52:41AM -0800, Olof Johansson wrote:
+> > > If we knew exactly what we wanted, it'd be a different story. _We
+> > > don't_. We're into year FOUR of the device tree conversion and we're just
+> > > now reaching a point where we think we know what a good solution looks
+> > > like. The first two years were easy -- they were the trivial devices we're
+> > > now talking about on ACPI. After that it got harder. Going through all
+> > > of that again with ACPI? No. No way. Microsoft gets to do it and while
+> > > they're busy sorting it out, we'll boot with device tree.
+> > 
+> > However, there's a very big danger here.  I disagree with the stance
+> > you're taking.
+> > 
+> > It seems that under ACPI and DT, we refer to properties by string names.
+> > That's good, but do we really want to have different string names for the
+> > same property.
+> 
+> For all I know, doing this in ACPI is something that is only now being
+> discussed as Intel wants to be able to reuse the existing features from
+> DT enabled drivers in the kernel and share the implementation between
+> embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
+> isn't as crazy.
+> 
+> The existing ACPI usage however is basically all binary and cannot be
+> shared with DT, in particular it won't help for the orthogonal problem of
+> using ACPI to get "enterprise server" features on ARM64.
 
---gr/z0/N6AeWAPJVB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's strange, because the patches I've seen from people who want to
+add ACPI support to AMBA are all based around very similar strings to
+those in DT to lookup the same data in ACPI.
 
-On Thu, Nov 14, 2013 at 01:02:11PM -0800, Tim Kryger wrote:
-> This series adds support for the Kona I2C bus found on Broadcom mobile
-> SoCs like the bcm11351 (aka bcm281xx) and enables it on the bcm28155-ap
-> board.
->=20
-> It depends upon the following commit:
->   http://lkml.indiana.edu/hypermail/linux/kernel/1311.1/03583.html
+What's been done there is the function which reads from DT has been
+duplicated, and instead of reading the information from DT, it reads it
+from ACPI instead using string names without the vendor prefix.
 
-Fixed Kconfig sorting, squashed broken out patches 1-3 into one and
-applied to for-next, thanks! Let me know if I should take patches 4-5
-also, but usually they go via arm-soc. Also, please provide a "Changes
-since V1" log which will speed up reviewing.
-
-Thanks,
-
-   Wolfram
-
-
---gr/z0/N6AeWAPJVB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJShqWyAAoJEBQN5MwUoCm29OgQAIaT+x3Kn4hRankq0+PVqnjB
-PAiCLkq1zJMq5ne6mZ8YQzg0cDnHmN3o9liVMV+kZKgiveizSpEhrWTlH1XzOUxE
-EkRUnVQWWrjZnKzmY8pEIYWn0MMG+ThkjN9PydG7T3ZFoNjlQXeoBUl2Y1r6wRJx
-xGYgB1ZmZRrBx+RIjrCiVQ8RmSCae7bFODCZC1ADMRi5N46mANSf1XazifbuUasd
-Rm6u00JAFHoPDOPhPj5B6NTy0piJmC2zvZcqUHLq2rdCCjBI8TZsfwoI/CgVMo12
-e+v/VZQlxFC4Jr9QNqb+cSpMmIcGj4ahCaHk2jOraXuuhBzF8lIzF3BILDWfQnay
-htTGFqId38gLaXx8W/vxEh9o+p3BRzzU+sjVDazFRqCFi+jw9Q6yzwN45hoDnCiQ
-EcWA8Jyf/ry/0zbt1OaepNet5uq6kyzNUkfLxw0ztn/1W/cwE6LQeotI3yZthdSQ
-GE0Twov3LV11Jpo5PmUY8uvNLRw4voaqvUIah+4bbo+w/i/hwYlMfL6L4t0djjqU
-3nTOEx6ODRv18CxGEA6KmgsdPqSmp5x/BGV7/yMFaX2qNTLpHF7ioQj3L342xBuC
-FQL36DeBfqCPxJLfuz4MP1jPZlteoh6IMxuegHealNlXtYd3ei8zogqLAT+MGnzG
-VetCw+10ADyinFSqDWBq
-=3CHQ
------END PGP SIGNATURE-----
-
---gr/z0/N6AeWAPJVB--
+That tells me that what I've stated in my previous email to which you
+replied is _definitely_ possible to do.  That means it's certainly
+possible to do this without reinventing the wheel, and without having
+to rewrite lots of parsing code, precisely along the lines I set out
+in my original email.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
