@@ -1,107 +1,203 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in TSC/ADC
- DT binding
-Date: Fri, 15 Nov 2013 11:53:56 -0600
-Message-ID: <20131115175356.GJ4698@saruman.home>
-References: <1382386404-6659-1-git-send-email-balbi@ti.com>
- <1382386404-6659-2-git-send-email-balbi@ti.com>
- <52663A58.9070706@linutronix.de>
- <20131022120253.GD9340@gimli>
- <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
- <20131114155404.GE15835@saruman.home>
- <20131115155540.GF24831@e106331-lin.cambridge.arm.com>
-Reply-To: <balbi@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Fri, 15 Nov 2013 09:52:41 -0800
+Message-ID: <20131115175241.GB27174@quad.lixom.net>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IbA9xpzOQlG26JSn"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131115155540.GF24831@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+In-Reply-To: <20131115095717.GC1709-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---IbA9xpzOQlG26JSn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 15, 2013 at 09:57:17AM +0000, Mark Rutland wrote:
+> On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
+> > The more I start to see early UEFI/ACPI code, the more I am certain
+> > that we want none of that crap in the kernel. It's making things
+> > considerably messier, while we're already very busy trying to convert
+> > everything over and enable DT -- we'll be preempting that effort just
+> > to add even more boilerplate everywhere and total progress will be
+> > hurt.
+> 
+> We are certainly under a lot of pressure with the device tree migration,
+> and I agree that adding another information source is going to be a
+> source of pain. However, I'd argue that we're going to encounter pain
+> regardless of which approach we take.
+> 
+> I'm of the opinion that the only way we should support ACPI is as a
+> first-class citizen. We don't need to modify every driver and subsystem
+> to support ACPI, only those necessary to support the minimal set of
+> platforms using ACPI. ACPI is new in the arm space, and we can enforce
+> quality standards on ACPI _now_ above what we're allowing for DT, and
+> avoid future problems.
 
-Hi,
+It's obvious from the very first submission, from a vendor that has worked
+closely with "the community" (i.e. one enterprise distro at least), that this
+is completely new territory for _everyone_ involved. There's no way that we can
+enforce quality standards for ACPI yet -- we don't know what they look like!
+Nobody knows how to design a good ACPI implementation or binding.
 
-On Fri, Nov 15, 2013 at 03:55:40PM +0000, Mark Rutland wrote:
-> > > > > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/driver=
-s/input/touchscreen/ti_am335x_tsc.c
-> > > > > > index e1c5300..b61df9d 100644
-> > > > > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > > > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > > > > @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct platform_=
-device *pdev,
-> > > > > >  	if (err < 0)
-> > > > > >  		return err;
-> > > > > > =20
-> > > > > > -	err =3D of_property_read_u32(node, "ti,coordiante-readouts",
-> > > > > > +	/*
-> > > > > > +	 * try with new binding first. If it fails, still try with
-> > > > > > +	 * bogus, miss-spelled version.
-> > > > > > +	 */
-> > > > > > +	err =3D of_property_read_u32(node, "ti,coordinate-readouts",
-> > > > > >  			&ts_dev->coordinate_readouts);
-> > > > > >  	if (err < 0)
-> > > > > > +		err =3D of_property_read_u32(node, "ti,coordiante-readouts",
-> > > > > > +				&ts_dev->coordinate_readouts);
-> > > > > > +	if (err < 0)
-> > > > > >  		return err;
-> > > > >=20
-> > > > > Thanks, very good. Do we keep this fallback for ever or just for =
-a year
-> > > > > or two?
-> > > >=20
-> > > > That's for DT maintainers to decide but considering DT is an ABI, I
-> > > > guess we need to keep for 30 years or so :-p
-> > >=20
-> > > We keep it as long as we have to. If no-one's relying on the typo by =
-the
-> > > next merge window, I see no reason we'd have to keep support for the
-> >=20
-> > and how could you know that ? considering it's an ABI, how could you
-> > ever know that ?
->=20
-> If you know that the only user of a binding is a dts for a particular
-> product that you're in charge of, then you'd know the set of kernel +
-> dtb combinations out there, and can judge.
+Oh wait, there's people who have been doing this for years. Microsoft. They
+should be the ones driving this and taking the pain for it. Once the platform
+is enabled for their needs, we'll sort it out at our end. After all, that has
+worked reasonably well for x86 platforms.
 
-once the binding has made into mainline, it's next to impossible to
-figure out who has downloaded a tarball containing that driver and made
-a product out of it.
+If we knew exactly what we wanted, it'd be a different story. _We
+don't_. We're into year FOUR of the device tree conversion and we're just
+now reaching a point where we think we know what a good solution looks
+like. The first two years were easy -- they were the trivial devices we're
+now talking about on ACPI. After that it got harder. Going through all
+of that again with ACPI? No. No way. Microsoft gets to do it and while
+they're busy sorting it out, we'll boot with device tree.
 
-Besides keeping that check in the driver won't hurt at all in the long
-run. I would give it at least until 4.0 before thinking about removing,
-and that might still not be enough time.
+Once they're done, we'll figure out how to enable new hardware. Sure, someone
+needs to keep them sane and participate in the standardization process, but we
+don't have to drag the whole kernel through it.
 
---=20
-balbi
+> There may even be things which we don't have to deal with at all on ACPI
+> systems as used in servers (e.g. clock management), but perhaps we will
+> if people see value in those elements.
 
---IbA9xpzOQlG26JSn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+It's not about seeing value, it's about trying to shoehorn an existing
+implementation into ACPI right now. People don't program with the ACPI
+mindset since that's not what they're used to. So everybody needs to
+re-learn everything all over again.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+The clock issues still have to be dealt with in ACPI _somewhere_,
+and they likely have to be dealt with by the same software team at the
+vendors that do Linux kernel work. So by forcing them to figure out how
+to do it in ACPI, we're distracting from their efforts to support their
+hardware better in the kernel in the first place. That's not win-win,
+it's lose-lose. Or rather, it's lose for all of us, and win for Microsoft
+since they are DoS:ing us.
 
-iQIcBAEBAgAGBQJShl+0AAoJEIaOsuA1yqREofcP/jU5i67IMZOBLdbk9/C68m96
-TsdwClJC+pfUEV3gJP1wufJS/2xeCm4kEupFlmkJbmrrW7fZaPrf0n1NFdCX/jvA
-IV7QKMkprzcyjB+QGUvEy11VJs332fH3j/BMej9rbPiOHU+toZPnRdvWbRwzqzrm
-zQIN+tKW61NhhKYopg9wQ+4vuFQJ9z2WvEdpjyknyzGiUnjfKbcmD/4Hy3TSoqg1
-CIyAI2+//q5AiW0lePFMmffeFUjf/VKTwENRW/CjVoO/vwQjX426OCAfn63edQwS
-COQU0/DdJXQG3hqkXsAL0rgfZZu/bE+K4RuYwsW+G6i7JEI6lkfU/1ozzXgbk/fl
-G/3q29PQjQiQwIQftRwSkeQsRtTyvYeOmaYw5I4J08Oz7FYOnzgLV2hufvfZzjy6
-sGHWROg89Djhqjf9UQCTTETE1sbDbKDIoRn0FBzcNqHmvf7I2UrXPqfiKcgjM2Kd
-VlX8gMeF+9KakuPRDw0ctoX1GLw3IYPndZdchT6KU8pzgvVZM6qU65OPefWw86zS
-y6hiOaSy6s5qQ2tU9Xibjb310puS9H/wOu3MzE5nyoiR5lwvtIs/UjcT1Ytwd8sq
-2xnngWLeSNdEZ8kB0P/RJduYf1SOhGf1LmTM8QdhXDdSKqtVyTdpxOrHVGgqOe4M
-rDgxjzC/+VsbldCG0cxt
-=jkgP
------END PGP SIGNATURE-----
+> > The server guys really want UEFI for their boot protocols,
+> > installation managers, etc, etc. That's fine, let them do that, but
+> > that doesn't mean we need to bring the same APIs all the way into the
+> > kernel.
+> > 
+> > So, I'm strongly urging that whatever the server guys try to do, it
+> > will in the end result in the ACPI data being translated into DT
+> > equivalents, such that the kernel _only_ needs to handle data via DT.
+> 
+> I'm not sure that translating ACPI tables to dt makes any sense. If AML
+> is used (even sparingly), I do not believe that we can do any sensible
+> conversion to device tree. My understanding is that AML includes
+> functionality for modifying ACPI tables, and I don't see how we can
+> possibly support that without having to add a lot of boilerplate to all
+> the code handling AML to add a device tree backend...
 
---IbA9xpzOQlG26JSn--
+We can definitely modify device tree contents at runtime, it's just that
+nobody besides the POWER server guys are doing that today. So that's
+not a strong argument in ACPI's favor. We should fix device-tree where
+needed instead.
+
+Also, we can either have some of our better people sort out the ACPI-to-DT
+translation and management, and get it done right, or we can rely on all the
+vendors to get ACPI right in all their drivers. While some of them will,
+I suspect we'll be more successful driving this from a common place. It
+also gives us a place to stick all the fixups for broken firmware,
+since the first generations of ARM servers are bound to have them.
+
+And best of all, it allows us to continue focus on device tree and
+getting that done right, than splitting all efforts into two. We can't
+affort that right now.
+
+> > Just like PowerPC scrapes the OpenFirmware client interface to build a
+> > flat device tree, we should add a pre-boot stage that scrapes
+> > ACPI/UEFI data and constructs an appropriate device-tree. We can still
+> > bring over ACPI methods and represent those in the DT, but we should
+> > _not_ have two native interfaces.
+> 
+> I'm not sure the two cases are comparable. The format of the FDT was
+> designed to encode the data structure used by OpenFirmware, and thus the
+> two map to each other pretty well. I do not believe that mapping from
+> ACPI tables to an FDT blob is anywhere near as simple, and as I mention
+> above I do not believe that we can just copy over the ACPI methods in
+> isolation.
+
+Sorry, I wasn't implying that there's a one-time trivial conversion
+to be made in the generic case, but it can still be done in a similar
+manner even though it will be more complex.
+
+Nobody is expecting there to be zero work for new drivers with ACPI;
+after all, the driver itself still has to be written. We're talking differences
+from board to board and system to system here, which we can definitely handle
+through a translator as well.
+
+And, as you say, if the first platforms are going to be trivial and easy to
+implement with ACPI, then doing a translation for them will be simple too.
+
+Shipping a firmware with ACPI is really no different from shipping a firmware
+with a flashed device tree. Whatever bugs or strange things the vendor chooses
+to do in there, we'll have to live with forever.
+
+We all know DT considerably better to a point where I would recommend
+that they flash a DTB in their UEFI firmware instead of go with ACPI. For
+simple hardware and basic devices we've got most bindings sorted out by
+now, and we've decided on backwards compatibility from here on out.
+
+> > It might be done via having a skeleton/framework DT for the vendor
+> > platform that is updated via UEFI/ACPI data, or it might be
+> > constructed entirely out of tables coming from firmware. I don't care
+> > about the methods for how it is done, but I do feel strongly that we
+> > should _not_ introduce a second API for everything. I can't think of a
+> > single good reason to do it.
+> 
+> Where does this skeleton/framework come from? Within the kernel?
+
+Since there might need to be runtime modifications done to the tree based on
+ACPI events, it seems to make sense to do it in the kernel, so that translation
+state and such can be kept around for use by the runtime modification parts.
+
+Having it extractable out of the kernel tree for testing purposes would be
+greatly appreciated, so it can be ran through valgrind, add testcases, etc.
+
+> That
+> sounds like an arcane board file equivalent, and is counter to the
+> entire reason for using UEFI and ACPI -- having a well-defined
+> (excluding particular driver bindings, and I'm not arguing well-defined
+> means nice) stable standard that allows the kernel to boot on an
+> arbitrary platform without requiring arbitrary platform-specific code
+> everywhere in the boot path.
+> 
+> It might not be pretty, and it will certainly require a lot of work, but
+> I'd prefer it at least for a semblance of uniformity.
+
+That is a red herring -- that booting standard has _nothing_ to do with
+ACPI. Once you've got a standard that is well-defined enough like that,
+you no longer need the runtime portions of ACPI to deal with it. You
+can just hardcode it. You need a way to probe _which_ type of standard
+is used, but from there on out you can assume that things are the same
+way.
+
+> I think that trying to shoe-horn ACPI-derived information into device
+> tree is fundamentally the wrong approach. I don't think it encourages
+> best practices, and I don't think it's beneficial to the long term
+> health of Linux or the ecosystem as a whole.
+
+There are no known best practices with ACPI. It's a complete fumbling
+around in the dark right now. We're complaining about reviewer bandwith
+on DT -- do we have a single reviewer for ACPI on ARM that actually
+knows what a good solution looks like? I don't think so.
+
+So, until there's strong evidence that ACPI is actually going to be
+a sane solution, in other words, until someone has shipped a system
+that uses it (with Windows) and does it successfully without being
+a hot mess, we shouldn't litter the kernel with it.
+
+Vendors can standardise of UEFI if they want, but I would much rather
+see them bundle DTB images with their firmware today, than rely on early
+buggy and still-early-on-the-learning-curve ACPI bindings that we then
+have to live with forever.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
