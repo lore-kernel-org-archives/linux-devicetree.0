@@ -1,83 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy
- settings
-Date: Fri, 15 Nov 2013 16:17:32 +0000
-Message-ID: <20131115161732.GG24831@e106331-lin.cambridge.arm.com>
-References: <1383034352-15494-1-git-send-email-s.shirish@samsung.com>
- <1383034352-15494-5-git-send-email-s.shirish@samsung.com>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH 1/3] Documentation: Add APM X-Gene SoC 6.0Gbps SATA PHY
+ driver binding documentation
+Date: Fri, 15 Nov 2013 08:22:02 -0800
+Message-ID: <CAPw-ZT=x3eTd_vgVgyu0HR7j2wmSfQkkSeCMJSJ_i3MTPwiM-g@mail.gmail.com>
+References: <1384457519-21335-1-git-send-email-lho@apm.com>
+	<1384457519-21335-2-git-send-email-lho@apm.com>
+	<201311151335.09577.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383034352-15494-5-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <201311151335.09577.arnd@arndb.de>
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 08:12:32AM +0000, Shirish S wrote:
-> This patch adds dt support to hdmiphy config settings
-> as it is board specific and depends on the signal pattern
-> of board.
-> 
-> Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/exynos_hdmi.txt      |   34 +++++++++
->  drivers/gpu/drm/exynos/exynos_hdmi.c               |   79 +++++++++++++++++++-
->  2 files changed, 109 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 323983b..c685c90 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -13,6 +13,32 @@ Required properties:
->  	b) pin number within the gpio controller.
->  	c) optional flags and pull up/down.
->  
-> +- hdmiphy-configs: following information about the hdmiphy config settings.
-> +        a) "nr-configs" specifies the number of pixel clocks supported.
+Hi,
 
-I really don't see why this is necessary. It's redundant, and it's easy
-for the driver to derive this from the number of config<N> nodes, which
-it can count.
+>> +- CTLE0                        : PHY override parameters for channel 0 register REG1
+>> +                         field CTLE_EQ. First value for Gen1, second value
+>> +                         for Gen2, and third value for Gen3. Default is 0x2.
+>> +- CTLE1                        : PHY override parameters for channel 1 register REG1
+>> +                         field CTLE_EQ. First value for Gen1, second value
+>> +                         for Gen2, and third value for Gen3. Default is 0x2.
+>> +- PQ0                  : PHY override parameters for channel 0 register REG125
+>> +                         field PQ_REG. First value for Gen1, second value
+>> +                         for Gen2, and third value for Gen3. Default is 0xA.
+>> +- PQ1                  : PHY override parameters for channel 1 register REG125
+>> +                         field PQ_REG. First value for Gen1, second value
+>> +                         for Gen2, and third value for Gen3. Default is 0xA.
+>
+> As mentioned before, I don't think putting register-level information into the binding
+> is the right approach here.
+>
+[Loc Ho]
+I don't want to change the driver for every possible customer or APM
+boards out there. In general, if the board designer follows the board
+design guideline, this isn't necessary. Unfortunately, I can not
+control what customer do. If these setting is NOT driven by DTS, then
+I or others may have to change the driver every time there is an new
+board. Another option is pass them as module parameters.
 
-> +	b) "config<N>: config<N>" specifies the phy configuration settings,
-> +		wher 'N' denotes the number of iteration.
-
-The number of iteration?
-
-> +		"pixel-clock" specifies the pixel clock
-> +		"conifig-de-emphasis-level" specifies the 8 bit configuration
-> +		of Data De-emphasis levels,below shown is example for
-> +		data de-emphasis register at address 0x145D0040.
-> +			hdmiphy@38[16] for bits[3:0] permitted values:
-> +				0000 means 760 mVdiff && 1111 means 1400 mVdiff
-> +				1LSB corresponds to 20mVdiff
-> +			hdmiphy@38[16] for bits[7:4] permitted values:
-> +				0000 	0dB
-> +				0001	-0.25dB
-> +				0010	-0.7dB
-> +				0011	-1.15dB
-> +				1111	-7.45dB
-> +		"config-clock-level" specifies the 8 bit configuration for
-> +		the corresponding clock level, for example if 0x145D005C
-> +		is the address of clock level register.
-
-I don't understand what this intended to mean.
-
-> +			hdmiphy@38[23] for bits [1:0] permitted values:
-> +				00 means 0 mVdiff && 11 means 60 mVdiff
-> +			hdmiphy@38[23] for bits [7:3] permitted values:
-> +				00000 is 790 mVdiff
-> +				11111 is 1430 mVdiff
-> +				1LSB corresponds to 20mVdiff
-
-That last line was confusing. Why not state that this is a value between
-790 and 1430 mV in 20mV increments?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Loc
