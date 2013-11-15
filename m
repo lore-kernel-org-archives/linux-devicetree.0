@@ -1,40 +1,53 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91/dt: binding: add precision to AIC documentation
-Date: Fri, 15 Nov 2013 11:09:33 +0100
-Message-ID: <1384510173-15901-1-git-send-email-nicolas.ferre@atmel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Fri, 15 Nov 2013 11:10:24 +0100
+Message-ID: <CAMuHMdVt8ZTnBCwC2yHZ5nQQ7xErZi2VW8Wm7zEdF+EBnBkcJA@mail.gmail.com>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+	<20131110055145.GA7947@chokladfabriken.org>
+	<5285EED9.6090401@southpole.se>
+	<CADj1OPA0s1-MM97+Qyk4e8BSUNQLN1+sDL5jF-=_HEAQRED_tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <CADj1OPA0s1-MM97+Qyk4e8BSUNQLN1+sDL5jF-=_HEAQRED_tw@mail.gmail.com>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Andrew Back <andrew@abopen.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Mehall <contact@kevinmehall.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-In response to the "undocumented compatible strings" message, here is a
-patch which is adding the precision of two "chips" that should be used for
-the "atmel,<chip>-aic" compatibility string.
+On Fri, Nov 15, 2013 at 11:04 AM, Andrew Back <andrew@abopen.com> wrote:
+> P012060013
+> 94V-0
+> HL9-VO
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/atmel-aic.txt | 1 +
- 1 file changed, 1 insertion(+)
+Same here.
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-index ad031211..2742e9c 100644
---- a/Documentation/devicetree/bindings/arm/atmel-aic.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-@@ -2,6 +2,7 @@
- 
- Required properties:
- - compatible: Should be "atmel,<chip>-aic"
-+  <chip> can be "at91rm9200" or "sama5d3"
- - interrupt-controller: Identifies the node as an interrupt controller.
- - interrupt-parent: For single AIC system, it is an empty property.
- - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
--- 
-1.8.2.2
+> 1227 F
+
+Mine says "1321 F"
+
+Do you have the 8 MiB Spansion FL064PIF?
+
+> Plus a barcode sticker which I assume is the S/N.
+
+Idem ditto. And the last 4 digits don't match the sticker on the box. Hmm...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
