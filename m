@@ -1,88 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 28/31] ARM: tegra: remove legacy clock entries from DT
-Date: Fri, 15 Nov 2013 13:54:23 -0700
-Message-ID: <1384548866-13141-29-git-send-email-swarren@wwwdotorg.org>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384548866-13141-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Fri, 15 Nov 2013 21:58:32 +0100
+Message-ID: <201311152158.32644.arnd@arndb.de>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Friday 15 November 2013, Olof Johansson wrote:
+> So, I'm strongly urging that whatever the server guys try to do, it
+> will in the end result in the ACPI data being translated into DT
+> equivalents, such that the kernel only needs to handle data via DT.
 
-Now that all Tegra drivers have been converted to use the common reset
-framework, we can remove all the legacy DT clocks/clock-names entries for
-"clocks" that were only used with the old custom Tegra module reset API.
+I don't think that a translation layer is the answer, I see the problem
+more in things that cannot be translated automatically. The parts that
+are similar enough to allow translation could also just be handled by
+a thin abstraction layer in the kernel, which I think we will see
+on embedded x86 with DT-in-ACPI-syntax.
 
-Cc: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/tegra20.dtsi |  3 +--
- arch/arm/boot/dts/tegra30.dtsi | 18 +++---------------
- 2 files changed, 4 insertions(+), 17 deletions(-)
+I think we can still treat ACPI on ARM64 as a beginner's mistake and
+provide hand-written DT blobs for the few systems that start shipping
+with that. The main reason for doing it in the first place was the
+expected number of Windows RT servers, but WinRT isn't doing well
+at the moment, so it's not unreasonable to assume it's going the same
+way as WinRT tablets.
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index c53e02e08310..61d2f3868f4f 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -576,9 +576,8 @@
- 
- 		clocks = <&tegra_car TEGRA20_CLK_PEX>,
- 			 <&tegra_car TEGRA20_CLK_AFI>,
--			 <&tegra_car TEGRA20_CLK_PCIE_XCLK>,
- 			 <&tegra_car TEGRA20_CLK_PLL_E>;
--		clock-names = "pex", "afi", "pcie_xclk", "pll_e";
-+		clock-names = "pex", "afi", "pll_e";
- 		resets = <&tegra_car 70>,
- 		         <&tegra_car 72>,
- 		         <&tegra_car 74>;
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 0e69dd9f33e6..348b0f07f675 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -40,10 +40,9 @@
- 
- 		clocks = <&tegra_car TEGRA30_CLK_PCIE>,
- 			 <&tegra_car TEGRA30_CLK_AFI>,
--			 <&tegra_car TEGRA30_CLK_PCIEX>,
- 			 <&tegra_car TEGRA30_CLK_PLL_E>,
- 			 <&tegra_car TEGRA30_CLK_CML0>;
--		clock-names = "pex", "afi", "pcie_xclk", "pll_e", "cml";
-+		clock-names = "pex", "afi", "pll_e", "cml";
- 		resets = <&tegra_car 70>,
- 		         <&tegra_car 72>,
- 		         <&tegra_car 74>;
-@@ -641,19 +640,8 @@
- 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 1>;
- 		clocks = <&tegra_car TEGRA30_CLK_D_AUDIO>,
--			 <&tegra_car TEGRA30_CLK_APBIF>,
--			 <&tegra_car TEGRA30_CLK_I2S0>,
--			 <&tegra_car TEGRA30_CLK_I2S1>,
--			 <&tegra_car TEGRA30_CLK_I2S2>,
--			 <&tegra_car TEGRA30_CLK_I2S3>,
--			 <&tegra_car TEGRA30_CLK_I2S4>,
--			 <&tegra_car TEGRA30_CLK_DAM0>,
--			 <&tegra_car TEGRA30_CLK_DAM1>,
--			 <&tegra_car TEGRA30_CLK_DAM2>,
--			 <&tegra_car TEGRA30_CLK_SPDIF_IN>;
--		clock-names = "d_audio", "apbif", "i2s0", "i2s1", "i2s2",
--			      "i2s3", "i2s4", "dam0", "dam1", "dam2",
--			      "spdif_in";
-+			 <&tegra_car TEGRA30_CLK_APBIF>;
-+		clock-names = "d_audio", "apbif";
- 		resets = <&tegra_car 106>, /* d_audio */
- 			 <&tegra_car 107>, /* apbif */
- 			 <&tegra_car 30>,  /* i2s0 */
--- 
-1.8.1.5
+During the kernel summit, Grant (as one of the proponents of doing
+ACPI on ARM) already mentioned that he only sees this as viable
+on PC-like systems. My feeling is that when (if?) AMD or someone else
+comes out with a server system where they basically replace the
+x86 core with an ARM one but keep the system design, there won't
+be much to describe in terms of internal components anyway, and also
+no need to translate a lot of device information -- everything is
+already a PCI device in that case and does not get handled through
+the platform bus. However, until we see code or system-level specs
+for such a system, I'd rather keep ACPI out of the ARM kernel so we
+don't give people the wrong ideas.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
