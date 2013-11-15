@@ -1,37 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] misc: bmp085: Add missing platform data.
-Date: Fri, 15 Nov 2013 14:58:59 +0100
-Message-ID: <201311151459.00293.arnd@arndb.de>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com> <1384465609-26485-4-git-send-email-marek@goldelico.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384465609-26485-4-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: gregkh@linuxfoundation.org, neilb@suse.de, hns@goldelico.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/2] ARM: kirkwood: mark guruplug sdio as non-removable
+Date: Fri, 15 Nov 2013 15:20:25 +0100
+Message-ID: <1384525225-591-2-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384525225-591-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 November 2013, Marek Belisko wrote:
-> DT bindings contains more parameters to set so add them to platform data also
-> to have possibility to use on arch where DT isn't available yet.
-> 
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
+Globalscale Guruplug has AW-GH381 WiFi/BT on sdio which is always
+present and cannot be detected in any way. Therefore, mark the node
+as non-removable instead of broken-cd. While at it, also put a note
+about connected WiFi/BT chip above.
 
-Can you give an example of a platform that uses this chip and cannot
-yet use DT in the mainline kernel? 
-If it's only for out-of-tree platforms, I'd prefer to leave this
-patch out of tree as well and put the burden on whoever maintains
-a non-DT platform in a private kernel.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org 
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
+---
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
+index 6548b9d..4ebe720 100644
+--- a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
++++ b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
+@@ -65,10 +65,10 @@
+ 			nr-ports = <1>;
+ 		};
+ 
++		/* AzureWave AW-GH381 WiFi/BT */
+ 		mvsdio@90000 {
+ 			status = "okay";
+-			/* No CD or WP GPIOs */
+-			broken-cd;
++			non-removable;
+ 		};
+ 	};
+ 
+-- 
+1.7.2.5
 
-> diff --git a/include/linux/i2c/bmp085.h b/include/linux/i2c/bmp085.h
-> index b66cb98..addb972 100644
-> --- a/include/linux/i2c/bmp085.h
-> +++ b/include/linux/i2c/bmp085.h
-
-Shouldn't this be in include/linux/platform_data? 
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
