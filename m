@@ -1,75 +1,214 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/3] ata: Add APM X-Gene SoC 6.0Gbps SATA PHY driver
-Date: Fri, 15 Nov 2013 13:46:16 +0100
-Message-ID: <201311151346.17231.arnd@arndb.de>
-References: <1384457519-21335-1-git-send-email-lho@apm.com> <1384457519-21335-2-git-send-email-lho@apm.com> <1384457519-21335-3-git-send-email-lho@apm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2 v2] irqchip: mmp: add dt support for wakeup
+Date: Fri, 15 Nov 2013 12:50:04 +0000
+Message-ID: <20131115125004.GI1709@e106331-lin.cambridge.arm.com>
+References: <1381479838-7794-1-git-send-email-zhangwm@marvell.com>
+ <1381479838-7794-3-git-send-email-zhangwm@marvell.com>
+ <CAN1soZwPVCNO5V33mP4yn-n=fye2LX-3XCYYG+Z1zw0Q6VVm4g@mail.gmail.com>
+ <20131114122733.GJ16396@e106331-lin.cambridge.arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE49FD2839AB@SC-VEXCH4.marvell.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1384457519-21335-3-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <175CCF5F49938B4D99B2E3EF7F558EBE49FD2839AB-r8ILAu4/owuq90oVIqnETxL4W9x8LtSr@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 November 2013, Loc Ho wrote:
-> +
-> +/* SATA port 4 - 5 force power down VCO */
-> +static void xgene_phy_sata45_macro_pdwn_force_vco(struct xgene_ahci_phy_ctx
-> +						     *ctx)
-> +{
-> +	sds_pcie_toggle1to0(ctx->pcie_base, KC_CLKMACRO_CMU_REGS_CMU_REG0_ADDR,
-> +			    CMU_REG0_PDOWN_MASK);
-> +	sds_pcie_toggle1to0(ctx->pcie_base,
-> +			    KC_CLKMACRO_CMU_REGS_CMU_REG32_ADDR,
-> +			    CMU_REG32_FORCE_VCOCAL_START_MASK);
-> +}
+On Fri, Nov 15, 2013 at 11:49:20AM +0000, Neil Zhang wrote:
+>=20
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> > Sent: 2013=E5=B9=B411=E6=9C=8814=E6=97=A5 20:28
+> > To: Haojian Zhuang
+> > Cc: Neil Zhang; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org=
+l.org;
+> > Thomas Gleixner
+> > Subject: Re: [PATCH 2/2 v2] irqchip: mmp: add dt support for wakeup
+> >=20
+> > On Thu, Nov 14, 2013 at 10:28:53AM +0000, Haojian Zhuang wrote:
+> > > On Fri, Oct 11, 2013 at 4:23 PM, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>=
+ wrote:
+> > > > Some of the Marvell SoCs use GIC as its interrupt controller,an=
+d ICU
+> > > > only used as wakeup logic. When AP subsystem is powered off, GI=
+C
+> > > > will lose its context, the PMU will need ICU to wakeup the AP s=
+ubsystem.
+> > > > So add wakeup entry for such kind of usage.
+> > > >
+> > > > Signed-off-by: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > > > ---
+> > > >  .../devicetree/bindings/arm/mrvl/intc.txt          |   14 ++-
+> > > >  drivers/irqchip/irq-mmp.c                          |  124
+> > ++++++++++++++++++++
+> > > >  include/linux/irqchip/mmp.h                        |   13 ++
+> > > >  3 files changed, 150 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.tx=
+t
+> > > > b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> > > > index 8b53273..4180928 100644
+> > > > --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> > > > +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> > > > @@ -2,7 +2,7 @@
+> > > >
+> > > >  Required properties:
+> > > >  - compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+> > > > -  "mrvl,mmp2-mux-intc"
+> > > > +  "mrvl,mmp2-mux-intc", "mrvl,mmp-intc-wakeupgen"
+> >=20
+> > Why do we need a new compatible string?
+>=20
+> As the patch comments said, we don't use the ICU as an interrupt cont=
+roller in some Marvell Socs,
+> Just use them to wakeup CPU when GIC is powered off.
 
-I think it's bad to have knowledge of specific port numbers in the driver.
-Can you change this so that the driver treats all PHYs the same way but
-gets the differences between sata/eth/pcie mode from DT properties?
+Hmm. Is it possible to use the ICU as an interrupt controller in those
+SoCs?
 
+>=20
+> >=20
+> > > >  - reg : Address and length of the register set of the interrup=
+t controller.
+> > > >    If the interrupt controller is intc, address and length mean=
+s the range
+> > > >    of the whold interrupt controller. If the interrupt controll=
+er is
+> > > > mux-intc, @@ -15,6 +15,9 @@ Required properties:
+> > > >  - interrupt-controller : Identifies the node as an interrupt c=
+ontroller.
+> > > >  - #interrupt-cells : Specifies the number of cells needed to e=
+ncode an
+> > > >    interrupt source.
+> > > > +- mrvl,intc-gbl-mask : Specifies the address and value for glo=
+bal
+> > > > +mask in the
+> > > > +  interrupt controller.
+> > >
+> > > As my understanding, we should avoid to write register settings i=
+n DTS file.
+> >=20
+> > In general, yes. We should describe the hardware and let Linux choo=
+se how to
+> > configure it as far as possible.
+> >=20
+> > What is this global mask? What is it used for? Why do there seem to=
+ be multiple
+> > global masks (judging by the example)?
+> >=20
+>=20
+> Global mask will prevent distributing interrupt from ICU to GIC.
+> Since we will use GIC as the interrupt controller, so we need to mask=
+ the ICU global mask.
+> ICU has connection to every core in the system, so we need to mask al=
+l global mask registers for each core.
 
-> +void xgene_ahci_serdes_reset_rxa_rxd(struct xgene_ahci_phy_ctx *ctx, int chan)
+Why can the driver not figure out these masks for itself?
 
-All functions in the driver should be 'static'. You are not calling these
-directly from the SATA driver, are you?
+>=20
+> > >
+> > > Loop devicetree guys.
+> > >
+> > > > +- mrvl,intc-for-cp : Specifies the irqs that will be routed to=
+ cp
+> >=20
+> > cp?
+> >=20
+> > _why_ do we need this, and what exactly does routing the irqs to th=
+e cp imply?
+>=20
+> Communication processor.
+> Kernel should avoid to handle the irq lines that has been routed to c=
+ommunication processor.
 
-> +	/* Select SATA mux for SATA port 0 - 3 which shared with SGMII ETH */
-> +	if (ctx->id < 2) {
-> +		if (xgene_phy_host_sata_select(ctx) != 0) {
-> +			dev_err(ctx->dev, "SATA%d can not select SATA MUX\n",
-> +				ctx->id);
-> +			return -1;
-> +		}
-> +	}
+Ok. Does this just tell the kernel the set of IRQs to ignore, or does
+this imply that the kernel must configure something in the hardware
+based on this? If so, what specifically?
 
-I think all checks for the "id" field are to find out what kind of PHY you
-are talking to, the driver itself does not need to know the id, and the
-field can be removed if you find that out in a different way.
+>=20
+> >=20
+> > > >  - mrvl,intc-nr-irqs : Specifies the number of interrupts in th=
+e interrupt
+> > > >    controller.
+> > > >  - mrvl,clr-mfp-irq : Specifies the interrupt that needs to cle=
+ar
+> > > > MFP edge @@ -39,6 +42,15 @@ Example:
+> > > >                 mrvl,intc-nr-irqs =3D <2>;
+> > > >         };
+> > > >
+> > > > +     intc: wakeupgen@d4282000 {
+> > > > +               compatible =3D "mrvl,mmp-intc-wakeupgen";
+> > > > +               reg =3D <0xd4282000 0x1000>;
+> > > > +               mrvl,intc-nr-irqs =3D <64>;
+> > > > +               mrvl,intc-gbl-mask =3D <0x114 0x3
+> > > > +                                     0x144 0x3>;
+> >=20
+> > Are these multiple entries? The binding text implied there was only=
+ one entry.
+> > What is this?
+>=20
+> This specify the register offset and value to mask for each core.
 
-> +	if (ctx->id == 2) {
-> +		/* For 3rd controller, we must also program another resource */
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		if (!res) {
-> +			dev_err(&pdev->dev,
-> +				"no SATA/PCIE PHY resource address\n");
-> +			goto error;
-> +		}
-> +		ctx->pcie_base = devm_ioremap(&pdev->dev, res->start,
-> +					      resource_size(res));
-> +		if (!ctx->pcie_base) {
-> +			dev_err(&pdev->dev,
-> +				"can't map SATA/PCIe PHY resource\n");
-> +			rc = -ENOMEM;
-> +			goto error;
-> +		}
-> +	}
+Why can the driver not have these offsets hard-coded? How variable are
+they?
 
-If you need a second memory resource, I take that as a hint that
-the device is actually different from the others, so using a separate
-"compatible" string in DT might be more appropriate.
+[...]
 
-	Arnd
+> > > > +       size /=3D sizeof(*wakeup_reg);
+> > > > +       while (i < size) {
+> > > > +               unsigned offset, val;
+> > > > +
+> > > > +               offset =3D be32_to_cpup(wakeup_reg + i++);
+> > > > +               val =3D be32_to_cpup(wakeup_reg + i++);
+> >=20
+> > Use of_property_read_u32_index. You don't need to deal with the raw=
+ dtb.
+>=20
+> It's offset / value pair, it there convenient way to get such kind of=
+ key / value pair?
+> Thanks.
+
+Unfortunately there's no of_property_read_u32_array_index, but it's
+perfectly possible to do something similar to what you have here,
+without relying on the raw binary DTB:
+
+for (;;) {
+	u32 offset, val;
+	if (of_property_read_u32_index(node, PROP_NAME, i++, &offset) !=3D 0)
+		break;
+	if (of_property_read_u32_index(node, PROP_NAME, i++, &val) !=3D 0)
+		break;
+=09
+	do_something(offset, val);
+}
+
+>=20
+> >=20
+> > > > +               writel_relaxed(val, mmp_icu_base + offset);
+> > > > +       }
+> > > > +
+> > > > +       /* Get the irq lines and ignore irqs */
+> > > > +       cp_irq_reg =3D of_get_property(node, "mrvl,intc-for-cp"=
+, &size);
+> > > > +       if (!cp_irq_reg)
+> > > > +               return;
+> > > > +
+> > > > +       irq_for_cp_nr =3D size / sizeof(*cp_irq_reg);
+> > > > +       for (i =3D 0; i < irq_for_cp_nr; i++) {
+> > > > +               irq_for_cp[i] =3D be32_to_cpup(cp_irq_reg + i);
+> >=20
+> > Use of_property_read_u32_index.
+>=20
+> Yes, it should be OK, thanks very much.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
