@@ -1,63 +1,47 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] ARM: kirkwood: provide pinctrl default to sdio nodes
-Date: Fri, 15 Nov 2013 15:20:24 +0100
-Message-ID: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "John W. Linville" <linville@tuxdriver.com>
+Subject: Re: [PATCH 1/4] wl1251: split wl251 platform data to a separate
+ structure
+Date: Fri, 15 Nov 2013 09:32:55 -0500
+Message-ID: <20131115143254.GA7079@tuxdriver.com>
+References: <1382890469-25286-1-git-send-email-sre@debian.org>
+ <1382890469-25286-2-git-send-email-sre@debian.org>
+ <20131114185132.GQ10317@atomide.com>
+ <20131114230330.GB6383@earth.universe>
+ <20131114232217.GV10317@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131114232217.GV10317@atomide.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Luciano Coelho <luca@coelho.fi>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Luciano Coelho <coelho@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SDIO controllers found on Marvell Kirkwood 6281/6282 SoCs require
-pins to be muxed by pinctrl. As there is only one sane pinctrl
-setting for this, provide default pinctrl properties to the controller
-nodes.
+On Thu, Nov 14, 2013 at 03:22:18PM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@debian.org> [131114 15:04]:
+> > On Thu, Nov 14, 2013 at 10:51:33AM -0800, Tony Lindgren wrote:
+> > > [...]
+> > >
+> > > If this is not going into v3.13, these will cause conflicts
+> > > with the mach-omap2/board-*.c files for v3.14.
+> > > 
+> > > So it might be best to do a minimal header patch first that
+> > > can be merged in by both linux-omap and wireless trees.
+> > 
+> > I guess this patch is pretty minimal. It also seems to be acked by
+> > the involved Maintainers, so maybe just merge Patch 1 without the
+> > other patches?
+> > 
+> > This does not solve the problem with the struct modification from
+> > the second patch, but I guess it's the more intrusive patch.
+> 
+> Once at least the first two patches are ready, how about I queue
+> them after -rc1 and set up an immutable branch that can be merged
+> in by linux-omap tree and the wireless tree?
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-I am not sending this two patches to each DT maintainer, as it is a
-Kirkwood only thing, added the dt list for completeness.
+That sounds reasonable to me.
 
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/kirkwood-6281.dtsi |    2 ++
- arch/arm/boot/dts/kirkwood-6282.dtsi |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/kirkwood-6281.dtsi b/arch/arm/boot/dts/kirkwood-6281.dtsi
-index 650ef30..e4e1968 100644
---- a/arch/arm/boot/dts/kirkwood-6281.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-6281.dtsi
-@@ -97,6 +97,8 @@
- 			reg = <0x90000 0x200>;
- 			interrupts = <28>;
- 			clocks = <&gate_clk 4>;
-+			pinctrl-0 = <&pmx_sdio>;
-+			pinctrl-names = "default";
- 			bus-width = <4>;
- 			cap-sdio-irq;
- 			cap-sd-highspeed;
-diff --git a/arch/arm/boot/dts/kirkwood-6282.dtsi b/arch/arm/boot/dts/kirkwood-6282.dtsi
-index 3933a33..f010c21 100644
---- a/arch/arm/boot/dts/kirkwood-6282.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-6282.dtsi
-@@ -125,6 +125,8 @@
- 			reg = <0x90000 0x200>;
- 			interrupts = <28>;
- 			clocks = <&gate_clk 4>;
-+			pinctrl-0 = <&pmx_sdio>;
-+			pinctrl-names = "default";
- 			bus-width = <4>;
- 			cap-sdio-irq;
- 			cap-sd-highspeed;
 -- 
-1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+John W. Linville		Someday the world will need a hero, and you
+linville@tuxdriver.com			might be all we have.  Be ready.
