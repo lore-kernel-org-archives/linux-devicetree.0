@@ -1,26 +1,70 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] clk: imx5: introduce DT includes for clock
- provider
-Date: Fri, 15 Nov 2013 14:21:52 +0800
-Message-ID: <20131115062150.GF11014@S2101-09.ap.freescale.net>
-References: <1384424340-24991-1-git-send-email-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
+Date: Fri, 15 Nov 2013 06:23:32 +0000
+Message-ID: <1384496612-28392-1-git-send-email-f.fainelli@gmail.com>
+References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1384424340-24991-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20131114074711.9A8C5C402E1-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 11:18:57AM +0100, Lucas Stach wrote:
-> Use clock defines in order to make devicetrees more
-> human readable.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Per the ePAPR v1.1 specification, 'phy-connection-type' is the canonical
+property name for describing an Ethernet to PHY connection type. Make
+sure that of_get_phy_mode() also attempts to parse that property and
+update the comments mentioning 'phy-mode' to also include
+'phy-connection-type'.
 
-Applied all, thanks.
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v2:
+- reworked the error condition to look nicer per Grant's suggestion
+- added Grant's Acked-by tag
+- fixed a typo in the commit message on "mentioning"
+
+ drivers/of/of_net.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index 8f9be2e..651e249 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -13,8 +13,8 @@
+ 
+ /**
+  * It maps 'enum phy_interface_t' found in include/linux/phy.h
+- * into the device tree binding of 'phy-mode', so that Ethernet
+- * device driver can get phy interface from device tree.
++ * into the device tree binding of 'phy-mode' or 'phy-connection-type',
++ * so that Ethernet device driver can get phy interface from device tree.
+  */
+ static const char *phy_modes[] = {
+ 	[PHY_INTERFACE_MODE_NA]		= "",
+@@ -36,8 +36,9 @@ static const char *phy_modes[] = {
+  * of_get_phy_mode - Get phy mode for given device_node
+  * @np:	Pointer to the given device_node
+  *
+- * The function gets phy interface string from property 'phy-mode',
+- * and return its index in phy_modes table, or errno in error case.
++ * The function gets phy interface string from property 'phy-mode' or
++ * 'phy-connection-type', and return its index in phy_modes table, or errno in
++ * error case.
+  */
+ int of_get_phy_mode(struct device_node *np)
+ {
+@@ -46,6 +47,8 @@ int of_get_phy_mode(struct device_node *np)
+ 
+ 	err = of_property_read_string(np, "phy-mode", &pm);
+ 	if (err < 0)
++		err = of_property_read_string(np, "phy-connection-type", &pm);
++	if (err < 0)
+ 		return err;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(phy_modes); i++)
+-- 
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
