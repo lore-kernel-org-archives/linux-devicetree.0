@@ -1,58 +1,48 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH 0/2] Add monaural audio support for
-	fsl_ssi.c
-Date: Fri, 15 Nov 2013 11:15:37 +0800
-Message-ID: <20131115031536.GB745@MrMyself>
-References: <1384427230-979-1-git-send-email-b42378@freescale.com>
- <20131115030247.GC11014@S2101-09.ap.freescale.net>
- <20131115025956.GA745@MrMyself>
- <20131115032250.GD11014@S2101-09.ap.freescale.net>
+From: viresh kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCHv5 05/20] cpufreq: cpufreq-cpu0: add dt node parsing for
+ cooling device properties
+Date: Fri, 15 Nov 2013 10:11:36 +0530
+Message-ID: <5285A600.1070807@linaro.org>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20131115032250.GD11014@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, swarren@wwwdotorg.org, timur@tabi.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, broonie@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com
+Cc: wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 11:22:52AM +0800, Shawn Guo wrote:
-> On Fri, Nov 15, 2013 at 10:59:57AM +0800, Nicolin Chen wrote:
-> > Hi Shawn,
-> >    
-> > On Fri, Nov 15, 2013 at 11:02:49AM +0800, Shawn Guo wrote:
-> > > On Thu, Nov 14, 2013 at 07:07:08PM +0800, Nicolin Chen wrote:
-> > > > This series of patches need to be applied into one single tree because
-> > > > the second patch depends on the first one. Without it, SSI would playback
-> > > > constant noise to the right channel when playback monaural audio files on
-> > > > i.MX6 Series board.
-> > > 
-> > > Let me try to understand if the dependency is true.
-> > > 
-> > > Saying I apply the DTS patch on IMX tree while Mark apply the fsl_ssi
-> > > patch on his tree, will there be any regression on either IMX tree or
-> > > Mark's tree?  The monaural playback on imx6qdl never worked, so it's not
-> > > a regression.  If there is no regression on either tree, there is no
-> > > dependency to maintain.
-> > 
-> > It's fair enough to understand in this way. It looks like I misunderstood
-> > the dependency here.
-> > 
-> > Do I need to resend them separately?
+On Wednesday 13 November 2013 01:16 AM, Eduardo Valentin wrote:
+> This patch changes the cpufreq-cpu0 driver to consider if
+> a cpu needs cooling (with cpufreq). In case the cooling is needed,
+> the cpu0 device tree node needs to be properly configured
+> with cooling device properties.
 > 
-> No, I will just pick up the DTS patch with some testing.
+> In case these properties are present,, the driver will
+> load a cpufreq cooling device in the system. The cpufreq-cpu0
+> driver is not interested in determining how the system should
+> be using the cooling device. The driver is responsible
+> only of loading the cooling device.
 > 
-> Shawn
+> Describing how the cooling device will be used can be
+> accomplished by setting up a thermal zone that references
+> and is composed by the cpufreq cooling device.
+> 
+> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: cpufreq@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> ---
+>  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt         |  7 +++++++
+>  drivers/cpufreq/Kconfig                                  |  2 +-
+>  drivers/cpufreq/cpufreq-cpu0.c                           | 16 ++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
 
-Thank you.
-Nicolin Chen
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
