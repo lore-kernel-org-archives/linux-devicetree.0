@@ -1,29 +1,40 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Strange location and name for platform  devices when device-tree is used.
-Date: Fri, 15 Nov 2013 16:37:25 +0900
-Message-ID: <20131115073725.83C11C407FE@trevor.secretlab.ca>
-References: <20131101145925.66e22f73@notabene.brown> <1383279744.28909.26. camel@pasglop> <1383280054.28909.30.camel@pasglop> <20131101160329.37f3707b @notabene.brown> <1383282516.28909.36.camel@pasglop> <20131101180459. 81793C40A28@trevor.secretlab.ca> <1383338001.28909.42.camel@pasglop>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Fri, 15 Nov 2013 21:12:15 +0900
+Message-ID: <20131115121215.901EFC40885@trevor.secretlab.ca>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383338001.28909.42.camel@pasglop>
+In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 02 Nov 2013 07:33:21 +1100, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Fri, 2013-11-01 at 11:04 -0700, Grant Likely wrote:
+On Mon, 11 Nov 2013 20:29:20 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Consumers of the Linux kernel's build products are beginning to hardcode
+> the filenames of the dtbs generated.  Since the dtb filenames are
+> currently the dts filename s/dts/dtb/, this prevents the kernel
+> community from renaming dts files as needed.
 > 
-> > There are two problems here. First, making the change moves all the DT
-> > populated devices under the /sys/devices/platform tree, not just
-> > platform devices.
+> Let's provide a consistent naming structure for consumers to script
+> against.  Or at least, as consistent as the dts properties themselves.
 > 
-> All DT populated *platform* devices. There are others that have their
-> own locations.
+> With this patch, adding the '-L' option to the dtc commandline will
+> cause dtc to create a symlink to the generated dtb, using the board
+> compatible string as the filename, eg:
+> 
+>   globalscale,mirabox.dtb -> armada-370-mirabox.dtb
 
-They are all in the same tree! Move the platform devices and everything
-else moves to because they are under them.
+This whole thread is just crazy. The filename is not an ABI. Anything
+digging into the kernel build tree is a) wrong, and b) userspace tooling
+consuming the kernel build products which is /not/ ABI and can be changed
+
+If we want to have a tool or script for creating a well formed directory
+full of .dtb files because it would be helpful to U-Boot or something
+else, then that is fine. Make it part of the "make install" path.
 
 g.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
