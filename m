@@ -1,50 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Fri, 15 Nov 2013 21:58:32 +0100
-Message-ID: <201311152158.32644.arnd@arndb.de>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
+Date: Fri, 15 Nov 2013 16:38:59 -0500
+Message-ID: <20131115213859.GE10335@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <52814AFB.3070600@wwwdotorg.org>
+ <CAL_Jsq+mAoN2Lbg+uqfLMTZBvgz28E-EioiaU4BUSL_7rS5JjA@mail.gmail.com>
+ <528275B7.6050209@wwwdotorg.org>
+ <20131112193012.GR10335@titan.lakedaemon.net>
+ <52828C77.20001@wwwdotorg.org>
+ <20131114162859.GX10335@titan.lakedaemon.net>
+ <20131114192629.GE16735@n2100.arm.linux.org.uk>
+ <20131115152336.GD10335@titan.lakedaemon.net>
+ <CABxcv==rgF8fHL0MBStEsE6WmFs4OyQvuuyPQU4tqXG2NoDrzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv==rgF8fHL0MBStEsE6WmFs4OyQvuuyPQU4tqXG2NoDrzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 November 2013, Olof Johansson wrote:
-> So, I'm strongly urging that whatever the server guys try to do, it
-> will in the end result in the ACPI data being translated into DT
-> equivalents, such that the kernel only needs to handle data via DT.
+On Fri, Nov 15, 2013 at 06:09:50PM +0100, Javier Martinez Canillas wrote:
+> Hi Jason,
+> 
+> On Fri, Nov 15, 2013 at 4:23 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> > On Thu, Nov 14, 2013 at 07:26:29PM +0000, Russell King - ARM Linux wrote:
+> >> We have ways and means to deal with the installation of kernel images
+> >> and modules.  There's well defined makefile targets for this, and
+> >> make variables which control where and how these get put.  For the
+> >> kernel image, you can specify the script to be run (which is called
+> >> with the location of the *Image file) for copying.  Pulling it manually
+> >> out of arch/arm/boot is really a failure of the distro packaging people
+> >> to get their process right.
+> >>
+> >> The same goes for the DT files: if we don't provide a method for the
+> >> kernel build system to install these in a sane way, then that's our
+> >> failing.  However, distros should be asking for this, and not picking
+> >> the files out of arch/arm/boot/dts.
+> >
+> > Exactly.  V2 hopefully this weekend implementing 'make dtbs-install'
+> 
+> Just a small comment, I think the make target should be called
+> 'dtbs_install and not of 'dtbs-install' to be consistent with make
+> {modules,firmware,headers}_install
 
-I don't think that a translation layer is the answer, I see the problem
-more in things that cannot be translated automatically. The parts that
-are similar enough to allow translation could also just be handled by
-a thin abstraction layer in the kernel, which I think we will see
-on embedded x86 with DT-in-ACPI-syntax.
+Yep, typo on my part.
 
-I think we can still treat ACPI on ARM64 as a beginner's mistake and
-provide hand-written DT blobs for the few systems that start shipping
-with that. The main reason for doing it in the first place was the
-expected number of Windows RT servers, but WinRT isn't doing well
-at the moment, so it's not unreasonable to assume it's going the same
-way as WinRT tablets.
+thx,
 
-During the kernel summit, Grant (as one of the proponents of doing
-ACPI on ARM) already mentioned that he only sees this as viable
-on PC-like systems. My feeling is that when (if?) AMD or someone else
-comes out with a server system where they basically replace the
-x86 core with an ARM one but keep the system design, there won't
-be much to describe in terms of internal components anyway, and also
-no need to translate a lot of device information -- everything is
-already a PCI device in that case and does not get handled through
-the platform bus. However, until we see code or system-level specs
-for such a system, I'd rather keep ACPI out of the ARM kernel so we
-don't give people the wrong ideas.
-
-	Arnd
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
