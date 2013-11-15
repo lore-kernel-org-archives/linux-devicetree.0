@@ -1,66 +1,94 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 12/15] usb: phy: msm: Add support for secondary PHY
- control
-Date: Fri, 15 Nov 2013 16:42:13 +0000
-Message-ID: <20131115164212.GI24831@e106331-lin.cambridge.arm.com>
-References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
- <1384267910-32066-13-git-send-email-iivanov@mm-sol.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv4 1/7] ARM: tegra: Create a DT header defining SWGROUP ID
+Date: Fri, 15 Nov 2013 09:44:43 -0700
+Message-ID: <52864F7B.901@wwwdotorg.org>
+References: <1384158718-4756-1-git-send-email-hdoyu@nvidia.com>	<1384158718-4756-2-git-send-email-hdoyu@nvidia.com>	<5282B036.9090604@wwwdotorg.org>
+	<20131115122926.9166a6693bb9378a7f2c1526@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384267910-32066-13-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "davidb@codeaurora.org" <davidb@codeaurora.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131115122926.9166a6693bb9378a7f2c1526-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 02:51:47PM +0000, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On 11/15/2013 03:29 AM, Hiroshi Doyu wrote:
+> On Tue, 12 Nov 2013 23:48:22 +0100
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 > 
-> Allow support to use 2nd HSPHY with USB2 Core.
-> Some platforms may have configuration to allow USB controller
-> work with any of the two HSPHYs present. By default driver
-> configures USB core to use primary HSPHY. Add support to allow
-> user select 2nd HSPHY using DT parameter.
+>> On 11/11/2013 01:31 AM, Hiroshi Doyu wrote:
+>>> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
+>>> binding. "swgroup" is a group of H/W clients which a Tegra SoC
+>>> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
+>>> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
+>>> register bit. This will allow the same header to be used by both
+>>> device tree files, and drivers implementing this binding, which
+>>> guarantees that the two stay in sync. This also makes device trees
+>>> more readable by using names instead of magic numbers. For HOTRESET
+>>> bit shifting we need another conversion table, which will come later.
+>>
+>>> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+>>
+>>> +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+>>> +
+>>> +#define TEGRA_SWGROUP_MAX	64
+>>> +
+>>> +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+>>
+>> If I put the following into a DT and compile it:
+>>
+>> #define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+>> #define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+>> / {
+>> 	test-prop = <(TEGRA_SWGROUP_BIT(PPCS2))>;
+>> };
+>>
+>> I get:
+>>
+>> Error: arch/arm/boot/dts/tegra20.dtsi:11.28-29 integer value out of
+>> range 0000000000000020 (32 bits)
+>> FATAL ERROR: Syntax error parsing input tree
+>>
+>> Is TEGRA_SWGROUP_BIT() not meant to be used in DT files? If it is, the
+>> definition is broken. If it is not, it should be defined in the driver
+>> not the header, since DT files have no use for it.
 > 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> Cc: Manu Gautam <mgautam@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/usb/msm-hsusb.txt          |    6 +++++
->  drivers/usb/phy/phy-msm-usb.c                      |   24 ++++++++++++++++++--
->  include/linux/usb/msm_hsusb.h                      |    1 +
->  include/linux/usb/msm_hsusb_hw.h                   |    1 +
->  4 files changed, 30 insertions(+), 2 deletions(-)
+> I'd like to use the macro in DT but what I want is 2 cells from 64 bit.
+> For the above example, I want the following 2 cell to be generated but I
+> haven't found any ways yet.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> index 3f21204..d105ba9 100644
-> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> @@ -72,6 +72,12 @@ Optional properties:
->  - qcom,phy-init-sequence: PHY configuration sequence. val, reg pairs
->  				terminate with -1
->  
-> +- qcom,phy-num:	Select number of pyco-phy to use, can be one of
-> +				0 - PHY one, default
-> +				1 - Second PHY
-> +				Some platforms may have configuration to allow USB
-> +				controller work with any of the two HSPHYs present.
-> +
+> #define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+> #define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+> / {
+>  	test-prop = <0x00000000 0x00000001>;
+> };
 
-Only one can be used at a time?
+I guess you'd need to do something like:
 
-[...]
+#define MSW_OF_U64(x) ((x) >> 32)
+#define LSW_OF_U64(x) ((x) & 0xffffffff)
 
-> @@ -1395,6 +1412,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
->  	if (!of_property_read_u32(node, "qcom,otg-control", &val))
->  		pdata->otg_control = val;
->  
-> +	if (!of_property_read_u32(node, "qcom,phy-num", &val))
-> +		motg->phy_number = val;
+... and use those to construct the two cells explicitly.
 
-No sanity checking? If not all of your tests on the value of
-motg->phy_number are the same form, you may get undepected results...
+Or, explicitly name TEGRA_SWGROUP_xxx so that it's obvious which go in
+the MSW and which in the LSW, and then:
 
-Mark.
+#define TEGRA_SWGROUP_BIT(x)	(1ULL << (TEGRA_SWGROUP_##x % 32))
+
+It might also be possible to do:
+
+#define TWO_U32_OF_U64(x) ((x) >> 32) ((x) & 0xffffffff)
+
+... which expands to both cells at once, although that's verging on
+hiding DT structure behind a macro, which isn't exceptionally great, but
+might be acceptable in this limited case.
