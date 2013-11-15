@@ -1,37 +1,75 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC DTC PATCH] dtc: add symlink (-L) output to dtbs
-Date: Fri, 15 Nov 2013 21:12:15 +0900
-Message-ID: <20131115121215.901EFC40885@trevor.secretlab.ca>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dtc: Dynamic symbols & fixup support (v2)
+Date: Fri, 15 Nov 2013 16:01:31 +0900
+Message-ID: <20131115070131.78139C40785@trevor.secretlab.ca>
+References: <1383073266-12017-1-git-send-email-panto@antoniou-consulting.com > <20131111175604.ECF33C4233A@trevor.secretlab.ca> < DABC2A65-BC07-4481-B80C-A62777BD8732@antoniou-consulting.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <DABC2A65-BC07-4481-B80C-A62777BD8732-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2013 20:29:20 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> Consumers of the Linux kernel's build products are beginning to hardcode
-> the filenames of the dtbs generated.  Since the dtb filenames are
-> currently the dts filename s/dts/dtb/, this prevents the kernel
-> community from renaming dts files as needed.
+On Tue, 12 Nov 2013 11:20:04 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Hi Grant,
 > 
-> Let's provide a consistent naming structure for consumers to script
-> against.  Or at least, as consistent as the dts properties themselves.
+> On Nov 11, 2013, at 6:56 PM, Grant Likely wrote:
 > 
-> With this patch, adding the '-L' option to the dtc commandline will
-> cause dtc to create a symlink to the generated dtb, using the board
-> compatible string as the filename, eg:
+> > On Tue, 29 Oct 2013 21:01:06 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> >> Enable the generation of symbol & fixup information for
+> >> usage with dynamic DT loading.
+> >> 
+> >> Passing the -@ option generates a __symbols__ node at the
+> >> root node of the resulting blob for any node labels used.
+> >> 
+> >> When using the /plugin/ tag all unresolved label references
+> >> be tracked in the __fixups__ node, while all local phandle
+> >> references will the tracked in the __local_fixups__ node.
+> >> 
+> >> This is sufficient to implement a dynamic DT object loader.
+> >> 
+> >> Changes since v1:
+> >> 
+> >> * Forward ported to 1.4 version
+> >> * Added manual entries for the -@ option
+> >> 
+> >> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> > 
+> > Hi Pantelis,
+> > 
+> > This looks pretty good on first look. Comments below.
+> > 
+> >> ---
+> >> Documentation/dt-object-internal.txt | 295 +++++++++++++++++++++++++++++++++++
+> >> Documentation/manual.txt             |  10 ++
 > 
->   globalscale,mirabox.dtb -> armada-370-mirabox.dtb
+> [snip]
+> 
+> >> +-----------------------------------------
+> >> +
+> >> +Since the device tree is used for booting a number of very different hardware
+> >> +platforms it is imperative that we tread very carefully.
+> >> +
+> >> +2.a) No changes to the Device Tree binary format. We cannot modify the tree
+> >> +format at all and all the information we require should be encoded using device
+> >> +tree itself. We can add nodes that can be safely ignored by both bootloaders and
+> >> +the kernel.
+> > 
+> > Not /entirely/ true. It would be completely fine to bump up the binary
+> > format version for the overlays since they will never be loaded
+> > standalone. If there are specific things that you would like to have in
+> > the marshalled format then go ahead and propose them. Then the overlay
+> > would use the new protocol version, but the base tree would use the
+> > existing one.
+> 
+> OK, I see. I am very hesitant to bump the format version, because both the
+> base DTS and the overlay need to be compiled with symbol support.
+> We can bump the version format for the overlay fragment, but bumping the
+> version for the base DTS will affect bootloaders badly.
 
-This whole thread is just crazy. The filename is not an ABI. Anything
-digging into the kernel build tree is a) wrong, and b) userspace tooling
-consuming the kernel build products which is /not/ ABI and can be changed
-
-If we want to have a tool or script for creating a well formed directory
-full of .dtb files because it would be helpful to U-Boot or something
-else, then that is fine. Make it part of the "make install" path.
+Hmmm, I missed that detail. Why does the base tree require symbol
+support? It looked to me like the overlay had all the resolution
+information needed.
 
 g.
 
