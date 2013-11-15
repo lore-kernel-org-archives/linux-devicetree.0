@@ -1,42 +1,111 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/4] wl1251: split wl251 platform data to a separate
- structure
-Date: Thu, 14 Nov 2013 15:22:18 -0800
-Message-ID: <20131114232217.GV10317@atomide.com>
-References: <1382890469-25286-1-git-send-email-sre@debian.org>
- <1382890469-25286-2-git-send-email-sre@debian.org>
- <20131114185132.GQ10317@atomide.com>
- <20131114230330.GB6383@earth.universe>
+Subject: [PATCH 01/11] ARM: dts: Add basic device tree support for omap2430 sdp
+Date: Thu, 14 Nov 2013 16:09:48 -0800
+Message-ID: <1384474198-20756-2-git-send-email-tony@atomide.com>
+References: <1384474198-20756-1-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131114230330.GB6383@earth.universe>
+In-Reply-To: <1384474198-20756-1-git-send-email-tony@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Luciano Coelho <luca@coelho.fi>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, "John W. Linville" <linville@tuxdriver.com>, Felipe Balbi <balbi@ti.com>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bill Pemberton <wfp5p@virginia.edu>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Luciano Coelho <coelho@ti.com>
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131114 15:04]:
-> On Thu, Nov 14, 2013 at 10:51:33AM -0800, Tony Lindgren wrote:
-> > [...]
-> >
-> > If this is not going into v3.13, these will cause conflicts
-> > with the mach-omap2/board-*.c files for v3.14.
-> > 
-> > So it might be best to do a minimal header patch first that
-> > can be merged in by both linux-omap and wireless trees.
-> 
-> I guess this patch is pretty minimal. It also seems to be acked by
-> the involved Maintainers, so maybe just merge Patch 1 without the
-> other patches?
-> 
-> This does not solve the problem with the struct modification from
-> the second patch, but I guess it's the more intrusive patch.
+I doubt that there are many people using 2430 sdp, but as
+that's been historically an important acid test platform
+for omap2+ related changes, let's add minimal device
+tree support for it.
 
-Once at least the first two patches are ready, how about I queue
-them after -rc1 and set up an immutable branch that can be merged
-in by linux-omap tree and the wireless tree?
+If anybody is using it beyond minimal boot testing, patches
+for more complete device tree support are welcome.
 
-Regards,
+Cc: devicetree@vger.kernel.org
+Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/Makefile         |  1 +
+ arch/arm/boot/dts/omap2430-sdp.dts | 49 ++++++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap2430-sdp.dts
 
-Tony
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..73022b1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -173,6 +173,7 @@ dtb-$(CONFIG_ARCH_NSPIRE) +=3D nspire-cx.dtb \
+ 	nspire-tp.dtb \
+ 	nspire-clp.dtb
+ dtb-$(CONFIG_ARCH_OMAP2PLUS) +=3D omap2420-h4.dtb \
++	omap2430-sdp.dtb \
+ 	omap3430-sdp.dtb \
+ 	omap3-beagle.dtb \
+ 	omap3-devkit8000.dtb \
+diff --git a/arch/arm/boot/dts/omap2430-sdp.dts b/arch/arm/boot/dts/oma=
+p2430-sdp.dts
+new file mode 100644
+index 0000000..2c90d29
+--- /dev/null
++++ b/arch/arm/boot/dts/omap2430-sdp.dts
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.c=
+om/
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++#include "omap2430.dtsi"
++
++/ {
++	model =3D "TI OMAP2430 SDP";
++	compatible =3D "ti,omap2430-sdp", "ti,omap2430", "ti,omap2";
++
++	memory {
++		device_type =3D "memory";
++		reg =3D <0x80000000 0x8000000>; /* 128 MB */
++	};
++};
++
++&i2c2 {
++	clock-frequency =3D <100000>;
++
++	twl: twl@48 {
++		reg =3D <0x48>;
++		interrupts =3D <7>; /* SYS_NIRQ cascaded to intc */
++	};
++};
++
++#include "twl4030.dtsi"
++
++&mmc1 {
++	vmmc-supply =3D <&vmmc1>;
++	bus-width =3D <4>;
++};
++
++&gpmc {
++	ranges =3D <5 0 0x08000000 0x01000000>;
++	ethernet@gpmc {
++		compatible =3D "smsc,lan91c94";
++		interrupt-parent =3D <&gpio5>;
++		interrupts =3D <21 IRQ_TYPE_LEVEL_LOW>;	/* gpio149 */
++		reg =3D <5 0x300 0xf>;
++		bank-width =3D <2>;
++		gpmc,mux-add-data;
++        };
++};
++
+--=20
+1.8.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
