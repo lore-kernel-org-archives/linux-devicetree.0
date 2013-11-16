@@ -1,94 +1,129 @@
 From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] dtc: Dynamic symbols & fixup support (v2)
-Date: Sat, 16 Nov 2013 19:47:45 +0200
-Message-ID: <972758FF-44EC-4C32-BE13-4E3E8361D063@antoniou-consulting.com>
-References: <1383073266-12017-1-git-send-email-panto@antoniou-consulting.com > <20131111175604.ECF33C4233A@trevor.secretlab.ca> < DABC2A65-BC07-4481-B80C-A62777BD8732@antoniou-consulting.com> <20131115070131.78139C40785@trevor.secretlab.ca>
+Subject: Re: [PATCH v5 2/3] of/selftest: Add self tests for manipulation of properties
+Date: Sat, 16 Nov 2013 19:50:37 +0200
+Message-ID: <902D15D9-439C-43BC-BD27-94785DA2F486@antoniou-consulting.com>
+References: <1384537604-5032-1-git-send-email-grant.likely@linaro.org> <1384537604-5032-3-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131115070131.78139C40785-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1384537604-5032-3-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
 
-On Nov 15, 2013, at 9:01 AM, Grant Likely wrote:
+On Nov 15, 2013, at 7:46 PM, Grant Likely wrote:
 
-> On Tue, 12 Nov 2013 11:20:04 +0100, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->> Hi Grant,
->> 
->> On Nov 11, 2013, at 6:56 PM, Grant Likely wrote:
->> 
->>> On Tue, 29 Oct 2013 21:01:06 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->>>> Enable the generation of symbol & fixup information for
->>>> usage with dynamic DT loading.
->>>> 
->>>> Passing the -@ option generates a __symbols__ node at the
->>>> root node of the resulting blob for any node labels used.
->>>> 
->>>> When using the /plugin/ tag all unresolved label references
->>>> be tracked in the __fixups__ node, while all local phandle
->>>> references will the tracked in the __local_fixups__ node.
->>>> 
->>>> This is sufficient to implement a dynamic DT object loader.
->>>> 
->>>> Changes since v1:
->>>> 
->>>> * Forward ported to 1.4 version
->>>> * Added manual entries for the -@ option
->>>> 
->>>> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
->>> 
->>> Hi Pantelis,
->>> 
->>> This looks pretty good on first look. Comments below.
->>> 
->>>> ---
->>>> Documentation/dt-object-internal.txt | 295 +++++++++++++++++++++++++++++++++++
->>>> Documentation/manual.txt             |  10 ++
->> 
->> [snip]
->> 
->>>> +-----------------------------------------
->>>> +
->>>> +Since the device tree is used for booting a number of very different hardware
->>>> +platforms it is imperative that we tread very carefully.
->>>> +
->>>> +2.a) No changes to the Device Tree binary format. We cannot modify the tree
->>>> +format at all and all the information we require should be encoded using device
->>>> +tree itself. We can add nodes that can be safely ignored by both bootloaders and
->>>> +the kernel.
->>> 
->>> Not /entirely/ true. It would be completely fine to bump up the binary
->>> format version for the overlays since they will never be loaded
->>> standalone. If there are specific things that you would like to have in
->>> the marshalled format then go ahead and propose them. Then the overlay
->>> would use the new protocol version, but the base tree would use the
->>> existing one.
->> 
->> OK, I see. I am very hesitant to bump the format version, because both the
->> base DTS and the overlay need to be compiled with symbol support.
->> We can bump the version format for the overlay fragment, but bumping the
->> version for the base DTS will affect bootloaders badly.
+> Adds a few simple test cases to ensure that addition, update and removal
+> of device tree node properties works correctly.
 > 
-> Hmmm, I missed that detail. Why does the base tree require symbol
-> support? It looked to me like the overlay had all the resolution
-> information needed.
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> Cc: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> ---
+> drivers/of/selftest.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 62 insertions(+)
+> 
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index e21012bde639..cb8d3e722f76 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -30,6 +30,67 @@ static struct selftest_results {
+> 	} \
+> }
+> 
+> +static void __init of_selftest_dynamic(void)
+> +{
+> +	struct device_node *np;
+> +	struct property *prop;
+> +
+> +	np = of_find_node_by_path("/testcase-data");
+> +	if (!np) {
+> +		pr_err("missing testcase data\n");
+> +		return;
+> +	}
+> +
+> +	/* Array of 4 properties for the purpose of testing */
+> +	prop = kzalloc(sizeof(*prop) * 4, GFP_KERNEL);
+> +	if (!prop) {
+> +		selftest(0, "kzalloc() failed\n");
+> +		return;
+> +	}
+> +
+> +	/* Add a new property - should pass*/
+> +	prop->name = "new-property";
+> +	prop->value = "new-property-data";
+> +	prop->length = strlen(prop->value);
+> +	selftest(of_add_property(np, prop) == 0, "Adding a new property failed\n");
+> +
+> +	/* Try to add an existing property - should fail */
+> +	prop++;
+> +	prop->name = "new-property";
+> +	prop->value = "new-property-data-should-fail";
+> +	prop->length = strlen(prop->value);
+> +	selftest(of_add_property(np, prop) != 0,
+> +		 "Adding an existing property should have failed\n");
+> +
+> +	/* Try to modify an existing property - should pass */
+> +	prop->value = "modify-property-data-should-pass";
+> +	prop->length = strlen(prop->value);
+> +	selftest(of_update_property(np, prop) == 0,
+> +		 "Updating an existing property should have passed\n");
+> +
+> +	/* Try to modify non-existent property - should pass*/
+> +	prop++;
+> +	prop->name = "modify-property";
+> +	prop->value = "modify-missing-property-data-should-pass";
+> +	prop->length = strlen(prop->value);
+> +	selftest(of_update_property(np, prop) == 0,
+> +		 "Updating a missing property should have passed\n");
+> +
+> +	/* Remove property - should pass */
+> +	selftest(of_remove_property(np, prop) == 0,
+> +		 "Removing a property should have passed\n");
+> +
+> +	/* Adding very large property - should pass */
+> +	prop++;
+> +	prop->name = "large-property-PAGE_SIZEx8";
+> +	prop->length = PAGE_SIZE * 8;
+> +	prop->value = kzalloc(prop->length, GFP_KERNEL);
+> +	selftest(prop->value != NULL, "Unable to allocate large buffer\n");
+> +	if (prop->value)
+> +		selftest(of_add_property(np, prop) == 0,
+> +			 "Adding a large property should have passed\n");
+> +}
+> +
+> static void __init of_selftest_parse_phandle_with_args(void)
+> {
+> 	struct device_node *np;
+> @@ -312,6 +373,7 @@ static int __init of_selftest(void)
+> 	of_node_put(np);
+> 
+> 	pr_info("start of selftest - you will see error messages\n");
+> +	of_selftest_dynamic();
+> 	of_selftest_parse_phandle_with_args();
+> 	of_selftest_property_match_string();
+> 	of_selftest_parse_interrupts();
+> -- 
+> 1.8.3.2
 > 
 
-It is because the symbols are in our case the labels of the DTS. We need
-to generate a node containing all the labels so that the overlays can use in order
-to get the target of their insertion point.
+I like this. I'll add my overlay test cases somewhere around here.
 
-> g.
-> 
+I might need to introduce some new helper functions in order to generate
+the overlay completely programmatically.
 
 Regards
 
 -- Pantelis
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
