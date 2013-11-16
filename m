@@ -1,78 +1,60 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
-Date: Sat, 16 Nov 2013 12:24:51 +0000
-Message-ID: <20131116122451.3F0B9C4038F@trevor.secretlab.ca>
-References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca> < 1384496612-28392-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384496612-28392-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/5] ARM: dts: Add basic support for omap3 LDP zoom1
+ labrador
+Date: Sat, 16 Nov 2013 06:40:34 -0800
+Message-ID: <20131116144033.GG10317@atomide.com>
+References: <1384562167-14725-1-git-send-email-tony@atomide.com>
+ <1384562167-14725-5-git-send-email-tony@atomide.com>
+ <20131116080408.GA15300@earth.universe>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131116080408.GA15300@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Nov 2013 06:23:32 +0000, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Per the ePAPR v1.1 specification, 'phy-connection-type' is the canonical
-> property name for describing an Ethernet to PHY connection type. Make
-> sure that of_get_phy_mode() also attempts to parse that property and
-> update the comments mentioning 'phy-mode' to also include
-> 'phy-connection-type'.
+* Sebastian Reichel <sre@ring0.de> [131116 00:05]:
+> On Fri, Nov 15, 2013 at 04:36:06PM -0800, Tony Lindgren wrote:
+> > Basic things like serial, Ethernet, MMC, NAND, DSS, touchscreen
+> > and GPIO keys work.
+> > 
+> > For twl4030-keypad we're still missing the binding, but
+> > support for that should be trivial to add once the driver
+> > has been updated.
 > 
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied, thanks
-
-g.
-
-> ---
-> Changes since v2:
-> - reworked the error condition to look nicer per Grant's suggestion
-> - added Grant's Acked-by tag
-> - fixed a typo in the commit message on "mentioning"
+> DT bindings for twl4030-keypad are being worked on:
 > 
->  drivers/of/of_net.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+> https://lkml.org/lkml/2013/11/8/463
 > 
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index 8f9be2e..651e249 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -13,8 +13,8 @@
->  
->  /**
->   * It maps 'enum phy_interface_t' found in include/linux/phy.h
-> - * into the device tree binding of 'phy-mode', so that Ethernet
-> - * device driver can get phy interface from device tree.
-> + * into the device tree binding of 'phy-mode' or 'phy-connection-type',
-> + * so that Ethernet device driver can get phy interface from device tree.
->   */
->  static const char *phy_modes[] = {
->  	[PHY_INTERFACE_MODE_NA]		= "",
-> @@ -36,8 +36,9 @@ static const char *phy_modes[] = {
->   * of_get_phy_mode - Get phy mode for given device_node
->   * @np:	Pointer to the given device_node
->   *
-> - * The function gets phy interface string from property 'phy-mode',
-> - * and return its index in phy_modes table, or errno in error case.
-> + * The function gets phy interface string from property 'phy-mode' or
-> + * 'phy-connection-type', and return its index in phy_modes table, or errno in
-> + * error case.
->   */
->  int of_get_phy_mode(struct device_node *np)
->  {
-> @@ -46,6 +47,8 @@ int of_get_phy_mode(struct device_node *np)
->  
->  	err = of_property_read_string(np, "phy-mode", &pm);
->  	if (err < 0)
-> +		err = of_property_read_string(np, "phy-connection-type", &pm);
-> +	if (err < 0)
->  		return err;
->  
->  	for (i = 0; i < ARRAY_SIZE(phy_modes); i++)
-> -- 
-> 1.8.3.2
+> > MUSB I'm pretty sure I got got to enumerate once, but I
+> > suspect the battery charging somehow disrupts it and it's
+> > not enumerating in general for some reason.
 > 
+> Try to add this:
+> 
+> &usb_otg_hs {
+> 	phys = <&usb2_phy>;
+> 	phy-names = "usb2-phy";
+> };
+> 
+> Those were introduced by the new generic PHY framework, see
+> for example: https://lkml.org/lkml/2013/9/27/37
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks yeah those should be added. No luck with those either
+though, I do have MUSB working fine on the 37xx-evm with the
+same image.
+
+I seem to get twl4030_usb interrupts on cable insert and remove,
+then enabling debugging I see the following:
+
+connect
+HW_CONDITIONS 0xe0/224; link 3
+
+disconnect
+HW_CONDITIONS 0x60/96; link 4
+
+Regards,
+
+Tony
