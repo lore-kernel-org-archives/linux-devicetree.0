@@ -1,52 +1,44 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 3/3] misc: bmp085: Add missing platform data.
-Date: Sat, 16 Nov 2013 09:23:28 +0100
-Message-ID: <CDF07AB2-12B3-4EE4-B1EB-B4F27901B7E0@goldelico.com>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com> <1384465609-26485-4-git-send-email-marek@goldelico.com> <201311151459.00293.arnd@arndb.de>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201311151459.00293.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Marek Belisko <marek@goldelico.com>, gregkh@linuxfoundation.org, neilb@suse.de, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Sat, 16 Nov 2013 10:45:06 +0200
+Message-ID: <20131116084505.GA26233@chokladfabriken.org>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+	<5285EE5A.1070202@southpole.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+Content-Disposition: inline
+In-Reply-To: <5285EE5A.1070202@southpole.se>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Jonas Bonn <jonas@southpole.se>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Mehall <contact@kevinmehall.net>, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-
-Am 15.11.2013 um 14:58 schrieb Arnd Bergmann:
-
-> On Thursday 14 November 2013, Marek Belisko wrote:
->> DT bindings contains more parameters to set so add them to platform data also
->> to have possibility to use on arch where DT isn't available yet.
->> 
->> Signed-off-by: Marek Belisko <marek@goldelico.com>
+On Fri, Nov 15, 2013 at 10:50:18AM +0100, Jonas Bonn wrote:
+> >+
+> >+	i2c0: ocores@a0000000 {
+> >+		#address-cells = <1>;
+> >+		#size-cells = <0>;
+> >+		compatible = "opencores,i2c-ocores";
 > 
-> Can you give an example of a platform that uses this chip and cannot
-> yet use DT in the mainline kernel? 
-
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/omap3-gta04.dts
-
-exists but is far from being complete, because the transition to DT is really complex.
-
-We still need some (private) board file for 3.13 and hope to have everything ready
-for 3.14. But that depends on speed of acceptance of other drivers because
-all DT things are still constantly moving.
-
-So we will have to mix DT+board file for a while.
-
-> If it's only for out-of-tree platforms, I'd prefer to leave this
-> patch out of tree as well and put the burden on whoever maintains
-> a non-DT platform in a private kernel.
+> Version number needed.  OpenCores wanted "projectname-rtlsvn###"
+> where ### is the SVN commit number of the RTL directory in the
+> project's source repository.
 > 
-> 
->> diff --git a/include/linux/i2c/bmp085.h b/include/linux/i2c/bmp085.h
->> index b66cb98..addb972 100644
->> --- a/include/linux/i2c/bmp085.h
->> +++ b/include/linux/i2c/bmp085.h
-> 
-> Shouldn't this be in include/linux/platform_data? 
-> 
-> 	Arnd
 
--- hns
+That will also require a change to the driver.
+
+Using svn commit ids as version info seems a bit too fine grained to me,
+but if that's what's agreed on, then it should be the commit id from the
+projects official repository at opencores.org I think.
+
+Stefan
