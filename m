@@ -1,149 +1,259 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4/5] ARM: dts: Add basic support for omap3 LDP zoom1 labrador
-Date: Fri, 15 Nov 2013 16:36:06 -0800
-Message-ID: <1384562167-14725-5-git-send-email-tony@atomide.com>
-References: <1384562167-14725-1-git-send-email-tony@atomide.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [RFC PATCH RESEND 1/2] clk: add clk accuracy retrieval support
+Date: Fri, 15 Nov 2013 16:50:31 -0800
+Message-ID: <20131116005031.19193.32668@quantum>
+References: <1381684631-10835-1-git-send-email-b.brezillon@overkiz.com>
+ <1381684631-10835-2-git-send-email-b.brezillon@overkiz.com>
+ <20131108005147.19193.42349@quantum> <527CA6D5.9070807@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384562167-14725-1-git-send-email-tony@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <527CA6D5.9070807@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QmFzaWMgdGhpbmdzIGxpa2Ugc2VyaWFsLCBFdGhlcm5ldCwgTU1DLCBOQU5ELCBEU1MsIHRvdWNo
-c2NyZWVuCmFuZCBHUElPIGtleXMgd29yay4KCkZvciB0d2w0MDMwLWtleXBhZCB3ZSdyZSBzdGls
-bCBtaXNzaW5nIHRoZSBiaW5kaW5nLCBidXQKc3VwcG9ydCBmb3IgdGhhdCBzaG91bGQgYmUgdHJp
-dmlhbCB0byBhZGQgb25jZSB0aGUgZHJpdmVyCmhhcyBiZWVuIHVwZGF0ZWQuCgpNVVNCIEknbSBw
-cmV0dHkgc3VyZSBJIGdvdCBnb3QgdG8gZW51bWVyYXRlIG9uY2UsIGJ1dCBJCnN1c3BlY3QgdGhl
-IGJhdHRlcnkgY2hhcmdpbmcgc29tZWhvdyBkaXNydXB0cyBpdCBhbmQgaXQncwpub3QgZW51bWVy
-YXRpbmcgaW4gZ2VuZXJhbCBmb3Igc29tZSByZWFzb24uCgpQYXRjaGVzIGFyZSB3ZWxjb21lIHRv
-IGltcHJvdmUgdGhpbmdzIGlmIHBlb3BsZSBhcmUKc3RpbGwgdXNpbmcgdGhpcyBib2FyZC4KCkZv
-ciByZWZlcmVuY2UsIGhlcmUncyBzb21lIG1vcmUgaW5mbyBvbiB0aGlzIG9sZCBib2FyZDoKaHR0
-cDovL3d3dy5vcGVub21hcC5vcmcvd2lraS90aWtpLWluZGV4LnBocD9wYWdlPUhhcmR3YXJlSW5m
-bwoKQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiAiQmVub8OudCBDb3Vzc29uIiA8
-YmNvdXNzb25AYmF5bGlicmUuY29tPgpTaWduZWQtb2ZmLWJ5OiBUb255IExpbmRncmVuIDx0b255
-QGF0b21pZGUuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgfCAgIDEg
-KwogYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtbGRwLmR0cyB8IDIzMSArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDIzMiBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtbGRwLmR0cwoK
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvTWFrZWZpbGUKaW5kZXggZGUzNzA5NC4uZmMzN2JjYSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKQEAgLTE4
-Myw2ICsxODMsNyBAQCBkdGItJChDT05GSUdfQVJDSF9PTUFQMlBMVVMpICs9IG9tYXAyNDIwLWg0
-LmR0YiBcCiAJb21hcDMtYmVhZ2xlLXhtLmR0YiBcCiAJb21hcDMtZXZtLmR0YiBcCiAJb21hcDMt
-ZXZtLTM3eHguZHRiIFwKKwlvbWFwMy1sZHAuZHRiIFwKIAlvbWFwMy1uOTAwLmR0YiBcCiAJb21h
-cDMtbjkuZHRiIFwKIAlvbWFwMy1uOTUwLmR0YiBcCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9vbWFwMy1sZHAuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtbGRwLmR0cwpuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5kZGNlMGQ4Ci0tLSAvZGV2L251bGwKKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtbGRwLmR0cwpAQCAtMCwwICsxLDIzMSBAQAorLyoK
-KyAqIENvcHlyaWdodCAoQykgMjAxMyBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBvcmF0ZWQgLSBo
-dHRwOi8vd3d3LnRpLmNvbS8KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsg
-eW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQorICogaXQgdW5kZXIgdGhlIHRl
-cm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKKyAqIHB1
-Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgorICovCisvZHRzLXYxLzsK
-KworI2luY2x1ZGUgIm9tYXAzNHh4LmR0c2kiCisjaW5jbHVkZSAib21hcC1ncG1jLXNtc2M5MTF4
-LmR0c2kiCisKKy8geworCW1vZGVsID0gIlRJIE9NQVAzNDMwIExEUCAoWm9vbTEgTGFicmFkb3Ip
-IjsKKwljb21wYXRpYmxlID0gInRpLG9tYXAzLWxkcCIsICJ0aSxvbWFwMyI7CisKKwltZW1vcnkg
-eworCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOworCQlyZWcgPSA8MHg4MDAwMDAwMCAweDgwMDAw
-MDA+OyAvKiAxMjggTUIgKi8KKwl9OworCisJY3B1cyB7CisJCWNwdUAwIHsKKwkJCWNwdTAtc3Vw
-cGx5ID0gPCZ2Y2M+OworCQl9OworCX07CisKKwlncGlvX2tleXMgeworCQljb21wYXRpYmxlID0g
-ImdwaW8ta2V5cyI7CisJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJCXBpbmN0cmwtMCA9
-IDwmZ3Bpb19rZXlfcGlucz47CisKKwkJa2V5X2VudGVyIHsKKwkJCWxhYmVsID0gImVudGVyIjsK
-KwkJCWdwaW9zID0gPCZncGlvNCA1IEdQSU9fQUNUSVZFX0xPVz47IC8qIGdwaW8xMDEgKi8KKwkJ
-CWxpbnV4LGNvZGUgPSA8MHgwMTA3MDAxYz47IC8qIEtFWV9FTlRFUiAqLworCQkJZ3Bpby1rZXks
-d2FrZXVwOworCQl9OworCisJCWtleV9mMSB7CisJCQlsYWJlbCA9ICJmMSI7CisJCQlncGlvcyA9
-IDwmZ3BpbzQgNiBHUElPX0FDVElWRV9MT1c+OyAvKiBncGlvMTAyICovCisJCQlsaW51eCxjb2Rl
-ID0gPDB4MDMwMzAwM2I+OyAvKiBLRVlfRjEgKi8KKwkJCWdwaW8ta2V5LHdha2V1cDsKKwkJfTsK
-KworCQlrZXlfZjIgeworCQkJbGFiZWwgPSAiZjIiOworCQkJZ3Bpb3MgPSA8JmdwaW80IDcgR1BJ
-T19BQ1RJVkVfTE9XPjsgLyogZ3BpbzEwMyAqLworCQkJbGludXgsY29kZSA9IDwweDA0MDMwMDNj
-PjsgLyogS0VZX0YyICovCisJCQlncGlvLWtleSx3YWtldXA7CisJCX07CisKKwkJa2V5X2YzIHsK
-KwkJCWxhYmVsID0gImYzIjsKKwkJCWdwaW9zID0gPCZncGlvNCA4IEdQSU9fQUNUSVZFX0xPVz47
-IC8qIGdwaW8xMDQgKi8KKwkJCWxpbnV4LGNvZGUgPSA8MHgwNTAzMDAzZD47IC8qIEtFWV9GMyAq
-LworCQkJZ3Bpby1rZXksd2FrZXVwOworCQl9OworCisJCWtleV9mNCB7CisJCQlsYWJlbCA9ICJm
-NCI7CisJCQlncGlvcyA9IDwmZ3BpbzQgOSBHUElPX0FDVElWRV9MT1c+OyAvKiBncGlvMTA1ICov
-CisJCQlsaW51eCxjb2RlID0gPDB4MDcwNDAwM2U+OyAvKiBLRVlfRjQgKi8KKwkJCWdwaW8ta2V5
-LHdha2V1cDsKKwkJfTsKKworCQlrZXlfbGVmdCB7CisJCQlsYWJlbCA9ICJsZWZ0IjsKKwkJCWdw
-aW9zID0gPCZncGlvNCAxMCBHUElPX0FDVElWRV9MT1c+OyAvKiBncGlvMTA2ICovCisJCQlsaW51
-eCxjb2RlID0gPDB4MDQwNzAwNjk+OyAvKiBLRVlfTEVGVCAqLworCQkJZ3Bpby1rZXksd2FrZXVw
-OworCQl9OworCisJCWtleV9yaWdodCB7CisJCQlsYWJlbCA9ICJyaWdodCI7CisJCQlncGlvcyA9
-IDwmZ3BpbzQgMTEgR1BJT19BQ1RJVkVfTE9XPjsgLyogZ3BpbzEwNyAqLworCQkJbGludXgsY29k
-ZSA9IDwweDA1MDcwMDZhPjsgLyogS0VZX1JJR0hUICovCisJCQlncGlvLWtleSx3YWtldXA7CisJ
-CX07CisKKwkJa2V5X3VwIHsKKwkJCWxhYmVsID0gInVwIjsKKwkJCWdwaW9zID0gPCZncGlvNCAx
-MiBHUElPX0FDVElWRV9MT1c+OyAvKiBncGlvMTA4ICovCisJCQlsaW51eCxjb2RlID0gPDB4MDYw
-NzAwNjc+OyAvKiBLRVlfVVAgKi8KKwkJCWdwaW8ta2V5LHdha2V1cDsKKwkJfTsKKworCQlrZXlf
-ZG93biB7CisJCQlsYWJlbCA9ICJkb3duIjsKKwkJCWdwaW9zID0gPCZncGlvNCAxMyBHUElPX0FD
-VElWRV9MT1c+OyAvKiBncGlvMTA5ICovCisJCQlsaW51eCxjb2RlID0gPDB4MDcwNzAwNmM+OyAv
-KiBLRVlfRE9XTiAqLworCQkJZ3Bpby1rZXksd2FrZXVwOworCQl9OworCX07Cit9OworCismZ3Bt
-YyB7CisJcmFuZ2VzID0gPDAgMCAweDAwMDAwMDAwIDB4MDEwMDAwMDA+LAorCQkgPDEgMCAweDA4
-MDAwMDAwIDB4MDEwMDAwMDA+OworCisJbmFuZEAwLDAgeworCQlsaW51eCxtdGQtbmFtZT0gIm1p
-Y3JvbixuYW5kIjsKKwkJcmVnID0gPDAgMCAwPjsKKwkJbmFuZC1idXMtd2lkdGggPSA8MTY+Owor
-CQl0aSxuYW5kLWVjYy1vcHQgPSAiYmNoOCI7CisKKwkJZ3BtYyxzeW5jLWNsay1wcyA9IDwwPjsK
-KwkJZ3BtYyxjcy1vbi1ucyA9IDwwPjsKKwkJZ3BtYyxjcy1yZC1vZmYtbnMgPSA8NDQ+OworCQln
-cG1jLGNzLXdyLW9mZi1ucyA9IDw0ND47CisJCWdwbWMsYWR2LW9uLW5zID0gPDY+OworCQlncG1j
-LGFkdi1yZC1vZmYtbnMgPSA8MzQ+OworCQlncG1jLGFkdi13ci1vZmYtbnMgPSA8NDQ+OworCQln
-cG1jLHdlLW9mZi1ucyA9IDw0MD47CisJCWdwbWMsb2Utb2ZmLW5zID0gPDU0PjsKKwkJZ3BtYyxh
-Y2Nlc3MtbnMgPSA8NjQ+OworCQlncG1jLHJkLWN5Y2xlLW5zID0gPDgyPjsKKwkJZ3BtYyx3ci1j
-eWNsZS1ucyA9IDw4Mj47CisJCWdwbWMsd3ItYWNjZXNzLW5zID0gPDQwPjsKKwkJZ3BtYyx3ci1k
-YXRhLW11eC1idXMtbnMgPSA8MD47CisKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXpl
-LWNlbGxzID0gPDE+OworCisJCXBhcnRpdGlvbkAwIHsKKwkJCWxhYmVsID0gIlgtTG9hZGVyIjsK
-KwkJCXJlZyA9IDwwIDB4ODAwMDA+OworCQl9OworCQlwYXJ0aXRpb25AODAwMDAgeworCQkJbGFi
-ZWwgPSAiVS1Cb290IjsKKwkJCXJlZyA9IDwweDgwMDAwIDB4MTQwMDAwPjsKKwkJfTsKKwkJcGFy
-dGl0aW9uQDFjMDAwMCB7CisJCQlsYWJlbCA9ICJFbnZpcm9ubWVudCI7CisJCQlyZWcgPSA8MHgx
-YzAwMDAgMHg0MDAwMD47CisJCX07CisJCXBhcnRpdGlvbkAyMDAwMDAgeworCQkJbGFiZWwgPSAi
-S2VybmVsIjsKKwkJCXJlZyA9IDwweDIwMDAwMCAweDFlMDAwMDA+OworCQl9OworCQlwYXJ0aXRp
-b25AMjAwMDAwMCB7CisJCQlsYWJlbCA9ICJGaWxlc3lzdGVtIjsKKwkJCXJlZyA9IDwweDIwMDAw
-MDAgMHhlMDAwMDAwPjsKKwkJfTsKKwl9OworCisJZXRoZXJuZXRAZ3BtYyB7CisJCWludGVycnVw
-dC1wYXJlbnQgPSA8JmdwaW81PjsKKwkJaW50ZXJydXB0cyA9IDwyNCBJUlFfVFlQRV9MRVZFTF9M
-T1c+OworCQlyZWcgPSA8MSAwIDB4ZmY+OworCX07Cit9OworCismaTJjMSB7CisJY2xvY2stZnJl
-cXVlbmN5ID0gPDI2MDAwMDA+OworCisJdHdsOiB0d2xANDggeworCQlyZWcgPSA8MHg0OD47CisJ
-CWludGVycnVwdHMgPSA8Nz47IC8qIFNZU19OSVJRIGNhc2NhZGVkIHRvIGludGMgKi8KKwkJaW50
-ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47CisJfTsKK307CisKKyNpbmNsdWRlICJ0d2w0MDMwLmR0
-c2kiCisjaW5jbHVkZSAidHdsNDAzMF9vbWFwMy5kdHNpIgorCismaTJjMiB7CisJY2xvY2stZnJl
-cXVlbmN5ID0gPDQwMDAwMD47Cit9OworCismaTJjMyB7CisJY2xvY2stZnJlcXVlbmN5ID0gPDQw
-MDAwMD47Cit9OworCismbW1jMSB7CisJdm1tYy1zdXBwbHkgPSA8JnZtbWMxPjsKKwlidXMtd2lk
-dGggPSA8ND47Cit9OworCismb21hcDNfcG14X2NvcmUgeworCWdwaW9fa2V5X3BpbnM6IHBpbm11
-eF9ncGlvX2tleV9waW5zIHsKKwkJcGluY3RybC1zaW5nbGUscGlucyA9IDwKKwkJCTB4ZWEgKFBJ
-Tl9JTlBVVCB8IE1VWF9NT0RFNCkJLyogY2FtX2QyLmdwaW9fMTAxICovCisJCQkweGVjIChQSU5f
-SU5QVVQgfCBNVVhfTU9ERTQpCS8qIGNhbV9kMy5ncGlvXzEwMiAqLworCQkJMHhlZSAoUElOX0lO
-UFVUIHwgTVVYX01PREU0KQkvKiBjYW1fZDQuZ3Bpb18xMDMgKi8KKwkJCTB4ZjAgKFBJTl9JTlBV
-VCB8IE1VWF9NT0RFNCkJLyogY2FtX2Q1LmdwaW9fMTA0ICovCisJCQkweGYyIChQSU5fSU5QVVQg
-fCBNVVhfTU9ERTQpCS8qIGNhbV9kNi5ncGlvXzEwNSAqLworCQkJMHhmNCAoUElOX0lOUFVUIHwg
-TVVYX01PREU0KQkvKiBjYW1fZDcuZ3Bpb18xMDYgKi8KKwkJCTB4ZjYgKFBJTl9JTlBVVCB8IE1V
-WF9NT0RFNCkJLyogY2FtX2Q4LmdwaW9fMTA3ICovCisJCQkweGY4IChQSU5fSU5QVVQgfCBNVVhf
-TU9ERTQpCS8qIGNhbV9kOS5ncGlvXzEwOCAqLworCQkJMHhmYSAoUElOX0lOUFVUIHwgTVVYX01P
-REU0KQkvKiBjYW1fZDEwLmdwaW9fMTA5ICovCisJCT47CisJfTsKKworCW11c2JfcGluczogcGlu
-bXV4X211c2JfcGlucyB7CisJCXBpbmN0cmwtc2luZ2xlLHBpbnMgPSA8CisJCQkweDE3MiAoUElO
-X0lOUFVUIHwgTVVYX01PREUwKQkvKiBoc3VzYjBfY2xrLmhzdXNiMF9jbGsgKi8KKwkJCTB4MTdh
-IChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRhMC5oc3VzYjBfZGF0YTAgKi8K
-KwkJCTB4MTdjIChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRhMS5oc3VzYjBf
-ZGF0YTEgKi8KKwkJCTB4MTdlIChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRh
-Mi5oc3VzYjBfZGF0YTIgKi8KKwkJCTB4MTgwIChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhz
-dXNiMF9kYXRhMy5oc3VzYjBfZGF0YTMgKi8KKwkJCTB4MTgyIChQSU5fSU5QVVQgfCBNVVhfTU9E
-RTApCS8qIGhzdXNiMF9kYXRhNC5oc3VzYjBfZGF0YTQgKi8KKwkJCTB4MTg0IChQSU5fSU5QVVQg
-fCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRhNS5oc3VzYjBfZGF0YTUgKi8KKwkJCTB4MTg2IChQ
-SU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRhNi5oc3VzYjBfZGF0YTYgKi8KKwkJ
-CTB4MTg4IChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kYXRhNy5oc3VzYjBfZGF0
-YTcgKi8KKwkJCTB4MTc2IChQSU5fSU5QVVQgfCBNVVhfTU9ERTApCS8qIGhzdXNiMF9kaXIuaHN1
-c2IwX2RpciAqLworCQkJMHgxNzggKFBJTl9JTlBVVCB8IE1VWF9NT0RFMCkJLyogaHN1c2IwX254
-dC5oc3VzYjBfbnh0ICovCisJCQkweDE3NCAoUElOX09VVFBVVCB8IE1VWF9NT0RFMCkJLyogaHN1
-c2IwX3N0cC5oc3VzYjBfc3RwICovCisJCT47CisJfTsKK307CisKKyZ1c2Jfb3RnX2hzIHsKKwlw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0cmwtMCA9IDwmbXVzYl9waW5zPjsKKwlp
-bnRlcmZhY2UtdHlwZSA9IDwwPjsKKwl1c2ItcGh5ID0gPCZ1c2IyX3BoeT47CisJbW9kZSA9IDwz
-PjsKKwlwb3dlciA9IDw1MD47Cit9OworCismdmF1eDEgeworCS8qIE5lZWRlZCBmb3IgYWRzNzg0
-NiAqLworICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJ2Y2MiOworfTsKKworJnZwbGwyIHsKKyAg
-ICAgICAvKiBOZWVkZWQgZm9yIERTUyAqLworICAgICAgIHJlZ3VsYXRvci1uYW1lID0gInZkZHNf
-ZHNpIjsKK307Ci0tIAoxLjguMS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Quoting boris brezillon (2013-11-08 00:54:45)
+> Hello Mike,
+> 
+> On 08/11/2013 01:51, Mike Turquette wrote:
+> > Quoting Boris BREZILLON (2013-10-13 10:17:10)
+> >> +/**
+> >> + * clk_get_accuracy - return the accuracy of clk
+> >> + * @clk: the clk whose accuracy is being returned
+> >> + *
+> >> + * Simply returns the cached accuracy of the clk, unless
+> >> + * CLK_GET_ACCURACY_NOCACHE flag is set, which means a recalc_rate will be
+> >> + * issued.
+> >> + * If clk is NULL then returns 0.
+> >> + */
+> >> +unsigned long clk_get_accuracy(struct clk *clk)
+> >> +{
+> >> +       unsigned long accuracy;
+> >> +       clk_prepare_lock();
+> >> +
+> >> +       if (clk && (clk->flags & CLK_GET_ACCURACY_NOCACHE))
+> >> +               __clk_recalc_accuracies(clk);
+> > I think that there is some overlap between recalculating the accuracy
+> > here and simply getting it. You only provide clk_get_accuracy and it
+> > serves both purposes. It would be better if clk_recalc_accuracy walked
+> > the subtree of children and if clk_get_accuracy simply returned a cached
+> > value.
+> 
+> I'm not sure I get your point.
+> 
+> I used exactly the same model as for clk rate retrieval.
+
+Not exactly the same model. For rates we support public clk_recalc_rate
+and clk_get_rate functions.
+
+> 
+> Actually there's one flag (CLK_GET_ACCURACY_NOCACHE) which is
+> checked to decide wether the accuracy should be recalculated each
+> time the get_accuracy is called or not.
+> 
+> This means most of the time the clk_get_accuracy will return the cached
+> value unless the clk provider explicitely ask for accuracy recalculation
+> (e.g. a clk with dynamic accuracy according to temperature range ?).
+> 
+> Are you suggesting to expose 2 functions to clk users (clk_get_accuracy
+> and clk_recalc_accuracy) ?
+> Or is clk_recalc_accuracy an internal/private function used by the CCF ?
+
+I was suggesting that in my previous email. However I've thought on it a
+bit and I'm not sure there is any value to having a public
+clk_recalc_accuracy right now.
+
+The only reason to do so would be if the accuracy can change in such a
+way that the clock framework is never aware of it.  This would mean that
+somehow the accuracy changed "behind our back".
+
+One hypothetical example is a PLL which Linux knows about, but perhaps
+is controlled by some other co-processor (not Linux). In this case the
+co-processor may reprogram/relock the PLL in a way that affects it's
+accuracy, and a Linux driver that knows this may want to update the CCF
+book-keeping with a call to clk_recalc_accuracy.
+
+That's all hypothetical though and it can be added in later. Looking
+over your change again I think that it is sufficient for now.
+
+Can you respin this patch with fixes for the two nitpicks I outlined in
+my previous mail and rebase it onto -rc1 when it drops? That should be
+any day now.
+
+Thanks!
+Mike
+
+> 
+> >
+> >> +
+> >> +       accuracy = __clk_get_accuracy(clk);
+> >> +       clk_prepare_unlock();
+> >> +
+> >> +       return accuracy;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(clk_get_accuracy);
+> >> +
+> >> +/**
+> >>    * __clk_recalc_rates
+> >>    * @clk: first clk in the subtree
+> >>    * @msg: notification type (see include/linux/clk.h)
+> >> @@ -1545,6 +1610,7 @@ void __clk_reparent(struct clk *clk, struct clk *new_parent)
+> >>   {
+> >>          clk_reparent(clk, new_parent);
+> >>          clk_debug_reparent(clk, new_parent);
+> >> +       __clk_recalc_accuracies(clk);
+> > Similar to the above statement. Why do this here? We do this for rates
+> > since calls to clk_get_rate will return the cached rate (unless the
+> > NOCACHE flag is set). But since a call to clk_get_accuracy will always
+> > recalculate it then there is no benefit to doing that here.
+> 
+> This is the same for clk_get_accuracies (it returns the cached
+> accuracy unless CLK_GET_ACCURACY_NOCACHE is defined).
+> 
+> And changing parent of a clk will indirectly change the clk
+> accuracy (clk accuracies are cumulative).
+> 
+> >
+> >>          __clk_recalc_rates(clk, POST_RATE_CHANGE);
+> >>   }
+> >>   
+> >> @@ -1615,6 +1681,9 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
+> >>          /* do the re-parent */
+> >>          ret = __clk_set_parent(clk, parent, p_index);
+> >>   
+> >> +       /* propagate accuracy recalculation */
+> >> +       __clk_recalc_accuracies(clk);
+> > Ditto.
+> Ditto. :)
+> 
+> 
+> Please tell me if I misunderstood your requests.
+> 
+> Best Regards,
+> 
+> Boris
+> 
+> >
+> > Regards,
+> > Mike
+> >
+> >> +
+> >>          /* propagate rate recalculation accordingly */
+> >>          if (ret)
+> >>                  __clk_recalc_rates(clk, ABORT_RATE_CHANGE);
+> >> @@ -1724,6 +1793,21 @@ int __clk_init(struct device *dev, struct clk *clk)
+> >>                  hlist_add_head(&clk->child_node, &clk_orphan_list);
+> >>   
+> >>          /*
+> >> +        * Set clk's accuracy.  The preferred method is to use
+> >> +        * .recalc_accuracy. For simple clocks and lazy developers the default
+> >> +        * fallback is to use the parent's accuracy.  If a clock doesn't have a
+> >> +        * parent (or is orphaned) then accuracy is set to zero (perfect
+> >> +        * clock).
+> >> +        */
+> >> +       if (clk->ops->recalc_accuracy)
+> >> +               clk->accuracy = clk->ops->recalc_accuracy(clk->hw,
+> >> +                                       __clk_get_accuracy(clk->parent));
+> >> +       else if (clk->parent)
+> >> +               clk->accuracy = clk->parent->accuracy;
+> >> +       else
+> >> +               clk->accuracy = 0;
+> >> +
+> >> +       /*
+> >>           * Set clk's rate.  The preferred method is to use .recalc_rate.  For
+> >>           * simple clocks and lazy developers the default fallback is to use the
+> >>           * parent's rate.  If a clock doesn't have a parent (or is orphaned)
+> >> diff --git a/include/linux/clk-private.h b/include/linux/clk-private.h
+> >> index 8138c94..accb517 100644
+> >> --- a/include/linux/clk-private.h
+> >> +++ b/include/linux/clk-private.h
+> >> @@ -41,6 +41,7 @@ struct clk {
+> >>          unsigned long           flags;
+> >>          unsigned int            enable_count;
+> >>          unsigned int            prepare_count;
+> >> +       unsigned long           accuracy;
+> >>          struct hlist_head       children;
+> >>          struct hlist_node       child_node;
+> >>          unsigned int            notifier_count;
+> >> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> >> index 73bdb69..942811d 100644
+> >> --- a/include/linux/clk-provider.h
+> >> +++ b/include/linux/clk-provider.h
+> >> @@ -29,6 +29,7 @@
+> >>   #define CLK_IS_BASIC           BIT(5) /* Basic clk, can't do a to_clk_foo() */
+> >>   #define CLK_GET_RATE_NOCACHE   BIT(6) /* do not use the cached clk rate */
+> >>   #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
+> >> +#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
+> >>   
+> >>   struct clk_hw;
+> >>   
+> >> @@ -108,6 +109,13 @@ struct clk_hw;
+> >>    *             which is likely helpful for most .set_rate implementation.
+> >>    *             Returns 0 on success, -EERROR otherwise.
+> >>    *
+> >> + * @recalc_accuracy: Recalculate the accuracy of this clock. The clock accuracy
+> >> + *             is expressed in ppb (parts per billion). The parent accuracy is
+> >> + *             an input parameter.
+> >> + *             Returns the calculated accuracy.  Optional - if this op is not
+> >> + *             set then clock accuracy will be initialized to parent accuracy
+> >> + *             or 0 (perfect clock) if clock has no parent.
+> >> + *
+> >>    * The clk_enable/clk_disable and clk_prepare/clk_unprepare pairs allow
+> >>    * implementations to split any work between atomic (enable) and sleepable
+> >>    * (prepare) contexts.  If enabling a clock requires code that might sleep,
+> >> @@ -139,6 +147,8 @@ struct clk_ops {
+> >>          u8              (*get_parent)(struct clk_hw *hw);
+> >>          int             (*set_rate)(struct clk_hw *hw, unsigned long,
+> >>                                      unsigned long);
+> >> +       unsigned long   (*recalc_accuracy)(struct clk_hw *hw,
+> >> +                                          unsigned long parent_accuracy);
+> >>          void            (*init)(struct clk_hw *hw);
+> >>   };
+> >>   
+> >> @@ -194,6 +204,7 @@ struct clk_hw {
+> >>   struct clk_fixed_rate {
+> >>          struct          clk_hw hw;
+> >>          unsigned long   fixed_rate;
+> >> +       unsigned long   fixed_accuracy;
+> >>          u8              flags;
+> >>   };
+> >>   
+> >> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> >> index 9a6d045..2fe3b54 100644
+> >> --- a/include/linux/clk.h
+> >> +++ b/include/linux/clk.h
+> >> @@ -85,6 +85,23 @@ int clk_notifier_unregister(struct clk *clk, struct notifier_block *nb);
+> >>   #endif
+> >>   
+> >>   /**
+> >> + * clk_get_accuracy - obtain the clock accuracy in ppb (parts per billion)
+> >> + *                   for a clock source.
+> >> + * @clk: clock source
+> >> + *
+> >> + * This gets the clock source accuracy expressed in ppb.
+> >> + * A perfect clock returns 0.
+> >> + */
+> >> +#ifdef CONFIG_HAVE_CLK_GET_ACCURACY
+> >> +unsigned long clk_get_accuracy(struct clk *clk);
+> >> +#else
+> >> +static inline unsigned long clk_get_accuracy(struct clk *clk)
+> >> +{
+> >> +       return 0;
+> >> +}
+> >> +#endif
+> >> +
+> >> +/**
+> >>    * clk_prepare - prepare a clock source
+> >>    * @clk: clock source
+> >>    *
+> >> -- 
+> >> 1.7.9.5
+> >>
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
