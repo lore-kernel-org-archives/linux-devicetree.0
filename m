@@ -1,172 +1,77 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v3 3/4] ata: Add APM X-Gene SoC SATA host controller driver
-Date: Fri, 15 Nov 2013 22:36:56 -0800
-Message-ID: <CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
-References: <1384465153-29902-1-git-send-email-lho@apm.com>
-	<1384465153-29902-3-git-send-email-lho@apm.com>
-	<1384465153-29902-4-git-send-email-lho@apm.com>
-	<201311151448.16279.arnd@arndb.de>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCH 4/5] ARM: dts: Add basic support for omap3 LDP zoom1
+ labrador
+Date: Sat, 16 Nov 2013 08:04:09 +0000
+Message-ID: <20131116080408.GA15300@earth.universe>
+References: <1384562167-14725-1-git-send-email-tony@atomide.com>
+ <1384562167-14725-5-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <201311151448.16279.arnd@arndb.de>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384562167-14725-5-git-send-email-tony@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
->> +config SATA_XGENE
->> +     tristate "APM X-Gene 6.0Gbps SATA host controller support"
->> +     depends on SATA_AHCI_PLATFORM
->> +     default y if ARM64
->> +     select SATA_XGENE_PHY
->
-> I don't think the "default y" is appropriate here, since there are going to
-> be lots of ARM64 platforms in the long run that don't have this. Also,
-> there is a trend towards using CONFIG_COMPILE_TEST to limit the
-> visibility.
->
-> I'd suggest something like
->
-> config SATA_XGENE
->         tristate "APM X-Gene 6.0Gbps SATA host controller support"
->         depends on ARM64 || COMPILE_TEST
->         ...
->
-[Loc Ho]
-Okay. How about this?
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- depends on ARM64 || COMPILE_TEST
- select SATA_XGENE_PHY && SATA_AHCI_PLATFORM
+On Fri, Nov 15, 2013 at 04:36:06PM -0800, Tony Lindgren wrote:
+> Basic things like serial, Ethernet, MMC, NAND, DSS, touchscreen
+> and GPIO keys work.
+>=20
+> For twl4030-keypad we're still missing the binding, but
+> support for that should be trivial to add once the driver
+> has been updated.
 
->> +/* Enable for dumping CSR read/write access */
->> +#undef XGENE_DBG_CSR
->
-> This should be removed now as well, along with the debug macro you already removed.
-[Loc Ho]
-This is very useful if one running into problem - one can enable all
-CSR dump. I would like to keep this around for the time being.
+DT bindings for twl4030-keypad are being worked on:
 
->
->> +
->> +/* Temporary function until the PHY parameter API */
->> +extern void xgene_ahci_phy_set_pq(struct phy *phy, int chan, int data);
->> +extern void xgene_ahci_phy_set_spd(struct phy *phy, int chan, int gen);
->
-> Ah, that should have been mentioned in the changeset text. Do you think you
-> can remove these for the final version?
-[Loc Ho]
-Yes... Krishon, can you provide an patch that allows me to accommodate
-this? Or should I come up one? I will trying to get rip of the first
-one. But I will need the function to set the PHY speed - for
-Gen2/Gen1. Let's plan on add these function:
+https://lkml.org/lkml/2013/11/8/463
 
-a. int (*set_speed)(int gen_speed) where gen_speed is either AUTO,
-GEN1, GEN2, or GEN3.
-b. Change the PHY init function to take an optional parameter. This
-would help my first function in case I can get rip of it.
+> MUSB I'm pretty sure I got got to enumerate once, but I
+> suspect the battery charging somehow disrupts it and it's
+> not enumerating in general for some reason.
 
->
->> +static void xgene_rd(void *addr, u32 *val)
->> +{
->> +     *val = readl(addr);
->> +#if defined(XGENE_DBG_CSR)
->> +     printk(KERN_DEBUG "SATAPHY CSR RD: 0x%p value: 0x%08x\n", addr, *val);
->> +#endif
->> +}
->
-> The interface you are looking for is pr_debug() or dev_dbg(), which get
-> built-in only if the DEBUG macro is set.
->
-> In a lot of cases, it's actually best to remove debug output like this from
-> the driver once you have it working  -- whoever is debugging problems in
-> the driver next might need completely different debugging information or
-> can add them back easily if needed.
->
-> It's your choice if you want to use pr_debug() or remove that output
-> entirely. If you remove it, best remove the helper functions entirely
-> and use readl/writel directly.
-[Loc Ho]
-I would like to keep this function for now until this driver actual
-being used in production. I will use pr_debug.
+Try to add this:
 
->
->> +/* Flush the IOB to ensure all SATA controller writes completed before
->> +   servicing the completed command. */
->> +static int xgene_ahci_iob_flush(struct xgene_ahci_context *ctx)
->> +{
->> +     if (ctx->ahbc_io_base == NULL) {
->> +             void *ahbc_base;
->> +             u32 val;
->> +
->> +             /* The AHBC address is fixed in X-Gene */
->> +             ahbc_base = devm_ioremap(ctx->dev, 0x1F2A0000, 0x80000);
->> +             if (!ahbc_base) {
->> +                     dev_err(ctx->dev, "can't map AHBC resource\n");
->> +                     return -ENODEV;
->> +             }
->
-> I had an important comment about the misuse of hardcoded I/O addresses
-> here. Please never just post a new version with the same issue. In general,
-> your options are:
->
-> * rewrite the code in a more appropriate way
-> * reply to the comment, arguing why you think your code is correct
-> * ask for clarification if you don't know how to improve the code
-> * mark the code as TODO and mention in the patch description why you
->   are still working on this and that the current version should not
->   be seen as final.
->
-> If you don't do any of these, reviewers will get annoyed because you
-> are wasting their time.
-[Loc Ho]
-Sorry about this one. I will add this to the DTS. If this resource
-isn't available, then it will be nop.
+&usb_otg_hs {
+	phys =3D <&usb2_phy>;
+	phy-names =3D "usb2-phy";
+};
 
->> +
->> +static int xgene_ahci_get_u32_param(struct platform_device *pdev,
->> +                                 const char *of_name, char *acpi_name,
->> +                                 u32 *param)
->> +{
->> +#ifdef CONFIG_ACPI
->> +     if (efi_enabled(EFI_BOOT)) {
->> +             unsigned long long value;
->> +             acpi_status status;
->> +             if (acpi_name == NULL)
->> +                     return -ENODEV;
->> +             status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
->> +                                            acpi_name, NULL, &value);
->> +             if (ACPI_FAILURE(status))
->> +                     return -ENODEV;
->> +             *param = value;
->> +             return 0;
->> +     }
->> +#endif
->
-> There are more previous comments that you have not addressed yet.
-[Loc Ho]
-Original, I didn't want to get rip of this as ACPI isn't available in
-the 3.12 kernel yet. I will get rip of this as I don't need the ID any
-more. Also, I will also get rip of the clock interface. Don't need
-this as it is handled directly by the driver. This will address for DT
-as well as ACPI.
+Those were introduced by the new generic PHY framework, see
+for example: https://lkml.org/lkml/2013/9/27/37
 
->
->> diff --git a/drivers/ata/sata_xgene.h b/drivers/ata/sata_xgene.h
->> new file mode 100644
->> index 0000000..51e73f6
->> --- /dev/null
->> +++ b/drivers/ata/sata_xgene.h
->
-> This file should probably just be folded into the driver, since it contains no
-> interfaces between  modules, just internal definitions.
-[Loc Ho]
-I can get rip this header file now. But in the future I may need to
-add this back as I intended this driver to also support running from
-our co-processor (ARMv7 32-bit). For that, I will need anothe file and
-other function that will need knowledge of the context structure and
-etc.
+> [...]
 
--Loc
+-- Sebastian
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJShyb4AAoJENju1/PIO/qaVEgP/0fR9y8x1/QtYHzCf5GDKhlY
+TK8bMRhN+hHv//qJW6J6iY9dfF7mSQCuJE0Sz8I6gC0sW1o3URlTpjgvSOQPpryY
+HVyH58z1Y4TOYQ0EwLd0RNYCtJQEKV2Tyy3GG6XbGPzXC0nwsYH93qj30/LsDMDG
+wNONHAgcYE33Fdok0HFgUlOicY0SuOoY4JaaLQ/UvUC6PkG+DNYoPH9iTF1aynGL
+ZFI7c8prezRdhZiUw2ryJFvMZiJDIeksxOiiU0eEFBQqDnwtsIs597I4McmckK0o
+Q75soJD7KbNx3UtRnzljs+d2BITCRCldaJ20jK+Lmkm45Q76t7jMBCSq4OzEf8m6
+hrrVLdwokudRNejjc/yvwaePL7RZz+f5AiDsL8Ts4Ev0n2a/vVDrsoltSWPVWBDK
+qEpgaSDZOY8sgv5JUQHfu19pCB04Qa+hL/lre8CrttWl4SlOKSqELvB3uCa2HrzM
+tFtL9vOxkTRn9Hj9vttl3sEZALKUd+egiEReGSko15Pnewob9OXThEy+uroxHIql
+nbHkun8nHLhwILUabfU4uj2lCgT0WS7l7wZjY0wX+k1VHyipdeta44DqShfDfoyP
+OtQgENfd/1d4BBINqgIGiPoB7+7Gne0EdEtoq19T/XhxjemVvFklPY0n854g9AhQ
+6wDphVv7DREqDTO5rld+
+=eiDx
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
