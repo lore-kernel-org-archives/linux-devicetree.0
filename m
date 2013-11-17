@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 12/21] ARM: ux500: move old HREF ipgpio to the device tree
-Date: Sun, 17 Nov 2013 12:04:01 +0100
-Message-ID: <1384686250-10542-13-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH 13/21] ARM: ux500: move GPIO key configuration to device tree
+Date: Sun, 17 Nov 2013 12:04:02 +0100
+Message-ID: <1384686250-10542-14-git-send-email-linus.walleij@linaro.org>
 References: <1384686250-10542-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384686250-10542-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,92 +10,210 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jone
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The old HREFs (MOP500) were controlling an image-processor
-GPIO (IPGPIO) by using hogs. Do the same thing with device tree
-and get rid of the mop500_pins setting.
+This moves over the configuration of the GPIO keys (used for
+proximity sensor and Hall effect sensor) from the static pin
+configuration file to the device tree. As part of the exercise,
+implement the GPIO keys properly in a per-UIB file as this
+setup actually differs with each UIB.
 
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-hrefprev60.dtsi   | 16 ++++++++++++++++
- arch/arm/mach-ux500/board-mop500-pins.c | 24 ------------------------
- 2 files changed, 16 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/ste-href-stuib.dtsi      | 41 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/ste-href-tvk1281618.dtsi | 38 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/ste-href.dtsi            | 11 --------
+ arch/arm/boot/dts/ste-hrefv60plus.dtsi     |  6 -----
+ arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi |  5 ++++
+ arch/arm/mach-ux500/board-mop500-pins.c    |  8 ------
+ 6 files changed, 84 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index 32295e396ff8..b0f5def8e2a8 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -68,6 +68,10 @@
- 		};
+diff --git a/arch/arm/boot/dts/ste-href-stuib.dtsi b/arch/arm/boot/dts/ste-href-stuib.dtsi
+index 76704ec0ffcc..1c3574435ea8 100644
+--- a/arch/arm/boot/dts/ste-href-stuib.dtsi
++++ b/arch/arm/boot/dts/ste-href-stuib.dtsi
+@@ -12,6 +12,28 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
  
- 		pinctrl {
-+			/* Set this up using hogs */
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ipgpio_hrefprev60_mode>;
+ / {
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		vdd-supply = <&ab8500_ldo_aux1_reg>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&prox_stuib_mode>, <&hall_stuib_mode>;
 +
- 			ssp0 {
- 				ssp0_hrefprev60_mode: ssp0_hrefprev60_default {
- 					hrefprev60_mux {
-@@ -103,6 +107,18 @@
++		button@139 {
++			/* Proximity sensor */
++			gpios = <&gpio6 25 0x4>;
++			linux,code = <11>; /* SW_FRONT_PROXIMITY */
++			label = "SFH7741 Proximity Sensor";
++		};
++		button@145 {
++			/* Hall sensor */
++			gpios = <&gpio4 17 0x4>;
++			linux,code = <0>; /* SW_LID */
++			label = "HED54XXU11 Hall Effect Sensor";
++		};
++	};
++
+ 	soc {
+ 		i2c@80004000 {
+ 			stmpe1601: stmpe1601@40 {
+@@ -74,5 +96,24 @@
+ 				rohm,flip-y;
+ 			};
+ 		};
++
++		pinctrl {
++			prox {
++				prox_stuib_mode: prox_stuib {
++					stuib_cfg {
++						ste,pins = "GPIO217_AH12";
++						ste,config = <&gpio_in_pu>;
++					};
++				};
++			};
++			hall {
++				hall_stuib_mode: stuib_tvk {
++					stuib_cfg {
++						ste,pins = "GPIO145_C13";
++						ste,config = <&gpio_in_pu>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/ste-href-tvk1281618.dtsi b/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
+index 3f31f9206fb3..c40565320978 100644
+--- a/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
++++ b/arch/arm/boot/dts/ste-href-tvk1281618.dtsi
+@@ -14,6 +14,28 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		vdd-supply = <&ab8500_ldo_aux1_reg>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&prox_tvk_mode>, <&hall_tvk_mode>;
++
++		button@139 {
++			/* Proximity sensor */
++			gpios = <&gpio6 25 0x4>;
++			linux,code = <11>; /* SW_FRONT_PROXIMITY */
++			label = "SFH7741 Proximity Sensor";
++		};
++		button@145 {
++			/* Hall sensor */
++			gpios = <&gpio4 17 0x4>;
++			linux,code = <0>; /* SW_LID */
++			label = "HED54XXU11 Hall Effect Sensor";
++		};
++	};
++
+ 	soc {
+ 		/* Add Synaptics touch screen, TC35893 keypad etc here */
+ 		i2c@80004000 {
+@@ -76,6 +98,22 @@
  					};
  				};
  			};
-+			ipgpio {
-+				 ipgpio_hrefprev60_mode: ipgpio_hrefprev60 {
-+					hrefprev60_mux {
-+						ste,function = "ipgpio";
-+						ste,pins = "ipgpio0_c_1", "ipgpio1_c_1";
++			prox {
++				prox_tvk_mode: prox_tvk {
++					tvk_cfg {
++						ste,pins = "GPIO217_AH12";
++						ste,config = <&gpio_in_pu>;
 +					};
-+					hrefprev60_cfg1 {
-+						ste,pins = "GPIO6_AF6", "GPIO7_AG5";
-+						ste,config = <&in_pu>;
++				};
++			};
++			hall {
++				hall_tvk_mode: hall_tvk {
++					tvk_cfg {
++						ste,pins = "GPIO145_C13";
++						ste,config = <&gpio_in_pu>;
 +					};
-+				 };
++				};
 +			};
  		};
  	};
  };
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 56772c3ebb28..e28242173d18 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -18,17 +18,6 @@
+ 		reg = <0x00000000 0x20000000>;
+ 	};
+ 
+-	gpio_keys {
+-		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		button@1 {
+-			linux,code = <11>;
+-			label = "SFH7741 Proximity Sensor";
+-		};
+-	};
+-
+ 	soc {
+ 		usb_per5@a03e0000 {
+ 			pinctrl-names = "default", "sleep";
+diff --git a/arch/arm/boot/dts/ste-hrefv60plus.dtsi b/arch/arm/boot/dts/ste-hrefv60plus.dtsi
+index 452f00c4f7c0..6e0105d2f461 100644
+--- a/arch/arm/boot/dts/ste-hrefv60plus.dtsi
++++ b/arch/arm/boot/dts/ste-hrefv60plus.dtsi
+@@ -16,12 +16,6 @@
+ 	model = "ST-Ericsson HREF (v60+) platform with Device Tree";
+ 	compatible = "st-ericsson,hrefv60+", "st-ericsson,u8500";
+ 
+-	gpio_keys {
+-		button@1 {
+-			gpios = <&gpio5 25 0x4>;
+-		};
+-	};
+-
+ 	soc {
+ 		// External Micro SD slot
+ 		sdi0_per1@80126000 {
+diff --git a/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi b/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
+index ee143b0a5baa..e6f22b266420 100644
+--- a/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
++++ b/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
+@@ -36,6 +36,11 @@
+ 		ste,input = <INPUT_PULLUP>;
+ 	};
+ 
++	gpio_in_pd: gpio_input_pull_down {
++		ste,gpio = <GPIOMODE_ENABLED>;
++		ste,input = <INPUT_PULLDOWN>;
++	};
++
+ 	gpio_out_lo: gpio_output_low {
+ 		ste,gpio = <GPIOMODE_ENABLED>;
+ 		ste,output = <OUTPUT_LOW>;
 diff --git a/arch/arm/mach-ux500/board-mop500-pins.c b/arch/arm/mach-ux500/board-mop500-pins.c
-index c311d11d6c3d..257c97a214a5 100644
+index 257c97a214a5..4535702a8e3f 100644
 --- a/arch/arm/mach-ux500/board-mop500-pins.c
 +++ b/arch/arm/mach-ux500/board-mop500-pins.c
-@@ -312,28 +312,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
+@@ -382,14 +382,6 @@ static struct pinctrl_map __initdata hrefv60_pinmap[] = {
+ 	/* Accelerometer interrupt lines */
+ 	DB8500_PIN_HOG("GPIO82_C1", gpio_in_pu), /* ACC_INT1 */
+ 	DB8500_PIN_HOG("GPIO83_D3", gpio_in_pu), /* ACC_INT2 */
+-	/*
+-	 * Runtime stuff
+-	 * Pull up/down of some sensor GPIO pins, for proximity, HAL sensor
+-	 * etc.
+-	 */
+-	DB8500_PIN("GPIO217_AH12", gpio_in_pu_slpm_gpio_nopull, "gpio-keys.0"),
+-	DB8500_PIN("GPIO145_C13", gpio_in_pd_slpm_gpio_nopull, "gpio-keys.0"),
+-	DB8500_PIN("GPIO139_C9", gpio_in_pu_slpm_gpio_nopull, "gpio-keys.0"),
  };
  
- /*
-- * These are specifically for the MOP500 and HREFP (pre-v60) version of the
-- * board, which utilized a TC35892 GPIO expander instead of using a lot of
-- * on-chip pins as the HREFv60 and later does.
-- */
--static struct pinctrl_map __initdata mop500_pinmap[] = {
--	/*
--	 * XENON Flashgun on image processor GPIO (controlled from image
--	 * processor firmware), mux in these image processor GPIO lines 0
--	 * (XENON_FLASH_ID) and 1 (XENON_READY) on altfunction C and pull up
--	 * the pins.
--	 */
--	DB8500_MUX_HOG("ipgpio0_c_1", "ipgpio"),
--	DB8500_MUX_HOG("ipgpio1_c_1", "ipgpio"),
--	DB8500_PIN_HOG("GPIO6_AF6", in_pu),
--	DB8500_PIN_HOG("GPIO7_AG5", in_pu),
--	/*
--	 * Runtime stuff: make it possible to mux in the SKE keypad
--	 * and bias the pins
--	 */
--};
--
--/*
-  * The HREFv60 series of platforms is using available pins on the DB8500
-  * insteaf of the Toshiba I2C GPIO expander, reusing some pins like the SSP0
-  * and SSP1 ports (previously connected to the AB8500) as generic GPIO lines.
-@@ -496,8 +474,6 @@ static void __init mop500_href_family_pinmaps_init(void)
- 
- void __init mop500_pinmaps_init(void)
- {
--	pinctrl_register_mappings(mop500_pinmap,
--				  ARRAY_SIZE(mop500_pinmap));
- 	mop500_href_family_pinmaps_init();
- 	if (machine_is_u8520())
- 		pinctrl_register_mappings(ab8505_pinmap,
+ static struct pinctrl_map __initdata u9500_pinmap[] = {
 -- 
 1.8.3.1
 
