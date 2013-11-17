@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 20/21] ARM: ux500: move snowball LED pin control to device tree
-Date: Sun, 17 Nov 2013 12:04:09 +0100
-Message-ID: <1384686250-10542-21-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH 19/21] ARM: ux500: convert Snowball SPI pin reference
+Date: Sun, 17 Nov 2013 12:04:08 +0100
+Message-ID: <1384686250-10542-20-git-send-email-linus.walleij@linaro.org>
 References: <1384686250-10542-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384686250-10542-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,36 +10,57 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jone
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This moves the Snowball LED pin config to the device tree.
+The SPI0 block is not at all connected to the AB8500 on the
+Snowball: it is connected to the external header. These pins
+on the header may also be used for GPIO, but let's assume
+that SPI is a probable usecase on the Snowball and mux in the
+SPI block and use these for SPI.
 
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-snowball.dts      | 11 +++++++++++
- arch/arm/mach-ux500/board-mop500-pins.c |  2 --
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ste-snowball.dts      | 28 ++++++++++++++++++++++++++++
+ arch/arm/mach-ux500/board-mop500-pins.c |  5 -----
+ 2 files changed, 28 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 744ab956059a..605188ba30cd 100644
+index 4f5457a91589..744ab956059a 100644
 --- a/arch/arm/boot/dts/ste-snowball.dts
 +++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -76,6 +76,8 @@
+@@ -248,6 +248,11 @@
+ 			pinctrl-1 = <&i2c3_sleep_mode>;
+ 		};
  
- 	leds {
- 		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpioled_snowball_mode>;
- 		used-led {
- 			label = "user_led";
- 			gpios = <&gpio4 14 0x4>;
-@@ -414,6 +416,15 @@
++		ssp@80002000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ssp0_snowball_mode>;
++		};
++
+ 		cpufreq-cooling {
+ 			status = "okay";
+ 		};
+@@ -386,6 +391,29 @@
  
  				};
  			};
-+			gpio_led {
-+				gpioled_snowball_mode: gpioled_default {
++			ssp0 {
++				ssp0_snowball_mode: ssp0_snowball_default {
++					snowball_mux {
++						ste,function = "ssp0";
++						ste,pins = "ssp0_a_1";
++					};
 +					snowball_cfg1 {
-+						ste,pins = "GPIO142_C11";
++						ste,pins = "GPIO144_B13"; /* FRM */
 +						ste,config = <&gpio_out_hi>;
++					};
++					snowball_cfg2 {
++						ste,pins = "GPIO145_C13"; /* RXD */
++						ste,config = <&in_pd>;
++					};
++					snowball_cfg3 {
++						ste,pins =
++						"GPIO146_D13", /* TXD */
++						"GPIO143_D12"; /* CLK */
++						ste,config = <&out_lo>;
 +					};
 +
 +				};
@@ -48,18 +69,28 @@ index 744ab956059a..605188ba30cd 100644
  
  		mcde@a0350000 {
 diff --git a/arch/arm/mach-ux500/board-mop500-pins.c b/arch/arm/mach-ux500/board-mop500-pins.c
-index 0e5d2684bc9a..aae9cfcfd56a 100644
+index 55da56e39974..0e5d2684bc9a 100644
 --- a/arch/arm/mach-ux500/board-mop500-pins.c
 +++ b/arch/arm/mach-ux500/board-mop500-pins.c
-@@ -297,8 +297,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
+@@ -19,8 +19,6 @@
+ /* These simply sets bias for pins */
+ #define BIAS(a,b) static unsigned long a[] = { b }
+ 
+-BIAS(pd, PIN_PULL_DOWN);
+-
+ BIAS(abx500_out_lo, PIN_CONF_PACKED(PIN_CONFIG_OUTPUT, 0));
+ BIAS(abx500_in_pd, PIN_CONF_PACKED(PIN_CONFIG_BIAS_PULL_DOWN, 1));
+ BIAS(abx500_in_nopull, PIN_CONF_PACKED(PIN_CONFIG_BIAS_PULL_DOWN, 0));
+@@ -299,9 +297,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
  };
  
  static struct pinctrl_map __initdata snowball_pinmap[] = {
--	/* User LED */
--	DB8500_PIN_HOG("GPIO142_C11", gpio_out_hi),
+-	/* Mux in SSP0 connected to AB8500, pull down RXD pin */
+-	DB8500_MUX_HOG("ssp0_a_1", "ssp0"),
+-	DB8500_PIN_HOG("GPIO145_C13", pd),
+ 	/* User LED */
+ 	DB8500_PIN_HOG("GPIO142_C11", gpio_out_hi),
  	/*  Accelerometer/Magnetometer */
- 	DB8500_PIN_HOG("GPIO163_C20", gpio_in_pu), /* ACCEL_IRQ1 */
- 	DB8500_PIN_HOG("GPIO164_B21", gpio_in_pu), /* ACCEL_IRQ2 */
 -- 
 1.8.3.1
 
