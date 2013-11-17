@@ -1,100 +1,63 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
-Date: Sun, 17 Nov 2013 18:03:37 +0900
-Message-ID: <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA@mail.gmail.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
- <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com>
- <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
- <52842553.2080807@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52842553.2080807-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 00/21] ARM: ux500: pin control device tree migration
+Date: Sun, 17 Nov 2013 12:03:49 +0100
+Message-ID: <1384686250-10542-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 10:20 AM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On 11/14/2013 02:57 AM, Olof Johansson wrote:
->>
->> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>
->>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
->>>>
->>>>
->>>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>> wrote:
->>>>>
->>>>>
->>>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
->>>>>>
->>>>>>
->>>>>> Just a set of small fixes to address the concerns expressed on v9 with
->>>>>> the
->>>>>> non-prefixed version DT properties. I hope there won't be a need for
->>>>>> an
->>>>>> eleventh (!) version. :P
->>>>>
->>>>>
->>>>>
->>>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
->>>>> him. I'm just waiting to hear back from Olof/Russell whether I should
->>>>> merge this through the Tegra tree, or whether the first 1-3 patches
->>>>> should go through Russell's tree.
->>>>
->>>>
->>>>
->>>> I pinged Russell, and he brought up the fact that there were earlier
->>>> requests to move it to drivers/firmware. It would make sense to try to
->>>> get that done before merging, especially if you anticipate someone
->>>> using TF on 64-bit platforms.
->>>
->>>
->>>
->>> IIRC when we discussed this point your last comment was as follows:
->>
->>
->> Touche. :) Thanks for the reminder.
->>
->>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>>>
->>>> I think we can probably merge this under arch/arm now, and when we
->>>> figure out what needs to be common with ARM64 we can move it out to a
->>>> good location. It might be that mostly just a header file with ABI
->>>> conventions needs to be shared, not actual implementation, for
->>>> example.
->>>
->>>
->>> So I thought we agreed on that. If in the end we prefer to move the ARM
->>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
->>> also confirmed he would be ok with it) but I wonder if that would not be
->>> somehow premature.
->>>
->>> Another worry of mine is that this might delay this patchset some more.
->>> Support for TF is one of the last remaining step towards making NVIDIA
->>> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
->>> upstream directly. I missed 3.13, I'd like to make sure I won't miss
->>> 3.14.
->>> Would it be acceptable if we move the ARM firmware interface to a common
->>> place after this patchset is merged?
->>
->>
->> Well, as I already said I'm ok with things going into arch/arm to
->> start with, as long as Russell is. Once we see 64-bit needs for the
->> same we'll move it out -- it's not like it's a whole lot of code to
->> start with. But Russell has veto on the topic. :-)
->
->
-> Thanks Olof. Russell, are you ok with the patchset in its current form? I
-> can start moving the firmware interface out of arch/arm if that's what you
-> want (there is no user outside of ARM at the moment, but as Olof pointed out
-> that's not too much code) but I'd really like to see this series secured for
-> 3.14.
+This patch series migrated all the pin control information
+for the Nomadik pin controller as used on the various Ux500
+boards from the board file and into the device tree.
 
-Never mind, I have submitted a patch that moves firmware_ops to
-drivers/firmware, that will hopefully settle this issue. Then maybe we
-can finally flush this series as well (I will need to resubmit a new
-version though).
+After this only the ABx500 pin configuration remains in the
+board file. (Will be addressed separately.)
 
-Alex.
+This uses the existing device tree bindings. No new bindings
+are added.
+
+Linus Walleij (21):
+  ARM: ux500: move UART pin control to the device tree
+  ARM: ux500: move I2C pin control to the device tree
+  ARM: ux500: move MMC/SD/SDIO pin control to the device tree
+  ARM: ux500: move MSP pin control to the device tree
+  ARM: ux500: move GPIO217/218 config to device tree
+  ARM: ux500: move MUSB pin config to device tree
+  ARM: ux500: move SPI pin config to device tree
+  ARM: ux500: create MCDE node to collect resources
+  ARM: ux500: move MCDE pin config to device tree
+  ARM: ux500: move SKE pin config to device tree
+  ARM: ux500: drop STM pinmap settings
+  ARM: ux500: move old HREF ipgpio to the device tree
+  ARM: ux500: move GPIO key configuration to device tree
+  ARM: ux500: move the WLAN GPIO pin setup to the device tree
+  ARM: ux500: move the HREFv60plus IPGPIO pins to device tree
+  ARM: ux500: move final HREFv60 LCD pins to device tree
+  ARM: ux500: move HREFv60plus pin configs to device tree
+  ARM: ux500: move snowball ethernet config to device tree
+  ARM: ux500: convert Snowball SPI pin reference
+  ARM: ux500: move snowball LED pin control to device tree
+  ARM: ux500: move snowball pin configs to device tree
+
+ arch/arm/boot/dts/ste-dbx5x0.dtsi              |  17 +
+ arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 745 +++++++++++++++++++++++
+ arch/arm/boot/dts/ste-href-stuib.dtsi          |  41 ++
+ arch/arm/boot/dts/ste-href-tvk1281618.dtsi     |  51 ++
+ arch/arm/boot/dts/ste-href.dtsi                |  78 ++-
+ arch/arm/boot/dts/ste-hrefprev60.dtsi          |  65 ++
+ arch/arm/boot/dts/ste-hrefv60plus.dtsi         | 217 ++++++-
+ arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi     |  80 +++
+ arch/arm/boot/dts/ste-snowball.dts             | 225 +++++++
+ arch/arm/mach-ux500/board-mop500-pins.c        | 781 -------------------------
+ 10 files changed, 1503 insertions(+), 797 deletions(-)
+ create mode 100644 arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
