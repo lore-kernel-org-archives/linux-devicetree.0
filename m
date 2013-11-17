@@ -1,110 +1,100 @@
-From: Jonas Bonn <jonas@southpole.se>
-Subject: Re: [ORLinux] [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
-Date: Sun, 17 Nov 2013 09:44:38 +0100
-Message-ID: <528881F6.3090902@southpole.se>
-References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>	<5285EE5A.1070202@southpole.se>	<20131116084505.GA26233@chokladfabriken.org> <CAKaYPCNOLbX09Pqx7Zn=ivO++iBZMbBpu-pMjNgayVDBrBX1yQ@mail.gmail.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
+Date: Sun, 17 Nov 2013 18:03:37 +0900
+Message-ID: <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA@mail.gmail.com>
+References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
+ <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com>
+ <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
+ <52842553.2080807@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKaYPCNOLbX09Pqx7Zn=ivO++iBZMbBpu-pMjNgayVDBrBX1yQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Kindgren <olof.kindgren@gmail.com>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Mehall <contact@kevinmehall.net>, linux <linux@lists.openrisc.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52842553.2080807-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
-
-I think this discussion is veering away from what's relevant for the 
-linux-kernel and devicetree lists and did consider dropping them at this 
-point... but let's leave them in the discussion a bit longer in case 
-there's some sage guidance to be found there on the topic of doing sane 
-versioning of open source hardware.
-
-On 11/16/13 12:01, Olof Kindgren wrote:
-> 2013/11/16 Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
->> On Fri, Nov 15, 2013 at 10:50:18AM +0100, Jonas Bonn wrote:
->>>> +
->>>> +    i2c0: ocores@a0000000 {
->>>> +            #address-cells = <1>;
->>>> +            #size-cells = <0>;
->>>> +            compatible = "opencores,i2c-ocores";
->>> Version number needed.  OpenCores wanted "projectname-rtlsvn###"
->>> where ### is the SVN commit number of the RTL directory in the
->>> project's source repository.
+On Thu, Nov 14, 2013 at 10:20 AM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 11/14/2013 02:57 AM, Olof Johansson wrote:
+>>
+>> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 >>>
->> That will also require a change to the driver.
-The drivers in question aren't upstream so it's not a big deal. Making a 
-change to get sane revisioning would be worth it anyway.
-
+>>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
+>>>>
+>>>>
+>>>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>>
+>>>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
+>>>>>>
+>>>>>>
+>>>>>> Just a set of small fixes to address the concerns expressed on v9 with
+>>>>>> the
+>>>>>> non-prefixed version DT properties. I hope there won't be a need for
+>>>>>> an
+>>>>>> eleventh (!) version. :P
+>>>>>
+>>>>>
+>>>>>
+>>>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
+>>>>> him. I'm just waiting to hear back from Olof/Russell whether I should
+>>>>> merge this through the Tegra tree, or whether the first 1-3 patches
+>>>>> should go through Russell's tree.
+>>>>
+>>>>
+>>>>
+>>>> I pinged Russell, and he brought up the fact that there were earlier
+>>>> requests to move it to drivers/firmware. It would make sense to try to
+>>>> get that done before merging, especially if you anticipate someone
+>>>> using TF on 64-bit platforms.
+>>>
+>>>
+>>>
+>>> IIRC when we discussed this point your last comment was as follows:
 >>
->> Using svn commit ids as version info seems a bit too fine grained to me,
->> but if that's what's agreed on, then it should be the commit id from the
->> projects official repository at opencores.org I think.
-The DTS version tells the driver what feature set it can expect to find 
-in the HW core and thus how to go about driving it.  Normally, the core 
-won't change features much, but if you add something new you'd want the 
-driver to see a new 'compatible' tag so that it knows which features it 
-can/should enable.  New features will always entail driver changes; and 
-a driver can always be compatible with both the old and new HW versions 
-by just enabling the feature set appropriate to the HW in question.
-
 >>
->> Stefan
->> _______________________________________________
->> Linux mailing list
->> Linux@lists.openrisc.net
->> http://lists.openrisc.net/listinfo/linux
+>> Touche. :) Thanks for the reminder.
+>>
+>>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>>
+>>>> I think we can probably merge this under arch/arm now, and when we
+>>>> figure out what needs to be common with ARM64 we can move it out to a
+>>>> good location. It might be that mostly just a header file with ABI
+>>>> conventions needs to be shared, not actual implementation, for
+>>>> example.
+>>>
+>>>
+>>> So I thought we agreed on that. If in the end we prefer to move the ARM
+>>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
+>>> also confirmed he would be ok with it) but I wonder if that would not be
+>>> somehow premature.
+>>>
+>>> Another worry of mine is that this might delay this patchset some more.
+>>> Support for TF is one of the last remaining step towards making NVIDIA
+>>> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
+>>> upstream directly. I missed 3.13, I'd like to make sure I won't miss
+>>> 3.14.
+>>> Would it be acceptable if we move the ARM firmware interface to a common
+>>> place after this patchset is merged?
+>>
+>>
+>> Well, as I already said I'm ok with things going into arch/arm to
+>> start with, as long as Russell is. Once we see 64-bit needs for the
+>> same we'll move it out -- it's not like it's a whole lot of code to
+>> start with. But Russell has veto on the topic. :-)
 >
-> I agree. I don't like doing versioning with revision numbers. It's too
-> closely tied to the currently used VCS. The problem is that no one has
-> bothered to do proper releases of the cores for the last ten years or
-> so.
 >
-> But since we are talking about a relatively small amount of cores
-> here, I think it could be worth to take a quick glance to see if the
-> latest SVN version is compatible with the latest tagged release. I
-> would suspect that is the case for the majority of the cores and the
-> we can just use the latest tag as version. For the other cores we
-> could
-> 1. Use latest tag + 1 (a bit ugly if the maintainer wants to do a proper release
-> 2. Take over maintainership/fork and just release what's in the trunk
-> (taking over maintenance is preferrable here to avoid  more repo
-> confusion)
-> 3. Use SVN revisions
->
-> option 2 would be my preferred choice here, given that we get someone
-> to do the actual work. I could probably help out with a few of the
-> cores
+> Thanks Olof. Russell, are you ok with the patchset in its current form? I
+> can start moving the firmware interface out of arch/arm if that's what you
+> want (there is no user outside of ARM at the moment, but as Olof pointed out
+> that's not too much code) but I'd really like to see this series secured for
+> 3.14.
 
-My suggestion:
-i)  Move the primary source of these cores to git (doesn't matter 
-where... github is fine)
-ii)  Use a shortened git commit ID (6 chars) as the version number
+Never mind, I have submitted a patch that moves firmware_ops to
+drivers/firmware, that will hopefully settle this issue. Then maybe we
+can finally flush this series as well (I will need to resubmit a new
+version though).
 
-Why?
-
-i)  The commit ID is independent of the repository; whether the repo is 
-opencores, github, or olof's computer, the commit ID is constant
-ii)  Tag names are arbitrary labels; they don't contain any more 
-information than the commit ID
-iii)  The commit ID,  being a hash of the source and repository history 
-itself, contains information that makes it effectively impossible for 
-someone to attach the same label to an incompatible core
-iv)  I think everyone actively working on these cores today are doing so 
-via git already... via orpsocv2/3, presumably
-
-NB: you might do named releases of a core, from versions 1.2 to 2.5, but 
-if the underlying feature set remains the same and the same driver 
-applies then the DTS 'compatible' tag would remain constant across all 
-these releases.  This means that the HW feature set is decoupled from 
-the arbitrary version numbers that people like to use when doing releases.
-
-> Jonas, you said that opencores wanted projectname-svnversion. Do you
-> know where that comes from? My proposal here would conflict with that
-It came out of a private conversion I had with Marcus Erlandsson (who 
-spoke for OpenCores at the time).  The OpenRISC project hadn't really 
-moved on to git back then (as it has today) so it was the best we could 
-come up with.
-
-/Jonas
+Alex.
