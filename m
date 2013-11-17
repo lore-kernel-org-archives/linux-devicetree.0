@@ -1,54 +1,120 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Mon, 13 Jan 2014 16:30:51 +0800
-Message-ID: <52D3A43B.4030909@linaro.org>
-References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org> <1389278112-7099-3-git-send-email-zhangfei.gao@linaro.org> <003601cf0e09$5fb07c90$1f1175b0$%jun@samsung.com> <52CFFFDA.8050108@linaro.org> <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com> <52D3515B.7040008@linaro.org> <001c01cf1020$e3e1aed0$aba50c70$%jun@samsung.com>
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
+Date: Sun, 17 Nov 2013 15:46:20 +0200
+Message-ID: <CADzBsGPPQhPEtxN1B9q9PP6eXpd3XB2nS9Oro7Bv+V8OiBL6BQ@mail.gmail.com>
+References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+	<5285EE5A.1070202@southpole.se>
+	<20131116084505.GA26233@chokladfabriken.org>
+	<CAKaYPCNOLbX09Pqx7Zn=ivO++iBZMbBpu-pMjNgayVDBrBX1yQ@mail.gmail.com>
+	<528881F6.3090902@southpole.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <001c01cf1020$e3e1aed0$aba50c70$%jun@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>
+Content-Type: multipart/mixed; boundary="===============7685081224710807049=="
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <528881F6.3090902@southpole.se>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Jonas Bonn <jonas@southpole.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Mehall <contact@kevinmehall.net>, linux <linux@lists.openrisc.net>
 List-Id: devicetree@vger.kernel.org
 
-Dear Seungwon
+--===============7685081224710807049==
+Content-Type: multipart/alternative; boundary=047d7b10cb750b16b804eb5fa864
 
-On 01/13/2014 01:32 PM, Seungwon Jeon wrote:
->>>>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>>>>> +{
->>>>>> +	struct dw_mci_k3_priv_data *priv = host->priv;
->>>>>> +	u32 rate = priv->clk_table[ios->timing];
+--047d7b10cb750b16b804eb5fa864
+Content-Type: text/plain; charset=ISO-8859-1
+
+On Sun, Nov 17, 2013 at 10:44 AM, Jonas Bonn <jonas@southpole.se> wrote:
+
+> 2013/11/16 Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+>>
+>>> On Fri, Nov 15, 2013 at 10:50:18AM +0100, Jonas Bonn wrote:
+>>>
+>>>> +
+>>>>> +    i2c0: ocores@a0000000 {
+>>>>> +            #address-cells = <1>;
+>>>>> +            #size-cells = <0>;
+>>>>> +            compatible = "opencores,i2c-ocores";
 >>>>>
+>>>> Version number needed.  OpenCores wanted "projectname-rtlsvn###"
+>>>> where ### is the SVN commit number of the RTL directory in the
+>>>> project's source repository.
+>>>>
+>>>>  That will also require a change to the driver.
+>>>
+>> The drivers in question aren't upstream so it's not a big deal. Making a
+> change to get sane revisioning would be worth it anyway.
+>
+>
+Actually, the i2c driver *is* upstream.
+The remark was mostly meant as a reminder of that.
 
->>
->> The function mmc_clk_determine_rate() will need the info which
->> controller it is, what's the init clock rate, what's the max clock rate,
->> and what's the limitation, which may be different as different soc, and
->> can not be hardcoded.
->> The limitation may in HS200 and SDR104 mode.
->>
->> The plan is only input init rate and max rate instead of the table,
->> while others directly use ios->clock, only if the the limitation resolved.
-> 
-> Handling mmc clock for hi3620 is in drivers/clk/hisilicon/clk-hi3620.c, right?
-> Currently only hi3620 has been introduced.
-> If hi3620's host has a limitation, clk-hi3620.c can handle clock range(init, max) for source clock enough.
-> I feel like clock table is redundant.
-> Ok. It's just my suggestion.  But I still point dependency of mode index number.
-> K3's clock table refers and depends mode definition value from include/linux/mmc/host.h
-> If new mode is added or modified, it should be considered and also may make complicated.
-> 
+Stefan
 
-Looks like you dislike the clk_table very much :)
+--047d7b10cb750b16b804eb5fa864
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Double checked with the silicon guy, currently it is said the limitation
-in HS200 and SDR104 can be replaced by the max_rate, so clk_table can be
-replaced with ios->clock directly, though they have concern it is not so
-convinent when removing clk_table in case limitation rate is not equal
-to max_rate again in future.
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On S=
+un, Nov 17, 2013 at 10:44 AM, Jonas Bonn <span dir=3D"ltr">&lt;<a href=3D"m=
+ailto:jonas@southpole.se" target=3D"_blank">jonas@southpole.se</a>&gt; wrot=
+e:</span><br>
 
-Will update accordingly, thanks for the suggestion.
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;padding=
+-left:1ex;border-left-color:rgb(204,204,204);border-left-width:1px;border-l=
+eft-style:solid"><div class=3D"im"><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;padding-left:1ex;border-left-color:rgb(204,204=
+,204);border-left-width:1px;border-left-style:solid">
 
-Thanks
+2013/11/16 Stefan Kristiansson &lt;<a href=3D"mailto:stefan.kristiansson@sa=
+unalahti.fi" target=3D"_blank">stefan.kristiansson@<u></u>saunalahti.fi</a>=
+&gt;<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;padding=
+-left:1ex;border-left-color:rgb(204,204,204);border-left-width:1px;border-l=
+eft-style:solid">
+On Fri, Nov 15, 2013 at 10:50:18AM +0100, Jonas Bonn wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;padding=
+-left:1ex;border-left-color:rgb(204,204,204);border-left-width:1px;border-l=
+eft-style:solid"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
+0px 0.8ex;padding-left:1ex;border-left-color:rgb(204,204,204);border-left-w=
+idth:1px;border-left-style:solid">
+
++<br>
++ =A0 =A0i2c0: ocores@a0000000 {<br>
++ =A0 =A0 =A0 =A0 =A0 =A0#address-cells =3D &lt;1&gt;;<br>
++ =A0 =A0 =A0 =A0 =A0 =A0#size-cells =3D &lt;0&gt;;<br>
++ =A0 =A0 =A0 =A0 =A0 =A0compatible =3D &quot;opencores,i2c-ocores&quot;;<b=
+r>
+</blockquote>
+Version number needed. =A0OpenCores wanted &quot;projectname-rtlsvn###&quot=
+;<br>
+where ### is the SVN commit number of the RTL directory in the<br>
+project&#39;s source repository.<br>
+<br>
+</blockquote>
+That will also require a change to the driver.<br>
+</blockquote></blockquote></div>
+The drivers in question aren&#39;t upstream so it&#39;s not a big deal. Mak=
+ing a change to get sane revisioning would be worth it anyway.<div class=3D=
+"im"><br>
+
+</div></blockquote><div>=A0</div><div>Actually, the i2c driver *is* upstrea=
+m.</div><div>The remark was mostly meant as a reminder of that.</div><div>=
+=A0</div><div>Stefan</div></div></div></div>
+
+--047d7b10cb750b16b804eb5fa864--
+
+--===============7685081224710807049==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7685081224710807049==--
