@@ -1,215 +1,234 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/21] ARM: ux500: move MSP pin control to the device tree
-Date: Sun, 17 Nov 2013 12:03:53 +0100
-Message-ID: <1384686250-10542-5-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH 07/21] ARM: ux500: move SPI pin config to device tree
+Date: Sun, 17 Nov 2013 12:03:56 +0100
+Message-ID: <1384686250-10542-8-git-send-email-linus.walleij@linaro.org>
 References: <1384686250-10542-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384686250-10542-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This moves the static, device-tied pin control configuration
-out of the board file board-mop500-pins.c and into the device
-tree. Add nodes for MSP0 and MSP2 on the HREF and Snowball
-so we can reference the pins properly.
+This moves the SPI pin control table out of the board file
+and into the device tree. Move the specific setting for
+SSP0 on the HREFprev60 into the prev60-specific DTS file.
+The SPI2 configuration is not really connected to any device,
+as it will conflict with GPIO218 which is used on all HREFs.
 
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 63 ++++++++++++++++++++++++++
- arch/arm/boot/dts/ste-href.dtsi                | 14 ++++++
- arch/arm/boot/dts/ste-snowball.dts             | 14 ++++++
- arch/arm/mach-ux500/board-mop500-pins.c        | 30 ------------
- 4 files changed, 91 insertions(+), 30 deletions(-)
+ arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 61 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/ste-hrefprev60.dtsi          | 22 ++++++++++
+ arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi     | 31 +++++++++++++
+ arch/arm/mach-ux500/board-mop500-pins.c        | 19 --------
+ 4 files changed, 114 insertions(+), 19 deletions(-)
 
 diff --git a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-index 23583b0546d9..7408d3a898a5 100644
+index 6868fec95d64..ec990d8e1029 100644
 --- a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-@@ -425,6 +425,69 @@
- 					};
+@@ -215,6 +215,67 @@
  				};
  			};
-+
-+			/*
-+			 * Multi-rate serial ports (MSPs) - MSP3 output is internal and
-+			 * cannot be muxed onto any pins.
-+			 */
-+			msp0 {
-+				msp0_default_mode: msp0_default {
-+					default_msp0_mux {
-+						ste,function = "msp0";
-+						ste,pins = "msp0txrx_a_1", "msp0tfstck_a_1";
-+					};
-+					default_msp0_cfg {
-+						ste,pins =
-+						"GPIO12_AC4", /* TXD */
-+						"GPIO15_AC3", /* RXD */
-+						"GPIO13_AF3", /* TFS */
-+						"GPIO14_AE3"; /* TCK */
-+						ste,config = <&in_nopull>;
-+					};
-+				};
-+			};
-+
-+			msp1 {
-+				msp1_default_mode: msp1_default {
+ 
++			/* Settings for all SPI default and sleep states */
++			spi2 {
++				spi2_default_mode: spi_default {
 +					default_mux {
-+						ste,function = "msp1";
-+						ste,pins = "msp1txrx_a_1", "msp1_a_1";
++						ste,function = "spi2";
++						ste,pins = "spi2_oc1_2";
 +					};
 +					default_cfg1 {
-+						ste,pins = "GPIO33_AF2";
-+						ste,config = <&out_lo>;
++						ste,pins = "GPIO216_AG12"; /* FRM */
++						ste,config = <&gpio_out_hi>;
 +					};
 +					default_cfg2 {
-+						ste,pins =
-+						"GPIO34_AE1",
-+						"GPIO35_AE2",
-+						"GPIO36_AG2";
-+						ste,config = <&in_nopull>;
-+					};
-+
-+				};
-+			};
-+
-+			msp2 {
-+				msp2_default_mode: msp2_default {
-+					/* MSP2 usually used for HDMI audio */
-+					default_mux {
-+						ste,function = "msp2";
-+						ste,pins = "msp2_a_1";
-+					};
-+					default_cfg1 {
-+						ste,pins =
-+						"GPIO193_AH27", /* TXD */
-+						"GPIO194_AF27", /* TCK */
-+						"GPIO195_AG28"; /* TFS */
++						ste,pins = "GPIO218_AH11"; /* RXD */
 +						ste,config = <&in_pd>;
 +					};
-+					default_cfg2 {
-+						ste,pins = "GPIO196_AG26"; /* RXD */
++					default_cfg3 {
++						ste,pins =
++						"GPIO215_AH13", /* TXD */
++						"GPIO217_AH12"; /* CLK */
 +						ste,config = <&out_lo>;
 +					};
 +				};
++
++				spi2_idle_mode: spi_idle {
++					/*
++					 * The idle mode is basically sleep mode sans wakeups. Also
++					 * note that we have muxes the pins off the function here
++					 * as we do not state any muxing.
++					 */
++					idle_cfg1 {
++						ste,pins = "GPIO218_AH11"; /* RXD */
++						ste,config = <&slpm_in_pdis>;
++					};
++					idle_cfg2 {
++						ste,pins = "GPIO215_AH13"; /* TXD */
++						ste,config = <&slpm_out_lo_pdis>;
++					};
++					idle_cfg3 {
++						ste,pins = "GPIO217_AH12"; /* CLK */
++						ste,config = <&slpm_pdis>;
++					};
++				};
++
++				spi2_sleep_mode: spi_sleep {
++					sleep_cfg1 {
++						ste,pins =
++						"GPIO216_AG12", /* FRM */
++						"GPIO218_AH11"; /* RXD */
++						ste,config = <&slpm_in_wkup_pdis>;
++					};
++					sleep_cfg2 {
++						ste,pins = "GPIO215_AH13"; /* TXD */
++						ste,config = <&slpm_out_lo_wkup_pdis>;
++					};
++					sleep_cfg3 {
++						ste,pins = "GPIO217_AH12"; /* CLK */
++						ste,config = <&slpm_wkup_pdis>;
++					};
++				};
 +			};
++
+ 			/* Settings for all MMC/SD/SDIO default and sleep states */
+ 			sdi0 {
+ 				/* This is the external SD card slot, 4 bits wide */
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index 6fc94ea65ab9..32295e396ff8 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -51,6 +51,15 @@
+ 			};
  		};
+ 
++		ssp@80002000 {
++			/*
++			 * On the first generation boards, this SSP/SPI port was connected
++			 * to the AB8500.
++			 */
++			pinctrl-names = "default";
++			pinctrl-0 = <&ssp0_hrefprev60_mode>;
++		};
++
+ 		vmmci: regulator-gpio {
+ 			gpios = <&tc3589x_gpio 18 0x4>;
+ 			enable-gpio = <&tc3589x_gpio 17 0x4>;
+@@ -59,6 +68,19 @@
+ 		};
+ 
+ 		pinctrl {
++			ssp0 {
++				ssp0_hrefprev60_mode: ssp0_hrefprev60_default {
++					hrefprev60_mux {
++						ste,function = "ssp0";
++						ste,pins = "ssp0_a_1";
++					};
++					hrefprev60_cfg1 {
++						ste,pins = "GPIO145_C13"; /* RXD */
++						ste,config = <&in_pd>;
++					};
++
++				};
++			};
+ 			sdi0 {
+ 				/* This additional pin needed on early MOP500 and HREFs previous to v60 */
+ 				sdi0_default_mode: sdi0_default {
+diff --git a/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi b/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
+index 9f3e87573f86..456a25fbfaee 100644
+--- a/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
++++ b/arch/arm/boot/dts/ste-nomadik-pinctrl.dtsi
+@@ -41,6 +41,23 @@
+ 		ste,output = <OUTPUT_LOW>;
  	};
- };
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 845eb25f5d26..85260846deae 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -180,7 +180,21 @@
- 			stericsson,audio-codec = <&codec>;
- 		};
  
-+		msp0: msp@80123000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp0_default_mode>;
-+			status = "okay";
-+		};
++	gpio_out_hi: gpio_output_high {
++		ste,gpio = <GPIOMODE_ENABLED>;
++		ste,output = <OUTPUT_HIGH>;
++	};
 +
- 		msp1: msp@80124000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp1_default_mode>;
-+			status = "okay";
-+		};
++	slpm_pdis: slpm_pdis {
++		ste,sleep = <SLPM_ENABLED>;
++		ste,sleep-wakeup = <SLPM_WAKEUP_DISABLE>;
++		ste,sleep-pull-disable = <SLPM_PDIS_DISABLED>;
++	};
 +
-+		msp2: msp@80117000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp2_default_mode>;
- 			status = "okay";
- 		};
++	slpm_wkup_pdis: slpm_wkup_pdis {
++		ste,sleep = <SLPM_ENABLED>;
++		ste,sleep-wakeup = <SLPM_WAKEUP_ENABLE>;
++		ste,sleep-pull-disable = <SLPM_PDIS_DISABLED>;
++	};
++
+ 	slpm_wkup_pdis_en: slpm_wkup_pdis_en {
+ 		ste,sleep = <SLPM_ENABLED>;
+ 		ste,sleep-wakeup = <SLPM_WAKEUP_ENABLE>;
+@@ -53,6 +70,13 @@
+ 		ste,sleep-wakeup = <SLPM_WAKEUP_ENABLE>;
+ 	};
  
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index c2cb3ea637dc..65180b2bc409 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -93,7 +93,21 @@
- 			stericsson,audio-codec = <&codec>;
- 		};
- 
-+		msp0: msp@80123000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp0_default_mode>;
-+			status = "okay";
-+		};
++	slpm_in_pdis: slpm_in_pdis {
++		ste,sleep = <SLPM_ENABLED>;
++		ste,sleep-input = <SLPM_DIR_INPUT>;
++		ste,sleep-wakeup = <SLPM_WAKEUP_DISABLE>;
++		ste,sleep-pull-disable = <SLPM_PDIS_DISABLED>;
++	};
 +
- 		msp1: msp@80124000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp1_default_mode>;
-+			status = "okay";
-+		};
-+
-+		msp2: msp@80117000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&msp2_default_mode>;
- 			status = "okay";
- 		};
+ 	slpm_in_wkup_pdis: slpm_in_wkup_pdis {
+ 		ste,sleep = <SLPM_ENABLED>;
+ 		ste,sleep-input = <SLPM_DIR_INPUT>;
+@@ -86,6 +110,13 @@
+ 		ste,sleep-pull-disable = <SLPM_PDIS_DISABLED>;
+ 	};
  
++	slpm_out_lo_pdis: slpm_out_lo_pdis {
++		ste,sleep = <SLPM_ENABLED>;
++		ste,sleep-output = <SLPM_OUTPUT_LOW>;
++		ste,sleep-wakeup = <SLPM_WAKEUP_DISABLE>;
++		ste,sleep-pull-disable = <SLPM_PDIS_DISABLED>;
++	};
++
+ 	slpm_out_lo_wkup_pdis: slpm_out_lo_wkup_pdis {
+ 		ste,sleep = <SLPM_ENABLED>;
+ 		ste,sleep-output = <SLPM_OUTPUT_LOW>;
 diff --git a/arch/arm/mach-ux500/board-mop500-pins.c b/arch/arm/mach-ux500/board-mop500-pins.c
-index 0f9a0776cf90..f7034cbdc630 100644
+index a6d431bd0659..8fba58c98da2 100644
 --- a/arch/arm/mach-ux500/board-mop500-pins.c
 +++ b/arch/arm/mach-ux500/board-mop500-pins.c
-@@ -28,12 +28,10 @@ static enum custom_pin_cfg_t pinsfor;
+@@ -342,22 +342,6 @@ static struct pinctrl_map __initdata mop500_family_pinmap[] = {
+ 	/* LCD VSI1 sleep state */
+ 	DB8500_PIN_SLEEP("GPIO69_E2", slpm_in_wkup_pdis, "0-0070"),
  
- BIAS(pd, PIN_PULL_DOWN);
- BIAS(in_nopull, PIN_INPUT_NOPULL);
--BIAS(in_nopull_slpm_nowkup, PIN_INPUT_NOPULL|PIN_SLPM_WAKEUP_DISABLE);
- BIAS(in_pu, PIN_INPUT_PULLUP);
- BIAS(in_pd, PIN_INPUT_PULLDOWN);
- BIAS(out_hi, PIN_OUTPUT_HIGH);
- BIAS(out_lo, PIN_OUTPUT_LOW);
--BIAS(out_lo_slpm_nowkup, PIN_OUTPUT_LOW|PIN_SLPM_WAKEUP_DISABLE);
- 
- BIAS(abx500_out_lo, PIN_CONF_PACKED(PIN_CONFIG_OUTPUT, 0));
- BIAS(abx500_in_pd, PIN_CONF_PACKED(PIN_CONFIG_BIAS_PULL_DOWN, 1));
-@@ -335,22 +333,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
- /* Pin control settings */
- static struct pinctrl_map __initdata mop500_family_pinmap[] = {
+-	/* Mux in SPI2 pins on the "other C1" altfunction */
+-	DB8500_MUX("spi2_oc1_2", "spi2", "spi2"),
+-	DB8500_PIN("GPIO216_AG12", gpio_out_hi, "spi2"), /* FRM */
+-	DB8500_PIN("GPIO218_AH11", in_pd, "spi2"), /* RXD */
+-	DB8500_PIN("GPIO215_AH13", out_lo, "spi2"), /* TXD */
+-	DB8500_PIN("GPIO217_AH12", out_lo, "spi2"), /* CLK */
+-	/* SPI2 idle state */
+-	DB8500_PIN_IDLE("GPIO218_AH11", slpm_in_wkup_pdis, "spi2"), /* RXD */
+-	DB8500_PIN_IDLE("GPIO215_AH13", slpm_out_lo_wkup_pdis, "spi2"), /* TXD */
+-	DB8500_PIN_IDLE("GPIO217_AH12", slpm_wkup_pdis, "spi2"), /* CLK */
+-	/* SPI2 sleep state */
+-	DB8500_PIN_SLEEP("GPIO216_AG12", slpm_in_wkup_pdis, "spi2"), /* FRM */
+-	DB8500_PIN_SLEEP("GPIO218_AH11", slpm_in_wkup_pdis, "spi2"), /* RXD */
+-	DB8500_PIN_SLEEP("GPIO215_AH13", slpm_out_lo_wkup_pdis, "spi2"), /* TXD */
+-	DB8500_PIN_SLEEP("GPIO217_AH12", slpm_wkup_pdis, "spi2"), /* CLK */
+-
+ 	/* ske default state */
+ 	DB8500_MUX("kp_a_2", "kp", "nmk-ske-keypad"),
+ 	DB8500_PIN("GPIO153_B17", in_pd, "nmk-ske-keypad"), /* I7 */
+@@ -582,9 +566,6 @@ static struct pinctrl_map __initdata mop500_family_pinmap[] = {
+  * on-chip pins as the HREFv60 and later does.
+  */
+ static struct pinctrl_map __initdata mop500_pinmap[] = {
+-	/* Mux in SSP0, pull down RXD pin */
+-	DB8500_MUX_HOG("ssp0_a_1", "ssp0"),
+-	DB8500_PIN_HOG("GPIO145_C13", pd),
  	/*
--	 * uMSP0, mux in 4 pins, regular placement of RX/TX
--	 * explicitly set the pins to no pull
--	 */
--	DB8500_MUX_HOG("msp0txrx_a_1", "msp0"),
--	DB8500_MUX_HOG("msp0tfstck_a_1", "msp0"),
--	DB8500_PIN_HOG("GPIO12_AC4", in_nopull), /* TXD */
--	DB8500_PIN_HOG("GPIO15_AC3", in_nopull), /* RXD */
--	DB8500_PIN_HOG("GPIO13_AF3", in_nopull), /* TFS */
--	DB8500_PIN_HOG("GPIO14_AE3", in_nopull), /* TCK */
--	/* MSP2 for HDMI, pull down TXD, TCK, TFS  */
--	DB8500_MUX_HOG("msp2_a_1", "msp2"),
--	DB8500_PIN_HOG("GPIO193_AH27", in_pd), /* TXD */
--	DB8500_PIN_HOG("GPIO194_AF27", in_pd), /* TCK */
--	DB8500_PIN_HOG("GPIO195_AG28", in_pd), /* TFS */
--	DB8500_PIN_HOG("GPIO196_AG26", out_lo), /* RXD */
--	/*
- 	 * LCD, set TE0 (using LCD VSI0) and D14 (touch screen interrupt) to
- 	 * pull-up
- 	 * TODO: is this really correct? Snowball doesn't have a LCD.
-@@ -363,18 +345,6 @@ static struct pinctrl_map __initdata mop500_family_pinmap[] = {
- 	 * TODO: set for snowball and HREF really??
- 	 */
- 	DB8500_PIN_HOG("GPIO218_AH11", gpio_in_pu),
--	/*
--	 * The following pin sets were known as "runtime pins" before being
--	 * converted to the pinctrl model. Here we model them as "default"
--	 * states.
--	 */
--	/* MSP1 for ALSA codec */
--	DB8500_MUX_HOG("msp1txrx_a_1", "msp1"),
--	DB8500_MUX_HOG("msp1_a_1", "msp1"),
--	DB8500_PIN_HOG("GPIO33_AF2", out_lo_slpm_nowkup),
--	DB8500_PIN_HOG("GPIO34_AE1", in_nopull_slpm_nowkup),
--	DB8500_PIN_HOG("GPIO35_AE2", in_nopull_slpm_nowkup),
--	DB8500_PIN_HOG("GPIO36_AG2", in_nopull_slpm_nowkup),
- 	/* Mux in LCD data lines 8 thru 11 and LCDA CLK for MCDE TVOUT */
- 	DB8500_MUX("lcd_d8_d11_a_1", "lcd", "mcde-tvout"),
- 	DB8500_MUX("lcdaclk_b_1", "lcda", "mcde-tvout"),
+ 	 * XENON Flashgun on image processor GPIO (controlled from image
+ 	 * processor firmware), mux in these image processor GPIO lines 0
 -- 
 1.8.3.1
 
