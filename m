@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 11/21] ARM: ux500: drop STM pinmap settings
-Date: Sun, 17 Nov 2013 12:04:00 +0100
-Message-ID: <1384686250-10542-12-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH 12/21] ARM: ux500: move old HREF ipgpio to the device tree
+Date: Sun, 17 Nov 2013 12:04:01 +0100
+Message-ID: <1384686250-10542-13-git-send-email-linus.walleij@linaro.org>
 References: <1384686250-10542-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1384686250-10542-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,263 +10,92 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jone
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pin mappings for the STM (System Trace Macrocell) are not
-really used by anything: we have no driver for is and the settings
-are not connected to any device. We can recreate the different
-mux outputs in the device tree the day we need them. Drop these
-for now.
+The old HREFs (MOP500) were controlling an image-processor
+GPIO (IPGPIO) by using hogs. Do the same thing with device tree
+and get rid of the mop500_pins setting.
 
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-ux500/board-mop500-pins.c | 200 --------------------------------
- 1 file changed, 200 deletions(-)
+ arch/arm/boot/dts/ste-hrefprev60.dtsi   | 16 ++++++++++++++++
+ arch/arm/mach-ux500/board-mop500-pins.c | 24 ------------------------
+ 2 files changed, 16 insertions(+), 24 deletions(-)
 
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index 32295e396ff8..b0f5def8e2a8 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -68,6 +68,10 @@
+ 		};
+ 
+ 		pinctrl {
++			/* Set this up using hogs */
++			pinctrl-names = "default";
++			pinctrl-0 = <&ipgpio_hrefprev60_mode>;
++
+ 			ssp0 {
+ 				ssp0_hrefprev60_mode: ssp0_hrefprev60_default {
+ 					hrefprev60_mux {
+@@ -103,6 +107,18 @@
+ 					};
+ 				};
+ 			};
++			ipgpio {
++				 ipgpio_hrefprev60_mode: ipgpio_hrefprev60 {
++					hrefprev60_mux {
++						ste,function = "ipgpio";
++						ste,pins = "ipgpio0_c_1", "ipgpio1_c_1";
++					};
++					hrefprev60_cfg1 {
++						ste,pins = "GPIO6_AF6", "GPIO7_AG5";
++						ste,config = <&in_pu>;
++					};
++				 };
++			};
+ 		};
+ 	};
+ };
 diff --git a/arch/arm/mach-ux500/board-mop500-pins.c b/arch/arm/mach-ux500/board-mop500-pins.c
-index 07ddb89a6dbe..c311d11d6c3d 100644
+index c311d11d6c3d..257c97a214a5 100644
 --- a/arch/arm/mach-ux500/board-mop500-pins.c
 +++ b/arch/arm/mach-ux500/board-mop500-pins.c
-@@ -27,7 +27,6 @@ static enum custom_pin_cfg_t pinsfor;
- #define BIAS(a,b) static unsigned long a[] = { b }
- 
- BIAS(pd, PIN_PULL_DOWN);
--BIAS(in_nopull, PIN_INPUT_NOPULL);
- BIAS(in_pu, PIN_INPUT_PULLUP);
- BIAS(in_pd, PIN_INPUT_PULLDOWN);
- BIAS(out_lo, PIN_OUTPUT_LOW);
-@@ -43,15 +42,6 @@ BIAS(gpio_in_pu_slpm_gpio_nopull, PIN_INPUT_PULLUP|PIN_GPIOMODE_ENABLED|PIN_SLPM
- BIAS(gpio_in_pd_slpm_gpio_nopull, PIN_INPUT_PULLDOWN|PIN_GPIOMODE_ENABLED|PIN_SLPM_GPIO|PIN_SLPM_INPUT_NOPULL);
- BIAS(gpio_out_hi, PIN_OUTPUT_HIGH|PIN_GPIOMODE_ENABLED);
- BIAS(gpio_out_lo, PIN_OUTPUT_LOW|PIN_GPIOMODE_ENABLED);
--/* Sleep modes */
--BIAS(slpm_in_wkup_pdis, PIN_SLEEPMODE_ENABLED|
--	PIN_SLPM_DIR_INPUT|PIN_SLPM_WAKEUP_ENABLE|PIN_SLPM_PDIS_DISABLED);
--BIAS(slpm_out_lo_pdis, PIN_SLEEPMODE_ENABLED|
--	PIN_SLPM_OUTPUT_LOW|PIN_SLPM_WAKEUP_DISABLE|PIN_SLPM_PDIS_DISABLED);
--BIAS(slpm_out_lo_wkup_pdis, PIN_SLEEPMODE_ENABLED|
--	PIN_SLPM_OUTPUT_LOW|PIN_SLPM_WAKEUP_ENABLE|PIN_SLPM_PDIS_DISABLED);
--BIAS(slpm_in_pu_wkup_pdis_en, PIN_SLEEPMODE_ENABLED|PIN_SLPM_INPUT_PULLUP|
--	PIN_SLPM_WAKEUP_ENABLE|PIN_SLPM_PDIS_ENABLED);
- 
- /* We use these to define hog settings that are always done on boot */
- #define DB8500_MUX_HOG(group,func) \
-@@ -321,190 +311,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
- 	AB8505_PIN_HOG("GPIO53_D15", in_pd),
+@@ -312,28 +312,6 @@ static struct pinctrl_map __initdata ab8505_pinmap[] = {
  };
  
--/* Pin control settings */
--static struct pinctrl_map __initdata mop500_family_pinmap[] = {
--	/* STM APE pins states */
--	DB8500_MUX_STATE("stmape_c_1", "stmape",
--		"stm", "ape_mipi34"),
--	DB8500_PIN_STATE("GPIO70_G5", in_nopull,
--		"stm", "ape_mipi34"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", in_nopull,
--		"stm", "ape_mipi34"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", in_nopull,
--		"stm", "ape_mipi34"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", in_nopull,
--		"stm", "ape_mipi34"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", in_nopull,
--		"stm", "ape_mipi34"), /* dat0 */
--
--	DB8500_PIN_STATE("GPIO70_G5", slpm_out_lo_pdis,
--		"stm", "ape_mipi34_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", slpm_out_lo_pdis,
--		"stm", "ape_mipi34_sleep"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", slpm_out_lo_pdis,
--		"stm", "ape_mipi34_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", slpm_out_lo_pdis,
--		"stm", "ape_mipi34_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", slpm_out_lo_pdis,
--		"stm", "ape_mipi34_sleep"), /* dat0 */
--
--	DB8500_MUX_STATE("stmape_oc1_1", "stmape",
--		"stm", "ape_microsd"),
--	DB8500_PIN_STATE("GPIO23_AA4", in_nopull,
--		"stm", "ape_microsd"), /* clk */
--	DB8500_PIN_STATE("GPIO25_Y4", in_nopull,
--		"stm", "ape_microsd"), /* dat0 */
--	DB8500_PIN_STATE("GPIO26_Y2", in_nopull,
--		"stm", "ape_microsd"), /* dat1 */
--	DB8500_PIN_STATE("GPIO27_AA2", in_nopull,
--		"stm", "ape_microsd"), /* dat2 */
--	DB8500_PIN_STATE("GPIO28_AA1", in_nopull,
--		"stm", "ape_microsd"), /* dat3 */
--
--	DB8500_PIN_STATE("GPIO23_AA4", slpm_out_lo_wkup_pdis,
--		"stm", "ape_microsd_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO25_Y4", slpm_in_wkup_pdis,
--		"stm", "ape_microsd_sleep"), /* dat0 */
--	DB8500_PIN_STATE("GPIO26_Y2", slpm_in_wkup_pdis,
--		"stm", "ape_microsd_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO27_AA2", slpm_in_wkup_pdis,
--		"stm", "ape_microsd_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO28_AA1", slpm_in_wkup_pdis,
--		"stm", "ape_microsd_sleep"), /* dat3 */
--
--	/*  STM Modem pins states */
--	DB8500_MUX_STATE("stmmod_oc3_2", "stmmod",
--		"stm", "mod_mipi34"),
--	DB8500_MUX_STATE("uartmodrx_oc3_1", "uartmod",
--		"stm", "mod_mipi34"),
--	DB8500_MUX_STATE("uartmodtx_oc3_1", "uartmod",
--		"stm", "mod_mipi34"),
--	DB8500_PIN_STATE("GPIO70_G5", in_nopull,
--		"stm", "mod_mipi34"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", in_nopull,
--		"stm", "mod_mipi34"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", in_nopull,
--		"stm", "mod_mipi34"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", in_nopull,
--		"stm", "mod_mipi34"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", in_nopull,
--		"stm", "mod_mipi34"), /* dat0 */
--	DB8500_PIN_STATE("GPIO75_H2", in_pu,
--		"stm", "mod_mipi34"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", out_lo,
--		"stm", "mod_mipi34"), /* uartmod tx */
--
--	DB8500_PIN_STATE("GPIO70_G5", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_sleep"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_sleep"), /* dat0 */
--	DB8500_PIN_STATE("GPIO75_H2", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_sleep"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", slpm_out_lo_wkup_pdis,
--		"stm", "mod_mipi34_sleep"), /* uartmod tx */
--
--	DB8500_MUX_STATE("stmmod_b_1", "stmmod",
--		"stm", "mod_microsd"),
--	DB8500_MUX_STATE("uartmodrx_oc3_1", "uartmod",
--		"stm", "mod_microsd"),
--	DB8500_MUX_STATE("uartmodtx_oc3_1", "uartmod",
--		"stm", "mod_microsd"),
--	DB8500_PIN_STATE("GPIO23_AA4", in_nopull,
--		"stm", "mod_microsd"), /* clk */
--	DB8500_PIN_STATE("GPIO25_Y4", in_nopull,
--		"stm", "mod_microsd"), /* dat0 */
--	DB8500_PIN_STATE("GPIO26_Y2", in_nopull,
--		"stm", "mod_microsd"), /* dat1 */
--	DB8500_PIN_STATE("GPIO27_AA2", in_nopull,
--		"stm", "mod_microsd"), /* dat2 */
--	DB8500_PIN_STATE("GPIO28_AA1", in_nopull,
--		"stm", "mod_microsd"), /* dat3 */
--	DB8500_PIN_STATE("GPIO75_H2", in_pu,
--		"stm", "mod_microsd"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", out_lo,
--		"stm", "mod_microsd"), /* uartmod tx */
--
--	DB8500_PIN_STATE("GPIO23_AA4", slpm_out_lo_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO25_Y4", slpm_in_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* dat0 */
--	DB8500_PIN_STATE("GPIO26_Y2", slpm_in_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO27_AA2", slpm_in_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO28_AA1", slpm_in_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* dat3 */
--	DB8500_PIN_STATE("GPIO75_H2", slpm_in_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", slpm_out_lo_wkup_pdis,
--		"stm", "mod_microsd_sleep"), /* uartmod tx */
--
--	/*  STM dual Modem/APE pins state */
--	DB8500_MUX_STATE("stmmod_oc3_2", "stmmod",
--		"stm", "mod_mipi34_ape_mipi60"),
--	DB8500_MUX_STATE("stmape_c_2", "stmape",
--		"stm", "mod_mipi34_ape_mipi60"),
--	DB8500_MUX_STATE("uartmodrx_oc3_1", "uartmod",
--		"stm", "mod_mipi34_ape_mipi60"),
--	DB8500_MUX_STATE("uartmodtx_oc3_1", "uartmod",
--		"stm", "mod_mipi34_ape_mipi60"),
--	DB8500_PIN_STATE("GPIO70_G5", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat0 */
--	DB8500_PIN_STATE("GPIO75_H2", in_pu,
--		"stm", "mod_mipi34_ape_mipi60"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", out_lo,
--		"stm", "mod_mipi34_ape_mipi60"), /* uartmod tx */
--	DB8500_PIN_STATE("GPIO155_C19", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* clk */
--	DB8500_PIN_STATE("GPIO156_C17", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat3 */
--	DB8500_PIN_STATE("GPIO157_A18", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat2 */
--	DB8500_PIN_STATE("GPIO158_C18", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat1 */
--	DB8500_PIN_STATE("GPIO159_B19", in_nopull,
--		"stm", "mod_mipi34_ape_mipi60"), /* dat0 */
--
--	DB8500_PIN_STATE("GPIO70_G5", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO71_G4", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat3 */
--	DB8500_PIN_STATE("GPIO72_H4", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO73_H3", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO74_J3", slpm_out_lo_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat0 */
--	DB8500_PIN_STATE("GPIO75_H2", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* uartmod rx */
--	DB8500_PIN_STATE("GPIO76_J2", slpm_out_lo_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* uartmod tx */
--	DB8500_PIN_STATE("GPIO155_C19", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* clk */
--	DB8500_PIN_STATE("GPIO156_C17", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat3 */
--	DB8500_PIN_STATE("GPIO157_A18", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat2 */
--	DB8500_PIN_STATE("GPIO158_C18", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat1 */
--	DB8500_PIN_STATE("GPIO159_B19", slpm_in_wkup_pdis,
--		"stm", "mod_mipi34_ape_mipi60_sleep"), /* dat0 */
+ /*
+- * These are specifically for the MOP500 and HREFP (pre-v60) version of the
+- * board, which utilized a TC35892 GPIO expander instead of using a lot of
+- * on-chip pins as the HREFv60 and later does.
+- */
+-static struct pinctrl_map __initdata mop500_pinmap[] = {
+-	/*
+-	 * XENON Flashgun on image processor GPIO (controlled from image
+-	 * processor firmware), mux in these image processor GPIO lines 0
+-	 * (XENON_FLASH_ID) and 1 (XENON_READY) on altfunction C and pull up
+-	 * the pins.
+-	 */
+-	DB8500_MUX_HOG("ipgpio0_c_1", "ipgpio"),
+-	DB8500_MUX_HOG("ipgpio1_c_1", "ipgpio"),
+-	DB8500_PIN_HOG("GPIO6_AF6", in_pu),
+-	DB8500_PIN_HOG("GPIO7_AG5", in_pu),
+-	/*
+-	 * Runtime stuff: make it possible to mux in the SKE keypad
+-	 * and bias the pins
+-	 */
 -};
 -
- /*
-  * These are specifically for the MOP500 and HREFP (pre-v60) version of the
-  * board, which utilized a TC35892 GPIO expander instead of using a lot of
-@@ -690,8 +496,6 @@ static void __init mop500_href_family_pinmaps_init(void)
+-/*
+  * The HREFv60 series of platforms is using available pins on the DB8500
+  * insteaf of the Toshiba I2C GPIO expander, reusing some pins like the SSP0
+  * and SSP1 ports (previously connected to the AB8500) as generic GPIO lines.
+@@ -496,8 +474,6 @@ static void __init mop500_href_family_pinmaps_init(void)
  
  void __init mop500_pinmaps_init(void)
  {
--	pinctrl_register_mappings(mop500_family_pinmap,
--				  ARRAY_SIZE(mop500_family_pinmap));
- 	pinctrl_register_mappings(mop500_pinmap,
- 				  ARRAY_SIZE(mop500_pinmap));
+-	pinctrl_register_mappings(mop500_pinmap,
+-				  ARRAY_SIZE(mop500_pinmap));
  	mop500_href_family_pinmaps_init();
-@@ -705,8 +509,6 @@ void __init mop500_pinmaps_init(void)
- 
- void __init snowball_pinmaps_init(void)
- {
--	pinctrl_register_mappings(mop500_family_pinmap,
--				  ARRAY_SIZE(mop500_family_pinmap));
- 	pinctrl_register_mappings(snowball_pinmap,
- 				  ARRAY_SIZE(snowball_pinmap));
- 	pinctrl_register_mappings(u8500_pinmap,
-@@ -717,8 +519,6 @@ void __init snowball_pinmaps_init(void)
- 
- void __init hrefv60_pinmaps_init(void)
- {
--	pinctrl_register_mappings(mop500_family_pinmap,
--				  ARRAY_SIZE(mop500_family_pinmap));
- 	pinctrl_register_mappings(hrefv60_pinmap,
- 				  ARRAY_SIZE(hrefv60_pinmap));
- 	mop500_href_family_pinmaps_init();
+ 	if (machine_is_u8520())
+ 		pinctrl_register_mappings(ab8505_pinmap,
 -- 
 1.8.3.1
 
