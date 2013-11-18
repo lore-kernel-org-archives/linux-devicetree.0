@@ -1,109 +1,92 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC v5 4/5] dma: mpc512x: register for device tree
- channel lookup
-Date: Mon, 18 Nov 2013 12:09:57 +0000
-Message-ID: <20131118120957.GH30853@e106331-lin.cambridge.arm.com>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
- <1383290374-17484-5-git-send-email-a13xp0p0v88@gmail.com>
+From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Subject: Re: [PATCHv7] dmaengine: Add support for BCM2835
+Date: Mon, 18 Nov 2013 13:16:26 +0100
+Message-ID: <528A051A.7000703@koalo.de>
+References: <5288E327.8050809@koalo.de> <1384768816.14845.186.camel@smile>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1383290374-17484-5-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1384768816.14845.186.camel@smile>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 07:19:33AM +0000, Alexander Popov wrote:
-> From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Thank you! Few comments below.
+
+> []
+>> +static enum dma_status bcm2835_dma_tx_status(struct dma_chan *chan,
+>> +	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>> +{
 > 
-> register the controller for device tree based lookup of DMA channels
-> (non-fatal for backwards compatibility with older device trees), provide
-> the '#dma-cells' property in the shared mpc5121.dtsi file, and introduce
-> a bindings document for the MPC512x DMA controller
+> []
 > 
-> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-> ---
->  .../devicetree/bindings/dma/mpc512x-dma.txt        | 55 ++++++++++++++++++++++
->  arch/powerpc/boot/dts/mpc5121.dtsi                 |  1 +
->  drivers/dma/mpc512x_dma.c                          | 21 +++++++--
->  3 files changed, 74 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+>> +	} else {
+>> +		txstate->residue = 0;
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> new file mode 100644
-> index 0000000..a4867d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> @@ -0,0 +1,55 @@
-> +* Freescale MPC512x DMA Controller
-> +
-> +The DMA controller in the Freescale MPC512x SoC can move blocks of
-> +memory contents between memory and peripherals or memory to memory.
-> +
-> +Refer to the "Generic DMA Controller and DMA request bindings" description
-> +in the dma.txt file for a more detailled discussion of the binding.  The
-> +MPC512x DMA engine binding follows the common scheme, but doesn't provide
-> +support for the optional channels and requests counters (those values are
-> +derived from the detected hardware features) and has a fixed client
-> +specifier length of 1 integer cell (the value is the DMA channel, since
-> +the DMA controller uses a fixed assignment of request lines per channel).
+> Useless assignment since dmaengine will do this for you in
+> dma_cookie_status.
 
-The fact that #dma-cells must be <1> isn't a difference from the
-standard binding, and needs not be described here. The meaning of the
-value should be in your description of #dma-cells below.
+I agree that it is useless, but I think otherwise it might be concealed
+that there is a third case left that uses a residue of 0. Do you think a
+comment is better? E.g.:
 
-I'm not sure it's worth mentioning optional channels / request counters.
-If anything, it would be better to update dma.txt to move the "Optional
-properties" to something like "Suggested properties"...
++	} else {
++		/* residue = 0 per default */
 
-> +
-> +
-> +DMA controller node properties:
-> +
-> +Required properties:
-> +- compatible:		should be "fsl,mpc5121-dma"
-> +- reg:			address and size of the DMA controller's register set
-> +- interrupts:		interrupt spec for the DMA controller
-> +
-> +Optional properties:
-> +- #dma-cells:		must be <1>, describes the number of integer cells
-> +			needed to specify the 'dmas' property in client nodes,
-> +			strongly recommended since common client helper code
-> +			uses this property
+>> +	/* Bus width translates to the element size (ES) */
+>> +	switch (dev_width) {
+>> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+>> +		es = BCM2835_DMA_DATA_TYPE_S32;
+>> +		break;
+>> +	default:
+>> +		return NULL;
+>> +	}
+> 
+> So, you use switch-case on hope to extend it later, correct?
 
-Rather than redundantly describing what the standard property means, it
-would be better to describe what the cell actually means (i.e. which
-value maps to which DMA channel in hardware, how many their are, etc).
+Yes, there is a S128 case left, but that is not implemented yet.
 
-> +
-> +Example:
-> +
-> +	dma0: dma@14000 {
-> +		compatible = "fsl,mpc5121-dma";
-> +		reg = <0x14000 0x1800>;
-> +		interrupts = <65 0x8>;
-> +		#dma-cells = <1>;
-> +	};
-> +
-> +
-> +Client node properties:
-> +
-> +Required properties:
-> +- dmas:			list of DMA specifiers, consisting each of a handle
-> +			for the DMA controller and integer cells to specify
-> +			the channel used within the DMA controller
-> +- dma-names:		list of identifier strings for the DMA specifiers,
-> +			client device driver code uses these strings to
-> +			have DMA channels looked up at the controller
-> +
+>> +static int bcm2835_dma_probe(struct platform_device *pdev)
+>> +{
+>> +	struct bcm2835_dmadev *od;
+>> +	struct resource *res;
+>> +	void __iomem *base;
+>> +	int rc;
+>> +	int i;
+>> +	int irq;
+>> +	uint32_t chans_available;
+> 
+> Why uint32_t?
 
-I don't think its necessary or helpful to describe the client binding
-here, it's in dma.txt
+Because it is a bit mask of fixed length that directly comes from the
+firmware.
 
-Thanks,
-Mark.
+>> +		/* Request DMA channel mask from device tree */
+>> +		if (of_property_read_u32(pdev->dev.of_node,
+>> +				"brcm,dma-channel-mask",
+>> +				&chans_available)) {
+>> +			dev_err(&pdev->dev, "Failed to get channel mask\n");
+>> +			bcm2835_dma_free(od);
+>> +			return -EINVAL;
+>> +		}
+>> +	} else {
+>> +		dev_err(&pdev->dev, "Failed to get channel mask. No device tree.\n");
+>> +		bcm2835_dma_free(od);
+>> +		return -EINVAL;
+>> +	}
+> 
+>> +	dev_dbg(&pdev->dev, "Initialized %i DMA channels\n", i);
+>> +
+>> +	if (pdev->dev.of_node) {
+> 
+> Does it make sense?
+
+There was already a discussion about that in PATCHv4. It should be
+possible to add board file initialization later with few patching.
+Although, maybe this will not be relevant anymore, because device tree
+support of this platform is getting better more and more.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
