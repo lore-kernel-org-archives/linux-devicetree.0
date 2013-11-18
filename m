@@ -1,64 +1,166 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
-Date: Sun, 17 Nov 2013 19:58:15 -0800
-Message-ID: <20131118035815.GA3311@core.coreip.homeip.net>
-References: <1383948866-32672-1-git-send-email-sre@debian.org>
- <1383948866-32672-2-git-send-email-sre@debian.org>
- <20131111221941.GB23331@amd.pavel.ucw.cz>
- <20131112032506.GA30028@earth.universe>
- <20131117182840.GA30012@xo-6d-61-c0.localdomain>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [lm-sensors] [PATCHv9 02/20] thermal: introduce device tree
+ parser
+Date: Mon, 18 Nov 2013 14:04:10 +0800
+Message-ID: <1384754650.2316.32.camel@rzhang-lenovo>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+	 <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+	 <20131115090736.4f360dc8@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131117182840.GA30012@xo-6d-61-c0.localdomain>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131115090736.4f360dc8@endymion.delvare>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jean Delvare <khali@linux-fr.org>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2013 at 07:28:40PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > On Mon, Nov 11, 2013 at 11:19:41PM +0100, Pavel Machek wrote:
-> > > > +	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
-> > > > +		keypad_data->no_autorepeat = true;
-> > > 
-> > > From 2/2:
-> > > 
-> > > +Optional Properties specific to linux:
-> > > +- linux,keypad-no-autorepeat: do not enable autorepeat feature.
-> > > 
-> > > I'm confused now.
-> > 
-> > good catch! That happens when one tries to mimic other drivers :/
-> > 
-> > I just checked all DT input drivers for autorepeat keyword:
-> > 
-> > DRIVER              CODE                        DOCUMENTATION
-> > twl4030-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > omap4-keypad        linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > samsung-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > stmpe-keypad        st,no-autorepeat            st,no-autorepeat
-> > spear-keyboard      autorepeat                  autorepeat
-> > tca8418-keypad      keypad,autorepeat           --- not documented ---
-> > gpio-matrix-keypad  linux,no-autorepeat         linux,no-autorepeat
-> > gpio-keys-polled    autorepeat                  autorepeat
-> > gpio-keys           autorepeat                  --- no documentation ---
-> > 
-> > Any suggestions how to continue fixing this mess? I guess first of
-> > all the documentation of omap4-keypad, samsung-keypad and of course
-> > the new twl4030-keypad driver should be fixed.
-> > 
-> > Next it would be nice to choose one standard property name for this
-> > and use it for twl4030-keypad. I suggest to use "linux,input-no-autorepeat".
-> 
-> I'd suggest just simple "autorepeat", so that we get rid of ugly double-negation.
+On =E4=BA=94, 2013-11-15 at 09:07 +0100, Jean Delvare wrote:
+> Hi Eduardo,
+>=20
+> On Tue, 12 Nov 2013 15:46:04 -0400, Eduardo Valentin wrote:
+> > This patch introduces a device tree bindings for
+> > describing the hardware thermal behavior and limits.
+> > Also a parser to read and interpret the data and feed
+> > it in the thermal framework is presented.
+> >=20
+> > This patch introduces a thermal data parser for device
+> > tree. The parsed data is used to build thermal zones
+> > and thermal binding parameters. The output data
+> > can then be used to deploy thermal policies.
+> >=20
+> > This patch adds also documentation regarding this
+> > API and how to define tree nodes to use
+> > this infrastructure.
+> >=20
+> > Note that, in order to be able to have control
+> > on the sensor registration on the DT thermal zone,
+> > it was required to allow changing the thermal zone
+> > .get_temp callback. For this reason, this patch
+> > also removes the 'const' modifier from the .ops
+> > field of thermal zone devices.
+> >=20
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> > ---
+> > (...)
+> > +static int of_thermal_get_trend(struct thermal_zone_device *tz, in=
+t trip,
+> > +				enum thermal_trend *trend)
+> > +{
+> > +	struct __thermal_zone *data =3D tz->devdata;
+> > +	long dev_trend;
+> > +	int r;
+> > +
+> > +	if (!data->get_trend)
+> > +		return -EINVAL;
+> > +
+> > +	r =3D data->get_trend(data->sensor_data, &dev_trend);
+> > +	if (r)
+> > +		return r;
+> > +
+> > +	/* TODO: These intervals might have some thresholds, but in core =
+code */
+> > +	if (dev_trend > 0)
+> > +		*trend =3D THERMAL_TREND_RAISING;
+> > +	else if (dev_trend < 0)
+> > +		*trend =3D THERMAL_TREND_DROPPING;
+> > +	else
+> > +		*trend =3D THERMAL_TREND_STABLE;
+> > +
+> > +	return 0;
+> > +}
+>=20
+> I don't like the whole trend thing.
+>=20
+> I've been writing hwmon drivers for the past decade and I've never se=
+en
+> a thermal sensor device being able to report trends. And as a rule of
+> thumb, if the hardware can't do it then the (hardware-specific) drive=
+rs
+> should not report it.
 
-The idea was that majority of setups want autorepeat so in the absence
-of the property autorepeat is turned on.
+I agree that a sensor device should not be able to report trends. But
+currently, the thermal zone driver is not only a sensor driver, it also
+owns the platform thermal cooling strategy.
+And some platforms do have this kind of knowledge, right?
+e.g. ACPI spec provides an equation for processor passive cooling (ACPI
+Spec 5.0 11.1.5).
 
-Thanks.
+>=20
+> Hwmon devices (and drivers) report temperature values, and sometimes
+> historical min/max. They can do that because these are facts that nee=
+d
+> no interpretation.
+>=20
+> Defining a trend, however, requires care and, more importantly,
+> decisions.
 
--- 
-Dmitry
+We had the assumption that we will get an interrupt when the firmware
+thinks there is an temperature change that should be noticed by OS.
+
+>  For example, consider a thermal sensor which reports 50=C2=B0C at
+> time t, then 47=C2=B0C at time t+3s,
+
+does firmware thinks this should be noticed by OS?
+If no, there is no interrupt and this temperature change is totally
+transparent to the OS at all.
+If yes, the thermal core will check if the system is overheating, if
+yes, it throttles the devices, and if no, do nothing.
+
+>  then 48=C2=B0C at time t+6s. At t+7s someone
+> asks for the trend,
+
+the trend is needed when platform thermal driver calls
+thermal_zone_device_update(), and mostly following a temperature change
+interrupt.
+
+>  what should the driver reply?
+>  If you consider only
+> the last 5 seconds, temperature is raising. If you consider the last =
+10
+> seconds instead, temperature is dropping. How would the driver know
+> what time frame the caller is interested in?
+>=20
+> Another example: "small" temperature variations. If temperatures vari=
+es
+> by 1=C2=B0C in my kitchen's oven, I'd call it stable. If my body temp=
+erature
+> varies by 1=C2=B0C, I'd call it non-stable, and my doctor for an appo=
+intment
+> also ;-)
+>=20
+
+> My point is that only the caller, and not the driver, knows how to
+> convert a series of measurements into a trend. So I don't think drive=
+rs
+> should implement anything like get_trend(). Whatever piece of code
+> needs to establish a trend should call get_temp() repeatedly, store t=
+he
+> results and do its own analysis of the data.
+>=20
+I think the key problem is that,
+the thermal subsystem just provides a basic/minimum thermal control
+framework in kernel, and it is totally platform independent. And any
+platform driver can use this framework to do some basic thermal control
+easily but just telling thermal core if the thermal core should take
+some cooling actions (trip points + trend + current temperature) and ho=
+w
+(by choosing thermal governors).
+
+So if you want to do more precise thermal control, you'd better disable
+kernel thermal control and do it in userspace. In this case,
+the .get_trend() will never be invoked at all.
+=46urther more, I'm indeed considering introduce platform specific ther=
+mal
+governors, so that platform thermal driver can tell thermal core what t=
+o
+do at a certain point.
+
+thanks,
+rui
+
