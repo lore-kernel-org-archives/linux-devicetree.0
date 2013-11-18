@@ -1,47 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 16:10:32 +0100
-Message-ID: <201311181610.33105.arnd@arndb.de>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <3371903.8j54vrCjEN@wuerfel> <20131118150455.GD24408@sirena.org.uk>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT
+ core
+Date: Mon, 18 Nov 2013 17:15:12 +0200
+Message-ID: <528A2F00.7090302@ti.com>
+References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com> <527A287C.2090401@ti.com> <5287D5A7.7060702@roeck-us.net> <5289FE60.2040207@ti.com> <528A24DE.1010507@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131118150455.GD24408@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528A24DE.1010507-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 November 2013, Mark Brown wrote:
-> On Sun, Nov 17, 2013 at 07:10:51PM +0100, Arnd Bergmann wrote:
-> > On Sunday 17 November 2013 17:18:03 Stefano Stabellini wrote:
-> 
-> > > Simply using DT would help avoiding the awkward situation where a driver
-> > > of a device only works with one of the two description formats and not
-> > > the other.
-> 
-> > Yes, but remember that Intel still have the problem on their embedded
-> > systems, and will want to solve them.
-> 
-> Has it been confirmed that Intel are going with ACPI for their embedded
-> devices rather than SFI?  That would be nice given how awful SFI is and
-> I have heard that before but I'm not sure I've seen anything official.
+On 11/18/2013 04:31 PM, Guenter Roeck wrote:
+> On 11/18/2013 03:47 AM, ivan.khoronzhuk wrote:
+>
+>>>>    MODULE_LICENSE("GPL");
+>>>> -MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
+>>>>    MODULE_ALIAS("platform:watchdog");
+>>>>
+>>> You might want to rename the platform driver to something like
+>>> davinci-wdt and change the MODULE_ALIAS
+>>> accordingly.
+>>>
+>>
+>> Yes, it could be changed but not in this patch.
+>>
+> Seems to me this would be the perfect time to change it, as you switch
+> to use
+> the watchdog core which permits more than one active watchdog in the
+> system.
+>
+> Guenter
+>
 
-Possibly not all of Intel agrees to that, but I think that's what I've 
-heard from Darrent Hart and David Woodhouse. I doubt you can get an
-"official" confirmation about it. I also don't know if there is a follow-up
-for the Intel CE4100 that started using DT[1].
-
-	Arnd
-
-[1] arch/x86/platform/ce4100/falconfalls.dts
+... Yes, you are right. I'll rename it.
+-- 
+Regards,
+Ivan Khoronzhuk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
