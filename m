@@ -1,53 +1,162 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 15:19:01 +0000
-Message-ID: <20131118151900.GF16735@n2100.arm.linux.org.uk>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <201311152056.47846.arnd@arndb.de> <20131115232109.GT16735@n2100.arm.linux.org.uk> <201311181605.37300.arnd@arndb.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv1] Add support for Intersil ISL12057 I2C RTC chip
+Date: Mon, 18 Nov 2013 15:20:12 +0000
+Message-ID: <20131118152012.GA3759@e106331-lin.cambridge.arm.com>
+References: <87txfdcjqg.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201311181605.37300.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <87txfdcjqg.fsf@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Kent Yoder <key@linux.vnet.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Landley <rob@landley.net>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 04:05:37PM +0100, Arnd Bergmann wrote:
-> On Saturday 16 November 2013, Russell King - ARM Linux wrote:
-> > On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
-> > > 
-> > > For all I know, doing this in ACPI is something that is only now being
-> > > discussed as Intel wants to be able to reuse the existing features from
-> > > DT enabled drivers in the kernel and share the implementation between
-> > > embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
-> > > isn't as crazy.
-> > > 
-> > > The existing ACPI usage however is basically all binary and cannot be
-> > > shared with DT, in particular it won't help for the orthogonal problem of
-> > > using ACPI to get "enterprise server" features on ARM64.
-> > 
-> > That's strange, because the patches I've seen from people who want to
-> > add ACPI support to AMBA are all based around very similar strings to
-> > those in DT to lookup the same data in ACPI.
-> 
-> Can you point to specific patches?
+On Fri, Nov 15, 2013 at 11:45:27PM +0000, Arnaud Ebalard wrote:
+>=20
+> Intersil ISL12057 I2C RTC chip also supports two alarms. This patch
+> only adds support for basic RTC functionalities (i.e. getting and
+> setting time). Tests have been performed on NETGEAR ReadyNAS 102 w/
+> startup/shutdown scripts, hwclock, ntpdate and openntpd.
+>=20
+> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> ---
+> Hi,
+>=20
+> In order to get at least some initial support for the chip available =
+in
+> mainline kernel (3.14 will have three users waiting for it: ReadyNAS
+> 102, 104 and 2120), I decided to temporarily remove the alarm and IRQ
+> related code I pushed earlier (see [1] below). I will submit a patch
+> later to add back Alarm/IRQ support once I have understood how to
+> correctly handle my use case described via existing RTC logic.
+>=20
+> Anyway, comments are welcome on the patch!
+>=20
+> Changes since previous v0:
+>  - removed alarm and IRQ related code
+>  - Switched to isl for intersil (no existing driver has any reference
+>    to isil, even though this would be the recommended choice)
+>  - Added intersil info in vendor-prefixes.txt file
+>  - Added entry for ISL 12057 in I2C trivial-devices.txt file
+>  - Added mutex protection for non atomic read/write
+>=20
+>=20
+> Now, regarding later submission of Alarm/IRQ functionality, here is t=
+he
+> use case: on all 3 NETGEAR NAS above (102, 104 and RN2120), the Alarm
+> interrupt pins of the ISL 12057 are not connected to the SoC, i.e. Li=
+nux
+> kernel never gets warned via an interrupt when the alarm goes off. Th=
+e
+> reason is that the alarm interrupt pin is connected to some regulator
+> which will power up the (previously off) device when the alarm goes
+> off. It raises some questions for which I am looking for some support=
+s
+> from RTC maintainer and people familiar w/ RTC framework:
+>=20
+>  - Are there no previous example of such need from existing platform?
+>  - How can this use case be supported? Tested?
+>  - in usual context, what is the purpose of having an IRQ handler for
+>    such an alarm event: just acknowledge it and remove the alarm? Or
+>    are there other reasons?
+>=20
+> As a side note, I want to repeat that previous code (the one I droppe=
+d
+> from current patch) worked fine to get alarm installed (i.e. once the
+> device powered off, it woke up as expected using the alarm). I was ju=
+st
+> unable to test the interrupt handling part, for the reason described
+> above.
+>=20
+> Cheers,
+>=20
+> a+
+>=20
+> [1]: http://thread.gmane.org/gmane.linux.drivers.devicetree/46581
+>=20
+>=20
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  drivers/rtc/Kconfig                                |   9 +
+>  drivers/rtc/Makefile                               |   1 +
+>  drivers/rtc/rtc-isl12057.c                         | 397 +++++++++++=
+++++++++++
+>  5 files changed, 409 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-isl12057.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
+t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index ad6a738..b57c71e 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -37,6 +37,7 @@ fsl,mpr121            MPR121: Proximity Capacitive =
+Touch Sensor Controller
+>  fsl,sgtl5000           SGTL5000: Ultra Low-Power Audio Codec
+>  infineon,slb9635tt     Infineon SLB9635 (Soft-) I2C TPM (old protoco=
+l, max 100khz)
+>  infineon,slb9645tt     Infineon SLB9645 I2C TPM (new protocol, max 4=
+00khz)
+> +isl,isl12057           Intersil ISL12057 I2C RTC Chip
+>  maxim,ds1050           5 Bit Programmable, Pulse-Width Modulator
+>  maxim,max1237          Low-Power, 4-/12-Channel, 2-Wire Serial, 12-B=
+it ADCs
+>  maxim,max6625          9-Bit/12-Bit Temperature Sensors with I=C2=B2=
+C-Compatible Serial Interface
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ce95ed1..507761a 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -38,6 +38,7 @@ ibm   International Business Machines (IBM)
+>  idt    Integrated Device Technologies, Inc.
+>  img    Imagination Technologies Ltd.
+>  intercontrol   Inter Control Group
+> +isl    Intersil
+>  linux  Linux-specific binding
+>  lsi    LSI Corp. (LSI Logic)
+>  marvell        Marvell Technology Group Ltd.
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 15f166a..bcc0c17 100644
 
-No, because they weren't publically posted, so I don't feel that I can
-say all that much; they were from quite a large company though.
+The binding additions look fine to me.
 
-> I can't say I'm an expert on this, but everything I've seen with ACPI
-> is tables of binary data with four-letter identifiers that are defined
-> by the ACPI group, but not using strings in a similar manner to DT.
+[...]
 
-They are using strings which are the same as the DT properties, but
-without the vendor prefix - but yes, to only retrieve things like
-booleans, u32s and such like.  They also have support for fixed-rate
-clocks via the clk API too...
+> +static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg,=
+ u8 buf[],
+> +                                 unsigned len)
+> +{
+> +       struct i2c_msg msgs[2] =3D {
+> +               {
+> +                       .addr =3D client->addr,
+> +                       .flags =3D 0,
+> +                       .len =3D sizeof(u8),
+> +                       .buf =3D buf
+> +               },
+> +               {
+> +                       .addr =3D client->addr,
+> +                       .flags =3D I2C_M_RD,
+> +                       .len =3D len,
+> +                       .buf =3D buf
+> +               }
+> +       };
+> +       int ret;
+> +
+> +       BUG_ON(reg > ISL12057_REG_SR);
+> +       BUG_ON(reg + len > ISL12057_REG_SR + 1);
+> +
+> +       ret =3D i2c_transfer(client->adapter, msgs, 2);
+> +       if (ret !=3D 2)
+> +               return ret;
 
-I'd like them to post the patches publically so a more open discussion
-could occur.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This might return 1.
+
+Given that in isl12057_rtc_read_time you check if the return value is
+negative (also indirectly via isl12057_i2c_validate_client), I think it
+would make sense to always either return a negative error code or 0.
+
+Thanks,
+Mark.
