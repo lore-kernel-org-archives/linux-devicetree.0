@@ -1,39 +1,139 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH V3 1/2] scripts: dtc: build fdtget for extracting
- properties from dtbs
-Date: Mon, 18 Nov 2013 15:54:26 -0700
-Message-ID: <528A9AA2.30303@wwwdotorg.org>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <cover.1384809305.git.jason@lakedaemon.net> <55bef0830d336fc1df24e4cbf96822acc70c8f7e.1384809305.git.jason@lakedaemon.net>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] itg3200: add dt support.
+Date: Tue, 19 Nov 2013 09:56:25 +1100
+Message-ID: <20131119095625.1fc4f66f@notabene.brown>
+References: <20131101154854.2d7d1432@notabene.brown>
+	<20131118115742.GG30853@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55bef0830d336fc1df24e4cbf96822acc70c8f7e.1384809305.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/2Sjbqu0a89jxgN+JCgh_INP"; protocol="application/pgp-signature"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131118115742.GG30853-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Manuel Stahl <manuel.stahl-GeUHRtUQU7nSyEMIgutvibNAH6kLmebB@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2013 02:21 PM, Jason Cooper wrote:
-> In order for 'make dtbs_install' to be maintainable, we need a reliable
-> way to determine the board compatible string for a given dtb.  fdtget
-> does that easily as written, but currently isn't built by the kernel.
+--Sig_/2Sjbqu0a89jxgN+JCgh_INP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+On Mon, 18 Nov 2013 11:57:42 +0000 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrot=
+e:
 
-> +include $(src)/libfdt/Makefile.libfdt
-> +
-> +fdtget-objs	:= fdtget.o util.o $(patsubst %, libfdt/%, $(LIBFDT_OBJS))
+> On Fri, Nov 01, 2013 at 04:48:54AM +0000, NeilBrown wrote:
+> >=20
+> >=20
+> > No new configuration, just a 'compatible' string and documentation.
+> >=20
+> > Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/gyro/itg3200.txt b/D=
+ocumentation/devicetree/bindings/iio/gyro/itg3200.txt
+> > new file mode 100644
+> > index 000000000000..4581620632df
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/gyro/itg3200.txt
+> > @@ -0,0 +1,20 @@
+> > +* InvenSense ITG3200 3-axis gyroscope
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible : "invensense,itg3200"
+> > +  - reg : I2C address, typically 0x68
+> > +
+> > +Optional properties:
+> > +
+> > +  - interrupt-parent : should be the phandle for the interrupt control=
+ler
+> > +  - interrupts : interrupt mapping for GPIO IRQ
+>=20
+> Why is this a "GPIO IRQ"? This device das no GPIO. The fact that it
+> might be wired to a GPIO controller has nothing to do with the ITG3200,
+> and shouldn't be a concern of its binding.
+>=20
 
-I observe that there's a scripts/dtc/Makefile.dtc that /isn't/ used by
-scripts/dtc/Makefile. Hence, having scripts/dtc/Makefile use
-scripts/dtc/libfdt/Makefile.libfdt seems slightly inconsistent. That
-said, it's probably a good idea to use Makefile.libfdt, so perhaps the
-answer here is to update Makefile to use Makefile.dtc sometime, rather
-than not use Makefile.libfdt in this patch?
+You are of course correct.  I'll resubmit with that word removed.
 
-Otherwise, this patch seems to make sense.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I probably copied it from bma180.txt without thinking.
+
+/home/git/linux$ git grep 'GPIO IRQ' Documentation/devicetree/bindings/
+Documentation/devicetree/bindings/gpio/8xxx_gpio.txt: - interrupts : Interr=
+upt mapping for GPIO IRQ.
+Documentation/devicetree/bindings/gpio/gpio-xilinx.txt:- interrupts : Inter=
+rupt mapping for GPIO IRQ.
+Documentation/devicetree/bindings/gpio/pl061-gpio.txt:- interrupts : Interr=
+upt mapping for GPIO IRQ.
+Documentation/devicetree/bindings/iio/accel/bma180.txt:  - interrupts : int=
+errupt mapping for GPIO IRQ, it should by configured wi
+Documentation/devicetree/bindings/iio/light/apds9300.txt:  - interrupts : i=
+nterrupt mapping for GPIO IRQ
+
+Both bma180.txt and apds9300.txt seem to use the phrase "GPIO IRQ"
+inappropriately.
+
+Thanks,
+NeilBrown
+
+> Thanks,
+> Mark.
+>=20
+> > +
+> > +Example:
+> > +
+> > +itg3200@68 {
+> > +	compatible =3D "invensense,itg3200";
+> > +	reg =3D <0x68>;
+> > +	interrupt-parent =3D <&gpio2>;
+> > +	interrupts =3D <24 IRQ_TYPE_EDGE_RISING>;
+> > +};
+> > diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200=
+_core.c
+> > index 4d3f3b92b361..1ed3003ef41a 100644
+> > --- a/drivers/iio/gyro/itg3200_core.c
+> > +++ b/drivers/iio/gyro/itg3200_core.c
+> > @@ -374,10 +374,17 @@ static const struct i2c_device_id itg3200_id[] =
+=3D {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, itg3200_id);
+> > =20
+> > +static const struct of_device_id itg3200_of_match[] =3D {
+> > +	{ .compatible =3D "invensense,itg3200", },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, itg3200_of_match);
+> > +
+> >  static struct i2c_driver itg3200_driver =3D {
+> >  	.driver =3D {
+> >  		.owner  =3D THIS_MODULE,
+> >  		.name	=3D "itg3200",
+> > +		.of_match_table =3D of_match_ptr(itg3200_of_match),
+> >  	},
+> >  	.id_table	=3D itg3200_id,
+> >  	.probe		=3D itg3200_probe,
+>=20
+
+
+--Sig_/2Sjbqu0a89jxgN+JCgh_INP
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUoqbGTnsnt1WYoG5AQLImw//YENjBlmsOuSTQjxBRsw0GQj3d6L8qkz2
++Kj6I+BzukQKwIoREiJNnQN4qaxnTcCE+oHxGp8fydMn+baEt4NaZn9f302UpAID
+YXRnJMr98g2CxkHhqcXvk6LqwKtGfcEe/UmhbsRckDtoOdaj0LcnhFWtrcV32RTw
+15hWRaoBQAdoP16KGi4DujVReznmcUuNbi5XpbsCGw+UMhKJZRzfxyrGCgx3Mtzm
+QTggen2APv4a66EyDiCQgOJT/Az9BhtGHULSoE6Q8OEvba4c+8GuCHNBO6Fmoc1f
+k7eYnBLbEasSvtL561P4FDCXyaf7TSfseNK8GTB63yhp7TA5Gw5yasOqYc0muQAN
+cFZmOY2uDS2maot07YDBe7WMYauRNNwxDfpXrT9fbwulEKtBjE+rgMMWacC4FFSi
+FyvrD3rS01ETuJzS/PonQHVJlJhCzUVIiNzRSK5yW45hyv/cGSNF6oY/F9uCKRLG
+6W6ii2AnX4NHfA4esLuYa6hZuZWRW4OT1SaV7jYy04JhcYPDf6O95GTFCA8bdN+J
+x1jhCBb/PwjQVLA5AGagfmv+ugnnLgDjzNfLtjeOzHVe6OXQgXllDgzDSaLMNzdW
+b0irWbXCKgQqHAwlKpKgHSfuJ+uXi3cXkY2RgNT0iKco51Gc8DuzfBm+NVWEb18C
+NWkO0RKACnY=
+=oVOV
+-----END PGP SIGNATURE-----
+
+--Sig_/2Sjbqu0a89jxgN+JCgh_INP--
