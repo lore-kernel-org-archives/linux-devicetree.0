@@ -1,88 +1,94 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and
- direct irq.
-Date: Mon, 18 Nov 2013 09:58:14 +0100
-Message-ID: <CAAfyv346pUa9k3+9jdBX+EK8cV9GenaBxrAnVnKsbUPBoNBqrQ@mail.gmail.com>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com>
-	<1384465609-26485-3-git-send-email-marek@goldelico.com>
-	<20131115153015.GD24831@e106331-lin.cambridge.arm.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v8 2/2] PWM: atmel-pwm: add device tree binding document
+Date: Mon, 18 Nov 2013 17:13:22 +0800
+Message-ID: <1384766002-2852-2-git-send-email-voice.shen@atmel.com>
+References: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131115153015.GD24831@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "neilb@suse.de" <neilb@suse.de>, "hns@goldelico.com" <hns@goldelico.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, Bo Shen <voice.shen@atmel.com>, galak@codeaurora.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add atmel pwm driver device tree binding document
 
-On Fri, Nov 15, 2013 at 4:30 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Nov 14, 2013 at 09:46:48PM +0000, Marek Belisko wrote:
->> Signed-off-by: Marek Belisko <marek@goldelico.com>
->> ---
->>  Documentation/devicetree/bindings/misc/bmp085.txt |  8 ++++
->>  drivers/misc/bmp085.c                             | 53 ++++++++++++++++++++---
->>  2 files changed, 55 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/misc/bmp085.txt b/Documentation/devicetree/bindings/misc/bmp085.txt
->> index 91dfda2..c6033d5 100644
->> --- a/Documentation/devicetree/bindings/misc/bmp085.txt
->> +++ b/Documentation/devicetree/bindings/misc/bmp085.txt
->> @@ -8,6 +8,9 @@ Optional properties:
->>  - temp-measurement-period: temperature measurement period (milliseconds)
->>  - default-oversampling: default oversampling value to be used at startup,
->>    value range is 0-3 with rising sensitivity.
->> +- gpio: if device is using EOC irq line gpio can be specified to setup interrupt
->> +  handling
->> +- irq: interrupt with no gpio
->>
->>  Example:
->>
->> @@ -17,4 +20,9 @@ pressure@77 {
->>       chip-id = <10>;
->>       temp-measurement-period = <100>;
->>       default-oversampling = <2>;
->> +     gpio = <&gpio0 17 0>;
->> +
->> +     OR
->> +
->> +     irq = <75>;
->
-> There's some contention over the description of gpio-based IRQs in DT.
-> From the point of view of the device there is a logical IRQ output; the
-> fact that this happens to be wired up to a GPIO pin that can happen to
-> generate interrupts isn't anything to do with the device itself. There
-> are plenty of device we have now whose interrupt lines could be wired to
-> GPIOs. I see no reason to extend their bindings to support explicit
-> GPIOs for IRQs, and I see no reason the driver should have to handle
-> this.
->
-> It would be far nicer for the device binding to just have the interrupts
-> property, and for the gpio controller to act as an interrupt-controller,
-> with the appropriate pin management.
-OK. Can you please give me some example in current bindings tree?
-Something like in:
-Documentation/devicetree/bindings/fb/mxsfb.txt ? So if I understand
-correctly we define only property
-interrupts = <xxx> which will be exact interrupt number for cpu gpio
-connected to bmp085 irq line.
->
-> Thanks,
-> Mark.
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
 
-Thanks,
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Acked-by: Kumar Gala <galak@codeaurora.org>
+---
+Changes in v8: None
+Changes in v7: None
+Changes in v6:
+  - New, split binding document as a separate patch
 
-marek
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
+ .../devicetree/bindings/pwm/atmel-pwm.txt          |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+
+diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+new file mode 100644
+index 0000000..1c1a5fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+@@ -0,0 +1,41 @@
++Atmel PWM controller
++
++Required properties:
++  - compatible: should be one of:
++    - "atmel,at91sam9rl-pwm"
++    - "atmel,sama5d3-pwm"
++  - reg: physical base address and length of the controller's registers
++  - #pwm-cells: Should be 3. See pwm.txt in this directory for a
++    description of the cells format
++
++Example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++The following the pwm led based example:
++
++	pwm0: pwm@f8034000 {
++		compatible = "atmel,at91sam9rl-pwm";
++		reg = <0xf8034000 0x400>;
++		#pwm-cells = <3>;
++	};
++
++	pwdleds {
++		compatible = "pwm-leds";
++
++		d1 {
++			label = "d1";
++			pwms = <&pwm0 3 5000 0>
++			max-brightness = <255>;
++		};
++
++		d2 {
++			label = "d2";
++			pwms = <&pwm0 1 5000 1>
++			max-brightness = <255>;
++		};
++	};
 -- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+1.7.9.5
