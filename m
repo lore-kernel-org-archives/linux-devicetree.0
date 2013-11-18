@@ -1,46 +1,75 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 11:25:52 -0800
-Message-ID: <20131118192552.GD5886@quad.lixom.net>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <5289A356.4060004@jonmasters.org>
- <5289A4F3.5040203@jonmasters.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
+Date: Mon, 18 Nov 2013 14:28:52 -0500
+Message-ID: <20131118192852.GI10335@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <cover.1384798508.git.jason@lakedaemon.net>
+ <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net>
+ <528A65DF.8060000@wwwdotorg.org>
+ <20131118191955.GG10335@titan.lakedaemon.net>
+ <528A6944.3070303@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5289A4F3.5040203-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+In-Reply-To: <528A6944.3070303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 12:26:11AM -0500, Jon Masters wrote:
-> On 11/18/2013 12:19 AM, Jon Masters wrote:
+On Mon, Nov 18, 2013 at 12:23:48PM -0700, Stephen Warren wrote:
+> On 11/18/2013 12:19 PM, Jason Cooper wrote:
+> > On Mon, Nov 18, 2013 at 12:09:19PM -0700, Stephen Warren wrote:
+> >> On 11/18/2013 11:38 AM, Jason Cooper wrote:
+> >>> Unlike other build products in the Linux kernel, the devicetree blobs
+> >>> are simply the name of their source file, s/dts/dtb/.  There is also no
+> >>> 'make *install' mechanism to put them in a standard place with a
+> >>> standard naming structure.
+> >>>
+> >>> Unfortunately, users have begun scripting pulling the needed dtbs from
+> >>> within the kernel tree, thus hardcoding the dtbs names.  In turn, this
+> >>> means any changes to the dts filenames breaks these scripts.
+> >>>
+> >>> This patch is an attempt to fix this problem.  Akin to 'make install',
+> >>> this creates a new make target, dtbs_install.  The script that gets
+> >>> called defers to a vendor or distribution supplied installdtbs binary,
+> >>> if found in the system.  Otherwise, the default action is to install a
+> >>> given dtb into
+> ...
+> >> This only appears to create ${compat}.dtb, and not ${dtb} too. 
+> > 
+> > See my comment, above.
+> > 
+> >> So, it doesn't seem to address part of the cover letter, "In addition,
+> >> some vendors have done a diligent job naming their devicetree source
+> >> files appropriately and we don't want to break their setups." Was that
+> >> deliberate? If so, I guess I need to send some patches to U-Boot.
+> > 
+> > I assume you are still pulling from arch/arm/boot/dts/*.dtb, right?
+> > Those build products don't go away with this patch, so you should be
+> > fine.  Unless I'm mis-understanding your workflow...
 > 
-> > It's going to be a messy thing to even attempt. Look, I wish we had a
-> > time machine and could have done this whole thing years ago, but I'm not
-> > sure it would have gone differently. ACPI is something a lot of people
-> > emotionally hate. In the Enterprise space myself and others *need* it
-> > (along with UEFI) to have a scalable solution that doesn't result in an
-> > onslaught of customer support calls, which a non-standards body backed
-> > moving target of DTB will do. And besides all of the big boys are going
-> > to be using ACPI whether it's liked much or not.
-> 
-> A while ago I mentioned producing a series of requirements that
-> articulates what Red Hat thinks an ARMv8 server looks like. Suffice it
-> to say that such requirements do in fact exist, and will be made
-> available in the not too distant future as part of another doc.
+> Yes, but I thought the whole point of this was that everyone would/could
+> switch to running "make dtbs_install", then pulling out the files from
+> the install tree, instead of any use-case requiring obtaining files
+> directly from the source/build tree?
 
-It's nice that there's an unpublished document with a RedHat logo on it
-somewhere that mandates what we, the kernel project, is going to do.
+Yes, in the script, it checks for the existence of /sbin/installdtbs.
+If it's there, it will override the default behavior and execute that
+script.
 
-I thought both RedHat and you personally knew that we don't do things
-that way in the kernel, Jon. Published or not.
+So yours can be:
 
+#!/bin/sh
 
--Olof
+[ -d "/boot/dtbs/$1" ] && rm -rf "/boot/dtbs/$1"
+
+mkdir -p "/boot/dtbs/$1"
+
+for dtb in `find "$3" -name "*.dtb"`; do
+	cp "$dtb" "/boot/dtbs/$1/${dtb##*/}"
+done
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
