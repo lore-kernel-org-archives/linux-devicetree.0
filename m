@@ -1,51 +1,50 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH v6] of: add vendor prefix for GMT
-Date: Mon, 18 Nov 2013 11:25:41 +0800
-Message-ID: <528988B5.2000509@nvidia.com>
-References: <1384340349-8626-1-git-send-email-wni@nvidia.com>
-	<52835C42.6070806@nvidia.com> <20131113131332.63068fb1@endymion.delvare>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 0/3] thermal: samsung: Clean up and add support for Exynos5420
+Date: Mon, 18 Nov 2013 08:55:40 +0530
+Message-ID: <CAHfPSqCowbDoCdWQ-33S3fQ1p3hDULCaR3X2roETZKZqNU-S_A@mail.gmail.com>
+References: <1377668719-8602-1-git-send-email-ch.naveen@samsung.com> <1384238132-24515-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131113131332.63068fb1@endymion.delvare>
-Sender: linux-doc-owner@vger.kernel.org
-To: shawn.guo@linaro.org
-Cc: Jean Delvare <khali@linux-fr.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1384238132-24515-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-To: Shawn Guo <shawn.guo@linaro.org>
+Hello All,
 
-On 11/13/2013 08:13 PM, Jean Delvare wrote:
-> On Wed, 13 Nov 2013 19:02:26 +0800, Wei Ni wrote:
->> Previous versions are:
->> [v5]: http://patchwork.ozlabs.org/patch/281017/
->> [v4]: http://lkml.indiana.edu/hypermail/linux/kernel/1309.1/02812.html
->>
->> On 11/13/2013 06:59 PM, Wei Ni wrote:
->>> Adding Global Mixed-mode Technology Inc. to the list
->>> of devicetree vendor prefixes.
->>>
->>> Signed-off-by: Wei Ni <wni@nvidia.com>
->>> Acked-by: Stephen Warren <swarren@nvidia.com>
->>> ---
->>>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> index 2956800..64471a8 100644
->>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> @@ -28,6 +28,7 @@ est	ESTeem Wireless Modems
->>>  fsl	Freescale Semiconductor
->>>  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->>>  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->>> +gmt	Global Mixed-mode Technology, Inc.
->>>  hisilicon	Hisilicon Limited.
->>>  hp	Hewlett Packard
->>>  ibm	International Business Machines (IBM)
->>>
-> 
-> Reviewed-by: Jean Delvare <khali@linux-fr.org>
-> 
+On 12 November 2013 12:05, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> This patchset does a little clean up of the existing code
+> 1.  [v9] thermal: samsung: replace inten_ bit fields with intclr_
+> 2.  [v9] thermal: samsung: change base_common to more meaningful base_second
+>
+> adds support for Exynos5420 in the driver and
+> 3.  [v9] thermal: samsung: Add TMU support for Exynos5420 SoCs
+> also adds the device tree nodes for the same to exynos5420.dtsi (linux-samsung.git)
+> 4.  [v3] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+>
+> Naveen Krishna Chatradhi (3):
+>   thermal: samsung: replace inten_ bit fields with intclr_
+>   thermal: samsung: change base_common to more meaningful base_second
+>   thermal: samsung: Add TMU support for Exynos5420 SoCs
+>   ARM: dts: Exynos5420: Add device nodes for TMU blocks
+>
+>  .../devicetree/bindings/thermal/exynos-thermal.txt |   49 +++++++-
+>  drivers/thermal/samsung/exynos_tmu.c               |   78 +++++++++---
+>  drivers/thermal/samsung/exynos_tmu.h               |   22 ++--
+>  drivers/thermal/samsung/exynos_tmu_data.c          |  126 ++++++++++++++++++--
+>  drivers/thermal/samsung/exynos_tmu_data.h          |   12 +-
+>  5 files changed, 249 insertions(+), 38 deletions(-)
+>
+> --
+> 1.7.10.4
+Any comments on this patch set please.
+>
 
+
+
+-- 
+Shine bright,
+(: Nav :)
