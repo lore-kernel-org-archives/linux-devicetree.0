@@ -1,100 +1,79 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH 02/12] mtd: nand: davinci: check required ti,
- davinci-chipselect property
-Date: Mon, 18 Nov 2013 20:25:25 +0200
-Message-ID: <528A5B95.3040808@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-3-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8CEF@DNCE04.ent.ti.com>
- <52824E2F.9090302@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 18 Nov 2013 18:35:02 +0000
+Message-ID: <20131118183502.GP2674@sirena.org.uk>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131118122644.GA26046@ulmo.nvidia.com>
+ <20131118134022.26EE7C409EC@trevor.secretlab.ca>
+ <20131118135727.GD14306@sirena.org.uk>
+ <20131118152920.GL26046@ulmo.nvidia.com>
+ <20131118155022.GB28334@sirena.org.uk>
+ <20131118160626.GN26046@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <52824E2F.9090302@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FRaepaAnLTQkJ4tS"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131118160626.GN26046-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2013 05:50 PM, Santosh Shilimkar wrote:
-> On Monday 11 November 2013 11:53 AM, Khoronzhuk, Ivan wrote:
->> The property "ti,davinci-chipselect" is required. So we have to check
->> if it is set.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
->>   drivers/mtd/nand/davinci_nand.c |   10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
->> index d87213f..8e1c88e 100644
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -541,10 +541,14 @@ static struct davinci_nand_pdata
->>                                  GFP_KERNEL);
->>                  pdev->dev.platform_data = pdata;
->>                  if (!pdata)
->> -                       return NULL;
->> +                       return ERR_PTR(-ENOMEM);
->> +
-> This change don't follow commit message.
->
 
-I'll move it to separate patch, that will be first patch
+--FRaepaAnLTQkJ4tS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>                  if (!of_property_read_u32(pdev->dev.of_node,
->>                          "ti,davinci-chipselect", &prop))
->>                          pdev->id = prop;
->> +               else
->> +                       return ERR_PTR(-EINVAL);
->> +
-> So the check already exist but the error case wasn't handled.
-> This should be reflected in change log.
->
+On Mon, Nov 18, 2013 at 05:06:28PM +0100, Thierry Reding wrote:
 
-The error will be handled at return by:
-	pdata = nand_davinci_get_pdata(pdev);
-  	if (IS_ERR(pdata))
-		return PTR_ERR(pdata);
+> Part of my point was that you could possibly still use the same IP with
+> only a modified (standard) register interface. That way no licensing of
+> third party IP would be needed. You'd only need to rewrite parts of the
+> IP to make it look (and behave) like the standard one.
 
-or did you mean I should add dev_err().
+> That's exactly how 16550-compatible UARTs work, isn't it? Or even the
+> way that USB (EHCI, ...) work. There's a standardize register interface,
+> possibly with a way for vendor-specific extensions, but the interface
+> itself doesn't need to be licensed, so there are no additional costs to
+> supporting the standard interface. There are only the advantages of
+> being able to reuse a well-tested body of code.
 
->>                  if (!of_property_read_u32(pdev->dev.of_node,
->>                          "ti,davinci-mask-ale", &prop))
->>                          pdata->mask_ale = prop;
->> @@ -598,6 +602,10 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
->>          nand_ecc_modes_t                ecc_mode;
->>
->>          pdata = nand_davinci_get_pdata(pdev);
->> +       if (IS_ERR(pdata)) {
->> +               return PTR_ERR(pdata);
->> +       }
->> +
-> Again not related to commit log. You might want to split this patch
-> then.
->
+My (potentially flawed) understanding here is that the register
+interfaces for this sort of thing tend to be very thin - perhaps more
+true for SPI which is extremely simple electrically.  Adding a new
+interface therefore ends up being more invasive than it could appear
+since assumptions in the design and validation tend to appear in the
+registers and so changing the register map propagates through.
 
-I'll move it in the same separate patch.
+I do agree that it'd be nice to get some standardisation at some level,
+I just fear that it's a bit late.
 
-> Regards,
-> Santosh
->
+--FRaepaAnLTQkJ4tS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
--- 
-Regards,
-Ivan Khoronzhuk
+iQIcBAEBAgAGBQJSil3TAAoJELSic+t+oim9vFwP/3SLqzj4laAextkKD/rwl4O8
+j0lGB+z3BtN7/2sI1EgjJKgEZQlRuBd61FZWScuXbeqQAE29qAR2j08bFFA4PGMg
+XbOITjMrT9PLALW44d0gmJ6mpxWhHKudFXca9gPz67a+1aS8LOL+Os3moMUz92v+
+CnKjxpewmtKChETniveZc9ovsGZf4uj3LyCXeABgG2BjMb6Fau7NqWf7ga6NWDU3
+nlKcVzm3dOsOnk3B03PSQ+CYH/r/zkrQBpYLZHCOsd7NjXbYiQ1hGoTeOJC5c/XL
+XQcxKO8lxpdKuTo5P1FfgJWIwtwZHewlNV0GSwuYzS/inkXZoyuoJjGmWTwkXSDJ
+o4RwqesjAmuLRSeZcPqFEjlGSly+NoTJOTw100T2PnssXhvsJhDO7zFTLF4o8KeR
+/oxP/a86aL9vKAa9u1GU8lp1cEXg71Ufqo8h8HiV+75Q5cKwiI3+RP8i3IQO86BH
+M3H8HcOMoX348AzwDWB2t8FvYAIHYqDmHKKNYufIKy0Ry2f5Ke9XAIaD9Bvb8tH+
+9+qPTmAWq1ySjzH/ypcrrYkonErrm5easwizHhIvN8qBjuVKi8cxcYzOsOlyfiQp
+VHBbJwbrrGareqpBodAm5Yy7vnwm0TsdjoQL7AJ9RhpV3JAes6gZ8PRXpQSJ5wGG
+QYQ3lmQDjcjDw0CRgP+M
+=TVN4
+-----END PGP SIGNATURE-----
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--FRaepaAnLTQkJ4tS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
