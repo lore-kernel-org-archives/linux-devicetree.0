@@ -1,45 +1,52 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [PATCH 1/8] watchdog: davinci: change driver to use WDT
- core
-Date: Mon, 18 Nov 2013 17:15:12 +0200
-Message-ID: <528A2F00.7090302@ti.com>
-References: <1383680783-12114-2-git-send-email-ivan.khoronzhuk@ti.com> <527A287C.2090401@ti.com> <5287D5A7.7060702@roeck-us.net> <5289FE60.2040207@ti.com> <528A24DE.1010507@roeck-us.net>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 15:19:01 +0000
+Message-ID: <20131118151900.GF16735@n2100.arm.linux.org.uk>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <201311152056.47846.arnd@arndb.de> <20131115232109.GT16735@n2100.arm.linux.org.uk> <201311181605.37300.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <528A24DE.1010507-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201311181605.37300.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2013 04:31 PM, Guenter Roeck wrote:
-> On 11/18/2013 03:47 AM, ivan.khoronzhuk wrote:
->
->>>>    MODULE_LICENSE("GPL");
->>>> -MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
->>>>    MODULE_ALIAS("platform:watchdog");
->>>>
->>> You might want to rename the platform driver to something like
->>> davinci-wdt and change the MODULE_ALIAS
->>> accordingly.
->>>
->>
->> Yes, it could be changed but not in this patch.
->>
-> Seems to me this would be the perfect time to change it, as you switch
-> to use
-> the watchdog core which permits more than one active watchdog in the
-> system.
->
-> Guenter
->
+On Mon, Nov 18, 2013 at 04:05:37PM +0100, Arnd Bergmann wrote:
+> On Saturday 16 November 2013, Russell King - ARM Linux wrote:
+> > On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
+> > > 
+> > > For all I know, doing this in ACPI is something that is only now being
+> > > discussed as Intel wants to be able to reuse the existing features from
+> > > DT enabled drivers in the kernel and share the implementation between
+> > > embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
+> > > isn't as crazy.
+> > > 
+> > > The existing ACPI usage however is basically all binary and cannot be
+> > > shared with DT, in particular it won't help for the orthogonal problem of
+> > > using ACPI to get "enterprise server" features on ARM64.
+> > 
+> > That's strange, because the patches I've seen from people who want to
+> > add ACPI support to AMBA are all based around very similar strings to
+> > those in DT to lookup the same data in ACPI.
+> 
+> Can you point to specific patches?
 
-... Yes, you are right. I'll rename it.
--- 
-Regards,
-Ivan Khoronzhuk
+No, because they weren't publically posted, so I don't feel that I can
+say all that much; they were from quite a large company though.
+
+> I can't say I'm an expert on this, but everything I've seen with ACPI
+> is tables of binary data with four-letter identifiers that are defined
+> by the ACPI group, but not using strings in a similar manner to DT.
+
+They are using strings which are the same as the DT properties, but
+without the vendor prefix - but yes, to only retrieve things like
+booleans, u32s and such like.  They also have support for fixed-rate
+clocks via the clk API too...
+
+I'd like them to post the patches publically so a more open discussion
+could occur.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
