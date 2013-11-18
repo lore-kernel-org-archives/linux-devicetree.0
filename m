@@ -1,56 +1,98 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv5 06/20] hwmon: lm75: expose to thermal fw via DT nodes
-Date: Mon, 18 Nov 2013 08:25:32 -0800
-Message-ID: <20131118162532.GB15610@roeck-us.net>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
- <1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
- <20131115084354.656452b9@endymion.delvare>
- <528A23DD.2070406@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: Fwd: [PATCH 4/8] watchdog: davinci: add GET_STATUS option support
+Date: Mon, 18 Nov 2013 18:28:05 +0200
+Message-ID: <528A4015.5040405@ti.com>
+References: <1383680783-12114-5-git-send-email-ivan.khoronzhuk@ti.com>
+ <527A28CE.2070802@ti.com> <528828E7.6060404@roeck-us.net>
+ <528A2252.7040605@ti.com> <20131118162426.GA15610@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <528A23DD.2070406@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Jean Delvare <khali@linux-fr.org>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131118162426.GA15610@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 10:27:41AM -0400, Eduardo Valentin wrote:
-> On 15-11-2013 03:43, Jean Delvare wrote:
-> > Hi Eduardo,
-> > 
-> 
-> Hello Jean!
-> 
-> > Sorry for joining the discussion a little late, I could never find the
-> > time to look into this patch series so far.
-> 
-> Well, better late than never, that's what it is said, isn't it? :-)
-> Thanks for arranging the time to look at these patches.
-> 
-> The patch series have been looked and contributed by several people and
-> a couple o maintainers now. Starts to be way better than the original
-> RFC. The core idea still holds though.
-> 
-> > 
-> > On Tue, 12 Nov 2013 15:46:08 -0400, Eduardo Valentin wrote:
-> >> This patch adds to lm75 temperature sensor the possibility
-> >> to expose itself as thermal zone device, registered on the
-> >> thermal framework.
-> >>
-> >> The thermal zone is built only if a device tree node
-> >> describing a thermal zone for this sensor is present
-> >> inside the lm75 DT node. Otherwise, the driver behavior
-> >> will be the same.
-> >>
-> >> Cc: Jean Delvare <khali@linux-fr.org>
-> >> Cc: lm-sensors@lm-sensors.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> On HWMON side, I got Guenter's solid contributions, as you can see.
-> 
-Not an argument. I am not perfect, and Jean has a number of valid points.
+On 11/18/2013 06:24 PM, Guenter Roeck wrote:
+> On Mon, Nov 18, 2013 at 04:21:06PM +0200, ivan.khoronzhuk wrote:
+>> On 11/17/2013 04:24 AM, Guenter Roeck wrote:
+>>> On 11/06/2013 03:32 AM, ivan.khoronzhuk wrote:
+>>>> When watchdog timer is expired we can know about it thought
+>>>
+>>> thought -> through or with
+>>>
+>>
+>> Ok
+>>
+>>>> GET_STATUS ioctl option.
+>>>>
+>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>> ---
+>>>>    drivers/watchdog/davinci_wdt.c |   13 +++++++++++++
+>>>>    1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/drivers/watchdog/davinci_wdt.c
+>>>> b/drivers/watchdog/davinci_wdt.c
+>>>> index 6cbf2e1..a371b2d 100644
+>>>> --- a/drivers/watchdog/davinci_wdt.c
+>>>> +++ b/drivers/watchdog/davinci_wdt.c
+>>>> @@ -144,6 +144,18 @@ static unsigned int
+>>>> davinci_wdt_get_timeleft(struct watchdog_device *wdd)
+>>>>        return wdd->timeout - timer_counter;
+>>>>    }
+>>>>
+>>>> +static unsigned int davinci_wdt_status(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    u32 val;
+>>>> +    struct davinci_wdt_device *davinci_wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    val = ioread32(davinci_wdt->base + WDTCR);
+>>>> +    if (val & WDFLAG)
+>>>> +        return WDIOF_CARDRESET;
+>>>> +
+>>>       "Card previously reset the CPU"
+>>>
+>>> Is this really accurate / correct ?
+>>>
+>>> My understanding is that the status is supposed to return the reason for
+>>> a previous reset/reboot,
+>>> not the curent condition.
+>>>
+>>
+>> Actually it is not so good correlate with the purpose, but I grasped
+>> several examples like watchdog/pcwd.c; watchdog/w83977f_wdt.c;
+>> watchdog/of_xilinx_wdt.c and saw that I can use it in meaning "the card initiated reset.
+>> After the WDT is overflowed it sets WDFLAG, so I can use it.
+>> It is more useful while debugging and if it is doubtful I can drop it.
+>>
+> The usual reaction to a watchdog timer event is a reset, so I am somewhat
+> doubtful if this is of any use in practice, other than maybe to show that it
+> isn't working.
+>
+> Anyway, I always dislike it when people point out other wrong usages of an API
+> (or anything, really) as argument to do the same. Speeding isn't legal either,
+> no matter how many people do it. FWIW, the wrong usages you pointed out should
+> in my opinion be removed, and if Wim agrees I'll be happy to submit patches to
+> do it.
+>
+> If you need debugging information, there is always debugfs. There should be
+> no need to hijack an API which is supposed to be used for something else.
+>
+> Guenter
+>
 
-Guenter
+I'll drop it
+
+-- 
+Regards,
+Ivan Khoronzhuk
