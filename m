@@ -1,78 +1,107 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
- better?
-Date: Mon, 18 Nov 2013 18:35:02 +0000
-Message-ID: <20131118183502.GP2674@sirena.org.uk>
-References: <52644A9E.3060007@wwwdotorg.org>
- <20131118122644.GA26046@ulmo.nvidia.com>
- <20131118134022.26EE7C409EC@trevor.secretlab.ca>
- <20131118135727.GD14306@sirena.org.uk>
- <20131118152920.GL26046@ulmo.nvidia.com>
- <20131118155022.GB28334@sirena.org.uk>
- <20131118160626.GN26046@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FRaepaAnLTQkJ4tS"
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [RFC PATCH V2 1/2] dtc: add 'compat' output option, prints board string
+Date: Mon, 18 Nov 2013 18:38:14 +0000
+Message-ID: <728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <cover.1384798508.git.jason@lakedaemon.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131118160626.GN26046-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+References: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Consumers of the Linux kernel's build products are beginning to hardcode
+the filenames of the dtbs generated.  Since the dtb filenames are
+currently the dts filename s/dts/dtb/, this prevents the kernel
+community from renaming dts files as needed.
 
---FRaepaAnLTQkJ4tS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let's provide a consistent naming structure for consumers to script
+against.  Or at least, as consistent as the dts properties themselves.
 
-On Mon, Nov 18, 2013 at 05:06:28PM +0100, Thierry Reding wrote:
+With this patch, adding the '-O compat' option to the dtc commandline
+will cause dtc to parse the provided file, and print out the board
+compatible string to stdout.
 
-> Part of my point was that you could possibly still use the same IP with
-> only a modified (standard) register interface. That way no licensing of
-> third party IP would be needed. You'd only need to rewrite parts of the
-> IP to make it look (and behave) like the standard one.
+This will facilitate an 'installdtbs.sh' script in the kernel for naming
+dtb files by their compatible string, eg:
 
-> That's exactly how 16550-compatible UARTs work, isn't it? Or even the
-> way that USB (EHCI, ...) work. There's a standardize register interface,
-> possibly with a way for vendor-specific extensions, but the interface
-> itself doesn't need to be licensed, so there are no additional costs to
-> supporting the standard interface. There are only the advantages of
-> being able to reuse a well-tested body of code.
+$ dtc -I dtb -O compat arch/arm/boot/dts/armada-370-mirabox.dtb
+globalscale,mirabox
 
-My (potentially flawed) understanding here is that the register
-interfaces for this sort of thing tend to be very thin - perhaps more
-true for SPI which is extremely simple electrically.  Adding a new
-interface therefore ends up being more invasive than it could appear
-since assumptions in the design and validation tend to appear in the
-registers and so changing the register map propagates through.
+This change will also simplify distribution install scripts that need to
+search through many dtbs to find the right one for a target board.
 
-I do agree that it'd be nice to get some standardisation at some level,
-I just fear that it's a bit late.
+Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+changes since v1:
+ - made patch against in-tree dtc code to facilitate testing
+ - dtc prints compatible string to stdout now, instead of creating symlink
+    - should be more flexible for end-users
 
---FRaepaAnLTQkJ4tS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ scripts/dtc/dtc.c      | 3 +++
+ scripts/dtc/dtc.h      | 1 +
+ scripts/dtc/flattree.c | 9 +++++++++
+ 3 files changed, 13 insertions(+)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+index a375683c1534..89264bb0a3dd 100644
+--- a/scripts/dtc/dtc.c
++++ b/scripts/dtc/dtc.c
+@@ -68,6 +68,7 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\tOutput formats are:\n");
+ 	fprintf(stderr, "\t\t\tdts - device tree source text\n");
+ 	fprintf(stderr, "\t\t\tdtb - device tree blob\n");
++	fprintf(stderr, "\t\t\tcompat - print board compatible string\n");
+ 	fprintf(stderr, "\t\t\tasm - assembler source\n");
+ 	fprintf(stderr, "\t-V <output version>\n");
+ 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
+@@ -250,6 +251,8 @@ int main(int argc, char *argv[])
+ 		dt_to_blob(outf, bi, outversion);
+ 	} else if (streq(outform, "asm")) {
+ 		dt_to_asm(outf, bi, outversion);
++	} else if (streq(outform, "compat")) {
++		dt_to_compat(bi);
+ 	} else if (streq(outform, "null")) {
+ 		/* do nothing */
+ 	} else {
+diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+index 3e42a071070e..d4e47c697c2f 100644
+--- a/scripts/dtc/dtc.h
++++ b/scripts/dtc/dtc.h
+@@ -255,6 +255,7 @@ void process_checks(int force, struct boot_info *bi);
+ 
+ void dt_to_blob(FILE *f, struct boot_info *bi, int version);
+ void dt_to_asm(FILE *f, struct boot_info *bi, int version);
++void dt_to_compat(struct boot_info *bi);
+ 
+ struct boot_info *dt_from_blob(const char *fname);
+ 
+diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+index 665dad7bb465..bdbd3d7e8964 100644
+--- a/scripts/dtc/flattree.c
++++ b/scripts/dtc/flattree.c
+@@ -577,6 +577,15 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
+ 	data_free(strbuf);
+ }
+ 
++void dt_to_compat(struct boot_info *bi)
++{
++	struct property *prop;
++
++	prop = get_property(bi->dt, "compatible");
++
++	printf("%s\n", prop->val.val);
++}
++
+ struct inbuf {
+ 	char *base, *limit, *ptr;
+ };
+-- 
+1.8.4.3
 
-iQIcBAEBAgAGBQJSil3TAAoJELSic+t+oim9vFwP/3SLqzj4laAextkKD/rwl4O8
-j0lGB+z3BtN7/2sI1EgjJKgEZQlRuBd61FZWScuXbeqQAE29qAR2j08bFFA4PGMg
-XbOITjMrT9PLALW44d0gmJ6mpxWhHKudFXca9gPz67a+1aS8LOL+Os3moMUz92v+
-CnKjxpewmtKChETniveZc9ovsGZf4uj3LyCXeABgG2BjMb6Fau7NqWf7ga6NWDU3
-nlKcVzm3dOsOnk3B03PSQ+CYH/r/zkrQBpYLZHCOsd7NjXbYiQ1hGoTeOJC5c/XL
-XQcxKO8lxpdKuTo5P1FfgJWIwtwZHewlNV0GSwuYzS/inkXZoyuoJjGmWTwkXSDJ
-o4RwqesjAmuLRSeZcPqFEjlGSly+NoTJOTw100T2PnssXhvsJhDO7zFTLF4o8KeR
-/oxP/a86aL9vKAa9u1GU8lp1cEXg71Ufqo8h8HiV+75Q5cKwiI3+RP8i3IQO86BH
-M3H8HcOMoX348AzwDWB2t8FvYAIHYqDmHKKNYufIKy0Ry2f5Ke9XAIaD9Bvb8tH+
-9+qPTmAWq1ySjzH/ypcrrYkonErrm5easwizHhIvN8qBjuVKi8cxcYzOsOlyfiQp
-VHBbJwbrrGareqpBodAm5Yy7vnwm0TsdjoQL7AJ9RhpV3JAes6gZ8PRXpQSJ5wGG
-QYQ3lmQDjcjDw0CRgP+M
-=TVN4
------END PGP SIGNATURE-----
-
---FRaepaAnLTQkJ4tS--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
