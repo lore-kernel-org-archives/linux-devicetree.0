@@ -1,64 +1,100 @@
-From: Jon Masters <jonathan@jonmasters.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 12:47:40 -0500
-Message-ID: <A1500B03-BE9F-413D-AB2C-A15A8F0C6103@jonmasters.org>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <20131115175241.GB27174@quad.lixom.net>
-Mime-Version: 1.0 (Mac OS X Mail 6.6 \(1510\))
-Content-Type: text/plain; charset="us-ascii"
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 02/12] mtd: nand: davinci: check required ti,
+ davinci-chipselect property
+Date: Mon, 18 Nov 2013 20:25:25 +0200
+Message-ID: <528A5B95.3040808@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8CEF@DNCE04.ent.ti.com>
+ <52824E2F.9090302@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131115175241.GB27174@quad.lixom.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <52824E2F.9090302@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/12/2013 05:50 PM, Santosh Shilimkar wrote:
+> On Monday 11 November 2013 11:53 AM, Khoronzhuk, Ivan wrote:
+>> The property "ti,davinci-chipselect" is required. So we have to check
+>> if it is set.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   drivers/mtd/nand/davinci_nand.c |   10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>> index d87213f..8e1c88e 100644
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -541,10 +541,14 @@ static struct davinci_nand_pdata
+>>                                  GFP_KERNEL);
+>>                  pdev->dev.platform_data = pdata;
+>>                  if (!pdata)
+>> -                       return NULL;
+>> +                       return ERR_PTR(-ENOMEM);
+>> +
+> This change don't follow commit message.
+>
 
-On Nov 15, 2013, at 12:52 PM, Olof Johansson <olof@lixom.net> wrote:
+I'll move it to separate patch, that will be first patch
 
-> On Fri, Nov 15, 2013 at 09:57:17AM +0000, Mark Rutland wrote:
->> On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
->>> The more I start to see early UEFI/ACPI code, the more I am certain
->>> that we want none of that crap in the kernel. It's making things
->>> considerably messier, while we're already very busy trying to convert
->>> everything over and enable DT -- we'll be preempting that effort just
->>> to add even more boilerplate everywhere and total progress will be
->>> hurt.
->> 
->> We are certainly under a lot of pressure with the device tree migration,
->> and I agree that adding another information source is going to be a
->> source of pain. However, I'd argue that we're going to encounter pain
->> regardless of which approach we take.
->> 
->> I'm of the opinion that the only way we should support ACPI is as a
->> first-class citizen. We don't need to modify every driver and subsystem
->> to support ACPI, only those necessary to support the minimal set of
->> platforms using ACPI. ACPI is new in the arm space, and we can enforce
->> quality standards on ACPI _now_ above what we're allowing for DT, and
->> avoid future problems.
-> 
-> It's obvious from the very first submission, from a vendor that has worked
-> closely with "the community" (i.e. one enterprise distro at least), that this
-> is completely new territory for _everyone_ involved. There's no way that we can
-> enforce quality standards for ACPI yet -- we don't know what they look like!
-> Nobody knows how to design a good ACPI implementation or binding.
-> 
-> Oh wait, there's people who have been doing this for years. Microsoft. They
-> should be the ones driving this and taking the pain for it. Once the platform
-> is enabled for their needs, we'll sort it out at our end. After all, that has
-> worked reasonably well for x86 platforms.
+>>                  if (!of_property_read_u32(pdev->dev.of_node,
+>>                          "ti,davinci-chipselect", &prop))
+>>                          pdev->id = prop;
+>> +               else
+>> +                       return ERR_PTR(-EINVAL);
+>> +
+> So the check already exist but the error case wasn't handled.
+> This should be reflected in change log.
+>
 
-For the record, Red Hat's position is to fully back ACPI on ARMv8. This is not to say that you ever will see a commercial product from Red Hat (I have nothing to say there of any kind), but in saying the above you do attempt to preclude the possibility that someone might want to ship a real Enterprise grade OS for the next few years (no offense to others who are shipping today). I would suggest a more pragmatic solution is to leverage the opportunity to be involved in the steering of ACPI on ARMv8 from the ground up, rather than just waiting for others to do it as has happened in the past (isn't that a sad reality? waiting for Microsoft to do the lifting?). It's going to happen either way. Too many silicon companies have billions on the line, and most of them are already on the ACPI train 
- at this point - along with the major OEMs. Now if people said "sure, we'd love to join UEFI Forum but we can't afford it" or something tangible I could take back to others to secure funds or support for such involvement to proceed, then we'd be usefully advancing this :)
+The error will be handled at return by:
+	pdata = nand_davinci_get_pdata(pdev);
+  	if (IS_ERR(pdata))
+		return PTR_ERR(pdata);
 
-Jon.
+or did you mean I should add dev_err().
+
+>>                  if (!of_property_read_u32(pdev->dev.of_node,
+>>                          "ti,davinci-mask-ale", &prop))
+>>                          pdata->mask_ale = prop;
+>> @@ -598,6 +602,10 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>          nand_ecc_modes_t                ecc_mode;
+>>
+>>          pdata = nand_davinci_get_pdata(pdev);
+>> +       if (IS_ERR(pdata)) {
+>> +               return PTR_ERR(pdata);
+>> +       }
+>> +
+> Again not related to commit log. You might want to split this patch
+> then.
+>
+
+I'll move it in the same separate patch.
+
+> Regards,
+> Santosh
+>
+
+
+-- 
+Regards,
+Ivan Khoronzhuk
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
