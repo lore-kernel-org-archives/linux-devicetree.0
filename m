@@ -1,69 +1,67 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC PATCH V2 1/2] dtc: add 'compat' output option, prints
- board string
-Date: Mon, 18 Nov 2013 14:21:21 -0500
-Message-ID: <20131118192121.GH10335@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <cover.1384798508.git.jason@lakedaemon.net>
- <728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon.net>
- <528A63EE.8050401@wwwdotorg.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 11:21:07 -0800
+Message-ID: <20131118192107.GC5886@quad.lixom.net>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <3371903.8j54vrCjEN@wuerfel>
+ <CAOesGMiYyOcvr3Aqs-p8zc=XDwJM9NZtNxtxrTZssc6F=siZCw@mail.gmail.com>
+ <201311180945.52764.arnd@arndb.de>
+ <528A4F5F.7080104@jonmasters.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <528A63EE.8050401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <528A4F5F.7080104-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 12:01:02PM -0700, Stephen Warren wrote:
-> On 11/18/2013 11:38 AM, Jason Cooper wrote:
-> > Consumers of the Linux kernel's build products are beginning to hardcode
-> > the filenames of the dtbs generated.  Since the dtb filenames are
-> > currently the dts filename s/dts/dtb/, this prevents the kernel
-> > community from renaming dts files as needed.
-> > 
-> > Let's provide a consistent naming structure for consumers to script
-> > against.  Or at least, as consistent as the dts properties themselves.
-> > 
-> > With this patch, adding the '-O compat' option to the dtc commandline
-> > will cause dtc to parse the provided file, and print out the board
-> > compatible string to stdout.
-> > 
-> > This will facilitate an 'installdtbs.sh' script in the kernel for naming
-> > dtb files by their compatible string, eg:
-> > 
-> > $ dtc -I dtb -O compat arch/arm/boot/dts/armada-370-mirabox.dtb
-> > globalscale,mirabox
-> > 
-> > This change will also simplify distribution install scripts that need to
-> > search through many dtbs to find the right one for a target board.
-> > 
-> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> > ---
-> > changes since v1:
-> >  - made patch against in-tree dtc code to facilitate testing
+On Mon, Nov 18, 2013 at 12:33:19PM -0500, Jon Masters wrote:
+> On 11/18/2013 03:45 AM, Arnd Bergmann wrote:
+> > On Sunday 17 November 2013, Olof Johansson wrote:
 > 
-> I assume this patch would first get applied to the upstream dtc, then
-> back-ported into the kernel though?
+> >> Yep, and together for review is a critical part. I'm not saying that
+> >> the ideal solution is a flashed DTB, but it's better than ACPI. A
+> >> flashed DTB that's _easy to update_ as part of an OS install would
+> >> probably be one of the best solutions we could ask for though.
+> > 
+> > Right: the assumption on the DT boot interfaces is that board designers
+> > make mistakes and are working on moving targets, so we need ways to update
+> > the DTB. By contrast, the assumption on ACPI is that server firmware
+> > authors know what they are doing and you shouldn't let anyone else mess
+> > with the ACPI bits because doing so might damage your hardware. We're
+> > in trouble if the second assumption turns out wrong.
+> 
+> In the server space we *never* ship updated ACPI tables in Red Hat
+> products, and we never would ship updated tables as part of the OS.
+> Platform data is platform data. It belongs to the vendor shipping the
+> system, never to the OS. Yes, there are workarounds for bugs but on the
+> whole you do in fact count on server vendors not to screw it up, and if
+> they do then it is up to them to ship a BIOS update for their hardware.
 
-Yes.
+And in x86 land these days, they mostly don't screw it up because they've been
+doing this for years and years. On ARM we've got a dozen new vendors who have
+never done any of this before (and neither have we), and we're all going to
+screw it up. Denying that buys us nothing, planning for it in a manner that we
+can recover from the worst screwups without paying for it forever is the best
+way forward.
 
-> I wonder if dtc is the correct place to put this feature at all though.
-> It seems like a tiny standalone utility using libfdt would be better.
-> Actually, perhaps the existing fdtget utility (which seems to be
-> scripts/dtc/fdtget.c in the kernel although I don't know if it's built
-> by the kernel yet) can be used rather than creating a new one? Using
-> fdtget seems like it'd allow more flexibility later, if the naming rules
-> change, via scripting rather than having to edit the dtc source code.
+> In the Fedora space, even on 32-bit, we tried to not get in the business
+> of shipping DeviceTree blobs (way back when) that should be shipped by
+> the platform, but alas many systems don't have flash to store the DTB.
 
-Ah, neat.  I missed fdtget.c.  I'll take a look at that, it sounds
-promising.
+Well, duh, that was what we, as the kernel community, had mandated at
+the time.
 
-thx,
+> Coupled with the moving target we're dealing with there...things have
+> been ugly. In the v8 server space, there will be no shipping of platform
+> data. It will be ACPI tables passed in via UEFI, never updated by the
+> OS, and owned wholly by the platform vendor.
 
-Jason.
+Everything is a moving target on ARMv8 today. ACPI isn't going to change that.
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
