@@ -1,152 +1,88 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 09:45:52 +0100
-Message-ID: <201311180945.52764.arnd@arndb.de>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <3371903.8j54vrCjEN@wuerfel> <CAOesGMiYyOcvr3Aqs-p8zc=XDwJM9NZtNxtxrTZssc6F=siZCw@mail.gmail.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and
+ direct irq.
+Date: Mon, 18 Nov 2013 09:58:14 +0100
+Message-ID: <CAAfyv346pUa9k3+9jdBX+EK8cV9GenaBxrAnVnKsbUPBoNBqrQ@mail.gmail.com>
+References: <1384465609-26485-1-git-send-email-marek@goldelico.com>
+	<1384465609-26485-3-git-send-email-marek@goldelico.com>
+	<20131115153015.GD24831@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMiYyOcvr3Aqs-p8zc=XDwJM9NZtNxtxrTZssc6F=siZCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131115153015.GD24831@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "neilb@suse.de" <neilb@suse.de>, "hns@goldelico.com" <hns@goldelico.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 17 November 2013, Olof Johansson wrote:
-> On Sun, Nov 17, 2013 at 10:10 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Sunday 17 November 2013 17:18:03 Stefano Stabellini wrote:
-> >
-> > My point was not that everything would be good if we change the kernel
-> > this way, it clearly wouldn't. I think the problem is more the parts
-> > for which neither an automated translation nor a unified driver level
-> > interface would work well.
-> 
-> Do you have predictions for what those areas would be? Chances are
-> that at least the initial ones can be handled with the methods we
-> already have today such as quirks and the like.
+Hi Mark,
 
-I think all DT references that take the form of <&phandle arg1 ...>
-are problematic because in ACPI the same things tend to expressed
-by a single number (irq, dma, gpio, ...) or just a reference with
-no arguments (don't have an example here).
+On Fri, Nov 15, 2013 at 4:30 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Nov 14, 2013 at 09:46:48PM +0000, Marek Belisko wrote:
+>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>> ---
+>>  Documentation/devicetree/bindings/misc/bmp085.txt |  8 ++++
+>>  drivers/misc/bmp085.c                             | 53 ++++++++++++++++++++---
+>>  2 files changed, 55 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/bmp085.txt b/Documentation/devicetree/bindings/misc/bmp085.txt
+>> index 91dfda2..c6033d5 100644
+>> --- a/Documentation/devicetree/bindings/misc/bmp085.txt
+>> +++ b/Documentation/devicetree/bindings/misc/bmp085.txt
+>> @@ -8,6 +8,9 @@ Optional properties:
+>>  - temp-measurement-period: temperature measurement period (milliseconds)
+>>  - default-oversampling: default oversampling value to be used at startup,
+>>    value range is 0-3 with rising sensitivity.
+>> +- gpio: if device is using EOC irq line gpio can be specified to setup interrupt
+>> +  handling
+>> +- irq: interrupt with no gpio
+>>
+>>  Example:
+>>
+>> @@ -17,4 +20,9 @@ pressure@77 {
+>>       chip-id = <10>;
+>>       temp-measurement-period = <100>;
+>>       default-oversampling = <2>;
+>> +     gpio = <&gpio0 17 0>;
+>> +
+>> +     OR
+>> +
+>> +     irq = <75>;
+>
+> There's some contention over the description of gpio-based IRQs in DT.
+> From the point of view of the device there is a logical IRQ output; the
+> fact that this happens to be wired up to a GPIO pin that can happen to
+> generate interrupts isn't anything to do with the device itself. There
+> are plenty of device we have now whose interrupt lines could be wired to
+> GPIOs. I see no reason to extend their bindings to support explicit
+> GPIOs for IRQs, and I see no reason the driver should have to handle
+> this.
+>
+> It would be far nicer for the device binding to just have the interrupts
+> property, and for the gpio controller to act as an interrupt-controller,
+> with the appropriate pin management.
+OK. Can you please give me some example in current bindings tree?
+Something like in:
+Documentation/devicetree/bindings/fb/mxsfb.txt ? So if I understand
+correctly we define only property
+interrupts = <xxx> which will be exact interrupt number for cpu gpio
+connected to bmp085 irq line.
+>
+> Thanks,
+> Mark.
 
-Another difference is things that are numbered on one side but
-named on the other. In DT we  have an inconsistent mix of the two,
-e.g. DMA requests must be named (per device) while IRQs must be
-numbered (per device) and may additionally be named. 
+Thanks,
 
-Finally, anything that needs run-time interpretation of AML is
-fundamentally hard because the AML would refer to objects that
-don't exist when you don't boot from ACPI. This gets worse if you
-need to pass ACPI identifiers into EL3 firmware. Because of this,
-anything related to runtime PM scares me at the moment, because
-there are two conflicting ways to do it: As we discussed before,
-the correct way to do this in ACPI is to hide it all from the OS
-in AML bytecode and EL2/EL3 firmware calls, but this may not be
-possible on all systems and it prevents us from translating into
-a format that the drivers can use to call our
-regulator/clk/pmdomain interfaces.
-Intel's embedded systems will likely get around this by defining
-ACPI representations of our existing DT bindings for these
-subsystems, which would be possible to translate automatically,
-but it seems very silly to use those on servers.
+marek
 
-> Once we've seen enough of them, we'll have more knowledge of what a
-> new solution really needs to cover. Speculating prematurely will
-> likely give us the wrong abstractions (and/or at too high a level,
-> causing extra work and churn for everybody). I think we agree that
-> holding off is the right answer, just maybe not (yet) what the actual
-> solution might be when we start to need it. :)
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
 
-Yes. Especially for the runtime-pm stuff, someone should probably try
-both methods on a couple of systems and then decide which one of them
-everybody should use. Unfortunately that alone is going to bind
-reviewer resources and take a significant amount of time.
-
-> >> Simply using DT would help avoiding the awkward situation where a driver
-> >> of a device only works with one of the two description formats and not
-> >> the other.
-> >
-> > Yes, but remember that Intel still have the problem on their embedded
-> > systems, and will want to solve them.
-> >
-> > For ARM Linux I agree that we're better off not having to change all
-> > the drivers again for this, but we will have a growing number of
-> > drivers that are shared with ACPI based x86 SoCs. At least there are
-> > only one or two vendors of those chips ;-)
-> 
-> Well, you menion DT-in-ACPI above. If they're really exploring that
-> path then a lot will sort itself out from there. Making a decision to
-> hold off with ACPI for ARM will help get everybody on the same page if
-> they're already considering a solution along those lines.
-
-Possibly, but x86 extending into deeply embedded may also have different
-requirements to ARM extending into servers, even if both want to use
-ACPI to get there. Some parts will overlap, others won't, and I suspect
-that there is more in the second category than people are hoping for.
-
-> >> > > I think we can still treat ACPI on ARM64 as a beginner's mistake and
-> >> > > provide hand-written DT blobs for the few systems that start shipping
-> >> > > with that.
-> >> >
-> >> > I think we can do better -- we can ask those vendors to not ship ACPI
-> >> > at all, and ship DT themselves (together with us for review, etc).
-> 
-> Yep, and together for review is a critical part. I'm not saying that
-> the ideal solution is a flashed DTB, but it's better than ACPI. A
-> flashed DTB that's _easy to update_ as part of an OS install would
-> probably be one of the best solutions we could ask for though.
-
-Right: the assumption on the DT boot interfaces is that board designers
-make mistakes and are working on moving targets, so we need ways to update
-the DTB. By contrast, the assumption on ACPI is that server firmware
-authors know what they are doing and you shouldn't let anyone else mess
-with the ACPI bits because doing so might damage your hardware. We're
-in trouble if the second assumption turns out wrong.
-
-> > The bigger problem is system vendors
-> > we don't talk to. They are going to to do any number of crazy things
-> > in their private kernels:
-> >
-> > * Board files
-> > * Hardcoded platform devices with no multiplatform support
-> > * Custom hypervisor (EL2 or EL3) interfaces for probing
-> > * FEX
-> > * ACPI
-> > * Some other firmware ported over from their MIPS products
-> > * Incompatible Open Firmware
-> > * Incompatible DT extensions
-> > * ...
-> 
-> Given that we have a documented boot protocol today, it shouldn't
-> matter much if someone ports over some MIPS firmware (we did add OF
-> client interface to CFE at PA Semi, and that worked well for us :-).
-> Most of the others listed above can hopefully be avoided by us having
-> appropriate solutions in-kernel today that they can reuse. I.e. FEX
-> happened because DT didn't exist at the time.
-> 
-> ACPI is a big problem here in that sense: Vendors have been told to
-> use it, but there's no infrastructure, and even if it would be there
-> it would be immature and we don't really know what we want from it.
-> 
-> Board files and hardcoded devices are things we've dealt with already
-> and know what to do with, so I'm less worried about that. And finally,
-> custom firmware interfaces should hopefully be rare given the
-> reference PSCI implementation from ARM, but we can deal with it if we
-> have to.
-
-Yes, the only real worry is if someone does their own firmware interfaces
-the way that Sony did on the PS3, which definitely requires custom
-APIs in the kernel. All others can be handled in some way by ignoring
-the provided interfaces and replacing them with DT. We might need some
-boot wrapper for cases where someone ignored the documented boot
-interfaces, but that would only be likely for systems designed for
-another OS.
- 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
