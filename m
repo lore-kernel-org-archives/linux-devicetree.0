@@ -1,166 +1,92 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [lm-sensors] [PATCHv9 02/20] thermal: introduce device tree
- parser
-Date: Mon, 18 Nov 2013 14:04:10 +0800
-Message-ID: <1384754650.2316.32.camel@rzhang-lenovo>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	 <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-	 <20131115090736.4f360dc8@endymion.delvare>
+From: Shirish S <shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy settings
+Date: Mon, 18 Nov 2013 11:37:59 +0530
+Message-ID: <CAHvYUDB3RxudtcBRnH1iyfPVHUE4cAkfq_DoXB3UCs_b16fL4g@mail.gmail.com>
+References: <1383034352-15494-1-git-send-email-s.shirish@samsung.com>
+	<1383034352-15494-5-git-send-email-s.shirish@samsung.com>
+	<20131115161732.GG24831@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131115090736.4f360dc8@endymion.delvare>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jean Delvare <khali@linux-fr.org>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, grant.likely@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131115161732.GG24831-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On =E4=BA=94, 2013-11-15 at 09:07 +0100, Jean Delvare wrote:
-> Hi Eduardo,
->=20
-> On Tue, 12 Nov 2013 15:46:04 -0400, Eduardo Valentin wrote:
-> > This patch introduces a device tree bindings for
-> > describing the hardware thermal behavior and limits.
-> > Also a parser to read and interpret the data and feed
-> > it in the thermal framework is presented.
-> >=20
-> > This patch introduces a thermal data parser for device
-> > tree. The parsed data is used to build thermal zones
-> > and thermal binding parameters. The output data
-> > can then be used to deploy thermal policies.
-> >=20
-> > This patch adds also documentation regarding this
-> > API and how to define tree nodes to use
-> > this infrastructure.
-> >=20
-> > Note that, in order to be able to have control
-> > on the sensor registration on the DT thermal zone,
-> > it was required to allow changing the thermal zone
-> > .get_temp callback. For this reason, this patch
-> > also removes the 'const' modifier from the .ops
-> > field of thermal zone devices.
-> >=20
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> > ---
-> > (...)
-> > +static int of_thermal_get_trend(struct thermal_zone_device *tz, in=
-t trip,
-> > +				enum thermal_trend *trend)
-> > +{
-> > +	struct __thermal_zone *data =3D tz->devdata;
-> > +	long dev_trend;
-> > +	int r;
-> > +
-> > +	if (!data->get_trend)
-> > +		return -EINVAL;
-> > +
-> > +	r =3D data->get_trend(data->sensor_data, &dev_trend);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	/* TODO: These intervals might have some thresholds, but in core =
-code */
-> > +	if (dev_trend > 0)
-> > +		*trend =3D THERMAL_TREND_RAISING;
-> > +	else if (dev_trend < 0)
-> > +		*trend =3D THERMAL_TREND_DROPPING;
-> > +	else
-> > +		*trend =3D THERMAL_TREND_STABLE;
-> > +
-> > +	return 0;
-> > +}
->=20
-> I don't like the whole trend thing.
->=20
-> I've been writing hwmon drivers for the past decade and I've never se=
-en
-> a thermal sensor device being able to report trends. And as a rule of
-> thumb, if the hardware can't do it then the (hardware-specific) drive=
-rs
-> should not report it.
+Hi,
 
-I agree that a sensor device should not be able to report trends. But
-currently, the thermal zone driver is not only a sensor driver, it also
-owns the platform thermal cooling strategy.
-And some platforms do have this kind of knowledge, right?
-e.g. ACPI spec provides an equation for processor passive cooling (ACPI
-Spec 5.0 11.1.5).
-
->=20
-> Hwmon devices (and drivers) report temperature values, and sometimes
-> historical min/max. They can do that because these are facts that nee=
-d
-> no interpretation.
->=20
-> Defining a trend, however, requires care and, more importantly,
-> decisions.
-
-We had the assumption that we will get an interrupt when the firmware
-thinks there is an temperature change that should be noticed by OS.
-
->  For example, consider a thermal sensor which reports 50=C2=B0C at
-> time t, then 47=C2=B0C at time t+3s,
-
-does firmware thinks this should be noticed by OS?
-If no, there is no interrupt and this temperature change is totally
-transparent to the OS at all.
-If yes, the thermal core will check if the system is overheating, if
-yes, it throttles the devices, and if no, do nothing.
-
->  then 48=C2=B0C at time t+6s. At t+7s someone
-> asks for the trend,
-
-the trend is needed when platform thermal driver calls
-thermal_zone_device_update(), and mostly following a temperature change
-interrupt.
-
->  what should the driver reply?
->  If you consider only
-> the last 5 seconds, temperature is raising. If you consider the last =
-10
-> seconds instead, temperature is dropping. How would the driver know
-> what time frame the caller is interested in?
->=20
-> Another example: "small" temperature variations. If temperatures vari=
-es
-> by 1=C2=B0C in my kitchen's oven, I'd call it stable. If my body temp=
-erature
-> varies by 1=C2=B0C, I'd call it non-stable, and my doctor for an appo=
-intment
-> also ;-)
->=20
-
-> My point is that only the caller, and not the driver, knows how to
-> convert a series of measurements into a trend. So I don't think drive=
-rs
-> should implement anything like get_trend(). Whatever piece of code
-> needs to establish a trend should call get_temp() repeatedly, store t=
-he
-> results and do its own analysis of the data.
->=20
-I think the key problem is that,
-the thermal subsystem just provides a basic/minimum thermal control
-framework in kernel, and it is totally platform independent. And any
-platform driver can use this framework to do some basic thermal control
-easily but just telling thermal core if the thermal core should take
-some cooling actions (trip points + trend + current temperature) and ho=
-w
-(by choosing thermal governors).
-
-So if you want to do more precise thermal control, you'd better disable
-kernel thermal control and do it in userspace. In this case,
-the .get_trend() will never be invoked at all.
-=46urther more, I'm indeed considering introduce platform specific ther=
-mal
-governors, so that platform thermal driver can tell thermal core what t=
-o
-do at a certain point.
-
-thanks,
-rui
-
+On Fri, Nov 15, 2013 at 9:47 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Oct 29, 2013 at 08:12:32AM +0000, Shirish S wrote:
+>> This patch adds dt support to hdmiphy config settings
+>> as it is board specific and depends on the signal pattern
+>> of board.
+>>
+>> Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/video/exynos_hdmi.txt      |   34 +++++++++
+>>  drivers/gpu/drm/exynos/exynos_hdmi.c               |   79 +++++++++++++++++++-
+>>  2 files changed, 109 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> index 323983b..c685c90 100644
+>> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> @@ -13,6 +13,32 @@ Required properties:
+>>       b) pin number within the gpio controller.
+>>       c) optional flags and pull up/down.
+>>
+>> +- hdmiphy-configs: following information about the hdmiphy config settings.
+>> +        a) "nr-configs" specifies the number of pixel clocks supported.
+>
+> I really don't see why this is necessary. It's redundant, and it's easy
+> for the driver to derive this from the number of config<N> nodes, which
+> it can count.
+>
+Agreed, i have removed this field and now use the pixel clock to update the
+required values.
+>> +     b) "config<N>: config<N>" specifies the phy configuration settings,
+>> +             wher 'N' denotes the number of iteration.
+>
+> The number of iteration?
+Corrected in next patch set.
+>
+>> +             "pixel-clock" specifies the pixel clock
+>> +             "conifig-de-emphasis-level" specifies the 8 bit configuration
+>> +             of Data De-emphasis levels,below shown is example for
+>> +             data de-emphasis register at address 0x145D0040.
+>> +                     hdmiphy@38[16] for bits[3:0] permitted values:
+>> +                             0000 means 760 mVdiff && 1111 means 1400 mVdiff
+>> +                             1LSB corresponds to 20mVdiff
+>> +                     hdmiphy@38[16] for bits[7:4] permitted values:
+>> +                             0000    0dB
+>> +                             0001    -0.25dB
+>> +                             0010    -0.7dB
+>> +                             0011    -1.15dB
+>> +                             1111    -7.45dB
+>> +             "config-clock-level" specifies the 8 bit configuration for
+>> +             the corresponding clock level, for example if 0x145D005C
+>> +             is the address of clock level register.
+>
+> I don't understand what this intended to mean.
+Have updated in next patch set, hope its understandable.
+>
+>> +                     hdmiphy@38[23] for bits [1:0] permitted values:
+>> +                             00 means 0 mVdiff && 11 means 60 mVdiff
+>> +                     hdmiphy@38[23] for bits [7:3] permitted values:
+>> +                             00000 is 790 mVdiff
+>> +                             11111 is 1430 mVdiff
+>> +                             1LSB corresponds to 20mVdiff
+>
+> That last line was confusing. Why not state that this is a value between
+> 790 and 1430 mV in 20mV increments?
+>
+Agreed, have made the change in next patch set.
+> Thanks,
+> Mark.
+Thanks,
+Shirish S
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
