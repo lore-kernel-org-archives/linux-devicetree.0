@@ -1,89 +1,28 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [PATCH 4/8] watchdog: davinci: add GET_STATUS option support
-Date: Mon, 18 Nov 2013 16:21:06 +0200
-Message-ID: <528A2252.7040605@ti.com>
-References: <1383680783-12114-5-git-send-email-ivan.khoronzhuk@ti.com> <527A28CE.2070802@ti.com> <528828E7.6060404@roeck-us.net>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCHv3] ASoC: Add support for BCM2835
+Date: Mon, 18 Nov 2013 15:24:43 +0100
+Message-ID: <528A232B.9070402@metafoo.de>
+References: <5289F9DF.8060406@koalo.de> <20131118141637.GI30853@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <528828E7.6060404-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20131118141637.GI30853-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2013 04:24 AM, Guenter Roeck wrote:
-> On 11/06/2013 03:32 AM, ivan.khoronzhuk wrote:
->> When watchdog timer is expired we can know about it thought
+On 11/18/2013 03:16 PM, Mark Rutland wrote:
 > 
-> thought -> through or with
-> 
-
-Ok
-
->> GET_STATUS ioctl option.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->> ---
->>   drivers/watchdog/davinci_wdt.c |   13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/watchdog/davinci_wdt.c 
->> b/drivers/watchdog/davinci_wdt.c
->> index 6cbf2e1..a371b2d 100644
->> --- a/drivers/watchdog/davinci_wdt.c
->> +++ b/drivers/watchdog/davinci_wdt.c
->> @@ -144,6 +144,18 @@ static unsigned int 
->> davinci_wdt_get_timeleft(struct watchdog_device *wdd)
->>       return wdd->timeout - timer_counter;
->>   }
->>
->> +static unsigned int davinci_wdt_status(struct watchdog_device *wdd)
+>> +static void bcm2835_i2s_stop_clock(struct bcm2835_i2s_dev *dev)
 >> +{
->> +    u32 val;
->> +    struct davinci_wdt_device *davinci_wdt = watchdog_get_drvdata(wdd);
->> +
->> +    val = ioread32(davinci_wdt->base + WDTCR);
->> +    if (val & WDFLAG)
->> +        return WDIOF_CARDRESET;
->> +
->      "Card previously reset the CPU"
+>> +       uint32_t clkreg;
 > 
-> Is this really accurate / correct ?
-> 
-> My understanding is that the status is supposed to return the reason for 
-> a previous reset/reboot,
-> not the curent condition.
-> 
+> s/uint32_t/u32/ (and elsewhere...)
 
-Actually it is not so good correlate with the purpose, but I grasped
-several examples like watchdog/pcwd.c; watchdog/w83977f_wdt.c;
-watchdog/of_xilinx_wdt.c and saw that I can use it in meaning "the card initiated reset.
-After the WDT is overflowed it sets WDFLAG, so I can use it.
-It is more useful while debugging and if it is doubtful I can drop it.
+Please don't do that.
 
->> +    return 0;
->> +}
->> +
->>   static const struct watchdog_info davinci_wdt_info = {
->>       .options = WDIOF_KEEPALIVEPING,
->>       .identity = "DaVinci Watchdog",
->> @@ -155,6 +167,7 @@ static const struct watchdog_ops davinci_wdt_ops = {
->>       .stop        = davinci_wdt_ping,
->>       .ping        = davinci_wdt_ping,
->>       .get_timeleft    = davinci_wdt_get_timeleft,
->> +    .status        = davinci_wdt_status,
->>   };
->>
->>   static int davinci_wdt_probe(struct platform_device *pdev)
->>
-> 
-
-
--- 
-Regards,
-Ivan Khoronzhuk
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
