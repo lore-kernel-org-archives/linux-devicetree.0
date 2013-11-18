@@ -1,76 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 16:05:37 +0100
-Message-ID: <201311181605.37300.arnd@arndb.de>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <201311152056.47846.arnd@arndb.de> <20131115232109.GT16735@n2100.arm.linux.org.uk>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add port FF to GPIO ID's
+Date: Mon, 18 Nov 2013 16:05:22 +0100
+Message-ID: <20131118150521.GI26046@ulmo.nvidia.com>
+References: <1384780241-31639-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JIpyCmsTxyPLrmrM"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131115232109.GT16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384780241-31639-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 16 November 2013, Russell King - ARM Linux wrote:
-> On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
-> > 
-> > For all I know, doing this in ACPI is something that is only now being
-> > discussed as Intel wants to be able to reuse the existing features from
-> > DT enabled drivers in the kernel and share the implementation between
-> > embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
-> > isn't as crazy.
-> > 
-> > The existing ACPI usage however is basically all binary and cannot be
-> > shared with DT, in particular it won't help for the orthogonal problem of
-> > using ACPI to get "enterprise server" features on ARM64.
-> 
-> That's strange, because the patches I've seen from people who want to
-> add ACPI support to AMBA are all based around very similar strings to
-> those in DT to lookup the same data in ACPI.
 
-Can you point to specific patches? I can't say I'm an expert on this, but
-everything I've seen with ACPI is tables of binary data with four-letter
-identifiers that are defined by the ACPI group, but not using strings
-in a similar manner to DT. Apple has an extension to do DT-style properties
-in their phones, and we had a discussion at the kernel summit to do
-a more generic variation of the same idea that Darren Hart presented,
-but that is still in prototype stage.
+--JIpyCmsTxyPLrmrM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> What's been done there is the function which reads from DT has been
-> duplicated, and instead of reading the information from DT, it reads it
-> from ACPI instead using string names without the vendor prefix.
+On Mon, Nov 18, 2013 at 06:40:41PM +0530, Laxman Dewangan wrote:
+> From: Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> NVIDIA Tegra124 supports has the new gpio port as GPIO_FF.
+> Add the macro for this port name.
+>=20
+> Signed-off-by: Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/dt-bindings/gpio/tegra-gpio.h |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 
-The recently posted x-gene ahci driver does this, but from what I can
-tell, the implementation is inappropriate on both DT (because of the
-use of unreadable four-character upper-case identifiers) and on ACPI
-(because of the use of non-standard identifiers).
+I've had the same patch in my local tree for a week, but was holding
+back on sending it until the merge window closes. Anyway:
 
-> That tells me that what I've stated in my previous email to which you
-> replied is _definitely_ possible to do.  That means it's certainly
-> possible to do this without reinventing the wheel, and without having
-> to rewrite lots of parsing code, precisely along the lines I set out
-> in my original email.
+	Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-To clarify my complaint: while we can do simple (boolean, integer, text,
-or arrays of those three) properties with Darren's approach as long as they
-are private to one device, that won't suffice for anything that requires
-links between devices. We have phandles on DT that can be freely mixed with
-integers for things like GPIO or clock references. ACPI has similar
-references, but uses a different syntax for doing the same things, and these
-have to be standardized per subsystem (i.e. per type of connection) to make
-sense.
-As a result, every subsystem that has a producer-consumer type connection
-requires different code for DT and for ACPI. If the subsystem-to-driver
-interface is done well, we can have a common device driver, but in a 
-lot of cases there will be a leaky abstraction. As Olof pointed out,
-even migrating from a DT-only interface to a generic interface would
-require changing each driver, even if the result is no more ugly than
-the current state.
+And I suppose I could add:
 
-	Arnd
+	Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+depending on who wants to take this patch. Traditionally I think
+Stephen's taken them through the Tegra tree, since these files are
+highly Tegra-specific.
+
+Thierry
+
+--JIpyCmsTxyPLrmrM
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSiiyxAAoJEN0jrNd/PrOhV70P/1fS47YpErAt6HqmNVCQTZfK
+OS1rFOQtSSatgboJC8tuMO7TczZQPBvk0EL6Em1/VWUk3W9Udw8e7V7BhElMueir
+Wu5XBm2EKqmRxlJauztXyM7aw6yGC6NxnypbhKwD/96u3jc36M/w+vI1eHoGYFtg
+SnmzujCCYnt1wnKpyi0q44svq8Xf9EWRj4y2d1BUf3ZyV8/fAsnjDiEcz4y1IazG
+P7RPqhr0rXt3oHQiRMWXgX4cSdmxc4SZJtM/Idp8p6MQByT4gI6SkbYF90Qrnd2N
+kIJtl1J8nN45dAR896KD+2TEs54zi9hEFtNyG5oDVmwcXL9iSsGDXx/mXLGGHvwU
+veTo2GhBVco7iGhxD3JQEdDgbhixOTgKlSb3W4bRCgwPuq1uvy/0U61pleoHG896
+3TgNdTiGHlMici2HHvGSzFEJuaCy08m9lylULhSacWkv8sfbCrwb25AmMazIoJpx
+DB3Vj6XgJpEqZMTWvHF0RTB3Y6hloLx04uHxftya90znP06WyteE01yOgreXmm0y
+3ssnd/Iu1LHoEYdSiCK+IDTu9RWtoo2u19nlusT3sM7wcc88moTACZSNk6vJtXgO
+R/UeoHdyX3KIJOJS/YddtcFYLu0uKGXtEQZ6HtxhtHZrAyQSgixTIMjKLTcncbPI
+xIHgpwMx5W4HNvHNnABi
+=CzCy
+-----END PGP SIGNATURE-----
+
+--JIpyCmsTxyPLrmrM--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
