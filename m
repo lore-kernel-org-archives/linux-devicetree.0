@@ -1,78 +1,146 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] itg3200: add dt support.
-Date: Mon, 18 Nov 2013 11:57:42 +0000
-Message-ID: <20131118115742.GG30853@e106331-lin.cambridge.arm.com>
-References: <20131101154854.2d7d1432@notabene.brown>
+From: "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3] ASoC: Add support for BCM2835
+Date: Mon, 18 Nov 2013 12:08:22 +0000
+Message-ID: <1384776479.14845.208.camel@smile>
+References: <5289F9DF.8060406@koalo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131101154854.2d7d1432-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Manuel Stahl <manuel.stahl-GeUHRtUQU7nSyEMIgutvibNAH6kLmebB@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5289F9DF.8060406-oZ8rN/sblLk@public.gmane.org>
+Content-Language: en-US
+Content-ID: <6DB828C271FD3848B21FBB4ED8069004-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2013 at 04:48:54AM +0000, NeilBrown wrote:
-> 
-> 
-> No new configuration, just a 'compatible' string and documentation.
-> 
-> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/gyro/itg3200.txt b/Documentation/devicetree/bindings/iio/gyro/itg3200.txt
-> new file mode 100644
-> index 000000000000..4581620632df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyro/itg3200.txt
-> @@ -0,0 +1,20 @@
-> +* InvenSense ITG3200 3-axis gyroscope
-> +
-> +Required properties:
-> +
-> +  - compatible : "invensense,itg3200"
-> +  - reg : I2C address, typically 0x68
-> +
-> +Optional properties:
-> +
-> +  - interrupt-parent : should be the phandle for the interrupt controller
-> +  - interrupts : interrupt mapping for GPIO IRQ
+T24gTW9uLCAyMDEzLTExLTE4IGF0IDEyOjI4ICswMTAwLCBGbG9yaWFuIE1laWVyIHdyb3RlOg0K
+PiBUaGlzIGRyaXZlciBhZGRzIHN1cHBvcnQgZm9yIGRpZ2l0YWwgYXVkaW8gKEkyUykNCj4gZm9y
+IHRoZSBCQ00yODM1IFNvQyB0aGF0IGlzIHVzZWQgYnkgdGhlDQo+IFJhc3BiZXJyeSBQaS4gRXh0
+ZXJuYWwgYXVkaW8gY29kZWNzIGNhbiBiZQ0KPiBjb25uZWN0ZWQgdG8gdGhlIFJhc3BiZXJyeSBQ
+aSB2aWEgUDUgaGVhZGVyLg0KPiANCj4gSXQgcmVsaWVzIG9uIGN5Y2xpYyBETUEgZW5naW5lIHN1
+cHBvcnQgZm9yIEJDTTI4MzUuDQoNCkZldyBjb21tZW50cyBiZWxvdy4NCg0KW10NCg0KPiArc3Rh
+dGljIHZvaWQgYmNtMjgzNV9pMnNfc3RvcF9jbG9jayhzdHJ1Y3QgYmNtMjgzNV9pMnNfZGV2ICpk
+ZXYpDQo+ICt7DQo+ICsJdWludDMyX3QgY2xrcmVnOw0KPiArCWludCB0aW1lb3V0ID0gMTAwMDsN
+Cj4gKw0KPiArCS8qIFN0b3AgY2xvY2sgKi8NCj4gKwlyZWdtYXBfdXBkYXRlX2JpdHMoZGV2LT5j
+bGtfcmVnbWFwLCBCQ00yODM1X0NMS19QQ01DVExfUkVHLA0KPiArCQkJQkNNMjgzNV9DTEtfUEFT
+U1dEX01BU0sgfCBCQ00yODM1X0NMS19FTkFCLA0KPiArCQkJQkNNMjgzNV9DTEtfUEFTU1dEKTsN
+Cj4gKw0KPiArCS8qIFdhaXQgZm9yIHRoZSBCVVNZIGZsYWcgZ29pbmcgZG93biAqLw0KPiArCXdo
+aWxlICh0aW1lb3V0ID4gMCkgew0KPiArCQl0aW1lb3V0LS07DQoNCndoaWxlICgtLXRpbWVvdXQp
+IHsNCg0KPiArDQo+ICsJCXJlZ21hcF9yZWFkKGRldi0+Y2xrX3JlZ21hcCwgQkNNMjgzNV9DTEtf
+UENNQ1RMX1JFRywgJmNsa3JlZyk7DQo+ICsJCWlmICghKGNsa3JlZyAmIEJDTTI4MzVfQ0xLX0JV
+U1kpKQ0KPiArCQkJYnJlYWs7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKHRpbWVvdXQgPD0gMCkgew0K
+DQppZiAoIXRpbWVvdXQpIHsNCg0KW10NCg0KPiArc3RhdGljIHZvaWQgYmNtMjgzNV9pMnNfY2xl
+YXJfZmlmb3Moc3RydWN0IGJjbTI4MzVfaTJzX2RldiAqZGV2LA0KPiArCQkJCSAgICBib29sIHR4
+LCBib29sIHJ4KQ0KPiArew0KDQpbXQ0KDQo+ICsJLyogV2FpdCBmb3IgdGhlIFNZTkMgZmxhZyBj
+aGFuZ2luZyBpdCdzIHN0YXRlICovDQo+ICsJd2hpbGUgKHRpbWVvdXQgPiAwKSB7DQo+ICsJCXRp
+bWVvdXQtLTsNCg0Kd2hpbGUgKC0tdGltZW91dCkgew0KDQo+ICsJCXJlZ21hcF9yZWFkKGRldi0+
+aTJzX3JlZ21hcCwgQkNNMjgzNV9JMlNfQ1NfQV9SRUcsICZjc3JlZyk7DQo+ICsJCWlmICgoY3Ny
+ZWcgJiBCQ00yODM1X0kyU19TWU5DKSAhPSBzeW5jdmFsKQ0KPiArCQkJYnJlYWs7DQo+ICsJfQ0K
+PiArDQo+ICsJaWYgKHRpbWVvdXQgPD0gMCkNCg0KaWYgKCF0aW1lb3V0KQ0KDQpbXQ0KDQo+ICtz
+dGF0aWMgaW50IGJjbTI4MzVfaTJzX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0g
+KnN1YnN0cmVhbSwNCj4gKwkJCQkgc3RydWN0IHNuZF9wY21faHdfcGFyYW1zICpwYXJhbXMsDQo+
+ICsJCQkJIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1
+X2kyc19kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwl1
+bnNpZ25lZCBpbnQgc2FtcGxpbmdfcmF0ZSA9IHBhcmFtc19yYXRlKHBhcmFtcyk7DQo+ICsJdW5z
+aWduZWQgaW50IGRhdGFfbGVuZ3RoLCBkYXRhX2RlbGF5LCBiY2xrX3JhdGlvOw0KPiArCXVuc2ln
+bmVkIGludCBjaDFwb3MsIGNoMnBvcywgbW9kZSwgZm9ybWF0Ow0KPiArCXVuc2lnbmVkIGludCBt
+YXNoID0gQkNNMjgzNV9DTEtfTUFTSF8xOw0KPiArCXVuc2lnbmVkIGludCBkaXZpLCBkaXZmLCB0
+YXJnZXRfZnJlcXVlbmN5Ow0KPiArCWludCBjbGtfc3JjID0gLTE7DQo+ICsJdW5zaWduZWQgaW50
+IG1hc3RlciA9IGRldi0+Zm10ICYgU05EX1NPQ19EQUlGTVRfTUFTVEVSX01BU0s7DQo+ICsJdWlu
+dDMyX3QgYml0X21hc3RlciA9CShtYXN0ZXIgPT0gU05EX1NPQ19EQUlGTVRfQ0JTX0NGUw0KPiAr
+CQkJCQl8fCBtYXN0ZXIgPT0gU05EX1NPQ19EQUlGTVRfQ0JTX0NGTSk7DQoNCmJvb2wgPw0KDQo+
+ICsNCj4gKwl1aW50MzJfdCBmcmFtZV9tYXN0ZXIgPQkobWFzdGVyID09IFNORF9TT0NfREFJRk1U
+X0NCU19DRlMNCg0KU28sIGlmIG1hc3RlciA9PSBTTkRfU09DX0RBSUZNVF9DQlNfQ0ZTIGJvdGgg
+Yml0X21hc3RlciBhbmQgZnJhbWVfbWFzdGVyDQp3aWxsIGJlIHRydWUuIElzIGl0IGNvcnJlY3Q/
+DQoNCj4gKwkJCQkJfHwgbWFzdGVyID09IFNORF9TT0NfREFJRk1UX0NCTV9DRlMpOw0KDQpEaXR0
+by4NCg0KPiArCXVpbnQzMl90IGNzcmVnOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBJZiBhIHN0cmVh
+bSBpcyBhbHJlYWR5IGVuYWJsZWQsDQo+ICsJICogdGhlIHJlZ2lzdGVycyBhcmUgYWxyZWFkeSBz
+ZXQgcHJvcGVybHkuDQo+ICsJICovDQo+ICsJcmVnbWFwX3JlYWQoZGV2LT5pMnNfcmVnbWFwLCBC
+Q00yODM1X0kyU19DU19BX1JFRywgJmNzcmVnKTsNCj4gKw0KPiArCWlmIChjc3JlZyAmIChCQ00y
+ODM1X0kyU19UWE9OIHwgQkNNMjgzNV9JMlNfUlhPTikpDQo+ICsJCXJldHVybiAwOw0KPiArDQoN
+Cj4gKwlpZiAoYmNtMjgzNV9jbGtfZnJlcVtjbGtfc3JjXSAlIHRhcmdldF9mcmVxdWVuY3kgPT0g
+MA0KPiArCQkJJiYgYml0X21hc3RlciAmJiBmcmFtZV9tYXN0ZXIpIHsNCj4gKwkJZGl2aSA9IGJj
+bTI4MzVfY2xrX2ZyZXFbY2xrX3NyY10vdGFyZ2V0X2ZyZXF1ZW5jeTsNCj4gKwkJZGl2ZiA9IDA7
+DQo+ICsJfSBlbHNlIHsNCj4gKwkJdWludDY0X3QgZGl2aWRlbmQ7DQo+ICsNCj4gKwkJaWYgKCFk
+ZXYtPmJjbGtfcmF0aW8pIHsNCj4gKwkJCS8qDQo+ICsJCQkgKiBPdmVyd3JpdGUgYmNsa19yYXRp
+bywgYmVjYXVzZSB0aGUNCj4gKwkJCSAqIGFib3ZlIHRyaWNrIGlzIG5vdCBuZWVkZWQgb3IgY2Fu
+DQo+ICsJCQkgKiBub3QgYmUgdXNlZC4NCj4gKwkJCSAqLw0KPiArCQkJYmNsa19yYXRpbyA9IDIq
+ZGF0YV9sZW5ndGg7DQoNCj0gMiAqIGRhdGFfbGVuZ3RoOw0KDQo+ICsJCX0NCj4gKw0KPiArCQl0
+YXJnZXRfZnJlcXVlbmN5ID0gc2FtcGxpbmdfcmF0ZSpiY2xrX3JhdGlvOw0KPiArDQo+ICsJCWNs
+a19zcmMgPSBCQ00yODM1X0NMS19TUkNfUExMRDsNCj4gKwkJbWFzaCA9IEJDTTI4MzVfQ0xLX01B
+U0hfMTsNCj4gKw0KPiArCQlkaXZpZGVuZCA9IGJjbTI4MzVfY2xrX2ZyZXFbY2xrX3NyY107DQo+
+ICsJCWRpdmlkZW5kICo9IDEwMjQ7DQo+ICsJCWRvX2RpdihkaXZpZGVuZCwgdGFyZ2V0X2ZyZXF1
+ZW5jeSk7DQo+ICsJCWRpdmkgPSBkaXZpZGVuZCAvIDEwMjQ7DQo+ICsJCWRpdmYgPSBkaXZpZGVu
+ZCAlIDEwMjQ7DQoNCjEwMjQgaXMgYSBtYWdpYyBudW1iZXI/DQpDb3VsZCB5b3UgdXNlIHNoaWZ0
+cyBhbmQgYml0d2lzZSBBTkRzIGhlcmU/DQoNCj4gKwljaDFwb3MgPSBkYXRhX2RlbGF5Ow0KPiAr
+CWNoMnBvcyA9IGJjbGtfcmF0aW8vMitkYXRhX2RlbGF5Ow0KDQonIC8gMiArICcNCg0KW10NCg0K
+PiArCW1vZGUgfD0gQkNNMjgzNV9JMlNfRkxFTihiY2xrX3JhdGlvLTEpOw0KPiArCW1vZGUgfD0g
+QkNNMjgzNV9JMlNfRlNMRU4oYmNsa19yYXRpby8yKTsNCg0KRGl0dG8uIFNwYWNlcyBhcmUgbWlz
+c2VkLg0KDQpbXQ0KDQo+ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9JQl9JRjoNCj4gKwkJLyogQm90
+aCAtIHRoZXJlZm9yZSwgbm9uZSBmb3IgQkNNKi8NCg0KJ00gKi8nDQoNCj4gKwkJYnJlYWs7DQo+
+ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9OQl9JRjoNCj4gKwkJLyoNCj4gKwkJICogSW52ZXJ0IG9u
+bHkgZnJhbWUgc3luYyAtIHRoZXJlZm9yZSwNCj4gKwkJICogSW52ZXJ0IG9ubHkgYml0IGNsb2Nr
+IGZvciBCQ00NCg0KU29tZXRoaW5nIHdyb25nIHdpdGggY2FzaW5nIGluIHRoZSBjb21tZW50YXJ5
+Lg0KDQo+ICsJCSAqLw0KPiArCQltb2RlIHw9IEJDTTI4MzVfSTJTX0NMS0k7DQo+ICsJCWJyZWFr
+Ow0KPiArCWNhc2UgU05EX1NPQ19EQUlGTVRfSUJfTkY6DQo+ICsJCS8qDQo+ICsJCSAqIEludmVy
+dCBvbmx5IGJpdCBjbG9jayAtIHRoZXJlZm9yZSwNCj4gKwkJICogSW52ZXJ0IG9ubHkgZnJhbWUg
+c3luYyBmb3IgQkNNDQoNCkRpdHRvLg0KDQo+ICsJCSAqLw0KPiArCQltb2RlIHw9IEJDTTI4MzVf
+STJTX0ZTSTsNCj4gKwkJYnJlYWs7DQo+ICsJZGVmYXVsdDoNCj4gKwkJcmV0dXJuIC1FSU5WQUw7
+DQo+ICsJfQ0KPiArDQo+ICsJcmVnbWFwX3dyaXRlKGRldi0+aTJzX3JlZ21hcCwgQkNNMjgzNV9J
+MlNfTU9ERV9BX1JFRywgbW9kZSk7DQo+ICsNCj4gKw0KDQpSZWR1bmRhbnQgZW1wdHkgbGluZS4N
+Cg0KW10NCg0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gKw0KDQpEaXR0by4NCg0K
+W10NCg0KPiArc3RhdGljIGludCBiY20yODM1X2kyc19zdGFydHVwKHN0cnVjdCBzbmRfcGNtX3N1
+YnN0cmVhbSAqc3Vic3RyZWFtLA0KPiArCQkJICAgICAgIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFp
+KQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dl
+dF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwlpZiAoIWRhaS0+YWN0aXZlKSB7DQo+ICsJCS8qIFNo
+b3VsZCB0aGlzIHN0aWxsIGJlIHJ1bm5pbmcgc3RvcCBpdCAqLw0KPiArCQliY20yODM1X2kyc19z
+dG9wX2Nsb2NrKGRldik7DQo+ICsNCj4gKwkJLyogRW5hYmxlIFBDTSBibG9jayAqLw0KPiArCQly
+ZWdtYXBfdXBkYXRlX2JpdHMoZGV2LT5pMnNfcmVnbWFwLCBCQ00yODM1X0kyU19DU19BX1JFRywN
+Cj4gKwkJCQlCQ00yODM1X0kyU19FTiwgQkNNMjgzNV9JMlNfRU4pOw0KPiArDQo+ICsJCS8qDQo+
+ICsJCSAqIERpc2FibGUgU1RCWQ0KDQpEb3QgaXMgbWlzc2luZz8NCg0KPiArCQkgKiBSZXF1aXJl
+cyBhdCBsZWFzdCA0IFBDTSBjbG9jayBjeWNsZXMgdG8gdGFrZSBlZmZlY3QNCj4gKwkJICovDQo+
+ICsJCXJlZ21hcF91cGRhdGVfYml0cyhkZXYtPmkyc19yZWdtYXAsIEJDTTI4MzVfSTJTX0NTX0Ff
+UkVHLA0KPiArCQkJCUJDTTI4MzVfSTJTX1NUQlksIEJDTTI4MzVfSTJTX1NUQlkpOw0KPiArCX0N
+Cj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KDQoNCg0KPiArc3RhdGljIHZvaWQgYmNtMjgzNV9p
+MnNfc2h1dGRvd24oc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQo+ICsJCXN0
+cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYg
+KmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwliY20yODM1X2ky
+c19zdG9wKGRldiwgc3Vic3RyZWFtLCBkYWkpOw0KPiArDQo+ICsJLyogSWYgYm90aCBzdHJlYW1z
+IGFyZSBzdG9wcGVkLCBkaXNhYmxlIG1vZHVsZSBhbmQgY2xvY2sgKi8NCj4gKwlpZiAoIWRhaS0+
+YWN0aXZlKSB7DQoNCmlmIChkYWktPmFjdGl2ZSkNCiByZXR1cm47DQoNCj4gKwkJLyogRGlzYWJs
+ZSB0aGUgbW9kdWxlICovDQo+ICsJCXJlZ21hcF91cGRhdGVfYml0cyhkZXYtPmkyc19yZWdtYXAs
+IEJDTTI4MzVfSTJTX0NTX0FfUkVHLA0KPiArCQkJCUJDTTI4MzVfSTJTX0VOLCAwKTsNCj4gKw0K
+PiArCQkvKg0KPiArCQkgKiBTdG9wcGluZyBjbG9jayBpcyBuZWNlc3NhcnksIGJlY2F1c2Ugc3Rv
+cCBkb2VzDQo+ICsJCSAqIG5vdCBzdG9wIHRoZSBjbG9jayB3aGVuIFNORF9TT0NfREFJRk1UX0NP
+TlQNCj4gKwkJICovDQo+ICsJCWJjbTI4MzVfaTJzX3N0b3BfY2xvY2soZGV2KTsNCj4gKwl9DQo+
+ICt9DQo+ICsNCg0KW10NCg0KPiArc3RhdGljIGludCBiY20yODM1X2kyc19wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYg
+KmRldjsNCj4gKwlpbnQgaTsNCj4gKwlpbnQgcmV0Ow0KPiArCXN0cnVjdCByZWdtYXAgKnJlZ21h
+cFsyXTsNCj4gKwlzdHJ1Y3QgcmVzb3VyY2UgKm1lbVsyXTsNCj4gKw0KPiArCS8qIFJlcXVlc3Qg
+Ym90aCBpb2FyZWFzICovDQo+ICsJZm9yIChpID0gMDsgaSA8PSAxOyBpKyspIHsNCj4gKwkJdm9p
+ZCBfX2lvbWVtICpiYXNlOw0KPiArDQo+ICsJCW1lbVtpXSA9IHBsYXRmb3JtX2dldF9yZXNvdXJj
+ZShwZGV2LCBJT1JFU09VUkNFX01FTSwgaSk7DQoNCj4gKwkJaWYgKCFtZW1baV0pIHsNCj4gKwkJ
+CWRldl9lcnIoJnBkZXYtPmRldiwgIkkyUyBwcm9iZTogTWVtb3J5IHJlc291cmNlIGNvdWxkIG5v
+dCBiZSBmb3VuZC5cbiIpOw0KPiArCQkJcmV0dXJuIC1FTk9ERVY7DQo+ICsJCX0NCg0KVW5uZWVk
+ZWQgbWVzc2FnaW5nIGFuZCBjaGVjay4NCg0KPiArDQo+ICsJCWJhc2UgPSBkZXZtX2lvcmVtYXBf
+cmVzb3VyY2UoJnBkZXYtPmRldiwgbWVtW2ldKTsNCj4gKwkJaWYgKCFiYXNlKSB7DQoNCkl0IHJl
+dHVybnMgRVJSX1BUUi4NClRodXMsDQoNCmlmIChJU19FUlIoYmFzZSkNCnJldHVybiBQVFJfRVJS
+KGJhc2UpDQoNCg0KPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiSTJTIHByb2JlOiBpb3JlbWFw
+IGZhaWxlZC5cbiIpOw0KDQpVbm5lZWRlZCBtZXNzYWdpbmcuDQoNCj4gKwkJCXJldHVybiAtRU5P
+TUVNOw0KDQpXcm9uZyBlcnJvciBjb2RlLiBTZWUgYWJvdmUuDQoNCg0KLS0gDQpBbmR5IFNoZXZj
+aGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAw
+MDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWlj
+aWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNv
+bnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVu
+ZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlz
+IHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGll
+bnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
 
-Why is this a "GPIO IRQ"? This device das no GPIO. The fact that it
-might be wired to a GPIO controller has nothing to do with the ITG3200,
-and shouldn't be a concern of its binding.
-
-Thanks,
-Mark.
-
-> +
-> +Example:
-> +
-> +itg3200@68 {
-> +	compatible = "invensense,itg3200";
-> +	reg = <0x68>;
-> +	interrupt-parent = <&gpio2>;
-> +	interrupts = <24 IRQ_TYPE_EDGE_RISING>;
-> +};
-> diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200_core.c
-> index 4d3f3b92b361..1ed3003ef41a 100644
-> --- a/drivers/iio/gyro/itg3200_core.c
-> +++ b/drivers/iio/gyro/itg3200_core.c
-> @@ -374,10 +374,17 @@ static const struct i2c_device_id itg3200_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, itg3200_id);
->  
-> +static const struct of_device_id itg3200_of_match[] = {
-> +	{ .compatible = "invensense,itg3200", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, itg3200_of_match);
-> +
->  static struct i2c_driver itg3200_driver = {
->  	.driver = {
->  		.owner  = THIS_MODULE,
->  		.name	= "itg3200",
-> +		.of_match_table = of_match_ptr(itg3200_of_match),
->  	},
->  	.id_table	= itg3200_id,
->  	.probe		= itg3200_probe,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
