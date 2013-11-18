@@ -1,46 +1,303 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 11:13:36 -0800
-Message-ID: <20131118191336.GB5886@quad.lixom.net>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <5289A356.4060004@jonmasters.org>
- <20131118150052.GC24408@sirena.org.uk>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
+Date: Mon, 18 Nov 2013 21:15:35 +0200
+Message-ID: <528A6757.3020502@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
+ <52825283.7000905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131118150052.GC24408-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <52825283.7000905@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-[adding back devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org]
-
-On Mon, Nov 18, 2013 at 03:00:52PM +0000, Mark Brown wrote:
-> On Mon, Nov 18, 2013 at 12:19:18AM -0500, Jon Masters wrote:
+On 11/12/2013 06:08 PM, Santosh Shilimkar wrote:
+> + Greg KH (drivers/memory/* patches goes through his queue)
 > 
-> > has an API enshrined in stone as far as compatibility. Device Tree is
-> > wonderful, anyone can make a binding and use it. Or change the binding
-> > in the next kernel release. Or...this doesn't work in the server space.
+> On Monday 11 November 2013 12:06 PM, Khoronzhuk, Ivan wrote:
+>> Add new AEMIF driver for EMIF16 davinci controller. The EMIF16 module
+>> is intended to provide a glue-less interface to a variety of
+>> asynchronous memory devices like ASRA M, NOR and NAND memory. A total
+>> of 256M bytes of any of these memories can be accessed at any given
+>> time via four chip selects with 64M byte access per chip select.
+>>
+>> Synchronous memories such as DDR1 SD RAM, SDR SDRAM and Mobile SDR
+>> are not supported.
+>>
+>> See http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   drivers/memory/Kconfig         |   11 ++
+>>   drivers/memory/Makefile        |    1 +
+>>   drivers/memory/davinci-aemif.c |  415 ++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 427 insertions(+)
+>>   create mode 100644 drivers/memory/davinci-aemif.c
+>>
+>> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+>> index 29a11db..010e75e 100644
+>> --- a/drivers/memory/Kconfig
+>> +++ b/drivers/memory/Kconfig
+>> @@ -7,6 +7,17 @@ menuconfig MEMORY
+>>
+>>   if MEMORY
+>>
+>> +config TI_DAVINCI_AEMIF
+> s/TI_DAVINCI_AEMIF/TI_AEMIF
 > 
-> This isn't really a property of DT, it's a property of the way people
-> have been using the DT - people have been running with baked in DTs on
-> PowerPC and SPARC systems for quite some time now.  It's not obvious how
-> writing the data out in one format rather than another addresses this.
 
-+1. And we're now changing the way DT is approached in a manner that will
-solve this problem.
+Ok
 
-I know people have been frustrated that they need to keep the DT in sync with
-the kernel. But we've always been upfront with the requirement, and why we've
-been having it. We're now changing this requirement, which should help sort out
-practically all of the concerns at hand.
+>> +       bool "Texas Instruments DaVinci AEMIF driver"
+> Drop DaVinci above since its used on more SOCs.
+>> +       depends on (ARCH_DAVINCI || ARCH_KEYSTONE) && OF
+>> +       help
+>> +         This driver is for the AEMIF module available in Texas Instruments
+>> +         SoCs. AEMIF stands for Asynchronous External Memory Interface and
+>> +         is intended to provide a glue-less interface to a variety of
+>> +         asynchronuous memory devices like ASRAM, NOR and NAND memory. A total
+>> +         of 256M bytes of any of these memories can be accessed at a given
+>> +         time via four chip selects with 64M byte access per chip select.
+>> +
+>>   config TI_EMIF
+>>          tristate "Texas Instruments EMIF driver"
+>>          depends on ARCH_OMAP2PLUS
+>> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+>> index 969d923..af14126 100644
+>> --- a/drivers/memory/Makefile
+>> +++ b/drivers/memory/Makefile
+>> @@ -5,6 +5,7 @@
+>>   ifeq ($(CONFIG_DDR),y)
+>>   obj-$(CONFIG_OF)               += of_memory.o
+>>   endif
+>> +obj-$(CONFIG_TI_DAVINCI_AEMIF) += davinci-aemif.o
+> 
+> Change this accordingly once the config is renamed.
+> 
+
+Ok
+
+>>   obj-$(CONFIG_TI_EMIF)          += emif.o
+>>   obj-$(CONFIG_MVEBU_DEVBUS)     += mvebu-devbus.o
+>>   obj-$(CONFIG_TEGRA20_MC)       += tegra20-mc.o
+>> diff --git a/drivers/memory/davinci-aemif.c b/drivers/memory/davinci-aemif.c
+>> new file mode 100644
+>> index 0000000..e36b74b
+>> --- /dev/null
+>> +++ b/drivers/memory/davinci-aemif.c
+>> @@ -0,0 +1,415 @@
+>> +/*
+>> + * DaVinci/Keystone AEMIF driver
+> s/{DaVinci/Keystone}/TI
+>> + *
+>> + * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. http://www.ti.com/
+>> + * Copyright (C) Heiko Schocher <hs@denx.de>
+>> + * Copyright (C) Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define TA_SHIFT       2
+>> +#define RHOLD_SHIFT    4
+>> +#define RSTROBE_SHIFT  7
+>> +#define RSETUP_SHIFT   13
+>> +#define WHOLD_SHIFT    17
+>> +#define WSTROBE_SHIFT  20
+>> +#define WSETUP_SHIFT   26
+>> +#define EW_SHIFT       30
+>> +#define SS_SHIFT       31
+>> +
+>> +#define TA(x)          ((x) << TA_SHIFT)
+>> +#define RHOLD(x)       ((x) << RHOLD_SHIFT)
+>> +#define RSTROBE(x)     ((x) << RSTROBE_SHIFT)
+>> +#define RSETUP(x)      ((x) << RSETUP_SHIFT)
+>> +#define WHOLD(x)       ((x) << WHOLD_SHIFT)
+>> +#define WSTROBE(x)     ((x) << WSTROBE_SHIFT)
+>> +#define WSETUP(x)      ((x) << WSETUP_SHIFT)
+>> +#define EW(x)          ((x) << EW_SHIFT)
+>> +#define SS(x)          ((x) << SS_SHIFT)
+>> +
+>> +#define ASIZE_MAX      0x1
+>> +#define TA_MAX         0x3
+>> +#define RHOLD_MAX      0x7
+>> +#define RSTROBE_MAX    0x3f
+>> +#define RSETUP_MAX     0xf
+>> +#define WHOLD_MAX      0x7
+>> +#define WSTROBE_MAX    0x3f
+>> +#define WSETUP_MAX     0xf
+>> +#define EW_MAX         0x1
+>> +#define SS_MAX         0x1
+>> +#define NUM_CS         4
+>> +
+>> +#define TA_VAL(x)      (((x) & TA(TA_MAX)) >> TA_SHIFT)
+>> +#define RHOLD_VAL(x)   (((x) & RHOLD(RHOLD_MAX)) >> RHOLD_SHIFT)
+>> +#define RSTROBE_VAL(x) (((x) & RSTROBE(RSTROBE_MAX)) >> RSTROBE_SHIFT)
+>> +#define RSETUP_VAL(x)  (((x) & RSETUP(RSETUP_MAX)) >> RSETUP_SHIFT)
+>> +#define WHOLD_VAL(x)   (((x) & WHOLD(WHOLD_MAX)) >> WHOLD_SHIFT)
+>> +#define WSTROBE_VAL(x) (((x) & WSTROBE(WSTROBE_MAX)) >> WSTROBE_SHIFT)
+>> +#define WSETUP_VAL(x)  (((x) & WSETUP(WSETUP_MAX)) >> WSETUP_SHIFT)
+>> +#define EW_VAL(x)      (((x) & EW(EW_MAX)) >> EW_SHIFT)
+>> +#define SS_VAL(x)      (((x) & SS(SS_MAX)) >> SS_SHIFT)
+>> +
+>> +#define NRCSR_OFFSET   0x00
+>> +#define AWCCR_OFFSET   0x04
+>> +#define A1CR_OFFSET    0x10
+>> +
+>> +#define ACR_ASIZE_MASK 0x3
+>> +#define ACR_EW_MASK    BIT(30)
+>> +#define ACR_SS_MASK    BIT(31)
+>> +#define ASIZE_16BIT    1
+>> +
+>> +#define CONFIG_MASK    (TA(TA_MAX) | \
+>> +                               RHOLD(RHOLD_MAX) | \
+>> +                               RSTROBE(RSTROBE_MAX) |  \
+>> +                               RSETUP(RSETUP_MAX) | \
+>> +                               WHOLD(WHOLD_MAX) | \
+>> +                               WSTROBE(WSTROBE_MAX) | \
+>> +                               WSETUP(WSETUP_MAX) | \
+>> +                               EW(EW_MAX) | SS(SS_MAX) | \
+>> +                               ASIZE_MAX)
+>> +
+>> +#define DRV_NAME       "davinci-aemif"
+> s/davinci-aemif/ti-aemif
+
+Ok
+
+>> +
+>> +/**
+>> + * structure to hold cs parameters
+>> + * @cs: chip-select number
+>> + * @wstrobe: write strobe width, ns
+>> + * @rstrobe: read strobe width, ns
+>> + * @wsetup: write setup width, ns
+>> + * @whold: write hold width, ns
+>> + * @rsetup: read setup width, ns
+>> + * @rhold: read hold width, ns
+>> + * @ta: minimum turn around time, ns
+>> + * @enable_ss: enable/disable select strobe mode
+>> + * @enable_ew: enable/disable extended wait mode
+>> + * @asize: width of the asynchronous device's data bus
+>> + */
+>> +struct davinci_aemif_cs_data {
+>> +       u8      cs;
+>> +       u16     wstrobe;
+>> +       u16     rstrobe;
+>> +       u8      wsetup;
+>> +       u8      whold;
+>> +       u8      rsetup;
+>> +       u8      rhold;
+>> +       u8      ta;
+>> +       u8      enable_ss;
+>> +       u8      enable_ew;
+>> +       u8      asize;
+>> +};
+>> +
+> I suggest you drop davinci prefix throughout the
+> driver.
+> 
+> [..]
+> 
+
+Seems there is nothing to prevent
+Ok
+
+>> +static const struct of_device_id davinci_aemif_of_match[] = {
+>> +       { .compatible = "ti,davinci-aemif", },
+>> +       { .compatible = "ti,keystone-aemif", },
+>> +       { .compatible = "ti,omap-L138-aemif", },
+>> +       {},
+>> +};
+> Do we need three seperate compatible or "ti,aemif" should
+> be enough ? Are there differences which we need to handled
+> based on compatibles ?
+> 
+
+We need separate compatibles. Depending on this cs start number is evaluated.
+For omap-L138-aemif it is 2 for keystone-aemif it is 0.
+
+>> +
+>> +static const struct of_device_id davinci_cs_of_match[] = {
+>> +       { .compatible = "ti,davinci-cs", },
+>> +       {},
+>> +};
+>> +
+>> +static int davinci_aemif_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret  = -ENODEV, i;
+>> +       struct resource *res;
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +
+>> +       if (np == NULL)
+>> +               return 0;
+>> +
+>> +       if (aemif) {
+>> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
+>> +               return -EBUSY;
+>> +       }
+>> +
+>> +       aemif = devm_kzalloc(dev, sizeof(*aemif), GFP_KERNEL);
+>> +
+> Drop this extra line.
+> 
+
+Ok, I will
+
+>> +       if (!aemif) {
+>> +               dev_err(dev, "cannot allocate memory for aemif\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       aemif->clk = devm_clk_get(dev, "aemif");
+>> +       if (IS_ERR(aemif->clk)) {
+>> +               dev_err(dev, "cannot get clock 'aemif'\n");
+>> +               return PTR_ERR(aemif->clk);
+>> +       }
+>> +
+>> +       clk_prepare_enable(aemif->clk);
+>> +       aemif->clk_rate = clk_get_rate(aemif->clk) / 1000;
+>> +
+> 1000 divider ? Define a marco and use it to be clear.
+
+Is it OK if I use MSEC_PER_SEC (linux/time.h).
+
+> 
+> Other than above comments patch looks fine to me.
+> 
+> Regards,
+> Santosh
+> 
 
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
