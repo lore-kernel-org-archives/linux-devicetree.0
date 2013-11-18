@@ -1,144 +1,69 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Mon, 18 Nov 2013 18:38:15 +0000
-Message-ID: <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <cover.1384798508.git.jason@lakedaemon.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 18 Nov 2013 18:43:09 +0000
+Message-ID: <20131118184309.GU2674@sirena.org.uk>
+References: <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
+ <20131021092730.GF30088@pengutronix.de>
+ <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
+ <20131024072811.GS30088@pengutronix.de>
+ <CAF6AEGuEho9Ms7ifTE-EmBoQ-=_AXgvGcJxi5qEC0vsZ+H9C+A@mail.gmail.com>
+ <20131118124518.GA16735@n2100.arm.linux.org.uk>
+ <20131118153750.GM26046@ulmo.nvidia.com>
+ <20131118161151.GG16735@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vKcNkqnJHUUp475E"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-References: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131118161151.GG16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Unlike other build products in the Linux kernel, the devicetree blobs
-are simply the name of their source file, s/dts/dtb/.  There is also no
-'make *install' mechanism to put them in a standard place with a
-standard naming structure.
 
-Unfortunately, users have begun scripting pulling the needed dtbs from
-within the kernel tree, thus hardcoding the dtbs names.  In turn, this
-means any changes to the dts filenames breaks these scripts.
+--vKcNkqnJHUUp475E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch is an attempt to fix this problem.  Akin to 'make install',
-this creates a new make target, dtbs_install.  The script that gets
-called defers to a vendor or distribution supplied installdtbs binary,
-if found in the system.  Otherwise, the default action is to install a
-given dtb into
+On Mon, Nov 18, 2013 at 04:11:51PM +0000, Russell King - ARM Linux wrote:
 
-  /lib/modules/${kernel_version}/devicetree/${board_compat}.dtb
+> Logically, it can't stay as two separate patches, because it won't be
+> possible to "migrate" to it in stages.  So I'm fully intending to
+> squash that all down to one patch which adds the core code (probably
+> ultimately into drivers/base).
 
-This solves several problems for us.  The board compatible string should
-be unique, this enforces/highlights that.  While devicetrees are
-stablilizing, the fact is, devicetrees aren't (yet) independent of
-kernel version.  This install target facilitates keeping track of that.
+> IOW, watch this space this week. :)
 
-Once the devicetree files are moved to their own repository, this
-install target can be removed as users will be modifying their scripts
-anyway.
+Can you CC me on these changes please and I'll have a look at converting
+ASoC over to use them?
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-changes since v1:
- - added this patch
+--vKcNkqnJHUUp475E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
- Makefile                     |  3 ++-
- arch/arm/Makefile            |  4 ++++
- arch/arm/boot/installdtbs.sh | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 50 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/installdtbs.sh
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-diff --git a/Makefile b/Makefile
-index 920ad07180c9..29d609e972d6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -339,6 +339,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
- AWK		= awk
- GENKSYMS	= scripts/genksyms/genksyms
- INSTALLKERNEL  := installkernel
-+INSTALLDTBS    := installdtbs
- DEPMOD		= /sbin/depmod
- PERL		= perl
- CHECK		= sparse
-@@ -391,7 +392,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
- export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
- export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP
--export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
-+export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
- export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
- 
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c99b1086d83d..c16ebb1e74b0 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -314,6 +314,10 @@ PHONY += dtbs
- dtbs: scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
- 
-+dtbs_install: dtbs
-+	$(CONFIG_SHELL) $(srctree)/$(boot)/installdtbs.sh $(KERNELRELEASE) \
-+	"$(MODLIB)/devicetree" "$(srctree)/$(boot)/dts"
-+
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
-diff --git a/arch/arm/boot/installdtbs.sh b/arch/arm/boot/installdtbs.sh
-new file mode 100644
-index 000000000000..c46c109363d2
---- /dev/null
-+++ b/arch/arm/boot/installdtbs.sh
-@@ -0,0 +1,44 @@
-+#!/bin/sh
-+#
-+# This file is subject to the terms and conditions of the GNU General Public
-+# License.  See the file "COPYING" in the main directory of this archive
-+# for more details.
-+#
-+# Copyright (C) 1995 by Linus Torvalds
-+#
-+# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
-+#
-+# Further adapted from arch/x86/boot/install.sh by Jason Cooper
-+#
-+# "make dtbs_install" script
-+#
-+# Arguments:
-+#   $1 - kernel version
-+#   $2 - default install path (blank if root directory)
-+#   $3 - directory containing dtbs
-+#
-+
-+# User may have a custom install script
-+
-+if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@"; fi
-+if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@"; fi
-+
-+DTC=./scripts/dtc/dtc
-+
-+# Default install
-+[ -d "$2" ] && rm -rf "$2"
-+
-+mkdir -p "$2"
-+
-+for dtb in `find "$3" -name "*.dtb"`; do
-+	# we use dtc to parse the dtb, get the board compatible string,
-+	# and then copy the dtb to $2/${board_compatible}.dtb
-+	compat="`$DTC -I dtb -O compat "$dtb"`"
-+
-+	if [ -e "$2/${compat}.dtb" ]; then
-+		echo "Install $dtb: $2/${compat}.dtb already exists!" 1>&2
-+		exit 1
-+	else
-+		cp "$dtb" "$2/${compat}.dtb"
-+	fi
-+done
--- 
-1.8.4.3
+iQIcBAEBAgAGBQJSil+6AAoJELSic+t+oim9yMEP/3/9iZa5HBRIBTBgW7bGPqST
+evSdF636XUqWCAuK+Jd3nCBiMlq7cyYBbsxccNGmBcMCyN+BwhLgmUDdQSzO6e+q
+3KNfLU8WNKKQ7IHMKR4KubTezgc5MD8G9WL2FW8oYdbM6Qf3IJ5mGHZqOsTF/88h
+yFxEsLRMn1sxbju7Ci49I89IlEPE3v8Nvkxfz8JkEVCUEk+Z7uNTljdKIB7U4PeO
+iljlPSsE93Fce/nhp9l/FD9TNsrlWpPvV7tEVi50ZpeA1juWLebiKFMsD4iKLDil
+BQSYw9Ife1U2DD02C4c7380vX3/moAFdVAhFQJWm+lLXmLSHByAxxAZ4evg54fb9
+cU37yZtLw7Y0DCNdPGp8FT8UQGR0ppquf29yg94GXOZr8McdBeofwH/UpNGKYNbh
+sZHFsFEMZTxiw/xFAPx/h1BvLADJBMxpNhdNbJDCt5Zn9G0aprtqKwg5eq1ghlka
+fZwS6BIBYF8TcwGThWDwd0k04vODKrdky6tQAlYjTcuQZ+aiUrxWlqyoV6wHM37z
+cmCpN73OAcLBVy5Eqpj7KtKAm+RLcWCZC9+344uLBjTJ3b0Bnuj6dLEUIcGmeiSl
+tQtLfrxv/+MR0YHgBGVNvqId4Om1leEch7bOCHZKyJV+e7KJSAT4UA8pCG5sAyAA
+b5BnEAOFz5lmX3Qjo469
+=vFx8
+-----END PGP SIGNATURE-----
 
+--vKcNkqnJHUUp475E--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
