@@ -1,62 +1,90 @@
 From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
 Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
  is used
-Date: Mon, 18 Nov 2013 21:32:36 +0200
-Message-ID: <528A6B54.3080609@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528253B7.2060408@ti.com> <5289FB9C.6060204@ti.com> <528A1F4D.6050404@ti.com>
+Date: Mon, 18 Nov 2013 21:35:22 +0200
+Message-ID: <528A6BFA.3030007@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com>
+ <528307F0.6000805@ti.com> <52838941.4060207@ti.com> <5284ABB9.70608@ti.com>
+ <5284DFE7.70308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <528A1F4D.6050404@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5284DFE7.70308@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, "Nori, Sekhar" <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2013 04:08 PM, Santosh Shilimkar wrote:
-> On Monday 18 November 2013 06:35 AM, Grygorii Strashko wrote:
->> On 11/12/2013 06:13 PM, Santosh Shilimkar wrote:
->>> On Monday 11 November 2013 12:10 PM, Khoronzhuk, Ivan wrote:
->>>> If Davinci AEMIF is used we don't need to set timings and bus width.
->>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+On 11/14/2013 04:36 PM, Santosh Shilimkar wrote:
+> On Thursday 14 November 2013 05:53 AM, Nori, Sekhar wrote:
+>> On Wednesday 13 November 2013 07:44 PM, Santosh Shilimkar wrote:
+>>> On Wednesday 13 November 2013 12:02 AM, Sekhar Nori wrote:
+>>>> On Monday 11 November 2013 10:40 PM, Khoronzhuk, Ivan wrote:
+>>>>> If Davinci AEMIF is used we don't need to set timings and bus width.
+>>>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+>>>>>
+>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>>> ---
+>>>>>   drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
+>>>>>   1 file changed, 15 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>>>>> index 4705214..879e915 100644
+>>>>> --- a/drivers/mtd/nand/davinci_nand.c
+>>>>> +++ b/drivers/mtd/nand/davinci_nand.c
+>>>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>>>>                  goto err_clk_enable;
+>>>>>          }
+>>>>>
+>>>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
 >>>>
->>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>> ---
->>>>    drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
->>>>    1 file changed, 15 insertions(+), 7 deletions(-)
+>>>> This is a hack! Just because AEMIF driver is enabled, it does not
+>>>> guarantee that the timings have been setup by it. Instead of configuring
+>>>> timings in two drivers, why not just convert everyone over to use the
+>>>> new driver. Dont worry about breaking old platforms, I will help test
+>>>> and ack them.
 >>>>
->>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
->>>> index 4705214..879e915 100644
->>>> --- a/drivers/mtd/nand/davinci_nand.c
->>>> +++ b/drivers/mtd/nand/davinci_nand.c
->>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
->>>>                   goto err_clk_enable;
->>>>           }
->>>>
->>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
->>>>
->>> Instead above #if, just use a variable.
->>>      bool aemif = IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF) and then skip
->>> the below code. #if block in the middle of the code looks ugly.
+>>> How about you take a stab at and convert the DaVinci code over to make
+>>> use of new driver. We are trying to re-use as much as possible from the
+>>> common drivers and also making an option so that the DaVinci arch can
+>>> move over to these drivers if they want to.
 >>
->> Yes, this is the hack.
->> The problem is that this part of code contains the call of Davinci platform function davinci_aemif_setup_timing() which is not accessible if Kernel is built for Keystone only.
->> That's why "#if" has been used.
+>> Sure I could.
 >>
->> This part of code has to be removed together with Davinci aemif platform code (aemif.c), once Davinci will be converted to DT and use
->> new driver.
+> Thanks
+>
+>> Ivan,
 >>
->> The corresponding comment can be added here. Is it ok?
+>> The AEMIF driver does not use platfrom_data currently. Is that something
+>> you can add or you want me to take a stab at that as well?
 >>
-> Thats more or less what I proposed in another reply. Lets clearly
-> document it on why such a check was added.
+> The AEMIF new driver is device tree only and thats the direction. So the
+> better thing would be to convert Davinci to DT and then make use of this
+> new driver. Thats how most of the new drivers used on arm socs are
+> moving. Adding platform data to new driver is a step in backward
+> direction so I would want to avoid that.
+>
+> Once you start using new driver the $subject patch code skipping
+> is trivial. Till then I would like to proceed with current approach
+> which allows Nand support for Keystone.
 >
 > Regards,
 > Santosh
 >
 
-Ok, I'll add more explanation on it.
+Agree with Santosh
 
 -- 
 Regards,
