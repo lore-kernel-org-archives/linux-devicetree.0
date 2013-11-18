@@ -1,81 +1,30 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v4 12/15] usb: phy: msm: Add support for secondary PHY
- control
-Date: Mon, 18 Nov 2013 14:57:42 +0200
-Message-ID: <1384779462.13631.16.camel@iivanov-dev.int.mm-sol.com>
-References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
-	 <1384267910-32066-13-git-send-email-iivanov@mm-sol.com>
-	 <20131115164212.GI24831@e106331-lin.cambridge.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 2/7] gpio: davinci: use readl/writel instead of __raw_*
+Date: Mon, 18 Nov 2013 14:01:43 +0100
+Message-ID: <CACRpkdbUpGdxCn6VZO+dVCsc-3SbFC4N_E49=MAEFHd5VXqRHw@mail.gmail.com>
+References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1383905510-31760-3-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131115164212.GI24831@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "davidb@codeaurora.org" <davidb@codeaurora.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1383905510-31760-3-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 8, 2013 at 11:11 AM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>
+> This patch replaces the __raw_readl/writel with
+> readl and writel, Although the code runs on ARMv5
+> based SOCs, changing this will help copying the code
+> for other uses.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Hi Mark,
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-On Fri, 2013-11-15 at 16:42 +0000, Mark Rutland wrote: 
-> On Tue, Nov 12, 2013 at 02:51:47PM +0000, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > 
-> > Allow support to use 2nd HSPHY with USB2 Core.
-> > Some platforms may have configuration to allow USB controller
-> > work with any of the two HSPHYs present. By default driver
-> > configures USB core to use primary HSPHY. Add support to allow
-> > user select 2nd HSPHY using DT parameter.
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > Cc: Manu Gautam <mgautam@codeaurora.org>
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  .../devicetree/bindings/usb/msm-hsusb.txt          |    6 +++++
-> >  drivers/usb/phy/phy-msm-usb.c                      |   24 ++++++++++++++++++--
-> >  include/linux/usb/msm_hsusb.h                      |    1 +
-> >  include/linux/usb/msm_hsusb_hw.h                   |    1 +
-> >  4 files changed, 30 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > index 3f21204..d105ba9 100644
-> > --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > @@ -72,6 +72,12 @@ Optional properties:
-> >  - qcom,phy-init-sequence: PHY configuration sequence. val, reg pairs
-> >  				terminate with -1
-> >  
-> > +- qcom,phy-num:	Select number of pyco-phy to use, can be one of
-> > +				0 - PHY one, default
-> > +				1 - Second PHY
-> > +				Some platforms may have configuration to allow USB
-> > +				controller work with any of the two HSPHYs present.
-> > +
-> 
-> Only one can be used at a time?
-
-Yes only one of them. Selected at driver init time. 
-
-> 
-> [...]
-> 
-> > @@ -1395,6 +1412,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
-> >  	if (!of_property_read_u32(node, "qcom,otg-control", &val))
-> >  		pdata->otg_control = val;
-> >  
-> > +	if (!of_property_read_u32(node, "qcom,phy-num", &val))
-> > +		motg->phy_number = val;
-> 
-> No sanity checking? If not all of your tests on the value of
-> motg->phy_number are the same form, you may get undepected results...
-
-
-All checks are the same, but will add explicit check.
-
-Thanks, 
-Ivan 
-
-> 
-> Mark.
+Yours,
+Linus Walleij
