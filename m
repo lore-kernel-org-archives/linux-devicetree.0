@@ -1,61 +1,46 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1] Add support for Intersil ISL12057 I2C RTC chip
-Date: Mon, 18 Nov 2013 20:24:39 +0100
-Message-ID: <87ob5hldhk.fsf@natisbad.org>
-References: <87txfdcjqg.fsf@natisbad.org>
-	<20131118152012.GA3759@e106331-lin.cambridge.arm.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 11:25:52 -0800
+Message-ID: <20131118192552.GD5886@quad.lixom.net>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <5289A356.4060004@jonmasters.org>
+ <5289A4F3.5040203@jonmasters.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118152012.GA3759-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org> (Mark
-	Rutland's message of "Mon, 18 Nov 2013 15:20:12 +0000")
+Content-Disposition: inline
+In-Reply-To: <5289A4F3.5040203-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Kent Yoder <key-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rob.herring@calxeda.com" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "grant.likely@linaro.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc@vger.kernel.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "rtc-linux@googlegroups.com" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Nov 18, 2013 at 12:26:11AM -0500, Jon Masters wrote:
+> On 11/18/2013 12:19 AM, Jon Masters wrote:
+> 
+> > It's going to be a messy thing to even attempt. Look, I wish we had a
+> > time machine and could have done this whole thing years ago, but I'm not
+> > sure it would have gone differently. ACPI is something a lot of people
+> > emotionally hate. In the Enterprise space myself and others *need* it
+> > (along with UEFI) to have a scalable solution that doesn't result in an
+> > onslaught of customer support calls, which a non-standards body backed
+> > moving target of DTB will do. And besides all of the big boys are going
+> > to be using ACPI whether it's liked much or not.
+> 
+> A while ago I mentioned producing a series of requirements that
+> articulates what Red Hat thinks an ARMv8 server looks like. Suffice it
+> to say that such requirements do in fact exist, and will be made
+> available in the not too distant future as part of another doc.
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+It's nice that there's an unpublished document with a RedHat logo on it
+somewhere that mandates what we, the kernel project, is going to do.
 
->> +static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg, u8 buf[],
->> +                                 unsigned len)
->> +{
->> +       struct i2c_msg msgs[2] = {
->> +               {
->> +                       .addr = client->addr,
->> +                       .flags = 0,
->> +                       .len = sizeof(u8),
->> +                       .buf = buf
->> +               },
->> +               {
->> +                       .addr = client->addr,
->> +                       .flags = I2C_M_RD,
->> +                       .len = len,
->> +                       .buf = buf
->> +               }
->> +       };
->> +       int ret;
->> +
->> +       BUG_ON(reg > ISL12057_REG_SR);
->> +       BUG_ON(reg + len > ISL12057_REG_SR + 1);
->> +
->> +       ret = i2c_transfer(client->adapter, msgs, 2);
->> +       if (ret != 2)
->> +               return ret;
->
-> This might return 1.
->
-> Given that in isl12057_rtc_read_time you check if the return value is
-> negative (also indirectly via isl12057_i2c_validate_client), I think it
-> would make sense to always either return a negative error code or 0.
+I thought both RedHat and you personally knew that we don't do things
+that way in the kernel, Jon. Published or not.
 
-Good catch. Will fix that and spend some more time on return paths, and
-then send a v2.
 
-Cheers,
-
-a+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
