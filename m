@@ -1,57 +1,64 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [RFC PATCH V3 0/2] Add 'make dtbs_install'
-Date: Mon, 18 Nov 2013 21:21:04 +0000
-Message-ID: <cover.1384809305.git.jason@lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 13:25:00 -0800
+Message-ID: <CAOesGMj+Mry2TtyDfd+NSM3Z9=NUA=TE145FnVDTWuR+45_nog@mail.gmail.com>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+	<20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+	<5289A356.4060004@jonmasters.org>
+	<5289A4F3.5040203@jonmasters.org>
+	<20131118192552.GD5886@quad.lixom.net>
+	<528A7BFD.4020303@jonmasters.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <528A7BFD.4020303-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Detailed changelog can be found in each patch.
+On Mon, Nov 18, 2013 at 12:43 PM, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org> wrote:
+> On 11/18/2013 02:25 PM, Olof Johansson wrote:
+>> On Mon, Nov 18, 2013 at 12:26:11AM -0500, Jon Masters wrote:
+>>> On 11/18/2013 12:19 AM, Jon Masters wrote:
+>>>
+>>>> It's going to be a messy thing to even attempt. Look, I wish we had a
+>>>> time machine and could have done this whole thing years ago, but I'm not
+>>>> sure it would have gone differently. ACPI is something a lot of people
+>>>> emotionally hate. In the Enterprise space myself and others *need* it
+>>>> (along with UEFI) to have a scalable solution that doesn't result in an
+>>>> onslaught of customer support calls, which a non-standards body backed
+>>>> moving target of DTB will do. And besides all of the big boys are going
+>>>> to be using ACPI whether it's liked much or not.
+>>>
+>>> A while ago I mentioned producing a series of requirements that
+>>> articulates what Red Hat thinks an ARMv8 server looks like. Suffice it
+>>> to say that such requirements do in fact exist, and will be made
+>>> available in the not too distant future as part of another doc.
+>>
+>> It's nice that there's an unpublished document with a RedHat logo on it
+>> somewhere that mandates what we, the kernel project, is going to do.
+>>
+>> I thought both RedHat and you personally knew that we don't do things
+>> that way in the kernel, Jon. Published or not.
+>
+> Olof, I understand completely. My hands are unfortunately tied and it's
+> not of my making (or my employer) on this front. In the ARM space, there
+> are a lot of entities involved when it comes to anything at all, and you
+> know what the NDA situation is like. I am pushing to get a few things
+> out there for broader consumption.
 
-The kernel community never created a 'dtbs_install' make target for properly
-handling the build output of the kernel's devicetree files.  Currently, the dtb
-files are simply their source file, s/dts/dtb/.  Users have recently begun
-retrieving these files from inside the kernel tree.  Any change to the dts
-filenames breaks the scripts of those users.
+No, I don't think you understand. Or at least, your email is not reflecting it.
 
-Before this gets too far along, we'd like to create a standardized method of
-installing the dtb files for users to find and use.  In addition, some vendors
-have done a diligent job naming their devicetree source files appropriately and
-we don't want to break their setups.
+It's not whether the document is public or not that is the real
+problem. The real problem is the claim that you have a platforms
+requirements document that is built upon unmerged features in the
+upstream kernel. Unless RedHat is willing to carry that functionality
+in their own kernel instead -- if so, RedHat is of course free to
+mandate whatever they want to.
 
-This patch series solves both problems by creating a dtbs_install make target
-which calls arch/arm/boot/installdtbs.sh.  If /sbin/installdtbs or
-~/bin/installdtbs is present, they will be run instead of the default behavior.
 
-The default action is to install a given dtb to
-
-  /lib/modules/${kernel_version}/devicetree/${board_compatible}.dtb
-
-Ideally, the devicetree file should be independent of the kernel version,
-however, we aren't there yet.  So, while the devicetree files live in the
-kernel source tree, we'll install them as above.  Once they are in their own
-repository, this install target can be removed, and users can adjust their
-workflow to getting the dtbs from a new location.
-
-Jason Cooper (2):
-  scripts: dtc: build fdtget for extracting properties from dtbs
-  kbuild: dtbs_install: new make target
-
- Makefile                     |  3 ++-
- arch/arm/Makefile            |  4 ++++
- arch/arm/boot/installdtbs.sh | 44 ++++++++++++++++++++++++++++++++++++++++++++
- scripts/dtc/.gitignore       |  2 +-
- scripts/dtc/Makefile         | 10 +++++++++-
- 5 files changed, 60 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/boot/installdtbs.sh
-
--- 
-1.8.4.3
-
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
