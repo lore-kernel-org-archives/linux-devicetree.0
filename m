@@ -1,57 +1,97 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and direct irq.
-Date: Mon, 18 Nov 2013 23:28:40 +0100
-Message-ID: <201311182328.40743.arnd@arndb.de>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com> <201311181238.40349.arnd@arndb.de> <20131118171747.GM17929@book.gsilab.sittig.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
+Date: Mon, 18 Nov 2013 15:46:32 -0700
+Message-ID: <528A98C8.9040803@wwwdotorg.org>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <cover.1384798508.git.jason@lakedaemon.net> <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net> <528A65DF.8060000@wwwdotorg.org> <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118171747.GM17929-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+In-Reply-To: <20131118195243.GJ10335-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 November 2013, Gerhard Sittig wrote:
-> [ trimmed Cc: list for DT ]
-> [ is the bindings/gpio/8xxx_gpio.txt document incomplete? ]
+On 11/18/2013 12:52 PM, Jason Cooper wrote:
+> On Mon, Nov 18, 2013 at 12:38:11PM -0700, Stephen Warren wrote:
+>> On 11/18/2013 12:28 PM, Jason Cooper wrote:
+>>> On Mon, Nov 18, 2013 at 12:23:48PM -0700, Stephen Warren wrote:
+>>>> On 11/18/2013 12:19 PM, Jason Cooper wrote:
+>>>>> On Mon, Nov 18, 2013 at 12:09:19PM -0700, Stephen Warren wrote:
+>>>>>> On 11/18/2013 11:38 AM, Jason Cooper wrote:
+>>>>>>> Unlike other build products in the Linux kernel, the devicetree blobs
+>>>>>>> are simply the name of their source file, s/dts/dtb/.  There is also no
+>>>>>>> 'make *install' mechanism to put them in a standard place with a
+>>>>>>> standard naming structure.
+>>>>>>>
+>>>>>>> Unfortunately, users have begun scripting pulling the needed dtbs from
+>>>>>>> within the kernel tree, thus hardcoding the dtbs names.  In turn, this
+>>>>>>> means any changes to the dts filenames breaks these scripts.
+>>>>>>>
+>>>>>>> This patch is an attempt to fix this problem.  Akin to 'make install',
+>>>>>>> this creates a new make target, dtbs_install.  The script that gets
+>>>>>>> called defers to a vendor or distribution supplied installdtbs binary,
+>>>>>>> if found in the system.  Otherwise, the default action is to install a
+>>>>>>> given dtb into
+>>>> ...
+>>>>>> This only appears to create ${compat}.dtb, and not ${dtb} too. 
+>>>>>
+>>>>> See my comment, above.
+>>>>>
+>>>>>> So, it doesn't seem to address part of the cover letter, "In addition,
+>>>>>> some vendors have done a diligent job naming their devicetree source
+>>>>>> files appropriately and we don't want to break their setups." Was that
+>>>>>> deliberate? If so, I guess I need to send some patches to U-Boot.
+>>>>>
+>>>>> I assume you are still pulling from arch/arm/boot/dts/*.dtb, right?
+>>>>> Those build products don't go away with this patch, so you should be
+>>>>> fine.  Unless I'm mis-understanding your workflow...
+>>>>
+>>>> Yes, but I thought the whole point of this was that everyone would/could
+>>>> switch to running "make dtbs_install", then pulling out the files from
+>>>> the install tree, instead of any use-case requiring obtaining files
+>>>> directly from the source/build tree?
+>>>
+>>> Yes, in the script, it checks for the existence of /sbin/installdtbs.
+>>> If it's there, it will override the default behavior and execute that
+>>> script.
+>>
+>> But that means everyone (a lot of people, and all distros) has to write,
+>> or at least download and install, such a script. 
 > 
-> On Mon, Nov 18, 2013 at 12:38 +0100, Arnd Bergmann wrote:
-> > 
-> > See Documentation/devicetree/bindings/gpio/8xxx_gpio.txt for an
-> > example of a device whose interrupt line is connected to a gpio
-> > controller. The key here is to set the "interrupt-parent" to
-> > the gpio node and have the irq specifier define an interrupt
-> > local to that node.
+> They would already be modifying their build environment to make use of
+> 'make dtbs_install', and few extra lines of shell script to integrate
+> with existing systems certainly isn't unreasonable?
 > 
-> I was wondering whether the gpio-controller nodes lack both the
-> 'interrupt-controller' boolean flag as well as the
-> '#interrupt-cells = <2>' property.  The former may be optional,
-> I'm not certain there.  But the latter should be a hard
-> requirement without which the 'funkyfpga' references cannot get
-> parsed I'm afraid.
+>> Equally, that script would incorrectly affect the naming of non-Tegra
+>> DTBs that follow the new convention. The naming of the Tegra DTBs is
+>> based more on the fact that they're the Tegra DTBs than the fact that
+>> I'm using them.
+> 
+> Umm, I wrote that script in 2 minutes.  I'm sure you could come up with
+> something Tegra-specific (perhaps using fdtget?) that places only the
+> Tegra dtbs in the location that works with Tegra's u-boot.
 
-You are absolutely right, I picked an example that was actually
-wrong.
+Again, the point is not that it's hard to write the script. As you
+demonstrated, it's easy. The problem is that then, everybody has to do
+something different for Tegra, forever. No matter how small the actual
+cost of doing it is, it's still non-scalable to require that everyone
+know about this special case. I'm not convinced the issue would be
+isolated to Tegra either.
 
-> Am I missing something?  Did I get the names right?  Shall I send
-> a patch?  Is the code working without those specs since it
-> assumes knowledge that was not specified in the device tree?  And
-> would this be against the idea that the binding should be
-> "complete" and independent of who is interpreting the data?  Or
-> is the binding document just incomplete?
+The whole point of "make dtbs_install" is that people can run it, and
+get the results they're expected to use. If this isn't the case, what
+exactly is the point of any of the renaming that "make dtbs_install" is
+doing?
 
-I think the problem is that this particular controller is never used
-in "interrupts" properties, so nobody noticed the mistake. It probably
-still works for gpio references and drivers using gpio_to_irq on those
-numbers. It would be nice if you can send a patch to add those as
-optional properties to the binding and the example. We can't really
-make them mandatory properties now because that would make all existing
-dts files with this controller invalid.
+Certainly, it makes sense to have a "make dtbs_install" target, to
+isolate DTB consumers from the source locations of the DTBs.
 
-	Arnd
+However, if "make dtbs_install" is doing anything other than just
+copying files (i.e. if it does any kind of renaming at all), then it had
+better do *everything* that's required to solve *all* cases, and not
+just solve the one case you care about.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
