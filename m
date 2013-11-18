@@ -1,56 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC v5 4/5] dma: mpc512x: register for device tree channel lookup
-Date: Mon, 18 Nov 2013 15:31:54 +0100
-Message-ID: <201311181531.54818.arnd@arndb.de>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com> <1383290374-17484-5-git-send-email-a13xp0p0v88@gmail.com> <20131118120957.GH30853@e106331-lin.cambridge.arm.com>
+From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Subject: Re: [PATCHv7] dmaengine: Add support for BCM2835
+Date: Mon, 18 Nov 2013 15:37:01 +0100
+Message-ID: <528A260D.7090807@koalo.de>
+References: <5288E327.8050809@koalo.de> <1384768816.14845.186.camel@smile>	 <528A051A.7000703@koalo.de> <1384785017.14845.214.camel@smile>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118120957.GH30853-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <1384785017.14845.214.camel@smile>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 November 2013, Mark Rutland wrote:
-> > +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> > @@ -0,0 +1,55 @@
-> > +* Freescale MPC512x DMA Controller
-> > +
-> > +The DMA controller in the Freescale MPC512x SoC can move blocks of
-> > +memory contents between memory and peripherals or memory to memory.
-> > +
-> > +Refer to the "Generic DMA Controller and DMA request bindings" description
-> > +in the dma.txt file for a more detailled discussion of the binding.  The
-> > +MPC512x DMA engine binding follows the common scheme, but doesn't provide
-> > +support for the optional channels and requests counters (those values are
-> > +derived from the detected hardware features) and has a fixed client
-> > +specifier length of 1 integer cell (the value is the DMA channel, since
-> > +the DMA controller uses a fixed assignment of request lines per channel).
+>>>> +static enum dma_status bcm2835_dma_tx_status(struct dma_chan *chan,
+>>>> +	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>> +{
+>>>
+>>> []
+>>>
+>>>> +	} else {
+>>>> +		txstate->residue = 0;
+>>>
+>>> Useless assignment since dmaengine will do this for you in
+>>> dma_cookie_status.
+>>
+>> I agree that it is useless, but I think otherwise it might be concealed
+>> that there is a third case left that uses a residue of 0. Do you think a
+>> comment is better? E.g.:
+>>
+>> +	} else {
+>> +		/* residue = 0 per default */
 > 
-> The fact that #dma-cells must be <1> isn't a difference from the
-> standard binding, and needs not be described here. The meaning of the
-> value should be in your description of #dma-cells below.
+> I think like in many other DMA drivers either you have separate function
+> to get residue, which returns 0, or just not include this case.
 
-I think the value it has to be in there, and I have in the past asked other
-people to add this. Note that in the generic binding, it says that it must
-be "at least 1". You can have controllers that require a larger number, or
-that can use 1 or 2 alternatively, depending on how the device is wired
-up, e.g. when a dma controller has two master ports you would need a
-second cell to specify the port number, but only if more than one port
-is actually connected to a slave.
+You mean like in the omap-dma.c? ;-P
 
-> I'm not sure it's worth mentioning optional channels / request counters.
-> If anything, it would be better to update dma.txt to move the "Optional
-> properties" to something like "Suggested properties"...
+>>>> +static int bcm2835_dma_probe(struct platform_device *pdev)
+>>>> +{
+> 
+>>>> +	uint32_t chans_available;
+>>>
+>>> Why uint32_t?
+>>
+>> Because it is a bit mask of fixed length that directly comes from the
+>> firmware.
+> 
+> Like one already told you in your i2s patch, please, change that to
+> corresponding u* value, namely u32.
 
-These are less clearly defined. In the generic binding, it's mostly a matter
-of "if you need to pass this information, use these properties". The individual
-binding can then make them mandatory if needed.
+I have no problem with changing that, but why?
 
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
