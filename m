@@ -1,162 +1,71 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv1] Add support for Intersil ISL12057 I2C RTC chip
-Date: Mon, 18 Nov 2013 15:20:12 +0000
-Message-ID: <20131118152012.GA3759@e106331-lin.cambridge.arm.com>
-References: <87txfdcjqg.fsf@natisbad.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC v5 4/5] dma: mpc512x: register for device tree
+ channel lookup
+Date: Mon, 18 Nov 2013 15:23:57 +0000
+Message-ID: <20131118152357.GB3759@e106331-lin.cambridge.arm.com>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1383290374-17484-5-git-send-email-a13xp0p0v88@gmail.com>
+ <20131118120957.GH30853@e106331-lin.cambridge.arm.com>
+ <201311181531.54818.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87txfdcjqg.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Kent Yoder <key@linux.vnet.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Landley <rob@landley.net>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <201311181531.54818.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 11:45:27PM +0000, Arnaud Ebalard wrote:
->=20
-> Intersil ISL12057 I2C RTC chip also supports two alarms. This patch
-> only adds support for basic RTC functionalities (i.e. getting and
-> setting time). Tests have been performed on NETGEAR ReadyNAS 102 w/
-> startup/shutdown scripts, hwclock, ntpdate and openntpd.
->=20
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
-> Hi,
->=20
-> In order to get at least some initial support for the chip available =
-in
-> mainline kernel (3.14 will have three users waiting for it: ReadyNAS
-> 102, 104 and 2120), I decided to temporarily remove the alarm and IRQ
-> related code I pushed earlier (see [1] below). I will submit a patch
-> later to add back Alarm/IRQ support once I have understood how to
-> correctly handle my use case described via existing RTC logic.
->=20
-> Anyway, comments are welcome on the patch!
->=20
-> Changes since previous v0:
->  - removed alarm and IRQ related code
->  - Switched to isl for intersil (no existing driver has any reference
->    to isil, even though this would be the recommended choice)
->  - Added intersil info in vendor-prefixes.txt file
->  - Added entry for ISL 12057 in I2C trivial-devices.txt file
->  - Added mutex protection for non atomic read/write
->=20
->=20
-> Now, regarding later submission of Alarm/IRQ functionality, here is t=
-he
-> use case: on all 3 NETGEAR NAS above (102, 104 and RN2120), the Alarm
-> interrupt pins of the ISL 12057 are not connected to the SoC, i.e. Li=
-nux
-> kernel never gets warned via an interrupt when the alarm goes off. Th=
-e
-> reason is that the alarm interrupt pin is connected to some regulator
-> which will power up the (previously off) device when the alarm goes
-> off. It raises some questions for which I am looking for some support=
-s
-> from RTC maintainer and people familiar w/ RTC framework:
->=20
->  - Are there no previous example of such need from existing platform?
->  - How can this use case be supported? Tested?
->  - in usual context, what is the purpose of having an IRQ handler for
->    such an alarm event: just acknowledge it and remove the alarm? Or
->    are there other reasons?
->=20
-> As a side note, I want to repeat that previous code (the one I droppe=
-d
-> from current patch) worked fine to get alarm installed (i.e. once the
-> device powered off, it woke up as expected using the alarm). I was ju=
-st
-> unable to test the interrupt handling part, for the reason described
-> above.
->=20
-> Cheers,
->=20
-> a+
->=20
-> [1]: http://thread.gmane.org/gmane.linux.drivers.devicetree/46581
->=20
->=20
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  drivers/rtc/Kconfig                                |   9 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-isl12057.c                         | 397 +++++++++++=
-++++++++++
->  5 files changed, 409 insertions(+)
->  create mode 100644 drivers/rtc/rtc-isl12057.c
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index ad6a738..b57c71e 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -37,6 +37,7 @@ fsl,mpr121            MPR121: Proximity Capacitive =
-Touch Sensor Controller
->  fsl,sgtl5000           SGTL5000: Ultra Low-Power Audio Codec
->  infineon,slb9635tt     Infineon SLB9635 (Soft-) I2C TPM (old protoco=
-l, max 100khz)
->  infineon,slb9645tt     Infineon SLB9645 I2C TPM (new protocol, max 4=
-00khz)
-> +isl,isl12057           Intersil ISL12057 I2C RTC Chip
->  maxim,ds1050           5 Bit Programmable, Pulse-Width Modulator
->  maxim,max1237          Low-Power, 4-/12-Channel, 2-Wire Serial, 12-B=
-it ADCs
->  maxim,max6625          9-Bit/12-Bit Temperature Sensors with I=C2=B2=
-C-Compatible Serial Interface
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ce95ed1..507761a 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -38,6 +38,7 @@ ibm   International Business Machines (IBM)
->  idt    Integrated Device Technologies, Inc.
->  img    Imagination Technologies Ltd.
->  intercontrol   Inter Control Group
-> +isl    Intersil
->  linux  Linux-specific binding
->  lsi    LSI Corp. (LSI Logic)
->  marvell        Marvell Technology Group Ltd.
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 15f166a..bcc0c17 100644
+On Mon, Nov 18, 2013 at 02:31:54PM +0000, Arnd Bergmann wrote:
+> On Monday 18 November 2013, Mark Rutland wrote:
+> > > +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> > > @@ -0,0 +1,55 @@
+> > > +* Freescale MPC512x DMA Controller
+> > > +
+> > > +The DMA controller in the Freescale MPC512x SoC can move blocks of
+> > > +memory contents between memory and peripherals or memory to memory.
+> > > +
+> > > +Refer to the "Generic DMA Controller and DMA request bindings" description
+> > > +in the dma.txt file for a more detailled discussion of the binding.  The
+> > > +MPC512x DMA engine binding follows the common scheme, but doesn't provide
+> > > +support for the optional channels and requests counters (those values are
+> > > +derived from the detected hardware features) and has a fixed client
+> > > +specifier length of 1 integer cell (the value is the DMA channel, since
+> > > +the DMA controller uses a fixed assignment of request lines per channel).
+> > 
+> > The fact that #dma-cells must be <1> isn't a difference from the
+> > standard binding, and needs not be described here. The meaning of the
+> > value should be in your description of #dma-cells below.
+> 
+> I think the value it has to be in there, and I have in the past asked other
+> people to add this. Note that in the generic binding, it says that it must
+> be "at least 1". You can have controllers that require a larger number, or
+> that can use 1 or 2 alternatively, depending on how the device is wired
+> up, e.g. when a dma controller has two master ports you would need a
+> second cell to specify the port number, but only if more than one port
+> is actually connected to a slave.
 
-The binding additions look fine to me.
+The number of cells required should be described. My points were that it
+should be described at the property description rather than in the introduction,
+and that the fact that a specific value was required was not a
+difference from the bindings as the paragraph implied.
 
-[...]
+> 
+> > I'm not sure it's worth mentioning optional channels / request counters.
+> > If anything, it would be better to update dma.txt to move the "Optional
+> > properties" to something like "Suggested properties"...
+> 
+> These are less clearly defined. In the generic binding, it's mostly a matter
+> of "if you need to pass this information, use these properties". The individual
+> binding can then make them mandatory if needed.
 
-> +static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg,=
- u8 buf[],
-> +                                 unsigned len)
-> +{
-> +       struct i2c_msg msgs[2] =3D {
-> +               {
-> +                       .addr =3D client->addr,
-> +                       .flags =3D 0,
-> +                       .len =3D sizeof(u8),
-> +                       .buf =3D buf
-> +               },
-> +               {
-> +                       .addr =3D client->addr,
-> +                       .flags =3D I2C_M_RD,
-> +                       .len =3D len,
-> +                       .buf =3D buf
-> +               }
-> +       };
-> +       int ret;
-> +
-> +       BUG_ON(reg > ISL12057_REG_SR);
-> +       BUG_ON(reg + len > ISL12057_REG_SR + 1);
-> +
-> +       ret =3D i2c_transfer(client->adapter, msgs, 2);
-> +       if (ret !=3D 2)
-> +               return ret;
-
-This might return 1.
-
-Given that in isl12057_rtc_read_time you check if the return value is
-negative (also indirectly via isl12057_i2c_validate_client), I think it
-would make sense to always either return a negative error code or 0.
+Agreed. I'd prefer that bindings described the suggested properties they
+used, rather than those they don't.
 
 Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
