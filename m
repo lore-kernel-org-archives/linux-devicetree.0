@@ -1,46 +1,47 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv3] ASoC: Add support for BCM2835
-Date: Mon, 18 Nov 2013 15:06:19 +0000
-Message-ID: <20131118150619.GL30853@e106331-lin.cambridge.arm.com>
-References: <5289F9DF.8060406@koalo.de>
- <20131118141637.GI30853@e106331-lin.cambridge.arm.com>
- <528A232B.9070402@metafoo.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 16:10:32 +0100
+Message-ID: <201311181610.33105.arnd@arndb.de>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <3371903.8j54vrCjEN@wuerfel> <20131118150455.GD24408@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <528A232B.9070402@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Florian Meier <florian.meier@koalo.de>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131118150455.GD24408@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 02:24:43PM +0000, Lars-Peter Clausen wrote:
-> On 11/18/2013 03:16 PM, Mark Rutland wrote:
-> > 
-> >> +static void bcm2835_i2s_stop_clock(struct bcm2835_i2s_dev *dev)
-> >> +{
-> >> +       uint32_t clkreg;
-> > 
-> > s/uint32_t/u32/ (and elsewhere...)
+On Monday 18 November 2013, Mark Brown wrote:
+> On Sun, Nov 17, 2013 at 07:10:51PM +0100, Arnd Bergmann wrote:
+> > On Sunday 17 November 2013 17:18:03 Stefano Stabellini wrote:
 > 
-> Please don't do that.
+> > > Simply using DT would help avoiding the awkward situation where a driver
+> > > of a device only works with one of the two description formats and not
+> > > the other.
 > 
+> > Yes, but remember that Intel still have the problem on their embedded
+> > systems, and will want to solve them.
+> 
+> Has it been confirmed that Intel are going with ACPI for their embedded
+> devices rather than SFI?  That would be nice given how awful SFI is and
+> I have heard that before but I'm not sure I've seen anything official.
 
-I was under the impression that there was a preference for uXX types
-over uintXX_t types, but the replies and Documentation/CodingStyle have
-taught me otherwise.
+Possibly not all of Intel agrees to that, but I think that's what I've 
+heard from Darrent Hart and David Woodhouse. I doubt you can get an
+"official" confirmation about it. I also don't know if there is a follow-up
+for the Intel CE4100 that started using DT[1].
 
-Apologies for the confusion here.
+	Arnd
 
-Thanks,
-Mark.
+[1] arch/x86/platform/ce4100/falconfalls.dts
