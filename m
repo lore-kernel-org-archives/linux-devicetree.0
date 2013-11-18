@@ -1,201 +1,100 @@
-From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy settings
-Date: Mon, 18 Nov 2013 12:06:03 +0530
-Message-ID: <1384756563-17097-5-git-send-email-s.shirish@samsung.com>
-References: <1384756563-17097-1-git-send-email-s.shirish@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1384756563-17097-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
+Date: Mon, 18 Nov 2013 15:28:14 +0900
+Message-ID: <5289B37E.2030208@nvidia.com>
+References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com> <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com> <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com> <52842553.2080807@nvidia.com> <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt support to hdmiphy config settings
-as it is board specific and depends on the signal pattern
-of board.
+On 11/17/2013 06:03 PM, Alexandre Courbot wrote:
+> On Thu, Nov 14, 2013 at 10:20 AM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 11/14/2013 02:57 AM, Olof Johansson wrote:
+>>>
+>>> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>
+>>>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
+>>>>>
+>>>>>
+>>>>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> Just a set of small fixes to address the concerns expressed on v9 with
+>>>>>>> the
+>>>>>>> non-prefixed version DT properties. I hope there won't be a need for
+>>>>>>> an
+>>>>>>> eleventh (!) version. :P
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
+>>>>>> him. I'm just waiting to hear back from Olof/Russell whether I should
+>>>>>> merge this through the Tegra tree, or whether the first 1-3 patches
+>>>>>> should go through Russell's tree.
+>>>>>
+>>>>>
+>>>>>
+>>>>> I pinged Russell, and he brought up the fact that there were earlier
+>>>>> requests to move it to drivers/firmware. It would make sense to try to
+>>>>> get that done before merging, especially if you anticipate someone
+>>>>> using TF on 64-bit platforms.
+>>>>
+>>>>
+>>>>
+>>>> IIRC when we discussed this point your last comment was as follows:
+>>>
+>>>
+>>> Touche. :) Thanks for the reminder.
+>>>
+>>>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>>>
+>>>>> I think we can probably merge this under arch/arm now, and when we
+>>>>> figure out what needs to be common with ARM64 we can move it out to a
+>>>>> good location. It might be that mostly just a header file with ABI
+>>>>> conventions needs to be shared, not actual implementation, for
+>>>>> example.
+>>>>
+>>>>
+>>>> So I thought we agreed on that. If in the end we prefer to move the ARM
+>>>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
+>>>> also confirmed he would be ok with it) but I wonder if that would not be
+>>>> somehow premature.
+>>>>
+>>>> Another worry of mine is that this might delay this patchset some more.
+>>>> Support for TF is one of the last remaining step towards making NVIDIA
+>>>> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
+>>>> upstream directly. I missed 3.13, I'd like to make sure I won't miss
+>>>> 3.14.
+>>>> Would it be acceptable if we move the ARM firmware interface to a common
+>>>> place after this patchset is merged?
+>>>
+>>>
+>>> Well, as I already said I'm ok with things going into arch/arm to
+>>> start with, as long as Russell is. Once we see 64-bit needs for the
+>>> same we'll move it out -- it's not like it's a whole lot of code to
+>>> start with. But Russell has veto on the topic. :-)
+>>
+>>
+>> Thanks Olof. Russell, are you ok with the patchset in its current form? I
+>> can start moving the firmware interface out of arch/arm if that's what you
+>> want (there is no user outside of ARM at the moment, but as Olof pointed out
+>> that's not too much code) but I'd really like to see this series secured for
+>> 3.14.
+>
+> Never mind, I have submitted a patch that moves firmware_ops to
+> drivers/firmware, that will hopefully settle this issue. Then maybe we
+> can finally flush this series as well (I will need to resubmit a new
+> version though).
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/video/exynos_hdmi.txt      |   33 +++++++++
- drivers/gpu/drm/exynos/exynos_hdmi.c               |   77 +++++++++++++++++++-
- 2 files changed, 106 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-index 323983b..1021c74 100644
---- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-@@ -13,6 +13,31 @@ Required properties:
- 	b) pin number within the gpio controller.
- 	c) optional flags and pull up/down.
- 
-+- hdmiphy-configs: following information about the hdmiphy config settings.
-+        a) "nr-configs" specifies the number of pixel clocks supported.
-+	b) "config<N>: config<N>" specifies the phy configuration settings,
-+		where 'N' denotes the number of configuration, since every
-+		pixel clock can have its unique configuration.
-+		"pixel-clock" specifies the pixel clock
-+		"conifig-de-emphasis-level" provides fine control of TMDS data
-+		 pre emphasis, below shown is example for
-+		data de-emphasis register at address 0x145D0040.
-+			hdmiphy@38[16] for bits[3:0] permitted values are in
-+			the range of 760 mVdiff to 1400 mVdiff at 20mVdiff
-+			increments for every LSB
-+			hdmiphy@38[16] for bits[7:4] permitted values are in
-+			the range of 0dB to -7.45dB at increments of -0.45dB
-+			for every LSB.
-+		"config-clock-level" provides fine control of TMDS data
-+		amplitude for each channel,
-+		for example if 0x145D005C is the address of clock level
-+		register then,
-+			hdmiphy@38[23] for bits [1:0] permitted values are in
-+			the range of 0 mVdiff & 60 mVdiff for each channel at
-+			increments 20 mVdiff of amplitude levels for every LSB,
-+			hdmiphy@38[23] for bits [7:3] permitted values are in
-+			the range of 790 and 1430 mV at 20mV increments for
-+			every LSB.
- Example:
- 
- 	hdmi {
-@@ -20,4 +45,12 @@ Example:
- 		reg = <0x14530000 0x100000>;
- 		interrupts = <0 95 0>;
- 		hpd-gpio = <&gpx3 7 1>;
-+		hdmiphy-configs {
-+			nr-configs = <1>;
-+			config0: config0 {
-+				pixel-clock = <25200000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		}
- 	};
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index 32ce9a6..5f599e3 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -197,6 +197,9 @@ struct hdmi_context {
- 
- 	struct hdmi_resources		res;
- 
-+	struct hdmiphy_config		*confs;
-+	int				nr_confs;
-+
- 	int				hpd_gpio;
- 
- 	enum hdmi_type			type;
-@@ -256,7 +259,7 @@ static const struct hdmiphy_config hdmiphy_v13_configs[] = {
- 	},
- };
- 
--static const struct hdmiphy_config hdmiphy_v14_configs[] = {
-+static struct hdmiphy_config hdmiphy_v14_configs[] = {
- 	{
- 		.pixel_clock = 25200000,
- 		.conf = {
-@@ -785,8 +788,8 @@ static int hdmi_find_phy_conf(struct hdmi_context *hdata, u32 pixel_clock)
- 		confs = hdmiphy_v13_configs;
- 		count = ARRAY_SIZE(hdmiphy_v13_configs);
- 	} else if (hdata->type == HDMI_TYPE14) {
--		confs = hdmiphy_v14_configs;
--		count = ARRAY_SIZE(hdmiphy_v14_configs);
-+		confs = hdata->confs;
-+		count = hdata->nr_confs;
- 	} else
- 		return -EINVAL;
- 
-@@ -1415,7 +1418,7 @@ static void hdmiphy_conf_apply(struct hdmi_context *hdata)
- 	if (hdata->type == HDMI_TYPE13)
- 		hdmiphy_data = hdmiphy_v13_configs[i].conf;
- 	else
--		hdmiphy_data = hdmiphy_v14_configs[i].conf;
-+		hdmiphy_data = hdata->confs[i].conf;
- 
- 	memcpy(buffer, hdmiphy_data, 32);
- 	ret = i2c_master_send(hdata->hdmiphy_port, buffer, 32);
-@@ -1894,6 +1897,63 @@ fail:
- 	return -ENODEV;
- }
- 
-+static int drm_hdmi_dt_parse_phy_conf(struct platform_device *pdev,
-+						struct hdmi_context *hdata)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *dev_np = dev->of_node;
-+	struct device_node *phy_conf, *cfg_np;
-+	int i, pixel_clock = 0;
-+
-+	/* Initialize with default config */
-+	hdata->confs = hdmiphy_v14_configs;
-+	hdata->nr_confs = ARRAY_SIZE(hdmiphy_v14_configs);
-+
-+	phy_conf = of_find_node_by_name(dev_np, "hdmiphy-configs");
-+	if (phy_conf == NULL) {
-+		hdata->nr_confs = ARRAY_SIZE(hdmiphy_v14_configs);
-+		DRM_ERROR("Did not find hdmiphy-configs node\n");
-+		return -ENODEV;
-+	}
-+
-+	for_each_child_of_node(phy_conf, cfg_np) {
-+		if (!of_find_property(cfg_np, "pixel-clock", NULL))
-+			continue;
-+
-+		if (of_property_read_u32(cfg_np, "pixel-clock",
-+							&pixel_clock, 1)) {
-+				DRM_ERROR("Failed to get pixel clock\n");
-+				return -EINVAL;
-+		}
-+
-+		for (i = 0; i < ARRAY_SIZE(hdmiphy_v14_configs); i++) {
-+			if (hdata->confs[i].pixel_clock == pixel_clock)
-+				/* Update the data de-emphasis and data level */
-+				if (of_property_read_u8_array(cfg_np,
-+					 "config-de-emphasis-level",
-+					&hdata->confs[i].conf[16], 1)) {
-+					DRM_ERROR("Failed to get conf\n");
-+					return -EINVAL;
-+				}
-+				if (of_property_read_u8_array(cfg_np,
-+					 "config-de-emphasis-level",
-+					&hdata->confs[i].conf[16], 1)) {
-+					DRM_ERROR("Failed to get conf\n");
-+					return -EINVAL;
-+				}
-+				/* Update the clock level diff */
-+				if (of_property_read_u8_array(cfg_np,
-+					 "config-clock-level",
-+					&hdata->confs[i].conf[23], 1)) {
-+					DRM_ERROR("Failed to get conf\n");
-+					return -EINVAL;
-+				}
-+		}
-+	}
-+	return 0;
-+
-+}
-+
- static struct s5p_hdmi_platform_data *drm_hdmi_dt_parse_pdata
- 					(struct device *dev)
- {
-@@ -2024,6 +2084,15 @@ static int hdmi_probe(struct platform_device *pdev)
- 		goto err_hdmiphy;
- 	}
- 
-+	/* get hdmiphy confs */
-+	if (hdata->type == HDMI_TYPE14) {
-+		ret = drm_hdmi_dt_parse_phy_conf(pdev, hdata);
-+		if (ret) {
-+			DRM_ERROR("failed to get user defined config,will use
-+			default configs, eye diagram tests may fail\n");
-+		}
-+	}
-+
- 	hdmi_display.dev = dev;
- 	exynos_drm_display_register(&hdmi_display);
- 
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+... and that patch is very likely to not make it, for (I think) valid 
+reasons. Thus I'm not quite sure where we are with this series now.
