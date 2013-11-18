@@ -1,63 +1,100 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
- is used
-Date: Mon, 18 Nov 2013 13:35:56 +0200
-Message-ID: <5289FB9C.6060204@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528253B7.2060408@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] input: touchscreen: fix spelling mistake in
+ TSC/ADC DT binding
+Date: Mon, 18 Nov 2013 11:40:29 +0000
+Message-ID: <20131118114029.GD30853@e106331-lin.cambridge.arm.com>
+References: <1382386404-6659-1-git-send-email-balbi@ti.com>
+ <1382386404-6659-2-git-send-email-balbi@ti.com>
+ <52663A58.9070706@linutronix.de>
+ <20131022120253.GD9340@gimli>
+ <20131114111958.GG16396@e106331-lin.cambridge.arm.com>
+ <20131114155404.GE15835@saruman.home>
+ <20131115155540.GF24831@e106331-lin.cambridge.arm.com>
+ <20131115175356.GJ4698@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <528253B7.2060408-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131115175356.GJ4698@saruman.home>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2013 06:13 PM, Santosh Shilimkar wrote:
-> On Monday 11 November 2013 12:10 PM, Khoronzhuk, Ivan wrote:
->> If Davinci AEMIF is used we don't need to set timings and bus width.
->> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->> ---
->>   drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
->>   1 file changed, 15 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
->> index 4705214..879e915 100644
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
->>                  goto err_clk_enable;
->>          }
->>
->> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
->>
-> Instead above #if, just use a variable.
-> 	bool aemif = IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF) and then skip
-> the below code. #if block in the middle of the code looks ugly.
+On Fri, Nov 15, 2013 at 05:53:56PM +0000, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Fri, Nov 15, 2013 at 03:55:40PM +0000, Mark Rutland wrote:
+> > > > > > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/=
+drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > > > index e1c5300..b61df9d 100644
+> > > > > > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > > > > > @@ -348,9 +348,16 @@ static int titsc_parse_dt(struct pla=
+tform_device *pdev,
+> > > > > > >  	if (err < 0)
+> > > > > > >  		return err;
+> > > > > > > =20
+> > > > > > > -	err =3D of_property_read_u32(node, "ti,coordiante-reado=
+uts",
+> > > > > > > +	/*
+> > > > > > > +	 * try with new binding first. If it fails, still try w=
+ith
+> > > > > > > +	 * bogus, miss-spelled version.
+> > > > > > > +	 */
+> > > > > > > +	err =3D of_property_read_u32(node, "ti,coordinate-reado=
+uts",
+> > > > > > >  			&ts_dev->coordinate_readouts);
+> > > > > > >  	if (err < 0)
+> > > > > > > +		err =3D of_property_read_u32(node, "ti,coordiante-read=
+outs",
+> > > > > > > +				&ts_dev->coordinate_readouts);
+> > > > > > > +	if (err < 0)
+> > > > > > >  		return err;
+> > > > > >=20
+> > > > > > Thanks, very good. Do we keep this fallback for ever or jus=
+t for a year
+> > > > > > or two?
+> > > > >=20
+> > > > > That's for DT maintainers to decide but considering DT is an =
+ABI, I
+> > > > > guess we need to keep for 30 years or so :-p
+> > > >=20
+> > > > We keep it as long as we have to. If no-one's relying on the ty=
+po by the
+> > > > next merge window, I see no reason we'd have to keep support fo=
+r the
+> > >=20
+> > > and how could you know that ? considering it's an ABI, how could =
+you
+> > > ever know that ?
+> >=20
+> > If you know that the only user of a binding is a dts for a particul=
+ar
+> > product that you're in charge of, then you'd know the set of kernel=
+ +
+> > dtb combinations out there, and can judge.
+>=20
+> once the binding has made into mainline, it's next to impossible to
+> figure out who has downloaded a tarball containing that driver and ma=
+de
+> a product out of it.
+>=20
+> Besides keeping that check in the driver won't hurt at all in the lon=
+g
+> run. I would give it at least until 4.0 before thinking about removin=
+g,
+> and that might still not be enough time.
 
-Yes, this is the hack.
-The problem is that this part of code contains the call of Davinci 
-platform function davinci_aemif_setup_timing() which is not accessible 
-if Kernel is built for Keystone only.
-That's why "#if" has been used.
+That sounds sensible to me. As mentioned before I'd recommend adding a
+warning for the typo now in the (possibly na=C3=AFve) hope that it will
+encourage people to fix up their dts early.
 
-This part of code has to be removed together with Davinci aemif platform 
-code (aemif.c), once Davinci will be converted to DT and use
-new driver.
-
-The corresponding comment can be added here. Is it ok?
-
->
-> Other than that patch looks fine to me.
->
-> Regards,
-> Santosh
->
-
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
