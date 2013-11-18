@@ -1,70 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
- better?
-Date: Mon, 18 Nov 2013 18:43:09 +0000
-Message-ID: <20131118184309.GU2674@sirena.org.uk>
-References: <20131020231134.GR25034@n2100.arm.linux.org.uk>
- <20131021083242.GB30088@pengutronix.de>
- <20131021084854.GV25034@n2100.arm.linux.org.uk>
- <20131021092730.GF30088@pengutronix.de>
- <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
- <20131024072811.GS30088@pengutronix.de>
- <CAF6AEGuEho9Ms7ifTE-EmBoQ-=_AXgvGcJxi5qEC0vsZ+H9C+A@mail.gmail.com>
- <20131118124518.GA16735@n2100.arm.linux.org.uk>
- <20131118153750.GM26046@ulmo.nvidia.com>
- <20131118161151.GG16735@n2100.arm.linux.org.uk>
+From: "Tim Kryger" <tim.kryger@linaro.org>
+Subject: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
+Date: Mon, 18 Nov 2013 10:54:57 -0800
+Message-ID: <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
+References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vKcNkqnJHUUp475E"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131118161151.GG16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Linux PWM List <linux-pwm@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Tim Kryger <tim.kryger@linaro.org>, Linaro Patches List <patches@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Add the binding description for the kona-pwm block found on Broadcom's
+mobile SoCs.
 
---vKcNkqnJHUUp475E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ .../devicetree/bindings/pwm/bcm-kona-pwm.txt       | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
 
-On Mon, Nov 18, 2013 at 04:11:51PM +0000, Russell King - ARM Linux wrote:
-
-> Logically, it can't stay as two separate patches, because it won't be
-> possible to "migrate" to it in stages.  So I'm fully intending to
-> squash that all down to one patch which adds the core code (probably
-> ultimately into drivers/base).
-
-> IOW, watch this space this week. :)
-
-Can you CC me on these changes please and I'll have a look at converting
-ASoC over to use them?
-
---vKcNkqnJHUUp475E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSil+6AAoJELSic+t+oim9yMEP/3/9iZa5HBRIBTBgW7bGPqST
-evSdF636XUqWCAuK+Jd3nCBiMlq7cyYBbsxccNGmBcMCyN+BwhLgmUDdQSzO6e+q
-3KNfLU8WNKKQ7IHMKR4KubTezgc5MD8G9WL2FW8oYdbM6Qf3IJ5mGHZqOsTF/88h
-yFxEsLRMn1sxbju7Ci49I89IlEPE3v8Nvkxfz8JkEVCUEk+Z7uNTljdKIB7U4PeO
-iljlPSsE93Fce/nhp9l/FD9TNsrlWpPvV7tEVi50ZpeA1juWLebiKFMsD4iKLDil
-BQSYw9Ife1U2DD02C4c7380vX3/moAFdVAhFQJWm+lLXmLSHByAxxAZ4evg54fb9
-cU37yZtLw7Y0DCNdPGp8FT8UQGR0ppquf29yg94GXOZr8McdBeofwH/UpNGKYNbh
-sZHFsFEMZTxiw/xFAPx/h1BvLADJBMxpNhdNbJDCt5Zn9G0aprtqKwg5eq1ghlka
-fZwS6BIBYF8TcwGThWDwd0k04vODKrdky6tQAlYjTcuQZ+aiUrxWlqyoV6wHM37z
-cmCpN73OAcLBVy5Eqpj7KtKAm+RLcWCZC9+344uLBjTJ3b0Bnuj6dLEUIcGmeiSl
-tQtLfrxv/+MR0YHgBGVNvqId4Om1leEch7bOCHZKyJV+e7KJSAT4UA8pCG5sAyAA
-b5BnEAOFz5lmX3Qjo469
-=vFx8
------END PGP SIGNATURE-----
-
---vKcNkqnJHUUp475E--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+new file mode 100644
+index 0000000..5c3ea1b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+@@ -0,0 +1,24 @@
++Broadcom's PWM Controller Device Tree bindings
++
++Broadcom's Kona PWM Controller has 6 channels
++
++Required Properties :
++- compatible: should be "brcm,kona-pwm"
++- reg: physical base address and length of the controller's registers
++- clocks: clock specifier for the kona pwm external clock
++- #pwm-cells: should be 2.  The first cell specifies the per-chip index
++  of the PWM to use and the second cell is the period in nanoseconds.
++
++Refer to pwm/pwm.txt for generic pwm controller node properties.
++
++Refer to clocks/clock-bindings.txt for generic clock consumer
++properties
++
++Example:
++
++pwm: pwm@3e01a000 {
++	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
++	reg = <0x3e01a000 0xc4>;
++	clocks = <&pwm_clk>;
++	#pwm-cells = <2>;
++};
+-- 
+1.8.0.1
