@@ -1,70 +1,185 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v4] ASoC: simple-card: add Device Tree
- support
-Date: Mon, 18 Nov 2013 12:41:52 +0000
-Message-ID: <20131118124152.GB14306@sirena.org.uk>
-References: <87eh97sqw7.wl%kuninori.morimoto.gx@renesas.com>
- <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
- <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
- <20131003104248.GI27287@sirena.org.uk>
- <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
- <20131024171758.GA2461@kartoffel>
- <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
- <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
- <87li0m7d7c.wl%kuninori.morimoto.gx@renesas.com>
- <20131118113617.GC30853@e106331-lin.cambridge.arm.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 18 Nov 2013 12:45:19 +0000
+Message-ID: <20131118124518.GA16735@n2100.arm.linux.org.uk>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131020231134.GR25034@n2100.arm.linux.org.uk>
+ <20131021083242.GB30088@pengutronix.de>
+ <20131021084854.GV25034@n2100.arm.linux.org.uk>
+ <20131021092730.GF30088@pengutronix.de>
+ <CAF6AEGtt_2sStiZCNBp9btxevWghSwLZZBdN6ir8eUpX1FXrCQ@mail.gmail.com>
+ <20131024072811.GS30088@pengutronix.de>
+ <CAF6AEGuEho9Ms7ifTE-EmBoQ-=_AXgvGcJxi5qEC0vsZ+H9C+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20131118113617.GC30853-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAF6AEGuEho9Ms7ifTE-EmBoQ-=_AXgvGcJxi5qEC0vsZ+H9C+A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-2013-discuss@lists.linuxfoundation.org" <ksummit-2013-discuss@lists.linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 24, 2013 at 05:21:54PM -0400, Rob Clark wrote:
+> ahh, ok.  Yeah, we do need some way to make this easier, as it is a
+> too-common pattern.  I do think we do need a way to know if something
+> is missing because it isn't there vs it hasn't been probed yet.  Ie.
+> late_initcall() is not the awesome solution.
 
---neYutvxvOLaeuPCA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On this topic, I now have a solution to this which is not DRM specific,
+nor is it DT specific.
 
-On Mon, Nov 18, 2013 at 11:36:18AM +0000, Mark Rutland wrote:
+It's a core piece of code which gathers up the struct device pointers,
+and a callback for the master device to assemble the components and
+indicate when the master is complete.
 
-> What I meant was that I am surprised there isn't a helper doing all of:
-> * of_parse_phandle
-> * snd_soc_of_get_dai_name
-> * snd_soc_of_parse_daifmt
+Here's an example:
 
-> It looks like a common pattern that could be factored out.
+        imx-drm {
+                compatible = "fsl,drm";
+                /* Both CRTCs (can't specify which here) */
+                crtcs = <&ipu1>, <&ipu1>;
+                connectors = <&hdmi>;
+        };
 
-This is the factoring out of the common pattern, other drivers will only
-need the compatible string to work out the format.
+&hdmi {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_carrier1_hdmi>;
+        ddc = <&i2c2>;
+        status = "okay";
+        crtcs = <&ipu1 0>;
+};
 
---neYutvxvOLaeuPCA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The HDMI driver's probe and remove functions look like this:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+static int imx_hdmi_platform_probe(struct platform_device *pdev)
+{
+        return component_add(&pdev->dev, &hdmi_ops);
+}
 
-iQIcBAEBAgAGBQJSigsMAAoJELSic+t+oim996MP/1WR3iqkzlnN5Tor+vfeYeHi
-Fc4/M3xLQK9MyCxuloZRCupcdkcOppcCtyLY3Bn0/nda3+sfuBPrGhWBQx/3xQ9C
-J0uYZ1BFZfBqAVgPscekeeghWdDe56jf0FrHVl5p1dYa0aytdD7op5tr3jQYfprV
-LU2D3y8uwm08KGr54UTguAPvUUvsp2g+8Y/qt194SGYrc3Gy5O8K6efSKIAx4zw4
-uJZ9952ZI5do8RySNZhNY5r1hcUOxkCvhH1r+l69LAjpNSDtuIFPzgg1mvKZUNp9
-mqowovSXr3UoOn3wn6EjDMlKBphvFsFstDZ7GbGYfAnOyWjPu8EArCsZMHj3rlPI
-tWptw3ESuF+41PmM5sv/TNB8/Wzt3uPxEh9Y3bl9/lVjdRSN93N+6hJWasixG/IR
-EVPPudxZYScVc4M65Y8WkWNIMgruo42rfE/gIxADYnQ8swATUBpa24QSnGHq02TB
-ch6JnEyKx9ym/RWU18uY8/QaioFgPGF8TxfC1qVMFyjK8hl9Y9DRvZIf+myKpya+
-+L7p+lZOXVjshB6CEvtvFMz3UQglVu/JLQ3ncsTVNip/CXS0RcVYsBnFnJJIdmQY
-nW4QrrYC0uMXtQ7QcVGj5MJHpOR9Iut8O/xtudABiJG63iNZ1rc6ljeTetmvS7zb
-ITtIp0VBLwRdHTtHlMPq
-=VqQZ
------END PGP SIGNATURE-----
+static int imx_hdmi_platform_remove(struct platform_device *pdev)
+{
+        component_del(&pdev->dev, &hdmi_ops);
+        return 0;
+}
 
---neYutvxvOLaeuPCA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These register the device into the component layer, with a set of
+operations for binding and unbinding the device.
+
+The master device (imx-drm) does this:
+
+static const struct component_master_ops imx_drm_ops = {
+        .add_components = imx_drm_add_components,
+        .bind = imx_drm_bind,
+        .unbind = imx_drm_unbind,
+};
+
+static int imx_drm_platform_probe(struct platform_device *pdev)
+{
+        return component_master_add(&pdev->dev, &imx_drm_ops);
+}
+
+static int imx_drm_platform_remove(struct platform_device *pdev)
+{
+        component_master_del(&pdev->dev, &imx_drm_ops);
+        return 0;
+}
+
+so registering the master device.  imx_drm_add_components() gets called
+whenever something gets added, and this function is responsible for
+assembling the registered components and indicating when the master is
+complete:
+
+static int imx_drm_add_components(struct device *master, struct master *m)
+{
+        struct device_node *np = master->of_node;
+        unsigned i;
+        int ret;
+
+        for (i = 0; ; i++) {
+                struct device_node *node;
+
+                node = of_parse_phandle(np, "crtcs", i);
+                if (!node)
+                        break;
+
+                ret = component_master_add_child(m, compare_parent_of, node);
+                of_node_put(node);
+
+                if (ret)
+                        return ret;
+        }
+
+        for (i = 0; ; i++) {
+                struct device_node *node;
+
+                node = of_parse_phandle(np, "connectors", i);
+                if (!node)
+                        break;
+
+                ret = component_master_add_child(m, compare_of, node);
+                of_node_put(node);
+
+                if (ret)
+                        return ret;
+        }
+        return 0;
+}
+
+When it is complete (iow, this function returns zero), the master is
+bound:
+
+static int imx_drm_bind(struct device *dev)
+{
+        return drm_platform_init(&imx_drm_driver, to_platform_device(dev));
+}
+
+This causes DRM to start the construction of a drm_device, and call the
+load callback.  In the load callback:
+
+        /* Now try and bind all our sub-components */
+        ret = component_bind_all(drm->dev, drm);
+        if (ret)
+                goto err;
+
+which binds the previously assembled components, with the drm_device
+structure as their data - that's drm above:
+
+static int imx_hdmi_bind(struct device *dev, struct device *master, void *data)
+{
+        struct platform_device *pdev = to_platform_device(dev);
+        const struct of_device_id *of_id =
+                                of_match_device(imx_hdmi_dt_ids, dev);
+        struct drm_device *drm = data;
+...
+}
+
+This allows the HDMI driver to register with DRM using the passed
+struct drm_device pointer.  Other connectors do the same at this moment,
+CRTCs also use this same mechanism, but with a higher priority, so CRTCs
+get registered before connectors.
+
+Teardown is similar to the above, but it happens in reverse order: when
+any bound component or the master goes away, the master DRM device is
+unbound, which triggers DRM to call the unload callback.
+
+The unload callback unbinds the components, which triggers an unbind
+call to each component in reverse order.
+
+As I say, nothing in the above is specific to DRM; this can be re-used
+by any subsystem.  It can also be re-used by non-DT setups as well via
+appropriate .add_components callback and appropriate component matching
+functions.
+
+This addresses the componentised device problem in a completely generic
+way.
