@@ -1,98 +1,185 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Mon, 18 Nov 2013 15:46:32 -0700
-Message-ID: <528A98C8.9040803@wwwdotorg.org>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <cover.1384798508.git.jason@lakedaemon.net> <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net> <528A65DF.8060000@wwwdotorg.org> <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net>
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 2/2] LEDS: tca6502: add device-tree support for GPIO
+ configuration.
+Date: Tue, 19 Nov 2013 09:50:01 +1100
+Message-ID: <20131119095001.610e47c5@notabene.brown>
+References: <20131101134120.13a44225@notabene.brown>
+	<20131118115512.GF30853@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118195243.GJ10335-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/pzni9iv9=k+.qudDBdJBewZ"; protocol="application/pgp-signature"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20131118115512.GF30853@e106331-lin.cambridge.arm.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Belisko Marek <marek.belisko@gmail.com>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2013 12:52 PM, Jason Cooper wrote:
-> On Mon, Nov 18, 2013 at 12:38:11PM -0700, Stephen Warren wrote:
->> On 11/18/2013 12:28 PM, Jason Cooper wrote:
->>> On Mon, Nov 18, 2013 at 12:23:48PM -0700, Stephen Warren wrote:
->>>> On 11/18/2013 12:19 PM, Jason Cooper wrote:
->>>>> On Mon, Nov 18, 2013 at 12:09:19PM -0700, Stephen Warren wrote:
->>>>>> On 11/18/2013 11:38 AM, Jason Cooper wrote:
->>>>>>> Unlike other build products in the Linux kernel, the devicetree blobs
->>>>>>> are simply the name of their source file, s/dts/dtb/.  There is also no
->>>>>>> 'make *install' mechanism to put them in a standard place with a
->>>>>>> standard naming structure.
->>>>>>>
->>>>>>> Unfortunately, users have begun scripting pulling the needed dtbs from
->>>>>>> within the kernel tree, thus hardcoding the dtbs names.  In turn, this
->>>>>>> means any changes to the dts filenames breaks these scripts.
->>>>>>>
->>>>>>> This patch is an attempt to fix this problem.  Akin to 'make install',
->>>>>>> this creates a new make target, dtbs_install.  The script that gets
->>>>>>> called defers to a vendor or distribution supplied installdtbs binary,
->>>>>>> if found in the system.  Otherwise, the default action is to install a
->>>>>>> given dtb into
->>>> ...
->>>>>> This only appears to create ${compat}.dtb, and not ${dtb} too. 
->>>>>
->>>>> See my comment, above.
->>>>>
->>>>>> So, it doesn't seem to address part of the cover letter, "In addition,
->>>>>> some vendors have done a diligent job naming their devicetree source
->>>>>> files appropriately and we don't want to break their setups." Was that
->>>>>> deliberate? If so, I guess I need to send some patches to U-Boot.
->>>>>
->>>>> I assume you are still pulling from arch/arm/boot/dts/*.dtb, right?
->>>>> Those build products don't go away with this patch, so you should be
->>>>> fine.  Unless I'm mis-understanding your workflow...
->>>>
->>>> Yes, but I thought the whole point of this was that everyone would/could
->>>> switch to running "make dtbs_install", then pulling out the files from
->>>> the install tree, instead of any use-case requiring obtaining files
->>>> directly from the source/build tree?
->>>
->>> Yes, in the script, it checks for the existence of /sbin/installdtbs.
->>> If it's there, it will override the default behavior and execute that
->>> script.
->>
->> But that means everyone (a lot of people, and all distros) has to write,
->> or at least download and install, such a script. 
-> 
-> They would already be modifying their build environment to make use of
-> 'make dtbs_install', and few extra lines of shell script to integrate
-> with existing systems certainly isn't unreasonable?
-> 
->> Equally, that script would incorrectly affect the naming of non-Tegra
->> DTBs that follow the new convention. The naming of the Tegra DTBs is
->> based more on the fact that they're the Tegra DTBs than the fact that
->> I'm using them.
-> 
-> Umm, I wrote that script in 2 minutes.  I'm sure you could come up with
-> something Tegra-specific (perhaps using fdtget?) that places only the
-> Tegra dtbs in the location that works with Tegra's u-boot.
+--Sig_/pzni9iv9=k+.qudDBdJBewZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Again, the point is not that it's hard to write the script. As you
-demonstrated, it's easy. The problem is that then, everybody has to do
-something different for Tegra, forever. No matter how small the actual
-cost of doing it is, it's still non-scalable to require that everyone
-know about this special case. I'm not convinced the issue would be
-isolated to Tegra either.
+On Mon, 18 Nov 2013 11:55:12 +0000 Mark Rutland <mark.rutland@arm.com> wrot=
+e:
 
-The whole point of "make dtbs_install" is that people can run it, and
-get the results they're expected to use. If this isn't the case, what
-exactly is the point of any of the renaming that "make dtbs_install" is
-doing?
+> On Fri, Nov 01, 2013 at 02:41:20AM +0000, NeilBrown wrote:
+> >=20
+> > The 7 lines driven by the TCA6507 can either drive LEDs or act as outpu=
+t-only
+> > GPIOs.
+> >=20
+> > To make this distinction in devicetree we use the "compatible" property.
+> >=20
+> > If the device attached to a line is "compatible" with "gpio", we treat =
+it
+> > like a GPIO.  If it is "compatible" with "led" (or if no "compatible" v=
+alue
+> > is set) we treat it like an LED.
+>=20
+> I'm nto sure I understand the purpose of this.
+>=20
+> Are these lines all GPIOs, some of which happen to by attached to LEDs?
+>=20
+> If so, why is handlnig the device as a gpio-controller and using the
+> gpio-leds binding not sufficient?
 
-Certainly, it makes sense to have a "make dtbs_install" target, to
-isolate DTB consumers from the source locations of the DTBs.
+No, all the lines are designed to drives LEDs but can happen to be wired up
+like GPIOs.  This configuration is explicitly described in the data sheets
+for the chip, and is actually used in my board.
 
-However, if "make dtbs_install" is doing anything other than just
-copying files (i.e. if it does any kind of renaming at all), then it had
-better do *everything* that's required to solve *all* cases, and not
-just solve the one case you care about.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The 7 pins either float or sink current. They can switch between the two
+modes in various ways under hardware control with a PWM which can have a
+varying duty cycle.
+So they are very suitable for driving LEDs as the PWM can adjust the appare=
+nt
+brightness and the varying duty cycle can effect a 'blink' pattern.
+
+But the pins can also be fixed in one state of the other - either never on =
+or
+always on.  Floating or constantly sinking current.
+
+This mode combined with a pull-up resistor makes an effective output-only
+GPIO.  The same action that would turn the LED on, will pull the GPIO low.
+The action that would turn the LED off, will allow the GPIO to go high.
+
+So the device connected to each pin can be treated as an LED or as a GPIO.
+
+I hope that clarifies the situation.
+
+Thanks,
+NeilBrown
+
+
+>=20
+> THanksm
+> Mark.
+>=20
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Docum=
+entation/devicetree/bindings/leds/tca6507.txt
+> > index 80ff3dfb1f32..d7221b84987c 100644
+> > --- a/Documentation/devicetree/bindings/leds/tca6507.txt
+> > +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
+> > @@ -2,6 +2,13 @@ LEDs connected to tca6507
+> > =20
+> >  Required properties:
+> >  - compatible : should be : "ti,tca6507".
+> > +- #address-cells: must be 1
+> > +- #size-cells: must be 0
+> > +- reg: typically 0x45.
+> > +
+> > +Optional properties:
+> > +- gpio-controller: allows lines to be used as output-only GPIOs.
+> > +- #gpio-cells: if present, must be 0.
+> > =20
+> >  Each led is represented as a sub-node of the ti,tca6507 device.
+> > =20
+> > @@ -10,6 +17,7 @@ LED sub-node properties:
+> >  - reg : number of LED line (could be from 0 to 6)
+> >  - linux,default-trigger : (optional)
+> >     see Documentation/devicetree/bindings/leds/common.txt
+> > +- compatible: either "led" (the default) or "gpio".
+> > =20
+> >  Examples:
+> > =20
+> > @@ -19,6 +27,9 @@ tca6507@45 {
+> >  	#size-cells =3D <0>;
+> >  	reg =3D <0x45>;
+> > =20
+> > +	gpio-controller;
+> > +	#gpio-cells =3D <2>;
+> > +
+> >  	led0: red-aux@0 {
+> >  		label =3D "red:aux";
+> >  		reg =3D <0x0>;
+> > @@ -29,5 +40,10 @@ tca6507@45 {
+> >  		reg =3D <0x5>;
+> >  		linux,default-trigger =3D "default-on";
+> >  	};
+> > +
+> > +	wifi-reset@6 {
+> > +		reg =3D <0x6>;
+> > +		compatible =3D "gpio";
+> > +	};
+> >  };
+> > =20
+> > diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+> > index f5063f447463..93a2b1759054 100644
+> > --- a/drivers/leds/leds-tca6507.c
+> > +++ b/drivers/leds/leds-tca6507.c
+> > @@ -638,6 +638,9 @@ static int tca6507_probe_gpios(struct i2c_client *c=
+lient,
+> >  	tca->gpio.direction_output =3D tca6507_gpio_direction_output;
+> >  	tca->gpio.set =3D tca6507_gpio_set_value;
+> >  	tca->gpio.dev =3D &client->dev;
+> > +#ifdef CONFIG_OF_GPIO
+> > +	tca->gpio.of_node =3D of_node_get(client->dev.of_node);
+> > +#endif
+> >  	err =3D gpiochip_add(&tca->gpio);
+> >  	if (err) {
+> >  		tca->gpio.ngpio =3D 0;
+> > @@ -696,6 +699,8 @@ tca6507_led_dt_init(struct i2c_client *client)
+> >  		led.default_trigger =3D
+> >  			of_get_property(child, "linux,default-trigger", NULL);
+> >  		led.flags =3D 0;
+> > +		if (of_property_match_string(child, "compatible", "gpio") >=3D 0)
+> > +			led.flags |=3D TCA6507_MAKE_GPIO;
+> >  		ret =3D of_property_read_u32(child, "reg", &reg);
+> >  		if (ret !=3D 0 || reg < 0 || reg >=3D NUM_LEDS)
+> >  			continue;
+> > @@ -709,6 +714,7 @@ tca6507_led_dt_init(struct i2c_client *client)
+> > =20
+> >  	pdata->leds.leds =3D tca_leds;
+> >  	pdata->leds.num_leds =3D NUM_LEDS;
+> > +	pdata->gpio_base =3D -1;
+> > =20
+> >  	return pdata;
+> >  }
+>=20
+
+
+--Sig_/pzni9iv9=k+.qudDBdJBewZ
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUoqZmTnsnt1WYoG5AQLoNQ/+N8ZWQ5hq/0azLK0wbZT7A7nvU3N3eMyR
+OfgsPU7yBoUEtYyHvZR2eepf94fmXyD4eyP586u6xPiybbU9ne12RzPCTao3h5rX
+3YYg0eo8o+DPkMHuPEw+x/P7wj3rRnaNIIT6iKfKqK29z1/cSJZ0Psp1kROHEjd4
+N7WJdQEIyAAq9J6dCcYkjRTCnbpQEpIVA/SaUuZApG05fLWaCoTgbQDwvgLzk9J7
+Yk+fBo0mUDu7D8J7FXJM8z6qV8VMBzfPlav02FPsL187H9uBkxInUFMsOCxiKgAY
+UNgI5oaZFZZUUHjS7KlGXCo2xjxn5+AFd1ZsGSEuO4LqZk+pqZZ+QZLYTJul2m86
+sz/peZO2pI5iJhEom46cxz35Sq7avJmLFu7WgYyFLSLMfTOixXAt/kEKf6B8cj5d
+JMeHTqdVm+SHmwiMSPv2kTICSnqpT01JpvqxUhu1dFpW7L3Kd/pnh8KjXXsqtmBF
+n6Zc3OynNrZeDiF9KH2S1ZVaHriWxxb/v6L2U/uh7MzJNzR2i36tgS//AusfBtXD
+M7M36Jb1jIx02j08gBM4MUpxbO04S3e80S3OxR+E5eXHEkohVpzbsWzXf61J9KQL
+EPNJhBTXFgamOr6cumFLmShvInknnsRNYof/TdbHIp5iSNJN9EmK3VpBuK42rnv2
+oBxgdF8c6zM=
+=drnJ
+-----END PGP SIGNATURE-----
+
+--Sig_/pzni9iv9=k+.qudDBdJBewZ--
