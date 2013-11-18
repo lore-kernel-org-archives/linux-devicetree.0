@@ -1,115 +1,64 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [PATCH 6/8] watchdog: davinci: reuse driver for keystone
- arch
-Date: Mon, 18 Nov 2013 17:03:37 +0200
-Message-ID: <528A2C49.4040709@ti.com>
-References: <1383680783-12114-7-git-send-email-ivan.khoronzhuk@ti.com> <527A28DE.4030906@ti.com> <5288298B.1010602@roeck-us.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 18 Nov 2013 15:04:55 +0000
+Message-ID: <20131118150455.GD24408@sirena.org.uk>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <CAOesGMhkCn2zeJj_ZZAZu_wJya-4evWEqNHpVJEpjxzWHVWY3A@mail.gmail.com>
+ <alpine.DEB.2.02.1311171705130.4714@kaball.uk.xensource.com>
+ <3371903.8j54vrCjEN@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5288298B.1010602-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3371903.8j54vrCjEN@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2013 04:27 AM, Guenter Roeck wrote:
-> On 11/06/2013 03:32 AM, ivan.khoronzhuk wrote:
->> The keystone arch use the same IP watchdog, so add "ti,keystone-wdt"
->> compatible and correct identity.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->> ---
->>   .../devicetree/bindings/watchdog/davinci-wdt.txt   |   11 +++++++++--
->>   drivers/watchdog/Kconfig                           |    4 ++--
->>   drivers/watchdog/davinci_wdt.c                     |    3 ++-
->>   3 files changed, 13 insertions(+), 5 deletions(-)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
->> b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
->> index 1668b6e..fddced9 100644
->> --- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
->> +++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
->> @@ -1,13 +1,20 @@
->> -DaVinci Watchdog Timer (WDT) Controller
->> +Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
->>
->>   Required properties:
->> -- compatible : Should be "ti,davinci-wdt"
->> +
->> +- compatible:        "ti,davinci-wdt"
->> +            "ti,keystone-wdt"
->> +
->>   - reg : Should contain WDT registers location and length
->>
-> Please use consistent formatting. If you change it, at least change it
-> to be consistent.
->
 
-Thanks, I will
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>   Optional properties:
->>
->>   - timeout-sec:        Contains the watchdog timeout in seconds
->>
->> +Documentation:
->> +Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
->> +Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
->> +
->>   Examples:
->>
->>   wdt: wdt@2320000 {
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 2c954b5..a4fe130 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -270,11 +270,11 @@ config IOP_WATCHDOG
->>
->>   config DAVINCI_WATCHDOG
->>       tristate "DaVinci watchdog"
->> -    depends on ARCH_DAVINCI
->> +    depends on ARCH_DAVINCI || ARCH_KEYSTONE
->>       select WATCHDOG_CORE
->>       help
->>         Say Y here if to include support for the watchdog timer
->> -      in the DaVinci DM644x/DM646x processors.
->> +      in the DaVinci DM644x/DM646x or Keystone processors.
->>         To compile this driver as a module, choose M here: the
->>         module will be called davinci_wdt.
->>
->> diff --git a/drivers/watchdog/davinci_wdt.c
->> b/drivers/watchdog/davinci_wdt.c
->> index a371b2d..e51fd2e 100644
->> --- a/drivers/watchdog/davinci_wdt.c
->> +++ b/drivers/watchdog/davinci_wdt.c
->> @@ -158,7 +158,7 @@ static unsigned int davinci_wdt_status(struct
->> watchdog_device *wdd)
->>
->>   static const struct watchdog_info davinci_wdt_info = {
->>       .options = WDIOF_KEEPALIVEPING,
->> -    .identity = "DaVinci Watchdog",
->> +    .identity = "DaVinci/Keystone Watchdog",
->>   };
->>
->>   static const struct watchdog_ops davinci_wdt_ops = {
->> @@ -229,6 +229,7 @@ static int davinci_wdt_remove(struct
->> platform_device *pdev)
->>
->>   static const struct of_device_id davinci_wdt_of_match[] = {
->>       { .compatible = "ti,davinci-wdt", },
->> +    { .compatible = "ti,keystone-wdt", },
->>       {},
->>   };
->>   MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
->>
->
+On Sun, Nov 17, 2013 at 07:10:51PM +0100, Arnd Bergmann wrote:
+> On Sunday 17 November 2013 17:18:03 Stefano Stabellini wrote:
 
+> > Simply using DT would help avoiding the awkward situation where a driver
+> > of a device only works with one of the two description formats and not
+> > the other.
 
--- 
-Regards,
-Ivan Khoronzhuk
+> Yes, but remember that Intel still have the problem on their embedded
+> systems, and will want to solve them.
+
+Has it been confirmed that Intel are going with ACPI for their embedded
+devices rather than SFI?  That would be nice given how awful SFI is and
+I have heard that before but I'm not sure I've seen anything official.
+
+--6WlEvdN9Dv0WHSBl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSiiyUAAoJELSic+t+oim9+l4P/jBXBMUaqBX/O1Y8iAox8hsg
+d5tetSOVmh0XllC0C3ttgSJbRi07Bczf5w7v7rMOItdtAVSC2GOo7hZzQY2dF9dK
+zYHnK6xacsEecymicRSo4Y/XKeeFMJEAIGkCtOZdJSG+t7Wrteky0uF3V+woae+S
+9//j1ZbQROzMKRIh7cII/Yoz/Ym/1Ju6ObljWY9tRZVCNwmsqwsQ8y996lQsaDAN
+8ktTZW601d3MWo4kBGwoHFIV6QbFQl7p0PX4uzReceAKqcS2K7SMDs8jrBiJuCq7
+1c4xV4I6+ObwEFXSY/wuRDgK9I6m6KCi02UeJqsct0H2hqxx7cpv5yxgGHxR1L6I
+dx/IfsvpmqJios929ihhsB2OcnReJVNaba4VCtJlleI68Oa0Tni6+kBlygEAwWA7
+Y1SaXahqQmojcCnvjjFr3yl4xLwRtP2UaVtinuyogwTwPJX2iR6rGCbrFMI5r84R
+aTeOxvNH+ohoC1Dpuk46u4z9lubzwotVbL/NZk4/ib+qjSntd2pPMfIeykvOnXYr
+7nITEhbs+yTYUMO/ic6+lDgRfOLTtWMCpnqNT/k8LwFVHXNUi0NevmBAtTI9EKDX
+eL7Us/HvzSIJUYGBM0L98FAUNgkBeYK5WO+cqSoz8Or/ouqQw0NEtgnZIAtUr7/I
+JC2wofNOw8iuAyM0iKo9
+=GToh
+-----END PGP SIGNATURE-----
+
+--6WlEvdN9Dv0WHSBl--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
