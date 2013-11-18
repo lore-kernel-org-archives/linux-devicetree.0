@@ -1,104 +1,55 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [RFC PATCH V2 1/2] dtc: add 'compat' output option, prints board string
-Date: Mon, 18 Nov 2013 18:38:14 +0000
-Message-ID: <728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon.net>
+Subject: [RFC PATCH V2 0/2] Add 'make dtbs_install'
+Date: Mon, 18 Nov 2013 18:38:13 +0000
+Message-ID: <cover.1384798508.git.jason@lakedaemon.net>
 References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <cover.1384798508.git.jason@lakedaemon.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-In-Reply-To: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-References: <cover.1384798508.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Consumers of the Linux kernel's build products are beginning to hardcode
-the filenames of the dtbs generated.  Since the dtb filenames are
-currently the dts filename s/dts/dtb/, this prevents the kernel
-community from renaming dts files as needed.
+Detailed changelog can be found in each patch.
 
-Let's provide a consistent naming structure for consumers to script
-against.  Or at least, as consistent as the dts properties themselves.
+The kernel community never created a 'dtbs_install' make target for properly
+handling the build output of the kernel's devicetree files.  Currently, the dtb
+files are simply their source file, s/dts/dtb/.  Users have recently begun
+retrieving these files from inside the kernel tree.  Any change to the dts
+filenames breaks the scripts of those users.
 
-With this patch, adding the '-O compat' option to the dtc commandline
-will cause dtc to parse the provided file, and print out the board
-compatible string to stdout.
+Before this gets too far along, we'd like to create a standardized method of
+installing the dtb files for users to find and use.  In addition, some vendors
+have done a diligent job naming their devicetree source files appropriately and
+we don't want to break their setups.
 
-This will facilitate an 'installdtbs.sh' script in the kernel for naming
-dtb files by their compatible string, eg:
+This patch series solves both problems by creating a dtbs_install make target
+which calls arch/arm/boot/installdtbs.sh.  If /sbin/installdtbs or
+~/bin/installdtbs is present, they will be run instead of the default behavior.
 
-$ dtc -I dtb -O compat arch/arm/boot/dts/armada-370-mirabox.dtb
-globalscale,mirabox
+The default action is to install a given dtb to
 
-This change will also simplify distribution install scripts that need to
-search through many dtbs to find the right one for a target board.
+  /lib/modules/${kernel_version}/devicetree/${board_compatible}.dtb
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-changes since v1:
- - made patch against in-tree dtc code to facilitate testing
- - dtc prints compatible string to stdout now, instead of creating symlink
-    - should be more flexible for end-users
+Ideally, the devicetree file should be independent of the kernel version,
+however, we aren't there yet.  So, while the devicetree files live in the
+kernel source tree, we'll install them as above.  Once they are in their own
+repository, this install target can be removed, and users can adjust their
+workflow to getting the dtbs from a new location.
 
- scripts/dtc/dtc.c      | 3 +++
- scripts/dtc/dtc.h      | 1 +
- scripts/dtc/flattree.c | 9 +++++++++
- 3 files changed, 13 insertions(+)
+Jason Cooper (2):
+  dtc: add 'compat' output option, prints board string
+  kbuild: dtbs_install: new make target
 
-diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-index a375683c1534..89264bb0a3dd 100644
---- a/scripts/dtc/dtc.c
-+++ b/scripts/dtc/dtc.c
-@@ -68,6 +68,7 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\tOutput formats are:\n");
- 	fprintf(stderr, "\t\t\tdts - device tree source text\n");
- 	fprintf(stderr, "\t\t\tdtb - device tree blob\n");
-+	fprintf(stderr, "\t\t\tcompat - print board compatible string\n");
- 	fprintf(stderr, "\t\t\tasm - assembler source\n");
- 	fprintf(stderr, "\t-V <output version>\n");
- 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
-@@ -250,6 +251,8 @@ int main(int argc, char *argv[])
- 		dt_to_blob(outf, bi, outversion);
- 	} else if (streq(outform, "asm")) {
- 		dt_to_asm(outf, bi, outversion);
-+	} else if (streq(outform, "compat")) {
-+		dt_to_compat(bi);
- 	} else if (streq(outform, "null")) {
- 		/* do nothing */
- 	} else {
-diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-index 3e42a071070e..d4e47c697c2f 100644
---- a/scripts/dtc/dtc.h
-+++ b/scripts/dtc/dtc.h
-@@ -255,6 +255,7 @@ void process_checks(int force, struct boot_info *bi);
- 
- void dt_to_blob(FILE *f, struct boot_info *bi, int version);
- void dt_to_asm(FILE *f, struct boot_info *bi, int version);
-+void dt_to_compat(struct boot_info *bi);
- 
- struct boot_info *dt_from_blob(const char *fname);
- 
-diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-index 665dad7bb465..bdbd3d7e8964 100644
---- a/scripts/dtc/flattree.c
-+++ b/scripts/dtc/flattree.c
-@@ -577,6 +577,15 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
- 	data_free(strbuf);
- }
- 
-+void dt_to_compat(struct boot_info *bi)
-+{
-+	struct property *prop;
-+
-+	prop = get_property(bi->dt, "compatible");
-+
-+	printf("%s\n", prop->val.val);
-+}
-+
- struct inbuf {
- 	char *base, *limit, *ptr;
- };
+ Makefile                     |  3 ++-
+ arch/arm/Makefile            |  4 ++++
+ arch/arm/boot/installdtbs.sh | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ scripts/dtc/dtc.c            |  3 +++
+ scripts/dtc/dtc.h            |  1 +
+ scripts/dtc/flattree.c       |  9 +++++++++
+ 6 files changed, 63 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/installdtbs.sh
+
 -- 
 1.8.4.3
 
