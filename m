@@ -1,38 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and direct irq.
-Date: Mon, 18 Nov 2013 12:38:40 +0100
-Message-ID: <201311181238.40349.arnd@arndb.de>
-References: <1384465609-26485-1-git-send-email-marek@goldelico.com> <20131115153015.GD24831@e106331-lin.cambridge.arm.com> <CAAfyv346pUa9k3+9jdBX+EK8cV9GenaBxrAnVnKsbUPBoNBqrQ@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
+ is used
+Date: Mon, 18 Nov 2013 13:35:56 +0200
+Message-ID: <5289FB9C.6060204@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528253B7.2060408@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfyv346pUa9k3+9jdBX+EK8cV9GenaBxrAnVnKsbUPBoNBqrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <528253B7.2060408-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "neilb-l3A5Bk7waGM@public.gmane.org" <neilb-l3A5Bk7waGM@public.gmane.org>, "hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 November 2013, Belisko Marek wrote:
+On 11/12/2013 06:13 PM, Santosh Shilimkar wrote:
+> On Monday 11 November 2013 12:10 PM, Khoronzhuk, Ivan wrote:
+>> If Davinci AEMIF is used we don't need to set timings and bus width.
+>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
+>>   1 file changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>> index 4705214..879e915 100644
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>                  goto err_clk_enable;
+>>          }
+>>
+>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
+>>
+> Instead above #if, just use a variable.
+> 	bool aemif = IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF) and then skip
+> the below code. #if block in the middle of the code looks ugly.
 
-> > It would be far nicer for the device binding to just have the interrupts
-> > property, and for the gpio controller to act as an interrupt-controller,
-> > with the appropriate pin management.
-> OK. Can you please give me some example in current bindings tree?
-> Something like in:
-> Documentation/devicetree/bindings/fb/mxsfb.txt ? So if I understand
-> correctly we define only property
-> interrupts = <xxx> which will be exact interrupt number for cpu gpio
-> connected to bmp085 irq line.
-> >
+Yes, this is the hack.
+The problem is that this part of code contains the call of Davinci 
+platform function davinci_aemif_setup_timing() which is not accessible 
+if Kernel is built for Keystone only.
+That's why "#if" has been used.
 
-See Documentation/devicetree/bindings/gpio/8xxx_gpio.txt for an example
-of a device whose interrupt line is connected to a gpio controller. The
-key here is to set the "interrupt-parent" to the gpio node and have
-the irq specifier define an interrupt local to that node.
+This part of code has to be removed together with Davinci aemif platform 
+code (aemif.c), once Davinci will be converted to DT and use
+new driver.
 
-	Arnd
+The corresponding comment can be added here. Is it ok?
+
+>
+> Other than that patch looks fine to me.
+>
+> Regards,
+> Santosh
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
