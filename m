@@ -1,76 +1,63 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Mon, 18 Nov 2013 14:28:52 -0500
-Message-ID: <20131118192852.GI10335@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <cover.1384798508.git.jason@lakedaemon.net>
- <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net>
- <528A65DF.8060000@wwwdotorg.org>
- <20131118191955.GG10335@titan.lakedaemon.net>
- <528A6944.3070303@wwwdotorg.org>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
+ is used
+Date: Mon, 18 Nov 2013 21:32:36 +0200
+Message-ID: <528A6B54.3080609@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,<1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528253B7.2060408@ti.com> <5289FB9C.6060204@ti.com> <528A1F4D.6050404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528A6944.3070303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <528A1F4D.6050404@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 12:23:48PM -0700, Stephen Warren wrote:
-> On 11/18/2013 12:19 PM, Jason Cooper wrote:
-> > On Mon, Nov 18, 2013 at 12:09:19PM -0700, Stephen Warren wrote:
-> >> On 11/18/2013 11:38 AM, Jason Cooper wrote:
-> >>> Unlike other build products in the Linux kernel, the devicetree blobs
-> >>> are simply the name of their source file, s/dts/dtb/.  There is also no
-> >>> 'make *install' mechanism to put them in a standard place with a
-> >>> standard naming structure.
-> >>>
-> >>> Unfortunately, users have begun scripting pulling the needed dtbs from
-> >>> within the kernel tree, thus hardcoding the dtbs names.  In turn, this
-> >>> means any changes to the dts filenames breaks these scripts.
-> >>>
-> >>> This patch is an attempt to fix this problem.  Akin to 'make install',
-> >>> this creates a new make target, dtbs_install.  The script that gets
-> >>> called defers to a vendor or distribution supplied installdtbs binary,
-> >>> if found in the system.  Otherwise, the default action is to install a
-> >>> given dtb into
-> ...
-> >> This only appears to create ${compat}.dtb, and not ${dtb} too. 
-> > 
-> > See my comment, above.
-> > 
-> >> So, it doesn't seem to address part of the cover letter, "In addition,
-> >> some vendors have done a diligent job naming their devicetree source
-> >> files appropriately and we don't want to break their setups." Was that
-> >> deliberate? If so, I guess I need to send some patches to U-Boot.
-> > 
-> > I assume you are still pulling from arch/arm/boot/dts/*.dtb, right?
-> > Those build products don't go away with this patch, so you should be
-> > fine.  Unless I'm mis-understanding your workflow...
-> 
-> Yes, but I thought the whole point of this was that everyone would/could
-> switch to running "make dtbs_install", then pulling out the files from
-> the install tree, instead of any use-case requiring obtaining files
-> directly from the source/build tree?
+On 11/18/2013 04:08 PM, Santosh Shilimkar wrote:
+> On Monday 18 November 2013 06:35 AM, Grygorii Strashko wrote:
+>> On 11/12/2013 06:13 PM, Santosh Shilimkar wrote:
+>>> On Monday 11 November 2013 12:10 PM, Khoronzhuk, Ivan wrote:
+>>>> If Davinci AEMIF is used we don't need to set timings and bus width.
+>>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+>>>>
+>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>> ---
+>>>>    drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
+>>>>    1 file changed, 15 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>>>> index 4705214..879e915 100644
+>>>> --- a/drivers/mtd/nand/davinci_nand.c
+>>>> +++ b/drivers/mtd/nand/davinci_nand.c
+>>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>>>                   goto err_clk_enable;
+>>>>           }
+>>>>
+>>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
+>>>>
+>>> Instead above #if, just use a variable.
+>>>      bool aemif = IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF) and then skip
+>>> the below code. #if block in the middle of the code looks ugly.
+>>
+>> Yes, this is the hack.
+>> The problem is that this part of code contains the call of Davinci platform function davinci_aemif_setup_timing() which is not accessible if Kernel is built for Keystone only.
+>> That's why "#if" has been used.
+>>
+>> This part of code has to be removed together with Davinci aemif platform code (aemif.c), once Davinci will be converted to DT and use
+>> new driver.
+>>
+>> The corresponding comment can be added here. Is it ok?
+>>
+> Thats more or less what I proposed in another reply. Lets clearly
+> document it on why such a check was added.
+>
+> Regards,
+> Santosh
+>
 
-Yes, in the script, it checks for the existence of /sbin/installdtbs.
-If it's there, it will override the default behavior and execute that
-script.
+Ok, I'll add more explanation on it.
 
-So yours can be:
-
-#!/bin/sh
-
-[ -d "/boot/dtbs/$1" ] && rm -rf "/boot/dtbs/$1"
-
-mkdir -p "/boot/dtbs/$1"
-
-for dtb in `find "$3" -name "*.dtb"`; do
-	cp "$dtb" "/boot/dtbs/$1/${dtb##*/}"
-done
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
