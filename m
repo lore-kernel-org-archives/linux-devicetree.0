@@ -1,64 +1,76 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: ACPI vs DT at runtime
-Date: Mon, 18 Nov 2013 15:04:55 +0000
-Message-ID: <20131118150455.GD24408@sirena.org.uk>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <CAOesGMhkCn2zeJj_ZZAZu_wJya-4evWEqNHpVJEpjxzWHVWY3A@mail.gmail.com>
- <alpine.DEB.2.02.1311171705130.4714@kaball.uk.xensource.com>
- <3371903.8j54vrCjEN@wuerfel>
+Date: Mon, 18 Nov 2013 16:05:37 +0100
+Message-ID: <201311181605.37300.arnd@arndb.de>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <201311152056.47846.arnd@arndb.de> <20131115232109.GT16735@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3371903.8j54vrCjEN@wuerfel>
+In-Reply-To: <20131115232109.GT16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Saturday 16 November 2013, Russell King - ARM Linux wrote:
+> On Fri, Nov 15, 2013 at 08:56:47PM +0100, Arnd Bergmann wrote:
+> > 
+> > For all I know, doing this in ACPI is something that is only now being
+> > discussed as Intel wants to be able to reuse the existing features from
+> > DT enabled drivers in the kernel and share the implementation between
+> > embedded x86 SoCs and embedded ARM/PowerPC/MIPS/... SoCs. That part actually
+> > isn't as crazy.
+> > 
+> > The existing ACPI usage however is basically all binary and cannot be
+> > shared with DT, in particular it won't help for the orthogonal problem of
+> > using ACPI to get "enterprise server" features on ARM64.
+> 
+> That's strange, because the patches I've seen from people who want to
+> add ACPI support to AMBA are all based around very similar strings to
+> those in DT to lookup the same data in ACPI.
 
---6WlEvdN9Dv0WHSBl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can you point to specific patches? I can't say I'm an expert on this, but
+everything I've seen with ACPI is tables of binary data with four-letter
+identifiers that are defined by the ACPI group, but not using strings
+in a similar manner to DT. Apple has an extension to do DT-style properties
+in their phones, and we had a discussion at the kernel summit to do
+a more generic variation of the same idea that Darren Hart presented,
+but that is still in prototype stage.
 
-On Sun, Nov 17, 2013 at 07:10:51PM +0100, Arnd Bergmann wrote:
-> On Sunday 17 November 2013 17:18:03 Stefano Stabellini wrote:
+> What's been done there is the function which reads from DT has been
+> duplicated, and instead of reading the information from DT, it reads it
+> from ACPI instead using string names without the vendor prefix.
 
-> > Simply using DT would help avoiding the awkward situation where a driver
-> > of a device only works with one of the two description formats and not
-> > the other.
+The recently posted x-gene ahci driver does this, but from what I can
+tell, the implementation is inappropriate on both DT (because of the
+use of unreadable four-character upper-case identifiers) and on ACPI
+(because of the use of non-standard identifiers).
 
-> Yes, but remember that Intel still have the problem on their embedded
-> systems, and will want to solve them.
+> That tells me that what I've stated in my previous email to which you
+> replied is _definitely_ possible to do.  That means it's certainly
+> possible to do this without reinventing the wheel, and without having
+> to rewrite lots of parsing code, precisely along the lines I set out
+> in my original email.
 
-Has it been confirmed that Intel are going with ACPI for their embedded
-devices rather than SFI?  That would be nice given how awful SFI is and
-I have heard that before but I'm not sure I've seen anything official.
+To clarify my complaint: while we can do simple (boolean, integer, text,
+or arrays of those three) properties with Darren's approach as long as they
+are private to one device, that won't suffice for anything that requires
+links between devices. We have phandles on DT that can be freely mixed with
+integers for things like GPIO or clock references. ACPI has similar
+references, but uses a different syntax for doing the same things, and these
+have to be standardized per subsystem (i.e. per type of connection) to make
+sense.
+As a result, every subsystem that has a producer-consumer type connection
+requires different code for DT and for ACPI. If the subsystem-to-driver
+interface is done well, we can have a common device driver, but in a 
+lot of cases there will be a leaky abstraction. As Olof pointed out,
+even migrating from a DT-only interface to a generic interface would
+require changing each driver, even if the result is no more ugly than
+the current state.
 
---6WlEvdN9Dv0WHSBl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSiiyUAAoJELSic+t+oim9+l4P/jBXBMUaqBX/O1Y8iAox8hsg
-d5tetSOVmh0XllC0C3ttgSJbRi07Bczf5w7v7rMOItdtAVSC2GOo7hZzQY2dF9dK
-zYHnK6xacsEecymicRSo4Y/XKeeFMJEAIGkCtOZdJSG+t7Wrteky0uF3V+woae+S
-9//j1ZbQROzMKRIh7cII/Yoz/Ym/1Ju6ObljWY9tRZVCNwmsqwsQ8y996lQsaDAN
-8ktTZW601d3MWo4kBGwoHFIV6QbFQl7p0PX4uzReceAKqcS2K7SMDs8jrBiJuCq7
-1c4xV4I6+ObwEFXSY/wuRDgK9I6m6KCi02UeJqsct0H2hqxx7cpv5yxgGHxR1L6I
-dx/IfsvpmqJios929ihhsB2OcnReJVNaba4VCtJlleI68Oa0Tni6+kBlygEAwWA7
-Y1SaXahqQmojcCnvjjFr3yl4xLwRtP2UaVtinuyogwTwPJX2iR6rGCbrFMI5r84R
-aTeOxvNH+ohoC1Dpuk46u4z9lubzwotVbL/NZk4/ib+qjSntd2pPMfIeykvOnXYr
-7nITEhbs+yTYUMO/ic6+lDgRfOLTtWMCpnqNT/k8LwFVHXNUi0NevmBAtTI9EKDX
-eL7Us/HvzSIJUYGBM0L98FAUNgkBeYK5WO+cqSoz8Or/ouqQw0NEtgnZIAtUr7/I
-JC2wofNOw8iuAyM0iKo9
-=GToh
------END PGP SIGNATURE-----
-
---6WlEvdN9Dv0WHSBl--
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
