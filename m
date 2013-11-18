@@ -1,171 +1,238 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 3/7] gpio: davinci: use irqdomain
-Date: Mon, 18 Nov 2013 16:34:13 +0200
-Message-ID: <528A2565.4000802@ti.com>
-References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>	<1383905510-31760-4-git-send-email-prabhakar.csengg@gmail.com>
-	<CACRpkdaJg4wqtD5xhPVrHJHxFoVwau6jidbOuQ9xFSK_6drxPQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv7] dmaengine: Add support for BCM2835
+Date: Mon, 18 Nov 2013 14:41:55 +0000
+Message-ID: <20131118144155.GJ30853@e106331-lin.cambridge.arm.com>
+References: <5288E327.8050809@koalo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <CACRpkdaJg4wqtD5xhPVrHJHxFoVwau6jidbOuQ9xFSK_6drxPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <5288E327.8050809@koalo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Florian Meier <florian.meier@koalo.de>
+Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-On 11/18/2013 03:11 PM, Linus Walleij wrote:
-> On Fri, Nov 8, 2013 at 11:11 AM, Prabhakar Lad
-> <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> This patch converts the davinci gpio driver to use irqdomain
->> support.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> (...)
->> @@ -282,8 +283,7 @@ gpio_irq_handler(unsigned irq, struct irq_desc *desc)
->>          desc->irq_data.chip->irq_ack(&desc->irq_data);
->>          while (1) {
->>                  u32             status;
->> -               int             n;
->> -               int             res;
->> +               int             bit;
->
-> Why is this an int? I think u8 would suffice.
->
->>                  /* now demux them to the right lowlevel handler */
->> -               n = d->irq_base;
->> -               if (irq & 1) {
->> -                       n += 16;
->> -                       status >>= 16;
->> -               }
->> -
->>                  while (status) {
->> -                       res = ffs(status);
->> -                       n += res;
->> -                       generic_handle_irq(n - 1);
->> -                       status >>= res;
->> +                       bit = __ffs(status);
->> +                       status &= ~(1 << bit);
->> +                       generic_handle_irq(irq_find_mapping(d->irq_domain,
->> +                                                           bit));
->
-> This is a nice hunk of the patch.
->
-> I would use <linux/bitops.h> and do:
-> status &= ~BIT(bit);
->
->
->> @@ -313,10 +307,7 @@ static int gpio_to_irq_banked(struct gpio_chip *chip, unsigned offset)
->>   {
->>          struct davinci_gpio_controller *d = chip2controller(chip);
->>
->> -       if (d->irq_base >= 0)
->> -               return d->irq_base + offset;
->> -       else
->> -               return -ENODEV;
->> +       return irq_create_mapping(d->irq_domain, offset);
->>   }
->
-> I think we recently established that map creating cannot be done
-> in gpio_to_irq* functions as that will not work properly if you request
-> an IRQ from device tree without first obtaining the IRQ from the GPIO
-> number with this function.
+On Sun, Nov 17, 2013 at 03:39:19PM +0000, Florian Meier wrote:
+> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
+> Currently it only supports cyclic DMA.
+> 
+> Signed-off-by: Florian Meier <florian.meier@koalo.de>
+> ---
+> 
+> This version includes some more style improvements
+> suggested in the previous thread.
+> 
+>  .../devicetree/bindings/dma/bcm2835-dma.txt        |   56 ++
+>  drivers/dma/Kconfig                                |    6 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/bcm2835-dma.c                          |  736 ++++++++++++++++++++
+>  4 files changed, 799 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+>  create mode 100644 drivers/dma/bcm2835-dma.c
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+> new file mode 100644
+> index 0000000..7d91019
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
+> @@ -0,0 +1,56 @@
+> +* BCM2835 DMA controller
+> +
+> +Required properties:
+> +- compatible: Should be "brcm,bcm2835-dma".
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain the DMA interrupts associated
+> +               to the DMA channels in ascending order.
+> +               First cell is the IRQ bank.
+> +               Second cell is the IRQ number.
 
-Why? Could you point on corresponding thread, pls?
-Current call tree is:
-irq_create_of_mapping()
-|-hwirq = omain->ops->xlate()
-|-irq_create_mapping(domain, hwirq)
+The format of the cells is a property of the interrupt parent, not of
+the DMA controller. It shouldn't be described here.
 
->
-> Instead call irq_create_mapping() on *all* used IRQ lines in the
-> probe function and use irq_find_mapping() here too.
->
->> +       for (gpio = 0, bank = 0; gpio < ngpio; bank++, bank_irq++, gpio += 16) {
->>                  /* disabled by default, enabled only as needed */
->>                  g = gpio2regs(gpio);
->>                  writel(~0, &g->clr_falling);
->> @@ -467,14 +483,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>                   */
->>                  irq_set_handler_data(bank_irq, &chips[gpio / 32]);
->
-> So for example here you could call iurq_create_mapping();
->
-> Also: please write a patch that marks the IRQ lines.
-> Call gpio_lock_as_irq(*gpio_chip, offset); in the
-> irqchip startup/shutdown functions. (Can be a separate
-> patch.)
+> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
+> +               the dmas property of client devices.
 
-It seems, some misunderstanding is here. So I'd like to clarify few 
-points and would be very appreciate for your comments:
-1) This patch itself will work unless we switch to DT (as in the 
-following patch)
+A brief description of the set of sane values of the dma-specifier cell
+would be better.
 
-2) After this patch the following object structure will be created 
-during Davinci GPIO driver initialization (DA850 has 144 IRQ lines):
-- gpio_chip0(0..31)
-   |- irq_domain1
-- gpio_chip1(32..63)
-   |- irq_domain2
-- gpio_chip2(64..95)
-   |- irq_domain3
-- gpio_chip3(96..127)
-   |- irq_domain4
-- gpio_chip4(128..143)
-   |- irq_domain5
+How many channels does the DMA controller have?
 
-3) But in case of DT only one GPIO controller node will be created
-Example:
-gpio: gpio@1e26000 {
-	compatible = "ti,dm6441-gpio";
-	gpio-controller;
-	reg = <0x226000 0x1000>;
-	interrupt-parent = <&intc>;
-	interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
-		44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
-		46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
-		48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
-		50 IRQ_TYPE_EDGE_BOTH>;
-	interrupt-controller;
-	#interrupt-cells = <2>;
-	ti,ngpio = <144>;
-	ti,davinci-gpio-unbanked = <0>;
-}
+> +- brcm,dma-channel-mask: Bit mask representing the channels
+> +                        not used by the firmware.
 
-4) As result, to make GPIO bindings/mappings work - we'll need to 
-implement .of_xlate() callback per GPIO chip, which will provide us with 
-valid valid gpio_chip and offset of gpio inside chip
-(It was discussed before and supposed to be done as next step).
+Which bits correspond to which channels?
 
-For example, gpio_chip3 and offset=15 should be selected:
-devA {
-    gpios = <&gpio 111 GPIO_ACTIVE_HIGH>;
-}
+How many channels are likely to be reserved out of how many in total?
 
-5) What should be done to make GPIO IRQ bindings/mappings work?
+Are they likely to be an arbitrary set, or some contiguous range?
 
-Example:
-devB {
-    interrupt-parent = <&gpio>;
-    interrupts = <111 IRQ_TYPE_EDGE_BOTH>;
-}
+> +
+> +Example:
+> +
+> +dma: dma@7e007000 {
+> +       compatible = "brcm,bcm2835-dma";
+> +       reg = <0x7e007000 0xf00>;
+> +       interrupts = <1 16
+> +                     1 17
+> +                     1 18
+> +                     1 19
+> +                     1 20
+> +                     1 21
+> +                     1 22
+> +                     1 23
+> +                     1 24
+> +                     1 25
+> +                     1 26
+> +                     1 27
+> +                     1 28>;
 
-Should we implement one IRQ domain per all GPIO chips (per GPIO controller)?
+Please bracket these individually.
 
-Thanks.
+> +
+> +       #dma-cells = <1>;
+> +       brcm,dma-channel-mask = <0x7f35>;
+> +};
+> +
+> +DMA clients connected to the BCM2835 DMA controller must use the format
+> +described in the dma.txt file, using a two-cell specifier for each channel:
+> +a phandle plus one integer cells.
+> +The two cells in order are:
+> +
+> +1. A phandle pointing to the DMA controller.
+> +2. The DREQ number.
 
-Regards,
--Grygorii
+This description is unnecessary, and technically wrong (the phandle
+isn't part of the specifier, as the specifier goes with the phandle).
+
+> +
+> +Example:
+> +
+> +bcm2835_i2s: i2s@7e203000 {
+> +       compatible = "brcm,bcm2835-i2s";
+> +       reg = < 0x7e203000 0x20
+> +               0x7e101098 0x02>;
+> +
+> +       dmas = <&dma 2
+> +               &dma 3>;
+
+Brackets please.
+
+[...]
+
+> +struct bcm2835_dma_cb {
+> +       uint32_t info;
+> +       uint32_t src;
+> +       uint32_t dst;
+> +       uint32_t length;
+> +       uint32_t stride;
+> +       uint32_t next;
+> +       uint32_t pad[2];
+
+s/uint32_t/u32/ here and elsewhere.
+
+[...]
+
+> +static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
+> +{
+> +       struct virt_dma_desc *vd = vchan_next_desc(&c->vc);
+> +       struct bcm2835_desc *d;
+> +
+> +       if (!vd) {
+> +               c->desc = NULL;
+> +               return;
+> +       }
+> +
+> +       list_del(&vd->node);
+> +
+> +       c->desc = d = to_bcm2835_dma_desc(&vd->tx);
+> +
+> +       dsb();  /* ARM data synchronization (push) operation */
+
+We all know what a dsb is. What you should explain is _why_ the dsb is
+here. As this is sat under drivers, it would be nicer to use an
+architecture generic barrier rather than dsb() directly.
+
+> +
+> +       writel(d->control_block_base_phys, c->chan_base + BCM2835_DMA_ADDR);
+> +       writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
+> +}
+> +
+> +static irqreturn_t bcm2835_dma_callback(int irq, void *data)
+> +{
+> +       struct bcm2835_chan *c = data;
+> +       struct bcm2835_desc *d;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&c->vc.lock, flags);
+> +
+> +       /* Acknowledge interrupt */
+> +       writel(BCM2835_DMA_INT, c->chan_base + BCM2835_DMA_CS);
+> +
+> +       d = c->desc;
+> +
+> +       if (d) {
+> +               /* TODO Only works for cyclic DMA */
+> +               vchan_cyclic_callback(&d->vd);
+> +       }
+> +
+> +       /* Keep the DMA engine running */
+> +       dsb(); /* ARM synchronization barrier */
+
+Better explanation please.
+
+> +       writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
+> +
+> +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +       struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+> +
+> +       dev_dbg(c->vc.chan.device->dev,
+> +                       "Allocating DMA channel %i\n", c->ch);
+
+Why not %d? It's far more common...
+
+
+[...]
+
+> +       if (pdev->dev.of_node) {
+> +               /* Request DMA channel mask from device tree */
+> +               if (of_property_read_u32(pdev->dev.of_node,
+> +                               "brcm,dma-channel-mask",
+> +                               &chans_available)) {
+> +                       dev_err(&pdev->dev, "Failed to get channel mask\n");
+> +                       bcm2835_dma_free(od);
+> +                       return -EINVAL;
+> +               }
+
+As of_property_read_u32 has an implicit check on np, you don't need to
+first check pdev->dev.of_node.
+
+> +       } else {
+> +               dev_err(&pdev->dev, "Failed to get channel mask. No device tree.\n");
+> +               bcm2835_dma_free(od);
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Do not use the FIQ and BULK channels */
+> +       chans_available &= ~0xD;
+
+A couple of #defines would be nice, along with an explanation as to
+why...
+
+Thanks,
+Mark.
