@@ -1,43 +1,57 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv7] dmaengine: Add support for BCM2835
-Date: Mon, 18 Nov 2013 14:18:48 -0800
-Message-ID: <1384813128.17783.3.camel@joe-AO722>
-References: <5288E327.8050809@koalo.de> <1384768816.14845.186.camel@smile>
-	 <528A051A.7000703@koalo.de> <1384785017.14845.214.camel@smile>
-	 <20131118145400.GE16735@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and direct irq.
+Date: Mon, 18 Nov 2013 23:28:40 +0100
+Message-ID: <201311182328.40743.arnd@arndb.de>
+References: <1384465609-26485-1-git-send-email-marek@goldelico.com> <201311181238.40349.arnd@arndb.de> <20131118171747.GM17929@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118145400.GE16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20131118171747.GM17929-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-11-18 at 14:54 +0000, Russell King - ARM Linux wrote:
-> On Mon, Nov 18, 2013 at 04:30:17PM +0200, Andy Shevchenko wrote:
-> > On Mon, 2013-11-18 at 13:16 +0100, Florian Meier wrote:
-> > > >> +	uint32_t chans_available;
-> > > > 
-> > > > Why uint32_t?
-> > > 
-> > > Because it is a bit mask of fixed length that directly comes from the
-> > > firmware.
-> > 
-> > Like one already told you in your i2s patch, please, change that to
-> > corresponding u* value, namely u32.
+On Monday 18 November 2013, Gerhard Sittig wrote:
+> [ trimmed Cc: list for DT ]
+> [ is the bindings/gpio/8xxx_gpio.txt document incomplete? ]
 > 
-> There's no problem with uint32_t vs u32 - either will do.  u32 is the
-> pre-stdint.h Linux definition of a 32-bit unsigned integer.  There's
-> no reason why uint32_t isn't perfectly acceptable.  It's a matter of
-> author taste which gets used.  (Except where modifications are to an
-> existing chunk of code using one or the other - where consistency then
-> matters more.)
+> On Mon, Nov 18, 2013 at 12:38 +0100, Arnd Bergmann wrote:
+> > 
+> > See Documentation/devicetree/bindings/gpio/8xxx_gpio.txt for an
+> > example of a device whose interrupt line is connected to a gpio
+> > controller. The key here is to set the "interrupt-parent" to
+> > the gpio node and have the irq specifier define an interrupt
+> > local to that node.
+> 
+> I was wondering whether the gpio-controller nodes lack both the
+> 'interrupt-controller' boolean flag as well as the
+> '#interrupt-cells = <2>' property.  The former may be optional,
+> I'm not certain there.  But the latter should be a hard
+> requirement without which the 'funkyfpga' references cannot get
+> parsed I'm afraid.
 
-https://lkml.org/lkml/2006/5/2/258
+You are absolutely right, I picked an example that was actually
+wrong.
 
+> Am I missing something?  Did I get the names right?  Shall I send
+> a patch?  Is the code working without those specs since it
+> assumes knowledge that was not specified in the device tree?  And
+> would this be against the idea that the binding should be
+> "complete" and independent of who is interpreting the data?  Or
+> is the binding document just incomplete?
 
+I think the problem is that this particular controller is never used
+in "interrupts" properties, so nobody noticed the mistake. It probably
+still works for gpio references and drivers using gpio_to_irq on those
+numbers. It would be nice if you can send a patch to add those as
+optional properties to the binding and the example. We can't really
+make them mandatory properties now because that would make all existing
+dts files with this controller invalid.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
