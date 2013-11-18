@@ -1,70 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC v5 4/5] dma: mpc512x: register for device tree
- channel lookup
-Date: Mon, 18 Nov 2013 15:23:57 +0000
-Message-ID: <20131118152357.GB3759@e106331-lin.cambridge.arm.com>
-References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
- <1383290374-17484-5-git-send-email-a13xp0p0v88@gmail.com>
- <20131118120957.GH30853@e106331-lin.cambridge.arm.com>
- <201311181531.54818.arnd@arndb.de>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: Fwd: [PATCH 7/8] watchdog: davinci: add "clocks" property
+Date: Mon, 18 Nov 2013 17:26:06 +0200
+Message-ID: <528A318E.1090209@ti.com>
+References: <1383680783-12114-8-git-send-email-ivan.khoronzhuk@ti.com> <527A28E8.4010204@ti.com> <528829DB.7020003@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201311181531.54818.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <528829DB.7020003-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 02:31:54PM +0000, Arnd Bergmann wrote:
-> On Monday 18 November 2013, Mark Rutland wrote:
-> > > +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> > > @@ -0,0 +1,55 @@
-> > > +* Freescale MPC512x DMA Controller
-> > > +
-> > > +The DMA controller in the Freescale MPC512x SoC can move blocks of
-> > > +memory contents between memory and peripherals or memory to memory.
-> > > +
-> > > +Refer to the "Generic DMA Controller and DMA request bindings" description
-> > > +in the dma.txt file for a more detailled discussion of the binding.  The
-> > > +MPC512x DMA engine binding follows the common scheme, but doesn't provide
-> > > +support for the optional channels and requests counters (those values are
-> > > +derived from the detected hardware features) and has a fixed client
-> > > +specifier length of 1 integer cell (the value is the DMA channel, since
-> > > +the DMA controller uses a fixed assignment of request lines per channel).
-> > 
-> > The fact that #dma-cells must be <1> isn't a difference from the
-> > standard binding, and needs not be described here. The meaning of the
-> > value should be in your description of #dma-cells below.
-> 
-> I think the value it has to be in there, and I have in the past asked other
-> people to add this. Note that in the generic binding, it says that it must
-> be "at least 1". You can have controllers that require a larger number, or
-> that can use 1 or 2 alternatively, depending on how the device is wired
-> up, e.g. when a dma controller has two master ports you would need a
-> second cell to specify the port number, but only if more than one port
-> is actually connected to a slave.
+On 11/17/2013 04:28 AM, Guenter Roeck wrote:
+> On 11/06/2013 03:32 AM, ivan.khoronzhuk wrote:
+>> The Keystone arch is using clocks in DT and source clock for watchdog
+>> has to be specified, so add this to binding.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/watchdog/davinci-wdt.txt   |    5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+>> b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+>> index fddced9..4db4d0e 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+>> @@ -7,6 +7,10 @@ Required properties:
+>>
+>>   - reg : Should contain WDT registers location and length
+>>
+>> +- clocks: phandle reference to the controller clock.
+>> +      Required only for Keystone arch.
+>> +      See clock-bindings.txt
+>> +
+>
+> Yet another form of formatting. Also, wonder if it makes sense to merge
+> this with the patch adding keystone support.
+>
 
-The number of cells required should be described. My points were that it
-should be described at the property description rather than in the introduction,
-and that the fact that a specific value was required was not a
-difference from the bindings as the paragraph implied.
+Ok, I'll squash them.
 
-> 
-> > I'm not sure it's worth mentioning optional channels / request counters.
-> > If anything, it would be better to update dma.txt to move the "Optional
-> > properties" to something like "Suggested properties"...
-> 
-> These are less clearly defined. In the generic binding, it's mostly a matter
-> of "if you need to pass this information, use these properties". The individual
-> binding can then make them mandatory if needed.
+>>   Optional properties:
+>>
+>>   - timeout-sec:        Contains the watchdog timeout in seconds
+>> @@ -21,4 +25,5 @@ wdt: wdt@2320000 {
+>>       compatible = "ti,davinci-wdt";
+>>       reg = <0x02320000 0x80>;
+>>       timeout-sec = <30>;
+>> +    clocks = <&clkwdtimer0>;
+>>   };
+>>
+>
 
-Agreed. I'd prefer that bindings described the suggested properties they
-used, rather than those they don't.
-
-Thanks,
-Mark.
+-- 
+Regards,
+Ivan Khoronzhuk
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
