@@ -1,100 +1,55 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
-Date: Mon, 18 Nov 2013 15:28:14 +0900
-Message-ID: <5289B37E.2030208@nvidia.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com> <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com> <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com> <52842553.2080807@nvidia.com> <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAVeFu+Uh9fi_kGv-g-0fH=p4758sCRONexZN25weS0s3PrvxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/4]  Add dt support for exynos hdmiphy settings
+Date: Mon, 18 Nov 2013 14:08:32 +0530
+Message-ID: <1384763916-31868-1-git-send-email-s.shirish@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2013 06:03 PM, Alexandre Courbot wrote:
-> On Thu, Nov 14, 2013 at 10:20 AM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 11/14/2013 02:57 AM, Olof Johansson wrote:
->>>
->>> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>>
->>>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
->>>>>
->>>>>
->>>>> On Tue, Nov 12, 2013 at 12:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> On 11/07/2013 03:11 AM, Alexandre Courbot wrote:
->>>>>>>
->>>>>>>
->>>>>>> Just a set of small fixes to address the concerns expressed on v9 with
->>>>>>> the
->>>>>>> non-prefixed version DT properties. I hope there won't be a need for
->>>>>>> an
->>>>>>> eleventh (!) version. :P
->>>>>>
->>>>>>
->>>>>>
->>>>>> BTW, this version looks fine to me. On IRC, Olof said it looked OK to
->>>>>> him. I'm just waiting to hear back from Olof/Russell whether I should
->>>>>> merge this through the Tegra tree, or whether the first 1-3 patches
->>>>>> should go through Russell's tree.
->>>>>
->>>>>
->>>>>
->>>>> I pinged Russell, and he brought up the fact that there were earlier
->>>>> requests to move it to drivers/firmware. It would make sense to try to
->>>>> get that done before merging, especially if you anticipate someone
->>>>> using TF on 64-bit platforms.
->>>>
->>>>
->>>>
->>>> IIRC when we discussed this point your last comment was as follows:
->>>
->>>
->>> Touche. :) Thanks for the reminder.
->>>
->>>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>>>>
->>>>> I think we can probably merge this under arch/arm now, and when we
->>>>> figure out what needs to be common with ARM64 we can move it out to a
->>>>> good location. It might be that mostly just a header file with ABI
->>>>> conventions needs to be shared, not actual implementation, for
->>>>> example.
->>>>
->>>>
->>>> So I thought we agreed on that. If in the end we prefer to move the ARM
->>>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
->>>> also confirmed he would be ok with it) but I wonder if that would not be
->>>> somehow premature.
->>>>
->>>> Another worry of mine is that this might delay this patchset some more.
->>>> Support for TF is one of the last remaining step towards making NVIDIA
->>>> branded Tegra retail devices (SHIELD and TegraNote at the moment) run
->>>> upstream directly. I missed 3.13, I'd like to make sure I won't miss
->>>> 3.14.
->>>> Would it be acceptable if we move the ARM firmware interface to a common
->>>> place after this patchset is merged?
->>>
->>>
->>> Well, as I already said I'm ok with things going into arch/arm to
->>> start with, as long as Russell is. Once we see 64-bit needs for the
->>> same we'll move it out -- it's not like it's a whole lot of code to
->>> start with. But Russell has veto on the topic. :-)
->>
->>
->> Thanks Olof. Russell, are you ok with the patchset in its current form? I
->> can start moving the firmware interface out of arch/arm if that's what you
->> want (there is no user outside of ARM at the moment, but as Olof pointed out
->> that's not too much code) but I'd really like to see this series secured for
->> 3.14.
->
-> Never mind, I have submitted a patch that moves firmware_ops to
-> drivers/firmware, that will hopefully settle this issue. Then maybe we
-> can finally flush this series as well (I will need to resubmit a new
-> version though).
+For various revisions of a chipset if the signal pattern is changed for every
+revision, then the phy setting need to be updated correspondingly by measuring
+the signal.
+For getting correct signals the clock level and data de-emphasis 
+levels needs to be adjusted.
+Since only these 2 values matter,we can move the same to dt, 
+wherein we can have different dt files for every revision. 
 
-... and that patch is very likely to not make it, for (I think) valid 
-reasons. Thus I'm not quite sure where we are with this series now.
+This is an initial patchset towards achieving the same 
+for exynos 5250 and can be later extended to future chipsets.
+
+V2: replaced moving of entire phy config structure with only
+required and justifiable conf registers.
+
+V3: Incorporated Mark Rutland's comments.
+
+V4: Rebased and included cros5250-common.dtsi.
+
+V5: removed nr-configs feild and also the constraint
+    of having the exact number of configs in the dt file
+    as in the driver, the programmer can add only the pixel
+    clock that needs to be updated.
+
+V6: removed nr-configs form the dtsi files.
+
+Shirish S (4):
+  ARM: dts: smdk5250: Add hdmi phy settings
+  ARM: dts: arndale: Add hdmi phy settings
+  ARM: exynos: dts: cros5250: Add hdmi phy settings
+  drm: exynos: hdmi: Add dt support for hdmiphy settings
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   33 +++++++++
+ arch/arm/boot/dts/cros5250-common.dtsi             |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   74 +++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   77 +++++++++++++++++++-
+ 5 files changed, 328 insertions(+), 4 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
